@@ -62,13 +62,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
-import { getArticles, getPageviews, createArticle, updateArticle, defaultArticleData } from '../../../api/articles'
-import { IArticleData, IConsumerData, IDataWrapper } from '../../../api/types'
-import { exportJson2Excel } from '../../../utils/excel'
-import { formatJson } from '../../../utils'
+
 import Pagination from '../../../components/Pagination/index.vue'
 
-import { defaultConsumerData, getList, removeConsumer } from '../../../api/schema/consumers'
+import { getList, removeConsumer } from '../../../api/schema/consumers'
 
 @Component({
   name: 'ComplexTable',
@@ -78,7 +75,7 @@ import { defaultConsumerData, getList, removeConsumer } from '../../../api/schem
 })
 export default class extends Vue {
   private tableKey = 0
-  private list: IArticleData[] = []
+  private list: any[] = []
   private total = 0
   private listLoading = true
   private listQuery = {
@@ -90,7 +87,7 @@ export default class extends Vue {
     sort: '+id'
   }
 
-  private tableData: IConsumerData[] = []
+  private tableData: string[] = []
   private tableKeys: string[] = []
 
   created() {
