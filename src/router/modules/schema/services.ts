@@ -12,9 +12,25 @@ const tableRoutes: RouteConfig = {
   children: [
     {
       path: 'list',
-      component: () => import(/* webpackChunkName: "complex-table" */ '@/views/schema/upstream/list.vue'),
-      name: 'SchemaServicesList',
-      meta: { title: 'SchemaServicesList' }
+      component: () => import('@/views/schema/service/list.vue'),
+      name: 'SchemaServiceList',
+      meta: { title: 'SchemaServiceList' }
+    }, {
+      path: 'edit/:id',
+      component: () => import('@/views/schema/service/edit.vue'),
+      name: 'SchemaServiceEdit',
+      meta: {
+        title: 'SchemaServiceEdit',
+        hidden: true
+      }
+    }, {
+      path: 'create',
+      component: () => import('@/views/schema/service/edit.vue'),
+      name: 'SchemaServiceCreate',
+      meta: {
+        title: 'SchemaServiceCreate',
+        hidden: true
+      }
     }
   ]
 }

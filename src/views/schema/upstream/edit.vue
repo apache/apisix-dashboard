@@ -193,7 +193,7 @@ export default class extends Vue {
           await createUpstream(data)
         }
 
-        this.$message.success(`${this.isEditMode ? 'Edit the' : 'Create a'} upstream successfully!`)
+        this.$message.success(`${this.isEditMode ? 'Update the' : 'Create a'} upstream successfully!`)
 
         if (!this.isEditMode) {
           this.$nextTick(() => {

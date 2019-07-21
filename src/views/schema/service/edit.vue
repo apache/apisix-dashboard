@@ -8,51 +8,6 @@
       :show-message="false"
     >
       <el-form-item
-        label="URI"
-        prop="uri"
-      >
-        <el-input
-          v-model="form.uri"
-          placeholder="URI"
-        />
-      </el-form-item>
-
-      <el-form-item
-        label="Host"
-      >
-        <el-input
-          v-model="form.host"
-          placeholder="Host"
-        />
-      </el-form-item>
-
-      <el-form-item
-        label="Remote Adreess"
-      >
-        <el-input
-          v-model="form.remote_addr"
-          placeholder="Remote Adreess"
-        />
-      </el-form-item>
-
-      <el-form-item
-        label="Methods"
-      >
-        <el-select
-          v-model="form.methods"
-          multiple
-          placeholder="Methods"
-        >
-          <el-option
-            v-for="item in methods"
-            :key="item"
-            :label="item"
-            :value="item"
-          />
-        </el-select>
-      </el-form-item>
-
-      <el-form-item
         label="Upstream"
       >
         <el-select
@@ -61,22 +16,6 @@
         >
           <el-option
             v-for="item in upstreamList"
-            :key="item.id"
-            :label="item.id"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-
-      <el-form-item
-        label="Service"
-      >
-        <el-select
-          v-model="form.service_id"
-          placeholder="Service"
-        >
-          <el-option
-            v-for="item in serviceList"
             :key="item.id"
             :label="item.id"
             :value="item.id"
@@ -151,10 +90,9 @@ import { Form } from 'element-ui'
 
 import PluginDialog from '@/components/PluginDialog/index.vue'
 
-import { getRouter } from '@/api/schema/routes'
-import { getPluginList } from '@/api/schema/plugins'
 import { getUpstreamList } from '@/api/schema/upstream'
-import { getServiceList } from '@/api/schema/services'
+import { getService, createService, updateService } from '@/api/schema/services'
+import { getPluginList } from '@/api/schema/plugins'
 
 @Component({
   name: 'RouterEdit',
@@ -162,84 +100,54 @@ import { getServiceList } from '@/api/schema/services'
     PluginDialog
   }
 })
-
 export default class extends Vue {
   private form = {
-    uri: '',
-    host: '',
-    remote_addr: '',
-    upstream_id: '',
-    service_id: '',
-    methods: [],
-    plugins: {}
+    plugins: {},
+    upstream_id: ''
   }
 
-  private rules = {
-    uri: {
-      required: true
-    }
-  }
+  private rules = {}
   private isEditMode: boolean = false
-
-  private methods = [
-    'GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'
-  ]
 
   private pluginList = []
   private pluginName: string = ''
   private showPluginDialog: boolean = false
   private upstreamList = []
-  private serviceList = []
 
   created() {
     this.isEditMode = (this.$route as any).name.indexOf('Create') === -1
 
+    this.getUpstreamList()
+    this.getPluginList()
+
     if (this.isEditMode) {
       this.getData()
     }
-
-    this.getPluginList()
-    this.getUpstreamList()
-    this.getServiceList()
   }
 
   get filteredPluginList() {
     return this.pluginList.filter(item => !this.form.plugins.hasOwnProperty(item))
   }
 
-  private async getData() {
-    const { id } = this.$route.params
-    const {
-      node: {
-        value: {
-          uri = '',
-          host = '',
-          remote_addr = '',
-          upstream_id = '',
-          service_id = '',
-          methods = [],
-          plugins = {}
-        }
-      }
-    } = await getRouter(id) as any
-
-    this.form = {
-      uri,
-      host,
-      remote_addr,
-      upstream_id,
-      service_id,
-      methods,
-      plugins
-    }
-  }
-
-  private async onSubmit() {
-    console.log('onSubmit', this.form)
-  }
-
   private toPreviousPage() {
     this.$router.go(-1)
+  }
+
+  private async getData() {
+    const { id } = this.$route.params
+    let {
+      node: {
+        value: {
+          plugins = {},
+          upstream_id = ''
+        }
+      }
+    } = (await getService(id)) as any
+
+    this.form = {
+      plugins,
+      upstream_id
+    }
   }
 
   private async getUpstreamList() {
@@ -250,22 +158,6 @@ export default class extends Vue {
     } = await getUpstreamList() as any
 
     this.upstreamList = nodes.map((item: any) => {
-      const id = item.key.match(/\/([0-9]+)/)[1]
-      return {
-        ...item,
-        id
-      }
-    })
-  }
-
-  private async getServiceList() {
-    const {
-      node: {
-        nodes = []
-      }
-    } = await getServiceList() as any
-
-    this.serviceList = nodes.map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
       return {
         ...item,
@@ -296,6 +188,33 @@ export default class extends Vue {
       ...this.form.plugins,
       tempPlugin: null
     }
+  }
+
+  private async onSubmit() {
+    (this.$refs.form as any).validate(async(valid: boolean) => {
+      console.log('onSubmit', this.form)
+
+      if (valid) {
+        if (this.isEditMode) {
+          await updateService(this.$route.params.id, this.form)
+        } else {
+          await createService(this.form)
+        }
+
+        this.$message.success(`${this.isEditMode ? 'Update the' : 'Create a'} service successfully!`)
+
+        if (!this.isEditMode) {
+          this.$nextTick(() => {
+            this.form = {
+              plugins: {},
+              upstream_id: ''
+            }
+          })
+        }
+      } else {
+        return false
+      }
+    })
   }
 }
 </script>

@@ -152,7 +152,7 @@ export default class extends Vue {
 
         await updateOrCreateConsumer(Object.assign({}, this.form))
 
-        this.$message.success(`${this.isEditMode ? 'Edit the' : 'Create a'} consumer successfully!`)
+        this.$message.success(`${this.isEditMode ? 'Update the' : 'Create a'} consumer successfully!`)
 
         if (this.isEditMode) return
 
