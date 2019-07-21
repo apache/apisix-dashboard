@@ -248,7 +248,6 @@ export default class extends Vue {
 
   private async onSubmit() {
     (this.$refs.form as any).validate(async(valid: boolean) => {
-
       if (valid) {
         const data = Object.assign({}, this.form)
         if (!data.methods.length) {
