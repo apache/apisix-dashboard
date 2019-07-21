@@ -181,7 +181,16 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .plugin-dialog {
+  .el-form {
+    .el-form-item {
+      .el-form-item__content {
+        .el-input {
+          width: 180px !important;
+        }
+      }
+    }
+  }
 }
 </style>
