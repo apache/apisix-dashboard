@@ -1,0 +1,351 @@
+<template>
+  <div class="container">
+    <el-form
+      ref="form"
+      :model="form"
+      :rules="rules"
+      label-width="80px"
+      :show-message="false"
+    >
+      <el-form-item
+        label="URI"
+        prop="uri"
+      >
+        <el-input
+          v-model="form.uri"
+          placeholder="URI"
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="Host"
+      >
+        <el-input
+          v-model="form.host"
+          placeholder="Host"
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="Remote Adreess"
+      >
+        <el-input
+          v-model="form.remote_addr"
+          placeholder="Remote Adreess"
+        />
+      </el-form-item>
+
+      <el-form-item
+        label="Methods"
+      >
+        <el-select
+          v-model="form.methods"
+          multiple
+          placeholder="Methods"
+        >
+          <el-option
+            v-for="item in methods"
+            :key="item"
+            :label="item"
+            :value="item"
+          />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item
+        label="Upstream"
+      >
+        <el-select
+          v-model="form.upstream_id"
+          placeholder="Upstream"
+        >
+          <el-option
+            v-for="item in upstreamList"
+            :key="item.id"
+            :label="item.id"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item
+        label="Service"
+      >
+        <el-select
+          v-model="form.service_id"
+          placeholder="Service"
+        >
+          <el-option
+            v-for="item in serviceList"
+            :key="item.id"
+            :label="item.id"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item
+        v-for="(index, item) in form.plugins"
+        :key="item"
+        :label="&quot;plugin&quot;"
+        class="plugin-item"
+      >
+        <el-button
+          v-if="item !== 'tempPlugin'"
+          type="info"
+          plain
+          @click="showPlugin(item)"
+        >
+          {{ item }}
+        </el-button>
+        <el-select
+          v-if="item === 'tempPlugin'"
+          :value="null"
+          class="plugin-select"
+          placeholder="Select a Plugin"
+          @change="showPlugin"
+        >
+          <el-option
+            v-for="name in filteredPluginList"
+            :key="name"
+            :label="name"
+            :value="name"
+          />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button
+          :disabled="!filteredPluginList.length"
+          @click="addPlugin"
+        >
+          Add Plugin
+        </el-button>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button
+          type="primary"
+          @click="onSubmit"
+        >
+          Save
+        </el-button>
+        <el-button @click="toPreviousPage">
+          Cancel
+        </el-button>
+      </el-form-item>
+    </el-form>
+    <PluginDialog
+      :show="showPluginDialog"
+      :name="pluginName"
+      :plugin-data="form.plugins[pluginName]"
+      @hidePlugin="showPluginDialog = false"
+      @save="onPluginSave"
+    />
+  </div>
+</template>
+
+<script lang='ts'>
+import { Component, Vue } from 'vue-property-decorator'
+import { Form } from 'element-ui'
+
+import PluginDialog from '@/components/PluginDialog/index.vue'
+
+import { getRouter, createRouter, updateRouter } from '@/api/schema/routes'
+import { getPluginList } from '@/api/schema/plugins'
+import { getUpstreamList } from '@/api/schema/upstream'
+import { getServiceList } from '@/api/schema/services'
+
+@Component({
+  name: 'RouterEdit',
+  components: {
+    PluginDialog
+  }
+})
+
+export default class extends Vue {
+  private form = {
+    uri: '',
+    host: '',
+    remote_addr: '',
+    upstream_id: '',
+    service_id: '',
+    methods: [],
+    plugins: {}
+  }
+
+  private rules = {
+    uri: {
+      required: true
+    }
+  }
+  private isEditMode: boolean = false
+
+  private methods = [
+    'GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'
+  ]
+
+  private pluginList = []
+  private pluginName: string = ''
+  private showPluginDialog: boolean = false
+  private upstreamList = []
+  private serviceList = []
+
+  created() {
+    this.isEditMode = (this.$route as any).name.indexOf('Create') === -1
+
+    if (this.isEditMode) {
+      this.getData()
+    }
+
+    this.getPluginList()
+    this.getUpstreamList()
+    this.getServiceList()
+  }
+
+  get filteredPluginList() {
+    return this.pluginList.filter(item => !this.form.plugins.hasOwnProperty(item))
+  }
+
+  private reset() {
+    this.form = {
+      uri: '',
+      host: '',
+      remote_addr: '',
+      upstream_id: '',
+      service_id: '',
+      methods: [],
+      plugins: {}
+    }
+  }
+
+  private async getData() {
+    const { id } = this.$route.params
+    const {
+      node: {
+        value: {
+          uri = '',
+          host = '',
+          remote_addr = '',
+          upstream_id = '',
+          service_id = '',
+          methods = [],
+          plugins = {}
+        }
+      }
+    } = await getRouter(id) as any
+
+    this.form = {
+      uri,
+      host,
+      remote_addr,
+      upstream_id,
+      service_id,
+      methods,
+      plugins
+    }
+  }
+
+  private async onSubmit() {
+    (this.$refs.form as any).validate(async(valid: boolean) => {
+      if (valid) {
+        const data = Object.assign({}, this.form)
+        if (!data.methods.length) {
+          delete data.methods
+        }
+
+        if (this.isEditMode) {
+          await updateRouter(this.$route.params.id, data)
+        } else {
+          await createRouter(data)
+        }
+
+        this.$message.success(`${this.isEditMode ? 'Update the' : 'Create a'} service successfully!`)
+
+        if (!this.isEditMode) {
+          this.$nextTick(() => {
+            this.reset()
+          })
+        }
+      } else {
+        return false
+      }
+    })
+  }
+
+  private toPreviousPage() {
+    this.$router.go(-1)
+  }
+
+  private async getUpstreamList() {
+    const {
+      node: {
+        nodes = []
+      }
+    } = await getUpstreamList() as any
+
+    this.upstreamList = nodes.map((item: any) => {
+      const id = item.key.match(/\/([0-9]+)/)[1]
+      return {
+        ...item,
+        id
+      }
+    })
+  }
+
+  private async getServiceList() {
+    const {
+      node: {
+        nodes = []
+      }
+    } = await getServiceList() as any
+
+    this.serviceList = nodes.map((item: any) => {
+      const id = item.key.match(/\/([0-9]+)/)[1]
+      return {
+        ...item,
+        id
+      }
+    })
+  }
+
+  private async getPluginList() {
+    this.pluginList = await getPluginList() as any
+  }
+
+  private async showPlugin(name: string) {
+    this.pluginName = name
+    this.showPluginDialog = true
+  }
+
+  private onPluginSave(name: string, data: any) {
+    delete this.form.plugins['tempPlugin']
+    this.showPluginDialog = false
+    this.form.plugins[name] = data
+  }
+
+  private async addPlugin() {
+    if (this.form.plugins.hasOwnProperty('tempPlugin')) return
+
+    this.form.plugins = {
+      ...this.form.plugins,
+      tempPlugin: null
+    }
+  }
+}
+</script>
+
+<style lang='scss'>
+.container {
+  padding: 20px;
+  .el-form {
+    .el-form-item {
+      .el-form-item__content {
+        .el-input {
+          width: 220px;
+        }
+      }
+    }
+  }
+}
+</style>
