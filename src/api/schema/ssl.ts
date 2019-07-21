@@ -2,34 +2,34 @@ import request from '@/utils/request'
 
 import { ISSLData } from '../types'
 
-export const getList = () =>
+export const getSSLList = () =>
   request({
     url: '/ssl',
     method: 'GET'
   })
 
-export const set = (id: string, params: ISSLData) =>
+export const updateSSL = (id: string, data: any) =>
   request({
     url: `/ssl/${id}`,
     method: 'PUT',
-    params
+    data
   })
 
-export const get = (id: string) =>
+export const getSSL = (id: string) =>
   request({
     url: `/ssl/${id}`,
     method: 'GET'
   })
 
-export const remove = (id: string) =>
+export const removeSSL = (id: string) =>
   request({
     url: `/ssl/${id}`,
     method: 'DELETE'
   })
 
-export const create = (params: ISSLData) =>
+export const createSSL = (data: any) =>
   request({
     url: '/ssl',
     method: 'POST',
-    params
+    data
   })

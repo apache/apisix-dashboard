@@ -63,12 +63,12 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
 
-import Pagination from '../../../components/Pagination/index.vue'
+import Pagination from '@/components/Pagination/index.vue'
 
-import { getList, removeRouter } from '../../../api/schema/routes'
+import { getSSLList, removeSSL } from '@/api/schema/ssl'
 
 @Component({
-  name: 'RoutesList',
+  name: 'UpstreamList',
   components: {
     Pagination
   }
@@ -97,20 +97,14 @@ export default class extends Vue {
   private async getList() {
     this.listLoading = true
 
-    this.tableKeys = ['id', 'methods', 'upstreamType', 'uri']
-    let { node: { nodes } } = await getList() as any
+    this.tableKeys = ['id', 'sni']
+    let { node: { nodes = [] } } = await getSSLList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
-      let { methods, upstream, uri } = item.value
-      methods = methods.join(', ')
-      const upstreamType = upstream.type
 
       return {
         id,
-        methods,
-        upstream,
-        uri,
-        upstreamType
+        sni: item.value.sni
       }
     })
 
@@ -128,15 +122,15 @@ export default class extends Vue {
   }
 
   private handleRemove(row: any) {
-    this.$confirm(`Do you want to remove router ${row.id}?`, 'Warning', {
+    this.$confirm(`Do you want to remove ssl ${row.id}?`, 'Warning', {
       confirmButtonText: 'Confirm',
       cancelButtonText: 'Cancel',
       type: 'warning'
     })
       .then(async() => {
-        await removeRouter(row.id)
+        await removeSSL(row.id)
         this.getList()
-        this.$message.success(`Remove router ${row.id} successfully!`)
+        this.$message.success(`Remove ssl ${row.id} successfully!`)
       })
   }
 
@@ -158,13 +152,13 @@ export default class extends Vue {
 
   private handleCreate() {
     this.$router.push({
-      name: 'SchemaRoutesCreate'
+      name: 'SchemaSSLCreate'
     })
   }
 
   private handleToEdit(row: any) {
     this.$router.push({
-      name: 'SchemaRoutesEdit',
+      name: 'SchemaSSLEdit',
       params: {
         id: row.id
       }

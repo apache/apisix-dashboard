@@ -77,6 +77,8 @@ export default {
     SchemaServiceEdit: 'Service Edit',
     SchemaSSL: 'SSL',
     SchemaSSLList: 'SSL',
+    SchemaSSLEdit: 'SSL Edit',
+    SchemaSSLCreate: 'SSL Create',
     SchemaUpstream: 'Upstream',
     SchemaUpstreamList: 'Upstream',
     SchemaUpstreamCreate: 'Upstream Create',
