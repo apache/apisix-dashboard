@@ -167,10 +167,10 @@ export default class extends Vue {
     uri: '',
     host: '',
     remote_addr: '',
-    methods: [],
-    plugins: {},
     upstream_id: '',
-    service_id: ''
+    service_id: '',
+    methods: [],
+    plugins: {}
   }
 
   private rules = {
@@ -208,8 +208,29 @@ export default class extends Vue {
 
   private async getData() {
     const { id } = this.$route.params
-    const { node: { value } } = await getRouter(id) as any
-    this.form = value
+    const {
+      node: {
+        value: {
+          uri = '',
+          host = '',
+          remote_addr = '',
+          upstream_id = '',
+          service_id = '',
+          methods = [],
+          plugins = {}
+        }
+      }
+    } = await getRouter(id) as any
+
+    this.form = {
+      uri,
+      host,
+      remote_addr,
+      upstream_id,
+      service_id,
+      methods,
+      plugins
+    }
   }
 
   private async onSubmit() {

@@ -5,11 +5,6 @@ import Router, { RouteConfig } from 'vue-router'
 import Layout from '@/layout/index.vue'
 
 /* Router modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
-
 import SchemaRoutesRouter from './modules/schema/routes'
 import SchemaConsumersRouter from './modules/schema/consumers'
 import SchemaServicesRouter from './modules/schema/services'
