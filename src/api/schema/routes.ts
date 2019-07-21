@@ -7,11 +7,11 @@ export const getList = () =>
     method: 'GET'
   })
 
-export const update = (id: string, params: IRouteData) =>
+export const updateRouter = (id: string, data: any) =>
   request({
     url: `/routes/${id}`,
     method: 'PUT',
-    params
+    data
   })
 
 export const getRouter = (id: string) =>
@@ -26,9 +26,9 @@ export const removeRouter = (id: string) =>
     method: 'DELETE'
   })
 
-export const create = (params: IRouteData) =>
+export const createRouter = (data: any) =>
   request({
     url: '/routes',
     method: 'POST',
-    params
+    data
   })

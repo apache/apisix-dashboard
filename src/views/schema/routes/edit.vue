@@ -151,7 +151,7 @@ import { Form } from 'element-ui'
 
 import PluginDialog from '@/components/PluginDialog/index.vue'
 
-import { getRouter } from '@/api/schema/routes'
+import { getRouter, createRouter, updateRouter } from '@/api/schema/routes'
 import { getPluginList } from '@/api/schema/plugins'
 import { getUpstreamList } from '@/api/schema/upstream'
 import { getServiceList } from '@/api/schema/services'
@@ -207,6 +207,18 @@ export default class extends Vue {
     return this.pluginList.filter(item => !this.form.plugins.hasOwnProperty(item))
   }
 
+  private reset() {
+    this.form = {
+      uri: '',
+      host: '',
+      remote_addr: '',
+      upstream_id: '',
+      service_id: '',
+      methods: [],
+      plugins: {}
+    }
+  }
+
   private async getData() {
     const { id } = this.$route.params
     const {
@@ -235,7 +247,31 @@ export default class extends Vue {
   }
 
   private async onSubmit() {
-    console.log('onSubmit', this.form)
+    (this.$refs.form as any).validate(async(valid: boolean) => {
+
+      if (valid) {
+        const data = Object.assign({}, this.form)
+        if (!data.methods.length) {
+          delete data.methods
+        }
+
+        if (this.isEditMode) {
+          await updateRouter(this.$route.params.id, data)
+        } else {
+          await createRouter(data)
+        }
+
+        this.$message.success(`${this.isEditMode ? 'Update the' : 'Create a'} service successfully!`)
+
+        if (!this.isEditMode) {
+          this.$nextTick(() => {
+            this.reset()
+          })
+        }
+      } else {
+        return false
+      }
+    })
   }
 
   private toPreviousPage() {

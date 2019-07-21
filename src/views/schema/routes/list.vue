@@ -97,20 +97,33 @@ export default class extends Vue {
   private async getList() {
     this.listLoading = true
 
-    this.tableKeys = ['id', 'methods', 'upstreamType', 'uri']
-    let { node: { nodes } } = await getList() as any
+    this.tableKeys = ['id', 'uri', 'host', 'remote_addr', 'upstream_id', 'service_id', 'methods', 'plugins']
+    let { node: { nodes = [] } } = await getList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
-      let { methods, upstream, uri } = item.value
+      let {
+        uri = '',
+        host = '',
+        remote_addr = '',
+        upstream_id = '',
+        service_id = '',
+        methods = [],
+        plugins = {}
+      } = item.value
+
       methods = methods.join(', ')
-      const upstreamType = upstream.type
+
+      plugins = Object.keys(plugins as any).join(', ')
 
       return {
         id,
-        methods,
-        upstream,
         uri,
-        upstreamType
+        host,
+        remote_addr,
+        upstream_id,
+        service_id,
+        methods,
+        plugins
       }
     })
 
