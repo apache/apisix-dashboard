@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+  - "8"
+install:
+  - npm install
+
+script:
+  - npm run build:prod
+
+after_success:
+  - cd ./dist
+  - git init
+  - git config --global user.name ${GIT_USER}
+  - git config --global user.email ${GIT_MAIL}
+  - zip -r ${TRAVIS_BUILD_ID}.zip .
+  - git add ${TRAVIS_BUILD_ID}.zip
+  - git commit -m "Automatically update from travis-ci"
+  - git push --quiet --force  "https://${GH_TOKEN}@github.com/iresty/apisix_dashboard_built"
+
+branches:
+  only:
+    - master
+
+notifications:
+  email:
+    - ${GIT_MAIL}
