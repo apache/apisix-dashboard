@@ -5,15 +5,13 @@ install:
 - npm install
 script:
 - npm run build:prod
-before_deploy:
-  - export FILENAME=$(date +'%Y%m%d%H%M%S')
 after_success:
 - cd ./dist
 - git init
 - git config --global user.name ${GIT_USER}
 - git config --global user.email ${GIT_MAIL}
-- zip -r ${FILENAME}.zip .
-- git add ${FILENAME}.zip
+- zip -r ${date +'%Y%m%d%H%M%S'}.zip .
+- git add ${date +'%Y%m%d%H%M%S'}.zip
 - git commit -m "Automatically update from travis-ci"
 - git push --quiet --force  "https://${GH_USER}:${GH_PWD}@github.com/iresty/apisix_dashboard_built.git" master:master
 branches:
