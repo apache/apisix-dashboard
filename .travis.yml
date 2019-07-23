@@ -1,11 +1,6 @@
 language: node_js
 node_js:
 - '8'
-before_install:
-- openssl aes-256-cbc -K $encrypted_9bd45341267a_key -iv $encrypted_9bd45341267a_iv -in ssh_rsa.enc -out ssh_rsa -d
-- chmod 600 ssh_rsa
-- eval $(ssh-agent -s)
-- ssh-add ssh_rsa
 install:
 - npm install
 script:
@@ -18,7 +13,7 @@ after_success:
 - zip -r ${TRAVIS_BUILD_ID}.zip .
 - git add ${TRAVIS_BUILD_ID}.zip
 - git commit -m "Automatically update from travis-ci"
-- git push --quiet --force  "ssh://git@github.com:iresty/apisix_dashboard_built.git"
+- git push --quiet --force  "https://${GH_USER}:${GH_PWD}@github.com/iresty/apisix_dashboard_built.git"
 branches:
   only:
   - master
