@@ -10,8 +10,8 @@ after_success:
 - git init
 - git config --global user.name ${GIT_USER}
 - git config --global user.email ${GIT_MAIL}
-- zip -r ${date +'%Y%m%d%H%M%S'}.zip .
-- git add ${date +'%Y%m%d%H%M%S'}.zip
+- zip -r dashboard.zip .
+- git add dashboard.zip
 - git commit -m "Automatically update from travis-ci"
 - git push --quiet --force  "https://${GH_USER}:${GH_PWD}@github.com/iresty/apisix_dashboard_built.git" master:master
 branches:
