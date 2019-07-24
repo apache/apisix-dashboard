@@ -10,7 +10,7 @@ after_success:
 - git init
 - git config --global user.name ${GIT_USER}
 - git config --global user.email ${GIT_MAIL}
-- tar -czvf dashboard.tar.gz ./
+- tar zcvf dashboard.tar.gz ./
 - git add dashboard.tar.gz
 - git commit -m "Automatically update from travis-ci"
 - git push --quiet --force  "https://${GH_USER}:${GH_PWD}@github.com/iresty/apisix_dashboard_built.git" master:master
