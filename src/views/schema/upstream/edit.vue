@@ -8,6 +8,15 @@
       :show-message="false"
     >
       <el-form-item
+        label="Desc"
+      >
+        <el-input
+          v-model="form.desc"
+          placeholder="Description"
+        />
+      </el-form-item>
+
+      <el-form-item
         label="Type"
         prop="type"
       >
@@ -113,7 +122,8 @@ export default class extends Vue {
   private form = {
     type: null,
     key: null,
-    nodes: []
+    nodes: [],
+    desc: ''
   }
 
   private rules = {
@@ -140,7 +150,8 @@ export default class extends Vue {
         value: {
           type = null,
           nodes = [],
-          key = null
+          key = null,
+          desc = ''
         }
       }
     } = (await getUpstream(id)) as any
@@ -157,7 +168,8 @@ export default class extends Vue {
     this.form = {
       type,
       key,
-      nodes
+      nodes,
+      desc
     }
   }
 
@@ -200,7 +212,8 @@ export default class extends Vue {
             this.form = {
               type: null,
               key: null,
-              nodes: []
+              nodes: [],
+              desc: ''
             }
           })
         }

@@ -8,11 +8,21 @@
       :show-message="false"
     >
       <el-form-item
+        label="Desc"
+      >
+        <el-input
+          v-model="form.desc"
+          placeholder="Description"
+        />
+      </el-form-item>
+
+      <el-form-item
         label="name"
         prop="username"
       >
         <el-input v-model="form.username" />
       </el-form-item>
+
       <el-form-item
         v-for="(index, item) in form.plugins"
         :key="item"
@@ -95,7 +105,8 @@ export default class extends Vue {
 
   private form = {
     username: '',
-    plugins: {}
+    plugins: {},
+    desc: ''
   }
 
   private rules = {
@@ -159,7 +170,8 @@ export default class extends Vue {
         this.$nextTick(() => {
           this.form = {
             username: '',
-            plugins: {}
+            plugins: {},
+            desc: ''
           }
         })
       } else {

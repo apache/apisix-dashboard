@@ -97,16 +97,18 @@ export default class extends Vue {
   private async getList() {
     this.listLoading = true
 
-    this.tableKeys = ['id', 'type', 'nodes']
+    this.tableKeys = ['id', 'type', 'nodes', 'desc']
     let { node: { nodes = [] } } = await getUpstreamList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
       const type = item.value.type
+      const desc = item.value.desc
 
       return {
         id,
         type,
-        nodes: JSON.stringify(item.value.nodes)
+        nodes: JSON.stringify(item.value.nodes),
+        desc
       }
     })
 

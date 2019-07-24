@@ -97,10 +97,11 @@ export default class extends Vue {
   private async getList() {
     this.listLoading = true
 
-    this.tableKeys = ['id', 'plugins']
+    this.tableKeys = ['id', 'plugins', 'desc']
     let { node: { nodes = [] } } = await getServiceList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
+      const desc = item.value.desc
 
       const pluginArr: any[] = []
       Object.entries(item.value.plugins as any).map(([ key, value ]: any) => {
@@ -112,7 +113,8 @@ export default class extends Vue {
 
       return {
         id,
-        plugins: pluginArr.map((item: any) => item.name).join(', ')
+        plugins: pluginArr.map((item: any) => item.name).join(', '),
+        desc
       }
     })
 
