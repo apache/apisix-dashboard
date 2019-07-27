@@ -6,14 +6,7 @@ install:
 script:
 - npm run build:prod
 after_success:
-- cd ./dist
-- git init
-- git config --global user.name ${GIT_USER}
-- git config --global user.email ${GIT_MAIL}
-- tar zcvf dashboard.tar.gz ./
-- git add dashboard.tar.gz
-- git commit -m "Automatically update from travis-ci"
-- git push --quiet --force  "https://${GH_USER}:${GH_PWD}@github.com/iresty/apisix_dashboard_built.git" master:master
+- bash ./travis/after_success.sh
 branches:
   only:
   - master

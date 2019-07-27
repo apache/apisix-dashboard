@@ -124,9 +124,10 @@ export default class extends Vue {
 
   private async getConsumerData() {
     const username = this.$route.params.username
-    const data: IDataWrapper<IConsumerData> = await get(username) as any
+    const data = await get(username) as any
 
     (this.form as any) = {
+      desc: data.node.value.desc,
       username,
       plugins: data.node.value.plugins
     }
