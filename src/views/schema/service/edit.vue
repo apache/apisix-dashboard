@@ -8,6 +8,15 @@
       :show-message="false"
     >
       <el-form-item
+        label="Desc"
+      >
+        <el-input
+          v-model="form.desc"
+          placeholder="Description"
+        />
+      </el-form-item>
+
+      <el-form-item
         label="Upstream"
       >
         <el-select
@@ -17,7 +26,7 @@
           <el-option
             v-for="item in upstreamList"
             :key="item.id"
-            :label="item.id"
+            :label="item.desc"
             :value="item.id"
           />
         </el-select>
@@ -103,7 +112,8 @@ import { getPluginList } from '@/api/schema/plugins'
 export default class extends Vue {
   private form = {
     plugins: {},
-    upstream_id: ''
+    upstream_id: '',
+    desc: ''
   }
 
   private rules = {}
@@ -139,14 +149,16 @@ export default class extends Vue {
       node: {
         value: {
           plugins = {},
-          upstream_id = ''
+          upstream_id = '',
+          desc = ''
         }
       }
     } = (await getService(id)) as any
 
     this.form = {
       plugins,
-      upstream_id
+      upstream_id,
+      desc
     }
   }
 
@@ -207,7 +219,8 @@ export default class extends Vue {
           this.$nextTick(() => {
             this.form = {
               plugins: {},
-              upstream_id: ''
+              upstream_id: '',
+              desc: ''
             }
           })
         }

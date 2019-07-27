@@ -97,13 +97,14 @@ export default class extends Vue {
   private async getList() {
     this.listLoading = true
 
-    this.tableKeys = ['username', 'plugins']
+    this.tableKeys = ['username', 'plugins', 'desc']
     let { node: { nodes = [] } } = await getList() as any
     nodes = [...nodes].map((item: any) => {
       const pluginArr: any = []
 
       const { value } = item
       const username = value.username
+      const desc = value.desc
 
       Object.entries(value.plugins as any).map(([ key, value ]: any) => {
         pluginArr.push({
@@ -115,7 +116,8 @@ export default class extends Vue {
       return {
         username,
         plugins: pluginArr.map((item: any) => item.name).join(', '),
-        pluginArr
+        pluginArr,
+        desc
       }
     })
 

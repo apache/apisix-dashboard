@@ -8,6 +8,15 @@
       :show-message="false"
     >
       <el-form-item
+        label="Desc"
+      >
+        <el-input
+          v-model="form.desc"
+          placeholder="Description"
+        />
+      </el-form-item>
+
+      <el-form-item
         label="URI"
         prop="uri"
       >
@@ -62,7 +71,7 @@
           <el-option
             v-for="item in upstreamList"
             :key="item.id"
-            :label="item.id"
+            :label="item.desc"
             :value="item.id"
           />
         </el-select>
@@ -78,7 +87,7 @@
           <el-option
             v-for="item in serviceList"
             :key="item.id"
-            :label="item.id"
+            :label="item.desc"
             :value="item.id"
           />
         </el-select>
@@ -171,7 +180,8 @@ export default class extends Vue {
     upstream_id: '',
     service_id: '',
     methods: [],
-    plugins: {}
+    plugins: {},
+    desc: ''
   }
 
   private rules = {
@@ -215,7 +225,8 @@ export default class extends Vue {
       upstream_id: '',
       service_id: '',
       methods: [],
-      plugins: {}
+      plugins: {},
+      desc: ''
     }
   }
 
@@ -230,7 +241,8 @@ export default class extends Vue {
           upstream_id = '',
           service_id = '',
           methods = [],
-          plugins = {}
+          plugins = {},
+          desc = ''
         }
       }
     } = await getRouter(id) as any
@@ -242,7 +254,8 @@ export default class extends Vue {
       upstream_id,
       service_id,
       methods,
-      plugins
+      plugins,
+      desc
     }
   }
 

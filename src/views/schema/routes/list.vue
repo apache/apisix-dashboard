@@ -97,7 +97,7 @@ export default class extends Vue {
   private async getList() {
     this.listLoading = true
 
-    this.tableKeys = ['id', 'uri', 'host', 'remote_addr', 'upstream_id', 'service_id', 'methods', 'plugins']
+    this.tableKeys = ['id', 'uri', 'host', 'remote_addr', 'upstream_id', 'service_id', 'methods', 'plugins', 'desc']
     let { node: { nodes = [] } } = await getList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
@@ -108,7 +108,8 @@ export default class extends Vue {
         upstream_id = '',
         service_id = '',
         methods = [],
-        plugins = {}
+        plugins = {},
+        desc = ''
       } = item.value
 
       methods = methods.join(', ')
@@ -123,7 +124,8 @@ export default class extends Vue {
         upstream_id,
         service_id,
         methods,
-        plugins
+        plugins,
+        desc
       }
     })
 
