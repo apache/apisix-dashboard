@@ -4,20 +4,9 @@ node_js:
 install:
 - npm install
 script:
-- mkdir dist
-- cd ./dist
-- git init
-- git config --global user.name ${GIT_USER}
-- git config --global user.email ${GIT_MAIL}
-- git remote set-url --push origin https://github.com/iresty/apisix_dashboard_built.git
-- git pull
-- cd ..
 - npm run build:prod
 after_success:
-- cd dist
-- git add *
-- git commit -m "Automatically update from travis-ci"
-- git push -f "https://${GH_USER}:${GH_PWD}@github.com/iresty/apisix_dashboard_built.git" master:master
+- bash ./travis/after_success.sh
 branches:
   only:
   - master
