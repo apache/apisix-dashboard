@@ -12,7 +12,7 @@ after_success:
 - git config --global user.email ${GIT_MAIL}
 - git add *
 - git commit -m "Automatically update from travis-ci"
-- git push "https://${GH_USER}:${GH_PWD}@github.com/iresty/apisix_dashboard_built.git" master:master
+- git push -f "https://${GH_USER}:${GH_PWD}@github.com/iresty/apisix_dashboard_built.git" master:master
 branches:
   only:
   - master
