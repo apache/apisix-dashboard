@@ -25,9 +25,9 @@
       <el-table-column
         v-for="(item, index) of tableKeys"
         :key="index"
-        :label="item"
-        :prop="item"
-        width="400"
+        :label="item.key"
+        :prop="item.key"
+        :width="item.width"
         class-name="status-col"
       />
       <el-table-column
@@ -88,7 +88,7 @@ export default class extends Vue {
   }
 
   private tableData = []
-  private tableKeys: string[] = []
+  private tableKeys: any[] = []
 
   created() {
     this.getList()
@@ -96,8 +96,37 @@ export default class extends Vue {
 
   private async getList() {
     this.listLoading = true
+    this.tableKeys = [
+      {
+        key: 'id',
+        width: 300
+      }, {
+        key: 'uri',
+        width: 400
+      }, {
+        key: 'host',
+        width: 400
+      }, {
+        key: 'remote_addr',
+        width: 400
+      }, {
+        key: 'upstream_id',
+        width: 300
+      }, {
+        key: 'service_id',
+        width: 300
+      }, {
+        key: 'methods',
+        width: 300
+      }, {
+        key: 'plugins',
+        width: 400
+      }, {
+        key: 'desc',
+        width: 200
+      }
+    ]
 
-    this.tableKeys = ['id', 'uri', 'host', 'remote_addr', 'upstream_id', 'service_id', 'methods', 'plugins', 'desc']
     let { node: { nodes = [] } } = await getList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]

@@ -25,9 +25,9 @@
       <el-table-column
         v-for="(item, index) of tableKeys"
         :key="index"
-        :label="item"
-        :prop="item"
-        width="400"
+        :label="item.key"
+        :prop="item.key"
+        :width="item.width"
         class-name="status-col"
       />
       <el-table-column
@@ -88,7 +88,7 @@ export default class extends Vue {
   }
 
   private tableData = []
-  private tableKeys: string[] = []
+  private tableKeys: any[] = []
 
   created() {
     this.getList()
@@ -97,7 +97,15 @@ export default class extends Vue {
   private async getList() {
     this.listLoading = true
 
-    this.tableKeys = ['id', 'sni']
+    this.tableKeys = [
+      {
+        key: 'id',
+        width: 300
+      }, {
+        key: 'sni',
+        width: 300
+      }
+    ]
     let { node: { nodes = [] } } = await getSSLList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
