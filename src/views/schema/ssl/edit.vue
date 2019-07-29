@@ -46,10 +46,10 @@
           type="primary"
           @click="onSubmit"
         >
-          Save
+          {{ $t('button.save') }}
         </el-button>
         <el-button @click="toPreviousPage">
-          Cancel
+          {{ $t('button.cancel') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -60,6 +60,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
 
+import { TagsViewModule } from '@/store/modules/tags-view'
 import { getSSL, updateSSL, createSSL } from '@/api/schema/ssl'
 
 @Component({
@@ -130,12 +131,11 @@ export default class extends Vue {
         )
 
         if (!this.isEditMode) {
+          TagsViewModule.delView(this.$route)
           this.$nextTick(() => {
-            this.form = {
-              sni: '',
-              key: '',
-              cert: ''
-            }
+            this.$router.push({
+              name: 'SchemaSSLList'
+            })
           })
         }
       } else {

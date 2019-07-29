@@ -67,7 +67,7 @@
           :disabled="!filteredPluginList.length"
           @click="addPlugin"
         >
-          Add Plugin
+          {{ $t('button.add_plugin') }}
         </el-button>
       </el-form-item>
 
@@ -76,10 +76,10 @@
           type="primary"
           @click="onSubmit"
         >
-          Save
+          {{ $t('button.save') }}
         </el-button>
         <el-button @click="toPreviousPage">
-          Cancel
+          {{ $t('button.cancel') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -102,6 +102,7 @@ import PluginDialog from '@/components/PluginDialog/index.vue'
 import { getUpstreamList } from '@/api/schema/upstream'
 import { getService, createService, updateService } from '@/api/schema/services'
 import { getPluginList } from '@/api/schema/plugins'
+import { TagsViewModule } from '@/store/modules/tags-view'
 
 @Component({
   name: 'RouterEdit',
@@ -216,12 +217,11 @@ export default class extends Vue {
         this.$message.success(`${this.isEditMode ? 'Update the' : 'Create a'} service successfully!`)
 
         if (!this.isEditMode) {
+          TagsViewModule.delView(this.$route)
           this.$nextTick(() => {
-            this.form = {
-              plugins: {},
-              upstream_id: '',
-              desc: ''
-            }
+            this.$router.push({
+              name: 'SchemaServiceList'
+            })
           })
         }
       } else {

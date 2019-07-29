@@ -28,6 +28,7 @@
 
       <el-form-item
         label="Host"
+        prop="host"
       >
         <el-input
           v-model="form.host"
@@ -37,6 +38,7 @@
 
       <el-form-item
         label="Remote Adreess"
+        prop="remote_addr"
       >
         <el-input
           v-model="form.remote_addr"
@@ -63,6 +65,7 @@
 
       <el-form-item
         label="Upstream"
+        prop="upstream_id"
       >
         <el-select
           v-model="form.upstream_id"
@@ -79,6 +82,7 @@
 
       <el-form-item
         label="Service"
+        prop="service_id"
       >
         <el-select
           v-model="form.service_id"
@@ -128,7 +132,7 @@
           :disabled="!filteredPluginList.length"
           @click="addPlugin"
         >
-          Add Plugin
+          {{ $t('button.add_plugin') }}
         </el-button>
       </el-form-item>
 
@@ -137,10 +141,10 @@
           type="primary"
           @click="onSubmit"
         >
-          Save
+          {{ $t('button.save') }}
         </el-button>
         <el-button @click="toPreviousPage">
-          Cancel
+          {{ $t('button.cancel') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -164,6 +168,7 @@ import { getRouter, createRouter, updateRouter } from '@/api/schema/routes'
 import { getPluginList } from '@/api/schema/plugins'
 import { getUpstreamList } from '@/api/schema/upstream'
 import { getServiceList } from '@/api/schema/services'
+import { TagsViewModule } from '@/store/modules/tags-view'
 
 @Component({
   name: 'RouterEdit',
@@ -186,6 +191,18 @@ export default class extends Vue {
 
   private rules = {
     uri: {
+      required: true
+    },
+    upstream_id: {
+      required: true
+    },
+    service_id: {
+      required: true
+    },
+    remote_addr: {
+      required: true
+    },
+    host: {
       required: true
     }
   }
@@ -276,8 +293,11 @@ export default class extends Vue {
         this.$message.success(`${this.isEditMode ? 'Update the' : 'Create a'} service successfully!`)
 
         if (!this.isEditMode) {
+          TagsViewModule.delView(this.$route)
           this.$nextTick(() => {
-            this.reset()
+            this.$router.push({
+              name: 'SchemaRoutesList'
+            })
           })
         }
       } else {
@@ -300,7 +320,7 @@ export default class extends Vue {
     this.upstreamList = nodes.map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
       return {
-        ...item,
+        ...item.value,
         id
       }
     })
@@ -316,7 +336,7 @@ export default class extends Vue {
     this.serviceList = nodes.map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
       return {
-        ...item,
+        ...item.value,
         id
       }
     })

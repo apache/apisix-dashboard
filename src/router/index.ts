@@ -76,19 +76,7 @@ export const constantRoutes: RouteConfig[] = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
-    children: [
-      {
-        path: 'dashboard',
-        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/index.vue'),
-        name: 'Dashboard',
-        meta: {
-          title: 'dashboard',
-          icon: 'dashboard',
-          affix: true
-        }
-      }
-    ]
+    redirect: '/schema/routes/list'
   },
   {
     path: '/profile',
