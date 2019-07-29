@@ -76,7 +76,7 @@ export const constantRoutes: RouteConfig[] = [
   {
     path: '/',
     component: Layout,
-    redirect: '/schema/routes/list',
+    redirect: '/schema/routes/list'
   },
   {
     path: '/profile',

@@ -114,6 +114,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
 
 import { getUpstream, createUpstream, updateStream } from '../../../api/schema/upstream'
+import { TagsViewModule } from '@/store/modules/tags-view'
 
 @Component({
   name: 'RouterEdit'
@@ -208,13 +209,11 @@ export default class extends Vue {
         this.$message.success(`${this.isEditMode ? 'Update the' : 'Create a'} upstream successfully!`)
 
         if (!this.isEditMode) {
+          TagsViewModule.delView(this.$route)
           this.$nextTick(() => {
-            this.form = {
-              type: null,
-              key: null,
-              nodes: [],
-              desc: ''
-            }
+            this.$router.push({
+              name: 'SchemaUpstreamList'
+            })
           })
         }
       } else {

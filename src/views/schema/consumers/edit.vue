@@ -93,6 +93,7 @@ import { getPluginList } from '@/api/schema/plugins'
 import PluginDialog from '@/components/PluginDialog/index.vue'
 
 import { IConsumerData, IDataWrapper } from '../../../api/types'
+import { TagsViewModule } from '@/store/modules/tags-view'
 
 @Component({
   name: 'ConsumerEdit',
@@ -168,12 +169,11 @@ export default class extends Vue {
 
         if (this.isEditMode) return
 
+        TagsViewModule.delView(this.$route)
         this.$nextTick(() => {
-          this.form = {
-            username: '',
-            plugins: {},
-            desc: ''
-          }
+          this.$router.push({
+            name: 'SchemaConsumersList'
+          })
         })
       } else {
         return false

@@ -164,6 +164,7 @@ import { getRouter, createRouter, updateRouter } from '@/api/schema/routes'
 import { getPluginList } from '@/api/schema/plugins'
 import { getUpstreamList } from '@/api/schema/upstream'
 import { getServiceList } from '@/api/schema/services'
+import { TagsViewModule } from '@/store/modules/tags-view'
 
 @Component({
   name: 'RouterEdit',
@@ -276,8 +277,11 @@ export default class extends Vue {
         this.$message.success(`${this.isEditMode ? 'Update the' : 'Create a'} service successfully!`)
 
         if (!this.isEditMode) {
+          TagsViewModule.delView(this.$route)
           this.$nextTick(() => {
-            this.reset()
+            this.$router.push({
+              name: 'SchemaRoutesList'
+            })
           })
         }
       } else {
