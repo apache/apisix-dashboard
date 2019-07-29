@@ -28,6 +28,7 @@
 
       <el-form-item
         label="Host"
+        prop="host"
       >
         <el-input
           v-model="form.host"
@@ -37,6 +38,7 @@
 
       <el-form-item
         label="Remote Adreess"
+        prop="remote_addr"
       >
         <el-input
           v-model="form.remote_addr"
@@ -63,6 +65,7 @@
 
       <el-form-item
         label="Upstream"
+        prop="upstream_id"
       >
         <el-select
           v-model="form.upstream_id"
@@ -79,6 +82,7 @@
 
       <el-form-item
         label="Service"
+        prop="service_id"
       >
         <el-select
           v-model="form.service_id"
@@ -187,6 +191,18 @@ export default class extends Vue {
 
   private rules = {
     uri: {
+      required: true
+    },
+    upstream_id: {
+      required: true
+    },
+    service_id: {
+      required: true
+    },
+    remote_addr: {
+      required: true
+    },
+    host: {
       required: true
     }
   }
@@ -304,7 +320,7 @@ export default class extends Vue {
     this.upstreamList = nodes.map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
       return {
-        ...item,
+        ...item.value,
         id
       }
     })
@@ -320,7 +336,7 @@ export default class extends Vue {
     this.serviceList = nodes.map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
       return {
-        ...item,
+        ...item.value,
         id
       }
     })
