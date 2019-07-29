@@ -65,14 +65,24 @@ export default {
     profile: '个人中心',
     SchemaRoutes: 'Routes',
     SchemaRoutesList: 'Routes',
+    SchemaRoutesEdit: '编辑 Router',
+    SchemaRoutesCreate: '创建 Router',
     SchemaConsumers: 'Consumers',
     SchemaConsumersList: 'Consumers',
+    SchemaConsumersEdit: '编辑 Consumer',
+    SchemaConsumersCreate: '创建 Consumer',
     SchemaServices: 'Services',
-    SchemaServicesList: 'Services',
+    SchemaServiceList: 'Services',
+    SchemaServiceCreate: '创建 Service',
+    SchemaServiceEdit: '编辑 Service',
     SchemaSSL: 'SSL',
     SchemaSSLList: 'SSL',
+    SchemaSSLEdit: '编辑 SSL',
+    SchemaSSLCreate: '创建 SSL',
     SchemaUpstream: 'Upstream',
-    SchemaUpstreamList: 'Upstream'
+    SchemaUpstreamList: 'Upstream',
+    SchemaUpstreamCreate: '创建 Upstream',
+    SchemaUpstreamEdit: '编辑 Upstream'
   },
   navbar: {
     logOut: '退出登录',
@@ -181,5 +191,12 @@ export default {
     showSidebarLogo: '显示侧边栏 Logo',
     fixedHeader: '固定 Header',
     sidebarTextTheme: '侧边栏文字主题色'
+  },
+  button: {
+    save: '保存',
+    cancel: '取消',
+    add_plugin: '添加 Plugin',
+    add_node: '添加 Node',
+    delete: '删除'
   }
 }

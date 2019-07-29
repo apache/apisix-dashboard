@@ -191,5 +191,12 @@ export default {
     showSidebarLogo: 'Sidebar Logo',
     fixedHeader: 'Fixed Header',
     sidebarTextTheme: 'Sidebar Text Theme'
+  },
+  button: {
+    save: 'Save',
+    cancel: 'Cancel',
+    add_plugin: 'Add Plugin',
+    add_node: 'Add Node',
+    delete: 'Delete'
   }
 }

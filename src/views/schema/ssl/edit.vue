@@ -46,10 +46,10 @@
           type="primary"
           @click="onSubmit"
         >
-          Save
+          {{ $t('button.save') }}
         </el-button>
         <el-button @click="toPreviousPage">
-          Cancel
+          {{ $t('button.cancel') }}
         </el-button>
       </el-form-item>
     </el-form>

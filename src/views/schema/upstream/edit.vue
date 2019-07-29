@@ -81,7 +81,7 @@
             type="danger"
             @click.prevent="removeNode(item)"
           >
-            Delete
+            {{ $t('button.delete') }}
           </el-button>
         </el-form-item>
       </el-form-item>
@@ -90,7 +90,7 @@
         <el-button
           @click="addNode"
         >
-          Add Node
+          {{ $t('button.add_node') }}
         </el-button>
       </el-form-item>
 
@@ -99,10 +99,10 @@
           type="primary"
           @click="onSubmit"
         >
-          Save
+          {{ $t('button.save') }}
         </el-button>
         <el-button @click="toPreviousPage">
-          Cancel
+          {{ $t('button.cancel') }}
         </el-button>
       </el-form-item>
     </el-form>

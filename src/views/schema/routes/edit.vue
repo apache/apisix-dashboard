@@ -128,7 +128,7 @@
           :disabled="!filteredPluginList.length"
           @click="addPlugin"
         >
-          Add Plugin
+          {{ $t('button.add_plugin') }}
         </el-button>
       </el-form-item>
 
@@ -137,10 +137,10 @@
           type="primary"
           @click="onSubmit"
         >
-          Save
+          {{ $t('button.save') }}
         </el-button>
         <el-button @click="toPreviousPage">
-          Cancel
+          {{ $t('button.cancel') }}
         </el-button>
       </el-form-item>
     </el-form>
