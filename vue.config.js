@@ -6,7 +6,7 @@ const path = require('path')
 const name = 'Dashboard for APISIX' // TODO: get this variable from setting.ts
 
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/dashboard' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/apisix/dashboard' : '/',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
