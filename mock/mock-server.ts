@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({
 
 app.use('', proxy({
   // Proxy requests to API Server
-  target: 'http://39.97.63.215:9080/apisix/admin/',
+  target: 'http://127.0.0.1/apisix/admin/',
   changeOrigin: true
 }))
 
