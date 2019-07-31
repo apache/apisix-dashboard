@@ -8,6 +8,8 @@ Dashboard for apisix & based on ElementUI.
 
 [Docs](https://armour.github.io/vue-typescript-admin-docs)
 
+[Vue Config Docs][https://cli.vuejs.org/zh/config/#publicpath]
+
 ## Project Structure
 
 ```bash

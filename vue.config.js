@@ -6,11 +6,12 @@ const path = require('path')
 const name = 'Dashboard for APISIX' // TODO: get this variable from setting.ts
 
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/dashboard' : '/',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
-    proxy: 'http://39.97.63.215:9080/apisix/admin/'
+    // https://cli.vuejs.org/zh/config/#devserver-proxy
+    proxy: 'http://127.0.0.1/apisix/admin/'
   },
   pwa: {
     name: name,
