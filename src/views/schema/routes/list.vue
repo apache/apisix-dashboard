@@ -107,22 +107,22 @@ export default class extends Vue {
         align: 'left'
       }, {
         key: 'uri',
-        width: 300
+        width: 200
       }, {
         key: 'host',
-        width: 300
+        width: 200
       }, {
         key: 'remote_addr',
-        width: 300
+        width: 200
       }, {
         key: 'upstream_id',
-        width: 300
+        width: 200
       }, {
         key: 'service_id',
-        width: 300
+        width: 200
       }, {
         key: 'methods',
-        width: 300
+        width: 200
       }, {
         key: 'plugins',
         width: 400
@@ -155,8 +155,8 @@ export default class extends Vue {
         uri,
         host,
         remote_addr,
-        upstream_id,
-        service_id,
+        upstream_id: upstream_id.replace(/(0+)/, ''),
+        service_id: service_id.replace(/(0+)/, ''),
         methods,
         plugins,
         description: desc
