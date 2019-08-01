@@ -28,7 +28,8 @@
         :label="item.key"
         :prop="item.key"
         :width="item.width"
-        class-name="status-col"
+        :class-name="item.align !== 'left' && 'status-col'"
+        header-align="center"
       />
       <el-table-column
         :label="$t('table.actions')"
@@ -101,14 +102,18 @@ export default class extends Vue {
         key: 'id',
         width: 300
       }, {
+        key: 'description',
+        width: 300,
+        align: 'left'
+      }, {
         key: 'uri',
-        width: 400
+        width: 300
       }, {
         key: 'host',
-        width: 400
+        width: 300
       }, {
         key: 'remote_addr',
-        width: 400
+        width: 300
       }, {
         key: 'upstream_id',
         width: 300
@@ -121,9 +126,6 @@ export default class extends Vue {
       }, {
         key: 'plugins',
         width: 400
-      }, {
-        key: 'desc',
-        width: 200
       }
     ]
 
@@ -154,7 +156,7 @@ export default class extends Vue {
         service_id,
         methods,
         plugins,
-        desc
+        description: desc
       }
     })
 
