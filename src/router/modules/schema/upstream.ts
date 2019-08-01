@@ -9,6 +9,7 @@ const tableUpstream: RouteConfig = {
     title: 'SchemaUpstream',
     icon: 'table'
   },
+  redirect: '/schema/upstream/list',
   children: [
     {
       path: 'list',

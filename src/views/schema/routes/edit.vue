@@ -192,18 +192,6 @@ export default class extends Vue {
   private rules = {
     uri: {
       required: true
-    },
-    upstream_id: {
-      required: true
-    },
-    service_id: {
-      required: true
-    },
-    remote_addr: {
-      required: true
-    },
-    host: {
-      required: true
     }
   }
   private isEditMode: boolean = false

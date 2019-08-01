@@ -9,6 +9,7 @@ const tableRoutes: RouteConfig = {
     title: 'SchemaRoutes',
     icon: 'table'
   },
+  redirect: '/schema/routes/list',
   children: [
     {
       path: 'list',
