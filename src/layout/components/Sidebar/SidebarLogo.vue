@@ -42,7 +42,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 export default class extends Vue {
   @Prop({ required: true }) private collapse!: boolean
 
-  private title = 'Vue Typescript Admin'
+  private title = 'APISIX'
 }
 </script>
 
@@ -61,7 +61,7 @@ export default class extends Vue {
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background: #2b2f3a;
+  background: #304156f5;
   text-align: center;
   overflow: hidden;
 

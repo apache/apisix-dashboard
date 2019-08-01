@@ -25,10 +25,11 @@
       <el-table-column
         v-for="(item, index) of tableKeys"
         :key="index"
-        :label="item"
-        :prop="item"
-        width="400"
-        class-name="status-col"
+        :label="item.key"
+        :prop="item.key"
+        :width="item.width"
+        :class-name="item.align !== 'left' && 'status-col'"
+        header-align="center"
       />
       <el-table-column
         :label="$t('table.actions')"
@@ -88,7 +89,7 @@ export default class extends Vue {
   }
 
   private tableData: string[] = []
-  private tableKeys: string[] = []
+  private tableKeys: any[] = []
 
   created() {
     this.getList()
@@ -97,7 +98,20 @@ export default class extends Vue {
   private async getList() {
     this.listLoading = true
 
-    this.tableKeys = ['username', 'plugins', 'desc']
+    this.tableKeys = [
+      {
+        key: 'username',
+        width: 300
+      }, {
+        key: 'description',
+        width: 300,
+        align: 'left'
+      }, {
+        key: 'plugins',
+        width: 400
+      }
+    ]
+
     let { node: { nodes = [] } } = await getList() as any
     nodes = [...nodes].map((item: any) => {
       const pluginArr: any = []
@@ -117,7 +131,7 @@ export default class extends Vue {
         username,
         plugins: pluginArr.map((item: any) => item.name).join(', '),
         pluginArr,
-        desc
+        description: desc
       }
     })
 

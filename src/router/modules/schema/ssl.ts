@@ -9,6 +9,7 @@ const tableRoutes: RouteConfig = {
     title: 'SchemaSSL',
     icon: 'table'
   },
+  redirect: '/schema/ssl/list',
   children: [
     {
       path: 'list',

@@ -1,6 +1,6 @@
 {
-  "name": "Vue Typescript Admin",
-  "short_name": "Vue Ts Admin",
+  "name": "Dashboard for APISIX",
+  "short_name": "APISIX",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
