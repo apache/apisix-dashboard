@@ -28,7 +28,7 @@
         :label="item.key"
         :prop="item.key"
         :width="item.width"
-        :class-name="item.align !== 'left' && 'status-col'"
+        :class-name="item.align === 'left' ? '' : 'status-col'"
         header-align="center"
       />
       <el-table-column

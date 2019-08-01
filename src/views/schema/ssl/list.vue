@@ -100,7 +100,7 @@ export default class extends Vue {
     this.tableKeys = [
       {
         key: 'id',
-        width: 300
+        width: 100
       }, {
         key: 'sni',
         width: 300
@@ -109,9 +109,11 @@ export default class extends Vue {
     let { node: { nodes = [] } } = await getSSLList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
+      const fakeId = id.replace(/(0+)/, '')
 
       return {
-        id,
+        id: fakeId,
+        realId: id,
         sni: item.value.sni
       }
     })
@@ -136,7 +138,7 @@ export default class extends Vue {
       type: 'warning'
     })
       .then(async() => {
-        await removeSSL(row.id)
+        await removeSSL(row.realId)
         this.getList()
         this.$message.success(`Remove ssl ${row.id} successfully!`)
       })
@@ -168,7 +170,7 @@ export default class extends Vue {
     this.$router.push({
       name: 'SchemaSSLEdit',
       params: {
-        id: row.id
+        id: row.realId
       }
     })
   }

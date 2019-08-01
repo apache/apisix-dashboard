@@ -28,7 +28,7 @@
         :label="item.key"
         :prop="item.key"
         :width="item.width"
-        :class-name="item.align !== 'left' && 'status-col'"
+        :class-name="item.align === 'left' ? '' : 'status-col'"
         header-align="center"
       />
       <el-table-column
@@ -100,7 +100,7 @@ export default class extends Vue {
     this.tableKeys = [
       {
         key: 'id',
-        width: 300
+        width: 100
       }, {
         key: 'description',
         width: 300,
@@ -132,6 +132,8 @@ export default class extends Vue {
     let { node: { nodes = [] } } = await getList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
+      const fakeId = id.replace(/(0+)/, '')
+
       let {
         uri = '',
         host = '',
@@ -148,7 +150,8 @@ export default class extends Vue {
       plugins = Object.keys(plugins as any).join(', ')
 
       return {
-        id,
+        id: fakeId,
+        realId: id,
         uri,
         host,
         remote_addr,
@@ -180,7 +183,7 @@ export default class extends Vue {
       type: 'warning'
     })
       .then(async() => {
-        await removeRouter(row.id)
+        await removeRouter(row.realId)
         this.getList()
         this.$message.success(`Remove router ${row.id} successfully!`)
       })
@@ -212,7 +215,7 @@ export default class extends Vue {
     this.$router.push({
       name: 'SchemaRoutesEdit',
       params: {
-        id: row.id
+        id: row.realId
       }
     })
   }

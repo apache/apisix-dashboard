@@ -28,7 +28,7 @@
         :label="item.key"
         :prop="item.key"
         :width="item.width"
-        :class-name="item.align !== 'left' && 'status-col'"
+        :class-name="item.align === 'left' ? '' : 'status-col'"
         header-align="center"
       />
       <el-table-column
@@ -101,7 +101,7 @@ export default class extends Vue {
     this.tableKeys = [
       {
         key: 'id',
-        width: 300
+        width: 100
       }, {
         key: 'description',
         width: 300,
@@ -114,6 +114,7 @@ export default class extends Vue {
     let { node: { nodes = [] } } = await getServiceList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
+      const fakeId = id.replace(/(0+)/, '')
       const desc = item.value.desc
 
       const pluginArr: any[] = []
@@ -125,7 +126,8 @@ export default class extends Vue {
       })
 
       return {
-        id,
+        id: fakeId,
+        realId: id,
         plugins: pluginArr.map((item: any) => item.name).join(', '),
         description: desc
       }
@@ -151,7 +153,7 @@ export default class extends Vue {
       type: 'warning'
     })
       .then(async() => {
-        await removeService(row.id)
+        await removeService(row.realId)
         this.getList()
         this.$message.success(`Remove service ${row.id} successfully!`)
       })
@@ -183,7 +185,7 @@ export default class extends Vue {
     this.$router.push({
       name: 'SchemaServiceEdit',
       params: {
-        id: row.id
+        id: row.realId
       }
     })
   }

@@ -28,7 +28,7 @@
         :label="item.key"
         :prop="item.key"
         :width="item.width"
-        :class-name="item.align !== 'left' && 'status-col'"
+        :class-name="item.align === 'left' ? '' : 'status-col'"
         header-align="center"
       />
       <el-table-column
@@ -98,11 +98,10 @@ export default class extends Vue {
   private async getList() {
     this.listLoading = true
 
-    this.tableKeys = ['id', 'type', 'nodes', 'desc']
     this.tableKeys = [
       {
         key: 'id',
-        width: 300
+        width: 100
       }, {
         key: 'description',
         width: 300,
@@ -119,11 +118,13 @@ export default class extends Vue {
     let { node: { nodes = [] } } = await getUpstreamList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
+      const fakeId = id.replace(/(0+)/, '')
       const type = item.value.type
       const desc = item.value.desc
 
       return {
-        id,
+        id: fakeId,
+        realId: id,
         type,
         nodes: JSON.stringify(item.value.nodes),
         description: desc
@@ -150,7 +151,7 @@ export default class extends Vue {
       type: 'warning'
     })
       .then(async() => {
-        await removeUpstream(row.id)
+        await removeUpstream(row.realId)
         this.getList()
         this.$message.success(`Remove router ${row.id} successfully!`)
       })
@@ -182,7 +183,7 @@ export default class extends Vue {
     this.$router.push({
       name: 'SchemaUpstreamEdit',
       params: {
-        id: row.id
+        id: row.realId
       }
     })
   }

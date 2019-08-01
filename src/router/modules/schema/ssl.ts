@@ -17,7 +17,7 @@ const tableRoutes: RouteConfig = {
       name: 'SchemaSSLList',
       meta: { title: 'SchemaSSLList' }
     }, {
-      path: 'edit/:username',
+      path: 'edit/:id',
       component: () => import('@/views/schema/ssl/edit.vue'),
       name: 'SchemaSSLEdit',
       meta: {
