@@ -102,7 +102,7 @@ export default class extends Vue {
     this.tableKeys = [
       {
         key: 'id',
-        width: 300,
+        width: 300
       }, {
         key: 'description',
         width: 300,
