@@ -219,7 +219,14 @@ export default class extends Vue {
   }
 
   private removePlugin(name: any) {
-    Vue.delete(this.form.plugins, name)
+    this.$confirm(`Do you want to remove ${name} plugin?`, 'Warning', {
+      confirmButtonText: 'Confirm',
+      cancelButtonText: 'Cancel',
+      type: 'warning'
+    })
+      .then(async() => {
+        Vue.delete(this.form.plugins, name)
+      }).catch(() => {})
   }
 }
 </script>

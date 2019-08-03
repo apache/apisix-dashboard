@@ -185,7 +185,7 @@ export default class extends Vue {
   }
 
   private handleRemove(row: any) {
-    this.$confirm(`Do you want to remove router ${row.id}?`, 'Warning', {
+    this.$confirm(`Do you want to remove upstream ${row.id}?`, 'Warning', {
       confirmButtonText: 'Confirm',
       cancelButtonText: 'Cancel',
       type: 'warning'
@@ -193,7 +193,7 @@ export default class extends Vue {
       .then(async() => {
         await removeUpstream(row.realId)
         this.getList()
-        this.$message.success(`Remove router ${row.id} successfully!`)
+        this.$message.success(`Remove upstream ${row.id} successfully!`)
       })
   }
 

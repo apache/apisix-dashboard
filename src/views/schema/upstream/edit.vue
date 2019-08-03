@@ -247,10 +247,17 @@ export default class extends Vue {
   }
 
   private removeNode(item: any) {
-    const index = (this.form.nodes as any).indexOf(item)
-    if (index !== -1) {
-      this.form.nodes.splice(index, 1)
-    }
+    this.$confirm(`Do you want to remove the node?`, 'Warning', {
+      confirmButtonText: 'Confirm',
+      cancelButtonText: 'Cancel',
+      type: 'warning'
+    })
+      .then(async() => {
+        const index = (this.form.nodes as any).indexOf(item)
+        if (index !== -1) {
+          this.form.nodes.splice(index, 1)
+        }
+      }).catch(() => {})
   }
 }
 </script>
