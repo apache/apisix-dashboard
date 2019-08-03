@@ -201,9 +201,9 @@ export default class extends Vue {
         }
 
         Object.entries(data).forEach(([key, value]) => {
-            if (value === '' || value === null) {
-              delete data[key]
-            }
+          if (value === '' || value === null) {
+            delete data[key]
+          }
         })
 
         if (this.isEditMode) {

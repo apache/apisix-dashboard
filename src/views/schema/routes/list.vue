@@ -155,8 +155,8 @@ export default class extends Vue {
         uri,
         host,
         remote_addr,
-        upstream_id: upstream_id.replace(/(0+)/, ''),
-        service_id: service_id.replace(/(0+)/, ''),
+        upstream_id: upstream_id && String(upstream_id).replace(/(0+)/, ''),
+        service_id: service_id && String(service_id).replace(/(0+)/, ''),
         methods,
         plugins,
         description: desc

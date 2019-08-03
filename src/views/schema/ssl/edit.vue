@@ -120,9 +120,9 @@ export default class extends Vue {
       if (valid) {
         let data = Object.assign({}, this.form)
         Object.entries(data).forEach(([key, value]) => {
-            if (value === '') {
-              delete data[key]
-            }
+          if (value === '') {
+            delete data[key]
+          }
         })
 
         if (this.isEditMode) {
