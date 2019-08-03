@@ -16,7 +16,7 @@
       :key="tableKey"
       v-loading="listLoading"
       :data="tableData"
-      border
+      :border="false"
       fit
       highlight-current-row
       style="width: 100%;"

@@ -16,7 +16,7 @@
       :key="tableKey"
       v-loading="listLoading"
       :data="tableData"
-      border
+      :border="false"
       fit
       highlight-current-row
       style="width: 100%;"
@@ -193,3 +193,11 @@ export default class extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+.app-container {
+  .el-table::before {
+    height: 0 !important;
+  }
+}
+</style>
