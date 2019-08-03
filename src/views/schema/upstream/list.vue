@@ -151,7 +151,7 @@ export default class extends Vue {
         realId: id,
         type,
         nodes: item.value.nodes,
-        description: desc || '   '
+        description: desc
       }
     })
 
