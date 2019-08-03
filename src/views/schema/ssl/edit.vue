@@ -118,7 +118,12 @@ export default class extends Vue {
       console.log('onSubmit', this.form)
 
       if (valid) {
-        const data = Object.assign({}, this.form)
+        let data = Object.assign({}, this.form)
+        Object.entries(data).forEach(([key, value]) => {
+          if (value === '') {
+            delete data[key]
+          }
+        })
 
         if (this.isEditMode) {
           await updateSSL(this.$route.params.id, data)

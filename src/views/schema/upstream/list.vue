@@ -16,6 +16,7 @@
       :key="tableKey"
       v-loading="listLoading"
       :data="tableData"
+      :span-method="objectSpanMethod"
       border
       fit
       highlight-current-row
@@ -30,11 +31,33 @@
         :width="item.width"
         :class-name="item.align === 'left' ? '' : 'status-col'"
         header-align="center"
-      />
+      >
+        <template v-if="item.key === 'nodes'">
+          <el-table-column
+            label="IP"
+            width="150"
+            prop="ip"
+            class-name="status-col"
+          />
+
+          <el-table-column
+            label="Port"
+            width="150"
+            prop="port"
+            class-name="status-col"
+          />
+
+          <el-table-column
+            label="Weights"
+            width="150"
+            prop="weights"
+            class-name="status-col"
+          />
+        </template>
+      </el-table-column>
       <el-table-column
         :label="$t('table.actions')"
         align="center"
-        width="230"
         class-name="fixed-width"
       >
         <template slot-scope="{row}">
@@ -47,7 +70,6 @@
           </el-button>
 
           <el-button
-            v-if="row.status!=='deleted'"
             size="mini"
             type="danger"
             @click="handleRemove(row)"
@@ -88,8 +110,10 @@ export default class extends Vue {
     sort: '+id'
   }
 
-  private tableData = []
+  private tableData: any[] = []
   private tableKeys: any[] = []
+  private spanArr: any[] = []
+  private position = 0
 
   created() {
     this.getList()
@@ -111,7 +135,7 @@ export default class extends Vue {
         width: 200
       }, {
         key: 'nodes',
-        width: 400
+        width: 'auto'
       }
     ]
 
@@ -126,12 +150,28 @@ export default class extends Vue {
         id: fakeId,
         realId: id,
         type,
-        nodes: JSON.stringify(item.value.nodes),
+        nodes: item.value.nodes,
         description: desc
       }
     })
 
-    this.tableData = nodes
+    let tableData: any[] = []
+    const arr = nodes.forEach((item: any) => {
+      Object.entries(item.nodes).forEach(([key, value]) => {
+        tableData = tableData.concat({
+          ...item,
+          ip: key.split(':')[0],
+          port: key.split(':')[1],
+          weights: value
+        })
+      })
+    })
+
+    this.tableData = tableData
+    this.rowspan(0, 'id')
+    this.rowspan(1, 'description')
+    this.rowspan(2, 'type')
+
     this.total = nodes.length
 
     setTimeout(() => {
@@ -186,6 +226,41 @@ export default class extends Vue {
         id: row.realId
       }
     })
+  }
+
+  private rowspan(idx: number, prop: any) {
+    this.spanArr[idx] = []
+    this.position = 0
+    this.tableData.forEach((item, index) => {
+      if (index === 0) {
+        this.spanArr[idx].push(1)
+        this.position = 0
+      } else {
+        if (this.tableData[index][prop] === this.tableData[index - 1][prop]) {
+          this.spanArr[idx][this.position] += 1
+          this.spanArr[idx].push(0)
+        } else {
+          this.spanArr[idx].push(1)
+          this.position = index
+        }
+      }
+    })
+  }
+
+  private objectSpanMethod({ row, column, rowIndex, columnIndex }: any) {
+    if (columnIndex === 6) {
+      return {
+        rowspan: this.spanArr[0][rowIndex],
+        colspan: this.spanArr[0][rowIndex] > 0 ? 1 : 0
+      }
+    }
+
+    if (columnIndex < 3) {
+      return {
+        rowspan: this.spanArr[0][rowIndex],
+        colspan: this.spanArr[0][rowIndex] > 0 ? 1 : 0
+      }
+    }
   }
 }
 </script>

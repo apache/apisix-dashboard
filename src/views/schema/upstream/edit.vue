@@ -186,7 +186,7 @@ export default class extends Vue {
       })
 
       if (valid) {
-        const data = {
+        let data = {
           ...this.form,
           nodes
         }
@@ -199,6 +199,12 @@ export default class extends Vue {
         if (data.type !== 'chash') {
           delete data.key
         }
+
+        Object.entries(data).forEach(([key, value]) => {
+          if (value === '' || value === null) {
+            delete data[key]
+          }
+        })
 
         if (this.isEditMode) {
           await updateStream(this.$route.params.id, data)

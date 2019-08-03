@@ -267,10 +267,22 @@ export default class extends Vue {
   private async onSubmit() {
     (this.$refs.form as any).validate(async(valid: boolean) => {
       if (valid) {
-        const data = Object.assign({}, this.form)
+        let data = Object.assign({}, this.form)
         if (!data.methods.length) {
           delete data.methods
         }
+
+        Object.entries(data).forEach(([key, value]) => {
+          if (typeof data[key] === 'object') {
+            if (key !== 'plugins' && Object.keys(value).length === 0) {
+              delete data[key]
+            }
+          } else {
+            if (value === '') {
+              delete data[key]
+            }
+          }
+        })
 
         if (this.isEditMode) {
           await updateRouter(this.$route.params.id, data)

@@ -208,10 +208,23 @@ export default class extends Vue {
       console.log('onSubmit', this.form)
 
       if (valid) {
+        let data = Object.assign({}, this.form)
+        Object.entries(data).forEach(([key, value]) => {
+          if (typeof data[key] === 'object') {
+            if (key !== 'plugins' && Object.keys(value).length === 0) {
+              delete data[key]
+            }
+          } else {
+            if (value === '') {
+              delete data[key]
+            }
+          }
+        })
+
         if (this.isEditMode) {
-          await updateService(this.$route.params.id, this.form)
+          await updateService(this.$route.params.id, data)
         } else {
-          await createService(this.form)
+          await createService(data)
         }
 
         this.$message.success(`${this.isEditMode ? 'Update the' : 'Create a'} service successfully!`)

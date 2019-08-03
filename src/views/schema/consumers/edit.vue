@@ -163,7 +163,20 @@ export default class extends Vue {
       if (valid) {
         delete this.form.plugins['tempPlugin']
 
-        await updateOrCreateConsumer(Object.assign({}, this.form))
+        let data = Object.assign({}, this.form)
+        Object.entries(data).forEach(([key, value]) => {
+          if (typeof data[key] === 'object') {
+            if (key !== 'plugins' && Object.keys(value).length === 0) {
+              delete data[key]
+            }
+          } else {
+            if (value === '') {
+              delete data[key]
+            }
+          }
+        })
+
+        await updateOrCreateConsumer(Object.assign({}, data))
 
         this.$message.success(`${this.isEditMode ? 'Update the' : 'Create a'} consumer successfully!`)
 
@@ -202,12 +215,11 @@ export default class extends Vue {
 .consumers-wrapper {
   padding: 20px;
   .el-form {
-    .plugin-item {
-      button {
-        width: 150px;
-      }
-      .plugin-select {
-        width: 150px;
+    .el-form-item {
+      .el-form-item__content {
+        .el-input {
+          width: 220px;
+        }
       }
     }
   }
