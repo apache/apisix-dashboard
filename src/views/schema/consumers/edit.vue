@@ -37,6 +37,15 @@
         >
           {{ item }}
         </el-button>
+
+        <el-button
+          v-if="item !== 'tempPlugin'"
+          type="danger"
+          @click.prevent="removePlugin(item)"
+        >
+          {{ $t('button.delete') }}
+        </el-button>
+
         <el-select
           v-if="item === 'tempPlugin'"
           :value="null"
@@ -207,6 +216,10 @@ export default class extends Vue {
 
   private toPreviousPage() {
     this.$router.go(-1)
+  }
+
+  private removePlugin(name: any) {
+    Vue.delete(this.form.plugins, name)
   }
 }
 </script>

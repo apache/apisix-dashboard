@@ -4,6 +4,7 @@ import 'normalize.css'
 import ElementUI from 'element-ui'
 import SvgIcon from 'vue-svgicon'
 import '@/styles/index.scss'
+import Component from 'vue-class-component'
 
 import App from '@/App.vue'
 import store from '@/store'
@@ -39,6 +40,12 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.config.productionTip = false
+
+Component.registerHooks([
+  'beforeRouteEnter',
+  'beforeRouteLeave',
+  'beforeRouteUpdate'
+])
 
 new Vue({
   router,

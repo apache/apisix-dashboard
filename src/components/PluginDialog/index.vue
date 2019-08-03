@@ -59,9 +59,10 @@
         </el-button>
         <el-button
           type="primary"
+          :disabled="!isDataChanged"
           @click="onSave"
         >
-          Save
+          Confirm
         </el-button>
       </span>
     </el-dialog>
@@ -88,6 +89,7 @@ export default class extends Vue {
   }
   private rules: any = {}
   private data: any = {}
+  private isDataChanged: boolean = false
 
   @Watch('show')
   private onShowChange(value: boolean) {
@@ -103,6 +105,7 @@ export default class extends Vue {
     }
     this.rules = {}
     this.data = {}
+    this.isDataChanged = false
   }
 
   private async getschema(name: string) {
@@ -167,8 +170,8 @@ export default class extends Vue {
     (this.$refs.form as any).validate((valid: boolean) => {
       // 标记该插件数据是否通过校验
       if (valid) {
-        // DO Something
         this.$emit('save', this.name, this.data)
+        this.$message.warning('Your data will be saved after you click the Save button')
       } else {
         return false
       }
@@ -177,6 +180,7 @@ export default class extends Vue {
 
   private onPropertyChange(key: any, value: any) {
     this.data[key] = value
+    this.isDataChanged = true
   }
 }
 </script>
@@ -187,7 +191,7 @@ export default class extends Vue {
     .el-form-item {
       .el-form-item__content {
         .el-input {
-          width: 180px !important;
+          width: 200px !important;
         }
       }
     }

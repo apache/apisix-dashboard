@@ -12,8 +12,6 @@
     />
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <header-search class="right-menu-item" />
-        <error-log class="errLog-container right-menu-item hover-effect" />
         <screenfull class="right-menu-item hover-effect" />
         <lang-select class="right-menu-item hover-effect" />
       </template>
