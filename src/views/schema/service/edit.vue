@@ -182,7 +182,7 @@ export default class extends Vue {
     this.upstreamList = nodes.map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
       return {
-        ...item,
+        ...item.value,
         id
       }
     })
