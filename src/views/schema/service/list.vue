@@ -114,7 +114,7 @@ export default class extends Vue {
     let { node: { nodes = [] } } = await getServiceList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
-      const fakeId = id.replace(/(0+)/, '')
+      const fakeId = id.replace(/^(0+)/, '')
       const desc = item.value.desc
 
       const pluginArr: any[] = []
