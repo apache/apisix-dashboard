@@ -30,6 +30,7 @@
           <el-select
             v-if="schema.properties[key].hasOwnProperty('enum')"
             v-model="data[key]"
+            :clearable="true"
             :placeholder="&quot;Select a &quot; + key"
             @change="onPropertyChange(key, $event)"
           >
@@ -45,6 +46,7 @@
             v-if="schema.properties[key].type === 'string' && !schema.properties[key].hasOwnProperty('enum')"
             v-model="data[key]"
             :placeholder="key"
+            @input="onPropertyChange(key, $event)"
           />
         </el-form-item>
       </el-form>
@@ -159,6 +161,8 @@ export default class extends Vue {
       this.data = {
         key: uuidv1()
       }
+
+      this.isDataChanged = true
     }
   }
 
