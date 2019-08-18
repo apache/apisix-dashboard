@@ -113,7 +113,10 @@ export default class extends Vue {
   private async getschema(name: string) {
     const schema = await getPluginSchema(name) as any
 
-    if (!schema.properties) return
+    if (!schema.properties) {
+      this.isDataChanged = true
+      return
+    }
 
     this.schema = Object.assign({}, {
       ...schema,
