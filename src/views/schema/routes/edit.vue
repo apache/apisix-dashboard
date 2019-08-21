@@ -37,12 +37,12 @@
       </el-form-item>
 
       <el-form-item
-        label="Remote Adreess"
+        label="Remote Address"
         prop="remote_addr"
       >
         <el-input
           v-model="form.remote_addr"
-          placeholder="Remote Adreess"
+          placeholder="Remote Address"
         />
       </el-form-item>
 
