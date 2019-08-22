@@ -69,7 +69,7 @@ import Pagination from '@/components/Pagination/index.vue'
 import { getServiceList, removeService } from '@/api/schema/services'
 
 @Component({
-  name: 'UpstreamList',
+  name: 'ServiceList',
   components: {
     Pagination
   }
