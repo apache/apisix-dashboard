@@ -118,12 +118,14 @@ export default class extends Vue {
       const desc = item.value.desc
 
       const pluginArr: any[] = []
-      Object.entries(item.value.plugins as any).map(([ key, value ]: any) => {
-        pluginArr.push({
-          name: key,
-          key: value.key
+      if (item.value.plugins !== undefined) {
+        Object.entries(item.value.plugins as any).map(([ key, value ]: any) => {
+          pluginArr.push({
+            name: key,
+            key: value.key
+          })
         })
-      })
+      }
 
       return {
         id: fakeId,
