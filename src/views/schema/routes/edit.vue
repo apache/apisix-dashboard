@@ -70,6 +70,7 @@
         <el-select
           v-model="form.upstream_id"
           placeholder="Upstream"
+          clearable
         >
           <el-option
             v-for="item in upstreamList"
@@ -87,6 +88,7 @@
         <el-select
           v-model="form.service_id"
           placeholder="Service"
+          clearable
         >
           <el-option
             v-for="item in serviceList"
