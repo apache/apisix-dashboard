@@ -13,7 +13,6 @@ Dashboard for apisix & based on ElementUI.
 ## Project Structure
 
 ```bash
-├── mock/                      # mock server & mock data
 ├── public                     # public static assets (directly copied)
 │   │── favicon.ico            # favicon
 │   │── manifest.json          # PWA config file
