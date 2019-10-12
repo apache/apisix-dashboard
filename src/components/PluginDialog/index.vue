@@ -42,6 +42,24 @@
             />
           </el-select>
 
+          <el-select
+            v-if="schema.properties[key].type === 'array'"
+            v-model="data[key]"
+            multiple
+            filterable
+            allow-create
+            default-first-option
+            :placeholder="`Please input ${key}`"
+            @change="onPropertyChange(key, $event)"
+          >
+            <el-option
+              v-for="item in []"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+
           <el-input
             v-if="schema.properties[key].type === 'string' && !schema.properties[key].hasOwnProperty('enum')"
             v-model="data[key]"
@@ -54,18 +72,12 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-button
-          @click="onCancel"
-        >
-          Cancel
-        </el-button>
+        <el-button @click="onCancel">Cancel</el-button>
         <el-button
           type="primary"
           :disabled="!isDataChanged"
           @click="onSave"
-        >
-          Confirm
-        </el-button>
+        >Confirm</el-button>
       </span>
     </el-dialog>
   </div>
@@ -82,16 +94,16 @@ const uuidv1 = require('uuid/v1')
   name: 'PluginDialog'
 })
 export default class extends Vue {
-  @Prop({ default: false }) private show!: boolean
-  @Prop({ default: '' }) private name!: string
-  @Prop({ default: null }) private pluginData!: any
+  @Prop({ default: false }) private show!: boolean;
+  @Prop({ default: '' }) private name!: string;
+  @Prop({ default: null }) private pluginData!: any;
 
   private schema: any = {
     properties: {}
-  }
-  private rules: any = {}
-  private data: any = {}
-  private isDataChanged: boolean = false
+  };
+  private rules: any = {};
+  private data: any = {};
+  private isDataChanged: boolean = false;
 
   @Watch('show')
   private onShowChange(value: boolean) {
@@ -111,17 +123,20 @@ export default class extends Vue {
   }
 
   private async getschema(name: string) {
-    const schema = await getPluginSchema(name) as any
+    const schema = (await getPluginSchema(name)) as any
 
     if (!schema.properties) {
       this.isDataChanged = true
       return
     }
 
-    this.schema = Object.assign({}, {
-      ...schema,
-      name: this.name
-    })
+    this.schema = Object.assign(
+      {},
+      {
+        ...schema,
+        name: this.name
+      }
+    )
 
     const rules = Object.assign({}, schema.properties)
 
@@ -178,7 +193,9 @@ export default class extends Vue {
       // 标记该插件数据是否通过校验
       if (valid) {
         this.$emit('save', this.name, this.data)
-        this.$message.warning('Your data will be saved after you click the Save button')
+        this.$message.warning(
+          'Your data will be saved after you click the Save button'
+        )
       } else {
         return false
       }
