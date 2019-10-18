@@ -1,6 +1,10 @@
 git clone https://github.com/iresty/apisix_dashboard_built.git && \
 echo ">>>>> git clone successfully" && \
+cd ./apisix_dashboard_built && \
+git rm . -r && \
+cd .. && \
 /bin/cp -a ./dist/. ./apisix_dashboard_built && \
+/bin/cp ./dashboard_license ./apisix_dashboard_built/LICENSE && \
 echo ">>>>> cp dist to built successfully" && \
 cd ./apisix_dashboard_built && \
 git config --global user.name ${GIT_USER} && \
