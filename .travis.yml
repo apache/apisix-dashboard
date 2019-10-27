@@ -17,10 +17,14 @@
 language: node_js
 node_js:
 - '8'
+cache:
+  yarn: true
+  directories:
+    - node_modules
 install:
-- npm install --production
+- yarn
 script:
-- npm run build:prod
+- yarn build:prod
 after_success:
 - bash ./travis/after_success.sh
 branches:
