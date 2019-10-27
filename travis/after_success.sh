@@ -36,4 +36,4 @@ git config --global user.email ${GIT_MAIL} && \
 git add * && \
 git commit -m "${TRAVIS_COMMIT:0:8}: ${TRAVIS_COMMIT_MESSAGE}" && \
 git push "https://${GH_USER}:${GH_PWD}@github.com/iresty/apisix_dashboard_built.git" master:master
-echo ">>>>> git push successfully" && \
+echo ">>>>> git push successfully"
