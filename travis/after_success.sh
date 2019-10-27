@@ -22,8 +22,8 @@ cd ../dist && \
 
 for file in $(find . -type f \( -iname \*.js -o -iname \*.css \)); do
   if [[ "$file" != *"service-worker.js" ]]; then
-    echo Processing $file && \
-    cat ../travis/LICENSE $file > $file.modified && \
+    echo Processing $file
+    cat ../travis/LICENSE $file > $file.modified
     mv $file.modified $file
   fi
 done
