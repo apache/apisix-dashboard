@@ -18,7 +18,7 @@ language: node_js
 node_js:
 - '8'
 install:
-- npm install
+- npm install --production
 script:
 - npm run build:prod
 after_success:
