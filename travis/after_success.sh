@@ -20,9 +20,11 @@ cd ./apisix_dashboard_built && \
 git rm . -r && \
 cd ../dist && \
 for file in $(find . -name "*.js"); do
-  echo Processing $file
-  cat ../travis/license.js $file > $file.modified
-  mv $file.modified $file
+  if [[ "$file" != *"service-worker.js" ]]; then
+    echo Processing $file
+    cat ../travis/license.js $file > $file.modified
+    mv $file.modified $file
+  fi
 done
 cd .. && \
 /bin/cp -a ./dist/. ./apisix_dashboard_built && \
