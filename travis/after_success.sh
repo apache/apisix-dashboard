@@ -18,6 +18,12 @@ git clone https://github.com/iresty/apisix_dashboard_built.git && \
 echo ">>>>> git clone successfully" && \
 cd ./apisix_dashboard_built && \
 git rm . -r && \
+cd ../dist && \
+for file in $(find . -name "*.js"); do
+  echo Processing $file
+  cat ../travis/license.js $file > $file.modified
+  mv $file.modified $file
+done
 cd .. && \
 /bin/cp -a ./dist/. ./apisix_dashboard_built && \
 /bin/cp ./LICENSE ./apisix_dashboard_built/LICENSE && \
