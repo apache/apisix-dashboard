@@ -52,14 +52,13 @@
         </el-form-item>
 
         <el-form-item
-          v-for="(value, index) in data['values']"
+          v-for="(value, index) in data.values"
           :key="index"
           :label="'Value' + (index + 1)"
           :rules="{
             required: true, trigger: 'blur'
           }"
         >
-          {{ data.values.length }}
           <el-input v-model="data['values'][index]" />
           <el-button
             v-if="data.values.length !== 1"
@@ -264,6 +263,7 @@ export default class extends Vue {
     (this.$refs.form as any).validate((valid: boolean) => {
       // 标记该插件数据是否通过校验
       if (valid) {
+        this.data = this.processOneOfProp(this.data)
         this.$emit('save', this.name, this.data)
         this.$message.warning('Your data will be saved after you click the Save button')
       } else {
@@ -291,6 +291,16 @@ export default class extends Vue {
 
   private removeOneOfPropValue(index: number) {
     this.data.values = this.data.values.filter((item: any, _index: number) => index !== _index)
+  }
+
+  private processOneOfProp(data: any) {
+    if (!this.schema.oneOf) {
+      return data
+    }
+
+    return {
+      [this.data.radioKey]: this.data.values
+    }
   }
 }
 </script>
