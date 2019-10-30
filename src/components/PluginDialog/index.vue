@@ -247,6 +247,18 @@ export default class extends Vue {
       this.isDataChanged = true
     }
 
+    // Edit lugin data
+    if (this.name === 'ip-restriction') {
+      const key = Object.keys(this.pluginData)[0]
+      this.$nextTick(() => {
+        this.data = {
+          radioKey: key,
+          values: this.pluginData[key]
+        }
+      })
+    }
+
+    // Create new plugin data
     if (this.schema.oneOf) {
       this.data = {
         radioKey: Object.keys(this.schema.properties)[0],
@@ -278,7 +290,7 @@ export default class extends Vue {
   }
 
   private handleOneOfChange(e: any) {
-    this.data.values = []
+    this.data.values = ['']
   }
 
   get oneOfPropHasEmptyValue() {
