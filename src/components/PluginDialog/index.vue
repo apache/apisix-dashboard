@@ -21,9 +21,67 @@
   <div class="plugin-dialog">
     <el-dialog
       :title="'Plugin ' + name + ' Edit'"
-      :visible.sync="show"
+      :visible.sync="showDialog"
     >
       <el-form
+        v-if="schema.oneOf"
+        ref="form"
+        :model="data"
+        :rules="rules"
+        :show-message="false"
+        class="oneof-plugin-wrapper"
+      >
+        <el-form-item
+          label="Option"
+          :rules="{
+            required: true, trigger: 'blur'
+          }"
+        >
+          <el-radio-group
+            v-model="data['radioKey']"
+            @change="handleOneOfChange"
+          >
+            <el-radio
+              v-for="(value, key) in schema.properties"
+              :key="key"
+              :label="key"
+            >
+              {{ key }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item
+          v-for="(value, index) in data.values"
+          :key="index"
+          :label="'Value' + (index + 1)"
+          :rules="{
+            required: true, trigger: 'blur'
+          }"
+        >
+          <el-input v-model="data['values'][index]" />
+          <el-button
+            v-if="data.values.length !== 1"
+            class="remove-value-btn"
+            type="danger"
+            @click.prevent="removeOneOfPropValue(index)"
+          >
+            Remove
+          </el-button>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button
+            :disabled="oneOfPropHasEmptyValue"
+            @click="addValueInput"
+          >
+            {{ $t('button.addValue') }}
+          </el-button>
+        </el-form-item>
+      </el-form>
+
+      <el-form
+        v-if="!schema.oneOf"
         ref="form"
         :model="data"
         :rules="rules"
@@ -80,7 +138,7 @@
         </el-button>
         <el-button
           type="primary"
-          :disabled="!isDataChanged"
+          :disabled="!isDataChanged && oneOfPropHasEmptyValue"
           @click="onSave"
         >
           Confirm
@@ -111,6 +169,7 @@ export default class extends Vue {
   private rules: any = {}
   private data: any = {}
   private isDataChanged: boolean = false
+  private showDialog: boolean = false
 
   @Watch('show')
   private onShowChange(value: boolean) {
@@ -118,6 +177,7 @@ export default class extends Vue {
     if (value) {
       this.getschema(this.name)
     }
+    this.showDialog = value
   }
 
   private resetPlugin() {
@@ -186,6 +246,25 @@ export default class extends Vue {
 
       this.isDataChanged = true
     }
+
+    // Edit lugin data
+    if (this.name === 'ip-restriction') {
+      const key = Object.keys(this.pluginData)[0]
+      this.$nextTick(() => {
+        this.data = {
+          radioKey: key,
+          values: this.pluginData[key]
+        }
+      })
+    }
+
+    // Create new plugin data
+    if (this.schema.oneOf) {
+      this.data = {
+        radioKey: Object.keys(this.schema.properties)[0],
+        values: ['']
+      }
+    }
   }
 
   private onCancel() {
@@ -196,6 +275,7 @@ export default class extends Vue {
     (this.$refs.form as any).validate((valid: boolean) => {
       // 标记该插件数据是否通过校验
       if (valid) {
+        this.data = this.processOneOfProp(this.data)
         this.$emit('save', this.name, this.data)
         this.$message.warning('Your data will be saved after you click the Save button')
       } else {
@@ -207,6 +287,32 @@ export default class extends Vue {
   private onPropertyChange(key: any, value: any) {
     this.data[key] = value
     this.isDataChanged = true
+  }
+
+  private handleOneOfChange(e: any) {
+    this.data.values = ['']
+  }
+
+  get oneOfPropHasEmptyValue() {
+    return this.data.values ? this.data.values.find((value: string) => value === '') : true
+  }
+
+  private addValueInput() {
+    this.data.values = this.data.values.concat([''])
+  }
+
+  private removeOneOfPropValue(index: number) {
+    this.data.values = this.data.values.filter((item: any, _index: number) => index !== _index)
+  }
+
+  private processOneOfProp(data: any) {
+    if (!this.schema.oneOf) {
+      return data
+    }
+
+    return {
+      [this.data.radioKey]: this.data.values
+    }
   }
 }
 </script>
@@ -220,6 +326,12 @@ export default class extends Vue {
           width: 200px !important;
         }
       }
+    }
+  }
+
+  .oneof-plugin-wrapper {
+    .remove-value-btn {
+      margin-left: 10px;
     }
   }
 }

@@ -156,6 +156,7 @@ export default {
     cancel: 'Cancel',
     add_plugin: 'Add Plugin',
     add_node: 'Add Node',
-    delete: 'Delete'
+    delete: 'Delete',
+    addValue: 'Add Value'
   }
 }
