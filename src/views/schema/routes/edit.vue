@@ -56,6 +56,18 @@
       </el-form-item>
 
       <el-form-item
+        label="Host"
+        prop="host"
+      >
+        <vue-tags-input
+          v-model="form.hosts"
+          :tags="hosts"
+          :validation="validation"
+          @tags-changed="newTags => hosts = newTags"
+        />
+      </el-form-item>
+
+      <el-form-item
         label="Remote Address"
         prop="remote_addr"
       >
@@ -199,6 +211,7 @@ import { getPluginList } from '@/api/schema/plugins'
 import { getUpstreamList } from '@/api/schema/upstream'
 import { getServiceList } from '@/api/schema/services'
 import { TagsViewModule } from '@/store/modules/tags-view'
+import { VueTagsInput } from '@johmun/vue-tags-input'
 
 @Component({
   name: 'RouterEdit',
@@ -210,14 +223,26 @@ import { TagsViewModule } from '@/store/modules/tags-view'
 export default class extends Vue {
   private form = {
     uri: '',
+    uris: [],
     host: '',
     remote_addr: '',
     upstream_id: '',
     service_id: '',
     methods: [],
     plugins: {},
-    desc: ''
+    desc: '',
+    hosts: []
   }
+
+  private autocompleteItems = [{
+    text: 'Invalid host'
+  } ]
+
+  private validation = [ {
+    classes: 'avoid-item',
+    rule: /^[*0-9a-zA-Z-_]+(\.[0-9a-zA-Z-_]+)*(\.[a-zA-Z]{2,7})+$/,
+    disableAdd: true
+  }]
 
   private rules = {
     uri: {
@@ -255,13 +280,15 @@ export default class extends Vue {
   private reset() {
     this.form = {
       uri: '',
+      uris: [],
       host: '',
       remote_addr: '',
       upstream_id: '',
       service_id: '',
       methods: [],
       plugins: {},
-      desc: ''
+      desc: '',
+      hosts: []
     }
   }
 
@@ -271,26 +298,30 @@ export default class extends Vue {
       node: {
         value: {
           uri = '',
+          uris = [],
           host = '',
           remote_addr = '',
           upstream_id = '',
           service_id = '',
           methods = [],
           plugins = {},
-          desc = ''
+          desc = '',
+          hosts = []
         }
       }
     } = await getRouter(id) as any
 
     this.form = {
       uri,
+      uris,
       host,
       remote_addr,
       upstream_id,
       service_id,
       methods,
       plugins,
-      desc
+      desc,
+      hosts
     }
   }
 

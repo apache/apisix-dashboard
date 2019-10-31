@@ -33,7 +33,8 @@
     "vue-svgicon": "^3.2.6",
     "vuex": "^3.1.1",
     "vuex-class": "^0.3.2",
-    "vuex-module-decorators": "^0.9.9"
+    "vuex-module-decorators": "^0.9.9",
+    "johmun/vue-tags-input": "^1.19.1"
   },
   "devDependencies": {
     "@types/compression": "^0.0.36",
