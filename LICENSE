@@ -199,3 +199,10 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+=======================================================================
+
+The Apache APISIX project bundles the following dependencies under the MIT license. (https://opensource.org/licenses/MIT)
+See bundled license files for details.
+
+- vue-element-admin: https://github.com/PanJiaChen/vue-element-admin
