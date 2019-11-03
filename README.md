@@ -34,18 +34,14 @@ Dashboard for APISIX & based on ElementUI.
 ```bash
 ├── public                     # public static assets (directly copied)
 │   │── favicon.ico            # favicon
-│   │── manifest.json          # PWA config file
 │   └── index.html             # index.html template
 ├── src                        # main source code
 │   ├── api                    # api service
 │   ├── assets                 # module assets like fonts, images (processed by webpack)
 │   ├── components             # global components
-│   ├── directives             # global directives
-│   ├── filters                # global filter
 │   ├── icons                  # svg icons
 │   ├── lang                   # i18n language
 │   ├── layout                 # global layout
-│   ├── pwa                    # PWA service worker related files
 │   ├── router                 # router
 │   ├── store                  # store
 │   ├── styles                 # global css
