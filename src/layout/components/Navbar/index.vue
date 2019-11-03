@@ -40,7 +40,7 @@
       >
         <div class="avatar-wrapper">
           <img
-            :src="avatar+'?imageView2/1/w/80/h/80'"
+            :src="avatar"
             class="user-avatar"
           >
           <i class="el-icon-caret-bottom" />
@@ -67,7 +67,6 @@ import Hamburger from '@/components/Hamburger/index.vue'
 import HeaderSearch from '@/components/HeaderSearch/index.vue'
 import LangSelect from '@/components/LangSelect/index.vue'
 import Screenfull from '@/components/Screenfull/index.vue'
-import SizeSelect from '@/components/SizeSelect/index.vue'
 
 @Component({
   name: 'Navbar',
@@ -76,8 +75,7 @@ import SizeSelect from '@/components/SizeSelect/index.vue'
     Hamburger,
     HeaderSearch,
     LangSelect,
-    Screenfull,
-    SizeSelect
+    Screenfull
   }
 })
 export default class extends Vue {
