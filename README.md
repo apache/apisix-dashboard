@@ -52,15 +52,12 @@ Dashboard for APISIX & based on ElementUI.
 │   ├── permission.ts          # permission authentication
 │   ├── settings.ts            # setting file
 │   └── shims.d.ts             # type definition shims
-├── tests/                     # tests
 ├── .circleci/                 # automated CI configuration
 ├── .browserslistrc            # browserslist config file (to support Autoprefixer)
 ├── .editorconfig              # editor code format consistency config
 ├── .env.xxx                   # env variable configuration
 ├── .eslintrc.js               # eslint config
 ├── babel.config.js            # babel config
-├── cypress.json               # e2e test config
-├── jest.config.js             # jest unit test config
 ├── package.json               # package.json
 ├── postcss.config.js          # postcss config
 ├── tsconfig.json              # typescript config

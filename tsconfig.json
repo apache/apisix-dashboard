@@ -14,7 +14,6 @@
     "suppressImplicitAnyIndexErrors": true,
     "types": [
       "node",
-      "jest",
       "webpack-env"
     ],
     "paths": {
