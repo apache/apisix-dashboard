@@ -34,18 +34,14 @@ Dashboard for APISIX & based on ElementUI.
 ```bash
 ├── public                     # public static assets (directly copied)
 │   │── favicon.ico            # favicon
-│   │── manifest.json          # PWA config file
 │   └── index.html             # index.html template
 ├── src                        # main source code
 │   ├── api                    # api service
 │   ├── assets                 # module assets like fonts, images (processed by webpack)
 │   ├── components             # global components
-│   ├── directives             # global directives
-│   ├── filters                # global filter
 │   ├── icons                  # svg icons
 │   ├── lang                   # i18n language
 │   ├── layout                 # global layout
-│   ├── pwa                    # PWA service worker related files
 │   ├── router                 # router
 │   ├── store                  # store
 │   ├── styles                 # global css
@@ -56,15 +52,12 @@ Dashboard for APISIX & based on ElementUI.
 │   ├── permission.ts          # permission authentication
 │   ├── settings.ts            # setting file
 │   └── shims.d.ts             # type definition shims
-├── tests/                     # tests
 ├── .circleci/                 # automated CI configuration
 ├── .browserslistrc            # browserslist config file (to support Autoprefixer)
 ├── .editorconfig              # editor code format consistency config
 ├── .env.xxx                   # env variable configuration
 ├── .eslintrc.js               # eslint config
 ├── babel.config.js            # babel config
-├── cypress.json               # e2e test config
-├── jest.config.js             # jest unit test config
 ├── package.json               # package.json
 ├── postcss.config.js          # postcss config
 ├── tsconfig.json              # typescript config

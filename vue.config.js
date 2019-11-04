@@ -30,13 +30,6 @@ module.exports = {
     // https://cli.vuejs.org/zh/config/#devserver-proxy
     proxy: 'http://127.0.0.1/apisix/admin/'
   },
-  pwa: {
-    name: name,
-    workboxPluginMode: 'InjectManifest',
-    workboxOptions: {
-      swSrc: path.resolve(__dirname, 'src/pwa/service-worker.js')
-    }
-  },
   pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'scss',
