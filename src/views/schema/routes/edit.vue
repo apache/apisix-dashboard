@@ -36,23 +36,45 @@
       </el-form-item>
 
       <el-form-item
-        label="URI"
-        prop="uri"
+        label="URIs"
+        prop="uris"
+        placeholder="can write multi uri here"
       >
-        <el-input
-          v-model="form.uri"
-          placeholder="URI"
-        />
+        <el-select
+          v-model="form.uris"
+          allow-create
+          filterable
+          multiple
+          default-first-option
+        >
+          <el-option
+            v-for="item in ExistedUris"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
 
       <el-form-item
-        label="Host"
-        prop="host"
+        label="Hosts"
+        prop="hosts"
+        placeholder="Hosts"
       >
-        <el-input
-          v-model="form.host"
-          placeholder="Host"
-        />
+        <el-select
+          v-model="form.hosts"
+          multiple
+          filterable
+          allow-create
+          default-first-option
+        >
+          <el-option
+            v-for="item in ExistedHosts"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
 
       <el-form-item
@@ -90,6 +112,7 @@
           v-model="form.upstream_id"
           placeholder="Upstream"
           clearable
+          filterable
         >
           <el-option
             v-for="item in upstreamList"
@@ -108,6 +131,7 @@
           v-model="form.service_id"
           placeholder="Service"
           clearable
+          filterable
         >
           <el-option
             v-for="item in serviceList"
@@ -209,8 +233,8 @@ import { TagsViewModule } from '@/store/modules/tags-view'
 
 export default class extends Vue {
   private form = {
-    uri: '',
-    host: '',
+    uris: [],
+    hosts: [],
     remote_addr: '',
     upstream_id: '',
     service_id: '',
@@ -218,6 +242,10 @@ export default class extends Vue {
     plugins: {},
     desc: ''
   }
+
+  // TODO: can add existed info from route list
+  private ExistedUris = [{ }]
+  private ExistedHosts = [{ }]
 
   private rules = {
     uri: {
@@ -254,8 +282,8 @@ export default class extends Vue {
 
   private reset() {
     this.form = {
-      uri: '',
-      host: '',
+      uris: [],
+      hosts: [],
       remote_addr: '',
       upstream_id: '',
       service_id: '',
@@ -270,8 +298,8 @@ export default class extends Vue {
     const {
       node: {
         value: {
-          uri = '',
-          host = '',
+          uris = [],
+          hosts = [],
           remote_addr = '',
           upstream_id = '',
           service_id = '',
@@ -283,8 +311,8 @@ export default class extends Vue {
     } = await getRouter(id) as any
 
     this.form = {
-      uri,
-      host,
+      uris,
+      hosts,
       remote_addr,
       upstream_id,
       service_id,

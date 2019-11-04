@@ -39,6 +39,7 @@
       fit
       highlight-current-row
       style="width: 100%;"
+      :default-sort="{prop: 'id', order: 'descending'}"
       @sort-change="sortChange"
     >
       <el-table-column
@@ -133,7 +134,7 @@ export default class extends Vue {
     let { node: { nodes = [] } } = await getServiceList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
-      const fakeId = id.replace(/^(0+)/, '')
+      const fakeId = parseInt(id.replace(/^(0+)/, ''))
       const desc = item.value.desc
 
       const pluginArr: any[] = []
