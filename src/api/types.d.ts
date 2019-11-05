@@ -15,50 +15,6 @@
  * limitations under the License.
  */
 
-export interface IArticleData {
-  id: number
-  status: string
-  title: string
-  abstractContent: string
-  fullContent: string
-  sourceURL: string
-  imageURL: string
-  timestamp: string | number
-  platforms: string[]
-  disableComment: boolean
-  importance: number
-  author: string
-  reviewer: string
-  type: string
-  pageviews: number
-}
-
-export interface IRoleData {
-  key: string
-  name: string
-  description: string
-  routes: any
-}
-
-export interface ITransactionData {
-  orderId: string
-  timestamp: string | number
-  username: string
-  price: number
-  status: string
-}
-
-export interface IUserData {
-  id: number
-  username: string
-  password: string
-  name: string
-  email: string
-  phone: string
-  avatar: string
-  introduction: string
-  roles: string[]
-}
 
 export type TypeID = number | string
 export type TypePlugin = object
@@ -68,15 +24,7 @@ export interface IConsumerData {
   plugins?: TypePlugin
 }
 
-export enum EnumRouteMethod {
-  GET,
-  PUT,
-  POST,
-  DELETE
-}
 export interface IRouteData {
-  // TODO: https://github.com/iresty/apisix/blob/7953e5bb755bf7481b07a177f94d674f8b344741/lua/apisix/core/schema.lua#L175
-  // TODO: https://github.com/iresty/apisix/blob/7953e5bb755bf7481b07a177f94d674f8b344741/lua/apisix/core/schema.lua#L149
   methods: []
   plugins: TypePlugin
   upstream: IUpstreamData
@@ -88,7 +36,6 @@ export interface IRouteData {
   id: TypeID
 }
 
-// TODO: https://github.com/iresty/apisix/blob/7953e5bb755bf7481b07a177f94d674f8b344741/lua/apisix/core/schema.lua#L193
 export interface IServiceData {
   id: TypeID
   plugins: TypePlugin

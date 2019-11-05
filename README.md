@@ -37,7 +37,6 @@ Dashboard for APISIX & based on ElementUI.
 │   └── index.html             # index.html template
 ├── src                        # main source code
 │   ├── api                    # api service
-│   ├── assets                 # module assets like fonts, images (processed by webpack)
 │   ├── components             # global components
 │   ├── icons                  # svg icons
 │   ├── lang                   # i18n language
