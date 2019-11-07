@@ -125,6 +125,14 @@
             :placeholder="key"
             @input="onPropertyChange(key, $event)"
           />
+
+          <el-switch
+            v-if="schema.properties[key].type === 'boolean' && !schema.properties[key].hasOwnProperty('enum')"
+            v-model="data[key]"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+          />
+
         </el-form-item>
       </el-form>
       <span
