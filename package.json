@@ -1,8 +1,8 @@
 {
-  "name": "vue-typescript-admin-template",
+  "name": "incubator-apisix-dashboard",
   "version": "0.1.0",
   "private": true,
-  "author": "Chong Guo <armourcy@gmail.com>",
+  "author": "apache",
   "scripts": {
     "serve": "concurrently \"vue-cli-service serve\"",
     "lint": "vue-cli-service lint",
@@ -59,7 +59,7 @@
     "webpack": "^4.35.0"
   },
   "bugs": {
-    "url": "https://github.com/armour/vue-typescript-admin-template/issues"
+    "url": "https://github.com/apache/incubator-apisix-dashboard/issues"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
@@ -79,6 +79,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/armour/vue-typescript-admin-template.git"
+    "url": "git+https://github.com/apache/incubator-apisix-dashboard.git"
   }
 }
