@@ -39,7 +39,6 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      :default-sort="{prop: 'id', order: 'descending'}"
       @sort-change="sortChange"
     >
       <el-table-column
@@ -54,9 +53,8 @@
       <el-table-column
         :label="$t('table.actions')"
         align="center"
-        width="200"
+        width="230"
         class-name="fixed-width"
-        fixed="right"
       >
         <template slot-scope="{row}">
           <el-button
@@ -121,7 +119,7 @@ export default class extends Vue {
     this.tableKeys = [
       {
         key: 'id',
-        width: 80
+        width: 100
       }, {
         key: 'description',
         width: 300,
@@ -153,7 +151,7 @@ export default class extends Vue {
     let { node: { nodes = [] } } = await getList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
-      const fakeId = parseInt(id.replace(/^(0+)/, ''))
+      const fakeId = id.replace(/^(0+)/, '')
 
       let {
         uri = '',
@@ -167,14 +165,6 @@ export default class extends Vue {
       } = item.value
 
       methods = methods.join(', ')
-
-      if (item.value.uris) {
-        uri = item.value.uris.join(', ')
-      }
-
-      if (item.value.hosts) {
-        host = item.value.hosts.join('\n ')
-      }
 
       plugins = Object.keys(plugins as any).join(', ')
 

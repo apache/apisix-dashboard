@@ -40,7 +40,6 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      :default-sort="{prop: 'id', order: 'descending'}"
       @sort-change="sortChange"
     >
       <el-table-column
@@ -145,14 +144,14 @@ export default class extends Vue {
     this.tableKeys = [
       {
         key: 'id',
-        width: 80
+        width: 100
       }, {
         key: 'description',
         width: 300,
         align: 'left'
       }, {
         key: 'type',
-        width: 120
+        width: 200
       }, {
         key: 'nodes',
         width: 'auto'
@@ -162,7 +161,7 @@ export default class extends Vue {
     let { node: { nodes = [] } } = await getUpstreamList() as any
     nodes = [...nodes].map((item: any) => {
       const id = item.key.match(/\/([0-9]+)/)[1]
-      const fakeId = parseInt(id.replace(/^(0+)/, ''))
+      const fakeId = id.replace(/^(0+)/, '')
       const type = item.value.type
       const desc = item.value.desc
 
