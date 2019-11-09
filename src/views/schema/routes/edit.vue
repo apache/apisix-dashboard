@@ -297,8 +297,7 @@ export default class extends Vue {
 
   filterDataWithRegex(val: any, regex: any) {
     if (val.length > 0) {
-      var newArr:string[]
-      newArr = []
+      const newArr:string[] = []
       val.filter(function(item: any) {
         if (typeof item === 'string') {
           item = item.replace(/\s+/g, '')
