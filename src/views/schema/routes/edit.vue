@@ -36,23 +36,47 @@
       </el-form-item>
 
       <el-form-item
-        label="URI"
-        prop="uri"
+        label="URIs"
+        prop="uris"
+        placeholder="can write multi uri here"
       >
-        <el-input
-          v-model="form.uri"
-          placeholder="URI"
-        />
+        <el-select
+          v-model="form.uris"
+          allow-create
+          filterable
+          multiple
+          default-first-option
+          @change="filterUriOptions"
+        >
+          <el-option
+            v-for="item in ExistedUris"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
 
       <el-form-item
-        label="Host"
-        prop="host"
+        label="Hosts"
+        prop="hosts"
+        placeholder="Hosts"
       >
-        <el-input
-          v-model="form.host"
-          placeholder="Host"
-        />
+        <el-select
+          v-model="form.hosts"
+          multiple
+          filterable
+          allow-create
+          default-first-option
+          @change="filterHostsOptions"
+        >
+          <el-option
+            v-for="item in ExistedHosts"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
 
       <el-form-item
@@ -90,6 +114,7 @@
           v-model="form.upstream_id"
           placeholder="Upstream"
           clearable
+          filterable
         >
           <el-option
             v-for="item in upstreamList"
@@ -108,6 +133,7 @@
           v-model="form.service_id"
           placeholder="Service"
           clearable
+          filterable
         >
           <el-option
             v-for="item in serviceList"
@@ -209,8 +235,8 @@ import { TagsViewModule } from '@/store/modules/tags-view'
 
 export default class extends Vue {
   private form = {
-    uri: '',
-    host: '',
+    uris: [],
+    hosts: [],
     remote_addr: '',
     upstream_id: '',
     service_id: '',
@@ -219,8 +245,12 @@ export default class extends Vue {
     desc: ''
   }
 
+  // TODO: can add existed info from route list
+  private ExistedUris = [{ }]
+  private ExistedHosts = [{ }]
+
   private rules = {
-    uri: {
+    uris: {
       required: true
     }
   }
@@ -254,8 +284,8 @@ export default class extends Vue {
 
   private reset() {
     this.form = {
-      uri: '',
-      host: '',
+      uris: [],
+      hosts: [],
       remote_addr: '',
       upstream_id: '',
       service_id: '',
@@ -265,13 +295,42 @@ export default class extends Vue {
     }
   }
 
+  filterDataWithRegex(val: any, regex: any) {
+    if (val.length > 0) {
+      const newArr:string[] = []
+      val.filter(function(item: any) {
+        if (typeof item === 'string') {
+          item = item.replace(/\s+/g, '')
+          if (regex.test(item)) {
+            newArr.push(item)
+          }
+        }
+      })
+      newArr.map(function(item: any, index: number) {
+        val[index] = item
+      })
+      if (val.length > newArr.length) {
+        val.splice(newArr.length, val.length)
+      }
+    }
+  }
+
+  private filterUriOptions(val: any) {
+    this.filterDataWithRegex(val, new RegExp('^([\\*\\./0-9a-zA-Z-_~@\\?\\!#$\\(\\)]+)$'))
+  }
+
+  private filterHostsOptions(val: any) {
+    let regexpFilter = new RegExp('^(([0-9a-zA-Z-]+|\\*)\\.)?([0-9a-zA-Z-]+\\.)+([a-zA-Z]{2,12})$')
+    this.filterDataWithRegex(val, regexpFilter)
+  }
+
   private async getData() {
     const { id } = this.$route.params
     const {
       node: {
         value: {
-          uri = '',
-          host = '',
+          uris = [],
+          hosts = [],
           remote_addr = '',
           upstream_id = '',
           service_id = '',
@@ -283,8 +342,8 @@ export default class extends Vue {
     } = await getRouter(id) as any
 
     this.form = {
-      uri,
-      host,
+      uris,
+      hosts,
       remote_addr,
       upstream_id,
       service_id,

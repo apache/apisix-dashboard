@@ -56,11 +56,23 @@
       <el-form-item
         label="Key"
       >
-        <el-input
+        <el-select
           v-model="form.key"
           placeholder="Input a Key"
+          allow-create
+          filterable
+          default-first-option
+          value-key="form.key"
+          clearable
           :disabled="form.type !== 'chash'"
-        />
+        >
+          <el-option
+            v-for="item in defaultHashKeys"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
 
       <el-form-item
@@ -154,6 +166,49 @@ export default class extends Vue {
   private isEditMode: boolean = false
 
   private types = ['roundrobin', 'chash']
+
+  private defaultHashKeys = [
+    {
+      value: 'remote_addr',
+      label: 'remote_addr'
+    },
+    {
+      value: 'host',
+      label: 'host'
+    },
+    {
+      value: 'uri',
+      label: 'uri'
+    },
+    {
+      value: 'server_name',
+      label: 'server_name'
+    },
+    {
+      value: 'server_addr',
+      label: 'server_addr'
+    },
+    {
+      value: 'request_uri',
+      label: 'request_uri'
+    },
+    {
+      value: 'query_string',
+      label: 'query_string'
+    },
+    {
+      value: 'remote_port',
+      label: 'remote_port'
+    },
+    {
+      value: 'hostname',
+      label: 'hostname'
+    },
+    {
+      value: 'arg_id',
+      label: 'arg_id'
+    }
+  ]
 
   created() {
     this.isEditMode = (this.$route as any).name.indexOf('Create') === -1

@@ -2,13 +2,6 @@
 node_modules
 /dist
 
-/tests/e2e/videos/
-/tests/e2e/screenshots/
-/tests/**/coverage/
-/tests/e2e/reports/
-
-chromedriver.log
-
 # local env files
 .env.local
 .env.*.local
