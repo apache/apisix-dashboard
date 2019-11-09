@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 export type TypeID = number | string
 export type TypePlugin = object
 
