@@ -46,6 +46,7 @@
           filterable
           multiple
           default-first-option
+          @change="filterUriOptions"
         >
           <el-option
             v-for="item in ExistedUris"
@@ -67,6 +68,7 @@
           filterable
           allow-create
           default-first-option
+          @change="filterHostsOptions"
         >
           <el-option
             v-for="item in ExistedHosts"
@@ -248,7 +250,7 @@ export default class extends Vue {
   private ExistedHosts = [{ }]
 
   private rules = {
-    uri: {
+    uris: {
       required: true
     }
   }
@@ -291,6 +293,35 @@ export default class extends Vue {
       plugins: {},
       desc: ''
     }
+  }
+
+  filterDataWithRegex(val: any, regex: any) {
+    if (val.length > 0) {
+      const newArr:string[] = []
+      val.filter(function(item: any) {
+        if (typeof item === 'string') {
+          item = item.replace(/\s+/g, '')
+          if (regex.test(item)) {
+            newArr.push(item)
+          }
+        }
+      })
+      newArr.map(function(item: any, index: number) {
+        val[index] = item
+      })
+      if (val.length > newArr.length) {
+        val.splice(newArr.length, val.length)
+      }
+    }
+  }
+
+  private filterUriOptions(val: any) {
+    this.filterDataWithRegex(val, new RegExp('^([\\*\\./0-9a-zA-Z-_~@\\?\\!#$\\(\\)]+)$'))
+  }
+
+  private filterHostsOptions(val: any) {
+    let regexpFilter = new RegExp('^(([0-9a-zA-Z-]+|\\*)\\.)?([0-9a-zA-Z-]+\\.)+([a-zA-Z]{2,12})$')
+    this.filterDataWithRegex(val, regexpFilter)
   }
 
   private async getData() {
