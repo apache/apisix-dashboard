@@ -2,7 +2,6 @@
   "name": "incubator-apisix-dashboard",
   "version": "0.1.0",
   "private": true,
-  "author": "apache",
   "scripts": {
     "serve": "concurrently \"vue-cli-service serve\"",
     "lint": "vue-cli-service lint",
