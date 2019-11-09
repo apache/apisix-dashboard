@@ -326,11 +326,13 @@ export default class extends Vue {
 
   private async getData() {
     const { id } = this.$route.params
-    const {
+    let {
       node: {
         value: {
+          uri = '',
           uris = [],
           hosts = [],
+          host = '',
           remote_addr = '',
           upstream_id = '',
           service_id = '',
@@ -340,6 +342,14 @@ export default class extends Vue {
         }
       }
     } = await getRouter(id) as any
+
+    if (hosts.length === 0 && host.length > 0) {
+      hosts.push(host)
+    }
+
+    if (uris.length === 0 && uri.length > 0) {
+      uris.push(uri)
+    }
 
     this.form = {
       uris,
