@@ -64,6 +64,7 @@ Dashboard for APISIX & based on ElementUI.
 ```
 
 ## Project setup
+> Make sure Yarn is installed on your machine: https://yarnpkg.com/en/docs/install
 
 ### Install dependencies
 
@@ -87,24 +88,6 @@ yarn run build:prod
 
 ```bash
 yarn run lint
-```
-
-### Run your unit tests
-
-```bash
-yarn run test:unit
-```
-
-### Run your end-to-end tests
-
-```bash
-yarn run test:e2e
-```
-
-### Generate all svg components
-
-```bash
-yarn run svg
 ```
 
 ### Customize Vue configuration
