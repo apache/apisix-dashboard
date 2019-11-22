@@ -255,7 +255,7 @@ export default class extends Vue {
       const nodes = {}
       this.form.nodes.map((item: any) => {
         if (item.ip && item.port && String(item.weights)) {
-          nodes[`${item.ip}:${item.port}`] = Number(item.weights)
+          nodes[`${item.ip}:${item.port}`] = Number(item.weights || 1)
         }
       })
 
