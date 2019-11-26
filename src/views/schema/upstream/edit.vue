@@ -82,12 +82,12 @@
         class="node-item"
       >
         <el-form-item
-          :rules="[{required: true, pattern: /((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}/g, type: 'string'}]"
+          :rules="[{required: true, pattern: IPAndURLRegexp, type: 'string'}]"
           :prop="'nodes.' + index + '.ip'"
         >
           <el-input
             v-model="item.ip"
-            placeholder="IP"
+            placeholder="IP/HOST"
           />
         </el-form-item>
         <el-form-item
@@ -151,6 +151,7 @@ import { TagsViewModule } from '@/store/modules/tags-view'
   name: 'RouterEdit'
 })
 export default class extends Vue {
+  private IPAndURLRegexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?|^((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/g
   private form = {
     type: null,
     key: null,

@@ -54,7 +54,7 @@
       >
         <template v-if="item.key === 'nodes'">
           <el-table-column
-            label="IP"
+            label="IP/HOST"
             width="150"
             prop="ip"
             class-name="status-col"
