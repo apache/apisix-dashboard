@@ -40,7 +40,6 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      :default-sort="{prop: 'id', order: 'descending'}"
       @sort-change="sortChange"
     >
       <el-table-column
@@ -177,15 +176,19 @@ export default class extends Vue {
 
     let tableData: any[] = []
     const arr = nodes.forEach((item: any) => {
-      Object.entries(item.nodes).forEach(([key, value]) => {
+      Object.entries(item.nodes).forEach(([ipWithPort, weights]) => {
+        // 释放 nodes
+        item.nodes = {}
         tableData = tableData.concat({
           ...item,
-          ip: key.split(':')[0],
-          port: key.split(':')[1],
-          weights: value
+          ip: ipWithPort.split(':')[0],
+          port: ipWithPort.split(':')[1],
+          weights
         })
       })
     })
+
+    tableData.sort((a, b) => b.id - a.id)
 
     this.tableData = tableData
     this.rowspan(0, 'id')
