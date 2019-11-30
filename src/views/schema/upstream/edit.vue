@@ -100,7 +100,10 @@
             type="number"
           />
         </el-form-item>
-        <el-form-item>
+        <el-form-item
+          :rules="[{required: true}]"
+          :prop="'nodes.' + index + '.weights'"
+        >
           <el-input
             v-model="item.weights"
             placeholder="Weights"
@@ -317,7 +320,7 @@ export default class extends Vue {
     (this.form.nodes as any).push({
       ip: null,
       port: null,
-      weights: null
+      weights: 0
     })
   }
 
