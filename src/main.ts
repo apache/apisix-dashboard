@@ -28,7 +28,6 @@ import store from '@/store'
 import { AppModule } from '@/store/modules/app'
 import router from '@/router'
 import i18n from '@/lang'
-import '@/icons/components'
 import '@/permission'
 
 Vue.use(ElementUI, {
