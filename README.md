@@ -32,38 +32,46 @@ Dashboard for APISIX & based on ElementUI.
 ## Project Structure
 
 ```bash
-├── public                     # public static assets (directly copied)
+├── public                     # public static assets
+│   │── img/                   # static image files
 │   │── favicon.ico            # favicon
-│   └── index.html             # index.html template
+│   │── index.html             # index.html template
+│   └── robots.txt             # robots file
 ├── src                        # main source code
-│   ├── api                    # api service
-│   ├── components             # global components
-│   ├── icons                  # svg icons
-│   ├── lang                   # i18n language
-│   ├── layout                 # global layout
-│   ├── router                 # router
-│   ├── store                  # store
-│   ├── styles                 # global css
-│   ├── utils                  # global utils
-│   ├── views                  # views
+│   ├── api/                   # api service
+│   ├── components/            # global components
+│   ├── lang/                  # i18n language
+│   ├── layout/                # global layout
+│   ├── router/                # router
+│   ├── store/                 # store
+│   ├── styles/                # global css
+│   ├── utils/                 # global utils
+│   ├── views/                 # views
 │   ├── App.vue                # main app component
 │   ├── main.ts                # app entry file
 │   ├── permission.ts          # permission authentication
 │   ├── settings.ts            # setting file
 │   └── shims.d.ts             # type definition shims
-├── .circleci/                 # automated CI configuration
+├── licenses                   # license files for ALv2 and boilerplate
 ├── .browserslistrc            # browserslist config file (to support Autoprefixer)
 ├── .editorconfig              # editor code format consistency config
 ├── .env.xxx                   # env variable configuration
 ├── .eslintrc.js               # eslint config
+├── .eslintignore              # eslint ignore config
+├── .gitignore                 # git ignore config
 ├── babel.config.js            # babel config
+├── LICENSE                    # license file
+├── NOTICE                     # notice file
 ├── package.json               # package.json
 ├── postcss.config.js          # postcss config
+├── README.md                  # some information about APISIX
 ├── tsconfig.json              # typescript config
-└── vue.config.js              # vue-cli config
+├── vue.config.js              # vue-cli config
+└── yarn.lock                  # keep exact versions of each dependency
 ```
 
 ## Project setup
+> Make sure Yarn is installed on your machine: https://yarnpkg.com/en/docs/install
 
 ### Install dependencies
 
@@ -87,24 +95,6 @@ yarn run build:prod
 
 ```bash
 yarn run lint
-```
-
-### Run your unit tests
-
-```bash
-yarn run test:unit
-```
-
-### Run your end-to-end tests
-
-```bash
-yarn run test:e2e
-```
-
-### Generate all svg components
-
-```bash
-yarn run svg
 ```
 
 ### Customize Vue configuration

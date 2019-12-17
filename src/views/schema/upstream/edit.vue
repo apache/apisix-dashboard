@@ -82,12 +82,12 @@
         class="node-item"
       >
         <el-form-item
-          :rules="[{required: true, pattern: /((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}/g, type: 'string'}]"
+          :rules="[{required: true, pattern: IPAndURLRegexp, type: 'string'}]"
           :prop="'nodes.' + index + '.ip'"
         >
           <el-input
             v-model="item.ip"
-            placeholder="IP"
+            placeholder="IP/HOST"
           />
         </el-form-item>
         <el-form-item
@@ -100,7 +100,10 @@
             type="number"
           />
         </el-form-item>
-        <el-form-item>
+        <el-form-item
+          :rules="[{required: true}]"
+          :prop="'nodes.' + index + '.weights'"
+        >
           <el-input
             v-model="item.weights"
             placeholder="Weights"
@@ -151,6 +154,7 @@ import { TagsViewModule } from '@/store/modules/tags-view'
   name: 'RouterEdit'
 })
 export default class extends Vue {
+  private IPAndURLRegexp = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})$|^((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))$/
   private form = {
     type: null,
     key: null,
@@ -255,7 +259,7 @@ export default class extends Vue {
       const nodes = {}
       this.form.nodes.map((item: any) => {
         if (item.ip && item.port && String(item.weights)) {
-          nodes[`${item.ip}:${item.port}`] = Number(item.weights)
+          nodes[`${item.ip}:${item.port}`] = Number(item.weights || 1)
         }
       })
 
@@ -316,7 +320,7 @@ export default class extends Vue {
     (this.form.nodes as any).push({
       ip: null,
       port: null,
-      weights: null
+      weights: 0
     })
   }
 

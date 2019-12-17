@@ -180,10 +180,10 @@ export default class extends Vue {
   .el-form-item {
     .el-form-item__content {
       .el-input {
-        width: 220px;
+        width: 300px;
       }
       .el-textarea {
-        width: 220px;
+        width: 400px;
       }
     }
   }

@@ -28,7 +28,7 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     // https://cli.vuejs.org/zh/config/#devserver-proxy
-    proxy: 'http://127.0.0.1/apisix/admin/'
+    proxy: 'http://127.0.0.1:9080/apisix/admin/'
   },
   pluginOptions: {
     'style-resources-loader': {
