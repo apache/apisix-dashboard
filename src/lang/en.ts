@@ -72,7 +72,7 @@ export default {
   },
   schema: {
     route: {
-      inputMultipleURLs: 'Input value and press return button'
+      inputMultipleURLs: 'Input value then press return button'
     }
   }
 }
