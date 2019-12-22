@@ -69,5 +69,10 @@ export default {
     add_node: 'Add Node',
     delete: 'Delete',
     addValue: 'Add Value'
+  },
+  schema: {
+    route: {
+      inputMultipleURLs: 'Input value then press return button'
+    }
   }
 }
