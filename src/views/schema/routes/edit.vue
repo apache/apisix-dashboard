@@ -38,7 +38,6 @@
       <el-form-item
         label="URIs"
         prop="uris"
-        placeholder="can write multi uri here"
       >
         <el-select
           v-model="form.uris"
@@ -46,6 +45,7 @@
           filterable
           multiple
           default-first-option
+          :placeholder="$t('schema.route.inputMultipleURLs')"
           @change="filterUriOptions"
         >
           <el-option
@@ -485,7 +485,7 @@ export default class extends Vue {
     .el-form-item {
       .el-form-item__content {
         .el-input {
-          width: 220px;
+          width: 300px;
         }
       }
     }
