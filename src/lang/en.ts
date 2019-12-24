@@ -73,7 +73,7 @@ export default {
   schema: {
     route: {
       inputMultipleValues: 'Input value then press return button',
-      propertyHostsTip: 'Only URI is supported',
+      propertyHostsTip: 'Any values are supported'
     }
   }
 }

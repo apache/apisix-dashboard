@@ -69,7 +69,6 @@
           allow-create
           default-first-option
           :placeholder="$t('schema.route.inputMultipleValues')"
-          @change="filterHostsOptions"
         >
           <el-option
             v-for="item in ExistedHosts"
@@ -301,7 +300,7 @@ export default class extends Vue {
 
   filterDataWithRegex(val: any, regex: any) {
     if (val.length > 0) {
-      const newArr:string[] = []
+      const newArr: string[] = []
       val.filter(function(item: any) {
         if (typeof item === 'string') {
           item = item.replace(/\s+/g, '')
@@ -310,9 +309,11 @@ export default class extends Vue {
           }
         }
       })
+
       newArr.map(function(item: any, index: number) {
         val[index] = item
       })
+
       if (val.length > newArr.length) {
         val.splice(newArr.length, val.length)
       }
@@ -321,11 +322,6 @@ export default class extends Vue {
 
   private filterUriOptions(val: any) {
     this.filterDataWithRegex(val, new RegExp('^([\\*\\./0-9a-zA-Z-_~@\\?\\!#$\\(\\)]+)$'))
-  }
-
-  private filterHostsOptions(val: any) {
-    let regexpFilter = new RegExp('^(([0-9a-zA-Z-]+|\\*)\\.)?([0-9a-zA-Z-]+\\.)+([a-zA-Z]{2,12})$')
-    this.filterDataWithRegex(val, regexpFilter)
   }
 
   private async getData() {
