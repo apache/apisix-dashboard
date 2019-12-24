@@ -80,7 +80,8 @@ export default {
   },
   schema: {
     route: {
-      inputMultipleURLs: '输入值后并回车'
+      inputMultipleValues: '输入值后并回车',
+      propertyHostsTip: '任何值均可'
     }
   }
 }

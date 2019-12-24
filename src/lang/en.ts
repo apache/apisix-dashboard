@@ -72,7 +72,8 @@ export default {
   },
   schema: {
     route: {
-      inputMultipleURLs: 'Input value then press return button'
+      inputMultipleValues: 'Input value then press return button',
+      propertyHostsTip: 'Any values are supported'
     }
   }
 }

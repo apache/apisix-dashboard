@@ -45,7 +45,7 @@
           filterable
           multiple
           default-first-option
-          :placeholder="$t('schema.route.inputMultipleURLs')"
+          :placeholder="$t('schema.route.inputMultipleValues')"
           @change="filterUriOptions"
         >
           <el-option
@@ -68,7 +68,7 @@
           filterable
           allow-create
           default-first-option
-          @change="filterHostsOptions"
+          :placeholder="$t('schema.route.inputMultipleValues')"
         >
           <el-option
             v-for="item in ExistedHosts"
@@ -77,6 +77,9 @@
             :value="item.value"
           />
         </el-select>
+        <p class="tip">
+          {{ $t('schema.route.propertyHostsTip') }}
+        </p>
       </el-form-item>
 
       <el-form-item
@@ -246,8 +249,8 @@ export default class extends Vue {
   }
 
   // TODO: can add existed info from route list
-  private ExistedUris = [{ }]
-  private ExistedHosts = [{ }]
+  private ExistedUris = [{}]
+  private ExistedHosts = [{}]
 
   private rules = {
     uris: {
@@ -297,7 +300,7 @@ export default class extends Vue {
 
   filterDataWithRegex(val: any, regex: any) {
     if (val.length > 0) {
-      const newArr:string[] = []
+      const newArr: string[] = []
       val.filter(function(item: any) {
         if (typeof item === 'string') {
           item = item.replace(/\s+/g, '')
@@ -306,9 +309,11 @@ export default class extends Vue {
           }
         }
       })
+
       newArr.map(function(item: any, index: number) {
         val[index] = item
       })
+
       if (val.length > newArr.length) {
         val.splice(newArr.length, val.length)
       }
@@ -317,11 +322,6 @@ export default class extends Vue {
 
   private filterUriOptions(val: any) {
     this.filterDataWithRegex(val, new RegExp('^([\\*\\./0-9a-zA-Z-_~@\\?\\!#$\\(\\)]+)$'))
-  }
-
-  private filterHostsOptions(val: any) {
-    let regexpFilter = new RegExp('^(([0-9a-zA-Z-]+|\\*)\\.)?([0-9a-zA-Z-]+\\.)+([a-zA-Z]{2,12})$')
-    this.filterDataWithRegex(val, regexpFilter)
   }
 
   private async getData() {
@@ -486,6 +486,12 @@ export default class extends Vue {
       .el-form-item__content {
         .el-input {
           width: 300px;
+        }
+        .tip {
+          line-height: 24px;
+          font-size: 12px;
+          margin: 0;
+          color: #8e8c8c;
         }
       }
     }
