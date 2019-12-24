@@ -45,7 +45,7 @@
           filterable
           multiple
           default-first-option
-          :placeholder="$t('schema.route.inputMultipleURLs')"
+          :placeholder="$t('schema.route.inputMultipleValues')"
           @change="filterUriOptions"
         >
           <el-option
@@ -68,6 +68,7 @@
           filterable
           allow-create
           default-first-option
+          :placeholder="$t('schema.route.inputMultipleValues')"
           @change="filterHostsOptions"
         >
           <el-option
@@ -77,6 +78,9 @@
             :value="item.value"
           />
         </el-select>
+        <p class="tip">
+          {{ $t('schema.route.propertyHostsTip') }}
+        </p>
       </el-form-item>
 
       <el-form-item
@@ -246,8 +250,8 @@ export default class extends Vue {
   }
 
   // TODO: can add existed info from route list
-  private ExistedUris = [{ }]
-  private ExistedHosts = [{ }]
+  private ExistedUris = [{}]
+  private ExistedHosts = [{}]
 
   private rules = {
     uris: {
@@ -486,6 +490,12 @@ export default class extends Vue {
       .el-form-item__content {
         .el-input {
           width: 300px;
+        }
+        .tip {
+          line-height: 24px;
+          font-size: 12px;
+          margin: 0;
+          color: #8e8c8c;
         }
       }
     }
