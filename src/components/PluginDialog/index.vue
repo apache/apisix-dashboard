@@ -254,8 +254,8 @@ export default class extends Vue {
       this.isDataChanged = true
     }
 
-    // Edit lugin data
-    if (this.name === 'ip-restriction') {
+    // Edit plugin data
+    if (this.name === 'ip-restriction' && this.pluginData) {
       const key = Object.keys(this.pluginData)[0]
       this.$nextTick(() => {
         this.data = {
