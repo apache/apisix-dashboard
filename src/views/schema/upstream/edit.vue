@@ -82,7 +82,7 @@
         class="node-item"
       >
         <el-form-item
-          :rules="[{required: true, pattern: hostAndIpRegexPattern, type: 'string'}]"
+          :rules="[{required: true, pattern: IPAndURLRegexp, type: 'string'}]"
           :prop="'nodes.' + index + '.ip'"
         >
           <el-input
@@ -147,14 +147,14 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
 
-import { getUpstream, createUpstream, updateStream } from '@/api/schema/upstream'
+import { getUpstream, createUpstream, updateStream } from '../../../api/schema/upstream'
 import { TagsViewModule } from '@/store/modules/tags-view'
-import { hostAndIp as hostAndIpRegexPattern } from '@/utils/regex-patterns'
 
 @Component({
   name: 'RouterEdit'
 })
 export default class extends Vue {
+  private IPAndURLRegexp = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})$|^((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9]*[A-Za-z0-9]))$/
   private form = {
     type: null,
     key: null,
@@ -354,6 +354,7 @@ export default class extends Vue {
     .el-form-item {
       margin-bottom: 10px;
       display: inline-block;
+      .el-form-item__label {}
       .el-form-item__content {
         margin-right: 10px;
       }
