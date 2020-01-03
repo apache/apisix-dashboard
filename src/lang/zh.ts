@@ -77,5 +77,11 @@ export default {
     add_node: '添加 Node',
     delete: '删除',
     addValue: '添加值'
+  },
+  schema: {
+    route: {
+      inputMultipleValues: '输入值后并回车',
+      propertyHostsTip: '任何值均可'
+    }
   }
 }
