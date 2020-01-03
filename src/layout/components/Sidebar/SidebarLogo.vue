@@ -37,7 +37,7 @@
         to="/"
       >
         <img
-          src="/favicon.ico"
+          :src="getIco"
           class="sidebar-logo"
         >
       </router-link>
@@ -48,7 +48,7 @@
         to="/"
       >
         <img
-          src="/favicon.ico"
+          :src="getIco"
           class="sidebar-logo"
         >
         <h1 class="sidebar-title">
@@ -69,6 +69,29 @@ export default class extends Vue {
   @Prop({ required: true }) private collapse!: boolean
 
   private title = 'APISIX'
+
+  get getIco() {
+    var links = document.getElementsByTagName("link");
+    for (var i = 0; i < links.length; i++) {
+      var link = links[i];
+      if (link.rel) {
+        var nowRel = link.rel;
+          if (nowRel.indexOf("apple-touch-icon-precomposed") === 0) {
+            return link.href;
+          }
+
+          if (nowRel.indexOf("apple-touch-icon") === 0) {
+            return link.href;
+          }
+
+          if (nowRel.indexOf("shortcut") === 0 || nowRel.indexOf("ico") === 0) {
+            return link.href;
+          }
+      }
+    }
+    return "favicon.ico";
+  }
+
 }
 </script>
 
