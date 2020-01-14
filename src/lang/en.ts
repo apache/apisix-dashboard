@@ -78,9 +78,10 @@ export default {
   },
   upstream: {
     websocket: {
-      EnabledTips: 'WebSocket enabled',
-      DisabledTips: 'WebSocket disabled'
+      EnabledTip: 'WebSocket enabled',
+      DisabledTip: 'WebSocket disabled'
     },
-    keyTips: 'You can edit and input any value here,press Enter to confirm.'
+    keyTip: 'You can edit and input any value here,and press Enter to confirm.',
+    hashOnTip: 'Select a hash on.'
   }
 }

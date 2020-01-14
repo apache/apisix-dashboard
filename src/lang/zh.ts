@@ -86,9 +86,10 @@ export default {
   },
   upstream: {
     websocket: {
-      EnabledTips: 'WebSocket 打开',
-      DisabledTips: 'WebSocket 关闭'
+      EnabledTip: 'WebSocket 打开',
+      DisabledTip: 'WebSocket 关闭'
     },
-    keyTips: '你可以编辑并输入任何值,输入值后 回车确认。'
+    keyTip: '你可以编辑并输入任何值,输入值后回车确认。',
+    hashOnTip: '选择 chash 参数来源。'
   }
 }

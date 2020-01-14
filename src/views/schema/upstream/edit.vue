@@ -58,7 +58,6 @@
       >
         <el-select
           v-model="form.hash_on"
-          placeholder="Select a hash on"
           filterable
           default-first-option
           value-key="form.hash_on"
@@ -71,6 +70,9 @@
             :value="item.value"
           />
         </el-select>
+        <p class="tip">
+          {{ $t('upstream.hashOnTip') }}
+        </p>
       </el-form-item>
 
       <el-form-item
@@ -94,7 +96,7 @@
           />
         </el-select>
         <p class="tip">
-          {{ $t('upstream.keyTips') }}
+          {{ $t('upstream.keyTip') }}
         </p>
       </el-form-item>
 
@@ -108,7 +110,7 @@
           inactive-color="#ff4949"
         />
         <p class="tip">
-          {{ form.enable_websocket?$t('upstream.websocket.EnabledTips'):$t('upstream.websocket.DisabledTips') }}
+          {{ form.enable_websocket ? $t('upstream.websocket.EnabledTip') : $t('upstream.websocket.DisabledTip') }}
         </p>
       </el-form-item>
 
@@ -289,7 +291,7 @@ export default class extends Vue {
           nodes = [],
           key = null,
           desc = '',
-          enable_websocket = null,
+          enable_websocket = Boolean,
           hash_on = null
         }
       }
@@ -411,11 +413,11 @@ export default class extends Vue {
         width: 193px;
       }
       .tip {
-          line-height: 24px;
-          font-size: 12px;
-          margin: 0;
-          color: #8e8c8c;
-          display:inline;
+        line-height: 24px;
+        font-size: 12px;
+        margin: 0;
+        color: #8e8c8c;
+        display: inline;
       }
     }
   }
