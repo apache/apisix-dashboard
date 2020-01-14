@@ -75,5 +75,11 @@ export default {
       inputMultipleValues: 'Input value then press return button',
       propertyHostsTip: 'Any values are supported'
     }
-  }
+  },
+  upstream: {
+    websocket: {
+      EnabledTips: 'websocket enabled',
+      DisabledTips: 'websocket disabled',
+    }
+  } 
 }

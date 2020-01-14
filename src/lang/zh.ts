@@ -83,5 +83,11 @@ export default {
       inputMultipleValues: '输入值后并回车',
       propertyHostsTip: '任何值均可'
     }
+  },
+  upstream: {
+    websocket: {
+      EnabledTips: 'websocket 打开',
+      DisabledTips: 'websocket 关闭',
+    }
   }
 }

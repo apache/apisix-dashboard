@@ -54,6 +54,26 @@
       </el-form-item>
 
       <el-form-item
+        label="Hash On"
+      >
+        <el-select
+          v-model="form.hash_on"
+          placeholder="Select a hash on"
+          filterable
+          default-first-option
+          value-key="form.hash_on"
+          :disabled="form.type !== 'chash'"
+        >
+          <el-option
+            v-for="item in defaultHashOnKeys"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item
         label="Key"
       >
         <el-select
@@ -73,6 +93,20 @@
             :value="item.value"
           />
         </el-select>
+      </el-form-item>
+
+      <el-form-item
+        label="Websocket"
+      >
+        <el-switch
+          v-model="form.enable_websocket"
+
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+        />
+        <p class="tip">
+          {{ form.enable_websocket?$t('upstream.websocket.EnabledTips'):$t('upstream.websocket.DisabledTips') }}
+        </p>
       </el-form-item>
 
       <el-form-item
@@ -159,7 +193,9 @@ export default class extends Vue {
     type: null,
     key: null,
     nodes: [],
-    desc: ''
+    desc: '',
+    enable_websocket: null,
+    hash_on: null
   }
 
   private rules = {
@@ -170,6 +206,25 @@ export default class extends Vue {
   private isEditMode: boolean = false
 
   private types = ['roundrobin', 'chash']
+
+  private defaultHashOnKeys = [
+    {
+      value: 'vars',
+      label: 'vars'
+    },
+    {
+      value: 'header',
+      label: 'header'
+    },
+    {
+      value: 'cookie',
+      label: 'cookie'
+    },
+    {
+      value: 'consumer',
+      label: 'consumer'
+    }
+  ]
 
   private defaultHashKeys = [
     {
@@ -230,7 +285,9 @@ export default class extends Vue {
           type = null,
           nodes = [],
           key = null,
-          desc = ''
+          desc = '',
+          enable_websocket = null,
+          hash_on = null
         }
       }
     } = (await getUpstream(id)) as any
@@ -248,7 +305,9 @@ export default class extends Vue {
       type,
       key,
       nodes,
-      desc
+      desc,
+      enable_websocket,
+      hash_on
     }
   }
 
@@ -347,6 +406,13 @@ export default class extends Vue {
     .el-form-item__content {
       .el-input {
         width: 193px;
+      }
+      .tip {
+          line-height: 24px;
+          font-size: 12px;
+          margin: 0;
+          color: #8e8c8c;
+          display:inline;
       }
     }
   }
