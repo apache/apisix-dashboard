@@ -81,6 +81,6 @@ export default {
       EnabledTips: 'WebSocket enabled',
       DisabledTips: 'WebSocket disabled'
     },
-    keyTips:'You can edit and input any value here,press Enter to confirm.'
+    keyTips: 'You can edit and input any value here,press Enter to confirm.'
   }
 }

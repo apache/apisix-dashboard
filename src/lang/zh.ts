@@ -89,6 +89,6 @@ export default {
       EnabledTips: 'WebSocket 打开',
       DisabledTips: 'WebSocket 关闭'
     },
-    keyTips:'你可以编辑并输入任何值,输入值后 回车确认。'
+    keyTips: '你可以编辑并输入任何值,输入值后 回车确认。'
   }
 }
