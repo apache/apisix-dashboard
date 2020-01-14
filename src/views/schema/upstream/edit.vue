@@ -93,10 +93,13 @@
             :value="item.value"
           />
         </el-select>
+        <p class="tip">
+          {{ $t('upstream.keyTips') }}
+        </p>
       </el-form-item>
 
       <el-form-item
-        label="Websocket"
+        label="WebSocket"
       >
         <el-switch
           v-model="form.enable_websocket"

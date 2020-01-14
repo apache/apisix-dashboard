@@ -86,8 +86,9 @@ export default {
   },
   upstream: {
     websocket: {
-      EnabledTips: 'websocket 打开',
-      DisabledTips: 'websocket 关闭',
-    }
+      EnabledTips: 'WebSocket 打开',
+      DisabledTips: 'WebSocket 关闭'
+    },
+    keyTips:'你可以编辑并输入任何值,输入值后 回车确认。'
   }
 }
