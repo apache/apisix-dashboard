@@ -383,6 +383,7 @@ export default class extends Vue {
           }
         })
 
+        delete data['tempPlugin']
         if (this.isEditMode) {
           await updateRouter(this.$route.params.id, data)
         } else {
