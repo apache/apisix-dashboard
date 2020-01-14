@@ -83,5 +83,13 @@ export default {
       inputMultipleValues: '输入值后并回车',
       propertyHostsTip: '任何值均可'
     }
+  },
+  upstream: {
+    websocket: {
+      EnabledTip: 'WebSocket 打开',
+      DisabledTip: 'WebSocket 关闭'
+    },
+    keyTip: '你可以编辑并输入任何值,输入值后回车确认。',
+    hashOnTip: '选择 chash 参数来源。'
   }
 }

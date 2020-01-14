@@ -75,5 +75,13 @@ export default {
       inputMultipleValues: 'Input value then press return button',
       propertyHostsTip: 'Any values are supported'
     }
+  },
+  upstream: {
+    websocket: {
+      EnabledTip: 'WebSocket enabled',
+      DisabledTip: 'WebSocket disabled'
+    },
+    keyTip: 'You can edit and input any value here,and press Enter to confirm.',
+    hashOnTip: 'Select a hash on.'
   }
 }
