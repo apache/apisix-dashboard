@@ -291,7 +291,7 @@ export default class extends Vue {
           nodes = [],
           key = null,
           desc = '',
-          enable_websocket = Boolean,
+          enable_websocket = false,
           hash_on = null
         }
       }
