@@ -30,7 +30,7 @@ This release is mainly to build some basic panels and resolve License issue.
 - Dashboard initial. [#1](https://github.com/apache/incubator-apisix-dashboard/pull/1)
 - Resolve licence issues.
 - Remove unused files from the Dashboard boilerplate.
-- Support panel for listing, create and modify Route, Consumer, Service, SSL and Upstream.
-- Support custom config for Plugin dialog.
+- Support panel to list, create and modify Route, Consumer, Service, SSL and Upstream.
+- Support custom configuration for Plugin dialog.
 
 [Back to TOC](#table-of-contents)
