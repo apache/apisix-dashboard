@@ -71,7 +71,7 @@ Dashboard for APISIX & based on ElementUI.
 ```
 
 ## Project setup
-> Make sure Yarn is installed on your machine: https://yarnpkg.com/en/docs/install
+> Make sure Node.js 8.12.0 or higher, and Yarn are installed on your machine: https://yarnpkg.com/en/docs/install
 
 ### Install dependencies
 
