@@ -71,10 +71,25 @@ Dashboard for APISIX & based on ElementUI.
 ```
 
 ## Project setup
-> Make sure Yarn is installed on your machine: https://yarnpkg.com/en/docs/install
+> Make sure Node.js 8.12.0 or higher, and Yarn are installed on your machine: https://yarnpkg.com/en/docs/install
 
-### Installation
-Please refer to [Dashboard Installation](https://github.com/apache/incubator-apisix#dashboard).
+### Install dependencies
+
+```bash
+yarn install
+```
+
+### Compiles and hot-reloads for development
+
+```bash
+yarn run serve
+```
+
+### Compiles and minifies for production
+
+```bash
+yarn run build:prod
+```
 
 ### Lints and fixes files
 
