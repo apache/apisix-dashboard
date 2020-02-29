@@ -4326,6 +4326,11 @@ get-own-enumerable-property-symbols@^3.0.0:
   resolved "https://registry.npm.taobao.org/get-own-enumerable-property-symbols/download/get-own-enumerable-property-symbols-3.0.2.tgz?cache=0&sync_timestamp=1575993334275&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fget-own-enumerable-property-symbols%2Fdownload%2Fget-own-enumerable-property-symbols-3.0.2.tgz#b5fde77f22cbe35f390b4e089922c50bce6ef664"
   integrity sha1-tf3nfyLL4185C04ImSLFC85u9mQ=
 
+get-stdin@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.npm.taobao.org/get-stdin/download/get-stdin-4.0.1.tgz#b968c6b0a04384324902e8bf1a5df32579a450fe"
+  integrity sha1-uWjGsKBDhDJJAui/Gl3zJXmkUP4=
+
 get-stream@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/get-stream/download/get-stream-3.0.0.tgz#8e943d1358dc37555054ecbe2edb05aa174ede14"
@@ -6788,6 +6793,15 @@ path-to-regexp@^3.0.0:
   resolved "https://registry.npm.taobao.org/path-to-regexp/download/path-to-regexp-3.2.0.tgz#fa7877ecbc495c601907562222453c43cc204a5f"
   integrity sha1-+nh37LxJXGAZB1YiIkU8Q8wgSl8=
 
+path-type@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/path-type/download/path-type-1.1.0.tgz#59c44f7ee491da704da415da5a4070ba4f8fe441"
+  integrity sha1-WcRPfuSR2nBNpBXaWkBwuk+P5EE=
+  dependencies:
+    graceful-fs "^4.1.2"
+    pify "^2.0.0"
+    pinkie-promise "^2.0.0"
+
 path-type@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/path-type/download/path-type-2.0.0.tgz#f012ccb8415b7096fc2daa1054c3d72389594c73"
@@ -7542,6 +7556,13 @@ readdirp@~3.3.0:
   version "3.3.0"
   resolved "https://registry.npm.taobao.org/readdirp/download/readdirp-3.3.0.tgz?cache=0&sync_timestamp=1575629866543&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freaddirp%2Fdownload%2Freaddirp-3.3.0.tgz#984458d13a1e42e2e9f5841b129e162f369aff17"
   integrity sha1-mERY0ToeQuLp9YQbEp4WLzaa/xc=
+  dependencies:
+    picomatch "^2.0.7"
+
+redent@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/redent/download/redent-1.0.0.tgz#cf916ab1fd5f1f16dfb20822dd6ec7f730c2afde"
+  integrity sha1-z5Fqsf1fHxbfsggi3W7H9zDCr94=
   dependencies:
     picomatch "^2.0.7"
 
@@ -8853,6 +8874,11 @@ tree-kill@^1.2.1:
   version "1.2.2"
   resolved "https://registry.npm.taobao.org/tree-kill/download/tree-kill-1.2.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftree-kill%2Fdownload%2Ftree-kill-1.2.2.tgz#4ca09a9092c88b73a7cdc5e8a01b507b0790a0cc"
   integrity sha1-TKCakJLIi3OnzcXooBtQeweQoMw=
+
+trim-newlines@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/trim-newlines/download/trim-newlines-1.0.0.tgz#5887966bb582a4503a41eb524f7d35011815a613"
+  integrity sha1-WIeWa7WCpFA6QetST301ARgVphM=
 
 tryer@^1.0.1:
   version "1.0.1"
