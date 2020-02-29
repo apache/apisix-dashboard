@@ -50,7 +50,6 @@
     "sass": "^1.21.0",
     "sass-loader": "^7.1.0",
     "style-resources-loader": "^1.2.1",
-    "ts-node-dev": "^1.0.0-pre.40",
     "typescript": "3.5.2",
     "vue-cli-plugin-element": "^1.0.1",
     "vue-cli-plugin-style-resources-loader": "^0.1.3",

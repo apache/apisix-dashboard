@@ -73,7 +73,7 @@ export default class extends Vue {
   private show = false
   private options: RouteConfig[] = []
   private searchPool: RouteConfig[] = []
-  private fuse?: Fuse<RouteConfig>
+  private fuse?: Fuse<RouteConfig, Fuse.FuseOptions<RouteConfig>>
 
   get routes() {
     return PermissionModule.routes
@@ -194,7 +194,7 @@ export default class extends Vue {
   private querySearch(query: string) {
     if (query !== '') {
       if (this.fuse) {
-        this.options = this.fuse.search(query)
+        this.options = this.fuse.search(query) as any
       }
     } else {
       this.options = []
