@@ -29,11 +29,26 @@
     :class="[{'is-active': isActive}]"
     @click="toggleClick"
   >
-    <svg-icon
-      name="hamburger"
+    <svg
+      viewBox="0 0 100 80"
       width="20"
       height="20"
-    />
+    >
+      <rect
+        width="100"
+        height="20"
+      />
+      <rect
+        y="30"
+        width="100"
+        height="20"
+      />
+      <rect
+        y="60"
+        width="100"
+        height="20"
+      />
+    </svg>
   </div>
 </template>
 
@@ -57,7 +72,4 @@ export default class extends Vue {
   vertical-align: middle;
 }
 
-.is-active {
-  transform: rotate(180deg);
-}
 </style>
