@@ -55,7 +55,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'Apache APISIX Dashboard',
+  title: 'APISIX Dashboard',
   pwa: false,
   iconfontUrl: '',
 } as DefaultSettings;

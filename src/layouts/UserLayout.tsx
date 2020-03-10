@@ -52,7 +52,7 @@ const UserLayout: React.FC<UserLayoutProps> = props => {
             <div className={styles.header}>
               <Link to="/">
                 <img alt="logo" className={styles.logo} src={logo} />
-                <span className={styles.title}>Apache APISIX</span>
+                <span className={styles.title}>APISIX Dashboard</span>
               </Link>
             </div>
             <div className={styles.desc}>Cloud-Native Microservices API Gateway</div>
