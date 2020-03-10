@@ -29,10 +29,10 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = props => {
 
   return (
     <div className={className}>
-      <Tooltip title="使用文档">
+      <Tooltip title="Documentation">
         <a
           target="_blank"
-          href="https://pro.ant.design/docs/getting-started"
+          href="https://github.com/apache/incubator-apisix"
           rel="noopener noreferrer"
           className={styles.action}
         >
