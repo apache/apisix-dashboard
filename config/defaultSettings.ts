@@ -55,7 +55,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'Ant Design Pro',
+  title: 'APISIX Dashboard',
   pwa: false,
   iconfontUrl: '',
 } as DefaultSettings;
