@@ -1,10 +1,11 @@
 import request from '@/utils/request';
-import { transformFetchListData } from '@/transforms/global';
+import { transformFetchListData, transformFetchItemData } from '@/transforms/global';
 import { SSL } from '@/models/ssl';
 
 export const fetchList = () => request('/api/ssl').then(data => transformFetchListData<SSL>(data));
 
-export const fetchItem = (id: number) => request(`/api/ssl/${id}`);
+export const fetchItem = (id: number) =>
+  request(`/api/ssl/${id}`).then(data => transformFetchItemData<SSL>(data));
 
 export const remove = (id: number) => request.delete(`/api/ssl/${id}`);
 

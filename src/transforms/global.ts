@@ -23,7 +23,7 @@ const key2id = (key: string) => parseInt(key.replace(/^(0+)/, ''), 10);
 /**
  * Transform data from fetch list api.
  */
-export const transformFetchListData = <T>(data: Data<T>): Array<Node<T> & { displayKey: string }> =>
+export const transformFetchListData = <T>(data: Data<T>) =>
   data.node.nodes
     .map(node => {
       const result = node.key.match(/\/([0-9]+)/);
@@ -39,3 +39,8 @@ export const transformFetchListData = <T>(data: Data<T>): Array<Node<T> & { disp
       };
     })
     .filter(item => item.displayKey);
+
+/**
+ * Transform data from fetch target item.
+ */
+export const transformFetchItemData = <T>(data: { node: Node<T>; action: ActionType }) => data.node;
