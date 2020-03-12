@@ -119,26 +119,16 @@ export default {
               component: './Welcome',
             },
             {
-              path: '/admin',
-              name: 'admin',
+              name: 'ssl',
+              path: '/ssl',
               icon: 'crown',
-              component: './Admin',
-              authority: ['admin'],
               routes: [
                 {
-                  path: '/admin/sub-page',
-                  name: 'sub-page',
-                  icon: 'smile',
-                  component: './Welcome',
-                  authority: ['admin'],
+                  path: '/ssl/list',
+                  name: 'list',
+                  component: './SSLModule/list',
                 },
               ],
-            },
-            {
-              name: 'list.table-list',
-              icon: 'table',
-              path: '/list',
-              component: './ListTableList',
             },
             {
               component: './404',
