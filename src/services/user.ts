@@ -5,7 +5,12 @@ export async function query(): Promise<any> {
 }
 
 export async function queryCurrent(): Promise<any> {
-  return request('/api/currentUser');
+  // NOTE: APISIX doesn‘t support user login currently, we return fake data directly.
+  return {
+    name: 'APISIX User',
+    avatar: 'favicon.png',
+    userid: '00000001',
+  };
 }
 
 export async function queryNotices(): Promise<any> {
