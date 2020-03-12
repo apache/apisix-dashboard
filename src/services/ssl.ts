@@ -7,7 +7,7 @@ export const fetchList = () => request('/api/ssl').then(data => transformFetchLi
 export const fetchItem = (id: number) =>
   request(`/api/ssl/${id}`).then(data => transformFetchItemData<SSL>(data));
 
-export const remove = (id: number) => request.delete(`/api/ssl/${id}`);
+export const remove = (key: string) => request.delete(`/api/ssl/${key}`);
 
 export const create = (data: SSL) =>
   request.post('/api/ssl', {

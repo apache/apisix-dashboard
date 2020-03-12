@@ -9,4 +9,6 @@ export default {
   // SSL Module
   'component.ssl.removeSSLItemModalContent': 'You are going to remove this item!',
   'component.ssl.removeSSLItemModalTitle': 'SSL Remove Alert',
+  'component.ssl.fetchSSLListSuccess': 'fetch SSL list successfully',
+  'component.ssl.removeSSLSuccess': 'remove target SSL successfully',
 };

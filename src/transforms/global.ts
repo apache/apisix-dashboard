@@ -30,7 +30,7 @@ const key2id = (key: string) => parseInt(key.replace(/^(0+)/, ''), 10);
  * Transform data from fetch list api.
  */
 export const transformFetchListData = <T>(data: ListData<T>): RequestData<ListItem<T>> => {
-  const results = data.node.nodes
+  const results = (data.node.nodes || [])
     .map(node => {
       const result = node.key.match(/\/([0-9]+)/);
       let displayKey = '';
@@ -38,6 +38,7 @@ export const transformFetchListData = <T>(data: ListData<T>): RequestData<ListIt
       if (result) {
         const [, key] = result;
         displayKey = key2id(key).toString();
+        /* eslint no-param-reassign: ["error", { "props": false }] */
         node.key = key;
       }
       return {
@@ -60,6 +61,7 @@ export const transformFetchItemData = <T>(data: { node: Node<T>; action: ActionT
   const result = data.node.key.match(/\/([0-9]+)/);
   if (result) {
     const [, key] = result;
+    /* eslint no-param-reassign: ["error", { "props": false }] */
     data.node.key = key;
   }
   return data.node;

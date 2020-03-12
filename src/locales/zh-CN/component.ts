@@ -9,4 +9,6 @@ export default {
   // SSL 模块
   'component.ssl.removeSSLItemModalContent': '确定要移除该项吗？',
   'component.ssl.removeSSLItemModalTitle': '移除 SSL',
+  'component.ssl.fetchSSLListSuccess': '获取 SSL 列表成功',
+  'component.ssl.removeSSLSuccess': '移除 SSL 成功',
 };
