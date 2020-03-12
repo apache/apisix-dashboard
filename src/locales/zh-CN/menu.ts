@@ -51,4 +51,5 @@ export default {
   'menu.editor.koni': '拓扑编辑器',
   'menu.ssl': 'SSL',
   'menu.ssl.list': 'SSL 列表',
+  'menu.ssl.edit': '编辑',
 };
