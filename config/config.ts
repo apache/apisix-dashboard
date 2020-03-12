@@ -128,6 +128,12 @@ export default {
                   name: 'list',
                   component: './SSLModule/list',
                 },
+                {
+                  path: '/ssl/:key/edit',
+                  name: 'edit',
+                  component: './SSLModule/detail',
+                  hideInMenu: true,
+                },
               ],
             },
             {
