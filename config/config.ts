@@ -141,6 +141,18 @@ export default {
               component: './ListTableList',
             },
             {
+              name: 'ssl',
+              path: '/ssl',
+              icon: 'crown',
+              routes: [
+                {
+                  path: '/ssl/list',
+                  name: 'list',
+                  component: './SSLModule/list',
+                },
+              ],
+            },
+            {
               component: './404',
             },
           ],

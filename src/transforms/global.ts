@@ -1,3 +1,5 @@
+import { RequestData } from '@ant-design/pro-table';
+
 type ActionType = 'get' | 'set' | 'delete' | 'create';
 
 interface Node<T> {
@@ -7,7 +9,7 @@ interface Node<T> {
   value: T;
 }
 
-interface Data<T> {
+interface ListData<T> {
   action: ActionType;
   node: {
     modifiedIndex: number;
@@ -18,13 +20,17 @@ interface Data<T> {
   };
 }
 
+export interface ListItem<T> extends Node<T> {
+  displayKey: string;
+}
+
 const key2id = (key: string) => parseInt(key.replace(/^(0+)/, ''), 10);
 
 /**
  * Transform data from fetch list api.
  */
-export const transformFetchListData = <T>(data: Data<T>) =>
-  data.node.nodes
+export const transformFetchListData = <T>(data: ListData<T>): RequestData<ListItem<T>> => {
+  const results = data.node.nodes
     .map(node => {
       const result = node.key.match(/\/([0-9]+)/);
       let displayKey = '';
@@ -39,6 +45,12 @@ export const transformFetchListData = <T>(data: Data<T>) =>
       };
     })
     .filter(item => item.displayKey);
+
+  return {
+    data: results,
+    total: results.length,
+  };
+};
 
 /**
  * Transform data from fetch target item.
