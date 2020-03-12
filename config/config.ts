@@ -135,12 +135,6 @@ export default {
               ],
             },
             {
-              name: 'list.table-list',
-              icon: 'table',
-              path: '/list',
-              component: './ListTableList',
-            },
-            {
               name: 'ssl',
               path: '/ssl',
               icon: 'crown',
