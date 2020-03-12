@@ -38,6 +38,7 @@ export const transformFetchListData = <T>(data: ListData<T>): RequestData<ListIt
       if (result) {
         const [, key] = result;
         displayKey = key2id(key).toString();
+        node.key = key;
       }
       return {
         ...node,
@@ -55,4 +56,11 @@ export const transformFetchListData = <T>(data: ListData<T>): RequestData<ListIt
 /**
  * Transform data from fetch target item.
  */
-export const transformFetchItemData = <T>(data: { node: Node<T>; action: ActionType }) => data.node;
+export const transformFetchItemData = <T>(data: { node: Node<T>; action: ActionType }) => {
+  const result = data.node.key.match(/\/([0-9]+)/);
+  if (result) {
+    const [, key] = result;
+    data.node.key = key;
+  }
+  return data.node;
+};
