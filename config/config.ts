@@ -134,6 +134,12 @@ export default {
                   component: './SSLModule/detail',
                   hideInMenu: true,
                 },
+                {
+                  path: '/ssl/create',
+                  name: 'create',
+                  component: './SSLModule/detail',
+                  hideInMenu: true,
+                },
               ],
             },
             {
