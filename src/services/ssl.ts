@@ -4,8 +4,8 @@ import { SSL } from '@/models/ssl';
 
 export const fetchList = () => request('/api/ssl').then(data => transformFetchListData<SSL>(data));
 
-export const fetchItem = (id: number) =>
-  request(`/api/ssl/${id}`).then(data => transformFetchItemData<SSL>(data));
+export const fetchItem = (key: string) =>
+  request(`/api/ssl/${key}`).then(data => transformFetchItemData<SSL>(data));
 
 export const remove = (key: string) => request.delete(`/api/ssl/${key}`);
 
@@ -14,7 +14,7 @@ export const create = (data: SSL) =>
     data,
   });
 
-export const update = (id: number, data: SSL) =>
-  request.put(`/api/ssl/${id}`, {
+export const update = (key: string, data: SSL) =>
+  request.put(`/api/ssl/${key}`, {
     data,
   });
