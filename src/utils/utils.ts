@@ -63,3 +63,16 @@ export const getRouteAuthority = (path: string, routeData: Route[]) => {
   });
   return authorities;
 };
+
+export const getPageMode = (): PageMode => {
+  const { pathname } = window.location;
+  if (/edit$/.test(pathname)) {
+    return 'EDIT';
+  }
+
+  if (/create$/.test(pathname)) {
+    return 'CREATE';
+  }
+
+  return 'VIEW';
+};

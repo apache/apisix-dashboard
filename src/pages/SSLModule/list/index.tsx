@@ -4,6 +4,7 @@ import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Modal, notification } from 'antd';
 import { router } from 'umi';
 import { formatMessage } from 'umi-plugin-react/locale';
+import { PlusOutlined } from '@ant-design/icons';
 
 import { fetchList as fetchSSLList, remove as removeSSL } from '@/services/ssl';
 import { SSL } from '@/models/ssl';
@@ -37,6 +38,7 @@ const List: React.FC = () => {
     {
       title: 'ID',
       dataIndex: 'displayKey',
+      sortOrder: 'descend',
     },
     {
       title: 'SNI',
@@ -69,6 +71,12 @@ const List: React.FC = () => {
         search={false}
         columns={columns}
         actionRef={tableRef}
+        toolBarRender={() => [
+          <Button type="primary" onClick={() => router.push(`/ssl/create`)}>
+            <PlusOutlined />
+            {formatMessage({ id: 'component.global.create' })}
+          </Button>,
+        ]}
       />
     </PageHeaderWrapper>
   );

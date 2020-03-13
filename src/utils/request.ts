@@ -29,10 +29,10 @@ const codeMessage = {
 const errorHandler = (error: { response: Response; data: any }): Promise<Response> => {
   const { response } = error;
   if (response && response.status) {
-    const errorText = error.data.message || codeMessage[response.status];
+    const errorText = error.data.message || error.data.error_msg || codeMessage[response.status];
 
     notification.error({
-      message: `请求错误，错误码： ${error.data.errorCode}`,
+      message: `请求错误，错误码： ${error.data.errorCode || response.status}`,
       description: errorText,
     });
   } else if (!response) {
