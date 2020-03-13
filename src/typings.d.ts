@@ -76,7 +76,7 @@ interface PluginProperty {
   };
 }
 
-interface Plugin {
+interface PluginSchema {
   type: 'object';
   id?: string;
   required?: string[];
