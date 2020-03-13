@@ -51,18 +51,20 @@ declare const FetchPluginNameList: string[];
 
 interface PluginProperty {
   type: 'number' | 'string' | 'integer' | 'array' | 'boolean' | 'object';
+  // the same as type
+  default?: any;
+  description?: string;
   // NOTE: maybe 0.00001
   minimum?: number;
   maximum?: number;
-  enum?: string[];
   minLength?: number;
   maxLength?: number;
   minItems?: number;
   maxItems?: number;
-  pattern?: string; // e.g "^/.*"
+  // e.g "^/.*"
+  pattern?: string;
+  enum?: string[];
   requried?: string[];
-  description?: string;
-  default?: any; // the same as type
   minProperties?: number;
   additionalProperties?: boolean;
   items?: {
