@@ -38,3 +38,54 @@ declare let ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: 'site' | undefine
 declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 
 declare type PageMode = 'CREATE' | 'EDIT' | 'VIEW';
+
+declare const FetchPluginNameList: string[];
+
+/**
+ * TODO: //
+ * 1. key-auth 在前端生成 Key
+ * 2. prometheus 没有 properties 字段，选中后直接标记为启用。
+ * 4. ip-restriction 较为复杂
+ * 5.
+ */
+
+interface PluginProperty {
+  type: 'number' | 'string' | 'integer' | 'array' | 'boolean' | 'object';
+  // NOTE: maybe 0.00001
+  minimum?: number;
+  maximum?: number;
+  enum?: string[];
+  minLength?: number;
+  maxLength?: number;
+  minItems?: number;
+  maxItems?: number;
+  pattern?: string; // e.g "^/.*"
+  requried?: string[];
+  description?: string;
+  default?: any; // the same as type
+  minProperties?: number;
+  additionalProperties?: boolean;
+  items?: {
+    type: string;
+    anyOf?: Array<{
+      type?: string;
+      description?: string;
+      enum?: string[];
+      pattern?: string;
+    }>;
+  };
+}
+
+declare interface Plugin {
+  type: 'object';
+  id?: string;
+  required?: string[];
+  additionalProperties?: boolean;
+  minProperties?: number;
+  oneOf?: Array<{
+    required: string[];
+  }>;
+  properties?: {
+    [propertyName: string]: PluginProperty;
+  };
+}
