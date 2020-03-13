@@ -24,7 +24,6 @@ const Detail: React.FC = () => {
   useEffect(() => {
     if (mode === 'EDIT' && key) {
       fetchSSLItem(key).then(data => {
-        console.log(data);
         form.setFieldsValue(data.value);
       });
     }
