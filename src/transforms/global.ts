@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { RequestData } from '@ant-design/pro-table';
 
 type ActionType = 'get' | 'set' | 'delete' | 'create';
@@ -65,4 +67,22 @@ export const transformFetchItemData = <T>(data: { node: Node<T>; action: ActionT
     data.node.key = key;
   }
   return data.node;
+};
+
+/**
+ * Transform schema data for target plugin.
+ */
+export const transformPluginSchema = (schema: PluginSchema, pluginName: string): PluginSchema => {
+  if (pluginName === 'key-auth') {
+    return {
+      ...schema,
+      properties: {
+        key: {
+          ...schema.properties!.key,
+          default: uuidv4(),
+        },
+      },
+    };
+  }
+  return schema;
 };

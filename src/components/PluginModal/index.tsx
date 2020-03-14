@@ -14,7 +14,7 @@ interface Props {
 }
 
 const formLayout = {
-  labelCol: { span: 12 },
+  labelCol: { span: 4 },
   wrapperCol: { span: 12 },
 };
 
@@ -159,6 +159,8 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
           if (propertyValue.type === 'array') {
             return renderArrayComponent(propertyName, propertyValue);
           }
+
+          // TODO: object
 
           return (
             <Form.Item
