@@ -14,8 +14,8 @@ interface Props {
 }
 
 const formLayout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 12 },
+  labelCol: { span: 10 },
+  wrapperCol: { span: 14 },
 };
 
 const renderComponentByProperty = (propertyValue: PluginProperty) => {
@@ -116,7 +116,7 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
   return (
     // TODO: i18n
     <Modal destroyOnClose visible={visible} title={`编辑插件：${name}`}>
-      <Form {...formLayout} form={form} onFinish={onFinish}>
+      <Form {...formLayout} form={form} onFinish={onFinish} labelAlign="left">
         {Object.entries(schema?.properties || {}).map(([propertyName, propertyValue]) => {
           // eslint-disable-next-line arrow-body-style
           if (propertyValue.type === 'array') {
