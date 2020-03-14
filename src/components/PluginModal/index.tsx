@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Switch, Select, InputNumber, Button } from 'antd';
 import { useForm } from 'antd/es/form/util';
-import { Rule } from 'antd/es/form';
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 import { fetchPluginSchema } from '@/services/plugin';
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { transformPropertyToRules } from '@/transforms/plugin';
 
 interface Props {
   visible: boolean;
@@ -77,45 +77,6 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
     }
   }, [name]);
 
-  const calculateRules = (propertyName: string, propertyValue: PluginProperty): Rule[] => {
-    if (!schema) {
-      return [];
-    }
-
-    const { type, minLength, maxLength, minimum, maximum, pattern } = propertyValue;
-
-    const requiredRule = schema.required?.includes(propertyName) ? [{ required: true }] : [];
-    const typeRule = [{ type }];
-    const enumRule = propertyValue.enum ? [{ type: 'enum', enum: propertyValue.enum }] : [];
-    const rangeRule =
-      type !== 'string' &&
-      type !== 'array' &&
-      (propertyValue.hasOwnProperty('minimum') || propertyValue.hasOwnProperty('maximum'))
-        ? [
-            {
-              min: minimum ?? Number.MIN_SAFE_INTEGER,
-              max: maximum ?? Number.MAX_SAFE_INTEGER,
-            },
-          ]
-        : [];
-    const lengthRule =
-      type === 'string' || type === 'array'
-        ? [{ min: minLength ?? Number.MIN_SAFE_INTEGER, max: maxLength ?? Number.MAX_SAFE_INTEGER }]
-        : [];
-    const customPattern = pattern ? [{ pattern: new RegExp(pattern) }] : [];
-
-    const rules = [
-      ...requiredRule,
-      ...typeRule,
-      ...enumRule,
-      ...rangeRule,
-      ...lengthRule,
-      ...customPattern,
-    ];
-    const flattend = rules.reduce((prev, next) => ({ ...prev, ...next }));
-    return [flattend] as Rule[];
-  };
-
   const renderArrayComponent = (propertyName: string, propertyValue: PluginProperty) => (
     <Form.List key={propertyName} name={propertyName}>
       {(fields, { add, remove }) => (
@@ -123,7 +84,7 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
           {fields.map((field, index) => (
             <Form.Item
               key={field.key}
-              rules={calculateRules(propertyName, propertyValue)}
+              rules={transformPropertyToRules(schema!, propertyName, propertyValue)}
               label={`${propertyName}-${index + 1}`}
             >
               <Form.Item
@@ -169,7 +130,7 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
               label={propertyName}
               name={propertyName}
               key={propertyName}
-              rules={calculateRules(propertyName, propertyValue)}
+              rules={transformPropertyToRules(schema!, propertyName, propertyValue)}
               valuePropName={propertyValue.type === 'boolean' ? 'checked' : 'value'}
             >
               {renderComponentByProperty(propertyValue)}
