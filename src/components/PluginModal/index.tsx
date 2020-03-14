@@ -87,14 +87,7 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
               rules={transformPropertyToRules(schema!, propertyName, propertyValue)}
               label={`${propertyName}-${index + 1}`}
             >
-              <Form.Item
-                {...field}
-                valuePropName={propertyValue.type === 'boolean' ? 'checked' : 'value'}
-                noStyle
-              >
-                {/* NOTE: When property type is array, the property.items' type is string currently. */}
-                {renderComponentByProperty({ type: 'string' })}
-              </Form.Item>
+              {renderComponentByProperty({ type: 'string' })}
               {fields.length > 1 ? (
                 <MinusCircleOutlined onClick={() => remove(field.name)} />
               ) : (
