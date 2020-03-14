@@ -95,12 +95,15 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
               )}
             </Form.Item>
           ))}
-          <Form.Item label={propertyName}>
-            <Button type="dashed" onClick={add}>
-              {/* TODO: i18n */}
-              <PlusOutlined /> Add
-            </Button>
-          </Form.Item>
+          {/* BUG: There should also care about minItems */}
+          {fields.length < (propertyValue.maxItems ?? Number.MAX_SAFE_INTEGER) ? (
+            <Form.Item label={propertyName}>
+              <Button type="dashed" onClick={add}>
+                {/* TODO: i18n */}
+                <PlusOutlined /> Add
+              </Button>
+            </Form.Item>
+          ) : null}
         </>
       )}
     </Form.List>
