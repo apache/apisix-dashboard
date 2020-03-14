@@ -60,6 +60,7 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
     if (name) {
       fetchPluginSchema(name).then(data => {
         setSchema(data);
+        console.log(name, data);
 
         const propertyDefaultData = {};
         Object.entries(data.properties || {}).forEach(([propertyName, propertyValue]) => {
