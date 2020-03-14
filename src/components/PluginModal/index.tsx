@@ -18,7 +18,14 @@ const formLayout = {
   wrapperCol: { span: 14 },
 };
 
-const renderComponentByProperty = (propertyValue: PluginProperty) => {
+interface RenderComponentProps {
+  placeholder?: string;
+}
+
+const renderComponentByProperty = (
+  propertyValue: PluginProperty,
+  restProps?: RenderComponentProps,
+) => {
   const { type, minimum, maximum } = propertyValue;
 
   if (type === 'string') {
@@ -33,7 +40,7 @@ const renderComponentByProperty = (propertyValue: PluginProperty) => {
         </Select>
       );
     }
-    return <Input />;
+    return <Input {...restProps} />;
   }
 
   if (type === 'boolean') {
@@ -49,8 +56,51 @@ const renderComponentByProperty = (propertyValue: PluginProperty) => {
     );
   }
 
-  return <Input />;
+  return <Input {...restProps} />;
 };
+
+interface ArrayComponentProps {
+  schema: PluginSchema;
+  propertyName: string;
+  propertyValue: PluginProperty;
+}
+
+const ArrayComponent: React.FC<ArrayComponentProps> = ({
+  propertyName,
+  propertyValue,
+  schema,
+  children,
+}) => (
+  <Form.List key={propertyName} name={propertyName}>
+    {(fields, { add, remove }) => (
+      <>
+        {fields.map((field, index) => (
+          <Form.Item
+            key={field.key}
+            rules={transformPropertyToRules(schema!, propertyName, propertyValue)}
+            label={`${propertyName}-${index + 1}`}
+          >
+            {children}
+            {fields.length > 1 ? (
+              <MinusCircleOutlined onClick={() => remove(field.name)} />
+            ) : (
+              <React.Fragment />
+            )}
+          </Form.Item>
+        ))}
+        {/* BUG: There should also care about minItems */}
+        {fields.length < (propertyValue.maxItems ?? Number.MAX_SAFE_INTEGER) ? (
+          <Form.Item label={propertyName}>
+            <Button type="dashed" onClick={add}>
+              {/* TODO: i18n */}
+              <PlusOutlined /> Add
+            </Button>
+          </Form.Item>
+        ) : null}
+      </>
+    )}
+  </Form.List>
+);
 
 const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinish }) => {
   const [schema, setSchema] = useState<PluginSchema>();
@@ -77,38 +127,6 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
     }
   }, [name]);
 
-  const renderArrayComponent = (propertyName: string, propertyValue: PluginProperty) => (
-    <Form.List key={propertyName} name={propertyName}>
-      {(fields, { add, remove }) => (
-        <>
-          {fields.map((field, index) => (
-            <Form.Item
-              key={field.key}
-              rules={transformPropertyToRules(schema!, propertyName, propertyValue)}
-              label={`${propertyName}-${index + 1}`}
-            >
-              {renderComponentByProperty({ type: 'string' })}
-              {fields.length > 1 ? (
-                <MinusCircleOutlined onClick={() => remove(field.name)} />
-              ) : (
-                <React.Fragment />
-              )}
-            </Form.Item>
-          ))}
-          {/* BUG: There should also care about minItems */}
-          {fields.length < (propertyValue.maxItems ?? Number.MAX_SAFE_INTEGER) ? (
-            <Form.Item label={propertyName}>
-              <Button type="dashed" onClick={add}>
-                {/* TODO: i18n */}
-                <PlusOutlined /> Add
-              </Button>
-            </Form.Item>
-          ) : null}
-        </>
-      )}
-    </Form.List>
-  );
-
   return (
     // TODO: i18n
     <Modal destroyOnClose visible={visible} title={`编辑插件：${name}`}>
@@ -116,10 +134,30 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
         {Object.entries(schema?.properties || {}).map(([propertyName, propertyValue]) => {
           // eslint-disable-next-line arrow-body-style
           if (propertyValue.type === 'array') {
-            return renderArrayComponent(propertyName, propertyValue);
+            return (
+              <ArrayComponent
+                schema={schema!}
+                propertyName={propertyName}
+                propertyValue={propertyValue}
+              >
+                {renderComponentByProperty({ type: 'string' })}
+              </ArrayComponent>
+            );
           }
 
-          // TODO: object
+          if (propertyValue.type === 'object') {
+            return (
+              <ArrayComponent
+                schema={schema!}
+                propertyName={propertyName}
+                propertyValue={propertyValue}
+              >
+                {/* TODO: there should not be fixed value, and it should receive custom key */}
+                {renderComponentByProperty({ type: 'string' }, { placeholder: 'Header' })}
+                {renderComponentByProperty({ type: 'string' }, { placeholder: 'Value' })}
+              </ArrayComponent>
+            );
+          }
 
           return (
             <Form.Item
