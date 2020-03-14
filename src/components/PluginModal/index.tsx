@@ -56,6 +56,7 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
   useEffect(() => {
     if (name) {
       fetchPluginSchema(name).then(data => {
+        console.log(name, data);
         setSchema(data);
 
         requestAnimationFrame(() => {
@@ -70,20 +71,28 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
       return [];
     }
 
+    const { type, minLength, maxLength, minimum, maximum } = propertyValue;
+
     const requiredRule = schema.required?.includes(propertyName) ? [{ required: true }] : [];
-    const typeRule = [{ type: propertyValue.type }];
+    const typeRule = [{ type }];
     const enumRule = propertyValue.enum ? [{ type: 'enum', enum: propertyValue.enum }] : [];
     const rangeRule =
-      propertyValue.hasOwnProperty('minimum') || propertyValue.hasOwnProperty('maximum')
+      type !== 'string' &&
+      type !== 'array' &&
+      (propertyValue.hasOwnProperty('minimum') || propertyValue.hasOwnProperty('maximum'))
         ? [
             {
-              min: propertyValue.minimum ?? Number.MIN_SAFE_INTEGER,
-              max: propertyValue.maximum ?? Number.MAX_SAFE_INTEGER,
+              min: minimum ?? Number.MIN_SAFE_INTEGER,
+              max: maximum ?? Number.MAX_SAFE_INTEGER,
             },
           ]
         : [];
+    const lengthRule =
+      type === 'string' || type === 'array'
+        ? [{ min: minLength ?? Number.MIN_SAFE_INTEGER, max: maxLength ?? Number.MAX_SAFE_INTEGER }]
+        : [];
 
-    const rules = [...requiredRule, ...typeRule, ...enumRule, ...rangeRule];
+    const rules = [...requiredRule, ...typeRule, ...enumRule, ...rangeRule, ...lengthRule];
     const flattend = rules.reduce((prev, next) => ({ ...prev, ...next }));
     return [flattend] as Rule[];
   };
