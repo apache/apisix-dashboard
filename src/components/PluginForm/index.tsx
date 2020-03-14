@@ -133,6 +133,7 @@ const PluginForm: React.FC<Props> = ({ name, initialData = {}, onFinish }) => {
         if (propertyValue.type === 'array') {
           return (
             <ArrayComponent
+              key={propertyName}
               schema={schema!}
               propertyName={propertyName}
               propertyValue={propertyValue}
@@ -145,6 +146,7 @@ const PluginForm: React.FC<Props> = ({ name, initialData = {}, onFinish }) => {
         if (propertyValue.type === 'object') {
           return (
             <ArrayComponent
+              key={propertyName}
               schema={schema!}
               propertyName={propertyName}
               propertyValue={propertyValue}
