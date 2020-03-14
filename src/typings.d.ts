@@ -39,14 +39,6 @@ declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 
 type PageMode = 'CREATE' | 'EDIT' | 'VIEW';
 
-/**
- * TODO: //
- * 1. key-auth 在前端生成 Key
- * 2. prometheus 没有 properties 字段，选中后直接标记为启用。
- * 4. ip-restriction 较为复杂
- * 5.
- */
-
 interface PluginProperty {
   type: 'number' | 'string' | 'integer' | 'array' | 'boolean' | 'object';
   // the same as type
