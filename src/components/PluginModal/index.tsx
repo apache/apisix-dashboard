@@ -14,17 +14,18 @@ interface Props {
 }
 
 const formLayout = {
-  labelCol: { span: 7 },
+  labelCol: { span: 12 },
   wrapperCol: { span: 12 },
 };
 
-const renderComponentByProperty = (property: PluginProperty) => {
-  const { type, minimum, maximum } = property;
+const renderComponentByProperty = (propertyValue: PluginProperty) => {
+  const { type, minimum, maximum } = propertyValue;
+
   if (type === 'string') {
-    if (property.enum) {
+    if (propertyValue.enum) {
       return (
         <Select>
-          {property.enum.map(enumValue => (
+          {propertyValue.enum.map(enumValue => (
             <Select.Option value={enumValue} key={enumValue}>
               {enumValue}
             </Select.Option>
@@ -60,6 +61,14 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
       fetchPluginSchema(name).then(data => {
         setSchema(data);
 
+        const propertyDefaultData = {};
+        Object.entries(data.properties || {}).forEach(([propertyName, propertyValue]) => {
+          if (propertyValue.hasOwnProperty('default')) {
+            propertyDefaultData[propertyName] = propertyValue.default;
+          }
+        });
+        form.setFieldsValue(propertyDefaultData);
+
         requestAnimationFrame(() => {
           form.setFieldsValue(initialData);
         });
@@ -72,7 +81,7 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
       return [];
     }
 
-    const { type, minLength, maxLength, minimum, maximum } = propertyValue;
+    const { type, minLength, maxLength, minimum, maximum, pattern } = propertyValue;
 
     const requiredRule = schema.required?.includes(propertyName) ? [{ required: true }] : [];
     const typeRule = [{ type }];
@@ -92,11 +101,55 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
       type === 'string' || type === 'array'
         ? [{ min: minLength ?? Number.MIN_SAFE_INTEGER, max: maxLength ?? Number.MAX_SAFE_INTEGER }]
         : [];
+    const customPattern = pattern ? [{ pattern: new RegExp(pattern) }] : [];
 
-    const rules = [...requiredRule, ...typeRule, ...enumRule, ...rangeRule, ...lengthRule];
+    const rules = [
+      ...requiredRule,
+      ...typeRule,
+      ...enumRule,
+      ...rangeRule,
+      ...lengthRule,
+      ...customPattern,
+    ];
     const flattend = rules.reduce((prev, next) => ({ ...prev, ...next }));
     return [flattend] as Rule[];
   };
+
+  const renderArrayComponent = (propertyName: string, propertyValue: PluginProperty) => (
+    <Form.List key={propertyName} name={propertyName}>
+      {(fields, { add, remove }) => (
+        <>
+          {fields.map((field, index) => (
+            <Form.Item
+              key={field.key}
+              rules={calculateRules(propertyName, propertyValue)}
+              label={`${propertyName}-${index + 1}`}
+            >
+              <Form.Item
+                {...field}
+                valuePropName={propertyValue.type === 'boolean' ? 'checked' : 'value'}
+                noStyle
+              >
+                {/* NOTE: When property type is array, the property.items' type is string currently. */}
+                {renderComponentByProperty({ type: 'string' })}
+              </Form.Item>
+              {fields.length > 1 ? (
+                <MinusCircleOutlined onClick={() => remove(field.name)} />
+              ) : (
+                <React.Fragment />
+              )}
+            </Form.Item>
+          ))}
+          <Form.Item label={propertyName}>
+            <Button type="dashed" onClick={add}>
+              {/* TODO: i18n */}
+              <PlusOutlined /> Add
+            </Button>
+          </Form.Item>
+        </>
+      )}
+    </Form.List>
+  );
 
   return (
     <Modal destroyOnClose visible={visible}>
@@ -104,37 +157,7 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
         {Object.entries(schema?.properties || {}).map(([propertyName, propertyValue]) => {
           // eslint-disable-next-line arrow-body-style
           if (propertyValue.type === 'array') {
-            return (
-              <Form.List key={propertyName} name={propertyName}>
-                {(fields, { add, remove }) => (
-                  <>
-                    {fields.map((field, index) => (
-                      <Form.Item
-                        key={field.key}
-                        rules={calculateRules(propertyName, propertyValue)}
-                        label={`${propertyName}-${index + 1}`}
-                      >
-                        <Form.Item {...field} noStyle>
-                          {/* NOTE: When property type is array, the property.items' type is string currently. */}
-                          {renderComponentByProperty({ type: 'string' })}
-                        </Form.Item>
-                        {fields.length > 1 ? (
-                          <MinusCircleOutlined onClick={() => remove(field.name)} />
-                        ) : (
-                          <React.Fragment />
-                        )}
-                      </Form.Item>
-                    ))}
-                    <Form.Item label={propertyName}>
-                      <Button type="dashed" onClick={add}>
-                        {/* TODO: i18n */}
-                        <PlusOutlined /> Add
-                      </Button>
-                    </Form.Item>
-                  </>
-                )}
-              </Form.List>
-            );
+            return renderArrayComponent(propertyName, propertyValue);
           }
 
           return (
@@ -143,6 +166,7 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
               name={propertyName}
               key={propertyName}
               rules={calculateRules(propertyName, propertyValue)}
+              valuePropName={propertyValue.type === 'boolean' ? 'checked' : 'value'}
             >
               {renderComponentByProperty(propertyValue)}
             </Form.Item>
