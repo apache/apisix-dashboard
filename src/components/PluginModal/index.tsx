@@ -153,7 +153,8 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
   );
 
   return (
-    <Modal destroyOnClose visible={visible}>
+    // TODO: i18n
+    <Modal destroyOnClose visible={visible} title={`编辑插件：${name}`}>
       <Form {...formLayout} form={form} onFinish={onFinish}>
         {Object.entries(schema?.properties || {}).map(([propertyName, propertyValue]) => {
           // eslint-disable-next-line arrow-body-style
