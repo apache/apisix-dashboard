@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, Switch, Select, InputNumber } from 'antd';
+import { Modal, Form, Input, Switch, Select, InputNumber, Button } from 'antd';
 import { useForm } from 'antd/es/form/util';
 import { Rule } from 'antd/es/form';
 
 import { fetchPluginSchema } from '@/services/plugin';
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 interface Props {
   visible: boolean;
@@ -18,7 +19,8 @@ const formLayout = {
 };
 
 const renderComponentByProperty = (property: PluginProperty) => {
-  if (property.type === 'string') {
+  const { type, minimum, maximum } = property;
+  if (type === 'string') {
     if (property.enum) {
       return (
         <Select>
@@ -33,15 +35,15 @@ const renderComponentByProperty = (property: PluginProperty) => {
     return <Input />;
   }
 
-  if (property.type === 'boolean') {
+  if (type === 'boolean') {
     return <Switch />;
   }
 
-  if (property.type === 'number' || property.type === 'integer') {
+  if (type === 'number' || type === 'integer') {
     return (
       <InputNumber
-        min={property.minimum ?? Number.MIN_SAFE_INTEGER}
-        max={property.maximum ?? Number.MAX_SAFE_INTEGER}
+        min={minimum ?? Number.MIN_SAFE_INTEGER}
+        max={maximum ?? Number.MAX_SAFE_INTEGER}
       />
     );
   }
@@ -56,7 +58,6 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
   useEffect(() => {
     if (name) {
       fetchPluginSchema(name).then(data => {
-        console.log(name, data);
         setSchema(data);
 
         requestAnimationFrame(() => {
@@ -100,16 +101,53 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
   return (
     <Modal destroyOnClose visible={visible}>
       <Form {...formLayout} form={form} onFinish={onFinish}>
-        {Object.entries(schema?.properties || {}).map(([propertyName, propertyValue]) => (
-          <Form.Item
-            label={propertyName}
-            name={propertyName}
-            key={propertyName}
-            rules={calculateRules(propertyName, propertyValue)}
-          >
-            {renderComponentByProperty(propertyValue)}
-          </Form.Item>
-        ))}
+        {Object.entries(schema?.properties || {}).map(([propertyName, propertyValue]) => {
+          // eslint-disable-next-line arrow-body-style
+          if (propertyValue.type === 'array') {
+            return (
+              <Form.List key={propertyName} name={propertyName}>
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map((field, index) => (
+                      <Form.Item
+                        key={field.key}
+                        rules={calculateRules(propertyName, propertyValue)}
+                        label={`${propertyName}-${index + 1}`}
+                      >
+                        <Form.Item {...field} noStyle>
+                          {/* NOTE: When property type is array, the property.items' type is string currently. */}
+                          {renderComponentByProperty({ type: 'string' })}
+                        </Form.Item>
+                        {fields.length > 1 ? (
+                          <MinusCircleOutlined onClick={() => remove(field.name)} />
+                        ) : (
+                          <React.Fragment />
+                        )}
+                      </Form.Item>
+                    ))}
+                    <Form.Item label={propertyName}>
+                      <Button type="dashed" onClick={add}>
+                        {/* TODO: i18n */}
+                        <PlusOutlined /> Add
+                      </Button>
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
+            );
+          }
+
+          return (
+            <Form.Item
+              label={propertyName}
+              name={propertyName}
+              key={propertyName}
+              rules={calculateRules(propertyName, propertyValue)}
+            >
+              {renderComponentByProperty(propertyValue)}
+            </Form.Item>
+          );
+        })}
       </Form>
     </Modal>
   );
