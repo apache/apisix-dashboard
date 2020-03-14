@@ -70,10 +70,7 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
       return [];
     }
 
-    // TODO: i18n
-    const requiredRule = schema.required?.includes(propertyName)
-      ? [{ required: true, message: '必填' }]
-      : [];
+    const requiredRule = schema.required?.includes(propertyName) ? [{ required: true }] : [];
     const typeRule = [{ type: propertyValue.type }];
     const enumRule = propertyValue.enum ? [{ type: 'enum', enum: propertyValue.enum }] : [];
     const rangeRule =
@@ -86,7 +83,9 @@ const PluginModal: React.FC<Props> = ({ name, visible, initialData = {}, onFinis
           ]
         : [];
 
-    return [...requiredRule, ...typeRule, ...enumRule, ...rangeRule] as Rule[];
+    const rules = [...requiredRule, ...typeRule, ...enumRule, ...rangeRule];
+    const flattend = rules.reduce((prev, next) => ({ ...prev, ...next }));
+    return [flattend] as Rule[];
   };
 
   return (
