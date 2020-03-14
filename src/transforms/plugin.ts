@@ -17,7 +17,7 @@ export const transformSchemaFromAPI = (schema: PluginSchema, pluginName: string)
     };
   }
 
-  if (pluginName === 'prometheus') {
+  if (pluginName === 'prometheus' || pluginName === 'node-status') {
     return {
       ...schema,
       properties: {
