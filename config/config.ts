@@ -202,5 +202,6 @@ export default {
   },
   proxy: proxy[REACT_APP_ENV || 'dev'],
   chainWebpack: webpackPlugin,
-  API_KEY: 'edd1c9f034335f136f87ad84b625c8f1'
 } as IConfig;
+
+export const API_KEY = 'edd1c9f034335f136f87ad84b625c8f1';
