@@ -31,7 +31,7 @@
     "tsc": "tsc",
     "ui": "umi ui"
   },
-  "husky": { "hooks": { "pre-commit": "npm run lint-staged" } },
+  "husky": { "hooks": { "pre-commit": "npm run lint-staged", "commit-msg": "node scripts/verifyCommit.js" } },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
     "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js",
