@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Switch, Select, InputNumber, Button } from 'antd';
 import { useForm } from 'antd/es/form/util';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { formatMessage } from 'umi-plugin-react/locale';
 
 import { fetchPluginSchema } from '@/services/plugin';
 import { transformPropertyToRules } from '@/transforms/plugin';
@@ -91,8 +92,7 @@ const ArrayComponent: React.FC<ArrayComponentProps> = ({
         {fields.length < (propertyValue.maxItems ?? Number.MAX_SAFE_INTEGER) ? (
           <Form.Item label={propertyName}>
             <Button type="dashed" onClick={add}>
-              {/* TODO: i18n */}
-              <PlusOutlined /> Add
+              <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
             </Button>
           </Form.Item>
         ) : null}

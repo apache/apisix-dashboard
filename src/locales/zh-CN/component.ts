@@ -6,11 +6,13 @@ export default {
   'component.global.cancel': '取消',
   'component.global.submit': '提交',
   'component.global.create': '创建',
+  'component.global.add': '增加',
   'component.global.save': '保存',
   'component.global.edit': '编辑',
   'component.global.action': '操作',
   'component.global.update': '更新',
   'component.global.get': '获取',
+  'component.global.edit.plugin': '编辑插件',
   'component.status.success': '成功',
   'component.status.fail': '失败',
   // SSL 模块

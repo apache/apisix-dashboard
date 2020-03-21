@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal } from 'antd';
+import { formatMessage } from 'umi-plugin-react/locale';
 
 import PluginForm from '@/components/PluginForm';
 
@@ -14,8 +15,11 @@ const PluginModal: React.FC<Props> = props => {
   const { name, visible } = props;
 
   return (
-    // TODO: i18n
-    <Modal destroyOnClose visible={visible} title={`编辑插件：${name}`}>
+    <Modal
+      destroyOnClose
+      visible={visible}
+      title={`${formatMessage({ id: 'component.global.edit.plugin' })} ${name}`}
+    >
       <PluginForm {...props} />
     </Modal>
   );
