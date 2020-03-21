@@ -6,11 +6,13 @@ export default {
   'component.global.cancel': 'Cancel',
   'component.global.submit': 'Submit',
   'component.global.create': 'Create',
+  'component.global.add': 'Add',
   'component.global.save': 'Save',
   'component.global.edit': 'Edit',
   'component.global.action': 'Action',
   'component.global.update': 'Update',
   'component.global.get': 'Get',
+  'component.global.edit.plugin': 'Edit plugin',
   'component.status.success': 'Successfully',
   'component.status.fail': 'Failed',
   // SSL Module
