@@ -28,10 +28,11 @@
       <el-form-item :prop="'var.' + index + '.ip'">
         <el-select
           v-model="item.name"
+          :placeholder="$t('schema.route.inputMultipleValues')"
           filterable
           allow-create
           default-first-option
-          :placeholder="$t('schema.route.inputMultipleValues')"
+          @change="onChange"
         >
           <el-option
             v-for="name in varNames"
@@ -43,6 +44,7 @@
         <el-select
           v-model="item.operator"
           placeholder="Operator"
+          @change="onChange"
         >
           <el-option
             v-for="operator in varOperator"
@@ -56,12 +58,13 @@
         <el-input
           v-model="item.value"
           placeholder=""
+          @input="onChange"
         />
       </el-form-item>
       <el-form-item>
         <el-button
           type="danger"
-          @click.prevent="removeVar(item)"
+          @click.prevent="removeVar(index)"
         >
           {{ $t("button.delete") }}
         </el-button>
@@ -76,44 +79,48 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue, Watch, Prop } from 'vue-property-decorator'
 
 @Component({
   name: 'VarArgs'
 })
 export default class extends Vue {
+  @Prop({ default: () => [] }) private pVars!: any
   private isFullscreen = false;
-  private vars = [];
-  private varNames = ['arg_id', 'arg_name'];
+  private get vars() {
+    const _vars = this.pVars.map((arr:Array<any>) => {
+      const [name, operator, value] = arr
+      return { name, operator, value }
+    })
+    return _vars
+  }
+  private varNames = ['remote_addr', 'host', 'uri', 'http_user_agent', 'http_referer', 'http_cookie', 'http_accept_language', 'request_uri', 'query_string', 'remote_port', 'hostname', 'arg_id'];
 
   private varOperator = ['==', '~=', '>', '<', '~~'];
 
-  @Watch('vars', { immediate: true, deep: true })
-  private onvarsChange() {
-    console.log(this.vars)
-    const val = this.vars.map(e => Object.values(e))
-    this.$emit('onChange', val)
+  private onChange() {
+    const val = this.vars.map((e:any) => Object.values(e))
+    this.$emit('update:pVars', val)
   }
 
   private addVar() {
     (this.vars as any).push({
       name: null,
       operator: null,
-      value: 0
+      value: null
     })
+    this.onChange()
   }
 
-  private removeVar(item: any) {
+  private removeVar(index:number) {
     this.$confirm(`Do you want to remove the var?`, 'Warning', {
       confirmButtonText: 'Confirm',
       cancelButtonText: 'Cancel',
       type: 'warning'
     })
       .then(async() => {
-        const index = (this.vars as any).indexOf(item)
-        if (index !== -1) {
-          this.vars.splice(index, 1)
-        }
+        this.vars.splice(index, 1)
+        this.onChange()
       })
       .catch(() => {})
   }

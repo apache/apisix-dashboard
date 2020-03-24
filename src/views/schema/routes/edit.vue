@@ -194,7 +194,10 @@
           {{ $t('button.add_plugin') }}
         </el-button>
       </el-form-item>
-      <VarArgs @onChange="onVarArgsChange" />
+      <VarArgs
+        :p-vars.sync="form.vars"
+        @onChange="onVarArgsChange"
+      />
 
       <el-form-item>
         <el-button
