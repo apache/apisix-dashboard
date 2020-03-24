@@ -74,7 +74,8 @@ export default {
   schema: {
     route: {
       inputMultipleValues: 'Input value then press return button',
-      propertyHostsTip: 'Any values are supported'
+      propertyHostsTip: 'Any values are supported',
+      fileterFunc: 'User-defined filtering function，Begins with "function()" and ends with "end".'
     }
   },
   upstream: {

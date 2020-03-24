@@ -199,6 +199,18 @@
         @onChange="onVarArgsChange"
       />
 
+      <el-form-item
+        label="filter_func"
+        prop="filter_func"
+      >
+        <el-input
+          v-model="form.filter_func"
+          type="textarea"
+          :autosize="{minRows: 2, maxRows: 4}"
+          :placeholder="$t('schema.route.fileterFunc')"
+        />
+      </el-form-item>
+
       <el-form-item>
         <el-button
           type="primary"
@@ -234,6 +246,8 @@ import { getUpstreamList } from '@/api/schema/upstream'
 import { getServiceList } from '@/api/schema/services'
 import { TagsViewModule } from '@/store/modules/tags-view'
 
+import i18n from '@/lang'
+
 @Component({
   name: 'RouterEdit',
   components: {
@@ -252,17 +266,22 @@ export default class extends Vue {
     methods: [],
     plugins: {},
     vars: [],
-    desc: ''
+    desc: '',
+    filter_func: ''
   }
 
   // TODO: can add existed info from route list
   private ExistedUris = [{}]
   private ExistedHosts = [{}]
+  private validateFilterFuncRegexp = /^function\(\)[^]*?\bend$/
 
   private rules = {
     uris: {
       required: true
-    }
+    },
+    filter_func: [
+      { pattern: this.validateFilterFuncRegexp, trigger: 'blur', message: i18n.t('schema.route.fileterFunc') }
+    ]
   }
   private isEditMode: boolean = false
 
@@ -302,7 +321,8 @@ export default class extends Vue {
       methods: [],
       plugins: {},
       vars: [],
-      desc: ''
+      desc: '',
+      filter_func: ''
     }
   }
 
@@ -347,7 +367,8 @@ export default class extends Vue {
           methods = [],
           plugins = {},
           vars = [],
-          desc = ''
+          desc = '',
+          filter_func = ''
         }
       }
     } = await getRouter(id) as any
@@ -369,12 +390,13 @@ export default class extends Vue {
       methods,
       plugins,
       vars,
-      desc
+      desc,
+      filter_func
     }
   }
 
   private async onSubmit() {
-    (this.$refs.form as any).validate(async(valid: boolean) => {
+    (this.$refs.form as any).validate(async(valid: boolean, invalidField: any) => {
       if (valid) {
         let data = Object.assign({}, this.form)
         if (!data.methods.length) {
@@ -411,6 +433,9 @@ export default class extends Vue {
           })
         }
       } else {
+        if (invalidField.filter_func) {
+          this.$message.warning(invalidField.filter_func[0].message)
+        }
         return false
       }
     })
