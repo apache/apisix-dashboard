@@ -194,6 +194,10 @@
           {{ $t('button.add_plugin') }}
         </el-button>
       </el-form-item>
+      <VarArgs
+        :p-vars.sync="form.vars"
+        @onChange="onVarArgsChange"
+      />
 
       <el-form-item>
         <el-button
@@ -222,6 +226,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Form } from 'element-ui'
 
 import PluginDialog from '@/components/PluginDialog/index.vue'
+import VarArgs from '@/components/VarArgs/index.vue'
 
 import { getRouter, createRouter, updateRouter } from '@/api/schema/routes'
 import { getPluginList } from '@/api/schema/plugins'
@@ -232,7 +237,8 @@ import { TagsViewModule } from '@/store/modules/tags-view'
 @Component({
   name: 'RouterEdit',
   components: {
-    PluginDialog
+    PluginDialog,
+    VarArgs
   }
 })
 
@@ -245,6 +251,7 @@ export default class extends Vue {
     service_id: '',
     methods: [],
     plugins: {},
+    vars: [],
     desc: ''
   }
 
@@ -294,6 +301,7 @@ export default class extends Vue {
       service_id: '',
       methods: [],
       plugins: {},
+      vars: [],
       desc: ''
     }
   }
@@ -338,6 +346,7 @@ export default class extends Vue {
           service_id = '',
           methods = [],
           plugins = {},
+          vars = [],
           desc = ''
         }
       }
@@ -359,6 +368,7 @@ export default class extends Vue {
       service_id,
       methods,
       plugins,
+      vars,
       desc
     }
   }
@@ -476,6 +486,10 @@ export default class extends Vue {
         Vue.delete(this.form.plugins, name)
       }).catch(() => {})
   }
+
+  private onVarArgsChange(val: any) {
+    this.form.vars = val
+  }
 }
 </script>
 
@@ -494,6 +508,15 @@ export default class extends Vue {
           margin: 0;
           color: #8e8c8c;
         }
+      }
+    }
+  }
+  .var-item {
+    .el-form-item {
+      margin-bottom: 10px;
+      display: inline-block;
+      .el-form-item__content {
+        margin-right: 10px;
       }
     }
   }

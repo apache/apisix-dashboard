@@ -67,6 +67,7 @@ export default {
     cancel: 'Cancel',
     add_plugin: 'Add Plugin',
     add_node: 'Add Node',
+    add_var: 'Add Var',
     delete: 'Delete',
     addValue: 'Add Value'
   },

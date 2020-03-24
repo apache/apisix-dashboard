@@ -389,7 +389,7 @@ export default class extends Vue {
   }
 
   private removeNode(item: any) {
-    this.$confirm(`Do you want to remove the node?`, 'Warning', {
+    this.$confirm('Do you want to remove the node?', 'Warning', {
       confirmButtonText: 'Confirm',
       cancelButtonText: 'Cancel',
       type: 'warning'
@@ -425,7 +425,6 @@ export default class extends Vue {
     .el-form-item {
       margin-bottom: 10px;
       display: inline-block;
-      .el-form-item__label {}
       .el-form-item__content {
         margin-right: 10px;
       }
