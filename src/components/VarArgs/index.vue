@@ -113,7 +113,7 @@ export default class extends Vue {
   }
 
   private removeVar(index:number) {
-    this.$confirm(`Do you want to remove the var?`, 'Warning', {
+    this.$confirm('Do you want to remove the var?', 'Warning', {
       confirmButtonText: 'Confirm',
       cancelButtonText: 'Cancel',
       type: 'warning'
