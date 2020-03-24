@@ -75,6 +75,7 @@ export default {
     cancel: '取消',
     add_plugin: '添加 Plugin',
     add_node: '添加 Node',
+    add_var: '添加 Var',
     delete: '删除',
     addValue: '添加值'
   },
