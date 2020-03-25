@@ -82,7 +82,8 @@ export default {
   schema: {
     route: {
       inputMultipleValues: '输入值后并回车',
-      propertyHostsTip: '任何值均可'
+      propertyHostsTip: '任何值均可',
+      fileterFunc: '用户自定义的过滤函数，以‘function()’开头，以‘end’结尾。'
     }
   },
   upstream: {
