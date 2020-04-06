@@ -85,5 +85,8 @@ export default {
     },
     keyTip: 'You can edit and input any value here,and press Enter to confirm.',
     hashOnTip: 'Select a hash on.'
+  },
+  message: {
+    cannotAddMore: 'You cannot add more item!'
   }
 }

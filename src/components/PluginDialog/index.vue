@@ -132,6 +132,26 @@
             active-color="#13ce66"
             inactive-color="#ff4949"
           />
+
+          <!-- array property -->
+          <div v-if="schema.properties[key].type === 'array'">
+            <!-- @input="onPropertyChange(key, $event)" -->
+            <el-input
+              v-for="(arrayIndex) in arrayPropertiesLength[key]"
+              :key="arrayIndex"
+              v-model="data[key][arrayIndex]"
+              :placeholder="key + ' [' + (arrayIndex) + ']'"
+              style="margin-top:5px;"
+              @input="isDataChanged = true"
+            />
+
+            <el-button
+              style="margin-top:5px;"
+              @click="addArrayItem(key)"
+            >
+              {{ $t('button.addValue') }}
+            </el-button>
+          </div>
         </el-form-item>
       </el-form>
       <span
@@ -177,6 +197,7 @@ export default class extends Vue {
   private data: any = {}
   private isDataChanged: boolean = false
   private showDialog: boolean = false
+  private arrayPropertiesLength = {}
 
   @Watch('show')
   private onShowChange(value: boolean) {
@@ -242,8 +263,37 @@ export default class extends Vue {
 
     this.rules = rules
 
+    // Generate initial data and merge current data
+    let schemaKeys = {}
+    for (let key in schema.properties) {
+      if (schema.properties[key].default) {
+        schemaKeys[key] = schema.properties[key].default
+        continue
+      }
+
+      switch (schema.properties[key].type) {
+        case 'array':
+          schemaKeys[key] = []
+          this.arrayPropertiesLength[key] = [...new Array(this.pluginData[key] ? this.pluginData[key].length : schema.properties[key].minItems).keys()]
+          break
+
+        case 'object':
+          schemaKeys[key] = {}
+          break
+
+        case 'boolean':
+          schemaKeys[key] = false
+          break
+
+        default:
+          schemaKeys[key] = ''
+      }
+    }
+
     if (this.pluginData) {
-      this.data = Object.assign({}, this.pluginData)
+      this.data = Object.assign(schemaKeys, this.pluginData)
+    } else {
+      this.data = schemaKeys
     }
 
     if (this.name === 'key-auth' && !this.pluginData) {
@@ -291,6 +341,19 @@ export default class extends Vue {
     })
   }
 
+  /**
+   * Add item to array property
+   * @param key
+   */
+  private addArrayItem(key: any) {
+    if (this.arrayPropertiesLength[key].length < this.schema.properties[key].maxItems) {
+      this.arrayPropertiesLength[key].push(this.arrayPropertiesLength[key].length)
+      this.$forceUpdate()
+    } else {
+      this.$message.warning(`${this.$t('message.cannotAddMore')}`)
+    }
+  }
+
   private onPropertyChange(key: any, value: any) {
     this.data[key] = value
     this.isDataChanged = true
@@ -314,6 +377,15 @@ export default class extends Vue {
 
   private processOneOfProp(data: any) {
     if (!this.schema.oneOf) {
+      // remove empty field
+      for (let key in data) {
+        if (data[key] === '') {
+          delete data[key]
+        }
+        if (typeof data[key] === 'object' && Object.keys(data[key]).length === 0) {
+          delete data[key]
+        }
+      }
       return data
     }
 

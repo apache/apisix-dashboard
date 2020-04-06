@@ -93,5 +93,8 @@ export default {
     },
     keyTip: '你可以编辑并输入任何值,输入值后回车确认。',
     hashOnTip: '选择 chash 参数来源。'
+  },
+  message: {
+    cannotAddMore: '不能添加更多项了！'
   }
 }
