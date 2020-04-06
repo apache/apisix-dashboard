@@ -280,15 +280,12 @@ export default class extends Vue {
           schemaKeys[key] = []
           this.arrayPropertiesLength[key] = [...new Array(this.pluginData[key] ? this.pluginData[key].length : schema.properties[key].minItems).keys()]
           break
-
         case 'object':
           schemaKeys[key] = {}
           break
-
         case 'boolean':
           schemaKeys[key] = false
           break
-
         default:
           schemaKeys[key] = ''
       }
