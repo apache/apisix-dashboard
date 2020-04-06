@@ -72,6 +72,7 @@ export default {
   },
   button: {
     save: '保存',
+    confirm: '确认',
     cancel: '取消',
     add_plugin: '添加 Plugin',
     add_node: '添加 Node',
@@ -95,6 +96,7 @@ export default {
     hashOnTip: '选择 chash 参数来源。'
   },
   message: {
-    cannotAddMore: '不能添加更多项了！'
+    cannotAddMoreItems: '不能添加更多项了！',
+    clickSaveButton: '你的数据将在点击保存按钮后被保存！'
   }
 }

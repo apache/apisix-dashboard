@@ -95,6 +95,7 @@
           :prop="key"
         >
           <!-- 分情况讨论 -->
+          <!-- number property -->
           <el-input-number
             v-if="schema.properties[key].type === 'integer' || schema.properties[key].type === 'number'"
             v-model="data[key]"
@@ -104,11 +105,12 @@
             @change="onPropertyChange(key, $event)"
           />
 
+          <!-- enum property -->
           <el-select
             v-if="schema.properties[key].hasOwnProperty('enum')"
             v-model="data[key]"
             :clearable="true"
-            :placeholder="&quot;Select a &quot; + key"
+            :placeholder="`Select a ${key}`"
             @change="onPropertyChange(key, $event)"
           >
             <el-option
@@ -119,6 +121,7 @@
             />
           </el-select>
 
+          <!-- string property -->
           <el-input
             v-if="schema.properties[key].type === 'string' && !schema.properties[key].hasOwnProperty('enum')"
             v-model="data[key]"
@@ -126,6 +129,7 @@
             @input="onPropertyChange(key, $event)"
           />
 
+          <!-- boolean property -->
           <el-switch
             v-if="schema.properties[key].type === 'boolean' && !schema.properties[key].hasOwnProperty('enum')"
             v-model="data[key]"
@@ -134,19 +138,19 @@
           />
 
           <!-- array property -->
-          <div v-if="schema.properties[key].type === 'array'">
-            <!-- @input="onPropertyChange(key, $event)" -->
+          <div
+            v-if="schema.properties[key].type === 'array'"
+            class="array-input-container"
+          >
             <el-input
               v-for="(arrayIndex) in arrayPropertiesLength[key]"
               :key="arrayIndex"
               v-model="data[key][arrayIndex]"
-              :placeholder="key + ' [' + (arrayIndex) + ']'"
-              style="margin-top:5px;"
+              :placeholder="`${key} [${arrayIndex}]`"
               @input="isDataChanged = true"
             />
 
             <el-button
-              style="margin-top:5px;"
               @click="addArrayItem(key)"
             >
               {{ $t('button.addValue') }}
@@ -161,14 +165,14 @@
         <el-button
           @click="onCancel"
         >
-          Cancel
+          {{ $t('button.cancel') }}
         </el-button>
         <el-button
           type="primary"
           :disabled="!isDataChanged && oneOfPropHasEmptyValue"
           @click="onSave"
         >
-          Confirm
+          {{ $t('button.confirm') }}
         </el-button>
       </span>
     </el-dialog>
@@ -334,7 +338,7 @@ export default class extends Vue {
       if (valid) {
         this.data = this.processOneOfProp(this.data)
         this.$emit('save', this.name, this.data)
-        this.$message.warning('Your data will be saved after you click the Save button')
+        this.$message.warning(`${this.$t('message.clickSaveButton')}`)
       } else {
         return false
       }
@@ -350,7 +354,7 @@ export default class extends Vue {
       this.arrayPropertiesLength[key].push(this.arrayPropertiesLength[key].length)
       this.$forceUpdate()
     } else {
-      this.$message.warning(`${this.$t('message.cannotAddMore')}`)
+      this.$message.warning(`${this.$t('message.cannotAddMoreItems')}`)
     }
   }
 
@@ -412,6 +416,11 @@ export default class extends Vue {
     .remove-value-btn {
       margin-left: 10px;
     }
+  }
+
+  .array-input-container > * {
+    display: flex;
+    margin-top: 5px;
   }
 }
 </style>
