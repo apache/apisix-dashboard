@@ -64,6 +64,7 @@ export default {
   },
   button: {
     save: 'Save',
+    confirm: 'Confirm',
     cancel: 'Cancel',
     add_plugin: 'Add Plugin',
     add_node: 'Add Node',
@@ -85,5 +86,9 @@ export default {
     },
     keyTip: 'You can edit and input any value here,and press Enter to confirm.',
     hashOnTip: 'Select a hash on.'
+  },
+  message: {
+    cannotAddMoreItems: 'You cannot add more item!',
+    clickSaveButton: 'Your data will be saved after you click the Save button!'
   }
 }
