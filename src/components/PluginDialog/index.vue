@@ -318,8 +318,7 @@ export default class extends Vue {
           schemaKeys[key] = {}
           this.objectPropertiesArray[key] = []
           if (this.pluginData[key]) {
-            let objectKeys = Object.keys(this.pluginData[key])
-            objectKeys.map((item) => {
+            Object.keys(this.pluginData[key]).map(item => {
               this.objectPropertiesArray[key].push({
                 key: item,
                 value: this.pluginData[key][item]
@@ -442,11 +441,8 @@ export default class extends Vue {
 
   /**
    * Force rerender on object property content changed
-   * @param key
-   * @param value
-   * @param isKey
    */
-  private onObjectPropertyChange(key: any, value: any, isKey: boolean) {
+  private onObjectPropertyChange() {
     this.isDataChanged = true
     this.$forceUpdate()
   }
