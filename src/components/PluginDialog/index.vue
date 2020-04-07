@@ -156,6 +156,39 @@
               {{ $t('button.addValue') }}
             </el-button>
           </div>
+
+          <!-- object property -->
+          <div
+            v-if="schema.properties[key].type === 'object'"
+            class="object-input-container"
+          >
+            <div
+              v-for="(objectItem, objectIndex) in objectPropertiesArray[key]"
+              :key="objectIndex"
+              class="object-input-item"
+            >
+              <el-input
+                v-model="objectPropertiesArray[key][objectIndex].key"
+                :placeholder="`${key} [key ${objectIndex}]`"
+                @input="onObjectPropertyChange(key, $event, true)"
+              />
+              <el-input
+                v-model="objectPropertiesArray[key][objectIndex].value"
+                :placeholder="`${key} [value ${objectIndex}]`"
+                @input="onObjectPropertyChange(key, $event, false)"
+              />
+              <el-button
+                @click="deleteObjectItem(key, objectIndex)"
+              >
+                {{ $t('button.delete') }}
+              </el-button>
+            </div>
+            <el-button
+              @click="addObjectItem(key)"
+            >
+              {{ $t('button.addValue') }}
+            </el-button>
+          </div>
         </el-form-item>
       </el-form>
       <span
@@ -202,6 +235,7 @@ export default class extends Vue {
   private isDataChanged: boolean = false
   private showDialog: boolean = false
   private arrayPropertiesLength = {}
+  private objectPropertiesArray = {}
 
   @Watch('show')
   private onShowChange(value: boolean) {
@@ -282,6 +316,15 @@ export default class extends Vue {
           break
         case 'object':
           schemaKeys[key] = {}
+          this.objectPropertiesArray[key] = []
+          if (this.pluginData[key]) {
+            Object.keys(this.pluginData[key]).map(item => {
+              this.objectPropertiesArray[key].push({
+                key: item,
+                value: this.pluginData[key][item]
+              })
+            })
+          }
           break
         case 'boolean':
           schemaKeys[key] = false
@@ -333,6 +376,8 @@ export default class extends Vue {
     (this.$refs.form as any).validate((valid: boolean) => {
       // 标记该插件数据是否通过校验
       if (valid) {
+        // Reorganize an array of object properties into objects
+        this.data = Object.assign({}, this.data, this.reorganizeObjectProperty())
         this.data = this.processOneOfProp(this.data)
         this.$emit('save', this.name, this.data)
         this.$message.warning(`${this.$t('message.clickSaveButton')}`)
@@ -353,6 +398,53 @@ export default class extends Vue {
     } else {
       this.$message.warning(`${this.$t('message.cannotAddMoreItems')}`)
     }
+  }
+
+  /**
+   * Add item to object property
+   * @param key
+   */
+  private addObjectItem(key: any) {
+    this.objectPropertiesArray[key].push({
+      key: '',
+      value: ''
+    })
+    this.isDataChanged = true
+    this.$forceUpdate()
+  }
+
+  /**
+   * Delete item form object property
+   * @param key
+   * @param index
+   */
+  private deleteObjectItem(key: any, index: number) {
+    this.objectPropertiesArray[key].splice(index, 1)
+    this.isDataChanged = true
+    this.$forceUpdate()
+  }
+
+  /**
+   * Reorganize an array of object properties into objects
+   */
+  private reorganizeObjectProperty() {
+    let data = {}
+    for (let i in this.objectPropertiesArray) {
+      let objectItem = {}
+      this.objectPropertiesArray[i].map((item: any) => {
+        objectItem[item.key] = item.value
+      })
+      data[i] = objectItem
+    }
+    return data
+  }
+
+  /**
+   * Force rerender on object property content changed
+   */
+  private onObjectPropertyChange() {
+    this.isDataChanged = true
+    this.$forceUpdate()
   }
 
   private onPropertyChange(key: any, value: any) {
@@ -418,6 +510,14 @@ export default class extends Vue {
   .array-input-container > * {
     display: flex;
     margin-top: 5px;
+  }
+
+  .object-input-container > * {
+    display: flex;
+    margin-top: 5px;
+    :not(:first-child){
+      margin-left: 5px;
+    }
   }
 }
 </style>
