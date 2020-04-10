@@ -126,20 +126,25 @@ export default {
               icon: 'crown',
               routes: [
                 {
+                  path: '/ssl',
+                  redirect: '/ssl/list',
+                },
+                {
                   path: '/ssl/list',
                   name: 'list',
-                  component: './SSLModule/list',
+                  component: './module/ssl/list',
+                  hideInMenu: true,
                 },
                 {
                   path: '/ssl/:key/edit',
                   name: 'edit',
-                  component: './SSLModule/detail',
+                  component: './module/ssl/edit',
                   hideInMenu: true,
                 },
                 {
                   path: '/ssl/create',
                   name: 'create',
-                  component: './SSLModule/detail',
+                  component: './module/ssl/edit',
                   hideInMenu: true,
                 },
               ],

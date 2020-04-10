@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { useParams } from 'dva';
-import { Form, Input, Card, Button, notification } from 'antd';
+import { Form, Input, Card, Button, notification, message } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 
 import { getPageMode } from '@/utils/utils';
@@ -11,21 +11,37 @@ import {
   update as updateSSL,
 } from '@/services/ssl';
 import { useForm } from 'antd/es/form/util';
+import { router } from 'umi';
 
 const layout = {
-  wrapperCol: { span: 8 },
+  labelCol: {
+    span: 2,
+  },
+  wrapperCol: {
+    span: 8,
+  },
 };
 
-const Detail: React.FC = () => {
+const tailLayout = {
+  wrapperCol: {
+    offset: 2,
+  },
+};
+
+const Edit: React.FC = () => {
   const [mode] = useState<PageMode>(getPageMode());
   const { key } = useParams();
   const [form] = useForm();
+  const hideLoading = message.loading(formatMessage({ id: 'component.global.loading' }), 0);
 
   useEffect(() => {
     if (mode === 'EDIT' && key) {
       fetchSSLItem(key).then(data => {
         form.setFieldsValue(data.value);
+        hideLoading();
       });
+    } else {
+      hideLoading();
     }
   }, [mode]);
 
@@ -38,7 +54,7 @@ const Detail: React.FC = () => {
           }).toLowerCase()}`,
         });
 
-        window.history.go(-1);
+        router.goBack();
       });
     }
 
@@ -50,7 +66,7 @@ const Detail: React.FC = () => {
           }).toLowerCase()}`,
         });
 
-        window.history.go(-1);
+        router.goBack();
       });
     }
   };
@@ -60,7 +76,7 @@ const Detail: React.FC = () => {
       <Card>
         <Form {...layout} form={form} onFinish={onFinish}>
           <Form.Item
-            label="SNI"
+            label={formatMessage({ id: 'component.ssl.sni' })}
             name="sni"
             rules={[
               { required: true, message: formatMessage({ id: 'component.ssl.fieldSNIInvalid' }) },
@@ -70,27 +86,29 @@ const Detail: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            label="Cert"
+            label={formatMessage({ id: 'component.ssl.cert' })}
             name="cert"
             rules={[
               { required: true, message: formatMessage({ id: 'component.ssl.fieldCertInvalid' }) },
+              { min: 128, message: formatMessage({ id: 'component.ssl.fieldCertTooShort' }) },
             ]}
           >
             <Input.TextArea rows={6} />
           </Form.Item>
 
           <Form.Item
-            label="Key"
+            label={formatMessage({ id: 'component.ssl.key' })}
             name="key"
             rules={[
               { required: true, message: formatMessage({ id: 'component.ssl.fieldKeyInvalid' }) },
+              { min: 128, message: formatMessage({ id: 'component.ssl.fieldKeyTooShort' }) },
             ]}
           >
             <Input.TextArea rows={6} />
           </Form.Item>
 
-          <Form.Item>
-            <Button style={{ marginRight: 10 }}>
+          <Form.Item {...tailLayout}>
+            <Button style={{ marginRight: 10 }} onClick={() => router.goBack()}>
               {formatMessage({ id: 'component.global.cancel' })}
             </Button>
 
@@ -106,4 +124,4 @@ const Detail: React.FC = () => {
   );
 };
 
-export default Detail;
+export default Edit;

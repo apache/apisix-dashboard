@@ -8,7 +8,8 @@
 export default {
   dev: {
     '/api/': {
-      target: 'https://apisix.iresty.com/apisix/admin/',
+      //target: 'https://apisix.iresty.com/apisix/admin/',
+      target: 'http://10.0.4.1:9080/apisix/admin/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
