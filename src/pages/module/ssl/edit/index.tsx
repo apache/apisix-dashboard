@@ -76,7 +76,7 @@ const Edit: React.FC = () => {
       <Card>
         <Form {...layout} form={form} onFinish={onFinish}>
           <Form.Item
-            label={formatMessage({ id: 'component.ssl.sni' })}
+            label="SNI"
             name="sni"
             rules={[
               { required: true, message: formatMessage({ id: 'component.ssl.fieldSNIInvalid' }) },
@@ -86,7 +86,7 @@ const Edit: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            label={formatMessage({ id: 'component.ssl.cert' })}
+            label="Cert"
             name="cert"
             rules={[
               { required: true, message: formatMessage({ id: 'component.ssl.fieldCertInvalid' }) },
@@ -97,7 +97,7 @@ const Edit: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            label={formatMessage({ id: 'component.ssl.key' })}
+            label="Key"
             name="key"
             rules={[
               { required: true, message: formatMessage({ id: 'component.ssl.fieldKeyInvalid' }) },

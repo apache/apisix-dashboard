@@ -34,9 +34,6 @@ export default {
   'component.ssl.fieldKeyInvalid': '请检查 Key 值',
   'component.ssl.fieldCertInvalid': '请检查 Cert 值',
   'component.ssl.invalidKey': '非法的 Key',
-  'component.ssl.fieldKeyTooShort': 'Key 值过短，至少需要128位',
-  'component.ssl.fieldCertTooShort': 'Cert 值过短，至少需要128位',
-  'component.ssl.sni': 'SNI',
-  'component.ssl.key': 'Key',
-  'component.ssl.cert': 'Certificate',
+  'component.ssl.fieldKeyTooShort': 'Key 值过短，至少需要128位！',
+  'component.ssl.fieldCertTooShort': 'Cert 值过短，至少需要128位！',
 };

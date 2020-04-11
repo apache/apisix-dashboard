@@ -34,9 +34,6 @@ export default {
   'component.ssl.fieldKeyInvalid': 'Please check Key',
   'component.ssl.fieldCertInvalid': 'Please check Cert',
   'component.ssl.invalidKey': 'Invalid Key',
-  'component.ssl.fieldKeyTooShort': 'Key too short, at least 128 characters',
-  'component.ssl.fieldCertTooShort': 'Cert too short, at least 128 characters',
-  'component.ssl.sni': 'SNI',
-  'component.ssl.key': 'Key',
-  'component.ssl.cert': 'Certificate',
+  'component.ssl.fieldKeyTooShort': 'Key is too short, 128 characters at least.',
+  'component.ssl.fieldCertTooShort': 'Cert is too short, 128 characters at least.',
 };
