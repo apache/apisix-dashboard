@@ -32,9 +32,9 @@ const Detail: React.FC = () => {
   const [mode] = useState<PageMode>(getPageMode());
   const {key} = useParams();
   const [form] = useForm();
-  const hideLoading = message.loading(formatMessage({id: 'component.global.loading'}), 0);
 
   useEffect(() => {
+    let hideLoading = message.loading(formatMessage({id: 'component.global.loading'}), 0);
     if (mode === 'EDIT' && key) {
       fetchSSLItem(key).then(data => {
         form.setFieldsValue(data.value);
@@ -46,7 +46,9 @@ const Detail: React.FC = () => {
   }, [mode]);
 
   const onFinish = (values: any) => {
+    let hideLoading = message.loading(formatMessage({id: 'component.global.loading'}), 0);
     if (mode === 'EDIT' && key) {
+      hideLoading();
       updateSSL(key, values).then(() => {
         notification.success({
           message: `${formatMessage({id: 'component.global.update'})} SSL ${formatMessage({
@@ -60,6 +62,7 @@ const Detail: React.FC = () => {
 
     if (mode === 'CREATE') {
       createSSL(values).then(() => {
+        hideLoading();
         notification.success({
           message: `${formatMessage({id: 'component.global.create'})} SSL ${formatMessage({
             id: 'component.status.success',
