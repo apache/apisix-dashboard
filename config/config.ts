@@ -132,19 +132,19 @@ export default {
                 {
                   path: '/ssl/list',
                   name: 'list',
-                  component: './module/ssl/list',
+                  component: './SSLModule/list',
                   hideInMenu: true,
                 },
                 {
                   path: '/ssl/:key/edit',
                   name: 'edit',
-                  component: './module/ssl/edit',
+                  component: './SSLModule/detail',
                   hideInMenu: true,
                 },
                 {
                   path: '/ssl/create',
                   name: 'create',
-                  component: './module/ssl/edit',
+                  component: './SSLModule/detail',
                   hideInMenu: true,
                 },
               ],
