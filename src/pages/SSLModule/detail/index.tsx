@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { useParams } from 'dva';
-import { Form, Input, Card, Button, notification, message } from 'antd';
-import { formatMessage } from 'umi-plugin-react/locale';
+import React, {useState, useEffect} from 'react';
+import {PageHeaderWrapper} from '@ant-design/pro-layout';
+import {useParams} from 'dva';
+import {Form, Input, Card, Button, notification, message} from 'antd';
+import {formatMessage} from 'umi-plugin-react/locale';
 
-import { getPageMode } from '@/utils/utils';
+import {getPageMode} from '@/utils/utils';
 import {
   fetchItem as fetchSSLItem,
   create as createSSL,
   update as updateSSL,
 } from '@/services/ssl';
-import { useForm } from 'antd/es/form/util';
-import { router } from 'umi';
+import {useForm} from 'antd/es/form/util';
+import {router} from 'umi';
 
 const layout = {
   labelCol: {
@@ -30,9 +30,9 @@ const tailLayout = {
 
 const Detail: React.FC = () => {
   const [mode] = useState<PageMode>(getPageMode());
-  const { key } = useParams();
+  const {key} = useParams();
   const [form] = useForm();
-  const hideLoading = message.loading(formatMessage({ id: 'component.global.loading' }), 0);
+  const hideLoading = message.loading(formatMessage({id: 'component.global.loading'}), 0);
 
   useEffect(() => {
     if (mode === 'EDIT' && key) {
@@ -49,7 +49,7 @@ const Detail: React.FC = () => {
     if (mode === 'EDIT' && key) {
       updateSSL(key, values).then(() => {
         notification.success({
-          message: `${formatMessage({ id: 'component.global.update' })} SSL ${formatMessage({
+          message: `${formatMessage({id: 'component.global.update'})} SSL ${formatMessage({
             id: 'component.status.success',
           }).toLowerCase()}`,
         });
@@ -61,7 +61,7 @@ const Detail: React.FC = () => {
     if (mode === 'CREATE') {
       createSSL(values).then(() => {
         notification.success({
-          message: `${formatMessage({ id: 'component.global.create' })} SSL ${formatMessage({
+          message: `${formatMessage({id: 'component.global.create'})} SSL ${formatMessage({
             id: 'component.status.success',
           }).toLowerCase()}`,
         });
@@ -79,43 +79,43 @@ const Detail: React.FC = () => {
             label="SNI"
             name="sni"
             rules={[
-              { required: true, message: formatMessage({ id: 'component.ssl.fieldSNIInvalid' }) },
+              {required: true, message: formatMessage({id: 'component.ssl.fieldSNIInvalid'})},
             ]}
           >
-            <Input />
+            <Input/>
           </Form.Item>
 
           <Form.Item
             label="Cert"
             name="cert"
             rules={[
-              { required: true, message: formatMessage({ id: 'component.ssl.fieldCertInvalid' }) },
-              { min: 128, message: formatMessage({ id: 'component.ssl.fieldCertTooShort' }) },
+              {required: true, message: formatMessage({id: 'component.ssl.fieldCertInvalid'})},
+              {min: 128, message: formatMessage({id: 'component.ssl.fieldCertTooShort'})},
             ]}
           >
-            <Input.TextArea rows={6} />
+            <Input.TextArea rows={6}/>
           </Form.Item>
 
           <Form.Item
             label="Key"
             name="key"
             rules={[
-              { required: true, message: formatMessage({ id: 'component.ssl.fieldKeyInvalid' }) },
-              { min: 128, message: formatMessage({ id: 'component.ssl.fieldKeyTooShort' }) },
+              {required: true, message: formatMessage({id: 'component.ssl.fieldKeyInvalid'})},
+              {min: 128, message: formatMessage({id: 'component.ssl.fieldKeyTooShort'})},
             ]}
           >
-            <Input.TextArea rows={6} />
+            <Input.TextArea rows={6}/>
           </Form.Item>
 
           <Form.Item {...tailLayout}>
-            <Button style={{ marginRight: 10 }} onClick={() => router.goBack()}>
-              {formatMessage({ id: 'component.global.cancel' })}
+            <Button style={{marginRight: 10}} onClick={() => router.goBack()}>
+              {formatMessage({id: 'component.global.cancel'})}
             </Button>
 
             <Button htmlType="submit" type="primary">
               {mode === 'CREATE'
-                ? formatMessage({ id: 'component.global.create' })
-                : formatMessage({ id: 'component.global.save' })}
+                ? formatMessage({id: 'component.global.create'})
+                : formatMessage({id: 'component.global.save'})}
             </Button>
           </Form.Item>
         </Form>
