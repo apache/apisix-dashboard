@@ -22,7 +22,6 @@ const List: React.FC = () => {
       okButtonProps: {
         type: 'danger',
       },
-      /* eslint-disable no-unused-expressions */
       onOk: () =>
         removeSSL(key).then(() => {
           notification.success({
@@ -30,7 +29,6 @@ const List: React.FC = () => {
           });
           tableRef.current?.reload();
         }),
-      /* eslint-enable no-unused-expressions */
     });
   };
 

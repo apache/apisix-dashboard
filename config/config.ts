@@ -126,9 +126,14 @@ export default {
               icon: 'crown',
               routes: [
                 {
+                  path: '/ssl',
+                  redirect: '/ssl/list',
+                },
+                {
                   path: '/ssl/list',
                   name: 'list',
                   component: './SSLModule/list',
+                  hideInMenu: true,
                 },
                 {
                   path: '/ssl/:key/edit',

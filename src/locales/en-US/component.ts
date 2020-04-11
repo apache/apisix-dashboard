@@ -13,6 +13,7 @@ export default {
   'component.global.update': 'Update',
   'component.global.get': 'Get',
   'component.global.edit.plugin': 'Edit plugin',
+  'component.global.loading': 'Loading',
   'component.status.success': 'Successfully',
   'component.status.fail': 'Failed',
   // User component
@@ -33,4 +34,6 @@ export default {
   'component.ssl.fieldKeyInvalid': 'Please check Key',
   'component.ssl.fieldCertInvalid': 'Please check Cert',
   'component.ssl.invalidKey': 'Invalid Key',
+  'component.ssl.fieldKeyTooShort': 'Key is too short, 128 characters at least.',
+  'component.ssl.fieldCertTooShort': 'Cert is too short, 128 characters at least.',
 };
