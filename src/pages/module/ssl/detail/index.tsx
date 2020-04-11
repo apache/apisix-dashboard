@@ -28,7 +28,7 @@ const tailLayout = {
   },
 };
 
-const Edit: React.FC = () => {
+const Detail: React.FC = () => {
   const [mode] = useState<PageMode>(getPageMode());
   const { key } = useParams();
   const [form] = useForm();
@@ -124,4 +124,4 @@ const Edit: React.FC = () => {
   );
 };
 
-export default Edit;
+export default Detail;
