@@ -85,7 +85,7 @@ const Detail: React.FC = () => {
               {required: true, message: formatMessage({id: 'component.ssl.fieldSNIInvalid'})},
             ]}
           >
-            <Input/>
+            <Input />
           </Form.Item>
 
           <Form.Item
@@ -96,7 +96,7 @@ const Detail: React.FC = () => {
               {min: 128, message: formatMessage({id: 'component.ssl.fieldCertTooShort'})},
             ]}
           >
-            <Input.TextArea rows={6}/>
+            <Input.TextArea rows={6} />
           </Form.Item>
 
           <Form.Item
@@ -107,7 +107,7 @@ const Detail: React.FC = () => {
               {min: 128, message: formatMessage({id: 'component.ssl.fieldKeyTooShort'})},
             ]}
           >
-            <Input.TextArea rows={6}/>
+            <Input.TextArea rows={6} />
           </Form.Item>
 
           <Form.Item {...tailLayout}>
