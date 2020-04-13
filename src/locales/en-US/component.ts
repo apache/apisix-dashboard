@@ -14,9 +14,10 @@ export default {
   'component.global.get': 'Get',
   'component.global.edit.plugin': 'Edit plugin',
   'component.global.loading': 'Loading',
+  'component.global.description': 'Description',
   'component.status.success': 'Successfully',
   'component.status.fail': 'Failed',
-  // User component
+  // User Module
   'component.user.loginByPassword': 'Username & Password',
   'component.user.login': 'Login',
   'component.user.username': 'Username',
@@ -36,4 +37,5 @@ export default {
   'component.ssl.invalidKey': 'Invalid Key',
   'component.ssl.fieldKeyTooShort': 'Key is too short, 128 characters at least.',
   'component.ssl.fieldCertTooShort': 'Cert is too short, 128 characters at least.',
+  // Routes Module
 };

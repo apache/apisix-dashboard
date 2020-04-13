@@ -53,4 +53,8 @@ export default {
   'menu.ssl.list': 'SSL List',
   'menu.ssl.edit': 'Edit',
   'menu.ssl.create': 'Create',
+  'menu.routes': 'Route',
+  'menu.routes.list': 'Routes List',
+  'menu.routes.edit': 'Edit',
+  'menu.routes.create': 'Create',
 };

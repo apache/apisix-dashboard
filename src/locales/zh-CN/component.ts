@@ -14,9 +14,10 @@ export default {
   'component.global.get': '获取',
   'component.global.edit.plugin': '编辑插件',
   'component.global.loading': '加载中',
+  'component.global.description': '描述',
   'component.status.success': '成功',
   'component.status.fail': '失败',
-  // User component
+  // User Module
   'component.user.loginByPassword': '账号密码登录',
   'component.user.login': '登录',
   'component.user.username': '账号',
@@ -36,4 +37,6 @@ export default {
   'component.ssl.invalidKey': '非法的 Key',
   'component.ssl.fieldKeyTooShort': 'Key 值过短，至少需要128位！',
   'component.ssl.fieldCertTooShort': 'Cert 值过短，至少需要128位！',
+  // Routes Module
+
 };

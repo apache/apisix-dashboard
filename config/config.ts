@@ -150,6 +150,35 @@ export default {
               ],
             },
             {
+              name: 'routes',
+              path: '/routes',
+              icon: 'crown',
+              routes: [
+                {
+                  path: '/routes',
+                  redirect: '/routes/list',
+                },
+                {
+                  path: '/routes/list',
+                  name: 'list',
+                  component: './RoutesModule/list',
+                  hideInMenu: true,
+                },
+                /*{
+                  path: '/route/:key/edit',
+                  name: 'edit',
+                  component: './RouteModule/detail',
+                  hideInMenu: true,
+                },
+                {
+                  path: '/route/create',
+                  name: 'create',
+                  component: './RouteModule/detail',
+                  hideInMenu: true,
+                },*/
+              ],
+            },
+            {
               component: './404',
             },
           ],
