@@ -76,3 +76,11 @@ export const getPageMode = (): PageMode => {
 
   return 'VIEW';
 };
+
+export const getAdminAPI = (): string => {
+  return localStorage.getItem('admin_api') || ADMIN_API;
+}
+
+export const getAdminAPIKey = (): string => {
+  return localStorage.getItem('admin_api_key') || API_KEY;
+}
