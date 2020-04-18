@@ -13,8 +13,6 @@ RUN npm run build && rm -rf /usr/src/app/node_modules
 # phase-run
 FROM nginx:1.16-alpine
 
-ENV ADMIN_API https://apisix.iresty.com/apisix/admin/
-
 COPY ./docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /usr/src/app/dist /usr/share/nginx/html/dashboard
 
