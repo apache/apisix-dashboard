@@ -39,10 +39,10 @@ declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 
 declare let ADMIN_API_SCHEMA, ADMIN_API_HOST, ADMIN_API_PATH, API_KEY: '';
 declare interface AdminAPIConfig {
-  adminAPISchema: string;
-  adminAPIHost: string;
-  adminAPIPath: string;
-  adminAPIKey: string;
+  schema: string;
+  host: string;
+  path: string;
+  key: string;
 }
 
 type PageMode = 'CREATE' | 'EDIT' | 'VIEW';
