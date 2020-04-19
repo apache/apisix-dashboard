@@ -4,7 +4,7 @@ import {Button, Card, Form, Input, notification, Select} from "antd";
 import {formatMessage, FormattedMessage} from "umi-plugin-react/locale";
 import {router} from "umi";
 import {PageHeaderWrapper} from "@ant-design/pro-layout";
-import {getAdminAPIConfig} from "@/utils/utils";
+import {getAdminAPIConfig} from "@/utils/setting";
 
 const { Option } = Select;
 
@@ -29,10 +29,10 @@ const Settings: React.FC = () => {
   useEffect(() => {
     let adminAPIConfig = getAdminAPIConfig();
     form.setFieldsValue({
-      adminAPISchema: adminAPIConfig.adminAPISchema,
-      adminAPIHost: adminAPIConfig.adminAPIHost,
-      adminAPIPath: adminAPIConfig.adminAPIPath,
-      adminAPIKey: adminAPIConfig.adminAPIKey
+      adminAPISchema: adminAPIConfig.schema,
+      adminAPIHost: adminAPIConfig.host,
+      adminAPIPath: adminAPIConfig.path,
+      adminAPIKey: adminAPIConfig.key
     })
   });
 
@@ -54,7 +54,7 @@ const Settings: React.FC = () => {
       <Card>
         <Form {...layout} form={form} onFinish={onFinish}>
           <Form.Item
-            label="Admin API Schema"
+            label={formatMessage({ id: 'app.settings.item.admin-api-schema' })}
             name="adminAPISchema"
             rules={[
               {required: true, message: formatMessage({id: 'app.settings.description.invalid-admin-api-schema'})},
@@ -67,7 +67,7 @@ const Settings: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            label="Admin API Host"
+            label={formatMessage({ id: 'app.settings.item.admin-api-host' })}
             name="adminAPIHost"
             rules={[
               {required: true, message: formatMessage({id: 'app.settings.description.invalid-admin-api-host'})},
@@ -77,7 +77,7 @@ const Settings: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            label="Admin API Path"
+            label={formatMessage({ id: 'app.settings.item.admin-api-path' })}
             name="adminAPIPath"
             rules={[
               {required: true, message: formatMessage({id: 'app.settings.description.invalid-admin-api-path'})},
@@ -87,7 +87,7 @@ const Settings: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            label="X-API-KEY"
+            label={formatMessage({ id: 'app.settings.item.admin-api-key' })}
             name="adminAPIKey"
           >
             <Input />
