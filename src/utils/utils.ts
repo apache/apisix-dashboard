@@ -77,10 +77,11 @@ export const getPageMode = (): PageMode => {
   return 'VIEW';
 };
 
-export const getAdminAPI = (): string => {
-  return localStorage.getItem('GLOBAL_ADMIN_API') || ADMIN_API;
-}
-
-export const getAdminAPIKey = (): string => {
-  return localStorage.getItem('GLOBAL_ADMIN_API_KEY') || API_KEY;
+export const getAdminAPIConfig = (): AdminAPIConfig => {
+  return {
+    adminAPISchema: localStorage.getItem('GLOBAL_ADMIN_API_SCHEMA') || ADMIN_API_SCHEMA,
+    adminAPIHost: localStorage.getItem('GLOBAL_ADMIN_API_HOST') || ADMIN_API_HOST,
+    adminAPIPath: localStorage.getItem('GLOBAL_ADMIN_API_PATH') || ADMIN_API_PATH,
+    adminAPIKey: localStorage.getItem('GLOBAL_ADMIN_API_KEY') || API_KEY
+  };
 }

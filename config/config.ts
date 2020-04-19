@@ -178,7 +178,9 @@ export default {
     REACT_APP_ENV: REACT_APP_ENV || false,
     ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION:
       ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION || '', // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-    ADMIN_API: 'http://127.0.0.1:9080/apisix/admin/',
+    ADMIN_API_SCHEMA: 'http',
+    ADMIN_API_HOST: '127.0.0.1:9080',
+    ADMIN_API_PATH: '/apisix/admin/',
     API_KEY: ''
   },
   ignoreMomentLocale: true,
