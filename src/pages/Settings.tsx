@@ -26,14 +26,14 @@ const Settings: React.FC = () => {
 
   useEffect(() => {
     form.setFieldsValue({
-      admin_api: getAdminAPI(),
-      admin_api_key: getAdminAPIKey()
+      adminAPI: getAdminAPI(),
+      adminAPIKey: getAdminAPIKey()
     })
   });
 
   const onFinish = (values: any) => {
-    localStorage.setItem('admin_api', values.admin_api);
-    localStorage.setItem('admin_api_key', values.admin_api_key);
+    localStorage.setItem('admin_api', values.adminAPI);
+    localStorage.setItem('admin_api_key', values.adminAPIKey);
 
     notification.success({
       message: `${formatMessage({id: 'component.global.update'})} Admin API ${formatMessage({
@@ -48,9 +48,9 @@ const Settings: React.FC = () => {
         <Form {...layout} form={form} onFinish={onFinish}>
           <Form.Item
             label="Admin API"
-            name="admin_api"
+            name="adminAPI"
             rules={[
-              {required: true, message: formatMessage({id: 'app.settings.fieldAdminAPIInvalid'})},
+              {required: true, message: formatMessage({id: 'app.settings.description.invalid-admin-api'})},
             ]}
           >
             <Input />
@@ -58,7 +58,7 @@ const Settings: React.FC = () => {
 
           <Form.Item
             label="X-API-KEY"
-            name="admin_api_key"
+            name="adminAPIKey"
           >
             <Input />
           </Form.Item>

@@ -1,3 +1,3 @@
 export default {
-  'app.settings.fieldAdminAPIInvalid': 'Invalid Admin API'
+  'app.settings.description.invalid-admin-api': 'Invalid Admin API'
 };
