@@ -4,7 +4,7 @@
  */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
-import { getAdminAPI, getAdminAPIKey } from "@/utils/utils";
+import { getAdminAPIConfig } from "@/utils/utils";
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -45,6 +45,8 @@ const errorHandler = (error: { response: Response; data: any }): Promise<Respons
   return Promise.reject(response);
 };
 
+const adminAPIConfig = getAdminAPIConfig();
+
 /**
  * 配置request请求时的默认参数
  */
@@ -52,9 +54,11 @@ const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'same-origin', // 默认请求是否带上cookie
   headers: {
-    'X-API-KEY': getAdminAPIKey(),
+    'X-ADMIN-API-SCHEMA': adminAPIConfig.adminAPISchema,
+    'X-ADMIN-API-HOST': adminAPIConfig.adminAPIHost,
+    'X-ADMIN-API-PATH': adminAPIConfig.adminAPIPath,
+    'X-API-KEY': adminAPIConfig.adminAPIKey,
   },
-  prefix: getAdminAPI()
 });
 
 export default request;
