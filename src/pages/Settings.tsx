@@ -1,14 +1,16 @@
 import React, {useEffect} from "react";
 import {useForm} from "antd/es/form/util";
-import {Button, Card, Form, Input, notification} from "antd";
+import {Button, Card, Form, Input, notification, Select} from "antd";
 import {formatMessage, FormattedMessage} from "umi-plugin-react/locale";
 import {router} from "umi";
 import {PageHeaderWrapper} from "@ant-design/pro-layout";
-import {getAdminAPI, getAdminAPIKey} from "@/utils/utils";
+import {getAdminAPIConfig} from "@/utils/setting";
+
+const { Option } = Select;
 
 const layout = {
   labelCol: {
-    span: 2,
+    span: 4,
   },
   wrapperCol: {
     span: 8,
@@ -17,7 +19,7 @@ const layout = {
 
 const tailLayout = {
   wrapperCol: {
-    offset: 2,
+    offset: 4,
   },
 };
 
@@ -25,14 +27,19 @@ const Settings: React.FC = () => {
   const [form] = useForm();
 
   useEffect(() => {
+    let adminAPIConfig = getAdminAPIConfig();
     form.setFieldsValue({
-      adminAPI: getAdminAPI(),
-      adminAPIKey: getAdminAPIKey()
+      adminAPISchema: adminAPIConfig.schema,
+      adminAPIHost: adminAPIConfig.host,
+      adminAPIPath: adminAPIConfig.path,
+      adminAPIKey: adminAPIConfig.key
     })
   });
 
   const onFinish = (values: any) => {
-    localStorage.setItem('GLOBAL_ADMIN_API', values.adminAPI);
+    localStorage.setItem('GLOBAL_ADMIN_API_SCHEMA', values.adminAPISchema);
+    localStorage.setItem('GLOBAL_ADMIN_API_HOST', values.adminAPIHost);
+    localStorage.setItem('GLOBAL_ADMIN_API_PATH', values.adminAPIPath);
     localStorage.setItem('GLOBAL_ADMIN_API_KEY', values.adminAPIKey);
 
     notification.success({
@@ -47,17 +54,40 @@ const Settings: React.FC = () => {
       <Card>
         <Form {...layout} form={form} onFinish={onFinish}>
           <Form.Item
-            label="Admin API"
-            name="adminAPI"
+            label={formatMessage({ id: 'app.settings.item.admin-api-schema' })}
+            name="adminAPISchema"
             rules={[
-              {required: true, message: formatMessage({id: 'app.settings.description.invalid-admin-api'})},
+              {required: true, message: formatMessage({id: 'app.settings.description.invalid-admin-api-schema'})},
+            ]}
+          >
+            <Select defaultValue="http">
+              <Option value="http">HTTP</Option>
+              <Option value="https">HTTPS</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            label={formatMessage({ id: 'app.settings.item.admin-api-host' })}
+            name="adminAPIHost"
+            rules={[
+              {required: true, message: formatMessage({id: 'app.settings.description.invalid-admin-api-host'})},
             ]}
           >
             <Input />
           </Form.Item>
 
           <Form.Item
-            label="X-API-KEY"
+            label={formatMessage({ id: 'app.settings.item.admin-api-path' })}
+            name="adminAPIPath"
+            rules={[
+              {required: true, message: formatMessage({id: 'app.settings.description.invalid-admin-api-path'})},
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label={formatMessage({ id: 'app.settings.item.admin-api-key' })}
             name="adminAPIKey"
           >
             <Input />

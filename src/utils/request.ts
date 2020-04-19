@@ -4,7 +4,7 @@
  */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
-import { getAdminAPIConfig } from "@/utils/utils";
+import { getAdminAPIConfig } from "@/utils/setting";
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -54,10 +54,10 @@ const request = extend({
   errorHandler, // 默认错误处理
   credentials: 'same-origin', // 默认请求是否带上cookie
   headers: {
-    'X-ADMIN-API-SCHEMA': adminAPIConfig.adminAPISchema,
-    'X-ADMIN-API-HOST': adminAPIConfig.adminAPIHost,
-    'X-ADMIN-API-PATH': adminAPIConfig.adminAPIPath,
-    'X-API-KEY': adminAPIConfig.adminAPIKey,
+    'X-ADMIN-API-SCHEMA': adminAPIConfig.schema,
+    'X-ADMIN-API-HOST': adminAPIConfig.host,
+    'X-ADMIN-API-PATH': adminAPIConfig.path,
+    'X-API-KEY': adminAPIConfig.key,
   },
 });
 
