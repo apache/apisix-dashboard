@@ -32,8 +32,8 @@ const Settings: React.FC = () => {
   });
 
   const onFinish = (values: any) => {
-    localStorage.setItem('admin_api', values.adminAPI);
-    localStorage.setItem('admin_api_key', values.adminAPIKey);
+    localStorage.setItem('GLOBAL_ADMIN_API', values.adminAPI);
+    localStorage.setItem('GLOBAL_ADMIN_API_KEY', values.adminAPIKey);
 
     notification.success({
       message: `${formatMessage({id: 'component.global.update'})} Admin API ${formatMessage({

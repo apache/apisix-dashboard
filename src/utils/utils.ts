@@ -78,9 +78,9 @@ export const getPageMode = (): PageMode => {
 };
 
 export const getAdminAPI = (): string => {
-  return localStorage.getItem('admin_api') || ADMIN_API;
+  return localStorage.getItem('GLOBAL_ADMIN_API') || ADMIN_API;
 }
 
 export const getAdminAPIKey = (): string => {
-  return localStorage.getItem('admin_api_key') || API_KEY;
+  return localStorage.getItem('GLOBAL_ADMIN_API_KEY') || API_KEY;
 }
