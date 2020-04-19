@@ -178,8 +178,8 @@ export default {
     REACT_APP_ENV: REACT_APP_ENV || false,
     ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION:
       ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION || '', // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
-    ADMIN_API: 'https://apisix.iresty.com/apisix/admin/',
-    API_KEY: 'edd1c9f034335f136f87ad84b625c8f1'
+    ADMIN_API: 'http://127.0.0.1:9080/apisix/admin/',
+    API_KEY: ''
   },
   ignoreMomentLocale: true,
   lessLoaderOptions: {
