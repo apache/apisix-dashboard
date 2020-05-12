@@ -1,18 +1,16 @@
 import { Alert, Checkbox } from 'antd';
 import React, { useState } from 'react';
-import { Dispatch, AnyAction } from 'redux';
-import { connect } from 'dva';
-import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
+import { connect, Dispatch, formatMessage, FormattedMessage } from 'umi';
 import { StateType } from '@/models/login';
 import { LoginParamsType } from '@/services/login';
 import { ConnectState } from '@/models/connect';
-import LoginFrom from './components/Login';
+import LoginForm from './components/Login';
 
 import styles from './style.less';
 
-const { Tab, UserName, Password, Submit } = LoginFrom;
+const { Tab, UserName, Password, Submit } = LoginForm;
 interface LoginProps {
-  dispatch: Dispatch<AnyAction>;
+  dispatch: Dispatch;
   userLogin: StateType;
   submitting?: boolean;
 }
@@ -45,7 +43,7 @@ const Login: React.FC<LoginProps> = props => {
   };
   return (
     <div className={styles.main}>
-      <LoginFrom activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
+      <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
         <Tab key="account" tab={formatMessage({ id: 'component.user.loginByPassword' })}>
           {status === 'error' && loginType === 'account' && !submitting && (
             <LoginMessage
@@ -84,7 +82,7 @@ const Login: React.FC<LoginProps> = props => {
         <Submit loading={submitting}>
           <FormattedMessage id="component.user.login" />
         </Submit>
-      </LoginFrom>
+      </LoginForm>
     </div>
   );
 };
