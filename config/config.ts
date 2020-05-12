@@ -1,20 +1,18 @@
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings'; // https://umijs.org/config/
 import proxy from './proxy';
-import webpackPlugin from './plugin.config';
 
-// preview.pro.ant.design only do not use in your production ;
-// preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION, REACT_APP_ENV } = process.env;
 
 export default defineConfig({
   antd: {},
+  dva: {
+    hmr: true,
+  },
   locale: {
     default: 'zh-CN',
     antd: true,
-    title: true,
     baseNavigator: true,
-    baseSeparator: '-',
   },
   hash: true,
   targets: {
@@ -105,7 +103,6 @@ export default defineConfig({
   ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
-    // ...darkTheme,
     'primary-color': defaultSettings.primaryColor,
   },
   define: {
@@ -128,5 +125,5 @@ export default defineConfig({
     basePath: '/',
   },
   proxy: proxy[REACT_APP_ENV || 'dev'],
-  chainWebpack: webpackPlugin,
+  title: false,
 });

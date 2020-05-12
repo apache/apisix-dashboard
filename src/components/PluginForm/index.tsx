@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Switch, Select, InputNumber, Button } from 'antd';
 import { useForm } from 'antd/es/form/util';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { useIntl } from 'umi';
 
 import { fetchPluginSchema } from '@/services/plugin';
 import { transformPropertyToRules } from '@/transforms/plugin';
@@ -70,36 +70,39 @@ const ArrayComponent: React.FC<ArrayComponentProps> = ({
   propertyValue,
   schema,
   children,
-}) => (
-  <Form.List key={propertyName} name={propertyName}>
-    {(fields, { add, remove }) => (
-      <>
-        {fields.map((field, index) => (
-          <Form.Item
-            key={field.key}
-            rules={transformPropertyToRules(schema!, propertyName, propertyValue)}
-            label={`${propertyName}-${index + 1}`}
-          >
-            {children}
-            {fields.length > 1 ? (
-              <MinusCircleOutlined onClick={() => remove(field.name)} />
-            ) : (
-              <React.Fragment />
-            )}
-          </Form.Item>
-        ))}
-        {/* BUG: There should also care about minItems */}
-        {fields.length < (propertyValue.maxItems ?? Number.MAX_SAFE_INTEGER) ? (
-          <Form.Item label={propertyName}>
-            <Button type="dashed" onClick={add}>
-              <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
-            </Button>
-          </Form.Item>
-        ) : null}
-      </>
-    )}
-  </Form.List>
-);
+}) => {
+  const intl = useIntl();
+  return (
+    <Form.List key={propertyName} name={propertyName}>
+      {(fields, { add, remove }) => (
+        <>
+          {fields.map((field, index) => (
+            <Form.Item
+              key={field.key}
+              rules={transformPropertyToRules(schema!, propertyName, propertyValue)}
+              label={`${propertyName}-${index + 1}`}
+            >
+              {children}
+              {fields.length > 1 ? (
+                <MinusCircleOutlined onClick={() => remove(field.name)} />
+              ) : (
+                <React.Fragment />
+              )}
+            </Form.Item>
+          ))}
+          {/* BUG: There should also care about minItems */}
+          {fields.length < (propertyValue.maxItems ?? Number.MAX_SAFE_INTEGER) ? (
+            <Form.Item label={propertyName}>
+              <Button type="dashed" onClick={add}>
+                <PlusOutlined /> {intl.formatMessage({ id: 'component.global.add' })}
+              </Button>
+            </Form.Item>
+          ) : null}
+        </>
+      )}
+    </Form.List>
+  );
+};
 
 const PluginForm: React.FC<Props> = ({ name, initialData = {}, onFinish }) => {
   const [schema, setSchema] = useState<PluginSchema>();
