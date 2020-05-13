@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Button, Modal, notification } from 'antd';
+import { Button, Modal, notification, Switch } from 'antd';
 import { router } from 'umi';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { PlusOutlined } from '@ant-design/icons';
@@ -47,13 +47,12 @@ const List: React.FC = () => {
       valueType: 'option',
       render: (_, record) => (
         <>
-          <Button
-            type="primary"
-            style={{ marginRight: '10px' }}
-            onClick={() => router.push(`/ssl/${record.key}/edit`)}
-          >
-            {formatMessage({ id: 'component.global.edit' })}
-          </Button>
+          <Switch
+            checkedChildren="启用"
+            unCheckedChildren="不启用"
+            defaultChecked
+            style={{ marginRight: '8px' }}
+          />
           <Button type="danger" onClick={() => onRemove(record.key)}>
             {formatMessage({ id: 'component.global.remove' })}
           </Button>
