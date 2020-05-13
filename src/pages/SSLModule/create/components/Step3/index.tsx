@@ -19,7 +19,7 @@ const Step3: React.FC = props => {
           上一步
         </Button>
         <Button type="primary" onClick={onValidateForm}>
-          下一步
+          提交
         </Button>
       </div>
     </div>
