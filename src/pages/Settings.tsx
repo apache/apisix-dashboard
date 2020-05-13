@@ -34,7 +34,7 @@ const Settings: React.FC = () => {
       adminAPIPath: adminAPIConfig.path,
       adminAPIKey: adminAPIConfig.key,
     });
-  });
+  }, []);
 
   const onFinish = (values: any) => {
     localStorage.setItem('GLOBAL_ADMIN_API_SCHEMA', values.adminAPISchema);
@@ -63,7 +63,7 @@ const Settings: React.FC = () => {
               },
             ]}
           >
-            <Select defaultValue="http">
+            <Select>
               <Option value="http">HTTP</Option>
               <Option value="https">HTTPS</Option>
             </Select>
