@@ -112,7 +112,6 @@ const PluginForm: React.FC<Props> = ({ name, initialData = {}, onFinish }) => {
     if (name) {
       fetchPluginSchema(name).then(data => {
         setSchema(data);
-        console.log(name, data);
 
         const propertyDefaultData = {};
         Object.entries(data.properties || {}).forEach(([propertyName, propertyValue]) => {
