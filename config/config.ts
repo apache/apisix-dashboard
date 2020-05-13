@@ -1,10 +1,11 @@
 import { defineConfig } from 'umi';
-import defaultSettings from './defaultSettings'; // https://umijs.org/config/
+import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 
-const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION, REACT_APP_ENV } = process.env;
+const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
+  hash: true,
   antd: {},
   dva: {
     hmr: true,
@@ -14,13 +15,14 @@ export default defineConfig({
     antd: true,
     baseNavigator: true,
   },
-  hash: true,
+  dynamicImport: {
+    loading: '@/components/PageLoading/index',
+  },
   targets: {
     ie: 11,
   },
   base: '/dashboard/',
   publicPath: '/dashboard/',
-  // umi routes: https://umijs.org/zh/guide/router.html
   routes: [
     {
       path: '/user',
@@ -101,29 +103,22 @@ export default defineConfig({
       component: './404',
     },
   ],
-  // Theme for antd: https://ant.design/docs/react/customize-theme-cn
-  theme: {
-    'primary-color': defaultSettings.primaryColor,
-  },
   define: {
     REACT_APP_ENV: REACT_APP_ENV || false,
-    ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION:
-      ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION || '', // preview.pro.ant.design only do not use in your production ; preview.pro.ant.design 专用环境变量，请不要在你的项目中使用它。
     ADMIN_API_SCHEMA: 'http',
     ADMIN_API_HOST: '127.0.0.1:9080',
     ADMIN_API_PATH: '/apisix/admin/',
     API_KEY: '',
   },
+  // Theme for antd: https://ant.design/docs/react/customize-theme-cn
+  theme: {
+    'primary-color': defaultSettings.primaryColor,
+  },
+  // @ts-ignore
+  title: false,
   ignoreMomentLocale: true,
-  lessLoader: {
-    javascriptEnabled: true,
-  },
-  cssLoader: {
-    modules: true,
-  },
+  proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
     basePath: '/',
   },
-  proxy: proxy[REACT_APP_ENV || 'dev'],
-  title: false,
 });
