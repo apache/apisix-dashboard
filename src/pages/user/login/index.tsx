@@ -1,6 +1,6 @@
 import { Alert, Checkbox } from 'antd';
 import React, { useState } from 'react';
-import { connect, Dispatch, formatMessage, FormattedMessage } from 'umi';
+import { connect, Dispatch, useIntl, FormattedMessage } from 'umi';
 import { StateType } from '@/models/login';
 import { LoginParamsType } from '@/services/login';
 import { ConnectState } from '@/models/connect';
@@ -28,11 +28,12 @@ const LoginMessage: React.FC<{
   />
 );
 
-const Login: React.FC<LoginProps> = props => {
+const Login: React.FC<LoginProps> = (props) => {
   const { userLogin = {}, submitting } = props;
   const { status, type: loginType } = userLogin;
   const [autoLogin, setAutoLogin] = useState(true);
-  const [type, setType] = useState<string>('account');
+  const [type, setType] = useState('account');
+  const { formatMessage } = useIntl();
 
   const handleSubmit = (values: LoginParamsType) => {
     const { dispatch } = props;
@@ -75,7 +76,7 @@ const Login: React.FC<LoginProps> = props => {
           />
         </Tab>
         <div>
-          <Checkbox checked={autoLogin} onChange={e => setAutoLogin(e.target.checked)}>
+          <Checkbox checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)}>
             <FormattedMessage id="component.user.rememberMe" />
           </Checkbox>
         </div>

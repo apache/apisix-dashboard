@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'antd/es/form/util';
 import { Button, Card, Form, Input, notification, Select } from 'antd';
-import { formatMessage, FormattedMessage, history } from 'umi';
+import { useIntl, FormattedMessage, history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { getAdminAPIConfig } from '@/utils/setting';
 
@@ -24,6 +24,7 @@ const tailLayout = {
 
 const Settings: React.FC = () => {
   const [form] = useForm();
+  const { formatMessage } = useIntl();
 
   useEffect(() => {
     const adminAPIConfig = getAdminAPIConfig();

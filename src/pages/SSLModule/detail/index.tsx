@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Form, Input, Card, Button, notification, message } from 'antd';
-import { formatMessage, history, useParams } from 'umi';
+import { useIntl, history, useParams } from 'umi';
 import { useForm } from 'antd/es/form/util';
 
 import { getPageMode } from '@/utils/utils';
@@ -30,11 +30,12 @@ const Detail: React.FC = () => {
   const [mode] = useState<PageMode>(getPageMode());
   const { key } = useParams();
   const [form] = useForm();
+  const { formatMessage } = useIntl();
 
   useEffect(() => {
     const hideLoading = message.loading(formatMessage({ id: 'component.global.loading' }), 0);
     if (mode === 'EDIT' && key) {
-      fetchSSLItem(key).then(data => {
+      fetchSSLItem(key).then((data) => {
         form.setFieldsValue(data.value);
         hideLoading();
       });
