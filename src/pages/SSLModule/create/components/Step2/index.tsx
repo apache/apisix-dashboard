@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import styles from './index.less';
-import ListDetail from '../listDetail/index';
+import CertificateForm from '../CertificateForm/index';
 
 const Step2: React.FC = props => {
   const [form] = Form.useForm();
@@ -35,7 +35,7 @@ const Step2: React.FC = props => {
   if (data.createType === 'ManualInput') {
     renderView = (
       <div className="step2-container">
-        <ListDetail mode="EDIT" form={form} data={data} />
+        <CertificateForm mode="EDIT" form={form} data={data} />
         {buttonArea}
       </div>
     );

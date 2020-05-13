@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button } from 'antd';
-import ListDetail from '../listDetail/index';
+import CertificateForm from '../CertificateForm/index';
 
 const Step3: React.FC = props => {
   const [form] = Form.useForm();
@@ -13,7 +13,7 @@ const Step3: React.FC = props => {
   };
   return (
     <div className="container">
-      <ListDetail mode="VIEW" form={form} data={data} />
+      <CertificateForm mode="VIEW" form={form} data={data} />
       <div style={{ width: '100%', textAlign: 'center' }}>
         <Button type="primary" onClick={preStep} style={{ marginRight: '8px' }}>
           上一步

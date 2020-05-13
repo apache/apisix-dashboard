@@ -10,19 +10,33 @@ interface detailList {
 
 const ListDetail: React.FC<detailList> = props => {
   const { mode, data, form } = props;
+  const sni =
+    mode === 'EDIT' ? null : (
+      <Form.Item
+        label="SNI"
+        name="sni"
+        rules={[
+          { required: true, message: formatMessage({ id: 'component.ssl.fieldSNIInvalid' }) },
+        ]}
+      >
+        <Input disabled={mode !== 'EDIT'} />
+      </Form.Item>
+    );
+  const expireTime =
+    mode === 'EDIT' ? null : (
+      <Form.Item
+        label="ExpireTime"
+        name="ExpireTime"
+        rules={[{ required: true, message: 'ExpireTime' }]}
+      >
+        <Input disabled={mode !== 'EDIT'} />
+      </Form.Item>
+    );
 
   return (
     <>
       <Form form={form} layout="horizontal" initialValues={data}>
-        <Form.Item
-          label="SNI"
-          name="sni"
-          rules={[
-            { required: true, message: formatMessage({ id: 'component.ssl.fieldSNIInvalid' }) },
-          ]}
-        >
-          <Input disabled={mode !== 'EDIT'} />
-        </Form.Item>
+        {sni}
         <Form.Item
           label="Cert"
           name="cert"
@@ -44,6 +58,7 @@ const ListDetail: React.FC<detailList> = props => {
         >
           <Input.TextArea rows={6} disabled={mode !== 'EDIT'} />
         </Form.Item>
+        {expireTime}
       </Form>
     </>
   );
