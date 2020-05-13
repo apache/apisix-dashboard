@@ -42,6 +42,15 @@ const List: React.FC = () => {
       title: 'SNI',
       dataIndex: ['value', 'sni'],
     },
+    // TODO: need to check api response
+    {
+      title: '关联路由',
+      dataIndex: [],
+    },
+    {
+      title: '过期时间',
+      dataIndex: [],
+    },
     {
       title: formatMessage({ id: 'component.global.action' }),
       valueType: 'option',
