@@ -14,8 +14,8 @@ const Step3: React.FC = props => {
   return (
     <div className="container">
       <ListDetail mode="VIEW" form={form} data={data} />
-      <div className="button-area">
-        <Button type="primary" onClick={preStep}>
+      <div style={{ width: '100%', textAlign: 'center' }}>
+        <Button type="primary" onClick={preStep} style={{ marginRight: '8px' }}>
           上一步
         </Button>
         <Button type="primary" onClick={onValidateForm}>

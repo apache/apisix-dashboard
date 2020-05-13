@@ -4,15 +4,6 @@ import { UploadOutlined } from '@ant-design/icons';
 import styles from './index.less';
 import ListDetail from '../listDetail/index';
 
-const formItemLayout = {
-  labelCol: {
-    span: 5,
-  },
-  wrapperCol: {
-    span: 19,
-  },
-};
-
 const Step2: React.FC = props => {
   const [form] = Form.useForm();
   const { data, setCurrentStep, setFormData } = props;
@@ -31,47 +22,43 @@ const Step2: React.FC = props => {
     setCurrentStep(0);
   };
   let renderView;
+  const buttonArea = (
+    <div style={{ width: '100%', textAlign: 'center' }}>
+      <Button type="primary" onClick={preStep} style={{ marginRight: '8px' }}>
+        上一步
+      </Button>
+      <Button type="primary" onClick={onValidateForm}>
+        下一步
+      </Button>
+    </div>
+  );
   if (data.createType === 'ManualInput') {
     renderView = (
       <div className="step2-container">
         <ListDetail mode="EDIT" form={form} data={data} />
-        <div className="button-area">
-          <Button type="primary" onClick={preStep}>
-            上一步
-          </Button>
-          <Button type="primary" onClick={onValidateForm}>
-            下一步
-          </Button>
-        </div>
+        {buttonArea}
       </div>
     );
   } else {
     renderView = (
       <>
-        <Form
-          {...formItemLayout}
-          form={form}
-          layout="horizontal"
-          className={styles.stepForm}
-          hideRequiredMark
-          initialValues={data}
-        >
+        <Form form={form} layout="horizontal" className={styles.stepForm} initialValues={data}>
           <Form.Item>
             <Upload className={styles.stepForm}>
               <Button>
-                <UploadOutlined /> 点击上传
+                <UploadOutlined /> 点击上传公钥
+              </Button>
+            </Upload>
+          </Form.Item>
+          <Form.Item>
+            <Upload className={styles.stepForm}>
+              <Button>
+                <UploadOutlined /> 点击上传私钥
               </Button>
             </Upload>
           </Form.Item>
         </Form>
-        <div className="button-area">
-          <Button type="primary" onClick={preStep}>
-            上一步
-          </Button>
-          <Button type="primary" onClick={onValidateForm}>
-            下一步
-          </Button>
-        </div>
+        {buttonArea}
       </>
     );
   }

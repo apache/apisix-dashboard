@@ -42,20 +42,12 @@ const Step1: React.FC = props => {
             <Option value="UploadCertificate">上传证书</Option>
           </Select>
         </Form.Item>
-        <Form.Item
-          wrapperCol={{
-            xs: { span: 24, offset: 0 },
-            sm: {
-              span: formItemLayout.wrapperCol.span,
-              offset: formItemLayout.labelCol.span,
-            },
-          }}
-        >
-          <Button type="primary" onClick={onValidateForm}>
-            下一步
-          </Button>
-        </Form.Item>
       </Form>
+      <div style={{ width: '100%', textAlign: 'center' }}>
+        <Button type="primary" onClick={onValidateForm}>
+          下一步
+        </Button>
+      </div>
     </>
   );
 };
