@@ -2,8 +2,7 @@ import React, { useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Modal, notification } from 'antd';
-import { router } from 'umi';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 
 import { fetchList as fetchSSLList, remove as removeSSL } from '@/services/ssl';
@@ -12,7 +11,7 @@ import { ListItem } from '@/transforms/global';
 
 const List: React.FC = () => {
   const tableRef = useRef<ActionType>();
-
+  const { formatMessage } = useIntl();
   const onRemove = (key: string) => {
     Modal.confirm({
       title: formatMessage({ id: 'component.ssl.removeSSLItemModalTitle' }),
@@ -20,13 +19,15 @@ const List: React.FC = () => {
       okText: formatMessage({ id: 'component.global.remove' }),
       cancelText: formatMessage({ id: 'component.global.cancel' }),
       okButtonProps: {
-        type: 'danger',
+        type: 'primary',
+        danger: true,
       },
       onOk: () =>
         removeSSL(key).then(() => {
           notification.success({
             message: formatMessage({ id: 'component.ssl.removeSSLSuccess' }),
           });
+          /* eslint-disable no-unused-expressions */
           tableRef.current?.reload();
         }),
     });
@@ -50,11 +51,11 @@ const List: React.FC = () => {
           <Button
             type="primary"
             style={{ marginRight: '10px' }}
-            onClick={() => router.push(`/ssl/${record.key}/edit`)}
+            onClick={() => history.push(`/ssl/${record.key}/edit`)}
           >
             {formatMessage({ id: 'component.global.edit' })}
           </Button>
-          <Button type="danger" onClick={() => onRemove(record.key)}>
+          <Button type="primary" danger onClick={() => onRemove(record.key)}>
             {formatMessage({ id: 'component.global.remove' })}
           </Button>
         </>
@@ -70,7 +71,7 @@ const List: React.FC = () => {
         columns={columns}
         actionRef={tableRef}
         toolBarRender={() => [
-          <Button type="primary" onClick={() => router.push(`/ssl/create`)}>
+          <Button type="primary" onClick={() => history.push(`/ssl/create`)}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,

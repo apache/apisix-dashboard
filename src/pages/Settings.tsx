@@ -1,10 +1,9 @@
-import React, {useEffect} from "react";
-import {useForm} from "antd/es/form/util";
-import {Button, Card, Form, Input, notification, Select} from "antd";
-import {formatMessage, FormattedMessage} from "umi-plugin-react/locale";
-import {router} from "umi";
-import {PageHeaderWrapper} from "@ant-design/pro-layout";
-import {getAdminAPIConfig} from "@/utils/setting";
+import React, { useEffect } from 'react';
+import { useForm } from 'antd/es/form/util';
+import { Button, Card, Form, Input, notification, Select } from 'antd';
+import { useIntl, FormattedMessage, history } from 'umi';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { getAdminAPIConfig } from '@/utils/setting';
 
 const { Option } = Select;
 
@@ -25,16 +24,17 @@ const tailLayout = {
 
 const Settings: React.FC = () => {
   const [form] = useForm();
+  const { formatMessage } = useIntl();
 
   useEffect(() => {
-    let adminAPIConfig = getAdminAPIConfig();
+    const adminAPIConfig = getAdminAPIConfig();
     form.setFieldsValue({
       adminAPISchema: adminAPIConfig.schema,
       adminAPIHost: adminAPIConfig.host,
       adminAPIPath: adminAPIConfig.path,
-      adminAPIKey: adminAPIConfig.key
-    })
-  });
+      adminAPIKey: adminAPIConfig.key,
+    });
+  }, []);
 
   const onFinish = (values: any) => {
     localStorage.setItem('GLOBAL_ADMIN_API_SCHEMA', values.adminAPISchema);
@@ -43,7 +43,7 @@ const Settings: React.FC = () => {
     localStorage.setItem('GLOBAL_ADMIN_API_KEY', values.adminAPIKey);
 
     notification.success({
-      message: `${formatMessage({id: 'component.global.update'})} Admin API ${formatMessage({
+      message: `${formatMessage({ id: 'component.global.update' })} Admin API ${formatMessage({
         id: 'component.status.success',
       }).toLowerCase()}`,
     });
@@ -57,10 +57,13 @@ const Settings: React.FC = () => {
             label={formatMessage({ id: 'app.settings.item.admin-api-schema' })}
             name="adminAPISchema"
             rules={[
-              {required: true, message: formatMessage({id: 'app.settings.description.invalid-admin-api-schema'})},
+              {
+                required: true,
+                message: formatMessage({ id: 'app.settings.description.invalid-admin-api-schema' }),
+              },
             ]}
           >
-            <Select defaultValue="http">
+            <Select>
               <Option value="http">HTTP</Option>
               <Option value="https">HTTPS</Option>
             </Select>
@@ -70,7 +73,10 @@ const Settings: React.FC = () => {
             label={formatMessage({ id: 'app.settings.item.admin-api-host' })}
             name="adminAPIHost"
             rules={[
-              {required: true, message: formatMessage({id: 'app.settings.description.invalid-admin-api-host'})},
+              {
+                required: true,
+                message: formatMessage({ id: 'app.settings.description.invalid-admin-api-host' }),
+              },
             ]}
           >
             <Input />
@@ -80,7 +86,10 @@ const Settings: React.FC = () => {
             label={formatMessage({ id: 'app.settings.item.admin-api-path' })}
             name="adminAPIPath"
             rules={[
-              {required: true, message: formatMessage({id: 'app.settings.description.invalid-admin-api-path'})},
+              {
+                required: true,
+                message: formatMessage({ id: 'app.settings.description.invalid-admin-api-path' }),
+              },
             ]}
           >
             <Input />
@@ -94,12 +103,12 @@ const Settings: React.FC = () => {
           </Form.Item>
 
           <Form.Item {...tailLayout}>
-            <Button style={{marginRight: 10}} onClick={() => router.goBack()}>
-              <FormattedMessage id='component.global.cancel' />
+            <Button style={{ marginRight: 10 }} onClick={() => history.goBack()}>
+              <FormattedMessage id="component.global.cancel" />
             </Button>
 
             <Button htmlType="submit" type="primary">
-              <FormattedMessage id='component.global.save' />
+              <FormattedMessage id="component.global.save" />
             </Button>
           </Form.Item>
         </Form>

@@ -1,18 +1,16 @@
 import { Alert, Checkbox } from 'antd';
 import React, { useState } from 'react';
-import { Dispatch, AnyAction } from 'redux';
-import { connect } from 'dva';
-import { FormattedMessage, formatMessage } from 'umi-plugin-react/locale';
+import { connect, Dispatch, useIntl, FormattedMessage } from 'umi';
 import { StateType } from '@/models/login';
 import { LoginParamsType } from '@/services/login';
 import { ConnectState } from '@/models/connect';
-import LoginFrom from './components/Login';
+import LoginForm from './components/Login';
 
 import styles from './style.less';
 
-const { Tab, UserName, Password, Submit } = LoginFrom;
+const { Tab, UserName, Password, Submit } = LoginForm;
 interface LoginProps {
-  dispatch: Dispatch<AnyAction>;
+  dispatch: Dispatch;
   userLogin: StateType;
   submitting?: boolean;
 }
@@ -30,11 +28,12 @@ const LoginMessage: React.FC<{
   />
 );
 
-const Login: React.FC<LoginProps> = props => {
+const Login: React.FC<LoginProps> = (props) => {
   const { userLogin = {}, submitting } = props;
   const { status, type: loginType } = userLogin;
   const [autoLogin, setAutoLogin] = useState(true);
-  const [type, setType] = useState<string>('account');
+  const [type, setType] = useState('account');
+  const { formatMessage } = useIntl();
 
   const handleSubmit = (values: LoginParamsType) => {
     const { dispatch } = props;
@@ -45,7 +44,7 @@ const Login: React.FC<LoginProps> = props => {
   };
   return (
     <div className={styles.main}>
-      <LoginFrom activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
+      <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
         <Tab key="account" tab={formatMessage({ id: 'component.user.loginByPassword' })}>
           {status === 'error' && loginType === 'account' && !submitting && (
             <LoginMessage
@@ -77,14 +76,14 @@ const Login: React.FC<LoginProps> = props => {
           />
         </Tab>
         <div>
-          <Checkbox checked={autoLogin} onChange={e => setAutoLogin(e.target.checked)}>
+          <Checkbox checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)}>
             <FormattedMessage id="component.user.rememberMe" />
           </Checkbox>
         </div>
         <Submit loading={submitting}>
           <FormattedMessage id="component.user.login" />
         </Submit>
-      </LoginFrom>
+      </LoginForm>
     </div>
   );
 };
