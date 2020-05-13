@@ -32,7 +32,7 @@ const renderComponentByProperty = (
     if (propertyValue.enum) {
       return (
         <Select>
-          {propertyValue.enum.map(enumValue => (
+          {propertyValue.enum.map((enumValue) => (
             <Select.Option value={enumValue} key={enumValue}>
               {enumValue}
             </Select.Option>
@@ -71,7 +71,7 @@ const ArrayComponent: React.FC<ArrayComponentProps> = ({
   schema,
   children,
 }) => {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   return (
     <Form.List key={propertyName} name={propertyName}>
       {(fields, { add, remove }) => (
@@ -94,7 +94,7 @@ const ArrayComponent: React.FC<ArrayComponentProps> = ({
           {fields.length < (propertyValue.maxItems ?? Number.MAX_SAFE_INTEGER) ? (
             <Form.Item label={propertyName}>
               <Button type="dashed" onClick={add}>
-                <PlusOutlined /> {intl.formatMessage({ id: 'component.global.add' })}
+                <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
               </Button>
             </Form.Item>
           ) : null}
@@ -110,7 +110,7 @@ const PluginForm: React.FC<Props> = ({ name, initialData = {}, onFinish }) => {
 
   useEffect(() => {
     if (name) {
-      fetchPluginSchema(name).then(data => {
+      fetchPluginSchema(name).then((data) => {
         setSchema(data);
 
         const propertyDefaultData = {};
