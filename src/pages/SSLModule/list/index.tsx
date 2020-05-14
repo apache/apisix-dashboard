@@ -52,16 +52,19 @@ const List: React.FC = () => {
       dataIndex: [],
     },
     {
+      title: '是否启用',
+      valueType: 'option',
+      render: (_, record) => (
+        <>
+          <Switch defaultChecked onClick={() => console.log(record)} />
+        </>
+      ),
+    },
+    {
       title: formatMessage({ id: 'component.global.action' }),
       valueType: 'option',
       render: (_, record) => (
         <>
-          <Switch
-            checkedChildren="启用"
-            unCheckedChildren="不启用"
-            defaultChecked
-            style={{ marginRight: '8px' }}
-          />
           <Button type="danger" onClick={() => onRemove(record.key)}>
             {formatMessage({ id: 'component.global.remove' })}
           </Button>
