@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Button, Select } from 'antd';
 import styles from './index.less';
+import { StepProps } from '../..';
 
 const { Option } = Select;
 
@@ -13,15 +14,15 @@ const formItemLayout = {
   },
 };
 
-const Step1: React.FC = props => {
-  const { data, setCurrentStep, setFormData } = props;
+const Step1: React.FC<StepProps> = props => {
+  const { data, setStep, setData } = props;
   const [form] = Form.useForm();
 
   const { validateFields } = form;
   const onValidateForm = async () => {
     const values = await validateFields();
-    setCurrentStep(1);
-    setFormData({ createType: values.createType });
+    setStep(1);
+    setData({ createType: values.createType });
   };
   return (
     <>

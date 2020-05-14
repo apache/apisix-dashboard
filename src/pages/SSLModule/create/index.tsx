@@ -16,21 +16,37 @@ export interface FormData {
   createType: 'INPUT' | 'UPLOAD';
 }
 
+export interface StepProps {
+  data: any;
+  setStep: any;
+  setData: any;
+}
+
 const Create: React.FC<FormStepFormProps> = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [formData, setFormData] = useState<FormData>({
     createType: 'INPUT',
   });
   let step;
-
+  const setStep = (params: React.SetStateAction<number>) => {
+    setCurrentStep(params);
+  };
+  const setData = (params: React.SetStateAction<FormData>) => {
+    setFormData(params);
+  };
+  const setpProps = {
+    data: formData,
+    setStep,
+    setData,
+  };
   if (currentStep === 0) {
-    step = <Step1 data={formData} setCurrentStep={setCurrentStep} setFormData={setFormData} />;
+    step = <Step1 {...setpProps} />;
   } else if (currentStep === 1) {
-    step = <Step2 data={formData} setFormData={setFormData} setCurrentStep={setCurrentStep} />;
+    step = <Step2 {...setpProps} />;
   } else if (currentStep === 2) {
-    step = <Step3 data={formData} setFormData={setFormData} setCurrentStep={setCurrentStep} />;
+    step = <Step3 {...setpProps} />;
   } else {
-    step = <Step4 data={formData} setFormData={setFormData} setCurrentStep={setCurrentStep} />;
+    step = <Step4 {...setpProps} />;
   }
 
   return (

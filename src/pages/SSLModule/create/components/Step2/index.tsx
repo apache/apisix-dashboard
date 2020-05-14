@@ -5,28 +5,23 @@ import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
 import styles from './index.less';
 import CertificateForm from '../CertificateForm/index';
-import { FormData } from '../..';
+import { StepProps } from '../..';
 
-interface Props {
-  data: FormData;
-}
-
-const Step2: React.FC<Props> = props => {
+const Step2: React.FC<StepProps> = props => {
   const [form] = Form.useForm();
-  const { data, setCurrentStep, setFormData } = props;
-
+  const { data, setStep, setData } = props;
   const { validateFields } = form;
 
   const onValidateForm = async () => {
     const values = await validateFields();
-    setFormData({
+    setData({
       createType: data.createType,
       ...values,
     });
-    setCurrentStep(2);
+    setStep(2);
   };
   const preStep = () => {
-    setCurrentStep(0);
+    setStep(0);
   };
   let renderView;
   const buttonArea = (
@@ -51,11 +46,16 @@ const Step2: React.FC<Props> = props => {
     const handleChange = (info: UploadChangeParam<UploadFile<any>>, type: UploadType) => {
       console.log('type: ', type);
       console.log('info: ', info);
+      //   const fr = new FileReader();
+      //   fr.readAsText(info.file.originFileObj)
+      //   fr.onload(function(){ // 文件读取成功回调
+      //     console.log(this.result)
+      // });
     };
     const uploadProps = {
       action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
       // onChange: handleChange,
-      multiple: true,
+      multiple: false,
     };
     renderView = (
       <>

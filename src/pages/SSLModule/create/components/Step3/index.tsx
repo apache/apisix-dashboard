@@ -1,15 +1,16 @@
 import React from 'react';
 import { Form, Button } from 'antd';
 import CertificateForm from '../CertificateForm/index';
+import { StepProps } from '../..';
 
-const Step3: React.FC = props => {
+const Step3: React.FC<StepProps> = props => {
   const [form] = Form.useForm();
-  const { data, setCurrentStep } = props;
+  const { data, setStep } = props;
   const onValidateForm = async () => {
-    setCurrentStep(3);
+    setStep(3);
   };
   const preStep = () => {
-    setCurrentStep(1);
+    setStep(1);
   };
   return (
     <div className="container">
