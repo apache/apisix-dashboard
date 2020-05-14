@@ -1,16 +1,14 @@
 import { DefaultFooter, MenuDataItem, getMenuData, getPageTitle } from '@ant-design/pro-layout';
-import { Helmet } from 'react-helmet';
-import { Link } from 'umi';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { Link, useIntl, ConnectProps, connect } from 'umi';
 import React from 'react';
-import { formatMessage } from 'umi-plugin-react/locale';
-import { connect } from 'dva';
-import SelectLang from '@/components/SelectLang';
-import { ConnectProps, ConnectState } from '@/models/connect';
 import { GithubOutlined } from '@ant-design/icons';
+import SelectLang from '@/components/SelectLang';
+import { ConnectState } from '@/models/connect';
 import logo from '../assets/logo.svg';
 import styles from './UserLayout.less';
 
-export interface UserLayoutProps extends ConnectProps {
+export interface UserLayoutProps extends Partial<ConnectProps> {
   breadcrumbNameMap: {
     [path: string]: MenuDataItem;
   };
@@ -29,6 +27,7 @@ const UserLayout: React.FC<UserLayoutProps> = props => {
       pathname: '',
     },
   } = props;
+  const { formatMessage } = useIntl();
   const { breadcrumb } = getMenuData(routes);
   const title = getPageTitle({
     pathname: location.pathname,
@@ -37,7 +36,7 @@ const UserLayout: React.FC<UserLayoutProps> = props => {
     ...props,
   });
   return (
-    <>
+    <HelmetProvider>
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={title} />
@@ -71,7 +70,7 @@ const UserLayout: React.FC<UserLayoutProps> = props => {
           ]}
         />
       </div>
-    </>
+    </HelmetProvider>
   );
 };
 

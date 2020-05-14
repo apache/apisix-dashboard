@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { useParams } from 'dva';
 import { Form, Input, Card, Button, notification, message } from 'antd';
-import { formatMessage } from 'umi-plugin-react/locale';
+import { useIntl, history, useParams } from 'umi';
+import { useForm } from 'antd/es/form/util';
 
 import { getPageMode } from '@/utils/utils';
 import {
@@ -10,8 +10,6 @@ import {
   create as createSSL,
   update as updateSSL,
 } from '@/services/ssl';
-import { useForm } from 'antd/es/form/util';
-import { router } from 'umi';
 
 const layout = {
   labelCol: {
@@ -32,11 +30,12 @@ const Detail: React.FC = () => {
   const [mode] = useState<PageMode>(getPageMode());
   const { key } = useParams();
   const [form] = useForm();
+  const { formatMessage } = useIntl();
 
   useEffect(() => {
     const hideLoading = message.loading(formatMessage({ id: 'component.global.loading' }), 0);
     if (mode === 'EDIT' && key) {
-      fetchSSLItem(key).then(data => {
+      fetchSSLItem(key).then((data) => {
         form.setFieldsValue(data.value);
         hideLoading();
       });
@@ -56,7 +55,7 @@ const Detail: React.FC = () => {
           }).toLowerCase()}`,
         });
 
-        router.goBack();
+        history.goBack();
       });
     }
 
@@ -69,7 +68,7 @@ const Detail: React.FC = () => {
           }).toLowerCase()}`,
         });
 
-        router.goBack();
+        history.goBack();
       });
     }
   };
@@ -111,7 +110,7 @@ const Detail: React.FC = () => {
           </Form.Item>
 
           <Form.Item {...tailLayout}>
-            <Button style={{ marginRight: 10 }} onClick={() => router.goBack()}>
+            <Button style={{ marginRight: 10 }} onClick={() => history.goBack()}>
               {formatMessage({ id: 'component.global.cancel' })}
             </Button>
 
