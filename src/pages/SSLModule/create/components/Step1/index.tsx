@@ -38,7 +38,7 @@ const Step1: React.FC = props => {
           rules={[{ required: true, message: '请选择创建方式' }]}
         >
           <Select placeholder="请选择创建方式">
-            <Option value="ManualInput">手动输入</Option>
+            <Option value="INPUT">手动输入</Option>
             <Option value="UploadCertificate">上传证书</Option>
           </Select>
         </Form.Item>

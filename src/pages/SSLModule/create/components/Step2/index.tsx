@@ -1,10 +1,17 @@
 import React from 'react';
 import { Form, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { UploadChangeParam } from 'antd/lib/upload';
+import { UploadFile } from 'antd/lib/upload/interface';
 import styles from './index.less';
 import CertificateForm from '../CertificateForm/index';
+import { FormData } from '../..';
 
-const Step2: React.FC = props => {
+interface Props {
+  data: FormData;
+}
+
+const Step2: React.FC<Props> = props => {
   const [form] = Form.useForm();
   const { data, setCurrentStep, setFormData } = props;
 
@@ -32,7 +39,7 @@ const Step2: React.FC = props => {
       </Button>
     </div>
   );
-  if (data.createType === 'ManualInput') {
+  if (data.createType === 'INPUT') {
     renderView = (
       <div className="step2-container">
         <CertificateForm mode="EDIT" form={form} data={data} />
@@ -40,18 +47,36 @@ const Step2: React.FC = props => {
       </div>
     );
   } else {
+    type UploadType = 'PUBLIC_KEY' | 'PRIVATE_KEY';
+    const handleChange = (info: UploadChangeParam<UploadFile<any>>, type: UploadType) => {
+      console.log('type: ', type);
+      console.log('info: ', info);
+    };
+    const uploadProps = {
+      action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+      // onChange: handleChange,
+      multiple: true,
+    };
     renderView = (
       <>
         <Form form={form} layout="horizontal" className={styles.stepForm} initialValues={data}>
           <Form.Item>
-            <Upload className={styles.stepForm}>
+            <Upload
+              {...uploadProps}
+              onChange={info => handleChange(info, 'PUBLIC_KEY')}
+              className={styles.stepForm}
+            >
               <Button>
                 <UploadOutlined /> 点击上传公钥
               </Button>
             </Upload>
           </Form.Item>
           <Form.Item>
-            <Upload className={styles.stepForm}>
+            <Upload
+              {...uploadProps}
+              onChange={info => handleChange(info, 'PRIVATE_KEY')}
+              className={styles.stepForm}
+            >
               <Button>
                 <UploadOutlined /> 点击上传私钥
               </Button>

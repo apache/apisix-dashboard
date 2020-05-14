@@ -12,12 +12,17 @@ interface FormStepFormProps {
   current?: string;
 }
 
+export interface FormData {
+  createType: 'INPUT' | 'UPLOAD';
+}
+
 const Create: React.FC<FormStepFormProps> = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [formData, setFormData] = useState({
-    createType: null,
+  const [formData, setFormData] = useState<FormData>({
+    createType: 'INPUT',
   });
   let step;
+
   if (currentStep === 0) {
     step = <Step1 data={formData} setCurrentStep={setCurrentStep} setFormData={setFormData} />;
   } else if (currentStep === 1) {
