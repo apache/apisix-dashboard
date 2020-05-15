@@ -10,7 +10,11 @@ import styles from './style.less';
 const { Step } = Steps;
 
 export interface FormData {
-  createType: 'INPUT' | 'UPLOAD';
+  createType?: 'INPUT' | 'UPLOAD';
+  sni?: string;
+  cert?: string;
+  key?: string;
+  expireTime?: Date;
 }
 
 export interface StepProps {
@@ -21,13 +25,13 @@ export interface StepProps {
 
 const Create: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<Partial<FormData>>({
     createType: 'INPUT',
   });
   const setpProps = {
     data: formData,
     onStepChange: setCurrentStep,
-    onFormChange: setFormData,
+    onFormChange: (params: FormData) => setFormData({ ...formData, ...params }),
   };
 
   const renderStep = () => {

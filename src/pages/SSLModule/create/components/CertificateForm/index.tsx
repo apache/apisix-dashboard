@@ -11,7 +11,6 @@ interface CertificateFormProps {
 
 const CertificateForm: React.FC<CertificateFormProps> = ({ mode, data, form }) => {
   const { formatMessage } = useIntl();
-
   const renderSNI = () => {
     if (mode === 'VIEW') {
       return (
@@ -34,7 +33,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, data, form }) =
       return (
         <Form.Item
           label="ExpireTime"
-          name="ExpireTime"
+          name="expireTime"
           rules={[{ required: true, message: 'ExpireTime' }]}
         >
           <Input disabled={mode === 'VIEW'} />
