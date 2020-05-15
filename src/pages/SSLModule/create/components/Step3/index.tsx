@@ -1,25 +1,22 @@
+/* eslint-disable import/no-unresolved */
 import React from 'react';
 import { Form, Button } from 'antd';
-import CertificateForm from '../CertificateForm/index';
+import CertificateForm from '../CertificateForm';
 import { StepProps } from '../..';
 
-const Step3: React.FC<StepProps> = props => {
+const Step3: React.FC<StepProps> = ({ data, onStepChange }) => {
   const [form] = Form.useForm();
-  const { data, setStep } = props;
-  const onValidateForm = async () => {
-    setStep(3);
-  };
-  const preStep = () => {
-    setStep(1);
+  const submit = () => {
+    onStepChange(3);
   };
   return (
     <div className="container">
       <CertificateForm mode="VIEW" form={form} data={data} />
       <div style={{ width: '100%', textAlign: 'center' }}>
-        <Button type="primary" onClick={preStep} style={{ marginRight: '8px' }}>
+        <Button type="primary" onClick={() => onStepChange(1)} style={{ marginRight: '8px' }}>
           上一步
         </Button>
-        <Button type="primary" onClick={onValidateForm}>
+        <Button type="primary" onClick={submit}>
           提交
         </Button>
       </div>

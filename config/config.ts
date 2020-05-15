@@ -83,7 +83,6 @@ export default defineConfig({
                 },
                 {
                   name: 'create',
-                  icon: 'smile',
                   path: '/ssl/create',
                   component: './SSLModule/create',
                   hideInMenu: true,

@@ -8,45 +8,36 @@ import Step4 from './components/Step4';
 import styles from './style.less';
 
 const { Step } = Steps;
-interface FormStepFormProps {
-  current?: string;
-}
 
 export interface FormData {
   createType: 'INPUT' | 'UPLOAD';
 }
 
 export interface StepProps {
-  data: any;
-  setStep: any;
-  setData: any;
+  data: FormData;
+  onStepChange(step: number): void;
+  onFormChange(data: FormData): void;
 }
 
-const Create: React.FC<FormStepFormProps> = () => {
-  const [currentStep, setCurrentStep] = useState<number>(0);
+const Create: React.FC = () => {
+  const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>({
     createType: 'INPUT',
   });
-  let step;
-  const setStep = (params: React.SetStateAction<number>) => {
-    setCurrentStep(params);
-  };
-  const setData = (params: React.SetStateAction<FormData>) => {
-    setFormData(params);
-  };
   const setpProps = {
     data: formData,
-    setStep,
-    setData,
+    onStepChange: setCurrentStep,
+    onFormChange: setFormData,
   };
+  let renderStep;
   if (currentStep === 0) {
-    step = <Step1 {...setpProps} />;
+    renderStep = <Step1 {...setpProps} />;
   } else if (currentStep === 1) {
-    step = <Step2 {...setpProps} />;
+    renderStep = <Step2 {...setpProps} />;
   } else if (currentStep === 2) {
-    step = <Step3 {...setpProps} />;
+    renderStep = <Step3 {...setpProps} />;
   } else {
-    step = <Step4 {...setpProps} />;
+    renderStep = <Step4 {...setpProps} />;
   }
 
   return (
@@ -54,12 +45,11 @@ const Create: React.FC<FormStepFormProps> = () => {
       <Card bordered={false}>
         <>
           <Steps current={currentStep} className={styles.steps}>
-            <Step title="选择创建类型" />
-            <Step title="编辑上传信息" />
-            <Step title="预览" />
-            <Step title="完成" />
+            {['选择创建类型', '编辑上传信息', '预览', '完成'].map((item) => (
+              <Step title={item} key={item} />
+            ))}
           </Steps>
-          <div className="step-container">{step}</div>
+          <div className="step-container">{renderStep}</div>
         </>
       </Card>
     </PageHeaderWrapper>
