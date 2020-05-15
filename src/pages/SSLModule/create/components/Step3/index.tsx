@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import React from 'react';
 import { Form, Button } from 'antd';
 import CertificateForm from '../CertificateForm';

@@ -27,7 +27,7 @@ const Step4: React.FC<StepProps> = ({ onStepChange, onFormChange }) => {
             onStepChange(0);
           }}
         >
-          继续上传
+          继续创建
         </Button>,
       ]}
     />

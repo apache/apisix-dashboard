@@ -5,38 +5,48 @@ import { FormInstance } from 'antd/lib/form';
 
 interface CertificateFormProps {
   mode: 'EDIT' | 'VIEW';
-  data?: any;
+  data: FormData;
   form: FormInstance;
 }
 
 const CertificateForm: React.FC<CertificateFormProps> = ({ mode, data, form }) => {
   const { formatMessage } = useIntl();
-  const renderSNI =
-    mode === 'EDIT' ? null : (
-      <Form.Item
-        label="SNI"
-        name="sni"
-        rules={[
-          { required: true, message: formatMessage({ id: 'component.ssl.fieldSNIInvalid' }) },
-        ]}
-      >
-        <Input disabled={mode === 'VIEW'} />
-      </Form.Item>
-    );
-  const renderExpireTime =
-    mode === 'EDIT' ? null : (
-      <Form.Item
-        label="ExpireTime"
-        name="ExpireTime"
-        rules={[{ required: true, message: 'ExpireTime' }]}
-      >
-        <Input disabled={mode === 'VIEW'} />
-      </Form.Item>
-    );
+
+  const renderSNI = () => {
+    if (mode === 'VIEW') {
+      return (
+        <Form.Item
+          label="SNI"
+          name="sni"
+          rules={[
+            { required: true, message: formatMessage({ id: 'component.ssl.fieldSNIInvalid' }) },
+          ]}
+        >
+          <Input disabled={mode === 'VIEW'} />
+        </Form.Item>
+      );
+    }
+    return null;
+  };
+
+  const renderExpireTime = () => {
+    if (mode === 'VIEW') {
+      return (
+        <Form.Item
+          label="ExpireTime"
+          name="ExpireTime"
+          rules={[{ required: true, message: 'ExpireTime' }]}
+        >
+          <Input disabled={mode === 'VIEW'} />
+        </Form.Item>
+      );
+    }
+    return null;
+  };
 
   return (
     <Form form={form} layout="horizontal" initialValues={data}>
-      {renderSNI}
+      {renderSNI()}
       <Form.Item
         label="Cert"
         name="cert"
@@ -57,7 +67,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, data, form }) =
       >
         <Input.TextArea rows={6} disabled={mode !== 'EDIT'} />
       </Form.Item>
-      {renderExpireTime}
+      {renderExpireTime()}
     </Form>
   );
 };

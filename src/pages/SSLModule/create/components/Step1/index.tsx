@@ -16,7 +16,6 @@ const formItemLayout = {
 
 const Step1: React.FC<StepProps> = ({ data, onStepChange, onFormChange }) => {
   const [form] = Form.useForm();
-
   const { validateFields } = form;
   const onValidateForm = () => {
     validateFields().then((values) => {
@@ -40,7 +39,7 @@ const Step1: React.FC<StepProps> = ({ data, onStepChange, onFormChange }) => {
         >
           <Select placeholder="请选择创建方式">
             <Option value="INPUT">手动输入</Option>
-            <Option value="UploadCertificate">上传证书</Option>
+            <Option value="UPLOAD">上传证书</Option>
           </Select>
         </Form.Item>
       </Form>

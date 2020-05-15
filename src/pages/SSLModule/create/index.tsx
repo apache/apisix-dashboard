@@ -29,16 +29,17 @@ const Create: React.FC = () => {
     onStepChange: setCurrentStep,
     onFormChange: setFormData,
   };
-  let renderStep;
-  if (currentStep === 0) {
-    renderStep = <Step1 {...setpProps} />;
-  } else if (currentStep === 1) {
-    renderStep = <Step2 {...setpProps} />;
-  } else if (currentStep === 2) {
-    renderStep = <Step3 {...setpProps} />;
-  } else {
-    renderStep = <Step4 {...setpProps} />;
-  }
+
+  const renderStep = () => {
+    return (
+      <>
+        {Boolean(currentStep === 0) && <Step1 {...setpProps} />}
+        {Boolean(currentStep === 1) && <Step2 {...setpProps} />}
+        {Boolean(currentStep === 2) && <Step3 {...setpProps} />}
+        {Boolean(currentStep === 3) && <Step4 {...setpProps} />}
+      </>
+    );
+  };
 
   return (
     <PageHeaderWrapper content="">
@@ -49,7 +50,7 @@ const Create: React.FC = () => {
               <Step title={item} key={item} />
             ))}
           </Steps>
-          <div className="step-container">{renderStep}</div>
+          {renderStep()}
         </>
       </Card>
     </PageHeaderWrapper>

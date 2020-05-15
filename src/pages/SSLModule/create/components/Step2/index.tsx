@@ -17,38 +17,27 @@ const Step2: React.FC<StepProps> = ({ data, onStepChange, onFormChange }) => {
       onStepChange(2);
     });
   };
-  let renderView;
-  const buttonArea = (
-    <div style={{ width: '100%', textAlign: 'center' }}>
-      <Button
-        type="primary"
-        onClick={() => {
-          onStepChange(0);
-        }}
-        style={{ marginRight: '8px' }}
-      >
-        上一步
-      </Button>
-      <Button type="primary" onClick={onValidateForm}>
-        下一步
-      </Button>
-    </div>
-  );
-  if (data.createType === 'INPUT') {
-    renderView = (
-      <div className="step2-container">
+  return (
+    <>
+      {Boolean(data.createType === 'INPUT') && (
         <CertificateForm mode="EDIT" form={form} data={data} />
-        {buttonArea}
+      )}
+      {Boolean(data.createType === 'UPLOAD') && <CertificateUploader form={form} data={data} />}
+      <div style={{ width: '100%', textAlign: 'center' }}>
+        <Button
+          type="primary"
+          onClick={() => {
+            onStepChange(0);
+          }}
+          style={{ marginRight: '8px' }}
+        >
+          上一步
+        </Button>
+        <Button type="primary" onClick={onValidateForm}>
+          下一步
+        </Button>
       </div>
-    );
-  } else {
-    renderView = (
-      <>
-        <CertificateUploader form={form} data={data} />
-        {buttonArea}
-      </>
-    );
-  }
-  return renderView;
+    </>
+  );
 };
 export default Step2;
