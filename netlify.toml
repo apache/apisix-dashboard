@@ -8,7 +8,7 @@
   force = true
   [redirects.headers]
     X-From = "Netlify"
-    X-Api-Key = "edd1c9f034335f136f87ad84b625c8f1"
+    X-API-Key = "edd1c9f034335f136f87ad84b625c8f1"
 
 [[redirects]]
   from = "/*"
