@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Input } from 'antd';
 import { useIntl } from 'umi';
 import { FormInstance } from 'antd/lib/form';
+import { FormData } from '../..';
 
 interface CertificateFormProps {
   mode: 'EDIT' | 'VIEW';

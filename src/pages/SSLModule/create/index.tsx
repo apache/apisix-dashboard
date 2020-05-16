@@ -15,6 +15,24 @@ export interface FormData {
   cert?: string;
   key?: string;
   expireTime?: Date;
+  publicKeyDefaultFileList?:
+    | []
+    | [
+        {
+          uid: string;
+          status: string;
+          name: string;
+        },
+      ];
+  privateKeyDefaultFileList?:
+    | []
+    | [
+        {
+          uid: string;
+          status: string;
+          name: string;
+        },
+      ];
 }
 
 export interface StepProps {
@@ -31,7 +49,13 @@ const Create: React.FC = () => {
   const setpProps = {
     data: formData,
     onStepChange: setCurrentStep,
-    onFormChange: (params: FormData) => setFormData({ ...formData, ...params }),
+    onFormChange: (params: FormData) => {
+      if (Object.keys(params).length === 0) {
+        setFormData({});
+      } else {
+        setFormData({ ...formData, ...params });
+      }
+    },
   };
 
   const renderStep = () => {

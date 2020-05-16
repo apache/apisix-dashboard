@@ -23,7 +23,7 @@ const Step4: React.FC<StepProps> = ({ onStepChange, onFormChange }) => {
         <Button
           key="reset"
           onClick={() => {
-            onFormChange({ createType: 'INPUT' });
+            onFormChange({});
             onStepChange(0);
           }}
         >
