@@ -22,7 +22,7 @@ export default defineConfig({
     ie: 11,
   },
   base: '/dashboard/',
-  publicPath: '/dashboard/',
+  publicPath: '/',
   routes: [
     {
       path: '/user',
