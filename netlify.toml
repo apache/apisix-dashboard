@@ -1,0 +1,16 @@
+[build]
+  publish = "dist/"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://apisix.iresty.com/apisix/admin/"
+  status = 200
+  force = true
+  [redirects.headers]
+    X-From = "Netlify"
+    X-Api-Key = "edd1c9f034335f136f87ad84b625c8f1"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200 
