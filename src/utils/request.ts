@@ -4,7 +4,7 @@
  */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
-import { getAdminAPIConfig } from "@/utils/setting";
+import { getAdminAPIConfig } from '@/utils/setting';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -51,6 +51,7 @@ const adminAPIConfig = getAdminAPIConfig();
  * 配置request请求时的默认参数
  */
 const request = extend({
+  prefix: process.env.NODE_ENV === 'production' ? '' : '/api',
   errorHandler, // 默认错误处理
   credentials: 'same-origin', // 默认请求是否带上cookie
   headers: {
