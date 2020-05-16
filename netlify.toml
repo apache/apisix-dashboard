@@ -3,7 +3,7 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "https://apisix.iresty.com/apisix/admin"
+  to = "https://apisix.iresty.com/apisix/admin/:splat"
   status = 200
   force = true
   [redirects.headers]
