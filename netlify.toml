@@ -6,9 +6,6 @@
   to = "https://apisix.iresty.com/apisix/admin/:splat"
   status = 200
   force = true
-  [redirects.headers]
-    X-From = "Netlify"
-    X-API-Key = "edd1c9f034335f136f87ad84b625c8f1"
 
 [[redirects]]
   from = "/*"
