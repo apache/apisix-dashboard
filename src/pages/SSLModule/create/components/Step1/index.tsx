@@ -38,7 +38,7 @@ const Step1: React.FC<StepProps> = ({ data, onStepChange, onFormChange }) => {
           name="createType"
           rules={[{ required: true, message: '请选择创建方式' }]}
         >
-          <Select placeholder="请选择创建方式" onChange={() => onFormChange({})}>
+          <Select placeholder="请选择创建方式" onChange={() => onFormChange({}, true)}>
             <Option value="INPUT">手动输入</Option>
             <Option value="UPLOAD">上传证书</Option>
           </Select>

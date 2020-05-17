@@ -1,7 +1,12 @@
 import React from 'react';
 import { Form, Button } from 'antd';
 import CertificateForm from '../CertificateForm';
-import { CertificateUploader, SuccessDataProps, UploadType } from '../CertificateUploader';
+import {
+  CertificateUploader,
+  UploadPublicSuccessData,
+  UploadPrivateSuccessData,
+  UploadType,
+} from '../CertificateUploader';
 import { StepProps } from '../..';
 
 const Step2: React.FC<StepProps> = ({ onStepChange, onFormChange, data }) => {
@@ -13,21 +18,23 @@ const Step2: React.FC<StepProps> = ({ onStepChange, onFormChange, data }) => {
       onStepChange(2);
     });
   };
-  const onUploadSuccess = (successData: SuccessDataProps) => {
-    onFormChange({ ...successData });
+  const onUploadSuccess = (
+    uploadSuccessData: UploadPublicSuccessData | UploadPrivateSuccessData,
+  ) => {
+    onFormChange(uploadSuccessData);
   };
-  const onDelFile = (type: UploadType) => {
+  const onRemove = (type: UploadType) => {
     if (type === 'PUBLIC_KEY') {
       onFormChange({
         publicKeyDefaultFileList: [],
-        cert: undefined,
-        sni: undefined,
+        cert: '',
+        sni: '',
         expireTime: undefined,
       });
     } else {
       onFormChange({
         privateKeyDefaultFileList: [],
-        key: undefined,
+        key: '',
       });
     }
   };
@@ -37,7 +44,7 @@ const Step2: React.FC<StepProps> = ({ onStepChange, onFormChange, data }) => {
         <CertificateForm mode="EDIT" form={form} data={data} />
       )}
       {Boolean(data.createType === 'UPLOAD') && (
-        <CertificateUploader onSuccess={onUploadSuccess} onDelFile={onDelFile} data={data} />
+        <CertificateUploader onSuccess={onUploadSuccess} onRemove={onRemove} data={data} />
       )}
       <div style={{ width: '100%', textAlign: 'center' }}>
         <Button

@@ -13,75 +13,59 @@ interface AltName {
 }
 
 export type UploadType = 'PUBLIC_KEY' | 'PRIVATE_KEY';
-export interface SuccessDataProps {
-  sni?: string;
-  cert?: string;
-  key?: string;
-  expireTime?: Date;
-  publicKeyDefaultFileList?:
-    | []
-    | [
-        {
-          uid: string;
-          status: string;
-          name: string;
-        },
-      ];
-  privateKeyDefaultFileList?:
-    | []
-    | [
-        {
-          uid: string;
-          status: string;
-          name: string;
-        },
-      ];
+export interface UploadPublicSuccessData {
+  sni: string;
+  cert: string;
+  expireTime: Date;
+  publicKeyDefaultFileList: UploadFile[];
+}
+export interface UploadPrivateSuccessData {
+  key: string;
+  privateKeyDefaultFileList: UploadFile[];
 }
 
 interface UploaderProps {
-  onSuccess(uploadData: SuccessDataProps): void;
-  onDelFile(type: UploadType): void;
+  onSuccess(data: UploadPublicSuccessData | UploadPrivateSuccessData): void;
+  onRemove(type: UploadType): void;
   data: FormData;
 }
 
-const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onDelFile, data }) => {
+const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, data }) => {
   const [form] = useForm();
-  const handleChange = (info: UploadChangeParam<UploadFile<any>>, type: UploadType) => {
+  const genUploadFile = (name = ''): UploadFile => {
+    return {
+      uid: Math.random().toString(36).slice(2),
+      name,
+      status: 'done',
+      size: 0,
+      type: '',
+    };
+  };
+  const onChange = (info: UploadChangeParam<UploadFile<any>>, type: UploadType) => {
     if (!info.file.originFileObj) return;
-    const fileRead = new FileReader();
-    fileRead.readAsText(info.file.originFileObj);
+    const fileReader = new FileReader();
+    fileReader.readAsText(info.file.originFileObj);
     // eslint-disable-next-line func-names
-    fileRead.onload = function (event) {
-      const fileResult = (event.currentTarget as any).result;
+    fileReader.onload = function (event) {
+      const { result } = event.currentTarget as any;
       if (type === 'PUBLIC_KEY') {
-        const cert = forge.pki.certificateFromPem(fileResult);
+        const cert = forge.pki.certificateFromPem(result);
         const altNames = (cert.extensions.find((item) => item.name === 'subjectAltName')
           .altNames as AltName[])
           .map((item) => item.value)
           .join(';');
-        const uploadPublicData: SuccessDataProps = {
+        if (!altNames) return;
+        const uploadPublicData: UploadPublicSuccessData = {
           sni: altNames,
-          cert: fileResult,
+          cert: result,
           expireTime: cert.validity.notAfter,
-          publicKeyDefaultFileList: [
-            {
-              uid: '1',
-              name: info.file.name,
-              status: 'done',
-            },
-          ],
+          publicKeyDefaultFileList: [genUploadFile(info.file.name)],
         };
         onSuccess(uploadPublicData);
       } else {
-        const uploadprivateData: SuccessDataProps = {
-          key: fileResult,
-          privateKeyDefaultFileList: [
-            {
-              uid: '2',
-              name: info.file.name,
-              status: 'done',
-            },
-          ],
+        const uploadprivateData: UploadPrivateSuccessData = {
+          key: result,
+          privateKeyDefaultFileList: [genUploadFile(info.file.name)],
         };
         onSuccess(uploadprivateData);
       }
@@ -89,11 +73,11 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onDelFile, da
   };
 
   const publicUploadProps = {
-    defaultFileList: data.publicKeyDefaultFileList || undefined,
+    defaultFileList: data.publicKeyDefaultFileList || [],
   };
 
   const privateUploadProps = {
-    defaultFileList: data.privateKeyDefaultFileList || undefined,
+    defaultFileList: data.privateKeyDefaultFileList || [],
   };
 
   return (
@@ -101,8 +85,8 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onDelFile, da
       <Form.Item>
         <Upload
           className={styles.stepForm}
-          onChange={(info) => handleChange(info, 'PUBLIC_KEY')}
-          onRemove={() => onDelFile('PUBLIC_KEY')}
+          onChange={(info) => onChange(info, 'PUBLIC_KEY')}
+          onRemove={() => onRemove('PUBLIC_KEY')}
           {...publicUploadProps}
         >
           <Button>
@@ -113,8 +97,8 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onDelFile, da
       <Form.Item>
         <Upload
           className={styles.stepForm}
-          onChange={(info) => handleChange(info, 'PRIVATE_KEY')}
-          onRemove={() => onDelFile('PRIVATE_KEY')}
+          onChange={(info) => onChange(info, 'PRIVATE_KEY')}
+          onRemove={() => onRemove('PRIVATE_KEY')}
           {...privateUploadProps}
         >
           <Button>

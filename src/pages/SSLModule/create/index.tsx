@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Steps } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { UploadFile } from 'antd/es/upload/interface';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
@@ -15,30 +16,14 @@ export interface FormData {
   cert?: string;
   key?: string;
   expireTime?: Date;
-  publicKeyDefaultFileList?:
-    | []
-    | [
-        {
-          uid: string;
-          status: string;
-          name: string;
-        },
-      ];
-  privateKeyDefaultFileList?:
-    | []
-    | [
-        {
-          uid: string;
-          status: string;
-          name: string;
-        },
-      ];
+  publicKeyDefaultFileList?: UploadFile[];
+  privateKeyDefaultFileList?: UploadFile[];
 }
 
 export interface StepProps {
   data: FormData;
   onStepChange(step: number): void;
-  onFormChange(data: FormData): void;
+  onFormChange(data: FormData, reset?: boolean): void;
 }
 
 const Create: React.FC = () => {
@@ -49,8 +34,8 @@ const Create: React.FC = () => {
   const setpProps = {
     data: formData,
     onStepChange: setCurrentStep,
-    onFormChange: (params: FormData) => {
-      if (Object.keys(params).length === 0) {
+    onFormChange: (params: FormData, reset?: boolean) => {
+      if (reset) {
         setFormData({});
       } else {
         setFormData({ ...formData, ...params });
