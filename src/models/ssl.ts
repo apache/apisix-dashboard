@@ -1,5 +1,5 @@
 export interface SSL {
-  sni: string;
+  sni: string[];
   cert: string;
   key: string;
 }

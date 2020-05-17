@@ -2492,6 +2492,13 @@
   resolved "https://registry.npmjs.org/@types/mustache/-/mustache-4.0.1.tgz#e4d421ed2d06d463b120621774185a5cd1b92d77"
   integrity sha512-wH6Tu9mbiOt0n5EvdoWy0VGQaJMHfLIxY/6wS0xLC7CV1taM6gESEzcYy0ZlWvxxiiljYvfDIvz4hHbUUDRlhw==
 
+"@types/node-forge@^0.9.3":
+  version "0.9.3"
+  resolved "https://registry.npm.taobao.org/@types/node-forge/download/@types/node-forge-0.9.3.tgz#5f8299a3f2b069a7e165c807bef6b17464f8b8ad"
+  integrity sha1-X4KZo/KwaafhZcgHvvaxdGT4uK0=
+  dependencies:
+    "@types/node" "*"
+
 "@types/node@*":
   version "14.0.1"
   resolved "https://registry.npmjs.org/@types/node/-/node-14.0.1.tgz#5d93e0a099cd0acd5ef3d5bde3c086e1f49ff68c"
@@ -11987,6 +11994,11 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
+node-forge@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.npm.taobao.org/node-forge/download/node-forge-0.9.1.tgz?cache=0&sync_timestamp=1569524669712&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnode-forge%2Fdownload%2Fnode-forge-0.9.1.tgz#775368e6846558ab6676858a4d8c6e8d16c677b5"
+  integrity sha1-d1No5oRlWKtmdoWKTYxujRbGd7U=
+
 node-import-ts@^1.0.1, node-import-ts@^1.0.2:
   version "1.0.5"
   resolved "https://registry.npmjs.org/node-import-ts/-/node-import-ts-1.0.5.tgz#2b5aef3c8fa9babc9d1f948ddfeb62231c18d4f8"
@@ -12215,6 +12227,11 @@ nwsapi@^2.0.7, nwsapi@^2.1.3, nwsapi@^2.2.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/nwsapi/-/nwsapi-2.2.0.tgz#204879a9e3d068ff2a55139c2c772780681a38b7"
   integrity sha512-h2AatdwYH+JHiZpv7pt/gSX1XoRGb7L/qSIeuqA6GwYoF9w1vP1cw42TO0aI2pNyshRK5893hNSl+1//vHK7hQ==
+
+nzh@^1.0.3:
+  version "1.0.4"
+  resolved "https://registry.npm.taobao.org/nzh/download/nzh-1.0.4.tgz#bded5492cd7148fa5fe1c809fa61932a899769c5"
+  integrity sha1-ve1Uks1xSPpf4cgJ+mGTKomXacU=
 
 oauth-sign@~0.9.0:
   version "0.9.0"

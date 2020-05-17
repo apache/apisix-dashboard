@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Button, Modal, notification } from 'antd';
+import { Button, Modal, notification, Switch } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 
@@ -43,18 +43,29 @@ const List: React.FC = () => {
       title: 'SNI',
       dataIndex: ['value', 'sni'],
     },
+    // TODO: need to check api response
+    {
+      title: '关联路由',
+      dataIndex: [],
+    },
+    {
+      title: '过期时间',
+      dataIndex: [],
+    },
+    {
+      title: '是否启用',
+      valueType: 'option',
+      render: (_, record) => (
+        <>
+          <Switch defaultChecked onClick={() => console.log(record)} />
+        </>
+      ),
+    },
     {
       title: formatMessage({ id: 'component.global.action' }),
       valueType: 'option',
       render: (_, record) => (
         <>
-          <Button
-            type="primary"
-            style={{ marginRight: '10px' }}
-            onClick={() => history.push(`/ssl/${record.key}/edit`)}
-          >
-            {formatMessage({ id: 'component.global.edit' })}
-          </Button>
           <Button type="primary" danger onClick={() => onRemove(record.key)}>
             {formatMessage({ id: 'component.global.remove' })}
           </Button>

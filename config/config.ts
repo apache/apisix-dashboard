@@ -82,9 +82,9 @@ export default defineConfig({
                   hideInMenu: true,
                 },
                 {
-                  path: '/ssl/create',
                   name: 'create',
-                  component: './SSLModule/detail',
+                  path: '/ssl/create',
+                  component: './SSLModule/create',
                   hideInMenu: true,
                 },
               ],
