@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button, Upload } from 'antd';
+import { Form, Button, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
@@ -8,7 +8,7 @@ import forge from 'node-forge';
 import { FormData } from '../..';
 import styles from '../../style.less';
 
-interface AltName {
+export interface AltName {
   value: string;
 }
 
@@ -49,19 +49,22 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
     fileReader.onload = function (event) {
       const { result } = event.currentTarget as any;
       if (type === 'PUBLIC_KEY') {
-        const cert = forge.pki.certificateFromPem(result);
-        const altNames = (cert.extensions.find((item) => item.name === 'subjectAltName')
-          .altNames as AltName[])
-          .map((item) => item.value)
-          .join(';');
-        if (!altNames) return;
-        const uploadPublicData: UploadPublicSuccessData = {
-          sni: altNames,
-          cert: result,
-          expireTime: cert.validity.notAfter,
-          publicKeyDefaultFileList: [genUploadFile(info.file.name)],
-        };
-        onSuccess(uploadPublicData);
+        try {
+          const cert = forge.pki.certificateFromPem(result);
+          const altNames = (cert.extensions.find((item) => item.name === 'subjectAltName')
+            .altNames as AltName[])
+            .map((item) => item.value)
+            .join(';');
+          const uploadPublicData: UploadPublicSuccessData = {
+            sni: altNames,
+            cert: result,
+            expireTime: cert.validity.notAfter,
+            publicKeyDefaultFileList: [genUploadFile(info.file.name)],
+          };
+          onSuccess(uploadPublicData);
+        } catch (error) {
+          message.error('证书解析失败');
+        }
       } else {
         const uploadprivateData: UploadPrivateSuccessData = {
           key: result,

@@ -1,12 +1,19 @@
 import React from 'react';
 import { Form, Button } from 'antd';
+import { create as createSSL } from '@/services/ssl';
 import CertificateForm from '../CertificateForm';
 import { StepProps } from '../..';
 
 const Step3: React.FC<StepProps> = ({ data, onStepChange }) => {
   const [form] = Form.useForm();
   const submit = () => {
-    onStepChange(3);
+    createSSL({
+      sni: data.sni!.split(';'),
+      cert: data.cert!,
+      key: data.key!,
+    }).then(() => {
+      onStepChange(3);
+    });
   };
   return (
     <div className="container">
