@@ -1,7 +1,6 @@
 import React from 'react';
 import { Form, Button, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { UploadChangeParam } from 'antd/lib/upload';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { useForm } from 'antd/es/form/util';
 import forge from 'node-forge';
@@ -31,7 +30,9 @@ interface UploaderProps {
 }
 
 const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, data }) => {
+  const { publicKeyDefaultFileList = [], privateKeyDefaultFileList = [] } = data;
   const [form] = useForm();
+
   const genUploadFile = (name = ''): UploadFile => {
     return {
       uid: Math.random().toString(36).slice(2),
@@ -41,10 +42,10 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
       type: '',
     };
   };
-  const onChange = (info: UploadChangeParam<UploadFile<any>>, type: UploadType) => {
-    if (!info.file.originFileObj) return;
+
+  const parseCertificate = (file: File | Blob, fileName: string, type: UploadType) => {
     const fileReader = new FileReader();
-    fileReader.readAsText(info.file.originFileObj);
+    fileReader.readAsText(file);
     // eslint-disable-next-line func-names
     fileReader.onload = function (event) {
       const { result } = event.currentTarget as any;
@@ -59,7 +60,7 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
             sni: altNames,
             cert: result,
             expireTime: cert.validity.notAfter,
-            publicKeyDefaultFileList: [genUploadFile(info.file.name)],
+            publicKeyDefaultFileList: [genUploadFile(fileName)],
           };
           onSuccess(uploadPublicData);
         } catch (error) {
@@ -68,43 +69,42 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
       } else {
         const uploadprivateData: UploadPrivateSuccessData = {
           key: result,
-          privateKeyDefaultFileList: [genUploadFile(info.file.name)],
+          privateKeyDefaultFileList: [genUploadFile(fileName)],
         };
         onSuccess(uploadprivateData);
       }
     };
   };
 
-  const publicUploadProps = {
-    defaultFileList: data.publicKeyDefaultFileList || [],
-  };
-
-  const privateUploadProps = {
-    defaultFileList: data.privateKeyDefaultFileList || [],
+  const beforeUpload = (file: File, fileList: File[], type: UploadType) => {
+    parseCertificate(file, file.name, type);
+    return false;
   };
 
   return (
     <Form form={form} layout="horizontal" className={styles.stepForm}>
       <Form.Item>
         <Upload
+          accept=".pem"
           className={styles.stepForm}
-          onChange={(info) => onChange(info, 'PUBLIC_KEY')}
           onRemove={() => onRemove('PUBLIC_KEY')}
-          {...publicUploadProps}
+          defaultFileList={publicKeyDefaultFileList}
+          beforeUpload={(file, fileList) => beforeUpload(file, fileList, 'PUBLIC_KEY')}
         >
-          <Button>
+          <Button disabled={publicKeyDefaultFileList.length === 1}>
             <UploadOutlined /> 点击上传公钥
           </Button>
         </Upload>
       </Form.Item>
       <Form.Item>
         <Upload
+          accept=".key"
           className={styles.stepForm}
-          onChange={(info) => onChange(info, 'PRIVATE_KEY')}
           onRemove={() => onRemove('PRIVATE_KEY')}
-          {...privateUploadProps}
+          defaultFileList={privateKeyDefaultFileList}
+          beforeUpload={(file, fileList) => beforeUpload(file, fileList, 'PRIVATE_KEY')}
         >
-          <Button>
+          <Button disabled={privateKeyDefaultFileList.length === 1}>
             <UploadOutlined /> 点击上传私钥
           </Button>
         </Upload>
