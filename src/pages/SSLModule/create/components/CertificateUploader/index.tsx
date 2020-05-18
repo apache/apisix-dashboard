@@ -16,11 +16,11 @@ export interface UploadPublicSuccessData {
   sni: string;
   cert: string;
   expireTime: Date;
-  publicKeyDefaultFileList: UploadFile[];
+  publicKeyFileList: UploadFile[];
 }
 export interface UploadPrivateSuccessData {
   key: string;
-  privateKeyDefaultFileList: UploadFile[];
+  privateKeyFileList: UploadFile[];
 }
 
 interface UploaderProps {
@@ -30,7 +30,7 @@ interface UploaderProps {
 }
 
 const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, data }) => {
-  const { publicKeyDefaultFileList = [], privateKeyDefaultFileList = [] } = data;
+  const { publicKeyFileList = [], privateKeyFileList = [] } = data;
   const [form] = useForm();
 
   const genUploadFile = (name = ''): UploadFile => {
@@ -60,7 +60,7 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
             sni: altNames,
             cert: result,
             expireTime: cert.validity.notAfter,
-            publicKeyDefaultFileList: [genUploadFile(fileName)],
+            publicKeyFileList: [genUploadFile(fileName)],
           };
           onSuccess(uploadPublicData);
         } catch (error) {
@@ -69,7 +69,7 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
       } else {
         const uploadprivateData: UploadPrivateSuccessData = {
           key: result,
-          privateKeyDefaultFileList: [genUploadFile(fileName)],
+          privateKeyFileList: [genUploadFile(fileName)],
         };
         onSuccess(uploadprivateData);
       }
@@ -88,10 +88,10 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
           accept=".pem"
           className={styles.stepForm}
           onRemove={() => onRemove('PUBLIC_KEY')}
-          defaultFileList={publicKeyDefaultFileList}
+          fileList={publicKeyFileList}
           beforeUpload={(file, fileList) => beforeUpload(file, fileList, 'PUBLIC_KEY')}
         >
-          <Button disabled={publicKeyDefaultFileList.length === 1}>
+          <Button disabled={publicKeyFileList.length === 1}>
             <UploadOutlined /> 点击上传公钥
           </Button>
         </Upload>
@@ -101,10 +101,10 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
           accept=".key"
           className={styles.stepForm}
           onRemove={() => onRemove('PRIVATE_KEY')}
-          defaultFileList={privateKeyDefaultFileList}
+          fileList={privateKeyFileList}
           beforeUpload={(file, fileList) => beforeUpload(file, fileList, 'PRIVATE_KEY')}
         >
-          <Button disabled={privateKeyDefaultFileList.length === 1}>
+          <Button disabled={privateKeyFileList.length === 1}>
             <UploadOutlined /> 点击上传私钥
           </Button>
         </Upload>
