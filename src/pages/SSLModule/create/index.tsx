@@ -16,8 +16,8 @@ export interface FormData {
   cert?: string;
   key?: string;
   expireTime?: Date;
-  publicKeyDefaultFileList?: UploadFile[];
-  privateKeyDefaultFileList?: UploadFile[];
+  publicKeyFileList?: UploadFile[];
+  privateKeyFileList?: UploadFile[];
 }
 
 export interface StepProps {

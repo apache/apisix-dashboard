@@ -47,14 +47,14 @@ const Step2: React.FC<StepProps> = ({ onStepChange, onFormChange, data }) => {
   const onRemove = (type: UploadType) => {
     if (type === 'PUBLIC_KEY') {
       onFormChange({
-        publicKeyDefaultFileList: [],
+        publicKeyFileList: [],
         cert: '',
         sni: '',
         expireTime: undefined,
       });
     } else {
       onFormChange({
-        privateKeyDefaultFileList: [],
+        privateKeyFileList: [],
         key: '',
       });
     }
