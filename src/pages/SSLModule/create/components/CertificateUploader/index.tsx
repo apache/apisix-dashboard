@@ -85,6 +85,7 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
     <Form form={form} layout="horizontal" className={styles.stepForm}>
       <Form.Item>
         <Upload
+          accept=".pem"
           className={styles.stepForm}
           onRemove={() => onRemove('PUBLIC_KEY')}
           defaultFileList={publicKeyDefaultFileList}
@@ -97,6 +98,7 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
       </Form.Item>
       <Form.Item>
         <Upload
+          accept=".key"
           className={styles.stepForm}
           onRemove={() => onRemove('PRIVATE_KEY')}
           defaultFileList={privateKeyDefaultFileList}
