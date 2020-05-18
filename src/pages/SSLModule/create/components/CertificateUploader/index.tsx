@@ -31,6 +31,7 @@ interface UploaderProps {
 }
 
 const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, data }) => {
+  const { publicKeyDefaultFileList = [], privateKeyDefaultFileList = [] } = data;
   const [form] = useForm();
   const genUploadFile = (name = ''): UploadFile => {
     return {
@@ -75,14 +76,6 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
     };
   };
 
-  const publicUploadProps = {
-    defaultFileList: data.publicKeyDefaultFileList || [],
-  };
-
-  const privateUploadProps = {
-    defaultFileList: data.privateKeyDefaultFileList || [],
-  };
-
   return (
     <Form form={form} layout="horizontal" className={styles.stepForm}>
       <Form.Item>
@@ -90,9 +83,9 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
           className={styles.stepForm}
           onChange={(info) => onChange(info, 'PUBLIC_KEY')}
           onRemove={() => onRemove('PUBLIC_KEY')}
-          {...publicUploadProps}
+          defaultFileList={publicKeyDefaultFileList}
         >
-          <Button>
+          <Button disabled={publicKeyDefaultFileList.length === 1}>
             <UploadOutlined /> 点击上传公钥
           </Button>
         </Upload>
@@ -102,9 +95,9 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
           className={styles.stepForm}
           onChange={(info) => onChange(info, 'PRIVATE_KEY')}
           onRemove={() => onRemove('PRIVATE_KEY')}
-          {...privateUploadProps}
+          defaultFileList={privateKeyDefaultFileList}
         >
-          <Button>
+          <Button disabled={privateKeyDefaultFileList.length === 1}>
             <UploadOutlined /> 点击上传私钥
           </Button>
         </Upload>
