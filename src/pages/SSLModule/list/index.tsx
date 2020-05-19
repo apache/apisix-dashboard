@@ -9,9 +9,9 @@ import { SSL } from '@/models/ssl';
 import { ListItem } from '@/transforms/global';
 
 interface SearchParamsProps {
-  current: number | undefined;
-  pageSize: number | undefined;
-  'value-sni': string;
+  current: number;
+  pageSize: number;
+  sni: string;
 }
 
 const List: React.FC = () => {
@@ -49,8 +49,8 @@ const List: React.FC = () => {
     {
       title: 'SNI',
       dataIndex: ['value', 'sni'],
+      key: 'sni',
     },
-    // TODO: need to check api response
     {
       title: '关联路由',
       dataIndex: 'relatedRouting',
@@ -58,7 +58,7 @@ const List: React.FC = () => {
     },
     {
       title: '过期时间',
-      dataIndex: 'expireTime',
+      dataIndex: 'expiredTime',
       hideInSearch: true,
     },
     {
@@ -85,9 +85,9 @@ const List: React.FC = () => {
 
   const fetchPageSSLList = (params: Partial<SearchParamsProps> | undefined) => {
     if (list.length) {
-      const result = list.filter((_item) => {
-        if (params?.['value-sni']) {
-          return _item.value.sni.includes(params?.['value-sni']);
+      const result = list.filter((item) => {
+        if (params?.sni) {
+          return item.value.sni.includes(params.sni);
         }
         return true;
       });
@@ -98,6 +98,7 @@ const List: React.FC = () => {
       return data;
     });
   };
+
   return (
     <PageHeaderWrapper>
       <ProTable<ListItem<SSL>>
