@@ -1,16 +1,22 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Modal, notification, Switch } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
-
 import { fetchList as fetchSSLList, remove as removeSSL } from '@/services/ssl';
 import { SSL } from '@/models/ssl';
 import { ListItem } from '@/transforms/global';
 
+interface SearchParamsProps {
+  current: number | undefined;
+  pageSize: number | undefined;
+  'value-sni': string;
+}
+
 const List: React.FC = () => {
   const tableRef = useRef<ActionType>();
+  const [list, setList] = useState<ListItem<SSL>[]>([]);
   const { formatMessage } = useIntl();
   const onRemove = (key: string) => {
     Modal.confirm({
@@ -38,6 +44,7 @@ const List: React.FC = () => {
       title: 'ID',
       dataIndex: 'displayKey',
       sortOrder: 'descend',
+      hideInSearch: true,
     },
     {
       title: 'SNI',
@@ -46,11 +53,13 @@ const List: React.FC = () => {
     // TODO: need to check api response
     {
       title: '关联路由',
-      dataIndex: [],
+      dataIndex: 'relatedRouting',
+      hideInSearch: true,
     },
     {
       title: '过期时间',
-      dataIndex: [],
+      dataIndex: 'expireTime',
+      hideInSearch: true,
     },
     {
       title: '是否启用',
@@ -74,11 +83,26 @@ const List: React.FC = () => {
     },
   ];
 
+  const fetchPageSSLList = (params: Partial<SearchParamsProps> | undefined) => {
+    if (list.length) {
+      const result = list.filter((_item) => {
+        if (params?.['value-sni']) {
+          return _item.value.sni.includes(params?.['value-sni']);
+        }
+        return true;
+      });
+      return Promise.resolve({ data: result, total: list.length });
+    }
+    return fetchSSLList().then((data) => {
+      setList(data.data);
+      return data;
+    });
+  };
   return (
     <PageHeaderWrapper>
       <ProTable<ListItem<SSL>>
-        request={() => fetchSSLList()}
-        search={false}
+        request={(params) => fetchPageSSLList(params)}
+        search
         columns={columns}
         actionRef={tableRef}
         toolBarRender={() => [
