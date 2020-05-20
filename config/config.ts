@@ -66,13 +66,13 @@ export default defineConfig({
                 {
                   path: '/ssl/list',
                   name: 'list',
-                  component: './SSLModule/list',
+                  component: './SSLModule/pages/list',
                   hideInMenu: true,
                 },
                 {
                   name: 'create',
                   path: '/ssl/create',
-                  component: './SSLModule/create',
+                  component: './SSLModule/pages/create',
                   hideInMenu: true,
                 },
               ],
