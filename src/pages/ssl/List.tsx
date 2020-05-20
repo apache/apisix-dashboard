@@ -5,7 +5,6 @@ import { Button, Modal, notification, Switch } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 import { fetchList as fetchSSLList, remove as removeSSL } from '@/pages/ssl/service';
-import { SSL } from '@/models/ssl';
 import { ListItem } from '@/transforms/global';
 
 interface SearchParamsProps {

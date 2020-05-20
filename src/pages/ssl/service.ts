@@ -1,6 +1,5 @@
 import request from '@/utils/request';
 import { transformFetchListData, transformFetchItemData } from '@/transforms/global';
-import { SSL } from '@/models/ssl';
 
 export const fetchList = () =>
   request('/api/ssl').then((data) => transformFetchListData<SSL>(data));
