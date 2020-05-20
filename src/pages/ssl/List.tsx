@@ -4,8 +4,7 @@ import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Modal, notification, Switch } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
-import { fetchList as fetchSSLList, remove as removeSSL } from '@/services/ssl';
-import { SSL } from '@/models/ssl';
+import { fetchList as fetchSSLList, remove as removeSSL } from '@/pages/ssl/service';
 import { ListItem } from '@/transforms/global';
 
 interface SearchParamsProps {

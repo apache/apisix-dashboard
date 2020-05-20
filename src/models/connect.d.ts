@@ -3,7 +3,6 @@ import { GlobalModelState } from './global';
 import { DefaultSettings as SettingModelState } from '../../config/defaultSettings';
 import { UserModelState } from './user';
 import { StateType } from './login';
-import { ModelState as SSLModelState } from './ssl';
 
 export { GlobalModelState, SettingModelState, UserModelState };
 
@@ -25,7 +24,6 @@ export interface ConnectState {
   settings: SettingModelState;
   user: UserModelState;
   login: StateType;
-  ssl: SSLModelState;
 }
 
 export interface Route extends MenuDataItem {
