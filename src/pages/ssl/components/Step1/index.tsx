@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Button, Select } from 'antd';
-import styles from '../../style.less';
-import { StepProps } from '../..';
+import styles from '../../Create.less';
+import { StepProps } from '../../Create';
 
 const { Option } = Select;
 
