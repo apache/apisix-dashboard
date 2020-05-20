@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button } from 'antd';
-import { create as createSSL } from '@/pages/ssl/services/request';
+import { create as createSSL } from '@/pages/ssl/service';
 import CertificateForm from '../CertificateForm';
 import { StepProps } from '../..';
 
