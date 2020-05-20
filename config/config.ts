@@ -63,7 +63,7 @@ export default defineConfig({
             {
               name: 'ssl',
               path: '/ssl',
-              icon: 'crown',
+              icon: 'BarsOutlined',
               routes: [
                 {
                   path: '/ssl',
