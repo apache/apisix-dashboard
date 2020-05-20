@@ -76,12 +76,6 @@ export default defineConfig({
                   hideInMenu: true,
                 },
                 {
-                  path: '/ssl/:key/edit',
-                  name: 'edit',
-                  component: './SSLModule/detail',
-                  hideInMenu: true,
-                },
-                {
                   name: 'create',
                   path: '/ssl/create',
                   component: './SSLModule/create',
