@@ -51,11 +51,6 @@ const List: React.FC = () => {
       key: 'sni',
     },
     {
-      title: '关联路由',
-      dataIndex: 'relatedRouting',
-      hideInSearch: true,
-    },
-    {
       title: '过期时间',
       dataIndex: 'expiredTime',
       hideInSearch: true,
@@ -63,9 +58,9 @@ const List: React.FC = () => {
     {
       title: '是否启用',
       valueType: 'option',
-      render: (_, record) => (
+      render: () => (
         <>
-          <Switch defaultChecked onClick={() => console.log(record)} />
+          <Switch defaultChecked />
         </>
       ),
     },
