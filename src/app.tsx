@@ -1,5 +1,6 @@
 import { notification } from 'antd';
 import { RequestConfig } from 'umi';
+import { getAdminAPIConfig } from '@/utils/setting';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -22,27 +23,32 @@ const codeMessage = {
 /**
  * 异常处理程序
  */
-const errorHandler = (error: { response: Response }) => {
+const errorHandler = (error: { response: Response; data: any }): Promise<Response> => {
   const { response } = error;
   if (response && response.status) {
-    const errorText = codeMessage[response.status] || response.statusText;
-    const { status, url } = response;
+    const errorText = error.data.message || error.data.error_msg || codeMessage[response.status];
 
     notification.error({
-      message: `请求错误 ${status}: ${url}`,
+      message: `请求错误，错误码： ${error.data.errorCode || response.status}`,
       description: errorText,
     });
-  }
-
-  if (!response) {
+  } else if (!response) {
     notification.error({
       description: '您的网络发生异常，无法连接服务器',
       message: '网络异常',
     });
   }
-  throw error;
+  return Promise.reject(response);
 };
 
+const adminAPIConfig = getAdminAPIConfig();
 export const request: RequestConfig = {
   errorHandler,
+  credentials: 'same-origin',
+  headers: {
+    'X-ADMIN-API-SCHEMA': adminAPIConfig.schema,
+    'X-ADMIN-API-HOST': adminAPIConfig.host,
+    'X-ADMIN-API-PATH': adminAPIConfig.path,
+    'X-API-KEY': adminAPIConfig.key,
+  },
 };
