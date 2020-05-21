@@ -12,7 +12,7 @@ export async function fakeAccountLogin() {
   return {
     status: 'ok',
     type: 'account',
-    currentAuthority: 'admin',
+    access: 'admin',
   };
 }
 

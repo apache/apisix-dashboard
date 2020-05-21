@@ -1,26 +1,21 @@
-import { Settings as ProSettings } from '@ant-design/pro-layout';
+import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 
-type DefaultSettings = ProSettings & {
-  pwa: boolean;
-};
-
-const defaultSettings: DefaultSettings = {
-  navTheme: 'dark',
+export default {
+  navTheme: 'light',
   // 拂晓蓝
   primaryColor: '#1890ff',
-  layout: 'side',
+  layout: 'mix',
   contentWidth: 'Fluid',
   fixedHeader: false,
+  autoHideHeader: false,
   fixSiderbar: false,
   colorWeak: false,
   menu: {
     locale: true,
   },
-  title: 'APISIX',
+  title: 'APISIX Dashboard',
   pwa: false,
   iconfontUrl: '',
+} as LayoutSettings & {
+  pwa: boolean;
 };
-
-export { DefaultSettings };
-
-export default defaultSettings;

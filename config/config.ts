@@ -44,7 +44,7 @@ export default defineConfig({
       routes: [
         {
           path: '/',
-          authority: ['admin', 'user'],
+          access: 'canAdmin',
           routes: [
             {
               path: '/',
