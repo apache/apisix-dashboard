@@ -8,7 +8,7 @@ const defaultSettings: DefaultSettings = {
   navTheme: 'dark',
   // 拂晓蓝
   primaryColor: '#1890ff',
-  layout: 'sidemenu',
+  layout: 'side',
   contentWidth: 'Fluid',
   fixedHeader: false,
   fixSiderbar: false,
@@ -16,7 +16,7 @@ const defaultSettings: DefaultSettings = {
   menu: {
     locale: true,
   },
-  title: 'APISIX Dashboard',
+  title: 'APISIX',
   pwa: false,
   iconfontUrl: '',
 };
