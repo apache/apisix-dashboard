@@ -21,12 +21,17 @@ export default defineConfig({
   targets: {
     ie: 11,
   },
+  layout: {
+    name: 'APISIX Dashboard',
+    locale: true,
+    logo: '/favicon.png',
+  },
   base: '/dashboard/',
   publicPath: '/',
   routes: [
     {
       path: '/user',
-      component: '../layouts/UserLayout',
+      layout: false,
       routes: [
         {
           name: 'login',
@@ -37,53 +42,34 @@ export default defineConfig({
     },
     {
       path: '/',
-      component: '../layouts/SecurityLayout',
+      redirect: '/settings',
+    },
+    {
+      name: 'settings',
+      path: '/settings',
+      icon: 'setting',
+      component: './Settings',
+    },
+    {
+      name: 'ssl',
+      path: '/ssl',
+      icon: 'BarsOutlined',
       routes: [
         {
-          path: '/',
-          component: '../layouts/BasicLayout',
-          authority: ['admin', 'user'],
-          routes: [
-            {
-              path: '/',
-              redirect: '/settings',
-            },
-            {
-              name: 'settings',
-              path: '/settings',
-              icon: 'setting',
-              component: './Settings',
-            },
-            {
-              name: 'ssl',
-              path: '/ssl',
-              icon: 'BarsOutlined',
-              routes: [
-                {
-                  path: '/ssl',
-                  redirect: '/ssl/list',
-                },
-                {
-                  path: '/ssl/list',
-                  name: 'list',
-                  component: './ssl/List',
-                  hideInMenu: true,
-                },
-                {
-                  name: 'create',
-                  path: '/ssl/create',
-                  component: './ssl/Create',
-                  hideInMenu: true,
-                },
-              ],
-            },
-            {
-              component: './404',
-            },
-          ],
+          path: '/ssl',
+          redirect: '/ssl/list',
         },
         {
-          component: './404',
+          path: '/ssl/list',
+          name: 'list',
+          component: './ssl/List',
+          hideInMenu: true,
+        },
+        {
+          name: 'create',
+          path: '/ssl/create',
+          component: './ssl/Create',
+          hideInMenu: true,
         },
       ],
     },
