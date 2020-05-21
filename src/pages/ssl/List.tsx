@@ -53,11 +53,6 @@ const List: React.FC = () => {
       key: 'sni',
     },
     {
-      title: '关联路由',
-      dataIndex: 'relatedRouting',
-      hideInSearch: true,
-    },
-    {
       title: '过期时间',
       dataIndex: 'expiredTime',
       hideInSearch: true,
