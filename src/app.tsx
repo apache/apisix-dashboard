@@ -1,12 +1,12 @@
 import React from 'react';
-import { notification } from 'antd';
-import { RequestConfig, history } from 'umi';
-import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
+import {notification} from 'antd';
+import {RequestConfig, history} from 'umi';
+import {BasicLayoutProps, Settings as LayoutSettings} from '@ant-design/pro-layout';
 
-import { getAdminAPIConfig } from '@/utils/setting';
+import {getAdminAPIConfig} from '@/utils/setting';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { queryCurrent } from '@/services/user';
+import {queryCurrent} from '@/services/user';
 import defaultSettings from '../config/defaultSettings';
 
 export async function getInitialState(): Promise<{
@@ -31,14 +31,14 @@ export async function getInitialState(): Promise<{
 }
 
 export const layout = ({
-  initialState,
-}: {
+                         initialState,
+                       }: {
   initialState: { settings?: LayoutSettings };
 }): BasicLayoutProps => {
   return {
-    rightContentRender: () => <RightContent />,
+    rightContentRender: () => <RightContent/>,
     disableContentMargin: false,
-    footerRender: () => <Footer />,
+    footerRender: () => <Footer/>,
     menuHeaderRender: undefined,
     ...initialState?.settings,
   };
@@ -66,7 +66,7 @@ const codeMessage = {
  * 异常处理程序
  */
 const errorHandler = (error: { response: Response; data: any }): Promise<Response> => {
-  const { response } = error;
+  const {response} = error;
   if (response && response.status) {
     const errorText = error.data.message || error.data.error_msg || codeMessage[response.status];
 
@@ -85,12 +85,10 @@ const errorHandler = (error: { response: Response; data: any }): Promise<Respons
 
 const adminAPIConfig = getAdminAPIConfig();
 export const request: RequestConfig = {
+  prefix: `${adminAPIConfig.schema}://${adminAPIConfig.host}${adminAPIConfig.path}${adminAPIConfig.prefix}`,
   errorHandler,
   credentials: 'same-origin',
   headers: {
-    'X-ADMIN-API-SCHEMA': adminAPIConfig.schema,
-    'X-ADMIN-API-HOST': adminAPIConfig.host,
-    'X-ADMIN-API-PATH': adminAPIConfig.path,
     'X-API-KEY': adminAPIConfig.key,
   },
 };
