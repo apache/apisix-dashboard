@@ -1,4 +1,4 @@
-# APISIX Dashboard
+# Apache APISIX Dashboard
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
 
@@ -9,13 +9,13 @@ This project is initialized with [Ant Design Pro](https://pro.ant.design). Follo
 3. Install `node_modules`:
 
 ```bash
-$ env PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true yarn
+$ yarn
 ```
 
 ### Start project
 
 ```bash
-yarn start
+yarn start:no-mock
 ```
 
 ### Build project

@@ -8,8 +8,7 @@ const Step3: React.FC<StepProps> = ({ data, onStepChange }) => {
   const [form] = Form.useForm();
   const submit = () => {
     createSSL({
-      // sni: data.sni!.split(';'),
-      sni: 'www.baidu.com',
+      sni: data.sni!.split(';'),
       cert: data.cert!,
       key: data.key!,
     }).then(() => {
