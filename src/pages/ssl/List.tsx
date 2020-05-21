@@ -33,7 +33,9 @@ const List: React.FC = () => {
             message: formatMessage({ id: 'component.ssl.removeSSLSuccess' }),
           });
           /* eslint-disable no-unused-expressions */
-          tableRef.current?.reload();
+          // NOTE: tricky way
+          setList([]);
+          requestAnimationFrame(() => tableRef.current?.reload());
         }),
     });
   };
