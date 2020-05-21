@@ -64,7 +64,7 @@
     umi-utils "^1.5.1"
     yargs-parser "^16.1.0"
 
-"@ant-design/pro-layout@^5.0.0", "@ant-design/pro-layout@^5.0.8":
+"@ant-design/pro-layout@^5.0.8":
   version "5.0.12"
   resolved "https://registry.npmjs.org/@ant-design/pro-layout/-/pro-layout-5.0.12.tgz#80a68aa21a427bd995fb77426c48fc314b45b468"
   integrity sha512-cpOIx4BKj+3IvwUMjgtSy53FDXu+MhvC0vDyWWppAdtuQAyD1PIE62hikHWe/uWzfAKK9Plm+KC/Y5ocJYac4g==
@@ -2561,6 +2561,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-helmet@6.0.0":
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/@types/react-helmet/-/react-helmet-6.0.0.tgz#5b74e44a12662ffb12d1c97ee702cf4e220958cf"
+  integrity sha512-NBMPAxgjpaMooXa51cU1BTgrX6T+hQbMiLm77JhBbfOzPQea3RB5rNpPOD5xGWHIVpGXHd59cltEzIq0qglGcQ==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-helmet@^5.0.13":
   version "5.0.16"
   resolved "https://registry.npmjs.org/@types/react-helmet/-/react-helmet-5.0.16.tgz#dafac5f043665b880559285a27c71a69abd1f29e"
@@ -3159,37 +3166,51 @@
   resolved "https://registry.npmjs.org/@umijs/plugin-crossorigin/-/plugin-crossorigin-1.1.0.tgz#369a594812276458aa0a9284681349179b73662d"
   integrity sha512-ObkR0fEA19xxvKkzMJlLum3mxzNuXz9TiV/xHSh9L6xZUQYssACgwnKGYJrVyc959k3zhCkROgIUHsXxKGE6uQ==
 
-"@umijs/plugin-dva@0.6.5":
-  version "0.6.5"
-  resolved "https://registry.npmjs.org/@umijs/plugin-dva/-/plugin-dva-0.6.5.tgz#2b77c1979219b82f94e5458dcc034301d717e88b"
-  integrity sha512-GbAwC4BP2I5Y5BSvHdU8rdqjOD09CkItc8QLUZg86PgF2VYsvuoGoX5+tLGS+pey9m9AO15MbidIJINLesfEsQ==
+"@umijs/plugin-dva@0.7.1":
+  version "0.7.1"
+  resolved "https://registry.npmjs.org/@umijs/plugin-dva/-/plugin-dva-0.7.1.tgz#757e854752774cfd5a1dbe504b3665eb2e29dd30"
+  integrity sha512-5MQw39BbwAmnCHKrDA1lve9XgCgq1Asnqgrml83WJ1OINtFgZNol87dYaUJfgAdVhN5CaXqBcVXYzlVMFs0Pqg==
   dependencies:
     babel-plugin-dva-hmr "^0.4.2"
     dva "^2.6.0-beta.20"
     dva-immer "^0.4.19"
     dva-loading "^3.0.20"
 
+"@umijs/plugin-esbuild@^1.0.0-beta.2":
+  version "1.0.0-beta.2"
+  resolved "https://registry.npmjs.org/@umijs/plugin-esbuild/-/plugin-esbuild-1.0.0-beta.2.tgz#7940a22bac2a30a0f3a121329a591f4e3f612339"
+  integrity sha512-0D47/zwF9iZhsVlQgP/OpnLPHQGNg0rkP3/eAtadICH7pP6vzawc87YB1+nz3Qxp9ywX4pjznhWKnuZ0zD/kvg==
+  dependencies:
+    esbuild-webpack-plugin "^1.0.0-beta.3"
+
+"@umijs/plugin-helmet@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@umijs/plugin-helmet/-/plugin-helmet-1.0.1.tgz#8cdf57aad6813f26ebf4000daa922fac80620e9a"
+  integrity sha512-On3oQgIgnnqA5Dk54QJhJNBuOkK5DfQpqOxrJsHZJHrhgVonclaNqFqQP4ScbJFtiweNkdbCN4l2tzZmcKFQTA==
+  dependencies:
+    "@types/react-helmet" "6.0.0"
+    react-helmet "6.0.0"
+
 "@umijs/plugin-initial-state@2.2.1":
   version "2.2.1"
   resolved "https://registry.npmjs.org/@umijs/plugin-initial-state/-/plugin-initial-state-2.2.1.tgz#cd7592aa90b6b369bd0df297254320088397ff67"
   integrity sha512-qDtWguduISeG+EObgKbImuRX3FyLrNcj3yQtY24HdYkDTGmtsmA4ZKB7Q/N+V/O0Yxep06bCotTK3jFV9KXuEA==
 
-"@umijs/plugin-layout@0.10.3":
-  version "0.10.3"
-  resolved "https://registry.npmjs.org/@umijs/plugin-layout/-/plugin-layout-0.10.3.tgz#dd0f2c4edc05c01e4bf8a0cadc28e138236f254c"
-  integrity sha512-oSQ3AlvIC539tLlV69gMPsyNrOXFLcZnBt7CSyWngk2TEAQZ9xzZDy+b31so3Q3shwQz8Qkb0IIWmaKTn0N5UQ==
+"@umijs/plugin-layout@0.11.4":
+  version "0.11.4"
+  resolved "https://registry.npmjs.org/@umijs/plugin-layout/-/plugin-layout-0.11.4.tgz#de4910710225d77c35ace008dc3436fd2cebcb2d"
+  integrity sha512-6Jgt0HgVotxIvSWDbqsZjaDevCVEfPwRFGdNCSaQf1VHCHuACddoai0RBa2pToJ5LFg/bB55KckJIcvH2lFC6A==
   dependencies:
-    "@ant-design/icons" "^4.0.0"
-    "@ant-design/pro-layout" "^5.0.0"
     antd "^4.1.2"
     lodash "^4.17.15"
     path-to-regexp "1.x"
 
-"@umijs/plugin-locale@0.4.5":
-  version "0.4.5"
-  resolved "https://registry.npmjs.org/@umijs/plugin-locale/-/plugin-locale-0.4.5.tgz#fd612c6276e1543b622662002d789ec18a8f453c"
-  integrity sha512-oypPjEcn/pTff6e64vmIMs9YJqReUDmuzyPRdvoDjRiCm9/9UMJxrHpDNYZ4YRMeTHviEcvlCgUEGX7gcgSc7A==
+"@umijs/plugin-locale@0.7.0":
+  version "0.7.0"
+  resolved "https://registry.npmjs.org/@umijs/plugin-locale/-/plugin-locale-0.7.0.tgz#e82e0a5bf82b24457eb2653144947cba20da2815"
+  integrity sha512-GS7YwCoQJCen82vMMQeoA3ypSl5i/wDLBBvX2/OgfHFuwLIZ/kB04jxABWxxvq1IR1RPkntZiQBGoH534zThNA==
   dependencies:
+    "@ant-design/icons" "^4.1.0"
     "@formatjs/intl-pluralrules" "^1.5.0"
     "@formatjs/intl-relativetimeformat" "^4.5.7"
     intl "1.2.5"
@@ -3219,10 +3240,10 @@
   dependencies:
     "@umijs/test" "^3.0.7"
 
-"@umijs/plugin-ui-blocks@^2.1.8":
-  version "2.1.8"
-  resolved "https://registry.npmjs.org/@umijs/plugin-ui-blocks/-/plugin-ui-blocks-2.1.8.tgz#4eb810493675fe3f7da0b200ed6dfd07de16f0fc"
-  integrity sha512-yLfpuDKqU42hK4fsVRzdseA0ROhAYwp/rePp5A/OSlFiY/b5/d+0QZdVKzY/NX2tIGJ3EmC3+8J13hfExH0TwA==
+"@umijs/plugin-ui-blocks@^2.1.9":
+  version "2.1.9"
+  resolved "https://registry.npmjs.org/@umijs/plugin-ui-blocks/-/plugin-ui-blocks-2.1.9.tgz#7dfbb2ca6457e78bd9be3c11cab7e5ee941c1691"
+  integrity sha512-ymh2LQjYbSJkaol9ZgZg28aIjvUfQyxLm3a/+D72ViuDFkIv4ZqIcFkCjYNjVrJQe1mPexMQFgE/xQWhD3Mh+A==
   dependencies:
     "@babel/parser" "7.4.5"
     "@babel/traverse" "7.4.5"
@@ -3242,7 +3263,7 @@
     binary-mirror-config "1.20.3"
     umi-webpack-bundle-analyzer "^3.5.0"
 
-"@umijs/preset-ant-design-pro@^1.0.1":
+"@umijs/preset-ant-design-pro@^1.2.0":
   version "1.2.2"
   resolved "https://registry.npmjs.org/@umijs/preset-ant-design-pro/-/preset-ant-design-pro-1.2.2.tgz#2477386abe64ad498487f098570c7c572ce335db"
   integrity sha512-cO40AmVSm6RY5bO8or78Q4r/qLcABl0VlmsCbHGOytvjzf+9s3o+RBvrB8KU75anbKqr4qKhGRA/O8CKRw9tkA==
@@ -3283,31 +3304,32 @@
     umi-webpack-bundle-analyzer "3.5.0"
     zlib "1.0.5"
 
-"@umijs/preset-react@^1.4.19":
-  version "1.4.22"
-  resolved "https://registry.npmjs.org/@umijs/preset-react/-/preset-react-1.4.22.tgz#f78d69794e975bf1a7d394c6391bdc6de78f487d"
-  integrity sha512-kMchjgUJelSV6qgeJ1HN6HguMYAaZYm9N664K+L+pAqi6agQpXrXUtt/6rOTUBOUeeEaLiTqFfoY76KT2NDOpw==
+"@umijs/preset-react@^1.4.24":
+  version "1.5.2"
+  resolved "https://registry.npmjs.org/@umijs/preset-react/-/preset-react-1.5.2.tgz#7bb32f9dda7b865dad73aafdad87154a6c9738c0"
+  integrity sha512-5QKfKjrjmykwdZqQChLoxUZkgfadu/adYu5HG9a/64WoY+RrUuMX21ShFLxc6OvOUR1VKcJpMuq4qJT+DhnZPA==
   dependencies:
     "@umijs/plugin-access" "2.3.1"
     "@umijs/plugin-analytics" "0.2.2"
     "@umijs/plugin-antd" "0.5.1"
     "@umijs/plugin-crossorigin" "1.1.0"
-    "@umijs/plugin-dva" "0.6.5"
+    "@umijs/plugin-dva" "0.7.1"
+    "@umijs/plugin-helmet" "1.0.1"
     "@umijs/plugin-initial-state" "2.2.1"
-    "@umijs/plugin-layout" "0.10.3"
-    "@umijs/plugin-locale" "0.4.5"
+    "@umijs/plugin-layout" "0.11.4"
+    "@umijs/plugin-locale" "0.7.0"
     "@umijs/plugin-model" "2.3.1"
     "@umijs/plugin-request" "2.3.2"
     "@umijs/plugin-test" "1.0.0"
 
-"@umijs/preset-ui@^2.0.9":
-  version "2.1.13"
-  resolved "https://registry.npmjs.org/@umijs/preset-ui/-/preset-ui-2.1.13.tgz#3212ebb037bae2a22942fefd1ec60a0f43274cfc"
-  integrity sha512-zdCVd1iRuPyszDPgcKicnj42gssGA8dlLYYqi2hIVAY4PSgRE6lOmHs85QCEY9YNtsLCZyfHinyS3XobTvARNA==
+"@umijs/preset-ui@^2.1.11":
+  version "2.1.14"
+  resolved "https://registry.npmjs.org/@umijs/preset-ui/-/preset-ui-2.1.14.tgz#87d3470c5a10a845564d1982b47e5bf85f1d87ad"
+  integrity sha512-twW8/wUr8rWweNudoGGVWXkjPZnzJu+WCY40bicb7Uj/g52eV2ELanYT4gPRAPxZXR3qgw/+tCwAm9hcNXxHJA==
   dependencies:
-    "@umijs/plugin-ui-blocks" "^2.1.8"
+    "@umijs/plugin-ui-blocks" "^2.1.9"
     "@umijs/plugin-ui-tasks" "^2.1.1"
-    "@umijs/ui" "^2.1.7"
+    "@umijs/ui" "^2.1.8"
     immer "^5.0.0"
     is-mobile "2.1.0"
     sockjs-client "1.3.0"
@@ -3413,10 +3435,10 @@
     "@umijs/utils" "3.1.4"
     webpack-chain "6.4.0"
 
-"@umijs/ui@^2.1.7":
-  version "2.1.7"
-  resolved "https://registry.npmjs.org/@umijs/ui/-/ui-2.1.7.tgz#6dab2f953261cb8ac1462510c6cd905a9f40189f"
-  integrity sha512-zBvZ06GB/5ddwEtcUlsO09MRlwH6aQkgDxAyOova1HnvBHSwDtSxbUmE5Ddqu8DnXU5sc1yyfu/hBTyQ4nfmhA==
+"@umijs/ui@^2.1.8":
+  version "2.1.8"
+  resolved "https://registry.npmjs.org/@umijs/ui/-/ui-2.1.8.tgz#a15a6072588adc952ed0c0142cb4d79bd61686b2"
+  integrity sha512-HAh0j/GkJ/5v3Frm0MOv8p5i4rEMG/CYBeyWPdCHdzstNw0+fOYE81i7WpUCaEX++Dx6xpmc5QS7dSaY9nBtTQ==
   dependencies:
     "@umijs/launch-editor" "^1.0.0"
     binary-mirror-config "1.20.3"
@@ -6785,6 +6807,18 @@ es6-weak-map@^2.0.2:
     es5-ext "^0.10.46"
     es6-iterator "^2.0.3"
     es6-symbol "^3.1.1"
+
+esbuild-webpack-plugin@^1.0.0-beta.3:
+  version "1.0.0-beta.4"
+  resolved "https://registry.npmjs.org/esbuild-webpack-plugin/-/esbuild-webpack-plugin-1.0.0-beta.4.tgz#2a678c2a10ef1986c5a2a40f10ef75ca3d2ad13b"
+  integrity sha512-fM1slS1lBCStXkJEKQzFqRqwnt9k/I4h0mSwMft9Xpfhm5OfsxpAPNk6SdbKN0Z52MWzWwdQankCbYBQMELJBg==
+  dependencies:
+    esbuild "^0.2.3"
+
+esbuild@^0.2.3:
+  version "0.2.12"
+  resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.2.12.tgz#77db901f471de7e8732729ff928ffc12687be453"
+  integrity sha512-+PMODPa6MshZlZryeNeXxqdHF2A4phUe1AIBDAPqgHWAe5N/9IqrmCcE6RVDei0caMV7D9EBMEuY/X8+Wp5xiw==
 
 escape-goat@^2.0.0:
   version "2.1.1"
@@ -14613,6 +14647,11 @@ react-error-overlay@^5.1.6:
   resolved "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-5.1.6.tgz#0cd73407c5d141f9638ae1e0c63e7b2bf7e9929d"
   integrity sha512-X1Y+0jR47ImDVr54Ab6V9eGk0Hnu7fVWGeHQSOXHf/C2pF9c6uy3gef8QUeuUiWlNb0i08InPSE5a/KJzNzw1Q==
 
+react-fast-compare@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
+  integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
+
 react-fast-compare@^3.0.1:
   version "3.1.1"
   resolved "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-3.1.1.tgz#0becf31e3812fa70dc231e259f40d892d4767900"
@@ -14628,6 +14667,16 @@ react-helmet-async@^1.0.4:
     prop-types "^15.7.2"
     react-fast-compare "^3.0.1"
     shallowequal "^1.1.0"
+
+react-helmet@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/react-helmet/-/react-helmet-6.0.0.tgz#fcb93ebaca3ba562a686eb2f1f9d46093d83b5f8"
+  integrity sha512-My6S4sa0uHN/IuVUn0HFmasW5xj9clTkB9qmMngscVycQ5vVG51Qp44BEvLJ4lixupTwDlU9qX1/sCrMN4AEPg==
+  dependencies:
+    object-assign "^4.1.1"
+    prop-types "^15.7.2"
+    react-fast-compare "^2.0.4"
+    react-side-effect "^2.1.0"
 
 react-intl@3.12.0:
   version "3.12.0"
@@ -14753,6 +14802,11 @@ react-router@5.2.0:
     react-is "^16.6.0"
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
+
+react-side-effect@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/react-side-effect/-/react-side-effect-2.1.0.tgz#1ce4a8b4445168c487ed24dab886421f74d380d3"
+  integrity sha512-IgmcegOSi5SNX+2Snh1vqmF0Vg/CbkycU9XZbOHJlZ6kMzTmi3yc254oB1WCkgA7OQtIAoLmcSFuHTc/tlcqXg==
 
 react-test-renderer@^16.0.0-0:
   version "16.13.1"

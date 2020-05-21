@@ -1,7 +1,7 @@
 import React from 'react';
 import { Result, Button } from 'antd';
 import { history } from 'umi';
-import { StepProps } from '../..';
+import { StepProps } from '../../Create';
 
 const Step4: React.FC<StepProps> = ({ onStepChange, onFormChange }) => {
   return (

@@ -2,7 +2,6 @@ import { Avatar, List } from 'antd';
 
 import React from 'react';
 import classNames from 'classnames';
-import { NoticeIconData } from './index';
 import styles from './NoticeList.less';
 
 export interface NoticeIconTabProps {
@@ -13,13 +12,13 @@ export interface NoticeIconTabProps {
   style?: React.CSSProperties;
   title: string;
   tabKey: string;
-  data?: NoticeIconData[];
-  onClick?: (item: NoticeIconData) => void;
+  data?: API.NoticeIconData[];
+  onClick?: (item: API.NoticeIconData) => void;
   onClear?: () => void;
   emptyText?: string;
   clearText?: string;
   viewMoreText?: string;
-  list: NoticeIconData[];
+  list: API.NoticeIconData[];
   onViewMore?: (e: any) => void;
 }
 const NoticeList: React.SFC<NoticeIconTabProps> = ({
@@ -97,7 +96,7 @@ const NoticeList: React.SFC<NoticeIconTabProps> = ({
         ) : null}
         {showViewMore ? (
           <div
-            onClick={e => {
+            onClick={(e) => {
               if (onViewMore) {
                 onViewMore(e);
               }

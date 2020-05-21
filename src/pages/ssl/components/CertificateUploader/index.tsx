@@ -4,8 +4,8 @@ import { UploadOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { useForm } from 'antd/es/form/util';
 import forge from 'node-forge';
-import { FormData } from '../..';
-import styles from '../../style.less';
+import { FormData } from '../../Create';
+import styles from '../../Create.less';
 
 export interface AltName {
   value: string;

@@ -46,13 +46,7 @@ export default defineConfig({
           routes: [
             {
               path: '/',
-              redirect: '/welcome',
-            },
-            {
-              path: '/welcome',
-              name: 'welcome',
-              icon: 'smile',
-              component: './Welcome',
+              redirect: '/settings',
             },
             {
               name: 'settings',
@@ -63,7 +57,7 @@ export default defineConfig({
             {
               name: 'ssl',
               path: '/ssl',
-              icon: 'crown',
+              icon: 'BarsOutlined',
               routes: [
                 {
                   path: '/ssl',
@@ -72,19 +66,13 @@ export default defineConfig({
                 {
                   path: '/ssl/list',
                   name: 'list',
-                  component: './SSLModule/list',
-                  hideInMenu: true,
-                },
-                {
-                  path: '/ssl/:key/edit',
-                  name: 'edit',
-                  component: './SSLModule/detail',
+                  component: './ssl/List',
                   hideInMenu: true,
                 },
                 {
                   name: 'create',
                   path: '/ssl/create',
-                  component: './SSLModule/create',
+                  component: './ssl/Create',
                   hideInMenu: true,
                 },
               ],

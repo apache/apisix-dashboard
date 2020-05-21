@@ -6,7 +6,7 @@ import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
 import Step4 from './components/Step4';
-import styles from './style.less';
+import styles from './Create.less';
 
 const { Step } = Steps;
 

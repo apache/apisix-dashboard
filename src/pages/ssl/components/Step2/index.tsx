@@ -9,7 +9,7 @@ import {
   UploadType,
   AltName,
 } from '../CertificateUploader';
-import { StepProps } from '../..';
+import { StepProps } from '../../Create';
 
 const Step2: React.FC<StepProps> = ({ onStepChange, onFormChange, data }) => {
   const [form] = Form.useForm();
