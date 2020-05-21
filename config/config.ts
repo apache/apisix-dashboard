@@ -21,12 +21,16 @@ export default defineConfig({
   targets: {
     ie: 11,
   },
+  layout: {
+    name: 'APISIX Dashboard',
+    locale: true,
+  },
   base: '/dashboard/',
   publicPath: '/',
   routes: [
     {
       path: '/user',
-      component: '../layouts/UserLayout',
+      layout: false,
       routes: [
         {
           name: 'login',
@@ -37,11 +41,9 @@ export default defineConfig({
     },
     {
       path: '/',
-      component: '../layouts/SecurityLayout',
       routes: [
         {
           path: '/',
-          component: '../layouts/BasicLayout',
           authority: ['admin', 'user'],
           routes: [
             {

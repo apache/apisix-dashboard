@@ -1,6 +1,25 @@
+import React from 'react';
 import { notification } from 'antd';
 import { RequestConfig } from 'umi';
+import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
+
 import { getAdminAPIConfig } from '@/utils/setting';
+import RightContent from '@/components/RightContent';
+import Footer from '@/components/Footer';
+
+export const layout = ({
+  initialState,
+}: {
+  initialState: { settings?: LayoutSettings };
+}): BasicLayoutProps => {
+  return {
+    rightContentRender: () => <RightContent />,
+    disableContentMargin: false,
+    footerRender: () => <Footer />,
+    menuHeaderRender: undefined,
+    ...initialState?.settings,
+  };
+};
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
