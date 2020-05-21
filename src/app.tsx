@@ -1,10 +1,6 @@
-/**
- * request 网络请求工具
- * 更详细的 api 文档: https://github.com/umijs/umi-request
- */
-import { extend } from 'umi-request';
 import { notification } from 'antd';
-import { getAdminAPIConfig } from "@/utils/setting";
+import { RequestConfig } from 'umi';
+import { getAdminAPIConfig } from '@/utils/setting';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -46,19 +42,13 @@ const errorHandler = (error: { response: Response; data: any }): Promise<Respons
 };
 
 const adminAPIConfig = getAdminAPIConfig();
-
-/**
- * 配置request请求时的默认参数
- */
-const request = extend({
-  errorHandler, // 默认错误处理
-  credentials: 'same-origin', // 默认请求是否带上cookie
+export const request: RequestConfig = {
+  errorHandler,
+  credentials: 'same-origin',
   headers: {
     'X-ADMIN-API-SCHEMA': adminAPIConfig.schema,
     'X-ADMIN-API-HOST': adminAPIConfig.host,
     'X-ADMIN-API-PATH': adminAPIConfig.path,
     'X-API-KEY': adminAPIConfig.key,
   },
-});
-
-export default request;
+};
