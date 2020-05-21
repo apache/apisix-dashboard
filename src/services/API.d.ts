@@ -20,16 +20,13 @@ declare namespace API {
   }
 
   export interface NoticeIconData {
-    id: string;
-    key: string;
-    avatar: string;
-    title: string;
-    datetime: string;
-    type: string;
+    avatar?: string | React.ReactNode;
+    title?: React.ReactNode;
+    description?: React.ReactNode;
+    datetime?: React.ReactNode;
+    extra?: React.ReactNode;
+    style?: React.CSSProperties;
+    key?: string | number;
     read?: boolean;
-    description: string;
-    clickClose?: boolean;
-    extra: any;
-    status: string;
   }
 }
