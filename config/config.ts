@@ -24,6 +24,7 @@ export default defineConfig({
   layout: {
     name: 'APISIX Dashboard',
     locale: true,
+    logo: '/favicon.png',
   },
   base: '/dashboard/',
   publicPath: '/',
