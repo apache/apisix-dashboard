@@ -1,5 +1,7 @@
-type SSL = {
-  sni: string[];
-  cert: string;
-  key: string;
-};
+declare namespace SSLModule {
+  export type SSL = {
+    sni: string[];
+    cert: string;
+    key: string;
+  };
+}
