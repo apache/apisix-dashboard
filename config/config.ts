@@ -10,7 +10,7 @@ const getRequestPrefix = () => {
   if (NETLIFY_DEMO) return '/api';
   if (NODE_ENV === 'development') return '/api';
   return '';
-}
+};
 
 export default defineConfig({
   hash: true,
@@ -41,7 +41,7 @@ export default defineConfig({
     REACT_APP_ENV: REACT_APP_ENV || false,
     ADMIN_API_SCHEMA: 'http',
     ADMIN_API_HOST: '127.0.0.1:9080',
-    ADMIN_API_PATH: '/apisix/admin/',
+    ADMIN_API_PATH: '/apisix/admin',
     API_KEY: '',
     API_REQUEST_PREFIX: getRequestPrefix(),
   },
