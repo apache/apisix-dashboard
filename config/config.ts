@@ -2,10 +2,9 @@ import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 
-const { REACT_APP_ENV, NETLIFY_DEMO, NODE_ENV } = process.env;
+const { REACT_APP_ENV, NODE_ENV } = process.env;
 
 const getRequestPrefix = () => {
-  if (NETLIFY_DEMO) return '/api';
   if (NODE_ENV === 'development') return '/api';
   return '';
 };
