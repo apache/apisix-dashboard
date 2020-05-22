@@ -12,7 +12,7 @@ export const remove = (key: string) =>
     method: 'DELETE',
   });
 
-export const create = (data: SSL) =>
+export const create = (data: SSLModule.SSL) =>
   request('/api/ssl', {
     method: 'POST',
     data,
