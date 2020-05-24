@@ -4,12 +4,7 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 
-const { REACT_APP_ENV, NODE_ENV } = process.env;
-
-const getRequestPrefix = () => {
-  if (NODE_ENV === 'development') return '/api';
-  return '';
-};
+const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
   hash: true,
@@ -38,11 +33,6 @@ export default defineConfig({
   publicPath: '/',
   define: {
     REACT_APP_ENV: REACT_APP_ENV || false,
-    ADMIN_API_SCHEMA: 'http',
-    ADMIN_API_HOST: '127.0.0.1:9080',
-    ADMIN_API_PATH: '/apisix/admin',
-    API_KEY: '',
-    API_REQUEST_PREFIX: getRequestPrefix(),
   },
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {

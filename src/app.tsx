@@ -3,7 +3,7 @@ import { notification } from 'antd';
 import { RequestConfig, history } from 'umi';
 import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
 
-import { getAdminAPIConfig } from '@/utils/setting';
+import { getAdminAPIConfig } from '@/pages/Settings';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { queryCurrent } from '@/services/user';

@@ -37,20 +37,6 @@ declare let ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: 'site' | undefine
 
 declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 
-declare let ADMIN_API_SCHEMA;
-declare let ADMIN_API_HOST;
-declare let ADMIN_API_PATH;
-declare let API_KEY: '';
-declare let API_REQUEST_PREFIX: '';
-
-declare interface AdminAPIConfig {
-  schema: string;
-  host: string;
-  path: string;
-  prefix: string;
-  key: string;
-}
-
 type PageMode = 'CREATE' | 'EDIT' | 'VIEW';
 
 interface PluginProperty {
