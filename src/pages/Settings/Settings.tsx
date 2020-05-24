@@ -3,7 +3,8 @@ import { useForm } from 'antd/es/form/util';
 import { Button, Card, Form, Input, notification, Select } from 'antd';
 import { useIntl, FormattedMessage, history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { getAdminAPIConfig } from '@/utils/setting';
+
+import { getAdminAPIConfig } from './service';
 
 const { Option } = Select;
 
