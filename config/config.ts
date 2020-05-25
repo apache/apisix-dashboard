@@ -1,6 +1,8 @@
 import { defineConfig } from 'umi';
+
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
+import routes from './routes';
 
 const { REACT_APP_ENV } = process.env;
 
@@ -21,6 +23,7 @@ export default defineConfig({
   targets: {
     ie: 11,
   },
+  routes,
   layout: {
     name: 'APISIX Dashboard',
     locale: true,
@@ -28,61 +31,8 @@ export default defineConfig({
   },
   base: '/dashboard/',
   publicPath: '/',
-  routes: [
-    {
-      path: '/user',
-      layout: false,
-      routes: [
-        {
-          name: 'login',
-          path: '/user/login',
-          component: './user/login',
-        },
-      ],
-    },
-    {
-      path: '/',
-      redirect: '/settings',
-    },
-    {
-      name: 'settings',
-      path: '/settings',
-      icon: 'setting',
-      component: './Settings',
-    },
-    {
-      name: 'ssl',
-      path: '/ssl',
-      icon: 'BarsOutlined',
-      routes: [
-        {
-          path: '/ssl',
-          redirect: '/ssl/list',
-        },
-        {
-          path: '/ssl/list',
-          name: 'list',
-          component: './ssl/List',
-          hideInMenu: true,
-        },
-        {
-          name: 'create',
-          path: '/ssl/create',
-          component: './ssl/Create',
-          hideInMenu: true,
-        },
-      ],
-    },
-    {
-      component: './404',
-    },
-  ],
   define: {
     REACT_APP_ENV: REACT_APP_ENV || false,
-    ADMIN_API_SCHEMA: 'http',
-    ADMIN_API_HOST: '127.0.0.1:9080',
-    ADMIN_API_PATH: '/apisix/admin/',
-    API_KEY: '',
   },
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {

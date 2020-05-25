@@ -2,18 +2,18 @@ import { request } from 'umi';
 import { transformFetchListData, transformFetchItemData } from '@/transforms/global';
 
 export const fetchList = () =>
-  request('/api/ssl').then((data) => transformFetchListData<SSL>(data));
+  request('/ssl').then((data) => transformFetchListData<SSLModule.SSL>(data));
 
 export const fetchItem = (key: string) =>
-  request(`/api/ssl/${key}`).then((data) => transformFetchItemData<SSL>(data));
+  request(`/ssl/${key}`).then((data) => transformFetchItemData<SSLModule.SSL>(data));
 
 export const remove = (key: string) =>
-  request(`/api/ssl/${key}`, {
+  request(`/ssl/${key}`, {
     method: 'DELETE',
   });
 
-export const create = (data: SSL) =>
-  request('/api/ssl', {
+export const create = (data: SSLModule.SSL) =>
+  request('/ssl', {
     method: 'POST',
     data,
   });

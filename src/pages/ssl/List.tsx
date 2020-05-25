@@ -4,8 +4,9 @@ import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Modal, notification, Switch } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
-import { fetchList as fetchSSLList, remove as removeSSL } from '@/pages/ssl/service';
+
 import { ListItem } from '@/transforms/global';
+import { fetchList as fetchSSLList, remove as removeSSL } from './service';
 
 interface SearchParamsProps {
   current: number;
@@ -15,7 +16,7 @@ interface SearchParamsProps {
 
 const List: React.FC = () => {
   const tableRef = useRef<ActionType>();
-  const [list, setList] = useState<ListItem<SSL>[]>([]);
+  const [list, setList] = useState<ListItem<SSLModule.SSL>[]>([]);
   const { formatMessage } = useIntl();
   const onRemove = (key: string) => {
     Modal.confirm({
@@ -40,7 +41,7 @@ const List: React.FC = () => {
     });
   };
 
-  const columns: ProColumns<ListItem<SSL>>[] = [
+  const columns: ProColumns<ListItem<SSLModule.SSL>>[] = [
     {
       title: 'ID',
       dataIndex: 'displayKey',
@@ -97,7 +98,7 @@ const List: React.FC = () => {
 
   return (
     <PageHeaderWrapper>
-      <ProTable<ListItem<SSL>>
+      <ProTable<ListItem<SSLModule.SSL>>
         request={(params) => fetchPageSSLList(params)}
         search
         columns={columns}

@@ -4,8 +4,7 @@ export async function query() {
   return request<API.CurrentUser[]>('/api/users');
 }
 
-export async function queryCurrent() {
-  // return request<API.CurrentUser>('/api/currentUser');
+export async function queryCurrent(): Promise<API.CurrentUser> {
   return Promise.resolve({
     name: 'APISIX User',
     avatar:
