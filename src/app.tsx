@@ -83,12 +83,12 @@ const errorHandler = (error: { response: Response; data: any }): Promise<Respons
   return Promise.reject(response);
 };
 
-const adminAPIConfig = getAdminAPIConfig();
+const { schema, host, path, prefix, key } = getAdminAPIConfig();
 export const request: RequestConfig = {
-  prefix: `${adminAPIConfig.schema}://${adminAPIConfig.host}${adminAPIConfig.path}${adminAPIConfig.prefix}`,
+  prefix: `${schema}://${host}${path}${prefix}`,
   errorHandler,
   credentials: 'same-origin',
   headers: {
-    'X-API-KEY': adminAPIConfig.key,
+    'X-API-KEY': key,
   },
 };
