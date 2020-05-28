@@ -1,32 +1,32 @@
 declare namespace RoutesModule {
   interface Step1ModalProps {
-    paramsLocation: string;
+    paramsLocation: 'query' | 'params' | 'header' | 'cookie';
     paramsName: string;
-    paramsExpresstion: string;
+    paramsExpresstion: '==' | '～=' | '>' | '<' | '~~';
     paramsValue: string;
-    remark?: string;
+    remark: string;
     key: string;
   }
 
   interface Step1HostProps {
     host: string;
-    port: string;
-    priority: string;
+    port: number;
+    priority: number;
   }
 
-  interface Step1PageDataProps {
-    apiName: string;
-    protocol: string;
+  interface step1DataProps {
+    name: string;
+    protocol: [];
     hosts: Step1HostProps[];
-    requestPath: string;
+    path: string[];
     httpMethods: [];
-    advancedConfig: Step1ModalProps[];
+    advancedMatchingRules: Step1ModalProps[];
   }
 
   interface StepProps {
-    pageData: {
-      step1PageData: Step1PageDataProps;
+    data: {
+      step1Data: step1DataProps;
     };
-    onChange(data: any): void;
+    onChange(data: T): void;
   }
 }

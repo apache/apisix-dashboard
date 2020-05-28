@@ -7,30 +7,25 @@ import styles from './Create.less';
 const { Step } = Steps;
 
 const Create: React.FC = () => {
-  const [step1PageData, setStep1PageData] = useState<RoutesModule.Step1PageDataProps>({
-    apiName: '',
-    protocol: '',
+  const [step1Data, setstep1Data] = useState<RoutesModule.step1DataProps>({
+    name: '',
+    protocol: [],
     hosts: [],
-    requestPath: '',
+    path: [],
     httpMethods: [],
-    advancedConfig: [],
+    advancedMatchingRules: [],
   });
 
-  const [currentStep, setCurrentStep] = useState(0);
-  const [stepHeader, setStepHeader] = useState(['定义API请求', '定义API后端服务', '插件', '预览']);
-  const pageData = {
-    step1PageData,
+  const [currentStep] = useState(0);
+  const [stepHeader] = useState(['定义 API 请求', '定义 API 后端服务', '插件配置', '预览']);
+  const data = {
+    step1Data,
   };
 
-  const handleChange = (step: number, data: RoutesModule.Step1PageDataProps) => {
+  const handleChange = (step: number, params: RoutesModule.step1DataProps) => {
     switch (step) {
       case 0:
-        setStep1PageData({ ...step1PageData, ...data });
-        break;
-      case 1:
-        // TODO: base on data show different step
-        setCurrentStep(1);
-        setStepHeader(['定义API请求', '定义API后端服务', '预览']);
+        setstep1Data({ ...step1Data, ...params });
         break;
       default:
     }
@@ -41,9 +36,8 @@ const Create: React.FC = () => {
       <>
         {Boolean(currentStep === 0) && (
           <Step1
-            key={Math.random().toString(36).slice(2)}
-            pageData={pageData}
-            onChange={(data: RoutesModule.Step1PageDataProps) => handleChange(currentStep, data)}
+            data={data}
+            onChange={(params: RoutesModule.step1DataProps) => handleChange(currentStep, params)}
           />
         )}
       </>
@@ -51,16 +45,14 @@ const Create: React.FC = () => {
   };
 
   return (
-    <PageHeaderWrapper content="">
+    <PageHeaderWrapper>
       <Card bordered={false}>
-        <>
-          <Steps current={currentStep} className={styles.steps}>
-            {stepHeader.map((item) => (
-              <Step title={item} key={item} />
-            ))}
-          </Steps>
-          {renderStep()}
-        </>
+        <Steps current={currentStep} className={styles.steps}>
+          {stepHeader.map((item) => (
+            <Step title={item} key={item} />
+          ))}
+        </Steps>
+        {renderStep()}
       </Card>
     </PageHeaderWrapper>
   );
