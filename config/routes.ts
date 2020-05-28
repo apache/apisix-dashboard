@@ -44,6 +44,23 @@ const routes = [
     ],
   },
   {
+    name: 'routes',
+    path: '/routes',
+    icon: 'BarsOutlined',
+    routes: [
+      {
+        path: '/routes',
+        redirect: '/routes/create',
+      },
+      {
+        path: '/routes/create',
+        name: 'create',
+        component: './Routes/create',
+        hideInMenu: true,
+      },
+    ],
+  },
+  {
     component: './404',
   },
 ];
