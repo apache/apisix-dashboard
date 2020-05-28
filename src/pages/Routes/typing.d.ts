@@ -7,14 +7,10 @@ declare namespace RoutesModule {
     key: string;
   }
 
-  interface Step1HostProps {
-    host: string;
-  }
-
   interface Step1DataProps {
     name: string;
     protocol: [];
-    hosts: Step1HostProps[];
+    hosts: string[];
     paths: string[];
     httpMethods: [];
     advancedMatchingRules: MatchingRule[];

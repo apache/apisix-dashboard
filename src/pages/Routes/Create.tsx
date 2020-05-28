@@ -10,7 +10,7 @@ const Create: React.FC = () => {
   const [step1Data, setStep1Data] = useState<RoutesModule.Step1DataProps>({
     name: '',
     protocol: [],
-    hosts: [{ host: '' }],
+    hosts: [''],
     paths: [],
     httpMethods: [],
     advancedMatchingRules: [],

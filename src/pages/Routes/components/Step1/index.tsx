@@ -80,17 +80,13 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
 
   const addHost = () => {
     onChange({
-      hosts: hosts.concat([
-        {
-          host: '',
-        },
-      ]),
+      hosts: hosts.concat(''),
     });
   };
 
   const renderHosts = () =>
     hosts.map((item, index) => (
-      <Row key={`${item.host + index}`} style={{ marginBottom: '10px' }} gutter={[16, 16]}>
+      <Row key={`${item + index}`} style={{ marginBottom: '10px' }} gutter={[16, 16]}>
         <Col span={16}>
           <Input placeholder="HOST" />
         </Col>
@@ -178,6 +174,7 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
               </Row>
             </Checkbox.Group>
           </Form.Item>
+          {/* TODO: name */}
           <Form.Item label="HOST" rules={[{ required: true, message: '请输入 HOST' }]}>
             {renderHosts()}
             <Button
@@ -189,7 +186,8 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
               增加
             </Button>
           </Form.Item>
-          <Form.Item label="PATH" name="paths">
+          {/* TODO: name */}
+          <Form.Item label="PATH">
             {renderPaths()}
             <Button onClick={addPath} type="primary">
               增加
@@ -294,7 +292,7 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
               </Select>
             </Form.Item>
             <Form.Item
-              label="参数值"
+              label="值"
               name="paramsValue"
               rules={[{ required: true, message: '请输入参数值' }]}
             >
