@@ -55,7 +55,7 @@ const routes = [
       {
         path: '/routes/create',
         name: 'create',
-        component: './Routes/create',
+        component: './Routes/Create',
         hideInMenu: true,
       },
     ],
