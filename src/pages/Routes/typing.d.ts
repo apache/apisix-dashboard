@@ -1,31 +1,28 @@
 declare namespace RoutesModule {
-  interface Step1ModalProps {
+  interface MatchingRule {
     paramsLocation: 'query' | 'params' | 'header' | 'cookie';
     paramsName: string;
     paramsExpresstion: '==' | '～=' | '>' | '<' | '~~';
     paramsValue: string;
-    remark: string;
     key: string;
   }
 
   interface Step1HostProps {
     host: string;
-    port: number;
-    priority: number;
   }
 
-  interface step1DataProps {
+  interface Step1DataProps {
     name: string;
     protocol: [];
     hosts: Step1HostProps[];
-    path: string[];
+    paths: string[];
     httpMethods: [];
-    advancedMatchingRules: Step1ModalProps[];
+    advancedMatchingRules: MatchingRule[];
   }
 
   interface StepProps {
     data: {
-      step1Data: step1DataProps;
+      step1Data: Step1DataProps;
     };
     onChange(data: T): void;
   }

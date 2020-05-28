@@ -7,11 +7,11 @@ import styles from './Create.less';
 const { Step } = Steps;
 
 const Create: React.FC = () => {
-  const [step1Data, setstep1Data] = useState<RoutesModule.step1DataProps>({
+  const [step1Data, setStep1Data] = useState<RoutesModule.Step1DataProps>({
     name: '',
     protocol: [],
-    hosts: [],
-    path: [],
+    hosts: [{ host: '' }],
+    paths: [],
     httpMethods: [],
     advancedMatchingRules: [],
   });
@@ -22,10 +22,10 @@ const Create: React.FC = () => {
     step1Data,
   };
 
-  const handleChange = (step: number, params: RoutesModule.step1DataProps) => {
+  const handleChange = (step: number, params: RoutesModule.Step1DataProps) => {
     switch (step) {
       case 0:
-        setstep1Data({ ...step1Data, ...params });
+        setStep1Data({ ...step1Data, ...params });
         break;
       default:
     }
@@ -37,7 +37,7 @@ const Create: React.FC = () => {
         {Boolean(currentStep === 0) && (
           <Step1
             data={data}
-            onChange={(params: RoutesModule.step1DataProps) => handleChange(currentStep, params)}
+            onChange={(params: RoutesModule.Step1DataProps) => handleChange(currentStep, params)}
           />
         )}
       </>

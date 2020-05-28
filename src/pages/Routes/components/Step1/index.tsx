@@ -18,27 +18,30 @@ const formItemLayout = {
 
 const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
   const { step1Data } = data;
-  const { hosts, path } = step1Data;
+  const { hosts, paths, advancedMatchingRules } = step1Data;
   const [form] = Form.useForm();
   const [modalVisible, setModalVisible] = useState(false);
-  const [editModalData, setEditModalData] = useState();
+  const [editModalData, setEditModalData] = useState<RoutesModule.MatchingRule>({
+    paramsLocation: 'query',
+    paramsName: '',
+    paramsExpresstion: '==',
+    paramsValue: '',
+    key: '',
+  });
 
   const handleAdd = () => {
     setModalVisible(true);
   };
 
-  const handleEdit = (record: any) => {
+  const handleEdit = (record: RoutesModule.MatchingRule) => {
     setEditModalData(record);
     requestAnimationFrame(() => {
       setModalVisible(true);
     });
   };
 
-  const handleDelete = (record: any) => {
-    const { advancedMatchingRules } = step1Data;
-    const filteredAdvancedMatchingRules = advancedMatchingRules.filter(
-      (item) => item.key !== record.key,
-    );
+  const handleRemove = (key: string) => {
+    const filteredAdvancedMatchingRules = advancedMatchingRules.filter((item) => item.key !== key);
     onChange({ advancedMatchingRules: filteredAdvancedMatchingRules });
   };
 
@@ -54,7 +57,7 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
       key: 'paramsName',
     },
     {
-      title: '表达式',
+      title: '运算符',
       dataIndex: 'paramsExpresstion',
       key: 'paramsExpresstion',
     },
@@ -64,17 +67,12 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
       key: 'paramsValue',
     },
     {
-      title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
-    },
-    {
       title: '操作',
       key: 'action',
-      render: (_: any, record: any) => (
+      render: (_: any, record: RoutesModule.MatchingRule) => (
         <Space size="middle">
           <a onClick={() => handleEdit(record)}>编辑</a>
-          <a onClick={() => handleDelete(record)}>移除</a>
+          <a onClick={() => handleRemove(record.key)}>移除</a>
         </Space>
       ),
     },
@@ -85,47 +83,40 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
       hosts: hosts.concat([
         {
           host: '',
-          port: 0,
-          priority: 0,
         },
       ]),
     });
   };
 
   const renderHosts = () =>
-    step1Data.hosts.map((item, index) => (
+    hosts.map((item, index) => (
       <Row key={`${item.host + index}`} style={{ marginBottom: '10px' }} gutter={[16, 16]}>
-        <Col span={8}>
-          <Input placeholder="IP/HOST" />
-        </Col>
-        <Col span={4}>
-          <Input placeholder="PORT" />
-        </Col>
-        <Col span={4}>
-          <Input placeholder="PRIORITY" />
+        <Col span={16}>
+          <Input placeholder="HOST" />
         </Col>
         <Col span={4}>
           <Space>
-            <Button
-              type="primary"
-              danger
-              onClick={() => {
-                const newHosts = hosts.filter((_, _index) => _index !== index);
-                onChange({ hosts: newHosts });
-              }}
-            >
-              删除
-            </Button>
+            {hosts.length > 1 && (
+              <Button
+                type="primary"
+                danger
+                onClick={() => {
+                  onChange({ hosts: hosts.filter((_, _index) => _index !== index) });
+                }}
+              >
+                删除
+              </Button>
+            )}
           </Space>
         </Col>
       </Row>
     ));
 
   const renderPaths = () =>
-    step1Data.path.map((item, index) => (
+    paths.map((item, index) => (
       <Row key={`${item + index}`} style={{ marginBottom: '10px' }} gutter={[16, 16]}>
         <Col span={16}>
-          <Input placeholder="请输入 PATH" />
+          <Input placeholder="请输入 Path" />
         </Col>
         <Col span={4}>
           <Space>
@@ -133,8 +124,7 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
               type="primary"
               danger
               onClick={() => {
-                const newpath = path.filter((_, _index) => _index !== index);
-                onChange({ path: newpath });
+                onChange({ paths: paths.filter((_, _index) => _index !== index) });
               }}
             >
               删除
@@ -146,82 +136,91 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
 
   const addPath = () => {
     onChange({
-      path: path.concat(['']),
+      paths: paths.concat(['']),
     });
   };
 
   const renderMeta = () => (
     <>
-      <PanelSection title="名称及其描述" />
-      <Form {...formItemLayout} form={form} layout="horizontal" className={styles.stepForm}>
-        <Form.Item
-          label="API 名称"
-          name="name"
-          rules={[{ required: true, message: '请输入 API 名称' }]}
-        >
-          <Input placeholder="请输入 API 名称" />
-        </Form.Item>
-        <Form.Item label="描述" name="desc">
-          <TextArea placeholder="请输入描述" />
-        </Form.Item>
-      </Form>
+      <PanelSection title="名称及其描述">
+        <Form {...formItemLayout} form={form} layout="horizontal" className={styles.stepForm}>
+          <Form.Item
+            label="API 名称"
+            name="name"
+            rules={[{ required: true, message: '请输入 API 名称' }]}
+          >
+            <Input placeholder="请输入 API 名称" />
+          </Form.Item>
+          <Form.Item label="描述" name="desc">
+            <TextArea placeholder="请输入描述" />
+          </Form.Item>
+        </Form>
+      </PanelSection>
     </>
   );
 
   const renderBaseRequestConfig = () => (
     <>
-      <PanelSection title="请求基础定义" />
-      <Form {...formItemLayout} form={form} layout="horizontal" className={styles.stepForm}>
-        <Form.Item label="协议" name="protocol" rules={[{ required: true, message: '请勾选协议' }]}>
-          <Checkbox.Group style={{ width: '100%' }}>
-            <Row>
-              {['HTTP', 'HTTPS', 'WebSocket'].map((item) => (
-                <Col span={6} key={item}>
-                  <Checkbox value={item}>{item}</Checkbox>
-                </Col>
-              ))}
-            </Row>
-          </Checkbox.Group>
-        </Form.Item>
-        <Form.Item label="IP/HOST" rules={[{ required: true, message: '请输入 HOST' }]}>
-          {renderHosts()}
-          <Button onClick={addHost} type="primary">
-            增加
-          </Button>
-        </Form.Item>
-        <Form.Item label="PATH" name="path" rules={[{ required: true, message: '请输入 PATH' }]}>
-          {renderPaths()}
-          <Button onClick={addPath} type="primary">
-            增加
-          </Button>
-        </Form.Item>
-        <Form.Item
-          label="HTTP Methods"
-          name="httpMethods"
-          rules={[{ required: true, message: '请勾选 HTTP Methods' }]}
-        >
-          <Checkbox.Group style={{ width: '100%' }}>
-            <Row>
-              {['ANY', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'].map((item) => (
-                <Col span={6} key={item}>
-                  <Checkbox value={item}>{item}</Checkbox>
-                </Col>
-              ))}
-            </Row>
-          </Checkbox.Group>
-        </Form.Item>
-      </Form>
+      <PanelSection title="请求基础定义">
+        <Form {...formItemLayout} form={form} layout="horizontal" className={styles.stepForm}>
+          <Form.Item
+            label="协议"
+            name="protocol"
+            rules={[{ required: true, message: '请勾选协议' }]}
+          >
+            <Checkbox.Group style={{ width: '100%' }}>
+              <Row>
+                {['HTTP', 'HTTPS', 'WebSocket'].map((item) => (
+                  <Col span={6} key={item}>
+                    <Checkbox value={item}>{item}</Checkbox>
+                  </Col>
+                ))}
+              </Row>
+            </Checkbox.Group>
+          </Form.Item>
+          <Form.Item label="HOST" rules={[{ required: true, message: '请输入 HOST' }]}>
+            {renderHosts()}
+            <Button
+              type="primary"
+              onClick={() => {
+                addHost();
+              }}
+            >
+              增加
+            </Button>
+          </Form.Item>
+          <Form.Item label="PATH" name="paths">
+            {renderPaths()}
+            <Button onClick={addPath} type="primary">
+              增加
+            </Button>
+          </Form.Item>
+          <Form.Item
+            label="HTTP Methods"
+            name="httpMethods"
+            rules={[{ required: true, message: '请勾选 HTTP Methods' }]}
+          >
+            <Checkbox.Group style={{ width: '100%' }}>
+              <Row>
+                {['ANY', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'].map((item) => (
+                  <Col span={6} key={item}>
+                    <Checkbox value={item}>{item}</Checkbox>
+                  </Col>
+                ))}
+              </Row>
+            </Checkbox.Group>
+          </Form.Item>
+        </Form>
+      </PanelSection>
     </>
   );
 
   const [modalForm] = Form.useForm();
-  const validateModalFields = modalForm.validateFields;
   const handleOk = () => {
-    validateModalFields().then((value) => {
-      const { advancedMatchingRules } = step1Data;
+    modalForm.validateFields().then((value) => {
       onChange({
         advancedMatchingRules: advancedMatchingRules.concat({
-          ...(value as RoutesModule.Step1ModalProps),
+          ...(value as RoutesModule.MatchingRule),
           key: Math.random().toString(36).slice(2),
         }),
       });
@@ -233,26 +232,22 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
     setModalVisible(false);
   };
 
-  const renderadvancedMatchingRules = () => (
+  const renderAdvancedMatchingRules = () => (
     <>
-      <PanelSection title="高级路由匹配条件" />
-      <div>
-        <Button
-          onClick={handleAdd}
-          type="primary"
-          style={{
-            marginBottom: 16,
-          }}
-        >
-          新增
-        </Button>
-        <Table
-          key="table"
-          bordered
-          dataSource={step1Data.advancedMatchingRules}
-          columns={columns}
-        />
-      </div>
+      <PanelSection title="高级路由匹配条件">
+        <div>
+          <Button
+            onClick={handleAdd}
+            type="primary"
+            style={{
+              marginBottom: 16,
+            }}
+          >
+            新增
+          </Button>
+          <Table key="table" bordered dataSource={advancedMatchingRules} columns={columns} />
+        </div>
+      </PanelSection>
     </>
   );
 
@@ -286,9 +281,9 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
               <Input />
             </Form.Item>
             <Form.Item
-              label="表达式"
+              label="运算符"
               name="paramsExpresstion"
-              rules={[{ required: true, message: '请选择表达式' }]}
+              rules={[{ required: true, message: '请选择运算符' }]}
             >
               <Select>
                 <Option value="==">等于</Option>
@@ -305,15 +300,12 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
             >
               <Input />
             </Form.Item>
-            <Form.Item label="备注" name="remark">
-              <TextArea placeholder="请输入备注" />
-            </Form.Item>
           </Form>
         </Modal>
       )}
       {renderMeta()}
       {renderBaseRequestConfig()}
-      {renderadvancedMatchingRules()}
+      {renderAdvancedMatchingRules()}
     </>
   );
 };
