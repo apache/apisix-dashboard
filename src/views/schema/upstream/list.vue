@@ -160,8 +160,8 @@ export default class extends Vue {
 
     let { node: { nodes = [] } } = await getUpstreamList() as any
     nodes = [...nodes].map((item: any) => {
-      const id = item.key.match(/\/([0-9]+)/)[1]
-      const fakeId = parseInt(id.replace(/^(0+)/, ''))
+      const id = item.key.match(/\/([a-zA-Z0-9-_]+)$/)[1]
+      const fakeId = id
       const type = item.value.type
       const desc = item.value.desc
 
