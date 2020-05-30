@@ -3,7 +3,7 @@ import globalHeader from './zh-CN/globalHeader';
 import menu from './zh-CN/menu';
 import pwa from './zh-CN/pwa';
 import settingDrawer from './zh-CN/settingDrawer';
-import settings from './zh-CN/settings';
+import settings from './zh-CN/setting';
 
 export default {
   'navBar.lang': '语言',

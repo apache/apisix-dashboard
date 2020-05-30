@@ -4,9 +4,9 @@ const routes = [
     redirect: '/ssl',
   },
   {
-    name: 'settings',
-    path: '/settings',
-    component: './settings',
+    name: 'setting',
+    path: '/setting',
+    component: './Setting',
     layout: false,
     hideInMenu: true,
   },

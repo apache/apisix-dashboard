@@ -3,7 +3,7 @@ import { notification } from 'antd';
 import { RequestConfig, history } from 'umi';
 import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
 
-import { getAdminAPIConfig } from '@/pages/settings';
+import { getAdminAPIConfig } from '@/pages/Setting';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { queryCurrent } from '@/services/user';
@@ -14,7 +14,7 @@ export async function getInitialState(): Promise<{
   settings?: LayoutSettings;
 }> {
   // 如果是设置页面，不执行
-  if (history.location.pathname !== '/settings') {
+  if (history.location.pathname !== '/setting') {
     try {
       const currentUser = await queryCurrent();
       return {
@@ -22,7 +22,7 @@ export async function getInitialState(): Promise<{
         settings: defaultSettings,
       };
     } catch (error) {
-      history.push('/settings');
+      history.push('/setting');
     }
   }
   return {
@@ -83,9 +83,9 @@ const errorHandler = (error: { response: Response; data: any }): Promise<Respons
   return Promise.reject(response);
 };
 
-const { schema, host, path, prefix, key } = getAdminAPIConfig();
+const { schema, host, path, key } = getAdminAPIConfig();
 export const request: RequestConfig = {
-  prefix: `${schema}://${host}${path}${prefix}`,
+  prefix: `${schema}://${host}${path}`,
   errorHandler,
   credentials: 'same-origin',
   headers: {
