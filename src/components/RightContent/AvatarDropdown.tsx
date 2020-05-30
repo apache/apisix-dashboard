@@ -17,7 +17,7 @@ export interface GlobalHeaderRightProps {
  */
 const settings = async () => {
   history.replace({
-    pathname: '/settings',
+    pathname: '/setting',
     search: stringify({
       redirect: window.location.href,
     }),

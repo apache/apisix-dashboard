@@ -14,20 +14,14 @@ const Settings: React.FC<{}> = () => {
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    const adminAPIConfig = getAdminAPIConfig();
-    form.setFieldsValue({
-      adminAPISchema: adminAPIConfig.schema,
-      adminAPIHost: adminAPIConfig.host,
-      adminAPIPath: adminAPIConfig.path,
-      adminAPIKey: adminAPIConfig.key,
-    });
+    form.setFieldsValue(getAdminAPIConfig());
   }, []);
 
-  const onFinish = (values: any) => {
-    localStorage.setItem('GLOBAL_ADMIN_API_SCHEMA', values.adminAPISchema);
-    localStorage.setItem('GLOBAL_ADMIN_API_HOST', values.adminAPIHost);
-    localStorage.setItem('GLOBAL_ADMIN_API_PATH', values.adminAPIPath);
-    localStorage.setItem('GLOBAL_ADMIN_API_KEY', values.adminAPIKey);
+  const onFinish = ({ schema, host, path, key }: Setting.AdminAPI) => {
+    localStorage.setItem('GLOBAL_ADMIN_API_SCHEMA', schema);
+    localStorage.setItem('GLOBAL_ADMIN_API_HOST', host);
+    localStorage.setItem('GLOBAL_ADMIN_API_PATH', path);
+    localStorage.setItem('GLOBAL_ADMIN_API_KEY', key);
 
     notification.success({
       duration: 1,
@@ -59,9 +53,9 @@ const Settings: React.FC<{}> = () => {
         <div className={styles.main}>
           <Tabs>
             <TabPane tab={formatMessage({ id: 'app.settings.admin-api' })}>
-              <Form form={form} onFinish={onFinish}>
+              <Form form={form} onFinish={(values) => onFinish(values as Setting.AdminAPI)}>
                 <Form.Item
-                  name="adminAPISchema"
+                  name="schema"
                   rules={[
                     {
                       required: true,
@@ -81,7 +75,7 @@ const Settings: React.FC<{}> = () => {
                 </Form.Item>
 
                 <Form.Item
-                  name="adminAPIHost"
+                  name="host"
                   rules={[
                     {
                       required: true,
@@ -95,7 +89,7 @@ const Settings: React.FC<{}> = () => {
                 </Form.Item>
 
                 <Form.Item
-                  name="adminAPIPath"
+                  name="path"
                   rules={[
                     {
                       required: true,
@@ -108,7 +102,7 @@ const Settings: React.FC<{}> = () => {
                   <Input placeholder={formatMessage({ id: 'app.settings.item.admin-api-path' })} />
                 </Form.Item>
 
-                <Form.Item name="adminAPIKey">
+                <Form.Item name="key">
                   <Input placeholder={formatMessage({ id: 'app.settings.item.admin-api-key' })} />
                 </Form.Item>
 

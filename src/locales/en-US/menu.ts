@@ -52,5 +52,5 @@ export default {
   'menu.ssl.list': 'SSL List',
   'menu.ssl.edit': 'Edit',
   'menu.ssl.create': 'Create',
-  'menu.settings': 'Settings',
+  'menu.setting': 'Settings',
 };
