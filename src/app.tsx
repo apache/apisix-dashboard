@@ -3,7 +3,7 @@ import { notification } from 'antd';
 import { RequestConfig, history } from 'umi';
 import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
 
-import { getAdminAPIConfig } from '@/pages/Settings';
+import { getAdminAPIConfig } from '@/pages/settings';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { queryCurrent } from '@/services/user';
@@ -13,8 +13,8 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   settings?: LayoutSettings;
 }> {
-  // 如果是登录页面，不执行
-  if (history.location.pathname !== '/user/login') {
+  // 如果是设置页面，不执行
+  if (history.location.pathname !== '/settings') {
     try {
       const currentUser = await queryCurrent();
       return {
@@ -22,7 +22,7 @@ export async function getInitialState(): Promise<{
         settings: defaultSettings,
       };
     } catch (error) {
-      history.push('/user/login');
+      history.push('/settings');
     }
   }
   return {

@@ -4,7 +4,6 @@ declare namespace API {
     name?: string;
     userid?: string;
     access?: 'user' | 'guest' | 'admin';
-    unreadCount?: number;
   }
 
   export interface LoginStateType {
