@@ -3,6 +3,7 @@ import { Card, Steps } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import Step1 from './components/Step1';
 import styles from './Create.less';
+import CreateStep3 from './components/CreateStep3';
 
 const { Step } = Steps;
 
@@ -16,7 +17,7 @@ const Create: React.FC = () => {
     advancedMatchingRules: [],
   });
 
-  const [currentStep] = useState(0);
+  const [currentStep] = useState(2);
   const [stepHeader] = useState(['定义 API 请求', '定义 API 后端服务', '插件配置', '预览']);
   const data = {
     step1Data,
@@ -32,16 +33,19 @@ const Create: React.FC = () => {
   };
 
   const renderStep = () => {
-    return (
-      <>
-        {Boolean(currentStep === 0) && (
+    switch (currentStep) {
+      case 0:
+        return (
           <Step1
             data={data}
             onChange={(params: RoutesModule.Step1DataProps) => handleChange(currentStep, params)}
           />
-        )}
-      </>
-    );
+        );
+      case 2:
+        return <CreateStep3 />;
+      default:
+        return null;
+    }
   };
 
   return (
