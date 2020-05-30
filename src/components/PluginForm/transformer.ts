@@ -4,7 +4,7 @@ import { Rule } from 'antd/es/form';
 /**
  * Transform schema data from API for target plugin.
  */
-export const transformSchemaFromAPI = (schema: PluginSchema, pluginName: string): PluginSchema => {
+export const transformSchemaFromAPI = (schema: PluginForm.PluginSchema, pluginName: string): PluginForm.PluginSchema => {
   if (pluginName === 'key-auth') {
     return {
       ...schema,
@@ -37,7 +37,7 @@ export const transformSchemaFromAPI = (schema: PluginSchema, pluginName: string)
  * Transform schema data to be compatible with API.
  */
 // eslint-disable-next-line arrow-body-style
-export const transformSchemaToAPI = (schema: PluginSchema, pluginName: string) => {
+export const transformSchemaToAPI = (schema: PluginForm.PluginSchema, pluginName: string) => {
   return { schema, pluginName };
 };
 
@@ -45,9 +45,9 @@ export const transformSchemaToAPI = (schema: PluginSchema, pluginName: string) =
  * Transform schema's property to rules.
  */
 export const transformPropertyToRules = (
-  schema: PluginSchema,
+  schema: PluginForm.PluginSchema,
   propertyName: string,
-  propertyValue: PluginProperty,
+  propertyValue: PluginForm.PluginProperty,
 ): Rule[] => {
   if (!schema) {
     return [];
