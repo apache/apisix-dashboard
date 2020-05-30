@@ -4,12 +4,12 @@ import { useForm } from 'antd/es/form/util';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
-import { fetchPluginSchema } from '@/services/plugin';
-import { transformPropertyToRules } from '@/transforms/plugin';
+import { fetchPluginSchema } from './service';
+import { transformPropertyToRules } from './transformer';
 
 interface Props {
   name: string;
-  initialData?: PluginSchema;
+  initialData?: PluginForm.PluginSchema;
   onFinish(values: any): void;
 }
 
@@ -23,7 +23,7 @@ interface RenderComponentProps {
 }
 
 const renderComponentByProperty = (
-  propertyValue: PluginProperty,
+  propertyValue: PluginForm.PluginProperty,
   restProps?: RenderComponentProps,
 ) => {
   const { type, minimum, maximum } = propertyValue;
@@ -60,9 +60,9 @@ const renderComponentByProperty = (
 };
 
 interface ArrayComponentProps {
-  schema: PluginSchema;
+  schema: PluginForm.PluginSchema;
   propertyName: string;
-  propertyValue: PluginProperty;
+  propertyValue: PluginForm.PluginProperty;
 }
 
 const ArrayComponent: React.FC<ArrayComponentProps> = ({
@@ -105,7 +105,7 @@ const ArrayComponent: React.FC<ArrayComponentProps> = ({
 };
 
 const PluginForm: React.FC<Props> = ({ name, initialData = {}, onFinish }) => {
-  const [schema, setSchema] = useState<PluginSchema>();
+  const [schema, setSchema] = useState<PluginForm.PluginSchema>();
   const [form] = useForm();
 
   useEffect(() => {
