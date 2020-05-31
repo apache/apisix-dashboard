@@ -1,4 +1,10 @@
 declare namespace PluginForm {
+  interface Props {
+    name?: string;
+    initialData?: PluginSchema;
+    onFinish(values: any): void;
+  }
+
   interface PluginSchema {
     type: 'object';
     id?: string;
@@ -12,7 +18,7 @@ declare namespace PluginForm {
       [propertyName: string]: PluginProperty;
     };
   }
-  
+
   interface PluginProperty {
     type: 'number' | 'string' | 'integer' | 'array' | 'boolean' | 'object';
     // the same as type

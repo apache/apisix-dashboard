@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { Divider } from 'antd';
 
 const PanelSection: React.FC<{
   title: string;
-}> = ({ title, children }) => {
+  style?: CSSProperties;
+}> = ({ title, style, children }) => {
   return (
     <>
-      <div>{title}</div>
-      <Divider />
-      {children}
+      <Divider orientation="left">{title}</Divider>
+      <div style={style}>{children}</div>
     </>
   );
 };

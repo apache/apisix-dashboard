@@ -7,12 +7,6 @@ import { useIntl } from 'umi';
 import { fetchPluginSchema } from './service';
 import { transformPropertyToRules } from './transformer';
 
-interface Props {
-  name: string;
-  initialData?: PluginForm.PluginSchema;
-  onFinish(values: any): void;
-}
-
 const formLayout = {
   labelCol: { span: 10 },
   wrapperCol: { span: 14 },
@@ -104,12 +98,13 @@ const ArrayComponent: React.FC<ArrayComponentProps> = ({
   );
 };
 
-const PluginForm: React.FC<Props> = ({ name, initialData = {}, onFinish }) => {
+const PluginForm: React.FC<PluginForm.Props> = ({ name, initialData = {}, onFinish }) => {
   const [schema, setSchema] = useState<PluginForm.PluginSchema>();
   const [form] = useForm();
 
   useEffect(() => {
     if (name) {
+      setSchema(undefined);
       fetchPluginSchema(name).then((data) => {
         setSchema(data);
 
