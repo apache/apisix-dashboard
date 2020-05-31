@@ -1,4 +1,6 @@
 declare namespace PluginForm {
+  type PluginName = 'limit-req';
+
   interface Props {
     name?: string;
     initialData?: PluginSchema;
@@ -46,5 +48,9 @@ declare namespace PluginForm {
         pattern?: string;
       }>;
     };
+  }
+
+  interface PluginMeta {
+    desc?: string;
   }
 }
