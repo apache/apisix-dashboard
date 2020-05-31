@@ -11,6 +11,7 @@ const sectionStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 33.333%)',
   gridRowGap: 10,
+  gridColumnGap: 10,
 };
 
 const CreateStep3: React.FC = () => {

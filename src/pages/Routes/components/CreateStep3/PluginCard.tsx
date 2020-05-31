@@ -11,10 +11,13 @@ const PluginCard: React.FC<Props> = ({ name, actions }) => {
   const { formatMessage } = useIntl();
 
   return (
-    <Card style={{ width: 300 }} actions={actions}>
+    <Card actions={actions}>
       <Card.Meta
         title={name}
-        description={formatMessage({ id: `PluginForm.plugin.${name}.desc` })}
+        description={formatMessage({
+          id: `PluginForm.plugin.${name}.desc`,
+          defaultMessage: 'Please view the documentation.',
+        })}
       />
     </Card>
   );
