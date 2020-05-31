@@ -1,4 +1,4 @@
-declare namespace RoutesModule {
+declare namespace RouteModule {
   interface MatchingRule {
     paramsLocation: 'query' | 'params' | 'header' | 'cookie';
     paramsName: string;
@@ -7,7 +7,7 @@ declare namespace RoutesModule {
     key: string;
   }
 
-  interface Step1DataProps {
+  interface Step1Data {
     name: string;
     protocol: [];
     hosts: string[];
@@ -16,9 +16,9 @@ declare namespace RoutesModule {
     advancedMatchingRules: MatchingRule[];
   }
 
-  interface StepProps {
+  interface Data {
     data: {
-      step1Data: Step1DataProps;
+      step1Data: Step1Data;
     };
     onChange(data: T): void;
   }

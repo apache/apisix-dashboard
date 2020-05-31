@@ -7,6 +7,8 @@ import PanelSection from '../PanelSection';
 import PluginDrawer from './PluginDrawer';
 import PluginCard from './PluginCard';
 
+interface Props extends RouteModule.Data {}
+
 const sectionStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 33.333%)',
@@ -14,10 +16,13 @@ const sectionStyle = {
   gridColumnGap: 10,
 };
 
-const CreateStep3: React.FC = () => {
+const CreateStep3: React.FC<Props> = () => {
   const [currentPlugin, setCurrentPlugin] = useState<string | undefined>();
 
-  // TODO: 设置插件黑名单（不展示的插件）
+  // NOTE: Plugin in blacklist WILL NOT be shown on Step3.
+  const pluginBlackList = ['redirect'];
+  const list = pluginList.filter(({ name }) => !pluginBlackList.includes(name));
+
   // TODO: 获取 Route 已启用插件
   // TODO: 拆分已启用、未启用插件
 
@@ -32,7 +37,7 @@ const CreateStep3: React.FC = () => {
         </Card>
       </PanelSection>
       <PanelSection title="未启用" style={sectionStyle}>
-        {pluginList.map(({ name }) => (
+        {list.map(({ name }) => (
           <PluginCard
             name={name}
             actions={[
