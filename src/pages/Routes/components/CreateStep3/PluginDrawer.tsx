@@ -18,7 +18,7 @@ const PluginDrawer: React.FC<Props> = ({ name, ...rest }) => {
 
   return (
     <Drawer
-      title="编辑插件"
+      title="配置插件"
       width={400}
       visible={visiable}
       destroyOnClose
