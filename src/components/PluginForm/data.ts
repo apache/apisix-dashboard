@@ -1,10 +1,8 @@
-interface Props extends PluginForm.PluginMeta {
-  name: PluginForm.PluginName;
-}
-
-export const list: Props[] = [
+export const list: PluginForm.PluginProps[] = [
   {
     name: 'limit-req',
-    desc: '限流限制请求速度的插件，使用的是漏桶算法。',
+  },
+  {
+    name: 'key-auth',
   },
 ];

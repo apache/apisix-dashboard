@@ -1,23 +1,21 @@
 import React from 'react';
 import { Card } from 'antd';
 import { CardProps } from 'antd/lib/card';
-
-import { getPluginMeta } from '@/components/PluginForm';
+import { useIntl } from 'umi';
 
 interface Props extends CardProps {
-  name: PluginForm.PluginName;
+  name: string;
 }
 
 const PluginCard: React.FC<Props> = ({ name, actions }) => {
-  const plugin = getPluginMeta(name);
-  if (!plugin) {
-    return null;
-  }
-  const { desc = '' } = plugin;
+  const { formatMessage } = useIntl();
 
   return (
     <Card style={{ width: 300 }} actions={actions}>
-      <Card.Meta title={name} description={desc} />
+      <Card.Meta
+        title={name}
+        description={formatMessage({ id: `PluginForm.plugin.${name}.desc` })}
+      />
     </Card>
   );
 };
