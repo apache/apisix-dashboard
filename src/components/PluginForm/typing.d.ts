@@ -47,4 +47,8 @@ declare namespace PluginForm {
       }>;
     };
   }
+
+  interface PluginProps {
+    name: string;
+  }
 }

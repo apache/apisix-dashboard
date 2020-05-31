@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card } from 'antd';
-import { SettingOutlined } from '@ant-design/icons';
+import { SettingOutlined, LinkOutlined } from '@ant-design/icons';
 
-import { fetchPluginList } from '@/components/PluginForm';
+import { pluginList } from '@/components/PluginForm';
 import PanelSection from '../PanelSection';
 import PluginDrawer from './PluginDrawer';
 import PluginCard from './PluginCard';
@@ -11,15 +11,11 @@ const sectionStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 33.333%)',
   gridRowGap: 10,
+  gridColumnGap: 10,
 };
 
 const CreateStep3: React.FC = () => {
-  const [pluginList, setPluginList] = useState<string[]>([]);
   const [currentPlugin, setCurrentPlugin] = useState<string | undefined>();
-
-  useEffect(() => {
-    fetchPluginList().then((data) => setPluginList(data));
-  }, []);
 
   // TODO: 设置插件黑名单（不展示的插件）
   // TODO: 获取 Route 已启用插件
@@ -36,10 +32,20 @@ const CreateStep3: React.FC = () => {
         </Card>
       </PanelSection>
       <PanelSection title="未启用" style={sectionStyle}>
-        {pluginList.map((name) => (
+        {pluginList.map(({ name }) => (
           <PluginCard
             name={name}
-            actions={[<SettingOutlined onClick={() => setCurrentPlugin(name)} />]}
+            actions={[
+              <SettingOutlined onClick={() => setCurrentPlugin(name)} />,
+              <LinkOutlined
+                onClick={() =>
+                  window.open(
+                    `https://github.com/apache/incubator-apisix/blob/master/doc/plugins/${name}.md`,
+                  )
+                }
+              />,
+            ]}
+            key={name}
           />
         ))}
       </PanelSection>
