@@ -17,7 +17,7 @@ const Create: React.FC = () => {
     advancedMatchingRules: [],
   });
 
-  const [currentStep] = useState(2);
+  const [currentStep] = useState(0);
   const [stepHeader] = useState(['定义 API 请求', '定义 API 后端服务', '插件配置', '预览']);
   const data = {
     step1Data,
