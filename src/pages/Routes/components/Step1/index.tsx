@@ -20,18 +20,20 @@ const formItemLayout = {
   },
 };
 
+const initEditModalData: RoutesModule.MatchingRule = {
+  paramsLocation: 'query',
+  paramsName: '',
+  paramsExpresstion: '==',
+  paramsValue: '',
+  key: '',
+};
+
 const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
   const { step1Data } = data;
   const { hosts, paths, advancedMatchingRules } = step1Data;
   const [form] = Form.useForm();
   const [modalVisible, setModalVisible] = useState(false);
-  const [editModalData, setEditModalData] = useState<RoutesModule.MatchingRule>({
-    paramsLocation: 'query',
-    paramsName: '',
-    paramsExpresstion: '==',
-    paramsValue: '',
-    key: '',
-  });
+  const [editModalData, setEditModalData] = useState<RoutesModule.MatchingRule>(initEditModalData);
   const [protocolValueList, setProtocolValueList] = useState<HttpType[]>(['HTTP', 'HTTPS']);
   const protocolList = ['HTTP', 'HTTPS', 'WebSocket'];
   const httpMethodsOptionList = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'];
@@ -263,6 +265,12 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
     setModalVisible(false);
   };
 
+  const handleClose = () => {
+    // TODO: Data not updated in a timely manner
+    setEditModalData(initEditModalData);
+    modalForm.resetFields();
+  };
+
   const renderAdvancedMatchingRules = () => (
     <>
       <PanelSection title="高级路由匹配条件">
@@ -284,56 +292,62 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
 
   return (
     <>
-      {modalVisible && (
-        <Modal title="新增" centered visible onOk={handleOk} onCancel={handleCancel} destroyOnClose>
-          <Form
-            form={modalForm}
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 20 }}
-            initialValues={editModalData}
+      <Modal
+        title="新增"
+        centered
+        visible={modalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        afterClose={handleClose}
+        destroyOnClose
+      >
+        <Form
+          form={modalForm}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 20 }}
+          initialValues={editModalData}
+        >
+          <Form.Item
+            label="参数位置"
+            name="paramsLocation"
+            rules={[{ required: true, message: '请选择参数位置' }]}
           >
-            <Form.Item
-              label="参数位置"
-              name="paramsLocation"
-              rules={[{ required: true, message: '请选择参数位置' }]}
-            >
-              <Select>
-                <Option value="header">header</Option>
-                <Option value="query">query</Option>
-                <Option value="params">params</Option>
-                <Option value="cookie">cookie</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="参数名称"
-              name="paramsName"
-              rules={[{ required: true, message: '请输入参数名称' }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="运算符"
-              name="paramsExpresstion"
-              rules={[{ required: true, message: '请选择运算符' }]}
-            >
-              <Select>
-                <Option value="==">等于</Option>
-                <Option value="～=">不等于</Option>
-                <Option value=">">大于</Option>
-                <Option value="<">小于</Option>
-                <Option value="~~">正则匹配</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="值"
-              name="paramsValue"
-              rules={[{ required: true, message: '请输入参数值' }]}
-            >
-              <Input />
-            </Form.Item>
-          </Form>
-        </Modal>
-      )}
+            <Select>
+              <Option value="header">header</Option>
+              <Option value="query">query</Option>
+              <Option value="params">params</Option>
+              <Option value="cookie">cookie</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="参数名称"
+            name="paramsName"
+            rules={[{ required: true, message: '请输入参数名称' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="运算符"
+            name="paramsExpresstion"
+            rules={[{ required: true, message: '请选择运算符' }]}
+          >
+            <Select>
+              <Option value="==">等于</Option>
+              <Option value="～=">不等于</Option>
+              <Option value=">">大于</Option>
+              <Option value="<">小于</Option>
+              <Option value="~~">正则匹配</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="值"
+            name="paramsValue"
+            rules={[{ required: true, message: '请输入参数值' }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
       {renderMeta()}
       {renderBaseRequestConfig()}
       {renderAdvancedMatchingRules()}
