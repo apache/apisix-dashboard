@@ -1,4 +1,5 @@
 export default {
+  'app.settings.admin-api': '管理 API 配置',
   'app.settings.item.admin-api-schema': '管理 API 协议',
   'app.settings.item.admin-api-host': '管理 API 地址',
   'app.settings.item.admin-api-path': '管理 API 路径',

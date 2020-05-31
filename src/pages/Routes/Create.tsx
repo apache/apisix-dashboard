@@ -3,6 +3,7 @@ import { Card, Steps } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import Step1 from './components/Step1';
 import styles from './Create.less';
+import CreateStep3 from './components/CreateStep3';
 
 const { Step } = Steps;
 
@@ -32,16 +33,19 @@ const Create: React.FC = () => {
   };
 
   const renderStep = () => {
-    return (
-      <>
-        {Boolean(currentStep === 0) && (
+    switch (currentStep) {
+      case 0:
+        return (
           <Step1
             data={data}
             onChange={(params: RoutesModule.Step1DataProps) => handleChange(currentStep, params)}
           />
-        )}
-      </>
-    );
+        );
+      case 2:
+        return <CreateStep3 />;
+      default:
+        return null;
+    }
   };
 
   return (

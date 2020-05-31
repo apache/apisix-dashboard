@@ -3,7 +3,7 @@ import { notification } from 'antd';
 import { RequestConfig, history } from 'umi';
 import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
 
-import { getAdminAPIConfig } from '@/pages/Settings';
+import { getAdminAPIConfig } from '@/pages/Setting';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { queryCurrent } from '@/services/user';
@@ -13,8 +13,8 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   settings?: LayoutSettings;
 }> {
-  // 如果是登录页面，不执行
-  if (history.location.pathname !== '/user/login') {
+  // 如果是设置页面，不执行
+  if (history.location.pathname !== '/setting') {
     try {
       const currentUser = await queryCurrent();
       return {
@@ -22,7 +22,7 @@ export async function getInitialState(): Promise<{
         settings: defaultSettings,
       };
     } catch (error) {
-      history.push('/user/login');
+      history.push('/setting');
     }
   }
   return {
@@ -83,12 +83,12 @@ const errorHandler = (error: { response: Response; data: any }): Promise<Respons
   return Promise.reject(response);
 };
 
-const adminAPIConfig = getAdminAPIConfig();
+const { schema, host, path, key } = getAdminAPIConfig();
 export const request: RequestConfig = {
-  prefix: `${adminAPIConfig.schema}://${adminAPIConfig.host}${adminAPIConfig.path}${adminAPIConfig.prefix}`,
+  prefix: `${schema}://${host}${path}`,
   errorHandler,
   credentials: 'same-origin',
   headers: {
-    'X-API-KEY': adminAPIConfig.key,
+    'X-API-KEY': key,
   },
 };

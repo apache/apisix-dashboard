@@ -1,4 +1,5 @@
 export default {
+  'app.settings.admin-api': 'Admin API Config',
   'app.settings.item.admin-api-schema': 'Admin API Schema',
   'app.settings.item.admin-api-host': 'Admin API Host',
   'app.settings.item.admin-api-path': 'Admin API Path',

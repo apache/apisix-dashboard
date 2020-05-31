@@ -1,9 +1,8 @@
 import React, { useCallback } from 'react';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { SettingOutlined, UserOutlined, SettingFilled } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import { ClickParam } from 'antd/es/menu';
 import { history, useModel } from 'umi';
-import { getPageQuery } from '@/utils/utils';
 
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
@@ -16,17 +15,13 @@ export interface GlobalHeaderRightProps {
 /**
  * 退出登录，并且将当前的 url 保存
  */
-const loginOut = async () => {
-  const { redirect } = getPageQuery();
-  // Note: There may be security issues, please note
-  if (window.location.pathname !== '/user/login' && !redirect) {
-    history.replace({
-      pathname: '/user/login',
-      search: stringify({
-        redirect: window.location.href,
-      }),
-    });
-  }
+const settings = async () => {
+  history.replace({
+    pathname: '/setting',
+    search: stringify({
+      redirect: window.location.href,
+    }),
+  });
 };
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
@@ -34,9 +29,9 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
   const onMenuClick = useCallback((event: ClickParam) => {
     const { key } = event;
-    if (key === 'logout') {
+    if (key === 'settings') {
       setInitialState({ ...initialState, currentUser: undefined });
-      loginOut();
+      settings();
       return;
     }
     history.push(`/account/${key}`);
@@ -80,9 +75,9 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       )}
       {menu && <Menu.Divider />}
 
-      <Menu.Item key="logout">
-        <LogoutOutlined />
-        退出登录
+      <Menu.Item key="settings">
+        <SettingFilled />
+        修改设置
       </Menu.Item>
     </Menu>
   );

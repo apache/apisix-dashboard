@@ -1,24 +1,14 @@
 const routes = [
   {
-    path: '/user',
-    layout: false,
-    routes: [
-      {
-        name: 'login',
-        path: '/user/login',
-        component: './user/login',
-      },
-    ],
-  },
-  {
     path: '/',
-    redirect: '/settings',
+    redirect: '/ssl',
   },
   {
-    name: 'settings',
-    path: '/settings',
-    icon: 'setting',
-    component: './Settings',
+    name: 'setting',
+    path: '/setting',
+    component: './Setting',
+    layout: false,
+    hideInMenu: true,
   },
   {
     name: 'ssl',

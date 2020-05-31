@@ -52,7 +52,7 @@ export default {
   'menu.ssl.list': 'SSL 列表',
   'menu.ssl.edit': '编辑',
   'menu.ssl.create': '创建',
-  'menu.settings': '设置',
+  'menu.setting': '设置',
   'menu.routes': '路由',
   'menu.routes.create': '创建',
 };
