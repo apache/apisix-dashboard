@@ -69,7 +69,11 @@ const CreateStep3: React.FC<Props> = ({ data }) => {
           />
         ))}
       </PanelSection>
-      <PluginDrawer name={currentPlugin} onFinish={() => {}} />
+      <PluginDrawer
+        name={currentPlugin}
+        active={Boolean(activeList.find((item) => item.name === currentPlugin))}
+        onFinish={() => {}}
+      />
     </>
   );
 };
