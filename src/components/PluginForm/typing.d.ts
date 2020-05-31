@@ -51,9 +51,4 @@ declare namespace PluginForm {
   interface PluginProps {
     name: string;
   }
-
-  interface PluginLocaleProps {
-    name: string;
-    desc: string;
-  }
 }
