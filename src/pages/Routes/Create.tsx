@@ -8,7 +8,7 @@ import CreateStep3 from './components/CreateStep3';
 const { Step } = Steps;
 
 const Create: React.FC = () => {
-  const [step1Data, setStep1Data] = useState<RoutesModule.Step1DataProps>({
+  const [step1Data, setStep1Data] = useState<RouteModule.Step1Data>({
     name: '',
     protocol: [],
     hosts: [''],
@@ -17,19 +17,22 @@ const Create: React.FC = () => {
     advancedMatchingRules: [],
   });
 
+  const [step3Data, setStep3Data] = useState<RouteModule.Step3Data>({
+    plugins: {
+      'limit-count': {
+        count: 2,
+        time_window: 60,
+        rejected_code: 503,
+        key: 'remote_addr',
+      },
+    },
+  });
+
   const [currentStep] = useState(2);
   const [stepHeader] = useState(['定义 API 请求', '定义 API 后端服务', '插件配置', '预览']);
   const data = {
     step1Data,
-  };
-
-  const handleChange = (step: number, params: RoutesModule.Step1DataProps) => {
-    switch (step) {
-      case 0:
-        setStep1Data({ ...step1Data, ...params });
-        break;
-      default:
-    }
+    step3Data,
   };
 
   const renderStep = () => {
@@ -38,11 +41,16 @@ const Create: React.FC = () => {
         return (
           <Step1
             data={data}
-            onChange={(params: RoutesModule.Step1DataProps) => handleChange(currentStep, params)}
+            onChange={(params: RouteModule.Step1Data) => setStep1Data({ ...step1Data, ...params })}
           />
         );
       case 2:
-        return <CreateStep3 />;
+        return (
+          <CreateStep3
+            data={data}
+            onChange={(params: RouteModule.Step3Data) => setStep3Data({ ...step3Data, ...params })}
+          />
+        );
       default:
         return null;
     }

@@ -16,12 +16,12 @@ const formItemLayout = {
   },
 };
 
-const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
+const Step1: React.FC<RouteModule.Data> = ({ data, onChange }) => {
   const { step1Data } = data;
   const { hosts, paths, advancedMatchingRules } = step1Data;
   const [form] = Form.useForm();
   const [modalVisible, setModalVisible] = useState(false);
-  const [editModalData, setEditModalData] = useState<RoutesModule.MatchingRule>({
+  const [editModalData, setEditModalData] = useState<RouteModule.MatchingRule>({
     paramsLocation: 'query',
     paramsName: '',
     paramsExpresstion: '==',
@@ -33,7 +33,7 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
     setModalVisible(true);
   };
 
-  const handleEdit = (record: RoutesModule.MatchingRule) => {
+  const handleEdit = (record: RouteModule.MatchingRule) => {
     setEditModalData(record);
     requestAnimationFrame(() => {
       setModalVisible(true);
@@ -69,7 +69,7 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
     {
       title: '操作',
       key: 'action',
-      render: (_: any, record: RoutesModule.MatchingRule) => (
+      render: (_: any, record: RouteModule.MatchingRule) => (
         <Space size="middle">
           <a onClick={() => handleEdit(record)}>编辑</a>
           <a onClick={() => handleRemove(record.key)}>移除</a>
@@ -218,7 +218,7 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
     modalForm.validateFields().then((value) => {
       onChange({
         advancedMatchingRules: advancedMatchingRules.concat({
-          ...(value as RoutesModule.MatchingRule),
+          ...(value as RouteModule.MatchingRule),
           key: Math.random().toString(36).slice(2),
         }),
       });
