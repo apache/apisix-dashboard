@@ -85,9 +85,9 @@ const CreateStep3: React.FC<Props> = ({ data, onChange }) => {
           setCurrentPlugin(undefined);
         }}
         onClose={() => setCurrentPlugin(undefined)}
-        onFinish={(value) => {
-          onChange(merge(data.step3Data, { plugins: { [currentPlugin as string]: value } }));
-        }}
+        onFinish={(value) =>
+          onChange(merge(data.step3Data, { plugins: { [currentPlugin as string]: value } }))
+        }
       />
     </>
   );
