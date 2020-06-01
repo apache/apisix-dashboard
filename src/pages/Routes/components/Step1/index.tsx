@@ -8,8 +8,8 @@ import PanelSection from '../PanelSection';
 const { TextArea } = Input;
 const { Option } = Select;
 
-type HttpMethodsListType = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH';
-type HttpType = 'HTTPS' | 'HTTP';
+type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH';
+type RequestProtocol = 'HTTPS' | 'HTTP';
 
 const formItemLayout = {
   labelCol: {
@@ -20,7 +20,7 @@ const formItemLayout = {
   },
 };
 
-const initEditModalData: RoutesModule.MatchingRule = {
+const DEFAULT_MODAL_DATA: RoutesModule.MatchingRule = {
   paramsLocation: 'query',
   paramsName: '',
   paramsExpresstion: '==',
@@ -33,12 +33,12 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
   const { hosts, paths, advancedMatchingRules } = step1Data;
   const [form] = Form.useForm();
   const [modalVisible, setModalVisible] = useState(false);
-  const [editModalData, setEditModalData] = useState<RoutesModule.MatchingRule>(initEditModalData);
-  const [protocolValueList, setProtocolValueList] = useState<HttpType[]>(['HTTP', 'HTTPS']);
+  const [editModalData, setEditModalData] = useState(DEFAULT_MODAL_DATA);
+  const [protocolValueList, setProtocolValueList] = useState<RequestProtocol[]>(['HTTP', 'HTTPS']);
   const protocolList = ['HTTP', 'HTTPS', 'WebSocket'];
-  const httpMethodsOptionList = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'];
-  const [httpMethodsList, setHttpMethodsList] = useState({
-    checkedList: httpMethodsOptionList,
+  const httpMethodOptionList = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'];
+  const [httpMethodList, setHttpMethodList] = useState({
+    checkedList: httpMethodOptionList,
     indeterminate: false,
     checkAll: true,
   });
@@ -172,79 +172,77 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
   const renderBaseRequestConfig = () => {
     const onProtocolChange = (e: CheckboxValueType[]) => {
       if (!e.includes('HTTP') && !e.includes('HTTPS')) return;
-      setProtocolValueList(e as HttpType[]);
+      setProtocolValueList(e as RequestProtocol[]);
     };
     const onMethodsChange = (checkedList: CheckboxValueType[]) => {
-      setHttpMethodsList({
-        checkedList: checkedList as HttpMethodsListType[],
-        indeterminate: !!checkedList.length && checkedList.length < httpMethodsOptionList.length,
-        checkAll: checkedList.length === httpMethodsOptionList.length,
+      setHttpMethodList({
+        checkedList: checkedList as HttpMethod[],
+        indeterminate: !!checkedList.length && checkedList.length < httpMethodOptionList.length,
+        checkAll: checkedList.length === httpMethodOptionList.length,
       });
     };
     const onCheckAllChange = (e: CheckboxChangeEvent) => {
-      setHttpMethodsList({
-        checkedList: e.target.checked ? httpMethodsOptionList : [],
+      setHttpMethodList({
+        checkedList: e.target.checked ? httpMethodOptionList : [],
         indeterminate: false,
         checkAll: e.target.checked,
       });
     };
     return (
-      <>
-        <PanelSection title="请求基础定义">
-          <Form {...formItemLayout} form={form} layout="horizontal" className={styles.stepForm}>
-            <Form.Item
-              label="协议"
-              name="protocol"
-              rules={[{ required: true, message: '请勾选协议' }]}
-            >
-              <Row>
-                <Checkbox.Group
-                  options={protocolList}
-                  value={protocolValueList}
-                  onChange={onProtocolChange}
-                />
-              </Row>
-            </Form.Item>
-            {/* TODO: name */}
-            <Form.Item label="HOST" rules={[{ required: true, message: '请输入 HOST' }]}>
-              {renderHosts()}
-              <Button
-                type="primary"
-                onClick={() => {
-                  addHost();
-                }}
-              >
-                增加
-              </Button>
-            </Form.Item>
-            {/* TODO: name */}
-            <Form.Item label="PATH">
-              {renderPaths()}
-              <Button onClick={addPath} type="primary">
-                增加
-              </Button>
-            </Form.Item>
-            <Form.Item
-              label="HTTP Methods"
-              name="httpMethods"
-              rules={[{ required: true, message: '请勾选 HTTP Methods' }]}
-            >
-              <Checkbox
-                indeterminate={httpMethodsList.indeterminate}
-                onChange={onCheckAllChange}
-                checked={httpMethodsList.checkAll}
-              >
-                ANY
-              </Checkbox>
+      <PanelSection title="请求基础定义">
+        <Form {...formItemLayout} form={form} layout="horizontal" className={styles.stepForm}>
+          <Form.Item
+            label="协议"
+            name="protocol"
+            rules={[{ required: true, message: '请勾选协议' }]}
+          >
+            <Row>
               <Checkbox.Group
-                options={httpMethodsOptionList}
-                value={httpMethodsList.checkedList}
-                onChange={onMethodsChange}
+                options={protocolList}
+                value={protocolValueList}
+                onChange={onProtocolChange}
               />
-            </Form.Item>
-          </Form>
-        </PanelSection>
-      </>
+            </Row>
+          </Form.Item>
+          {/* TODO: name */}
+          <Form.Item label="HOST" rules={[{ required: true, message: '请输入 HOST' }]}>
+            {renderHosts()}
+            <Button
+              type="primary"
+              onClick={() => {
+                addHost();
+              }}
+            >
+              增加
+            </Button>
+          </Form.Item>
+          {/* TODO: name */}
+          <Form.Item label="PATH">
+            {renderPaths()}
+            <Button onClick={addPath} type="primary">
+              增加
+            </Button>
+          </Form.Item>
+          <Form.Item
+            label="HTTP Methods"
+            name="httpMethods"
+            rules={[{ required: true, message: '请勾选 HTTP Methods' }]}
+          >
+            <Checkbox
+              indeterminate={httpMethodList.indeterminate}
+              onChange={onCheckAllChange}
+              checked={httpMethodList.checkAll}
+            >
+              ANY
+            </Checkbox>
+            <Checkbox.Group
+              options={httpMethodOptionList}
+              value={httpMethodList.checkedList}
+              onChange={onMethodsChange}
+            />
+          </Form.Item>
+        </Form>
+      </PanelSection>
     );
   };
 
@@ -267,7 +265,7 @@ const Step1: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
 
   const handleClose = () => {
     // TODO: Data not updated in a timely manner
-    setEditModalData(initEditModalData);
+    setEditModalData(DEFAULT_MODAL_DATA);
     modalForm.resetFields();
   };
 
