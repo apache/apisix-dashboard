@@ -72,7 +72,16 @@ const CreateStep3: React.FC<Props> = ({ data }) => {
       <PluginDrawer
         name={currentPlugin}
         active={Boolean(activeList.find((item) => item.name === currentPlugin))}
-        onFinish={() => {}}
+        onActive={(name: string) => {
+          setInactiveList(inactiveList.filter((item) => item.name !== name));
+          setActiveList(activeList.concat({ name }));
+        }}
+        onInactive={(name: string) => {
+          setActiveList(activeList.filter((item) => item.name !== name));
+          setInactiveList(inactiveList.concat({ name }));
+          setCurrentPlugin(undefined);
+        }}
+        onFinish={(value) => console.log('plugin data:', value)}
       />
     </>
   );
