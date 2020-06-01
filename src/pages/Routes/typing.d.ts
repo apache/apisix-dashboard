@@ -25,6 +25,7 @@ declare namespace RouteModule {
   interface Data {
     data: {
       step1Data: Step1Data;
+      step2Data: Step2Data;
       step3Data: Step3Data;
     };
     onChange(data: T): void;
@@ -43,7 +44,7 @@ declare namespace RouteModule {
     key: string;
   }
 
-  type Step2DataProps = {
+  type Step2Data = {
     backendProtocol: 'HTTP' | 'HTTPS' | 'originalRequest';
     backendAddressList: backendAddressItemProps[];
     upstream_header: UpstreamHeader[];

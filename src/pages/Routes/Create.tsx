@@ -18,7 +18,7 @@ const Create: React.FC = () => {
     advancedMatchingRules: [],
   });
 
-  const [step2Data, setStep2Data] = useState<RouteModule.Step2DataProps>({
+  const [step2Data, setStep2Data] = useState<RouteModule.Step2Data>({
     backendProtocol: 'originalRequest',
     backendAddressList: [{ host: '', port: 0, weight: 0 }],
     upstream_header: [],
@@ -48,10 +48,7 @@ const Create: React.FC = () => {
     step3Data,
   };
 
-  const handleChange = (
-    step: number,
-    params: RouteModule.Step1Data | RouteModule.Step2DataProps,
-  ) => {
+  const handleChange = (step: number, params: RouteModule.Step1Data | RouteModule.Step2Data) => {
     switch (step) {
       case 0:
         setStep1Data({ ...step1Data, ...params });
@@ -76,7 +73,7 @@ const Create: React.FC = () => {
         return (
           <Step2
             data={data}
-            onChange={(params: RouteModule.Step2DataProps) => handleChange(currentStep, params)}
+            onChange={(params: RouteModule.Step2Data) => handleChange(currentStep, params)}
           />
         );
       case 2:

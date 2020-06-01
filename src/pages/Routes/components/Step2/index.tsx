@@ -6,7 +6,7 @@ import styles from '../../Create.less';
 
 const { TextArea } = Input;
 
-const initEditModalData: RoutesModule.UpstreamHeader = {
+const DEFAULT_MODAL_DATA: RouteModule.UpstreamHeader = {
   header_name: '',
   header_value: '',
   header_desc: '',
@@ -22,15 +22,14 @@ const formItemLayout = {
   },
 };
 
-const Step2: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
+const Step2: React.FC<RouteModule.Data> = ({ data, onChange }) => {
   const { step2Data } = data;
-  const { upstream_header } = step2Data;
+  const { upstream_header, backendAddressList, backendProtocol } = step2Data;
   const [modalVisible, setModalVisible] = useState(false);
   const [modalForm] = Form.useForm();
-  const [editModalData, setEditModalData] = useState<RoutesModule.UpstreamHeader>(
-    initEditModalData,
+  const [editModalData, setEditModalData] = useState<RouteModule.UpstreamHeader>(
+    DEFAULT_MODAL_DATA,
   );
-  const { backendAddressList, backendProtocol } = step2Data;
   const [form] = Form.useForm();
 
   const handleRemove = (key: string) => {
@@ -56,7 +55,7 @@ const Step2: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
     {
       title: '操作',
       key: 'action',
-      render: (_: any, record: RoutesModule.UpstreamHeader) => (
+      render: (_: any, record: RouteModule.UpstreamHeader) => (
         <Space size="middle">
           <a
             onClick={() => {
@@ -91,7 +90,7 @@ const Step2: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
             <InputNumber placeholder="Port" />
           </Col>
           <Col span={4}>
-            <InputNumber placeholder="Weights" />
+            <InputNumber placeholder="Weight" />
           </Col>
           <Col span={4}>
             <Space>
@@ -143,12 +142,7 @@ const Step2: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
           </Form.Item>
           <Form.Item label="后端地址" rules={[{ required: true, message: '请输入后端地址' }]}>
             {renderBackendAddress()}
-            <Button
-              type="primary"
-              onClick={() => {
-                addBackendAddress();
-              }}
-            >
+            <Button type="primary" onClick={addBackendAddress}>
               增加
             </Button>
           </Form.Item>
@@ -198,7 +192,7 @@ const Step2: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
       modalForm.validateFields().then((value) => {
         onChange({
           upstream_header: upstream_header.concat({
-            ...(value as RoutesModule.UpstreamHeader),
+            ...(value as RouteModule.UpstreamHeader),
             key: Math.random().toString(36).slice(2),
           }),
         });
@@ -210,7 +204,7 @@ const Step2: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
     };
 
     const handleClose = () => {
-      setEditModalData(initEditModalData);
+      setEditModalData(DEFAULT_MODAL_DATA);
       modalForm.resetFields();
     };
 
@@ -237,7 +231,11 @@ const Step2: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
           >
             <Input />
           </Form.Item>
-          <Form.Item label="值" name="header_value" rules={[{ required: true, message: '值' }]}>
+          <Form.Item
+            label="值"
+            name="header_value"
+            rules={[{ required: true, message: '请输入值' }]}
+          >
             <Input />
           </Form.Item>
           <Form.Item label="描述" name="upstream_header_desc">
