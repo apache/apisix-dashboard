@@ -45,12 +45,6 @@ const RequestConfigView: React.FC<Props> = ({ data, form, onChange }) => {
     });
   };
 
-  const addHost = () => {
-    onChange({
-      hosts: hosts.concat(''),
-    });
-  };
-
   const renderHosts = () =>
     hosts.map((item, index) => (
       <Row key={`${item + index}`} style={{ marginBottom: '10px' }} gutter={[16, 16]}>
@@ -118,7 +112,7 @@ const RequestConfigView: React.FC<Props> = ({ data, form, onChange }) => {
         {/* TODO: name */}
         <Form.Item label="HOST" rules={[{ required: true, message: '请输入 HOST' }]}>
           {renderHosts()}
-          <Button type="primary" onClick={addHost}>
+          <Button type="primary" onClick={() => onChange({ hosts: hosts.concat('') })}>
             增加
           </Button>
         </Form.Item>
