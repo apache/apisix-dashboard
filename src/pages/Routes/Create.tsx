@@ -7,6 +7,7 @@ import Step2 from './components/Step2';
 import styles from './Create.less';
 import CreateStep3 from './components/CreateStep3';
 import ActionBar from './components/ActionBar';
+import CreateStep4 from './components/CreateStep4';
 
 const { Step } = Steps;
 
@@ -68,6 +69,8 @@ const Create: React.FC = () => {
         );
       case 2:
         return <CreateStep3 data={data} onChange={setStep3Data} />;
+      case 3:
+        return <CreateStep4 data={data} onChange={() => {}} />;
       default:
         return null;
     }

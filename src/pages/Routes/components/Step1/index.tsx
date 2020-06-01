@@ -9,7 +9,7 @@ const Step1: React.FC<RouteModule.Data> = (props) => {
   const [form] = Form.useForm();
   return (
     <>
-      <MetaView form={form} />
+      <MetaView form={form} {...props} />
       <RequestConfigView form={form} {...props} />
       <MatchingRulesView {...props} />
     </>

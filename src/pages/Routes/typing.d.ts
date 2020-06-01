@@ -23,6 +23,7 @@ declare namespace RouteModule {
   };
 
   interface Data {
+    disabled?: boolean;
     data: {
       step1Data: Step1Data;
       step2Data: Step2Data;
