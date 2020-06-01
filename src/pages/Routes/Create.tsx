@@ -21,6 +21,12 @@ const Create: React.FC = () => {
   const [step2Data, setStep2Data] = useState<RoutesModule.Step2DataProps>({
     backendProtocol: 'originalRequest',
     backendAddressList: [{ host: '', port: 0, weight: 0 }],
+    upstream_header: [],
+    timeout: {
+      connect: 30000,
+      send: 30000,
+      read: 30000,
+    },
   });
 
   const [currentStep] = useState(1);

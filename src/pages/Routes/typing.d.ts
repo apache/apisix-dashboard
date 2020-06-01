@@ -30,8 +30,21 @@ declare namespace RoutesModule {
     weight: number;
   };
 
+  interface UpstreamHeader {
+    header_name: string;
+    header_value: string;
+    header_desc: string;
+    key: string;
+  }
+
   type Step2DataProps = {
     backendProtocol: 'HTTP' | 'HTTPS' | 'originalRequest';
     backendAddressList: backendAddressItemProps[];
+    upstream_header: UpstreamHeader[];
+    timeout: {
+      connect: number;
+      send: number;
+      read: number;
+    };
   };
 }

@@ -1,8 +1,17 @@
-import React from 'react';
-import { Form, Row, Col, Input, Space, Button, Radio, InputNumber, Table } from 'antd';
+import React, { useState } from 'react';
+import { Form, Row, Col, Input, Space, Button, Radio, InputNumber, Table, Modal } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import PanelSection from '../PanelSection';
 import styles from '../../Create.less';
+
+const { TextArea } = Input;
+
+const initEditModalData: RoutesModule.UpstreamHeader = {
+  header_name: '',
+  header_value: '',
+  header_desc: '',
+  key: '',
+};
 
 const formItemLayout = {
   labelCol: {
@@ -15,8 +24,51 @@ const formItemLayout = {
 
 const Step2: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
   const { step2Data } = data;
+  const { upstream_header } = step2Data;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalForm] = Form.useForm();
+  const [editModalData, setEditModalData] = useState<RoutesModule.UpstreamHeader>(
+    initEditModalData,
+  );
   const { backendAddressList, backendProtocol } = step2Data;
   const [form] = Form.useForm();
+
+  const handleRemove = (key: string) => {
+    onChange({ upstream_header: upstream_header.filter((item) => item.key !== key) });
+  };
+
+  const columns = [
+    {
+      title: '请求头',
+      dataIndex: 'header_name',
+      key: 'header_name',
+    },
+    {
+      title: '值',
+      dataIndex: 'header_value',
+      key: 'header_value',
+    },
+    {
+      title: '描述',
+      dataIndex: 'header_desc',
+      key: 'header_desc',
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (_: any, record: RoutesModule.UpstreamHeader) => (
+        <Space size="middle">
+          <a
+            onClick={() => {
+              handleRemove(record.key);
+            }}
+          >
+            移除
+          </a>
+        </Space>
+      ),
+    },
+  ];
 
   const renderRequestRewrite = () => {
     const onProtocolChange = (e: RadioChangeEvent) => {
@@ -65,7 +117,13 @@ const Step2: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
 
     return (
       <PanelSection title="请求改写">
-        <Form {...formItemLayout} form={form} layout="horizontal" className={styles.stepForm}>
+        <Form
+          {...formItemLayout}
+          form={form}
+          layout="horizontal"
+          className={styles.stepForm}
+          initialValues={step2Data}
+        >
           <Form.Item
             label="协议"
             name="protocol"
@@ -114,12 +172,14 @@ const Step2: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
   };
 
   const renderHttpHeaderRewrite = () => {
+    const handleAdd = () => {
+      setModalVisible(true);
+    };
     return (
       <PanelSection title="HTTP 头改写">
         <div>
           <Button
-            // TODO: Handle HttpHeaderRewrite table
-            // onClick={handleAdd}
+            onClick={handleAdd}
             type="primary"
             style={{
               marginBottom: 16,
@@ -127,14 +187,70 @@ const Step2: React.FC<RoutesModule.StepProps> = ({ data, onChange }) => {
           >
             新增
           </Button>
-          <Table key="table" bordered />
+          <Table key="table" bordered dataSource={upstream_header} columns={columns} />
         </div>
       </PanelSection>
     );
   };
 
+  const renderModal = () => {
+    const handleOk = () => {
+      modalForm.validateFields().then((value) => {
+        onChange({
+          upstream_header: upstream_header.concat({
+            ...(value as RoutesModule.UpstreamHeader),
+            key: Math.random().toString(36).slice(2),
+          }),
+        });
+        setModalVisible(false);
+      });
+    };
+    const handleCancel = () => {
+      setModalVisible(false);
+    };
+
+    const handleClose = () => {
+      setEditModalData(initEditModalData);
+      modalForm.resetFields();
+    };
+
+    return (
+      <Modal
+        title="新增"
+        centered
+        visible={modalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        afterClose={handleClose}
+        destroyOnClose
+      >
+        <Form
+          form={modalForm}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 20 }}
+          initialValues={editModalData}
+        >
+          <Form.Item
+            label="请求头"
+            name="header_name"
+            rules={[{ required: true, message: '请输入请求头' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item label="值" name="header_value" rules={[{ required: true, message: '值' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="描述" name="upstream_header_desc">
+            <TextArea />
+          </Form.Item>
+        </Form>
+      </Modal>
+    );
+  };
+
   return (
     <>
+      {renderModal()}
       {renderRequestRewrite()}
       {renderHttpHeaderRewrite()}
     </>
