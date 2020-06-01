@@ -9,23 +9,34 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const { advancedMatchingRules } = data.step1Data;
 
   const [visible, setVisible] = useState(false);
+
+  const [mode, setMode] = useState<RouteModule.ModalType>('create');
   const [modalForm] = Form.useForm();
 
   const { Option } = Select;
 
   const onOk = () => {
     modalForm.validateFields().then((value) => {
-      const rule = {
-        ...(value as RouteModule.MatchingRule),
-        key: Math.random().toString(36).slice(2),
-      };
-      onChange({ ...data.step1Data, advancedMatchingRules: advancedMatchingRules.concat(rule) });
+      if (mode === 'edit') {
+        const key = modalForm.getFieldValue('key');
+        const newAdvancedMatchingRules = advancedMatchingRules.concat();
+        const findIndex = newAdvancedMatchingRules.findIndex((item) => item.key === key);
+        newAdvancedMatchingRules[findIndex] = { ...(value as RouteModule.MatchingRule), key };
+        onChange({ ...data.step1Data, advancedMatchingRules: newAdvancedMatchingRules });
+      } else {
+        const rule = {
+          ...(value as RouteModule.MatchingRule),
+          key: Math.random().toString(36).slice(2),
+        };
+        onChange({ ...data.step1Data, advancedMatchingRules: advancedMatchingRules.concat(rule) });
+      }
       modalForm.resetFields();
       setVisible(false);
     });
   };
 
   const handleEdit = (record: RouteModule.MatchingRule) => {
+    setMode('edit');
     setVisible(true);
     modalForm.setFieldsValue(record);
   };
@@ -73,7 +84,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const renderModal = () => {
     return (
       <Modal
-        title="新增"
+        title={mode === 'edit' ? '编辑' : '新增'}
         centered
         visible={visible}
         onOk={onOk}
@@ -132,7 +143,10 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
     <PanelSection title="高级路由匹配条件">
       {!disabled && (
         <Button
-          onClick={() => setVisible(true)}
+          onClick={() => {
+            setMode('create');
+            setVisible(true);
+          }}
           type="primary"
           style={{
             marginBottom: 16,

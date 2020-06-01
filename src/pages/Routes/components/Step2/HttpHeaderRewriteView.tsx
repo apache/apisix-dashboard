@@ -11,8 +11,10 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
   const { upstream_header } = data.step2Data;
   const [visible, setVisible] = useState(false);
   const [modalForm] = Form.useForm();
+  const [mode, setMode] = useState<RouteModule.ModalType>('create');
 
   const handleEdit = (record: RouteModule.UpstreamHeader) => {
+    setMode('edit');
     setVisible(true);
     modalForm.setFieldsValue(record);
   };
@@ -65,19 +67,28 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
   const renderModal = () => {
     const handleOk = () => {
       modalForm.validateFields().then((value) => {
-        onChange({
-          upstream_header: upstream_header.concat({
-            ...(value as RouteModule.UpstreamHeader),
-            key: Math.random().toString(36).slice(2),
-          }),
-        });
+        if (mode === 'edit') {
+          const key = modalForm.getFieldValue('key');
+          const newUpstreamHeader = upstream_header.concat();
+          const findIndex = newUpstreamHeader.findIndex((item) => item.key === key);
+          newUpstreamHeader[findIndex] = { ...(value as RouteModule.UpstreamHeader), key };
+          onChange({ upstream_header: newUpstreamHeader, key });
+        } else {
+          onChange({
+            upstream_header: upstream_header.concat({
+              ...(value as RouteModule.UpstreamHeader),
+              key: Math.random().toString(36).slice(2),
+            }),
+          });
+        }
+        modalForm.resetFields();
         setVisible(false);
       });
     };
 
     return (
       <Modal
-        title="新增"
+        title={mode === 'edit' ? '编辑' : '新增'}
         centered
         visible={visible}
         onOk={handleOk}
@@ -115,6 +126,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
       {!disabled && (
         <Button
           onClick={() => {
+            setMode('create');
             setVisible(true);
           }}
           type="primary"
