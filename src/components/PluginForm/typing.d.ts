@@ -1,6 +1,8 @@
 declare namespace PluginForm {
   interface Props {
     name?: string;
+    // FormInstance
+    form: any;
     initialData?: PluginSchema;
     onFinish(values: any): void;
   }
@@ -46,5 +48,9 @@ declare namespace PluginForm {
         pattern?: string;
       }>;
     };
+  }
+
+  interface PluginProps {
+    name: string;
   }
 }
