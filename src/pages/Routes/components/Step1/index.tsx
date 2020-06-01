@@ -20,7 +20,7 @@ const Step1: React.FC<RouteModule.Data> = (props) => {
     <>
       <MetaView form={form} />
       <RequestConfigView form={form} {...props} />
-      <MatchingRulesView form={form} {...props} />
+      <MatchingRulesView {...props} />
     </>
   );
 };

@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
-import { FormInstance } from 'antd/es/form';
 import { Button, Table, Modal, Form, Select, Input, Space } from 'antd';
 
 import PanelSection from '../PanelSection';
 
-interface Props extends RouteModule.Data {
-  form: FormInstance;
-}
+interface Props extends RouteModule.Data {}
 
 const MatchingRulesView: React.FC<Props> = ({ data, onChange }) => {
   const { advancedMatchingRules } = data.step1Data;
 
   const [visible, setVisible] = useState(false);
+  const [modalForm] = Form.useForm();
 
   const { Option } = Select;
-
-  const [modalForm] = Form.useForm();
 
   const onOk = () => {
     modalForm.validateFields().then((value) => {
