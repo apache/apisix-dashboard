@@ -4,9 +4,9 @@ import { Row, Checkbox, Button, Col, Input, Space } from 'antd';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
-import { httpMethodOptionList } from '@/pages/Routes/constants';
+import { FORM_ITEM_LAYOUT, HTTP_METHOD_OPTION_LIST } from '@/pages/Routes/constants';
+
 import PanelSection from '../PanelSection';
-import { formItemLayout } from '.';
 import styles from '../../Create.less';
 
 interface Props extends RouteModule.Data {
@@ -21,7 +21,7 @@ const RequestConfigView: React.FC<Props> = ({ data, form, disabled, onChange }) 
   ]);
   const protocolList = ['HTTP', 'HTTPS', 'WebSocket'];
   const [httpMethodList, setHttpMethodList] = useState({
-    checkedList: httpMethodOptionList,
+    checkedList: HTTP_METHOD_OPTION_LIST,
     indeterminate: false,
     checkAll: true,
   });
@@ -33,13 +33,13 @@ const RequestConfigView: React.FC<Props> = ({ data, form, disabled, onChange }) 
   const onMethodsChange = (checkedList: CheckboxValueType[]) => {
     setHttpMethodList({
       checkedList: checkedList as RouteModule.HttpMethod[],
-      indeterminate: !!checkedList.length && checkedList.length < httpMethodOptionList.length,
-      checkAll: checkedList.length === httpMethodOptionList.length,
+      indeterminate: !!checkedList.length && checkedList.length < HTTP_METHOD_OPTION_LIST.length,
+      checkAll: checkedList.length === HTTP_METHOD_OPTION_LIST.length,
     });
   };
   const onCheckAllChange = (e: CheckboxChangeEvent) => {
     setHttpMethodList({
-      checkedList: e.target.checked ? httpMethodOptionList : [],
+      checkedList: e.target.checked ? HTTP_METHOD_OPTION_LIST : [],
       indeterminate: false,
       checkAll: e.target.checked,
     });
@@ -95,7 +95,7 @@ const RequestConfigView: React.FC<Props> = ({ data, form, disabled, onChange }) 
 
   return (
     <PanelSection title="请求基础定义">
-      <Form {...formItemLayout} form={form} layout="horizontal" className={styles.stepForm}>
+      <Form {...FORM_ITEM_LAYOUT} form={form} layout="horizontal" className={styles.stepForm}>
         <Form.Item label="协议" name="protocol" rules={[{ required: true, message: '请勾选协议' }]}>
           <Row>
             <Checkbox.Group
@@ -138,7 +138,7 @@ const RequestConfigView: React.FC<Props> = ({ data, form, disabled, onChange }) 
             ANY
           </Checkbox>
           <Checkbox.Group
-            options={httpMethodOptionList}
+            options={HTTP_METHOD_OPTION_LIST}
             value={httpMethodList.checkedList}
             onChange={onMethodsChange}
             disabled={disabled}
