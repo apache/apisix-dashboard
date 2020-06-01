@@ -18,7 +18,18 @@ const sectionStyle = {
 
 const CreateStep3: React.FC<Props> = ({ data, onChange }) => {
   // NOTE: Plugin in blacklist WILL NOT be shown on Step3.
-  const pluginBlackList = ['redirect'];
+  const pluginBlackList = [
+    'basic-auth',
+    'batch-requests',
+    'grpc-transcoding',
+    'http-logger',
+    'jwt-auth',
+    'key-auth',
+    'mqtt-proxy',
+    'oauth',
+    'redirect',
+    'wolf-rbac',
+  ];
 
   const list = pluginList.filter(({ name }) => !pluginBlackList.includes(name));
   const [activeList, setActiveList] = useState<PluginForm.PluginProps[]>([]);
