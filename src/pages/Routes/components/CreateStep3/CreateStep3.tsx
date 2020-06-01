@@ -16,7 +16,7 @@ const sectionStyle = {
   gridColumnGap: 10,
 };
 
-const CreateStep3: React.FC<Props> = ({ data, onChange }) => {
+const CreateStep3: React.FC<Props> = ({ data, disabled, onChange }) => {
   // NOTE: Plugin in blacklist WILL NOT be shown on Step3.
   const pluginBlackList = [
     'basic-auth',
@@ -63,24 +63,26 @@ const CreateStep3: React.FC<Props> = ({ data, onChange }) => {
           />
         ))}
       </PanelSection>
-      <PanelSection title="未启用" style={sectionStyle}>
-        {inactiveList.map(({ name }) => (
-          <PluginCard
-            name={name}
-            actions={[
-              <SettingOutlined onClick={() => setCurrentPlugin(name)} />,
-              <LinkOutlined
-                onClick={() =>
-                  window.open(
-                    `https://github.com/apache/incubator-apisix/blob/master/doc/plugins/${name}.md`,
-                  )
-                }
-              />,
-            ]}
-            key={name}
-          />
-        ))}
-      </PanelSection>
+      {!disabled && (
+        <PanelSection title="未启用" style={sectionStyle}>
+          {inactiveList.map(({ name }) => (
+            <PluginCard
+              name={name}
+              actions={[
+                <SettingOutlined onClick={() => setCurrentPlugin(name)} />,
+                <LinkOutlined
+                  onClick={() =>
+                    window.open(
+                      `https://github.com/apache/incubator-apisix/blob/master/doc/plugins/${name}.md`,
+                    )
+                  }
+                />,
+              ]}
+              key={name}
+            />
+          ))}
+        </PanelSection>
+      )}
       <PluginDrawer
         name={currentPlugin}
         initialData={currentPlugin ? data.step3Data.plugins[currentPlugin] : {}}

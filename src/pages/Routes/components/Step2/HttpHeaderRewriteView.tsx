@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import Form, { FormInstance } from 'antd/es/form';
+import Form from 'antd/es/form';
 import { Button, Table, Space, Modal, Input } from 'antd';
-
 import TextArea from 'antd/lib/input/TextArea';
+
 import PanelSection from '../PanelSection';
 
-interface Props extends RouteModule.Data {
-  form: FormInstance;
-}
+interface Props extends RouteModule.Data {}
 
-const HttpHeaderRewriteView: React.FC<Props> = ({ data, onChange }) => {
+const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const { upstream_header } = data.step2Data;
   const [visible, setVisible] = useState(false);
   const [modalForm] = Form.useForm();
@@ -38,28 +36,30 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, onChange }) => {
       dataIndex: 'header_desc',
       key: 'header_desc',
     },
-    {
-      title: '操作',
-      key: 'action',
-      render: (_: any, record: RouteModule.UpstreamHeader) => (
-        <Space size="middle">
-          <a
-            onClick={() => {
-              handleEdit(record);
-            }}
-          >
-            编辑
-          </a>
-          <a
-            onClick={() => {
-              handleRemove(record.key);
-            }}
-          >
-            移除
-          </a>
-        </Space>
-      ),
-    },
+    disabled
+      ? {}
+      : {
+          title: '操作',
+          key: 'action',
+          render: (_: any, record: RouteModule.UpstreamHeader) => (
+            <Space size="middle">
+              <a
+                onClick={() => {
+                  handleEdit(record);
+                }}
+              >
+                编辑
+              </a>
+              <a
+                onClick={() => {
+                  handleRemove(record.key);
+                }}
+              >
+                移除
+              </a>
+            </Space>
+          ),
+        },
   ];
 
   const renderModal = () => {
@@ -112,17 +112,19 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, onChange }) => {
 
   return (
     <PanelSection title="HTTP 头改写">
-      <Button
-        onClick={() => {
-          setVisible(true);
-        }}
-        type="primary"
-        style={{
-          marginBottom: 16,
-        }}
-      >
-        新增
-      </Button>
+      {!disabled && (
+        <Button
+          onClick={() => {
+            setVisible(true);
+          }}
+          type="primary"
+          style={{
+            marginBottom: 16,
+          }}
+        >
+          新增
+        </Button>
+      )}
       <Table key="table" bordered dataSource={upstream_header} columns={columns} />
       {renderModal()}
     </PanelSection>

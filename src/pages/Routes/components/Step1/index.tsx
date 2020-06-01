@@ -1,16 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form } from 'antd';
+
+import { FORM_ITEM_LAYOUT } from '@/pages/Routes/constants';
+import styles from '../../Create.less';
 
 import MetaView from './MetaView';
 import RequestConfigView from './RequestConfigView';
 import MatchingRulesView from './MatchingRulesView';
 
 const Step1: React.FC<RouteModule.Data> = (props) => {
+  const { onChange, data } = props;
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    return () => {
+      onChange(form.getFieldsValue());
+    };
+  }, []);
+
   return (
     <>
-      <MetaView form={form} />
-      <RequestConfigView form={form} {...props} />
+      <Form
+        {...FORM_ITEM_LAYOUT}
+        form={form}
+        layout="horizontal"
+        className={styles.stepForm}
+        initialValues={data.step1Data}
+      >
+        <MetaView {...props} />
+        <RequestConfigView {...props} />
+      </Form>
       <MatchingRulesView {...props} />
     </>
   );

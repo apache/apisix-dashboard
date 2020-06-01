@@ -29,7 +29,7 @@ const ActionBar: React.FC<Props> = ({ step, onChange }) => {
         </Col>
         <Col>
           <Button type="primary" onClick={() => onChange(step + 1)}>
-            {step < 3 ? '下一步' : '创建'}
+            {step < 3 ? '下一步' : '提交'}
           </Button>
         </Col>
       </Row>
