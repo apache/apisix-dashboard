@@ -52,11 +52,11 @@ const Create: React.FC = () => {
       );
     }
 
-    if (step === 3) {
+    if (step === 2) {
       return <CreateStep3 data={data} onChange={setStep3Data} />;
     }
 
-    if (step === 4) {
+    if (step === 3) {
       return <CreateStep4 data={data} onChange={() => {}} />;
     }
 
