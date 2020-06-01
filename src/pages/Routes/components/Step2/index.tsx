@@ -10,7 +10,7 @@ const Step2: React.FC<RouteModule.Data> = (props) => {
   return (
     <>
       <RequestRewriteView form={form} {...props} />
-      <HttpHeaderRewriteView form={form} {...props} />
+      <HttpHeaderRewriteView {...props} />
     </>
   );
 };

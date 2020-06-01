@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Form } from 'antd';
 
 import { FORM_ITEM_LAYOUT } from '@/pages/Routes/constants';
@@ -9,14 +9,8 @@ import RequestConfigView from './RequestConfigView';
 import MatchingRulesView from './MatchingRulesView';
 
 const Step1: React.FC<RouteModule.Data> = (props) => {
-  const { onChange, data } = props;
+  const { data } = props;
   const [form] = Form.useForm();
-
-  useEffect(() => {
-    return () => {
-      onChange(form.getFieldsValue());
-    };
-  }, []);
 
   return (
     <>

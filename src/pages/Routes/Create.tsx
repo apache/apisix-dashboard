@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, Steps } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
@@ -26,17 +26,12 @@ const Create: React.FC = () => {
     step3Data,
   };
 
-  useEffect(() => {
-    console.log('step1Data2', step1Data);
-  }, [step1Data]);
-
   const renderStep = () => {
     if (step === 0) {
       return (
         <Step1
           data={data}
           onChange={(_data: RouteModule.Step1Data) => {
-            console.log(_data);
             setStep1Data(_data);
           }}
         />
@@ -52,11 +47,11 @@ const Create: React.FC = () => {
       );
     }
 
-    if (step === 3) {
+    if (step === 2) {
       return <CreateStep3 data={data} onChange={setStep3Data} />;
     }
 
-    if (step === 4) {
+    if (step === 3) {
       return <CreateStep4 data={data} onChange={() => {}} />;
     }
 
