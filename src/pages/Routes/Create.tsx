@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, Steps } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
@@ -25,10 +25,6 @@ const Create: React.FC = () => {
     step2Data,
     step3Data,
   };
-
-  useEffect(() => {
-    console.log('step1Data2', step1Data);
-  }, [step1Data]);
 
   const renderStep = () => {
     if (step === 0) {
