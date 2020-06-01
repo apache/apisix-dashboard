@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Steps } from 'antd';
+import { Card, Steps, Row, Col, Button, message } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import Step1 from './components/Step1';
 import styles from './Create.less';
@@ -32,7 +32,7 @@ const Create: React.FC = () => {
     },
   });
 
-  const [currentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(0);
   const [stepHeader] = useState(['定义 API 请求', '定义 API 后端服务', '插件配置', '预览']);
   const data = {
     step1Data,
@@ -55,6 +55,36 @@ const Create: React.FC = () => {
     }
   };
 
+  const renderPageSkip = () => {
+    // TODO: form validation
+    const preStep = () => {
+      setCurrentStep(currentStep - 1);
+    };
+    const nextStep = () => {
+      if (currentStep === 3) {
+        message.success('创建成功');
+        return;
+      }
+      setCurrentStep(currentStep + 1);
+    };
+    return (
+      <div>
+        <Row justify="center" gutter={10}>
+          <Col>
+            <Button type="primary" onClick={preStep} disabled={currentStep === 0}>
+              上一步
+            </Button>
+          </Col>
+          <Col>
+            <Button type="primary" onClick={nextStep}>
+              {currentStep < 3 ? '下一步' : '创建'}
+            </Button>
+          </Col>
+        </Row>
+      </div>
+    );
+  };
+
   return (
     <PageHeaderWrapper>
       <Card bordered={false}>
@@ -64,6 +94,7 @@ const Create: React.FC = () => {
           ))}
         </Steps>
         {renderStep()}
+        {renderPageSkip()}
       </Card>
     </PageHeaderWrapper>
   );
