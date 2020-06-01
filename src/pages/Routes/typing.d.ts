@@ -29,4 +29,8 @@ declare namespace RouteModule {
     };
     onChange(data: T): void;
   }
+
+  type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH';
+
+  type RequestProtocol = 'HTTPS' | 'HTTP';
 }
