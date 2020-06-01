@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Switch, Select, InputNumber, Button } from 'antd';
-import { useForm } from 'antd/es/form/util';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
@@ -98,9 +97,8 @@ const ArrayComponent: React.FC<ArrayComponentProps> = ({
   );
 };
 
-const PluginForm: React.FC<PluginForm.Props> = ({ name, initialData = {}, onFinish }) => {
+const PluginForm: React.FC<PluginForm.Props> = ({ name, form, initialData = {}, onFinish }) => {
   const [schema, setSchema] = useState<PluginForm.PluginSchema>();
-  const [form] = useForm();
 
   useEffect(() => {
     if (name) {
