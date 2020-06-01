@@ -50,18 +50,6 @@ const Create: React.FC = () => {
     step3Data,
   };
 
-  const handleChange = (step: number, params: RouteModule.Step1Data | RouteModule.Step2Data) => {
-    switch (step) {
-      case 0:
-        setStep1Data({ ...step1Data, ...params });
-        break;
-      case 1:
-        setStep2Data({ ...step2Data, ...params });
-        break;
-      default:
-    }
-  };
-
   const renderStep = () => {
     switch (step) {
       case 0:
@@ -75,7 +63,7 @@ const Create: React.FC = () => {
         return (
           <Step2
             data={data}
-            onChange={(params: RouteModule.Step2Data) => handleChange(currentStep, params)}
+            onChange={(params: RouteModule.Step2Data) => setStep2Data({ ...step2Data, ...params })}
           />
         );
       case 2:
