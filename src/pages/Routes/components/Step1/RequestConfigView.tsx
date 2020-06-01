@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import Form, { FormInstance } from 'antd/es/form';
 import { Row, Checkbox, Button, Col, Input, Space } from 'antd';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 import PanelSection from '../PanelSection';
 import { formItemLayout } from '.';
 import styles from '../../Create.less';
-import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { httpMethodOptionList } from '@/pages/Routes/constants';
 
 interface Props extends RouteModule.Data {
