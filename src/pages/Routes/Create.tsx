@@ -25,6 +25,10 @@ const Create: React.FC = () => {
         rejected_code: 503,
         key: 'remote_addr',
       },
+      'basic-auth': {
+        username: 'testuser',
+        password: 'pass',
+      },
     },
   });
 

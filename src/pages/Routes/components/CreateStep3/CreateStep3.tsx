@@ -72,6 +72,7 @@ const CreateStep3: React.FC<Props> = ({ data, onChange }) => {
       </PanelSection>
       <PluginDrawer
         name={currentPlugin}
+        initialData={currentPlugin ? data.step3Data.plugins[currentPlugin] : {}}
         active={Boolean(activeList.find((item) => item.name === currentPlugin))}
         onActive={(name: string) => {
           setInactiveList(inactiveList.filter((item) => item.name !== name));
@@ -83,6 +84,7 @@ const CreateStep3: React.FC<Props> = ({ data, onChange }) => {
           onChange(omit({ ...data.step3Data }, `plugins.${currentPlugin}`));
           setCurrentPlugin(undefined);
         }}
+        onClose={() => setCurrentPlugin(undefined)}
         onFinish={(value) => {
           onChange(merge(data.step3Data, { plugins: { [currentPlugin as string]: value } }));
         }}
