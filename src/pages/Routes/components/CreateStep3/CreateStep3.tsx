@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SettingOutlined, LinkOutlined } from '@ant-design/icons';
+import { omit, merge } from 'lodash';
 
 import { pluginList } from '@/components/PluginForm';
 import PanelSection from '../PanelSection';
@@ -15,7 +16,7 @@ const sectionStyle = {
   gridColumnGap: 10,
 };
 
-const CreateStep3: React.FC<Props> = ({ data }) => {
+const CreateStep3: React.FC<Props> = ({ data, onChange }) => {
   // NOTE: Plugin in blacklist WILL NOT be shown on Step3.
   const pluginBlackList = ['redirect'];
 
@@ -79,9 +80,12 @@ const CreateStep3: React.FC<Props> = ({ data }) => {
         onInactive={(name: string) => {
           setActiveList(activeList.filter((item) => item.name !== name));
           setInactiveList(inactiveList.concat({ name }));
+          onChange(omit({ ...data.step3Data }, `plugins.${currentPlugin}`));
           setCurrentPlugin(undefined);
         }}
-        onFinish={(value) => console.log('plugin data:', value)}
+        onFinish={(value) => {
+          onChange(merge(data.step3Data, { plugins: { [currentPlugin as string]: value } }));
+        }}
       />
     </>
   );

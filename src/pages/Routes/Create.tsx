@@ -45,12 +45,7 @@ const Create: React.FC = () => {
           />
         );
       case 2:
-        return (
-          <CreateStep3
-            data={data}
-            onChange={(params: RouteModule.Step3Data) => setStep3Data({ ...step3Data, ...params })}
-          />
-        );
+        return <CreateStep3 data={data} onChange={setStep3Data} />;
       default:
         return null;
     }
