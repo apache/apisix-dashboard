@@ -2,8 +2,8 @@ import React from 'react';
 import Form, { FormInstance } from 'antd/es/form';
 import { Input } from 'antd';
 
+import { FORM_ITEM_LAYOUT } from '@/pages/Routes/constants';
 import PanelSection from '../PanelSection';
-import { formItemLayout } from '.';
 import styles from '../../Create.less';
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 const MetaView: React.FC<Props> = ({ form }) => {
   return (
     <PanelSection title="名称及其描述">
-      <Form {...formItemLayout} form={form} layout="horizontal" className={styles.stepForm}>
+      <Form {...FORM_ITEM_LAYOUT} form={form} layout="horizontal" className={styles.stepForm}>
         <Form.Item
           label="API 名称"
           name="name"
