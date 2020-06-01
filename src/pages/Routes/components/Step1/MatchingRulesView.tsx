@@ -5,7 +5,7 @@ import PanelSection from '../PanelSection';
 
 interface Props extends RouteModule.Data {}
 
-const MatchingRulesView: React.FC<Props> = ({ data, onChange }) => {
+const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const { advancedMatchingRules } = data.step1Data;
 
   const [visible, setVisible] = useState(false);
@@ -129,15 +129,17 @@ const MatchingRulesView: React.FC<Props> = ({ data, onChange }) => {
 
   return (
     <PanelSection title="高级路由匹配条件">
-      <Button
-        onClick={() => setVisible(true)}
-        type="primary"
-        style={{
-          marginBottom: 16,
-        }}
-      >
-        增加
-      </Button>
+      {!disabled && (
+        <Button
+          onClick={() => setVisible(true)}
+          type="primary"
+          style={{
+            marginBottom: 16,
+          }}
+        >
+          增加
+        </Button>
+      )}
       <Table key="table" bordered dataSource={advancedMatchingRules} columns={columns} />
       {renderModal()}
     </PanelSection>

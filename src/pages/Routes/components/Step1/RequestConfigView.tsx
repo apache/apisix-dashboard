@@ -4,16 +4,16 @@ import { Row, Checkbox, Button, Col, Input, Space } from 'antd';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
+import { httpMethodOptionList } from '@/pages/Routes/constants';
 import PanelSection from '../PanelSection';
 import { formItemLayout } from '.';
 import styles from '../../Create.less';
-import { httpMethodOptionList } from '@/pages/Routes/constants';
 
 interface Props extends RouteModule.Data {
   form: FormInstance;
 }
 
-const RequestConfigView: React.FC<Props> = ({ data, form, onChange }) => {
+const RequestConfigView: React.FC<Props> = ({ data, form, disabled, onChange }) => {
   const { paths, hosts } = data.step1Data;
   const [protocolValueList, setProtocolValueList] = useState<RouteModule.RequestProtocol[]>([
     'HTTP',
@@ -49,11 +49,11 @@ const RequestConfigView: React.FC<Props> = ({ data, form, onChange }) => {
     hosts.map((item, index) => (
       <Row key={`${item + index}`} style={{ marginBottom: '10px' }} gutter={[16, 16]}>
         <Col span={16}>
-          <Input placeholder="HOST" />
+          <Input placeholder="HOST" disabled={disabled} />
         </Col>
         <Col span={4}>
           <Space>
-            {hosts.length > 1 && (
+            {hosts.length > 1 && !disabled && (
               <Button
                 type="primary"
                 danger
@@ -73,29 +73,25 @@ const RequestConfigView: React.FC<Props> = ({ data, form, onChange }) => {
     paths.map((item, index) => (
       <Row key={`${item + index}`} style={{ marginBottom: '10px' }} gutter={[16, 16]}>
         <Col span={16}>
-          <Input placeholder="请输入 Path" />
+          <Input placeholder="请输入 Path" disabled={disabled} />
         </Col>
-        <Col span={4}>
-          <Space>
-            <Button
-              type="primary"
-              danger
-              onClick={() => {
-                onChange({ paths: paths.filter((_, _index) => _index !== index) });
-              }}
-            >
-              删除
-            </Button>
-          </Space>
-        </Col>
+        {!disabled && (
+          <Col span={4}>
+            <Space>
+              <Button
+                type="primary"
+                danger
+                onClick={() => {
+                  onChange({ paths: paths.filter((_, _index) => _index !== index) });
+                }}
+              >
+                删除
+              </Button>
+            </Space>
+          </Col>
+        )}
       </Row>
     ));
-
-  const addPath = () => {
-    onChange({
-      paths: paths.concat(['']),
-    });
-  };
 
   return (
     <PanelSection title="请求基础定义">
@@ -103,6 +99,7 @@ const RequestConfigView: React.FC<Props> = ({ data, form, onChange }) => {
         <Form.Item label="协议" name="protocol" rules={[{ required: true, message: '请勾选协议' }]}>
           <Row>
             <Checkbox.Group
+              disabled={disabled}
               options={protocolList}
               value={protocolValueList}
               onChange={onProtocolChange}
@@ -112,16 +109,20 @@ const RequestConfigView: React.FC<Props> = ({ data, form, onChange }) => {
         {/* TODO: name */}
         <Form.Item label="HOST" rules={[{ required: true, message: '请输入 HOST' }]}>
           {renderHosts()}
-          <Button type="primary" onClick={() => onChange({ hosts: hosts.concat('') })}>
-            增加
-          </Button>
+          {!disabled && (
+            <Button type="primary" onClick={() => onChange({ hosts: hosts.concat('') })}>
+              增加
+            </Button>
+          )}
         </Form.Item>
         {/* TODO: name */}
         <Form.Item label="PATH">
           {renderPaths()}
-          <Button onClick={addPath} type="primary">
-            增加
-          </Button>
+          {!disabled && (
+            <Button onClick={() => onChange({ paths: paths.concat(['']) })} type="primary">
+              增加
+            </Button>
+          )}
         </Form.Item>
         <Form.Item
           label="HTTP Methods"
@@ -132,6 +133,7 @@ const RequestConfigView: React.FC<Props> = ({ data, form, onChange }) => {
             indeterminate={httpMethodList.indeterminate}
             onChange={onCheckAllChange}
             checked={httpMethodList.checkAll}
+            disabled={disabled}
           >
             ANY
           </Checkbox>
@@ -139,6 +141,7 @@ const RequestConfigView: React.FC<Props> = ({ data, form, onChange }) => {
             options={httpMethodOptionList}
             value={httpMethodList.checkedList}
             onChange={onMethodsChange}
+            disabled={disabled}
           />
         </Form.Item>
       </Form>
