@@ -7,12 +7,15 @@ declare namespace RouteModule {
     key: string;
   }
 
+  type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH';
+  type RequestProtocol = 'HTTPS' | 'HTTP' | 'WebSocket';
+
   type Step1Data = {
     name: string;
-    protocol: [];
+    protocols: RequestProtocol[];
     hosts: string[];
     paths: string[];
-    httpMethods: [];
+    httpMethods: HttpMethod[];
     advancedMatchingRules: MatchingRule[];
   };
 
@@ -31,9 +34,6 @@ declare namespace RouteModule {
     };
     onChange(data: T): void;
   }
-
-  type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH';
-  type RequestProtocol = 'HTTPS' | 'HTTP';
 
   type backendAddressItemProps = {
     host: '';

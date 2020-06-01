@@ -15,12 +15,11 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
 
   const onOk = () => {
     modalForm.validateFields().then((value) => {
-      onChange({
-        advancedMatchingRules: advancedMatchingRules.concat({
-          ...(value as RouteModule.MatchingRule),
-          key: Math.random().toString(36).slice(2),
-        }),
-      });
+      const rule = {
+        ...(value as RouteModule.MatchingRule),
+        key: Math.random().toString(36).slice(2),
+      };
+      onChange({ ...data.step1Data, advancedMatchingRules: advancedMatchingRules.concat(rule) });
       modalForm.resetFields();
       setVisible(false);
     });
@@ -32,8 +31,10 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   };
 
   const handleRemove = (key: string) => {
-    const filteredAdvancedMatchingRules = advancedMatchingRules.filter((item) => item.key !== key);
-    onChange({ advancedMatchingRules: filteredAdvancedMatchingRules });
+    onChange({
+      ...data.step1Data,
+      advancedMatchingRules: advancedMatchingRules.filter((item) => item.key !== key),
+    });
   };
 
   const columns = [
