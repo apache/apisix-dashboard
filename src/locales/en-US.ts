@@ -1,3 +1,5 @@
+import { PluginFormEnUS } from '@/components/PluginForm';
+
 import component from './en-US/component';
 import globalHeader from './en-US/globalHeader';
 import menu from './en-US/menu';
@@ -17,4 +19,5 @@ export default {
   ...settings,
   ...pwa,
   ...component,
+  ...PluginFormEnUS,
 };
