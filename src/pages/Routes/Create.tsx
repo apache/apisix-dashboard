@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Card, Steps, Row, Col, Button, message } from 'antd';
+import { Card, Steps } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+
 import Step1 from './components/Step1';
 import styles from './Create.less';
 import CreateStep3 from './components/CreateStep3';
+import ActionBar from './components/ActionBar';
 
 const { Step } = Steps;
 
@@ -28,7 +30,7 @@ const Create: React.FC = () => {
     },
   });
 
-  const [currentStep, setCurrentStep] = useState(0);
+  const [step, setStep] = useState(0);
   const [stepHeader] = useState(['定义 API 请求', '定义 API 后端服务', '插件配置', '预览']);
   const data = {
     step1Data,
@@ -36,7 +38,7 @@ const Create: React.FC = () => {
   };
 
   const renderStep = () => {
-    switch (currentStep) {
+    switch (step) {
       case 0:
         return (
           <Step1
@@ -51,48 +53,20 @@ const Create: React.FC = () => {
     }
   };
 
-  const renderActionBar = () => {
-    // TODO: form validation
-    const onPrev = () => {
-      setCurrentStep(currentStep - 1);
-    };
-    const onNext = () => {
-      if (currentStep === 3) {
-        message.success('创建成功');
-        return;
-      }
-      setCurrentStep(currentStep + 1);
-    };
-    return (
-      <div>
-        <Row justify="center" gutter={10}>
-          <Col>
-            <Button type="primary" onClick={onPrev} disabled={currentStep === 0}>
-              上一步
-            </Button>
-          </Col>
-          <Col>
-            <Button type="primary" onClick={onNext}>
-              {currentStep < 3 ? '下一步' : '创建'}
-            </Button>
-          </Col>
-        </Row>
-      </div>
-    );
-  };
-
   return (
-    <PageHeaderWrapper>
-      <Card bordered={false}>
-        <Steps current={currentStep} className={styles.steps}>
-          {stepHeader.map((item) => (
-            <Step title={item} key={item} />
-          ))}
-        </Steps>
-        {renderStep()}
-      </Card>
-      {renderActionBar()}
-    </PageHeaderWrapper>
+    <>
+      <PageHeaderWrapper>
+        <Card bordered={false}>
+          <Steps current={step} className={styles.steps}>
+            {stepHeader.map((item) => (
+              <Step title={item} key={item} />
+            ))}
+          </Steps>
+          {renderStep()}
+        </Card>
+      </PageHeaderWrapper>
+      <ActionBar step={step} onChange={setStep} />
+    </>
   );
 };
 
