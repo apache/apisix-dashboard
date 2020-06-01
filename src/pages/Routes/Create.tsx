@@ -55,12 +55,12 @@ const Create: React.FC = () => {
     }
   };
 
-  const renderPageSkip = () => {
+  const renderActionBar = () => {
     // TODO: form validation
-    const preStep = () => {
+    const onPrev = () => {
       setCurrentStep(currentStep - 1);
     };
-    const nextStep = () => {
+    const onNext = () => {
       if (currentStep === 3) {
         message.success('创建成功');
         return;
@@ -71,12 +71,12 @@ const Create: React.FC = () => {
       <div>
         <Row justify="center" gutter={10}>
           <Col>
-            <Button type="primary" onClick={preStep} disabled={currentStep === 0}>
+            <Button type="primary" onClick={onPrev} disabled={currentStep === 0}>
               上一步
             </Button>
           </Col>
           <Col>
-            <Button type="primary" onClick={nextStep}>
+            <Button type="primary" onClick={onNext}>
               {currentStep < 3 ? '下一步' : '创建'}
             </Button>
           </Col>
@@ -94,8 +94,8 @@ const Create: React.FC = () => {
           ))}
         </Steps>
         {renderStep()}
-        {renderPageSkip()}
       </Card>
+      {renderActionBar()}
     </PageHeaderWrapper>
   );
 };

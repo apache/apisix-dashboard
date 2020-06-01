@@ -207,12 +207,7 @@ const Step1: React.FC<RouteModule.Data> = ({ data, onChange }) => {
           {/* TODO: name */}
           <Form.Item label="HOST" rules={[{ required: true, message: '请输入 HOST' }]}>
             {renderHosts()}
-            <Button
-              type="primary"
-              onClick={() => {
-                addHost();
-              }}
-            >
+            <Button type="primary" onClick={addHost}>
               增加
             </Button>
           </Form.Item>
