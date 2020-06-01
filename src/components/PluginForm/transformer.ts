@@ -4,7 +4,10 @@ import { Rule } from 'antd/es/form';
 /**
  * Transform schema data from API for target plugin.
  */
-export const transformSchemaFromAPI = (schema: PluginForm.PluginSchema, pluginName: string): PluginForm.PluginSchema => {
+export const transformSchemaFromAPI = (
+  schema: PluginForm.PluginSchema,
+  pluginName: string,
+): PluginForm.PluginSchema => {
   if (pluginName === 'key-auth') {
     return {
       ...schema,

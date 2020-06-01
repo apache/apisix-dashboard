@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Form, Button, Input, Checkbox, Row, Col, Table, Space, Modal, Select } from 'antd';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import styles from '../../Create.less';
-
 import PanelSection from '../PanelSection';
 
 const { TextArea } = Input;
 const { Option } = Select;
+
+type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH';
+type RequestProtocol = 'HTTPS' | 'HTTP';
 
 const formItemLayout = {
   labelCol: {
@@ -16,17 +20,27 @@ const formItemLayout = {
   },
 };
 
+const DEFAULT_MODAL_DATA: RouteModule.MatchingRule = {
+  paramsLocation: 'query',
+  paramsName: '',
+  paramsExpresstion: '==',
+  paramsValue: '',
+  key: '',
+};
+
 const Step1: React.FC<RouteModule.Data> = ({ data, onChange }) => {
   const { step1Data } = data;
   const { hosts, paths, advancedMatchingRules } = step1Data;
   const [form] = Form.useForm();
   const [modalVisible, setModalVisible] = useState(false);
-  const [editModalData, setEditModalData] = useState<RouteModule.MatchingRule>({
-    paramsLocation: 'query',
-    paramsName: '',
-    paramsExpresstion: '==',
-    paramsValue: '',
-    key: '',
+  const [editModalData, setEditModalData] = useState(DEFAULT_MODAL_DATA);
+  const [protocolValueList, setProtocolValueList] = useState<RequestProtocol[]>(['HTTP', 'HTTPS']);
+  const protocolList = ['HTTP', 'HTTPS', 'WebSocket'];
+  const httpMethodOptionList = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'];
+  const [httpMethodList, setHttpMethodList] = useState({
+    checkedList: httpMethodOptionList,
+    indeterminate: false,
+    checkAll: true,
   });
 
   const handleAdd = () => {
@@ -155,8 +169,26 @@ const Step1: React.FC<RouteModule.Data> = ({ data, onChange }) => {
     </>
   );
 
-  const renderBaseRequestConfig = () => (
-    <>
+  const renderBaseRequestConfig = () => {
+    const onProtocolChange = (e: CheckboxValueType[]) => {
+      if (!e.includes('HTTP') && !e.includes('HTTPS')) return;
+      setProtocolValueList(e as RequestProtocol[]);
+    };
+    const onMethodsChange = (checkedList: CheckboxValueType[]) => {
+      setHttpMethodList({
+        checkedList: checkedList as HttpMethod[],
+        indeterminate: !!checkedList.length && checkedList.length < httpMethodOptionList.length,
+        checkAll: checkedList.length === httpMethodOptionList.length,
+      });
+    };
+    const onCheckAllChange = (e: CheckboxChangeEvent) => {
+      setHttpMethodList({
+        checkedList: e.target.checked ? httpMethodOptionList : [],
+        indeterminate: false,
+        checkAll: e.target.checked,
+      });
+    };
+    return (
       <PanelSection title="请求基础定义">
         <Form {...formItemLayout} form={form} layout="horizontal" className={styles.stepForm}>
           <Form.Item
@@ -164,25 +196,18 @@ const Step1: React.FC<RouteModule.Data> = ({ data, onChange }) => {
             name="protocol"
             rules={[{ required: true, message: '请勾选协议' }]}
           >
-            <Checkbox.Group style={{ width: '100%' }}>
-              <Row>
-                {['HTTP', 'HTTPS', 'WebSocket'].map((item) => (
-                  <Col span={6} key={item}>
-                    <Checkbox value={item}>{item}</Checkbox>
-                  </Col>
-                ))}
-              </Row>
-            </Checkbox.Group>
+            <Row>
+              <Checkbox.Group
+                options={protocolList}
+                value={protocolValueList}
+                onChange={onProtocolChange}
+              />
+            </Row>
           </Form.Item>
           {/* TODO: name */}
           <Form.Item label="HOST" rules={[{ required: true, message: '请输入 HOST' }]}>
             {renderHosts()}
-            <Button
-              type="primary"
-              onClick={() => {
-                addHost();
-              }}
-            >
+            <Button type="primary" onClick={addHost}>
               增加
             </Button>
           </Form.Item>
@@ -198,20 +223,23 @@ const Step1: React.FC<RouteModule.Data> = ({ data, onChange }) => {
             name="httpMethods"
             rules={[{ required: true, message: '请勾选 HTTP Methods' }]}
           >
-            <Checkbox.Group style={{ width: '100%' }}>
-              <Row>
-                {['ANY', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'].map((item) => (
-                  <Col span={6} key={item}>
-                    <Checkbox value={item}>{item}</Checkbox>
-                  </Col>
-                ))}
-              </Row>
-            </Checkbox.Group>
+            <Checkbox
+              indeterminate={httpMethodList.indeterminate}
+              onChange={onCheckAllChange}
+              checked={httpMethodList.checkAll}
+            >
+              ANY
+            </Checkbox>
+            <Checkbox.Group
+              options={httpMethodOptionList}
+              value={httpMethodList.checkedList}
+              onChange={onMethodsChange}
+            />
           </Form.Item>
         </Form>
       </PanelSection>
-    </>
-  );
+    );
+  };
 
   const [modalForm] = Form.useForm();
   const handleOk = () => {
@@ -228,6 +256,12 @@ const Step1: React.FC<RouteModule.Data> = ({ data, onChange }) => {
 
   const handleCancel = () => {
     setModalVisible(false);
+  };
+
+  const handleClose = () => {
+    // TODO: Data not updated in a timely manner
+    setEditModalData(DEFAULT_MODAL_DATA);
+    modalForm.resetFields();
   };
 
   const renderAdvancedMatchingRules = () => (
@@ -251,56 +285,62 @@ const Step1: React.FC<RouteModule.Data> = ({ data, onChange }) => {
 
   return (
     <>
-      {modalVisible && (
-        <Modal title="新增" centered visible onOk={handleOk} onCancel={handleCancel} destroyOnClose>
-          <Form
-            form={modalForm}
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 20 }}
-            initialValues={editModalData}
+      <Modal
+        title="新增"
+        centered
+        visible={modalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        afterClose={handleClose}
+        destroyOnClose
+      >
+        <Form
+          form={modalForm}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 20 }}
+          initialValues={editModalData}
+        >
+          <Form.Item
+            label="参数位置"
+            name="paramsLocation"
+            rules={[{ required: true, message: '请选择参数位置' }]}
           >
-            <Form.Item
-              label="参数位置"
-              name="paramsLocation"
-              rules={[{ required: true, message: '请选择参数位置' }]}
-            >
-              <Select>
-                <Option value="header">header</Option>
-                <Option value="query">query</Option>
-                <Option value="params">params</Option>
-                <Option value="cookie">cookie</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="参数名称"
-              name="paramsName"
-              rules={[{ required: true, message: '请输入参数名称' }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="运算符"
-              name="paramsExpresstion"
-              rules={[{ required: true, message: '请选择运算符' }]}
-            >
-              <Select>
-                <Option value="==">等于</Option>
-                <Option value="～=">不等于</Option>
-                <Option value=">">大于</Option>
-                <Option value="<">小于</Option>
-                <Option value="~~">正则匹配</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="值"
-              name="paramsValue"
-              rules={[{ required: true, message: '请输入参数值' }]}
-            >
-              <Input />
-            </Form.Item>
-          </Form>
-        </Modal>
-      )}
+            <Select>
+              <Option value="header">header</Option>
+              <Option value="query">query</Option>
+              <Option value="params">params</Option>
+              <Option value="cookie">cookie</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="参数名称"
+            name="paramsName"
+            rules={[{ required: true, message: '请输入参数名称' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="运算符"
+            name="paramsExpresstion"
+            rules={[{ required: true, message: '请选择运算符' }]}
+          >
+            <Select>
+              <Option value="==">等于</Option>
+              <Option value="～=">不等于</Option>
+              <Option value=">">大于</Option>
+              <Option value="<">小于</Option>
+              <Option value="~~">正则匹配</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="值"
+            name="paramsValue"
+            rules={[{ required: true, message: '请输入参数值' }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
       {renderMeta()}
       {renderBaseRequestConfig()}
       {renderAdvancedMatchingRules()}
