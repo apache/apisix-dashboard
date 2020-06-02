@@ -11,10 +11,10 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
   const { upstream_header } = data.step2Data;
   const [visible, setVisible] = useState(false);
   const [modalForm] = Form.useForm();
-  const [mode, setMode] = useState<RouteModule.ModalType>('create');
+  const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
 
   const handleEdit = (record: RouteModule.UpstreamHeader) => {
-    setMode('edit');
+    setMode('EDIT');
     setVisible(true);
     modalForm.setFieldsValue(record);
   };
@@ -57,7 +57,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
                   handleRemove(record.key);
                 }}
               >
-                移除
+                删除
               </a>
             </Space>
           ),
@@ -67,7 +67,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
   const renderModal = () => {
     const handleOk = () => {
       modalForm.validateFields().then((value) => {
-        if (mode === 'edit') {
+        if (mode === 'EDIT') {
           const key = modalForm.getFieldValue('key');
           const newUpstreamHeader = upstream_header.concat();
           const findIndex = newUpstreamHeader.findIndex((item) => item.key === key);
@@ -88,7 +88,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
 
     return (
       <Modal
-        title={mode === 'edit' ? '编辑' : '新增'}
+        title={mode === 'EDIT' ? '编辑' : '增加'}
         centered
         visible={visible}
         onOk={handleOk}
@@ -126,7 +126,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
       {!disabled && (
         <Button
           onClick={() => {
-            setMode('create');
+            setMode('CREATE');
             setVisible(true);
           }}
           type="primary"
@@ -134,7 +134,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
             marginBottom: 16,
           }}
         >
-          新增
+          增加
         </Button>
       )}
       <Table key="table" bordered dataSource={upstream_header} columns={columns} />

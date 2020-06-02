@@ -10,19 +10,24 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
 
   const [visible, setVisible] = useState(false);
 
-  const [mode, setMode] = useState<RouteModule.ModalType>('create');
+  const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
   const [modalForm] = Form.useForm();
 
   const { Option } = Select;
 
   const onOk = () => {
     modalForm.validateFields().then((value) => {
-      if (mode === 'edit') {
+      if (mode === 'EDIT') {
         const key = modalForm.getFieldValue('key');
-        const newAdvancedMatchingRules = advancedMatchingRules.concat();
-        const findIndex = newAdvancedMatchingRules.findIndex((item) => item.key === key);
-        newAdvancedMatchingRules[findIndex] = { ...(value as RouteModule.MatchingRule), key };
-        onChange({ ...data.step1Data, advancedMatchingRules: newAdvancedMatchingRules });
+        onChange({
+          ...data.step1Data,
+          advancedMatchingRules: advancedMatchingRules.map((rule) => {
+            if (rule.key === key) {
+              return { ...(value as RouteModule.MatchingRule), key };
+            }
+            return rule;
+          }),
+        });
       } else {
         const rule = {
           ...(value as RouteModule.MatchingRule),
@@ -36,7 +41,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   };
 
   const handleEdit = (record: RouteModule.MatchingRule) => {
-    setMode('edit');
+    setMode('EDIT');
     setVisible(true);
     modalForm.setFieldsValue(record);
   };
@@ -69,22 +74,24 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
       dataIndex: 'paramsValue',
       key: 'paramsValue',
     },
-    {
-      title: '操作',
-      key: 'action',
-      render: (_: any, record: RouteModule.MatchingRule) => (
-        <Space size="middle">
-          <a onClick={() => handleEdit(record)}>编辑</a>
-          <a onClick={() => handleRemove(record.key)}>移除</a>
-        </Space>
-      ),
-    },
+    disabled
+      ? {}
+      : {
+          title: '操作',
+          key: 'action',
+          render: (_: any, record: RouteModule.MatchingRule) => (
+            <Space size="middle">
+              <a onClick={() => handleEdit(record)}>编辑</a>
+              <a onClick={() => handleRemove(record.key)}>删除</a>
+            </Space>
+          ),
+        },
   ];
 
   const renderModal = () => {
     return (
       <Modal
-        title={mode === 'edit' ? '编辑' : '新增'}
+        title={mode === 'EDIT' ? '编辑' : '增加'}
         centered
         visible={visible}
         onOk={onOk}
@@ -101,10 +108,9 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
             rules={[{ required: true, message: '请选择参数位置' }]}
           >
             <Select>
-              <Option value="header">header</Option>
-              <Option value="query">query</Option>
-              <Option value="params">params</Option>
-              <Option value="cookie">cookie</Option>
+              <Option value="header">HTTP 请求头</Option>
+              <Option value="arguments">请求参数</Option>
+              <Option value="cookie">Cookie</Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -144,7 +150,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
       {!disabled && (
         <Button
           onClick={() => {
-            setMode('create');
+            setMode('CREATE');
             setVisible(true);
           }}
           type="primary"
