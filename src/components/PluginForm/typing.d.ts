@@ -1,6 +1,7 @@
 declare namespace PluginForm {
   interface Props {
     name?: string;
+    disabled?: boolean;
     // FormInstance
     form: any;
     initialData?: PluginSchema;

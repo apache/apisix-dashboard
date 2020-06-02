@@ -85,6 +85,7 @@ const CreateStep3: React.FC<Props> = ({ data, disabled, onChange }) => {
       )}
       <PluginDrawer
         name={currentPlugin}
+        disabled={disabled}
         initialData={currentPlugin ? data.step3Data.plugins[currentPlugin] : {}}
         active={Boolean(activeList.find((item) => item.name === currentPlugin))}
         onActive={(name: string) => {

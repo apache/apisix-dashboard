@@ -13,6 +13,7 @@ const formLayout = {
 
 interface RenderComponentProps {
   placeholder?: string;
+  disabled?: boolean;
 }
 
 const renderComponentByProperty = (
@@ -24,7 +25,7 @@ const renderComponentByProperty = (
   if (type === 'string') {
     if (propertyValue.enum) {
       return (
-        <Select>
+        <Select disabled={restProps?.disabled}>
           {propertyValue.enum.map((enumValue) => (
             <Select.Option value={enumValue} key={enumValue}>
               {enumValue}
@@ -37,7 +38,7 @@ const renderComponentByProperty = (
   }
 
   if (type === 'boolean') {
-    return <Switch />;
+    return <Switch {...restProps} />;
   }
 
   if (type === 'number' || type === 'integer') {
@@ -45,6 +46,7 @@ const renderComponentByProperty = (
       <InputNumber
         min={minimum ?? Number.MIN_SAFE_INTEGER}
         max={maximum ?? Number.MAX_SAFE_INTEGER}
+        {...restProps}
       />
     );
   }
@@ -53,6 +55,7 @@ const renderComponentByProperty = (
 };
 
 interface ArrayComponentProps {
+  disabled?: boolean;
   schema: PluginForm.PluginSchema;
   propertyName: string;
   propertyValue: PluginForm.PluginProperty;
@@ -62,6 +65,7 @@ const ArrayComponent: React.FC<ArrayComponentProps> = ({
   propertyName,
   propertyValue,
   schema,
+  disabled,
   children,
 }) => {
   const { formatMessage } = useIntl();
@@ -86,7 +90,7 @@ const ArrayComponent: React.FC<ArrayComponentProps> = ({
           {/* BUG: There should also care about minItems */}
           {fields.length < (propertyValue.maxItems ?? Number.MAX_SAFE_INTEGER) ? (
             <Form.Item label={propertyName}>
-              <Button type="dashed" onClick={add}>
+              <Button type="dashed" onClick={add} disabled={disabled}>
                 <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
               </Button>
             </Form.Item>
@@ -97,7 +101,13 @@ const ArrayComponent: React.FC<ArrayComponentProps> = ({
   );
 };
 
-const PluginForm: React.FC<PluginForm.Props> = ({ name, form, initialData = {}, onFinish }) => {
+const PluginForm: React.FC<PluginForm.Props> = ({
+  name,
+  form,
+  disabled,
+  initialData = {},
+  onFinish,
+}) => {
   const [schema, setSchema] = useState<PluginForm.PluginSchema>();
 
   useEffect(() => {
@@ -129,6 +139,7 @@ const PluginForm: React.FC<PluginForm.Props> = ({ name, form, initialData = {}, 
           return (
             <ArrayComponent
               key={propertyName}
+              disabled={disabled}
               schema={schema!}
               propertyName={propertyName}
               propertyValue={propertyValue}
@@ -142,6 +153,7 @@ const PluginForm: React.FC<PluginForm.Props> = ({ name, form, initialData = {}, 
           return (
             <ArrayComponent
               key={propertyName}
+              disabled={disabled}
               schema={schema!}
               propertyName={propertyName}
               propertyValue={propertyValue}
@@ -161,7 +173,7 @@ const PluginForm: React.FC<PluginForm.Props> = ({ name, form, initialData = {}, 
             rules={transformPropertyToRules(schema!, propertyName, propertyValue)}
             valuePropName={propertyValue.type === 'boolean' ? 'checked' : 'value'}
           >
-            {renderComponentByProperty(propertyValue)}
+            {renderComponentByProperty(propertyValue, { disabled })}
           </Form.Item>
         );
       })}
