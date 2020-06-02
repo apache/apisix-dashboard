@@ -32,7 +32,6 @@ const Create: React.FC = () => {
         <Step1
           data={data}
           onChange={(_data: RouteModule.Step1Data) => {
-            console.log(_data);
             setStep1Data(_data);
           }}
         />

@@ -58,4 +58,6 @@ declare namespace RouteModule {
       read: number;
     };
   };
+
+  type ModalType = 'create' | 'edit';
 }
