@@ -1,10 +1,13 @@
 import React from 'react';
+import { FormInstance } from 'antd/lib/form';
 
 import Step1 from '../Step1';
 import Step2 from '../Step2';
 import CreateStep3 from '../CreateStep3';
 
-interface Props extends RouteModule.Data {}
+interface Props extends RouteModule.Data {
+  form: FormInstance;
+}
 
 const CreateStep4: React.FC<Props> = (props) => {
   return (
