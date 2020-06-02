@@ -6,6 +6,7 @@ import PluginForm from '@/components/PluginForm';
 
 interface Props extends Omit<PluginForm.Props, 'form'> {
   active?: boolean;
+  disabled?: boolean;
   onActive(name: string): void;
   onInactive(name: string): void;
   onClose(): void;
@@ -14,6 +15,7 @@ interface Props extends Omit<PluginForm.Props, 'form'> {
 const PluginDrawer: React.FC<Props> = ({
   name,
   active,
+  disabled,
   onActive,
   onInactive,
   onClose,
@@ -33,35 +35,37 @@ const PluginDrawer: React.FC<Props> = ({
       destroyOnClose
       onClose={onClose}
       footer={
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div>
+        disabled ? null : (
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div>
+              {Boolean(active) && (
+                <Button type="primary" danger onClick={() => onInactive(name)}>
+                  禁用
+                </Button>
+              )}
+              {Boolean(!active) && (
+                <Button type="primary" onClick={() => onActive(name)}>
+                  启用
+                </Button>
+              )}
+            </div>
             {Boolean(active) && (
-              <Button type="primary" danger onClick={() => onInactive(name)}>
-                禁用
-              </Button>
-            )}
-            {Boolean(!active) && (
-              <Button type="primary" onClick={() => onActive(name)}>
-                启用
-              </Button>
+              <div>
+                <Button onClick={onClose}>取消</Button>
+                <Button
+                  type="primary"
+                  style={{ marginRight: 8, marginLeft: 8 }}
+                  onClick={() => form.submit()}
+                >
+                  提交
+                </Button>
+              </div>
             )}
           </div>
-          {Boolean(active) && (
-            <div>
-              <Button onClick={onClose}>取消</Button>
-              <Button
-                type="primary"
-                style={{ marginRight: 8, marginLeft: 8 }}
-                onClick={() => form.submit()}
-              >
-                提交
-              </Button>
-            </div>
-          )}
-        </div>
+        )
       }
     >
-      <PluginForm name={name!} form={form} {...rest} />
+      <PluginForm name={name!} form={form} {...rest} disabled={disabled} />
     </Drawer>
   );
 };
