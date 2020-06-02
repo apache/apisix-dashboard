@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Steps } from 'antd';
+import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import Step1 from './components/Step1';
@@ -17,7 +17,10 @@ const Create: React.FC = () => {
   const [step2Data, setStep2Data] = useState(DEFAULT_STEP_2_DATA);
   const [step3Data, setStep3Data] = useState(DEFAULT_STEP_3_DATA);
 
-  const [step, setStep] = useState(0);
+  const [form1] = Form.useForm();
+  const [form2] = Form.useForm();
+
+  const [step, setStep] = useState(1);
   const [stepHeader] = useState(['定义 API 请求', '定义 API 后端服务', '插件配置', '预览']);
 
   const data = {
@@ -31,6 +34,7 @@ const Create: React.FC = () => {
       return (
         <Step1
           data={data}
+          form={form1}
           onChange={(_data: RouteModule.Step1Data) => {
             setStep1Data(_data);
           }}
@@ -42,6 +46,7 @@ const Create: React.FC = () => {
       return (
         <Step2
           data={data}
+          form={form2}
           onChange={(params: RouteModule.Step2Data) => setStep2Data({ ...step2Data, ...params })}
         />
       );
@@ -58,6 +63,30 @@ const Create: React.FC = () => {
     return null;
   };
 
+  const onStepChange = (nextStep: number) => {
+    const nextStepAction = () => {
+      setStep(nextStep);
+      window.scrollTo({ top: 0 });
+    };
+    if (nextStep > step && nextStep < 3) {
+      // Form Validation
+      if (step === 0) {
+        form1.validateFields().then((value) => {
+          setStep1Data({ ...step1Data, ...value });
+          nextStepAction();
+        });
+        return;
+      }
+      if (step === 1) {
+        form2.validateFields().then((value) => {
+          setStep1Data({ ...step1Data, ...value });
+          nextStepAction();
+        });
+        return;
+      }
+    }
+    nextStepAction();
+  };
   return (
     <>
       <PageHeaderWrapper>
@@ -73,8 +102,7 @@ const Create: React.FC = () => {
       <ActionBar
         step={step}
         onChange={(nextStep) => {
-          setStep(nextStep);
-          window.scrollTo({ top: 0 });
+          onStepChange(nextStep);
         }}
       />
     </>
