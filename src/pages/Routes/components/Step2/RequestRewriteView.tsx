@@ -1,7 +1,7 @@
 import React from 'react';
 import Form, { FormInstance } from 'antd/es/form';
 import Radio, { RadioChangeEvent } from 'antd/lib/radio';
-import { Input, Row, Col, InputNumber, Button, Space } from 'antd';
+import { Input, Row, Col, InputNumber, Button } from 'antd';
 
 import { FORM_ITEM_LAYOUT } from '@/pages/Routes/constants';
 import PanelSection from '../PanelSection';
@@ -18,39 +18,32 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
     onChange({ backendProtocol: e.target.value });
   };
 
-  const addBackendAddress = () => {
-    onChange({
-      backendAddressList: backendAddressList.concat({ host: '', port: 0, weight: 0 }),
-    });
-  };
   const renderBackendAddress = () =>
     backendAddressList.map((item, index) => (
       <Row key={`${item.host + index}`} style={{ marginBottom: '10px' }} gutter={16}>
         <Col span={9}>
-          <Input placeholder="HOST" disabled={disabled} />
+          <Input placeholder="域名" disabled={disabled} />
         </Col>
         <Col span={4}>
-          <InputNumber placeholder="Port" disabled={disabled} />
+          <InputNumber placeholder="端口号" disabled={disabled} min={1} max={65535} />
         </Col>
         <Col span={4} offset={1}>
-          <InputNumber placeholder="Weight" disabled={disabled} />
+          <InputNumber placeholder="权重" disabled={disabled} min={0} max={100} />
         </Col>
         <Col span={4} offset={1}>
-          <Space>
-            {backendAddressList.length > 1 && !disabled && (
-              <Button
-                type="primary"
-                danger
-                onClick={() => {
-                  onChange({
-                    backendAddressList: backendAddressList.filter((_, _index) => _index !== index),
-                  });
-                }}
-              >
-                删除
-              </Button>
-            )}
-          </Space>
+          {backendAddressList.length > 1 && !disabled && (
+            <Button
+              type="primary"
+              danger
+              onClick={() => {
+                onChange({
+                  backendAddressList: backendAddressList.filter((_, _index) => _index !== index),
+                });
+              }}
+            >
+              删除
+            </Button>
+          )}
         </Col>
       </Row>
     ));
@@ -72,33 +65,40 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
               value={backendProtocol}
               disabled={disabled}
             >
+              <Radio value="originalRequest">原始请求</Radio>
               <Radio value="HTTP">HTTP</Radio>
               <Radio value="HTTPS">HTTPS</Radio>
-              <Radio value="originalRequest">原始请求</Radio>
             </Radio.Group>
           </Row>
         </Form.Item>
-        <Form.Item label="后端地址" rules={[{ required: true, message: '请输入后端地址' }]}>
+        <Form.Item label="请求地址" rules={[{ required: true, message: '请输入后端地址' }]}>
           {renderBackendAddress()}
           {!disabled && (
-            <Button type="primary" onClick={addBackendAddress}>
+            <Button
+              type="primary"
+              onClick={() => {
+                onChange({
+                  backendAddressList: backendAddressList.concat({ host: '', port: 0, weight: 0 }),
+                });
+              }}
+            >
               增加
             </Button>
           )}
         </Form.Item>
-        <Form.Item label="后端请求 Path">
+        <Form.Item label="请求路径">
           <Row>
             <Input disabled={disabled} />
           </Row>
         </Form.Item>
         <Form.Item label="连接超时">
-          <InputNumber disabled={disabled} /> ms
+          <InputNumber disabled={disabled} defaultValue={30000} /> ms
         </Form.Item>
         <Form.Item label="发送超时">
-          <InputNumber disabled={disabled} /> ms
+          <InputNumber disabled={disabled} defaultValue={30000} /> ms
         </Form.Item>
         <Form.Item label="接收超时">
-          <InputNumber disabled={disabled} /> ms
+          <InputNumber disabled={disabled} defaultValue={30000} /> ms
         </Form.Item>
       </Form>
     </PanelSection>
