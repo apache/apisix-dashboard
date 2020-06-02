@@ -19,10 +19,15 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
     modalForm.validateFields().then((value) => {
       if (mode === 'EDIT') {
         const key = modalForm.getFieldValue('key');
-        const newAdvancedMatchingRules = advancedMatchingRules.concat();
-        const findIndex = newAdvancedMatchingRules.findIndex((item) => item.key === key);
-        newAdvancedMatchingRules[findIndex] = { ...(value as RouteModule.MatchingRule), key };
-        onChange({ ...data.step1Data, advancedMatchingRules: newAdvancedMatchingRules });
+        onChange({
+          ...data.step1Data,
+          advancedMatchingRules: advancedMatchingRules.map((rule) => {
+            if (rule.key === key) {
+              return { ...(value as RouteModule.MatchingRule), key };
+            }
+            return rule;
+          }),
+        });
       } else {
         const rule = {
           ...(value as RouteModule.MatchingRule),
