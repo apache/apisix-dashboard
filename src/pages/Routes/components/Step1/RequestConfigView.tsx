@@ -3,6 +3,7 @@ import Form from 'antd/es/form';
 import { Checkbox, Button, Input } from 'antd';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 import {
   HTTP_METHOD_OPTION_LIST,
@@ -10,7 +11,6 @@ import {
   FORM_ITEM_WITHOUT_LABEL,
 } from '@/pages/Routes/constants';
 
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import PanelSection from '../PanelSection';
 
 interface Props extends RouteModule.Data {}

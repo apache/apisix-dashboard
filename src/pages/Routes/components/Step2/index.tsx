@@ -1,12 +1,17 @@
 import React from 'react';
+import { FormInstance } from 'antd/es/form';
 
 import RequestRewriteView from './RequestRewriteView';
 import HttpHeaderRewriteView from './HttpHeaderRewriteView';
 
-const Step2: React.FC<RouteModule.Data> = (props) => {
+interface Props extends RouteModule.Data {
+  form: FormInstance;
+}
+
+const Step2: React.FC<Props> = (props) => {
   return (
     <>
-      <RequestRewriteView form={props.form} {...props} />
+      <RequestRewriteView {...props} />
       <HttpHeaderRewriteView {...props} />
     </>
   );

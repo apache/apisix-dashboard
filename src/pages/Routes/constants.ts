@@ -26,10 +26,10 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
 };
 
 export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
-  backendProtocol: 'originalRequest',
-  backendAddressList: [{ host: '', port: 0, weight: 0 }],
-  upstream_header: [],
-  backendAddressPath: '',
+  upstreamProtocol: 'originalRequest',
+  upstreamHostList: [{ host: '', port: 0, weight: 0 }],
+  upstreamHeaderList: [],
+  upstreamPath: '',
   timeout: {
     connect: 30000,
     send: 30000,

@@ -8,7 +8,7 @@ import PanelSection from '../PanelSection';
 interface Props extends RouteModule.Data {}
 
 const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) => {
-  const { upstream_header } = data.step2Data;
+  const { upstreamHeaderList } = data.step2Data;
   const [visible, setVisible] = useState(false);
   const [modalForm] = Form.useForm();
   const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
@@ -19,7 +19,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
     modalForm.setFieldsValue(record);
   };
   const handleRemove = (key: string) => {
-    onChange({ upstream_header: upstream_header.filter((item) => item.key !== key) });
+    onChange({ upstreamHeaderList: upstreamHeaderList.filter((item) => item.key !== key) });
   };
 
   const columns = [
@@ -69,13 +69,18 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
       modalForm.validateFields().then((value) => {
         if (mode === 'EDIT') {
           const key = modalForm.getFieldValue('key');
-          const newUpstreamHeader = upstream_header.concat();
-          const findIndex = newUpstreamHeader.findIndex((item) => item.key === key);
-          newUpstreamHeader[findIndex] = { ...(value as RouteModule.UpstreamHeader), key };
-          onChange({ upstream_header: newUpstreamHeader, key });
+          onChange({
+            upstreamHeaderList: upstreamHeaderList.map((item) => {
+              if (item.key === key) {
+                return { ...(value as RouteModule.UpstreamHeader), key };
+              }
+              return item;
+            }),
+            key,
+          });
         } else {
           onChange({
-            upstream_header: upstream_header.concat({
+            upstreamHeaderList: upstreamHeaderList.concat({
               ...(value as RouteModule.UpstreamHeader),
               key: Math.random().toString(36).slice(2),
             }),
@@ -137,7 +142,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
           增加
         </Button>
       )}
-      <Table key="table" bordered dataSource={upstream_header} columns={columns} />
+      <Table key="table" bordered dataSource={upstreamHeaderList} columns={columns} />
       {renderModal()}
     </PanelSection>
   );

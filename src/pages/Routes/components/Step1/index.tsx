@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form } from 'antd';
+import { FormInstance } from 'antd/lib/form';
 
 import { FORM_ITEM_LAYOUT } from '@/pages/Routes/constants';
 import styles from '../../Create.less';
@@ -8,7 +9,11 @@ import MetaView from './MetaView';
 import RequestConfigView from './RequestConfigView';
 import MatchingRulesView from './MatchingRulesView';
 
-const Step1: React.FC<RouteModule.Data> = (props) => {
+interface Props extends RouteModule.Data {
+  form: FormInstance;
+}
+
+const Step1: React.FC<Props> = (props) => {
   const { data, form } = props;
 
   return (

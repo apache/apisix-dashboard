@@ -20,7 +20,7 @@ const Create: React.FC = () => {
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
   const [stepHeader] = useState(['定义 API 请求', '定义 API 后端服务', '插件配置', '预览']);
 
   const data = {
