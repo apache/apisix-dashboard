@@ -41,7 +41,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
     hosts.map((item, index) => (
       <Row key={`${item + index}`} style={{ marginBottom: '10px' }} gutter={[16, 16]}>
         <Col span={16}>
-          <Input placeholder="HOST" disabled={disabled} />
+          <Input placeholder="域名" disabled={disabled} />
         </Col>
         <Col span={4}>
           <Space>
@@ -68,7 +68,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
     paths.map((item, index) => (
       <Row key={`${item + index}`} style={{ marginBottom: '10px' }} gutter={[16, 16]}>
         <Col span={16}>
-          <Input placeholder="请输入 Path" disabled={disabled} />
+          <Input placeholder="请输入请求路径" disabled={disabled} />
         </Col>
         {!disabled && (
           <Col span={4}>
@@ -105,7 +105,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
         </Row>
       </Form.Item>
       {/* TODO: name */}
-      <Form.Item label="HOST" rules={[{ required: true, message: '请输入 HOST' }]}>
+      <Form.Item label="域名" rules={[{ required: true, message: '请输入域名' }]}>
         {renderHosts()}
         {!disabled && (
           <Button
@@ -117,7 +117,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
         )}
       </Form.Item>
       {/* TODO: name */}
-      <Form.Item label="PATH">
+      <Form.Item label="路径">
         {renderPaths()}
         {!disabled && (
           <Button
@@ -129,9 +129,9 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
         )}
       </Form.Item>
       <Form.Item
-        label="HTTP Methods"
+        label="HTTP 方法"
         name="httpMethods"
-        rules={[{ required: true, message: '请勾选 HTTP Methods' }]}
+        rules={[{ required: true, message: '请选择 HTTP 方法' }]}
       >
         <Checkbox
           indeterminate={httpMethodList.indeterminate}

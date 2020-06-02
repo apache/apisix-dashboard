@@ -59,5 +59,5 @@ declare namespace RouteModule {
     };
   };
 
-  type ModalType = 'create' | 'edit';
+  type ModalType = 'CREATE' | 'EDIT';
 }
