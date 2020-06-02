@@ -36,7 +36,7 @@ declare namespace RouteModule {
     form?: any;
   }
 
-  type backendAddressItemProps = {
+  type UpstreamHost = {
     host: '';
     port: number;
     weight: number;
@@ -50,10 +50,10 @@ declare namespace RouteModule {
   }
 
   type Step2Data = {
-    backendProtocol: 'HTTP' | 'HTTPS' | 'originalRequest';
-    backendAddressList: backendAddressItemProps[];
-    backendAddressPath: string;
-    upstream_header: UpstreamHeader[];
+    upstreamProtocol: 'HTTP' | 'HTTPS' | 'originalRequest';
+    upstreamHostList: UpstreamHost[];
+    upstreamPath: string;
+    upstreamHeaderList: UpstreamHeader[];
     timeout: {
       connect: number;
       send: number;
