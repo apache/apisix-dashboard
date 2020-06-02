@@ -33,6 +33,7 @@ declare namespace RouteModule {
       step3Data: Step3Data;
     };
     onChange(data: T): void;
+    form?: any;
   }
 
   type backendAddressItemProps = {
@@ -51,6 +52,7 @@ declare namespace RouteModule {
   type Step2Data = {
     backendProtocol: 'HTTP' | 'HTTPS' | 'originalRequest';
     backendAddressList: backendAddressItemProps[];
+    backendAddressPath: string;
     upstream_header: UpstreamHeader[];
     timeout: {
       connect: number;

@@ -9,10 +9,17 @@ export const FORM_ITEM_LAYOUT = {
   },
 };
 
+export const FORM_ITEM_WITHOUT_LABEL = {
+  wrapperCol: {
+    xs: { span: 24, offset: 0 },
+    sm: { span: 20, offset: 6 },
+  },
+};
+
 export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
   name: '',
   protocols: ['HTTP', 'HTTPS'],
-  hosts: [],
+  hosts: [''],
   paths: [],
   httpMethods: [],
   advancedMatchingRules: [],
@@ -22,6 +29,7 @@ export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
   backendProtocol: 'originalRequest',
   backendAddressList: [{ host: '', port: 0, weight: 0 }],
   upstream_header: [],
+  backendAddressPath: '',
   timeout: {
     connect: 30000,
     send: 30000,

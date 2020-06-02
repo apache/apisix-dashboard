@@ -9,8 +9,7 @@ import RequestConfigView from './RequestConfigView';
 import MatchingRulesView from './MatchingRulesView';
 
 const Step1: React.FC<RouteModule.Data> = (props) => {
-  const { data } = props;
-  const [form] = Form.useForm();
+  const { data, form } = props;
 
   return (
     <>
