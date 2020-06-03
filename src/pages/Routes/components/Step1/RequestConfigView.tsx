@@ -1,7 +1,6 @@
 import React from 'react';
 import Form from 'antd/es/form';
-import { Checkbox, Button, Input, Switch } from 'antd';
-import { CheckboxValueType } from 'antd/lib/checkbox/Group';
+import { Checkbox, Button, Input, Switch, Select, Row, Col } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 import {
@@ -14,14 +13,10 @@ import PanelSection from '../PanelSection';
 
 interface Props extends RouteModule.Data {}
 
-const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
-  const { protocols } = data.step1Data;
+const { Option } = Select;
 
-  const onProtocolChange = (e: CheckboxValueType[]) => {
-    if (!e.includes('HTTP') && !e.includes('HTTPS')) return;
-    onChange({ ...data.step1Data, protocols: e });
-  };
-
+const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
+  const { step1Data } = data;
   const renderHosts = () => (
     <Form.List name="hosts">
       {(fields, { add, remove }) => {
@@ -119,12 +114,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
   return (
     <PanelSection title="请求基础定义">
       <Form.Item label="协议" name="protocols" rules={[{ required: true, message: '请勾选协议' }]}>
-        <Checkbox.Group
-          disabled={disabled}
-          options={['HTTP', 'HTTPS']}
-          value={protocols}
-          onChange={onProtocolChange}
-        />
+        <Checkbox.Group disabled={disabled} options={['HTTP', 'HTTPS']} />
       </Form.Item>
       <Form.Item label="WebSocket" name="websocket" valuePropName="checked">
         <Switch disabled={disabled} />
@@ -138,6 +128,38 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
       >
         <Checkbox.Group options={HTTP_METHOD_OPTION_LIST} disabled={disabled} />
       </Form.Item>
+      <Form.Item label="redirect" name="redirect" valuePropName="checked">
+        <Switch disabled={disabled} />
+      </Form.Item>
+      {step1Data.redirect && (
+        <>
+          <Form.Item label="强制 HTTPS" valuePropName="checked" name="forceHttps">
+            <Switch disabled={disabled || step1Data.protocols.includes('HTTPS')} />
+          </Form.Item>
+          {!step1Data.forceHttps && (
+            <Form.Item label="自定义参数" required>
+              <Row gutter={10}>
+                <Col>
+                  <Form.Item
+                    name="redirect_uri"
+                    rules={[{ required: true, message: '请勾选输入 URI' }]}
+                  >
+                    <Input placeholder="请输入 URI" disabled={disabled} />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item name="redirect_code" rules={[{ required: true, message: '请选择' }]}>
+                    <Select disabled={disabled}>
+                      <Option value="301">301</Option>
+                      <Option value="302">302</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form.Item>
+          )}
+        </>
+      )}
     </PanelSection>
   );
 };

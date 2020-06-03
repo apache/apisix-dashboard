@@ -14,7 +14,7 @@ interface Props extends RouteModule.Data {
 }
 
 const Step1: React.FC<Props> = (props) => {
-  const { data, form } = props;
+  const { data, form, onChange } = props;
 
   return (
     <>
@@ -23,6 +23,14 @@ const Step1: React.FC<Props> = (props) => {
         form={form}
         layout="horizontal"
         className={styles.stepForm}
+        onValuesChange={(field, value) => {
+          if (field.protocols?.includes('HTTPS')) {
+            form.setFieldsValue({ forceHttps: false });
+            onChange({ ...data.step1Data, forceHttps: false, ...value });
+            return;
+          }
+          onChange({ ...data.step1Data, ...value });
+        }}
         initialValues={data.step1Data}
       >
         <MetaView {...props} />

@@ -19,6 +19,8 @@ declare namespace RouteModule {
     hosts: string[];
     paths: string[];
     methods: HttpMethod[];
+    redirect: boolean;
+    forceHttps: boolean;
     advancedMatchingRules: MatchingRule[];
   };
 

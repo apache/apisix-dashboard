@@ -36,8 +36,8 @@ const Create: React.FC = () => {
         <Step1
           data={data}
           form={form1}
-          onChange={(_data: RouteModule.Step1Data) => {
-            setStep1Data(_data);
+          onChange={(params: RouteModule.Step1Data) => {
+            setStep1Data(params);
           }}
         />
       );

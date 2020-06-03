@@ -30,6 +30,8 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
   websocket: false,
   hosts: [''],
   paths: [],
+  redirect: false,
+  forceHttps: false,
   methods: HTTP_METHOD_OPTION_LIST,
   advancedMatchingRules: [],
 };
