@@ -57,7 +57,7 @@ const Create: React.FC = () => {
     }
 
     if (step === 3) {
-      return <CreateStep4 data={data} onChange={() => {}} />;
+      return <CreateStep4 data={data} form1={form1} form2={form2} onChange={() => {}} />;
     }
 
     return null;

@@ -33,7 +33,6 @@ declare namespace RouteModule {
       step3Data: Step3Data;
     };
     onChange(data: T): void;
-    form?: any;
   }
 
   type UpstreamHost = {
