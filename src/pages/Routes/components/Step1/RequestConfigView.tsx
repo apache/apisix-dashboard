@@ -64,9 +64,9 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                   ]}
                   noStyle
                 >
-                  <Input placeholder="请输入域名" style={{ width: '60%' }} />
+                  <Input placeholder="请输入域名" style={{ width: '60%' }} disabled={disabled} />
                 </Form.Item>
-                {fields.length > 1 ? (
+                {!disabled && fields.length > 1 ? (
                   <MinusCircleOutlined
                     className="dynamic-delete-button"
                     style={{ margin: '0 8px' }}
@@ -103,15 +103,17 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
             {fields.map((field) => (
               <Form.Item required key={field.key}>
                 <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
-                  <Input placeholder="请输入路径" style={{ width: '60%' }} />
+                  <Input placeholder="请输入路径" style={{ width: '60%' }} disabled={disabled} />
                 </Form.Item>
-                <MinusCircleOutlined
-                  className="dynamic-delete-button"
-                  style={{ margin: '0 8px' }}
-                  onClick={() => {
-                    remove(field.name);
-                  }}
-                />
+                {!disabled && (
+                  <MinusCircleOutlined
+                    className="dynamic-delete-button"
+                    style={{ margin: '0 8px' }}
+                    onClick={() => {
+                      remove(field.name);
+                    }}
+                  />
+                )}
               </Form.Item>
             ))}
             <Form.Item>

@@ -45,13 +45,7 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
                     name={[field.name, 'port']}
                     rules={[{ required: true, message: '请输入端口' }]}
                   >
-                    <InputNumber
-                      placeholder="端口号"
-                      disabled={disabled}
-                      defaultValue={80}
-                      min={1}
-                      max={65535}
-                    />
+                    <InputNumber placeholder="端口号" disabled={disabled} min={1} max={65535} />
                   </Form.Item>
                 </Col>
                 <Col span={4} offset={1}>
@@ -64,14 +58,15 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
                   </Form.Item>
                 </Col>
                 <Col>
-                  {fields.length > 1 ? (
-                    <MinusCircleOutlined
-                      style={{ margin: '0 8px' }}
-                      onClick={() => {
-                        remove(field.name);
-                      }}
-                    />
-                  ) : null}
+                  {!disabled &&
+                    (fields.length > 1 ? (
+                      <MinusCircleOutlined
+                        style={{ margin: '0 8px' }}
+                        onClick={() => {
+                          remove(field.name);
+                        }}
+                      />
+                    ) : null)}
                 </Col>
               </Row>
             </Form.Item>
