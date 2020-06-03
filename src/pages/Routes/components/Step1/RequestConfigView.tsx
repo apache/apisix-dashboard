@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Form from 'antd/es/form';
-import { Checkbox, Button, Input } from 'antd';
+import { Checkbox, Button, Input, Switch } from 'antd';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
@@ -139,10 +139,13 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
       <Form.Item label="协议" name="protocols" rules={[{ required: true, message: '请勾选协议' }]}>
         <Checkbox.Group
           disabled={disabled}
-          options={['HTTP', 'HTTPS', 'WebSocket']}
+          options={['HTTP', 'HTTPS']}
           value={protocols}
           onChange={onProtocolChange}
         />
+      </Form.Item>
+      <Form.Item label="WebSocket" name="WebSocket" valuePropName="checked">
+        <Switch />
       </Form.Item>
       {renderHosts()}
       <Form.Item label="路径">{renderPaths()}</Form.Item>
