@@ -27,10 +27,10 @@ export const FORM_ITEM_WITHOUT_LABEL = {
 export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
   name: '',
   protocols: ['HTTP', 'HTTPS'],
-  WebSocket: false,
+  websocket: false,
   hosts: [''],
   paths: [],
-  httpMethods: HTTP_METHOD_OPTION_LIST,
+  methods: HTTP_METHOD_OPTION_LIST,
   advancedMatchingRules: [],
 };
 
