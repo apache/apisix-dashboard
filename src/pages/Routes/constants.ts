@@ -26,7 +26,7 @@ export const FORM_ITEM_WITHOUT_LABEL = {
 
 export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
   name: '',
-  protocols: ['HTTP', 'HTTPS'],
+  protocols: ['http', 'https'],
   websocket: false,
   hosts: [''],
   paths: [],
@@ -35,7 +35,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
 };
 
 export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
-  upstreamProtocol: 'originalRequest',
+  upstreamProtocol: 'original',
   upstreamHostList: [{ host: '', port: 80, weight: 0 }],
   upstreamHeaderList: [],
   upstreamPath: '',

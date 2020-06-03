@@ -10,7 +10,7 @@ declare namespace RouteModule {
   }
 
   type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH';
-  type RequestProtocol = 'HTTPS' | 'HTTP' | 'websocket';
+  type RequestProtocol = 'https' | 'http' | 'websocket';
 
   type Step1Data = {
     name: string;
@@ -54,7 +54,7 @@ declare namespace RouteModule {
   }
 
   type Step2Data = {
-    upstreamProtocol: 'HTTP' | 'HTTPS' | 'originalRequest';
+    upstreamProtocol: 'http' | 'https' | 'original';
     upstreamHostList: UpstreamHost[];
     upstreamPath: string;
     upstreamHeaderList: UpstreamHeader[];

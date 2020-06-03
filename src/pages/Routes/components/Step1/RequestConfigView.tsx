@@ -18,7 +18,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const { protocols } = data.step1Data;
 
   const onProtocolChange = (e: CheckboxValueType[]) => {
-    if (!e.includes('HTTP') && !e.includes('HTTPS')) return;
+    if (!e.includes('http') && !e.includes('https')) return;
     onChange({ ...data.step1Data, protocols: e });
   };
 
@@ -98,7 +98,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                 )}
               </Form.Item>
             ))}
-            {fields.length === 0 && <span>无</span>}
+            {fields.length === 0 && disabled && <span>无</span>}
             {!disabled && (
               <Form.Item>
                 <Button
@@ -122,7 +122,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
       <Form.Item label="协议" name="protocols" rules={[{ required: true, message: '请勾选协议' }]}>
         <Checkbox.Group
           disabled={disabled}
-          options={['HTTP', 'HTTPS']}
+          options={['http', 'https']}
           value={protocols}
           onChange={onProtocolChange}
         />

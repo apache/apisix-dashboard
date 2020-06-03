@@ -13,12 +13,17 @@ export const transformStepData = ({
     upstream_header[header.header_name] = header.header_value;
   });
 
-  let data: RouteModule.Body = {
+  let { protocols } = step1Data;
+  if (step1Data.websocket) {
+    protocols = protocols.concat('websocket');
+  }
+
+  const data: RouteModule.Body = {
     ...step1Data,
     ...step2Data,
     ...step3Data,
     priority: 0,
-    protocols: step1Data.protocols.concat(step1Data.websocket ? 'websocket' : []),
+    protocols,
     uris: step1Data.paths,
     redirect: {
       redirect_to_https: true,
@@ -49,7 +54,7 @@ export const transformStepData = ({
     },
   };
 
-  data = omit(data, [
+  return omit(data, [
     'advancedMatchingRules',
     'upstreamProtocol',
     'upstreamHostList',
@@ -57,7 +62,5 @@ export const transformStepData = ({
     'upstreamHeaderList',
     'websocket',
     'timeout',
-  ]) as RouteModule.Body;
-
-  return data;
+  ]);
 };

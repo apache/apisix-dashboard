@@ -105,9 +105,9 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
           rules={[{ required: true, message: '请勾选协议' }]}
         >
           <Radio.Group onChange={onProtocolChange} name="upstreamProtocol" disabled={disabled}>
-            <Radio value="originalRequest">原始请求</Radio>
-            <Radio value="HTTP">HTTP</Radio>
-            <Radio value="HTTPS">HTTPS</Radio>
+            <Radio value="original">原始请求</Radio>
+            <Radio value="http">HTTP</Radio>
+            <Radio value="https">HTTPS</Radio>
           </Radio.Group>
         </Form.Item>
         {renderUpstreamMeta()}
