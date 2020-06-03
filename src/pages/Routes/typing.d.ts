@@ -22,7 +22,7 @@ declare namespace RouteModule {
     methods: HttpMethod[];
     redirect: boolean;
     forceHttps: boolean;
-    redirectURI?: boolean;
+    redirectURI?: string;
     redirectCode?: boolean;
     advancedMatchingRules: MatchingRule[];
   };
