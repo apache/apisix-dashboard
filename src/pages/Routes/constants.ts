@@ -1,4 +1,12 @@
-export const HTTP_METHOD_OPTION_LIST = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'];
+export const HTTP_METHOD_OPTION_LIST: RouteModule.HttpMethod[] = [
+  'GET',
+  'HEAD',
+  'POST',
+  'PUT',
+  'DELETE',
+  'OPTIONS',
+  'PATCH',
+];
 
 export const FORM_ITEM_LAYOUT = {
   labelCol: {
@@ -22,7 +30,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
   WebSocket: false,
   hosts: [''],
   paths: [],
-  httpMethods: [],
+  httpMethods: HTTP_METHOD_OPTION_LIST,
   advancedMatchingRules: [],
 };
 

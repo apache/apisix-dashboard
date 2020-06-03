@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Form from 'antd/es/form';
 import { Checkbox, Button, Input, Switch } from 'antd';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
-import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 import {
@@ -18,26 +17,9 @@ interface Props extends RouteModule.Data {}
 const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const { protocols } = data.step1Data;
 
-  // TODO: checkedList Validation
-  const [checkedList, setCheckedList] = useState(HTTP_METHOD_OPTION_LIST);
-  const [indeterminate, setIndeterminate] = useState(false);
-  const [checkAll, setCheckAll] = useState(true);
-
   const onProtocolChange = (e: CheckboxValueType[]) => {
     if (!e.includes('HTTP') && !e.includes('HTTPS')) return;
     onChange({ ...data.step1Data, protocols: e });
-  };
-
-  const onMethodsChange = (methods: CheckboxValueType[]) => {
-    setCheckedList(methods as RouteModule.HttpMethod[]);
-    setIndeterminate(!!methods.length && methods.length < HTTP_METHOD_OPTION_LIST.length);
-    setCheckAll(methods.length === HTTP_METHOD_OPTION_LIST.length);
-  };
-
-  const onCheckAllChange = (e: CheckboxChangeEvent) => {
-    setCheckedList(e.target.checked ? HTTP_METHOD_OPTION_LIST : []);
-    setIndeterminate(false);
-    setCheckAll(e.target.checked);
   };
 
   const renderHosts = () => (
@@ -149,21 +131,12 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
       </Form.Item>
       {renderHosts()}
       <Form.Item label="路径">{renderPaths()}</Form.Item>
-      <Form.Item label="HTTP 方法" name="httpMethods">
-        <Checkbox
-          indeterminate={indeterminate}
-          onChange={onCheckAllChange}
-          checked={checkAll}
-          disabled={disabled}
-        >
-          ANY
-        </Checkbox>
-        <Checkbox.Group
-          options={HTTP_METHOD_OPTION_LIST}
-          value={checkedList}
-          onChange={onMethodsChange}
-          disabled={disabled}
-        />
+      <Form.Item
+        label="HTTP 方法"
+        name="httpMethods"
+        rules={[{ required: true, message: '请勾选 HTTP 方法' }]}
+      >
+        <Checkbox.Group options={HTTP_METHOD_OPTION_LIST} disabled={disabled} />
       </Form.Item>
     </PanelSection>
   );
