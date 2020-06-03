@@ -21,6 +21,8 @@ const PluginModal: React.FC<Props> = (props) => {
       destroyOnClose
       visible={visible}
       title={`${useIntl().formatMessage({ id: 'component.global.edit.plugin' })} ${name}`}
+      okText="确定"
+      cancelText="取消"
     >
       <PluginForm form={form} {...props} />
     </Modal>

@@ -36,7 +36,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
 
 export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
   upstreamProtocol: 'originalRequest',
-  upstreamHostList: [{ host: '', port: 0, weight: 0 }],
+  upstreamHostList: [{ host: '', port: 80, weight: 0 }],
   upstreamHeaderList: [],
   upstreamPath: '',
   timeout: {

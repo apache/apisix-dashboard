@@ -59,8 +59,8 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                 ) : null}
               </Form.Item>
             ))}
-            <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-              {!disabled && (
+            {!disabled && (
+              <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
                   onClick={() => {
@@ -69,8 +69,8 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                 >
                   <PlusOutlined /> 增加
                 </Button>
-              )}
-            </Form.Item>
+              </Form.Item>
+            )}
           </div>
         );
       }}
@@ -98,8 +98,9 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                 )}
               </Form.Item>
             ))}
-            <Form.Item>
-              {!disabled && (
+            {fields.length === 0 && <span>无</span>}
+            {!disabled && (
+              <Form.Item>
                 <Button
                   type="dashed"
                   onClick={() => {
@@ -108,8 +109,8 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                 >
                   <PlusOutlined /> 增加
                 </Button>
-              )}
-            </Form.Item>
+              </Form.Item>
+            )}
           </div>
         );
       }}

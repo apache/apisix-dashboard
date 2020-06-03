@@ -71,8 +71,8 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
               </Row>
             </Form.Item>
           ))}
-          <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-            {!disabled && (
+          {!disabled && (
+            <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
               <Button
                 type="dashed"
                 onClick={() => {
@@ -81,8 +81,8 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
               >
                 <PlusOutlined /> 增加
               </Button>
-            )}
-          </Form.Item>
+            </Form.Item>
+          )}
         </>
       )}
     </Form.List>
