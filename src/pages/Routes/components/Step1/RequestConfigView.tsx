@@ -141,14 +141,14 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
               <Row gutter={10}>
                 <Col>
                   <Form.Item
-                    name="redirect_uri"
+                    name="redirectURI"
                     rules={[{ required: true, message: '请勾选输入 URI' }]}
                   >
                     <Input placeholder="请输入 URI" disabled={disabled} />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
-                  <Form.Item name="redirect_code" rules={[{ required: true, message: '请选择' }]}>
+                  <Form.Item name="redirectCode" rules={[{ required: true, message: '请选择' }]}>
                     <Select disabled={disabled}>
                       <Option value="301">301</Option>
                       <Option value="302">302</Option>

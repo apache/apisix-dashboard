@@ -14,6 +14,7 @@ declare namespace RouteModule {
 
   type Step1Data = {
     name: string;
+    desc: string;
     protocols: RequestProtocol[];
     websocket: boolean;
     hosts: string[];
@@ -21,6 +22,8 @@ declare namespace RouteModule {
     methods: HttpMethod[];
     redirect: boolean;
     forceHttps: boolean;
+    redirectURI?: boolean;
+    redirectCode?: boolean;
     advancedMatchingRules: MatchingRule[];
   };
 
@@ -69,6 +72,17 @@ declare namespace RouteModule {
 
   type ModalType = 'CREATE' | 'EDIT';
 
+  type Redirect =
+    | {
+        redirect_to_https: boolean;
+        code: 301 | 302;
+        uri: string;
+      }
+    | {
+        redirect_to_https: boolean;
+      }
+    | {};
+
   // Request Body or Response Data for API
   type Body = {
     name: string;
@@ -78,14 +92,7 @@ declare namespace RouteModule {
     uris: string[];
     hosts: string[];
     protocols: RequestProtocol[];
-    redirect:
-      | {
-          code: 301 | 302;
-          uri: string;
-        }
-      | {
-          redirect_to_https?: boolean;
-        };
+    redirect: Redirect;
     vars: [string, Operator, string][];
     upstream: {
       type: 'roundrobin' | 'chash';
