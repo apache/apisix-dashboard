@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Steps, Form } from 'antd';
+import { Card, Steps, Form, notification } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import Step1 from './components/Step1';
@@ -9,6 +9,7 @@ import CreateStep3 from './components/CreateStep3';
 import ActionBar from './components/ActionBar';
 import CreateStep4 from './components/CreateStep4';
 import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_2_DATA, DEFAULT_STEP_3_DATA } from './constants';
+import { createRoute } from './service';
 
 const { Step } = Steps;
 
@@ -64,28 +65,31 @@ const Create: React.FC = () => {
   };
 
   const onStepChange = (nextStep: number) => {
-    const nextStepAction = () => {
+    if (nextStep === 0) {
       setStep(nextStep);
-      window.scrollTo({ top: 0 });
-    };
-    if (nextStep > step && nextStep < 3) {
-      // Form Validation
-      if (step === 0) {
-        form1.validateFields().then((value) => {
-          setStep1Data({ ...step1Data, ...value });
-          nextStepAction();
-        });
-        return;
-      }
-      if (step === 1) {
-        form2.validateFields().then((value) => {
-          setStep1Data({ ...step1Data, ...value });
-          nextStepAction();
-        });
-        return;
-      }
     }
-    nextStepAction();
+    if (nextStep === 1) {
+      form1.validateFields().then((value) => {
+        setStep1Data({ ...step1Data, ...value });
+        setStep(nextStep);
+      });
+      return;
+    }
+    if (nextStep === 2) {
+      form2.validateFields().then((value) => {
+        setStep2Data({ ...step2Data, ...value });
+        setStep(nextStep);
+      });
+      return;
+    }
+    if (nextStep === 3) {
+      setStep(nextStep);
+    }
+    if (nextStep === 4) {
+      createRoute({ data }).then(() => {
+        notification.success({ message: '创建路由成功' });
+      });
+    }
   };
   return (
     <>
