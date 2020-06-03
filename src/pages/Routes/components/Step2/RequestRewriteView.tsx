@@ -88,6 +88,8 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
     </Form.List>
   );
 
+  const renderTimeUnit = () => <span style={{ margin: '0 8px' }}>ms</span>;
+
   return (
     <PanelSection title="请求改写">
       <Form
@@ -116,26 +118,35 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
         >
           <Input disabled={disabled} />
         </Form.Item>
-        <Form.Item
-          label="连接超时"
-          name={['timeout', 'connect']}
-          rules={[{ required: true, message: '连接超时时间' }]}
-        >
-          <InputNumber disabled={disabled} defaultValue={30000} /> ms
+        <Form.Item label="连接超时">
+          <Form.Item
+            name={['timeout', 'connect']}
+            noStyle
+            rules={[{ required: true, message: '请输入连接超时时间' }]}
+          >
+            <InputNumber disabled={disabled} />
+          </Form.Item>
+          {renderTimeUnit()}
         </Form.Item>
-        <Form.Item
-          label="发送超时"
-          name={['timeout', 'send']}
-          rules={[{ required: true, message: '发送超时时间' }]}
-        >
-          <InputNumber disabled={disabled} defaultValue={30000} /> ms
+        <Form.Item label="发送超时">
+          <Form.Item
+            name={['timeout', 'send']}
+            noStyle
+            rules={[{ required: true, message: '请输入发送超时时间' }]}
+          >
+            <InputNumber disabled={disabled} />
+          </Form.Item>
+          {renderTimeUnit()}
         </Form.Item>
-        <Form.Item
-          label="接收超时"
-          name={['timeout', 'read']}
-          rules={[{ required: true, message: '接收超时时间' }]}
-        >
-          <InputNumber disabled={disabled} defaultValue={30000} /> ms
+        <Form.Item label="接收超时">
+          <Form.Item
+            name={['timeout', 'read']}
+            noStyle
+            rules={[{ required: true, message: '请输入接收超时时间' }]}
+          >
+            <InputNumber disabled={disabled} />
+          </Form.Item>
+          {renderTimeUnit()}
         </Form.Item>
       </Form>
     </PanelSection>

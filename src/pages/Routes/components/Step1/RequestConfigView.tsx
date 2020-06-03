@@ -127,7 +127,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
         />
       </Form.Item>
       <Form.Item label="WebSocket" name="WebSocket" valuePropName="checked">
-        <Switch />
+        <Switch disabled={disabled} />
       </Form.Item>
       {renderHosts()}
       <Form.Item label="路径">{renderPaths()}</Form.Item>
