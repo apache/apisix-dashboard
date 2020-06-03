@@ -26,6 +26,7 @@ export const FORM_ITEM_WITHOUT_LABEL = {
 
 export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
   name: '',
+  desc: '',
   protocols: ['HTTP', 'HTTPS'],
   websocket: false,
   hosts: [''],

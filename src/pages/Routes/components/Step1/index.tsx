@@ -26,7 +26,7 @@ const Step1: React.FC<Props> = (props) => {
         onValuesChange={(field, value) => {
           if (field.protocols?.includes('HTTPS')) {
             form.setFieldsValue({ forceHttps: false });
-            onChange({ ...data.step1Data, forceHttps: false, ...value });
+            onChange({ ...data.step1Data, ...value, forceHttps: false });
             return;
           }
           onChange({ ...data.step1Data, ...value });
