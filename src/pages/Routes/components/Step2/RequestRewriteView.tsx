@@ -58,14 +58,15 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
                   </Form.Item>
                 </Col>
                 <Col>
-                  {fields.length > 1 ? (
-                    <MinusCircleOutlined
-                      style={{ margin: '0 8px' }}
-                      onClick={() => {
-                        remove(field.name);
-                      }}
-                    />
-                  ) : null}
+                  {!disabled &&
+                    (fields.length > 1 ? (
+                      <MinusCircleOutlined
+                        style={{ margin: '0 8px' }}
+                        onClick={() => {
+                          remove(field.name);
+                        }}
+                      />
+                    ) : null)}
                 </Col>
               </Row>
             </Form.Item>

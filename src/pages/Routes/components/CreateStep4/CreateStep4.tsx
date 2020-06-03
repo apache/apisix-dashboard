@@ -6,15 +6,16 @@ import Step2 from '../Step2';
 import CreateStep3 from '../CreateStep3';
 
 interface Props extends RouteModule.Data {
-  form: FormInstance;
+  form1: FormInstance;
+  form2: FormInstance;
 }
 
-const CreateStep4: React.FC<Props> = (props) => {
+const CreateStep4: React.FC<Props> = ({ form1, form2, ...rest }) => {
   return (
     <>
-      <Step1 {...props} disabled />
-      <Step2 {...props} disabled />
-      <CreateStep3 {...props} disabled />
+      <Step1 {...rest} form={form1} disabled />
+      <Step2 {...rest} form={form2} disabled />
+      <CreateStep3 {...rest} disabled />
     </>
   );
 };
