@@ -55,4 +55,5 @@ export default {
   'menu.setting': 'Settings',
   'menu.routes': 'Route',
   'menu.routes.create': 'Create a Route',
+  'menu.routes.edit': 'Edit the Route',
 };

@@ -35,11 +35,11 @@ export const transformStepData = ({
         case 'cookie':
           key = `cookie_${name}`;
           break;
-        case 'header':
+        case 'http':
           key = `http_${name}`;
           break;
         default:
-          key = `args_${name}`;
+          key = `arg_${name}`;
       }
       return [key, operator, value];
     }),
@@ -63,4 +63,69 @@ export const transformStepData = ({
     'websocket',
     'timeout',
   ]);
+};
+
+const transformVarsToRules = (
+  data: [string, RouteModule.Operator, string][],
+): RouteModule.MatchingRule[] =>
+  data.map(([key, operator, value]) => {
+    const [position, name] = key.split('_');
+    return {
+      position: position as RouteModule.VarPosition,
+      name,
+      value,
+      operator,
+      key: Math.random().toString(36).slice(2),
+    };
+  });
+
+const transformUpstreamNodes = (nodes: { [key: string]: number }): RouteModule.UpstreamHost[] => {
+  const data: RouteModule.UpstreamHost[] = [];
+  Object.entries(nodes).forEach(([k, v]) => {
+    const [host, port] = k.split(':');
+    data.push({ host, port: Number(port), weight: Number(v) });
+  });
+  return data;
+};
+
+export const transformRouteData = (data: RouteModule.Body) => {
+  const { name, desc, methods, uris, protocols, hosts, vars } = data;
+  // TODO: redirect
+
+  const step1Data: RouteModule.Step1Data = {
+    name,
+    desc,
+    protocols: protocols.filter((item) => item !== 'websocket'),
+    websocket: protocols.includes('websocket'),
+    hosts,
+    paths: uris,
+    methods,
+    advancedMatchingRules: transformVarsToRules(vars),
+  };
+
+  const { upstream, upstream_path, upstream_header } = data;
+
+  const upstreamHeaderList = Object.entries(upstream_header).map(([k, v]) => {
+    return { header_name: k, header_value: v, key: Math.random().toString(36).slice(2) };
+  });
+
+  const step2Data: RouteModule.Step2Data = {
+    // TODO: API
+    upstreamProtocol: 'original',
+    upstreamHeaderList,
+    upstreamHostList: transformUpstreamNodes(upstream.nodes),
+    upstreamPath: upstream_path.to,
+    timeout: upstream.timeout,
+  };
+
+  const { plugins } = data;
+  const step3Data: RouteModule.Step3Data = {
+    plugins,
+  };
+
+  return {
+    step1Data,
+    step2Data,
+    step3Data,
+  };
 };

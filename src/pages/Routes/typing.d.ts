@@ -1,8 +1,10 @@
 declare namespace RouteModule {
   type Operator = '==' | '～=' | '>' | '<' | '~~';
 
+  type VarPosition = 'arg' | 'http' | 'cookie';
+
   interface MatchingRule {
-    position: 'query' | 'params' | 'header' | 'cookie';
+    position: VarPosition;
     name: string;
     operator: Operator;
     value: string;
@@ -14,6 +16,7 @@ declare namespace RouteModule {
 
   type Step1Data = {
     name: string;
+    desc: string;
     protocols: RequestProtocol[];
     websocket: boolean;
     hosts: string[];
@@ -39,7 +42,7 @@ declare namespace RouteModule {
   }
 
   type UpstreamHost = {
-    host: '';
+    host: string;
     port: number;
     weight: number;
   };
@@ -69,8 +72,9 @@ declare namespace RouteModule {
 
   // Request Body or Response Data for API
   type Body = {
+    id?: number;
     name: string;
-    desc?: string;
+    desc: string;
     priority?: number;
     methods: HttpMethod[];
     uris: string[];
