@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Form from 'antd/es/form';
 import { Button, Table, Space, Modal, Input } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
 
 import PanelSection from '../PanelSection';
 
@@ -32,11 +31,6 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
       title: '值',
       dataIndex: 'header_value',
       key: 'header_value',
-    },
-    {
-      title: '描述',
-      dataIndex: 'header_desc',
-      key: 'header_desc',
     },
     disabled
       ? {}
@@ -93,7 +87,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
 
     return (
       <Modal
-        title={mode === 'EDIT' ? '编辑' : '增加'}
+        title={mode === 'EDIT' ? '编辑请求头' : '增加请求头'}
         centered
         visible={visible}
         onOk={handleOk}
@@ -117,9 +111,6 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
             rules={[{ required: true, message: '请输入值' }]}
           >
             <Input />
-          </Form.Item>
-          <Form.Item label="描述" name="header_desc">
-            <TextArea />
           </Form.Item>
         </Form>
       </Modal>

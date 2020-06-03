@@ -56,23 +56,23 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const columns = [
     {
       title: '参数位置',
-      dataIndex: 'paramsLocation',
-      key: 'paramsLocation',
+      dataIndex: 'position',
+      key: 'position',
     },
     {
       title: '参数名称',
-      dataIndex: 'paramsName',
-      key: 'paramsName',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: '运算符',
-      dataIndex: 'paramsExpresstion',
-      key: 'paramsExpresstion',
+      dataIndex: 'operator',
+      key: 'operator',
     },
     {
       title: '参数值',
-      dataIndex: 'paramsValue',
-      key: 'paramsValue',
+      dataIndex: 'value',
+      key: 'value',
     },
     disabled
       ? {}
@@ -104,7 +104,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
         <Form form={modalForm} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
           <Form.Item
             label="参数位置"
-            name="paramsLocation"
+            name="position"
             rules={[{ required: true, message: '请选择参数位置' }]}
           >
             <Select>
@@ -115,14 +115,14 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
           </Form.Item>
           <Form.Item
             label="参数名称"
-            name="paramsName"
+            name="name"
             rules={[{ required: true, message: '请输入参数名称' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="运算符"
-            name="paramsExpresstion"
+            name="operator"
             rules={[{ required: true, message: '请选择运算符' }]}
           >
             <Select>
@@ -133,11 +133,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
               <Option value="~~">正则匹配</Option>
             </Select>
           </Form.Item>
-          <Form.Item
-            label="值"
-            name="paramsValue"
-            rules={[{ required: true, message: '请输入参数值' }]}
-          >
+          <Form.Item label="值" name="value" rules={[{ required: true, message: '请输入参数值' }]}>
             <Input />
           </Form.Item>
         </Form>

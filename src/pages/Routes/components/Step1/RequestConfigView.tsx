@@ -126,14 +126,14 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
           onChange={onProtocolChange}
         />
       </Form.Item>
-      <Form.Item label="WebSocket" name="WebSocket" valuePropName="checked">
+      <Form.Item label="WebSocket" name="websocket" valuePropName="checked">
         <Switch disabled={disabled} />
       </Form.Item>
       {renderHosts()}
       <Form.Item label="路径">{renderPaths()}</Form.Item>
       <Form.Item
         label="HTTP 方法"
-        name="httpMethods"
+        name="methods"
         rules={[{ required: true, message: '请勾选 HTTP 方法' }]}
       >
         <Checkbox.Group options={HTTP_METHOD_OPTION_LIST} disabled={disabled} />

@@ -118,7 +118,7 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
         >
           <Input disabled={disabled} />
         </Form.Item>
-        <Form.Item label="连接超时">
+        <Form.Item label="连接超时" required>
           <Form.Item
             name={['timeout', 'connect']}
             noStyle
@@ -128,7 +128,7 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
           </Form.Item>
           {renderTimeUnit()}
         </Form.Item>
-        <Form.Item label="发送超时">
+        <Form.Item label="发送超时" required>
           <Form.Item
             name={['timeout', 'send']}
             noStyle
@@ -138,7 +138,7 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
           </Form.Item>
           {renderTimeUnit()}
         </Form.Item>
-        <Form.Item label="接收超时">
+        <Form.Item label="接收超时" required>
           <Form.Item
             name={['timeout', 'read']}
             noStyle
