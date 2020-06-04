@@ -19,7 +19,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const { protocols } = step1Data;
   const onProtocolChange = (e: CheckboxValueType[]) => {
     if (!e.includes('http') && !e.includes('https')) return;
-    onChange({ ...step1Data, protocols: e });
+    onChange({ ...data.step1Data, protocols: e });
   };
   const renderHosts = () => (
     <Form.List name="hosts">
