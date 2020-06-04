@@ -56,8 +56,24 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const columns = [
     {
       title: '参数位置',
-      dataIndex: 'position',
       key: 'position',
+      render: (text: RouteModule.MatchingRule) => {
+        let renderText;
+        switch (text.position) {
+          case 'http':
+            renderText = 'HTTP 请求头';
+            break;
+          case 'arg':
+            renderText = '请求参数';
+            break;
+          case 'cookie':
+            renderText = 'Cookie';
+            break;
+          default:
+            renderText = '';
+        }
+        return renderText;
+      },
     },
     {
       title: '参数名称',
