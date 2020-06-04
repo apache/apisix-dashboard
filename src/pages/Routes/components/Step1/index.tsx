@@ -1,7 +1,6 @@
 import React from 'react';
 import { Form } from 'antd';
 import { FormInstance } from 'antd/lib/form';
-
 import { FORM_ITEM_LAYOUT } from '@/pages/Routes/constants';
 import styles from '../../Create.less';
 

@@ -8,14 +8,19 @@ import CreateStep3 from '../CreateStep3';
 interface Props extends RouteModule.Data {
   form1: FormInstance;
   form2: FormInstance;
+  redirect?: boolean;
 }
 
-const CreateStep4: React.FC<Props> = ({ form1, form2, ...rest }) => {
+const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, ...rest }) => {
   return (
     <>
       <Step1 {...rest} form={form1} disabled />
-      <Step2 {...rest} form={form2} disabled />
-      <CreateStep3 {...rest} disabled />
+      {!redirect && (
+        <>
+          <Step2 {...rest} form={form2} disabled />
+          <CreateStep3 {...rest} disabled />
+        </>
+      )}
     </>
   );
 };

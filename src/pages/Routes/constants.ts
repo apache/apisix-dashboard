@@ -32,6 +32,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
   hosts: [''],
   paths: [],
   forceHttps: false,
+  redirectURI: '',
   redirectCode: 301,
   methods: HTTP_METHOD_OPTION_LIST,
   advancedMatchingRules: [],
@@ -60,3 +61,7 @@ export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
     },
   },
 };
+
+export const STEP_HEADER_2 = ['定义 API 请求', '预览'];
+
+export const STEP_HEADER_4 = ['定义 API 请求', '定义 API 后端服务', '插件配置', '预览'];

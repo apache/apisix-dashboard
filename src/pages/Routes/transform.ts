@@ -14,15 +14,16 @@ export const transformStepData = ({
   });
 
   let redirect: RouteModule.Redirect = {};
-  if (step1Data.redirect) {
-    if (step1Data.forceHttps) {
-      redirect = { redirect_to_https: true };
-    } else {
-      redirect = {
-        code: step1Data.redirectCode,
-        uri: step1Data.redirectURI,
-      };
-    }
+  if (step1Data.forceHttps) {
+    // TODO: 当只有步骤1预览的时候，需要清除步骤2和步骤3中的脏数据
+    redirect = { redirect_to_https: true };
+  }
+
+  if (step1Data.redirectURI !== '') {
+    redirect = {
+      code: step1Data.redirectCode,
+      uri: step1Data.redirectURI,
+    };
   }
 
   let { protocols } = step1Data;

@@ -8,7 +8,13 @@ import styles from './Create.less';
 import CreateStep3 from './components/CreateStep3';
 import ActionBar from './components/ActionBar';
 import CreateStep4 from './components/CreateStep4';
-import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_2_DATA, DEFAULT_STEP_3_DATA } from './constants';
+import {
+  DEFAULT_STEP_1_DATA,
+  DEFAULT_STEP_2_DATA,
+  DEFAULT_STEP_3_DATA,
+  STEP_HEADER_2,
+  STEP_HEADER_4,
+} from './constants';
 import { createRoute, fetchRoute, updateRoute } from './service';
 
 const { Step } = Steps;
@@ -22,7 +28,7 @@ const Create: React.FC = (props) => {
   const [form2] = Form.useForm();
 
   const [step, setStep] = useState(0);
-  const [stepHeader] = useState(['定义 API 请求', '定义 API 后端服务', '插件配置', '预览']);
+  const [stepHeader, setStepHeader] = useState(STEP_HEADER_4);
 
   const routeData = {
     step1Data,
@@ -46,7 +52,13 @@ const Create: React.FC = (props) => {
     if ((props as any).route.name === 'edit') {
       initRoute((props as any).match.params.rid);
     }
-  }, []);
+
+    if (step1Data.forceHttps || step1Data.redirectURI !== '') {
+      setStepHeader(STEP_HEADER_2);
+    } else {
+      setStepHeader(STEP_HEADER_4);
+    }
+  }, [step1Data]);
 
   const renderStep = () => {
     if (step === 0) {
@@ -55,13 +67,18 @@ const Create: React.FC = (props) => {
           data={routeData}
           form={form1}
           onChange={(params: RouteModule.Step1Data) => {
-            setStep1Data({ ...step1Data, ...params });
+            setStep1Data(params);
           }}
         />
       );
     }
 
     if (step === 1) {
+      if (stepHeader.length === 2) {
+        return (
+          <CreateStep4 data={routeData} form1={form1} form2={form2} onChange={() => {}} redirect />
+        );
+      }
       return (
         <Step2
           data={routeData}
