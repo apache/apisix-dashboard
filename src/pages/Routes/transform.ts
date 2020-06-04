@@ -30,7 +30,7 @@ export const transformStepData = ({
     protocols = protocols.concat('websocket');
   }
 
-  const data: RouteModule.Body = {
+  const data: Partial<RouteModule.Body> = {
     ...step1Data,
     ...step2Data,
     ...step3Data,
@@ -59,10 +59,13 @@ export const transformStepData = ({
       timeout: step2Data.timeout,
     },
     upstream_header,
-    upstream_path: {
-      to: step2Data.upstreamPath,
-    },
   };
+
+  if (step2Data.upstreamPath) {
+    data.upstream_path = {
+      to: step2Data.upstreamPath,
+    };
+  }
 
   return omit(data, [
     'advancedMatchingRules',
@@ -102,10 +105,9 @@ const transformUpstreamNodes = (nodes: { [key: string]: number }): RouteModule.U
 };
 
 export const transformRouteData = (data: RouteModule.Body) => {
-  const { name, desc, methods, uris, protocols, hosts, vars } = data;
-  // TODO: redirect
+  const { name, desc, methods, uris, protocols, hosts, vars, redirect } = data;
 
-  const step1Data: RouteModule.Step1Data = {
+  const step1Data: Partial<RouteModule.Step1Data> = {
     name,
     desc,
     protocols: protocols.filter((item) => item !== 'websocket'),
@@ -114,7 +116,14 @@ export const transformRouteData = (data: RouteModule.Body) => {
     paths: uris,
     methods,
     advancedMatchingRules: transformVarsToRules(vars),
+    redirect: Boolean(redirect),
+    forceHttps: Boolean(redirect.redirect_to_https),
   };
+
+  if (redirect.code) {
+    step1Data.redirectCode = redirect.code;
+    step1Data.redirectURI = redirect.uri;
+  }
 
   const { upstream, upstream_path, upstream_header } = data;
 
@@ -123,8 +132,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
   });
 
   const step2Data: RouteModule.Step2Data = {
-    // TODO: API
-    upstreamProtocol: 'original',
+    upstreamProtocol: 'keep',
     upstreamHeaderList,
     upstreamHostList: transformUpstreamNodes(upstream.nodes),
     upstreamPath: upstream_path.to,
