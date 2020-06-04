@@ -75,9 +75,9 @@ export const transformStepData = ({
     'upstreamHeaderList',
     'websocket',
     'timeout',
-    'redirect',
     'redirectURI',
     'redirectCode',
+    'forceHttps',
   ]) as RouteModule.Body;
 };
 
