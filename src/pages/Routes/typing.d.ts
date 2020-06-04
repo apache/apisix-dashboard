@@ -22,7 +22,6 @@ declare namespace RouteModule {
     hosts: string[];
     paths: string[];
     methods: HttpMethod[];
-    redirect: boolean;
     forceHttps: boolean;
     redirectURI?: string;
     redirectCode?: number;
