@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Steps, Form, notification } from 'antd';
+import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
-import Step1 from './components/Step1';
-import Step2 from './components/Step2';
-import styles from './Create.less';
-import CreateStep3 from './components/CreateStep3';
-import ActionBar from './components/ActionBar';
-import CreateStep4 from './components/CreateStep4';
 import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_2_DATA, DEFAULT_STEP_3_DATA } from './constants';
 import { createRoute, fetchRoute, updateRoute } from './service';
+import Step1 from './components/Step1';
+import Step2 from './components/Step2';
+import CreateStep3 from './components/CreateStep3';
+import CreateStep4 from './components/CreateStep4';
+import ResultView from './components/ResultView';
+import ActionBar from './components/ActionBar';
+import styles from './Create.less';
 
 const { Step } = Steps;
 
@@ -21,7 +22,7 @@ const Create: React.FC = (props) => {
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(3);
   const [stepHeader] = useState(['定义 API 请求', '定义 API 后端服务', '插件配置', '预览']);
 
   const routeData = {
@@ -47,6 +48,15 @@ const Create: React.FC = (props) => {
       initRoute((props as any).match.params.rid);
     }
   }, []);
+
+  const onReset = () => {
+    setStep1Data(DEFAULT_STEP_1_DATA);
+    setStep2Data(DEFAULT_STEP_2_DATA);
+    setStep3Data(DEFAULT_STEP_3_DATA);
+    form1.resetFields();
+    form2.resetFields();
+    setStep(0);
+  };
 
   const renderStep = () => {
     if (step === 0) {
@@ -81,6 +91,10 @@ const Create: React.FC = (props) => {
       return <CreateStep4 data={routeData} form1={form1} form2={form2} onChange={() => {}} />;
     }
 
+    if (step === 4) {
+      return <ResultView onReset={onReset} />;
+    }
+
     return null;
   };
 
@@ -108,15 +122,16 @@ const Create: React.FC = (props) => {
     if (nextStep === 4) {
       if ((props as any).route.name === 'edit') {
         updateRoute((props as any).match.params.rid, { data: routeData }).then(() => {
-          notification.success({ message: '更新路由成功' });
+          setStep(nextStep);
         });
       } else {
         createRoute({ data: routeData }).then(() => {
-          notification.success({ message: '创建路由成功' });
+          setStep(nextStep);
         });
       }
     }
   };
+
   return (
     <>
       <PageHeaderWrapper>
