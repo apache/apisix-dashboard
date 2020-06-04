@@ -67,7 +67,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
     {
       title: '运算符',
       key: 'operator',
-      render: (text: any) => {
+      render: (text: RouteModule.MatchingRule) => {
         let renderText;
         switch (text.operator) {
           case '==':
