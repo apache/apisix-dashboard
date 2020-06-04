@@ -16,3 +16,7 @@ export const updateRoute = (rid: number, data: Pick<RouteModule.Data, 'data'>, w
 
 export const fetchRoute = (rid: number, wid: number = 0) =>
   request(`/workspaces/${wid}/routes/${rid}`).then((data) => transformRouteData(data));
+
+export const fetchRouteList = (wid = 0) => request(`/workspaces/${wid}/routes`);
+
+export const removeRoute = (rid: number, wid = 0) => request(`/workspaces/${wid}/routes/${rid}`);

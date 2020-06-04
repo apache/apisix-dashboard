@@ -15,6 +15,7 @@ declare namespace RouteModule {
   type RequestProtocol = 'https' | 'http' | 'websocket';
 
   type BaseData = {
+    id?: number;
     name: string;
     desc: string;
   };
