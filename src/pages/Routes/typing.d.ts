@@ -14,6 +14,11 @@ declare namespace RouteModule {
   type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH';
   type RequestProtocol = 'https' | 'http' | 'websocket';
 
+  type BaseData = {
+    name: string;
+    desc: string;
+  };
+
   type Step1Data = {
     name: string;
     desc: string;
