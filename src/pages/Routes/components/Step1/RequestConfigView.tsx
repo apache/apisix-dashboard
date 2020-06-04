@@ -2,6 +2,7 @@ import React from 'react';
 import Form from 'antd/es/form';
 import { Checkbox, Button, Input, Switch, Select, Row, Col } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 
 import {
   HTTP_METHOD_OPTION_LIST,
@@ -13,14 +14,12 @@ import PanelSection from '../PanelSection';
 
 interface Props extends RouteModule.Data {}
 
-const { Option } = Select;
-
 const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const { step1Data } = data;
   const { protocols } = step1Data;
   const onProtocolChange = (e: CheckboxValueType[]) => {
     if (!e.includes('http') && !e.includes('https')) return;
-    onChange({ ...data.step1Data, protocols: e });
+    onChange({ ...step1Data, protocols: e });
   };
   const renderHosts = () => (
     <Form.List name="hosts">
@@ -145,7 +144,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
       {step1Data.redirect && (
         <>
           <Form.Item label="强制 HTTPS" valuePropName="checked" name="forceHttps">
-            <Switch disabled={disabled || step1Data.protocols.includes('HTTPS')} />
+            <Switch disabled={disabled || step1Data.protocols.includes('https')} />
           </Form.Item>
           {!step1Data.forceHttps && (
             <Form.Item label="自定义参数" required>
@@ -161,8 +160,8 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                     rules={[{ required: true, message: '请选择状态码' }]}
                   >
                     <Select disabled={disabled}>
-                      <Option value="301">301</Option>
-                      <Option value="302">302</Option>
+                      <Select.Option value="301">301</Select.Option>
+                      <Select.Option value="302">302</Select.Option>
                     </Select>
                   </Form.Item>
                 </Col>
