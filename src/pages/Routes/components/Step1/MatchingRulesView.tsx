@@ -66,8 +66,30 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
     },
     {
       title: '运算符',
-      dataIndex: 'operator',
       key: 'operator',
+      render: (text: any) => {
+        let renderText;
+        switch (text.operator) {
+          case '==':
+            renderText = '等于';
+            break;
+          case '～=':
+            renderText = '不等于';
+            break;
+          case '>':
+            renderText = '大于';
+            break;
+          case '<':
+            renderText = '小于';
+            break;
+          case '~~':
+            renderText = '正则匹配';
+            break;
+          default:
+            renderText = '';
+        }
+        return renderText;
+      },
     },
     {
       title: '参数值',
