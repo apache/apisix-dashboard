@@ -138,37 +138,27 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
       >
         <Checkbox.Group options={HTTP_METHOD_OPTION_LIST} disabled={disabled} />
       </Form.Item>
-      <Form.Item label="redirect" name="redirect" valuePropName="checked">
+      <Form.Item label="强制 HTTPS" valuePropName="checked" name="forceHttps">
         <Switch disabled={disabled} />
       </Form.Item>
-      {step1Data.redirect && (
-        <>
-          <Form.Item label="强制 HTTPS" valuePropName="checked" name="forceHttps">
-            <Switch disabled={disabled || step1Data.protocols.includes('https')} />
-          </Form.Item>
-          {!step1Data.forceHttps && (
-            <Form.Item label="自定义参数" required>
-              <Row gutter={10}>
-                <Col>
-                  <Form.Item name="redirectURI" rules={[{ required: true, message: '请输入 URI' }]}>
-                    <Input placeholder="请输入 URI" disabled={disabled} />
-                  </Form.Item>
-                </Col>
-                <Col span={6}>
-                  <Form.Item
-                    name="redirectCode"
-                    rules={[{ required: true, message: '请选择状态码' }]}
-                  >
-                    <Select disabled={disabled}>
-                      <Select.Option value="301">301</Select.Option>
-                      <Select.Option value="302">302</Select.Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form.Item>
-          )}
-        </>
+      {!step1Data.forceHttps && (
+        <Form.Item label="自定义重定向">
+          <Row gutter={10}>
+            <Col>
+              <Form.Item name="redirectURI">
+                <Input placeholder="请输入 URI" disabled={disabled} />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name="redirectCode">
+                <Select disabled={disabled}>
+                  <Select.Option value="301">301</Select.Option>
+                  <Select.Option value="302">302</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form.Item>
       )}
     </PanelSection>
   );
