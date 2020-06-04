@@ -122,7 +122,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
 
   return (
     <PanelSection title="请求基础定义">
-      <Form.Item label="协议" name="protocols" rules={[{ required: true, message: '请勾选协议' }]}>
+      <Form.Item label="协议" name="protocols" rules={[{ required: true, message: '请选择协议' }]}>
         <Checkbox.Group
           disabled={disabled}
           options={['http', 'https']}
@@ -138,7 +138,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
       <Form.Item
         label="HTTP 方法"
         name="methods"
-        rules={[{ required: true, message: '请勾选 HTTP 方法' }]}
+        rules={[{ required: true, message: '请选择 HTTP 方法' }]}
       >
         <Checkbox.Group options={HTTP_METHOD_OPTION_LIST} disabled={disabled} />
       </Form.Item>
@@ -156,13 +156,13 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
                 <Col>
                   <Form.Item
                     name="redirectURI"
-                    rules={[{ required: true, message: '请勾选输入 URI' }]}
+                    rules={[{ required: true, message: '请输入 URI' }]}
                   >
                     <Input placeholder="请输入 URI" disabled={disabled} />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
-                  <Form.Item name="redirectCode" rules={[{ required: true, message: '请选择' }]}>
+                  <Form.Item name="redirectCode" rules={[{ required: true, message: '请选择状态码' }]}>
                     <Select disabled={disabled}>
                       <Option value="301">301</Option>
                       <Option value="302">302</Option>
