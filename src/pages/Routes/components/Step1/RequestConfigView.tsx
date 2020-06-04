@@ -16,15 +16,12 @@ interface Props extends RouteModule.Data {}
 const { Option } = Select;
 
 const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
-  const { protocols } = data.step1Data;
-
+  const { step1Data } = data;
+  const { protocols } = step1Data;
   const onProtocolChange = (e: CheckboxValueType[]) => {
     if (!e.includes('http') && !e.includes('https')) return;
     onChange({ ...data.step1Data, protocols: e });
   };
-
-const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
-  const { step1Data } = data;
   const renderHosts = () => (
     <Form.List name="hosts">
       {(fields, { add, remove }) => {
@@ -154,15 +151,15 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
             <Form.Item label="自定义参数" required>
               <Row gutter={10}>
                 <Col>
-                  <Form.Item
-                    name="redirectURI"
-                    rules={[{ required: true, message: '请输入 URI' }]}
-                  >
+                  <Form.Item name="redirectURI" rules={[{ required: true, message: '请输入 URI' }]}>
                     <Input placeholder="请输入 URI" disabled={disabled} />
                   </Form.Item>
                 </Col>
                 <Col span={6}>
-                  <Form.Item name="redirectCode" rules={[{ required: true, message: '请选择状态码' }]}>
+                  <Form.Item
+                    name="redirectCode"
+                    rules={[{ required: true, message: '请选择状态码' }]}
+                  >
                     <Select disabled={disabled}>
                       <Option value="301">301</Option>
                       <Option value="302">302</Option>
