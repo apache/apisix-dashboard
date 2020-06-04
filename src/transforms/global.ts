@@ -22,6 +22,7 @@ interface ListData<T> {
 
 export interface ListItem<T> extends Node<T> {
   displayKey: string;
+  id?: number;
 }
 
 const key2id = (key: string) => parseInt(key.replace(/^(0+)/, ''), 10);
@@ -31,7 +32,7 @@ const key2id = (key: string) => parseInt(key.replace(/^(0+)/, ''), 10);
  */
 export const transformFetchListData = <T>(data: ListData<T>): RequestData<ListItem<T>> => {
   const results = (data.node.nodes || [])
-    .map(node => {
+    .map((node) => {
       const result = node.key.match(/\/([0-9]+)/);
       let displayKey = '';
 
@@ -46,7 +47,7 @@ export const transformFetchListData = <T>(data: ListData<T>): RequestData<ListIt
         displayKey,
       };
     })
-    .filter(item => item.displayKey);
+    .filter((item) => item.displayKey);
 
   return {
     data: results,
