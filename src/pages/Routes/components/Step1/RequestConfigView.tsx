@@ -15,6 +15,14 @@ interface Props extends RouteModule.Data {}
 
 const { Option } = Select;
 
+const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
+  const { protocols } = data.step1Data;
+
+  const onProtocolChange = (e: CheckboxValueType[]) => {
+    if (!e.includes('http') && !e.includes('https')) return;
+    onChange({ ...data.step1Data, protocols: e });
+  };
+
 const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
   const { step1Data } = data;
   const renderHosts = () => (
@@ -54,8 +62,8 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
                 ) : null}
               </Form.Item>
             ))}
-            <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-              {!disabled && (
+            {!disabled && (
+              <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
                   onClick={() => {
@@ -64,8 +72,8 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
                 >
                   <PlusOutlined /> 增加
                 </Button>
-              )}
-            </Form.Item>
+              </Form.Item>
+            )}
           </div>
         );
       }}
@@ -93,8 +101,9 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
                 )}
               </Form.Item>
             ))}
-            <Form.Item>
-              {!disabled && (
+            {fields.length === 0 && disabled && <span>无</span>}
+            {!disabled && (
+              <Form.Item>
                 <Button
                   type="dashed"
                   onClick={() => {
@@ -103,8 +112,8 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
                 >
                   <PlusOutlined /> 增加
                 </Button>
-              )}
-            </Form.Item>
+              </Form.Item>
+            )}
           </div>
         );
       }}
@@ -114,7 +123,12 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled }) => {
   return (
     <PanelSection title="请求基础定义">
       <Form.Item label="协议" name="protocols" rules={[{ required: true, message: '请勾选协议' }]}>
-        <Checkbox.Group disabled={disabled} options={['HTTP', 'HTTPS']} />
+        <Checkbox.Group
+          disabled={disabled}
+          options={['http', 'https']}
+          value={protocols}
+          onChange={onProtocolChange}
+        />
       </Form.Item>
       <Form.Item label="WebSocket" name="websocket" valuePropName="checked">
         <Switch disabled={disabled} />

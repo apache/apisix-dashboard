@@ -95,6 +95,8 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
           setVisible(false);
           modalForm.resetFields();
         }}
+        okText="确定"
+        cancelText="取消"
         destroyOnClose
       >
         <Form form={modalForm} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>

@@ -99,6 +99,8 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
           setVisible(false);
           modalForm.resetFields();
         }}
+        okText="确定"
+        cancelText="取消"
         destroyOnClose
       >
         <Form form={modalForm} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
@@ -108,8 +110,8 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
             rules={[{ required: true, message: '请选择参数位置' }]}
           >
             <Select>
-              <Option value="header">HTTP 请求头</Option>
-              <Option value="arguments">请求参数</Option>
+              <Option value="http">HTTP 请求头</Option>
+              <Option value="arg">请求参数</Option>
               <Option value="cookie">Cookie</Option>
             </Select>
           </Form.Item>

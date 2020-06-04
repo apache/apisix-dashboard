@@ -48,6 +48,12 @@ const routes = [
         component: './Routes/Create',
         hideInMenu: true,
       },
+      {
+        path: '/routes/:rid/edit',
+        name: 'edit',
+        component: './Routes/Create',
+        hideInMenu: true,
+      },
     ],
   },
   {
