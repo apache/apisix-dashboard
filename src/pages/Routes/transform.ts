@@ -13,6 +13,18 @@ export const transformStepData = ({
     upstream_header[header.header_name] = header.header_value;
   });
 
+  let redirect: RouteModule.Redirect = {};
+  if (step1Data.redirect) {
+    if (step1Data.forceHttps) {
+      redirect = { redirect_to_https: true };
+    } else {
+      redirect = {
+        code: step1Data.redirectCode,
+        uri: step1Data.redirectURI,
+      };
+    }
+  }
+
   let { protocols } = step1Data;
   if (step1Data.websocket) {
     protocols = protocols.concat('websocket');
@@ -25,9 +37,7 @@ export const transformStepData = ({
     priority: 0,
     protocols,
     uris: step1Data.paths,
-    redirect: {
-      redirect_to_https: true,
-    },
+    redirect,
     vars: step1Data.advancedMatchingRules.map((rule) => {
       const { operator, position, name, value } = rule;
       let key = '';
@@ -62,7 +72,10 @@ export const transformStepData = ({
     'upstreamHeaderList',
     'websocket',
     'timeout',
-  ]);
+    'redirect',
+    'redirectURI',
+    'redirectCode',
+  ]) as RouteModule.Body;
 };
 
 const transformVarsToRules = (
