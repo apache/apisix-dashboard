@@ -23,13 +23,8 @@ const Step1: React.FC<Props> = (props) => {
         form={form}
         layout="horizontal"
         className={styles.stepForm}
-        onValuesChange={(field, value) => {
-          if (field.protocols?.includes('HTTPS')) {
-            form.setFieldsValue({ forceHttps: false });
-            onChange({ ...data.step1Data, ...value, forceHttps: false });
-            return;
-          }
-          onChange({ ...data.step1Data, ...value });
+        onValuesChange={(field) => {
+          onChange({ ...data.step1Data, ...field });
         }}
         initialValues={data.step1Data}
       >

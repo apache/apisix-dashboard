@@ -44,9 +44,9 @@ export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
   upstreamHeaderList: [],
   upstreamPath: undefined,
   timeout: {
-    connect: 10000,
-    send: 10000,
-    read: 10000,
+    connect: 6000,
+    send: 6000,
+    read: 6000,
   },
 };
 

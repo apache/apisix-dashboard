@@ -65,9 +65,7 @@ const Create: React.FC = (props) => {
           data={routeData}
           form={form1}
           onChange={(params: RouteModule.Step1Data) => {
-            requestAnimationFrame(() => {
-              setStep1Data(params);
-            });
+            setStep1Data({ ...step1Data, ...params });
           }}
         />
       );
