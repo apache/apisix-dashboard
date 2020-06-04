@@ -40,7 +40,13 @@ const routes = [
     routes: [
       {
         path: '/routes',
-        redirect: '/routes/create',
+        redirect: '/routes/list',
+      },
+      {
+        path: '/routes/list',
+        name: 'list',
+        icon: 'BarsOutlined',
+        component: './Routes/List',
       },
       {
         path: '/routes/create',
