@@ -33,7 +33,7 @@ const Create: React.FC = (props) => {
   const initRoute = (rid: number) => {
     fetchRoute(rid).then((data) => {
       form1.setFieldsValue(data.step1Data);
-      setStep1Data(data.step1Data);
+      setStep1Data(data.step1Data as RouteModule.Step1Data);
 
       form2.setFieldsValue(data.step2Data);
       setStep2Data(data.step2Data);

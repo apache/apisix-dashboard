@@ -60,9 +60,9 @@ declare namespace RouteModule {
   }
 
   type Step2Data = {
-    upstreamProtocol: 'http' | 'https' | 'original';
+    upstreamProtocol: 'http' | 'https' | 'keep';
     upstreamHostList: UpstreamHost[];
-    upstreamPath: string;
+    upstreamPath: string | undefined;
     upstreamHeaderList: UpstreamHeader[];
     timeout: {
       connect: number;
@@ -73,16 +73,11 @@ declare namespace RouteModule {
 
   type ModalType = 'CREATE' | 'EDIT';
 
-  type Redirect =
-    | {
-        redirect_to_https: boolean;
-        code: 301 | 302;
-        uri: string;
-      }
-    | {
-        redirect_to_https: boolean;
-      }
-    | {};
+  type Redirect = {
+    code?: number;
+    uri?: string;
+    redirect_to_https?: boolean;
+  };
 
   // Request Body or Response Data for API
   type Body = {

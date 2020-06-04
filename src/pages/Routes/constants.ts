@@ -38,14 +38,15 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
 };
 
 export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
-  upstreamProtocol: 'original',
+  upstreamProtocol: 'keep',
+  // TODO: 展示 placeholder
   upstreamHostList: [{ host: '', port: 80, weight: 0 }],
   upstreamHeaderList: [],
-  upstreamPath: '',
+  upstreamPath: undefined,
   timeout: {
-    connect: 30000,
-    send: 30000,
-    read: 30000,
+    connect: 10000,
+    send: 10000,
+    read: 10000,
   },
 };
 
