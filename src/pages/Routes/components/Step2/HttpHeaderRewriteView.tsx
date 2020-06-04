@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Form from 'antd/es/form';
-import { Button, Table, Space, Modal, Input } from 'antd';
+import { Button, Table, Space, Modal, Input, Select } from 'antd';
 
 import PanelSection from '../PanelSection';
 
@@ -11,6 +11,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
   const [visible, setVisible] = useState(false);
   const [modalForm] = Form.useForm();
   const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
+  const [showModalValue, setShowModalValue] = useState(true);
 
   const handleEdit = (record: RouteModule.UpstreamHeader) => {
     setMode('EDIT');
@@ -26,6 +27,14 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
       title: '请求头',
       dataIndex: 'header_name',
       key: 'header_name',
+    },
+    {
+      title: '行为',
+      dataIndex: 'header_action',
+      key: 'header_action',
+      render: (action: 'override' | 'remove') => {
+        return action === 'override' ? '重写/新建' : '删除';
+      },
     },
     {
       title: '值',
@@ -87,7 +96,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
 
     return (
       <Modal
-        title={mode === 'EDIT' ? '编辑请求头' : '增加请求头'}
+        title={mode === 'EDIT' ? '编辑请求头' : '操作请求头'}
         centered
         visible={visible}
         onOk={handleOk}
@@ -108,12 +117,24 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
             <Input />
           </Form.Item>
           <Form.Item
-            label="值"
-            name="header_value"
-            rules={[{ required: true, message: '请输入值' }]}
+            label="行为"
+            name="header_action"
+            rules={[{ required: true, message: '请输入请求头' }]}
           >
-            <Input />
+            <Select onChange={(e) => setShowModalValue(e === 'override')}>
+              <Select.Option value="override">重写/添加</Select.Option>
+              <Select.Option value="remove">删除</Select.Option>
+            </Select>
           </Form.Item>
+          {showModalValue && (
+            <Form.Item
+              label="值"
+              name="header_value"
+              rules={[{ required: true, message: '请输入值' }]}
+            >
+              <Input />
+            </Form.Item>
+          )}
         </Form>
       </Modal>
     );
@@ -126,13 +147,14 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
           onClick={() => {
             setMode('CREATE');
             setVisible(true);
+            modalForm.setFieldsValue({ header_action: 'override' });
           }}
           type="primary"
           style={{
             marginBottom: 16,
           }}
         >
-          增加
+          操作
         </Button>
       )}
       <Table key="table" bordered dataSource={upstreamHeaderList} columns={columns} />
