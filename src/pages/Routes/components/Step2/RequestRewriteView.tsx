@@ -105,19 +105,33 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
           rules={[{ required: true, message: '请勾选协议' }]}
         >
           <Radio.Group onChange={onProtocolChange} name="upstreamProtocol" disabled={disabled}>
-            <Radio value="original">原始请求</Radio>
+            <Radio value="keep">保持原样</Radio>
             <Radio value="http">HTTP</Radio>
             <Radio value="https">HTTPS</Radio>
           </Radio.Group>
         </Form.Item>
         {renderUpstreamMeta()}
-        <Form.Item
-          label="请求路径"
-          name="upstreamPath"
-          rules={[{ required: true, message: '请输入请求路径' }]}
-        >
-          <Input disabled={disabled} />
+        <Form.Item label="请求路径">
+          <Radio.Group
+            defaultValue={step2Data.upstreamPath === undefined ? 'keep' : 'modify'}
+            onChange={(e) => {
+              onChange({ upstreamPath: e.target.value === 'keep' ? undefined : '' });
+            }}
+            disabled={disabled}
+          >
+            <Radio value="keep">保持原样</Radio>
+            <Radio value="modify">修改</Radio>
+          </Radio.Group>
         </Form.Item>
+        {step2Data.upstreamPath !== undefined && (
+          <Form.Item
+            label="新路径"
+            name="upstreamPath"
+            rules={[{ required: true, message: '请输入请求路径' }]}
+          >
+            <Input disabled={disabled} />
+          </Form.Item>
+        )}
         <Form.Item label="连接超时" required>
           <Form.Item
             name={['timeout', 'connect']}
