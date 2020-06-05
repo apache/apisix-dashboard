@@ -40,8 +40,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
 
 export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
   upstreamProtocol: 'keep',
-  // TODO: 展示 placeholder
-  upstreamHostList: [{ host: '', port: 80, weight: 0 }],
+  upstreamHostList: [{} as RouteModule.UpstreamHost],
   upstreamHeaderList: [],
   upstreamPath: undefined,
   timeout: {
