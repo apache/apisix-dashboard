@@ -13,18 +13,20 @@ const RouteList: React.FC = () => {
 
   const columns: ProColumns<ListItem<RouteModule.BaseData>>[] = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      sortOrder: 'descend',
-      hideInSearch: true,
-    },
-    {
       title: '名称',
       dataIndex: 'name',
     },
     {
+      title: '优先级',
+      dataIndex: 'priority',
+    },
+    {
       title: '描述',
-      dataIndex: 'desc',
+      dataIndex: 'description',
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'update_time',
     },
     {
       title: '操作',
@@ -61,7 +63,7 @@ const RouteList: React.FC = () => {
     <PageHeaderWrapper>
       <ProTable<ListItem<RouteModule.BaseData>>
         actionRef={ref}
-        rowKey="id"
+        rowKey="name"
         request={() => fetchRouteList()}
         columns={columns}
         search={false}

@@ -82,7 +82,7 @@ declare namespace RouteModule {
   type Redirect = {
     code?: number;
     uri?: string;
-    redirect_to_https?: boolean;
+    http_to_https?: boolean;
   };
 
   // Request Body or Response Data for API
@@ -95,7 +95,7 @@ declare namespace RouteModule {
     uris: string[];
     hosts: string[];
     protocols: RequestProtocol[];
-    redirect: Redirect;
+    redirect?: Redirect;
     vars: [string, Operator, string][];
     upstream: {
       type: 'roundrobin' | 'chash';
@@ -108,7 +108,7 @@ declare namespace RouteModule {
         read: number;
       };
     };
-    upstream_path: {
+    upstream_path?: {
       from?: string;
       to: string;
     };

@@ -15,7 +15,7 @@ export const transformStepData = ({
 
   let redirect: RouteModule.Redirect = {};
   if (step1Data.forceHttps) {
-    redirect = { redirect_to_https: true };
+    redirect = { http_to_https: true };
   } else if (step1Data.redirectURI !== '') {
     redirect = {
       code: step1Data.redirectCode,
@@ -66,10 +66,9 @@ export const transformStepData = ({
   }
 
   // 未启用 redirect
-  if (!redirect.uri && !redirect.redirect_to_https) {
+  if (!redirect.uri) {
     // 移除前端部分自定义变量
     return omit(data, [
-      'redirect',
       'advancedMatchingRules',
       'upstreamHostList',
       'upstreamPath',
@@ -79,6 +78,7 @@ export const transformStepData = ({
       'redirectURI',
       'redirectCode',
       'forceHttps',
+      Object.keys(redirect).length === 0 ? 'redirect' : '',
     ]);
   }
 
@@ -86,7 +86,7 @@ export const transformStepData = ({
 };
 
 const transformVarsToRules = (
-  data: [string, RouteModule.Operator, string][],
+  data: [string, RouteModule.Operator, string][] = [],
 ): RouteModule.MatchingRule[] =>
   data.map(([key, operator, value]) => {
     const [position, name] = key.split('_');
@@ -99,8 +99,10 @@ const transformVarsToRules = (
     };
   });
 
-const transformUpstreamNodes = (nodes: { [key: string]: number }): RouteModule.UpstreamHost[] => {
-  const data: RouteModule.UpstreamHost[] = [];
+const transformUpstreamNodes = (
+  nodes: { [key: string]: number } = {},
+): RouteModule.UpstreamHost[] => {
+  const data: RouteModule.UpstreamHost[] = [{} as RouteModule.UpstreamHost];
   Object.entries(nodes).forEach(([k, v]) => {
     const [host, port] = k.split(':');
     data.push({ host, port: Number(port), weight: Number(v) });
@@ -120,17 +122,17 @@ export const transformRouteData = (data: RouteModule.Body) => {
     paths: uris,
     methods,
     advancedMatchingRules: transformVarsToRules(vars),
-    forceHttps: Boolean(redirect.redirect_to_https),
+    forceHttps: Boolean(redirect?.http_to_https),
   };
 
-  if (redirect.uri) {
+  if (redirect?.uri) {
     step1Data.redirectCode = redirect.code;
     step1Data.redirectURI = redirect.uri;
   }
 
-  const { upstream, upstream_path, upstream_header, upstream_protocol } = data;
+  const { upstream, upstream_path, upstream_header, upstream_protocol = 'keep' } = data;
 
-  const upstreamHeaderList = Object.entries(upstream_header).map(([k, v]) => {
+  const upstreamHeaderList = Object.entries(upstream_header || {}).map(([k, v]) => {
     return {
       header_name: k,
       header_value: v,
@@ -142,9 +144,13 @@ export const transformRouteData = (data: RouteModule.Body) => {
   const step2Data: RouteModule.Step2Data = {
     upstream_protocol,
     upstreamHeaderList,
-    upstreamHostList: transformUpstreamNodes(upstream.nodes),
-    upstreamPath: upstream_path.to,
-    timeout: upstream.timeout,
+    upstreamHostList: transformUpstreamNodes(upstream?.nodes),
+    upstreamPath: upstream_path?.to,
+    timeout: upstream?.timeout || {
+      connect: 6000,
+      send: 6000,
+      read: 6000,
+    },
   };
 
   const { plugins } = data;
