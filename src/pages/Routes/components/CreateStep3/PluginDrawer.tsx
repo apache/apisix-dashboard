@@ -57,7 +57,7 @@ const PluginDrawer: React.FC<Props> = ({
                   style={{ marginRight: 8, marginLeft: 8 }}
                   onClick={() => form.submit()}
                 >
-                  提交
+                  确认
                 </Button>
               </div>
             )}

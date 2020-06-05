@@ -32,7 +32,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                 label={index === 0 ? '域名' : ''}
                 required
                 key={field.key}
-                extra='域名或 IP：支持泛域名，如 "\*.test.com"'
+                extra={index === 0 ? '域名或 IP：支持泛域名，如 "*.test.com"' : ''}
               >
                 <Form.Item
                   {...field}
@@ -89,7 +89,11 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                 extra='请求路径，如 "/foo/index.html"，支持请求路径前缀 "/foo/\*"'
               >
                 <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
-                  <Input placeholder="请输入请求路径" style={{ width: '60%' }} disabled={disabled} />
+                  <Input
+                    placeholder="请输入请求路径"
+                    style={{ width: '60%' }}
+                    disabled={disabled}
+                  />
                 </Form.Item>
                 {!disabled && (
                   <MinusCircleOutlined

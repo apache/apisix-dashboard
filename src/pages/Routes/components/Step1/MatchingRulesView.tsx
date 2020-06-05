@@ -129,7 +129,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const renderModal = () => {
     return (
       <Modal
-        title={mode === 'EDIT' ? '编辑' : '增加'}
+        title={mode === 'EDIT' ? '编辑规则' : '增加规则'}
         centered
         visible={visible}
         onOk={onOk}
@@ -150,9 +150,9 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
             <Select
               onChange={(value) => {
                 if (value === 'http') {
-                  setNamePlaceholder('请求头名字比如：Host');
+                  setNamePlaceholder('请求头键名：例如 HOST');
                 } else {
-                  setNamePlaceholder('比如：name');
+                  setNamePlaceholder('参数名称：例如 id');
                 }
               }}
             >
@@ -165,6 +165,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
             label="参数名称"
             name="name"
             rules={[{ required: true, message: '请输入参数名称' }]}
+            extra="只支持字母和数字，并且以字母开头"
           >
             <Input placeholder={namePlaceholder} />
           </Form.Item>

@@ -55,7 +55,9 @@ const Create: React.FC = (props) => {
     if ((props as any).route.name === 'edit') {
       initRoute((props as any).match.params.rid);
     }
+  }, []);
 
+  useEffect(() => {
     if (step1Data.redirectURI !== '') {
       if (step1Data.forceHttps) {
         setStep1Data({ ...step1Data, redirectURI: '' });
