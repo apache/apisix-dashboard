@@ -51,14 +51,7 @@ export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
 };
 
 export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
-  plugins: {
-    'limit-count': {
-      count: 2,
-      time_window: 60,
-      rejected_code: 503,
-      key: 'remote_addr',
-    },
-  },
+  plugins: {},
 };
 
 export const STEP_HEADER_2 = ['定义 API 请求', '预览'];
