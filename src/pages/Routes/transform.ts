@@ -1,4 +1,4 @@
-import { omit } from 'lodash';
+import { omit, pick } from 'lodash';
 
 export const transformStepData = ({
   data: { step1Data, step2Data, step3Data },
@@ -14,15 +14,15 @@ export const transformStepData = ({
   });
 
   let redirect: RouteModule.Redirect = {};
-  if (step1Data.redirect) {
-    if (step1Data.forceHttps) {
-      redirect = { redirect_to_https: true };
-    } else {
-      redirect = {
-        code: step1Data.redirectCode,
-        uri: step1Data.redirectURI,
-      };
-    }
+  if (step1Data.forceHttps) {
+    redirect = { redirect_to_https: true };
+  }
+
+  if (step1Data.redirectURI !== '') {
+    redirect = {
+      code: step1Data.redirectCode,
+      uri: step1Data.redirectURI,
+    };
   }
 
   let { protocols } = step1Data;
@@ -67,7 +67,7 @@ export const transformStepData = ({
     };
   }
 
-  return omit(data, [
+  const transformData = omit(data, [
     'advancedMatchingRules',
     'upstreamProtocol',
     'upstreamHostList',
@@ -78,7 +78,18 @@ export const transformStepData = ({
     'redirectURI',
     'redirectCode',
     'forceHttps',
-  ]) as RouteModule.Body;
+  ]);
+
+  if (step1Data.redirectURI !== '') {
+    return pick(transformData, [
+      'protocols',
+      'hosts',
+      'uris',
+      'methods',
+      'redirect',
+    ]) as RouteModule.Body;
+  }
+  return transformData;
 };
 
 const transformVarsToRules = (
@@ -116,7 +127,6 @@ export const transformRouteData = (data: RouteModule.Body) => {
     paths: uris,
     methods,
     advancedMatchingRules: transformVarsToRules(vars),
-    redirect: Boolean(redirect),
     forceHttps: Boolean(redirect.redirect_to_https),
   };
 

@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
-import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_2_DATA, DEFAULT_STEP_3_DATA } from './constants';
 import { createRoute, fetchRoute, updateRoute } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import CreateStep3 from './components/CreateStep3';
 import CreateStep4 from './components/CreateStep4';
+import {
+  DEFAULT_STEP_1_DATA,
+  DEFAULT_STEP_2_DATA,
+  DEFAULT_STEP_3_DATA,
+  STEP_HEADER_2,
+  STEP_HEADER_4,
+} from './constants';
 import ResultView from './components/ResultView';
 import ActionBar from './components/ActionBar';
 import styles from './Create.less';
@@ -19,11 +25,13 @@ const Create: React.FC = (props) => {
   const [step2Data, setStep2Data] = useState(DEFAULT_STEP_2_DATA);
   const [step3Data, setStep3Data] = useState(DEFAULT_STEP_3_DATA);
 
+  const [redirect, setRedirect] = useState(false);
+
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
 
   const [step, setStep] = useState(0);
-  const [stepHeader] = useState(['定义 API 请求', '定义 API 后端服务', '插件配置', '预览']);
+  const [stepHeader, setStepHeader] = useState(STEP_HEADER_4);
 
   const routeData = {
     step1Data,
@@ -47,7 +55,15 @@ const Create: React.FC = (props) => {
     if ((props as any).route.name === 'edit') {
       initRoute((props as any).match.params.rid);
     }
-  }, []);
+
+    if (step1Data.redirectURI !== '') {
+      setRedirect(true);
+      setStepHeader(STEP_HEADER_2);
+    } else {
+      setRedirect(false);
+      setStepHeader(STEP_HEADER_4);
+    }
+  }, [step1Data]);
 
   const onReset = () => {
     setStep1Data(DEFAULT_STEP_1_DATA);
@@ -72,6 +88,11 @@ const Create: React.FC = (props) => {
     }
 
     if (step === 1) {
+      if (redirect) {
+        return (
+          <CreateStep4 data={routeData} form1={form1} form2={form2} onChange={() => {}} redirect />
+        );
+      }
       return (
         <Step2
           data={routeData}
@@ -108,6 +129,12 @@ const Create: React.FC = (props) => {
       return;
     }
     if (nextStep === 2) {
+      if (redirect) {
+        createRoute({ data: routeData }).then(() => {
+          return <ResultView onReset={onReset} />;
+        });
+        return;
+      }
       form2.validateFields().then((value) => {
         setStep2Data({ ...step2Data, ...value });
         setStep(nextStep);
@@ -144,6 +171,7 @@ const Create: React.FC = (props) => {
       </PageHeaderWrapper>
       <ActionBar
         step={step}
+        redirect={redirect}
         onChange={(nextStep) => {
           onStepChange(nextStep);
         }}

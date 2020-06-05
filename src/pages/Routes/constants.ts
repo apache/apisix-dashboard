@@ -32,15 +32,15 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
   hosts: [''],
   paths: [],
   forceHttps: false,
-  redirectCode: 301,
+  redirectURI: '',
+  redirectCode: 302,
   methods: HTTP_METHOD_OPTION_LIST,
   advancedMatchingRules: [],
 };
 
 export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
   upstreamProtocol: 'keep',
-  // TODO: 展示 placeholder
-  upstreamHostList: [{ host: '', port: 80, weight: 0 }],
+  upstreamHostList: [{} as RouteModule.UpstreamHost],
   upstreamHeaderList: [],
   upstreamPath: undefined,
   timeout: {
@@ -60,3 +60,7 @@ export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
     },
   },
 };
+
+export const STEP_HEADER_2 = ['定义 API 请求', '预览'];
+
+export const STEP_HEADER_4 = ['定义 API 请求', '定义 API 后端服务', '插件配置', '预览'];
