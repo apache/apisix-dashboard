@@ -20,6 +20,10 @@ const style: CSSProperties = {
 };
 
 const ActionBar: React.FC<Props> = ({ step, onChange, redirect }) => {
+  if (step > 3) {
+    return null;
+  }
+
   return (
     <div style={style}>
       <Row gutter={10} justify="end">

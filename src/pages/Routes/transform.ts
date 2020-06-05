@@ -10,7 +10,7 @@ export const transformStepData = ({
 
   const upstream_header = {};
   step2Data.upstreamHeaderList.forEach((header) => {
-    upstream_header[header.header_name] = header.header_value;
+    upstream_header[header.header_name] = header.header_value || '';
   });
 
   let redirect: RouteModule.Redirect = {};
@@ -129,7 +129,12 @@ export const transformRouteData = (data: RouteModule.Body) => {
   const { upstream, upstream_path, upstream_header } = data;
 
   const upstreamHeaderList = Object.entries(upstream_header).map(([k, v]) => {
-    return { header_name: k, header_value: v, key: Math.random().toString(36).slice(2) };
+    return {
+      header_name: k,
+      header_value: v,
+      key: Math.random().toString(36).slice(2),
+      header_action: v ? 'override' : 'remove',
+    };
   });
 
   const step2Data: RouteModule.Step2Data = {
