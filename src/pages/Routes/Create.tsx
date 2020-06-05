@@ -25,7 +25,7 @@ const Create: React.FC = (props) => {
   const [step2Data, setStep2Data] = useState(DEFAULT_STEP_2_DATA);
   const [step3Data, setStep3Data] = useState(DEFAULT_STEP_3_DATA);
 
-  const [redirect, setRedirect] = useState(false);
+  const [redirect, setRedirect] = useState(step1Data.redirectURI !== '');
 
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
@@ -103,6 +103,9 @@ const Create: React.FC = (props) => {
     }
 
     if (step === 2) {
+      if (redirect) {
+        return <ResultView onReset={onReset} />;
+      }
       return <CreateStep3 data={routeData} onChange={setStep3Data} />;
     }
 
@@ -118,33 +121,7 @@ const Create: React.FC = (props) => {
   };
 
   const onStepChange = (nextStep: number) => {
-    if (nextStep === 0) {
-      setStep(nextStep);
-    }
-    if (nextStep === 1) {
-      form1.validateFields().then((value) => {
-        setStep1Data({ ...step1Data, ...value });
-        setStep(nextStep);
-      });
-      return;
-    }
-    if (nextStep === 2) {
-      if (redirect) {
-        createRoute({ data: routeData }).then(() => {
-          return <ResultView onReset={onReset} />;
-        });
-        return;
-      }
-      form2.validateFields().then((value) => {
-        setStep2Data({ ...step2Data, ...value });
-        setStep(nextStep);
-      });
-      return;
-    }
-    if (nextStep === 3) {
-      setStep(nextStep);
-    }
-    if (nextStep === 4) {
+    const renderCreateOrUpdate = () => {
       if ((props as any).route.name === 'edit') {
         updateRoute((props as any).match.params.rid, { data: routeData }).then(() => {
           setStep(nextStep);
@@ -154,6 +131,38 @@ const Create: React.FC = (props) => {
           setStep(nextStep);
         });
       }
+    };
+
+    if (nextStep === 0) {
+      setStep(nextStep);
+    }
+
+    if (nextStep === 1) {
+      form1.validateFields().then((value) => {
+        setStep1Data({ ...step1Data, ...value });
+        setStep(nextStep);
+      });
+      return;
+    }
+
+    if (nextStep === 2) {
+      if (redirect) {
+        renderCreateOrUpdate();
+        return;
+      }
+      form2.validateFields().then((value) => {
+        setStep2Data({ ...step2Data, ...value });
+        setStep(nextStep);
+      });
+      return;
+    }
+
+    if (nextStep === 3) {
+      setStep(nextStep);
+    }
+
+    if (nextStep === 4) {
+      renderCreateOrUpdate();
     }
   };
 

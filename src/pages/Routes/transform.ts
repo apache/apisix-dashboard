@@ -82,6 +82,8 @@ export const transformStepData = ({
 
   if (step1Data.redirectURI !== '') {
     return pick(transformData, [
+      'name',
+      'desc',
       'protocols',
       'hosts',
       'uris',
