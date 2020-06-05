@@ -57,6 +57,11 @@ const Create: React.FC = (props) => {
     }
 
     if (step1Data.redirectURI !== '') {
+      if (step1Data.forceHttps) {
+        setStep1Data({ ...step1Data, redirectURI: '' });
+        setRedirect(false);
+        setStepHeader(STEP_HEADER_4);
+      }
       setRedirect(true);
       setStepHeader(STEP_HEADER_2);
     } else {
