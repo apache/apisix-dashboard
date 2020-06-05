@@ -32,7 +32,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                 label={index === 0 ? '域名' : ''}
                 required
                 key={field.key}
-                extra="普通单个域名或 IP，也支持添加泛域名如 “\*.test.com”"
+                extra='域名或 IP：支持泛域名，如 "\*.test.com"'
               >
                 <Form.Item
                   {...field}
@@ -86,10 +86,10 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
               <Form.Item
                 required
                 key={field.key}
-                extra="请求路径全比如 “/foo/index.html”，也支持请求路径前缀 “/foo/\*”"
+                extra='请求路径，如 "/foo/index.html"，支持请求路径前缀 "/foo/\*"'
               >
                 <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
-                  <Input placeholder="请输入路径" style={{ width: '60%' }} disabled={disabled} />
+                  <Input placeholder="请输入请求路径" style={{ width: '60%' }} disabled={disabled} />
                 </Form.Item>
                 {!disabled && (
                   <MinusCircleOutlined
@@ -150,7 +150,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
         <Form.Item label="自定义重定向">
           <Row gutter={10}>
             <Col>
-              <Form.Item name="redirectURI" extra="以 / 开头的URI，不含 http://头及域名">
+              <Form.Item name="redirectURI">
                 <Input placeholder="例如：/foo/index.html" disabled={disabled} />
               </Form.Item>
             </Col>
