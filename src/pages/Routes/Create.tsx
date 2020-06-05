@@ -146,6 +146,7 @@ const Create: React.FC = (props) => {
       </PageHeaderWrapper>
       <ActionBar
         step={step}
+        redirect={stepHeader.length === 2}
         onChange={(nextStep) => {
           onStepChange(nextStep);
         }}

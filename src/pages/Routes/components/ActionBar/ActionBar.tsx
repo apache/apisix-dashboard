@@ -5,6 +5,7 @@ import { Row, Col, Button } from 'antd';
 interface Props {
   step: number;
   onChange(nextStep: number): void;
+  redirect?: boolean;
 }
 
 const style: CSSProperties = {
@@ -18,7 +19,7 @@ const style: CSSProperties = {
   width: '100%',
 };
 
-const ActionBar: React.FC<Props> = ({ step, onChange }) => {
+const ActionBar: React.FC<Props> = ({ step, onChange, redirect }) => {
   return (
     <div style={style}>
       <Row gutter={10} justify="end">
@@ -29,7 +30,8 @@ const ActionBar: React.FC<Props> = ({ step, onChange }) => {
         </Col>
         <Col>
           <Button type="primary" onClick={() => onChange(step + 1)}>
-            {step < 3 ? '下一步' : '提交'}
+            {!redirect && (step < 3 ? '下一步' : '提交')}
+            {redirect && (step === 0 ? '下一步' : '提交')}
           </Button>
         </Col>
       </Row>
