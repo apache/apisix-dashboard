@@ -13,11 +13,12 @@ const MetaView: React.FC<Props> = ({ disabled }) => {
         label="API 名称"
         name="name"
         rules={[{ required: true, message: '请输入 API 名称' }]}
+        extra="支持英文，数字，下划线和减号，且只能以英文开头"
       >
         <Input placeholder="请输入 API 名称" disabled={disabled} />
       </Form.Item>
       <Form.Item label="描述" name="desc">
-        <Input.TextArea placeholder="请输入描述" disabled={disabled} />
+        <Input.TextArea placeholder="不超过 200 个字符" disabled={disabled} />
       </Form.Item>
     </PanelSection>
   );

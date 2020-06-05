@@ -55,7 +55,15 @@ const Create: React.FC = (props) => {
     if ((props as any).route.name === 'edit') {
       initRoute((props as any).match.params.rid);
     }
-  }, []);
+
+    if (step1Data.redirectURI !== '') {
+      setRedirect(true);
+      setStepHeader(STEP_HEADER_2);
+    } else {
+      setRedirect(false);
+      setStepHeader(STEP_HEADER_4);
+    }
+  }, [step1Data]);
 
   useEffect(() => {
     if (step1Data.redirectURI !== '') {
@@ -120,9 +128,22 @@ const Create: React.FC = (props) => {
   };
 
   const onStepChange = (nextStep: number) => {
+    const onUpdateOrCreate = () => {
+      if ((props as any).route.name === 'edit') {
+        updateRoute((props as any).match.params.rid, { data: routeData }).then(() => {
+          setStep(4);
+        });
+      } else {
+        createRoute({ data: routeData }).then(() => {
+          setStep(4);
+        });
+      }
+    };
+
     if (nextStep === 0) {
       setStep(nextStep);
     }
+
     if (nextStep === 1) {
       form1.validateFields().then((value) => {
         setStep1Data({ ...step1Data, ...value });
@@ -130,11 +151,10 @@ const Create: React.FC = (props) => {
       });
       return;
     }
+
     if (nextStep === 2) {
       if (redirect) {
-        createRoute({ data: routeData }).then(() => {
-          setStep(4);
-        });
+        onUpdateOrCreate();
         return;
       }
       form2.validateFields().then((value) => {
@@ -143,19 +163,13 @@ const Create: React.FC = (props) => {
       });
       return;
     }
+
     if (nextStep === 3) {
       setStep(nextStep);
     }
+
     if (nextStep === 4) {
-      if ((props as any).route.name === 'edit') {
-        updateRoute((props as any).match.params.rid, { data: routeData }).then(() => {
-          setStep(nextStep);
-        });
-      } else {
-        createRoute({ data: routeData }).then(() => {
-          setStep(nextStep);
-        });
-      }
+      onUpdateOrCreate();
     }
   };
 

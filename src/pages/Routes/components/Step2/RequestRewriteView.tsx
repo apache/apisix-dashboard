@@ -132,7 +132,7 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
             name="upstreamPath"
             rules={[{ required: true, message: '请输入请求路径' }]}
           >
-            <Input disabled={disabled} />
+            <Input disabled={disabled} placeholder="例如：/foo/bar/index.html" />
           </Form.Item>
         )}
         <Form.Item label="连接超时" required>

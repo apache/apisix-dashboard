@@ -9,8 +9,8 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const { advancedMatchingRules } = data.step1Data;
 
   const [visible, setVisible] = useState(false);
-
   const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
+  const [namePlaceholder, setNamePlaceholder] = useState('');
   const [modalForm] = Form.useForm();
 
   const { Option } = Select;
@@ -147,7 +147,15 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
             name="position"
             rules={[{ required: true, message: '请选择参数位置' }]}
           >
-            <Select>
+            <Select
+              onChange={(value) => {
+                if (value === 'http') {
+                  setNamePlaceholder('请求头名字比如：Host');
+                } else {
+                  setNamePlaceholder('比如：name');
+                }
+              }}
+            >
               <Option value="http">HTTP 请求头</Option>
               <Option value="arg">请求参数</Option>
               <Option value="cookie">Cookie</Option>
@@ -158,7 +166,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
             name="name"
             rules={[{ required: true, message: '请输入参数名称' }]}
           >
-            <Input />
+            <Input placeholder={namePlaceholder} />
           </Form.Item>
           <Form.Item
             label="运算符"
