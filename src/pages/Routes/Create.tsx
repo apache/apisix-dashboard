@@ -61,6 +61,7 @@ const Create: React.FC = (props) => {
         setStep1Data({ ...step1Data, redirectURI: '' });
         setRedirect(false);
         setStepHeader(STEP_HEADER_4);
+        return;
       }
       setRedirect(true);
       setStepHeader(STEP_HEADER_2);
