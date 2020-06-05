@@ -1,6 +1,6 @@
 import React from 'react';
 import Form, { FormInstance } from 'antd/es/form';
-import Radio, { RadioChangeEvent } from 'antd/lib/radio';
+import Radio from 'antd/lib/radio';
 import { Input, Row, Col, InputNumber, Button } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
@@ -14,9 +14,6 @@ interface Props extends RouteModule.Data {
 
 const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange }) => {
   const { step2Data } = data;
-  const onProtocolChange = (e: RadioChangeEvent) => {
-    onChange({ upstreamProtocol: e.target.value });
-  };
 
   const renderUpstreamMeta = () => (
     <Form.List name="upstreamHostList">
@@ -101,10 +98,16 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
       >
         <Form.Item
           label="协议"
-          name="upstreamProtocol"
+          name="upstream_protocol"
           rules={[{ required: true, message: '请勾选协议' }]}
         >
-          <Radio.Group onChange={onProtocolChange} name="upstreamProtocol" disabled={disabled}>
+          <Radio.Group
+            onChange={(e) => {
+              onChange({ upstream_protocol: e.target.value });
+            }}
+            name="upstream_protocol"
+            disabled={disabled}
+          >
             <Radio value="keep">保持原样</Radio>
             <Radio value="http">HTTP</Radio>
             <Radio value="https">HTTPS</Radio>
