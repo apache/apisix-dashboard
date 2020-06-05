@@ -25,7 +25,7 @@ const Create: React.FC = (props) => {
   const [step2Data, setStep2Data] = useState(DEFAULT_STEP_2_DATA);
   const [step3Data, setStep3Data] = useState(DEFAULT_STEP_3_DATA);
 
-  const [redirect, setRedirect] = useState(step1Data.redirectURI !== '');
+  const [redirect, setRedirect] = useState(false);
 
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
@@ -56,6 +56,16 @@ const Create: React.FC = (props) => {
       initRoute((props as any).match.params.rid);
     }
 
+    if (step1Data.redirectURI !== '') {
+      setRedirect(true);
+      setStepHeader(STEP_HEADER_2);
+    } else {
+      setRedirect(false);
+      setStepHeader(STEP_HEADER_4);
+    }
+  }, [step1Data]);
+
+  useEffect(() => {
     if (step1Data.redirectURI !== '') {
       setRedirect(true);
       setStepHeader(STEP_HEADER_2);
@@ -103,9 +113,6 @@ const Create: React.FC = (props) => {
     }
 
     if (step === 2) {
-      if (redirect) {
-        return <ResultView onReset={onReset} />;
-      }
       return <CreateStep3 data={routeData} onChange={setStep3Data} />;
     }
 
@@ -121,14 +128,14 @@ const Create: React.FC = (props) => {
   };
 
   const onStepChange = (nextStep: number) => {
-    const renderCreateOrUpdate = () => {
+    const onUpdateOrCreate = () => {
       if ((props as any).route.name === 'edit') {
         updateRoute((props as any).match.params.rid, { data: routeData }).then(() => {
-          setStep(nextStep);
+          setStep(4);
         });
       } else {
         createRoute({ data: routeData }).then(() => {
-          setStep(nextStep);
+          setStep(4);
         });
       }
     };
@@ -147,7 +154,7 @@ const Create: React.FC = (props) => {
 
     if (nextStep === 2) {
       if (redirect) {
-        renderCreateOrUpdate();
+        onUpdateOrCreate();
         return;
       }
       form2.validateFields().then((value) => {
@@ -162,7 +169,7 @@ const Create: React.FC = (props) => {
     }
 
     if (nextStep === 4) {
-      renderCreateOrUpdate();
+      onUpdateOrCreate();
     }
   };
 
