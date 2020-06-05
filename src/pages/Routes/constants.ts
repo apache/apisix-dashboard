@@ -33,7 +33,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
   paths: [],
   forceHttps: false,
   redirectURI: '',
-  redirectCode: 301,
+  redirectCode: 302,
   methods: HTTP_METHOD_OPTION_LIST,
   advancedMatchingRules: [],
 };

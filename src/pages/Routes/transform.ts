@@ -117,7 +117,6 @@ export const transformRouteData = (data: RouteModule.Body) => {
     paths: uris,
     methods,
     advancedMatchingRules: transformVarsToRules(vars),
-    redirect: Boolean(redirect),
     forceHttps: Boolean(redirect.redirect_to_https),
   };
 

@@ -54,7 +54,7 @@ const Create: React.FC = (props) => {
       initRoute((props as any).match.params.rid);
     }
 
-    if (step1Data.forceHttps || step1Data.redirectURI !== '') {
+    if (step1Data.redirectURI !== '') {
       setStepHeader(STEP_HEADER_2);
     } else {
       setStepHeader(STEP_HEADER_4);
