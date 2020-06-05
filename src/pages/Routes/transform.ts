@@ -1,4 +1,4 @@
-import { omit } from 'lodash';
+import { omit, pick } from 'lodash';
 
 export const transformStepData = ({
   data: { step1Data, step2Data, step3Data },
@@ -15,7 +15,6 @@ export const transformStepData = ({
 
   let redirect: RouteModule.Redirect = {};
   if (step1Data.forceHttps) {
-    // TODO: 当只有步骤1预览的时候，需要清除步骤2和步骤3中的脏数据
     redirect = { redirect_to_https: true };
   }
 
@@ -68,7 +67,7 @@ export const transformStepData = ({
     };
   }
 
-  return omit(data, [
+  const transformData = omit(data, [
     'advancedMatchingRules',
     'upstreamProtocol',
     'upstreamHostList',
@@ -79,7 +78,18 @@ export const transformStepData = ({
     'redirectURI',
     'redirectCode',
     'forceHttps',
-  ]) as RouteModule.Body;
+  ]);
+
+  if (step1Data.redirectURI !== '') {
+    return pick(transformData, [
+      'protocols',
+      'hosts',
+      'uris',
+      'methods',
+      'redirect',
+    ]) as RouteModule.Body;
+  }
+  return transformData;
 };
 
 const transformVarsToRules = (

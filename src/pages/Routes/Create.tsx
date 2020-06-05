@@ -25,6 +25,8 @@ const Create: React.FC = (props) => {
   const [step2Data, setStep2Data] = useState(DEFAULT_STEP_2_DATA);
   const [step3Data, setStep3Data] = useState(DEFAULT_STEP_3_DATA);
 
+  const [redirect, setRedirect] = useState(false);
+
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
 
@@ -55,8 +57,10 @@ const Create: React.FC = (props) => {
     }
 
     if (step1Data.redirectURI !== '') {
+      setRedirect(true);
       setStepHeader(STEP_HEADER_2);
     } else {
+      setRedirect(false);
       setStepHeader(STEP_HEADER_4);
     }
   }, [step1Data]);
@@ -84,7 +88,7 @@ const Create: React.FC = (props) => {
     }
 
     if (step === 1) {
-      if (stepHeader.length === 2) {
+      if (redirect) {
         return (
           <CreateStep4 data={routeData} form1={form1} form2={form2} onChange={() => {}} redirect />
         );
@@ -125,6 +129,12 @@ const Create: React.FC = (props) => {
       return;
     }
     if (nextStep === 2) {
+      if (redirect) {
+        createRoute({ data: routeData }).then(() => {
+          return <ResultView onReset={onReset} />;
+        });
+        return;
+      }
       form2.validateFields().then((value) => {
         setStep2Data({ ...step2Data, ...value });
         setStep(nextStep);
@@ -161,7 +171,7 @@ const Create: React.FC = (props) => {
       </PageHeaderWrapper>
       <ActionBar
         step={step}
-        redirect={stepHeader.length === 2}
+        redirect={redirect}
         onChange={(nextStep) => {
           onStepChange(nextStep);
         }}
