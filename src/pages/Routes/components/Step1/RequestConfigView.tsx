@@ -32,6 +32,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                 label={index === 0 ? '域名' : ''}
                 required
                 key={field.key}
+                extra="普通单个域名或 IP，也支持添加泛域名如 “\*.test.com”"
               >
                 <Form.Item
                   {...field}
@@ -82,7 +83,11 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
         return (
           <div>
             {fields.map((field) => (
-              <Form.Item required key={field.key}>
+              <Form.Item
+                required
+                key={field.key}
+                extra="请求路径全比如 “/foo/index.html”，也支持请求路径前缀 “/foo/\*”"
+              >
                 <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
                   <Input placeholder="请输入路径" style={{ width: '60%' }} disabled={disabled} />
                 </Form.Item>
@@ -145,15 +150,15 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
         <Form.Item label="自定义重定向">
           <Row gutter={10}>
             <Col>
-              <Form.Item name="redirectURI">
-                <Input placeholder="请输入 URI" disabled={disabled} />
+              <Form.Item name="redirectURI" extra="以 / 开头的URI，不含 http://头及域名">
+                <Input placeholder="例如：/foo/index.html" disabled={disabled} />
               </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col span={10}>
               <Form.Item name="redirectCode">
                 <Select disabled={disabled}>
-                  <Select.Option value="301">301</Select.Option>
-                  <Select.Option value="302">302</Select.Option>
+                  <Select.Option value="301">301（临时的重定向）</Select.Option>
+                  <Select.Option value="302">302（永久的重定向）</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
