@@ -39,7 +39,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
 };
 
 export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
-  upstreamProtocol: 'keep',
+  upstream_protocol: 'keep',
   upstreamHostList: [{} as RouteModule.UpstreamHost],
   upstreamHeaderList: [],
   upstreamPath: undefined,

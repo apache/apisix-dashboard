@@ -55,7 +55,9 @@ const Create: React.FC = (props) => {
     if ((props as any).route.name === 'edit') {
       initRoute((props as any).match.params.rid);
     }
+  }, []);
 
+  useEffect(() => {
     if (step1Data.redirectURI !== '') {
       setRedirect(true);
       setStepHeader(STEP_HEADER_2);
@@ -131,7 +133,7 @@ const Create: React.FC = (props) => {
     if (nextStep === 2) {
       if (redirect) {
         createRoute({ data: routeData }).then(() => {
-          return <ResultView onReset={onReset} />;
+          setStep(4);
         });
         return;
       }

@@ -16,9 +16,7 @@ export const transformStepData = ({
   let redirect: RouteModule.Redirect = {};
   if (step1Data.forceHttps) {
     redirect = { redirect_to_https: true };
-  }
-
-  if (step1Data.redirectURI !== '') {
+  } else if (step1Data.redirectURI !== '') {
     redirect = {
       code: step1Data.redirectCode,
       uri: step1Data.redirectURI,
@@ -67,29 +65,24 @@ export const transformStepData = ({
     };
   }
 
-  const transformData = omit(data, [
-    'advancedMatchingRules',
-    'upstreamProtocol',
-    'upstreamHostList',
-    'upstreamPath',
-    'upstreamHeaderList',
-    'websocket',
-    'timeout',
-    'redirectURI',
-    'redirectCode',
-    'forceHttps',
-  ]);
-
-  if (step1Data.redirectURI !== '') {
-    return pick(transformData, [
-      'protocols',
-      'hosts',
-      'uris',
-      'methods',
+  // 未启用 redirect
+  if (!redirect.uri && !redirect.redirect_to_https) {
+    // 移除前端部分自定义变量
+    return omit(data, [
       'redirect',
-    ]) as RouteModule.Body;
+      'advancedMatchingRules',
+      'upstreamHostList',
+      'upstreamPath',
+      'upstreamHeaderList',
+      'websocket',
+      'timeout',
+      'redirectURI',
+      'redirectCode',
+      'forceHttps',
+    ]);
   }
-  return transformData;
+
+  return pick(data, ['name', 'desc', 'protocols', 'hosts', 'uris', 'methods', 'redirect', 'vars']);
 };
 
 const transformVarsToRules = (
@@ -130,12 +123,12 @@ export const transformRouteData = (data: RouteModule.Body) => {
     forceHttps: Boolean(redirect.redirect_to_https),
   };
 
-  if (redirect.code) {
+  if (redirect.uri) {
     step1Data.redirectCode = redirect.code;
     step1Data.redirectURI = redirect.uri;
   }
 
-  const { upstream, upstream_path, upstream_header } = data;
+  const { upstream, upstream_path, upstream_header, upstream_protocol } = data;
 
   const upstreamHeaderList = Object.entries(upstream_header).map(([k, v]) => {
     return {
@@ -147,7 +140,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
   });
 
   const step2Data: RouteModule.Step2Data = {
-    upstreamProtocol: 'keep',
+    upstream_protocol,
     upstreamHeaderList,
     upstreamHostList: transformUpstreamNodes(upstream.nodes),
     upstreamPath: upstream_path.to,
