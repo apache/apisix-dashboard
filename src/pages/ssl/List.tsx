@@ -1,62 +1,26 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Button, Modal, notification, Switch } from 'antd';
+import { Button, Switch, Popconfirm, notification } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 
-import { ListItem } from '@/transforms/global';
 import { fetchList as fetchSSLList, remove as removeSSL } from './service';
-
-interface SearchParamsProps {
-  current: number;
-  pageSize: number;
-  sni: string;
-}
 
 const List: React.FC = () => {
   const tableRef = useRef<ActionType>();
-  const [list, setList] = useState<ListItem<SSLModule.SSL>[]>([]);
   const { formatMessage } = useIntl();
-  const onRemove = (key: string) => {
-    Modal.confirm({
-      title: formatMessage({ id: 'component.ssl.removeSSLItemModalTitle' }),
-      content: formatMessage({ id: 'component.ssl.removeSSLItemModalContent' }),
-      okText: formatMessage({ id: 'component.global.remove' }),
-      cancelText: formatMessage({ id: 'component.global.cancel' }),
-      okButtonProps: {
-        type: 'primary',
-        danger: true,
-      },
-      onOk: () =>
-        removeSSL(key).then(() => {
-          notification.success({
-            message: formatMessage({ id: 'component.ssl.removeSSLSuccess' }),
-          });
-          /* eslint-disable no-unused-expressions */
-          // NOTE: tricky way
-          setList([]);
-          requestAnimationFrame(() => tableRef.current?.reload());
-        }),
-    });
-  };
 
-  const columns: ProColumns<ListItem<SSLModule.SSL>>[] = [
-    {
-      title: 'ID',
-      dataIndex: 'displayKey',
-      sortOrder: 'descend',
-      hideInSearch: true,
-    },
+  const columns: ProColumns<SSLModule.ResSSL>[] = [
     {
       title: 'SNI',
-      dataIndex: ['value', 'sni'],
-      key: 'sni',
+      dataIndex: 'sni',
     },
     {
       title: '过期时间',
-      dataIndex: 'expiredTime',
+      dataIndex: 'validity_end',
       hideInSearch: true,
+      render: (text) => `${new Date(Number(text) * 1000).toLocaleString()}`,
     },
     {
       title: '是否启用',
@@ -71,36 +35,33 @@ const List: React.FC = () => {
       title: formatMessage({ id: 'component.global.action' }),
       valueType: 'option',
       render: (_, record) => (
-        <>
-          <Button type="primary" danger onClick={() => onRemove(record.key)}>
+        <Popconfirm
+          title="删除"
+          // TODO: 确认按钮应为红色警告
+          onConfirm={() =>
+            removeSSL(record.id).then(() => {
+              notification.success({
+                message: formatMessage({ id: 'component.ssl.removeSSLSuccess' }),
+              });
+              /* eslint-disable no-unused-expressions */
+              requestAnimationFrame(() => tableRef.current?.reload());
+            })
+          }
+        >
+          <Button type="primary" danger>
             {formatMessage({ id: 'component.global.remove' })}
           </Button>
-        </>
+        </Popconfirm>
       ),
     },
   ];
 
-  const fetchPageSSLList = (params: Partial<SearchParamsProps> | undefined) => {
-    if (list.length) {
-      const result = list.filter((item) => {
-        if (params?.sni) {
-          return item.value.sni.includes(params.sni);
-        }
-        return true;
-      });
-      return Promise.resolve({ data: result, total: list.length });
-    }
-    return fetchSSLList().then((data) => {
-      setList(data.data);
-      return data;
-    });
-  };
-
   return (
     <PageHeaderWrapper>
-      <ProTable<ListItem<SSLModule.SSL>>
-        request={(params) => fetchPageSSLList(params)}
-        search
+      <ProTable<SSLModule.ResSSL>
+        request={(params) => fetchSSLList(params)}
+        search={false}
+        rowKey="id"
         columns={columns}
         actionRef={tableRef}
         toolBarRender={() => [

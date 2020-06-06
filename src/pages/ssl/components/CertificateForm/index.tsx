@@ -48,7 +48,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, data, form }) =
     <Form form={form} layout="horizontal" initialValues={data}>
       {renderSNI()}
       <Form.Item
-        label="Cert"
+        label="公钥"
         name="cert"
         rules={[
           { required: true, message: formatMessage({ id: 'component.ssl.fieldCertInvalid' }) },
@@ -58,7 +58,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, data, form }) =
         <Input.TextArea rows={6} disabled={mode !== 'EDIT'} />
       </Form.Item>
       <Form.Item
-        label="Key"
+        label="私钥"
         name="key"
         rules={[
           { required: true, message: formatMessage({ id: 'component.ssl.fieldKeyInvalid' }) },

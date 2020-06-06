@@ -1,14 +1,29 @@
 import { request } from 'umi';
-import { transformFetchListData, transformFetchItemData } from '@/transforms/global';
+import { transformFetchItemData } from '@/transforms/global';
 
-export const fetchList = () =>
-  request('/ssls').then((data) => transformFetchListData<SSLModule.SSL>(data));
+type FetchListParams = {
+  current: number;
+  pageSize: number;
+};
 
-export const fetchItem = (key: string) =>
-  request(`/ssl/${key}`).then((data) => transformFetchItemData<SSLModule.SSL>(data));
+export const fetchList = (params?: Partial<FetchListParams>) =>
+  request<{ count: number; list: SSLModule.ResSSL[] }>(
+    `/ssls?page=${params?.current || 1}&size=${params?.pageSize || 10}`,
+  ).then((data) => {
+    return {
+      count: data.count,
+      data: data.list.map((item) => ({
+        ...item,
+        sni: item.snis.join(';'),
+      })),
+    };
+  });
 
-export const remove = (key: string) =>
-  request(`/ssl/${key}`, {
+export const fetchItem = (id: string) =>
+  request(`/ssls/${id}`).then((data) => transformFetchItemData<SSLModule.SSL>(data));
+
+export const remove = (id: string) =>
+  request(`/ssls/${id}`, {
     method: 'DELETE',
   });
 
