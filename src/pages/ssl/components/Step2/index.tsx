@@ -1,71 +1,70 @@
-import React from 'react';
-import { Form, Button, message } from 'antd';
-import forge from 'node-forge';
+import React, { useState } from 'react';
+import { Form, Button } from 'antd';
+import { UploadFile } from 'antd/lib/upload/interface';
+
 import CertificateForm from '../CertificateForm';
-import {
-  CertificateUploader,
-  UploadPublicSuccessData,
-  UploadPrivateSuccessData,
-  UploadType,
-  AltName,
-} from '../CertificateUploader';
+import { CertificateUploader, UploadType } from '../CertificateUploader';
 import { StepProps } from '../../Create';
+import { verifyKeyPaire } from '../../service';
 
 const Step2: React.FC<StepProps> = ({ onStepChange, onFormChange, data }) => {
   const [form] = Form.useForm();
   const { validateFields } = form;
 
+  const [publicKeyList, setPublicKeyList] = useState<UploadFile[]>([]);
+  const [privateKeyList, setPrivateKeyList] = useState<UploadFile[]>([]);
+
   const onValidateForm = async () => {
-    if (data.createType === 'UPLOAD') {
-      if (!data.key || !data.cert) {
-        message.error('请检查证书');
-        return;
-      }
-      onStepChange(2);
-    }
-    if (data.createType === 'INPUT') {
-      validateFields().then((value) => {
-        try {
-          const cert = forge.pki.certificateFromPem(value.cert);
-          const altNames = (cert.extensions.find((item) => item.name === 'subjectAltName')
-            .altNames as AltName[])
-            .map((item) => item.value)
-            .join(';');
-          onFormChange({ ...value, sni: altNames, expireTime: cert.validity.notAfter });
-          onStepChange(2);
-        } catch (error) {
-          message.error('证书解析失败');
-        }
+    let keyPaire = { cert: '', key: '' };
+    validateFields()
+      .then((value) => {
+        keyPaire = { cert: value.cert, key: value.key };
+        return verifyKeyPaire(value.cert, value.key);
+      })
+      .then((_data) => {
+        const { snis, validity_end } = _data.data;
+        onFormChange({
+          ...keyPaire,
+          sni: snis.join(';'),
+          expireTime: new Date(validity_end * 1000).toLocaleString(),
+        });
+        onStepChange(2);
       });
-    }
   };
-  const onUploadSuccess = (
-    uploadSuccessData: UploadPublicSuccessData | UploadPrivateSuccessData,
-  ) => {
-    onFormChange(uploadSuccessData);
-  };
+
   const onRemove = (type: UploadType) => {
     if (type === 'PUBLIC_KEY') {
       onFormChange({
-        publicKeyFileList: [],
         cert: '',
         sni: '',
         expireTime: undefined,
       });
+      setPublicKeyList([]);
     } else {
       onFormChange({
-        privateKeyFileList: [],
         key: '',
       });
+      setPrivateKeyList([]);
     }
   };
   return (
     <>
-      {Boolean(data.createType === 'INPUT') && (
+      <div style={data.createType === 'INPUT' ? {} : { display: 'none' }}>
         <CertificateForm mode="EDIT" form={form} data={data} />
-      )}
+      </div>
       {Boolean(data.createType === 'UPLOAD') && (
-        <CertificateUploader onSuccess={onUploadSuccess} onRemove={onRemove} data={data} />
+        <CertificateUploader
+          onSuccess={(_data: any) => {
+            form.setFieldsValue(_data);
+            if (_data.cert) {
+              setPublicKeyList(_data.publicKeyList);
+            } else {
+              setPrivateKeyList(_data.privateKeyList);
+            }
+          }}
+          onRemove={onRemove}
+          data={{ publicKeyList, privateKeyList }}
+        />
       )}
       <div style={{ width: '100%', textAlign: 'center' }}>
         <Button

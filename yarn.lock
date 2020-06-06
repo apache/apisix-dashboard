@@ -11998,11 +11998,6 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-forge@^0.9.1:
-  version "0.9.1"
-  resolved "https://registry.npmjs.org/node-forge/-/node-forge-0.9.1.tgz#775368e6846558ab6676858a4d8c6e8d16c677b5"
-  integrity sha512-G6RlQt5Sb4GMBzXvhfkeFmbqR6MzhtnT7VTHuLadjkii3rdYHNdw0m8zA4BTxVIh68FicCQ2NSUANpsqkr9jvQ==
-
 node-import-ts@^1.0.1, node-import-ts@^1.0.2:
   version "1.0.5"
   resolved "https://registry.npmjs.org/node-import-ts/-/node-import-ts-1.0.5.tgz#2b5aef3c8fa9babc9d1f948ddfeb62231c18d4f8"

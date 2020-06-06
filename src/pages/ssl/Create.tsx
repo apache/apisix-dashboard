@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Steps } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { UploadFile } from 'antd/es/upload/interface';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
@@ -15,9 +14,7 @@ export interface FormData {
   sni?: string;
   cert?: string;
   key?: string;
-  expireTime?: Date;
-  publicKeyFileList?: UploadFile[];
-  privateKeyFileList?: UploadFile[];
+  expireTime?: Date | string;
 }
 
 export interface StepProps {
