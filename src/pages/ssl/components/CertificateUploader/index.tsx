@@ -1,36 +1,31 @@
 import React from 'react';
-import { Form, Button, Upload, message } from 'antd';
+import { Form, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { useForm } from 'antd/es/form/util';
-import forge from 'node-forge';
-import { FormData } from '../../Create';
 import styles from '../../Create.less';
-
-export interface AltName {
-  value: string;
-}
 
 export type UploadType = 'PUBLIC_KEY' | 'PRIVATE_KEY';
 export interface UploadPublicSuccessData {
-  sni: string;
   cert: string;
-  expireTime: Date;
-  publicKeyFileList: UploadFile[];
+  publicKeyList: UploadFile[];
 }
 export interface UploadPrivateSuccessData {
   key: string;
-  privateKeyFileList: UploadFile[];
+  privateKeyList: UploadFile[];
 }
 
 interface UploaderProps {
+  data: {
+    publicKeyList: UploadFile[];
+    privateKeyList: UploadFile[];
+  };
   onSuccess(data: UploadPublicSuccessData | UploadPrivateSuccessData): void;
   onRemove(type: UploadType): void;
-  data: FormData;
 }
 
 const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, data }) => {
-  const { publicKeyFileList = [], privateKeyFileList = [] } = data;
+  const { publicKeyList = [], privateKeyList = [] } = data;
   const [form] = useForm();
 
   const genUploadFile = (name = ''): UploadFile => {
@@ -50,26 +45,15 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
     fileReader.onload = function (event) {
       const { result } = event.currentTarget as any;
       if (type === 'PUBLIC_KEY') {
-        try {
-          const cert = forge.pki.certificateFromPem(result);
-          const altNames = (cert.extensions.find((item) => item.name === 'subjectAltName')
-            .altNames as AltName[])
-            .map((item) => item.value)
-            .join(';');
-          const uploadPublicData: UploadPublicSuccessData = {
-            sni: altNames,
-            cert: result,
-            expireTime: cert.validity.notAfter,
-            publicKeyFileList: [genUploadFile(fileName)],
-          };
-          onSuccess(uploadPublicData);
-        } catch (error) {
-          message.error('证书解析失败');
-        }
+        const uploadPublicData: UploadPublicSuccessData = {
+          cert: result,
+          publicKeyList: [genUploadFile(fileName)],
+        };
+        onSuccess(uploadPublicData);
       } else {
         const uploadprivateData: UploadPrivateSuccessData = {
           key: result,
-          privateKeyFileList: [genUploadFile(fileName)],
+          privateKeyList: [genUploadFile(fileName)],
         };
         onSuccess(uploadprivateData);
       }
@@ -85,26 +69,24 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
     <Form form={form} layout="horizontal" className={styles.stepForm}>
       <Form.Item>
         <Upload
-          accept=".pem"
           className={styles.stepForm}
           onRemove={() => onRemove('PUBLIC_KEY')}
-          fileList={publicKeyFileList}
+          fileList={publicKeyList}
           beforeUpload={(file, fileList) => beforeUpload(file, fileList, 'PUBLIC_KEY')}
         >
-          <Button disabled={publicKeyFileList.length === 1}>
+          <Button disabled={publicKeyList.length === 1}>
             <UploadOutlined /> 点击上传公钥
           </Button>
         </Upload>
       </Form.Item>
       <Form.Item>
         <Upload
-          accept=".key"
           className={styles.stepForm}
           onRemove={() => onRemove('PRIVATE_KEY')}
-          fileList={privateKeyFileList}
+          fileList={privateKeyList}
           beforeUpload={(file, fileList) => beforeUpload(file, fileList, 'PRIVATE_KEY')}
         >
-          <Button disabled={privateKeyFileList.length === 1}>
+          <Button disabled={privateKeyList.length === 1}>
             <UploadOutlined /> 点击上传私钥
           </Button>
         </Upload>

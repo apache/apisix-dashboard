@@ -33,7 +33,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
       dataIndex: 'header_action',
       key: 'header_action',
       render: (action: 'override' | 'remove') => {
-        return action === 'override' ? '重写/新建' : '删除';
+        return action === 'override' ? '重写/添加' : '删除';
       },
     },
     {

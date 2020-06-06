@@ -24,7 +24,8 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
               required
               key={field.key}
               {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-              label={index === 0 ? '域名/IP' : ''}
+              label={index === 0 ? '后端服务域名/IP' : ''}
+              extra={index === 0 ? '使用域名时，默认解析本地 /etc/resolv.conf' : ''}
             >
               <Row style={{ marginBottom: '10px' }} gutter={16}>
                 <Col span={9}>
@@ -76,7 +77,7 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
                   add();
                 }}
               >
-                <PlusOutlined /> 增加
+                <PlusOutlined /> 新建
               </Button>
             </Form.Item>
           )}

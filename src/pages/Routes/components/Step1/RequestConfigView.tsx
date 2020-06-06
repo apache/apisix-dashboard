@@ -67,7 +67,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                     add();
                   }}
                 >
-                  <PlusOutlined /> 增加
+                  <PlusOutlined /> 新建
                 </Button>
               </Form.Item>
             )}
@@ -82,20 +82,42 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
       {(fields, { add, remove }) => {
         return (
           <div>
-            {fields.map((field) => (
+            {fields.map((field, index) => (
               <Form.Item
+                {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
+                label={index === 0 ? '路径' : ''}
                 required
                 key={field.key}
-                extra='请求路径，如 "/foo/index.html"，支持请求路径前缀 "/foo/\*"'
+                extra={
+                  index === 0 ? (
+                    <div>
+                      1. 请求路径，如 &quot;/foo/index.html&quot;，支持请求路径前缀
+                      &quot;/foo/*&quot;；
+                      <br />
+                      2. &quot;/*&quot; 代表所有路径
+                    </div>
+                  ) : null
+                }
               >
-                <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
+                <Form.Item
+                  {...field}
+                  validateTrigger={['onChange', 'onBlur']}
+                  rules={[
+                    {
+                      required: true,
+                      whitespace: true,
+                      message: '请输入请求路径',
+                    },
+                  ]}
+                  noStyle
+                >
                   <Input
                     placeholder="请输入请求路径"
                     style={{ width: '60%' }}
                     disabled={disabled}
                   />
                 </Form.Item>
-                {!disabled && (
+                {!disabled && fields.length > 1 && (
                   <MinusCircleOutlined
                     className="dynamic-delete-button"
                     style={{ margin: '0 8px' }}
@@ -106,16 +128,15 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                 )}
               </Form.Item>
             ))}
-            {fields.length === 0 && disabled && <span>无</span>}
             {!disabled && (
-              <Form.Item>
+              <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
                   onClick={() => {
                     add();
                   }}
                 >
-                  <PlusOutlined /> 增加
+                  <PlusOutlined /> 新建
                 </Button>
               </Form.Item>
             )}
@@ -139,7 +160,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
         <Switch disabled={disabled} />
       </Form.Item>
       {renderHosts()}
-      <Form.Item label="路径">{renderPaths()}</Form.Item>
+      {renderPaths()}
       <Form.Item
         label="HTTP 方法"
         name="methods"
