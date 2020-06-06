@@ -27,6 +27,7 @@ const RouteList: React.FC = () => {
     {
       title: '更新时间',
       dataIndex: 'update_time',
+      render: (text) => `${new Date(Number(text) * 1000).toLocaleString()}`,
     },
     {
       title: '操作',
