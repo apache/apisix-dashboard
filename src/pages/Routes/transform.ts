@@ -102,11 +102,14 @@ const transformVarsToRules = (
 const transformUpstreamNodes = (
   nodes: { [key: string]: number } = {},
 ): RouteModule.UpstreamHost[] => {
-  const data: RouteModule.UpstreamHost[] = [{} as RouteModule.UpstreamHost];
+  const data: RouteModule.UpstreamHost[] = [];
   Object.entries(nodes).forEach(([k, v]) => {
     const [host, port] = k.split(':');
     data.push({ host, port: Number(port), weight: Number(v) });
   });
+  if (data.length === 0) {
+    data.push({} as RouteModule.UpstreamHost);
+  }
   return data;
 };
 

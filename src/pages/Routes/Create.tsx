@@ -73,16 +73,6 @@ const Create: React.FC = (props) => {
     }
   }, [step1Data]);
 
-  useEffect(() => {
-    if (step1Data.redirectURI !== '') {
-      setRedirect(true);
-      setStepHeader(STEP_HEADER_2);
-    } else {
-      setRedirect(false);
-      setStepHeader(STEP_HEADER_4);
-    }
-  }, [step1Data]);
-
   const onReset = () => {
     setStep1Data(DEFAULT_STEP_1_DATA);
     setStep2Data(DEFAULT_STEP_2_DATA);

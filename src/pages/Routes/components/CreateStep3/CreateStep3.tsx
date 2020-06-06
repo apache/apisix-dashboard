@@ -29,6 +29,8 @@ const CreateStep3: React.FC<Props> = ({ data, disabled, onChange }) => {
     'oauth',
     'redirect',
     'wolf-rbac',
+    // BUG:
+    'proxy-rewrite',
   ];
 
   const list = pluginList.filter(({ name }) => !pluginBlackList.includes(name));
