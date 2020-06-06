@@ -30,7 +30,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
   protocols: ['http', 'https'],
   websocket: false,
   hosts: [''],
-  paths: [],
+  paths: ['/*'],
   forceHttps: false,
   redirectURI: '',
   redirectCode: 302,

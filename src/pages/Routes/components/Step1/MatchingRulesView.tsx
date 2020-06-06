@@ -129,7 +129,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const renderModal = () => {
     return (
       <Modal
-        title={mode === 'EDIT' ? '编辑规则' : '增加规则'}
+        title={mode === 'EDIT' ? '编辑规则' : '新建规则'}
         centered
         visible={visible}
         onOk={onOk}
@@ -203,7 +203,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
             marginBottom: 16,
           }}
         >
-          增加
+          新建
         </Button>
       )}
       <Table key="table" bordered dataSource={advancedMatchingRules} columns={columns} />

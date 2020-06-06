@@ -6,7 +6,7 @@ export default {
   'component.global.cancel': '取消',
   'component.global.submit': '提交',
   'component.global.create': '创建',
-  'component.global.add': '增加',
+  'component.global.add': '新建',
   'component.global.save': '保存',
   'component.global.edit': '编辑',
   'component.global.action': '操作',
