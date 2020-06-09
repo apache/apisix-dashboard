@@ -6,10 +6,8 @@
   "scripts": {
     "analyze": "cross-env ANALYZE=1 umi build",
     "build": "umi build",
-    "deploy": "npm run site && npm run gh-pages",
     "dev": "npm run start:dev",
     "fetch:blocks": "pro fetch-blocks --branch antd@4 && npm run prettier",
-    "gh-pages": "cp CNAME ./dist/ && gh-pages -d dist",
     "i18n-remove": "pro i18n-remove --locale=zh-CN --write",
     "postinstall": "umi g tmp",
     "lint": "umi g tmp && npm run lint:js && npm run lint:style && npm run lint:prettier",
@@ -46,10 +44,10 @@
     ]
   },
   "dependencies": {
-    "@ant-design/icons": "^4.0.0",
+    "@ant-design/icons": "^4.2.1",
     "@ant-design/pro-layout": "6.0.0-2",
-    "@ant-design/pro-table": "^2.2.0",
-    "antd": "^4.0.0",
+    "@ant-design/pro-table": "^2.3.3",
+    "antd": "^4.3.3",
     "classnames": "^2.2.6",
     "lodash": "^4.17.15",
     "moment": "^2.25.3",
@@ -60,7 +58,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "umi": "^3.1.0",
-    "umi-request": "^1.0.8",
+    "umi-request": "^1.3.3",
     "use-merge-value": "^1.0.1",
     "uuid": "^7.0.2"
   },
@@ -89,7 +87,6 @@
     "detect-installer": "^1.0.1",
     "eslint": "^6.8.0",
     "express": "^4.17.1",
-    "gh-pages": "^2.0.1",
     "husky": "^4.0.7",
     "lint-staged": "^10.0.0",
     "mockjs": "^1.0.1-beta3",
