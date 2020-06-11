@@ -108,6 +108,7 @@ const PluginForm: React.FC<PluginForm.Props> = ({
   initialData = {},
   onFinish,
 }) => {
+  const { formatMessage } = useIntl();
   const [schema, setSchema] = useState<PluginForm.PluginSchema>();
 
   useEffect(() => {
@@ -167,7 +168,14 @@ const PluginForm: React.FC<PluginForm.Props> = ({
 
         return (
           <Form.Item
-            label={propertyName}
+            label={formatMessage({
+              id: `PluginForm.plugin.${name}.property.${propertyName}`,
+              defaultMessage: propertyName,
+            })}
+            extra={formatMessage({
+              id: `PluginForm.plugin.${name}.property.${propertyName}.extra`,
+              defaultMessage: '',
+            })}
             name={propertyName}
             key={propertyName}
             rules={transformPropertyToRules(schema!, propertyName, propertyValue)}

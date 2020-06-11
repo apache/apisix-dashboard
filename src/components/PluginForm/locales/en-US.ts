@@ -17,8 +17,21 @@ export default {
     'kafka-logger is a plugin which works as a Kafka client driver for the ngx_lua nginx module.',
   'PluginForm.plugin.key-auth.desc':
     'key-auth is an authentication plugin, it should work with consumer together.',
+
+  // TODO:
   'PluginForm.plugin.limit-conn.desc':
     'Limiting request concurrency (or concurrent connections) plugin for Apisix.',
+  'PluginForm.plugin.limit-conn.property.burst': '',
+  'PluginForm.plugin.limit-conn.property.burst.extra': '',
+  'PluginForm.plugin.limit-conn.property.conn': '',
+  'PluginForm.plugin.limit-conn.property.conn.extra': '',
+  'PluginForm.plugin.limit-conn.property.default_conn_delay': '',
+  'PluginForm.plugin.limit-conn.property.default_conn_delay.extra': '',
+  'PluginForm.plugin.limit-conn.property.key': '',
+  'PluginForm.plugin.limit-conn.property.key.extra': '',
+  'PluginForm.plugin.limit-conn.property.rejected_code': '',
+  'PluginForm.plugin.limit-conn.property.rejected_code.extra': '',
+
   'PluginForm.plugin.limit-count.desc':
     'Limit request rate by a fixed number of requests in a given time window.',
   'PluginForm.plugin.limit-req.desc': 'limit request rate using the "leaky bucket" method.',

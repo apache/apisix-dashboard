@@ -17,7 +17,22 @@ export default {
     'kafka-logger 是一个插件，可用作ngx_lua nginx 模块的 Kafka 客户端驱动程序。',
   'PluginForm.plugin.key-auth.desc':
     'key-auth 是一个认证插件，它需要与 consumer 一起配合才能工作。',
+
   'PluginForm.plugin.limit-conn.desc': 'APISIX 的限制并发请求（或并发连接）插件。',
+  'PluginForm.plugin.limit-conn.property.burst': '最大并发请求数',
+  'PluginForm.plugin.limit-conn.property.burst.extra': '允许的最大并发请求数',
+  'PluginForm.plugin.limit-conn.property.conn': '可延迟并发请求数',
+  'PluginForm.plugin.limit-conn.property.conn.extra': '允许延迟的过多并发请求(或连接)的数量。',
+  'PluginForm.plugin.limit-conn.property.default_conn_delay': '默认请求延迟时间',
+  'PluginForm.plugin.limit-conn.property.default_conn_delay.extra':
+    '默认的典型连接(或请求)的处理延迟时间。',
+  'PluginForm.plugin.limit-conn.property.key': '关键字',
+  'PluginForm.plugin.limit-conn.property.key.extra':
+    '用户指定的限制并发级别的关键字，可以是客户端IP或服务端IP。',
+  'PluginForm.plugin.limit-conn.property.rejected_code': '返回状态码',
+  'PluginForm.plugin.limit-conn.property.rejected_code.extra':
+    '当请求超过阈值时返回的 HTTP 状态码， 默认值是503。',
+
   'PluginForm.plugin.limit-count.desc':
     '和 GitHub API 的限速类似， 在指定的时间范围内，限制总的请求个数。并且在 HTTP 响应头中返回剩余可以请求的个数。',
   'PluginForm.plugin.limit-req.desc': '限制请求速度的插件，使用的是漏桶算法。',
