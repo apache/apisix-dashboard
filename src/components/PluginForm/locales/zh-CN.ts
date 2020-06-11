@@ -29,7 +29,7 @@ export default {
   'PluginForm.plugin.limit-conn.property.key': '关键字',
   'PluginForm.plugin.limit-conn.property.key.extra':
     '用户指定的限制并发级别的关键字，可以是客户端IP或服务端IP。',
-  'PluginForm.plugin.limit-conn.property.rejected_code': '返回状态码',
+  'PluginForm.plugin.limit-conn.property.rejected_code': '错误 HTTP 状态码',
   'PluginForm.plugin.limit-conn.property.rejected_code.extra':
     '当请求超过阈值时返回的 HTTP 状态码， 默认值是503。',
 
@@ -42,9 +42,9 @@ export default {
     '时间窗口的大小（以秒为单位），超过这个时间就会重置',
   'PluginForm.plugin.limit-count.property.key': 'Key',
   'PluginForm.plugin.limit-count.property.key.extra': '用来做请求计数的依据',
-  'PluginForm.plugin.limit-count.property.rejected_code': 'HTTP 状态码',
+  'PluginForm.plugin.limit-count.property.rejected_code': '错误 HTTP 状态码',
   'PluginForm.plugin.limit-count.property.rejected_code.extra':
-    '当请求超过阈值被拒绝时，返回的 HTTP 状态码',
+    '当请求超过阈值时返回的 HTTP 状态码， 默认值是503。',
   'PluginForm.plugin.limit-count.property.policy': '策略',
   'PluginForm.plugin.limit-count.property.policy.extra': '用于检索和增加限制的速率限制策略',
   'PluginForm.plugin.limit-count.property.redis_host': ' Redis 地址',
@@ -58,6 +58,18 @@ export default {
     'Redis 服务节点以毫秒为单位的超时时间',
 
   'PluginForm.plugin.limit-req.desc': '限制请求速度的插件，使用的是漏桶算法。',
+  'PluginForm.plugin.limit-req.property.rate': 'Rate',
+  'PluginForm.plugin.limit-req.property.rate.extra':
+    '指定的请求速率（以秒为单位），请求速率超过 rate 但没有超过 （rate + brust）的请求会被加上延时。',
+  'PluginForm.plugin.limit-req.property.burst': 'Burst',
+  'PluginForm.plugin.limit-req.property.burst.extra':
+    '请求速率超过 （rate + brust）的请求会被直接拒绝。',
+  'PluginForm.plugin.limit-req.property.key': 'Key',
+  'PluginForm.plugin.limit-req.property.key.extra': '用来做请求计数的依据',
+  'PluginForm.plugin.limit-req.property.rejected_code': '错误 HTTP 状态码',
+  'PluginForm.plugin.limit-req.property.rejected_code.extra':
+    '当请求超过阈值时返回的 HTTP 状态码， 默认值是503。',
+
   'PluginForm.plugin.mqtt-proxy.desc':
     'mqtt-proxy 只工作在流模式，它可以帮助你根据 MQTT 的 client_id 实现动态负载均衡。',
   'PluginForm.plugin.oauth.desc':
