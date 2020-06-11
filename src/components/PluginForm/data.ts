@@ -1,100 +1,99 @@
 export const PLUGIN_MAPPER_SOURCE: { [name: string]: PluginForm.PluginMapperItem } = {
   'limit-req': {
-    category: '',
+    category: 'Limit',
   },
   'limit-count': {
-    category: '',
+    category: 'Limit',
   },
   'limit-conn': {
-    category: '',
+    category: 'Limit',
   },
   'key-auth': {
-    category: '',
+    category: 'Security',
     hidden: true,
   },
   'basic-auth': {
-    category: '',
+    category: 'Security',
     hidden: true,
   },
   prometheus: {
-    category: '',
+    category: 'Metric',
   },
   'node-status': {
-    category: '',
+    category: 'Other',
   },
   'jwt-auth': {
-    category: '',
+    category: 'Security',
     hidden: true,
   },
   zipkin: {
-    category: '',
+    category: 'Metric',
   },
   'ip-restriction': {
-    category: '',
+    category: 'Security',
   },
   'grpc-transcode': {
-    category: '',
+    category: 'Other',
     hidden: true,
   },
   'serverless-pre-function': {
-    category: '',
+    category: 'Other',
   },
   'serverless-post-function': {
-    category: '',
+    category: 'Other',
   },
   'openid-connect': {
-    category: '',
+    category: 'Security',
   },
   'proxy-rewrite': {
-    category: '',
+    category: 'Other',
     hidden: true,
   },
   redirect: {
-    category: '',
+    category: 'Other',
     hidden: true,
   },
   'response-rewrite': {
-    category: '',
+    category: 'Other',
   },
   'fault-injection': {
-    category: '',
+    category: 'Security',
   },
   'udp-logger': {
-    category: '',
+    category: 'Log',
   },
   'wolf-rbac': {
-    category: '',
+    category: 'Other',
     hidden: true,
   },
   'proxy-cache': {
-    category: '',
+    category: 'Other',
   },
   'tcp-logger': {
-    category: '',
+    category: 'Log',
   },
   'proxy-mirror': {
-    category: '',
+    category: 'Other',
   },
   'kafka-logger': {
-    category: '',
+    category: 'Log',
   },
   cors: {
-    category: '',
+    category: 'Security',
   },
   heartbeat: {
-    category: '',
+    category: 'Other',
   },
-  // BUG: 下面几个接口未返回
   'batch-requests': {
-    category: '',
+    category: 'Other',
   },
   'http-logger': {
-    category: '',
+    category: 'Log',
   },
   'mqtt-proxy': {
-    category: '',
+    category: 'Other',
   },
   oauth: {
-    category: '',
+    category: 'Security',
   },
 };
