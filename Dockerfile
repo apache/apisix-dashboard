@@ -5,10 +5,10 @@ WORKDIR /usr/src/app/
 USER root
 
 COPY package.json /usr/src/app/
-RUN npm install --no-cache --production
+RUN yarn
 
 COPY . /usr/src/app/
-RUN npm run build && rm -rf /usr/src/app/node_modules
+RUN yarn build && rm -rf /usr/src/app/node_modules
 
 # phase-run
 FROM nginx:1.16-alpine
