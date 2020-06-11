@@ -51,7 +51,12 @@ declare namespace PluginForm {
     };
   }
 
-  interface PluginProps {
+  type PluginMapperItem = {
+    category: string;
+    hidden?: boolean;
+  };
+
+  interface PluginProps extends PluginMapperItem {
     name: string;
   }
 }

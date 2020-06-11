@@ -1,83 +1,100 @@
-export const list: PluginForm.PluginProps[] = [
-  {
-    name: 'basic-auth',
+export const PLUGIN_MAPPER_SOURCE: { [name: string]: PluginForm.PluginMapperItem } = {
+  'limit-req': {
+    category: '',
   },
-  {
-    name: 'batch-requests',
+  'limit-count': {
+    category: '',
   },
-  {
-    name: 'cors',
+  'limit-conn': {
+    category: '',
   },
-  {
-    name: 'fault-injection',
+  'key-auth': {
+    category: '',
+    hidden: true,
   },
-  {
-    name: 'grpc-transcoding',
+  'basic-auth': {
+    category: '',
+    hidden: true,
   },
-  {
-    name: 'http-logger',
+  prometheus: {
+    category: '',
   },
-  {
-    name: 'ip-restriction',
+  'node-status': {
+    category: '',
   },
-  {
-    name: 'jwt-auth',
+  'jwt-auth': {
+    category: '',
+    hidden: true,
   },
-  {
-    name: 'kafka-logger',
+  zipkin: {
+    category: '',
   },
-  {
-    name: 'key-auth',
+  'ip-restriction': {
+    category: '',
   },
-  {
-    name: 'limit-conn',
+  'grpc-transcode': {
+    category: '',
+    hidden: true,
   },
-  {
-    name: 'limit-count',
+  'serverless-pre-function': {
+    category: '',
   },
-  {
-    name: 'limit-req',
+  'serverless-post-function': {
+    category: '',
   },
-  {
-    name: 'mqtt-proxy',
+  'openid-connect': {
+    category: '',
   },
-  {
-    name: 'oauth',
+  'proxy-rewrite': {
+    category: '',
+    hidden: true,
   },
-  {
-    name: 'prometheus',
+  redirect: {
+    category: '',
+    hidden: true,
   },
-  {
-    name: 'proxy-cache',
+  'response-rewrite': {
+    category: '',
   },
-  {
-    name: 'proxy-mirror',
+  'fault-injection': {
+    category: '',
   },
-  {
-    name: 'proxy-rewrite',
+  'udp-logger': {
+    category: '',
   },
-  {
-    name: 'redirect',
+  'wolf-rbac': {
+    category: '',
+    hidden: true,
   },
-  {
-    name: 'response-rewrite',
+  'proxy-cache': {
+    category: '',
   },
-  {
-    name: 'serverless',
+  'tcp-logger': {
+    category: '',
   },
-  {
-    name: 'syslog',
+  'proxy-mirror': {
+    category: '',
   },
-  {
-    name: 'tcp-logger',
+  'kafka-logger': {
+    category: '',
   },
-  {
-    name: 'udp-logger',
+  cors: {
+    category: '',
   },
-  {
-    name: 'wolf-rbac',
+  heartbeat: {
+    category: '',
   },
-  {
-    name: 'zipkin',
+  // BUG: 下面几个接口未返回
+  'batch-requests': {
+    category: '',
   },
-];
+  'http-logger': {
+    category: '',
+  },
+  'mqtt-proxy': {
+    category: '',
+  },
+  oauth: {
+    category: '',
+  },
+};
