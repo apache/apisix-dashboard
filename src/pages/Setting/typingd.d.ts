@@ -6,7 +6,7 @@ declare namespace Setting {
     key: string;
   }
 
-  interface DashboardConfig extends AdminAPI {
-    grafanaUrl: string;
+  interface GrafanaURL {
+    grafanaURL: string;
   }
 }

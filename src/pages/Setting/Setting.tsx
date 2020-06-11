@@ -4,7 +4,7 @@ import { Link, SelectLang, FormattedMessage, useIntl } from 'umi';
 import logo from '@/assets/logo.svg';
 import { useForm } from 'antd/es/form/util';
 import styles from './style.less';
-import { getAdminAPIConfig } from './service';
+import { getAdminAPIConfig, getGrafanaConfig } from './service';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -14,15 +14,21 @@ const Settings: React.FC<{}> = () => {
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    form.setFieldsValue(getAdminAPIConfig());
+    form.setFieldsValue({ ...getAdminAPIConfig(), ...getGrafanaConfig() });
   }, []);
 
-  const onFinish = ({ schema, host, path, key, grafanaUrl }: Setting.DashboardConfig) => {
+  const onFinish = ({
+    schema,
+    host,
+    path,
+    key,
+    grafanaURL,
+  }: Setting.AdminAPI & Setting.GrafanaURL) => {
     localStorage.setItem('GLOBAL_ADMIN_API_SCHEMA', schema);
     localStorage.setItem('GLOBAL_ADMIN_API_HOST', host);
     localStorage.setItem('GLOBAL_ADMIN_API_PATH', path);
     localStorage.setItem('GLOBAL_ADMIN_API_KEY', key);
-    localStorage.setItem('GLOBAL_ADMIN_SETTING_GRAFANA_URL', grafanaUrl);
+    localStorage.setItem('GLOBAL_ADMIN_SETTING_GRAFANA_URL', grafanaURL);
 
     notification.success({
       duration: 1,
@@ -54,7 +60,10 @@ const Settings: React.FC<{}> = () => {
         <div className={styles.main}>
           <Tabs>
             <TabPane key="TabContent" tab={formatMessage({ id: 'app.settings.admin-api' })}>
-              <Form form={form} onFinish={(values) => onFinish(values as Setting.DashboardConfig)}>
+              <Form
+                form={form}
+                onFinish={(values) => onFinish(values as Setting.AdminAPI & Setting.GrafanaURL)}
+              >
                 <Form.Item
                   name="schema"
                   rules={[
@@ -108,7 +117,7 @@ const Settings: React.FC<{}> = () => {
                 </Form.Item>
 
                 <Form.Item>
-                  <Form.Item name="grafanaUrl" noStyle>
+                  <Form.Item name="grafanaURL" noStyle>
                     <Input
                       placeholder={formatMessage({ id: 'app.settings.item.admin-api-grafana' })}
                     />
