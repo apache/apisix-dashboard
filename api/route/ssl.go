@@ -1,3 +1,19 @@
+//
+//Licensed to the Apache Software Foundation (ASF) under one or more
+//contributor license agreements.  See the NOTICE file distributed with
+//this work for additional information regarding copyright ownership.
+//The ASF licenses this file to You under the Apache License, Version 2.0
+//(the "License"); you may not use this file except in compliance with
+//the License.  You may obtain a copy of the License at
+//
+//http://www.apache.org/licenses/LICENSE-2.0
+//
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
+//
 package route
 
 import (
@@ -26,7 +42,7 @@ func AppendSsl(r *gin.Engine) *gin.Engine {
 func sslList(c *gin.Context) {
 	size, _ := strconv.Atoi(c.DefaultQuery("size", "10"))
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	// todo 参数校验
+	// todo params check
 	resp, err := service.SslList(page, size)
 
 	if err != nil {
@@ -42,7 +58,7 @@ func sslList(c *gin.Context) {
 func sslItem(c *gin.Context) {
 	id := c.Param("id")
 
-	// todo 参数校验
+	// todo params check
 	resp, err := service.SslItem(id)
 
 	if err != nil {
@@ -56,7 +72,7 @@ func sslItem(c *gin.Context) {
 }
 
 func sslCheck(c *gin.Context) {
-	// todo 参数校验
+	// todo params check
 	param, exist := c.Get("requestBody")
 
 	if !exist || len(param.([]byte)) < 1 {
@@ -78,7 +94,7 @@ func sslCheck(c *gin.Context) {
 }
 
 func sslCreate(c *gin.Context) {
-	// todo 参数校验
+	// todo params check
 	param, exist := c.Get("requestBody")
 
 	u4 := uuid.NewV4()
@@ -101,7 +117,7 @@ func sslCreate(c *gin.Context) {
 }
 
 func sslUpdate(c *gin.Context) {
-	// todo 参数校验
+	// todo params check
 	param, exist := c.Get("requestBody")
 
 	id := c.Param("id")
@@ -125,7 +141,7 @@ func sslUpdate(c *gin.Context) {
 
 func sslDelete(c *gin.Context) {
 	id := c.Param("id")
-	// todo 参数校验
+	// todo params check
 	if err := service.SslDelete(id); err != nil {
 		e := errno.FromMessage(errno.RouteRequestError, err.Error())
 		logger.Error(e.Msg)
