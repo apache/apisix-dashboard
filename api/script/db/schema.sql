@@ -1,3 +1,5 @@
+-- this is a db script for init
+
 CREATE DATABASE `manager`;
 -- route
 DROP TABLE `routes`;
