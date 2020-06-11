@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { SettingOutlined, LinkOutlined } from '@ant-design/icons';
 import { omit, merge } from 'lodash';
 
-import { pluginList } from '@/components/PluginForm';
+import { PLUGIN_MAPPER_SOURCE } from '@/components/PluginForm/data';
 import PanelSection from '../PanelSection';
 import PluginDrawer from './PluginDrawer';
 import PluginCard from './PluginCard';
@@ -17,38 +17,13 @@ const sectionStyle = {
 };
 
 const CreateStep3: React.FC<Props> = ({ data, disabled, onChange }) => {
-  // NOTE: Plugin in blacklist WILL NOT be shown on Step3.
-  const pluginBlackList = [
-    'basic-auth',
-    'batch-requests',
-    'grpc-transcoding',
-    'http-logger',
-    'jwt-auth',
-    'key-auth',
-    'mqtt-proxy',
-    'oauth',
-    'redirect',
-    'wolf-rbac',
-    // BUG:
-    'proxy-rewrite',
-  ];
-
-  const list = pluginList.filter(({ name }) => !pluginBlackList.includes(name));
-  const [activeList, setActiveList] = useState<PluginForm.PluginProps[]>([]);
-  const [inactiveList, setInactiveList] = useState<PluginForm.PluginProps[]>([]);
-
-  useEffect(() => {
-    const pluginKeys = Object.keys(data.step3Data.plugins || []);
-    setActiveList(list.filter((item) => pluginKeys.includes(item.name)));
-    setInactiveList(list.filter((item) => !pluginKeys.includes(item.name)));
-  }, [data.step3Data.plugins]);
-
   const [currentPlugin, setCurrentPlugin] = useState<string | undefined>();
+  const { _disabledPluginList = [], _enabledPluginList = [] } = data.step3Data;
 
   return (
     <>
       <PanelSection title="已启用" style={sectionStyle}>
-        {activeList.map(({ name }) => (
+        {_enabledPluginList.map(({ name }) => (
           <PluginCard
             name={name}
             actions={[
@@ -67,7 +42,7 @@ const CreateStep3: React.FC<Props> = ({ data, disabled, onChange }) => {
       </PanelSection>
       {!disabled && (
         <PanelSection title="未启用" style={sectionStyle}>
-          {inactiveList.map(({ name }) => (
+          {_disabledPluginList.map(({ name }) => (
             <PluginCard
               name={name}
               actions={[
@@ -89,15 +64,23 @@ const CreateStep3: React.FC<Props> = ({ data, disabled, onChange }) => {
         name={currentPlugin}
         disabled={disabled}
         initialData={currentPlugin ? data.step3Data.plugins[currentPlugin] : {}}
-        active={Boolean(activeList.find((item) => item.name === currentPlugin))}
+        active={Boolean(_enabledPluginList.find((item) => item.name === currentPlugin))}
         onActive={(name: string) => {
-          setInactiveList(inactiveList.filter((item) => item.name !== name));
-          setActiveList(activeList.concat({ name }));
+          onChange({
+            ...data.step3Data,
+            _disabledPluginList: _disabledPluginList.filter((item) => item.name !== name),
+            _enabledPluginList: _enabledPluginList.concat({ name, ...PLUGIN_MAPPER_SOURCE[name] }),
+          });
         }}
         onInactive={(name: string) => {
-          setActiveList(activeList.filter((item) => item.name !== name));
-          setInactiveList(inactiveList.concat({ name }));
-          onChange(omit({ ...data.step3Data }, `plugins.${currentPlugin}`));
+          onChange({
+            ...omit({ ...data.step3Data }, `plugins.${currentPlugin}`),
+            _disabledPluginList: _disabledPluginList.concat({
+              name,
+              ...PLUGIN_MAPPER_SOURCE[name],
+            }),
+            _enabledPluginList: _enabledPluginList.filter((item) => item.name !== name),
+          });
           setCurrentPlugin(undefined);
         }}
         onClose={() => setCurrentPlugin(undefined)}

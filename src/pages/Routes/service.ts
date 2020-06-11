@@ -21,3 +21,5 @@ export const fetchRouteList = (wid = 0) => request(`/workspaces/${wid}/routes?pa
 
 export const removeRoute = (rid: number, wid = 0) =>
   request(`/workspaces/${wid}/routes/${rid}`, { method: 'DELETE' });
+
+export const fetchPluginList = () => request('/plugins');
