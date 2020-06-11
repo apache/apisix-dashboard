@@ -51,7 +51,14 @@ declare namespace PluginForm {
     };
   }
 
-  interface PluginProps {
+  type PluginCategory = 'Security' | 'Limit' | 'Log' | 'Metric' | 'Other';
+
+  type PluginMapperItem = {
+    category: PluginCategory;
+    hidden?: boolean;
+  };
+
+  interface PluginProps extends PluginMapperItem {
     name: string;
   }
 }

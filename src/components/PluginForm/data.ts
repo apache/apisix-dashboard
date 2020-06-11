@@ -1,83 +1,99 @@
-export const list: PluginForm.PluginProps[] = [
-  {
-    name: 'basic-auth',
+export const PLUGIN_MAPPER_SOURCE: { [name: string]: PluginForm.PluginMapperItem } = {
+  'limit-req': {
+    category: 'Limit',
   },
-  {
-    name: 'batch-requests',
+  'limit-count': {
+    category: 'Limit',
   },
-  {
-    name: 'cors',
+  'limit-conn': {
+    category: 'Limit',
   },
-  {
-    name: 'fault-injection',
+  'key-auth': {
+    category: 'Security',
+    hidden: true,
   },
-  {
-    name: 'grpc-transcoding',
+  'basic-auth': {
+    category: 'Security',
+    hidden: true,
   },
-  {
-    name: 'http-logger',
+  prometheus: {
+    category: 'Metric',
   },
-  {
-    name: 'ip-restriction',
+  'node-status': {
+    category: 'Other',
   },
-  {
-    name: 'jwt-auth',
+  'jwt-auth': {
+    category: 'Security',
+    hidden: true,
   },
-  {
-    name: 'kafka-logger',
+  zipkin: {
+    category: 'Metric',
   },
-  {
-    name: 'key-auth',
+  'ip-restriction': {
+    category: 'Security',
   },
-  {
-    name: 'limit-conn',
+  'grpc-transcode': {
+    category: 'Other',
+    hidden: true,
   },
-  {
-    name: 'limit-count',
+  'serverless-pre-function': {
+    category: 'Other',
   },
-  {
-    name: 'limit-req',
+  'serverless-post-function': {
+    category: 'Other',
   },
-  {
-    name: 'mqtt-proxy',
+  'openid-connect': {
+    category: 'Security',
   },
-  {
-    name: 'oauth',
+  'proxy-rewrite': {
+    category: 'Other',
+    hidden: true,
   },
-  {
-    name: 'prometheus',
+  redirect: {
+    category: 'Other',
+    hidden: true,
   },
-  {
-    name: 'proxy-cache',
+  'response-rewrite': {
+    category: 'Other',
   },
-  {
-    name: 'proxy-mirror',
+  'fault-injection': {
+    category: 'Security',
   },
-  {
-    name: 'proxy-rewrite',
+  'udp-logger': {
+    category: 'Log',
   },
-  {
-    name: 'redirect',
+  'wolf-rbac': {
+    category: 'Other',
+    hidden: true,
   },
-  {
-    name: 'response-rewrite',
+  'proxy-cache': {
+    category: 'Other',
   },
-  {
-    name: 'serverless',
+  'tcp-logger': {
+    category: 'Log',
   },
-  {
-    name: 'syslog',
+  'proxy-mirror': {
+    category: 'Other',
   },
-  {
-    name: 'tcp-logger',
+  'kafka-logger': {
+    category: 'Log',
   },
-  {
-    name: 'udp-logger',
+  cors: {
+    category: 'Security',
   },
-  {
-    name: 'wolf-rbac',
+  heartbeat: {
+    category: 'Other',
   },
-  {
-    name: 'zipkin',
+  'batch-requests': {
+    category: 'Other',
   },
-];
+  'http-logger': {
+    category: 'Log',
+  },
+  'mqtt-proxy': {
+    category: 'Other',
+  },
+  oauth: {
+    category: 'Security',
+  },
+};

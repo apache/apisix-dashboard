@@ -17,10 +17,59 @@ export default {
     'kafka-logger 是一个插件，可用作ngx_lua nginx 模块的 Kafka 客户端驱动程序。',
   'PluginForm.plugin.key-auth.desc':
     'key-auth 是一个认证插件，它需要与 consumer 一起配合才能工作。',
+
   'PluginForm.plugin.limit-conn.desc': 'APISIX 的限制并发请求（或并发连接）插件。',
+  'PluginForm.plugin.limit-conn.property.burst': '最大并发请求数',
+  'PluginForm.plugin.limit-conn.property.burst.extra': '允许的最大并发请求数',
+  'PluginForm.plugin.limit-conn.property.conn': '可延迟并发请求数',
+  'PluginForm.plugin.limit-conn.property.conn.extra': '允许延迟的过多并发请求(或连接)的数量。',
+  'PluginForm.plugin.limit-conn.property.default_conn_delay': '默认请求延迟时间',
+  'PluginForm.plugin.limit-conn.property.default_conn_delay.extra':
+    '默认的典型连接(或请求)的处理延迟时间。',
+  'PluginForm.plugin.limit-conn.property.key': '关键字',
+  'PluginForm.plugin.limit-conn.property.key.extra':
+    '用户指定的限制并发级别的关键字，可以是客户端IP或服务端IP。',
+  'PluginForm.plugin.limit-conn.property.rejected_code': '错误 HTTP 状态码',
+  'PluginForm.plugin.limit-conn.property.rejected_code.extra':
+    '当请求超过阈值时返回的 HTTP 状态码， 默认值是503。',
+
   'PluginForm.plugin.limit-count.desc':
     '和 GitHub API 的限速类似， 在指定的时间范围内，限制总的请求个数。并且在 HTTP 响应头中返回剩余可以请求的个数。',
+  'PluginForm.plugin.limit-count.property.count': '单位窗口内请求数量',
+  'PluginForm.plugin.limit-count.property.count.extra': '指定时间窗口内的请求数量阈值',
+  'PluginForm.plugin.limit-count.property.time_window': '时间窗口大小',
+  'PluginForm.plugin.limit-count.property.time_window.extra':
+    '时间窗口的大小（以秒为单位），超过这个时间就会重置',
+  'PluginForm.plugin.limit-count.property.key': 'Key',
+  'PluginForm.plugin.limit-count.property.key.extra': '用来做请求计数的依据',
+  'PluginForm.plugin.limit-count.property.rejected_code': '错误 HTTP 状态码',
+  'PluginForm.plugin.limit-count.property.rejected_code.extra':
+    '当请求超过阈值时返回的 HTTP 状态码， 默认值是503。',
+  'PluginForm.plugin.limit-count.property.policy': '策略',
+  'PluginForm.plugin.limit-count.property.policy.extra': '用于检索和增加限制的速率限制策略',
+  'PluginForm.plugin.limit-count.property.redis_host': ' Redis 地址',
+  'PluginForm.plugin.limit-count.property.redis_host.extra': ' Redis 服务节点的地址',
+  'PluginForm.plugin.limit-count.property.redis_port': 'Redis 端口',
+  'PluginForm.plugin.limit-count.property.redis_port.extra': 'Redis 服务节点的端口',
+  'PluginForm.plugin.limit-count.property.redis_password': 'Redis 密码',
+  'PluginForm.plugin.limit-count.property.redis_password.extra': 'Redis 服务节点的密码',
+  'PluginForm.plugin.limit-count.property.redis_timeout': 'Redis 超时时间',
+  'PluginForm.plugin.limit-count.property.redis_timeout.extra':
+    'Redis 服务节点以毫秒为单位的超时时间',
+
   'PluginForm.plugin.limit-req.desc': '限制请求速度的插件，使用的是漏桶算法。',
+  'PluginForm.plugin.limit-req.property.rate': 'Rate',
+  'PluginForm.plugin.limit-req.property.rate.extra':
+    '指定的请求速率（以秒为单位），请求速率超过 rate 但没有超过 （rate + brust）的请求会被加上延时。',
+  'PluginForm.plugin.limit-req.property.burst': 'Burst',
+  'PluginForm.plugin.limit-req.property.burst.extra':
+    '请求速率超过 （rate + brust）的请求会被直接拒绝。',
+  'PluginForm.plugin.limit-req.property.key': 'Key',
+  'PluginForm.plugin.limit-req.property.key.extra': '用来做请求计数的依据',
+  'PluginForm.plugin.limit-req.property.rejected_code': '错误 HTTP 状态码',
+  'PluginForm.plugin.limit-req.property.rejected_code.extra':
+    '当请求超过阈值时返回的 HTTP 状态码， 默认值是503。',
+
   'PluginForm.plugin.mqtt-proxy.desc':
     'mqtt-proxy 只工作在流模式，它可以帮助你根据 MQTT 的 client_id 实现动态负载均衡。',
   'PluginForm.plugin.oauth.desc':
@@ -40,4 +89,9 @@ export default {
   'PluginForm.plugin.wolf-rbac.desc':
     'wolf-rbac 是一个认证及授权(rbac)插件，它需要与 consumer 一起配合才能工作。',
   'PluginForm.plugin.zipkin.desc': 'zipkin 是一个开源的服务跟踪插件。',
+  'PluginForm.plugin.node-status.desc': '暂无描述',
+  'PluginForm.plugin.serverless-pre-function.desc': '属于 serverless，会在指定阶段最开始运行。',
+  'PluginForm.plugin.serverless-post-function.desc': '属于 serverless，会在指定阶段最后运行。',
+  'PluginForm.plugin.openid-connect.desc': '暂无描述。',
+  'PluginForm.plugin.heartbeat.desc': '暂无描述',
 };

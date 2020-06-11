@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
-import { createRoute, fetchRoute, updateRoute } from './service';
+import { PLUGIN_MAPPER_SOURCE } from '@/components/PluginForm/data';
+import { createRoute, fetchRoute, updateRoute, fetchPluginList } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import CreateStep3 from './components/CreateStep3';
@@ -20,7 +21,13 @@ import styles from './Create.less';
 
 const { Step } = Steps;
 
-const Create: React.FC = (props) => {
+type Props = {
+  // FIXME
+  route: any;
+  match: any;
+};
+
+const Create: React.FC<Props> = (props) => {
   const [step1Data, setStep1Data] = useState(DEFAULT_STEP_1_DATA);
   const [step2Data, setStep2Data] = useState(DEFAULT_STEP_2_DATA);
   const [step3Data, setStep3Data] = useState(DEFAULT_STEP_3_DATA);
@@ -39,7 +46,33 @@ const Create: React.FC = (props) => {
     step3Data,
   };
 
-  const initRoute = (rid: number) => {
+  const setupPlugin = () => {
+    const PLUGIN_BLOCK_LIST = Object.entries(PLUGIN_MAPPER_SOURCE)
+      .filter(([, value]) => value.hidden)
+      .flat()
+      .filter((item) => typeof item === 'string');
+
+    fetchPluginList().then((data: string[]) => {
+      const names = data.filter((name) => !PLUGIN_BLOCK_LIST.includes(name));
+
+      const enabledNames = Object.keys(step3Data.plugins);
+      const disabledNames = names.filter((name) => !enabledNames.includes(name));
+
+      setStep3Data({
+        plugins: step3Data.plugins,
+        _disabledPluginList: disabledNames.map((name) => ({
+          name,
+          ...PLUGIN_MAPPER_SOURCE[name],
+        })),
+        _enabledPluginList: enabledNames.map((name) => ({
+          name,
+          ...PLUGIN_MAPPER_SOURCE[name],
+        })),
+      });
+    });
+  };
+
+  const setupRoute = (rid: number) =>
     fetchRoute(rid).then((data) => {
       form1.setFieldsValue(data.step1Data);
       setStep1Data(data.step1Data as RouteModule.Step1Data);
@@ -49,30 +82,36 @@ const Create: React.FC = (props) => {
 
       setStep3Data(data.step3Data);
     });
-  };
 
   useEffect(() => {
-    if ((props as any).route.name === 'edit') {
-      initRoute((props as any).match.params.rid);
+    console.log(props);
+    if (props.route.name === 'edit') {
+      setupRoute(props.match.params.rid).then(() => setupPlugin());
+    } else {
+      setupPlugin();
     }
   }, []);
 
   useEffect(() => {
-    if (step1Data.redirectURI !== '') {
-      if (step1Data.forceHttps) {
-        setStep1Data({ ...step1Data, redirectURI: '' });
-        setRedirect(false);
-        setStepHeader(STEP_HEADER_4);
-        return;
-      }
-      setRedirect(true);
-      setStepHeader(STEP_HEADER_2);
-    } else {
+    const { redirectURI, forceHttps } = step1Data;
+    if (redirectURI === '') {
       setRedirect(false);
       setStepHeader(STEP_HEADER_4);
+      return;
     }
+
+    if (!forceHttps) {
+      setRedirect(true);
+      setStepHeader(STEP_HEADER_2);
+      return;
+    }
+
+    setStep1Data({ ...step1Data, redirectURI: '' });
+    setRedirect(false);
+    setStepHeader(STEP_HEADER_4);
   }, [step1Data]);
 
+  // FIXME
   const onReset = () => {
     setStep1Data(DEFAULT_STEP_1_DATA);
     setStep2Data(DEFAULT_STEP_2_DATA);
@@ -101,6 +140,7 @@ const Create: React.FC = (props) => {
           <CreateStep4 data={routeData} form1={form1} form2={form2} onChange={() => {}} redirect />
         );
       }
+
       return (
         <Step2
           data={routeData}
@@ -183,13 +223,7 @@ const Create: React.FC = (props) => {
           {renderStep()}
         </Card>
       </PageHeaderWrapper>
-      <ActionBar
-        step={step}
-        redirect={redirect}
-        onChange={(nextStep) => {
-          onStepChange(nextStep);
-        }}
-      />
+      <ActionBar step={step} redirect={redirect} onChange={onStepChange} />
     </>
   );
 };

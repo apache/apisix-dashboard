@@ -38,6 +38,8 @@ declare namespace RouteModule {
     plugins: {
       [name: string]: any;
     };
+    _enabledPluginList: PluginForm.PluginProps[];
+    _disabledPluginList: PluginForm.PluginProps[];
   };
 
   interface Data {
