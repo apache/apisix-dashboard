@@ -23,7 +23,7 @@ const Settings: React.FC<{}> = () => {
     path,
     key,
     grafanaURL,
-  }: Setting.AdminAPI & Setting.GrafanaURL) => {
+  }: Setting.AdminAPI & Setting.GrafanaConfig) => {
     localStorage.setItem('GLOBAL_ADMIN_API_SCHEMA', schema);
     localStorage.setItem('GLOBAL_ADMIN_API_HOST', host);
     localStorage.setItem('GLOBAL_ADMIN_API_PATH', path);
@@ -62,7 +62,7 @@ const Settings: React.FC<{}> = () => {
             <TabPane key="TabContent" tab={formatMessage({ id: 'app.settings.admin-api' })}>
               <Form
                 form={form}
-                onFinish={(values) => onFinish(values as Setting.AdminAPI & Setting.GrafanaURL)}
+                onFinish={(values) => onFinish(values as Setting.AdminAPI & Setting.GrafanaConfig)}
               >
                 <Form.Item
                   name="schema"

@@ -5,12 +5,12 @@ import { history } from 'umi';
 import { stringify } from 'qs';
 import { getGrafanaConfig } from './service';
 
-const Metrics: React.FC<{}> = () => {
-  const [grafanaURL, setGrafanaURL] = useState<string>('');
-  const [showMetrics, setShowMetrics] = useState(Boolean(grafanaURL));
+const Metrics: React.FC = () => {
+  const [grafanaURL, setGrafanaURL] = useState<string | undefined>();
+  const [showMetrics, setShowMetrics] = useState(false);
 
   useEffect(() => {
-    const url = getGrafanaConfig();
+    const url = getGrafanaConfig().grafanaURL;
     setGrafanaURL(url);
     setShowMetrics(Boolean(url));
   }, []);

@@ -1,3 +1,5 @@
-export const getGrafanaConfig = (): string => {
-  return localStorage.getItem('GLOBAL_ADMIN_SETTING_GRAFANA_URL') || '';
+export const getGrafanaConfig = (): Setting.GrafanaConfig => {
+  return {
+    grafanaURL: localStorage.getItem('GLOBAL_ADMIN_SETTING_GRAFANA_URL') || '',
+  };
 };

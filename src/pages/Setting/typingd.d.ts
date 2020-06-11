@@ -6,7 +6,7 @@ declare namespace Setting {
     key: string;
   }
 
-  interface GrafanaURL {
+  interface GrafanaConfig {
     grafanaURL: string;
   }
 }
