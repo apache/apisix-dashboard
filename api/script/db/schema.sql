@@ -1,4 +1,6 @@
+CREATE DATABASE `manager`;
 -- route
+DROP TABLE `routes`;
 CREATE TABLE `routes` (
   `id` varchar(64) NOT NULL unique,
   `name` varchar(200) NOT NULL unique, -- not support yet
@@ -18,6 +20,7 @@ CREATE TABLE `routes` (
 ) DEFAULT CHARSET=utf8;
 
 
+DROP TABLE `ssls`;
 CREATE TABLE `ssls` (
   `id` char(36) NOT NULL DEFAULT '',
   `public_key` text NOT NULL,

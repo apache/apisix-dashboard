@@ -61,6 +61,7 @@ services:
     volumes:
       - /tmp/datadir:/var/lib/mysql
       - /tmp/conf.d:/etc/mysql/conf.d
+      - ../api/script/db:/docker-entrypoint-initdb.d
     networks:
       apisix-dashboard:
         ipv4_address: 192.17.5.14
