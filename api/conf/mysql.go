@@ -2,7 +2,6 @@ package conf
 
 import (
 	"fmt"
-	//_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"time"
@@ -17,7 +16,7 @@ func DB() *gorm.DB {
 // InitializeMysql creates mysql's *sqlDB instance
 func InitializeMysql() {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", MysqlConfig.User,
-		MysqlConfig.Password, MysqlConfig.Address, "api7")
+		MysqlConfig.Password, MysqlConfig.Address, "manager")
 	if tmp, err := gorm.Open("mysql", dsn); err != nil {
 		panic(fmt.Sprintf("fail to connect to DB: %s for %s", err.Error(), dsn))
 	} else {

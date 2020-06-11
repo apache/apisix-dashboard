@@ -340,18 +340,6 @@ type ApisixRouteRequest struct {
 	//Name     string                 `json:"name"`
 }
 
-//func (r ApisixRouteRequest) MarshalJSON() ([]byte, error) {
-//	m := make(map[string]interface{})
-//	m["desc"] = r.Desc
-//	m["priority"] = r.Priority
-//	if r.Methods
-//	if result, err := json.Marshal(m); err != nil {
-//		return nil, err
-//	} else {
-//		return result, nil
-//	}
-//}
-
 // ApisixRouteResponse is response from apisix admin api
 type ApisixRouteResponse struct {
 	Action string `json:"action"`
@@ -527,8 +515,6 @@ func ToRoute(routeRequest *RouteRequest,
 	if hb, err := json.Marshal(hosts); err != nil {
 		e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
 		logger.Warn(e.Msg)
-		//c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
-		//return
 	} else {
 		rd.Hosts = string(hb)
 	}

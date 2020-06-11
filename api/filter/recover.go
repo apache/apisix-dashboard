@@ -3,7 +3,7 @@ package filter
 import (
 	"bytes"
 	"fmt"
-	"github.com/api7/api7-manager-api/log"
+	"github.com/apisix/manager-api/log"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
@@ -49,11 +49,10 @@ func WrapGo(f func(...interface{}), args ...interface{}) {
 
 func stack(skip int) []byte {
 	buf := new(bytes.Buffer) // the returned data
-	// As we loop, we open files and read them. These variables record the currently
 	// loaded file.
 	var lines [][]byte
 	var lastFile string
-	for i := skip; ; i++ { // Skip the expected number of frames
+	for i := skip; ; i++ {
 		pc, file, line, ok := runtime.Caller(i)
 		if !ok {
 			break
@@ -89,14 +88,7 @@ func function(pc uintptr) []byte {
 		return dunno
 	}
 	name := []byte(fn.Name())
-	// The name includes the path name to the package, which is unnecessary
-	// since the file name is already included.  Plus, it has center dots.
-	// That is, we see
-	//	runtime/debug.*T·ptrmethod
-	// and want
-	//	*T.ptrmethod
-	// Also the package path might contains dot (e.g. code.google.com/...),
-	// so first eliminate the path prefix
+	
 	if lastslash := bytes.LastIndex(name, slash); lastslash >= 0 {
 		name = name[lastslash+1:]
 	}

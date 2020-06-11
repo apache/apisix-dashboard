@@ -140,7 +140,7 @@ func SslCreate(param interface{}, id string) error {
 		return err
 	}
 
-	//先请求admin api
+	// first admin api
 	var snis []string
 	_ = json.Unmarshal([]byte(ssl.Snis), &snis)
 	sslReq.Snis = snis
@@ -148,7 +148,7 @@ func SslCreate(param interface{}, id string) error {
 	if _, err := sslReq.PutToApisix(id); err != nil {
 		return err
 	}
-	// 更新 mysql
+	// then mysql
 	ssl.ID = uuid.FromStringOrNil(id)
 	if err := conf.DB().Create(ssl).Error; err != nil {
 		return err
@@ -167,7 +167,7 @@ func SslUpdate(param interface{}, id string) error {
 		return err
 	}
 
-	//先请求admin api
+	// first admin api
 	var snis []string
 	_ = json.Unmarshal([]byte(ssl.Snis), &snis)
 	sslReq.Snis = snis
@@ -176,7 +176,7 @@ func SslUpdate(param interface{}, id string) error {
 		return err
 	}
 
-	// 更新 mysql
+	// then mysql
 	ssl.ID = uuid.FromStringOrNil(id)
 	data := Ssl{PublicKey: ssl.PublicKey, Snis: ssl.Snis, ValidityStart: ssl.ValidityStart, ValidityEnd: ssl.ValidityEnd}
 	if err := conf.DB().Model(&ssl).Updates(data).Error; err != nil {
@@ -244,13 +244,13 @@ func (req *SslRequest) DeleteFromApisix() (*ApisixSslResponse, error) {
 }
 
 func ParseCert(crt, key string) (*Ssl, error) {
-	//打印出私钥类型
+	//print private key 
 	certDERBlock, _ := pem.Decode([]byte(crt))
 	if certDERBlock == nil {
-		return nil, errors.New("证书解析失败")
+		return nil, errors.New("Certificate resolution failed")
 	}
 
-	//校验配对
+	// match
 	_, err := tls.X509KeyPair([]byte(crt), []byte(key))
 	if err != nil {
 		return nil, err
@@ -259,11 +259,11 @@ func ParseCert(crt, key string) (*Ssl, error) {
 	x509Cert, err := x509.ParseCertificate(certDERBlock.Bytes)
 
 	if err != nil {
-		return nil, errors.New("证书解析失败")
+		return nil, errors.New("Certificate resolution failed")
 	} else {
 		ssl := Ssl{}
 
-		//域名
+		//domain
 		snis := []byte{}
 		if x509Cert.DNSNames == nil || len(x509Cert.DNSNames) < 1 {
 			tmp := []string{}

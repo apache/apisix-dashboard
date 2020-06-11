@@ -2,9 +2,9 @@ package route
 
 import (
 	"encoding/json"
-	"github.com/api7/api7-manager-api/conf"
-	"github.com/api7/api7-manager-api/errno"
-	"github.com/api7/api7-manager-api/service"
+	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/errno"
+	"github.com/apisix/manager-api/service"
 	"github.com/gin-gonic/gin"
 	"github.com/satori/go.uuid"
 	"net/http"
@@ -58,7 +58,7 @@ func listRoute(c *gin.Context) {
 				Or("upstream_nodes like ? ", "%"+search+"%")
 		}
 	}
-	// todo 参数校验
+	// todo params check
 	// mysql
 	routeList := []service.Route{}
 	var count int
@@ -82,7 +82,7 @@ func listRoute(c *gin.Context) {
 
 func deleteRoute(c *gin.Context) {
 	rid := c.Param("rid")
-	// todo 参数校验
+	// todo  params check
 	// delete from apisix
 	request := &service.ApisixRouteRequest{}
 	if _, err := request.Delete(rid); err != nil {
@@ -105,7 +105,7 @@ func deleteRoute(c *gin.Context) {
 }
 func updateRoute(c *gin.Context) {
 	rid := c.Param("rid")
-	// todo 参数校验
+	// todo  params check
 	param, exist := c.Get("requestBody")
 	if !exist || len(param.([]byte)) < 1 {
 		e := errno.FromMessage(errno.RouteRequestError, "route create with no post data")
@@ -130,7 +130,7 @@ func updateRoute(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
 		return
 	} else {
-		// 更新 mysql
+		// update mysql
 		if rd, err := service.ToRoute(routeRequest, arr, uuid.FromStringOrNil(rid), resp); err != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, err.Response())
 			return
@@ -149,8 +149,8 @@ func updateRoute(c *gin.Context) {
 
 func findRoute(c *gin.Context) {
 	rid := c.Param("rid")
-	// todo 参数校验
-	// 直接查询 apisix
+	// todo  params check
+	// find from apisix
 	request := &service.ApisixRouteRequest{}
 	if response, err := request.FindById(rid); err != nil {
 		e := errno.FromMessage(errno.RouteRequestError, err.Error()+" route ID: "+rid)
@@ -165,7 +165,7 @@ func findRoute(c *gin.Context) {
 			c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
 			return
 		} else {
-			// 暂时需要从mysql查询name
+			// need to find name from mysql temporary
 			route := &service.Route{}
 			if err := conf.DB().Table("routes").Where("id=?", rid).First(&route).Error; err != nil {
 				e := errno.FromMessage(errno.RouteRequestError, err.Error()+" route ID: "+rid)
@@ -183,7 +183,7 @@ func findRoute(c *gin.Context) {
 func createRoute(c *gin.Context) {
 	u4 := uuid.NewV4()
 	rid := u4.String()
-	// todo 参数校验
+	// todo params check
 	param, exist := c.Get("requestBody")
 	if !exist || len(param.([]byte)) < 1 {
 		e := errno.FromMessage(errno.RouteRequestError, "route create with no post data")
@@ -208,7 +208,7 @@ func createRoute(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
 		return
 	} else {
-		// 更新 mysql
+		// update mysql
 		if rd, err := service.ToRoute(routeRequest, arr, u4, resp); err != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, err.Response())
 			return
