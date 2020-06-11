@@ -3,7 +3,7 @@ package log
 import (
 	"bufio"
 	"fmt"
-	"github.com/api7/api7-manager-api/conf"
+	"github.com/apisix/manager-api/conf"
 	"github.com/sirupsen/logrus"
 	"os"
 	"runtime"

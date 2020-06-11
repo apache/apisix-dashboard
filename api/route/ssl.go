@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/satori/go.uuid"
 
-	"github.com/api7/api7-manager-api/errno"
-	"github.com/api7/api7-manager-api/service"
+	"github.com/apisix/manager-api/errno"
+	"github.com/apisix/manager-api/service"
 )
 
 const contentType = "application/json"

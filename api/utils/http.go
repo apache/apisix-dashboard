@@ -2,8 +2,8 @@ package utils
 
 import (
 	"fmt"
-	"github.com/api7/api7-manager-api/conf"
-	"github.com/api7/api7-manager-api/log"
+	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/log"
 	"gopkg.in/resty.v1"
 	"net/http"
 	"time"

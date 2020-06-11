@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/api7/api7-manager-api/conf"
-	"github.com/api7/api7-manager-api/filter"
-	"github.com/api7/api7-manager-api/log"
-	"github.com/api7/api7-manager-api/route"
+	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/filter"
+	"github.com/apisix/manager-api/log"
+	"github.com/apisix/manager-api/route"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"net/http"

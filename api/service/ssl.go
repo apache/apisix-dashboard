@@ -10,9 +10,9 @@ import (
 
 	"github.com/satori/go.uuid"
 
-	"github.com/api7/api7-manager-api/conf"
-	"github.com/api7/api7-manager-api/errno"
-	"github.com/api7/api7-manager-api/utils"
+	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/errno"
+	"github.com/apisix/manager-api/utils"
 )
 
 type Ssl struct {

@@ -2,7 +2,7 @@ version: "3"
 
 services:
   apisix:
-    image: apisixacr.azurecr.cn/apisix:latest
+    image: apache/apisix:latest
     restart: always
     volumes:
       - ./apisix_log:/usr/local/apisix/logs
@@ -52,7 +52,7 @@ services:
         ipv4_address: 192.17.5.13
 
   mysql:
-    image: apisixacr.azurecr.cn/mysql:latest
+    image: mysql:latest
     restart: always
     ports:
       - "3306:3306/tcp"
@@ -73,7 +73,7 @@ services:
     ports:
       - "8080:8080/tcp"
     volumes:
-      - ./manager_conf/build.sh:/root/api7-manager-api/build.sh
+      - ./manager_conf/build.sh:/root/manager-api/build.sh
     networks:
       apisix-dashboard:
         ipv4_address: 192.17.5.15

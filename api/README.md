@@ -1,1 +1,1 @@
-# api7-manager-api
+# manager-api

@@ -2,8 +2,8 @@ package route
 
 import (
 	"encoding/json"
-	"github.com/api7/api7-manager-api/errno"
-	"github.com/api7/api7-manager-api/service"
+	"github.com/apisix/manager-api/errno"
+	"github.com/apisix/manager-api/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
