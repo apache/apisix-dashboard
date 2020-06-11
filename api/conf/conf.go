@@ -14,10 +14,7 @@ const PROD = "prod"
 const BETA = "beta"
 const DEV = "dev"
 const LOCAL = "local"
-const TimeLayout = "2006-01-02 15:04:05"
-const TimeTLayout = "2006-01-02T15:04:05"
-const DateLayout = "2006-01-02"
-const confPath = "/root/api7-manager-api/conf.json"
+const confPath = "/root/manager-api/conf.json"
 const RequestId = "requestId"
 
 var (

@@ -505,7 +505,7 @@ func ToApisixRequest(routeRequest *RouteRequest) *ApisixRouteRequest {
 func ToRoute(routeRequest *RouteRequest,
 	arr *ApisixRouteRequest,
 	u4 uuid.UUID,
-	resp *ApisixRouteResponse) (*Route, *errno.Api7Error) {
+	resp *ApisixRouteResponse) (*Route, *errno.ManagerError) {
 	rd := &Route{}
 	if err := rd.Parse(routeRequest, arr); err != nil {
 		e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
