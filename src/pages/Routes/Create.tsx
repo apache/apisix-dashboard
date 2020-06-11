@@ -37,7 +37,7 @@ const Create: React.FC<Props> = (props) => {
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(0);
   const [stepHeader, setStepHeader] = useState(STEP_HEADER_4);
 
   const routeData = {
