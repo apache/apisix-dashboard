@@ -1,4 +1,4 @@
-module github.com/api7/api7-manager-api
+module github.com/apisix/manager-api
 
 go 1.13
 

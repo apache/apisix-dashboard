@@ -73,6 +73,8 @@ services:
     restart: always
     ports:
       - "8080:8080/tcp"
+    environment:
+      - ENV=prod
     volumes:
       - ./manager_conf/build.sh:/root/manager-api/build.sh
     networks:
