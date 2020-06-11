@@ -1,9 +1,9 @@
-import { Button, Form, Input, notification, Select, Tabs } from 'antd';
+import { Button, Form, Input, notification, Select, Tabs, Tooltip } from 'antd';
 import React, { useEffect } from 'react';
 import { Link, SelectLang, FormattedMessage, useIntl } from 'umi';
 import logo from '@/assets/logo.svg';
-import styles from './style.less';
 import { useForm } from 'antd/es/form/util';
+import styles from './style.less';
 import { getAdminAPIConfig } from './service';
 
 const { Option } = Select;
@@ -17,11 +17,12 @@ const Settings: React.FC<{}> = () => {
     form.setFieldsValue(getAdminAPIConfig());
   }, []);
 
-  const onFinish = ({ schema, host, path, key }: Setting.AdminAPI) => {
+  const onFinish = ({ schema, host, path, key, grafanaUrl }: Setting.DashboardConfig) => {
     localStorage.setItem('GLOBAL_ADMIN_API_SCHEMA', schema);
     localStorage.setItem('GLOBAL_ADMIN_API_HOST', host);
     localStorage.setItem('GLOBAL_ADMIN_API_PATH', path);
     localStorage.setItem('GLOBAL_ADMIN_API_KEY', key);
+    localStorage.setItem('GLOBAL_ADMIN_SETTING_GRAFANA_URL', grafanaUrl);
 
     notification.success({
       duration: 1,
@@ -52,8 +53,8 @@ const Settings: React.FC<{}> = () => {
 
         <div className={styles.main}>
           <Tabs>
-            <TabPane tab={formatMessage({ id: 'app.settings.admin-api' })}>
-              <Form form={form} onFinish={(values) => onFinish(values as Setting.AdminAPI)}>
+            <TabPane key="TabContent" tab={formatMessage({ id: 'app.settings.admin-api' })}>
+              <Form form={form} onFinish={(values) => onFinish(values as Setting.DashboardConfig)}>
                 <Form.Item
                   name="schema"
                   rules={[
@@ -104,6 +105,24 @@ const Settings: React.FC<{}> = () => {
 
                 <Form.Item name="key">
                   <Input placeholder={formatMessage({ id: 'app.settings.item.admin-api-key' })} />
+                </Form.Item>
+
+                <Form.Item>
+                  <Form.Item name="grafanaUrl" noStyle>
+                    <Input
+                      placeholder={formatMessage({ id: 'app.settings.item.admin-api-grafana' })}
+                    />
+                  </Form.Item>
+                  <Tooltip title="从哪里可以获取 Grafana 地址？">
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href="https://github.com/apache/incubator-apisix/blob/master/doc/plugins/prometheus-cn.md"
+                      style={{ margin: '8px 8px' }}
+                    >
+                      帮助
+                    </a>
+                  </Tooltip>
                 </Form.Item>
 
                 <Form.Item>

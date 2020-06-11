@@ -53,6 +53,7 @@ export default {
   'menu.ssl.edit': '编辑',
   'menu.ssl.create': '创建',
   'menu.setting': '设置',
+  'menu.metrics': '监控',
   'menu.routes': '路由',
   'menu.routes.list': '列表',
   'menu.routes.create': '创建',
