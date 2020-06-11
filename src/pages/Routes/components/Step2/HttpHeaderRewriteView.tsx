@@ -98,7 +98,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
       <Modal
         title={mode === 'EDIT' ? '编辑请求头' : '操作请求头'}
         centered
-        visible={visible}
+        visible
         onOk={handleOk}
         onCancel={() => {
           setVisible(false);
@@ -158,7 +158,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
         </Button>
       )}
       <Table key="table" bordered dataSource={upstreamHeaderList} columns={columns} />
-      {renderModal()}
+      {visible ? renderModal() : null}
     </PanelSection>
   );
 };

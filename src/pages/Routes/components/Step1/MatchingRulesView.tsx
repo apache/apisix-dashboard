@@ -126,69 +126,67 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
         },
   ];
 
-  const renderModal = () => {
-    return (
-      <Modal
-        title={mode === 'EDIT' ? '编辑规则' : '新建规则'}
-        centered
-        visible={visible}
-        onOk={onOk}
-        onCancel={() => {
-          setVisible(false);
-          modalForm.resetFields();
-        }}
-        okText="确定"
-        cancelText="取消"
-        destroyOnClose
-      >
-        <Form form={modalForm} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
-          <Form.Item
-            label="参数位置"
-            name="position"
-            rules={[{ required: true, message: '请选择参数位置' }]}
+  const renderModal = () => (
+    <Modal
+      title={mode === 'EDIT' ? '编辑规则' : '新建规则'}
+      centered
+      visible
+      onOk={onOk}
+      onCancel={() => {
+        setVisible(false);
+        modalForm.resetFields();
+      }}
+      okText="确定"
+      cancelText="取消"
+      destroyOnClose
+    >
+      <Form form={modalForm} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+        <Form.Item
+          label="参数位置"
+          name="position"
+          rules={[{ required: true, message: '请选择参数位置' }]}
+        >
+          <Select
+            onChange={(value) => {
+              if (value === 'http') {
+                setNamePlaceholder('请求头键名：例如 HOST');
+              } else {
+                setNamePlaceholder('参数名称：例如 id');
+              }
+            }}
           >
-            <Select
-              onChange={(value) => {
-                if (value === 'http') {
-                  setNamePlaceholder('请求头键名：例如 HOST');
-                } else {
-                  setNamePlaceholder('参数名称：例如 id');
-                }
-              }}
-            >
-              <Option value="http">HTTP 请求头</Option>
-              <Option value="arg">请求参数</Option>
-              <Option value="cookie">Cookie</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label="参数名称"
-            name="name"
-            rules={[{ required: true, message: '请输入参数名称' }]}
-            extra="只支持字母和数字，并且以字母开头"
-          >
-            <Input placeholder={namePlaceholder} />
-          </Form.Item>
-          <Form.Item
-            label="运算符"
-            name="operator"
-            rules={[{ required: true, message: '请选择运算符' }]}
-          >
-            <Select>
-              <Option value="==">等于</Option>
-              <Option value="～=">不等于</Option>
-              <Option value=">">大于</Option>
-              <Option value="<">小于</Option>
-              <Option value="~~">正则匹配</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item label="值" name="value" rules={[{ required: true, message: '请输入参数值' }]}>
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
-    );
-  };
+            <Option value="http">HTTP 请求头</Option>
+            <Option value="arg">请求参数</Option>
+            <Option value="cookie">Cookie</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label="参数名称"
+          name="name"
+          rules={[{ required: true, message: '请输入参数名称' }]}
+          extra="只支持字母和数字，并且以字母开头"
+        >
+          <Input placeholder={namePlaceholder} />
+        </Form.Item>
+        <Form.Item
+          label="运算符"
+          name="operator"
+          rules={[{ required: true, message: '请选择运算符' }]}
+        >
+          <Select>
+            <Option value="==">等于</Option>
+            <Option value="～=">不等于</Option>
+            <Option value=">">大于</Option>
+            <Option value="<">小于</Option>
+            <Option value="~~">正则匹配</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item label="值" name="value" rules={[{ required: true, message: '请输入参数值' }]}>
+          <Input />
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
 
   return (
     <PanelSection title="高级路由匹配条件">
@@ -207,7 +205,8 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
         </Button>
       )}
       <Table key="table" bordered dataSource={advancedMatchingRules} columns={columns} />
-      {renderModal()}
+      {/* NOTE: tricky way, switch visible on Modal component will ocure error */}
+      {visible ? renderModal() : null}
     </PanelSection>
   );
 };
