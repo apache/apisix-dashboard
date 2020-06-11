@@ -4,6 +4,12 @@ const routes = [
     redirect: '/ssl',
   },
   {
+    name: 'metrics',
+    path: '/metrics',
+    component: './Metrics/Metrics',
+    icon: 'AreaChartOutlined',
+  },
+  {
     name: 'setting',
     path: '/setting',
     component: './Setting',
