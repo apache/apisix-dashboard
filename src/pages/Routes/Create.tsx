@@ -64,21 +64,20 @@ const Create: React.FC = (props) => {
 
     fetchPluginList().then((data: string[]) => {
       const names = data.filter((name) => !PLUGIN_BLOCK_LIST.includes(name));
-      let enabledList: PluginForm.PluginProps[] = names.map((name) => ({
-        name,
-        ...PLUGIN_MAPPER_SOURCE[name],
-      }));
-      let disabledList: PluginForm.PluginProps[] = [];
-      // TODO: 国际化
-      const enabledPluginNames = Object.keys(step3Data.plugins);
-      if (enabledPluginNames.length) {
-        disabledList = enabledList.filter((item) => !enabledPluginNames.includes(item.name));
-        enabledList = enabledList.filter((item) => enabledPluginNames.includes(item.name));
-      }
+
+      const enabledNames = Object.keys(step3Data.plugins);
+      const disabledNames = names.filter((name) => !enabledNames.includes(name));
+
       setStep3Data({
-        ...step3Data,
-        _disabledPluginList: disabledList,
-        _enabledPluginList: enabledList,
+        plugins: step3Data.plugins,
+        _disabledPluginList: disabledNames.map((name) => ({
+          name,
+          ...PLUGIN_MAPPER_SOURCE[name],
+        })),
+        _enabledPluginList: enabledNames.map((name) => ({
+          name,
+          ...PLUGIN_MAPPER_SOURCE[name],
+        })),
       });
     });
   }, []);
