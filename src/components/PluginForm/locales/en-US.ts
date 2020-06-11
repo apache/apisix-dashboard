@@ -46,4 +46,11 @@ export default {
   'PluginForm.plugin.wolf-rbac.desc':
     'wolf-rbac is an authentication and authorization (rbac) plugin',
   'PluginForm.plugin.zipkin.desc': 'Zipkin is a OpenTracing plugin.',
+  'PluginForm.plugin.node-status.desc': 'No description currently.',
+  'PluginForm.plugin.serverless-pre-function.desc':
+    'It belongs to serverless, and will execute first',
+  'PluginForm.plugin.serverless-post-function.desc':
+    'It belongs to serverless and will execute in the end',
+  'PluginForm.plugin.openid-connect.desc': 'No description currently.',
+  'PluginForm.plugin.heartbeat.desc': 'No description currently.',
 };

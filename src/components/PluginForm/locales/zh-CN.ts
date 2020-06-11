@@ -40,4 +40,9 @@ export default {
   'PluginForm.plugin.wolf-rbac.desc':
     'wolf-rbac 是一个认证及授权(rbac)插件，它需要与 consumer 一起配合才能工作。',
   'PluginForm.plugin.zipkin.desc': 'zipkin 是一个开源的服务跟踪插件。',
+  'PluginForm.plugin.node-status.desc': '暂无描述',
+  'PluginForm.plugin.serverless-pre-function.desc': '属于 serverless，会在指定阶段最开始运行。',
+  'PluginForm.plugin.serverless-post-function.desc': '属于 serverless，会在指定阶段最后运行。',
+  'PluginForm.plugin.openid-connect.desc': '暂无描述。',
+  'PluginForm.plugin.heartbeat.desc': '暂无描述',
 };
