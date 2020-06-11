@@ -35,6 +35,28 @@ export default {
 
   'PluginForm.plugin.limit-count.desc':
     '和 GitHub API 的限速类似， 在指定的时间范围内，限制总的请求个数。并且在 HTTP 响应头中返回剩余可以请求的个数。',
+  'PluginForm.plugin.limit-count.property.count': '单位窗口内请求数量',
+  'PluginForm.plugin.limit-count.property.count.extra': '指定时间窗口内的请求数量阈值',
+  'PluginForm.plugin.limit-count.property.time_window': '时间窗口大小',
+  'PluginForm.plugin.limit-count.property.time_window.extra':
+    '时间窗口的大小（以秒为单位），超过这个时间就会重置',
+  'PluginForm.plugin.limit-count.property.key': 'Key',
+  'PluginForm.plugin.limit-count.property.key.extra': '用来做请求计数的依据',
+  'PluginForm.plugin.limit-count.property.rejected_code': 'HTTP 状态码',
+  'PluginForm.plugin.limit-count.property.rejected_code.extra':
+    '当请求超过阈值被拒绝时，返回的 HTTP 状态码',
+  'PluginForm.plugin.limit-count.property.policy': '策略',
+  'PluginForm.plugin.limit-count.property.policy.extra': '用于检索和增加限制的速率限制策略',
+  'PluginForm.plugin.limit-count.property.redis_host': ' Redis 地址',
+  'PluginForm.plugin.limit-count.property.redis_host.extra': ' Redis 服务节点的地址',
+  'PluginForm.plugin.limit-count.property.redis_port': 'Redis 端口',
+  'PluginForm.plugin.limit-count.property.redis_port.extra': 'Redis 服务节点的端口',
+  'PluginForm.plugin.limit-count.property.redis_password': 'Redis 密码',
+  'PluginForm.plugin.limit-count.property.redis_password.extra': 'Redis 服务节点的密码',
+  'PluginForm.plugin.limit-count.property.redis_timeout': 'Redis 超时时间',
+  'PluginForm.plugin.limit-count.property.redis_timeout.extra':
+    'Redis 服务节点以毫秒为单位的超时时间',
+
   'PluginForm.plugin.limit-req.desc': '限制请求速度的插件，使用的是漏桶算法。',
   'PluginForm.plugin.mqtt-proxy.desc':
     'mqtt-proxy 只工作在流模式，它可以帮助你根据 MQTT 的 client_id 实现动态负载均衡。',
