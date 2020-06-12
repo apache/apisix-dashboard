@@ -2,7 +2,7 @@ version: "3"
 
 services:
   apisix:
-    image: apisixacr.azurecr.cn/apisix:latest
+    image: apache/apisix:latest
     restart: always
     volumes:
       - ./apisix_log:/usr/local/apisix/logs
@@ -52,7 +52,7 @@ services:
         ipv4_address: 192.17.5.13
 
   mysql:
-    image: apisixacr.azurecr.cn/mysql:latest
+    image: mysql:latest
     restart: always
     ports:
       - "3309:3306/tcp"
@@ -81,6 +81,31 @@ services:
       apisix-dashboard:
         ipv4_address: 192.17.5.15
 
+  prometheus:
+    image: prom/prometheus
+    hostname: prometheus
+    restart: always
+    volumes:
+      - ./prometheus_conf/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      apisix-dashboard:
+        ipv4_address: 192.17.5.16
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    hostname: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./grafana_conf/provisioning:/etc/grafana/provisioning"
+      - "./grafana_conf/dashboards:/var/lib/grafana/dashboards"
+    networks:
+      apisix-dashboard:
+        ipv4_address: 192.17.5.17
 
   dashboard:
     build:
