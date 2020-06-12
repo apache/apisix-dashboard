@@ -89,9 +89,6 @@ services:
     restart: always
     ports:
       - "80:80/tcp"
-    networks:
-      apisix-dashboard:
-        ipv4_address: 192.17.5.16
 
 networks:
   apisix-dashboard:
