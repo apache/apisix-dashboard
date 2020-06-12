@@ -25,7 +25,6 @@ export const transformSchemaFromAPI = (
       ...schema,
       properties: {
         enabled: {
-          // TODO: i18n
           type: 'boolean',
           default: false,
         },
