@@ -24,13 +24,12 @@
 
 import axios from 'axios'
 import { Message } from 'element-ui'
-import { API_KEY } from '@/config'
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   timeout: 5000,
   headers: {
-    'X-API-KEY': API_KEY
+    'X-API-KEY': localStorage.getItem('GLOBAL_API_KEY')
   }
 })
 
