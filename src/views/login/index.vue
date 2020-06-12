@@ -98,10 +98,9 @@ export default class extends Vue {
   private redirect?: string
 
   private async handleLogin() {
-    console.log(this.loginForm)
     await UserModule.Login({ username: '', password: '' })
     localStorage.setItem('GLOBAL_API_KEY', this.loginForm.apikey)
-    window.location.replace('/dashboard')
+    window.location.replace('/')
   }
 }
 </script>
