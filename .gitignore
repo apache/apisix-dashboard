@@ -37,3 +37,7 @@ screenshot
 .eslintcache
 
 build
+
+/compose/**/*.log
+/compose/**/nginx.pid
+/compose/etcd_data

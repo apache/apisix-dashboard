@@ -1,12 +1,11 @@
-import { Button, Form, Input, notification, Select, Tabs, Tooltip } from 'antd';
+import { Button, Form, Input, notification, Tabs, Tooltip } from 'antd';
 import React, { useEffect } from 'react';
 import { Link, SelectLang, FormattedMessage, useIntl } from 'umi';
 import logo from '@/assets/logo.svg';
 import { useForm } from 'antd/es/form/util';
 import styles from './style.less';
-import { getAdminAPIConfig, getGrafanaConfig } from './service';
+import { getSetting } from './service';
 
-const { Option } = Select;
 const { TabPane } = Tabs;
 
 const Settings: React.FC<{}> = () => {
@@ -14,16 +13,10 @@ const Settings: React.FC<{}> = () => {
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    form.setFieldsValue({ ...getAdminAPIConfig(), ...getGrafanaConfig() });
+    form.setFieldsValue(getSetting());
   }, []);
 
-  const onFinish = ({
-    schema,
-    host,
-    path,
-    key,
-    grafanaURL,
-  }: Setting.AdminAPI & Setting.GrafanaConfig) => {
+  const onFinish = ({ grafanaURL, baseURL }: Setting.AdminAPI & Setting.GrafanaConfig) => {
     if (grafanaURL.length) {
       if (!/^https?:\/\//.test(grafanaURL)) {
         notification.error({
@@ -33,12 +26,8 @@ const Settings: React.FC<{}> = () => {
         return;
       }
     }
-
-    localStorage.setItem('GLOBAL_ADMIN_API_SCHEMA', schema);
-    localStorage.setItem('GLOBAL_ADMIN_API_HOST', host);
-    localStorage.setItem('GLOBAL_ADMIN_API_PATH', path);
-    localStorage.setItem('GLOBAL_ADMIN_API_KEY', key);
-    localStorage.setItem('GLOBAL_ADMIN_SETTING_GRAFANA_URL', grafanaURL);
+    localStorage.setItem('GLOBAL_SETTING_API_BASE_URL', baseURL);
+    localStorage.setItem('GLOBAL_SETTING_GRAFANA_URL', grafanaURL);
 
     notification.success({
       duration: 1,
@@ -74,56 +63,8 @@ const Settings: React.FC<{}> = () => {
                 form={form}
                 onFinish={(values) => onFinish(values as Setting.AdminAPI & Setting.GrafanaConfig)}
               >
-                <Form.Item
-                  name="schema"
-                  rules={[
-                    {
-                      required: true,
-                      message: formatMessage({
-                        id: 'app.settings.description.invalid-admin-api-schema',
-                      }),
-                    },
-                  ]}
-                >
-                  <Select
-                    placeholder={formatMessage({ id: 'app.settings.item.admin-api-schema' })}
-                    allowClear
-                  >
-                    <Option value="http">HTTP</Option>
-                    <Option value="https">HTTPS</Option>
-                  </Select>
-                </Form.Item>
-
-                <Form.Item
-                  name="host"
-                  rules={[
-                    {
-                      required: true,
-                      message: formatMessage({
-                        id: 'app.settings.description.invalid-admin-api-host',
-                      }),
-                    },
-                  ]}
-                >
-                  <Input placeholder={formatMessage({ id: 'app.settings.item.admin-api-host' })} />
-                </Form.Item>
-
-                <Form.Item
-                  name="path"
-                  rules={[
-                    {
-                      required: true,
-                      message: formatMessage({
-                        id: 'app.settings.description.invalid-admin-api-path',
-                      }),
-                    },
-                  ]}
-                >
-                  <Input placeholder={formatMessage({ id: 'app.settings.item.admin-api-path' })} />
-                </Form.Item>
-
-                <Form.Item name="key">
-                  <Input placeholder={formatMessage({ id: 'app.settings.item.admin-api-key' })} />
+                <Form.Item name="baseURL">
+                  <Input placeholder={formatMessage({ id: 'app.settings.item.baseURL' })} />
                 </Form.Item>
 
                 <Form.Item>

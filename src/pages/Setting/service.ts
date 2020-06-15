@@ -1,14 +1,7 @@
-export const getAdminAPIConfig = (): Setting.AdminAPI => {
+export const getSetting = (): Setting.AdminAPI & Setting.GrafanaConfig => {
   return {
-    schema: localStorage.getItem('GLOBAL_ADMIN_API_SCHEMA') || 'http',
-    host: localStorage.getItem('GLOBAL_ADMIN_API_HOST') || '127.0.0.1:9080',
-    path: localStorage.getItem('GLOBAL_ADMIN_API_PATH') || '/apisix/admin',
-    key: localStorage.getItem('GLOBAL_ADMIN_API_KEY') || '',
-  };
-};
-
-export const getGrafanaConfig = (): Setting.GrafanaConfig => {
-  return {
-    grafanaURL: localStorage.getItem('GLOBAL_ADMIN_SETTING_GRAFANA_URL') || '',
+    baseURL:
+      localStorage.getItem('GLOBAL_SETTING_API_BASE_URL') || 'http://127.0.0.1:8080/apisix/admin',
+    grafanaURL: localStorage.getItem('GLOBAL_SETTING_GRAFANA_URL') || '',
   };
 };
