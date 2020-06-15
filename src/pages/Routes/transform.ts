@@ -78,6 +78,7 @@ export const transformStepData = ({
       'redirectURI',
       'redirectCode',
       'forceHttps',
+      'redirectOptions',
       Object.keys(redirect).length === 0 ? 'redirect' : '',
     ]);
   }
