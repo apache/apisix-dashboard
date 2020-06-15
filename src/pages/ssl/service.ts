@@ -56,3 +56,10 @@ export const verifyKeyPaire = (cert = '', key = ''): Promise<VerifyKeyPaireProps
     method: 'POST',
     data: { cert, key },
   });
+
+export const update = (id: string, checked: boolean) =>
+  request(`/ssls/${id}`, {
+    data: {
+      status: Number(checked),
+    },
+  });

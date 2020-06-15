@@ -5,11 +5,24 @@ import { Button, Switch, Popconfirm, notification } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 
-import { fetchList as fetchSSLList, remove as removeSSL } from './service';
+import { fetchList as fetchSSLList, remove as removeSSL, update as updateSSL } from './service';
 
 const List: React.FC = () => {
   const tableRef = useRef<ActionType>();
   const { formatMessage } = useIntl();
+
+  const onEnableChange = (id: string, checked: boolean) => {
+    console.log({ id, checked });
+    updateSSL(id, checked)
+      .then(() => {
+        notification.success({ message: '更新证书启用状态成功' });
+      })
+      .catch(() => {
+        notification.error({ message: '更新证书启用状态失败' });
+        /* eslint-disable no-unused-expressions */
+        tableRef.current?.reload();
+      });
+  };
 
   const columns: ProColumns<SSLModule.ResSSL>[] = [
     {
@@ -24,10 +37,15 @@ const List: React.FC = () => {
     },
     {
       title: '是否启用',
-      valueType: 'option',
-      render: () => (
+      dataIndex: 'status',
+      render: (text, record) => (
         <>
-          <Switch defaultChecked />
+          <Switch
+            defaultChecked={Number(text) === 1}
+            onChange={(checked: boolean) => {
+              onEnableChange(record.id, checked);
+            }}
+          />
         </>
       ),
     },
