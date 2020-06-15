@@ -24,6 +24,16 @@ const Settings: React.FC<{}> = () => {
     key,
     grafanaURL,
   }: Setting.AdminAPI & Setting.GrafanaConfig) => {
+    if (grafanaURL.length !== 0) {
+      if (!grafanaURL.startsWith('http') || !grafanaURL.startsWith('https')) {
+        notification.error({
+          duration: 3,
+          message: 'Grafana 地址需以 http 或 https 开头',
+        });
+        return;
+      }
+    }
+
     localStorage.setItem('GLOBAL_ADMIN_API_SCHEMA', schema);
     localStorage.setItem('GLOBAL_ADMIN_API_HOST', host);
     localStorage.setItem('GLOBAL_ADMIN_API_PATH', path);
