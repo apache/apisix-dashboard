@@ -3,7 +3,7 @@ import { notification } from 'antd';
 import { RequestConfig, history } from 'umi';
 import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
 
-import { getAdminAPIConfig } from '@/pages/Setting';
+import { getSetting } from '@/pages/Setting';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { queryCurrent } from '@/services/user';
@@ -84,12 +84,9 @@ const errorHandler = (error: { response: Response; data: any }): Promise<Respons
   return Promise.reject(response);
 };
 
-const { schema, host, path, key } = getAdminAPIConfig();
+const { baseURL } = getSetting();
 export const request: RequestConfig = {
-  prefix: `${schema}://${host}${path}`,
+  prefix: baseURL,
   errorHandler,
   credentials: 'same-origin',
-  headers: {
-    'X-API-KEY': key,
-  },
 };

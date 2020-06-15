@@ -3,14 +3,14 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Empty, Button, Card } from 'antd';
 import { history } from 'umi';
 import { stringify } from 'qs';
-import { getGrafanaConfig } from './service';
+import { getSetting } from '@/pages/Setting';
 
 const Metrics: React.FC = () => {
   const [grafanaURL, setGrafanaURL] = useState<string | undefined>();
   const [showMetrics, setShowMetrics] = useState(false);
 
   useEffect(() => {
-    const url = getGrafanaConfig().grafanaURL;
+    const { grafanaURL: url } = getSetting();
     setGrafanaURL(url);
     setShowMetrics(Boolean(url));
   }, []);
