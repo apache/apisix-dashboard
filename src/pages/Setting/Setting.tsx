@@ -24,8 +24,8 @@ const Settings: React.FC<{}> = () => {
     key,
     grafanaURL,
   }: Setting.AdminAPI & Setting.GrafanaConfig) => {
-    if (grafanaURL.length !== 0) {
-      if (!grafanaURL.startsWith('http') || !grafanaURL.startsWith('https')) {
+    if (grafanaURL.length) {
+      if (!/^https?:\/\//.test(grafanaURL)) {
         notification.error({
           duration: 3,
           message: 'Grafana 地址需以 http 或 https 开头',
