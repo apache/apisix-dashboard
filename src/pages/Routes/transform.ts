@@ -14,7 +14,7 @@ export const transformStepData = ({
   });
 
   let redirect: RouteModule.Redirect = {};
-  if (step1Data.forceHttps) {
+  if (step1Data.redirectOptions === 'forceHttps') {
     redirect = { http_to_https: true };
   } else if (step1Data.redirectURI !== '') {
     redirect = {
@@ -125,12 +125,16 @@ export const transformRouteData = (data: RouteModule.Body) => {
     paths: uris,
     methods,
     advancedMatchingRules: transformVarsToRules(vars),
-    forceHttps: Boolean(redirect?.http_to_https),
   };
 
-  if (redirect?.uri) {
-    step1Data.redirectCode = redirect.code;
-    step1Data.redirectURI = redirect.uri;
+  if (redirect?.http_to_https) {
+    step1Data.redirectOptions = 'forceHttps';
+  } else if (redirect?.uri !== '') {
+    step1Data.redirectOptions = 'customRedirect';
+    step1Data.redirectCode = redirect?.code;
+    step1Data.redirectURI = redirect?.uri;
+  } else {
+    step1Data.redirectOptions = 'disabled';
   }
 
   const { upstream, upstream_path, upstream_header, upstream_protocol = 'keep' } = data;

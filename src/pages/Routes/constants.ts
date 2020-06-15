@@ -31,7 +31,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
   websocket: false,
   hosts: [''],
   paths: ['/*'],
-  forceHttps: false,
+  redirectOptions: 'disabled',
   redirectURI: '',
   redirectCode: 302,
   methods: HTTP_METHOD_OPTION_LIST,

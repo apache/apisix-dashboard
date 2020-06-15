@@ -93,22 +93,15 @@ const Create: React.FC<Props> = (props) => {
   }, []);
 
   useEffect(() => {
-    const { redirectURI, forceHttps } = step1Data;
-    if (redirectURI === '') {
-      setRedirect(false);
-      setStepHeader(STEP_HEADER_4);
-      return;
-    }
+    const { redirectOptions } = step1Data;
 
-    if (!forceHttps) {
+    if (redirectOptions === 'customRedirect') {
       setRedirect(true);
       setStepHeader(STEP_HEADER_2);
-      return;
+    } else {
+      setRedirect(false);
+      setStepHeader(STEP_HEADER_4);
     }
-
-    setStep1Data({ ...step1Data, redirectURI: '' });
-    setRedirect(false);
-    setStepHeader(STEP_HEADER_4);
   }, [step1Data]);
 
   // FIXME
