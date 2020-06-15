@@ -27,11 +27,11 @@ Visit `http://127.0.0.1:3000/?search=open&orgId=1`
 
 ![login](pics/grafana_1.png)
 
-click `Apache Apisix` dashboard, and you can see the page as follow
+click `Apache APISIX` dashboard, and you can see the page as follow
 
 ![login](pics/grafana_2.png)
 
-click the button `shard dashboard` on the right of `Apache Apisix`
+click the button `shard dashboard` on the right of `Apache APISIX`
 
 ![login](pics/grafana_3.png)
 
