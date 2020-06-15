@@ -23,7 +23,7 @@ const Step1: React.FC<Props> = (props) => {
         layout="horizontal"
         className={styles.stepForm}
         onValuesChange={(field) => {
-          if (field.forceHttps) {
+          if (field.redirectOptions === 'forceHttps' || field.redirectOptions === 'disabled') {
             form.setFieldsValue({ redirectURI: '' });
           }
           onChange({ ...data.step1Data, ...field });

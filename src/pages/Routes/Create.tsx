@@ -98,10 +98,10 @@ const Create: React.FC<Props> = (props) => {
     if (redirectOptions === 'customRedirect') {
       setRedirect(true);
       setStepHeader(STEP_HEADER_2);
-    } else {
-      setRedirect(false);
-      setStepHeader(STEP_HEADER_4);
+      return;
     }
+    setRedirect(false);
+    setStepHeader(STEP_HEADER_4);
   }, [step1Data]);
 
   // FIXME
