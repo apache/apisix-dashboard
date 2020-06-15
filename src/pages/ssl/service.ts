@@ -1,14 +1,26 @@
 import { request } from 'umi';
+import querystring from 'querystring';
+import { identity, pickBy, omit } from 'lodash';
+
 import { transformFetchItemData } from '@/transforms/global';
 
 type FetchListParams = {
-  current: number;
-  pageSize: number;
+  current?: number;
+  pageSize?: number;
+  sni?: string;
+  expire_range?: string;
+  expire_start?: number;
+  expire_end?: number;
+  status?: 0;
 };
 
-export const fetchList = (params?: Partial<FetchListParams>) =>
-  request<{ count: number; list: SSLModule.ResSSL[] }>(
-    `/ssls?page=${params?.current || 1}&size=${params?.pageSize || 10}`,
+export const fetchList = ({ current = 1, pageSize = 10, ...props }: FetchListParams) => {
+  const [expire_start, expire_end] = (props.expire_range || '').split(':');
+  let queryObj = omit(props, 'expire_range', '_timestamp');
+  queryObj = pickBy(Object.assign({}, queryObj, { expire_start, expire_end }), identity);
+  const query = querystring.encode(queryObj);
+  return request<{ count: number; list: SSLModule.ResSSL[] }>(
+    `/ssls?page=${current}&size=${pageSize}&${query}`,
   ).then((data) => {
     return {
       count: data.count,
@@ -18,6 +30,7 @@ export const fetchList = (params?: Partial<FetchListParams>) =>
       })),
     };
   });
+};
 
 export const fetchItem = (id: string) =>
   request(`/ssls/${id}`).then((data) => transformFetchItemData<SSLModule.SSL>(data));
