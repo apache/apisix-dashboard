@@ -1,22 +1,22 @@
 export default {
   'PluginForm.plugin.basic-auth.desc':
-    'basic-auth is an authentication plugin that need to work with consumer.',
+    'basic auth plugin.',
   'PluginForm.plugin.batch-requests.desc':
     'batch-requests can accept mutiple request and send them from apisix via http pipeline,and return a aggregated response to client,this can significantly improve performance when the client needs to access multiple APIs.',
   'PluginForm.plugin.cors.desc': 'cors plugin can help you enable CORS easily.',
   'PluginForm.plugin.fault-injection.desc':
-    'Fault injection plugin, this plugin can be used with other plugins and will be executed before other plugins.',
-  'PluginForm.plugin.grpc-transcoding.desc': 'HTTP(s) -> APISIX -> gRPC server',
+    'Fault injection plugin, used to simulate various back-end failures and high latency.',
+  'PluginForm.plugin.grpc-transcoding.desc': 'gRPC transcoding plugin, implement HTTP(s) -> APISIX -> gRPC server',
   'PluginForm.plugin.http-logger.desc':
     'http-logger is a plugin which push Log data requests to HTTP/HTTPS servers.',
   'PluginForm.plugin.ip-restriction.desc':
-    'The ip-restriction can restrict access to a Service or a Route by either whitelisting or blacklisting IP addresses. Single IPs, multiple IPs or ranges in CIDR notation like 10.10.10.0/24 can be used(will support IPv6 soon).',
+    'The ip-restriction plugin can add a batch of IP addresses to the white list or black list (choose one of two), the time complexity is O(1), and supports CIDR to represent the IP range.',
   'PluginForm.plugin.jwt-auth.desc':
-    'jwt-auth is an authentication plugin that need to work with consumer.',
+    'JWT auth plugin.',
   'PluginForm.plugin.kafka-logger.desc':
-    'kafka-logger is a plugin which works as a Kafka client driver for the ngx_lua nginx module.',
+    'Push the interface request log to the external Kafka cluster in the form of JSON.',
   'PluginForm.plugin.key-auth.desc':
-    'key-auth is an authentication plugin, it should work with consumer together.',
+    'key auth plugin.',
 
   // TODO:
   'PluginForm.plugin.limit-conn.desc':
