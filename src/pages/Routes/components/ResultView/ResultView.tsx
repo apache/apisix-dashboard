@@ -14,6 +14,9 @@ const ResultView: React.FC<Props> = () => (
       <Button type="primary" key="goto-list" onClick={() => history.replace('/routes')}>
         返回路由列表
       </Button>,
+      <Button key="create-new" onClick={() => history.replace('/routes/create')}>
+        创建新路由
+      </Button>,
     ]}
   />
 );
