@@ -84,7 +84,6 @@ const Create: React.FC<Props> = (props) => {
     });
 
   useEffect(() => {
-    console.log(props);
     if (props.route.name === 'edit') {
       setupRoute(props.match.params.rid).then(() => setupPlugin());
     } else {
@@ -93,9 +92,9 @@ const Create: React.FC<Props> = (props) => {
   }, []);
 
   useEffect(() => {
-    const { redirectOptions } = step1Data;
+    const { redirectOption } = step1Data;
 
-    if (redirectOptions === 'customRedirect') {
+    if (redirectOption === 'customRedirect') {
       setRedirect(true);
       setStepHeader(STEP_HEADER_2);
       return;

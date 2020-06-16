@@ -168,14 +168,14 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
       >
         <Checkbox.Group options={HTTP_METHOD_OPTION_LIST} disabled={disabled} />
       </Form.Item>
-      <Form.Item label="重定向" name="redirectOptions">
+      <Form.Item label="重定向" name="redirectOption">
         <Select disabled={disabled}>
           <Select.Option value="forceHttps">启用 HTTPS</Select.Option>
           <Select.Option value="customRedirect">自定义</Select.Option>
           <Select.Option value="disabled">禁用</Select.Option>
         </Select>
       </Form.Item>
-      {Boolean(step1Data.redirectOptions === 'customRedirect') && (
+      {step1Data.redirectOption === 'customRedirect' && (
         <Form.Item label="自定义重定向">
           <Row gutter={10}>
             <Col>

@@ -28,7 +28,7 @@ declare namespace RouteModule {
     hosts: string[];
     paths: string[];
     methods: HttpMethod[];
-    redirectOptions: 'forceHttps' | 'customRedirect' | 'disabled';
+    redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
     redirectURI?: string;
     redirectCode?: number;
     advancedMatchingRules: MatchingRule[];
