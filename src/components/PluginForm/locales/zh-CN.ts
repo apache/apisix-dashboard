@@ -92,12 +92,49 @@ export default {
   'PluginForm.plugin.response-rewrite.property.headers': 'HTTP 头',
 
   'PluginForm.plugin.syslog.desc': '对接 syslog 日志服务器',
+  'PluginForm.plugin.syslog.property.host': '日志服务器地址',
+  'PluginForm.plugin.syslog.property.port': '日志服务器端口',
+  'PluginForm.plugin.syslog.property.timeout': '超时时间',
+  'PluginForm.plugin.syslog.property.tls': '开启 SSL',
+  'PluginForm.plugin.syslog.property.flush_limit': '缓存区大小',
+  'PluginForm.plugin.syslog.property.sock_type': '协议类型',
+  'PluginForm.plugin.syslog.property.max_retry_times': '重试次数',
+  'PluginForm.plugin.syslog.property.retry_interval': '重试间隔时间（毫秒）',
+  'PluginForm.plugin.syslog.property.pool_size': '连接池大小',
+
   'PluginForm.plugin.tcp-logger.desc': '对接 TCP 日志服务器',
+  'PluginForm.plugin.tcp-logger.property.host': '日志服务器地址',
+  'PluginForm.plugin.tcp-logger.property.port': '日志服务器地址',
+  'PluginForm.plugin.tcp-logger.property.timeout': '超时时间',
+  'PluginForm.plugin.tcp-logger.property.tls': '开启 SSL',
+  'PluginForm.plugin.tcp-logger.property.tls_options': 'TLS 选型',
+
   'PluginForm.plugin.udp-logger.desc': '对接 UDP 日志服务器',
+  'PluginForm.plugin.udp-logger.property.host': '日志服务器地址',
+  'PluginForm.plugin.udp-logger.property.port': '日志服务器地址',
+  'PluginForm.plugin.udp-logger.property.timeout': '超时时间',
+
   'PluginForm.plugin.zipkin.desc': '对接 zipkin',
+  'PluginForm.plugin.zipkin.property.endpoint': 'endpoint',
+  'PluginForm.plugin.zipkin.property.endpoint.extra': '例如 http://127.0.0.1:9411/api/v2/spans',
+  'PluginForm.plugin.zipkin.property.sample_ratio': '采样率',
+  'PluginForm.plugin.zipkin.property.service_name': '服务名',
+  'PluginForm.plugin.zipkin.property.server_addr': '网关实例 IP',
+  'PluginForm.plugin.zipkin.property.server_addr.extra': '默认值是 Nginx 内置变量 server_addr',
+
   'PluginForm.plugin.skywalking.desc': '对接 Apache Skywalking',
+  'PluginForm.plugin.skywalking.property.endpoint': 'endpoint',
+  'PluginForm.plugin.skywalking.property.endpoint.extra': '例如 http://127.0.0.1:12800',
+  'PluginForm.plugin.skywalking.property.sample_ratio': '采样率',
+  'PluginForm.plugin.skywalking.property.service_name': '服务名',
+
   'PluginForm.plugin.serverless-pre-function.desc': '在指定阶段最开始的位置，运行指定的 Lua 函数',
+  'PluginForm.plugin.serverless-pre-function.property.phase': '运行阶段',
+  'PluginForm.plugin.serverless-pre-function.property.functions': '运行的函数集',
+
   'PluginForm.plugin.serverless-post-function.desc': '在指定阶段最后的位置，运行指定的 Lua 函数',
+  'PluginForm.plugin.serverless-post-function.property.phase': '运行阶段',
+  'PluginForm.plugin.serverless-post-function.property.functions': '运行的函数集',
 
 
   'PluginForm.plugin.basic-auth.desc': 'basic auth 插件',
