@@ -73,19 +73,24 @@ export default {
   'PluginForm.plugin.proxy-cache.property.cache_key': '缓存 key',
   'PluginForm.plugin.proxy-cache.property.cache_key.extra': '可以使用 Nginx 变量，例如：$host, $uri',
   'PluginForm.plugin.proxy-cache.property.cache_bypass': '跳过缓存检索',
-  'PluginForm.plugin.proxy-cache.property.cache_bypass.extra': '这里可以使用 Nginx 变量，当此参数的值不为空或非'0'时将会跳过缓存的检索',
+  'PluginForm.plugin.proxy-cache.property.cache_bypass.extra': '这里可以使用 Nginx 变量，当此参数的值不为空或非0时将会跳过缓存的检索',
   'PluginForm.plugin.proxy-cache.property.cache_method': '缓存 Method',
   'PluginForm.plugin.proxy-cache.property.cache_http_status': '缓存响应状态码',
   'PluginForm.plugin.proxy-cache.property.hide_cache_headers': '隐藏缓存头',
   'PluginForm.plugin.proxy-cache.property.hide_cache_headers.extra': '是否将 Expires 和 Cache-Control 响应头返回给客户端',
   'PluginForm.plugin.proxy-cache.property.no_cache': '不缓存的数据',
-  'PluginForm.plugin.proxy-cache.property.no_cache.extra': '这里可以使用 Nginx 变量, 当此参数的值不为空或非'0'时将不会缓存数据',
-
+  'PluginForm.plugin.proxy-cache.property.no_cache.extra': '这里可以使用 Nginx 变量, 当此参数的值不为空或非0时将不会缓存数据',
 
   'PluginForm.plugin.proxy-mirror.desc': 'proxy mirror 代理镜像插件，提供了镜像客户端请求的能力',
-  'PluginForm.plugin.proxy-rewrite.desc': 'proxy rewrite 代理改写插件，可以改写客户端请求',
-  'PluginForm.plugin.redirect.desc': '重定向插件',
+  'PluginForm.plugin.proxy-mirror.property.host': '镜像服务地址',
+  'PluginForm.plugin.proxy-mirror.property.host.extra': '例如：http://127.0.0.1:9797。地址中需要包含 http 或 https，不能包含 URI 部分',
+
   'PluginForm.plugin.response-rewrite.desc': '该插件支持修改上游服务返回的 body 和 header 信息',
+  'PluginForm.plugin.response-rewrite.property.status_code': '状态码',
+  'PluginForm.plugin.response-rewrite.property.body': '响应体',
+  'PluginForm.plugin.response-rewrite.property.body_base64': '响应体是否需要 base64 解码',
+  'PluginForm.plugin.response-rewrite.property.headers': 'HTTP 头',
+
   'PluginForm.plugin.syslog.desc': '对接 syslog 日志服务器',
   'PluginForm.plugin.tcp-logger.desc': '对接 TCP 日志服务器',
   'PluginForm.plugin.udp-logger.desc': '对接 UDP 日志服务器',
@@ -101,6 +106,8 @@ export default {
   'PluginForm.plugin.wolf-rbac.desc': '对接 wolf RBAC 服务',
   'PluginForm.plugin.openid-connect.desc': 'Open ID Connect(OIDC) 插件提供对接外部认证服务的能力',
 
+  'PluginForm.plugin.redirect.desc': '重定向插件',
+  'PluginForm.plugin.proxy-rewrite.desc': 'proxy rewrite 代理改写插件，可以改写客户端请求',
   'PluginForm.plugin.mqtt-proxy.desc': 'mqtt-proxy 插件可以帮助你根据 MQTT 的 client_id 实现动态负载均衡',
   'PluginForm.plugin.grpc-transcoding.desc': 'gRPC 转换插件，实现 HTTP(s) -> APISIX -> gRPC server 的转换',
   'PluginForm.plugin.batch-requests.desc':
