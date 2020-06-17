@@ -137,3 +137,33 @@ func TestToApisixRequest_UpstreamUnable(t *testing.T) {
 	a.Equal("roundrobin", ar.Upstream.UType)
 	a.Equal(false, ar.Upstream.EnableWebsocket)
 }
+
+// no upstream
+func TestApisixRouteResponse_Parse(t *testing.T) {
+	a := assert.New(t)
+	plugins := make(map[string]interface{})
+	redirect := &Redirect{
+		Code: 302,
+		Uri:  "/foo",
+	}
+	plugins["redirect"] = redirect
+	arr := &ApisixRouteResponse{
+		Action: "get",
+		Node: &Node{
+			Value: Value{
+				Id:       "",
+				Name:     "",
+				Desc:     "",
+				Priority: 0,
+				Methods:  []string{"GET"},
+				Uris:     []string{"/*"},
+				Hosts:    []string{"www.baidu.com"},
+				Vars:     [][]string{},
+				Upstream: nil,
+				Plugins:  plugins,
+			},
+		},
+	}
+	_, err := arr.Parse()
+	a.Equal(nil, err)
+}
