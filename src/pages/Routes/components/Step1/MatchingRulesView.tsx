@@ -166,7 +166,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
           rules={[
             { required: true, message: '请输入参数名称' },
             {
-              pattern: new RegExp(/^([a-zA-Z][a-zA-Z0-9_-]+)/, 'g'),
+              pattern: new RegExp(/^([a-zA-Z][a-zA-Z0-9_-]*$)/, 'g'),
               message: '参数只支持字母、数字、-、_，并且以字母开头',
             },
           ]}
