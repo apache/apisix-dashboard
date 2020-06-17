@@ -61,7 +61,7 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
                     name={[field.name, 'weight']}
                     rules={[{ required: true, message: '请输入权重' }]}
                   >
-                    <InputNumber placeholder="权重" disabled={disabled} min={0} max={100} />
+                    <InputNumber placeholder="权重" disabled={disabled} min={0} max={1000} />
                   </Form.Item>
                 </Col>
                 <Col>
