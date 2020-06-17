@@ -2,12 +2,6 @@
   publish = "dist/"
 
 [[redirects]]
-  from = "/api/*"
-  to = "https://apisix.iresty.com/apisix/admin/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200 
