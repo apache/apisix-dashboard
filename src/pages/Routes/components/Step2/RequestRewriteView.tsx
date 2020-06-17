@@ -32,7 +32,16 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
                   <Form.Item
                     style={{ marginBottom: 0 }}
                     name={[field.name, 'host']}
-                    rules={[{ required: true, message: '请输入域名/IP' }]}
+                    rules={[
+                      { required: true, message: '请输入域名/IP' },
+                      {
+                        pattern: new RegExp(
+                          /(^([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.(25[0-5]|1\d{2}|2[0-4]\d|[1-9]?\d)){3}$|^(?![0-9.]+$)([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+){0,}$)/,
+                          'g',
+                        ),
+                        message: '仅支持数字或者字符 或者 . (.不是必须)',
+                      },
+                    ]}
                   >
                     <Input placeholder="域名/IP" disabled={disabled} />
                   </Form.Item>
@@ -52,7 +61,7 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
                     name={[field.name, 'weight']}
                     rules={[{ required: true, message: '请输入权重' }]}
                   >
-                    <InputNumber placeholder="权重" disabled={disabled} min={0} max={100} />
+                    <InputNumber placeholder="权重" disabled={disabled} min={0} max={1000} />
                   </Form.Item>
                 </Col>
                 <Col>

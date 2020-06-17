@@ -12,7 +12,13 @@ const MetaView: React.FC<Props> = ({ disabled }) => {
       <Form.Item
         label="API 名称"
         name="name"
-        rules={[{ required: true, message: '请输入 API 名称' }]}
+        rules={[
+          { required: true, message: '请输入 API 名称' },
+          {
+            pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
+            message: '最大长度100，仅支持英文，数字，下划线和减号，且只能以英文开头',
+          },
+        ]}
         extra="支持英文，数字，下划线和减号，且只能以英文开头"
       >
         <Input placeholder="请输入 API 名称" disabled={disabled} />

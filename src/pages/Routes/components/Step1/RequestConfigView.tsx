@@ -43,6 +43,10 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                       whitespace: true,
                       message: '请输入域名',
                     },
+                    {
+                      pattern: new RegExp(/(^\*?[a-zA-Z0-9._-]+$|^\*$)/, 'g'),
+                      message: '仅支持英文、数字、* （*只能是在开头位置），支持单个 *',
+                    },
                   ]}
                   noStyle
                 >
@@ -107,6 +111,10 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                       required: true,
                       whitespace: true,
                       message: '请输入请求路径',
+                    },
+                    {
+                      pattern: new RegExp(/^\/[a-zA-Z0-9\-._~%!$&'()+,;=:@/]*\*?$/, 'g'),
+                      message: '以/开头，*只能在最后',
                     },
                   ]}
                   noStyle

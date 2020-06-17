@@ -163,7 +163,13 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
         <Form.Item
           label="参数名称"
           name="name"
-          rules={[{ required: true, message: '请输入参数名称' }]}
+          rules={[
+            { required: true, message: '请输入参数名称' },
+            {
+              pattern: new RegExp(/^([a-zA-Z][a-zA-Z0-9_-]*$)/, 'g'),
+              message: '参数只支持字母、数字、-、_，并且以字母开头',
+            },
+          ]}
           extra="只支持字母和数字，并且以字母开头"
         >
           <Input placeholder={namePlaceholder} />
