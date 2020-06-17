@@ -1,9 +1,0 @@
-version: "3"
-
-services:
-  manager:
-    image: golang:1.13.8
-    volumes:
-      - .:/go/src/github.com/apisix/manager-api
-    working_dir: /go/src/github.com/apisix/manager-api
-    command: go test -v github.com/apisix/manager-api/service
