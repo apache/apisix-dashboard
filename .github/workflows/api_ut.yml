@@ -1,0 +1,18 @@
+name: API unit test
+
+on:
+  push:
+    branches: 
+      - master
+      - manager
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: use docker-compose in api
+      run: cd ./api && docker-compose up
