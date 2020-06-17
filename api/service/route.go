@@ -104,6 +104,7 @@ func (arr *ApisixRouteRequest) Update(rid string) (*ApisixRouteResponse, error) 
 	if b, err := json.Marshal(arr); err != nil {
 		return nil, err
 	} else {
+    fmt.Println(string(b))
 		if resp, err := utils.Patch(url, b); err != nil {
 			logger.Error(err.Error())
 			return nil, err
@@ -250,7 +251,7 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 		upstreamHeader = nil
 		upstreamPath = nil
 	}
-	if upstreamPath.UPathType == "" {
+  if upstreamPath != nil && upstreamPath.UPathType == "" {
 		upstreamPath = nil
 	}
 	result := &RouteRequest{
