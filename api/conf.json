@@ -1,0 +1,19 @@
+{
+  "conf": {
+    "mysql":{
+      "address": "#mysqlAddress#",
+      "user": "#mysqlUser#",
+      "password": "#mysqlPWD#",
+      "maxConns": 50,
+      "maxIdleConns": 25,
+      "maxLifeTime": 10
+    },
+    "syslog": {
+      "host": "#syslogAddress#"
+    },
+    "apisix": {
+      "base_url": "#apisixBaseUrl#",
+      "api_key": "#apisixApiKey#"
+    }
+  }
+}
