@@ -32,7 +32,6 @@ export const transformStepData = ({
     ...step1Data,
     ...step2Data,
     ...step3Data,
-    priority: 0,
     protocols,
     uris: step1Data.paths,
     redirect,

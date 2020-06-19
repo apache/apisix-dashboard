@@ -23,6 +23,7 @@ declare namespace RouteModule {
   type Step1Data = {
     name: string;
     desc: string;
+    priority: number;
     protocols: RequestProtocol[];
     websocket: boolean;
     hosts: string[];
