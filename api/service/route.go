@@ -80,6 +80,7 @@ func (rd *Route) Parse(r *RouteRequest, arr *ApisixRouteRequest) error {
 	}
 	timestamp := time.Now().Unix()
 	rd.CreateTime = timestamp
+	rd.Priority = r.Priority
 	return nil
 }
 
