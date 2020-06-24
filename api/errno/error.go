@@ -49,6 +49,15 @@ var (
 	// 03 plugin module
 	ApisixPluginListError   = Message{"010301", "List APISIX plugins  failed: %s"}
 	ApisixPluginSchemaError = Message{"010301", "Find APISIX plugin schema failed: %s"}
+
+	// 06 upstream
+	UpstreamRequestError = Message{"010601", "upstream request parameters are abnormal: %s"}
+	UpstreamTransError   = Message{"010602", "upstream parameter conversion is abnormal: %s"}
+	DBUpstreamError      = Message{"010603", "upstream storage failure: %s"}
+	ApisixUpstreamCreateError      = Message{"010604", "apisix upstream create failure: %s"}
+	ApisixUpstreamUpdateError      = Message{"010605", "apisix upstream update failure: %s"}
+	ApisixUpstreamDeleteError      = Message{"010606", "apisix upstream delete failure: %s"}
+	DBUpstreamDeleteError      = Message{"010607", "upstream delete failure: %s"}
 )
 
 type ManagerError struct {
