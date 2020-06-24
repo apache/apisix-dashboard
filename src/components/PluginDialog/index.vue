@@ -312,7 +312,11 @@ export default class extends Vue {
       switch (schema.properties[key].type) {
         case 'array':
           schemaKeys[key] = []
-          this.arrayPropertiesLength[key] = [...new Array(this.pluginData[key] ? this.pluginData[key].length : schema.properties[key].minItems).keys()]
+          if (this.pluginData[key]) {
+              this.arrayPropertiesLength[key] = [...this.pluginData[key]]
+          } else {
+            this.arrayPropertiesLength[key] = []
+          }
           break
         case 'object':
           schemaKeys[key] = {}
