@@ -142,13 +142,23 @@
             v-if="schema.properties[key].type === 'array'"
             class="array-input-container"
           >
-            <el-input
-              v-for="(arrayIndex) in arrayPropertiesLength[key]"
+            <div
+              v-for="(item, arrayIndex) in data[key]"
+              :key="arrayIndex"
+              class="object-input-item"
+            >
+              <el-input
               :key="arrayIndex"
               v-model="data[key][arrayIndex]"
               :placeholder="`${key} [${arrayIndex}]`"
               @input="isDataChanged = true"
-            />
+              />
+              <el-button
+              @click="deleteArrayItem(key, arrayIndex)"
+              >
+              {{ $t('button.delete') }}
+              </el-button>
+            </div>
 
             <el-button
               @click="addArrayItem(key)"
@@ -234,7 +244,6 @@ export default class extends Vue {
   private data: any = {}
   private isDataChanged: boolean = false
   private showDialog: boolean = false
-  private arrayPropertiesLength = {}
   private objectPropertiesArray = {}
 
   @Watch('show')
@@ -312,11 +321,6 @@ export default class extends Vue {
       switch (schema.properties[key].type) {
         case 'array':
           schemaKeys[key] = []
-          if (this.pluginData[key]) {
-              this.arrayPropertiesLength[key] = [...this.pluginData[key]]
-          } else {
-            this.arrayPropertiesLength[key] = []
-          }
           break
         case 'object':
           schemaKeys[key] = {}
@@ -391,19 +395,28 @@ export default class extends Vue {
     })
   }
 
-  /**
-   * Add item to array property
-   * @param key
-   */
-  private addArrayItem(key: any) {
-    if (this.arrayPropertiesLength[key].length < this.schema.properties[key].maxItems) {
-      this.arrayPropertiesLength[key].push(this.arrayPropertiesLength[key].length)
-      this.$forceUpdate()
-    } else {
-      this.$message.warning(`${this.$t('message.cannotAddMoreItems')}`)
+    /**
+     * Add item to array property
+     * @param key
+     */
+    private addArrayItem(key: any) {
+      if (this.data[key].length < this.schema.properties[key].maxItems) {
+        this.data[key].push("")
+        this.$forceUpdate()
+      } else {
+        this.$message.warning(`${this.$t('message.cannotAddMoreItems')}`)
+      }
     }
+  /**
+     * Delete item to array property
+     * @param key
+     * @param index
+     */
+  private deleteArrayItem(key: any, index: number) {
+    this.data[key].splice(index, 1)
+    this.isDataChanged = true
+    this.$forceUpdate()
   }
-
   /**
    * Add item to object property
    * @param key
