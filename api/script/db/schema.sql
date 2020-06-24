@@ -8,7 +8,7 @@ CREATE TABLE `routes` (
   `hosts` text,
   `uris` text,
   `upstream_nodes` text,
-  `upstream_id` varchar(32) , -- fk
+  `upstream_id` varchar(64) , -- fk
   `priority` int NOT NULL DEFAULT 0,
   `state` int NOT NULL DEFAULT 1, -- 1-normal 0-disable
   `content` text,
@@ -27,5 +27,17 @@ CREATE TABLE `ssls` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `create_time` bigint(20) unsigned NOT NULL,
   `update_time` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8;
+-- upstream
+CREATE TABLE `upstreams` (
+  `id` varchar(64) NOT NULL unique,
+  `name` varchar(200) NOT NULL unique, -- not support
+  `description` varchar(200) DEFAULT NULL,
+  `nodes` text,
+  `content` text,
+  `content_admin_api` text,
+  `create_time` bigint(20),
+  `update_time` bigint(20),
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;

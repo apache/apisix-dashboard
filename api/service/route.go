@@ -68,11 +68,7 @@ func (arr *ApisixRouteRequest) Parse(r *RouteRequest) {
 func (rd *Route) Parse(r *RouteRequest, arr *ApisixRouteRequest) error {
 	//rd.Name = arr.Name
 	rd.Description = arr.Desc
-	// todo transfer
-	rd.Hosts = ""
-	rd.Uris = ""
-	rd.UpstreamNodes = ""
-	rd.UpstreamId = ""
+	rd.UpstreamId = r.UpstreamId
 	if content, err := json.Marshal(r); err != nil {
 		return err
 	} else {
@@ -170,6 +166,7 @@ type RouteRequest struct {
 	Redirect         *Redirect              `json:"redirect,omitempty"`
 	Vars             [][]string             `json:"vars,omitempty"`
 	Upstream         *Upstream              `json:"upstream,omitempty"`
+	UpstreamId       string              `json:"upstream_id,omitempty"`
 	UpstreamProtocol string                 `json:"upstream_protocol,omitempty"`
 	UpstreamPath     *UpstreamPath          `json:"upstream_path,omitempty"`
 	UpstreamHeader   map[string]string      `json:"upstream_header,omitempty"`
@@ -354,6 +351,7 @@ type ApisixRouteRequest struct {
 	Hosts    []string               `json:"hosts,omitempty"`
 	Vars     [][]string             `json:"vars,omitempty"`
 	Upstream *Upstream              `json:"upstream,omitempty"`
+	UpstreamId string                 `json:"upstream_id,omitempty"`
 	Plugins  map[string]interface{} `json:"plugins,omitempty"`
 	//Name     string                 `json:"name"`
 }
@@ -505,6 +503,8 @@ func ToApisixRequest(routeRequest *RouteRequest) *ApisixRouteRequest {
 	} else {
 		arr.Plugins = nil
 	}
+	// upstreamId
+	arr.UpstreamId = routeRequest.UpstreamId
 	return arr
 }
 
@@ -558,5 +558,7 @@ func ToRoute(routeRequest *RouteRequest,
 			rd.UpstreamNodes = string(nb)
 		}
 	}
+	// upstreamId
+	rd.UpstreamId = arr.UpstreamId
 	return rd, nil
 }

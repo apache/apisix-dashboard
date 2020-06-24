@@ -43,6 +43,7 @@ func setUpRouter() *gin.Engine {
 	route.AppendRoute(r)
 	route.AppendSsl(r)
 	route.AppendPlugin(r)
+	route.AppendUpstream(r)
 
 	pprof.Register(r)
 
