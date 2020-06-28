@@ -28,30 +28,25 @@ import (
 	"github.com/apisix/manager-api/service"
 )
 
-func AppendSsl(r *gin.Engine) *gin.Engine {
-	r.POST("/apisix/admin/check_ssl_cert", sslCheck)
+func AppendConsumer(r *gin.Engine) *gin.Engine {
 
-	r.GET("/apisix/admin/ssls", sslList)
-	r.POST("/apisix/admin/ssls", sslCreate)
-	r.GET("/apisix/admin/ssls/:id", sslItem)
-	r.PUT("/apisix/admin/ssls/:id", sslUpdate)
-	r.DELETE("/apisix/admin/ssls/:id", sslDelete)
-	r.PATCH("/apisix/admin/ssls/:id", sslPatch)
+	r.GET("/apisix/admin/consumers", consumerList)
+	r.POST("/apisix/admin/consumers", consumerCreate)
+	r.GET("/apisix/admin/consumers/:id", consumerItem)
+	r.PUT("/apisix/admin/consumers/:id", consumerUpdate)
+	r.DELETE("/apisix/admin/consumers/:id", consumerDelete)
 
 	return r
 }
 
-func sslList(c *gin.Context) {
+func consumerList(c *gin.Context) {
 	requestId, _ := c.Get("X-Request-Id")
 	size, _ := strconv.Atoi(c.DefaultQuery("size", "10"))
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	status, _ := strconv.Atoi(c.DefaultQuery("status", "-1"))
-	expireStart, _ := strconv.Atoi(c.DefaultQuery("expire_start", "-1"))
-	expireEnd, _ := strconv.Atoi(c.DefaultQuery("expire_end", "-1"))
 
-	sni := c.DefaultQuery("sni", "")
+	search := c.DefaultQuery("search", "")
 
-	count, list, err := service.SslList(page, size, status, expireStart, expireEnd, sni)
+	count, list, err := service.ConsumerList(page, size, search)
 
 	if err != nil {
 		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
@@ -64,11 +59,11 @@ func sslList(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
-func sslItem(c *gin.Context) {
+func consumerItem(c *gin.Context) {
 	requestId, _ := c.Get("X-Request-Id")
 	id := c.Param("id")
 
-	ssl, err := service.SslItem(id)
+	consumer, err := service.ConsumerItem(id)
 
 	if err != nil {
 		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
@@ -76,33 +71,10 @@ func sslItem(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, errno.FromMessage(errno.SystemSuccess).ItemResponse(ssl))
+	c.JSON(http.StatusOK, errno.FromMessage(errno.SystemSuccess).ItemResponse(consumer))
 }
 
-func sslCheck(c *gin.Context) {
-	requestId, _ := c.Get("X-Request-Id")
-	param, exist := c.Get("requestBody")
-
-	if !exist || len(param.([]byte)) < 1 {
-		err := errno.New(errno.InvalidParam)
-		logger.WithField(conf.RequestId, requestId).Error(err.ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Response())
-		return
-	}
-
-	ssl, err := service.SslCheck(param)
-	if err != nil {
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
-		return
-	}
-
-	resp := errno.FromMessage(errno.SystemSuccess).ItemResponse(ssl)
-
-	c.JSON(http.StatusOK, resp)
-}
-
-func sslCreate(c *gin.Context) {
+func consumerCreate(c *gin.Context) {
 	requestId, _ := c.Get("X-Request-Id")
 	param, exist := c.Get("requestBody")
 
@@ -115,7 +87,7 @@ func sslCreate(c *gin.Context) {
 		return
 	}
 
-	if err := service.SslCreate(param, u4.String()); err != nil {
+	if err := service.ConsumerCreate(param, u4.String()); err != nil {
 		if httpError, ok := err.(*errno.HttpError); ok {
 			logger.WithField(conf.RequestId, requestId).Error(err)
 			c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
@@ -129,7 +101,7 @@ func sslCreate(c *gin.Context) {
 	c.JSON(http.StatusOK, errno.Succeed())
 }
 
-func sslUpdate(c *gin.Context) {
+func consumerUpdate(c *gin.Context) {
 	requestId, _ := c.Get("X-Request-Id")
 	param, exist := c.Get("requestBody")
 
@@ -142,7 +114,7 @@ func sslUpdate(c *gin.Context) {
 		return
 	}
 
-	if err := service.SslUpdate(param, id); err != nil {
+	if err := service.ConsumerUpdate(param, id); err != nil {
 		if httpError, ok := err.(*errno.HttpError); ok {
 			logger.WithField(conf.RequestId, requestId).Error(err)
 			c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
@@ -156,39 +128,11 @@ func sslUpdate(c *gin.Context) {
 	c.JSON(http.StatusOK, errno.Succeed())
 }
 
-func sslPatch(c *gin.Context) {
-	requestId, _ := c.Get("X-Request-Id")
-	param, exist := c.Get("requestBody")
-
-	id := c.Param("id")
-
-	if !exist || len(param.([]byte)) < 1 {
-		err := errno.New(errno.InvalidParam)
-		logger.WithField(conf.RequestId, requestId).Error(err.ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Response())
-		return
-	}
-
-	if err := service.SslPatch(param, id); err != nil {
-		if httpError, ok := err.(*errno.HttpError); ok {
-			logger.WithField(conf.RequestId, requestId).Error(err)
-			c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
-			return
-		}
-
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
-		return
-	}
-
-	c.JSON(http.StatusOK, errno.Succeed())
-}
-
-func sslDelete(c *gin.Context) {
+func consumerDelete(c *gin.Context) {
 	requestId, _ := c.Get("X-Request-Id")
 	id := c.Param("id")
 
-	if err := service.SslDelete(id); err != nil {
+	if err := service.ConsumerDelete(id); err != nil {
 		if httpError, ok := err.(*errno.HttpError); ok {
 			logger.WithField(conf.RequestId, requestId).Error(err)
 			c.AbortWithStatusJSON(httpError.Code, httpError.Msg)

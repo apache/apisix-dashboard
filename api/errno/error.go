@@ -32,6 +32,11 @@ var (
 	SystemError     = Message{"010001", "system error"}
 	BadRequestError = Message{Code: "010002", Msg: "Request format error"}
 	NotFoundError   = Message{Code: "010003", Msg: "No resources found"}
+	InvalidParam    = Message{"010004", "Request parameter error"}
+	DBWriteError    = Message{"010005", "Database save failed"}
+	DBReadError     = Message{"010006", "Database query failed"}
+	DBDeleteError   = Message{"010007", "Database delete failed"}
+	RecordNotExist  = Message{"010009", "Record does not exist"}
 
 	//BB 01 config module
 	ConfEnvError      = Message{"010101", "Environment variable not found: %s"}
@@ -50,14 +55,25 @@ var (
 	ApisixPluginListError   = Message{"010301", "List APISIX plugins  failed: %s"}
 	ApisixPluginSchemaError = Message{"010301", "Find APISIX plugin schema failed: %s"}
 
+	// 04 ssl模块
+	SslParseError        = Message{"010401", "Certificate resolution failed: %s"}
+	ApisixSslCreateError = Message{"010402", "Create APISIX SSL failed"}
+	ApisixSslUpdateError = Message{"010403", "Update APISIX SSL failed"}
+	ApisixSslDeleteError = Message{"010404", "Delete APISIX SSL failed"}
+
 	// 06 upstream
-	UpstreamRequestError = Message{"010601", "upstream request parameters are abnormal: %s"}
-	UpstreamTransError   = Message{"010602", "upstream parameter conversion is abnormal: %s"}
-	DBUpstreamError      = Message{"010603", "upstream storage failure: %s"}
-	ApisixUpstreamCreateError      = Message{"010604", "apisix upstream create failure: %s"}
-	ApisixUpstreamUpdateError      = Message{"010605", "apisix upstream update failure: %s"}
-	ApisixUpstreamDeleteError      = Message{"010606", "apisix upstream delete failure: %s"}
-	DBUpstreamDeleteError      = Message{"010607", "upstream delete failure: %s"}
+	UpstreamRequestError      = Message{"010601", "upstream request parameters are abnormal: %s"}
+	UpstreamTransError        = Message{"010602", "upstream parameter conversion is abnormal: %s"}
+	DBUpstreamError           = Message{"010603", "upstream storage failure: %s"}
+	ApisixUpstreamCreateError = Message{"010604", "apisix upstream create failure: %s"}
+	ApisixUpstreamUpdateError = Message{"010605", "apisix upstream update failure: %s"}
+	ApisixUpstreamDeleteError = Message{"010606", "apisix upstream delete failure: %s"}
+	DBUpstreamDeleteError     = Message{"010607", "upstream delete failure: %s"}
+
+	ApisixConsumerCreateError = Message{"010702", "Create APISIX Consumer failed"}
+	ApisixConsumerUpdateError = Message{"010703", "Update APISIX Consumer failed"}
+	ApisixConsumerDeleteError = Message{"010704", "Delete APISIX Consumer failed"}
+	DuplicateUserName         = Message{"010705", "Duplicate username"}
 )
 
 type ManagerError struct {
@@ -65,6 +81,7 @@ type ManagerError struct {
 	Code    string
 	Msg     string
 	Data    interface{}
+	Detail  string
 }
 
 // toString
@@ -72,8 +89,16 @@ func (e *ManagerError) Error() string {
 	return e.Msg
 }
 
+func (e *ManagerError) ErrorDetail() string {
+	return fmt.Sprintf("TraceId: %s, Code: %s, Msg: %s, Detail: %s", e.TraceId, e.Code, e.Msg, e.Detail)
+}
+
 func FromMessage(m Message, args ...interface{}) *ManagerError {
 	return &ManagerError{TraceId: "", Code: m.Code, Msg: fmt.Sprintf(m.Msg, args...)}
+}
+
+func New(m Message, args ...interface{}) *ManagerError {
+	return &ManagerError{TraceId: "", Code: m.Code, Msg: m.Msg, Detail: fmt.Sprintf("%s", args...)}
 }
 
 func (e *ManagerError) Response() map[string]interface{} {
@@ -104,4 +129,17 @@ func Success() []byte {
 	w := FromMessage(SystemSuccess).Response()
 	result, _ := json.Marshal(w)
 	return result
+}
+
+func Succeed() map[string]interface{} {
+	return FromMessage(SystemSuccess).Response()
+}
+
+type HttpError struct {
+	Code int
+	Msg  string
+}
+
+func (e *HttpError) Error() string {
+	return e.Msg
 }

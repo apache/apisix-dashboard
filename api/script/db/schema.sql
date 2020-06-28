@@ -18,6 +18,7 @@ CREATE TABLE `routes` (
 
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;
+
 CREATE TABLE `ssls` (
   `id` char(36) NOT NULL DEFAULT '',
   `public_key` text NOT NULL,
@@ -29,6 +30,7 @@ CREATE TABLE `ssls` (
   `update_time` bigint(20) unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;
+
 -- upstream
 CREATE TABLE `upstreams` (
   `id` varchar(64) NOT NULL unique,
@@ -40,4 +42,15 @@ CREATE TABLE `upstreams` (
   `create_time` bigint(20),
   `update_time` bigint(20),
   PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8;
+
+CREATE TABLE `consumers` (
+  `id` char(36) NOT NULL DEFAULT '',
+  `username` varchar(100) DEFAULT '',
+  `plugins` text,
+  `desc` varchar(200) DEFAULT '',
+  `create_time` int(10) unsigned NOT NULL,
+  `update_time` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uni_username` (`username`)
 ) DEFAULT CHARSET=utf8;
