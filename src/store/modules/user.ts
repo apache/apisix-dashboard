@@ -23,12 +23,12 @@
  */
 
 import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-decorators'
-// import { login, logout, getUserInfo } from '@/api/users'
 import { getToken, setToken, removeToken } from '@/utils/cookies'
 import router, { resetRouter } from '@/router'
 import { PermissionModule } from './permission'
 import { TagsViewModule } from './tags-view'
 import store from '@/store'
+import request from '@/utils/request'
 
 export interface IUserState {
   token: string
@@ -39,9 +39,15 @@ export interface IUserState {
   email: string
 }
 
+const TOKEN_KEY= "GLOBAL_APISIX_API_KEY"
+
+if (localStorage.getItem(TOKEN_KEY)) {
+  request.defaults.headers["X-API-KEY"] = localStorage.getItem(TOKEN_KEY)
+}
+
 @Module({ dynamic: true, store, name: 'user' })
 class User extends VuexModule implements IUserState {
-  public token = getToken() || ''
+  public token = localStorage.getItem(TOKEN_KEY) || ''
   public name = ''
   public avatar = ''
   public introduction = ''
@@ -79,23 +85,18 @@ class User extends VuexModule implements IUserState {
   }
 
   @Action
-  public async Login(userInfo: { username: string, password: string}) {
-    let { username, password } = userInfo
-    username = username.trim()
-    // TEMP: 在此处绕过登录
-    // const { data } = await login({ username, password })
-
-    const data = {
-      accessToken: username + '-token'
-    }
-
-    setToken(data.accessToken)
-    this.SET_TOKEN(data.accessToken)
+  public async Login(token: string) {
+    setToken(token)
+    localStorage.setItem(TOKEN_KEY, token)
+    this.SET_TOKEN(token)
+    request.defaults.headers["X-API-KEY"] = token
   }
 
   @Action
   public ResetToken() {
     removeToken()
+    localStorage.removeItem(TOKEN_KEY)
+    delete request.defaults.headers["X-API-KEY"]
     this.SET_TOKEN('')
     this.SET_ROLES([])
   }
@@ -161,8 +162,7 @@ class User extends VuexModule implements IUserState {
     // await logout()
     removeToken()
     resetRouter()
-    this.SET_TOKEN('')
-    this.SET_ROLES([])
+    this.ResetToken()
   }
 }
 

@@ -49,7 +49,7 @@
           placeholder="Please input API KEY here"
           name="apikey"
           type="text"
-          autocomplete="on"
+          autocomplete="off"
         />
       </el-form-item>
 
@@ -98,9 +98,8 @@ export default class extends Vue {
   private redirect?: string
 
   private async handleLogin() {
-    await UserModule.Login({ username: '', password: '' })
-    localStorage.setItem('GLOBAL_API_KEY', this.loginForm.apikey)
-    window.location.replace('/')
+    await UserModule.Login(this.loginForm.apikey)
+    await this.$router.replace(this.redirect || '/')
   }
 }
 </script>
