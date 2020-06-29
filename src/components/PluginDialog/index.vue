@@ -94,6 +94,17 @@
           label-width="160px"
           :prop="key"
         >
+          <label slot="label">
+            {{ key }}
+            <el-tooltip
+              placement="top"
+              effect="light"
+            >
+              <div slot="content">{{ schema.properties[key].description || key }}</div>
+              <i class="el-icon-info" />
+            </el-tooltip>
+          </label>
+
           <!-- 分情况讨论 -->
           <!-- number property -->
           <el-input-number
@@ -148,15 +159,15 @@
               class="object-input-item"
             >
               <el-input
-              :key="arrayIndex"
-              v-model="data[key][arrayIndex]"
-              :placeholder="`${key} [${arrayIndex}]`"
-              @input="isDataChanged = true"
+                :key="arrayIndex"
+                v-model="data[key][arrayIndex]"
+                :placeholder="`${key} [${arrayIndex}]`"
+                @input="isDataChanged = true"
               />
               <el-button
-              @click="deleteArrayItem(key, arrayIndex)"
+                @click="deleteArrayItem(key, arrayIndex)"
               >
-              {{ $t('button.delete') }}
+                {{ $t('button.delete') }}
               </el-button>
             </div>
 
@@ -395,18 +406,18 @@ export default class extends Vue {
     })
   }
 
-    /**
+  /**
      * Add item to array property
      * @param key
      */
-    private addArrayItem(key: any) {
-      if (this.data[key].length < this.schema.properties[key].maxItems) {
-        this.data[key].push("")
-        this.$forceUpdate()
-      } else {
-        this.$message.warning(`${this.$t('message.cannotAddMoreItems')}`)
-      }
+  private addArrayItem(key: any) {
+    if (this.data[key].length < this.schema.properties[key].maxItems) {
+      this.data[key].push('')
+      this.$forceUpdate()
+    } else {
+      this.$message.warning(`${this.$t('message.cannotAddMoreItems')}`)
     }
+  }
   /**
      * Delete item to array property
      * @param key
