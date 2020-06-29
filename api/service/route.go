@@ -102,7 +102,7 @@ func (arr *ApisixRouteRequest) Update(rid string) (*ApisixRouteResponse, error) 
 		return nil, err
 	} else {
     fmt.Println(string(b))
-		if resp, err := utils.Patch(url, b); err != nil {
+		if resp, err := utils.Put(url, b); err != nil {
 			logger.Error(err.Error())
 			return nil, err
 		} else {
