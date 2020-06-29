@@ -37,7 +37,7 @@
         to="/"
       >
         <img
-          src="favicon.ico"
+          :src="logoURL"
           class="sidebar-logo"
         >
       </router-link>
@@ -48,7 +48,7 @@
         to="/"
       >
         <img
-          src="favicon.ico"
+          :src="logoURL"
           class="sidebar-logo"
         >
         <h1 class="sidebar-title">
@@ -69,6 +69,7 @@ export default class extends Vue {
   @Prop({ required: true }) private collapse!: boolean
 
   private title = 'APISIX'
+  private logoURL = process.env.NODE_ENV === 'production' ? '/apisix/dashboard/favicon.ico' : '/favicon.ico'
 }
 </script>
 
