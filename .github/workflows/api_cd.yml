@@ -19,5 +19,5 @@ jobs:
     
     - run: |
         cd ./api
-        docker build . -t apisixacr.azurecr.cn/manager-api:${{ github.sha }}
-        docker push apisixacr.azurecr.cn/manager-api:${{ github.sha }}
+        docker build . -t apisixacr.azurecr.cn/managerApi:${{ github.sha }}
+        docker push apisixacr.azurecr.cn/managerApi:${{ github.sha }}
