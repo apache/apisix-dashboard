@@ -336,7 +336,7 @@ export default class extends Vue {
         case 'object':
           schemaKeys[key] = {}
           this.objectPropertiesArray[key] = []
-          if (this.pluginData[key]) {
+          if (this.pluginData && this.pluginData[key]) {
             Object.keys(this.pluginData[key]).map(item => {
               this.objectPropertiesArray[key].push({
                 key: item,
