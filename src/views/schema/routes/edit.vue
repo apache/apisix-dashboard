@@ -197,7 +197,7 @@
 
       <el-form-item>
         <el-button
-          :disabled="!filteredPluginList.length"
+          :disabled="!(filteredPluginList.length && !form.plugins.hasOwnProperty('tempPlugin'))"
           @click="addPlugin"
         >
           {{ $t('button.add_plugin') }}
