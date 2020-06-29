@@ -97,10 +97,11 @@
           <label slot="label">
             {{ key }}
             <el-tooltip
+              v-if="schema.properties[key].description"
               placement="top"
               effect="light"
             >
-              <div slot="content">{{ schema.properties[key].description || key }}</div>
+              <div slot="content">{{ schema.properties[key].description }}</div>
               <i class="el-icon-info" />
             </el-tooltip>
           </label>
