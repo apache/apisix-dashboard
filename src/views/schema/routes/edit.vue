@@ -148,9 +148,9 @@
       </el-form-item>
 
       <el-form-item
-        v-for="(index, item) in form.plugins"
+        v-for="(value, item, index) in form.plugins"
         :key="item"
-        :label="&quot;plugin&quot;"
+        :label="'plugin-' + index"
         class="plugin-item"
       >
         <el-button
@@ -184,11 +184,20 @@
             :value="name"
           />
         </el-select>
+
+        <el-button
+          v-if="item === 'tempPlugin'"
+          type="danger"
+          style="margin-left: 10px"
+          @click="cancelAddPlugin"
+        >
+          {{ $t('button.cancel') }}
+        </el-button>
       </el-form-item>
 
       <el-form-item>
         <el-button
-          :disabled="!filteredPluginList.length"
+          :disabled="!(filteredPluginList.length && !form.plugins.hasOwnProperty('tempPlugin'))"
           @click="addPlugin"
         >
           {{ $t('button.add_plugin') }}
@@ -227,7 +236,7 @@
       :show="showPluginDialog"
       :name="pluginName"
       :plugin-data="form.plugins[pluginName]"
-      @hidePlugin="showPluginDialog = false"
+      @hidePlugin="onHidePlugin(pluginName)"
       @save="onPluginSave"
     />
   </div>
@@ -492,6 +501,11 @@ export default class extends Vue {
     this.form.plugins[name] = data
   }
 
+  private onHidePlugin(name: string) {
+    this.showPluginDialog = false
+    delete this.form.plugins['tempPlugin']
+  }
+
   private async addPlugin() {
     if (this.form.plugins.hasOwnProperty('tempPlugin')) return
 
@@ -499,6 +513,11 @@ export default class extends Vue {
       ...this.form.plugins,
       tempPlugin: null
     }
+  }
+
+  private async cancelAddPlugin() {
+    delete this.form.plugins['tempPlugin']
+    this.$forceUpdate()
   }
 
   private removePlugin(name: any) {
