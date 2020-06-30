@@ -28,9 +28,6 @@ import { Message } from 'element-ui'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   timeout: 5000,
-  headers: {
-    'X-API-KEY': localStorage.getItem('GLOBAL_API_KEY')
-  }
 })
 
 service.interceptors.request.use(
