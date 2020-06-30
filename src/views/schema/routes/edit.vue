@@ -175,6 +175,7 @@
           :value="null"
           class="plugin-select"
           placeholder="Select a Plugin"
+          filterable
           @change="showPlugin"
         >
           <el-option
