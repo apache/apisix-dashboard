@@ -18,13 +18,13 @@ package route
 
 import (
 	"encoding/json"
+	"net/http"
+	"strconv"
+
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/errno"
 	"github.com/apisix/manager-api/service"
 	"github.com/gin-gonic/gin"
-	"github.com/satori/go.uuid"
-	"net/http"
-	"strconv"
 )
 
 func AppendRoute(r *gin.Engine) *gin.Engine {

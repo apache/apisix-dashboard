@@ -18,14 +18,15 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/filter"
 	"github.com/apisix/manager-api/log"
 	"github.com/apisix/manager-api/route"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"time"
 )
 
 var logger = log.GetLogger()

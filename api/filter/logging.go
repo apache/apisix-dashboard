@@ -18,10 +18,11 @@ package filter
 
 import (
 	"bytes"
+	"time"
+
 	"github.com/apisix/manager-api/errno"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"time"
 )
 
 func RequestLogHandler() gin.HandlerFunc {

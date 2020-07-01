@@ -18,10 +18,11 @@ package route
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/apisix/manager-api/errno"
 	"github.com/apisix/manager-api/service"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func AppendPlugin(r *gin.Engine) *gin.Engine {

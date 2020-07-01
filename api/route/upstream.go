@@ -3,13 +3,13 @@ package route
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"strconv"
+
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/errno"
 	"github.com/apisix/manager-api/service"
 	"github.com/gin-gonic/gin"
-	"github.com/satori/go.uuid"
-	"net/http"
-	"strconv"
 )
 
 func AppendUpstream(r *gin.Engine) *gin.Engine {
@@ -50,10 +50,10 @@ func createUpstream(c *gin.Context) {
 	} else {
 		// apisix
 		if resp, err := aur.Create(); err != nil {
-				e := errno.FromMessage(errno.ApisixUpstreamCreateError, err.Error())
-				logger.Error(e.Msg)
-				c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
-				return
+			e := errno.FromMessage(errno.ApisixUpstreamCreateError, err.Error())
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+			return
 		} else {
 			// mysql
 			fmt.Println(resp.UNode.UValue.Id)
@@ -76,7 +76,7 @@ func createUpstream(c *gin.Context) {
 
 func findUpstream(c *gin.Context) {
 	uid := c.Param("uid")
-		// find from apisix
+	// find from apisix
 	aur := &service.ApisixUpstreamRequest{Id: uid}
 	if resp, err := aur.FindById(); err != nil {
 		e := errno.FromMessage(errno.UpstreamRequestError, err.Error()+" upstream ID: "+uid)

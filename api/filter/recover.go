@@ -19,13 +19,14 @@ package filter
 import (
 	"bytes"
 	"fmt"
-	"github.com/apisix/manager-api/log"
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"runtime"
 	"time"
+
+	"github.com/apisix/manager-api/log"
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 var (

@@ -20,8 +20,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/satori/go.uuid"
-
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/errno"
 	"github.com/apisix/manager-api/utils"
