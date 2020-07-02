@@ -19,6 +19,7 @@ services:
 
   etcd:
     image: bitnami/etcd:3.4.9
+    user: root
     restart: always
     volumes:
       - ./etcd_data:/etcd_data
