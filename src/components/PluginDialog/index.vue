@@ -22,6 +22,9 @@
     <el-dialog
       :title="'Plugin ' + name + ' Edit'"
       :visible.sync="showDialog"
+      :before-close="onCancel"
+      :close-on-press-escape="false"
+      :close-on-click-modal="false"
     >
       <el-form
         v-if="schema.oneOf"
