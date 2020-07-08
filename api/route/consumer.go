@@ -21,7 +21,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/satori/go.uuid"
 
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/errno"

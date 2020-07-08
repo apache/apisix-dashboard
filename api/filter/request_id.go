@@ -18,7 +18,6 @@ package filter
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/satori/go.uuid"
 )
 
 func RequestId() gin.HandlerFunc {

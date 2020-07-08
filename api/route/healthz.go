@@ -17,9 +17,10 @@
 package route
 
 import (
+	"net/http"
+
 	"github.com/apisix/manager-api/log"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 var logger = log.GetLogger()

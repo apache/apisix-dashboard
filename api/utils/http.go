@@ -18,11 +18,12 @@ package utils
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/log"
 	"gopkg.in/resty.v1"
-	"net/http"
-	"time"
 )
 
 const timeout = 3000

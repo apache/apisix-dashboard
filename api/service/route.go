@@ -19,12 +19,12 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/errno"
 	"github.com/apisix/manager-api/log"
 	"github.com/apisix/manager-api/utils"
-	"github.com/satori/go.uuid"
-	"time"
 )
 
 const (
@@ -101,7 +101,7 @@ func (arr *ApisixRouteRequest) Update(rid string) (*ApisixRouteResponse, error) 
 	if b, err := json.Marshal(arr); err != nil {
 		return nil, err
 	} else {
-    fmt.Println(string(b))
+		fmt.Println(string(b))
 		if resp, err := utils.Put(url, b); err != nil {
 			logger.Error(err.Error())
 			return nil, err
@@ -166,7 +166,7 @@ type RouteRequest struct {
 	Redirect         *Redirect              `json:"redirect,omitempty"`
 	Vars             [][]string             `json:"vars,omitempty"`
 	Upstream         *Upstream              `json:"upstream,omitempty"`
-	UpstreamId       string              `json:"upstream_id,omitempty"`
+	UpstreamId       string                 `json:"upstream_id,omitempty"`
 	UpstreamProtocol string                 `json:"upstream_protocol,omitempty"`
 	UpstreamPath     *UpstreamPath          `json:"upstream_path,omitempty"`
 	UpstreamHeader   map[string]string      `json:"upstream_header,omitempty"`
@@ -249,7 +249,7 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 		upstreamHeader = nil
 		upstreamPath = nil
 	}
-  if upstreamPath != nil && upstreamPath.UPathType == "" {
+	if upstreamPath != nil && upstreamPath.UPathType == "" {
 		upstreamPath = nil
 	}
 	result := &RouteRequest{
@@ -344,15 +344,15 @@ type UpstreamPath struct {
 }
 
 type ApisixRouteRequest struct {
-	Desc     string                 `json:"desc,omitempty"`
-	Priority int64                  `json:"priority"`
-	Methods  []string               `json:"methods,omitempty"`
-	Uris     []string               `json:"uris,omitempty"`
-	Hosts    []string               `json:"hosts,omitempty"`
-	Vars     [][]string             `json:"vars,omitempty"`
-	Upstream *Upstream              `json:"upstream,omitempty"`
+	Desc       string                 `json:"desc,omitempty"`
+	Priority   int64                  `json:"priority"`
+	Methods    []string               `json:"methods,omitempty"`
+	Uris       []string               `json:"uris,omitempty"`
+	Hosts      []string               `json:"hosts,omitempty"`
+	Vars       [][]string             `json:"vars,omitempty"`
+	Upstream   *Upstream              `json:"upstream,omitempty"`
 	UpstreamId string                 `json:"upstream_id,omitempty"`
-	Plugins  map[string]interface{} `json:"plugins,omitempty"`
+	Plugins    map[string]interface{} `json:"plugins,omitempty"`
 	//Name     string                 `json:"name"`
 }
 

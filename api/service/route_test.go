@@ -18,8 +18,9 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRedirectMarshal(t *testing.T) {

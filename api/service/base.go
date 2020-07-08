@@ -17,9 +17,9 @@
 package service
 
 import (
-	"github.com/jinzhu/gorm"
-	"github.com/satori/go.uuid"
 	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 // Base contains common columns for all tables.

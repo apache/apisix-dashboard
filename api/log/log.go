@@ -19,11 +19,12 @@ package log
 import (
 	"bufio"
 	"fmt"
-	"github.com/apisix/manager-api/conf"
-	"github.com/sirupsen/logrus"
 	"os"
 	"runtime"
 	"strings"
+
+	"github.com/apisix/manager-api/conf"
+	"github.com/sirupsen/logrus"
 )
 
 var logEntry *logrus.Entry

@@ -18,11 +18,12 @@ package conf
 
 import (
 	"fmt"
-	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
+
+	"github.com/tidwall/gjson"
 )
 
 const ServerPort = 8080

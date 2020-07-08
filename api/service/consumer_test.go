@@ -19,7 +19,6 @@ package service
 import (
 	"testing"
 
-	"github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/apisix/manager-api/errno"
