@@ -33,7 +33,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint-staged"
+      "pre-commit": "npm run lint-staged",
+      "commit-msg": "node scripts/verifyCommit.js"
     }
   },
   "lint-staged": {
