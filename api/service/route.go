@@ -25,6 +25,7 @@ import (
 	"github.com/apisix/manager-api/errno"
 	"github.com/apisix/manager-api/log"
 	"github.com/apisix/manager-api/utils"
+	uuid "github.com/satori/go.uuid"
 )
 
 const (

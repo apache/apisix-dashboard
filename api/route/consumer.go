@@ -25,6 +25,7 @@ import (
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/errno"
 	"github.com/apisix/manager-api/service"
+	uuid "github.com/satori/go.uuid"
 )
 
 func AppendConsumer(r *gin.Engine) *gin.Engine {

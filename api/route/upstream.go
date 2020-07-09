@@ -10,6 +10,7 @@ import (
 	"github.com/apisix/manager-api/errno"
 	"github.com/apisix/manager-api/service"
 	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
 )
 
 func AppendUpstream(r *gin.Engine) *gin.Engine {

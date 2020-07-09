@@ -7,6 +7,7 @@ import (
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/errno"
 	"github.com/apisix/manager-api/utils"
+	uuid "github.com/satori/go.uuid"
 )
 
 type UpstreamDao struct {
