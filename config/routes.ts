@@ -70,6 +70,36 @@ const routes = [
     ],
   },
   {
+    name: 'consumer',
+    path: '/consumer',
+    icon: 'BarsOutlined',
+    routes: [
+      {
+        path: '/consumer',
+        redirect: '/Consumer/list',
+      },
+      {
+        path: '/consumer/list',
+        name: 'list',
+        icon: 'BarsOutlined',
+        component: './Consumer/List',
+        hideInMenu: true,
+      },
+      {
+        path: '/consumer/create',
+        name: 'create',
+        component: './Consumer/Create',
+        hideInMenu: true,
+      },
+      {
+        path: '/consumer/:rid/edit',
+        name: 'edit',
+        component: './Consumer/Create',
+        hideInMenu: true,
+      },
+    ],
+  },
+  {
     component: './404',
   },
 ];

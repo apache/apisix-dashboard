@@ -1,5 +1,8 @@
 import { PluginFormEnUS } from '@/components/PluginForm';
 
+import { ConsumerEnUS } from '@/pages/Consumer';
+import { RouteEnUS } from '@/pages/Route';
+
 import component from './en-US/component';
 import globalHeader from './en-US/globalHeader';
 import menu from './en-US/menu';
@@ -20,4 +23,6 @@ export default {
   ...pwa,
   ...component,
   ...PluginFormEnUS,
+  ...ConsumerEnUS,
+  ...RouteEnUS,
 };
