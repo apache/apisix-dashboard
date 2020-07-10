@@ -1,64 +1,55 @@
 import React, { useState } from 'react';
-import { Form, Button, Select } from 'antd';
+import { Form, Select } from 'antd';
 import { UploadFile } from 'antd/lib/upload/interface';
+import { FormInstance } from 'antd/es/form';
 
-import CertificateForm from '../CertificateForm';
-import { CertificateUploader, UploadType } from '../CertificateUploader';
-import { StepProps } from '../../Create';
-import { verifyKeyPaire } from '../../service';
+import CertificateForm from '@/pages/SSL/components/CertificateForm';
+import CertificateUploader, { UploadType } from '@/pages/SSL/components/CertificateUploader';
 
 type CreateType = 'Upload' | 'Input';
 
-const Step: React.FC<StepProps> = ({ onStepChange, onFormChange, data }) => {
-  const [form] = Form.useForm();
-  const { validateFields } = form;
+type Props = {
+  form: FormInstance;
+};
 
+const Step: React.FC<Props> = ({ form }) => {
   const [publicKeyList, setPublicKeyList] = useState<UploadFile[]>([]);
   const [privateKeyList, setPrivateKeyList] = useState<UploadFile[]>([]);
 
   const [createType, setCreateType] = useState<CreateType>('Input');
 
-  const onValidateForm = async () => {
-    let keyPaire = { cert: '', key: '' };
-    validateFields()
-      .then((value) => {
-        keyPaire = { cert: value.cert, key: value.key };
-        return verifyKeyPaire(value.cert, value.key);
-      })
-      .then((_data) => {
-        const { snis, validity_end } = _data.data;
-        onFormChange({
-          ...keyPaire,
-          sni: snis.join(';'),
-          expireTime: new Date(validity_end * 1000).toLocaleString(),
-        });
-        onStepChange(1);
-      });
-  };
-
   const onRemove = (type: UploadType) => {
     if (type === 'PUBLIC_KEY') {
-      onFormChange({
+      form.setFieldsValue({
         cert: '',
         sni: '',
         expireTime: undefined,
       });
       setPublicKeyList([]);
     } else {
-      onFormChange({
-        key: '',
-      });
+      form.setFieldsValue({ key: '' });
       setPrivateKeyList([]);
     }
   };
   return (
     <>
-      <Form.Item label="方式" required>
+      <Form.Item
+        label="方式"
+        required
+        extra={
+          window.location.pathname.indexOf('edit') === -1 ? '' : '新证书所含 SNI 应与当前证书一致'
+        }
+      >
         <Select
           placeholder="请选择创建方式"
           defaultValue="Input"
           onChange={(value: CreateType) => {
-            onFormChange({}, true);
+            form.setFieldsValue({
+              key: '',
+              cert: '',
+              sni: '',
+              expireTime: undefined,
+            });
             setCreateType(value);
           }}
           style={{ width: 100 }}
@@ -68,36 +59,27 @@ const Step: React.FC<StepProps> = ({ onStepChange, onFormChange, data }) => {
         </Select>
       </Form.Item>
       <div style={createType === 'Input' ? {} : { display: 'none' }}>
-        <CertificateForm mode="EDIT" form={form} data={data} />
+        <CertificateForm mode="EDIT" form={form} />
       </div>
       {Boolean(createType === 'Upload') && (
         <CertificateUploader
-          onSuccess={(_data: any) => {
-            form.setFieldsValue(_data);
-            if (_data.cert) {
-              setPublicKeyList(_data.publicKeyList);
+          onSuccess={({
+            cert,
+            key,
+            ...rest
+          }: SSLModule.UploadPrivateSuccessData & SSLModule.UploadPublicSuccessData) => {
+            if (cert) {
+              setPublicKeyList(rest.publicKeyList);
+              form.setFieldsValue({ cert });
             } else {
-              setPrivateKeyList(_data.privateKeyList);
+              form.setFieldsValue({ key });
+              setPrivateKeyList(rest.privateKeyList);
             }
           }}
           onRemove={onRemove}
           data={{ publicKeyList, privateKeyList }}
         />
       )}
-      <div style={{ width: '100%', textAlign: 'center' }}>
-        <Button
-          type="primary"
-          onClick={() => {
-            onStepChange(0);
-          }}
-          style={{ marginRight: '8px' }}
-        >
-          上一步
-        </Button>
-        <Button type="primary" onClick={onValidateForm}>
-          下一步
-        </Button>
-      </div>
     </>
   );
 };

@@ -37,6 +37,12 @@ const routes = [
         component: './ssl/Create',
         hideInMenu: true,
       },
+      {
+        name: 'edit',
+        path: '/ssl/:id/edit',
+        component: './SSL/Create',
+        hideInMenu: true,
+      },
     ],
   },
   {

@@ -3,24 +3,16 @@ import { Form, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { useForm } from 'antd/es/form/util';
-import styles from '../../Create.less';
+import styles from '@/pages/SSL/style.less';
 
 export type UploadType = 'PUBLIC_KEY' | 'PRIVATE_KEY';
-export interface UploadPublicSuccessData {
-  cert: string;
-  publicKeyList: UploadFile[];
-}
-export interface UploadPrivateSuccessData {
-  key: string;
-  privateKeyList: UploadFile[];
-}
 
 interface UploaderProps {
   data: {
     publicKeyList: UploadFile[];
     privateKeyList: UploadFile[];
   };
-  onSuccess(data: UploadPublicSuccessData | UploadPrivateSuccessData): void;
+  onSuccess(data: SSLModule.UploadPrivateSuccessData | SSLModule.UploadPublicSuccessData): void;
   onRemove(type: UploadType): void;
 }
 
@@ -45,13 +37,13 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
     fileReader.onload = function (event) {
       const { result } = event.currentTarget as any;
       if (type === 'PUBLIC_KEY') {
-        const uploadPublicData: UploadPublicSuccessData = {
+        const uploadPublicData: SSLModule.UploadPublicSuccessData = {
           cert: result,
           publicKeyList: [genUploadFile(fileName)],
         };
         onSuccess(uploadPublicData);
       } else {
-        const uploadprivateData: UploadPrivateSuccessData = {
+        const uploadprivateData: SSLModule.UploadPrivateSuccessData = {
           key: result,
           privateKeyList: [genUploadFile(fileName)],
         };
@@ -94,4 +86,4 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
     </Form>
   );
 };
-export { CertificateUploader };
+export default CertificateUploader;

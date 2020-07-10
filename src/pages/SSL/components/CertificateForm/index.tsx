@@ -1,28 +1,24 @@
 import React from 'react';
-import { Form, Input } from 'antd';
+import { Form, Input, Tag } from 'antd';
 import { useIntl } from 'umi';
 import { FormInstance } from 'antd/lib/form';
-import { FormData } from '../../Create';
 
 interface CertificateFormProps {
   mode: 'EDIT' | 'VIEW';
-  data: FormData;
   form: FormInstance;
 }
 
-const CertificateForm: React.FC<CertificateFormProps> = ({ mode, data, form }) => {
+const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
   const { formatMessage } = useIntl();
   const renderSNI = () => {
     if (mode === 'VIEW') {
       return (
-        <Form.Item
-          label="SNI"
-          name="sni"
-          rules={[
-            { required: true, message: formatMessage({ id: 'component.ssl.fieldSNIInvalid' }) },
-          ]}
-        >
-          <Input disabled={mode === 'VIEW'} />
+        <Form.Item label="SNI">
+          {(form.getFieldValue('snis') || []).map((item: string) => (
+            <Tag color="geekblue" key={item}>
+              {item}
+            </Tag>
+          ))}
         </Form.Item>
       );
     }
@@ -33,7 +29,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, data, form }) =
     if (mode === 'VIEW') {
       return (
         <Form.Item
-          label="ExpireTime"
+          label="过期时间"
           name="expireTime"
           rules={[{ required: true, message: 'ExpireTime' }]}
         >
@@ -45,7 +41,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, data, form }) =
   };
 
   return (
-    <Form form={form} layout="horizontal" initialValues={data}>
+    <Form form={form} layout="horizontal" initialValues={form?.getFieldsValue()}>
       {renderSNI()}
       <Form.Item
         label="公钥"
