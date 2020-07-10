@@ -2,11 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
-import { PLUGIN_MAPPER_SOURCE } from '@/components/PluginForm/data';
-import { createRoute, fetchRoute, updateRoute, fetchPluginList } from './service';
+import ActionBar from '@/components/ActionBar';
+import PluginPage from '@/components/PluginPage';
+
+import {
+  create,
+  fetchItem,
+  update,
+  checkUniqueName,
+  fetchUpstreamItem,
+  checkHostWithSSL,
+} from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
-import CreateStep3 from './components/CreateStep3';
 import CreateStep4 from './components/CreateStep4';
 import {
   DEFAULT_STEP_1_DATA,
@@ -16,7 +24,6 @@ import {
   STEP_HEADER_4,
 } from './constants';
 import ResultView from './components/ResultView';
-import ActionBar from './components/ActionBar';
 import styles from './Create.less';
 
 const { Step } = Steps;
@@ -27,7 +34,7 @@ type Props = {
   match: any;
 };
 
-const Create: React.FC<Props> = (props) => {
+const Page: React.FC<Props> = (props) => {
   const [step1Data, setStep1Data] = useState(DEFAULT_STEP_1_DATA);
   const [step2Data, setStep2Data] = useState(DEFAULT_STEP_2_DATA);
   const [step3Data, setStep3Data] = useState(DEFAULT_STEP_3_DATA);
@@ -37,7 +44,7 @@ const Create: React.FC<Props> = (props) => {
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
 
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
   const [stepHeader, setStepHeader] = useState(STEP_HEADER_4);
 
   const routeData = {
@@ -46,34 +53,8 @@ const Create: React.FC<Props> = (props) => {
     step3Data,
   };
 
-  const setupPlugin = () => {
-    const PLUGIN_BLOCK_LIST = Object.entries(PLUGIN_MAPPER_SOURCE)
-      .filter(([, value]) => value.hidden)
-      .flat()
-      .filter((item) => typeof item === 'string');
-
-    fetchPluginList().then((data: string[]) => {
-      const names = data.filter((name) => !PLUGIN_BLOCK_LIST.includes(name));
-
-      const enabledNames = Object.keys(step3Data.plugins);
-      const disabledNames = names.filter((name) => !enabledNames.includes(name));
-
-      setStep3Data({
-        plugins: step3Data.plugins,
-        _disabledPluginList: disabledNames.map((name) => ({
-          name,
-          ...PLUGIN_MAPPER_SOURCE[name],
-        })),
-        _enabledPluginList: enabledNames.map((name) => ({
-          name,
-          ...PLUGIN_MAPPER_SOURCE[name],
-        })),
-      });
-    });
-  };
-
   const setupRoute = (rid: number) =>
-    fetchRoute(rid).then((data) => {
+    fetchItem(rid).then((data) => {
       form1.setFieldsValue(data.step1Data);
       setStep1Data(data.step1Data as RouteModule.Step1Data);
 
@@ -84,10 +65,8 @@ const Create: React.FC<Props> = (props) => {
     });
 
   useEffect(() => {
-    if (props.route.name === 'edit') {
-      setupRoute(props.match.params.rid).then(() => setupPlugin());
-    } else {
-      setupPlugin();
+    if (props.route.path.indexOf('edit') !== -1) {
+      setupRoute(props.match.params.rid);
     }
   }, []);
 
@@ -103,18 +82,17 @@ const Create: React.FC<Props> = (props) => {
     setStepHeader(STEP_HEADER_4);
   }, [step1Data]);
 
-  // FIXME
   const onReset = () => {
     setStep1Data(DEFAULT_STEP_1_DATA);
     setStep2Data(DEFAULT_STEP_2_DATA);
     setStep3Data(DEFAULT_STEP_3_DATA);
     form1.resetFields();
     form2.resetFields();
-    setStep(0);
+    setStep(1);
   };
 
   const renderStep = () => {
-    if (step === 0) {
+    if (step === 1) {
       return (
         <Step1
           data={routeData}
@@ -126,7 +104,7 @@ const Create: React.FC<Props> = (props) => {
       );
     }
 
-    if (step === 1) {
+    if (step === 2) {
       if (redirect) {
         return (
           <CreateStep4 data={routeData} form1={form1} form2={form2} onChange={() => {}} redirect />
@@ -137,20 +115,35 @@ const Create: React.FC<Props> = (props) => {
         <Step2
           data={routeData}
           form={form2}
-          onChange={(params: RouteModule.Step2Data) => setStep2Data({ ...step2Data, ...params })}
+          onChange={(params: RouteModule.Step2Data) => {
+            if (params.upstream_id) {
+              fetchUpstreamItem(params.upstream_id).then((data) => {
+                form2.setFieldsValue({
+                  ...form2.getFieldsValue(),
+                  ...data,
+                });
+              });
+            }
+            setStep2Data({ ...form2.getFieldsValue(), ...params } as RouteModule.Step2Data);
+          }}
         />
       );
     }
 
-    if (step === 2) {
-      return <CreateStep3 data={routeData} onChange={setStep3Data} />;
-    }
-
     if (step === 3) {
-      return <CreateStep4 data={routeData} form1={form1} form2={form2} onChange={() => {}} />;
+      return (
+        <PluginPage
+          data={routeData.step3Data.plugins}
+          onChange={(data) => setStep3Data({ plugins: data })}
+        />
+      );
     }
 
     if (step === 4) {
+      return <CreateStep4 data={routeData} form1={form1} form2={form2} onChange={() => {}} />;
+    }
+
+    if (step === 5) {
       return <ResultView onReset={onReset} />;
     }
 
@@ -159,30 +152,40 @@ const Create: React.FC<Props> = (props) => {
 
   const onStepChange = (nextStep: number) => {
     const onUpdateOrCreate = () => {
-      if ((props as any).route.name === 'edit') {
-        updateRoute((props as any).match.params.rid, { data: routeData }).then(() => {
-          setStep(4);
+      if (props.route.path.indexOf('edit') !== -1) {
+        update((props as any).match.params.rid, { data: routeData }).then(() => {
+          setStep(5);
         });
       } else {
-        createRoute({ data: routeData }).then(() => {
-          setStep(4);
+        create({ data: routeData }).then(() => {
+          setStep(5);
         });
       }
     };
 
-    if (nextStep === 0) {
+    if (nextStep === 1) {
       setStep(nextStep);
     }
 
-    if (nextStep === 1) {
-      form1.validateFields().then((value) => {
-        setStep1Data({ ...step1Data, ...value });
+    if (nextStep === 2) {
+      if (step === 1) {
+        form1.validateFields().then((value) => {
+          const { redirectOption, hosts } = value;
+          Promise.all([
+            redirectOption === 'forceHttps' ? checkHostWithSSL(hosts) : Promise.resolve(),
+            checkUniqueName(value.name, (props as any).match.params.rid || ''),
+          ]).then(() => {
+            setStep1Data({ ...step1Data, ...value });
+            setStep(nextStep);
+          });
+        });
+      } else {
         setStep(nextStep);
-      });
+      }
       return;
     }
 
-    if (nextStep === 2) {
+    if (nextStep === 3) {
       if (redirect) {
         onUpdateOrCreate();
         return;
@@ -194,20 +197,20 @@ const Create: React.FC<Props> = (props) => {
       return;
     }
 
-    if (nextStep === 3) {
+    if (nextStep === 4) {
       setStep(nextStep);
     }
 
-    if (nextStep === 4) {
+    if (nextStep === 5) {
       onUpdateOrCreate();
     }
   };
 
   return (
     <>
-      <PageHeaderWrapper>
+      <PageHeaderWrapper title="路由管理">
         <Card bordered={false}>
-          <Steps current={step} className={styles.steps}>
+          <Steps current={step - 1} className={styles.steps}>
             {stepHeader.map((item) => (
               <Step title={item} key={item} />
             ))}
@@ -215,9 +218,9 @@ const Create: React.FC<Props> = (props) => {
           {renderStep()}
         </Card>
       </PageHeaderWrapper>
-      <ActionBar step={step} redirect={redirect} onChange={onStepChange} />
+      <ActionBar step={step} lastStep={redirect ? 2 : 4} onChange={onStepChange} withResultView />
     </>
   );
 };
 
-export default Create;
+export default Page;

@@ -1,31 +1,40 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Drawer, Button } from 'antd';
-import { useForm } from 'antd/es/form/util';
+import { withTheme, FormProps } from '@rjsf/core';
+import { Theme as AntDTheme } from '@rjsf/antd';
+import { JSONSchema7 } from 'json-schema';
 
-import PluginForm from '@/components/PluginForm';
-
-interface Props extends Omit<PluginForm.Props, 'form'> {
+interface Props {
+  name?: string;
+  initialData: any;
   active?: boolean;
   disabled?: boolean;
+  schema: JSONSchema7;
   onActive(name: string): void;
   onInactive(name: string): void;
   onClose(): void;
+  onFinish(values: any): void;
 }
 
 const PluginDrawer: React.FC<Props> = ({
   name,
   active,
   disabled,
+  schema,
+  initialData,
   onActive,
   onInactive,
   onClose,
-  ...rest
+  onFinish,
 }) => {
-  const [form] = useForm();
+  const PluginForm = withTheme(AntDTheme);
 
   if (!name) {
     return null;
   }
+
+  // NOTE: 用于作为 PluginForm 的引用
+  let form: any;
 
   return (
     <Drawer
@@ -55,7 +64,9 @@ const PluginDrawer: React.FC<Props> = ({
                 <Button
                   type="primary"
                   style={{ marginRight: 8, marginLeft: 8 }}
-                  onClick={() => form.submit()}
+                  onClick={() => {
+                    form.submit();
+                  }}
                 >
                   确认
                 </Button>
@@ -65,7 +76,22 @@ const PluginDrawer: React.FC<Props> = ({
         )
       }
     >
-      <PluginForm name={name!} form={form} {...rest} disabled={disabled} />
+      <PluginForm
+        schema={schema}
+        liveValidate
+        disabled={disabled || !active}
+        formData={initialData}
+        showErrorList={false}
+        ref={(_form: FormProps<any>) => {
+          form = _form;
+        }}
+        onSubmit={({ formData }) => {
+          onFinish(formData);
+        }}
+      >
+        {/* NOTE: 留空，用于隐藏 Submit 按钮 */}
+        <Fragment />
+      </PluginForm>
     </Drawer>
   );
 };

@@ -18,6 +18,8 @@ declare namespace RouteModule {
     id?: number;
     name: string;
     desc: string;
+    uris: string[];
+    hosts: string[];
   };
 
   type Step1Data = {
@@ -36,11 +38,7 @@ declare namespace RouteModule {
   };
 
   type Step3Data = {
-    plugins: {
-      [name: string]: any;
-    };
-    _enabledPluginList: PluginForm.PluginProps[];
-    _disabledPluginList: PluginForm.PluginProps[];
+    plugins: PluginPage.PluginData;
   };
 
   interface Data {
@@ -73,6 +71,7 @@ declare namespace RouteModule {
     upstreamHostList: UpstreamHost[];
     upstreamPath: string | undefined;
     upstreamHeaderList: UpstreamHeader[];
+    upstream_id?: string;
     timeout: {
       connect: number;
       send: number;
@@ -115,6 +114,7 @@ declare namespace RouteModule {
       from?: string;
       to: string;
     };
+    upstream_id?: string;
     upstream_protocol: 'keep' | 'http' | 'https';
     upstream_header: {
       [key: string]: string;

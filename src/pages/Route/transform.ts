@@ -9,12 +9,14 @@ export const transformStepData = ({
   });
 
   const upstream_header = {};
-  step2Data.upstreamHeaderList.forEach((header) => {
+  (step2Data.upstreamHeaderList || []).forEach((header) => {
     upstream_header[header.header_name] = header.header_value || '';
   });
 
   let redirect: RouteModule.Redirect = {};
-  if (step1Data.redirectOption === 'forceHttps') {
+  if (step1Data.redirectOption === 'disabled') {
+    redirect = {};
+  } else if (step1Data.redirectOption === 'forceHttps') {
     redirect = { http_to_https: true };
   } else if (step1Data.redirectURI !== '') {
     redirect = {
@@ -64,6 +66,11 @@ export const transformStepData = ({
     };
   }
 
+  if (step3Data.plugins.prometheus) {
+    // eslint-disable-next-line no-param-reassign
+    step3Data.plugins.prometheus = {};
+  }
+
   // 未启用 redirect
   if (!redirect.uri) {
     // 移除前端部分自定义变量
@@ -78,7 +85,8 @@ export const transformStepData = ({
       'redirectCode',
       'forceHttps',
       'redirectOption',
-      Object.keys(redirect).length === 0 ? 'redirect' : '',
+      step1Data.redirectOption === 'disabled' ? 'redirect' : '',
+      step2Data.upstream_id ? 'upstream' : '',
     ]);
   }
 
@@ -99,7 +107,7 @@ const transformVarsToRules = (
     };
   });
 
-const transformUpstreamNodes = (
+export const transformUpstreamNodes = (
   nodes: { [key: string]: number } = {},
 ): RouteModule.UpstreamHost[] => {
   const data: RouteModule.UpstreamHost[] = [];
@@ -137,7 +145,13 @@ export const transformRouteData = (data: RouteModule.Body) => {
     step1Data.redirectOption = 'disabled';
   }
 
-  const { upstream, upstream_path, upstream_header, upstream_protocol = 'keep' } = data;
+  const {
+    upstream,
+    upstream_path,
+    upstream_header,
+    upstream_protocol = 'keep',
+    upstream_id,
+  } = data;
 
   const upstreamHeaderList = Object.entries(upstream_header || {}).map(([k, v]) => {
     return {
@@ -152,6 +166,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     upstream_protocol,
     upstreamHeaderList,
     upstreamHostList: transformUpstreamNodes(upstream?.nodes),
+    upstream_id,
     upstreamPath: upstream_path?.to,
     timeout: upstream?.timeout || {
       connect: 6000,
@@ -161,10 +176,11 @@ export const transformRouteData = (data: RouteModule.Body) => {
   };
 
   const { plugins } = data;
+  if (plugins.prometheus) {
+    plugins.prometheus = { enabled: true };
+  }
   const step3Data: RouteModule.Step3Data = {
     plugins,
-    _enabledPluginList: [],
-    _disabledPluginList: [],
   };
 
   return {

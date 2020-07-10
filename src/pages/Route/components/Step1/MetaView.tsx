@@ -2,7 +2,7 @@ import React from 'react';
 import Form from 'antd/es/form';
 import { Input } from 'antd';
 
-import PanelSection from '../PanelSection';
+import PanelSection from '@/components/PanelSection';
 
 interface Props extends RouteModule.Data {}
 

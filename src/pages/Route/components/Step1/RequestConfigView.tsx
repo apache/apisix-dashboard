@@ -1,6 +1,6 @@
 import React from 'react';
 import Form from 'antd/es/form';
-import { Checkbox, Button, Input, Switch, Select, Row, Col, InputNumber } from 'antd';
+import { Checkbox, Button, Input, Switch, Select, Row, Col } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 
@@ -8,9 +8,9 @@ import {
   HTTP_METHOD_OPTION_LIST,
   FORM_ITEM_LAYOUT,
   FORM_ITEM_WITHOUT_LABEL,
-} from '@/pages/Routes/constants';
+} from '@/pages/Route/constants';
 
-import PanelSection from '../PanelSection';
+import PanelSection from '@/components/PanelSection';
 
 interface Props extends RouteModule.Data {}
 
@@ -167,13 +167,14 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
       <Form.Item label="WebSocket" name="websocket" valuePropName="checked">
         <Switch disabled={disabled} />
       </Form.Item>
-      <Form.Item
+      {/* <Form.Item
         label="优先级"
         name="priority"
         rules={[{ required: true, message: '请输入优先级' }]}
+        extra=""
       >
         <InputNumber placeholder="优先级" disabled={disabled} min={0} max={1000} />
-      </Form.Item>
+      </Form.Item> */}
       {renderHosts()}
       {renderPaths()}
       <Form.Item
@@ -201,8 +202,8 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
             <Col span={10}>
               <Form.Item name="redirectCode">
                 <Select disabled={disabled}>
-                  <Select.Option value="301">301（临时的重定向）</Select.Option>
-                  <Select.Option value="302">302（永久的重定向）</Select.Option>
+                  <Select.Option value={301}>301（临时的重定向）</Select.Option>
+                  <Select.Option value={302}>302（永久的重定向）</Select.Option>
                 </Select>
               </Form.Item>
             </Col>

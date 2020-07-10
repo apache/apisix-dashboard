@@ -11,7 +11,7 @@ const ResultView: React.FC<Props> = () => (
     status="success"
     title="提交成功"
     extra={[
-      <Button type="primary" key="goto-list" onClick={() => history.replace('/routes')}>
+      <Button type="primary" key="goto-list" onClick={() => history.replace('/routes/list')}>
         返回路由列表
       </Button>,
       <Button key="create-new" onClick={() => history.replace('/routes/create')}>

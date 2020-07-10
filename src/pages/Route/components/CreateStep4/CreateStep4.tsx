@@ -1,9 +1,10 @@
 import React from 'react';
 import { FormInstance } from 'antd/lib/form';
 
+import PluginPage from '@/components/PluginPage';
+
 import Step1 from '../Step1';
 import Step2 from '../Step2';
-import CreateStep3 from '../CreateStep3';
 
 interface Props extends RouteModule.Data {
   form1: FormInstance;
@@ -25,7 +26,7 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, ...rest }) => {
           <h2 style={style}>定义 API 后端服务</h2>
           <Step2 {...rest} form={form2} disabled />
           <h2 style={style}>插件配置</h2>
-          <CreateStep3 {...rest} disabled />
+          <PluginPage data={rest.data.step3Data.plugins} disabled />
         </>
       )}
     </>

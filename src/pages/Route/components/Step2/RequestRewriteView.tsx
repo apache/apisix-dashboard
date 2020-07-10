@@ -1,20 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Form, { FormInstance } from 'antd/es/form';
 import Radio from 'antd/lib/radio';
-import { Input, Row, Col, InputNumber, Button } from 'antd';
+import { Input, Row, Col, InputNumber, Button, Select } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
-import { FORM_ITEM_LAYOUT, FORM_ITEM_WITHOUT_LABEL } from '@/pages/Routes/constants';
-import PanelSection from '../PanelSection';
+import { FORM_ITEM_LAYOUT, FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
+import PanelSection from '@/components/PanelSection';
 import styles from '../../Create.less';
+import { fetchUpstreamList } from '../../service';
 
 interface Props extends RouteModule.Data {
   form: FormInstance;
 }
-
 const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange }) => {
   const { step2Data } = data;
+  const [upstearms, setUpstreams] = useState<{ id: string; name: string }[]>();
+  const upstreamDisabled = disabled || !!step2Data.upstream_id;
 
+  useEffect(() => {
+    // eslint-disable-next-line no-shadow
+    fetchUpstreamList().then(({ data }) => {
+      setUpstreams([{ name: '手动填写', id: null }, ...data]);
+      if (step2Data.upstream_id) {
+        onChange({ upstream_id: step2Data.upstream_id });
+      }
+    });
+  }, []);
   const renderUpstreamMeta = () => (
     <Form.List name="upstreamHostList">
       {(fields, { add, remove }) => (
@@ -43,7 +54,7 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
                       },
                     ]}
                   >
-                    <Input placeholder="域名/IP" disabled={disabled} />
+                    <Input placeholder="域名/IP" disabled={upstreamDisabled} />
                   </Form.Item>
                 </Col>
                 <Col span={4}>
@@ -52,7 +63,12 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
                     name={[field.name, 'port']}
                     rules={[{ required: true, message: '请输入端口' }]}
                   >
-                    <InputNumber placeholder="端口号" disabled={disabled} min={1} max={65535} />
+                    <InputNumber
+                      placeholder="端口号"
+                      disabled={upstreamDisabled}
+                      min={1}
+                      max={65535}
+                    />
                   </Form.Item>
                 </Col>
                 <Col span={4} offset={1}>
@@ -61,11 +77,16 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
                     name={[field.name, 'weight']}
                     rules={[{ required: true, message: '请输入权重' }]}
                   >
-                    <InputNumber placeholder="权重" disabled={disabled} min={0} max={1000} />
+                    <InputNumber
+                      placeholder="权重"
+                      disabled={upstreamDisabled}
+                      min={0}
+                      max={1000}
+                    />
                   </Form.Item>
                 </Col>
                 <Col>
-                  {!disabled &&
+                  {!upstreamDisabled &&
                     (fields.length > 1 ? (
                       <MinusCircleOutlined
                         style={{ margin: '0 8px' }}
@@ -78,7 +99,7 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
               </Row>
             </Form.Item>
           ))}
-          {!disabled && (
+          {!upstreamDisabled && (
             <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
               <Button
                 type="dashed"
@@ -123,7 +144,6 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
             <Radio value="https">HTTPS</Radio>
           </Radio.Group>
         </Form.Item>
-        {renderUpstreamMeta()}
         <Form.Item label="请求路径">
           <Radio.Group
             defaultValue={step2Data.upstreamPath === undefined ? 'keep' : 'modify'}
@@ -145,13 +165,30 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
             <Input disabled={disabled} placeholder="例如：/foo/bar/index.html" />
           </Form.Item>
         )}
+        <Form.Item label="上游" name="upstream_id">
+          <Select
+            onChange={(value) => {
+              onChange({ upstream_id: value });
+            }}
+            disabled={disabled}
+          >
+            {(upstearms || []).map((item) => {
+              return (
+                <Select.Option value={item.id} key={item.id}>
+                  {item.name}
+                </Select.Option>
+              );
+            })}
+          </Select>
+        </Form.Item>
+        {renderUpstreamMeta()}
         <Form.Item label="连接超时" required>
           <Form.Item
             name={['timeout', 'connect']}
             noStyle
             rules={[{ required: true, message: '请输入连接超时时间' }]}
           >
-            <InputNumber disabled={disabled} />
+            <InputNumber disabled={upstreamDisabled} />
           </Form.Item>
           {renderTimeUnit()}
         </Form.Item>
@@ -161,7 +198,7 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
             noStyle
             rules={[{ required: true, message: '请输入发送超时时间' }]}
           >
-            <InputNumber disabled={disabled} />
+            <InputNumber disabled={upstreamDisabled} />
           </Form.Item>
           {renderTimeUnit()}
         </Form.Item>
@@ -171,7 +208,7 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
             noStyle
             rules={[{ required: true, message: '请输入接收超时时间' }]}
           >
-            <InputNumber disabled={disabled} />
+            <InputNumber disabled={upstreamDisabled} />
           </Form.Item>
           {renderTimeUnit()}
         </Form.Item>

@@ -4,8 +4,9 @@ import { Row, Col, Button } from 'antd';
 
 interface Props {
   step: number;
+  lastStep: number;
   onChange(nextStep: number): void;
-  redirect?: boolean;
+  withResultView?: boolean;
 }
 
 const style: CSSProperties = {
@@ -19,8 +20,9 @@ const style: CSSProperties = {
   width: '100%',
 };
 
-const ActionBar: React.FC<Props> = ({ step, onChange, redirect }) => {
-  if (step > 3) {
+const ActionBar: React.FC<Props> = ({ step, lastStep, onChange, withResultView }) => {
+  if (step > lastStep && !withResultView) {
+    onChange(lastStep);
     return null;
   }
 
@@ -28,14 +30,13 @@ const ActionBar: React.FC<Props> = ({ step, onChange, redirect }) => {
     <div style={style}>
       <Row gutter={10} justify="end">
         <Col>
-          <Button type="primary" onClick={() => onChange(step - 1)} disabled={step === 0}>
+          <Button type="primary" onClick={() => onChange(step - 1)} disabled={step === 1}>
             上一步
           </Button>
         </Col>
         <Col>
           <Button type="primary" onClick={() => onChange(step + 1)}>
-            {!redirect && (step < 3 ? '下一步' : '提交')}
-            {redirect && (step === 0 ? '下一步' : '提交')}
+            {step < lastStep ? '下一步' : '提交'}
           </Button>
         </Col>
       </Row>
