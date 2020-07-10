@@ -92,9 +92,39 @@ const routes = [
         hideInMenu: true,
       },
       {
-        path: '/consumer/:rid/edit',
+        path: '/consumer/:id/edit',
         name: 'edit',
         component: './Consumer/Create',
+        hideInMenu: true,
+      },
+    ],
+  },
+  {
+    name: 'upstream',
+    path: '/upstream',
+    icon: 'BarsOutlined',
+    routes: [
+      {
+        path: '/upstream',
+        redirect: '/Upstream/list',
+      },
+      {
+        path: '/upstream/list',
+        name: 'list',
+        icon: 'BarsOutlined',
+        component: './Upstream/List',
+        hideInMenu: true,
+      },
+      {
+        path: '/upstream/create',
+        name: 'create',
+        component: './Upstream/Create',
+        hideInMenu: true,
+      },
+      {
+        path: '/upstream/:id/edit',
+        name: 'edit',
+        component: './Upstream/Create',
         hideInMenu: true,
       },
     ],
