@@ -28,13 +28,13 @@ const routes = [
       {
         path: '/ssl/list',
         name: 'list',
-        component: './ssl/List',
+        component: './SSL/List',
         hideInMenu: true,
       },
       {
         name: 'create',
         path: '/ssl/create',
-        component: './ssl/Create',
+        component: './SSL/Create',
         hideInMenu: true,
       },
       {
