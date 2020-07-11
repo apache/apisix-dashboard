@@ -34,7 +34,42 @@ func AppendRoute(r *gin.Engine) *gin.Engine {
 	r.GET("/apisix/admin/routes", listRoute)
 	r.PUT("/apisix/admin/routes/:rid", updateRoute)
 	r.DELETE("/apisix/admin/routes/:rid", deleteRoute)
+	r.GET("/apisix/admin/notexist/routes", isRouteExist)
 	return r
+}
+
+func isRouteExist(c *gin.Context) {
+	if name, exist := c.GetQuery("name"); exist {
+		db := conf.DB()
+		db = db.Table("routes")
+		exclude, exist := c.GetQuery("exclude")
+		if exist {
+			db = db.Where("name=? and id<>?", name, exclude)
+		} else {
+			db = db.Where("name=?", name)
+		}
+		var count int
+		err := db.Count(&count).Error
+		if err != nil {
+			e := errno.FromMessage(errno.RouteRequestError, err.Error())
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+			return
+		} else {
+			if count == 0 {
+				c.Data(http.StatusOK, service.ContentType, errno.Success())
+				return
+			} else {
+				e := errno.FromMessage(errno.DBRouteReduplicateError, name)
+				c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
+				return
+			}
+		}
+	} else {
+		e := errno.FromMessage(errno.RouteRequestError, "name is needed")
+		c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
+		return
+	}
 }
 
 func listRoute(c *gin.Context) {

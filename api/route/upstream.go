@@ -17,9 +17,67 @@ func AppendUpstream(r *gin.Engine) *gin.Engine {
 	r.POST("/apisix/admin/upstreams", createUpstream)
 	r.GET("/apisix/admin/upstreams/:uid", findUpstream)
 	r.GET("/apisix/admin/upstreams", listUpstream)
+	r.GET("/apisix/admin/names/upstreams", listUpstreamName)
 	r.PUT("/apisix/admin/upstreams/:uid", updateUpstream)
 	r.DELETE("/apisix/admin/upstreams/:uid", deleteUpstream)
+	r.GET("/apisix/admin/notexist/upstreams", isUpstreamExist)
 	return r
+}
+
+func isUpstreamExist(c *gin.Context) {
+	if name, exist := c.GetQuery("name"); exist {
+		db := conf.DB()
+		db = db.Table("upstreams")
+		exclude, exist := c.GetQuery("exclude")
+		if exist {
+			db = db.Where("name=? and id<>?", name, exclude)
+		} else {
+			db = db.Where("name=?", name)
+		}
+		var count int
+		if err := db.Count(&count).Error; err != nil {
+			e := errno.FromMessage(errno.UpstreamRequestError, err.Error())
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+			return
+		} else {
+			if count == 0 {
+				c.Data(http.StatusOK, service.ContentType, errno.Success())
+				return
+			} else {
+				e := errno.FromMessage(errno.DBUpstreamReduplicateError, name)
+				c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
+				return
+			}
+		}
+	} else {
+		e := errno.FromMessage(errno.UpstreamRequestError, "name is needed")
+		c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
+		return
+	}
+}
+
+func listUpstreamName(c *gin.Context) {
+	db := conf.DB()
+	upstreamList := []service.UpstreamDao{}
+	var count int
+	if err := db.Order("name").Table("upstreams").Find(&upstreamList).Count(&count).Error; err != nil {
+		e := errno.FromMessage(errno.UpstreamRequestError, err.Error())
+		logger.Error(e.Msg)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+		return
+	} else {
+		responseList := make([]*service.UpstreamNameResponse, 0)
+		for _, r := range upstreamList {
+			response, err := r.Parse2NameResponse()
+			if err == nil {
+				responseList = append(responseList, response)
+			}
+		}
+		result := &service.ListResponse{Count: count, Data: responseList}
+		resp, _ := json.Marshal(result)
+		c.Data(http.StatusOK, service.ContentType, resp)
+	}
 }
 
 func createUpstream(c *gin.Context) {

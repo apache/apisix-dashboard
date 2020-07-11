@@ -43,13 +43,14 @@ var (
 	ConfFilePathError = Message{"010102", "Error loading configuration file: %s"}
 
 	// BB 02 route module
-	RouteRequestError      = Message{"010201", "Route request parameters are abnormal: %s"}
-	ApisixRouteCreateError = Message{"010202", "Failed to create APISIX route: %s"}
-	DBRouteCreateError     = Message{"010203", "Route storage failure: %s"}
-	ApisixRouteUpdateError = Message{"010204", "Update APISIX routing failed: %s"}
-	ApisixRouteDeleteError = Message{"010205", "Failed to remove APISIX route: %s"}
-	DBRouteUpdateError     = Message{"010206", "Route update failed: %s"}
-	DBRouteDeleteError     = Message{"010207", "Route remove failed: %s"}
+	RouteRequestError       = Message{"010201", "Route request parameters are abnormal: %s"}
+	ApisixRouteCreateError  = Message{"010202", "Failed to create APISIX route: %s"}
+	DBRouteCreateError      = Message{"010203", "Route storage failure: %s"}
+	ApisixRouteUpdateError  = Message{"010204", "Update APISIX routing failed: %s"}
+	ApisixRouteDeleteError  = Message{"010205", "Failed to remove APISIX route: %s"}
+	DBRouteUpdateError      = Message{"010206", "Route update failed: %s"}
+	DBRouteDeleteError      = Message{"010207", "Route remove failed: %s"}
+	DBRouteReduplicateError = Message{"010208", "Route name is reduplicate : %s"}
 
 	// 03 plugin module
 	ApisixPluginListError   = Message{"010301", "List APISIX plugins  failed: %s"}
@@ -62,13 +63,14 @@ var (
 	ApisixSslDeleteError = Message{"010404", "Delete APISIX SSL failed"}
 
 	// 06 upstream
-	UpstreamRequestError      = Message{"010601", "upstream request parameters are abnormal: %s"}
-	UpstreamTransError        = Message{"010602", "upstream parameter conversion is abnormal: %s"}
-	DBUpstreamError           = Message{"010603", "upstream storage failure: %s"}
-	ApisixUpstreamCreateError = Message{"010604", "apisix upstream create failure: %s"}
-	ApisixUpstreamUpdateError = Message{"010605", "apisix upstream update failure: %s"}
-	ApisixUpstreamDeleteError = Message{"010606", "apisix upstream delete failure: %s"}
-	DBUpstreamDeleteError     = Message{"010607", "upstream delete failure: %s"}
+	UpstreamRequestError       = Message{"010601", "upstream request parameters are abnormal: %s"}
+	UpstreamTransError         = Message{"010602", "upstream parameter conversion is abnormal: %s"}
+	DBUpstreamError            = Message{"010603", "upstream storage failure: %s"}
+	ApisixUpstreamCreateError  = Message{"010604", "apisix upstream create failure: %s"}
+	ApisixUpstreamUpdateError  = Message{"010605", "apisix upstream update failure: %s"}
+	ApisixUpstreamDeleteError  = Message{"010606", "apisix upstream delete failure: %s"}
+	DBUpstreamDeleteError      = Message{"010607", "upstream delete failure: %s"}
+	DBUpstreamReduplicateError = Message{"010608", "Upstream name is reduplicate : %s"}
 
 	ApisixConsumerCreateError = Message{"010702", "Create APISIX Consumer failed"}
 	ApisixConsumerUpdateError = Message{"010703", "Update APISIX Consumer failed"}
