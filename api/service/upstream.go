@@ -72,6 +72,20 @@ type UpstreamResponse struct {
 	Upstream
 }
 
+type UpstreamNameResponse struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+func (u *UpstreamDao) Parse2NameResponse() (*UpstreamNameResponse, error) {
+	// upstream
+	unr := &UpstreamNameResponse{
+		ID:   u.ID.String(),
+		Name: u.Name,
+	}
+	return unr, nil
+}
+
 func (u *UpstreamDao) Parse2Response() (*UpstreamResponse, error) {
 	// upstream
 	aur := &ApisixUpstreamResponse{}
