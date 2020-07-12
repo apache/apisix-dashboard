@@ -1,13 +1,14 @@
 # phase-build
-FROM node:12-alpine as builder
+FROM circleci/node:latest-browsers as builder
 
 WORKDIR /usr/src/app/
 USER root
 
-COPY package.json /usr/src/app/
+COPY package.json ./
+COPY yarn.lock ./
 RUN yarn
 
-COPY . /usr/src/app/
+COPY ./ ./
 RUN yarn build && rm -rf /usr/src/app/node_modules
 
 # phase-run
