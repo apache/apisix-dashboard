@@ -125,8 +125,8 @@ func TestConsumerCurd(t *testing.T) {
 	err = ConsumerDelete(c1.String())
 	assert.Nil(err)
 
-	count2, _, err := ConsumerList(2, 1, "")
-	assert.Equal(count2, count-1)
+	_, err = ConsumerItem(c1.String())
+	assert.Equal(errno.DBReadError.Code, err.(*errno.ManagerError).Code)
 
 	err = ConsumerDelete(c2.String())
 	assert.Nil(err)

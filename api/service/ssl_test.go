@@ -344,8 +344,8 @@ func TestSslCurd(t *testing.T) {
 	err = SslDelete(u1.String())
 	assert.Nil(err)
 
-	count2, _, err := SslList(2, 1, -1, 0, 0, "", "desc")
-	assert.Equal(count2, count-1)
+	_, err = SslItem(u1.String())
+	assert.Equal(errno.DBReadError.Code, err.(*errno.ManagerError).Code)
 
 	err = SslDelete(u2.String())
 	assert.Nil(err)
