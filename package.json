@@ -33,8 +33,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint-staged",
-      "commit-msg": "node scripts/verifyCommit.js"
+      "pre-commit": "npm run lint-staged"
     }
   },
   "lint-staged": {
@@ -48,8 +47,12 @@
     "@ant-design/icons": "^4.2.1",
     "@ant-design/pro-layout": "6.0.0-2",
     "@ant-design/pro-table": "^2.3.3",
+    "@rjsf/antd": "^2.2.0",
+    "@rjsf/core": "^2.2.0",
     "antd": "^4.3.3",
     "classnames": "^2.2.6",
+    "dayjs": "^1.8.28",
+    "json-schema": "^0.2.5",
     "lodash": "^4.17.15",
     "moment": "^2.25.3",
     "nzh": "^1.0.3",
