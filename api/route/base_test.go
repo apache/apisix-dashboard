@@ -24,7 +24,6 @@ import (
 	"github.com/apisix/manager-api/filter"
 )
 
-var rootToken string
 var handler *apitest.APITest
 
 var (

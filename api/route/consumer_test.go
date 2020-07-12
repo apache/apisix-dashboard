@@ -43,7 +43,6 @@ func TestConsumer(t *testing.T) {
 			},
 			"desc": "test description"
 		}`).
-		Headers(map[string]string{"Authorization": rootToken}).
 		Expect(t).
 		Status(http.StatusOK).
 		End()
@@ -69,7 +68,6 @@ func TestConsumer(t *testing.T) {
 			},
 			"desc": "test desc"
 		}`).
-		Headers(map[string]string{"Authorization": rootToken}).
 		Expect(t).
 		Status(http.StatusOK).
 		End()
@@ -93,7 +91,6 @@ func TestConsumer(t *testing.T) {
 			},
 			"desc": "test description"
 		}`).
-		Headers(map[string]string{"Authorization": rootToken}).
 		Expect(t).
 		Status(http.StatusBadRequest).
 		End()
