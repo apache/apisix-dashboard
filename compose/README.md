@@ -5,6 +5,7 @@ $ cd incubator-apisix-dashboard/compose
 
 $ chmod +x ./manager_conf/build.sh
 
+# For most users in China, please use some proxy services like https://www.daocloud.io/mirror to speed up your Docker images pulling.
 $ docker-compose -p dashboard up -d
 ```
 
@@ -12,8 +13,7 @@ $ docker-compose -p dashboard up -d
 
 ### 1. login dashboard
 
-Visit `http://127.0.0.1/dashboard/` in the browser, 
-Enter `http://127.0.0.1:8080/apisix/admin` into the first input box, this is the backend management service address
+Visit `http://127.0.0.1/dashboard/` in the browser, Enter `http://127.0.0.1:8080/apisix/admin` into the first input box, this is the backend management service address
 
 ![login](pics/login.png)
 
@@ -46,11 +46,5 @@ Paste shared link
 ![login](pics/grafana_5.png)
 
 save, and you can see the metrics
- 
+
 ![login](pics/grafana_6.png)
- 
-
-
-
-
-
