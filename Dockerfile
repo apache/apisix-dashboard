@@ -1,5 +1,5 @@
 # phase-build
-FROM circleci/node:latest-browsers as builder
+FROM node:12-alpine as builder
 
 WORKDIR /usr/src/app/
 USER root
