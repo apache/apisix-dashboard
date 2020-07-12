@@ -8,7 +8,10 @@ export const fetchList = (
 ) => {
   const [expire_start, expire_end] = (props.expire_range || '').split(':');
   let queryObj = omit(props, 'expire_range', '_timestamp');
-  queryObj = pickBy(Object.assign({}, queryObj, { expire_start, expire_end, search }), identity);
+  queryObj = pickBy(
+    Object.assign({}, queryObj, { expire_start, expire_end, sni: search }),
+    identity,
+  );
   const query = querystring.encode(queryObj);
   return request<{ count: number; list: SSLModule.ResSSL[] }>(
     `/ssls?page=${current}&size=${pageSize}&${query}`,
