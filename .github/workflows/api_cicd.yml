@@ -1,0 +1,64 @@
+name: API CI && CD
+
+on:
+  push:
+    branches: 
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      etcd:
+        image: bitnami/etcd:3.3.13-r80
+        ports:
+          - 2379:2379
+          - 2380:2380
+        env:
+          ALLOW_NONE_AUTHENTICATION: yes
+
+      apisix:
+        image: johz/apisix:v1.4-github-action
+        env:
+          APISIX_ETCD_HOST: http://etcd:2379
+        ports:
+          - 9080:9080
+
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: 123456
+        ports:
+            - '3306:3306'
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: setting up database
+      run: |
+        mysql -h 127.0.0.1 --port 3306 -u root -p123456  < ./api/script/db/schema.sql
+
+    - name: setup go
+      uses: actions/setup-go@v1
+      with:
+        go-version: '1.13'
+
+    - name: run test
+      working-directory: ./api
+      run: |
+        go test ./...
+
+    - uses: Azure/docker-login@v1
+      with:
+        login-server: apisixacr.azurecr.cn
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    - name: build and push docker image   
+      run: |
+        cd ./api
+        docker build . -t apisixacr.azurecr.cn/managerapi:${{ github.sha }}
+        docker push apisixacr.azurecr.cn/managerapi:${{ github.sha }}
