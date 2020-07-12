@@ -102,8 +102,8 @@ func ConsumerList(page, size int, search string) (int, []ConsumerDto, error) {
 	db := conf.DB().Table("consumers")
 
 	if search != "" {
-		db = db.Where("name like ? ", "%"+search+"%").
-			Or("description like ? ", "%"+search+"%")
+		db = db.Where("username like ? ", "%"+search+"%").
+			Or("`desc` like ? ", "%"+search+"%")
 	}
 
 	if err := db.Order("create_time desc").Offset((page - 1) * size).Limit(size).Find(&consumerList).Error; err != nil {
@@ -128,6 +128,10 @@ func ConsumerList(page, size int, search string) (int, []ConsumerDto, error) {
 }
 
 func ConsumerItem(id string) (*ConsumerDto, error) {
+	if id == "" {
+		return nil, errno.New(errno.InvalidParam)
+	}
+
 	consumer := &Consumer{}
 	if err := conf.DB().Table("consumers").Where("id = ?", id).First(consumer).Error; err != nil {
 		e := errno.New(errno.DBReadError, err.Error())
@@ -144,6 +148,14 @@ func ConsumerCreate(param interface{}, id string) error {
 	req := &ConsumerDto{}
 	req.Parse(param)
 
+	if req.Username == "" {
+		return errno.New(errno.InvalidParamDetail, "username is required")
+	}
+
+	if len(req.Desc) > 200 {
+		return errno.New(errno.InvalidParamDetail, "description is too long")
+	}
+
 	exists := Consumer{}
 	conf.DB().Table("consumers").Where("username = ?", req.Username).First(&exists)
 	if exists != (Consumer{}) {
@@ -151,10 +163,29 @@ func ConsumerCreate(param interface{}, id string) error {
 		return e
 	}
 
+	// trans
+	tx := conf.DB().Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	consumer := &Consumer{}
+	consumer.Transfer(req)
+
+	// update mysql
+	consumer.ID = uuid.FromStringOrNil(id)
+	if err := tx.Create(consumer).Error; err != nil {
+		tx.Rollback()
+		return errno.New(errno.DBWriteError, err.Error())
+	}
+
 	apisixConsumer := &ApisixConsumer{}
 	apisixConsumer.Transfer(req)
 
 	if _, err := apisixConsumer.PutConsumerToApisix(req.Username); err != nil {
+		tx.Rollback()
 		if _, ok := err.(*errno.HttpError); ok {
 			return err
 		}
@@ -162,33 +193,56 @@ func ConsumerCreate(param interface{}, id string) error {
 		return e
 	}
 
-	consumer := &Consumer{}
-	consumer.Transfer(req)
-
-	// update mysql
-	consumer.ID = uuid.FromStringOrNil(id)
-	if err := conf.DB().Create(consumer).Error; err != nil {
-		return errno.New(errno.DBWriteError, err.Error())
-	}
+	tx.Commit()
 
 	return nil
 }
 
 func ConsumerUpdate(param interface{}, id string) error {
+	if id == "" {
+		return errno.New(errno.InvalidParam)
+	}
+
 	req := &ConsumerDto{}
 	req.Parse(param)
+	if req == nil {
+		return errno.New(errno.InvalidParam)
+	}
 
-	exists := Consumer{}
-	conf.DB().Table("consumers").Where("username = ?", req.Username).First(&exists)
-	if exists != (Consumer{}) && exists.ID != req.ID {
-		e := errno.New(errno.DuplicateUserName)
-		return e
+	req.ID = uuid.FromStringOrNil(id)
+	if req.Username != "" {
+		exists := Consumer{}
+		conf.DB().Table("consumers").Where("username = ?", req.Username).First(&exists)
+		if exists != (Consumer{}) && exists.ID != req.ID {
+			e := errno.New(errno.DuplicateUserName)
+			return e
+		}
+	}
+	// trans
+	tx := conf.DB().Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// update mysql
+	consumer := &Consumer{}
+	consumer.Transfer(req)
+	data := Consumer{Desc: consumer.Desc, Plugins: consumer.Plugins}
+	if req.Username != "" {
+		data.Username = req.Username
+	}
+	if err := tx.Model(&consumer).Updates(data).Error; err != nil {
+		tx.Rollback()
+		return errno.New(errno.DBWriteError, err.Error())
 	}
 
 	apisixConsumer := &ApisixConsumer{}
 	apisixConsumer.Transfer(req)
 
 	if _, err := apisixConsumer.PutConsumerToApisix(req.Username); err != nil {
+		tx.Rollback()
 		if _, ok := err.(*errno.HttpError); ok {
 			return err
 		}
@@ -196,18 +250,15 @@ func ConsumerUpdate(param interface{}, id string) error {
 		return e
 	}
 
-	// update mysql
-	consumer := &Consumer{}
-	consumer.Transfer(req)
-	consumer.ID = uuid.FromStringOrNil(id)
-	if err := conf.DB().Model(&consumer).Updates(consumer).Error; err != nil {
-		return errno.New(errno.DBWriteError, err.Error())
-	}
+	tx.Commit()
 
 	return nil
 }
 
 func ConsumerDelete(id string) error {
+	if id == "" {
+		return errno.New(errno.InvalidParam)
+	}
 	//
 	consumer := &Consumer{}
 	if err := conf.DB().Table("consumers").Where("id = ?", id).First(consumer).Error; err != nil {
@@ -215,17 +266,31 @@ func ConsumerDelete(id string) error {
 		return e
 	}
 
+	// trans
+	tx := conf.DB().Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// delete from mysql
+	if err := conf.DB().Delete(consumer).Error; err != nil {
+		tx.Rollback()
+		return errno.New(errno.DBDeleteError, err.Error())
+	}
+
+	//delete from apisix
 	if _, err := consumer.DeleteConsumerFromApisix(); err != nil {
+		tx.Rollback()
 		if _, ok := err.(*errno.HttpError); ok {
 			return err
 		}
 		e := errno.New(errno.ApisixConsumerDeleteError, err.Error())
 		return e
 	}
-	// delete from mysql
-	if err := conf.DB().Delete(consumer).Error; err != nil {
-		return errno.New(errno.DBDeleteError, err.Error())
-	}
+
+	tx.Commit()
 
 	return nil
 }
@@ -268,4 +333,17 @@ func (req *Consumer) DeleteConsumerFromApisix() (*ApisixConsumerResponse, error)
 			return &arresp, nil
 		}
 	}
+}
+
+func GetConsumerByUserName(name string) (*Consumer, error) {
+	if name == "" {
+		return nil, errno.New(errno.InvalidParam)
+	}
+	consumer := &Consumer{}
+	if err := conf.DB().Table("consumers").Where("username = ?", name).First(consumer).Error; err != nil {
+		e := errno.New(errno.NotFoundError, err.Error())
+		return nil, e
+	}
+
+	return consumer, nil
 }

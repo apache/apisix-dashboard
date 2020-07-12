@@ -17,12 +17,15 @@
 package service
 
 import (
+	"crypto/md5"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/errno"
@@ -37,6 +40,7 @@ type Ssl struct {
 	Snis          string `json:"snis"`
 	Status        uint64 `json:"status"`
 	PublicKey     string `json:"public_key,omitempty"`
+	PublicKeyHash string `json:"public_key_hash,omitempty"`
 }
 
 type SslDto struct {
@@ -69,8 +73,9 @@ type SslNode struct {
 
 func (req *SslRequest) Parse(body interface{}) {
 	if err := json.Unmarshal(body.([]byte), req); err != nil {
+		logger.Info("req:")
+		logger.Info(req)
 		req = nil
-		logger.Error(errno.FromMessage(errno.RouteRequestError, err.Error()).Msg)
 	}
 }
 
@@ -91,7 +96,7 @@ func (sslDto *SslDto) Parse(ssl *Ssl) error {
 	return nil
 }
 
-func SslList(page, size, status, expireStart, expireEnd int, sni string) (int, []SslDto, error) {
+func SslList(page, size, status, expireStart, expireEnd int, sni, sortType string) (int, []SslDto, error) {
 	var count int
 	sslList := []Ssl{}
 	db := conf.DB().Table("ssls")
@@ -109,7 +114,12 @@ func SslList(page, size, status, expireStart, expireEnd int, sni string) (int, [
 		db = db.Where("validity_end <= ? ", expireEnd)
 	}
 
-	if err := db.Order("validity_end desc").Offset((page - 1) * size).Limit(size).Find(&sslList).Error; err != nil {
+	sortType = strings.ToLower(sortType)
+	if sortType != "desc" {
+		sortType = "asc"
+	}
+
+	if err := db.Order("validity_end " + sortType).Offset((page - 1) * size).Limit(size).Find(&sslList).Error; err != nil {
 		e := errno.New(errno.DBReadError, err.Error())
 		return 0, nil, e
 	}
@@ -131,7 +141,11 @@ func SslList(page, size, status, expireStart, expireEnd int, sni string) (int, [
 }
 
 func SslItem(id string) (*SslDto, error) {
+	if id == "" {
+		return nil, errno.New(errno.InvalidParam)
+	}
 	ssl := &Ssl{}
+
 	if err := conf.DB().Table("ssls").Where("id = ?", id).First(ssl).Error; err != nil {
 		e := errno.New(errno.DBReadError, err.Error())
 		return nil, e
@@ -166,53 +180,126 @@ func SslCreate(param interface{}, id string) error {
 	sslReq := &SslRequest{}
 	sslReq.Parse(param)
 
-	ssl, err := ParseCert(sslReq.PublicKey, sslReq.PrivateKey)
+	if sslReq.PrivateKey == "" {
+		return errno.New(errno.InvalidParamDetail, "Key is required")
+	}
+	if sslReq.PublicKey == "" {
+		return errno.New(errno.InvalidParamDetail, "Cert is required")
+	}
 
+	sslReq.PublicKey = strings.TrimSpace(sslReq.PublicKey)
+	sslReq.PrivateKey = strings.TrimSpace(sslReq.PrivateKey)
+
+	ssl, err := ParseCert(sslReq.PublicKey, sslReq.PrivateKey)
 	if err != nil {
 		e := errno.FromMessage(errno.SslParseError, err.Error())
 		return e
 	}
 
-	// first admin api
+	ssl.ID = uuid.FromStringOrNil(id)
+	ssl.Status = 1
+	data := []byte(ssl.PublicKey)
+	hash := md5.Sum(data)
+	ssl.PublicKeyHash = fmt.Sprintf("%x", hash)
+
+	//check hash
+	exists := Ssl{}
+	conf.DB().Table("ssls").Where("public_key_hash = ?", ssl.PublicKeyHash).First(&exists)
+	if exists != (Ssl{}) {
+		e := errno.New(errno.DuplicateSslCert)
+		return e
+	}
+
+	//check sni
 	var snis []string
 	_ = json.Unmarshal([]byte(ssl.Snis), &snis)
 	sslReq.Snis = snis
 
+	// trans
+	tx := conf.DB().Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// update mysql
+	if err := tx.Create(ssl).Error; err != nil {
+		tx.Rollback()
+		return errno.New(errno.DBWriteError, err.Error())
+	}
+
+	//admin api
+
 	if _, err := sslReq.PutToApisix(id); err != nil {
+		tx.Rollback()
 		if _, ok := err.(*errno.HttpError); ok {
 			return err
 		}
 		e := errno.New(errno.ApisixSslCreateError, err.Error())
 		return e
 	}
-	// then mysql
-	ssl.ID = uuid.FromStringOrNil(id)
-	ssl.Status = 1
 
-	if err := conf.DB().Create(ssl).Error; err != nil {
-		return errno.New(errno.DBWriteError, err.Error())
-	}
+	tx.Commit()
 
 	return nil
 }
 
 func SslUpdate(param interface{}, id string) error {
+	if id == "" {
+		return errno.New(errno.InvalidParam)
+	}
+
 	sslReq := &SslRequest{}
 	sslReq.Parse(param)
 
-	ssl, err := ParseCert(sslReq.PublicKey, sslReq.PrivateKey)
+	if sslReq.PrivateKey == "" {
+		return errno.New(errno.InvalidParamDetail, "Key is required")
+	}
+	if sslReq.PublicKey == "" {
+		return errno.New(errno.InvalidParamDetail, "Cert is required")
+	}
 
+	ssl, err := ParseCert(sslReq.PublicKey, sslReq.PrivateKey)
 	if err != nil {
-		e := errno.FromMessage(errno.SslParseError, err.Error())
+		return errno.FromMessage(errno.SslParseError, err.Error())
+	}
+
+	hash := md5.Sum([]byte(ssl.PublicKey))
+	ssl.ID = uuid.FromStringOrNil(id)
+	ssl.PublicKeyHash = fmt.Sprintf("%x", hash)
+
+	//check hash
+	exists := Ssl{}
+	conf.DB().Table("ssls").Where("public_key_hash = ?", ssl.PublicKeyHash).First(&exists)
+	if exists != (Ssl{}) && exists.ID != ssl.ID {
+		e := errno.New(errno.DuplicateSslCert)
 		return e
 	}
 
-	// first admin api
+	// trans
+	tx := conf.DB().Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	//sni check
 	var snis []string
 	_ = json.Unmarshal([]byte(ssl.Snis), &snis)
 	sslReq.Snis = snis
 
+	// update mysql
+	data := Ssl{PublicKey: ssl.PublicKey, Snis: ssl.Snis, ValidityStart: ssl.ValidityStart, ValidityEnd: ssl.ValidityEnd}
+	if err := tx.Model(&ssl).Updates(data).Error; err != nil {
+		tx.Rollback()
+		return errno.New(errno.DBWriteError, err.Error())
+	}
+
+	//admin api
 	if _, err := sslReq.PutToApisix(id); err != nil {
+		tx.Rollback()
 		if _, ok := err.(*errno.HttpError); ok {
 			return err
 		}
@@ -220,21 +307,37 @@ func SslUpdate(param interface{}, id string) error {
 		return e
 	}
 
-	// then mysql
-	ssl.ID = uuid.FromStringOrNil(id)
-	data := Ssl{PublicKey: ssl.PublicKey, Snis: ssl.Snis, ValidityStart: ssl.ValidityStart, ValidityEnd: ssl.ValidityEnd}
-	if err := conf.DB().Model(&ssl).Updates(data).Error; err != nil {
-		return errno.New(errno.DBWriteError, err.Error())
-	}
+	tx.Commit()
 
 	return nil
 }
 
 func SslPatch(param interface{}, id string) error {
+	if id == "" {
+		return errno.New(errno.InvalidParam)
+	}
+
 	sslReq := &SslRequest{}
 	sslReq.Parse(param)
 
+	// trans
+	tx := conf.DB().Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// update mysql
+	ssl := Ssl{}
+	ssl.ID = uuid.FromStringOrNil(id)
+	if err := tx.Model(&ssl).Update("status", sslReq.Status).Error; err != nil {
+		tx.Rollback()
+		return errno.New(errno.DBWriteError, err.Error())
+	}
+
 	if _, err := sslReq.PatchToApisix(id); err != nil {
+		tx.Rollback()
 		if _, ok := err.(*errno.HttpError); ok {
 			return err
 		}
@@ -242,32 +345,45 @@ func SslPatch(param interface{}, id string) error {
 		return e
 	}
 
-	ssl := Ssl{}
-	ssl.ID = uuid.FromStringOrNil(id)
-	if err := conf.DB().Model(&ssl).Update("status", sslReq.Status).Error; err != nil {
-		return errno.New(errno.DBWriteError, err.Error())
-	}
+	tx.Commit()
 
 	return nil
 }
 
 func SslDelete(id string) error {
+	if id == "" {
+		return errno.New(errno.InvalidParam)
+	}
+
+	// trans
+	tx := conf.DB().Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// delete from mysql
+	ssl := &Ssl{}
+	ssl.ID = uuid.FromStringOrNil(id)
+	if err := conf.DB().Delete(ssl).Error; err != nil {
+		tx.Rollback()
+		return errno.New(errno.DBDeleteError, err.Error())
+	}
+
 	// delete from apisix
 	request := &SslRequest{}
 	request.ID = id
 	if _, err := request.DeleteFromApisix(); err != nil {
+		tx.Rollback()
 		if _, ok := err.(*errno.HttpError); ok {
 			return err
 		}
 		e := errno.New(errno.ApisixSslDeleteError, err.Error())
 		return e
 	}
-	// delete from mysql
-	ssl := &Ssl{}
-	ssl.ID = uuid.FromStringOrNil(id)
-	if err := conf.DB().Delete(ssl).Error; err != nil {
-		return errno.New(errno.DBDeleteError, err.Error())
-	}
+
+	tx.Commit()
 
 	return nil
 }
@@ -403,4 +519,71 @@ func ParseCert(crt, key string) (*Ssl, error) {
 
 		return &ssl, nil
 	}
+}
+
+func CheckSniExists(param interface{}) error {
+	var hosts []string
+	if err := json.Unmarshal(param.([]byte), &hosts); err != nil {
+		return errno.FromMessage(errno.InvalidParam)
+	}
+
+	sslList := []Ssl{}
+	db := conf.DB().Table("ssls")
+	db = db.Where("`status` = ? ", 1)
+
+	condition := ""
+	args := []interface{}{}
+	first := true
+	for _, host := range hosts {
+		idx := strings.Index(host, "*")
+		keyword := strings.Replace(host, "*.", "", -1)
+		if idx == -1 {
+			if j := strings.Index(host, "."); j != -1 {
+				keyword = host[j:]
+				//just one `.`
+				if j := strings.Index(host[(j+1):], "."); j == -1 {
+					keyword = host
+				}
+			}
+		}
+		if first {
+			condition = condition + "`snis` like ?"
+		} else {
+			condition = condition + " or `snis` like ?"
+		}
+		first = false
+		args = append(args, "%"+keyword+"%")
+	}
+	db = db.Where(condition, args...)
+
+	if err := db.Find(&sslList).Error; err != nil {
+		return errno.FromMessage(errno.SslForSniNotExists, hosts[0])
+	}
+
+hre:
+	for _, host := range hosts {
+		for _, ssl := range sslList {
+			sslDto := SslDto{}
+			sslDto.Parse(&ssl)
+			for _, sni := range sslDto.Snis {
+				if sni == host {
+					continue hre
+				}
+				regx := strings.Replace(sni, ".", `\.`, -1)
+				regx = strings.Replace(regx, "*", `([^\.]+)`, -1)
+				regx = "^" + regx + "$"
+				if isOk, _ := regexp.MatchString(regx, host); isOk {
+					continue hre
+				}
+			}
+		}
+		return errno.FromMessage(errno.SslForSniNotExists, host)
+	}
+
+	return nil
+}
+
+func DeleteTestSslData() {
+	db := conf.DB().Table("ssls")
+	db.Where("snis LIKE ? OR (snis LIKE ? AND snis LIKE ? )", "%*.route.com%", "%r.com%", "%s.com%").Delete(Ssl{})
 }
