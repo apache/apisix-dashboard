@@ -7,7 +7,7 @@ import PanelSection from '@/components/PanelSection';
 interface Props extends RouteModule.Data {}
 
 const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) => {
-  const { upstreamHeaderList } = data.step2Data;
+  const { upstreamHeaderList = [] } = data.step2Data;
   const [visible, setVisible] = useState(false);
   const [modalForm] = Form.useForm();
   const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
