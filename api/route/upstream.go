@@ -101,31 +101,57 @@ func createUpstream(c *gin.Context) {
 	}
 	ur.Id = uid
 	fmt.Println(ur)
-	if aur, err := ur.Parse2Apisix(); err != nil {
-		e := errno.FromMessage(errno.UpstreamTransError, err.Error())
-		logger.Error(e.Msg)
-		c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
+	// mysql
+	if ud, err := service.Trans2UpstreamDao(nil, ur); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err.Response())
 		return
 	} else {
-		// apisix
-		if resp, err := aur.Create(); err != nil {
-			e := errno.FromMessage(errno.ApisixUpstreamCreateError, err.Error())
+		// transaction
+		db := conf.DB()
+		tx := db.Begin()
+		defer func() {
+			if r := recover(); r != nil {
+				tx.Rollback()
+			}
+		}()
+		if err := tx.Create(ud).Error; err != nil {
+			tx.Rollback()
+			e := errno.FromMessage(errno.DBUpstreamError, err.Error())
 			logger.Error(e.Msg)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
 			return
 		} else {
-			// mysql
-			fmt.Println(resp.UNode.UValue.Id)
-			fmt.Println(resp.UNode.UValue.Upstream.Nodes)
-			if ud, err := service.Trans2UpstreamDao(resp, ur); err != nil {
-				c.AbortWithStatusJSON(http.StatusInternalServerError, err.Response())
+			// apisix
+			if aur, err := ur.Parse2Apisix(); err != nil {
+				tx.Rollback()
+				e := errno.FromMessage(errno.UpstreamTransError, err.Error())
+				logger.Error(e.Msg)
+				c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
 				return
 			} else {
-				if err := conf.DB().Create(ud).Error; err != nil {
-					e := errno.FromMessage(errno.DBUpstreamError, err.Error())
-					logger.Error(e.Msg)
-					c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
-					return
+				if resp, err := aur.Create(); err != nil {
+					tx.Rollback()
+					if httpError, ok := err.(*errno.HttpError); ok {
+						c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
+						return
+					} else {
+						e := errno.FromMessage(errno.ApisixUpstreamCreateError, err.Error())
+						logger.Error(e.Msg)
+						c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+						return
+					}
+				} else {
+					if err := tx.Commit().Error; err == nil {
+						if ud, err := service.Trans2UpstreamDao(resp, ur); err != nil {
+							e := errno.FromMessage(errno.DBUpstreamError, err.Error())
+							logger.Error(e.Msg)
+						} else {
+							if err := conf.DB().Model(&service.UpstreamDao{}).Update(ud).Error; err != nil {
+								e := errno.FromMessage(errno.DBUpstreamError, err.Error())
+								logger.Error(e.Msg)
+							}
+						}
+					}
 				}
 			}
 		}
@@ -184,7 +210,6 @@ func listUpstream(c *gin.Context) {
 }
 func updateUpstream(c *gin.Context) {
 	uid := c.Param("uid")
-	// todo 参数校验
 	param, exist := c.Get("requestBody")
 	if !exist || len(param.([]byte)) < 1 {
 		e := errno.FromMessage(errno.RouteRequestError, "upstream update with no post data")
@@ -201,30 +226,57 @@ func updateUpstream(c *gin.Context) {
 		return
 	}
 	ur.Id = uid
-	fmt.Println(ur)
-	if aur, err := ur.Parse2Apisix(); err != nil {
-		e := errno.FromMessage(errno.UpstreamTransError, err.Error())
-		logger.Error(e.Msg)
-		c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
+	// mysql
+	if ud, err := service.Trans2UpstreamDao(nil, ur); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err.Response())
 		return
 	} else {
-		// apisix
-		if resp, err := aur.Update(); err != nil {
-			e := errno.FromMessage(errno.ApisixUpstreamUpdateError, err.Error())
+		// transaction
+		db := conf.DB()
+		tx := db.Begin()
+		defer func() {
+			if r := recover(); r != nil {
+				tx.Rollback()
+			}
+		}()
+		if err := tx.Model(&service.UpstreamDao{}).Update(ud).Error; err != nil {
+			tx.Rollback()
+			e := errno.FromMessage(errno.DBUpstreamError, err.Error())
 			logger.Error(e.Msg)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
 			return
 		} else {
-			// mysql
-			if ud, err := service.Trans2UpstreamDao(resp, ur); err != nil {
-				c.AbortWithStatusJSON(http.StatusInternalServerError, err.Response())
+			// apisix
+			if aur, err := ur.Parse2Apisix(); err != nil {
+				tx.Rollback()
+				e := errno.FromMessage(errno.UpstreamTransError, err.Error())
+				logger.Error(e.Msg)
+				c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
 				return
 			} else {
-				if err := conf.DB().Model(&service.UpstreamDao{}).Update(ud).Error; err != nil {
-					e := errno.FromMessage(errno.DBUpstreamError, err.Error())
-					logger.Error(e.Msg)
-					c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
-					return
+				if resp, err := aur.Update(); err != nil {
+					tx.Rollback()
+					if httpError, ok := err.(*errno.HttpError); ok {
+						c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
+						return
+					} else {
+						e := errno.FromMessage(errno.ApisixUpstreamUpdateError, err.Error())
+						logger.Error(e.Msg)
+						c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+						return
+					}
+				} else {
+					if err := tx.Commit().Error; err == nil {
+						if ud, err := service.Trans2UpstreamDao(resp, ur); err != nil {
+							e := errno.FromMessage(errno.DBUpstreamError, err.Error())
+							logger.Error(e.Msg)
+						} else {
+							if err := conf.DB().Model(&service.UpstreamDao{}).Update(ud).Error; err != nil {
+								e := errno.FromMessage(errno.DBUpstreamError, err.Error())
+								logger.Error(e.Msg)
+							}
+						}
+					}
 				}
 			}
 		}
@@ -242,23 +294,41 @@ func deleteUpstream(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
 		return
 	}
-	// delete from apisix
-	request := &service.ApisixUpstreamRequest{Id: uid}
-	if _, err := request.Delete(); err != nil {
-		e := errno.FromMessage(errno.ApisixUpstreamDeleteError, err.Error())
+	db := conf.DB()
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	// delete from mysql
+	rd := &service.UpstreamDao{}
+	rd.ID = uuid.FromStringOrNil(uid)
+	if err := tx.Delete(rd).Error; err != nil {
+		tx.Rollback()
+		e := errno.FromMessage(errno.DBUpstreamDeleteError, err.Error())
 		logger.Error(e.Msg)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
 		return
 	} else {
-		// delete from mysql
-		rd := &service.UpstreamDao{}
-		rd.ID = uuid.FromStringOrNil(uid)
-		if err := conf.DB().Delete(rd).Error; err != nil {
-			e := errno.FromMessage(errno.DBUpstreamDeleteError, err.Error())
-			logger.Error(e.Msg)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
-			return
+		// delete from apisix
+		request := &service.ApisixUpstreamRequest{Id: uid}
+		if _, err := request.Delete(); err != nil {
+			tx.Rollback()
+			if httpError, ok := err.(*errno.HttpError); ok {
+				c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
+				return
+			} else {
+				e := errno.FromMessage(errno.ApisixUpstreamDeleteError, err.Error())
+				logger.Error(e.Msg)
+				c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+				return
+			}
 		}
+	}
+	if err := tx.Commit().Error; err != nil {
+		e := errno.FromMessage(errno.ApisixUpstreamDeleteError, err.Error())
+		logger.Error(e.Msg)
 	}
 	c.Data(http.StatusOK, service.ContentType, errno.Success())
 }

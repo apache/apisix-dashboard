@@ -243,9 +243,10 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 	//Plugins
 	requestPlugins := utils.CopyMap(o.Plugins)
 	delete(requestPlugins, REDIRECT)
+	delete(requestPlugins, PROXY_REWRIETE)
 
 	// check if upstream is not exist
-	if o.Upstream == nil {
+	if o.Upstream == nil && o.UpstreamId == "" {
 		upstreamProtocol = ""
 		upstreamHeader = nil
 		upstreamPath = nil
@@ -262,6 +263,7 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 		Hosts:            o.Hosts,
 		Redirect:         redirect,
 		Upstream:         o.Upstream,
+		UpstreamId:       o.UpstreamId,
 		UpstreamProtocol: upstreamProtocol,
 		UpstreamPath:     upstreamPath,
 		UpstreamHeader:   upstreamHeader,
@@ -523,14 +525,16 @@ func ToRoute(routeRequest *RouteRequest,
 	}
 	rd.ID = u4
 	// content_admin_api
-	if respStr, err := json.Marshal(resp); err != nil {
-		e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
-		return nil, e
-	} else {
-		rd.ContentAdminApi = string(respStr)
+	if resp != nil {
+		if respStr, err := json.Marshal(resp); err != nil {
+			e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
+			return nil, e
+		} else {
+			rd.ContentAdminApi = string(respStr)
+		}
 	}
 	// hosts
-	hosts := resp.Node.Value.Hosts
+	hosts := routeRequest.Hosts
 	if hb, err := json.Marshal(hosts); err != nil {
 		e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
 		logger.Warn(e.Msg)
@@ -538,7 +542,7 @@ func ToRoute(routeRequest *RouteRequest,
 		rd.Hosts = string(hb)
 	}
 	// uris
-	uris := resp.Node.Value.Uris
+	uris := routeRequest.Uris
 	if ub, err := json.Marshal(uris); err != nil {
 		e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
 		logger.Warn(e.Msg)
@@ -546,8 +550,8 @@ func ToRoute(routeRequest *RouteRequest,
 		rd.Uris = string(ub)
 	}
 	// upstreamNodes
-	if resp.Node.Value.Upstream != nil {
-		nodes := resp.Node.Value.Upstream.Nodes
+	if routeRequest.Upstream != nil {
+		nodes := routeRequest.Upstream.Nodes
 		ips := make([]string, 0)
 		for k, _ := range nodes {
 			ips = append(ips, k)

@@ -134,30 +134,45 @@ func listRoute(c *gin.Context) {
 
 func deleteRoute(c *gin.Context) {
 	rid := c.Param("rid")
-	// todo  params check
-	// delete from apisix
-	request := &service.ApisixRouteRequest{}
-	if _, err := request.Delete(rid); err != nil {
-		e := errno.FromMessage(errno.ApisixRouteDeleteError, err.Error())
+	db := conf.DB()
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	// delete from mysql
+	rd := &service.Route{}
+	rd.ID = uuid.FromStringOrNil(rid)
+	if err := conf.DB().Delete(rd).Error; err != nil {
+		tx.Rollback()
+		e := errno.FromMessage(errno.DBRouteDeleteError, err.Error())
 		logger.Error(e.Msg)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
 		return
 	} else {
-		// delete from mysql
-		rd := &service.Route{}
-		rd.ID = uuid.FromStringOrNil(rid)
-		if err := conf.DB().Delete(rd).Error; err != nil {
-			e := errno.FromMessage(errno.DBRouteDeleteError, err.Error())
-			logger.Error(e.Msg)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
-			return
+		request := &service.ApisixRouteRequest{}
+		if _, err := request.Delete(rid); err != nil {
+			tx.Rollback()
+			if httpError, ok := err.(*errno.HttpError); ok {
+				c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
+				return
+			} else {
+				e := errno.FromMessage(errno.ApisixRouteDeleteError, err.Error())
+				logger.Error(e.Msg)
+				c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+				return
+			}
 		}
+	}
+	if err := tx.Commit().Error; err != nil {
+		e := errno.FromMessage(errno.ApisixRouteDeleteError, err.Error())
+		logger.Error(e.Msg)
 	}
 	c.Data(http.StatusOK, service.ContentType, errno.Success())
 }
 func updateRoute(c *gin.Context) {
 	rid := c.Param("rid")
-	// todo  params check
 	param, exist := c.Get("requestBody")
 	if !exist || len(param.([]byte)) < 1 {
 		e := errno.FromMessage(errno.RouteRequestError, "route create with no post data")
@@ -173,27 +188,52 @@ func updateRoute(c *gin.Context) {
 		return
 	}
 	logger.Info(routeRequest.Plugins)
-
+	db := conf.DB()
 	arr := service.ToApisixRequest(routeRequest)
-	logger.Info(arr)
-	if resp, err := arr.Update(rid); err != nil {
-		e := errno.FromMessage(errno.ApisixRouteUpdateError, err.Error())
-		logger.Error(e.Msg)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+	var resp *service.ApisixRouteResponse
+	if rd, err := service.ToRoute(routeRequest, arr, uuid.FromStringOrNil(rid), nil); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err.Response())
 		return
 	} else {
-		// update mysql
-		if rd, err := service.ToRoute(routeRequest, arr, uuid.FromStringOrNil(rid), resp); err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, err.Response())
+		tx := db.Begin()
+		defer func() {
+			if r := recover(); r != nil {
+				tx.Rollback()
+			}
+		}()
+		logger.Info(rd)
+		if err := tx.Model(&service.Route{}).Update(rd).Error; err != nil {
+			// rollback
+			tx.Rollback()
+			e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
 			return
 		} else {
-			if err := conf.DB().Model(&service.Route{}).Update(rd).Error; err != nil {
+			if resp, err = arr.Update(rid); err != nil {
+				tx.Rollback()
+				if httpError, ok := err.(*errno.HttpError); ok {
+					c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
+					return
+				} else {
+					e := errno.FromMessage(errno.ApisixRouteCreateError, err.Error())
+					logger.Error(e.Msg)
+					c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+					return
+				}
+			}
+		}
+		if err := tx.Commit().Error; err == nil {
+			// update content_admin_api
+			if rd, err := service.ToRoute(routeRequest, arr, uuid.FromStringOrNil(rid), resp); err != nil {
 				e := errno.FromMessage(errno.DBRouteUpdateError, err.Error())
 				logger.Error(e.Msg)
-				c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
-				return
+			} else {
+				if err := conf.DB().Model(&service.Route{}).Update(rd).Error; err != nil {
+					e := errno.FromMessage(errno.DBRouteUpdateError, err.Error())
+					logger.Error(e.Msg)
+				}
 			}
-			logger.Info(rd)
 		}
 	}
 	c.Data(http.StatusOK, service.ContentType, errno.Success())
@@ -235,7 +275,6 @@ func findRoute(c *gin.Context) {
 func createRoute(c *gin.Context) {
 	u4 := uuid.NewV4()
 	rid := u4.String()
-	// todo params check
 	param, exist := c.Get("requestBody")
 	if !exist || len(param.([]byte)) < 1 {
 		e := errno.FromMessage(errno.RouteRequestError, "route create with no post data")
@@ -251,26 +290,51 @@ func createRoute(c *gin.Context) {
 		return
 	}
 	logger.Info(routeRequest.Plugins)
-
+	db := conf.DB()
 	arr := service.ToApisixRequest(routeRequest)
-	logger.Info(arr)
-	if resp, err := arr.Create(rid); err != nil {
-		e := errno.FromMessage(errno.ApisixRouteCreateError, err.Error())
-		logger.Error(e.Msg)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+	var resp *service.ApisixRouteResponse
+	if rd, err := service.ToRoute(routeRequest, arr, u4, nil); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err.Response())
 		return
 	} else {
-		// update mysql
-		if rd, err := service.ToRoute(routeRequest, arr, u4, resp); err != nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, err.Response())
+		tx := db.Begin()
+		defer func() {
+			if r := recover(); r != nil {
+				tx.Rollback()
+			}
+		}()
+		logger.Info(rd)
+		if err := tx.Create(rd).Error; err != nil {
+			// rollback
+			tx.Rollback()
+			e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
 			return
 		} else {
-			logger.Info(rd)
-			if err := conf.DB().Create(rd).Error; err != nil {
-				e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
+			if resp, err = arr.Create(rid); err != nil {
+				tx.Rollback()
+				if httpError, ok := err.(*errno.HttpError); ok {
+					c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
+					return
+				} else {
+					e := errno.FromMessage(errno.ApisixRouteCreateError, err.Error())
+					logger.Error(e.Msg)
+					c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+					return
+				}
+			}
+		}
+		if err := tx.Commit().Error; err == nil {
+			// update content_admin_api
+			if rd, err := service.ToRoute(routeRequest, arr, u4, resp); err != nil {
+				e := errno.FromMessage(errno.DBRouteUpdateError, err.Error())
 				logger.Error(e.Msg)
-				c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
-				return
+			} else {
+				if err := conf.DB().Model(&service.Route{}).Update(rd).Error; err != nil {
+					e := errno.FromMessage(errno.DBRouteUpdateError, err.Error())
+					logger.Error(e.Msg)
+				}
 			}
 		}
 	}
