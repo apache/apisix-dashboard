@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Steps, notification } from 'antd';
 import { useForm } from 'antd/es/form/util';
+import { history } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
-import PluginPage from '@/components/PluginPage/PluginPage';
-import { history } from 'umi';
+import PluginPage from '@/components/PluginPage';
 import { PLUGIN_MAPPER_SOURCE } from '@/components/PluginPage/data';
 
 import Step1 from './components/Step1';
