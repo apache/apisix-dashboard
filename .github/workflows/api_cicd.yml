@@ -50,8 +50,9 @@ jobs:
       with:
         go-version: '1.13'
 
-    - run: |
-        cd ./api
+    - name: run test
+      working-directory: ./api
+      run: |
         go test ./...
 
     - uses: Azure/docker-login@v1
@@ -59,8 +60,9 @@ jobs:
         login-server: apisixacr.azurecr.cn
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
-    
-    - run: |
+
+    - name: build and push docker image   
+      run: |
         cd ./api
         docker build . -t apisixacr.azurecr.cn/managerapi:${{ github.sha }}
         docker push apisixacr.azurecr.cn/managerapi:${{ github.sha }}
