@@ -1,7 +1,7 @@
 {
   "conf":{
     "mysql":{
-      "address": "127.0.0.1:8888",
+      "address": "127.0.0.1:3306",
       "user": "root",
       "password": "123456",
       "maxConns": 50,
@@ -12,7 +12,7 @@
       "host": "localhost"
     },
     "apisix":{
-      "base_url": "http://apisix:9080/apisix/admin",
+      "base_url": "http://127.0.0.1:9080/apisix/admin",
       "api_key": "edd1c9f034335f136f87ad84b625c8f1"
     }
   }
