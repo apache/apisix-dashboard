@@ -57,5 +57,5 @@ jobs:
         go-version: '1.13'
 
     - run: |
-      cd ./api
-      go run test ./...
+        cd ./api
+        go test ./...
