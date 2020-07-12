@@ -167,11 +167,13 @@ func Trans2UpstreamDao(resp *ApisixUpstreamResponse, r *UpstreamRequest) (*Upstr
 			u.Content = string(content)
 		}
 		// content_admin_api
-		if respStr, err := json.Marshal(resp); err != nil {
-			e := errno.FromMessage(errno.DBUpstreamError, err.Error())
-			return nil, e
-		} else {
-			u.ContentAdminApi = string(respStr)
+		if resp != nil {
+			if respStr, err := json.Marshal(resp); err != nil {
+				e := errno.FromMessage(errno.DBUpstreamError, err.Error())
+				return nil, e
+			} else {
+				u.ContentAdminApi = string(respStr)
+			}
 		}
 		return u, nil
 	}
