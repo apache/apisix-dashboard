@@ -1,12 +1,17 @@
-name: API CI && CD
+name: API CI
 
 on:
   push:
-    branches: 
+    branches:
+      - master
+  pull_request:
+    branches:
       - master
 
 jobs:
-  build:
+
+  run-test:
+
     runs-on: ubuntu-latest
 
     services:
@@ -35,8 +40,9 @@ jobs:
 
 
     steps:
+
     - uses: actions/checkout@v2
-    
+
     - name: setting up database
       run: |
         mysql -h 127.0.0.1 --port 8888 -u root -p123456  < ./api/script/db/schema.sql
@@ -49,13 +55,3 @@ jobs:
       uses: cedrickring/golang-action@1.5.2
       working-directory: ./api
 
-    - uses: Azure/docker-login@v1
-      with:
-        login-server: apisixacr.azurecr.cn
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-    
-    - run: |
-        cd ./api
-        docker build . -t apisixacr.azurecr.cn/managerapi:${{ github.sha }}
-        docker push apisixacr.azurecr.cn/managerapi:${{ github.sha }}
