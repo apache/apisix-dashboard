@@ -182,6 +182,9 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 	if o.Upstream != nil && o.Upstream.EnableWebsocket {
 		protocols = append(protocols, WEBSOCKET)
 	}
+	if o.UpstreamId != "" {
+		protocols = append(protocols, WEBSOCKET)
+	}
 	flag := true
 	for _, t := range o.Vars {
 		if t[0] == SCHEME {
@@ -221,7 +224,9 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 						upstreamProtocol = pr.Scheme
 					}
 					upstreamHeader = pr.Headers
-					if pr.RegexUri == nil || len(pr.RegexUri) < 2 {
+					if (pr.RegexUri == nil || len(pr.RegexUri) < 2) && pr.Uri == "" {
+						upstreamPath = nil
+					} else if pr.RegexUri == nil || len(pr.RegexUri) < 2 {
 						upstreamPath.UPathType = UPATHTYPE_STATIC
 						upstreamPath.To = pr.Uri
 					} else {
@@ -316,7 +321,7 @@ func (r Redirect) MarshalJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	if r.HttpToHttps {
 		m["http_to_https"] = true
-	} else {
+	} else if r.Uri != "" {
 		m["code"] = r.Code
 		m["uri"] = r.Uri
 	}
@@ -479,9 +484,10 @@ func ToApisixRequest(routeRequest *RouteRequest) *ApisixRouteRequest {
 	} else {
 		arr.Vars = nil
 	}
-
+	// upstreamId
+	arr.UpstreamId = routeRequest.UpstreamId
 	// upstream protocol
-	if arr.Upstream != nil {
+	if arr.Upstream != nil || arr.UpstreamId != "" {
 		pr := &ProxyRewrite{}
 		pr.Scheme = routeRequest.UpstreamProtocol
 		// upstream path
@@ -496,7 +502,7 @@ func ToApisixRequest(routeRequest *RouteRequest) *ApisixRouteRequest {
 		}
 		// upstream headers
 		pr.Headers = routeRequest.UpstreamHeader
-		if proxyPath != nil {
+		if proxyPath != nil || pr.Scheme != UPATHTYPE_KEEP || (pr.Headers != nil && len(pr.Headers) > 0) {
 			plugins[PROXY_REWRIETE] = pr
 		}
 	}
@@ -506,8 +512,7 @@ func ToApisixRequest(routeRequest *RouteRequest) *ApisixRouteRequest {
 	} else {
 		arr.Plugins = nil
 	}
-	// upstreamId
-	arr.UpstreamId = routeRequest.UpstreamId
+
 	return arr
 }
 
