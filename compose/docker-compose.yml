@@ -114,7 +114,7 @@ services:
 
   dashboard:
     build:
-      context: ./..
+      context: ./dashboard_conf
       dockerfile: Dockerfile
     restart: always
     ports:

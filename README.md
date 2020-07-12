@@ -2,7 +2,7 @@
 
 Dashboard for [Apache APISIX](https://github.com/apache/incubator-apisix-dashboard)
 
-## Deploy with Docker (currently)
+## Deploy with Docker (only support currently)
 
 Please refer to [Deploy with Docker README](./compose/README.md)
 
