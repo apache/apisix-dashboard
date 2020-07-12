@@ -13,7 +13,7 @@ $ docker-compose -p dashboard up -d
 ### 1. login dashboard
 
 Visit `http://127.0.0.1/dashboard/` in the browser, 
-Enter `http://127.0.0.1:8080/apisix/admin` into the first input box, this is the backend management service address
+Enter `http://127.0.0.1:9080/apisix/admin` into the first input box, this is the backend management service address
 
 ![login](pics/login.png)
 
