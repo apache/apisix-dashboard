@@ -14,31 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package main
+package route
 
 import (
-	"fmt"
-	"net/http"
-	"time"
+	"github.com/gin-contrib/pprof"
+	"github.com/gin-gonic/gin"
 
 	"github.com/apisix/manager-api/conf"
-	"github.com/apisix/manager-api/log"
-	"github.com/apisix/manager-api/route"
+	"github.com/apisix/manager-api/filter"
 )
 
-var logger = log.GetLogger()
-
-func main() {
-	// init
-	conf.InitializeMysql()
-	// routes
-	r := route.SetUpRouter()
-	addr := fmt.Sprintf(":%d", conf.ServerPort)
-	s := &http.Server{
-		Addr:         addr,
-		Handler:      r,
-		ReadTimeout:  time.Duration(1000) * time.Millisecond,
-		WriteTimeout: time.Duration(5000) * time.Millisecond,
+func SetUpRouter() *gin.Engine {
+	if conf.ENV != conf.LOCAL && conf.ENV != conf.BETA {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
 	}
-	s.ListenAndServe()
+	r := gin.New()
+
+	r.Use(filter.CORS(), filter.RequestId(), filter.RequestLogHandler(), filter.RecoverHandler())
+
+	AppendHealthCheck(r)
+	AppendRoute(r)
+	AppendSsl(r)
+	AppendPlugin(r)
+	AppendUpstream(r)
+	AppendConsumer(r)
+
+	pprof.Register(r)
+
+	return r
 }
