@@ -161,6 +161,22 @@ func createUpstream(c *gin.Context) {
 
 func findUpstream(c *gin.Context) {
 	uid := c.Param("uid")
+	upstream := &service.UpstreamDao{}
+	var count int
+	if err := conf.DB().Table("upstreams").Where("id=?", uid).Count(&count).Error; err != nil {
+		e := errno.FromMessage(errno.UpstreamRequestError, err.Error()+" upstream ID: "+uid)
+		logger.Error(e.Msg)
+		c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
+		return
+	} else {
+		if count < 1 {
+			e := errno.FromMessage(errno.UpstreamRequestError, " upstream ID: "+uid+" not exist")
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(e.Status, e.Response())
+			return
+		}
+	}
+	conf.DB().Table("upstreams").Where("id=?", uid).First(&upstream)
 	// find from apisix
 	aur := &service.ApisixUpstreamRequest{Id: uid}
 	if resp, err := aur.FindById(); err != nil {
@@ -188,9 +204,14 @@ func listUpstream(c *gin.Context) {
 		size = 10
 	}
 	db := conf.DB()
+	db = db.Table("upstreams")
+	if search, exist := c.GetQuery("search"); exist {
+		s := "%" + search + "%"
+		db = db.Where("name like ? or description like ? or nodes like ? ", s, s, s)
+	}
 	upstreamList := []service.UpstreamDao{}
 	var count int
-	if err := db.Order("update_time desc").Table("upstreams").Offset((page - 1) * size).Limit(size).Find(&upstreamList).Count(&count).Error; err != nil {
+	if err := db.Order("update_time desc").Offset((page - 1) * size).Limit(size).Find(&upstreamList).Error; err != nil {
 		e := errno.FromMessage(errno.RouteRequestError, err.Error())
 		logger.Error(e.Msg)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
@@ -202,6 +223,12 @@ func listUpstream(c *gin.Context) {
 			if err == nil {
 				responseList = append(responseList, response)
 			}
+		}
+		if err := db.Count(&count).Error; err != nil {
+			e := errno.FromMessage(errno.UpstreamRequestError, err.Error())
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+			return
 		}
 		result := &service.ListResponse{Count: count, Data: responseList}
 		resp, _ := json.Marshal(result)
