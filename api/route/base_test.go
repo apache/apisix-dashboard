@@ -18,16 +18,13 @@ package route
 
 import (
 	"github.com/api7/apitest"
-	"github.com/gin-gonic/gin"
 
 	"github.com/apisix/manager-api/conf"
-	"github.com/apisix/manager-api/filter"
 )
 
 var handler *apitest.APITest
 
 var (
-	r         = gin.New()
 	uriPrefix = "/apisix/admin"
 )
 
@@ -35,18 +32,7 @@ func init() {
 	//init mysql connect
 	conf.InitializeMysql()
 
-	//filters
-	r.Use(
-		filter.CORS(),
-		filter.RequestId(),
-		filter.RequestLogHandler(),
-		filter.RecoverHandler())
+	r := SetUpRouter()
 
-	handler = apitest.New().
-		Handler(AppendHealthCheck(r)).
-		Handler(AppendRoute(r)).
-		Handler(AppendSsl(r)).
-		Handler(AppendPlugin(r)).
-		Handler(AppendConsumer(r)).
-		Handler(AppendUpstream(r))
+	handler = apitest.New().Handler(r)
 }
