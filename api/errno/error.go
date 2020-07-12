@@ -22,65 +22,74 @@ import (
 )
 
 type Message struct {
-	Code string
-	Msg  string
+	Code   string
+	Msg    string
+	Status int `json:"-"`
 }
 
 var (
 	//AA 01 api-manager-api
-	SystemSuccess   = Message{"010000", "success"}
-	SystemError     = Message{"010001", "system error"}
-	BadRequestError = Message{Code: "010002", Msg: "Request format error"}
-	NotFoundError   = Message{Code: "010003", Msg: "No resources found"}
-	InvalidParam    = Message{"010004", "Request parameter error"}
-	DBWriteError    = Message{"010005", "Database save failed"}
-	DBReadError     = Message{"010006", "Database query failed"}
-	DBDeleteError   = Message{"010007", "Database delete failed"}
-	RecordNotExist  = Message{"010009", "Record does not exist"}
+	//BB 00 system
+	SystemSuccess      = Message{"010000", "success", 200}
+	SystemError        = Message{"010001", "system error", 500}
+	BadRequestError    = Message{"010002", "Request format error", 400}
+	NotFoundError      = Message{"010003", "No resources found", 404}
+	InvalidParam       = Message{"010004", "Request parameter error", 400}
+	DBWriteError       = Message{"010005", "Database save failed", 500}
+	DBReadError        = Message{"010006", "Database query failed", 500}
+	DBDeleteError      = Message{"010007", "Database delete failed", 500}
+	RecordNotExist     = Message{"010009", "Record does not exist", 404}
+	InvalidParamDetail = Message{"010010", "Invalid request parameter: %s", 400}
+	AdminApiSaveError  = Message{"010011", "Data save failed", 500}
+	SchemaCheckFailed  = Message{"010012", "%s", 400}
 
-	//BB 01 config module
-	ConfEnvError      = Message{"010101", "Environment variable not found: %s"}
-	ConfFilePathError = Message{"010102", "Error loading configuration file: %s"}
+	//BB 01 configuration
+	ConfEnvError      = Message{"010101", "Environment variable not found: %s", 500}
+	ConfFilePathError = Message{"010102", "Error loading configuration file: %s", 500}
 
-	// BB 02 route module
-	RouteRequestError       = Message{"010201", "Route request parameters are abnormal: %s"}
-	ApisixRouteCreateError  = Message{"010202", "Failed to create APISIX route: %s"}
-	DBRouteCreateError      = Message{"010203", "Route storage failure: %s"}
-	ApisixRouteUpdateError  = Message{"010204", "Update APISIX routing failed: %s"}
-	ApisixRouteDeleteError  = Message{"010205", "Failed to remove APISIX route: %s"}
-	DBRouteUpdateError      = Message{"010206", "Route update failed: %s"}
-	DBRouteDeleteError      = Message{"010207", "Route remove failed: %s"}
-	DBRouteReduplicateError = Message{"010208", "Route name is reduplicate : %s"}
+	// BB 02 route
+	RouteRequestError       = Message{"010201", "Route request parameters are abnormal: %s", 400}
+	ApisixRouteCreateError  = Message{"010202", "Failed to create APISIX route: %s", 500}
+	DBRouteCreateError      = Message{"010203", "Route storage failure: %s", 500}
+	ApisixRouteUpdateError  = Message{"010204", "Update APISIX routing failed: %s", 500}
+	ApisixRouteDeleteError  = Message{"010205", "Failed to delete APISIX route: %s", 500}
+	DBRouteUpdateError      = Message{"010206", "Route update failed: %s", 500}
+	DBRouteDeleteError      = Message{"010207", "Route deletion failed: %s", 500}
+	DBRouteReduplicateError = Message{"010208", "Route name is reduplicate : %s", 400}
 
-	// 03 plugin module
-	ApisixPluginListError   = Message{"010301", "List APISIX plugins  failed: %s"}
-	ApisixPluginSchemaError = Message{"010301", "Find APISIX plugin schema failed: %s"}
+	// 03 plugins
+	ApisixPluginListError   = Message{"010301", "find APISIX plugin list failed: %s", 500}
+	ApisixPluginSchemaError = Message{"010301", "find APISIX plugin schema failed: %s", 500}
 
-	// 04 ssl模块
-	SslParseError        = Message{"010401", "Certificate resolution failed: %s"}
-	ApisixSslCreateError = Message{"010402", "Create APISIX SSL failed"}
-	ApisixSslUpdateError = Message{"010403", "Update APISIX SSL failed"}
-	ApisixSslDeleteError = Message{"010404", "Delete APISIX SSL failed"}
+	// 04 ssl
+	SslParseError        = Message{"010401", "Certificate resolution failed: %s", 400}
+	ApisixSslCreateError = Message{"010402", "Failed to create APISIX SSL", 500}
+	ApisixSslUpdateError = Message{"010403", "Failed to update APISIX SSL", 500}
+	ApisixSslDeleteError = Message{"010404", "Failed to delete APISIX SSL", 500}
+	SslForSniNotExists   = Message{"010407", "Ssl for sni not exists：%s", 400}
+	DuplicateSslCert     = Message{"010408", "Duplicate ssl cert", 400}
 
 	// 06 upstream
-	UpstreamRequestError       = Message{"010601", "upstream request parameters are abnormal: %s"}
-	UpstreamTransError         = Message{"010602", "upstream parameter conversion is abnormal: %s"}
-	DBUpstreamError            = Message{"010603", "upstream storage failure: %s"}
-	ApisixUpstreamCreateError  = Message{"010604", "apisix upstream create failure: %s"}
-	ApisixUpstreamUpdateError  = Message{"010605", "apisix upstream update failure: %s"}
-	ApisixUpstreamDeleteError  = Message{"010606", "apisix upstream delete failure: %s"}
-	DBUpstreamDeleteError      = Message{"010607", "upstream delete failure: %s"}
-	DBUpstreamReduplicateError = Message{"010608", "Upstream name is reduplicate : %s"}
+	UpstreamRequestError       = Message{"010601", "upstream request parameters exception: %s", 400}
+	UpstreamTransError         = Message{"010602", "Abnormal upstream parameter conversion: %s", 400}
+	DBUpstreamError            = Message{"010603", "upstream storage failure: %s", 500}
+	ApisixUpstreamCreateError  = Message{"010604", "apisix upstream create failed: %s", 500}
+	ApisixUpstreamUpdateError  = Message{"010605", "apisix upstream update failed: %s", 500}
+	ApisixUpstreamDeleteError  = Message{"010606", "apisix upstream delete failed: %s", 500}
+	DBUpstreamDeleteError      = Message{"010607", "upstream storage delete failed: %s", 500}
+	DBUpstreamReduplicateError = Message{"010608", "Upstream name is reduplicate : %s", 500}
 
-	ApisixConsumerCreateError = Message{"010702", "Create APISIX Consumer failed"}
-	ApisixConsumerUpdateError = Message{"010703", "Update APISIX Consumer failed"}
-	ApisixConsumerDeleteError = Message{"010704", "Delete APISIX Consumer failed"}
-	DuplicateUserName         = Message{"010705", "Duplicate username"}
+	// 07 consumer
+	ApisixConsumerCreateError = Message{"010702", "APISIX Consumer create failed", 500}
+	ApisixConsumerUpdateError = Message{"010703", "APISIX Consumer update failed", 500}
+	ApisixConsumerDeleteError = Message{"010704", "APISIX Consumer delete failed", 500}
+	DuplicateUserName         = Message{"010705", "Duplicate consumer username", 400}
 )
 
 type ManagerError struct {
 	TraceId string
 	Code    string
+	Status  int
 	Msg     string
 	Data    interface{}
 	Detail  string
@@ -96,11 +105,11 @@ func (e *ManagerError) ErrorDetail() string {
 }
 
 func FromMessage(m Message, args ...interface{}) *ManagerError {
-	return &ManagerError{TraceId: "", Code: m.Code, Msg: fmt.Sprintf(m.Msg, args...)}
+	return &ManagerError{TraceId: "", Code: m.Code, Status: m.Status, Msg: fmt.Sprintf(m.Msg, args...)}
 }
 
 func New(m Message, args ...interface{}) *ManagerError {
-	return &ManagerError{TraceId: "", Code: m.Code, Msg: m.Msg, Detail: fmt.Sprintf("%s", args...)}
+	return &ManagerError{TraceId: "", Code: m.Code, Msg: m.Msg, Status: m.Status, Detail: fmt.Sprintf("%s", args...)}
 }
 
 func (e *ManagerError) Response() map[string]interface{} {
@@ -139,9 +148,9 @@ func Succeed() map[string]interface{} {
 
 type HttpError struct {
 	Code int
-	Msg  string
+	Msg  Message
 }
 
 func (e *HttpError) Error() string {
-	return e.Msg
+	return e.Msg.Msg
 }
