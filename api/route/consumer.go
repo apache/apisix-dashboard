@@ -39,6 +39,22 @@ func AppendConsumer(r *gin.Engine) *gin.Engine {
 	return r
 }
 
+func handleServiceError(c *gin.Context, requestId interface{}, err error) {
+	if httpError, ok := err.(*errno.HttpError); ok {
+		logger.WithField(conf.RequestId, requestId).Error(err)
+		c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
+		return
+	}
+
+	e := err.(*errno.ManagerError)
+	status := http.StatusInternalServerError
+	if e.Status > 0 {
+		status = e.Status
+	}
+	logger.WithField(conf.RequestId, requestId).Error(e.ErrorDetail())
+	c.AbortWithStatusJSON(status, e.Response())
+}
+
 func consumerList(c *gin.Context) {
 	requestId, _ := c.Get("X-Request-Id")
 	size, _ := strconv.Atoi(c.DefaultQuery("size", "10"))
@@ -49,8 +65,7 @@ func consumerList(c *gin.Context) {
 	count, list, err := service.ConsumerList(page, size, search)
 
 	if err != nil {
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
+		handleServiceError(c, requestId, err)
 		return
 	}
 
@@ -66,8 +81,7 @@ func consumerItem(c *gin.Context) {
 	consumer, err := service.ConsumerItem(id)
 
 	if err != nil {
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
+		handleServiceError(c, requestId, err)
 		return
 	}
 
@@ -88,13 +102,7 @@ func consumerCreate(c *gin.Context) {
 	}
 
 	if err := service.ConsumerCreate(param, u4.String()); err != nil {
-		if httpError, ok := err.(*errno.HttpError); ok {
-			logger.WithField(conf.RequestId, requestId).Error(err)
-			c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
-			return
-		}
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
+		handleServiceError(c, requestId, err)
 		return
 	}
 
@@ -115,13 +123,7 @@ func consumerUpdate(c *gin.Context) {
 	}
 
 	if err := service.ConsumerUpdate(param, id); err != nil {
-		if httpError, ok := err.(*errno.HttpError); ok {
-			logger.WithField(conf.RequestId, requestId).Error(err)
-			c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
-			return
-		}
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
+		handleServiceError(c, requestId, err)
 		return
 	}
 
@@ -133,14 +135,7 @@ func consumerDelete(c *gin.Context) {
 	id := c.Param("id")
 
 	if err := service.ConsumerDelete(id); err != nil {
-		if httpError, ok := err.(*errno.HttpError); ok {
-			logger.WithField(conf.RequestId, requestId).Error(err)
-			c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
-			return
-		}
-
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
+		handleServiceError(c, requestId, err)
 		return
 	}
 
