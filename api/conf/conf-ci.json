@@ -1,7 +1,7 @@
 {
   "conf":{
     "mysql":{
-      "address": "mysql:3306",
+      "address": "127.0.0.1:8888",
       "user": "root",
       "password": "123456",
       "maxConns": 50,
