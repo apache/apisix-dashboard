@@ -60,6 +60,41 @@ func TestToApisixRequest_RediretPlugins(t *testing.T) {
 	a.NotEqual(nil, ar.Plugins["redirect"])
 }
 
+func TestToApisixRequest_proxyRewrite(t *testing.T) {
+	nodes := make(map[string]int64)
+	nodes["127.0.0.1:8080"] = 100
+	upstream := &Upstream{
+		UType:   "roundrobin",
+		Nodes:   nodes,
+		Timeout: UpstreamTimeout{15, 15, 15},
+	}
+	to := "/hello"
+	upstreamPath := &UpstreamPath{To: to}
+	rr := &RouteRequest{
+		ID:           "u guess a uuid",
+		Name:         "a special name",
+		Desc:         "any description",
+		Priority:     0,
+		Methods:      []string{"GET"},
+		Uris:         []string{},
+		Hosts:        []string{"www.baidu.com"},
+		Protocols:    []string{"http", "https", "websocket"},
+		Redirect:     &Redirect{HttpToHttps: true, Code: 200, Uri: "/hello"},
+		Vars:         [][]string{},
+		Upstream:     upstream,
+		UpstreamPath: upstreamPath,
+	}
+	ar := ToApisixRequest(rr)
+	a := assert.New(t)
+	var pr ProxyRewrite
+	bytes, _ := json.Marshal(ar.Plugins["proxy-rewrite"])
+	json.Unmarshal(bytes, &pr)
+
+	a.Equal(2, len(ar.Plugins))
+	a.NotEqual(nil, ar.Plugins["redirect"])
+	a.Equal(to, pr.Uri)
+}
+
 func TestToApisixRequest_Vars(t *testing.T) {
 	rr := &RouteRequest{
 		ID:        "u guess a uuid",
