@@ -192,15 +192,15 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
         </Select>
       </Form.Item>
       {step1Data.redirectOption === 'customRedirect' && (
-        <Form.Item label="自定义重定向">
+        <Form.Item label="自定义重定向" required>
           <Row gutter={10}>
             <Col>
-              <Form.Item name="redirectURI">
+              <Form.Item name="redirectURI" rules={[{required: true}]}>
                 <Input placeholder="例如：/foo/index.html" disabled={disabled} />
               </Form.Item>
             </Col>
             <Col span={10}>
-              <Form.Item name="redirectCode">
+              <Form.Item name="redirectCode" rules={[{required: true}]}>
                 <Select disabled={disabled}>
                   <Select.Option value={301}>301（临时的重定向）</Select.Option>
                   <Select.Option value={302}>302（永久的重定向）</Select.Option>
