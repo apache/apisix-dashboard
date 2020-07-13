@@ -137,7 +137,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
 
   if (redirect?.http_to_https) {
     step1Data.redirectOption = 'forceHttps';
-  } else if (redirect?.uri !== '') {
+  } else if (redirect?.uri) {
     step1Data.redirectOption = 'customRedirect';
     step1Data.redirectCode = redirect?.code;
     step1Data.redirectURI = redirect?.uri;
