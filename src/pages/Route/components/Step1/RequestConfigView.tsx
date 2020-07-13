@@ -202,8 +202,8 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
             <Col span={10}>
               <Form.Item name="redirectCode" rules={[{required: true}]}>
                 <Select disabled={disabled}>
-                  <Select.Option value={301}>301（临时的重定向）</Select.Option>
-                  <Select.Option value={302}>302（永久的重定向）</Select.Option>
+                  <Select.Option value={301}>301（永久重定向）</Select.Option>
+                  <Select.Option value={302}>302（临时重定向）</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
