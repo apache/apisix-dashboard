@@ -493,7 +493,7 @@ func ToApisixRequest(routeRequest *RouteRequest) *ApisixRouteRequest {
 		// upstream path
 		proxyPath := routeRequest.UpstreamPath
 		if proxyPath != nil {
-			if proxyPath.UPathType == UPATHTYPE_STATIC {
+			if proxyPath.UPathType == UPATHTYPE_STATIC || proxyPath.UPathType == "" {
 				pr.Uri = proxyPath.To
 				pr.RegexUri = nil
 			} else {
