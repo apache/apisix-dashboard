@@ -29,7 +29,7 @@ export default defineConfig({
     locale: true,
     logo: '/favicon.png',
   },
-  base: '/dashboard/',
+  base: '/',
   publicPath: '/',
   define: {
     REACT_APP_ENV: REACT_APP_ENV || false,
