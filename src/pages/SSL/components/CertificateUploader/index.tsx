@@ -2,7 +2,6 @@ import React from 'react';
 import { Form, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib/upload/interface';
-import { useForm } from 'antd/es/form/util';
 import styles from '@/pages/SSL/style.less';
 
 export type UploadType = 'PUBLIC_KEY' | 'PRIVATE_KEY';
@@ -18,7 +17,7 @@ interface UploaderProps {
 
 const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, data }) => {
   const { publicKeyList = [], privateKeyList = [] } = data;
-  const [form] = useForm();
+  const [form] = Form.useForm();
 
   const genUploadFile = (name = ''): UploadFile => {
     return {

@@ -1,139 +1,63 @@
 const routes = [
   {
     path: '/',
-    redirect: '/ssl',
+    component: './Metrics',
   },
   {
-    name: 'metrics',
     path: '/metrics',
-    component: './Metrics/Metrics',
-    icon: 'AreaChartOutlined',
+    component: './Metrics',
   },
   {
-    name: 'setting',
-    path: '/setting',
+    path: '/routes/list',
+    component: './Route/List',
+  },
+  {
+    path: '/routes/create',
+    component: './Route/Create',
+  },
+  {
+    path: '/routes/:rid/edit',
+    component: './Route/Create',
+  },
+  {
+    path: '/ssl/:id/edit',
+    component: './SSL/Create',
+  },
+  {
+    path: '/ssl/list',
+    component: './SSL/List',
+  },
+  {
+    path: '/ssl/create',
+    component: './SSL/Create',
+  },
+  {
+    path: '/upstream/list',
+    component: './Upstream/List',
+  },
+  {
+    path: '/upstream/create',
+    component: './Upstream/Create',
+  },
+  {
+    path: '/upstream/:id/edit',
+    component: './Upstream/Create',
+  },
+  {
+    path: '/consumer/list',
+    component: './Consumer/List',
+  },
+  {
+    path: '/consumer/create',
+    component: './Consumer/Create',
+  },
+  {
+    path: '/consumer/:id/edit',
+    component: './Consumer/Create',
+  },
+  {
+    path: '/settings',
     component: './Setting',
-    layout: false,
-    hideInMenu: true,
-  },
-  {
-    name: 'ssl',
-    path: '/ssl',
-    icon: 'BarsOutlined',
-    routes: [
-      {
-        path: '/ssl',
-        redirect: '/ssl/list',
-      },
-      {
-        path: '/ssl/list',
-        name: 'list',
-        component: './SSL/List',
-        hideInMenu: true,
-      },
-      {
-        name: 'create',
-        path: '/ssl/create',
-        component: './SSL/Create',
-        hideInMenu: true,
-      },
-      {
-        name: 'edit',
-        path: '/ssl/:id/edit',
-        component: './SSL/Create',
-        hideInMenu: true,
-      },
-    ],
-  },
-  {
-    name: 'routes',
-    path: '/routes',
-    icon: 'BarsOutlined',
-    routes: [
-      {
-        path: '/routes',
-        redirect: '/routes/list',
-      },
-      {
-        path: '/routes/list',
-        name: 'list',
-        icon: 'BarsOutlined',
-        component: './Route/List',
-        hideInMenu: true,
-      },
-      {
-        path: '/routes/create',
-        name: 'create',
-        component: './Route/Create',
-        hideInMenu: true,
-      },
-      {
-        path: '/routes/:rid/edit',
-        name: 'edit',
-        component: './Route/Create',
-        hideInMenu: true,
-      },
-    ],
-  },
-  {
-    name: 'consumer',
-    path: '/consumer',
-    icon: 'BarsOutlined',
-    routes: [
-      {
-        path: '/consumer',
-        redirect: '/Consumer/list',
-      },
-      {
-        path: '/consumer/list',
-        name: 'list',
-        icon: 'BarsOutlined',
-        component: './Consumer/List',
-        hideInMenu: true,
-      },
-      {
-        path: '/consumer/create',
-        name: 'create',
-        component: './Consumer/Create',
-        hideInMenu: true,
-      },
-      {
-        path: '/consumer/:id/edit',
-        name: 'edit',
-        component: './Consumer/Create',
-        hideInMenu: true,
-      },
-    ],
-  },
-  {
-    name: 'upstream',
-    path: '/upstream',
-    icon: 'BarsOutlined',
-    routes: [
-      {
-        path: '/upstream',
-        redirect: '/Upstream/list',
-      },
-      {
-        path: '/upstream/list',
-        name: 'list',
-        icon: 'BarsOutlined',
-        component: './Upstream/List',
-        hideInMenu: true,
-      },
-      {
-        path: '/upstream/create',
-        name: 'create',
-        component: './Upstream/Create',
-        hideInMenu: true,
-      },
-      {
-        path: '/upstream/:id/edit',
-        name: 'edit',
-        component: './Upstream/Create',
-        hideInMenu: true,
-      },
-    ],
   },
   {
     component: './404',

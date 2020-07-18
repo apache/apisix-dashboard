@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Card, Steps, notification } from 'antd';
+import { Card, Steps, notification, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { useForm } from 'antd/es/form/util';
 import moment from 'moment';
 
 import ActionBar from '@/components/ActionBar';
@@ -13,7 +12,7 @@ import styles from '@/pages/SSL/style.less';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
-  const [form] = useForm();
+  const [form] = Form.useForm();
   const { id } = (props as any).match.params;
 
   const onValidateForm = () => {
@@ -24,14 +23,13 @@ const Page: React.FC = (props) => {
         keyPaire = { cert: value.cert, key: value.key };
         return verifyKeyPaire(value.cert, value.key);
       })
-      .then((_data) => {
-        const { snis, validity_end } = _data.data;
-        form.setFieldsValue(
-          Object.assign({}, form.getFieldsValue(), keyPaire, {
-            snis,
-            expireTime: moment.unix(Number(validity_end)).format('YYYY-MM-DD HH:mm:ss'),
-          }),
-        );
+      .then(({ data }) => {
+        form.setFieldsValue({
+          ...form.getFieldsValue(),
+          ...keyPaire,
+          snis: data.snis,
+          expireTime: moment.unix(Number(data.validity_end)).format('YYYY-MM-DD HH:mm:ss'),
+        });
         setStep(2);
       })
       .catch(() => {

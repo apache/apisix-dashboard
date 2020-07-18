@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Steps, notification } from 'antd';
-import { useForm } from 'antd/es/form/util';
+import { Card, Steps, notification, Form } from 'antd';
 import { history } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
@@ -15,7 +14,7 @@ import { fetchItem, create, update } from './service';
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
   const [plugins, setPlugins] = useState<PluginPage.PluginData>({});
-  const [form1] = useForm();
+  const [form1] = Form.useForm();
 
   useEffect(() => {
     const { id } = (props as any).match.params;
@@ -29,7 +28,7 @@ const Page: React.FC = (props) => {
   }, []);
 
   const onSubmit = () => {
-    const data = Object.assign({}, form1.getFieldsValue(), { plugins }) as ConsumerModule.Entity;
+    const data = { ...form1.getFieldsValue(), plugins } as ConsumerModule.Entity;
     const { id } = (props as any).match.params;
     (id ? update(id, data) : create(data))
       .then(() => {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Steps, notification } from 'antd';
-import { useForm } from 'antd/es/form/util';
+import { Card, Steps, notification, Form } from 'antd';
 
 import ActionBar from '@/components/ActionBar';
 import { history } from 'umi';
@@ -13,7 +12,7 @@ import { transformCreate, transformFetch } from './transform';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
-  const [form1] = useForm();
+  const [form1] = Form.useForm();
 
   useEffect(() => {
     const { id } = (props as any).match.params;
@@ -26,7 +25,7 @@ const Page: React.FC = (props) => {
   }, []);
 
   const onSubmit = () => {
-    const data = transformCreate(Object.assign({}, form1.getFieldsValue()) as UpstreamModule.Body);
+    const data = transformCreate({ ...form1.getFieldsValue() } as UpstreamModule.Body);
     const { id } = (props as any).match.params;
     (id ? update(id, data) : create(data)).then(() => {
       notification.success({ message: `${id ? '更新' : '创建'} 上游成功` });

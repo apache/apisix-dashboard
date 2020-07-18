@@ -2,23 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Empty, Button, Card } from 'antd';
 import { history } from 'umi';
-import { stringify } from 'qs';
-import { getSetting } from '@/pages/Setting';
+
+import { getGrafanaURL } from './service';
 
 const Metrics: React.FC = () => {
   const [grafanaURL, setGrafanaURL] = useState<string | undefined>();
-  const [showMetrics, setShowMetrics] = useState(false);
 
   useEffect(() => {
-    const { grafanaURL: url } = getSetting();
-    setGrafanaURL(url);
-    setShowMetrics(Boolean(url));
+    getGrafanaURL().then((url) => {
+      setGrafanaURL(url);
+    });
   }, []);
 
   return (
-    <PageHeaderWrapper>
+    <PageHeaderWrapper title="监控">
       <Card>
-        {!showMetrics && (
+        {!grafanaURL && (
           <Empty
             image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
             imageStyle={{
@@ -30,10 +29,7 @@ const Metrics: React.FC = () => {
               type="primary"
               onClick={() => {
                 history.replace({
-                  pathname: '/setting',
-                  search: stringify({
-                    redirect: window.location.href,
-                  }),
+                  pathname: '/settings',
                 });
               }}
             >
@@ -41,7 +37,7 @@ const Metrics: React.FC = () => {
             </Button>
           </Empty>
         )}
-        {showMetrics && (
+        {grafanaURL && (
           <div>
             <iframe title="metrics" src={grafanaURL} width="100%" height="860" frameBorder="0" />
           </div>
