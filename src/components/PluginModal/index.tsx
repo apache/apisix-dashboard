@@ -1,9 +1,8 @@
 import React from 'react';
-import { Modal } from 'antd';
+import { Modal, Form } from 'antd';
 import { useIntl } from 'umi';
 
 import PluginForm from '@/components/PluginForm';
-import { useForm } from 'antd/es/form/util';
 
 interface Props {
   visible: boolean;
@@ -14,7 +13,7 @@ interface Props {
 
 const PluginModal: React.FC<Props> = (props) => {
   const { name, visible } = props;
-  const [form] = useForm();
+  const [form] = Form.useForm();
 
   return (
     <Modal

@@ -1,102 +1,88 @@
-import { Button, Form, Input, notification, Tabs, Tooltip } from 'antd';
 import React, { useEffect } from 'react';
-import { Link, SelectLang, FormattedMessage, useIntl } from 'umi';
-import logo from '@/assets/logo.svg';
-import { useForm } from 'antd/es/form/util';
-import styles from './style.less';
-import { getSetting } from './service';
+import { PageContainer } from '@ant-design/pro-layout';
+import { Card, Form, Input, Row, Col, notification } from 'antd';
 
-const { TabPane } = Tabs;
+import { setBaseURL, getBaseURL } from '@/helpers';
+import ActionBar from '@/components/ActionBar';
+import { getGrafanaURL } from '@/pages/Metrics/service';
 
-const Settings: React.FC<{}> = () => {
-  const [form] = useForm();
-  const { formatMessage } = useIntl();
+import { updateMonitorURL } from './service';
+
+const Setting: React.FC = () => {
+  const [form] = Form.useForm();
+
+  const isSuperAdmin = true;
+  const isWorkspace = false;
+  const canFetchGrafana = (isSuperAdmin && !isWorkspace) || isWorkspace;
 
   useEffect(() => {
-    form.setFieldsValue(getSetting());
-  }, []);
+    form.setFieldsValue({
+      baseURL: getBaseURL(),
+    });
 
-  const onFinish = ({ grafanaURL, baseURL }: Setting.AdminAPI & Setting.GrafanaConfig) => {
-    if (grafanaURL.length) {
-      if (!/^https?:\/\//.test(grafanaURL)) {
-        notification.error({
-          duration: 3,
-          message: 'Grafana 地址需以 http 或 https 开头',
-        });
-        return;
-      }
+    if (!canFetchGrafana) {
+      return;
     }
-    localStorage.setItem('GLOBAL_SETTING_API_BASE_URL', baseURL);
-    localStorage.setItem('GLOBAL_SETTING_GRAFANA_URL', grafanaURL);
+    getGrafanaURL().then((url) => {
+      form.setFieldsValue({
+        grafanaURL: url,
+      });
+    });
+  }, [canFetchGrafana]);
 
-    notification.success({
-      duration: 1,
-      message: `${formatMessage({ id: 'component.global.update' })} Admin API ${formatMessage({
-        id: 'component.status.success',
-      }).toLowerCase()}`,
-      onClose: () => {
-        document.location.href = '/';
-      },
+  const onSubmit = () => {
+    const { grafanaURL, baseURL } = form.getFieldsValue();
+    Promise.all([
+      new Promise((resolve) => {
+        if (canFetchGrafana) {
+          updateMonitorURL(grafanaURL).then(resolve);
+        }
+        resolve();
+      }),
+      new Promise((resolve) => {
+        if (!isWorkspace) {
+          setBaseURL(baseURL);
+        }
+        resolve();
+      }),
+    ]).then(() => {
+      notification.success({ message: '更新配置成功' });
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     });
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.lang}>
-        <SelectLang />
-      </div>
-      <div className={styles.content}>
-        <div className={styles.top}>
-          <div className={styles.header}>
-            <Link to="/">
-              <img alt="logo" className={styles.logo} src={logo} />
-              <span className={styles.title}>APISIX Dashboard</span>
-            </Link>
-          </div>
-          <div className={styles.desc}>Cloud-Native Microservices API Gateway</div>
-        </div>
-
-        <div className={styles.main}>
-          <Tabs>
-            <TabPane key="TabContent" tab={formatMessage({ id: 'app.settings.admin-api' })}>
-              <Form
-                form={form}
-                onFinish={(values) => onFinish(values as Setting.AdminAPI & Setting.GrafanaConfig)}
-              >
-                <Form.Item name="baseURL">
-                  <Input placeholder={formatMessage({ id: 'app.settings.item.baseURL' })} />
-                </Form.Item>
-
-                <Form.Item>
-                  <Form.Item name="grafanaURL" noStyle>
-                    <Input
-                      placeholder={formatMessage({ id: 'app.settings.item.admin-api-grafana' })}
-                    />
+    <>
+      <PageContainer title="设置">
+        <Card>
+          <Row>
+            <Col span={10}>
+              <Form form={form} labelCol={{ span: 7 }}>
+                {!isWorkspace && (
+                  <Form.Item label="API 地址" name="baseURL">
+                    <Input />
                   </Form.Item>
-                  <Tooltip title="从哪里可以获取 Grafana 地址？">
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href="https://github.com/apache/incubator-apisix/blob/master/doc/plugins/prometheus-cn.md"
-                      style={{ margin: '8px 8px' }}
-                    >
-                      帮助
-                    </a>
-                  </Tooltip>
-                </Form.Item>
-
-                <Form.Item>
-                  <Button size="large" type="primary" htmlType="submit" block>
-                    <FormattedMessage id="component.global.save" />
-                  </Button>
-                </Form.Item>
+                )}
+                {canFetchGrafana && (
+                  <Form.Item
+                    label="Grafana 地址"
+                    name="grafanaURL"
+                    extra="Grafana 地址，需以 http 或 https 开头"
+                    rules={[{ pattern: new RegExp(/^https?:\/\//), message: '非法的地址' }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                )}
               </Form>
-            </TabPane>
-          </Tabs>
-        </div>
-      </div>
-    </div>
+            </Col>
+          </Row>
+        </Card>
+      </PageContainer>
+      <ActionBar step={1} lastStep={1} onChange={onSubmit} />
+    </>
   );
 };
 
-export default Settings;
+export default Setting;
