@@ -1,6 +1,44 @@
+import React from 'react';
 import { notification } from 'antd';
+import { MenuDataItem } from '@ant-design/pro-layout';
 
 import { codeMessage, DEFAULT_BASE_URL } from './constants';
+import IconFont from './iconfont';
+
+export const getMenuData = (): MenuDataItem[] => {
+  return [
+    {
+      name: 'metrics',
+      path: '/metrics',
+      icon: <IconFont type="icondashboard" />,
+    },
+    {
+      name: 'routes',
+      path: '/routes/list',
+      icon: <IconFont type="iconroute" />,
+    },
+    {
+      name: 'ssl',
+      path: '/ssl/list',
+      icon: <IconFont type="iconSSLshuzizhengshu" />,
+    },
+    {
+      name: 'upstream',
+      path: '/upstream/list',
+      icon: <IconFont type="iconupstream" />,
+    },
+    {
+      name: 'consumer',
+      path: '/consumer/list',
+      icon: <IconFont type="iconfuwuliebiao" />,
+    },
+    {
+      name: 'setting',
+      path: '/settings',
+      icon: <IconFont type="iconsetting" />,
+    },
+  ];
+};
 
 export const isLoginPage = () => window.location.pathname.indexOf('/login') !== -1;
 

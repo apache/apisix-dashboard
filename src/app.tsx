@@ -1,11 +1,15 @@
 import React from 'react';
 import { RequestConfig, history } from 'umi';
-import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
+import {
+  BasicLayoutProps,
+  Settings as LayoutSettings,
+  TopNavHeaderProps,
+} from '@ant-design/pro-layout';
 
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { queryCurrent } from '@/services/user';
-import { errorHandler, getBaseURL } from '@/helpers';
+import { getMenuData, errorHandler, getBaseURL } from '@/helpers';
 import defaultSettings from '../config/defaultSettings';
 
 export async function getInitialState(): Promise<{
@@ -13,7 +17,7 @@ export async function getInitialState(): Promise<{
   settings?: LayoutSettings;
 }> {
   // 如果是设置页面，不执行
-  if (history.location.pathname !== '/setting') {
+  if (history.location.pathname !== '/settings') {
     try {
       const currentUser = await queryCurrent();
       return {
@@ -21,7 +25,7 @@ export async function getInitialState(): Promise<{
         settings: defaultSettings,
       };
     } catch (error) {
-      history.push('/setting');
+      history.push('/settings');
     }
   }
   return {
@@ -33,12 +37,14 @@ export const layout = ({
   initialState,
 }: {
   initialState: { settings?: LayoutSettings };
-}): BasicLayoutProps => {
+}): BasicLayoutProps & TopNavHeaderProps => {
   return {
+    headerRender: undefined,
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     footerRender: () => <Footer />,
     menuHeaderRender: undefined,
+    menuDataRender: getMenuData,
     ...initialState?.settings,
   };
 };

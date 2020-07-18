@@ -49,7 +49,7 @@ export default {
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
   'menu.ssl': 'SSL',
-  'menu.ssl.list': 'SSL List',
+  'menu.ssl.list': 'List',
   'menu.ssl.edit': 'Edit',
   'menu.ssl.create': 'Create',
   'menu.setting': 'Settings',

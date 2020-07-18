@@ -29,10 +29,7 @@ const Metrics: React.FC = () => {
               type="primary"
               onClick={() => {
                 history.replace({
-                  pathname: '/setting',
-                  search: stringify({
-                    redirect: window.location.href,
-                  }),
+                  pathname: '/settings',
                 });
               }}
             >
