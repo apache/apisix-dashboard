@@ -86,7 +86,7 @@ export const transformStepData = ({
       'forceHttps',
       'redirectOption',
       step1Data.redirectOption === 'disabled' ? 'redirect' : '',
-      step2Data.upstream_id ? 'upstream' : '',
+      step2Data.upstream_id ? 'upstream' : 'upstream_id',
     ]);
   }
 
