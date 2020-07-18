@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Steps, notification, Form } from 'antd';
 import { history } from 'umi';
+import { useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/PluginPage';
@@ -15,6 +16,7 @@ const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
   const [plugins, setPlugins] = useState<PluginPage.PluginData>({});
   const [form1] = Form.useForm();
+  const { formatMessage } = useIntl();
 
   useEffect(() => {
     const { id } = (props as any).match.params;
@@ -32,7 +34,7 @@ const Page: React.FC = (props) => {
     const { id } = (props as any).match.params;
     (id ? update(id, data) : create(data))
       .then(() => {
-        notification.success({ message: `${id ? '更新' : '创建'} Consumer 成功` });
+        notification.success({ message: `${id ? formatMessage({ id: 'consumer.create.edit' }) : formatMessage({ id: 'consumer.create.create' })} Consumer ${formatMessage({ id: 'consumer.create.success' })}` });
         history.push('/consumer/list');
       })
       .catch(() => {
@@ -51,7 +53,7 @@ const Page: React.FC = (props) => {
         .map((item) => item[0]);
       const isValid = Object.keys(plugins).some((name) => authPluginNames.includes(name));
       if (!isValid) {
-        notification.warning({ message: '请启用至少一种身份认证类插件' });
+        notification.warning({ message: formatMessage({ id: 'consumer.create.enable.authentication.plugin' }) });
         return;
       }
       setStep(3);
@@ -64,12 +66,12 @@ const Page: React.FC = (props) => {
 
   return (
     <>
-      <PageContainer title={`${(props as any).match.params.id ? '编辑' : '创建'} Consumer`}>
+      <PageContainer title={`${(props as any).match.params.id ? formatMessage({ id: 'consumer.create.edit' }) : formatMessage({ id: 'consumer.create.create' })} Consumer`}>
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
-            <Steps.Step title="基础信息" />
-            <Steps.Step title="插件配置" />
-            <Steps.Step title="预览" />
+            <Steps.Step title={formatMessage({ id: 'consumer.create.basic.information' })} />
+            <Steps.Step title={formatMessage({ id: 'consumer.create.plugin.config' })} />
+            <Steps.Step title={formatMessage({ id: 'consumer.create.preview' })} />
           </Steps>
 
           {step === 1 && <Step1 form={form1} />}
