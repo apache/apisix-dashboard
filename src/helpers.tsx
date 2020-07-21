@@ -4,6 +4,7 @@ import { MenuDataItem } from '@ant-design/pro-layout';
 
 import { codeMessage, DEFAULT_BASE_URL } from './constants';
 import IconFont from './iconfont';
+import { useIntl } from 'umi';
 
 export const getMenuData = (): MenuDataItem[] => {
   return [
@@ -46,6 +47,9 @@ export const isLoginPage = () => window.location.pathname.indexOf('/login') !== 
  * 异常处理程序
  */
 export const errorHandler = (error: { response: Response; data: any }): Promise<Response> => {
+
+  const { formatMessage } = useIntl();
+
   const { response } = error;
   if (response && response.status) {
     if ([401].includes(response.status) && !isLoginPage()) {
@@ -57,13 +61,13 @@ export const errorHandler = (error: { response: Response; data: any }): Promise<
       error.data.msg || error.data.message || error.data.error_msg || codeMessage[response.status];
 
     notification.error({
-      message: `请求错误，错误码： ${error.data.errorCode || response.status}`,
+      message: formatMessage({ id: 'helper.request.error' }) + `${error.data.errorCode || response.status}`,
       description: errorText,
     });
   } else if (!response) {
     notification.error({
-      description: '您的网络发生异常，无法连接服务器',
-      message: '网络异常',
+      description: formatMessage({ id: 'helper.network.anomaly.cannot.connect.server' }),
+      message: formatMessage({ id: 'helper.network.anomaly' }),
     });
   }
   return Promise.reject(response);

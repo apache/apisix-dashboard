@@ -1,5 +1,6 @@
 import { request } from 'umi';
 import { notification } from 'antd';
+import { useIntl } from 'umi';
 
 import logo from '@/assets/logo.svg';
 
@@ -8,8 +9,11 @@ export async function query() {
 }
 
 export async function queryCurrent(): Promise<API.CurrentUser> {
+
+  const { formatMessage } = useIntl();
+
   if (!localStorage.getItem('GLOBAL_SETTING_API_BASE_URL')) {
-    notification.error({ message: '请设置 API 地址' });
+    notification.error({ message: formatMessage({ id: 'user.set.api.address' }) });
     throw new Error('Need Settings');
   } else {
     return Promise.resolve({
