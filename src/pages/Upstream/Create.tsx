@@ -4,6 +4,7 @@ import { Card, Steps, notification, Form } from 'antd';
 
 import ActionBar from '@/components/ActionBar';
 import { history } from 'umi';
+import { useIntl } from 'umi';
 
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
@@ -13,6 +14,7 @@ import { transformCreate, transformFetch } from './transform';
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
   const [form1] = Form.useForm();
+  const { formatMessage } = useIntl();
 
   useEffect(() => {
     const { id } = (props as any).match.params;
@@ -28,7 +30,7 @@ const Page: React.FC = (props) => {
     const data = transformCreate({ ...form1.getFieldsValue() } as UpstreamModule.Body);
     const { id } = (props as any).match.params;
     (id ? update(id, data) : create(data)).then(() => {
-      notification.success({ message: `${id ? '更新' : '创建'} 上游成功` });
+      notification.success({ message: `${id ? formatMessage({ id: 'upstream.create.edit' }) : formatMessage({ id: 'upstream.create.create' })} ` + formatMessage({ id: 'upstream.create.upstream.successfully' }) });
       history.replace('/upstream/list');
     });
   };
@@ -47,11 +49,11 @@ const Page: React.FC = (props) => {
 
   return (
     <>
-      <PageContainer title="创建上游">
+      <PageContainer title={formatMessage({ id: 'upstream.create.create' })}>
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
-            <Steps.Step title="基础信息" />
-            <Steps.Step title="预览" />
+            <Steps.Step title={formatMessage({ id: 'upstream.create.basic.info' })} />
+            <Steps.Step title={formatMessage({ id: 'upstream.create.preview' })} />
           </Steps>
 
           {step === 1 && <Step1 form={form1} />}
