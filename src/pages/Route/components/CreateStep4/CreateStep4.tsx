@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormInstance } from 'antd/lib/form';
+import { useIntl } from 'umi';
 
 import PluginPage from '@/components/PluginPage';
 
@@ -17,15 +18,18 @@ const style = {
 };
 
 const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, ...rest }) => {
+
+  const { formatMessage } = useIntl();
+
   return (
     <>
-      <h2>定义 API 请求</h2>
+      <h2>{formatMessage({ id: 'route.create.define.api.request' })}</h2>
       <Step1 {...rest} form={form1} disabled />
       {!redirect && (
         <>
-          <h2 style={style}>定义 API 后端服务</h2>
+          <h2 style={style}>{formatMessage({ id: 'route.create.define.api.backend.server' })}</h2>
           <Step2 {...rest} form={form2} disabled />
-          <h2 style={style}>插件配置</h2>
+          <h2 style={style}>{formatMessage({ id: 'route.create.plugin.configuration' })}</h2>
           <PluginPage data={rest.data.step3Data.plugins} disabled />
         </>
       )}

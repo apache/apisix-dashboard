@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Table, Modal, Form, Select, Input, Space } from 'antd';
+import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
 
@@ -14,6 +15,8 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const [modalForm] = Form.useForm();
 
   const { Option } = Select;
+
+  const { formatMessage } = useIntl();
 
   const onOk = () => {
     modalForm.validateFields().then((value) => {
@@ -55,16 +58,16 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
 
   const columns = [
     {
-      title: '参数位置',
+      title: formatMessage({ id: 'route.match.parameter.position' }),
       key: 'position',
       render: (text: RouteModule.MatchingRule) => {
         let renderText;
         switch (text.position) {
           case 'http':
-            renderText = 'HTTP 请求头';
+            renderText = formatMessage({ id: 'route.match.http.request.header' });
             break;
           case 'arg':
-            renderText = '请求参数';
+            renderText = formatMessage({ id: 'route.match.request.parameter' });
             break;
           case 'cookie':
             renderText = 'Cookie';
@@ -76,30 +79,30 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
       },
     },
     {
-      title: '参数名称',
+      title: formatMessage({ id: 'route.match.parameter.name' }),
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: '运算符',
+      title: formatMessage({ id: 'route.match.operational.character' }),
       key: 'operator',
       render: (text: RouteModule.MatchingRule) => {
         let renderText;
         switch (text.operator) {
           case '==':
-            renderText = '等于';
+            renderText = formatMessage({ id: 'route.match.equal' });
             break;
           case '～=':
-            renderText = '不等于';
+            renderText = formatMessage({ id: 'route.match.unequal' });
             break;
           case '>':
-            renderText = '大于';
+            renderText = formatMessage({ id: 'route.match.greater.than' });
             break;
           case '<':
-            renderText = '小于';
+            renderText = formatMessage({ id: 'route.match.less.than' });
             break;
           case '~~':
-            renderText = '正则匹配';
+            renderText = formatMessage({ id: 'route.match.regex.match' });
             break;
           default:
             renderText = '';
@@ -108,19 +111,19 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
       },
     },
     {
-      title: '参数值',
+      title: formatMessage({ id: 'route.match.parameter.value' }),
       dataIndex: 'value',
       key: 'value',
     },
     disabled
       ? {}
       : {
-          title: '操作',
+          title: formatMessage({ id: 'route.match.operation' }),
           key: 'action',
           render: (_: any, record: RouteModule.MatchingRule) => (
             <Space size="middle">
-              <a onClick={() => handleEdit(record)}>编辑</a>
-              <a onClick={() => handleRemove(record.key)}>删除</a>
+              <a onClick={() => handleEdit(record)}>{formatMessage({ id: 'route.match.edit' })}</a>
+              <a onClick={() => handleRemove(record.key)}>{formatMessage({ id: 'route.match.delete' })}</a>
             </Space>
           ),
         },
@@ -128,7 +131,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
 
   const renderModal = () => (
     <Modal
-      title={mode === 'EDIT' ? '编辑规则' : '新建规则'}
+      title={mode === 'EDIT' ? formatMessage({ id: 'route.match.edit.rule' }) : formatMessage({ id: 'route.match.create.rule' })}
       centered
       visible
       onOk={onOk}
@@ -136,58 +139,58 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
         setVisible(false);
         modalForm.resetFields();
       }}
-      okText="确定"
-      cancelText="取消"
+      okText={formatMessage({ id: 'route.match.confirm' })}
+      cancelText={formatMessage({ id: 'route.match.cancel' })}
       destroyOnClose
     >
       <Form form={modalForm} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
         <Form.Item
-          label="参数位置"
+          label={formatMessage({ id: 'route.match.parameter.position' })}
           name="position"
-          rules={[{ required: true, message: '请选择参数位置' }]}
+          rules={[{ required: true, message: formatMessage({ id: 'route.match.select.parameter.position' }) }]}
         >
           <Select
             onChange={(value) => {
               if (value === 'http') {
-                setNamePlaceholder('请求头键名：例如 HOST');
+                setNamePlaceholder(formatMessage({ id: 'route.match.request.header.example' }));
               } else {
-                setNamePlaceholder('参数名称：例如 id');
+                setNamePlaceholder(formatMessage({ id: 'route.match.parameter.name.example' }));
               }
             }}
           >
-            <Option value="http">HTTP 请求头</Option>
-            <Option value="arg">请求参数</Option>
+            <Option value="http">{formatMessage({ id: 'route.match.http.request.header' })}</Option>
+            <Option value="arg">{formatMessage({ id: 'route.match.request.parameter' })}</Option>
             <Option value="cookie">Cookie</Option>
           </Select>
         </Form.Item>
         <Form.Item
-          label="参数名称"
+          label={formatMessage({ id: 'route.match.parameter.name' })}
           name="name"
           rules={[
-            { required: true, message: '请输入参数名称' },
+            { required: true, message: formatMessage({ id: 'route.match.input.parameter.name' }) },
             {
               pattern: new RegExp(/^([a-zA-Z][a-zA-Z0-9_-]*$)/, 'g'),
-              message: '参数只支持字母、数字、-、_，并且以字母开头',
+              message: formatMessage({ id: 'route.match.parameter.name.rule' }),
             },
           ]}
-          extra="只支持字母和数字，并且以字母开头"
+          extra={formatMessage({ id: 'route.match.rule' })}
         >
           <Input placeholder={namePlaceholder} />
         </Form.Item>
         <Form.Item
-          label="运算符"
+          label={formatMessage({ id: 'route.match.operational.character' })}
           name="operator"
-          rules={[{ required: true, message: '请选择运算符' }]}
+          rules={[{ required: true, message: formatMessage({ id: 'route.match.choose.operational.character' }) }]}
         >
           <Select>
-            <Option value="==">等于</Option>
-            <Option value="～=">不等于</Option>
-            <Option value=">">大于</Option>
-            <Option value="<">小于</Option>
-            <Option value="~~">正则匹配</Option>
+            <Option value="==">{formatMessage({ id: 'route.match.equal' })}</Option>
+            <Option value="～=">{formatMessage({ id: 'route.match.unequal' })}</Option>
+            <Option value=">">{formatMessage({ id: 'route.match.greater.than' })}</Option>
+            <Option value="<">{formatMessage({ id: 'route.match.less.than' })}</Option>
+            <Option value="~~">{formatMessage({ id: 'route.match.regex.match' })}</Option>
           </Select>
         </Form.Item>
-        <Form.Item label="值" name="value" rules={[{ required: true, message: '请输入参数值' }]}>
+        <Form.Item label={formatMessage({ id: 'route.match.value' })} name="value" rules={[{ required: true, message: formatMessage({ id: 'route.match.input.parameter.value' }) }]}>
           <Input />
         </Form.Item>
       </Form>
@@ -195,7 +198,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   );
 
   return (
-    <PanelSection title="高级路由匹配条件">
+    <PanelSection title={formatMessage({ id: 'route.match.advanced.match.rule' })}>
       {!disabled && (
         <Button
           onClick={() => {
@@ -207,7 +210,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
             marginBottom: 16,
           }}
         >
-          新建
+          {formatMessage({ id: 'route.match.create' })}
         </Button>
       )}
       <Table key="table" bordered dataSource={advancedMatchingRules} columns={columns} />

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Form from 'antd/es/form';
 import { Button, Table, Space, Modal, Input, Select } from 'antd';
+import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
 
@@ -12,6 +13,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
   const [modalForm] = Form.useForm();
   const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
   const [showModalValue, setShowModalValue] = useState(true);
+  const { formatMessage } = useIntl();
 
   const handleEdit = (record: RouteModule.UpstreamHeader) => {
     setMode('EDIT');
@@ -24,27 +26,27 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
 
   const columns = [
     {
-      title: '请求头',
+      title: formatMessage({ id: 'route.http.request.header.name' }),
       dataIndex: 'header_name',
       key: 'header_name',
     },
     {
-      title: '行为',
+      title: formatMessage({ id: 'route.http.action' }),
       dataIndex: 'header_action',
       key: 'header_action',
       render: (action: 'override' | 'remove') => {
-        return action === 'override' ? '重写/添加' : '删除';
+        return action === 'override' ? formatMessage({ id: 'route.http.override.or.create' }) : formatMessage({ id: 'route.http.delete' });
       },
     },
     {
-      title: '值',
+      title: formatMessage({ id: 'route.http.value' }),
       dataIndex: 'header_value',
       key: 'header_value',
     },
     disabled
       ? {}
       : {
-          title: '操作',
+          title: formatMessage({ id: 'route.http.operation' }),
           key: 'action',
           render: (_: any, record: RouteModule.UpstreamHeader) => (
             <Space size="middle">
@@ -53,14 +55,14 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
                   handleEdit(record);
                 }}
               >
-                编辑
+                {formatMessage({ id: 'route.http.edit' })}
               </a>
               <a
                 onClick={() => {
                   handleRemove(record.key);
                 }}
               >
-                删除
+                {formatMessage({ id: 'route.http.delete' })}
               </a>
             </Space>
           ),
@@ -96,7 +98,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
 
     return (
       <Modal
-        title={mode === 'EDIT' ? '编辑请求头' : '操作请求头'}
+        title={mode === 'EDIT' ? formatMessage({ id: 'route.http.edit.request.header' }) : formatMessage({ id: 'route.http.operate.request.header' })}
         centered
         visible
         onOk={handleOk}
@@ -104,33 +106,33 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
           setVisible(false);
           modalForm.resetFields();
         }}
-        okText="确定"
-        cancelText="取消"
+        okText={formatMessage({ id: 'route.http.confirm' })}
+        cancelText={formatMessage({ id: 'route.http.cancel' })}
         destroyOnClose
       >
         <Form form={modalForm} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
           <Form.Item
-            label="请求头"
+            label={formatMessage({ id: 'route.http.request.header.name' })}
             name="header_name"
-            rules={[{ required: true, message: '请输入请求头' }]}
+            rules={[{ required: true, message: formatMessage({ id: 'route.http.input.request.header.name' }) }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="行为"
+            label={formatMessage({ id: 'route.http.action' })}
             name="header_action"
-            rules={[{ required: true, message: '请输入请求头' }]}
+            rules={[{ required: true, message: formatMessage({ id: 'route.http.select.actions' }) }]}
           >
             <Select onChange={(e) => setShowModalValue(e === 'override')}>
-              <Select.Option value="override">重写/添加</Select.Option>
-              <Select.Option value="remove">删除</Select.Option>
+              <Select.Option value="override">{formatMessage({ id: 'route.http.override.or.create' })}</Select.Option>
+              <Select.Option value="remove">{formatMessage({ id: 'route.http.delete' })}</Select.Option>
             </Select>
           </Form.Item>
           {showModalValue && (
             <Form.Item
-              label="值"
+              label={formatMessage({ id: 'route.http.value' })}
               name="header_value"
-              rules={[{ required: true, message: '请输入值' }]}
+              rules={[{ required: true, message: formatMessage({ id: 'route.http.input.value' }) }]}
             >
               <Input />
             </Form.Item>
@@ -141,7 +143,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
   };
 
   return (
-    <PanelSection title="HTTP 头改写">
+    <PanelSection title={formatMessage({ id: 'route.http.override.request.header' })}>
       {!disabled && (
         <Button
           onClick={() => {
@@ -154,7 +156,7 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
             marginBottom: 16,
           }}
         >
-          操作
+          {formatMessage({ id: 'route.http.operation' })}
         </Button>
       )}
       <Table key="table" bordered dataSource={upstreamHeaderList} columns={columns} />
