@@ -3,6 +3,7 @@ import { Form, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib/upload/interface';
 import styles from '@/pages/SSL/style.less';
+import { useIntl } from 'umi';
 
 export type UploadType = 'PUBLIC_KEY' | 'PRIVATE_KEY';
 
@@ -18,6 +19,7 @@ interface UploaderProps {
 const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, data }) => {
   const { publicKeyList = [], privateKeyList = [] } = data;
   const [form] = Form.useForm();
+  const { formatMessage } = useIntl();
 
   const genUploadFile = (name = ''): UploadFile => {
     return {
@@ -66,7 +68,7 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
           beforeUpload={(file, fileList) => beforeUpload(file, fileList, 'PUBLIC_KEY')}
         >
           <Button disabled={publicKeyList.length === 1}>
-            <UploadOutlined /> 点击上传公钥
+            <UploadOutlined /> {formatMessage({ id: 'ssl.upload.public.key' })}
           </Button>
         </Upload>
       </Form.Item>
@@ -78,7 +80,7 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
           beforeUpload={(file, fileList) => beforeUpload(file, fileList, 'PRIVATE_KEY')}
         >
           <Button disabled={privateKeyList.length === 1}>
-            <UploadOutlined /> 点击上传私钥
+            <UploadOutlined /> {formatMessage({ id: 'ssl.upload.private.key' })}
           </Button>
         </Upload>
       </Form.Item>

@@ -1,0 +1,37 @@
+export default {
+  'ssl.form.expiration.time':'过期时间',
+  'ssl.form.public.key':'公钥',
+  'ssl.form.check.cert.value': '请检查 Cert 值',
+  'ssl.form.cert.value.length': 'Cert 值至少需要128个字符',
+  'ssl.form.private.key':'私钥',
+  'ssl.form.check.key.value': '请检查 Key 值',
+  'ssl.form.key.value.length': 'Key 值至少需要128个字符',
+
+  'ssl.upload.public.key':'上传公钥',
+  'ssl.upload.private.key':'上传私钥',
+
+  'ssl.step.way':'方式',
+  'ssl.step.rules':'新证书所含 SNI 应与当前证书一致',
+  'ssl.step.select.create.ways':'请选择创建方式',
+  'ssl.step.input':'输入',
+  'ssl.step.upload':'上传',
+
+  'ssl.create.check':'请检查证书内容',
+  'ssl.create':'证书创建',
+  'ssl.create.complete.cert.info':'完善证书信息',
+  'ssl.create.preview':'预览',
+
+  'ssl.list.update.cert.enable.status.successful':'更新证书启用状态成功',
+  'ssl.list.expiration.time':'过期时间',
+  'ssl.list.if.enable':'是否启用',
+  'ssl.list.update.time':'更新时间',
+  'ssl.list.operation': '操作',
+  'ssl.list.edit':'编辑',
+  'ssl.list.delete':'删除',
+  'ssl.list.cancel':'取消',
+  'ssl.list.confirm':'确定',
+  'ssl.list.period.of.validity':'有效期',
+  'ssl.list':'证书列表',
+  'ssl.list.input':'请输入',
+  'ssl.list.create': '创建',
+};
