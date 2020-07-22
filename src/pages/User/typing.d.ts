@@ -1,9 +1,14 @@
-import { ReactElement } from 'react';
+import React from 'react';
 
 declare namespace UserModule {
   interface LoginMethod {
     id: string;
     name: string;
-    render: () => ReactElement;
+    render: () => React.ReactElement;
+    getData: () => LoginData;
   }
+
+  type LoginData = {
+    [string]: string;
+  };
 }
