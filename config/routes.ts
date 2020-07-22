@@ -60,6 +60,11 @@ const routes = [
     component: './Setting',
   },
   {
+    path: '/user/login',
+    component: './User/Login',
+    layout: false,
+  },
+  {
     component: './404',
   },
 ];
