@@ -6,9 +6,19 @@ declare namespace UserModule {
     name: string;
     render: () => React.ReactElement;
     getData: () => LoginData;
+    checkData: () => Promise<boolean>;
+    submit: (data) => Promise<LoginResponse>;
   }
 
   type LoginData = {
     [string]: string;
   };
+
+  interface LoginResponse {
+    status: boolean;
+    message: string;
+    data: {
+      [string]: any;
+    };
+  }
 }
