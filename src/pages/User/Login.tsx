@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Tabs } from 'antd';
+import { Button, notification, Tabs } from 'antd';
 import { DefaultFooter } from '@ant-design/pro-layout';
 import { SelectLang } from '@@/plugin-locale/SelectLang';
 import { Link } from 'umi';
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
-import LoginMethodTest from '@/pages/User/components/LoginMethodTest';
+import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
 import { UserModule } from '@/pages/User/typing';
 import logo from '@/assets/logo.svg';
 import styles from './Login.less';
@@ -14,23 +14,39 @@ const Tab = Tabs.TabPane;
 /**
  * Login Methods List
  */
-const loginMethods: UserModule.LoginMethod[] = [LoginMethodPassword, LoginMethodTest];
+const loginMethods: UserModule.LoginMethod[] = [LoginMethodPassword, LoginMethodExample];
 
 /**
  * User Login Page
  * @constructor
  */
 const Page: React.FC = () => {
-  const [loginType, setLoginType] = useState(loginMethods[0]);
+  const [loginMethod, setLoginMethod] = useState(loginMethods[0]);
 
   const onTabChange = (activeKey: string) => {
     loginMethods.forEach((item, index) => {
-      if (activeKey === item.id) setLoginType(loginMethods[index]);
+      if (activeKey === item.id) setLoginMethod(loginMethods[index]);
     });
   };
 
   const onSubmit = () => {
-    setLoginType(loginMethods[0]);
+    loginMethod.checkData().then((validate) => {
+      if (validate) {
+        loginMethod.submit(loginMethod.getData()).then((response) => {
+          if (response.status) {
+            notification.success({
+              message: '成功',
+              description: response.message,
+            });
+          } else {
+            notification.error({
+              message: '错误',
+              description: response.message,
+            });
+          }
+        });
+      }
+    });
   };
 
   return (
@@ -49,7 +65,7 @@ const Page: React.FC = () => {
           <div className={styles.desc}>Cloud-Native Microservices API Gateway</div>
         </div>
         <div className={styles.main}>
-          <Tabs activeKey={loginType.id} onChange={onTabChange}>
+          <Tabs activeKey={loginMethod.id} onChange={onTabChange}>
             {loginMethods.map((item) => (
               <Tab key={item.id} tab={item.name}>
                 {item.render()}
