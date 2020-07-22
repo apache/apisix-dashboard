@@ -58,6 +58,24 @@ const LoginMethodPassword: UserModule.LoginMethod = {
     }
     return {};
   },
+  checkData: async () => {
+    if (formRef.current) {
+      try {
+        await formRef.current.validateFields();
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
+  },
+  submit: async (data) => {
+    return {
+      status: true,
+      message: '登录成功',
+      data,
+    };
+  },
 };
 
 export default LoginMethodPassword;
