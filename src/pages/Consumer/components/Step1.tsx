@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Input } from 'antd';
 import { FormInstance } from 'antd/lib/form';
+import { useIntl } from 'umi';
 
 const FORM_LAYOUT = {
   labelCol: {
@@ -17,27 +18,28 @@ type Props = {
 };
 
 const Step1: React.FC<Props> = ({ form, disabled }) => {
+  const { formatMessage } = useIntl();
   return (
     <Form {...FORM_LAYOUT} form={form}>
       <Form.Item
-        label="用户名"
+        label={formatMessage({ id: 'consumer.step.username' })} 
         name="username"
         rules={[
           { required: true },
           {
             pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_]{0,100}$/, 'g'),
-            message: '最大长度100，仅支持英文、数字和下划线，且只能以英文开头',
+            message: formatMessage({ id: 'consumer.step.username.rule' }),
           },
         ]}
-        extra="用户名全局唯一"
+        extra={formatMessage({ id: 'consumer.step.username.unique' })}
       >
         <Input
-          placeholder="请输入用户名"
+          placeholder={formatMessage({ id: 'consumer.step.input.username' })}
           disabled={disabled || window.location.pathname.indexOf('edit') !== -1}
         />
       </Form.Item>
-      <Form.Item label="描述" name="desc">
-        <Input.TextArea placeholder="在此输入描述" disabled={disabled} />
+      <Form.Item label={formatMessage({ id: 'consumer.step.description' })}  name="desc">
+        <Input.TextArea placeholder={formatMessage({ id: 'consumer.step.input.description' })} disabled={disabled} />
       </Form.Item>
     </Form>
   );
