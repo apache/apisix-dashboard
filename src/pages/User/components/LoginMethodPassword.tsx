@@ -70,10 +70,17 @@ const LoginMethodPassword: UserModule.LoginMethod = {
     return false;
   },
   submit: async (data) => {
+    if (data.username === 'admin' && data.password === 'admin') {
+      return {
+        status: true,
+        message: '登录成功',
+        data: [],
+      };
+    }
     return {
-      status: true,
-      message: '登录成功',
-      data,
+      status: false,
+      message: '用户名或密码错误',
+      data: [],
     };
   },
 };
