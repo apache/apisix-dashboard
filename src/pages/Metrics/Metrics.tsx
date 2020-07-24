@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Empty, Button, Card } from 'antd';
-import { history } from 'umi';
+import { history, useIntl } from 'umi';
 
 import { getGrafanaURL } from './service';
 
 const Metrics: React.FC = () => {
   const [grafanaURL, setGrafanaURL] = useState<string | undefined>();
+  const { formatMessage } = useIntl();
 
   useEffect(() => {
     getGrafanaURL().then((url) => {
@@ -15,7 +16,7 @@ const Metrics: React.FC = () => {
   }, []);
 
   return (
-    <PageHeaderWrapper title="监控">
+    <PageHeaderWrapper title={formatMessage({ id: 'metrics.monitor' })}>
       <Card>
         {!grafanaURL && (
           <Empty
@@ -23,7 +24,7 @@ const Metrics: React.FC = () => {
             imageStyle={{
               height: 60,
             }}
-            description={<span>您还未配置 Grafana</span>}
+            description={<span>{formatMessage({ id: 'metrics.grafana.not.config' })}</span>}
           >
             <Button
               type="primary"
@@ -33,7 +34,7 @@ const Metrics: React.FC = () => {
                 });
               }}
             >
-              现在配置
+              {formatMessage({ id: 'metrics.grafana.config' })}
             </Button>
           </Empty>
         )}
