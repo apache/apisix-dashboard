@@ -46,7 +46,7 @@ export default {
 
   'PluginForm.plugin.cors.desc': 'CORS 插件可以为服务端启用 CORS 的返回头',
   'PluginForm.plugin.cors.property.allow_origins': '允许跨域访问的 Origin',
-  'PluginForm.plugin.cors.property.allow_origins.extra': '比如 https://somehost.com:8081',
+  'PluginForm.plugin.cors.property.allow_origins.extra': '比如：https://somehost.com:8081',
   'PluginForm.plugin.cors.property.allow_methods': '允许跨域访问的 Method',
 
   'PluginForm.plugin.fault-injection.desc': '故障注入插件，用来模拟各种后端故障和高延迟',
@@ -56,7 +56,7 @@ export default {
 
   'PluginForm.plugin.http-logger.desc': 'http-logger 可以将日志数据请求推送到 HTTP/HTTPS 服务器',
   'PluginForm.plugin.http-logger.property.uri': '日志服务器地址',
-  'PluginForm.plugin.http-logger.property.uri.extra': '比如 127.0.0.1:80/postendpoint?param=1',
+  'PluginForm.plugin.http-logger.property.uri.extra': '比如：127.0.0.1:80/postendpoint?param=1',
 
   'PluginForm.plugin.ip-restriction.desc':
     'ip-restriction 可以把一批 IP 地址列入白名单或黑名单（二选一），时间复杂度是O(1)，并支持用 CIDR 来表示 IP 范围',
@@ -112,19 +112,19 @@ export default {
 
   'PluginForm.plugin.tcp-logger.desc': '对接 TCP 日志服务器',
   'PluginForm.plugin.tcp-logger.property.host': '日志服务器地址',
-  'PluginForm.plugin.tcp-logger.property.port': '日志服务器地址',
+  'PluginForm.plugin.tcp-logger.property.port': '日志服务器端口',
   'PluginForm.plugin.tcp-logger.property.timeout': '超时时间',
   'PluginForm.plugin.tcp-logger.property.tls': '开启 SSL',
   'PluginForm.plugin.tcp-logger.property.tls_options': 'TLS 选型',
 
   'PluginForm.plugin.udp-logger.desc': '对接 UDP 日志服务器',
   'PluginForm.plugin.udp-logger.property.host': '日志服务器地址',
-  'PluginForm.plugin.udp-logger.property.port': '日志服务器地址',
+  'PluginForm.plugin.udp-logger.property.port': '日志服务器端口',
   'PluginForm.plugin.udp-logger.property.timeout': '超时时间',
 
   'PluginForm.plugin.zipkin.desc': '对接 zipkin',
   'PluginForm.plugin.zipkin.property.endpoint': 'endpoint',
-  'PluginForm.plugin.zipkin.property.endpoint.extra': '例如 http://127.0.0.1:9411/api/v2/spans',
+  'PluginForm.plugin.zipkin.property.endpoint.extra': '例如：http://127.0.0.1:9411/api/v2/spans',
   'PluginForm.plugin.zipkin.property.sample_ratio': '采样率',
   'PluginForm.plugin.zipkin.property.service_name': '服务名',
   'PluginForm.plugin.zipkin.property.server_addr': '网关实例 IP',
@@ -132,7 +132,7 @@ export default {
 
   'PluginForm.plugin.skywalking.desc': '对接 Apache Skywalking',
   'PluginForm.plugin.skywalking.property.endpoint': 'endpoint',
-  'PluginForm.plugin.skywalking.property.endpoint.extra': '例如 http://127.0.0.1:12800',
+  'PluginForm.plugin.skywalking.property.endpoint.extra': '例如：http://127.0.0.1:12800',
   'PluginForm.plugin.skywalking.property.sample_ratio': '采样率',
   'PluginForm.plugin.skywalking.property.service_name': '服务名',
 
@@ -159,5 +159,5 @@ export default {
   'PluginForm.plugin.batch-requests.desc':
     'batch-requests 插件可以一次接受多个请求并以 http pipeline 的方式在网关发起多个 http 请求，合并结果后再返回客户端，这在客户端需要访问多个接口时可以显著地提升请求性能',
 
-  'PluginForm.plugin.node-status.desc': 'node-status 暂无描述',
+  'PluginForm.plugin.node-status.desc': 'node-status 节点状态',
 };
