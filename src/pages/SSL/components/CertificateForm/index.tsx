@@ -29,7 +29,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
     if (mode === 'VIEW') {
       return (
         <Form.Item
-          label="过期时间"
+          label={formatMessage({ id: 'ssl.form.expiration.time' })}
           name="expireTime"
           rules={[{ required: true, message: 'ExpireTime' }]}
         >
@@ -44,21 +44,21 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
     <Form form={form} layout="horizontal" initialValues={form?.getFieldsValue()}>
       {renderSNI()}
       <Form.Item
-        label="公钥"
+        label={formatMessage({ id: 'ssl.form.public.key' })}
         name="cert"
         rules={[
-          { required: true, message: formatMessage({ id: 'component.ssl.fieldCertInvalid' }) },
-          { min: 128, message: formatMessage({ id: 'component.ssl.fieldCertTooShort' }) },
+          { required: true, message: formatMessage({ id: 'ssl.form.check.cert.value' }) },
+          { min: 128, message: formatMessage({ id: 'ssl.form.cert.value.length' }) },
         ]}
       >
         <Input.TextArea rows={6} disabled={mode !== 'EDIT'} />
       </Form.Item>
       <Form.Item
-        label="私钥"
+        label={formatMessage({ id: 'ssl.form.private.key' })}
         name="key"
         rules={[
-          { required: true, message: formatMessage({ id: 'component.ssl.fieldKeyInvalid' }) },
-          { min: 128, message: formatMessage({ id: 'component.ssl.fieldKeyTooShort' }) },
+          { required: true, message: formatMessage({ id: 'ssl.form.check.key.value' }) },
+          { min: 128, message: formatMessage({ id: 'ssl.form.key.value.length' }) },
         ]}
       >
         <Input.TextArea rows={6} disabled={mode !== 'EDIT'} />
