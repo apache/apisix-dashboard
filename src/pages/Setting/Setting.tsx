@@ -49,7 +49,7 @@ const Setting: React.FC = () => {
         resolve();
       }),
     ]).then(() => {
-      notification.success({ message: formatMessage({ id: 'set.update.configuration.successfully' }) });
+      notification.success({ message: formatMessage({ id: 'setting.update.configuration.successfully' }) });
       setTimeout(() => {
         window.location.reload();
       }, 500);
@@ -64,16 +64,16 @@ const Setting: React.FC = () => {
             <Col span={10}>
               <Form form={form} labelCol={{ span: 7 }}>
                 {!isWorkspace && (
-                  <Form.Item label={formatMessage({ id: 'set.api.address' })} name="baseURL">
+                  <Form.Item label={formatMessage({ id: 'setting.api.address' })} name="baseURL">
                     <Input />
                   </Form.Item>
                 )}
                 {canFetchGrafana && (
                   <Form.Item
-                    label={formatMessage({ id: 'set.grafana.address' })}
+                    label={formatMessage({ id: 'setting.grafana.address' })}
                     name="grafanaURL"
-                    extra={formatMessage({ id: 'set.grafana.address.rule' })}
-                    rules={[{ pattern: new RegExp(/^https?:\/\//), message: formatMessage({ id: 'set.grafana.address.illegality' }) }]}
+                    extra={formatMessage({ id: 'setting.grafana.address.rule' })}
+                    rules={[{ pattern: new RegExp(/^https?:\/\//), message: formatMessage({ id: 'setting.grafana.address.illegality' }) }]}
                   >
                     <Input />
                   </Form.Item>
