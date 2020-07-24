@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Form, Input, Row, Col, notification } from 'antd';
+import { useIntl } from 'umi';
 
 import { setBaseURL, getBaseURL } from '@/helpers';
 import ActionBar from '@/components/ActionBar';
@@ -14,6 +15,8 @@ const Setting: React.FC = () => {
   const isSuperAdmin = true;
   const isWorkspace = false;
   const canFetchGrafana = (isSuperAdmin && !isWorkspace) || isWorkspace;
+
+  const { formatMessage } = useIntl();
 
   useEffect(() => {
     form.setFieldsValue({
@@ -46,7 +49,7 @@ const Setting: React.FC = () => {
         resolve();
       }),
     ]).then(() => {
-      notification.success({ message: '更新配置成功' });
+      notification.success({ message: formatMessage({ id: 'setting.update.configuration.successfully' }) });
       setTimeout(() => {
         window.location.reload();
       }, 500);
@@ -55,22 +58,22 @@ const Setting: React.FC = () => {
 
   return (
     <>
-      <PageContainer title="设置">
+      <PageContainer title={formatMessage({ id: 'set' })}>
         <Card>
           <Row>
             <Col span={10}>
               <Form form={form} labelCol={{ span: 7 }}>
                 {!isWorkspace && (
-                  <Form.Item label="API 地址" name="baseURL">
+                  <Form.Item label={formatMessage({ id: 'setting.api.address' })} name="baseURL">
                     <Input />
                   </Form.Item>
                 )}
                 {canFetchGrafana && (
                   <Form.Item
-                    label="Grafana 地址"
+                    label={formatMessage({ id: 'setting.grafana.address' })}
                     name="grafanaURL"
-                    extra="Grafana 地址，需以 http 或 https 开头"
-                    rules={[{ pattern: new RegExp(/^https?:\/\//), message: '非法的地址' }]}
+                    extra={formatMessage({ id: 'setting.grafana.address.rule' })}
+                    rules={[{ pattern: new RegExp(/^https?:\/\//), message: formatMessage({ id: 'setting.grafana.address.illegality' }) }]}
                   >
                     <Input />
                   </Form.Item>
