@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Empty, Button, Card } from 'antd';
-import { history } from 'umi';
-import { useIntl } from 'umi';
+import { history, useIntl } from 'umi';
 
 import { getGrafanaURL } from './service';
 
