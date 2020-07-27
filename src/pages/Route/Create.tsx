@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/PluginPage';
@@ -63,6 +64,8 @@ const Page: React.FC<Props> = (props) => {
 
       setStep3Data(data.step3Data);
     });
+
+  const { formatMessage } = useIntl();
 
   useEffect(() => {
     if (props.route.path.indexOf('edit') !== -1) {
@@ -208,7 +211,7 @@ const Page: React.FC<Props> = (props) => {
 
   return (
     <>
-      <PageHeaderWrapper title="路由管理">
+      <PageHeaderWrapper title={formatMessage({ id: 'route.create.management' })}>
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>
             {stepHeader.map((item) => (

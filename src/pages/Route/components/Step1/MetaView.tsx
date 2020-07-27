@@ -1,30 +1,32 @@
 import React from 'react';
 import Form from 'antd/es/form';
 import { Input } from 'antd';
+import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
 
 interface Props extends RouteModule.Data {}
 
 const MetaView: React.FC<Props> = ({ disabled }) => {
+  const { formatMessage } = useIntl();
   return (
-    <PanelSection title="名称及其描述">
+    <PanelSection title={formatMessage({ id: 'route.meta.name.description' })}>
       <Form.Item
-        label="API 名称"
+        label={formatMessage({ id: 'route.meta.api.name' })}
         name="name"
         rules={[
-          { required: true, message: '请输入 API 名称' },
+          { required: true, message: formatMessage({ id: 'route.meta.input.api.name' }) },
           {
             pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
-            message: '最大长度100，仅支持英文，数字，下划线和减号，且只能以英文开头',
+            message: formatMessage({ id: 'route.meta.api.name.rule' }),
           },
         ]}
-        extra="支持英文，数字，下划线和减号，且只能以英文开头"
+        extra={formatMessage({ id: 'rotue.meta.api.rule' })}
       >
-        <Input placeholder="请输入 API 名称" disabled={disabled} />
+        <Input placeholder={formatMessage({ id: 'route.meta.input.api.name' })} disabled={disabled} />
       </Form.Item>
-      <Form.Item label="描述" name="desc">
-        <Input.TextArea placeholder="不超过 200 个字符" disabled={disabled} />
+      <Form.Item label={formatMessage({ id: 'route.meta.description' })} name="desc">
+        <Input.TextArea placeholder={formatMessage({ id: 'route.meta.description.rule' })} disabled={disabled} />
       </Form.Item>
     </PanelSection>
   );
