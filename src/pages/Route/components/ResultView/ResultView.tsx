@@ -1,7 +1,6 @@
 import React from 'react';
 import { Result, Button } from 'antd';
-import { history } from 'umi';
-import { useIntl } from 'umi';
+import { history, useIntl } from 'umi';
 
 type Props = {
   onReset?(): void;
