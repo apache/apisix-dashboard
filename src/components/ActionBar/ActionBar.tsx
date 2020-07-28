@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react';
-
 import { Row, Col, Button } from 'antd';
+import { useIntl } from 'umi';
 
 interface Props {
   step: number;
@@ -21,6 +21,9 @@ const style: CSSProperties = {
 };
 
 const ActionBar: React.FC<Props> = ({ step, lastStep, onChange, withResultView }) => {
+
+  const { formatMessage } = useIntl();
+
   if (step > lastStep && !withResultView) {
     onChange(lastStep);
     return null;
@@ -31,12 +34,12 @@ const ActionBar: React.FC<Props> = ({ step, lastStep, onChange, withResultView }
       <Row gutter={10} justify="end">
         <Col>
           <Button type="primary" onClick={() => onChange(step - 1)} disabled={step === 1}>
-            上一步
+            {formatMessage({ id: 'actionbar.last.step' })}
           </Button>
         </Col>
         <Col>
           <Button type="primary" onClick={() => onChange(step + 1)}>
-            {step < lastStep ? '下一步' : '提交'}
+            {step < lastStep ? formatMessage({ id: 'actionbar.next.step' }) : formatMessage({ id: 'actionbar.submit' })}
           </Button>
         </Col>
       </Row>

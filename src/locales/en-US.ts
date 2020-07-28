@@ -1,4 +1,5 @@
 import { PluginFormEnUS } from '@/components/PluginForm';
+import { ActionBarEnUS } from '@/components/ActionBar';
 
 import { ConsumerEnUS } from '@/pages/Consumer';
 import { RouteEnUS } from '@/pages/Route';
@@ -25,4 +26,5 @@ export default {
   ...PluginFormEnUS,
   ...ConsumerEnUS,
   ...RouteEnUS,
+  ...ActionBarEnUS,
 };
