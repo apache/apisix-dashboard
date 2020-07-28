@@ -1,4 +1,4 @@
-import { PluginFormZhCN } from '@/components/PluginForm';
+import { PluginPageZhCN } from '@/components/PluginPage';
 import { ActionBarZhCN } from '@/components/ActionBar';
 
 import { ConsumerZhCN } from '@/pages/Consumer';
@@ -23,7 +23,7 @@ export default {
   ...settings,
   ...pwa,
   ...component,
-  ...PluginFormZhCN,
+  ...PluginPageZhCN,
   ...ConsumerZhCN,
   ...RouteZhCN,
   ...ActionBarZhCN,
