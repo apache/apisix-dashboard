@@ -1,4 +1,5 @@
 import { PluginFormZhCN } from '@/components/PluginForm';
+import { ActionBarZhCN } from '@/components/ActionBar';
 
 import { ConsumerZhCN } from '@/pages/Consumer';
 import { RouteZhCN } from '@/pages/Route';
@@ -25,4 +26,5 @@ export default {
   ...PluginFormZhCN,
   ...ConsumerZhCN,
   ...RouteZhCN,
+  ...ActionBarZhCN,
 };
