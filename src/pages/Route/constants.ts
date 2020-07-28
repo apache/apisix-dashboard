@@ -54,7 +54,3 @@ export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
 export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
   plugins: {},
 };
-
-export const STEP_HEADER_2 = ['定义 API 请求', '预览'];
-
-export const STEP_HEADER_4 = ['定义 API 请求', '定义 API 后端服务', '插件配置', '预览'];

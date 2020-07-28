@@ -21,8 +21,6 @@ import {
   DEFAULT_STEP_1_DATA,
   DEFAULT_STEP_2_DATA,
   DEFAULT_STEP_3_DATA,
-  STEP_HEADER_2,
-  STEP_HEADER_4,
 } from './constants';
 import ResultView from './components/ResultView';
 import styles from './Create.less';
@@ -36,6 +34,13 @@ type Props = {
 };
 
 const Page: React.FC<Props> = (props) => {
+
+  const { formatMessage } = useIntl();
+
+  const STEP_HEADER_2 = [formatMessage({ id: 'route.constants.define.api.request' }), formatMessage({ id: 'route.constants.preview' })];
+
+  const STEP_HEADER_4 = [formatMessage({ id: 'route.constants.define.api.request' }), formatMessage({ id: 'route.constants.define.api.backend.serve' }), formatMessage({ id: 'route.constants.plugin.configuration' }), formatMessage({ id: 'route.constants.preview' })];
+
   const [step1Data, setStep1Data] = useState(DEFAULT_STEP_1_DATA);
   const [step2Data, setStep2Data] = useState(DEFAULT_STEP_2_DATA);
   const [step3Data, setStep3Data] = useState(DEFAULT_STEP_3_DATA);
@@ -64,8 +69,6 @@ const Page: React.FC<Props> = (props) => {
 
       setStep3Data(data.step3Data);
     });
-
-  const { formatMessage } = useIntl();
 
   useEffect(() => {
     if (props.route.path.indexOf('edit') !== -1) {
