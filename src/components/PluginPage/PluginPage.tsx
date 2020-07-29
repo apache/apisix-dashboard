@@ -26,11 +26,11 @@ const PluginPage: React.FC<Props> = ({ data = {}, disabled, onChange }) => {
 
   const pluginList = [
     {
-      title: formatMessage({ id: 'pluginpage.drawer.is.enabled' }),
+      title: formatMessage({ id: 'PluginPage.drawer.is.enabled' }),
       list: activeList,
     },
     {
-      title: formatMessage({ id: 'pluginpage.drawer.not.enabled' }),
+      title: formatMessage({ id: 'PluginPage.drawer.not.enabled' }),
       list: inactiveList,
     },
   ];

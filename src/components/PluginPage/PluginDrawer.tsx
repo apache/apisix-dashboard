@@ -41,7 +41,7 @@ const PluginDrawer: React.FC<Props> = ({
 
   return (
     <Drawer
-      title={formatMessage({ id: 'pluginpage.drawer.configure.plugin' })}
+      title={formatMessage({ id: 'PluginPage.drawer.configure.plugin' })}
       width={400}
       visible={Boolean(name)}
       destroyOnClose
@@ -52,12 +52,12 @@ const PluginDrawer: React.FC<Props> = ({
             <div>
               {Boolean(active) && (
                 <Button type="primary" danger onClick={() => onInactive(name)}>
-                  {formatMessage({ id: 'pluginpage.drawer.disabled' })}
+                  {formatMessage({ id: 'PluginPage.drawer.disabled' })}
                 </Button>
               )}
               {Boolean(!active) && (
                 <Button type="primary" onClick={() => onActive(name)}>
-                  {formatMessage({ id: 'pluginpage.drawer.enable' })}
+                  {formatMessage({ id: 'PluginPage.drawer.enable' })}
                 </Button>
               )}
             </div>
@@ -71,7 +71,7 @@ const PluginDrawer: React.FC<Props> = ({
                     form.submit();
                   }}
                 >
-                  {formatMessage({ id: 'pluginpage.drawer.confirm' })}
+                  {formatMessage({ id: 'PluginPage.drawer.confirm' })}
                 </Button>
               </div>
             )}
