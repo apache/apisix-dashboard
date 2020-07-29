@@ -92,7 +92,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
           case '==':
             renderText = formatMessage({ id: 'route.match.equal' });
             break;
-          case '～=':
+          case '~=':
             renderText = formatMessage({ id: 'route.match.unequal' });
             break;
           case '>':
@@ -123,7 +123,9 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
           render: (_: any, record: RouteModule.MatchingRule) => (
             <Space size="middle">
               <a onClick={() => handleEdit(record)}>{formatMessage({ id: 'route.match.edit' })}</a>
-              <a onClick={() => handleRemove(record.key)}>{formatMessage({ id: 'route.match.delete' })}</a>
+              <a onClick={() => handleRemove(record.key)}>
+                {formatMessage({ id: 'route.match.delete' })}
+              </a>
             </Space>
           ),
         },
@@ -131,7 +133,11 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
 
   const renderModal = () => (
     <Modal
-      title={mode === 'EDIT' ? formatMessage({ id: 'route.match.edit.rule' }) : formatMessage({ id: 'route.match.create.rule' })}
+      title={
+        mode === 'EDIT'
+          ? formatMessage({ id: 'route.match.edit.rule' })
+          : formatMessage({ id: 'route.match.create.rule' })
+      }
       centered
       visible
       onOk={onOk}
@@ -147,7 +153,12 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
         <Form.Item
           label={formatMessage({ id: 'route.match.parameter.position' })}
           name="position"
-          rules={[{ required: true, message: formatMessage({ id: 'route.match.select.parameter.position' }) }]}
+          rules={[
+            {
+              required: true,
+              message: formatMessage({ id: 'route.match.select.parameter.position' }),
+            },
+          ]}
         >
           <Select
             onChange={(value) => {
@@ -180,17 +191,28 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
         <Form.Item
           label={formatMessage({ id: 'route.match.operational.character' })}
           name="operator"
-          rules={[{ required: true, message: formatMessage({ id: 'route.match.choose.operational.character' }) }]}
+          rules={[
+            {
+              required: true,
+              message: formatMessage({ id: 'route.match.choose.operational.character' }),
+            },
+          ]}
         >
           <Select>
             <Option value="==">{formatMessage({ id: 'route.match.equal' })}</Option>
-            <Option value="～=">{formatMessage({ id: 'route.match.unequal' })}</Option>
+            <Option value="~=">{formatMessage({ id: 'route.match.unequal' })}</Option>
             <Option value=">">{formatMessage({ id: 'route.match.greater.than' })}</Option>
             <Option value="<">{formatMessage({ id: 'route.match.less.than' })}</Option>
             <Option value="~~">{formatMessage({ id: 'route.match.regex.match' })}</Option>
           </Select>
         </Form.Item>
-        <Form.Item label={formatMessage({ id: 'route.match.value' })} name="value" rules={[{ required: true, message: formatMessage({ id: 'route.match.input.parameter.value' }) }]}>
+        <Form.Item
+          label={formatMessage({ id: 'route.match.value' })}
+          name="value"
+          rules={[
+            { required: true, message: formatMessage({ id: 'route.match.input.parameter.value' }) },
+          ]}
+        >
           <Input />
         </Form.Item>
       </Form>

@@ -34,7 +34,9 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                 label={index === 0 ? formatMessage({ id: 'route.request.config.domain.name' }) : ''}
                 required
                 key={field.key}
-                extra={index === 0 ? formatMessage({ id: 'route.request.config.domain.or.ip' }) : ''}
+                extra={
+                  index === 0 ? formatMessage({ id: 'route.request.config.domain.or.ip' }) : ''
+                }
               >
                 <Form.Item
                   {...field}
@@ -52,7 +54,11 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                   ]}
                   noStyle
                 >
-                  <Input placeholder={formatMessage({ id: 'route.request.config.input.domain.name' })} style={{ width: '60%' }} disabled={disabled} />
+                  <Input
+                    placeholder={formatMessage({ id: 'route.request.config.input.domain.name' })}
+                    style={{ width: '60%' }}
+                    disabled={disabled}
+                  />
                 </Form.Item>
                 {!disabled && fields.length > 1 ? (
                   <MinusCircleOutlined
@@ -157,7 +163,16 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
 
   return (
     <PanelSection title={formatMessage({ id: 'route.request.config.basic.define' })}>
-      <Form.Item label={formatMessage({ id: 'route.request.config.protocol' })} name="protocols" rules={[{ required: true, message: formatMessage({ id: 'route.request.config.choose.protocol' }) }]}>
+      <Form.Item
+        label={formatMessage({ id: 'route.request.config.protocol' })}
+        name="protocols"
+        rules={[
+          {
+            required: true,
+            message: formatMessage({ id: 'route.request.config.choose.protocol' }),
+          },
+        ]}
+      >
         <Checkbox.Group
           disabled={disabled}
           options={['http', 'https']}
@@ -181,30 +196,53 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
       <Form.Item
         label={formatMessage({ id: 'route.request.config.http.method' })}
         name="methods"
-        rules={[{ required: true, message: formatMessage({ id: 'route.request.config.choose.http.method' }) }]}
+        rules={[
+          {
+            required: true,
+            message: formatMessage({ id: 'route.request.config.choose.http.method' }),
+          },
+        ]}
       >
         <Checkbox.Group options={HTTP_METHOD_OPTION_LIST} disabled={disabled} />
       </Form.Item>
-      <Form.Item label={formatMessage({ id: 'route.request.config.redirect' })} name="redirectOption">
+      <Form.Item
+        label={formatMessage({ id: 'route.request.config.redirect' })}
+        name="redirectOption"
+      >
         <Select disabled={disabled}>
-          <Select.Option value="forceHttps">{formatMessage({ id: 'route.request.config.enable.https' })}</Select.Option>
-          <Select.Option value="customRedirect">{formatMessage({ id: 'route.request.config.custom' })}</Select.Option>
-          <Select.Option value="disabled">{formatMessage({ id: 'route.request.config.forbidden' })}</Select.Option>
+          <Select.Option value="forceHttps">
+            {formatMessage({ id: 'route.request.config.enable.https' })}
+          </Select.Option>
+          <Select.Option value="customRedirect">
+            {formatMessage({ id: 'route.request.config.custom' })}
+          </Select.Option>
+          <Select.Option value="disabled">
+            {formatMessage({ id: 'route.request.config.forbidden' })}
+          </Select.Option>
         </Select>
       </Form.Item>
       {step1Data.redirectOption === 'customRedirect' && (
         <Form.Item label={formatMessage({ id: 'route.request.config.redirect.custom' })} required>
           <Row gutter={10}>
             <Col>
-              <Form.Item name="redirectURI" rules={[{required: true}]}>
-                <Input placeholder={formatMessage({ id: 'route.request.config.redirect.custom.example' })} disabled={disabled} />
+              <Form.Item name="redirectURI" rules={[{ required: true }]}>
+                <Input
+                  placeholder={formatMessage({
+                    id: 'route.request.config.redirect.custom.example',
+                  })}
+                  disabled={disabled}
+                />
               </Form.Item>
             </Col>
             <Col span={10}>
-              <Form.Item name="redirectCode" rules={[{required: true}]}>
+              <Form.Item name="redirectCode" rules={[{ required: true }]}>
                 <Select disabled={disabled}>
-                  <Select.Option value={301}>{formatMessage({ id: 'route.request.config.redirect.301' })}</Select.Option>
-                  <Select.Option value={302}>{formatMessage({ id: 'route.request.config.redirect.302' })}</Select.Option>
+                  <Select.Option value={301}>
+                    {formatMessage({ id: 'route.request.config.redirect.301' })}
+                  </Select.Option>
+                  <Select.Option value={302}>
+                    {formatMessage({ id: 'route.request.config.redirect.302' })}
+                  </Select.Option>
                 </Select>
               </Form.Item>
             </Col>
