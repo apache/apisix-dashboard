@@ -3,8 +3,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Steps, notification, Form } from 'antd';
 
 import ActionBar from '@/components/ActionBar';
-import { history } from 'umi';
-import { useIntl } from 'umi';
+import { history, useIntl } from 'umi';
 
 import Step1 from './components/Step1';
 import Preview from './components/Preview';

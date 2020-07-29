@@ -5,8 +5,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Popconfirm, Button, notification, Input } from 'antd';
 import moment from 'moment';
 
-import { history } from 'umi';
-import { useIntl } from 'umi';
+import { history, useIntl } from 'umi';
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
