@@ -9,6 +9,7 @@ import PluginCard from './PluginCard';
 import PluginDrawer from './PluginDrawer';
 import { getList, fetchPluginSchema } from './service';
 import { PLUGIN_MAPPER_SOURCE } from './data';
+import { useIntl } from 'umi';
 
 type Props = {
   disabled?: boolean;
@@ -21,14 +22,15 @@ const PluginPage: React.FC<Props> = ({ data = {}, disabled, onChange }) => {
   const [activeList, setActiveList] = useState<PluginPage.PluginProps[]>([]);
   const [inactiveList, setInactiveList] = useState<PluginPage.PluginProps[]>([]);
   const [schema, setSchema] = useState<JSONSchema7>();
+  const { formatMessage } = useIntl();
 
   const pluginList = [
     {
-      title: '已启用',
+      title: formatMessage({ id: 'PluginPage.drawer.is.enabled' }),
       list: activeList,
     },
     {
-      title: '未启用',
+      title: formatMessage({ id: 'PluginPage.drawer.not.enabled' }),
       list: inactiveList,
     },
   ];

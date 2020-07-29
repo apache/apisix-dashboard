@@ -1,4 +1,4 @@
-import { PluginFormEnUS } from '@/components/PluginForm';
+import { PluginPageEnUS } from '@/components/PluginPage';
 import { ActionBarEnUS } from '@/components/ActionBar';
 
 import { ConsumerEnUS } from '@/pages/Consumer';
@@ -23,7 +23,7 @@ export default {
   ...settings,
   ...pwa,
   ...component,
-  ...PluginFormEnUS,
+  ...PluginPageEnUS,
   ...ConsumerEnUS,
   ...RouteEnUS,
   ...ActionBarEnUS,

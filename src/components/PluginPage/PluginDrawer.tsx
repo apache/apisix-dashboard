@@ -3,6 +3,7 @@ import { Drawer, Button } from 'antd';
 import { withTheme, FormProps } from '@rjsf/core';
 import { Theme as AntDTheme } from '@rjsf/antd';
 import { JSONSchema7 } from 'json-schema';
+import { useIntl } from 'umi';
 
 interface Props {
   name?: string;
@@ -27,6 +28,8 @@ const PluginDrawer: React.FC<Props> = ({
   onClose,
   onFinish,
 }) => {
+
+  const { formatMessage } = useIntl();
   const PluginForm = withTheme(AntDTheme);
 
   if (!name) {
@@ -38,7 +41,7 @@ const PluginDrawer: React.FC<Props> = ({
 
   return (
     <Drawer
-      title={`配置 ${name} 插件`}
+      title={formatMessage({ id: 'PluginPage.drawer.configure.plugin' })}
       width={400}
       visible={Boolean(name)}
       destroyOnClose
@@ -49,12 +52,12 @@ const PluginDrawer: React.FC<Props> = ({
             <div>
               {Boolean(active) && (
                 <Button type="primary" danger onClick={() => onInactive(name)}>
-                  禁用
+                  {formatMessage({ id: 'PluginPage.drawer.disabled' })}
                 </Button>
               )}
               {Boolean(!active) && (
                 <Button type="primary" onClick={() => onActive(name)}>
-                  启用
+                  {formatMessage({ id: 'PluginPage.drawer.enable' })}
                 </Button>
               )}
             </div>
@@ -68,7 +71,7 @@ const PluginDrawer: React.FC<Props> = ({
                     form.submit();
                   }}
                 >
-                  确认
+                  {formatMessage({ id: 'PluginPage.drawer.confirm' })}
                 </Button>
               </div>
             )}
