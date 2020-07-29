@@ -1,5 +1,5 @@
 declare namespace RouteModule {
-  type Operator = '==' | '～=' | '>' | '<' | '~~';
+  type Operator = '==' | '~=' | '>' | '<' | '~~';
 
   type VarPosition = 'arg' | 'http' | 'cookie';
 
