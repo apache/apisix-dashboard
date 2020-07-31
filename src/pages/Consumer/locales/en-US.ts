@@ -1,9 +1,4 @@
 export default {
-  'menu.consumer': 'Consumer',
-  'menu.consumer.list': 'List',
-  'menu.consumer.create': 'Create Consumer',
-  'menu.consumer.edit': 'Edit Consumer',
-
   'consumer.step.username': 'Username',
   'consumer.step.username.rule': 'Maximum length is 100, only letters, numbers and _ are supported, and can only begin with letters',
   'consumer.step.username.unique': 'Username should be unique',
@@ -29,7 +24,7 @@ export default {
   'consumer.list.cancel': 'Cancel',
   'consumer.list.delete.success': 'Delete Success',
   'consumer.list.delete': 'Delete',
-  'consumer.list.list': 'Consumer List',
+  'consumer.list': 'Consumer List',
   'consumer.list.input': 'Please input',
   'consumer.list.create': 'Create',
 };

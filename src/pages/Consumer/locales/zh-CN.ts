@@ -1,9 +1,4 @@
 export default {
-  'menu.consumer': 'Consumer',
-  'menu.consumer.list': '列表',
-  'menu.consumer.create': '创建 Consumer',
-  'menu.consumer.edit': '编辑 Consumer',
-
   'consumer.step.username': '用户名',
   'consumer.step.username.rule': '最大长度100，仅支持字母、数字和 _ ，且只能以字母开头',
   'consumer.step.username.unique': '用户名需唯一',
@@ -29,7 +24,7 @@ export default {
   'consumer.list.cancel': '取消',
   'consumer.list.delete.success': '删除记录成功',
   'consumer.list.delete': '删除',
-  'consumer.list.list': 'Consumer 列表',
+  'consumer.list': '用户列表',
   'consumer.list.input': '请输入',
   'consumer.list.create': '创建',
 };
