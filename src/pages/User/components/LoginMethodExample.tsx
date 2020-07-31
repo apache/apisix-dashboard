@@ -16,7 +16,7 @@ const LoginMethodExample: UserModule.LoginMethod = {
   submit: async (data) => {
     return {
       status: false,
-      message: '示例登录方式，无法使用',
+      message: '示例登录方式，仅作为登录方式扩展例子，无法使用',
       data,
     };
   },
