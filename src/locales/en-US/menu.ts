@@ -48,9 +48,10 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
+  'menu.metrics': 'Metrics',
+  'menu.routes': 'Route',
   'menu.ssl': 'SSL',
-  'menu.ssl.list': 'List',
-  'menu.ssl.edit': 'Edit',
-  'menu.ssl.create': 'Create',
+  'menu.upstream': 'Upstream',
+  'menu.consumer': 'Consumer',
   'menu.setting': 'Settings',
 };
