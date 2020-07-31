@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { Card, Steps, notification, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
-import { useIntl } from 'umi';
+import { history, useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
-import { history } from 'umi';
 import Step1 from '@/pages/SSL/components/Step1';
 import Step2 from '@/pages/SSL/components/Step2';
 import { verifyKeyPaire, create, update } from '@/pages/SSL/service';

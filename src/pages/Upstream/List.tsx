@@ -3,8 +3,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
 import { Popconfirm, Button, notification, Input } from 'antd';
-import { history } from 'umi';
-import { useIntl } from 'umi';
+import { history, useIntl } from 'umi';
 import moment from 'moment';
 
 import { fetchList, remove } from './service';
