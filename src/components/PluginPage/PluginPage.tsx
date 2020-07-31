@@ -45,7 +45,7 @@ const PluginPage: React.FC<Props> = ({ data = {}, disabled, onChange }) => {
   return (
     <>
       {pluginList.map(({ list, title }) => {
-        if (disabled && title === '未启用') {
+        if (disabled && title === formatMessage({ id: 'PluginPage.drawer.not.enabled' })) {
           return null;
         }
         return (

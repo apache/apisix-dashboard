@@ -63,7 +63,9 @@ const PluginDrawer: React.FC<Props> = ({
             </div>
             {Boolean(active) && (
               <div>
-                <Button onClick={onClose}>取消</Button>
+                <Button onClick={onClose}>
+                  {formatMessage({ id: 'PluginPage.drawer.cancel' })}
+                </Button>
                 <Button
                   type="primary"
                   style={{ marginRight: 8, marginLeft: 8 }}
