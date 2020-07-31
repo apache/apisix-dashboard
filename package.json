@@ -1,8 +1,8 @@
 {
   "name": "apisix-dashboard",
-  "version": "1.1.0",
+  "version": "1.5.0",
   "private": true,
-  "description": "Dashboard for APISIX",
+  "description": "Dashboard for Apache APISIX",
   "scripts": {
     "analyze": "cross-env ANALYZE=1 umi build",
     "build": "umi build",
