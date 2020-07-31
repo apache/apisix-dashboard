@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, notification, Tabs } from 'antd';
 import { DefaultFooter } from '@ant-design/pro-layout';
 import { SelectLang } from '@@/plugin-locale/SelectLang';
-import { Link } from 'umi';
+import { Link, useIntl } from 'umi';
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
 import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
 import { UserModule } from '@/pages/User/typing';
@@ -21,6 +21,7 @@ const loginMethods: UserModule.LoginMethod[] = [LoginMethodPassword, LoginMethod
  * @constructor
  */
 const Page: React.FC = () => {
+  const { formatMessage } = useIntl();
   const [loginMethod, setLoginMethod] = useState(loginMethods[0]);
 
   const onTabChange = (activeKey: string) => {
@@ -35,12 +36,12 @@ const Page: React.FC = () => {
         loginMethod.submit(loginMethod.getData()).then((response) => {
           if (response.status) {
             notification.success({
-              message: '成功',
+              message: formatMessage({ id: 'component.status.success' }),
               description: response.message,
             });
           } else {
             notification.error({
-              message: '错误',
+              message: formatMessage({ id: 'component.status.fail' }),
               description: response.message,
             });
           }
@@ -73,7 +74,7 @@ const Page: React.FC = () => {
             ))}
           </Tabs>
           <Button className={styles.submit} size="large" type="primary" onClick={onSubmit}>
-            登录
+            {formatMessage({ id: 'component.user.login' })}
           </Button>
         </div>
       </div>

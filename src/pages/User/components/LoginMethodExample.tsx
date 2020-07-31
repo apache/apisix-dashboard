@@ -1,9 +1,10 @@
 import React from 'react';
 import { UserModule } from '@/pages/User/typing';
+import { formatMessage } from '@@/plugin-locale/localeExports';
 
 const LoginMethodExample: UserModule.LoginMethod = {
   id: 'example',
-  name: '示例登录',
+  name: formatMessage({ id: 'component.user.loginMethodExample' }),
   render: () => {
     return <a href="https://www.example.com">example</a>;
   },
@@ -16,7 +17,7 @@ const LoginMethodExample: UserModule.LoginMethod = {
   submit: async (data) => {
     return {
       status: false,
-      message: '示例登录方式，仅作为登录方式扩展例子，无法使用',
+      message: formatMessage({ id: 'component.user.loginMethodExample.message' }),
       data,
     };
   },

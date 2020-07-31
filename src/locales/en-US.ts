@@ -2,7 +2,7 @@ import { PluginFormEnUS } from '@/components/PluginForm';
 
 import { ConsumerEnUS } from '@/pages/Consumer';
 import { RouteEnUS } from '@/pages/Route';
-
+import { UserEnUS } from '@/pages/User';
 import component from './en-US/component';
 import globalHeader from './en-US/globalHeader';
 import menu from './en-US/menu';
@@ -25,4 +25,5 @@ export default {
   ...PluginFormEnUS,
   ...ConsumerEnUS,
   ...RouteEnUS,
+  ...UserEnUS,
 };

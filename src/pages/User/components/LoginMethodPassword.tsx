@@ -3,12 +3,13 @@ import { UserModule } from '@/pages/User/typing';
 import { Form, Input } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { UserOutlined, LockTwoTone } from '@ant-design/icons';
+import { formatMessage } from '@@/plugin-locale/localeExports';
 
 const formRef = React.createRef<FormInstance>();
 
 const LoginMethodPassword: UserModule.LoginMethod = {
   id: 'password',
-  name: '账户密码登录',
+  name: formatMessage({ id: 'component.user.loginMethodPassword' }),
   render: () => {
     return (
       <Form ref={formRef} name="control-ref">
@@ -17,14 +18,14 @@ const LoginMethodPassword: UserModule.LoginMethod = {
           rules={[
             {
               required: true,
-              message: '请输入用户名!',
+              message: formatMessage({ id: 'component.user.loginMethodPassword.inputUsername' }),
             },
           ]}
         >
           <Input
             size="large"
             type="text"
-            placeholder="用户名"
+            placeholder={formatMessage({ id: 'component.user.loginMethodPassword.username' })}
             prefix={
               <UserOutlined
                 style={{
@@ -39,11 +40,16 @@ const LoginMethodPassword: UserModule.LoginMethod = {
           rules={[
             {
               required: true,
-              message: '请输入密码！',
+              message: formatMessage({ id: 'component.user.loginMethodPassword.inputPassword' }),
             },
           ]}
         >
-          <Input size="large" type="password" placeholder="密码" prefix={<LockTwoTone />} />
+          <Input
+            size="large"
+            type="password"
+            placeholder={formatMessage({ id: 'component.user.loginMethodPassword.password' })}
+            prefix={<LockTwoTone />}
+          />
         </Form.Item>
       </Form>
     );
