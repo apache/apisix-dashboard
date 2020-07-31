@@ -1,4 +1,3 @@
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -14,7 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */import React, { Fragment } from 'react';
+ */
+import React, { Fragment } from 'react';
 import { Drawer, Button } from 'antd';
 import { withTheme, FormProps } from '@rjsf/core';
 import { Theme as AntDTheme } from '@rjsf/antd';
@@ -44,7 +44,6 @@ const PluginDrawer: React.FC<Props> = ({
   onClose,
   onFinish,
 }) => {
-
   const { formatMessage } = useIntl();
   const PluginForm = withTheme(AntDTheme);
 
