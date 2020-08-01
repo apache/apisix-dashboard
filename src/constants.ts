@@ -32,5 +32,5 @@ export const codeMessage = {
   504: '网关超时。',
 };
 
-// TODO: 应作为配置项
-export const DEFAULT_BASE_URL = 'http://127.0.0.1:8080/apisix/admin';
+// NOTE: This is the Manager API Address, e.g http://127.0.0.1:8080/apisix/admin
+export const DEFAULT_BASE_URL = 'https://api.apisix.dev/apisix/admin';
