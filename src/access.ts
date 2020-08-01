@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default function (initialState: { currentUser?: API.CurrentUser | undefined }) {
+export default (initialState: { currentUser?: API.CurrentUser | undefined }) => {
   const { currentUser } = initialState || {};
   return {
     canAdmin: currentUser && currentUser.access === 'admin',
   };
-}
+};

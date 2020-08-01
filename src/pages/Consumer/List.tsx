@@ -61,7 +61,9 @@ const Page: React.FC = () => {
             cancelText={formatMessage({ id: 'consumer.list.cancel' })}
             onConfirm={() => {
               remove(record.id).then(() => {
-                notification.success({ message: formatMessage({ id: 'consumer.list.delete.success' }) });
+                notification.success({
+                  message: formatMessage({ id: 'consumer.list.delete.success' }),
+                });
                 /* eslint-disable no-unused-expressions */
                 ref.current?.reload();
               });

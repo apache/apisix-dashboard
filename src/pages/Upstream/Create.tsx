@@ -45,7 +45,13 @@ const Page: React.FC = (props) => {
     const data = transformCreate({ ...form1.getFieldsValue() } as UpstreamModule.Body);
     const { id } = (props as any).match.params;
     (id ? update(id, data) : create(data)).then(() => {
-      notification.success({ message: `${id ? formatMessage({ id: 'upstream.create.edit' }) : formatMessage({ id: 'upstream.create.create' })} ` + formatMessage({ id: 'upstream.create.upstream.successfully' }) });
+      notification.success({
+        message: `${
+          id
+            ? formatMessage({ id: 'upstream.create.edit' })
+            : formatMessage({ id: 'upstream.create.create' })
+        } ${formatMessage({ id: 'upstream.create.upstream.successfully' })}`,
+      });
       history.replace('/upstream/list');
     });
   };
