@@ -20,3 +20,7 @@
 # manager-api
 
 This is a back-end project that the dashboard depends on, implemented through golang.
+
+## configuration and install
+
+[Install Doc](build/build.md)
