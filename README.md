@@ -35,7 +35,8 @@ The `manager-api` is used to provide APIs for Dashboard, just like a bridge betw
 
 ```sh
 # e.g Initialization for MySQL
-$ mysql –uroot –p123456 < $PROJECT_ROOT_FOLDER/api/script/db/schema.sql
+$ mysql –uroot –p123456 
+> source $PROJECT_ROOT_FOLDER/api/script/db/schema.sql
 ```
 
 2. Start the Apache APISIX.
@@ -55,6 +56,8 @@ $ go build -o manager-api $PROJECT_ROOT_FOLDER/api
 5. Run
 
 ```sh
+$ cd $PROJECT_ROOT_FOLDER
+$ chmod +x $PROJECT_ROOT_FOLDER/api/run/run.sh
 $ sh $PROJECT_ROOT_FOLDER/api/run/run.sh
 ```
 
