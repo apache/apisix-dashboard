@@ -60,22 +60,6 @@ yarn lint:fix
 yarn test
 ```
 
-## Usage
-
-### 1. start manager-api
-
-
-[Configure and Installation manager-api](api/run/build.md)
-
-
-### 2. login dashboard
-
-Visit `http://127.0.0.1/dashboard/` in the browser, Enter `http://127.0.0.1:8080/apisix/admin` into the first input box, this is the backend management service address
-
-![login](compose/pics/login.png)
-
-now, click `save`.
-
 ## More
 
 You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
