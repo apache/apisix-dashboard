@@ -19,7 +19,18 @@
 
 # Table of Contents
 
+- [1.5.0](#150)
 - [1.0.0](#100)
+
+# 1.5.0
+
+This release mainly refactors the dashboard.
+
+### Core
+
+- Integrate with Ant Design Pro. [#263](https://github.com/apache/apisix-dashboard/pull/263)
+- Added Manager API support to process logics between APISIX and Dashboard.
+- Added Metrics/Route/SSL/Upstream/Consumer module.
 
 ## 1.0.0
 
