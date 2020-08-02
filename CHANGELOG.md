@@ -38,7 +38,7 @@ This release is mainly to build some basic panels and resolve License issue.
 
 ### Core
 
-- Dashboard initial. [#1](https://github.com/apache/incubator-apisix-dashboard/pull/1)
+- Dashboard initial. [#1](https://github.com/apache/apisix-dashboard/pull/1)
 - Resolve licence issues.
 - Remove unused files from the Dashboard boilerplate.
 - Support panel to list, create and modify Route, Consumer, Service, SSL and Upstream.

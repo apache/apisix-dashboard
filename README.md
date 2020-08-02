@@ -19,7 +19,7 @@
 
 # Apache APISIX Dashboard
 
-Dashboard for [Apache APISIX](https://github.com/apache/incubator-apisix-dashboard)
+Dashboard for [Apache APISIX](https://github.com/apache/apisix-dashboard)
 
 ## Deploy with Docker
 
@@ -82,4 +82,4 @@ $ yarn build
 
 ## Other
 
-1. If you need the elder dashboard which is built with Vue.js, please refer to [master-vue](https://github.com/apache/incubator-apisix-dashboard/tree/master-vue).
+1. If you need the elder dashboard which is built with Vue.js, please refer to [master-vue](https://github.com/apache/apisix-dashboard/tree/master-vue).

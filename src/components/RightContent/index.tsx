@@ -55,7 +55,7 @@ const GlobalHeaderRight: React.FC<{}> = () => {
         <span
           className={styles.action}
           onClick={() => {
-            window.location.href = 'https://github.com/apache/incubator-apisix';
+            window.location.href = 'https://github.com/apache/apisix';
           }}
         >
           <QuestionCircleOutlined />
