@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, notification, Tabs } from 'antd';
 import { DefaultFooter } from '@ant-design/pro-layout';
 import { SelectLang } from '@@/plugin-locale/SelectLang';
-import { Link, useIntl } from 'umi';
+import { Link, useIntl, history } from 'umi';
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
 import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
 import { UserModule } from '@/pages/User/typing';
@@ -38,6 +38,10 @@ const Page: React.FC = () => {
             notification.success({
               message: formatMessage({ id: 'component.status.success' }),
               description: response.message,
+              duration: 1,
+              onClose: () => {
+                history.replace('/');
+              },
             });
           } else {
             notification.error({
