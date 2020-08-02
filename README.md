@@ -16,15 +16,23 @@
 # limitations under the License.
 #
 -->
+
 # Apache APISIX Dashboard
 
 Dashboard for [Apache APISIX](https://github.com/apache/incubator-apisix-dashboard)
 
-## Deploy with Docker (currently)
+## Deployment
+
+### Docker (Recommended)
 
 Please refer to [Deploy with Docker README](./compose/README.md)
 
-## More
+### Manually
+
+1. Building the [manager-api](./api/README.md)
+2. Building the [dashboard](./README-dashboard.md)
+
+## Other
 
 1. More infomation about the frontend Dashboard, please refer to [README for Dashboard](./README-dashboard.md)
 2. If you need the dashboard built with Vue.js, please refer to [master-vue](https://github.com/apache/incubator-apisix-dashboard/tree/master-vue).
