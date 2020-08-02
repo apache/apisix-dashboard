@@ -82,4 +82,4 @@ $ yarn build
 
 ## Other
 
-1. If you need the dashboard built with Vue.js, please refer to [master-vue](https://github.com/apache/incubator-apisix-dashboard/tree/master-vue).
+1. If you need the elder dashboard which is built with Vue.js, please refer to [master-vue](https://github.com/apache/incubator-apisix-dashboard/tree/master-vue).
