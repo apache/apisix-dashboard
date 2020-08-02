@@ -60,9 +60,9 @@ $ sh $PROJECT_ROOT_FOLDER/api/run/run.sh
 
 ### Build the Dashboard
 
-This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guide for how to use.
+This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
 
-1. Make sure you have `Node.js(version 8.10.0+)` installed on your machine.
+1. Make sure you have `Node.js(version 8.10.0+)/Nginx` installed on your machine.
 2. Install [yarn](https://yarnpkg.com/).
 3. Install dependencies:
 
@@ -78,7 +78,7 @@ $ yarn build
 
 5. The bundle files are under `/dist` folder if the step 4 is successful.
 6. We recommend using `nginx` to handle those bundled files, just put them under nginx's html folder, then visit `http://$IP` in your browser.
-7. NOTE: You may need to update the API address in the dashboard's setting page.
+7. NOTE: You may need to update the manager api's address in the dashboard's setting page.
 
 ## Other
 
