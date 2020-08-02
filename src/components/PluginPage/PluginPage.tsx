@@ -119,7 +119,7 @@ const PluginPage: React.FC<Props> = ({ data = {}, disabled, onChange }) => {
           if (!onChange) {
             throw new Error('请提供 onChange 方法');
           }
-          onChange(omit(Object.assign({}, data), name));
+          onChange(omit({ ...data }, name));
           setInactiveList(inactiveList.concat({ name, ...PLUGIN_MAPPER_SOURCE[name] }));
           setActiveList(activeList.filter((item) => item.name !== name));
           setPluginName(undefined);
@@ -132,7 +132,7 @@ const PluginPage: React.FC<Props> = ({ data = {}, disabled, onChange }) => {
           if (!onChange) {
             throw new Error('请提供 onChange 方法');
           }
-          onChange(Object.assign({}, data, { [pluginName]: value }));
+          onChange({ ...data, [pluginName]: value });
           setPluginName(undefined);
         }}
       />

@@ -49,7 +49,13 @@ const Page: React.FC = (props) => {
     const { id } = (props as any).match.params;
     (id ? update(id, data) : create(data))
       .then(() => {
-        notification.success({ message: `${id ? formatMessage({ id: 'consumer.create.edit' }) : formatMessage({ id: 'consumer.create.create' })} Consumer ${formatMessage({ id: 'consumer.create.success' })}` });
+        notification.success({
+          message: `${
+            id
+              ? formatMessage({ id: 'consumer.create.edit' })
+              : formatMessage({ id: 'consumer.create.create' })
+          } Consumer ${formatMessage({ id: 'consumer.create.success' })}`,
+        });
         history.push('/consumer/list');
       })
       .catch(() => {
@@ -68,7 +74,9 @@ const Page: React.FC = (props) => {
         .map((item) => item[0]);
       const isValid = Object.keys(plugins).some((name) => authPluginNames.includes(name));
       if (!isValid) {
-        notification.warning({ message: formatMessage({ id: 'consumer.create.enable.authentication.plugin' }) });
+        notification.warning({
+          message: formatMessage({ id: 'consumer.create.enable.authentication.plugin' }),
+        });
         return;
       }
       setStep(3);
@@ -81,7 +89,13 @@ const Page: React.FC = (props) => {
 
   return (
     <>
-      <PageContainer title={`${(props as any).match.params.id ? formatMessage({ id: 'consumer.create.edit' }) : formatMessage({ id: 'consumer.create.create' })} Consumer`}>
+      <PageContainer
+        title={`${
+          (props as any).match.params.id
+            ? formatMessage({ id: 'consumer.create.edit' })
+            : formatMessage({ id: 'consumer.create.create' })
+        } Consumer`}
+      >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
             <Steps.Step title={formatMessage({ id: 'consumer.create.basic.information' })} />

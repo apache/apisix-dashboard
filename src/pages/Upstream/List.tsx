@@ -103,7 +103,7 @@ const Page: React.FC = () => {
           <Button type="primary" onClick={() => history.push('/upstream/create')}>
             <PlusOutlined />
             {formatMessage({ id: 'upstream.list.create' })}
-          </Button>
+          </Button>,
         ]}
       />
     </PageContainer>

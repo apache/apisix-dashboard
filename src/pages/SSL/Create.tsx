@@ -80,7 +80,10 @@ const Page: React.FC = (props) => {
       <PageHeaderWrapper title={formatMessage({ id: 'ssl.create' })}>
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>
-            {[formatMessage({ id: 'ssl.create.complete.cert.info' }), formatMessage({ id: 'ssl.create.preview' })].map((item) => (
+            {[
+              formatMessage({ id: 'ssl.create.complete.cert.info' }),
+              formatMessage({ id: 'ssl.create.preview' }),
+            ].map((item) => (
               <Steps.Step title={item} key={item} />
             ))}
           </Steps>

@@ -83,7 +83,9 @@ const Page: React.FC = () => {
             title={formatMessage({ id: 'route.list.delete.confrim' })}
             onConfirm={() => {
               remove(record.id!).then(() => {
-                notification.success({ message: formatMessage({ id: 'route.list.delete.success' }) });
+                notification.success({
+                  message: formatMessage({ id: 'route.list.delete.success' }),
+                });
                 /* eslint-disable no-unused-expressions */
                 ref.current?.reload();
               });
@@ -92,7 +94,7 @@ const Page: React.FC = () => {
             cancelText={formatMessage({ id: 'route.list.cancel' })}
           >
             <Button type="primary" danger>
-            {formatMessage({ id: 'route.list.delete' })}
+              {formatMessage({ id: 'route.list.delete' })}
             </Button>
           </Popconfirm>
         </>
