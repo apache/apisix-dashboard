@@ -23,4 +23,4 @@ This is a backend project which the dashboard depends on, implemented by Golang.
 
 ## Installation
 
-[Install Doc](run/build.md)
+[Please refer to the doc](../README.md)
