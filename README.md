@@ -43,9 +43,9 @@ $ mysql –uroot –p123456
 
 [Please follow this guide](https://github.com/apache/apisix#configure-and-installation)
 
-3. Set environment variables
+3. Check environment variables
 
-According to your local deployment environment, modify the environment variables in `$PROJECT_ROOT_FOLDER/api/run/run.sh`
+According to your local deployment environment, check the environment variables in `$PROJECT_ROOT_FOLDER/api/run/run.sh`, modify the environment variables if necessary.
 
 4. Build
 
@@ -57,7 +57,6 @@ $ go build -o manager-api $PROJECT_ROOT_FOLDER/api
 
 ```sh
 $ cd $PROJECT_ROOT_FOLDER
-$ chmod +x $PROJECT_ROOT_FOLDER/api/run/run.sh
 $ sh $PROJECT_ROOT_FOLDER/api/run/run.sh
 ```
 
