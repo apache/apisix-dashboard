@@ -53,7 +53,7 @@ $ mysql –uroot –p123456
 
 3. Check environment variables
 
-According to your local deployment environment, check the environment variables in `apisix-dashboard/api/run/run.sh`, modify the environment variables if necessary.
+According to your local deployment environment, check the environment variables in `./api/run/run.sh`, modify the environment variables if needed.
 
 4. Build
 
