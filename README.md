@@ -35,7 +35,7 @@ The `manager-api` is used to provide APIs for Dashboard, just like a bridge betw
 
 ```sh
 # e.g Initialization for MySQL
-$ mysql –uroot –p123456 
+$ mysql –uroot –p123456
 > source $PROJECT_ROOT_FOLDER/api/script/db/schema.sql
 ```
 
@@ -50,14 +50,15 @@ According to your local deployment environment, check the environment variables 
 4. Build
 
 ```sh
-$ go build -o manager-api $PROJECT_ROOT_FOLDER/api
+## make sure you are in the path of $PROJECT_ROOT_FOLDER
+$ go build -o manager-api ./api
 ```
 
 5. Run
 
 ```sh
-$ cd $PROJECT_ROOT_FOLDER
-$ sh $PROJECT_ROOT_FOLDER/api/run/run.sh
+## make sure you are in the path of $PROJECT_ROOT_FOLDER
+$ sh ./api/run/run.sh
 ```
 
 ### Build the Dashboard
@@ -78,9 +79,7 @@ $ yarn install
 $ yarn build
 ```
 
-5. The bundle files are under `/dist` folder if the step 4 is successful.
-6. We recommend using `nginx` to handle those bundled files, just put them under nginx's html folder, then visit `http://$IP` in your browser.
-7. NOTE: You may need to update the manager api's address in the dashboard's setting page.
+5. The bundled files are under `/dist` folder if the step 4 is successful, then We recommend using `nginx` to handle those files: just move them to nginx's default html folder, then visit `http://127.0.0.1` in your browser. The default Setting page would be shown, and you should set the API field to the manager api's address, e.g `http://127.0.0.1:8080/apisix/admin` .
 
 ## Other
 
