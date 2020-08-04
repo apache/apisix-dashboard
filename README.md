@@ -27,6 +27,14 @@ Please refer to [Deploy with Docker README](./compose/README.md)
 
 ## Deploy Manually
 
+### Clone the project
+
+```sh
+$ git clone https://github.com/apache/apisix-dashboard.git
+
+$ cd apisix-dashboard
+```
+
 ### Build the manager-api
 
 The `manager-api` is used to provide APIs for Dashboard, just like a bridge between the Apache APISIX and the Dashboard. Here are the steps to build it manually:
@@ -36,7 +44,7 @@ The `manager-api` is used to provide APIs for Dashboard, just like a bridge betw
 ```sh
 # e.g Initialization for MySQL
 $ mysql –uroot –p123456
-> source $PROJECT_ROOT_FOLDER/api/script/db/schema.sql
+> source ./api/script/db/schema.sql
 ```
 
 2. Start the Apache APISIX.
@@ -45,19 +53,17 @@ $ mysql –uroot –p123456
 
 3. Check environment variables
 
-According to your local deployment environment, check the environment variables in `$PROJECT_ROOT_FOLDER/api/run/run.sh`, modify the environment variables if necessary.
+According to your local deployment environment, check the environment variables in `apisix-dashboard/api/run/run.sh`, modify the environment variables if necessary.
 
 4. Build
 
 ```sh
-## make sure you are in the path of $PROJECT_ROOT_FOLDER
 $ go build -o manager-api ./api
 ```
 
 5. Run
 
 ```sh
-## make sure you are in the path of $PROJECT_ROOT_FOLDER
 $ sh ./api/run/run.sh
 ```
 
