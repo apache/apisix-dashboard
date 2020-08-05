@@ -58,13 +58,13 @@ According to your local deployment environment, check the environment variables 
 4. Build
 
 ```sh
-$ go build -o manager-api ./api
+$ cd api && go build -o ../manager-api . && cd ..
 ```
 
 5. Run
 
 ```sh
-$ sh ./api/run/run.sh
+$ sh ./api/run/run.sh &
 ```
 
 ### Build the Dashboard
