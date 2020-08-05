@@ -21,10 +21,6 @@
 
 ```sh
 $ cd apisix-dashboard/compose
-
-$ chmod +x ./manager_conf/build.sh
-
-$ chmod +x gen-config-yaml.sh
 $ sh gen-config-yaml.sh
 
 # For most users in China, please use some proxy services like https://www.daocloud.io/mirror to speed up your Docker images pulling.
