@@ -46,4 +46,4 @@ COPY --from=build-env /root/manager-api/* /root/manager-api/
 COPY --from=build-env /usr/share/zoneinfo/Hongkong /etc/localtime
 EXPOSE 8080
 RUN chmod +x ./build.sh
-CMD ["/root/manager-api/build.sh"]
+CMD ["/bin/ash", "-c", "/root/manager-api/build.sh"]
