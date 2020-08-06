@@ -1,6 +1,6 @@
 {
-  "conf":{
-    "mysql":{
+  "conf": {
+    "mysql": {
       "address": "127.0.0.1:3306",
       "user": "root",
       "password": "123456",
@@ -8,10 +8,10 @@
       "maxIdleConns": 25,
       "maxLifeTime": 10
     },
-    "syslog":{
-      "host": "localhost"
+    "syslog": {
+      "host": "127.0.0.1"
     },
-    "apisix":{
+    "apisix": {
       "base_url": "http://127.0.0.1:9080/apisix/admin",
       "api_key": "edd1c9f034335f136f87ad84b625c8f1"
     }
