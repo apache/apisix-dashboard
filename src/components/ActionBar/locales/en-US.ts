@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 export default {
-  'actionbar.last.step': 'Last Step',
-  'actionbar.next.step': 'Next Step',
-  'actionbar.submit': 'Submit',
+  'component.actionbar.button.preStep': 'Previous',
+  'component.actionbar.button.nextStep': 'Next',
 };
