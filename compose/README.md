@@ -20,7 +20,7 @@
 ## Deploy
 
 ```sh
-$ cd incubator-apisix-dashboard/compose
+$ cd apisix-dashboard/compose
 
 $ chmod +x ./manager_conf/build.sh
 
