@@ -20,7 +20,7 @@ export default {
   'component.tagSelect.all': '全部',
   'component.global.remove': '删除',
   'component.global.cancel': '取消',
-  'component.global.submit': '提交',
+  'component.global.button.submit': '提交',
   'component.global.create': '创建',
   'component.global.add': '新建',
   'component.global.save': '保存',

@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 export default {
-  'setting.update.configuration.successfully': 'Update Configuration Successfully',
-  'setting':'Setting',
-  'setting.api.address':'API Address',
-  'setting.grafana.address':'Grafana Address',
-  'setting.grafana.address.rule':'Grafana address should begin with HTTP or HTTPS',
-  'setting.grafana.address.illegality':'Address is illegality',
+  'page.setting.notification.update.configuration.successfully':
+    'Update Configuration Successfully',
+  'page.setting.pageContainer.title': 'Setting',
+  'page.setting.form.item.baseURL': 'API Address',
+  'page.setting.form.item.grafanaURL': 'Grafana Address',
+  'page.setting.form.item.grafanaURL.inputHelpMessage':
+    'Grafana address should begin with HTTP or HTTPS',
+  'page.setting.form.item.grafanaURL.inputErrorMessage': 'Address is illegality',
 };

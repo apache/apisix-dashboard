@@ -65,7 +65,11 @@ const Setting: React.FC = () => {
         resolve();
       }),
     ]).then(() => {
-      notification.success({ message: formatMessage({ id: 'setting.update.configuration.successfully' }) });
+      notification.success({
+        message: formatMessage({
+          id: 'page.setting.notification.update.configuration.successfully',
+        }),
+      });
       setTimeout(() => {
         window.location.reload();
       }, 500);
@@ -74,22 +78,34 @@ const Setting: React.FC = () => {
 
   return (
     <>
-      <PageContainer title={formatMessage({ id: 'set' })}>
+      <PageContainer title={formatMessage({ id: 'page.setting.pageContainer.title' })}>
         <Card>
           <Row>
             <Col span={10}>
               <Form form={form} labelCol={{ span: 7 }}>
                 {!isWorkspace && (
-                  <Form.Item label={formatMessage({ id: 'setting.api.address' })} name="baseURL">
+                  <Form.Item
+                    label={formatMessage({ id: 'page.setting.form.item.baseURL' })}
+                    name="baseURL"
+                  >
                     <Input />
                   </Form.Item>
                 )}
                 {canFetchGrafana && (
                   <Form.Item
-                    label={formatMessage({ id: 'setting.grafana.address' })}
+                    label={formatMessage({ id: 'page.setting.form.item.grafanaURL' })}
                     name="grafanaURL"
-                    extra={formatMessage({ id: 'setting.grafana.address.rule' })}
-                    rules={[{ pattern: new RegExp(/^https?:\/\//), message: formatMessage({ id: 'setting.grafana.address.illegality' }) }]}
+                    extra={formatMessage({
+                      id: 'page.setting.form.item.grafanaURL.inputHelpMessage',
+                    })}
+                    rules={[
+                      {
+                        pattern: new RegExp(/^https?:\/\//),
+                        message: formatMessage({
+                          id: 'page.setting.form.item.grafanaURL.inputErrorMessage',
+                        }),
+                      },
+                    ]}
                   >
                     <Input />
                   </Form.Item>

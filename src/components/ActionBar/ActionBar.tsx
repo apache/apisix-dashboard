@@ -37,7 +37,6 @@ const style: CSSProperties = {
 };
 
 const ActionBar: React.FC<Props> = ({ step, lastStep, onChange, withResultView }) => {
-
   const { formatMessage } = useIntl();
 
   if (step > lastStep && !withResultView) {
@@ -50,12 +49,14 @@ const ActionBar: React.FC<Props> = ({ step, lastStep, onChange, withResultView }
       <Row gutter={10} justify="end">
         <Col>
           <Button type="primary" onClick={() => onChange(step - 1)} disabled={step === 1}>
-            {formatMessage({ id: 'actionbar.last.step' })}
+            {formatMessage({ id: 'component.actionbar.button.preStep' })}
           </Button>
         </Col>
         <Col>
           <Button type="primary" onClick={() => onChange(step + 1)}>
-            {step < lastStep ? formatMessage({ id: 'actionbar.next.step' }) : formatMessage({ id: 'actionbar.submit' })}
+            {step < lastStep
+              ? formatMessage({ id: 'component.actionbar.button.nextStep' })
+              : formatMessage({ id: 'component.global.button.submit' })}
           </Button>
         </Col>
       </Row>

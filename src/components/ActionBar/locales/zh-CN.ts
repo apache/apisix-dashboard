@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 export default {
-  'actionbar.last.step': '上一步',
-  'actionbar.next.step': '下一步',
-  'actionbar.submit': '提交',
+  'component.actionbar.button.preStep': '上一步',
+  'component.actionbar.button.nextStep': '下一步',
 };

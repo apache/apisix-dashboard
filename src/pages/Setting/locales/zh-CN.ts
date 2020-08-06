@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 export default {
-  'setting.update.configuration.successfully': '更新配置成功',
-  'setting':'设置',
-  'setting.api.address':'API 地址',
-  'setting.grafana.address':'Grafana 地址',
-  'setting.grafana.address.rule':'Grafana 地址需以 HTTP 或 HTTPS 开头',
-  'setting.grafana.address.illegality':'非法的地址',
+  'page.setting.notification.update.configuration.successfully': '更新配置成功',
+  'page.setting.pageContainer.title': '设置',
+  'page.setting.form.item.baseURL': 'API 基础地址',
+  'page.setting.form.item.grafanaURL': 'Grafana 地址',
+  'page.setting.form.item.grafanaURL.inputHelpMessage': 'Grafana 地址需以 HTTP 或 HTTPS 开头',
+  'page.setting.form.item.grafanaURL.inputErrorMessage': '非法的地址',
 };
