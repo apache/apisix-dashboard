@@ -92,7 +92,7 @@ const PluginPage: React.FC<Props> = ({ data = {}, disabled, onChange }) => {
                   <LinkOutlined
                     onClick={() =>
                       window.open(
-                        `https://github.com/apache/incubator-apisix/blob/master/doc/plugins/${name}.md`,
+                        `https://github.com/apache/apisix/blob/master/doc/plugins/${name}.md`,
                       )
                     }
                   />,
