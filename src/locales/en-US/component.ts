@@ -20,7 +20,7 @@ export default {
   'component.tagSelect.all': 'All',
   'component.global.remove': 'Remove',
   'component.global.cancel': 'Cancel',
-  'component.global.submit': 'Submit',
+  'component.global.button.submit': 'Submit',
   'component.global.create': 'Create',
   'component.global.add': 'Add',
   'component.global.save': 'Save',
