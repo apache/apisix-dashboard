@@ -1,0 +1,23 @@
+Please answer these questions before submitting your issue.
+
+- Why do you submit this issue?
+- [ ] Question or discussion
+- [ ] Bug
+- [ ] Requirements
+- [ ] Feature or performance improvement
+- [ ] Other
+
+___
+### Question
+- What do you want to know?
+
+___
+### Bug
+- Which version of Apache APISIX Dashboard, OS and Broswer?
+
+- What happened?
+If possible, provide a way to reproduce the error.
+
+___
+### Requirement or improvement
+- Please describe your requirements or improvement suggestions.
