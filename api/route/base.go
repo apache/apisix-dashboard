@@ -35,6 +35,7 @@ func SetUpRouter() *gin.Engine {
 	r.Use(filter.CORS(), filter.RequestId(), filter.RequestLogHandler(), filter.RecoverHandler())
 
 	AppendHealthCheck(r)
+	AppendAuthentication(r)
 	AppendRoute(r)
 	AppendSsl(r)
 	AppendPlugin(r)
