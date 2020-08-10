@@ -18,7 +18,6 @@ package route
 
 import (
 	"github.com/api7/apitest"
-
 	"github.com/apisix/manager-api/conf"
 )
 
@@ -34,5 +33,9 @@ func init() {
 
 	r := SetUpRouter()
 
-	handler = apitest.New().Handler(r)
+	handler = apitest.
+		New().
+		Handler(r)
 }
+
+
