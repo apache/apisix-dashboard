@@ -34,14 +34,14 @@ func RequestLogHandler() gin.HandlerFunc {
 			val = c.Request.URL.Query()
 		} else {
 			val, _ = c.GetRawData()
+
+			// set RequestBody back
+			c.Request.Body = ioutil.NopCloser(bytes.NewReader(val.([]byte)))
 		}
 		c.Set("requestBody", val)
 		uuid, _ := c.Get("X-Request-Id")
 
 		param, _ := c.Get("requestBody")
-
-		// set RequestBody back
-		c.Request.Body = ioutil.NopCloser(bytes.NewReader(param.([]byte)))
 
 		switch param.(type) {
 		case []byte:
