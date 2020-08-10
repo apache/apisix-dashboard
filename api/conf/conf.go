@@ -45,6 +45,7 @@ func init() {
 	setEnvironment()
 	initMysql()
 	initApisix()
+	initAuthentication()
 }
 
 func setEnvironment() {
@@ -74,6 +75,13 @@ type mysqlConfig struct {
 	MaxLifeTime  int
 }
 
+type user struct {
+	Username string
+	Password string
+}
+
+var UserList = make(map[string]user, 1)
+
 var MysqlConfig mysqlConfig
 
 func initMysql() {
@@ -101,5 +109,22 @@ func initApisix() {
 		apisixConf := configuration.Get("conf.apisix")
 		BaseUrl = apisixConf.Get("base_url").String()
 		ApiKey = apisixConf.Get("api_key").String()
+	}
+}
+
+func initAuthentication() {
+	filePath := configurationPath()
+	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
+		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
+	} else {
+		configuration := gjson.ParseBytes(configurationContent)
+		userList := configuration.Get("authentication.user").Array()
+
+		// create user list
+		for _, item := range userList{
+			username := item.Map()["username"].String()
+			password := item.Map()["password"].String()
+			UserList[item.Map()["username"].String()] = user{Username: username, Password: password}
+		}
 	}
 }
