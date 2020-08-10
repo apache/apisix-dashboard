@@ -18,6 +18,7 @@ package filter
 
 import (
 	"bytes"
+	"io/ioutil"
 	"time"
 
 	"github.com/apisix/manager-api/errno"
@@ -38,6 +39,10 @@ func RequestLogHandler() gin.HandlerFunc {
 		uuid, _ := c.Get("X-Request-Id")
 
 		param, _ := c.Get("requestBody")
+
+		// set RequestBody back
+		c.Request.Body = ioutil.NopCloser(bytes.NewReader(param.([]byte)))
+
 		switch param.(type) {
 		case []byte:
 			param = string(param.([]byte))
