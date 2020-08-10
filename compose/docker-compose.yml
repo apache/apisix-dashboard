@@ -135,6 +135,11 @@ services:
     restart: always
     ports:
       - "80:80/tcp"
+    volumes:
+      - "./dashboard_conf/nginx.conf:/etc/nginx/conf.d/default.conf"
+    networks:
+      apisix-dashboard:
+        ipv4_address: 192.17.5.18
 
 networks:
   apisix-dashboard:
