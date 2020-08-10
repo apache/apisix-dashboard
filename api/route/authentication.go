@@ -3,13 +3,10 @@ package route
 import (
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/errno"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
-
-type userTokenData struct {
-	Token  string `json:"token"`
-}
 
 func AppendAuthentication(r *gin.Engine) *gin.Engine {
 	r.POST("/user/login", userLogin)
@@ -34,7 +31,12 @@ func userLogin(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, errno.FromMessage(errno.AuthenticationUserError).Response())
 		return
 	} else {
-		c.AbortWithStatusJSON(http.StatusOK, errno.FromMessage(errno.SystemSuccess).ItemResponse(userTokenData{Token: "admin"}))
+	session := sessions.Default(c)
+
+	// set session by cookie
+	session.Set("username", username)
+	session.Save()
+		c.AbortWithStatusJSON(http.StatusOK, errno.FromMessage(errno.SystemSuccess).Response())
 		return
 	}
 }
