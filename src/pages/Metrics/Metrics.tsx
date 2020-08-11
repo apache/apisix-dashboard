@@ -32,7 +32,7 @@ const Metrics: React.FC = () => {
   }, []);
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'metrics.monitor' })}>
+    <PageHeaderWrapper title={formatMessage({ id: 'menu.metrics' })}>
       <Card>
         {!grafanaURL && (
           <Empty
@@ -40,7 +40,11 @@ const Metrics: React.FC = () => {
             imageStyle={{
               height: 60,
             }}
-            description={<span>{formatMessage({ id: 'metrics.grafana.not.config' })}</span>}
+            description={
+              <span>
+                {formatMessage({ id: 'page.metrics.empty.description.grafanaNotConfig' })}
+              </span>
+            }
           >
             <Button
               type="primary"
@@ -50,7 +54,7 @@ const Metrics: React.FC = () => {
                 });
               }}
             >
-              {formatMessage({ id: 'metrics.grafana.config' })}
+              {formatMessage({ id: 'page.metrics.button.grafanaConfig' })}
             </Button>
           </Empty>
         )}
