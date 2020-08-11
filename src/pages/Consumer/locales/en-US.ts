@@ -15,33 +15,11 @@
  * limitations under the License.
  */
 export default {
-  'consumer.step.username': 'Username',
-  'consumer.step.username.rule':
+  'page.consumer.form.itemRuleMessage.username':
     'Maximum length is 100, only letters, numbers and _ are supported, and can only begin with letters',
-  'consumer.step.username.unique': 'Username should be unique',
-  'consumer.step.input.username': 'Please input username',
-  'consumer.step.description': 'Description',
-  'consumer.step.input.description': 'Please input description',
-
-  'consumer.create.edit': 'Edit',
-  'consumer.create.create': 'Create',
-  'consumer.create.success': 'Success',
-  'consumer.create.enable.authentication.plugin': 'Please enable one authentication plugin',
-  'consumer.create.basic.information': 'Basic Information',
-  'consumer.create.plugin.config': 'Plugin Config',
-  'consumer.create.preview': 'Preview',
-
-  'consumer.list.username': 'Username',
-  'consumer.list.description': 'Description',
-  'consumer.list.update.time': 'Update Time',
-  'consumer.list.operation': 'Operation',
-  'consumer.list.edit': 'Edit',
-  'consumer.list.delete.confirm': 'Are you sure to delete this record ?',
-  'consumer.list.confirm': 'Confirm',
-  'consumer.list.cancel': 'Cancel',
-  'consumer.list.delete.success': 'Delete Success',
-  'consumer.list.delete': 'Delete',
-  'consumer.list': 'Consumer List',
-  'consumer.list.input': 'Please input',
-  'consumer.list.create': 'Create',
+  'page.consumer.form.itemExtraMessage.username': 'Username should be unique',
+  'page.consumer.notification.warning.enableAuthenticationPlugin':
+    'Please enable at least one authentication plugin',
+  'page.consumer.username': 'Username',
+  'page.consumer.updateTime': 'Update Time',
 };
