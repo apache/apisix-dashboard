@@ -17,9 +17,6 @@
 import { PluginPageZhCN } from '@/components/PluginPage';
 import { ActionBarZhCN } from '@/components/ActionBar';
 
-import { ConsumerZhCN } from '@/pages/Consumer';
-import { RouteZhCN } from '@/pages/Route';
-
 import component from './zh-CN/component';
 import globalHeader from './zh-CN/globalHeader';
 import menu from './zh-CN/menu';
@@ -40,7 +37,5 @@ export default {
   ...pwa,
   ...component,
   ...PluginPageZhCN,
-  ...ConsumerZhCN,
-  ...RouteZhCN,
   ...ActionBarZhCN,
 };

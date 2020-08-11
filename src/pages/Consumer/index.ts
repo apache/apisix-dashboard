@@ -14,5 +14,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { default as ConsumerZhCN } from './locales/zh-CN';
-export { default as ConsumerEnUS } from './locales/en-US';
