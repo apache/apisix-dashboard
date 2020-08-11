@@ -31,11 +31,11 @@ const Page: React.FC = () => {
 
   const columns: ProColumns<RouteModule.BaseData>[] = [
     {
-      title: formatMessage({ id: 'route.list.name' }),
+      title: formatMessage({ id: 'page.route.name' }),
       dataIndex: 'name',
     },
     {
-      title: formatMessage({ id: 'route.list.domain.name' }),
+      title: formatMessage({ id: 'page.route.domainName' }),
       dataIndex: 'hosts',
       render: (_, record) =>
         (record.hosts || []).map((host) => (
@@ -45,7 +45,7 @@ const Page: React.FC = () => {
         )),
     },
     {
-      title: formatMessage({ id: 'route.list.path' }),
+      title: formatMessage({ id: 'page.route.path' }),
       dataIndex: 'uri',
       render: (_, record) =>
         record.uris.map((uri) => (
@@ -59,7 +59,7 @@ const Page: React.FC = () => {
     //   dataIndex: 'priority',
     // },
     {
-      title: formatMessage({ id: 'route.list.description' }),
+      title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'description',
     },
     {
@@ -80,12 +80,12 @@ const Page: React.FC = () => {
       ),
     },
     {
-      title: formatMessage({ id: 'route.list.edit.time' }),
+      title: formatMessage({ id: 'page.route.editTime' }),
       dataIndex: 'update_time',
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },
     {
-      title: formatMessage({ id: 'route.list.operation' }),
+      title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
       render: (_, record) => (
         <>
@@ -111,8 +111,28 @@ const Page: React.FC = () => {
               onClick={() => history.push(`/routes/${record.id}/edit`)}
               style={{ marginRight: 10 }}
             >
-              {formatMessage({ id: 'route.list.edit' })}
+              {formatMessage({ id: 'component.global.edit' })}
             </Button>
+            <Popconfirm
+              title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
+              onConfirm={() => {
+                remove(record.id!).then(() => {
+                  notification.success({
+                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                      id: 'menu.routes',
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
+                  });
+                  /* eslint-disable no-unused-expressions */
+                  ref.current?.reload();
+                });
+              }}
+              okText={formatMessage({ id: 'component.global.confirm' })}
+              cancelText={formatMessage({ id: 'component.global.cancel' })}
+            >
+              <Button type="primary" danger>
+                {formatMessage({ id: 'component.global.delete' })}
+              </Button>
+            </Popconfirm>
             <Button
               type="primary"
               onClick={() => history.push(`/routes/${record.id}/debug`)}
@@ -163,7 +183,11 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'route.list' })}>
+    <PageHeaderWrapper
+      title={`${formatMessage({ id: 'menu.routes' })} ${formatMessage({
+        id: 'component.global.list',
+      })}`}
+    >
       <ProTable<RouteModule.BaseData>
         actionRef={ref}
         rowKey="name"
@@ -172,7 +196,7 @@ const Page: React.FC = () => {
         request={(params) => fetchList(params, search)}
         toolBarRender={(action) => [
           <Input.Search
-            placeholder={formatMessage({ id: 'route.list.input' })}
+            placeholder={formatMessage({ id: 'component.global.pleaseEnter' })}
             onSearch={(value) => {
               setSearch(value);
               action.setPageInfo({ page: 1 });
@@ -181,7 +205,7 @@ const Page: React.FC = () => {
           />,
           <Button type="primary" onClick={() => history.push('/routes/create')}>
             <PlusOutlined />
-            {formatMessage({ id: 'route.list.create' })}
+            {formatMessage({ id: 'component.global.create' })}
           </Button>,
         ]}
       />

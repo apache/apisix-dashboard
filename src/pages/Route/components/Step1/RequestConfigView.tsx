@@ -41,10 +41,12 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
             {fields.map((field, index) => (
               <Form.Item
                 {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-                label={index === 0 ? formatMessage({ id: 'route.request.config.domain.name' }) : ''}
+                label={index === 0 ? formatMessage({ id: 'page.route.domainName' }) : ''}
                 key={field.key}
                 extra={
-                  index === 0 ? formatMessage({ id: 'route.request.config.domain.or.ip' }) : ''
+                  index === 0
+                    ? formatMessage({ id: 'page.route.form.itemExtraMessage.domain' })
+                    : ''
                 }
               >
                 <Form.Item
@@ -53,13 +55,17 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                   rules={[
                     {
                       pattern: new RegExp(/(^\*?[a-zA-Z0-9._-]+$|^\*$)/, 'g'),
-                      message: formatMessage({ id: 'route.request.config.domain.name.rule' }),
+                      message: formatMessage({
+                        id: 'page.route.form.itemRulesPatternMessage.domain',
+                      }),
                     },
                   ]}
                   noStyle
                 >
                   <Input
-                    placeholder={formatMessage({ id: 'route.request.config.input.domain.name' })}
+                    placeholder={`${formatMessage({
+                      id: 'component.global.pleaseEnter',
+                    })} ${formatMessage({ id: 'page.route.domainName' })}`}
                     style={{ width: '60%' }}
                     disabled={disabled}
                   />
@@ -83,7 +89,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                     add();
                   }}
                 >
-                  <PlusOutlined /> {formatMessage({ id: 'route.request.config.create' })}
+                  <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
                 </Button>
               </Form.Item>
             )}
@@ -101,15 +107,15 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
             {fields.map((field, index) => (
               <Form.Item
                 {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-                label={index === 0 ? formatMessage({ id: 'route.request.config.path' }) : ''}
+                label={index === 0 ? formatMessage({ id: 'page.route.path' }) : ''}
                 required
                 key={field.key}
                 extra={
                   index === 0 ? (
                     <div>
-                      {formatMessage({ id: 'route.request.config.path.description1' })}
+                      {formatMessage({ id: 'page.route.form.itemExtraMessage1.path' })}
                       <br />
-                      {formatMessage({ id: 'route.request.config.path.description2' })}
+                      {formatMessage({ id: 'page.route.form.itemExtraMessage2.path' })}
                     </div>
                   ) : null
                 }
@@ -121,17 +127,23 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                     {
                       required: true,
                       whitespace: true,
-                      message: formatMessage({ id: 'route.request.config.input.path' }),
+                      message: `${formatMessage({
+                        id: 'component.global.pleaseEnter',
+                      })} ${formatMessage({ id: 'page.route.path' })}`,
                     },
                     {
                       pattern: new RegExp(/^\/[a-zA-Z0-9\-._~%!$&'()+,;=:@/]*\*?$/, 'g'),
-                      message: formatMessage({ id: 'route.request.config.path.rule' }),
+                      message: formatMessage({
+                        id: 'page.route.form.itemRulesPatternMessage.path',
+                      }),
                     },
                   ]}
                   noStyle
                 >
                   <Input
-                    placeholder={formatMessage({ id: 'route.request.config.input.path' })}
+                    placeholder={`${formatMessage({
+                      id: 'component.global.pleaseEnter',
+                    })} ${formatMessage({ id: 'page.route.path' })}`}
                     style={{ width: '60%' }}
                     disabled={disabled}
                   />
@@ -155,7 +167,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                     add();
                   }}
                 >
-                  <PlusOutlined /> {formatMessage({ id: 'route.request.config.create' })}
+                  <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
                 </Button>
               </Form.Item>
             )}
@@ -166,14 +178,18 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
   );
 
   return (
-    <PanelSection title={formatMessage({ id: 'route.request.config.basic.define' })}>
+    <PanelSection
+      title={formatMessage({ id: 'page.route.panelSection.title.requestConfigBasicDefine' })}
+    >
       <Form.Item
-        label={formatMessage({ id: 'route.request.config.protocol' })}
+        label={formatMessage({ id: 'page.route.protocol' })}
         name="protocols"
         rules={[
           {
             required: true,
-            message: formatMessage({ id: 'route.request.config.choose.protocol' }),
+            message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
+              id: 'page.route.protocol',
+            })}`,
           },
         ]}
       >
@@ -193,19 +209,21 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
       {renderHosts()}
       {renderPaths()}
       <Form.Item
-        label={formatMessage({ id: 'route.request.config.http.method' })}
+        label={formatMessage({ id: 'page.route.form.itemLabel.httpMethod' })}
         name="methods"
         rules={[
           {
             required: true,
-            message: formatMessage({ id: 'route.request.config.choose.http.method' }),
+            message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
+              id: 'page.route.form.itemLabel.httpMethod',
+            })}`,
           },
         ]}
       >
         <Checkbox.Group options={HTTP_METHOD_OPTION_LIST} disabled={disabled} />
       </Form.Item>
       <Form.Item
-        label={formatMessage({ id: 'route.request.config.redirect' })}
+        label={formatMessage({ id: 'page.route.form.itemLabel.redirect' })}
         name="redirectOption"
       >
         <Select
@@ -215,13 +233,13 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
           }}
         >
           <Select.Option value="forceHttps">
-            {formatMessage({ id: 'route.request.config.enable.https' })}
+            {formatMessage({ id: 'page.route.select.option.enableHttps' })}
           </Select.Option>
           <Select.Option value="customRedirect">
-            {formatMessage({ id: 'route.request.config.custom' })}
+            {formatMessage({ id: 'page.route.select.option.configCustom' })}
           </Select.Option>
           <Select.Option value="disabled">
-            {formatMessage({ id: 'route.request.config.forbidden' })}
+            {formatMessage({ id: 'page.route.select.option.forbidden' })}
           </Select.Option>
         </Select>
       </Form.Item>

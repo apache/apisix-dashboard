@@ -39,18 +39,23 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled, isEdit
   }, []);
 
   return (
-    <PanelSection title={formatMessage({ id: 'route.meta.name.description' })}>
+    <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>
       <Form.Item
-        label={formatMessage({ id: 'route.meta.api.name' })}
+        label={formatMessage({ id: 'page.route.form.itemLabel.apiName' })}
         name="name"
         rules={[
-          { required: true, message: formatMessage({ id: 'route.meta.input.api.name' }) },
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+              id: 'page.route.form.itemLabel.apiName',
+            })}`,
+          },
           {
             pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
-            message: formatMessage({ id: 'route.meta.api.name.rule' }),
+            message: formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' }),
           },
         ]}
-        extra={formatMessage({ id: 'rotue.meta.api.rule' })}
+        extra={formatMessage({ id: 'component.global.input.ruleMessage.name' })}
       >
         <Input
           placeholder={formatMessage({ id: 'route.meta.input.api.name' })}
@@ -108,9 +113,9 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled, isEdit
           <Switch disabled={disabled} />
         </Form.Item>
       )}
-      <Form.Item label={formatMessage({ id: 'route.meta.description' })} name="desc">
+      <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
         <Input.TextArea
-          placeholder={formatMessage({ id: 'route.meta.description.rule' })}
+          placeholder={formatMessage({ id: 'page.route.input.placeholder.description' })}
           disabled={disabled}
         />
       </Form.Item>

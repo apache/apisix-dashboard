@@ -49,6 +49,8 @@ export default {
     'Only letters, numbers, - and _ are supported, and can only begin with letters',
 
   'component.global.connectionTimeout': 'Connection Timeout',
+  'component.global.sendTimeout': 'Send Timeout',
+  'component.global.receiveTimeout': 'Receive Timeout',
   // User component
   'component.user.loginByPassword': 'Username & Password',
   'component.user.login': 'Login',
