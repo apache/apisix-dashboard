@@ -19,7 +19,18 @@
 
 # Table of Contents
 
+- [1.5.0](#150)
 - [1.0.0](#100)
+
+# 1.5.0
+
+This release mainly refactors the dashboard.
+
+### Core
+
+- Integrate with Ant Design Pro. [#263](https://github.com/apache/apisix-dashboard/pull/263)
+- Added Manager API support to process logics between APISIX and Dashboard.
+- Added Metrics/Route/SSL/Upstream/Consumer module.
 
 ## 1.0.0
 
@@ -27,7 +38,7 @@ This release is mainly to build some basic panels and resolve License issue.
 
 ### Core
 
-- Dashboard initial. [#1](https://github.com/apache/incubator-apisix-dashboard/pull/1)
+- Dashboard initial. [#1](https://github.com/apache/apisix-dashboard/pull/1)
 - Resolve licence issues.
 - Remove unused files from the Dashboard boilerplate.
 - Support panel to list, create and modify Route, Consumer, Service, SSL and Upstream.
