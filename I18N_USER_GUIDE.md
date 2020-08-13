@@ -40,8 +40,8 @@ the key can be like this : [basicModule].[moduleName].[elementName].[...desc]
 
 - common texts, we should not repeat in other part, and the common locale key omit [elementName] would be better.
 
-  - If the text is used in two or more places inside the module, we would recommend to share the text in the module, e.g:`page.route.parameterPosition`.
-  - If the text is used in two or more places between modules, we would recommend to share the text globally, and add`global`as the moduleName,git e.g:`component.global.confirm`.
+  - If the text is used in two or more places inside the module, we would recommend sharing the text in the module, e.g:`page.route.parameterPosition`.
+  - If the text is used in two or more places between modules, we would recommend sharing the text globally, and add`global`as the moduleName,git e.g:`component.global.confirm`.
 
 ## Global locale keys
 
