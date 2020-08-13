@@ -17,4 +17,21 @@
 #
 -->
 
+# docker-compose
+
 This folder stores the `docker-compose` file for `manager-api`.
+
+## Deploy
+
+1. Run docker-compose
+
+```sh
+$ cd apisix-dashboard/compose
+
+$ sh gen-config-yaml.sh
+
+# For most users in China, please use some proxy services like https://www.daocloud.io/mirror to speed up your Docker images pulling.
+$ docker-compose -p dashboard up -d
+```
+
+2. Visit `http://127.0.0.1/` in the browser.

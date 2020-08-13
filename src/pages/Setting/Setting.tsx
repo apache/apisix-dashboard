@@ -19,7 +19,6 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Form, Input, Row, Col, notification } from 'antd';
 import { useIntl } from 'umi';
 
-import { setBaseURL, getBaseURL } from '@/helpers';
 import ActionBar from '@/components/ActionBar';
 import { getGrafanaURL } from '@/pages/Metrics/service';
 
@@ -35,10 +34,6 @@ const Setting: React.FC = () => {
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    form.setFieldsValue({
-      baseURL: getBaseURL(),
-    });
-
     if (!canFetchGrafana) {
       return;
     }
@@ -50,17 +45,11 @@ const Setting: React.FC = () => {
   }, [canFetchGrafana]);
 
   const onSubmit = () => {
-    const { grafanaURL, baseURL } = form.getFieldsValue();
+    const { grafanaURL } = form.getFieldsValue();
     Promise.all([
       new Promise((resolve) => {
         if (canFetchGrafana) {
           updateMonitorURL(grafanaURL).then(resolve);
-        }
-        resolve();
-      }),
-      new Promise((resolve) => {
-        if (!isWorkspace) {
-          setBaseURL(baseURL);
         }
         resolve();
       }),
@@ -83,14 +72,6 @@ const Setting: React.FC = () => {
           <Row>
             <Col span={10}>
               <Form form={form} labelCol={{ span: 7 }}>
-                {!isWorkspace && (
-                  <Form.Item
-                    label={formatMessage({ id: 'page.setting.form.item.baseURL' })}
-                    name="baseURL"
-                  >
-                    <Input />
-                  </Form.Item>
-                )}
                 {canFetchGrafana && (
                   <Form.Item
                     label={formatMessage({ id: 'page.setting.form.item.grafanaURL' })}

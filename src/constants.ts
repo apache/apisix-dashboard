@@ -31,6 +31,3 @@ export const codeMessage = {
   503: '服务不可用，服务器暂时过载或维护。',
   504: '网关超时。',
 };
-
-// NOTE: This is the Manager API Address, e.g http://127.0.0.1:8080/apisix/admin
-export const DEFAULT_BASE_URL = 'https://api.apisix.dev/apisix/admin';

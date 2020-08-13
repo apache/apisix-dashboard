@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React from 'react';
-import { RequestConfig, history } from 'umi';
+import { RequestConfig } from 'umi';
 import {
   BasicLayoutProps,
   Settings as LayoutSettings,
@@ -25,26 +25,16 @@ import {
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { queryCurrent } from '@/services/user';
-import { getMenuData, errorHandler, getBaseURL } from '@/helpers';
+import { getMenuData, errorHandler } from '@/helpers';
 import defaultSettings from '../config/defaultSettings';
 
 export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   settings?: LayoutSettings;
 }> {
-  // 如果是设置页面，不执行
-  if (history.location.pathname !== '/settings') {
-    try {
-      const currentUser = await queryCurrent();
-      return {
-        currentUser,
-        settings: defaultSettings,
-      };
-    } catch (error) {
-      history.push('/settings');
-    }
-  }
+  const currentUser = await queryCurrent();
   return {
+    currentUser,
     settings: defaultSettings,
   };
 }
@@ -66,7 +56,7 @@ export const layout = ({
 };
 
 export const request: RequestConfig = {
-  prefix: getBaseURL(),
+  prefix: '/apisix/admin',
   errorHandler,
   credentials: 'same-origin',
 };

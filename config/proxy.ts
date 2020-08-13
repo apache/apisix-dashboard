@@ -16,24 +16,10 @@
  */
 export default {
   dev: {
-    '/api/': {
-      target: 'https://apisix.iresty.com/apisix/admin/',
+    '/apisix/admin': {
+      // NOTE: This is the manager-api pre-deployed in Azure just for preview, please refer to https://www.yuque.com/umijs/umi/proxy for more info.
+      target: 'http://139.217.185.221',
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
-    },
-  },
-  test: {
-    '/api/': {
-      target: 'https://preview.pro.ant.design',
-      changeOrigin: true,
-      pathRewrite: { '^': '' },
-    },
-  },
-  pre: {
-    '/api/': {
-      target: 'your pre url',
-      changeOrigin: true,
-      pathRewrite: { '^': '' },
     },
   },
 };
