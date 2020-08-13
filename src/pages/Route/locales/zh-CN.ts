@@ -152,4 +152,7 @@ export default {
   'route.list': '路由列表',
   'route.list.input': '请输入',
   'route.list.create': '创建',
+  'page.route.radio.static': '静态重写',
+  'page.route.radio.regx': '正则重写',
+  'page.route.form.itemLabel.from': '原路径',
 };

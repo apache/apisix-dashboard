@@ -85,6 +85,8 @@ declare namespace RouteModule {
   type Step2Data = {
     upstream_protocol: 'http' | 'https' | 'keep';
     upstreamHostList: UpstreamHost[];
+    mappingStrategy: string | undefined;
+    rewriteType: string | undefined;
     upstreamPath: string | undefined;
     upstreamHeaderList: UpstreamHeader[];
     upstream_id?: string;
@@ -127,6 +129,7 @@ declare namespace RouteModule {
       };
     };
     upstream_path?: {
+      type?: string;
       from?: string;
       to: string;
     };

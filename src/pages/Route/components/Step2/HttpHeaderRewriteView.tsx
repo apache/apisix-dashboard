@@ -51,7 +51,9 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
       dataIndex: 'header_action',
       key: 'header_action',
       render: (action: 'override' | 'remove') => {
-        return action === 'override' ? formatMessage({ id: 'route.http.override.or.create' }) : formatMessage({ id: 'route.http.delete' });
+        return action === 'override'
+          ? formatMessage({ id: 'route.http.override.or.create' })
+          : formatMessage({ id: 'route.http.delete' });
       },
     },
     {
@@ -114,7 +116,11 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
 
     return (
       <Modal
-        title={mode === 'EDIT' ? formatMessage({ id: 'route.http.edit.request.header' }) : formatMessage({ id: 'route.http.operate.request.header' })}
+        title={
+          mode === 'EDIT'
+            ? formatMessage({ id: 'route.http.edit.request.header' })
+            : formatMessage({ id: 'route.http.operate.request.header' })
+        }
         centered
         visible
         onOk={handleOk}
@@ -126,22 +132,33 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
         cancelText={formatMessage({ id: 'route.http.cancel' })}
         destroyOnClose
       >
-        <Form form={modalForm} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+        <Form form={modalForm} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
           <Form.Item
             label={formatMessage({ id: 'route.http.request.header.name' })}
             name="header_name"
-            rules={[{ required: true, message: formatMessage({ id: 'route.http.input.request.header.name' }) }]}
+            rules={[
+              {
+                required: true,
+                message: formatMessage({ id: 'route.http.input.request.header.name' }),
+              },
+            ]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label={formatMessage({ id: 'route.http.action' })}
             name="header_action"
-            rules={[{ required: true, message: formatMessage({ id: 'route.http.select.actions' }) }]}
+            rules={[
+              { required: true, message: formatMessage({ id: 'route.http.select.actions' }) },
+            ]}
           >
             <Select onChange={(e) => setShowModalValue(e === 'override')}>
-              <Select.Option value="override">{formatMessage({ id: 'route.http.override.or.create' })}</Select.Option>
-              <Select.Option value="remove">{formatMessage({ id: 'route.http.delete' })}</Select.Option>
+              <Select.Option value="override">
+                {formatMessage({ id: 'route.http.override.or.create' })}
+              </Select.Option>
+              <Select.Option value="remove">
+                {formatMessage({ id: 'route.http.delete' })}
+              </Select.Option>
             </Select>
           </Form.Item>
           {showModalValue && (
