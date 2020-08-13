@@ -18,7 +18,7 @@ import React from 'react';
 import { notification } from 'antd';
 import { MenuDataItem } from '@ant-design/pro-layout';
 
-import { codeMessage, DEFAULT_BASE_URL } from './constants';
+import { codeMessage } from './constants';
 import IconFont from './iconfont';
 
 export const getMenuData = (): MenuDataItem[] => {
@@ -84,7 +84,3 @@ export const errorHandler = (error: { response: Response; data: any }): Promise<
   }
   return Promise.reject(response);
 };
-
-export const getBaseURL = () =>
-  localStorage.getItem('GLOBAL_SETTING_API_BASE_URL') || DEFAULT_BASE_URL;
-export const setBaseURL = (url = '') => localStorage.setItem('GLOBAL_SETTING_API_BASE_URL', url);
