@@ -18,11 +18,11 @@
   publish = "dist/"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/apisix/admin/*"
+  to = "https://api.apisix.dev/apisix/admin/:splat"
   status = 200 
 
 [[redirects]]
-  from = "/apisix/admin/*"
-  to = "https://api.apisix.dev/apisix/admin/:splat"
+  from = "/*"
+  to = "/index.html"
   status = 200 
