@@ -1,0 +1,23 @@
+name: Deploy to Azure
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - uses: Azure/docker-login@v1
+      with:
+        login-server: apisixacr.azurecr.cn
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - run: |
+        docker build . -t apisixacr.azurecr.cn/dashboard:${{ github.sha }}
+        docker push apisixacr.azurecr.cn/dashboard:${{ github.sha }}
