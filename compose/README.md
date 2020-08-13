@@ -34,4 +34,4 @@ $ sh gen-config-yaml.sh
 $ docker-compose -p dashboard up -d
 ```
 
-2. Visit `http://127.0.0.1/dashboard/` in the browser, and input the manager api `http://127.0.0.1:8080/apisix/admin` in the Setting page.
+2. Visit `http://127.0.0.1/` in the browser.

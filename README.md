@@ -85,7 +85,7 @@ $ yarn install
 $ yarn build
 ```
 
-5. The bundled files are under `/dist` folder if the step 4 is successful, then We recommend using `nginx` to handle those files, please refer to the nginx conf under `docker/nginx.conf`.
+5. The bundled files are under `/dist` folder if the step 4 is successful, then we recommend using `nginx` to handle those files, please refer to the nginx conf `docker/nginx.conf`.
 6. Move files under `dist` folder to nginx's default html folder, then visit `http://127.0.0.1` in your browser.
 
 ## Development
@@ -103,4 +103,4 @@ $ yarn start
 
 ## Other
 
-1. If you need the elder dashboard which is built with Vue.js, please refer to [master-vue](https://github.com/apache/apisix-dashboard/tree/master-vue).
+1. If you need the dashboard-1.0 which is built with Vue.js, please refer to [master-vue](https://github.com/apache/apisix-dashboard/tree/master-vue).
