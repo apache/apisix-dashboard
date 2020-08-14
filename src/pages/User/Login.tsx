@@ -7,7 +7,9 @@ import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
 import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
 import { UserModule } from '@/pages/User/typing';
 import logo from '@/assets/logo.svg';
+import { SettingOutlined } from '@ant-design/icons';
 import styles from './Login.less';
+import { getUrlQuery } from '@/helpers';
 
 const Tab = Tabs.TabPane;
 
@@ -23,6 +25,10 @@ const loginMethods: UserModule.LoginMethod[] = [LoginMethodPassword, LoginMethod
 const Page: React.FC = () => {
   const { formatMessage } = useIntl();
   const [loginMethod, setLoginMethod] = useState(loginMethods[0]);
+
+  const onSettingsClick = () => {
+    history.replace(`/settings?redirect=${encodeURIComponent(history.location.pathname)}`);
+  };
 
   const onTabChange = (activeKey: string) => {
     loginMethods.forEach((item, index) => {
@@ -40,7 +46,8 @@ const Page: React.FC = () => {
               description: response.message,
               duration: 1,
               onClose: () => {
-                history.replace('/');
+                const redirect = getUrlQuery('redirect');
+                history.replace(redirect ? decodeURIComponent(redirect) : '/');
               },
             });
           } else {
@@ -54,9 +61,16 @@ const Page: React.FC = () => {
     });
   };
 
+  if (localStorage.getItem('token')) {
+    history.replace('/');
+    return <></>;
+  }
   return (
     <div className={styles.container}>
       <div className={styles.lang}>
+        <div className={styles.settings} onClick={onSettingsClick}>
+          <SettingOutlined />
+        </div>
         <SelectLang />
       </div>
       <div className={styles.content}>
@@ -64,10 +78,13 @@ const Page: React.FC = () => {
           <div className={styles.header}>
             <Link to="/">
               <img alt="logo" className={styles.logo} src={logo} />
-              <span className={styles.title}>APISIX Dashboard</span>
             </Link>
           </div>
-          <div className={styles.desc}>Cloud-Native Microservices API Gateway</div>
+          <div className={styles.desc}>
+            APISIX Dashboard
+            <br />
+            Cloud-Native Microservices API Gateway
+          </div>
         </div>
         <div className={styles.main}>
           <Tabs activeKey={loginMethod.id} onChange={onTabChange}>
