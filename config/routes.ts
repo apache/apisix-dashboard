@@ -65,6 +65,11 @@ const routes = [
     layout: false,
   },
   {
+    path: '/user/logout',
+    component: './User/Logout',
+    layout: false,
+  },
+  {
     component: './404',
   },
 ];
