@@ -40,7 +40,7 @@ export const getMenuData = (): MenuDataItem[] => {
   ];
 };
 
-export const isLoginPage = () => window.location.pathname.indexOf('/login') !== -1;
+export const isLoginPage = () => window.location.pathname.indexOf('/user/login') !== -1;
 
 /**
  * 异常处理程序
@@ -50,8 +50,9 @@ export const errorHandler = (error: { response: Response; data: any }): Promise<
   if (response && response.status) {
     if ([401].includes(response.status) && !isLoginPage()) {
       localStorage.clear();
-      window.location.href = '/login';
+      window.location.href = '/user/login';
     }
+    if ([401].includes(response.status) && isLoginPage()) return Promise.reject(response);
 
     const errorText =
       error.data.msg || error.data.message || error.data.error_msg || codeMessage[response.status];
