@@ -4,6 +4,7 @@ import { Form, Input } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { UserOutlined, LockTwoTone } from '@ant-design/icons';
 import { formatMessage } from '@@/plugin-locale/localeExports';
+import { request } from '@@/plugin-request/request';
 
 const formRef = React.createRef<FormInstance>();
 
@@ -76,16 +77,40 @@ const LoginMethodPassword: UserModule.LoginMethod = {
     return false;
   },
   submit: async (data) => {
-    if (data.username === 'admin' && data.password === 'admin') {
-      return {
-        status: true,
-        message: '登录成功',
-        data: [],
-      };
+    if (data.username !== '' && data.password !== '') {
+      try {
+        const result = await request('/user/login', {
+          method: 'POST',
+          requestType: 'form',
+          prefix: '',
+          data: {
+            username: data.username,
+            password: data.password,
+          },
+        });
+        if (result.code === '010000') {
+          // login success
+          localStorage.setItem('token', result.data.token);
+          return {
+            status: true,
+            message: formatMessage({ id: 'component.user.loginMethodPassword.success' }),
+            data: [],
+          };
+        }
+      } catch (e) {
+        const result = await e.json();
+        if (result.code === '019901') {
+          return {
+            status: false,
+            message: formatMessage({ id: 'component.user.loginMethodPassword.incorrectPassword' }),
+            data: [],
+          };
+        }
+      }
     }
     return {
       status: false,
-      message: '用户名或密码错误',
+      message: formatMessage({ id: 'component.user.loginMethodPassword.fieldInvalid' }),
       data: [],
     };
   },
