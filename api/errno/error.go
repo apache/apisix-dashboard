@@ -42,7 +42,7 @@ var (
 	InvalidParamDetail = Message{"010010", "Invalid request parameter: %s", 400}
 	AdminApiSaveError  = Message{"010011", "Data save failed", 500}
 	SchemaCheckFailed  = Message{"010012", "%s", 400}
-	ForbiddenError     = Message{"010013", "Request Forbidden", 403}
+	ForbiddenError     = Message{"010013", "Request Unauthorized", 401}
 
 	//BB 01 configuration
 	ConfEnvError      = Message{"010101", "Environment variable not found: %s", 500}

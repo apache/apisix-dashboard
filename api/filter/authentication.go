@@ -14,7 +14,7 @@ func Authentication() gin.HandlerFunc {
       session := sessions.Default(c)
       username := session.Get("username")
       if username == nil {
-        c.AbortWithStatusJSON(http.StatusForbidden, errno.FromMessage(errno.ForbiddenError).Response())
+        c.AbortWithStatusJSON(http.StatusUnauthorized, errno.FromMessage(errno.ForbiddenError).Response())
         return
       }
     }
