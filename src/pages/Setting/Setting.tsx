@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Form, Input, Row, Col, notification } from 'antd';
 
-import { setBaseURL, getBaseURL } from '@/helpers';
+import { setBaseURL, getBaseURL, getUrlQuery } from '@/helpers';
 import ActionBar from '@/components/ActionBar';
 import { getGrafanaURL } from '@/pages/Metrics/service';
 
@@ -48,7 +48,8 @@ const Setting: React.FC = () => {
     ]).then(() => {
       notification.success({ message: '更新配置成功' });
       setTimeout(() => {
-        window.location.reload();
+        const redirect = getUrlQuery('redirect');
+        window.location.href = redirect ? decodeURIComponent(redirect) : '/';
       }, 500);
     });
   };

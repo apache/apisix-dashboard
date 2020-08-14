@@ -25,7 +25,7 @@ export async function getInitialState(): Promise<{
         settings: defaultSettings,
       };
     } catch (error) {
-      history.push('/settings');
+      history.push(`/settings?redirect=${encodeURIComponent(history.location.pathname)}`);
     }
   }
   return {
