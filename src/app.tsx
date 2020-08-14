@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React from 'react';
-import { RequestConfig } from 'umi';
+import { RequestConfig, history } from 'umi';
 import {
   BasicLayoutProps,
   Settings as LayoutSettings,
@@ -26,6 +26,7 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { queryCurrent } from '@/services/user';
 import { getMenuData, errorHandler } from '@/helpers';
+import { notification } from 'antd';
 import defaultSettings from '../config/defaultSettings';
 
 export async function getInitialState(): Promise<{
@@ -33,12 +34,15 @@ export async function getInitialState(): Promise<{
   settings?: LayoutSettings;
 }> {
   // 如果是设置页面，不执行
-  if (history.location.pathname !== '/settings' && !localStorage.getItem('GLOBAL_SETTING_API_BASE_URL')) {
+  if (
+    history.location.pathname !== '/settings' &&
+    !localStorage.getItem('GLOBAL_SETTING_API_BASE_URL')
+  ) {
     notification.error({ message: '请设置 API 地址' });
     history.push(`/settings?redirect=${encodeURIComponent(history.location.pathname)}`);
     return {};
   }
-  
+
   const currentUser = await queryCurrent();
   return {
     currentUser,

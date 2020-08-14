@@ -19,7 +19,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Form, Input, Row, Col, notification } from 'antd';
 import { useIntl } from 'umi';
 
-import { setBaseURL, getBaseURL, getUrlQuery } from '@/helpers';
+import { getUrlQuery } from '@/helpers';
 import ActionBar from '@/components/ActionBar';
 import { getGrafanaURL } from '@/pages/Metrics/service';
 
