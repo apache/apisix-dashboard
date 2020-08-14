@@ -80,9 +80,17 @@ type user struct {
 	Password string
 }
 
+type authenticationConfig struct {
+  Session struct {
+    Secret     string
+    ExpireTime uint64
+  }
+}
+
 var UserList = make(map[string]user, 1)
 
 var MysqlConfig mysqlConfig
+var AuthenticationConfig authenticationConfig
 
 func initMysql() {
 	filePath := configurationPath()
@@ -126,5 +134,7 @@ func initAuthentication() {
 			password := item.Map()["password"].String()
 			UserList[item.Map()["username"].String()] = user{Username: username, Password: password}
 		}
+    AuthenticationConfig.Session.Secret =  configuration.Get("authentication.session.secret").String()
+    AuthenticationConfig.Session.ExpireTime =  configuration.Get("authentication.session.expireTime").Uint()
 	}
 }
