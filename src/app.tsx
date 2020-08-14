@@ -53,4 +53,17 @@ export const request: RequestConfig = {
   prefix: getBaseURL(),
   errorHandler,
   credentials: 'same-origin',
+  requestInterceptors: [
+    (url, options) => {
+      const newOptions = options;
+      newOptions.headers = {
+        ...options.headers,
+        Authorization: localStorage.getItem('token') || '',
+      };
+      return {
+        url,
+        options: { ...newOptions, interceptors: true },
+      };
+    },
+  ],
 };
