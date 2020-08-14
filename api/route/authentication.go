@@ -3,10 +3,15 @@ package route
 import (
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/errno"
-	"github.com/gin-contrib/sessions"
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
+
+type UserSession struct {
+	Token string `json:"token"`
+}
 
 func AppendAuthentication(r *gin.Engine) *gin.Engine {
 	r.POST("/user/login", userLogin)
@@ -31,12 +36,19 @@ func userLogin(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, errno.FromMessage(errno.AuthenticationUserError).Response())
 		return
 	} else {
-	session := sessions.Default(c)
+		// create JWT for session
+		claims := jwt.StandardClaims{
+			Subject: username,
+			IssuedAt: time.Now().Unix(),
+			ExpiresAt: time.Now().Add(time.Second * time.Duration(conf.AuthenticationConfig.Session.ExpireTime)).Unix(),
+		}
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+		signedToken, _ := token.SignedString([]byte(conf.AuthenticationConfig.Session.Secret))
 
-	// set session by cookie
-	session.Set("username", username)
-	session.Save()
-		c.AbortWithStatusJSON(http.StatusOK, errno.FromMessage(errno.SystemSuccess).Response())
+		// output token
+		c.AbortWithStatusJSON(http.StatusOK, errno.FromMessage(errno.SystemSuccess).ItemResponse(&UserSession {
+			Token: signedToken,
+		}))
 		return
 	}
 }
