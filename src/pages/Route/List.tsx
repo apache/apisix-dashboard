@@ -1,24 +1,41 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React, { useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag, Input } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { history } from 'umi';
+import { history, useIntl } from 'umi';
 
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const [search, setSearch] = useState('');
+  const { formatMessage } = useIntl();
 
   const columns: ProColumns<RouteModule.BaseData>[] = [
     {
-      title: '名称',
+      title: formatMessage({ id: 'route.list.name' }),
       dataIndex: 'name',
     },
     {
-      title: '域名',
+      title: formatMessage({ id: 'route.list.domain.name' }),
       dataIndex: 'hosts',
       render: (_, record) =>
         record.hosts.map((host) => (
@@ -28,7 +45,7 @@ const Page: React.FC = () => {
         )),
     },
     {
-      title: '路径',
+      title: formatMessage({ id: 'route.list.path' }),
       dataIndex: 'uri',
       render: (_, record) =>
         record.uris.map((uri) => (
@@ -42,16 +59,16 @@ const Page: React.FC = () => {
     //   dataIndex: 'priority',
     // },
     {
-      title: '描述',
+      title: formatMessage({ id: 'route.list.description' }),
       dataIndex: 'description',
     },
     {
-      title: '更新时间',
+      title: formatMessage({ id: 'route.list.edit.time' }),
       dataIndex: 'update_time',
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },
     {
-      title: '操作',
+      title: formatMessage({ id: 'route.list.operation' }),
       valueType: 'option',
       render: (_, record) => (
         <>
@@ -60,22 +77,24 @@ const Page: React.FC = () => {
             onClick={() => history.push(`/routes/${record.id}/edit`)}
             style={{ marginRight: 10 }}
           >
-            编辑
+            {formatMessage({ id: 'route.list.edit' })}
           </Button>
           <Popconfirm
-            title="确定删除该路由吗？"
+            title={formatMessage({ id: 'route.list.delete.confrim' })}
             onConfirm={() => {
               remove(record.id!).then(() => {
-                notification.success({ message: '删除记录成功' });
+                notification.success({
+                  message: formatMessage({ id: 'route.list.delete.success' }),
+                });
                 /* eslint-disable no-unused-expressions */
                 ref.current?.reload();
               });
             }}
-            okText="确定"
-            cancelText="取消"
+            okText={formatMessage({ id: 'route.list.confirm' })}
+            cancelText={formatMessage({ id: 'route.list.cancel' })}
           >
             <Button type="primary" danger>
-              删除
+              {formatMessage({ id: 'route.list.delete' })}
             </Button>
           </Popconfirm>
         </>
@@ -84,7 +103,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title="路由列表">
+    <PageHeaderWrapper title={formatMessage({ id: 'route.list' })}>
       <ProTable<RouteModule.BaseData>
         actionRef={ref}
         rowKey="name"
@@ -93,7 +112,7 @@ const Page: React.FC = () => {
         request={(params) => fetchList(params, search)}
         toolBarRender={(action) => [
           <Input.Search
-            placeholder="请输入"
+            placeholder={formatMessage({ id: 'route.list.input' })}
             onSearch={(value) => {
               setSearch(value);
               action.setPageInfo({ page: 1 });
@@ -102,7 +121,7 @@ const Page: React.FC = () => {
           />,
           <Button type="primary" onClick={() => history.push('/routes/create')}>
             <PlusOutlined />
-            创建
+            {formatMessage({ id: 'route.list.create' })}
           </Button>,
         ]}
       />

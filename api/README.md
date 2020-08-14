@@ -19,4 +19,8 @@
 
 # manager-api
 
-This is a back-end project that the dashboard depends on, implemented through golang.
+This is a backend project which the dashboard depends on, implemented by Golang.
+
+## Installation
+
+[Please refer to the doc](../README.md)

@@ -1,10 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React, { useState } from 'react';
 import { Card, Steps, notification, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
+import { history, useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
-import { history } from 'umi';
 import Step1 from '@/pages/SSL/components/Step1';
 import Step2 from '@/pages/SSL/components/Step2';
 import { verifyKeyPaire, create, update } from '@/pages/SSL/service';
@@ -14,6 +30,7 @@ const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
   const [form] = Form.useForm();
   const { id } = (props as any).match.params;
+  const { formatMessage } = useIntl();
 
   const onValidateForm = () => {
     let keyPaire = { cert: '', key: '' };
@@ -33,7 +50,7 @@ const Page: React.FC = (props) => {
         setStep(2);
       })
       .catch(() => {
-        notification.warning({ message: '请检查证书内容' });
+        notification.warning({ message: formatMessage({ id: 'ssl.create.check' }) });
       });
   };
 
@@ -60,10 +77,13 @@ const Page: React.FC = (props) => {
 
   return (
     <>
-      <PageHeaderWrapper title="证书创建">
+      <PageHeaderWrapper title={formatMessage({ id: 'ssl.create' })}>
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>
-            {['完善证书信息', '预览'].map((item) => (
+            {[
+              formatMessage({ id: 'ssl.create.complete.cert.info' }),
+              formatMessage({ id: 'ssl.create.preview' }),
+            ].map((item) => (
               <Steps.Step title={item} key={item} />
             ))}
           </Steps>

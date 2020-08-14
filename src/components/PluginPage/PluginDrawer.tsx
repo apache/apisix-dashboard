@@ -1,8 +1,25 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React, { Fragment } from 'react';
 import { Drawer, Button } from 'antd';
 import { withTheme, FormProps } from '@rjsf/core';
 import { Theme as AntDTheme } from '@rjsf/antd';
 import { JSONSchema7 } from 'json-schema';
+import { useIntl } from 'umi';
 
 interface Props {
   name?: string;
@@ -27,6 +44,7 @@ const PluginDrawer: React.FC<Props> = ({
   onClose,
   onFinish,
 }) => {
+  const { formatMessage } = useIntl();
   const PluginForm = withTheme(AntDTheme);
 
   if (!name) {
@@ -38,7 +56,7 @@ const PluginDrawer: React.FC<Props> = ({
 
   return (
     <Drawer
-      title={`配置 ${name} 插件`}
+      title={formatMessage({ id: 'PluginPage.drawer.configure.plugin' })}
       width={400}
       visible={Boolean(name)}
       destroyOnClose
@@ -49,18 +67,20 @@ const PluginDrawer: React.FC<Props> = ({
             <div>
               {Boolean(active) && (
                 <Button type="primary" danger onClick={() => onInactive(name)}>
-                  禁用
+                  {formatMessage({ id: 'PluginPage.drawer.disabled' })}
                 </Button>
               )}
               {Boolean(!active) && (
                 <Button type="primary" onClick={() => onActive(name)}>
-                  启用
+                  {formatMessage({ id: 'PluginPage.drawer.enable' })}
                 </Button>
               )}
             </div>
             {Boolean(active) && (
               <div>
-                <Button onClick={onClose}>取消</Button>
+                <Button onClick={onClose}>
+                  {formatMessage({ id: 'PluginPage.drawer.cancel' })}
+                </Button>
                 <Button
                   type="primary"
                   style={{ marginRight: 8, marginLeft: 8 }}
@@ -68,7 +88,7 @@ const PluginDrawer: React.FC<Props> = ({
                     form.submit();
                   }}
                 >
-                  确认
+                  {formatMessage({ id: 'PluginPage.drawer.confirm' })}
                 </Button>
               </div>
             )}

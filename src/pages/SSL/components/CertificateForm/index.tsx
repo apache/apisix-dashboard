@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React from 'react';
 import { Form, Input, Tag } from 'antd';
 import { useIntl } from 'umi';
@@ -29,7 +45,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
     if (mode === 'VIEW') {
       return (
         <Form.Item
-          label="过期时间"
+          label={formatMessage({ id: 'ssl.form.expiration.time' })}
           name="expireTime"
           rules={[{ required: true, message: 'ExpireTime' }]}
         >
@@ -44,21 +60,21 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
     <Form form={form} layout="horizontal" initialValues={form?.getFieldsValue()}>
       {renderSNI()}
       <Form.Item
-        label="公钥"
+        label={formatMessage({ id: 'ssl.form.public.key' })}
         name="cert"
         rules={[
-          { required: true, message: formatMessage({ id: 'component.ssl.fieldCertInvalid' }) },
-          { min: 128, message: formatMessage({ id: 'component.ssl.fieldCertTooShort' }) },
+          { required: true, message: formatMessage({ id: 'ssl.form.check.cert.value' }) },
+          { min: 128, message: formatMessage({ id: 'ssl.form.cert.value.length' }) },
         ]}
       >
         <Input.TextArea rows={6} disabled={mode !== 'EDIT'} />
       </Form.Item>
       <Form.Item
-        label="私钥"
+        label={formatMessage({ id: 'ssl.form.private.key' })}
         name="key"
         rules={[
-          { required: true, message: formatMessage({ id: 'component.ssl.fieldKeyInvalid' }) },
-          { min: 128, message: formatMessage({ id: 'component.ssl.fieldKeyTooShort' }) },
+          { required: true, message: formatMessage({ id: 'ssl.form.check.key.value' }) },
+          { min: 128, message: formatMessage({ id: 'ssl.form.key.value.length' }) },
         ]}
       >
         <Input.TextArea rows={6} disabled={mode !== 'EDIT'} />

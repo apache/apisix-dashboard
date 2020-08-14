@@ -1,8 +1,8 @@
 {
   "name": "apisix-dashboard",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
-  "description": "Dashboard for APISIX",
+  "description": "Dashboard for Apache APISIX",
   "scripts": {
     "analyze": "cross-env ANALYZE=1 umi build",
     "build": "umi build",
@@ -31,6 +31,7 @@
     "test:component": "umi test ./src/components",
     "tsc": "tsc"
   },
+  "license": "Apache-2.0",
   "husky": {
     "hooks": {
       "commit-msg": "node scripts/verifyCommit.js",
@@ -106,7 +107,6 @@
     "prettier": "^2.0.1",
     "pro-download": "1.0.1",
     "puppeteer-core": "^4.0.1",
-    "react-helmet-async": "1.0.6",
     "stylelint": "^13.0.0"
   },
   "engines": {

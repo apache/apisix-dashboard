@@ -1,5 +1,22 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React from 'react';
 import { FormInstance } from 'antd/lib/form';
+import { useIntl } from 'umi';
 
 import PluginPage from '@/components/PluginPage';
 
@@ -17,15 +34,18 @@ const style = {
 };
 
 const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, ...rest }) => {
+
+  const { formatMessage } = useIntl();
+
   return (
     <>
-      <h2>定义 API 请求</h2>
+      <h2>{formatMessage({ id: 'route.create.define.api.request' })}</h2>
       <Step1 {...rest} form={form1} disabled />
       {!redirect && (
         <>
-          <h2 style={style}>定义 API 后端服务</h2>
+          <h2 style={style}>{formatMessage({ id: 'route.create.define.api.backend.server' })}</h2>
           <Step2 {...rest} form={form2} disabled />
-          <h2 style={style}>插件配置</h2>
+          <h2 style={style}>{formatMessage({ id: 'route.create.plugin.configuration' })}</h2>
           <PluginPage data={rest.data.step3Data.plugins} disabled />
         </>
       )}

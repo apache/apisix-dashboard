@@ -1,7 +1,24 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React, { useState } from 'react';
 import { Form, Select } from 'antd';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { FormInstance } from 'antd/es/form';
+import { useIntl } from 'umi';
 
 import CertificateForm from '@/pages/SSL/components/CertificateForm';
 import CertificateUploader, { UploadType } from '@/pages/SSL/components/CertificateUploader';
@@ -17,6 +34,8 @@ const Step: React.FC<Props> = ({ form }) => {
   const [privateKeyList, setPrivateKeyList] = useState<UploadFile[]>([]);
 
   const [createType, setCreateType] = useState<CreateType>('Input');
+
+  const { formatMessage } = useIntl();
 
   const onRemove = (type: UploadType) => {
     if (type === 'PUBLIC_KEY') {
@@ -34,14 +53,14 @@ const Step: React.FC<Props> = ({ form }) => {
   return (
     <>
       <Form.Item
-        label="方式"
+        label={formatMessage({ id: 'ssl.step.way' })}
         required
         extra={
-          window.location.pathname.indexOf('edit') === -1 ? '' : '新证书所含 SNI 应与当前证书一致'
+          window.location.pathname.indexOf('edit') === -1 ? '' : formatMessage({ id: 'ssl.step.rules' })
         }
       >
         <Select
-          placeholder="请选择创建方式"
+          placeholder={formatMessage({ id: 'ssl.step.select.create.ways' })}
           defaultValue="Input"
           onChange={(value: CreateType) => {
             form.setFieldsValue({
@@ -54,8 +73,8 @@ const Step: React.FC<Props> = ({ form }) => {
           }}
           style={{ width: 100 }}
         >
-          <Select.Option value="Input">手动输入</Select.Option>
-          <Select.Option value="Upload">上传证书</Select.Option>
+          <Select.Option value="Input">{formatMessage({ id: 'ssl.step.input' })}</Select.Option>
+          <Select.Option value="Upload">{formatMessage({ id: 'ssl.step.upload' })}</Select.Option>
         </Select>
       </Form.Item>
       <div style={createType === 'Input' ? {} : { display: 'none' }}>

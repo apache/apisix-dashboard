@@ -9,7 +9,7 @@
       "maxLifeTime": 10
     },
     "syslog": {
-      "host": "localhost"
+      "host": "127.0.0.1"
     },
     "apisix": {
       "base_url": "http://127.0.0.1:9080/apisix/admin",

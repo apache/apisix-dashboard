@@ -1,10 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 export default {
   'component.tagSelect.expand': '展开',
   'component.tagSelect.collapse': '收起',
   'component.tagSelect.all': '全部',
   'component.global.remove': '删除',
   'component.global.cancel': '取消',
-  'component.global.submit': '提交',
+  'component.global.button.submit': '提交',
   'component.global.create': '创建',
   'component.global.add': '新建',
   'component.global.save': '保存',

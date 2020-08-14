@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React, { useState, useEffect } from 'react';
 import { LinkOutlined, SettingOutlined } from '@ant-design/icons';
 import { omit } from 'lodash';
@@ -9,6 +25,7 @@ import PluginCard from './PluginCard';
 import PluginDrawer from './PluginDrawer';
 import { getList, fetchPluginSchema } from './service';
 import { PLUGIN_MAPPER_SOURCE } from './data';
+import { useIntl } from 'umi';
 
 type Props = {
   disabled?: boolean;
@@ -21,14 +38,15 @@ const PluginPage: React.FC<Props> = ({ data = {}, disabled, onChange }) => {
   const [activeList, setActiveList] = useState<PluginPage.PluginProps[]>([]);
   const [inactiveList, setInactiveList] = useState<PluginPage.PluginProps[]>([]);
   const [schema, setSchema] = useState<JSONSchema7>();
+  const { formatMessage } = useIntl();
 
   const pluginList = [
     {
-      title: '已启用',
+      title: formatMessage({ id: 'PluginPage.drawer.is.enabled' }),
       list: activeList,
     },
     {
-      title: '未启用',
+      title: formatMessage({ id: 'PluginPage.drawer.not.enabled' }),
       list: inactiveList,
     },
   ];
@@ -43,7 +61,7 @@ const PluginPage: React.FC<Props> = ({ data = {}, disabled, onChange }) => {
   return (
     <>
       {pluginList.map(({ list, title }) => {
-        if (disabled && title === '未启用') {
+        if (disabled && title === formatMessage({ id: 'PluginPage.drawer.not.enabled' })) {
           return null;
         }
         return (
@@ -74,7 +92,7 @@ const PluginPage: React.FC<Props> = ({ data = {}, disabled, onChange }) => {
                   <LinkOutlined
                     onClick={() =>
                       window.open(
-                        `https://github.com/apache/incubator-apisix/blob/master/doc/plugins/${name}.md`,
+                        `https://github.com/apache/apisix/blob/master/doc/plugins/${name}.md`,
                       )
                     }
                   />,
@@ -101,7 +119,7 @@ const PluginPage: React.FC<Props> = ({ data = {}, disabled, onChange }) => {
           if (!onChange) {
             throw new Error('请提供 onChange 方法');
           }
-          onChange(omit(Object.assign({}, data), name));
+          onChange(omit({ ...data }, name));
           setInactiveList(inactiveList.concat({ name, ...PLUGIN_MAPPER_SOURCE[name] }));
           setActiveList(activeList.filter((item) => item.name !== name));
           setPluginName(undefined);
@@ -114,7 +132,7 @@ const PluginPage: React.FC<Props> = ({ data = {}, disabled, onChange }) => {
           if (!onChange) {
             throw new Error('请提供 onChange 方法');
           }
-          onChange(Object.assign({}, data, { [pluginName]: value }));
+          onChange({ ...data, [pluginName]: value });
           setPluginName(undefined);
         }}
       />

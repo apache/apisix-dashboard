@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React, { useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -17,7 +33,7 @@ const Page: React.FC = () => {
   const onEnableChange = (id: string, checked: boolean) => {
     switchEnable(id, checked)
       .then(() => {
-        notification.success({ message: '更新证书启用状态成功' });
+        notification.success({ message: formatMessage({ id: 'ssl.list.update.cert.enable.status.successful' }) });
       })
       .catch(() => {
         /* eslint-disable no-unused-expressions */
@@ -38,13 +54,13 @@ const Page: React.FC = () => {
       },
     },
     {
-      title: '过期时间',
+      title: formatMessage({ id: 'ssl.list.expiration.time' }),
       dataIndex: 'validity_end',
       hideInSearch: true,
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },
     {
-      title: '是否启用',
+      title: formatMessage({ id: 'ssl.list.if.enable' }),
       dataIndex: 'status',
       hideInSearch: true,
       render: (text, record) => (
@@ -57,13 +73,13 @@ const Page: React.FC = () => {
       ),
     },
     {
-      title: '更新时间',
+      title: formatMessage({ id: 'ssl.list.update.time' }),
       dataIndex: 'update_time',
       hideInSearch: true,
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },
     {
-      title: formatMessage({ id: 'component.global.action' }),
+      title: formatMessage({ id: 'ssl.list.operation' }),
       valueType: 'option',
       render: (_, record) => (
         <>
@@ -74,10 +90,10 @@ const Page: React.FC = () => {
             }}
             style={{ marginRight: 10 }}
           >
-            编辑
+            {formatMessage({ id: 'ssl.list.edit' })}
           </Button>
           <Popconfirm
-            title="删除"
+            title={formatMessage({ id: 'ssl.list.delete' })}
             onConfirm={() =>
               removeSSL(record.id).then(() => {
                 notification.success({
@@ -87,8 +103,8 @@ const Page: React.FC = () => {
                 requestAnimationFrame(() => tableRef.current?.reload());
               })
             }
-            cancelText="取消"
-            okText="确定"
+            cancelText={formatMessage({ id: 'ssl.list.cancel' })}
+            okText={formatMessage({ id: 'ssl.list.confirm' })}
           >
             <Button type="primary" danger>
               {formatMessage({ id: 'component.global.remove' })}
@@ -98,7 +114,7 @@ const Page: React.FC = () => {
       ),
     },
     {
-      title: '有效期',
+      title: formatMessage({ id: 'ssl.list.period.of.validity' }),
       dataIndex: 'expire_range',
       hideInTable: true,
       hideInSearch: true,
@@ -106,7 +122,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title="证书列表">
+    <PageHeaderWrapper title={formatMessage({ id: 'ssl.list' })}>
       <ProTable<SSLModule.ResSSL>
         search={false}
         rowKey="id"
@@ -115,7 +131,7 @@ const Page: React.FC = () => {
         request={(params) => fetchSSLList(params, search)}
         toolBarRender={(action) => [
           <Input.Search
-            placeholder="请输入"
+            placeholder={formatMessage({ id: 'ssl.list.input' })}
             onSearch={(value) => {
               setSearch(value);
               action.setPageInfo({ page: 1 });
@@ -124,7 +140,7 @@ const Page: React.FC = () => {
           />,
           <Button type="primary" onClick={() => history.push(`/ssl/create`)}>
             <PlusOutlined />
-            {formatMessage({ id: 'component.global.create' })}
+            {formatMessage({ id: 'ssl.list.create' })}
           </Button>,
         ]}
       />

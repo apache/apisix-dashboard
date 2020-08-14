@@ -1,6 +1,23 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React, { useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Form, Input, Row, Col, notification } from 'antd';
+import { useIntl } from 'umi';
 
 import { setBaseURL, getBaseURL, getUrlQuery } from '@/helpers';
 import ActionBar from '@/components/ActionBar';
@@ -15,11 +32,9 @@ const Setting: React.FC = () => {
   const isWorkspace = false;
   const canFetchGrafana = (isSuperAdmin && !isWorkspace) || isWorkspace;
 
-  useEffect(() => {
-    form.setFieldsValue({
-      baseURL: getBaseURL(),
-    });
+  const { formatMessage } = useIntl();
 
+  useEffect(() => {
     if (!canFetchGrafana) {
       return;
     }
@@ -31,7 +46,7 @@ const Setting: React.FC = () => {
   }, [canFetchGrafana]);
 
   const onSubmit = () => {
-    const { grafanaURL, baseURL } = form.getFieldsValue();
+    const { grafanaURL } = form.getFieldsValue();
     Promise.all([
       new Promise((resolve) => {
         if (canFetchGrafana) {
@@ -39,14 +54,12 @@ const Setting: React.FC = () => {
         }
         resolve();
       }),
-      new Promise((resolve) => {
-        if (!isWorkspace) {
-          setBaseURL(baseURL);
-        }
-        resolve();
-      }),
     ]).then(() => {
-      notification.success({ message: '更新配置成功' });
+      notification.success({
+        message: formatMessage({
+          id: 'page.setting.notification.update.configuration.successfully',
+        }),
+      });
       setTimeout(() => {
         const redirect = getUrlQuery('redirect');
         window.location.href = redirect ? decodeURIComponent(redirect) : '/';
@@ -56,22 +69,26 @@ const Setting: React.FC = () => {
 
   return (
     <>
-      <PageContainer title="设置">
+      <PageContainer title={formatMessage({ id: 'page.setting.pageContainer.title' })}>
         <Card>
           <Row>
             <Col span={10}>
               <Form form={form} labelCol={{ span: 7 }}>
-                {!isWorkspace && (
-                  <Form.Item label="API 地址" name="baseURL">
-                    <Input />
-                  </Form.Item>
-                )}
                 {canFetchGrafana && (
                   <Form.Item
-                    label="Grafana 地址"
+                    label={formatMessage({ id: 'page.setting.form.item.grafanaURL' })}
                     name="grafanaURL"
-                    extra="Grafana 地址，需以 http 或 https 开头"
-                    rules={[{ pattern: new RegExp(/^https?:\/\//), message: '非法的地址' }]}
+                    extra={formatMessage({
+                      id: 'page.setting.form.item.grafanaURL.inputHelpMessage',
+                    })}
+                    rules={[
+                      {
+                        pattern: new RegExp(/^https?:\/\//),
+                        message: formatMessage({
+                          id: 'page.setting.form.item.grafanaURL.inputErrorMessage',
+                        }),
+                      },
+                    ]}
                   >
                     <Input />
                   </Form.Item>

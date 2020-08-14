@@ -1,6 +1,23 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React, { useState, useEffect } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/PluginPage';
@@ -20,8 +37,6 @@ import {
   DEFAULT_STEP_1_DATA,
   DEFAULT_STEP_2_DATA,
   DEFAULT_STEP_3_DATA,
-  STEP_HEADER_2,
-  STEP_HEADER_4,
 } from './constants';
 import ResultView from './components/ResultView';
 import styles from './Create.less';
@@ -35,6 +50,13 @@ type Props = {
 };
 
 const Page: React.FC<Props> = (props) => {
+
+  const { formatMessage } = useIntl();
+
+  const STEP_HEADER_2 = [formatMessage({ id: 'route.constants.define.api.request' }), formatMessage({ id: 'route.constants.preview' })];
+
+  const STEP_HEADER_4 = [formatMessage({ id: 'route.constants.define.api.request' }), formatMessage({ id: 'route.constants.define.api.backend.serve' }), formatMessage({ id: 'route.constants.plugin.configuration' }), formatMessage({ id: 'route.constants.preview' })];
+
   const [step1Data, setStep1Data] = useState(DEFAULT_STEP_1_DATA);
   const [step2Data, setStep2Data] = useState(DEFAULT_STEP_2_DATA);
   const [step3Data, setStep3Data] = useState(DEFAULT_STEP_3_DATA);
@@ -208,7 +230,7 @@ const Page: React.FC<Props> = (props) => {
 
   return (
     <>
-      <PageHeaderWrapper title="路由管理">
+      <PageHeaderWrapper title={formatMessage({ id: 'route.create.management' })}>
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>
             {stepHeader.map((item) => (

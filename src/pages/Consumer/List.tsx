@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -5,29 +21,30 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Popconfirm, Button, notification, Input } from 'antd';
 import moment from 'moment';
 
-import { history } from 'umi';
+import { history, useIntl } from 'umi';
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const [search, setSearch] = useState('');
+  const { formatMessage } = useIntl();
 
   const columns: ProColumns<ConsumerModule.ResEntity>[] = [
     {
-      title: '用户名',
+      title: formatMessage({ id: 'consumer.list.username' }),
       dataIndex: 'username',
     },
     {
-      title: '描述',
+      title: formatMessage({ id: 'consumer.list.description' }),
       dataIndex: 'desc',
     },
     {
-      title: '更新时间',
+      title: formatMessage({ id: 'consumer.list.update.time' }),
       dataIndex: 'update_time',
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },
     {
-      title: '操作',
+      title: formatMessage({ id: 'consumer.list.operation' }),
       valueType: 'option',
       render: (_, record) => (
         <>
@@ -36,22 +53,24 @@ const Page: React.FC = () => {
             style={{ marginRight: 10 }}
             onClick={() => history.push(`/consumer/${record.id}/edit`)}
           >
-            编辑
+            {formatMessage({ id: 'consumer.list.edit' })}
           </Button>
           <Popconfirm
-            title="确定删除该条记录吗？"
-            okText="确定"
-            cancelText="取消"
+            title={formatMessage({ id: 'consumer.list.delete.confirm' })}
+            okText={formatMessage({ id: 'consumer.list.confirm' })}
+            cancelText={formatMessage({ id: 'consumer.list.cancel' })}
             onConfirm={() => {
               remove(record.id).then(() => {
-                notification.success({ message: '删除记录成功' });
+                notification.success({
+                  message: formatMessage({ id: 'consumer.list.delete.success' }),
+                });
                 /* eslint-disable no-unused-expressions */
                 ref.current?.reload();
               });
             }}
           >
             <Button type="primary" danger>
-              删除
+              {formatMessage({ id: 'consumer.list.delete' })}
             </Button>
           </Popconfirm>
         </>
@@ -60,7 +79,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageContainer title="Consumer 列表">
+    <PageContainer title={formatMessage({ id: 'consumer.list' })}>
       <ProTable<ConsumerModule.ResEntity>
         actionRef={ref}
         columns={columns}
@@ -69,7 +88,7 @@ const Page: React.FC = () => {
         request={(params) => fetchList(params, search)}
         toolBarRender={(action) => [
           <Input.Search
-            placeholder="请输入"
+            placeholder={formatMessage({ id: 'consumer.list.input' })}
             onSearch={(value) => {
               setSearch(value);
               action.setPageInfo({ page: 1 });
@@ -78,7 +97,7 @@ const Page: React.FC = () => {
           />,
           <Button type="primary" onClick={() => history.push('/consumer/create')}>
             <PlusOutlined />
-            创建
+            {formatMessage({ id: 'consumer.list.create' })}
           </Button>,
         ]}
       />
