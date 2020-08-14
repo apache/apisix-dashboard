@@ -5,6 +5,7 @@ import { FormInstance } from 'antd/lib/form';
 import { UserOutlined, LockTwoTone } from '@ant-design/icons';
 import { formatMessage } from '@@/plugin-locale/localeExports';
 import { request } from '@@/plugin-request/request';
+import { getBaseURL } from '@/helpers';
 
 const formRef = React.createRef<FormInstance>();
 
@@ -82,37 +83,37 @@ const LoginMethodPassword: UserModule.LoginMethod = {
         const result = await request('/user/login', {
           method: 'POST',
           requestType: 'form',
-          prefix: '',
+          prefix: getBaseURL().replace('/apisix/admin', ''),
           data: {
             username: data.username,
             password: data.password,
           },
         });
-        if (result.code === '010000') {
-          // login success
-          localStorage.setItem('token', result.data.token);
-          return {
-            status: true,
-            message: formatMessage({ id: 'component.user.loginMethodPassword.success' }),
-            data: [],
-          };
-        }
+
+        localStorage.setItem('token', result.data.token);
+        return {
+          status: true,
+          message: formatMessage({ id: 'component.user.loginMethodPassword.success' }),
+          data: [],
+        };
       } catch (e) {
-        const result = await e.json();
-        if (result.code === '019901') {
-          return {
-            status: false,
-            message: formatMessage({ id: 'component.user.loginMethodPassword.incorrectPassword' }),
-            data: [],
-          };
-        }
+        return {
+          status: false,
+          message: formatMessage({ id: 'component.user.loginMethodPassword.incorrectPassword' }),
+          data: [],
+        };
       }
+    } else {
+      return {
+        status: false,
+        message: formatMessage({ id: 'component.user.loginMethodPassword.fieldInvalid' }),
+        data: [],
+      };
     }
-    return {
-      status: false,
-      message: formatMessage({ id: 'component.user.loginMethodPassword.fieldInvalid' }),
-      data: [],
-    };
+  },
+  logout: () => {
+    console.log('password logout');
+    localStorage.removeItem('token');
   },
 };
 

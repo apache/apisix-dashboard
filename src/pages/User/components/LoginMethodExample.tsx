@@ -21,6 +21,7 @@ const LoginMethodExample: UserModule.LoginMethod = {
       data,
     };
   },
+  logout() {},
 };
 
 export default LoginMethodExample;

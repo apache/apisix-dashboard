@@ -8,6 +8,7 @@ declare namespace UserModule {
     getData: () => LoginData;
     checkData: () => Promise<boolean>;
     submit: (data) => Promise<LoginResponse>;
+    logout: () => void;
   }
 
   type LoginData = {
