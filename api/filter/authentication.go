@@ -39,6 +39,11 @@ func Authentication() gin.HandlerFunc {
 				c.AbortWithStatusJSON(http.StatusUnauthorized, errno.FromMessage(errno.ForbiddenError).Response())
 				return
 			}
+
+			if _, ok := conf.UserList[claims.Subject]; !ok {
+        c.AbortWithStatusJSON(http.StatusUnauthorized, errno.FromMessage(errno.ForbiddenError).Response())
+        return
+      }
 		}
 		c.Next()
 	}
