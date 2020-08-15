@@ -5,7 +5,6 @@ import { FormInstance } from 'antd/lib/form';
 import { UserOutlined, LockTwoTone } from '@ant-design/icons';
 import { formatMessage } from '@@/plugin-locale/localeExports';
 import { request } from '@@/plugin-request/request';
-import { getBaseURL } from '@/helpers';
 
 const formRef = React.createRef<FormInstance>();
 
@@ -83,7 +82,7 @@ const LoginMethodPassword: UserModule.LoginMethod = {
         const result = await request('/user/login', {
           method: 'POST',
           requestType: 'form',
-          prefix: getBaseURL().replace('/apisix/admin', ''),
+          prefix: '',
           data: {
             username: data.username,
             password: data.password,
