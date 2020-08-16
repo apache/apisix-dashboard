@@ -55,6 +55,8 @@ $ mysql –uroot –p123456
 
 According to your local deployment environment, check the environment variables in `./api/run/run.sh`, modify the environment variables if needed.
 
+For Chinese users please refer to [Goproxy](https://goproxy.cn/)
+
 4. Build
 
 ```sh
