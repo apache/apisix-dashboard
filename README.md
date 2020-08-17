@@ -21,8 +21,9 @@
 
 Dashboard for [Apache APISIX](https://github.com/apache/apisix-dashboard)
 
-## Preview
-TODO
+## User Guide
+
+Please refer to [User Guide](./USER_GUIDE.md)
 
 ## Deploy with Docker
 
