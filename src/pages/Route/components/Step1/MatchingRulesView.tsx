@@ -165,7 +165,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
       cancelText={formatMessage({ id: 'route.match.cancel' })}
       destroyOnClose
     >
-      <Form form={modalForm} labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
+      <Form form={modalForm} labelCol={{ span: 9 }} wrapperCol={{ span: 15 }}>
         <Form.Item
           label={formatMessage({ id: 'route.match.parameter.position' })}
           name="position"

@@ -81,6 +81,13 @@ export const transformStepData = ({
     data.upstream_path = {
       to: step2Data.upstreamPath,
     };
+    if (step2Data.mappingStrategy) {
+      data.upstream_path = {
+        ...data.upstream_path,
+        from: step2Data.mappingStrategy,
+        type: 'regx',
+      };
+    }
   }
 
   if (step3Data.plugins.prometheus) {
@@ -95,6 +102,8 @@ export const transformStepData = ({
       'advancedMatchingRules',
       'upstreamHostList',
       'upstreamPath',
+      'rewriteType',
+      'mappingStrategy',
       'upstreamHeaderList',
       'websocket',
       'timeout',
@@ -169,6 +178,14 @@ export const transformRouteData = (data: RouteModule.Body) => {
     upstream_protocol = 'keep',
     upstream_id,
   } = data;
+  let rewriteType = 'keep';
+  if (upstream_path && upstream_path.to) {
+    if (upstream_path.from) {
+      rewriteType = 'regx';
+    } else {
+      rewriteType = 'static';
+    }
+  }
 
   const upstreamHeaderList = Object.entries(upstream_header || {}).map(([k, v]) => {
     return {
@@ -185,6 +202,8 @@ export const transformRouteData = (data: RouteModule.Body) => {
     upstreamHostList: transformUpstreamNodes(upstream?.nodes),
     upstream_id,
     upstreamPath: upstream_path?.to,
+    mappingStrategy: upstream_path?.from,
+    rewriteType,
     timeout: upstream?.timeout || {
       connect: 6000,
       send: 6000,

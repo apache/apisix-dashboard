@@ -157,4 +157,7 @@ export default {
   'route.list': 'Route List',
   'route.list.input': 'Please input',
   'route.list.create': 'Create',
+  'page.route.radio.static': 'Static',
+  'page.route.radio.regx': 'Regx',
+  'page.route.form.itemLabel.from': 'From',
 };

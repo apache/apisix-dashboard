@@ -60,6 +60,8 @@ export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
   upstreamHostList: [{} as RouteModule.UpstreamHost],
   upstreamHeaderList: [],
   upstreamPath: undefined,
+  mappingStrategy: undefined,
+  rewriteType: 'keep',
   timeout: {
     connect: 6000,
     send: 6000,
