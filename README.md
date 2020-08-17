@@ -21,8 +21,9 @@
 
 Dashboard for [Apache APISIX](https://github.com/apache/apisix-dashboard)
 
-## User Guide
+[Online demo](http://139.217.190.60/)
 
+## User Guide
 Please refer to [User Guide](./USER_GUIDE.md)
 
 ## Deploy with Docker
