@@ -21,6 +21,11 @@
 
 Dashboard for [Apache APISIX](https://github.com/apache/apisix-dashboard)
 
+[Online demo](http://139.217.190.60/)
+
+## User Guide
+Please refer to [User Guide](./USER_GUIDE.md)
+
 ## Deploy with Docker
 
 Please refer to [Deploy with Docker README](./compose/README.md)
@@ -42,7 +47,7 @@ The `manager-api` is used to provide APIs for Dashboard, just like a bridge betw
 1. We need `MySQL/Golang` to be preinstalled.
 
 ```sh
-# e.g Initialization for MySQL
+# e.g Initialization for MySQL, please use a more secure Password instead of 123456.
 $ mysql –uroot –p123456
 > source ./api/script/db/schema.sql
 ```
@@ -55,7 +60,7 @@ $ mysql –uroot –p123456
 
 According to your local deployment environment, check the environment variables in `./api/run/run.sh`, modify the environment variables if needed.
 
-For Chinese users please refer to [Goproxy](https://goproxy.cn/)
+For most users in China, we could use [Goproxy](https://goproxy.cn/) to speed up downloading modules.
 
 4. Build
 
@@ -87,7 +92,7 @@ $ yarn install
 $ yarn build
 ```
 
-5. The bundled files are under `/dist` folder if the step 4 is successful, then we recommend using `nginx` to handle those files, please refer to the nginx conf `docker/nginx.conf`.
+5. The bundled files are under `/dist` folder if the step 4 is successful, then we recommend using `nginx` to handle those files, please install `nginx` manually, then refer to the nginx conf `docker/nginx.conf`.
 6. Move files under `dist` folder to nginx's default html folder, then visit `http://127.0.0.1` in your browser.
 
 ## Development
