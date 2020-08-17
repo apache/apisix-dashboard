@@ -155,6 +155,9 @@ export default class extends Vue {
       }, {
         key: 'nodes',
         width: 'auto'
+      }, {
+        key: 'other',
+        width: 'auto'
       }
     ]
 
@@ -170,13 +173,18 @@ export default class extends Vue {
         realId: id,
         type,
         nodes: item.value.nodes,
+        other: JSON.stringify(item.value.k8s_deployment_info || {}),
         description: desc
       }
     })
 
     let tableData: any[] = []
     const arr = nodes.forEach((item: any) => {
-      Object.entries(item.nodes).forEach(([ipWithPort, weights]) => {
+      if (!item.nodes) {
+        tableData = tableData.concat(item)
+        return
+      }
+      Object.entries(item.nodes || {}).forEach(([ipWithPort, weights]) => {
         // 释放 nodes
         item.nodes = {}
         tableData = tableData.concat({
@@ -194,6 +202,7 @@ export default class extends Vue {
     this.rowspan(0, 'id')
     this.rowspan(1, 'description')
     this.rowspan(2, 'type')
+    this.rowspan(3, 'other')
 
     this.total = nodes.length
 
