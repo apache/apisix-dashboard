@@ -21,7 +21,7 @@ export etcd_url='http://192.17.5.10:2379'
 
 unamestr=`uname`
 
-wget https://raw.githubusercontent.com/apache/apisix/master/conf/config-default.yaml
+wget https://raw.githubusercontent.com/apache/apisix/master/conf/config-default.yaml  -o config.yaml
 
 if [[ "$unamestr" == 'Darwin' ]]; then
    sed -i '' -e ':a' -e 'N' -e '$!ba' -e "s/allow_admin[a-z: #\/._]*\n\( *- [0-9a-zA-Z: #\/._',]*\n*\)*//g" config.yaml
