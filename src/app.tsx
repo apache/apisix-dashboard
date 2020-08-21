@@ -32,8 +32,8 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   settings?: LayoutSettings;
 }> {
-  const token = localStorage.getItem('token') || '';
-  if (token === '') {
+  const token = localStorage.getItem('token');
+  if (!token) {
     history.replace(`/user/login?redirect=${encodeURIComponent(window.location.pathname)}`);
   }
 
