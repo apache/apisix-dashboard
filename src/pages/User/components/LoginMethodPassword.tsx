@@ -98,7 +98,7 @@ const LoginMethodPassword: UserModule.LoginMethod = {
         const result = await request('/user/login', {
           method: 'POST',
           requestType: 'form',
-          prefix: 'http://localhost:8080',
+          prefix: '',
           data: {
             username: data.username,
             password: data.password,
