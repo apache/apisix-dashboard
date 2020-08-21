@@ -32,15 +32,6 @@ export default {
   'component.global.loading': 'Loading',
   'component.status.success': 'Successfully',
   'component.status.fail': 'Failed',
-  // User component
-  'component.user.loginByPassword': 'Username & Password',
-  'component.user.login': 'Login',
-  'component.user.username': 'Username',
-  'component.user.password': 'Password',
-  'component.user.rememberMe': 'Remember Me',
-  'component.user.inputUsername': 'Please input username!',
-  'component.user.inputPassword': 'Please input password!',
-  'component.user.wrongUsernameOrPassword': 'Wrong account or password!',
   // SSL Module
   'component.ssl.removeSSLItemModalContent': 'You are going to remove this item!',
   'component.ssl.removeSSLItemModalTitle': 'SSL Remove Alert',

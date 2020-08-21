@@ -27,6 +27,7 @@ func TestConsumer(t *testing.T) {
 	// create ok
 	handler.
 		Post(uriPrefix + "/consumers").
+    Header("Authorization", token).
 		JSON(`{
 			"username": "e2e_test_consumer1",
 			"plugins": {

@@ -14,28 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package route
+import React from 'react';
+import { UserModule } from '@/pages/User/typing';
+import { formatMessage } from '@@/plugin-locale/localeExports';
 
-import (
-	"github.com/api7/apitest"
-	"github.com/apisix/manager-api/conf"
-)
+const LoginMethodExample: UserModule.LoginMethod = {
+  id: 'example',
+  name: formatMessage({ id: 'component.user.loginMethodExample' }),
+  render: () => {
+    return <a href="https://www.example.com">example</a>;
+  },
+  getData(): UserModule.LoginData {
+    return {};
+  },
+  checkData: async () => {
+    return true;
+  },
+  submit: async (data) => {
+    return {
+      status: false,
+      message: formatMessage({ id: 'component.user.loginMethodExample.message' }),
+      data,
+    };
+  },
+  logout() {},
+};
 
-var handler *apitest.APITest
-
-var (
-	uriPrefix = "/apisix/admin"
-)
-
-func init() {
-	//init mysql connect
-	conf.InitializeMysql()
-
-	r := SetUpRouter()
-
-	handler = apitest.
-		New().
-		Handler(r)
-}
-
-
+export default LoginMethodExample;

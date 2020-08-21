@@ -15,5 +15,21 @@
       "base_url": "http://127.0.0.1:9080/apisix/admin",
       "api_key": "edd1c9f034335f136f87ad84b625c8f1"
     }
+  },
+  "authentication": {
+    "session": {
+      "secret": "secret",
+      "expireTime": 3600
+    },
+    "user": [
+      {
+        "username": "admin",
+        "password": "admin"
+      },
+      {
+        "username": "user",
+        "password": "user"
+      }
+    ]
   }
 }

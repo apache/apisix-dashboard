@@ -14,28 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package route
+import React from 'react';
+import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
+import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
+import { UserModule } from '@/pages/User/typing';
+import { getUrlQuery } from '@/helpers';
 
-import (
-	"github.com/api7/apitest"
-	"github.com/apisix/manager-api/conf"
-)
+/**
+ * Login Methods List
+ */
+const loginMethods: UserModule.LoginMethod[] = [LoginMethodPassword, LoginMethodExample];
 
-var handler *apitest.APITest
+/**
+ * User Logout Page
+ * @constructor
+ */
+const Page: React.FC = () => {
+  // run all logout method
+  loginMethods.forEach((item) => {
+    item.logout();
+  });
 
-var (
-	uriPrefix = "/apisix/admin"
-)
+  const redirect = getUrlQuery('redirect');
+  window.location.href = `/user/login${redirect ? `?redirect=${redirect}` : ''}`;
 
-func init() {
-	//init mysql connect
-	conf.InitializeMysql()
+  return null;
+};
 
-	r := SetUpRouter()
-
-	handler = apitest.
-		New().
-		Handler(r)
-}
-
-
+export default Page;

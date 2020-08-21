@@ -17,6 +17,7 @@
 import React from 'react';
 import { notification } from 'antd';
 import { MenuDataItem } from '@ant-design/pro-layout';
+import { history } from 'umi';
 
 import { codeMessage } from './constants';
 import IconFont from './iconfont';
@@ -56,7 +57,7 @@ export const getMenuData = (): MenuDataItem[] => {
   ];
 };
 
-export const isLoginPage = () => window.location.pathname.indexOf('/login') !== -1;
+export const isLoginPage = () => window.location.pathname.indexOf('/user/login') !== -1;
 
 /**
  * 异常处理程序
@@ -65,9 +66,10 @@ export const errorHandler = (error: { response: Response; data: any }): Promise<
   const { response } = error;
   if (response && response.status) {
     if ([401].includes(response.status) && !isLoginPage()) {
-      localStorage.clear();
-      window.location.href = '/login';
+      history.replace(`/user/logout?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return Promise.reject(response);
     }
+    if ([401].includes(response.status) && isLoginPage()) return Promise.reject(response);
 
     const errorText =
       error.data.msg || error.data.message || error.data.error_msg || codeMessage[response.status];
@@ -83,4 +85,15 @@ export const errorHandler = (error: { response: Response; data: any }): Promise<
     });
   }
   return Promise.reject(response);
+};
+
+export const getUrlQuery: (key: string) => string | false = (key: string) => {
+  const query = window.location.search.substring(1);
+  const vars = query.split('&');
+
+  for (let i = 0; i < vars.length; i += 1) {
+    const pair = vars[i].split('=');
+    if (pair[0] === key) return pair[1];
+  }
+  return false;
 };

@@ -42,6 +42,7 @@ var (
 	InvalidParamDetail = Message{"010010", "Invalid request parameter: %s", 400}
 	AdminApiSaveError  = Message{"010011", "Data save failed", 500}
 	SchemaCheckFailed  = Message{"010012", "%s", 400}
+	ForbiddenError     = Message{"010013", "Request Unauthorized", 401}
 
 	//BB 01 configuration
 	ConfEnvError      = Message{"010101", "Environment variable not found: %s", 500}
@@ -84,6 +85,9 @@ var (
 	ApisixConsumerUpdateError = Message{"010703", "APISIX Consumer update failed", 500}
 	ApisixConsumerDeleteError = Message{"010704", "APISIX Consumer delete failed", 500}
 	DuplicateUserName         = Message{"010705", "Duplicate consumer username", 400}
+
+	// 99 authentication
+	AuthenticationUserError = Message{"019901", "username or password error", 401}
 )
 
 type ManagerError struct {

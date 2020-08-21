@@ -17,25 +17,36 @@
 package route
 
 import (
-	"github.com/api7/apitest"
-	"github.com/apisix/manager-api/conf"
+  "bytes"
+  "net/http"
+  "strings"
+  "testing"
 )
 
-var handler *apitest.APITest
+var token string
 
-var (
-	uriPrefix = "/apisix/admin"
-)
+func TestUserLogin(t *testing.T) {
+  // password error
+  handler.
+    Post("/user/login").
+    Header("Content-Type", "application/x-www-form-urlencoded").
+    Body("username=admin&password=admin1").
+    Expect(t).
+    Status(http.StatusUnauthorized).
+    End()
 
-func init() {
-	//init mysql connect
-	conf.InitializeMysql()
+  // login success
+  sessionResponse := handler.
+    Post("/user/login").
+    Header("Content-Type", "application/x-www-form-urlencoded").
+    Body("username=admin&password=admin").
+    Expect(t).
+    Status(http.StatusOK).
+    End().Response.Body
 
-	r := SetUpRouter()
-
-	handler = apitest.
-		New().
-		Handler(r)
+  buf := new(bytes.Buffer)
+  buf.ReadFrom(sessionResponse)
+  data := buf.String()
+  tokenArr := strings.Split(data, "\"token\":\"")
+  token = strings.Split(tokenArr[1], "\"}")[0]
 }
-
-
