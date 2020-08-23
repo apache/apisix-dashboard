@@ -24,7 +24,7 @@ RUN mkdir /root/manager-api \
     && export GOPROXY=https://goproxy.io \
     && go build -o /root/manager-api/manager-api \
     && mv /go/src/github.com/apisix/manager-api/build.sh /root/manager-api/ \
-    && mv /go/src/github.com/apisix/manager-api/conf/conf_preview.json /root/manager-api/ \
+    && mv /go/src/github.com/apisix/manager-api/conf/conf_preview.json /root/manager-api/conf.json \
     && rm -rf /go/src/github.com/apisix/manager-api \
     && rm -rf /etc/localtime \
     && ln -s  /usr/share/zoneinfo/Hongkong /etc/localtime \
