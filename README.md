@@ -19,7 +19,7 @@
 
 # Apache APISIX Dashboard
 
-Dashboard for [Apache APISIX](https://github.com/apache/apisix-dashboard)
+Dashboard for [Apache APISIX](https://github.com/apache/apisix)
 
 [Online demo](http://139.217.190.60/)
 
