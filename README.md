@@ -111,3 +111,6 @@ $ yarn start
 ## Other
 
 1. If you need the dashboard-1.0 which is built with Vue.js, please refer to [master-vue](https://github.com/apache/apisix-dashboard/tree/master-vue).
+
+2. More information about the new dashboard and manager-api please refer to [here](./manager-api.md)
+
