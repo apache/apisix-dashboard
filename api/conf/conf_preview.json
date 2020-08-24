@@ -3,7 +3,7 @@
     "mysql": {
       "address": "#mysqlAddress#",
       "user": "#mysqlUser#",
-      "password": "#mysqlUser#",
+      "password": "#mysqlPWD#",
       "maxConns": 50,
       "maxIdleConns": 25,
       "maxLifeTime": 10
