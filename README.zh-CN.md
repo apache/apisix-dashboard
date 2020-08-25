@@ -31,7 +31,7 @@
 
 ## 使用 Docker 部署
 
-请参考 [README](./compose/README.md)
+请参考 [使用 Docker 部署 README](./compose/README.md)
 
 ## 手动部署
 
@@ -97,7 +97,7 @@ $ yarn install
 $ yarn build
 ```
 
-5. 如果第 4 步成功的话 `/dist` 目录下是构建后的文件，然后我们推荐使用 `nginx` 处理这些文件，请手动安装 `nginx` 并参考 `compose/dashboard_conf/nginx.conf` 配置。
+5. 如果第 4 步成功的话 `/dist` 目录下是构建后的文件，接着我们推荐使用 `nginx` 处理这些文件，请手动安装 `nginx` 并参考 `compose/dashboard_conf/nginx.conf` 配置。
 
 6. 移动 `dist` 目录下的文件到 nginx 的默认 html 目录，然后在浏览器中访问 `http://127.0.0.1`。
 
@@ -124,3 +124,5 @@ $ yarn start
 ## 其他
 
 1. 如果你需要 Vue.js 构建的 dashboard-1.0，请参考 [master-vue](https://github.com/apache/apisix-dashboard/tree/master-vue)。
+
+2. 关于新版仪表盘和 manager-api 的更多信息请参阅 [这里](./manager-api.md)
