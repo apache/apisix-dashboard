@@ -67,11 +67,18 @@ const Page: React.FC = (props) => {
   };
 
   const handleStepChange = (nextStep: number) => {
-    if (nextStep === 2) {
-      onValidateForm();
-    }
-    if (nextStep === 3) {
-      submit();
+    switch (nextStep) {
+      case 1:
+        setStep(nextStep);
+        break;
+      case 2:
+        onValidateForm();
+        break;
+      case 3:
+        submit();
+        break;
+      default:
+        break;
     }
   };
 
