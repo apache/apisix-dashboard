@@ -17,6 +17,8 @@
 #
 -->
 
+[English](./README.md) | 简体中文
+
 # Apache APISIX 仪表盘
 
 [Apache APISIX](https://github.com/apache/apisix-dashboard) 的仪表盘
