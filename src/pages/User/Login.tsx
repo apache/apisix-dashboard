@@ -16,7 +16,6 @@
  */
 import React, { useState } from 'react';
 import { Button, notification, Tabs } from 'antd';
-import { DefaultFooter } from '@ant-design/pro-layout';
 import { SelectLang } from '@@/plugin-locale/SelectLang';
 import { Link, useIntl, history } from 'umi';
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
@@ -24,8 +23,9 @@ import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
 import { UserModule } from '@/pages/User/typing';
 import logo from '@/assets/logo.svg';
 import { SettingOutlined } from '@ant-design/icons';
-import styles from './Login.less';
 import { getUrlQuery } from '@/helpers';
+import Footer from '@/components/Footer';
+import styles from './Login.less';
 
 const Tab = Tabs.TabPane;
 
@@ -115,7 +115,7 @@ const Page: React.FC = () => {
           </Button>
         </div>
       </div>
-      <DefaultFooter />
+      <Footer />
     </div>
   );
 };
