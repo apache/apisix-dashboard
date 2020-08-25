@@ -28,8 +28,6 @@ This folder stores the `docker-compose` file for `manager-api`.
 ```sh
 $ cd apisix-dashboard/compose
 
-$ sh gen-config-yaml.sh
-
 # For most users in China, please use some proxy services like https://www.daocloud.io/mirror to speed up your Docker images pulling.
 $ docker-compose -p dashboard up -d
 ```
