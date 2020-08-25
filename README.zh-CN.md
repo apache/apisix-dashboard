@@ -31,11 +31,11 @@
 
 ## 使用 Docker 部署
 
-请参考 [使用 Docker 部署 README](./compose/README.md)
+请参考 [使用 Docker 部署](./compose/README.md)
 
 ## 手动部署
 
-### Clone 项目
+### 克隆项目
 
 ```sh
 $ git clone https://github.com/apache/apisix-dashboard.git
@@ -45,17 +45,17 @@ $ cd apisix-dashboard
 
 ### 生成 manager-api
 
-`manager-api` 用于为仪表盘提供 APIS，就像 Apache APISIX 和仪表盘之间的桥梁。下面是手动构建步骤：
+`manager-api` 用于为仪表盘提供接口，就像 Apache APISIX 和仪表盘之间的桥梁。下面是手动构建步骤：
 
 1. 需要预先安装 `MySQL/Golang`。
 
 ```sh
-# e.g Initialization for MySQL, please use a more secure Password instead of 123456.
+# 例如：初始化时，推荐使用更加安全的密码，而不是 123456
 $ mysql –uroot –p123456
 > source ./api/script/db/schema.sql
 ```
 
-2. 启动 Apache APISIX。
+2. 启动 Apache APISIX
 
 [请参考这份指南](https://github.com/apache/apisix#configure-and-installation)
 
@@ -97,7 +97,7 @@ $ yarn install
 $ yarn build
 ```
 
-5. 如果第 4 步成功的话 `/dist` 目录下是构建后的文件，接着我们推荐使用 `nginx` 处理这些文件，请手动安装 `nginx` 并参考 `compose/dashboard_conf/nginx.conf` 配置。
+5. 如果第 4 步成功的话，那么构建后的文件在 `/dist` 目录下，接着我们推荐使用 `nginx` 处理这些文件，请手动安装 `nginx` 并参考 `compose/dashboard_conf/nginx.conf` 配置。
 
 6. 移动 `dist` 目录下的文件到 nginx 的默认 html 目录，然后在浏览器中访问 `http://127.0.0.1`。
 
