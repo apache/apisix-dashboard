@@ -55,7 +55,7 @@ $ mysql –uroot –p123456
 
 2. 启动 Apache APISIX。
 
-[请参考这份指南](<(https://github.com/apache/apisix#configure-and-installation)>)
+[请参考这份指南](https://github.com/apache/apisix#configure-and-installation)
 
 3. 检查环境变量
 
