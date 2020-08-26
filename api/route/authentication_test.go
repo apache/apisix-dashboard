@@ -28,7 +28,7 @@ var token string
 func TestUserLogin(t *testing.T) {
   // password error
   handler.
-    Post("/user/login").
+    Post("/apisix/admin/user/login").
     Header("Content-Type", "application/x-www-form-urlencoded").
     Body("username=admin&password=admin1").
     Expect(t).
@@ -37,7 +37,7 @@ func TestUserLogin(t *testing.T) {
 
   // login success
   sessionResponse := handler.
-    Post("/user/login").
+    Post("/apisix/admin/user/login").
     Header("Content-Type", "application/x-www-form-urlencoded").
     Body("username=admin&password=admin").
     Expect(t).
