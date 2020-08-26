@@ -12,6 +12,7 @@ CREATE TABLE `routes` (
   `priority` int NOT NULL DEFAULT 0,
   `state` int NOT NULL DEFAULT 1, -- 1-normal 0-disable
   `content` text,
+  `script` text,
   `content_admin_api` text,
   `create_time` bigint(20),
   `update_time` bigint(20),

@@ -282,6 +282,12 @@ func findRoute(c *gin.Context) {
 				return
 			}
 			result.Name = route.Name
+			var script map[string]interface{}
+			if err = json.Unmarshal([]byte(route.Script), &script); err != nil {
+				script = map[string]interface{}{}
+			}
+			result.Script = script
+
 			resp, _ := json.Marshal(result)
 			c.Data(http.StatusOK, service.ContentType, resp)
 		}

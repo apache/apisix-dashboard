@@ -19,6 +19,8 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os/exec"
 	"time"
 
 	"github.com/apisix/manager-api/conf"
@@ -74,6 +76,11 @@ func (rd *Route) Parse(r *RouteRequest, arr *ApisixRouteRequest) error {
 		return err
 	} else {
 		rd.Content = string(content)
+	}
+	if script, err := json.Marshal(r.Script); err != nil {
+		return err
+	} else {
+		rd.Script = string(script)
 	}
 	timestamp := time.Now().Unix()
 	rd.CreateTime = timestamp
@@ -172,6 +179,7 @@ type RouteRequest struct {
 	UpstreamPath     *UpstreamPath          `json:"upstream_path,omitempty"`
 	UpstreamHeader   map[string]string      `json:"upstream_header,omitempty"`
 	Plugins          map[string]interface{} `json:"plugins"`
+	Script           map[string]interface{} `json:"script"`
 }
 
 func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
@@ -361,6 +369,7 @@ type ApisixRouteRequest struct {
 	Upstream   *Upstream              `json:"upstream,omitempty"`
 	UpstreamId string                 `json:"upstream_id,omitempty"`
 	Plugins    map[string]interface{} `json:"plugins,omitempty"`
+	Script     string                 `json:"script,omitempty"`
 	//Name     string                 `json:"name"`
 }
 
@@ -399,6 +408,7 @@ type Route struct {
 	UpstreamId      string `json:"upstream_id"`
 	Priority        int64  `json:"priority"`
 	Content         string `json:"content"`
+	Script          string `json:"script"`
 	ContentAdminApi string `json:"content_admin_api"`
 }
 
@@ -513,7 +523,38 @@ func ToApisixRequest(routeRequest *RouteRequest) *ApisixRouteRequest {
 		arr.Plugins = nil
 	}
 
+	if routeRequest.Script != nil {
+		arr.Script, _ = generateLuaCode(routeRequest.Script)
+	}
+
 	return arr
+}
+
+func generateLuaCode(script map[string]interface{}) (string, error) {
+	scriptString, err := json.Marshal(script)
+	if err != nil {
+		return "", err
+	}
+
+	cmd := exec.Command("sh", "-c",
+		"cd /go/manager-api/dag-to-lua/ && lua cli.lua "+
+			"'"+string(scriptString)+"'")
+
+	logger.Info("generate conf:", string(scriptString))
+
+	stdout, _ := cmd.StdoutPipe()
+	defer stdout.Close()
+	if err := cmd.Start(); err != nil {
+		logger.Info("generate err:", err)
+		return "", err
+	}
+
+	result, _ := ioutil.ReadAll(stdout)
+	resData := string(result)
+
+	logger.Info("generated code:", resData)
+
+	return resData, nil
 }
 
 func ToRoute(routeRequest *RouteRequest,

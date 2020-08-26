@@ -19,20 +19,25 @@ FROM golang:1.13.8 AS build-env
 
 WORKDIR /go/src/github.com/apisix/manager-api
 COPY . .
-RUN mkdir /root/manager-api \
+RUN mkdir /go/manager-api \
     && go env -w GOPROXY=https://goproxy.io,direct \
     && export GOPROXY=https://goproxy.io \
-    && go build -o /root/manager-api/manager-api \
-    && mv /go/src/github.com/apisix/manager-api/build.sh /root/manager-api/ \
-    && mv /go/src/github.com/apisix/manager-api/conf/conf_preview.json /root/manager-api/conf.json \
+    && go build -o /go/manager-api/manager-api \
+    && mv /go/src/github.com/apisix/manager-api/build.sh /go/manager-api/ \
+    && mv /go/src/github.com/apisix/manager-api/conf/conf_preview.json /go/manager-api/conf.json \
     && rm -rf /go/src/github.com/apisix/manager-api \
     && rm -rf /etc/localtime \
     && ln -s  /usr/share/zoneinfo/Hongkong /etc/localtime \
     && dpkg-reconfigure -f noninteractive tzdata
 
+RUN wget https://github.com/api7/dag-to-lua/archive/v1.0.tar.gz \
+    && tar -zxvf v1.0.tar.gz \
+    && mkdir /go/manager-api/dag-to-lua \
+    && mv ./dag-to-lua-1.0/lib/* /go/manager-api/dag-to-lua/
+
 FROM alpine:3.11
 
-RUN mkdir /root/manager-api \
+RUN mkdir -p /go/manager-api \
    && apk update  \
    && apk add ca-certificates \
    && update-ca-certificates \
@@ -40,10 +45,11 @@ RUN mkdir /root/manager-api \
    && echo "hosts: files dns" > /etc/nsswitch.conf \
    && rm -rf /var/cache/apk/*
 
+RUN apk add lua5.1
 
-WORKDIR /root/manager-api
-COPY --from=build-env /root/manager-api/* /root/manager-api/
+WORKDIR /go/manager-api
+COPY --from=build-env /go/manager-api/ /go/manager-api/
 COPY --from=build-env /usr/share/zoneinfo/Hongkong /etc/localtime
 EXPOSE 8080
 RUN chmod +x ./build.sh
-CMD ["/bin/ash", "-c", "/root/manager-api/build.sh"]
+CMD ["/bin/ash", "-c", "/go/manager-api/build.sh"]

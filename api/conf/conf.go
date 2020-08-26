@@ -31,7 +31,7 @@ const PROD = "prod"
 const BETA = "beta"
 const DEV = "dev"
 const LOCAL = "local"
-const confPath = "/root/manager-api/conf.json"
+const confPath = "/go/manager-api/conf.json"
 const RequestId = "requestId"
 
 var (
@@ -81,10 +81,10 @@ type user struct {
 }
 
 type authenticationConfig struct {
-  Session struct {
-    Secret     string
-    ExpireTime uint64
-  }
+	Session struct {
+		Secret     string
+		ExpireTime uint64
+	}
 }
 
 var UserList = make(map[string]user, 1)
@@ -129,12 +129,12 @@ func initAuthentication() {
 		userList := configuration.Get("authentication.user").Array()
 
 		// create user list
-		for _, item := range userList{
+		for _, item := range userList {
 			username := item.Map()["username"].String()
 			password := item.Map()["password"].String()
 			UserList[item.Map()["username"].String()] = user{Username: username, Password: password}
 		}
-    AuthenticationConfig.Session.Secret =  configuration.Get("authentication.session.secret").String()
-    AuthenticationConfig.Session.ExpireTime =  configuration.Get("authentication.session.expireTime").Uint()
+		AuthenticationConfig.Session.Secret = configuration.Get("authentication.session.secret").String()
+		AuthenticationConfig.Session.ExpireTime = configuration.Get("authentication.session.expireTime").Uint()
 	}
 }
