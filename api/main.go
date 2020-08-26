@@ -40,5 +40,7 @@ func main() {
 		ReadTimeout:  time.Duration(1000) * time.Millisecond,
 		WriteTimeout: time.Duration(5000) * time.Millisecond,
 	}
-	s.ListenAndServe()
+	if err := s.ListenAndServe(); err != nil {
+		panic(err)
+	}
 }
