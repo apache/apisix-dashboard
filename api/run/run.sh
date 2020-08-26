@@ -18,7 +18,7 @@
 
 pwd=`pwd`
 
-cp ${pwd}/api/conf.json ${pwd}/conf.json
+cp ${pwd}/api/conf/conf_preview.json ${pwd}/conf.json
 
 export MYSQL_SERVER_ADDRESS="127.0.0.1:3306"
 export MYSQL_USER=root
