@@ -1,102 +1,107 @@
-import { Button, Form, Input, notification, Tabs, Tooltip } from 'antd';
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React, { useEffect } from 'react';
-import { Link, SelectLang, FormattedMessage, useIntl } from 'umi';
-import logo from '@/assets/logo.svg';
-import { useForm } from 'antd/es/form/util';
-import styles from './style.less';
-import { getSetting } from './service';
+import { PageContainer } from '@ant-design/pro-layout';
+import { Card, Form, Input, Row, Col, notification } from 'antd';
+import { useIntl } from 'umi';
 
-const { TabPane } = Tabs;
+import { getUrlQuery } from '@/helpers';
+import ActionBar from '@/components/ActionBar';
+import { getGrafanaURL } from '@/pages/Metrics/service';
 
-const Settings: React.FC<{}> = () => {
-  const [form] = useForm();
+import { updateMonitorURL } from './service';
+
+const Setting: React.FC = () => {
+  const [form] = Form.useForm();
+
+  const isSuperAdmin = true;
+  const isWorkspace = false;
+  const canFetchGrafana = (isSuperAdmin && !isWorkspace) || isWorkspace;
+
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    form.setFieldsValue(getSetting());
-  }, []);
-
-  const onFinish = ({ grafanaURL, baseURL }: Setting.AdminAPI & Setting.GrafanaConfig) => {
-    if (grafanaURL.length) {
-      if (!/^https?:\/\//.test(grafanaURL)) {
-        notification.error({
-          duration: 3,
-          message: 'Grafana 地址需以 http 或 https 开头',
-        });
-        return;
-      }
+    if (!canFetchGrafana) {
+      return;
     }
-    localStorage.setItem('GLOBAL_SETTING_API_BASE_URL', baseURL);
-    localStorage.setItem('GLOBAL_SETTING_GRAFANA_URL', grafanaURL);
+    getGrafanaURL().then((url) => {
+      form.setFieldsValue({
+        grafanaURL: url,
+      });
+    });
+  }, [canFetchGrafana]);
 
-    notification.success({
-      duration: 1,
-      message: `${formatMessage({ id: 'component.global.update' })} Admin API ${formatMessage({
-        id: 'component.status.success',
-      }).toLowerCase()}`,
-      onClose: () => {
-        document.location.href = '/';
-      },
+  const onSubmit = () => {
+    form.validateFields().then((value) => {
+      Promise.all([
+        new Promise((resolve) => {
+          if (canFetchGrafana) {
+            updateMonitorURL(value.grafanaURL).then(resolve);
+          }
+          resolve();
+        }),
+      ]).then(() => {
+        notification.success({
+          message: formatMessage({
+            id: 'page.setting.notification.update.configuration.successfully',
+          }),
+        });
+        setTimeout(() => {
+          const redirect = getUrlQuery('redirect');
+          window.location.href = redirect ? decodeURIComponent(redirect) : '/';
+        }, 500);
+      });
     });
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.lang}>
-        <SelectLang />
-      </div>
-      <div className={styles.content}>
-        <div className={styles.top}>
-          <div className={styles.header}>
-            <Link to="/">
-              <img alt="logo" className={styles.logo} src={logo} />
-              <span className={styles.title}>APISIX Dashboard</span>
-            </Link>
-          </div>
-          <div className={styles.desc}>Cloud-Native Microservices API Gateway</div>
-        </div>
-
-        <div className={styles.main}>
-          <Tabs>
-            <TabPane key="TabContent" tab={formatMessage({ id: 'app.settings.admin-api' })}>
-              <Form
-                form={form}
-                onFinish={(values) => onFinish(values as Setting.AdminAPI & Setting.GrafanaConfig)}
-              >
-                <Form.Item name="baseURL">
-                  <Input placeholder={formatMessage({ id: 'app.settings.item.baseURL' })} />
-                </Form.Item>
-
-                <Form.Item>
-                  <Form.Item name="grafanaURL" noStyle>
-                    <Input
-                      placeholder={formatMessage({ id: 'app.settings.item.admin-api-grafana' })}
-                    />
+    <>
+      <PageContainer title={formatMessage({ id: 'page.setting.pageContainer.title' })}>
+        <Card>
+          <Row>
+            <Col span={10}>
+              <Form form={form} labelCol={{ span: 7 }}>
+                {canFetchGrafana && (
+                  <Form.Item
+                    label={formatMessage({ id: 'page.setting.form.item.grafanaURL' })}
+                    name="grafanaURL"
+                    extra={formatMessage({
+                      id: 'page.setting.form.item.grafanaURL.inputHelpMessage',
+                    })}
+                    rules={[
+                      {
+                        pattern: new RegExp(/^https?:\/\//),
+                        message: formatMessage({
+                          id: 'page.setting.form.item.grafanaURL.inputErrorMessage',
+                        }),
+                      },
+                    ]}
+                  >
+                    <Input />
                   </Form.Item>
-                  <Tooltip title="从哪里可以获取 Grafana 地址？">
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href="https://github.com/apache/incubator-apisix/blob/master/doc/plugins/prometheus-cn.md"
-                      style={{ margin: '8px 8px' }}
-                    >
-                      帮助
-                    </a>
-                  </Tooltip>
-                </Form.Item>
-
-                <Form.Item>
-                  <Button size="large" type="primary" htmlType="submit" block>
-                    <FormattedMessage id="component.global.save" />
-                  </Button>
-                </Form.Item>
+                )}
               </Form>
-            </TabPane>
-          </Tabs>
-        </div>
-      </div>
-    </div>
+            </Col>
+          </Row>
+        </Card>
+      </PageContainer>
+      <ActionBar step={1} lastStep={1} onChange={onSubmit} />
+    </>
   );
 };
 
-export default Settings;
+export default Setting;

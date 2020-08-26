@@ -30,6 +30,7 @@ import (
 
 func AppendSsl(r *gin.Engine) *gin.Engine {
 	r.POST("/apisix/admin/check_ssl_cert", sslCheck)
+	r.POST("/apisix/admin/check_ssl_exists", hostCheck)
 
 	r.GET("/apisix/admin/ssls", sslList)
 	r.POST("/apisix/admin/ssls", sslCreate)
@@ -48,14 +49,14 @@ func sslList(c *gin.Context) {
 	status, _ := strconv.Atoi(c.DefaultQuery("status", "-1"))
 	expireStart, _ := strconv.Atoi(c.DefaultQuery("expire_start", "-1"))
 	expireEnd, _ := strconv.Atoi(c.DefaultQuery("expire_end", "-1"))
+	sortType := c.DefaultQuery("sort_type", "desc")
 
 	sni := c.DefaultQuery("sni", "")
 
-	count, list, err := service.SslList(page, size, status, expireStart, expireEnd, sni)
+	count, list, err := service.SslList(page, size, status, expireStart, expireEnd, sni, sortType)
 
 	if err != nil {
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
+		handleServiceError(c, requestId, err)
 		return
 	}
 
@@ -71,8 +72,7 @@ func sslItem(c *gin.Context) {
 	ssl, err := service.SslItem(id)
 
 	if err != nil {
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
+		handleServiceError(c, requestId, err)
 		return
 	}
 
@@ -92,8 +92,7 @@ func sslCheck(c *gin.Context) {
 
 	ssl, err := service.SslCheck(param)
 	if err != nil {
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
+		handleServiceError(c, requestId, err)
 		return
 	}
 
@@ -116,13 +115,7 @@ func sslCreate(c *gin.Context) {
 	}
 
 	if err := service.SslCreate(param, u4.String()); err != nil {
-		if httpError, ok := err.(*errno.HttpError); ok {
-			logger.WithField(conf.RequestId, requestId).Error(err)
-			c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
-			return
-		}
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
+		handleServiceError(c, requestId, err)
 		return
 	}
 
@@ -132,7 +125,6 @@ func sslCreate(c *gin.Context) {
 func sslUpdate(c *gin.Context) {
 	requestId, _ := c.Get("X-Request-Id")
 	param, exist := c.Get("requestBody")
-
 	id := c.Param("id")
 
 	if !exist || len(param.([]byte)) < 1 {
@@ -143,13 +135,7 @@ func sslUpdate(c *gin.Context) {
 	}
 
 	if err := service.SslUpdate(param, id); err != nil {
-		if httpError, ok := err.(*errno.HttpError); ok {
-			logger.WithField(conf.RequestId, requestId).Error(err)
-			c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
-			return
-		}
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
+		handleServiceError(c, requestId, err)
 		return
 	}
 
@@ -170,14 +156,7 @@ func sslPatch(c *gin.Context) {
 	}
 
 	if err := service.SslPatch(param, id); err != nil {
-		if httpError, ok := err.(*errno.HttpError); ok {
-			logger.WithField(conf.RequestId, requestId).Error(err)
-			c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
-			return
-		}
-
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
+		handleServiceError(c, requestId, err)
 		return
 	}
 
@@ -189,16 +168,30 @@ func sslDelete(c *gin.Context) {
 	id := c.Param("id")
 
 	if err := service.SslDelete(id); err != nil {
-		if httpError, ok := err.(*errno.HttpError); ok {
-			logger.WithField(conf.RequestId, requestId).Error(err)
-			c.AbortWithStatusJSON(httpError.Code, httpError.Msg)
-			return
-		}
-
-		logger.WithField(conf.RequestId, requestId).Error(err.(*errno.ManagerError).ErrorDetail())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.(*errno.ManagerError).Response())
+		handleServiceError(c, requestId, err)
 		return
 	}
 
 	c.JSON(http.StatusOK, errno.Succeed())
+}
+
+func hostCheck(c *gin.Context) {
+	requestId, _ := c.Get("X-Request-Id")
+	param, exist := c.Get("requestBody")
+
+	if !exist || len(param.([]byte)) < 1 {
+		err := errno.New(errno.InvalidParam)
+		logger.WithField(conf.RequestId, requestId).Error(err.ErrorDetail())
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Response())
+		return
+	}
+
+	err := service.CheckSniExists(param)
+	if err != nil {
+		handleServiceError(c, requestId, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, errno.Succeed())
+
 }

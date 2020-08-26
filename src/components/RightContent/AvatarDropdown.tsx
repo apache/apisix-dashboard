@@ -1,7 +1,29 @@
+/*
+* MIT License
+
+* Copyright (c) 2019 Alipay.inc
+
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*/
 import React, { useCallback } from 'react';
-import { SettingOutlined, UserOutlined, SettingFilled } from '@ant-design/icons';
+import { SettingOutlined, UserOutlined, SettingFilled, LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
-import { ClickParam } from 'antd/es/menu';
 import { history, useModel } from 'umi';
 
 import { stringify } from 'querystring';
@@ -17,7 +39,7 @@ export interface GlobalHeaderRightProps {
  */
 const settings = async () => {
   history.replace({
-    pathname: '/setting',
+    pathname: '/settings',
     search: stringify({
       redirect: window.location.href,
     }),
@@ -27,11 +49,22 @@ const settings = async () => {
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
 
-  const onMenuClick = useCallback((event: ClickParam) => {
+  const onMenuClick = useCallback((event) => {
     const { key } = event;
     if (key === 'settings') {
       setInitialState({ ...initialState, currentUser: undefined });
       settings();
+      return;
+    }
+
+    if (key === 'logout') {
+      setInitialState({ ...initialState, currentUser: undefined });
+      history.replace({
+        pathname: '/user/logout',
+        search: stringify({
+          redirect: window.location.pathname,
+        }),
+      });
       return;
     }
     history.push(`/account/${key}`);
@@ -78,6 +111,11 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       <Menu.Item key="settings">
         <SettingFilled />
         修改设置
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="logout">
+        <LogoutOutlined />
+        退出
       </Menu.Item>
     </Menu>
   );

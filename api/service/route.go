@@ -19,6 +19,8 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os/exec"
 	"time"
 
 	"github.com/apisix/manager-api/conf"
@@ -74,6 +76,11 @@ func (rd *Route) Parse(r *RouteRequest, arr *ApisixRouteRequest) error {
 		return err
 	} else {
 		rd.Content = string(content)
+	}
+	if script, err := json.Marshal(r.Script); err != nil {
+		return err
+	} else {
+		rd.Script = string(script)
 	}
 	timestamp := time.Now().Unix()
 	rd.CreateTime = timestamp
@@ -172,6 +179,7 @@ type RouteRequest struct {
 	UpstreamPath     *UpstreamPath          `json:"upstream_path,omitempty"`
 	UpstreamHeader   map[string]string      `json:"upstream_header,omitempty"`
 	Plugins          map[string]interface{} `json:"plugins"`
+	Script           map[string]interface{} `json:"script"`
 }
 
 func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
@@ -180,6 +188,9 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 	//Protocols from vars and upstream
 	protocols := make([]string, 0)
 	if o.Upstream != nil && o.Upstream.EnableWebsocket {
+		protocols = append(protocols, WEBSOCKET)
+	}
+	if o.UpstreamId != "" {
 		protocols = append(protocols, WEBSOCKET)
 	}
 	flag := true
@@ -221,7 +232,9 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 						upstreamProtocol = pr.Scheme
 					}
 					upstreamHeader = pr.Headers
-					if pr.RegexUri == nil || len(pr.RegexUri) < 2 {
+					if (pr.RegexUri == nil || len(pr.RegexUri) < 2) && pr.Uri == "" {
+						upstreamPath = nil
+					} else if pr.RegexUri == nil || len(pr.RegexUri) < 2 {
 						upstreamPath.UPathType = UPATHTYPE_STATIC
 						upstreamPath.To = pr.Uri
 					} else {
@@ -243,9 +256,10 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 	//Plugins
 	requestPlugins := utils.CopyMap(o.Plugins)
 	delete(requestPlugins, REDIRECT)
+	delete(requestPlugins, PROXY_REWRIETE)
 
 	// check if upstream is not exist
-	if o.Upstream == nil {
+	if o.Upstream == nil && o.UpstreamId == "" {
 		upstreamProtocol = ""
 		upstreamHeader = nil
 		upstreamPath = nil
@@ -262,6 +276,7 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 		Hosts:            o.Hosts,
 		Redirect:         redirect,
 		Upstream:         o.Upstream,
+		UpstreamId:       o.UpstreamId,
 		UpstreamProtocol: upstreamProtocol,
 		UpstreamPath:     upstreamPath,
 		UpstreamHeader:   upstreamHeader,
@@ -314,7 +329,7 @@ func (r Redirect) MarshalJSON() ([]byte, error) {
 	m := make(map[string]interface{})
 	if r.HttpToHttps {
 		m["http_to_https"] = true
-	} else {
+	} else if r.Uri != "" {
 		m["code"] = r.Code
 		m["uri"] = r.Uri
 	}
@@ -354,6 +369,7 @@ type ApisixRouteRequest struct {
 	Upstream   *Upstream              `json:"upstream,omitempty"`
 	UpstreamId string                 `json:"upstream_id,omitempty"`
 	Plugins    map[string]interface{} `json:"plugins,omitempty"`
+	Script     string                 `json:"script,omitempty"`
 	//Name     string                 `json:"name"`
 }
 
@@ -392,6 +408,7 @@ type Route struct {
 	UpstreamId      string `json:"upstream_id"`
 	Priority        int64  `json:"priority"`
 	Content         string `json:"content"`
+	Script          string `json:"script"`
 	ContentAdminApi string `json:"content_admin_api"`
 }
 
@@ -477,15 +494,16 @@ func ToApisixRequest(routeRequest *RouteRequest) *ApisixRouteRequest {
 	} else {
 		arr.Vars = nil
 	}
-
+	// upstreamId
+	arr.UpstreamId = routeRequest.UpstreamId
 	// upstream protocol
-	if arr.Upstream != nil {
+	if arr.Upstream != nil || arr.UpstreamId != "" {
 		pr := &ProxyRewrite{}
 		pr.Scheme = routeRequest.UpstreamProtocol
 		// upstream path
 		proxyPath := routeRequest.UpstreamPath
 		if proxyPath != nil {
-			if proxyPath.UPathType == UPATHTYPE_STATIC {
+			if proxyPath.UPathType == UPATHTYPE_STATIC || proxyPath.UPathType == "" {
 				pr.Uri = proxyPath.To
 				pr.RegexUri = nil
 			} else {
@@ -494,7 +512,7 @@ func ToApisixRequest(routeRequest *RouteRequest) *ApisixRouteRequest {
 		}
 		// upstream headers
 		pr.Headers = routeRequest.UpstreamHeader
-		if proxyPath != nil {
+		if proxyPath != nil || pr.Scheme != UPATHTYPE_KEEP || (pr.Headers != nil && len(pr.Headers) > 0) {
 			plugins[PROXY_REWRIETE] = pr
 		}
 	}
@@ -504,9 +522,39 @@ func ToApisixRequest(routeRequest *RouteRequest) *ApisixRouteRequest {
 	} else {
 		arr.Plugins = nil
 	}
-	// upstreamId
-	arr.UpstreamId = routeRequest.UpstreamId
+
+	if routeRequest.Script != nil {
+		arr.Script, _ = generateLuaCode(routeRequest.Script)
+	}
+
 	return arr
+}
+
+func generateLuaCode(script map[string]interface{}) (string, error) {
+	scriptString, err := json.Marshal(script)
+	if err != nil {
+		return "", err
+	}
+
+	cmd := exec.Command("sh", "-c",
+		"cd /go/manager-api/dag-to-lua/ && lua cli.lua "+
+			"'"+string(scriptString)+"'")
+
+	logger.Info("generate conf:", string(scriptString))
+
+	stdout, _ := cmd.StdoutPipe()
+	defer stdout.Close()
+	if err := cmd.Start(); err != nil {
+		logger.Info("generate err:", err)
+		return "", err
+	}
+
+	result, _ := ioutil.ReadAll(stdout)
+	resData := string(result)
+
+	logger.Info("generated code:", resData)
+
+	return resData, nil
 }
 
 func ToRoute(routeRequest *RouteRequest,
@@ -523,14 +571,16 @@ func ToRoute(routeRequest *RouteRequest,
 	}
 	rd.ID = u4
 	// content_admin_api
-	if respStr, err := json.Marshal(resp); err != nil {
-		e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
-		return nil, e
-	} else {
-		rd.ContentAdminApi = string(respStr)
+	if resp != nil {
+		if respStr, err := json.Marshal(resp); err != nil {
+			e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
+			return nil, e
+		} else {
+			rd.ContentAdminApi = string(respStr)
+		}
 	}
 	// hosts
-	hosts := resp.Node.Value.Hosts
+	hosts := routeRequest.Hosts
 	if hb, err := json.Marshal(hosts); err != nil {
 		e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
 		logger.Warn(e.Msg)
@@ -538,7 +588,7 @@ func ToRoute(routeRequest *RouteRequest,
 		rd.Hosts = string(hb)
 	}
 	// uris
-	uris := resp.Node.Value.Uris
+	uris := routeRequest.Uris
 	if ub, err := json.Marshal(uris); err != nil {
 		e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
 		logger.Warn(e.Msg)
@@ -546,8 +596,8 @@ func ToRoute(routeRequest *RouteRequest,
 		rd.Uris = string(ub)
 	}
 	// upstreamNodes
-	if resp.Node.Value.Upstream != nil {
-		nodes := resp.Node.Value.Upstream.Nodes
+	if routeRequest.Upstream != nil {
+		nodes := routeRequest.Upstream.Nodes
 		ips := make([]string, 0)
 		for k, _ := range nodes {
 			ips = append(ips, k)

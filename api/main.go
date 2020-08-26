@@ -22,40 +22,17 @@ import (
 	"time"
 
 	"github.com/apisix/manager-api/conf"
-	"github.com/apisix/manager-api/filter"
 	"github.com/apisix/manager-api/log"
 	"github.com/apisix/manager-api/route"
-	"github.com/gin-contrib/pprof"
-	"github.com/gin-gonic/gin"
 )
 
 var logger = log.GetLogger()
-
-func setUpRouter() *gin.Engine {
-	if conf.ENV != conf.LOCAL && conf.ENV != conf.BETA {
-		gin.SetMode(gin.DebugMode)
-	} else {
-		gin.SetMode(gin.ReleaseMode)
-	}
-	r := gin.New()
-
-	r.Use(filter.CORS(), filter.RequestId(), filter.RequestLogHandler(), filter.RecoverHandler())
-	route.AppendHealthCheck(r)
-	route.AppendRoute(r)
-	route.AppendSsl(r)
-	route.AppendPlugin(r)
-	route.AppendUpstream(r)
-
-	pprof.Register(r)
-
-	return r
-}
 
 func main() {
 	// init
 	conf.InitializeMysql()
 	// routes
-	r := setUpRouter()
+	r := route.SetUpRouter()
 	addr := fmt.Sprintf(":%d", conf.ServerPort)
 	s := &http.Server{
 		Addr:         addr,
@@ -63,5 +40,7 @@ func main() {
 		ReadTimeout:  time.Duration(1000) * time.Millisecond,
 		WriteTimeout: time.Duration(5000) * time.Millisecond,
 	}
-	s.ListenAndServe()
+	if err := s.ListenAndServe(); err != nil {
+		panic(err)
+	}
 }

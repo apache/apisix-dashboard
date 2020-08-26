@@ -1,10 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 export default {
   'component.tagSelect.expand': '展开',
   'component.tagSelect.collapse': '收起',
   'component.tagSelect.all': '全部',
   'component.global.remove': '删除',
   'component.global.cancel': '取消',
-  'component.global.submit': '提交',
+  'component.global.button.submit': '提交',
   'component.global.create': '创建',
   'component.global.add': '新建',
   'component.global.save': '保存',
@@ -16,15 +32,6 @@ export default {
   'component.global.loading': '加载中',
   'component.status.success': '成功',
   'component.status.fail': '失败',
-  // User component
-  'component.user.loginByPassword': '账号密码登录',
-  'component.user.login': '登录',
-  'component.user.username': '账号',
-  'component.user.password': '密码',
-  'component.user.rememberMe': '自动登录',
-  'component.user.inputUsername': '请输入账号！',
-  'component.user.inputPassword': '请输入密码！',
-  'component.user.wrongUsernameOrPassword': '账号或密码错误！',
   // SSL Module
   'component.ssl.removeSSLItemModalContent': '确定要删除该项吗？',
   'component.ssl.removeSSLItemModalTitle': '删除 SSL',

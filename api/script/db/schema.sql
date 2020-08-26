@@ -12,6 +12,7 @@ CREATE TABLE `routes` (
   `priority` int NOT NULL DEFAULT 0,
   `state` int NOT NULL DEFAULT 1, -- 1-normal 0-disable
   `content` text,
+  `script` text,
   `content_admin_api` text,
   `create_time` bigint(20),
   `update_time` bigint(20),
@@ -28,7 +29,9 @@ CREATE TABLE `ssls` (
   `status` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `create_time` bigint(20) unsigned NOT NULL,
   `update_time` bigint(20) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
+  `public_key_hash` varchar(64) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uni_public_key_hash` (`public_key_hash`)
 ) DEFAULT CHARSET=utf8;
 
 -- upstream
