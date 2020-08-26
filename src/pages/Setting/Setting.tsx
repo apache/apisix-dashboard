@@ -46,24 +46,25 @@ const Setting: React.FC = () => {
   }, [canFetchGrafana]);
 
   const onSubmit = () => {
-    const { grafanaURL } = form.getFieldsValue();
-    Promise.all([
-      new Promise((resolve) => {
-        if (canFetchGrafana) {
-          updateMonitorURL(grafanaURL).then(resolve);
-        }
-        resolve();
-      }),
-    ]).then(() => {
-      notification.success({
-        message: formatMessage({
-          id: 'page.setting.notification.update.configuration.successfully',
+    form.validateFields().then((value) => {
+      Promise.all([
+        new Promise((resolve) => {
+          if (canFetchGrafana) {
+            updateMonitorURL(value.grafanaURL).then(resolve);
+          }
+          resolve();
         }),
+      ]).then(() => {
+        notification.success({
+          message: formatMessage({
+            id: 'page.setting.notification.update.configuration.successfully',
+          }),
+        });
+        setTimeout(() => {
+          const redirect = getUrlQuery('redirect');
+          window.location.href = redirect ? decodeURIComponent(redirect) : '/';
+        }, 500);
       });
-      setTimeout(() => {
-        const redirect = getUrlQuery('redirect');
-        window.location.href = redirect ? decodeURIComponent(redirect) : '/';
-      }, 500);
     });
   };
 
