@@ -95,7 +95,7 @@ const LoginMethodPassword: UserModule.LoginMethod = {
   submit: async (data) => {
     if (data.username !== '' && data.password !== '') {
       try {
-        const result = await request('/user/login', {
+        const result = await request('/apisix/admin/user/login', {
           method: 'POST',
           requestType: 'form',
           prefix: '',
@@ -127,7 +127,6 @@ const LoginMethodPassword: UserModule.LoginMethod = {
     }
   },
   logout: () => {
-    console.log('password logout');
     localStorage.removeItem('token');
   },
 };

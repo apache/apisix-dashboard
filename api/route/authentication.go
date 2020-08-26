@@ -30,7 +30,7 @@ type UserSession struct {
 }
 
 func AppendAuthentication(r *gin.Engine) *gin.Engine {
-	r.POST("/user/login", userLogin)
+	r.POST("/apisix/admin/user/login", userLogin)
 	return r
 }
 
