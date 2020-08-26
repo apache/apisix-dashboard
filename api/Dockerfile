@@ -32,8 +32,8 @@ RUN mkdir /go/manager-api \
 
 RUN wget https://github.com/api7/dag-to-lua/archive/v1.0.tar.gz \
     && tar -zxvf v1.0.tar.gz \
-    && mkdir /go/api7-manager-api/dag-to-lua \
-    && mv ./dag-to-lua-1.0/lib/* /go/api7-manager-api/dag-to-lua/
+    && mkdir /go/manager-api/dag-to-lua \
+    && mv ./dag-to-lua-1.0/lib/* /go/manager-api/dag-to-lua/
 
 FROM alpine:3.11
 

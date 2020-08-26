@@ -537,7 +537,7 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 	}
 
 	cmd := exec.Command("sh", "-c",
-		"cd /go/api7-manager-api/dag-to-lua/ && lua cli.lua "+
+		"cd /go/manager-api/dag-to-lua/ && lua cli.lua "+
 			"'"+string(scriptString)+"'")
 
 	logger.Info("generate conf:", string(scriptString))
