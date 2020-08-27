@@ -270,7 +270,11 @@ const Page: React.FC<Props> = (props) => {
           {renderStep()}
         </Card>
       </PageHeaderWrapper>
-      <ActionBar step={step} lastStep={redirect ? 2 : 4} onChange={onStepChange} withResultView />
+      {step !== 5 ? (
+        <ActionBar step={step} lastStep={redirect ? 2 : 4} onChange={onStepChange} withResultView />
+      ) : (
+        ''
+      )}
     </>
   );
 };
