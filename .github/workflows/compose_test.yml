@@ -18,6 +18,12 @@ jobs:
     - name: run docker-compose 
       run: cd ./compose && docker-compose up -d
 
+    - name: ping dashboard
+      run: |
+        curl -i http://127.0.0.1
+        curl -i -X POST http://127.0.0.1/apisix/admin/user/login
+        curl -i http://127.0.0.1:9080
+
     - name: run test
       run: |
         code=$(curl -i -o /dev/null -s -w %{http_code} http://127.0.0.1)
@@ -30,8 +36,8 @@ jobs:
             echo "failed: can't access to manager api"
             exit 1
         fi
-        code=$(curl -i -o /dev/null -s -w %{http_code} -X POST  http://127.0.0.1:9080)
+        code=$(curl -i -o /dev/null -s -w %{http_code}  http://127.0.0.1:9080)
         if [ $code -lt 100 ]; then
-            echo "failed: can't access to manager api"
+            echo "failed: can't access to APISIX"
             exit 1
         fi
