@@ -31,13 +31,18 @@ jobs:
             echo "failed: can't access to dashboard"
             exit 1
         fi
+        echo $code;
+
         code=$(curl -i -o /dev/null -s -w %{http_code} -X POST  http://127.0.0.1/apisix/admin/user/login)
         if [ $code -lt 100 ]; then
             echo "failed: can't access to manager api"
             exit 1
         fi
+        echo $code
+
         code=$(curl -i -o /dev/null -s -w %{http_code}  http://127.0.0.1:9080)
         if [ $code -lt 100 ]; then
             echo "failed: can't access to APISIX"
             exit 1
         fi
+        echo $code
