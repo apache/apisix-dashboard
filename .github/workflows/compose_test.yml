@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: run docker-compose 
-      run: cd ./compose && docker-compose up
+      run: cd ./compose && docker-compose up -d
 
     - name: run test
       run: |
