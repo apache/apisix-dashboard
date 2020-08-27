@@ -143,5 +143,6 @@ declare namespace RouteModule {
     plugins: {
       [name: string]: any;
     };
+    script: Record<string, any>;
   };
 }

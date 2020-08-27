@@ -71,6 +71,7 @@ export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
 
 export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
   plugins: {},
+  script: {},
 };
 
 export const INIT_CHART = {
