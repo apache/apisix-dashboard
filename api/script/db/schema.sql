@@ -57,3 +57,13 @@ CREATE TABLE `consumers` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_username` (`username`)
 ) DEFAULT CHARSET=utf8;
+-- route_group
+CREATE TABLE `route_group` (
+  `id` varchar(64) NOT NULL unique,
+  `name` varchar(200) NOT NULL unique,
+  `description` varchar(200) DEFAULT NULL,
+  `create_time` bigint(20),
+  `update_time` bigint(20),
+
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8;
