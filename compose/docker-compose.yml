@@ -97,6 +97,9 @@ services:
       - ENV=prod
     volumes:
       - ./manager_conf/build.sh:/go/manager-api/build.sh
+    depends_on:
+      - mysql
+      - apisix  
     networks:
       apisix-dashboard:
         ipv4_address: 192.17.5.15
