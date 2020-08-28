@@ -16,12 +16,15 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: run docker-compose 
-      run: cd ./compose && docker-compose up -d
+      run: |
+        cd ./compose && docker-compose up -d
+        sleep 2
 
     - name: ping dashboard
       run: |
         curl -i http://127.0.0.1
         curl -i -X POST http://127.0.0.1/apisix/admin/user/login
+        curl -i -X POST http://127.0.0.1:8080/apisix/admin/user/login
         curl -i http://127.0.0.1:9080
 
     - name: run test
@@ -31,18 +34,25 @@ jobs:
             echo "failed: can't access to dashboard"
             exit 1
         fi
-        echo $code;
+        echo "dashboard: $code"
 
         code=$(curl -i -o /dev/null -s -w %{http_code} -X POST  http://127.0.0.1/apisix/admin/user/login)
         if [ $code -lt 100 ]; then
             echo "failed: can't access to manager api"
             exit 1
         fi
-        echo $code
+        echo "manager api: $code"
+
+        code=$(curl -i -o /dev/null -s -w %{http_code} -X POST  http://127.0.0.1:8080/apisix/admin/user/login)
+        if [ $code -lt 100 ]; then
+            echo "failed: can't access to manager api"
+            exit 1
+        fi
+        echo "manager api 8080: $code"
 
         code=$(curl -i -o /dev/null -s -w %{http_code}  http://127.0.0.1:9080)
         if [ $code -lt 100 ]; then
             echo "failed: can't access to APISIX"
             exit 1
         fi
-        echo $code
+        echo "APISIX: $code"
