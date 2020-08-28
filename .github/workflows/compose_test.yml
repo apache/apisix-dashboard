@@ -24,9 +24,8 @@ jobs:
 
     - name: ping database
       run: |
-        mysql -h 127.0.0.1 --port 3306 -u root -p123456  -e "show databases;" > /tmp/test.log 2>&1
+        mysql -h 127.0.0.1 --port 3306 -u root -p123456  -e "show databases;" > /tmp/test.log 2>&1 || docker logs compose_mysql_1
         cat /tmp/test.log
-        docker logs compose_mysql_1
 
     - name: ping dashboard
       run: |
