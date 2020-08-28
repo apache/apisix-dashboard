@@ -61,6 +61,7 @@ export default {
     'Maximum length 100, only letters, Numbers, _, and - are supported, and can only begin with letters',
   'rotue.meta.api.rule':
     'Only letters, numbers, _ and - are supported, and can only begin with letters',
+  'route.meta.api.group.name': 'RouteGroup',
   'route.meta.description': 'Description',
   'route.meta.description.rule': 'Can not more than 200 characters',
 

@@ -35,6 +35,11 @@ export const getMenuData = (): MenuDataItem[] => {
       icon: <IconFont type="iconroute" />,
     },
     {
+      name: 'routegroup',
+      path: '/routegroup/list',
+      icon: <IconFont type="iconroute" />,
+    },
+    {
       name: 'ssl',
       path: '/ssl/list',
       icon: <IconFont type="iconSSLshuzizhengshu" />,
