@@ -20,6 +20,7 @@ jobs:
         cd ./compose && docker-compose up -d --build
         sleep 3
         docker logs compose_manager_1
+        docker logs compose_mysql_1
 
     - name: ping database
       run: |
