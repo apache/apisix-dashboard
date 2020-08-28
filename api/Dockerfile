@@ -30,10 +30,10 @@ RUN mkdir /go/manager-api \
     && ln -s  /usr/share/zoneinfo/Hongkong /etc/localtime \
     && dpkg-reconfigure -f noninteractive tzdata
 
-RUN wget https://github.com/api7/dag-to-lua/archive/v1.0.tar.gz \
-    && tar -zxvf v1.0.tar.gz \
+RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz \
+    && tar -zxvf v1.1.tar.gz \
     && mkdir /go/manager-api/dag-to-lua \
-    && mv ./dag-to-lua-1.0/lib/* /go/manager-api/dag-to-lua/
+    && mv ./dag-to-lua-1.1/lib/* /go/manager-api/dag-to-lua/
 
 FROM alpine:3.11
 
