@@ -21,6 +21,10 @@ jobs:
         sleep 3
         docker logs compose_manager_1
 
+    - name: ping database
+      run: |
+        mysql -h 127.0.0.1 --port 3306 -u root -p123456  -e "show databases;"
+
     - name: ping dashboard
       run: |
         curl -i http://127.0.0.1

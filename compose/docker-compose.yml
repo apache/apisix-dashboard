@@ -75,7 +75,7 @@ services:
     image: mysql:latest
     restart: always
     ports:
-      - "3309:3306/tcp"
+      - "3306:3306/tcp"
     environment:
       - MYSQL_ROOT_PASSWORD=123456
     volumes:
