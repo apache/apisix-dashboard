@@ -18,7 +18,8 @@ jobs:
     - name: run docker-compose 
       run: |
         cd ./compose && docker-compose up -d --build
-        sleep 2
+        sleep 3
+        docker logs compose_manager_1
 
     - name: ping dashboard
       run: |
