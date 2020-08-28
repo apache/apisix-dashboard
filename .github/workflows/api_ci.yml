@@ -56,10 +56,10 @@ jobs:
 
     - name: get lua lib
       run: |
-        wget https://github.com/api7/dag-to-lua/archive/v1.0.tar.gz
+        wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
         sudo mkdir -p /go/api7-manager-api/dag-to-lua/
-        tar -zxvf v1.0.tar.gz
-        sudo mv ./dag-to-lua-1.0/lib/* /go/api7-manager-api/dag-to-lua/
+        tar -zxvf v1.1.tar.gz
+        sudo mv ./dag-to-lua-1.1/lib/* /go/api7-manager-api/dag-to-lua/
 
     - name: install runtime
       run: |
