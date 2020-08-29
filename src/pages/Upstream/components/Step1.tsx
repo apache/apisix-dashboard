@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React from 'react';
-import { Form, Input, Row, Col, InputNumber, Select } from 'antd';
+import { Form, Input, Row, Col, InputNumber, Select, Switch } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 
@@ -38,6 +38,7 @@ const initialValues = {
   description: '',
   type: 'roundrobin',
   upstreamHostList: [{} as UpstreamModule.UpstreamHost],
+  enable_websocket: false,
   timeout: {
     connect: 6000,
     send: 6000,
@@ -228,6 +229,9 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
           }
           return null;
         }}
+      </Form.Item>
+      <Form.Item label="WebSocket" name="enable_websocket" valuePropName="checked">
+        <Switch disabled={disabled} />
       </Form.Item>
       {renderUpstreamMeta()}
       <Form.Item label={formatMessage({ id: 'upstream.step.connect.timeout' })} required>

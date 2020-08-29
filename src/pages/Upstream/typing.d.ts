@@ -30,6 +30,7 @@ declare namespace UpstreamModule {
     };
     type: 'roundrobin' | 'chash';
     description: string;
+    enable_websocket: boolean;
   };
 
   type Entity = Base & {
