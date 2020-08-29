@@ -17,7 +17,7 @@
 import React, { useEffect, useState } from 'react';
 import Form, { FormInstance } from 'antd/es/form';
 import Radio from 'antd/lib/radio';
-import { Input, Row, Col, InputNumber, Button, Select } from 'antd';
+import { Input, Row, Col, InputNumber, Button, Select, Switch } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
@@ -304,6 +304,9 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
           </Select>
         </Form.Item>
         {renderUpstreamMeta()}
+        <Form.Item label="WebSocket" name="enable_websocket" valuePropName="checked">
+          <Switch disabled={upstreamDisabled} />
+        </Form.Item>
         <Form.Item
           label={formatMessage({ id: 'route.request.override.connection.timeout' })}
           required

@@ -100,6 +100,7 @@ declare namespace RouteModule {
       send: number;
       read: number;
     };
+    enable_websocket: boolean;
   };
 
   type ModalType = 'CREATE' | 'EDIT';
@@ -134,6 +135,7 @@ declare namespace RouteModule {
         send: number;
         read: number;
       };
+      enable_websocket: boolean;
     };
     upstream_path?: {
       type?: string;

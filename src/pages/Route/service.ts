@@ -65,11 +65,12 @@ export const checkUniqueName = (name = '', exclude = '') =>
 export const fetchUpstreamList = () => request(`/names/upstreams`);
 
 export const fetchUpstreamItem = (sid: string) => {
-  return request(`/upstreams/${sid}`).then(({ nodes, timeout, id }) => {
+  return request(`/upstreams/${sid}`).then(({ nodes, timeout, id, enable_websocket }) => {
     return {
       upstreamHostList: transformUpstreamNodes(nodes),
       timeout,
       upstream_id: id,
+      enable_websocket,
     };
   });
 };

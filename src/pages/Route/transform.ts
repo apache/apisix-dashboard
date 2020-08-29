@@ -48,10 +48,7 @@ export const transformStepData = ({
     };
   }
 
-  let { protocols } = step1Data;
-  if (step1Data.websocket) {
-    protocols = protocols.concat('websocket');
-  }
+  const { protocols } = step1Data;
 
   const data: Partial<RouteModule.Body> = {
     ...step1Data,
@@ -80,6 +77,7 @@ export const transformStepData = ({
       ...chashData,
       nodes,
       timeout: step2Data.timeout,
+      enable_websocket: step2Data.enable_websocket,
     },
     upstream_header,
   };
@@ -118,6 +116,7 @@ export const transformStepData = ({
       'redirectCode',
       'forceHttps',
       'redirectOption',
+      'enable_websocket',
       step1Data.redirectOption === 'disabled' ? 'redirect' : '',
       step2Data.upstream_id ? 'upstream' : 'upstream_id',
     ]);
@@ -161,7 +160,6 @@ export const transformRouteData = (data: RouteModule.Body) => {
     name,
     desc,
     protocols: protocols.filter((item) => item !== 'websocket'),
-    websocket: protocols.includes('websocket'),
     hosts,
     paths: uris,
     methods,
@@ -219,6 +217,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
       send: 6000,
       read: 6000,
     },
+    enable_websocket: upstream?.enable_websocket || false,
   };
 
   const { plugins, script } = data;

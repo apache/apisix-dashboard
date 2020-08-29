@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import Form from 'antd/es/form';
-import { Checkbox, Button, Input, Switch, Select, Row, Col } from 'antd';
+import { Checkbox, Button, Input, Select, Row, Col } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { useIntl } from 'umi';
@@ -195,9 +195,6 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
           value={protocols}
           onChange={onProtocolChange}
         />
-      </Form.Item>
-      <Form.Item label="WebSocket" name="websocket" valuePropName="checked">
-        <Switch disabled={disabled} />
       </Form.Item>
       {/* <Form.Item
         label="优先级"
