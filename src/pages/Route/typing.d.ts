@@ -55,6 +55,8 @@ declare namespace RouteModule {
 
   type Step3Data = {
     plugins: PluginPage.PluginData;
+    //  TEMP
+    script: any;
   };
 
   interface Data {
@@ -141,5 +143,6 @@ declare namespace RouteModule {
     plugins: {
       [name: string]: any;
     };
+    script: Record<string, any>;
   };
 }

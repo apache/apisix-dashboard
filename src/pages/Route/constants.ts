@@ -71,4 +71,14 @@ export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
 
 export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
   plugins: {},
+  script: {},
+};
+
+export const INIT_CHART = {
+  offset: { x: 55.71, y: 21.69 },
+  scale: 0.329,
+  nodes: {},
+  links: {},
+  selected: {},
+  hovered: {},
 };

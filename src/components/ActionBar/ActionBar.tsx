@@ -44,6 +44,11 @@ const ActionBar: React.FC<Props> = ({ step, lastStep, onChange, withResultView }
     return null;
   }
 
+  // resultView should not show actionbar
+  if (step > lastStep && withResultView) {
+    return null;
+  }
+
   return (
     <div style={style}>
       <Row gutter={10} justify="end">

@@ -1,4 +1,7 @@
-                                 Apache License
+Copyright (c) 2019 ShenZhen ZhiLiu Technology Co., Ltd
+Copyright (c) 2017 Julien Desgats
+
+                                Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
 
@@ -199,30 +202,3 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
-=======================================================================
-Apache APISIX Dashboard Subcomponents:
-
-The Apache APISIX Dashboard project contains subcomponents with separate copyright
-notices and license terms. Your use of the source code for the these
-subcomponents is subject to the terms and conditions of the following
-licenses.
-
-========================================================================
-MIT licenses
-========================================================================
-
-The following components are provided under the MIT License. See project link for details.
-The text of each license is also included at licenses/LICENSE-[project].txt.
-
-   files from ant-design-pro: https://github.com/ant-design/ant-design-pro MIT
-
-========================================================================
-Apache 2.0 licenses
-========================================================================
-
-The following components are provided under the Apache 2.0 License. See project link for details.
-The text of each license is also included at licenses/LICENSE-[project].txt.
-
-   files from dag-to-lua: https://github.com/api7/dag-to-lua Apache 2.0 
-   files from api7-dashboard: https://github.com/api7/dashboard-components Apache 2.0 
