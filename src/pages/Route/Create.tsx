@@ -29,6 +29,7 @@ import {
   checkUniqueName,
   fetchUpstreamItem,
   checkHostWithSSL,
+  fetchRouteGroupItem,
 } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
@@ -132,7 +133,15 @@ const Page: React.FC<Props> = (props) => {
           data={routeData}
           form={form1}
           onChange={(params: RouteModule.Step1Data) => {
-            setStep1Data({ ...step1Data, ...params });
+            if (params.route_group_id) {
+              fetchRouteGroupItem(params.route_group_id).then((data) => {
+                form1.setFieldsValue({
+                  ...form1.getFieldsValue(),
+                  ...data,
+                });
+              });
+            }
+            setStep1Data({ ...form1.getFieldsValue(), ...step1Data, ...params });
           }}
         />
       );

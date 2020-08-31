@@ -14,16 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from 'antd/es/form';
-import { Input } from 'antd';
+import { Input, Select } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
+import { fetchRouteGroupList } from '@/pages/Route/service';
 
 interface Props extends RouteModule.Data {}
 
-const MetaView: React.FC<Props> = ({ disabled }) => {
+const MetaView: React.FC<Props> = ({ data, disabled, onChange }) => {
+  const { step1Data } = data;
   const { formatMessage } = useIntl();
+  const [routeGroups, setRouteGroups] = useState<{ id: string; name: string }[]>();
+  useEffect(() => {
+    // eslint-disable-next-line no-shadow
+    fetchRouteGroupList().then(({ data }) => {
+      setRouteGroups([...data]);
+      if (step1Data.route_group_id) {
+        onChange({ route_group_id: step1Data.route_group_id });
+      }
+    });
+  }, []);
   return (
     <PanelSection title={formatMessage({ id: 'route.meta.name.description' })}>
       <Form.Item
@@ -42,6 +54,28 @@ const MetaView: React.FC<Props> = ({ disabled }) => {
           placeholder={formatMessage({ id: 'route.meta.input.api.name' })}
           disabled={disabled}
         />
+      </Form.Item>
+      <Form.Item
+        label={formatMessage({ id: 'route.meta.api.group.name' })}
+        name="route_group_id"
+        rules={[
+          { required: true, message: formatMessage({ id: 'route.meta.input.api.group.name' }) },
+        ]}
+      >
+        <Select
+          onChange={(value) => {
+            onChange({ route_group_id: value });
+          }}
+          disabled={disabled}
+        >
+          {(routeGroups || []).map((item) => {
+            return (
+              <Select.Option value={item.id} key={item.id}>
+                {item.name}
+              </Select.Option>
+            );
+          })}
+        </Select>
       </Form.Item>
       <Form.Item label={formatMessage({ id: 'route.meta.description' })} name="desc">
         <Input.TextArea

@@ -58,6 +58,8 @@ export default {
   'route.meta.input.api.name': '请输入 API 名称',
   'route.meta.api.name.rule': '最大长度100，仅支持字母、数字、- 和 _，且只能以字母开头',
   'rotue.meta.api.rule': '仅支持字母、数字、- 和 _，且只能以字母开头',
+  'route.meta.api.group.name': '路由分组',
+  'route.meta.input.api.group.name': '请选择路由分组',
   'route.meta.description': '描述',
   'route.meta.description.rule': '不超过 200 个字符',
 
