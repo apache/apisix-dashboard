@@ -199,6 +199,9 @@ export const transformRouteData = (data: RouteModule.Body) => {
   const step2Data: RouteModule.Step2Data = {
     upstream_protocol,
     upstreamHeaderList,
+    type: upstream ? upstream.type : 'roundrobin',
+    hash_on: upstream ? upstream.hash_on : undefined,
+    key: upstream ? upstream.key : undefined,
     upstreamHostList: transformUpstreamNodes(upstream?.nodes),
     upstream_id,
     upstreamPath: upstream_path?.to,

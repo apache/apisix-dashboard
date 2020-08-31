@@ -86,6 +86,9 @@ declare namespace RouteModule {
 
   type Step2Data = {
     upstream_protocol: 'http' | 'https' | 'keep';
+    type: 'roundrobin' | 'chash';
+    hash_on?: string;
+    key?: string;
     upstreamHostList: UpstreamHost[];
     mappingStrategy: string | undefined;
     rewriteType: string | undefined;
@@ -121,6 +124,8 @@ declare namespace RouteModule {
     vars: [string, Operator, string][];
     upstream: {
       type: 'roundrobin' | 'chash';
+      hash_on?: string;
+      key?: string;
       nodes: {
         [key: string]: number;
       };

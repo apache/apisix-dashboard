@@ -21,7 +21,12 @@ import { Input, Row, Col, InputNumber, Button, Select } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
-import { FORM_ITEM_LAYOUT, FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
+import {
+  FORM_ITEM_LAYOUT,
+  FORM_ITEM_WITHOUT_LABEL,
+  HASH_KEY_LIST,
+  HASH_ON_LIST,
+} from '@/pages/Route/constants';
 import PanelSection from '@/components/PanelSection';
 import styles from '../../Create.less';
 import { fetchUpstreamList } from '../../service';
@@ -48,117 +53,157 @@ const RequestRewriteView: React.FC<Props> = ({ data, form, disabled, onChange })
     });
   }, []);
   const renderUpstreamMeta = () => (
-    <Form.List name="upstreamHostList">
-      {(fields, { add, remove }) => (
+    <>
+      <Form.Item label="类型" name="type" rules={[{ required: true }]}>
+        <Select disabled={upstreamDisabled} onChange={(params) => onChange({ type: params })}>
+          <Select.Option value="roundrobin">roundrobin</Select.Option>
+          <Select.Option value="chash">chash</Select.Option>
+        </Select>
+      </Form.Item>
+      {step2Data.type === 'chash' && (
         <>
-          {fields.map((field, index) => (
-            <Form.Item
-              required
-              key={field.key}
-              {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-              label={
-                index === 0 ? formatMessage({ id: 'route.request.override.domain.name.or.ip' }) : ''
-              }
-              extra={
-                index === 0
-                  ? formatMessage({ id: 'route.request.override.use.domain.name.default.analysis' })
-                  : ''
-              }
-            >
-              <Row style={{ marginBottom: '10px' }} gutter={16}>
-                <Col span={9}>
-                  <Form.Item
-                    style={{ marginBottom: 0 }}
-                    name={[field.name, 'host']}
-                    rules={[
-                      {
-                        required: true,
-                        message: formatMessage({ id: 'route.request.override.input.domain.or.ip' }),
-                      },
-                      {
-                        pattern: new RegExp(
-                          /(^([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.(25[0-5]|1\d{2}|2[0-4]\d|[1-9]?\d)){3}$|^(?![0-9.]+$)([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+){0,}$)/,
-                          'g',
-                        ),
-                        message: formatMessage({ id: 'route.request.override.domain.or.ip.rules' }),
-                      },
-                    ]}
-                  >
-                    <Input
-                      placeholder={formatMessage({
-                        id: 'route.request.override.domain.name.or.ip',
-                      })}
-                      disabled={upstreamDisabled}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={4}>
-                  <Form.Item
-                    style={{ marginBottom: 0 }}
-                    name={[field.name, 'port']}
-                    rules={[
-                      {
-                        required: true,
-                        message: formatMessage({ id: 'route.request.override.input.port.number' }),
-                      },
-                    ]}
-                  >
-                    <InputNumber
-                      placeholder={formatMessage({ id: 'route.request.override.port.number' })}
-                      disabled={upstreamDisabled}
-                      min={1}
-                      max={65535}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={4} offset={1}>
-                  <Form.Item
-                    style={{ marginBottom: 0 }}
-                    name={[field.name, 'weight']}
-                    rules={[
-                      {
-                        required: true,
-                        message: formatMessage({ id: 'route.request.override.input.weight' }),
-                      },
-                    ]}
-                  >
-                    <InputNumber
-                      placeholder={formatMessage({ id: 'route.request.override.weight' })}
-                      disabled={upstreamDisabled}
-                      min={0}
-                      max={1000}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col>
-                  {!upstreamDisabled &&
-                    (fields.length > 1 ? (
-                      <MinusCircleOutlined
-                        style={{ margin: '0 8px' }}
-                        onClick={() => {
-                          remove(field.name);
-                        }}
-                      />
-                    ) : null)}
-                </Col>
-              </Row>
-            </Form.Item>
-          ))}
-          {!upstreamDisabled && (
-            <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-              <Button
-                type="dashed"
-                onClick={() => {
-                  add();
-                }}
-              >
-                <PlusOutlined /> {formatMessage({ id: 'route.request.override.create' })}
-              </Button>
-            </Form.Item>
-          )}
+          <Form.Item label="Hash On" name="hash_on">
+            <Select disabled={upstreamDisabled}>
+              {HASH_ON_LIST.map((item) => (
+                <Select.Option value={item} key={item}>
+                  {item}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="Key" name="key">
+            <Select disabled={upstreamDisabled}>
+              {HASH_KEY_LIST.map((item) => (
+                <Select.Option value={item} key={item}>
+                  {item}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
         </>
       )}
-    </Form.List>
+      <Form.List name="upstreamHostList">
+        {(fields, { add, remove }) => (
+          <>
+            {fields.map((field, index) => (
+              <Form.Item
+                required
+                key={field.key}
+                {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
+                label={
+                  index === 0
+                    ? formatMessage({ id: 'route.request.override.domain.name.or.ip' })
+                    : ''
+                }
+                extra={
+                  index === 0
+                    ? formatMessage({
+                        id: 'route.request.override.use.domain.name.default.analysis',
+                      })
+                    : ''
+                }
+              >
+                <Row style={{ marginBottom: '10px' }} gutter={16}>
+                  <Col span={9}>
+                    <Form.Item
+                      style={{ marginBottom: 0 }}
+                      name={[field.name, 'host']}
+                      rules={[
+                        {
+                          required: true,
+                          message: formatMessage({
+                            id: 'route.request.override.input.domain.or.ip',
+                          }),
+                        },
+                        {
+                          pattern: new RegExp(
+                            /(^([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.(25[0-5]|1\d{2}|2[0-4]\d|[1-9]?\d)){3}$|^(?![0-9.]+$)([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+){0,}$)/,
+                            'g',
+                          ),
+                          message: formatMessage({
+                            id: 'route.request.override.domain.or.ip.rules',
+                          }),
+                        },
+                      ]}
+                    >
+                      <Input
+                        placeholder={formatMessage({
+                          id: 'route.request.override.domain.name.or.ip',
+                        })}
+                        disabled={upstreamDisabled}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={4}>
+                    <Form.Item
+                      style={{ marginBottom: 0 }}
+                      name={[field.name, 'port']}
+                      rules={[
+                        {
+                          required: true,
+                          message: formatMessage({
+                            id: 'route.request.override.input.port.number',
+                          }),
+                        },
+                      ]}
+                    >
+                      <InputNumber
+                        placeholder={formatMessage({ id: 'route.request.override.port.number' })}
+                        disabled={upstreamDisabled}
+                        min={1}
+                        max={65535}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={4} offset={1}>
+                    <Form.Item
+                      style={{ marginBottom: 0 }}
+                      name={[field.name, 'weight']}
+                      rules={[
+                        {
+                          required: true,
+                          message: formatMessage({ id: 'route.request.override.input.weight' }),
+                        },
+                      ]}
+                    >
+                      <InputNumber
+                        placeholder={formatMessage({ id: 'route.request.override.weight' })}
+                        disabled={upstreamDisabled}
+                        min={0}
+                        max={1000}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col>
+                    {!upstreamDisabled &&
+                      (fields.length > 1 ? (
+                        <MinusCircleOutlined
+                          style={{ margin: '0 8px' }}
+                          onClick={() => {
+                            remove(field.name);
+                          }}
+                        />
+                      ) : null)}
+                  </Col>
+                </Row>
+              </Form.Item>
+            ))}
+            {!upstreamDisabled && (
+              <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+                <Button
+                  type="dashed"
+                  onClick={() => {
+                    add();
+                  }}
+                >
+                  <PlusOutlined /> {formatMessage({ id: 'route.request.override.create' })}
+                </Button>
+              </Form.Item>
+            )}
+          </>
+        )}
+      </Form.List>
+    </>
   );
 
   const renderTimeUnit = () => <span style={{ margin: '0 8px' }}>ms</span>;
