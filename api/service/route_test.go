@@ -51,7 +51,7 @@ func TestToApisixRequest_RediretPlugins(t *testing.T) {
 		Methods:   []string{"GET"},
 		Uris:      []string{},
 		Hosts:     []string{"www.baidu.com"},
-		Protocols: []string{"http", "https", "websocket"},
+		Protocols: []string{"http", "https"},
 		Redirect:  &Redirect{HttpToHttps: true, Code: 200, Uri: "/hello"},
 		Vars:      [][]string{},
 	}
@@ -79,7 +79,7 @@ func TestToApisixRequest_proxyRewrite(t *testing.T) {
 		Methods:      []string{"GET"},
 		Uris:         []string{},
 		Hosts:        []string{"www.baidu.com"},
-		Protocols:    []string{"http", "https", "websocket"},
+		Protocols:    []string{"http", "https"},
 		Redirect:     &Redirect{HttpToHttps: true, Code: 200, Uri: "/hello"},
 		Vars:         [][]string{},
 		Upstream:     upstream,
@@ -105,7 +105,7 @@ func TestToApisixRequest_Vars(t *testing.T) {
 		Methods:   []string{"GET"},
 		Uris:      []string{},
 		Hosts:     []string{"www.baidu.com"},
-		Protocols: []string{"http", "https", "websocket"},
+		Protocols: []string{"http", "https"},
 		Redirect:  &Redirect{HttpToHttps: true, Code: 200, Uri: "/hello"},
 		Vars:      [][]string{},
 	}
@@ -125,9 +125,10 @@ func TestToApisixRequest_Upstream(t *testing.T) {
 	nodes := make(map[string]int64)
 	nodes["127.0.0.1:8080"] = 100
 	upstream := &Upstream{
-		UType:   "roundrobin",
-		Nodes:   nodes,
-		Timeout: UpstreamTimeout{15, 15, 15},
+		UType:           "roundrobin",
+		Nodes:           nodes,
+		Timeout:         UpstreamTimeout{15, 15, 15},
+		EnableWebsocket: true,
 	}
 	rr := &RouteRequest{
 		ID:        "u guess a uuid",
@@ -137,7 +138,7 @@ func TestToApisixRequest_Upstream(t *testing.T) {
 		Methods:   []string{"GET"},
 		Uris:      []string{},
 		Hosts:     []string{"www.baidu.com"},
-		Protocols: []string{"http", "https", "websocket"},
+		Protocols: []string{"http", "https"},
 		Redirect:  &Redirect{HttpToHttps: true, Code: 200, Uri: "/hello"},
 		Vars:      [][]string{},
 		Upstream:  upstream,

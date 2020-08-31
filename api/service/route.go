@@ -35,7 +35,6 @@ const (
 	HTTP             = "http"
 	HTTPS            = "https"
 	SCHEME           = "scheme"
-	WEBSOCKET        = "websocket"
 	REDIRECT         = "redirect"
 	PROXY_REWRIETE   = "proxy-rewrite"
 	UPATHTYPE_STATIC = "static"
@@ -187,12 +186,6 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 
 	//Protocols from vars and upstream
 	protocols := make([]string, 0)
-	if o.Upstream != nil && o.Upstream.EnableWebsocket {
-		protocols = append(protocols, WEBSOCKET)
-	}
-	if o.UpstreamId != "" {
-		protocols = append(protocols, WEBSOCKET)
-	}
 	flag := true
 	for _, t := range o.Vars {
 		if t[0] == SCHEME {
@@ -479,10 +472,6 @@ func ToApisixRequest(routeRequest *RouteRequest) *ApisixRouteRequest {
 	arr := &ApisixRouteRequest{}
 	arr.Parse(routeRequest)
 
-	// protocols[websokect] -> upstream
-	if pMap[WEBSOCKET] == 1 && arr.Upstream != nil {
-		arr.Upstream.EnableWebsocket = true
-	}
 	vars := utils.CopyStrings(routeRequest.Vars)
 	if pMap[HTTP] != 1 || pMap[HTTPS] != 1 {
 		if pMap[HTTP] == 1 {
