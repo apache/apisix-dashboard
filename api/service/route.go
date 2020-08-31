@@ -341,10 +341,13 @@ func (r Redirect) MarshalJSON() ([]byte, error) {
 }
 
 type Upstream struct {
-	UType           string           `json:"type"`
-	Nodes           map[string]int64 `json:"nodes"`
-	Timeout         UpstreamTimeout  `json:"timeout"`
-	EnableWebsocket bool             `json:"enable_websocket"`
+	UType           string                 `json:"type"`
+	Nodes           map[string]int64       `json:"nodes"`
+	Timeout         UpstreamTimeout        `json:"timeout"`
+	EnableWebsocket bool                   `json:"enable_websocket"`
+	Checks          map[string]interface{} `json:"checks,omitempty"`
+	HashOn          string                 `json:"hash_on,omitempty"`
+	Key             string                 `json:"key,omitempty"`
 }
 
 type UpstreamTimeout struct {
