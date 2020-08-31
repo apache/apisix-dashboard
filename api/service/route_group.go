@@ -38,13 +38,13 @@ func (rd *RouteGroupDao) CreateRouteGroup() error {
 	return conf.DB().Create(&rd).Error
 }
 
-func (rd *RouteGroupDao) FindRouteGroup(id string) error {
+func (rd *RouteGroupDao) FindRouteGroup(id string) (error, int) {
 	var count int
-	if err := conf.DB().Table("route_group").Where("id=?", id).Count(&count).Error; err != nil || count < 1 {
-		return err
+	if err := conf.DB().Table("route_group").Where("id=?", id).Count(&count).Error; err != nil {
+		return err, 0
 	}
 	conf.DB().Table("route_group").Where("id=?", id).First(&rd)
-	return nil
+	return nil, count
 }
 
 func (rd *RouteGroupDao) GetRouteGroupList(routeGroupList *[]RouteGroupDao, search string, page, size int) (error, int) {
@@ -71,6 +71,20 @@ func (rd *RouteGroupDao) UpdateRouteGroup() error {
 
 func (rd *RouteGroupDao) DeleteRouteGroup() error {
 	return conf.DB().Delete(&rd).Error
+}
+
+type RouteGroupNameResponse struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+func (u *RouteGroupDao) Parse2NameResponse() (*RouteGroupNameResponse, error) {
+	// routeGroup
+	unr := &RouteGroupNameResponse{
+		ID:   u.ID.String(),
+		Name: u.Name,
+	}
+	return unr, nil
 }
 
 type RouteGroupRequest struct {
@@ -101,4 +115,12 @@ func Trans2RouteGroupDao(r *RouteGroupRequest) (*RouteGroupDao, *errno.ManagerEr
 	// id
 	u.ID = uuid.FromStringOrNil(r.Id)
 	return u, nil
+}
+
+func (r *RouteGroupDao) FindRoute() (error, int) {
+	var count int
+	if err := conf.DB().Table("routes").Where("route_group_id=?", r.ID).Count(&count).Error; err != nil {
+		return err, 0
+	}
+	return nil, count
 }

@@ -72,6 +72,7 @@ func (rd *Route) Parse(r *RouteRequest, arr *ApisixRouteRequest) error {
 	//rd.Name = arr.Name
 	rd.Description = arr.Desc
 	rd.UpstreamId = r.UpstreamId
+	rd.RouteGroupId = r.RouteGroupId
 	if content, err := json.Marshal(r); err != nil {
 		return err
 	} else {
@@ -180,6 +181,7 @@ type RouteRequest struct {
 	UpstreamHeader   map[string]string      `json:"upstream_header,omitempty"`
 	Plugins          map[string]interface{} `json:"plugins"`
 	Script           map[string]interface{} `json:"script"`
+	RouteGroupId     string                 `json:"route_group_id"`
 }
 
 func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
@@ -277,6 +279,7 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 		Redirect:         redirect,
 		Upstream:         o.Upstream,
 		UpstreamId:       o.UpstreamId,
+		RouteGroupId:     o.RouteGroupId,
 		UpstreamProtocol: upstreamProtocol,
 		UpstreamPath:     upstreamPath,
 		UpstreamHeader:   upstreamHeader,
@@ -374,6 +377,7 @@ type ApisixRouteRequest struct {
 	Plugins    map[string]interface{} `json:"plugins,omitempty"`
 	Script     string                 `json:"script,omitempty"`
 	//Name     string                 `json:"name"`
+	//RouteGroupId string               `json:"route_group_id"`
 }
 
 // ApisixRouteResponse is response from apisix admin api
@@ -388,17 +392,18 @@ type Node struct {
 }
 
 type Value struct {
-	Id         string                 `json:"id"`
-	Name       string                 `json:"name"`
-	Desc       string                 `json:"desc,omitempty"`
-	Priority   int64                  `json:"priority"`
-	Methods    []string               `json:"methods"`
-	Uris       []string               `json:"uris"`
-	Hosts      []string               `json:"hosts"`
-	Vars       [][]string             `json:"vars"`
-	Upstream   *Upstream              `json:"upstream,omitempty"`
-	UpstreamId string                 `json:"upstream_id,omitempty"`
-	Plugins    map[string]interface{} `json:"plugins"`
+	Id           string                 `json:"id"`
+	Name         string                 `json:"name"`
+	Desc         string                 `json:"desc,omitempty"`
+	Priority     int64                  `json:"priority"`
+	Methods      []string               `json:"methods"`
+	Uris         []string               `json:"uris"`
+	Hosts        []string               `json:"hosts"`
+	Vars         [][]string             `json:"vars"`
+	Upstream     *Upstream              `json:"upstream,omitempty"`
+	UpstreamId   string                 `json:"upstream_id,omitempty"`
+	Plugins      map[string]interface{} `json:"plugins"`
+	RouteGroupId string                 `json:"route_group_id"`
 }
 
 type Route struct {
@@ -413,17 +418,19 @@ type Route struct {
 	Content         string `json:"content"`
 	Script          string `json:"script"`
 	ContentAdminApi string `json:"content_admin_api"`
+	RouteGroupId    string `json:"route_group_id"`
 }
 
 type RouteResponse struct {
 	Base
-	Name        string    `json:"name"`
-	Description string    `json:"description,omitempty"`
-	Hosts       []string  `json:"hosts,omitempty"`
-	Uris        []string  `json:"uris,omitempty"`
-	Upstream    *Upstream `json:"upstream,omitempty"`
-	UpstreamId  string    `json:"upstream_id,omitempty"`
-	Priority    int64     `json:"priority"`
+	Name         string    `json:"name"`
+	Description  string    `json:"description,omitempty"`
+	Hosts        []string  `json:"hosts,omitempty"`
+	Uris         []string  `json:"uris,omitempty"`
+	Upstream     *Upstream `json:"upstream,omitempty"`
+	UpstreamId   string    `json:"upstream_id,omitempty"`
+	Priority     int64     `json:"priority"`
+	RouteGroupId string    `json:"route_group_id"`
 }
 
 type ListResponse struct {
@@ -437,6 +444,7 @@ func (rr *RouteResponse) Parse(r *Route) {
 	rr.Description = r.Description
 	rr.UpstreamId = r.UpstreamId
 	rr.Priority = r.Priority
+	rr.RouteGroupId = r.RouteGroupId
 	// hosts
 	if len(r.Hosts) > 0 {
 		var hosts []string
@@ -575,6 +583,7 @@ func ToRoute(routeRequest *RouteRequest,
 	rd.ID = u4
 	// content_admin_api
 	if resp != nil {
+		resp.Node.Value.RouteGroupId = rd.RouteGroupId
 		if respStr, err := json.Marshal(resp); err != nil {
 			e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
 			return nil, e

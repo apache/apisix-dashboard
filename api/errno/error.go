@@ -87,14 +87,11 @@ var (
 	DuplicateUserName         = Message{"010705", "Duplicate consumer username", 400}
 
 	// 08 routeGroup
-	RouteGroupRequestError       = Message{"010801", "routeGroup request parameters exception: %s", 400}
-	RouteGroupTransError         = Message{"010802", "Abnormal routeGroup parameter conversion: %s", 400}
-	DBRouteGroupError            = Message{"010803", "routeGroup storage failure: %s", 500}
-	ApisixRouteGroupCreateError  = Message{"010804", "apisix routeGroup create failed: %s", 500}
-	ApisixRouteGroupUpdateError  = Message{"010805", "apisix routeGroup update failed: %s", 500}
-	ApisixRouteGroupDeleteError  = Message{"010806", "apisix routeGroup delete failed: %s", 500}
-	DBRouteGroupDeleteError      = Message{"010807", "RouteGroup storage delete failed: %s", 500}
-	DBRouteGroupReduplicateError = Message{"010808", "RouteGroup name is reduplicate : %s", 500}
+	RouteGroupRequestError      = Message{"010801", "routeGroup request parameters exception: %s", 400}
+	DBRouteGroupError           = Message{"010802", "routeGroup storage failure: %s", 500}
+	DBRouteGroupDeleteError     = Message{"010803", "RouteGroup storage delete failed: %s", 500}
+	RouteGroupHasRoutesError    = Message{"010804", "Route exist in this route group ", 500}
+	RouteGroupSelectRoutesError = Message{"010805", "RouteGroup select routes failed : %s", 500}
 
 	// 99 authentication
 	AuthenticationUserError = Message{"019901", "username or password error", 401}

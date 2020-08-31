@@ -16,6 +16,7 @@ CREATE TABLE `routes` (
   `content_admin_api` text,
   `create_time` bigint(20),
   `update_time` bigint(20),
+  `route_group_id` varchar(64) NOT NULL,
 
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;

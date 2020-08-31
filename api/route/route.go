@@ -101,11 +101,15 @@ func listRoute(c *gin.Context) {
 		db = db.Where("upstream_nodes like ? ", "%"+ip+"%")
 		isSearch = false
 	}
+	if rgid, exist := c.GetQuery("route_group_id"); exist {
+		db = db.Where("route_group_id equal ?", rgid)
+		isSearch = false
+	}
 	// search
 	if isSearch {
 		if search, exist := c.GetQuery("search"); exist {
 			s := "%" + search + "%"
-			db = db.Where("name like ? or description like ? or hosts like ? or uris like ? or upstream_nodes like ? ", s, s, s, s, s)
+			db = db.Where("name like ? or description like ? or hosts like ? or uris like ? or upstream_nodes like ? or route_group_id = ?", s, s, s, s, s, search)
 		}
 	}
 	// mysql
@@ -288,6 +292,7 @@ func findRoute(c *gin.Context) {
 			}
 			result.Script = script
 
+			result.RouteGroupId = route.RouteGroupId
 			resp, _ := json.Marshal(result)
 			c.Data(http.StatusOK, service.ContentType, resp)
 		}

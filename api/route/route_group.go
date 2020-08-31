@@ -17,6 +17,7 @@ func AppendRouteGroup(r *gin.Engine) *gin.Engine {
 	r.POST("/apisix/admin/routegroups", createRouteGroup)
 	r.GET("/apisix/admin/routegroups/:gid", findRouteGroup)
 	r.GET("/apisix/admin/routegroups", listRouteGroup)
+	r.GET("/apisix/admin/names/routegroups", listRouteGroupName)
 	r.PUT("/apisix/admin/routegroups/:gid", updateRouteGroup)
 	r.DELETE("/apisix/admin/routegroups/:gid", deleteRouteGroup)
 	return r
@@ -61,11 +62,18 @@ func createRouteGroup(c *gin.Context) {
 func findRouteGroup(c *gin.Context) {
 	gid := c.Param("gid")
 	routeGroup := &service.RouteGroupDao{}
-	if err := routeGroup.FindRouteGroup(gid); err != nil {
-		e := errno.FromMessage(errno.RouteGroupRequestError, err.Error()+"select error")
+	if err, count := routeGroup.FindRouteGroup(gid); err != nil {
+		e := errno.FromMessage(errno.RouteGroupRequestError, err.Error()+"route_group ID:"+gid)
 		logger.Error(e.Msg)
 		c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
 		return
+	} else {
+		if count < 1 {
+			e := errno.FromMessage(errno.RouteRequestError, " route_group ID: "+gid+" not exist")
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(e.Status, e.Response())
+			return
+		}
 	}
 	resp, _ := json.Marshal(routeGroup)
 	c.Data(http.StatusOK, service.ContentType, resp)
@@ -95,7 +103,28 @@ func listRouteGroup(c *gin.Context) {
 		c.Data(http.StatusOK, service.ContentType, resp)
 	}
 }
-
+func listRouteGroupName(c *gin.Context) {
+	db := conf.DB()
+	routeGroupList := []service.RouteGroupDao{}
+	var count int
+	if err := db.Order("name").Table("route_group").Find(&routeGroupList).Count(&count).Error; err != nil {
+		e := errno.FromMessage(errno.RouteGroupRequestError, err.Error())
+		logger.Error(e.Msg)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+		return
+	} else {
+		responseList := make([]*service.RouteGroupNameResponse, 0)
+		for _, r := range routeGroupList {
+			response, err := r.Parse2NameResponse()
+			if err == nil {
+				responseList = append(responseList, response)
+			}
+		}
+		result := &service.ListResponse{Count: count, Data: responseList}
+		resp, _ := json.Marshal(result)
+		c.Data(http.StatusOK, service.ContentType, resp)
+	}
+}
 func updateRouteGroup(c *gin.Context) {
 	// get params
 	gid := c.Param("gid")
@@ -133,17 +162,30 @@ func updateRouteGroup(c *gin.Context) {
 func deleteRouteGroup(c *gin.Context) {
 	gid := c.Param("gid")
 	// 参数校验
-	RouteGroup := &service.RouteGroupDao{}
-	if err := conf.DB().Table("route_group").Where("id=?", gid).First(&RouteGroup).Error; err != nil {
+	routeGroup := &service.RouteGroupDao{}
+	if err := conf.DB().Table("route_group").Where("id=?", gid).First(&routeGroup).Error; err != nil {
 		e := errno.FromMessage(errno.RouteGroupRequestError, err.Error()+" route_group ID: "+gid)
 		logger.Error(e.Msg)
 		c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
 		return
 	}
 	// delete from mysql
-	rd := &service.RouteGroupDao{}
-	rd.ID = uuid.FromStringOrNil(gid)
-	if err := rd.DeleteRouteGroup(); err != nil {
+	routeGroup.ID = uuid.FromStringOrNil(gid)
+	//check route
+	if err, count := routeGroup.FindRoute(); err != nil {
+		e := errno.FromMessage(errno.RouteGroupSelectRoutesError, err.Error())
+		logger.Error(e.Msg)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+		return
+	} else {
+		if count > 0 {
+			e := errno.FromMessage(errno.RouteGroupHasRoutesError)
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+			return
+		}
+	}
+	if err := routeGroup.DeleteRouteGroup(); err != nil {
 		e := errno.FromMessage(errno.DBRouteGroupDeleteError, err.Error())
 		logger.Error(e.Msg)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
