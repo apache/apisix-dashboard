@@ -53,8 +53,8 @@
   "dependencies": {
     "@ant-design/icons": "^4.0.0",
     "@ant-design/pro-layout": "^6.0.0",
-    "@ant-design/pro-table": "^2.4.0",
-    "@api7-dashboard/plugin": "^1.0.0",
+    "@ant-design/pro-table": "2.6.3",
+    "@api7-dashboard/plugin": "^1.0.2",
     "@api7-dashboard/pluginchart": "^1.0.4",
     "@api7-dashboard/ui": "^1.0.0",
     "@rjsf/antd": "2.2.0",
