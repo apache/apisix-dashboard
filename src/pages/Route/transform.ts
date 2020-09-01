@@ -30,6 +30,12 @@ export const transformStepData = ({
     upstream_header[header.header_name] = header.header_value || '';
   });
 
+  const chashData: any = {};
+  if (step2Data.type === 'chash') {
+    chashData.key = step2Data.key;
+    chashData.hash_on = step2Data.hash_on;
+  }
+
   let redirect: RouteModule.Redirect = {};
   if (step1Data.redirectOption === 'disabled') {
     redirect = {};
@@ -70,7 +76,8 @@ export const transformStepData = ({
       return [key, operator, value];
     }),
     upstream: {
-      type: 'roundrobin',
+      type: step2Data.type,
+      ...chashData,
       nodes,
       timeout: step2Data.timeout,
     },
@@ -199,6 +206,9 @@ export const transformRouteData = (data: RouteModule.Body) => {
   const step2Data: RouteModule.Step2Data = {
     upstream_protocol,
     upstreamHeaderList,
+    type: upstream ? upstream.type : 'roundrobin',
+    hash_on: upstream ? upstream.hash_on : undefined,
+    key: upstream ? upstream.key : undefined,
     upstreamHostList: transformUpstreamNodes(upstream?.nodes),
     upstream_id,
     upstreamPath: upstream_path?.to,
