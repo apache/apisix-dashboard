@@ -16,12 +16,13 @@
  */
 export default {
   'ssl.form.expiration.time': '过期时间',
-  'ssl.form.cert': '证书',
-  'ssl.form.check.cert.value': '请检查 Cert 值',
-  'ssl.form.cert.value.length': 'Cert 值至少需要128个字符',
+  'ssl.form.cert': '证书内容',
+  'ssl.form.check.cert.value': '请检查 证书内容',
+  'ssl.form.cert.value.length': '证书内容至少需要128个字符',
   'ssl.form.private.key': '私钥',
-  'ssl.form.check.key.value': '请检查 Key 值',
-  'ssl.form.key.value.length': 'Key 值至少需要128个字符',
+  'ssl.form.check.key.value': '请检查 私钥',
+  'ssl.form.key.value.length': '私钥 至少需要128个字符',
+  'page.ssl.textAreaPlaceholder.cert': '请填写SSL证书内容',
 
   'ssl.upload.cert': '上传证书',
   'ssl.upload.private.key': '上传私钥',

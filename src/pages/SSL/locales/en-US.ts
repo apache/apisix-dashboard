@@ -16,14 +16,15 @@
  */
 export default {
   'ssl.form.expiration.time': 'Expiration Time',
-  'ssl.form.cert': 'Cert',
-  'ssl.form.check.cert.value': 'Please check Cert value',
-  'ssl.form.cert.value.length': 'The Cert value requires at least 128 characters',
+  'ssl.form.cert': 'Certificate Content',
+  'ssl.form.check.cert.value': 'Please check Certificate Content',
+  'ssl.form.cert.value.length': 'The Certificate Content requires at least 128 characters',
   'ssl.form.private.key': 'Private Key',
-  'ssl.form.check.key.value': 'Please check Key value',
-  'ssl.form.key.value.length': 'The Key value requires at least 128 characters',
+  'ssl.form.check.key.value': 'Please check Private Key',
+  'ssl.form.key.value.length': 'The Private Key requires at least 128 characters',
+  'page.ssl.textAreaPlaceholder.cert': 'Please enter the SSL Certificate Content',
 
-  'ssl.upload.cert': 'Upload Cert',
+  'ssl.upload.cert': 'Upload Certificate',
   'ssl.upload.private.key': 'Upload Private Key',
 
   'ssl.step.way': 'Way',

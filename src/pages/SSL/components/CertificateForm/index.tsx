@@ -67,7 +67,11 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
           { min: 128, message: formatMessage({ id: 'ssl.form.cert.value.length' }) },
         ]}
       >
-        <Input.TextArea rows={6} disabled={mode !== 'EDIT'} />
+        <Input.TextArea
+          rows={6}
+          disabled={mode !== 'EDIT'}
+          placeholder={formatMessage({ id: 'page.ssl.textAreaPlaceholder.cert' })}
+        />
       </Form.Item>
       <Form.Item
         label={formatMessage({ id: 'ssl.form.private.key' })}
