@@ -91,15 +91,15 @@
     lodash.tonumber "^4.0.3"
     moment "^2.27.0"
 
-"@ant-design/pro-form@1.0.0-beta.20":
-  version "1.0.0-beta.20"
-  resolved "https://registry.npm.taobao.org/@ant-design/pro-form/download/@ant-design/pro-form-1.0.0-beta.20.tgz#c60c317a41d2b7ccda0c1e2418b8cecd7a511d3a"
-  integrity sha1-xgwxekHSt8zaDB4kGLjOzXpRHTo=
+"@ant-design/pro-form@1.0.0-beta.21":
+  version "1.0.0-beta.21"
+  resolved "https://registry.yarnpkg.com/@ant-design/pro-form/-/pro-form-1.0.0-beta.21.tgz#d3e3bfcbf6ed122e567a0b8ef0feaa2399b136b3"
+  integrity sha512-7rALO6lWOmY8HlgfOBrWoiG5VkTtYF90HjnFZwBsh/PVDty/jec6NhjmywBfkHIiD5myuJOFD/aZuv9lbQ9H9g==
   dependencies:
     "@ant-design/icons" "^4.2.1"
     "@ant-design/pro-field" "0.1.2"
     "@ant-design/pro-provider" "0.0.6"
-    "@ant-design/pro-utils" "0.1.1"
+    "@ant-design/pro-utils" "0.1.2"
     classnames "^2.2.6"
     rc-resize-observer "^0.2.3"
     use-media-antd-query "^1.0.2"
@@ -136,16 +136,16 @@
   dependencies:
     rc-util "^5.0.1"
 
-"@ant-design/pro-table@^2.4.0":
-  version "2.6.2"
-  resolved "https://registry.npm.taobao.org/@ant-design/pro-table/download/@ant-design/pro-table-2.6.2.tgz#286075656829b68b0136d1fd4482044ad5e0d42b"
-  integrity sha1-KGB1ZWgptosBNtH9RIIEStXg1Cs=
+"@ant-design/pro-table@2.6.3":
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/@ant-design/pro-table/-/pro-table-2.6.3.tgz#c6e28078d0fb9fadc35052cdfe551925a191573c"
+  integrity sha512-MRfaLyEd5Ape0vriIz6YZYufDnl3r6v6CDYU9UMNzyDm/9DT0oEFYV2kpzNLVGB7LjF/1yLZXXi+XbjDg5St5A==
   dependencies:
     "@ant-design/icons" "^4.1.0"
     "@ant-design/pro-field" "0.1.2"
-    "@ant-design/pro-form" "1.0.0-beta.20"
+    "@ant-design/pro-form" "1.0.0-beta.21"
     "@ant-design/pro-provider" "0.0.6"
-    "@ant-design/pro-utils" "0.1.1"
+    "@ant-design/pro-utils" "0.1.2"
     antd "^4.1.5"
     classnames "^2.2.6"
     dnd-core "^10.0.2"
@@ -162,6 +162,15 @@
   version "0.1.1"
   resolved "https://registry.npm.taobao.org/@ant-design/pro-utils/download/@ant-design/pro-utils-0.1.1.tgz#d655f7df179a25548234da30a216f3da988e99b1"
   integrity sha1-1lX33xeaJVSCNNowohbz2piOmbE=
+  dependencies:
+    "@types/lodash.isequal" "^4.5.5"
+    lodash.isequal "^4.5.0"
+    rc-util "^5.0.6"
+
+"@ant-design/pro-utils@0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@ant-design/pro-utils/-/pro-utils-0.1.2.tgz#b9e1115e97d1ba5ac946f2f77136758c8335114b"
+  integrity sha512-5O9k2asNFTuSh+YWACZJ25DuPurWPPhr3AyDx6Pvj5lxb8t/1yJmmWJluwmVLJ65A9oKgwiWU87NHWnsP2cSYw==
   dependencies:
     "@types/lodash.isequal" "^4.5.5"
     lodash.isequal "^4.5.0"
@@ -188,10 +197,10 @@
     json-schema "^0.2.5"
     set-value "^3.0.2"
 
-"@api7-dashboard/pluginchart@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.npm.taobao.org/@api7-dashboard/pluginchart/download/@api7-dashboard/pluginchart-1.0.4.tgz#1fed486744b022c43f9864e312f0cecbcf2263e9"
-  integrity sha1-H+1IZ0SwIsQ/mGTjEvDOy88iY+k=
+"@api7-dashboard/pluginchart@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@api7-dashboard/pluginchart/-/pluginchart-1.0.7.tgz#0b7dc5cabc1c0945eaf24c12b5dab4feea48368e"
+  integrity sha512-SMgQ8pjUkA1xE77NceSjPiVzEYSOqNVk01lnt8rjqvBfZg4uMF8HHL6/jofDcrSLsbnkB1GSTKBcRkdFrRt25w==
   dependencies:
     "@ant-design/icons" "^4.2.2"
     "@mrblenny/react-flow-chart" "^0.0.14"
