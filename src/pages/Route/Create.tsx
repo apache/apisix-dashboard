@@ -156,11 +156,19 @@ const Page: React.FC<Props> = (props) => {
                   ...form2.getFieldsValue(),
                   ...data,
                 });
-                setStep2Data({ ...form2.getFieldsValue(), ...params } as RouteModule.Step2Data);
+                setStep2Data({
+                  ...step2Data,
+                  ...form2.getFieldsValue(),
+                  ...params,
+                } as RouteModule.Step2Data);
               });
               return;
             }
-            setStep2Data({ ...form2.getFieldsValue(), ...params } as RouteModule.Step2Data);
+            setStep2Data({
+              ...step2Data,
+              ...form2.getFieldsValue(),
+              ...params,
+            } as RouteModule.Step2Data);
           }}
         />
       );
