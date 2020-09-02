@@ -103,6 +103,7 @@ func listRouteGroup(c *gin.Context) {
 		c.Data(http.StatusOK, service.ContentType, resp)
 	}
 }
+
 func listRouteGroupName(c *gin.Context) {
 	db := conf.DB()
 	routeGroupList := []service.RouteGroupDao{}
@@ -125,6 +126,7 @@ func listRouteGroupName(c *gin.Context) {
 		c.Data(http.StatusOK, service.ContentType, resp)
 	}
 }
+
 func updateRouteGroup(c *gin.Context) {
 	// get params
 	gid := c.Param("gid")
@@ -171,20 +173,6 @@ func deleteRouteGroup(c *gin.Context) {
 	}
 	// delete from mysql
 	routeGroup.ID = uuid.FromStringOrNil(gid)
-	//check route
-	if err, count := routeGroup.FindRoute(); err != nil {
-		e := errno.FromMessage(errno.RouteGroupSelectRoutesError, err.Error())
-		logger.Error(e.Msg)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
-		return
-	} else {
-		if count > 0 {
-			e := errno.FromMessage(errno.RouteGroupHasRoutesError)
-			logger.Error(e.Msg)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
-			return
-		}
-	}
 	if err := routeGroup.DeleteRouteGroup(); err != nil {
 		e := errno.FromMessage(errno.DBRouteGroupDeleteError, err.Error())
 		logger.Error(e.Msg)

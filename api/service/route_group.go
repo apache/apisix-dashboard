@@ -70,6 +70,17 @@ func (rd *RouteGroupDao) UpdateRouteGroup() error {
 }
 
 func (rd *RouteGroupDao) DeleteRouteGroup() error {
+	if err, count := rd.FindRoute(); err != nil {
+		e := errno.FromMessage(errno.RouteGroupSelectRoutesError, err.Error())
+		logger.Error(e.Msg)
+		return e
+	} else {
+		if count > 0 {
+			e := errno.FromMessage(errno.RouteGroupHasRoutesError)
+			logger.Error(e.Msg)
+			return e
+		}
+	}
 	return conf.DB().Delete(&rd).Error
 }
 

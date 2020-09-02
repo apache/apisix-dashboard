@@ -102,7 +102,7 @@ func listRoute(c *gin.Context) {
 		isSearch = false
 	}
 	if rgid, exist := c.GetQuery("route_group_id"); exist {
-		db = db.Where("route_group_id equal ?", rgid)
+		db = db.Where("route_group_id = ?", rgid)
 		isSearch = false
 	}
 	// search
