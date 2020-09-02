@@ -20,7 +20,41 @@ func AppendRouteGroup(r *gin.Engine) *gin.Engine {
 	r.GET("/apisix/admin/names/routegroups", listRouteGroupName)
 	r.PUT("/apisix/admin/routegroups/:gid", updateRouteGroup)
 	r.DELETE("/apisix/admin/routegroups/:gid", deleteRouteGroup)
+	r.GET("/apisix/admin/notexist/routegroups", isRouteGroupExist)
 	return r
+}
+
+func isRouteGroupExist(c *gin.Context) {
+	if name, exist := c.GetQuery("name"); exist {
+		db := conf.DB()
+		db = db.Table("route_group")
+		exclude, exist := c.GetQuery("exclude")
+		if exist {
+			db = db.Where("name=? and id<>?", name, exclude)
+		} else {
+			db = db.Where("name=?", name)
+		}
+		var count int
+		if err := db.Count(&count).Error; err != nil {
+			e := errno.FromMessage(errno.RouteGroupRequestError, err.Error())
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+			return
+		} else {
+			if count == 0 {
+				c.Data(http.StatusOK, service.ContentType, errno.Success())
+				return
+			} else {
+				e := errno.FromMessage(errno.DuplicateRouteGroupName, name)
+				c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
+				return
+			}
+		}
+	} else {
+		e := errno.FromMessage(errno.RouteGroupRequestError, "name is needed")
+		c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
+		return
+	}
 }
 
 func createRouteGroup(c *gin.Context) {
