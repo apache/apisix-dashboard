@@ -79,7 +79,7 @@ $ sh ./api/run/run.sh &
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
 
-1. Make sure you have `Node.js(version 8.10.0+)/Nginx` installed on your machine.
+1. Make sure you have `Node.js(version 10.0.0+)/Nginx` installed on your machine.
 2. Install [yarn](https://yarnpkg.com/).
 3. Install dependencies:
 
