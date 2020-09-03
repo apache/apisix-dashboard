@@ -17,7 +17,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { useIntl } from 'umi';
+import { history, useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
 import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
@@ -86,7 +86,6 @@ const Page: React.FC<Props> = (props) => {
     step2Data,
     step3Data,
   };
-
   const setupRoute = (rid: number) =>
     fetchItem(rid).then((data) => {
       form1.setFieldsValue(data.step1Data);
@@ -120,8 +119,9 @@ const Page: React.FC<Props> = (props) => {
     setStep1Data(DEFAULT_STEP_1_DATA);
     setStep2Data(DEFAULT_STEP_2_DATA);
     setStep3Data(DEFAULT_STEP_3_DATA);
-    form1.resetFields();
-    form2.resetFields();
+
+    form1.setFieldsValue(DEFAULT_STEP_1_DATA);
+    form2.setFieldsValue(DEFAULT_STEP_2_DATA);
     setStep(1);
   };
 
@@ -187,9 +187,17 @@ const Page: React.FC<Props> = (props) => {
     }
 
     if (step === 5) {
-      return <ResultView onReset={onReset} />;
+      return (
+        <ResultView
+          createNew={() => {
+            if (props.route.path.indexOf('edit') !== -1) {
+              return history.replace('/routes/create');
+            }
+            return onReset();
+          }}
+        />
+      );
     }
-
     return null;
   };
 
