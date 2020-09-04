@@ -16,6 +16,7 @@
 # limitations under the License.
 #
 -->
+
 English | [简体中文](./README.zh-CN.md)
 
 # Apache APISIX Dashboard
@@ -25,6 +26,7 @@ Dashboard for [Apache APISIX](https://github.com/apache/apisix)
 [Online demo](http://139.217.190.60/)
 
 ## User Guide
+
 Please refer to [User Guide](./USER_GUIDE.md)
 
 ## Deploy with Docker
@@ -114,4 +116,3 @@ $ yarn start
 1. If you need the dashboard-1.0 which is built with Vue.js, please refer to [master-vue](https://github.com/apache/apisix-dashboard/tree/master-vue).
 
 2. More information about the new dashboard and manager-api please refer to [here](./manager-api.md)
-

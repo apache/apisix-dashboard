@@ -197,10 +197,10 @@
     json-schema "^0.2.5"
     set-value "^3.0.2"
 
-"@api7-dashboard/pluginchart@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@api7-dashboard/pluginchart/-/pluginchart-1.0.7.tgz#0b7dc5cabc1c0945eaf24c12b5dab4feea48368e"
-  integrity sha512-SMgQ8pjUkA1xE77NceSjPiVzEYSOqNVk01lnt8rjqvBfZg4uMF8HHL6/jofDcrSLsbnkB1GSTKBcRkdFrRt25w==
+"@api7-dashboard/pluginchart@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.npm.taobao.org/@api7-dashboard/pluginchart/download/@api7-dashboard/pluginchart-1.0.8.tgz?cache=0&sync_timestamp=1599205139159&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40api7-dashboard%2Fpluginchart%2Fdownload%2F%40api7-dashboard%2Fpluginchart-1.0.8.tgz#4412eb632193f7e7c175b5d84b1f0d0c2d92de25"
+  integrity sha1-RBLrYyGT9+fBdbXYSx8NDC2S3iU=
   dependencies:
     "@ant-design/icons" "^4.2.2"
     "@mrblenny/react-flow-chart" "^0.0.14"
