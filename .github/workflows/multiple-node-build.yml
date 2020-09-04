@@ -1,6 +1,6 @@
 # This is a basic test to build the dashboard
 
-name: CI
+name: multiple-node-build
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -17,16 +17,22 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x]
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2.1.1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
   
-    # Install packages
-    - name: Install packages
+    # Install dependencies
+    - name: Install dependencies
       run: yarn
 
-    # Build the dashboard
-    - name: Build the application
+    - name: Build the Dashboard
       run: yarn build

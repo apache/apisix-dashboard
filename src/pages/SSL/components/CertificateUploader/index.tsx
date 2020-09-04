@@ -84,7 +84,7 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
           beforeUpload={(file, fileList) => beforeUpload(file, fileList, 'PUBLIC_KEY')}
         >
           <Button disabled={publicKeyList.length === 1}>
-            <UploadOutlined /> {formatMessage({ id: 'ssl.upload.public.key' })}
+            <UploadOutlined /> {formatMessage({ id: 'ssl.upload.cert' })}
           </Button>
         </Upload>
       </Form.Item>

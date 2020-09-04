@@ -60,14 +60,18 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
     <Form form={form} layout="horizontal" initialValues={form?.getFieldsValue()}>
       {renderSNI()}
       <Form.Item
-        label={formatMessage({ id: 'ssl.form.public.key' })}
+        label={formatMessage({ id: 'ssl.form.cert' })}
         name="cert"
         rules={[
           { required: true, message: formatMessage({ id: 'ssl.form.check.cert.value' }) },
           { min: 128, message: formatMessage({ id: 'ssl.form.cert.value.length' }) },
         ]}
       >
-        <Input.TextArea rows={6} disabled={mode !== 'EDIT'} />
+        <Input.TextArea
+          rows={6}
+          disabled={mode !== 'EDIT'}
+          placeholder={formatMessage({ id: 'page.ssl.textAreaPlaceholder.cert' })}
+        />
       </Form.Item>
       <Form.Item
         label={formatMessage({ id: 'ssl.form.private.key' })}
