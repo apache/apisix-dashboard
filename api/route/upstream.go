@@ -74,10 +74,17 @@ func isUpstreamExist(c *gin.Context) {
 }
 
 func listUpstreamName(c *gin.Context) {
+	size, _ := strconv.Atoi(c.Query("size"))
+	page, _ := strconv.Atoi(c.Query("page"))
 	db := conf.DB()
 	upstreamList := []service.UpstreamDao{}
 	var count int
-	if err := db.Order("name").Table("upstreams").Find(&upstreamList).Count(&count).Error; err != nil {
+	if size == 0 || page == 0 {
+		db = db.Order("name").Table("upstreams")
+	} else {
+		db = db.Order("name").Table("upstreams").Offset((page - 1) * size).Limit(size)
+	}
+	if err := db.Find(&upstreamList).Count(&count).Error; err != nil {
 		e := errno.FromMessage(errno.UpstreamRequestError, err.Error())
 		logger.Error(e.Msg)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
