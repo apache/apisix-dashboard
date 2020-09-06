@@ -18,7 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Steps, notification, Form } from 'antd';
 import { history, useIntl } from 'umi';
-import { PluginPage, PLUGIN_MAPPER_SOURCE, PluginPageType } from '@api7-dashboard/plugin';
+import { PluginPage, PluginPageType } from '@api7-dashboard/plugin';
 
 import ActionBar from '@/components/ActionBar';
 
@@ -68,10 +68,7 @@ const Page: React.FC = (props) => {
         setStep(nextStep);
       });
     } else if (nextStep === 3) {
-      const authPluginNames = Object.entries(PLUGIN_MAPPER_SOURCE)
-        .filter(([name, value]) => name.includes('auth') && value.category === 'Security')
-        .map((item) => item[0]);
-      const isValid = Object.keys(plugins).some((name) => authPluginNames.includes(name));
+      const isValid = Object.keys(plugins).some((name) => name.includes('auth'));
       if (!isValid) {
         notification.warning({
           message: formatMessage({ id: 'consumer.create.enable.authentication.plugin' }),

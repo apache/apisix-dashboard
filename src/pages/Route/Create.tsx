@@ -18,9 +18,9 @@ import React, { useState, useEffect } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
+import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
 
 import ActionBar from '@/components/ActionBar';
-import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
 
 import {
   create,
