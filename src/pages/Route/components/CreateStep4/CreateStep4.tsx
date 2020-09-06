@@ -17,8 +17,7 @@
 import React from 'react';
 import { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
-
-import PluginPage from '@/components/PluginPage';
+import { PluginPage } from '@api7-dashboard/plugin';
 
 import Step1 from '../Step1';
 import Step2 from '../Step2';
@@ -34,7 +33,6 @@ const style = {
 };
 
 const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, ...rest }) => {
-
   const { formatMessage } = useIntl();
 
   return (

@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PluginPageEnUS } from '@/components/PluginPage';
 import { ActionBarEnUS } from '@/components/ActionBar';
 
 import component from './en-US/component';
@@ -36,6 +35,5 @@ export default {
   ...settings,
   ...pwa,
   ...component,
-  ...PluginPageEnUS,
   ...ActionBarEnUS,
 };

@@ -17,8 +17,7 @@
 import React, { useState } from 'react';
 import { Button, Table, Modal, Form, Select, Input, Space } from 'antd';
 import { useIntl } from 'umi';
-
-import PanelSection from '@/components/PanelSection';
+import { PanelSection } from '@api7-dashboard/ui';
 
 interface Props extends RouteModule.Data {}
 

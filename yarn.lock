@@ -187,20 +187,20 @@
     lodash "^4.17.15"
     resize-observer-polyfill "^1.5.0"
 
-"@api7-dashboard/plugin@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@api7-dashboard/plugin/-/plugin-1.0.2.tgz#b7f9d2dbb4f4ab17a9cbd66e484578287a0adb2d"
-  integrity sha512-Q7bbZ6Wh3b7SbdFEDv9aKqbZMeuYootufeP1d12rNzTT7T2JLePFEyjt8oeVbN2zXl7IvJzdYF+MbgzRTD9YYg==
+"@api7-dashboard/plugin@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@api7-dashboard/plugin/-/plugin-1.0.3.tgz#de51d10abdb5e64eede1699586fca9b532c46c00"
+  integrity sha512-jSl/r0Rjo4ePIPUZfTvRqFxzsVUsfn9Kyx/9PdvxLxLDR2DYEsajfNBRU+s7mUuwzRJ9djkMIqeA+FnFxTHLyQ==
   dependencies:
     "@rjsf/antd" "^2.3.0"
     "@rjsf/core" "^2.3.0"
     json-schema "^0.2.5"
     set-value "^3.0.2"
 
-"@api7-dashboard/pluginchart@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.npm.taobao.org/@api7-dashboard/pluginchart/download/@api7-dashboard/pluginchart-1.0.8.tgz?cache=0&sync_timestamp=1599205139159&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40api7-dashboard%2Fpluginchart%2Fdownload%2F%40api7-dashboard%2Fpluginchart-1.0.8.tgz#4412eb632193f7e7c175b5d84b1f0d0c2d92de25"
-  integrity sha1-RBLrYyGT9+fBdbXYSx8NDC2S3iU=
+"@api7-dashboard/pluginchart@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@api7-dashboard/pluginchart/-/pluginchart-1.0.9.tgz#306808dbe08f46ae02eca976d6495046830f8d3d"
+  integrity sha512-YCBQrwI/K2K2BFXWGy69BNbPiH+sxac0LpYDtiqhJFEGVZq1kR/OLh3eHeCRObpBuBGmGc+Bw3DGsrYd3v3c1Q==
   dependencies:
     "@ant-design/icons" "^4.2.2"
     "@mrblenny/react-flow-chart" "^0.0.14"

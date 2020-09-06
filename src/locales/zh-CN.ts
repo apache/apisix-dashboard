@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PluginPageZhCN } from '@/components/PluginPage';
 import { ActionBarZhCN } from '@/components/ActionBar';
 
 import component from './zh-CN/component';
@@ -36,6 +35,5 @@ export default {
   ...settings,
   ...pwa,
   ...component,
-  ...PluginPageZhCN,
   ...ActionBarZhCN,
 };
