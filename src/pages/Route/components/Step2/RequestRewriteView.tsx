@@ -20,6 +20,7 @@ import Radio from 'antd/lib/radio';
 import { Input, Row, Col, InputNumber, Button, Select } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
+import { PanelSection } from '@api7-dashboard/ui';
 
 import {
   FORM_ITEM_LAYOUT,
@@ -27,7 +28,6 @@ import {
   HASH_KEY_LIST,
   HASH_ON_LIST,
 } from '@/pages/Route/constants';
-import PanelSection from '@/components/PanelSection';
 import styles from '../../Create.less';
 import { fetchUpstreamList } from '../../service';
 
