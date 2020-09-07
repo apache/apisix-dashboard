@@ -16,6 +16,8 @@ CREATE TABLE `routes` (
   `content_admin_api` text,
   `create_time` bigint(20),
   `update_time` bigint(20),
+  `route_group_id` varchar(64) NOT NULL,
+  `route_group_name` varchar(64) NOT NULL,
 
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;
@@ -56,4 +58,14 @@ CREATE TABLE `consumers` (
   `update_time` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_username` (`username`)
+) DEFAULT CHARSET=utf8;
+-- route_group
+CREATE TABLE `route_group` (
+  `id` varchar(64) NOT NULL unique,
+  `name` varchar(200) NOT NULL unique,
+  `description` varchar(200) DEFAULT NULL,
+  `create_time` bigint(20),
+  `update_time` bigint(20),
+
+  PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;

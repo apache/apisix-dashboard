@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/errno"
@@ -101,11 +102,19 @@ func listRoute(c *gin.Context) {
 		db = db.Where("upstream_nodes like ? ", "%"+ip+"%")
 		isSearch = false
 	}
+	if rgid, exist := c.GetQuery("route_group_id"); exist {
+		db = db.Where("route_group_id = ?", rgid)
+		isSearch = false
+	}
+	if rgName, exist := c.GetQuery("route_group_name"); exist {
+		db = db.Where("route_group_name like ?", "%"+rgName+"%")
+		isSearch = false
+	}
 	// search
 	if isSearch {
 		if search, exist := c.GetQuery("search"); exist {
 			s := "%" + search + "%"
-			db = db.Where("name like ? or description like ? or hosts like ? or uris like ? or upstream_nodes like ? ", s, s, s, s, s)
+			db = db.Where("name like ? or description like ? or hosts like ? or uris like ? or upstream_nodes like ? or route_group_id = ? or route_group_name like ?", s, s, s, s, s, search, s)
 		}
 	}
 	// mysql
@@ -190,6 +199,15 @@ func updateRoute(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
 		return
 	}
+	routeGroup := &service.RouteGroupDao{}
+	isCreateGroup := false
+	if len(strings.Trim(routeRequest.RouteGroupId, "")) == 0 {
+		isCreateGroup = true
+		routeGroup.ID = uuid.NewV4()
+		// create route group
+		routeGroup.Name = routeRequest.RouteGroupName
+		routeRequest.RouteGroupId = routeGroup.ID.String()
+	}
 	logger.Info(routeRequest.Plugins)
 	db := conf.DB()
 	arr := service.ToApisixRequest(routeRequest)
@@ -205,6 +223,15 @@ func updateRoute(c *gin.Context) {
 			}
 		}()
 		logger.Info(rd)
+		if isCreateGroup {
+			if err := tx.Model(&service.RouteGroupDao{}).Create(routeGroup).Error; err != nil {
+				tx.Rollback()
+				e := errno.FromMessage(errno.DuplicateRouteGroupName, routeGroup.Name)
+				logger.Error(e.Msg)
+				c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+				return
+			}
+		}
 		if err := tx.Model(&service.Route{}).Update(rd).Error; err != nil {
 			// rollback
 			tx.Rollback()
@@ -288,6 +315,8 @@ func findRoute(c *gin.Context) {
 			}
 			result.Script = script
 
+			result.RouteGroupId = route.RouteGroupId
+			result.RouteGroupName = route.RouteGroupName
 			resp, _ := json.Marshal(result)
 			c.Data(http.StatusOK, service.ContentType, resp)
 		}
@@ -311,6 +340,15 @@ func createRoute(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
 		return
 	}
+	routeGroup := &service.RouteGroupDao{}
+	isCreateGroup := false
+	if len(strings.Trim(routeRequest.RouteGroupId, "")) == 0 {
+		isCreateGroup = true
+		routeGroup.ID = uuid.NewV4()
+		// create route group
+		routeGroup.Name = routeRequest.RouteGroupName
+		routeRequest.RouteGroupId = routeGroup.ID.String()
+	}
 	logger.Info(routeRequest.Plugins)
 	db := conf.DB()
 	arr := service.ToApisixRequest(routeRequest)
@@ -326,7 +364,16 @@ func createRoute(c *gin.Context) {
 			}
 		}()
 		logger.Info(rd)
-		if err := tx.Create(rd).Error; err != nil {
+		if isCreateGroup {
+			if err := tx.Model(&service.RouteGroupDao{}).Create(routeGroup).Error; err != nil {
+				tx.Rollback()
+				e := errno.FromMessage(errno.DuplicateRouteGroupName, routeGroup.Name)
+				logger.Error(e.Msg)
+				c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+				return
+			}
+		}
+		if err := tx.Model(&service.Route{}).Create(rd).Error; err != nil {
 			// rollback
 			tx.Rollback()
 			e := errno.FromMessage(errno.DBRouteCreateError, err.Error())

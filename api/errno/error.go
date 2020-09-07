@@ -86,6 +86,14 @@ var (
 	ApisixConsumerDeleteError = Message{"010704", "APISIX Consumer delete failed", 500}
 	DuplicateUserName         = Message{"010705", "Duplicate consumer username", 400}
 
+	// 08 routeGroup
+	RouteGroupRequestError      = Message{"010801", "RouteGroup request parameters exception: %s", 400}
+	DBRouteGroupError           = Message{"010802", "RouteGroup storage failure: %s", 500}
+	DBRouteGroupDeleteError     = Message{"010803", "RouteGroup storage delete failed: %s", 500}
+	RouteGroupHasRoutesError    = Message{"010804", "Route exist in this route group ", 500}
+	RouteGroupSelectRoutesError = Message{"010805", "RouteGroup select routes failed : %s", 500}
+	DuplicateRouteGroupName     = Message{"010806", "RouteGroup name is duplicate : %s", 500}
+
 	// 99 authentication
 	AuthenticationUserError = Message{"019901", "username or password error", 401}
 )
