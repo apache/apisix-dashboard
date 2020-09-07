@@ -53,11 +53,17 @@ export const transformStepData = ({
     protocols = protocols.concat('websocket');
   }
 
+  let { status } = step1Data;
+  if (step1Data.status === undefined) {
+    status = false;
+  }
+
   const data: Partial<RouteModule.Body> = {
     ...step1Data,
     ...step2Data,
     ...step3Data,
     protocols,
+    status,
     uris: step1Data.paths,
     redirect,
     vars: step1Data.advancedMatchingRules.map((rule) => {
@@ -166,6 +172,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     hosts,
     vars,
     redirect,
+    status,
   } = data;
 
   const step1Data: Partial<RouteModule.Step1Data> = {
@@ -173,6 +180,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     route_group_id,
     route_group_name,
     desc,
+    status,
     protocols: protocols.filter((item) => item !== 'websocket'),
     websocket: protocols.includes('websocket'),
     hosts,

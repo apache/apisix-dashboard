@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState, useEffect } from 'react';
-import { Card, Steps, Form } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Card, Form, Steps } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
 import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
@@ -23,13 +23,13 @@ import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
 import ActionBar from '@/components/ActionBar';
 
 import {
+  checkHostWithSSL,
+  checkUniqueName,
   create,
   fetchItem,
-  update,
-  checkUniqueName,
   fetchUpstreamItem,
-  checkHostWithSSL,
   fetchRouteGroupItem,
+  update,
 } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
@@ -143,6 +143,7 @@ const Page: React.FC<Props> = (props) => {
             }
             setStep1Data({ ...form1.getFieldsValue(), ...step1Data, ...params });
           }}
+          isEdit={props.route.path.indexOf('edit') > 0}
         />
       );
     }
