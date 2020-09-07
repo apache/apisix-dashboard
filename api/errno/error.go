@@ -58,6 +58,7 @@ var (
 	DBRouteDeleteError      = Message{"010207", "Route deletion failed: %s", 500}
 	DBRouteReduplicateError = Message{"010208", "Route name is reduplicate : %s", 400}
 	SetRouteUngroupError    = Message{"010209", "Set route ungroup err", 500}
+	RoutePublishError       = Message{"010209", "Route publish error", 400}
 
 	// 03 plugins
 	ApisixPluginListError   = Message{"010301", "find APISIX plugin list failed: %s", 500}
