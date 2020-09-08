@@ -63,6 +63,10 @@ const Page: React.FC = () => {
       dataIndex: 'description',
     },
     {
+      title: formatMessage({ id: 'route.list.group.name' }),
+      dataIndex: 'route_group_name',
+    },
+    {
       title: formatMessage({ id: 'route.list.edit.time' }),
       dataIndex: 'update_time',
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,

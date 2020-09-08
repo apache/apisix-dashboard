@@ -148,6 +148,7 @@ export default {
   'route.list.domain.name': 'Domain Name',
   'route.list.path': 'Path',
   'route.list.description': 'Description',
+  'route.list.group.name': 'RouteGroup',
   'route.list.edit.time': 'Edit Time',
   'route.list.operation': 'Operation',
   'route.list.edit': 'Edit',

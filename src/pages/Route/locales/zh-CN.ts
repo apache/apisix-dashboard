@@ -143,6 +143,7 @@ export default {
   'route.list.domain.name': '域名',
   'route.list.path': '路径',
   'route.list.description': '描述',
+  'route.list.group.name': '路由分组',
   'route.list.edit.time': '编辑时间',
   'route.list.operation': '操作',
   'route.list.edit': '编辑',
