@@ -52,6 +52,7 @@ declare namespace RouteModule {
     redirectCode?: number;
     advancedMatchingRules: MatchingRule[];
     route_group_id?: string;
+    route_group_name: string;
   };
 
   type Step3Data = {
@@ -115,6 +116,7 @@ declare namespace RouteModule {
   type Body = {
     id?: number;
     route_group_id?: string;
+    route_group_name: string;
     name: string;
     desc: string;
     priority?: number;

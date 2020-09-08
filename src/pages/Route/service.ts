@@ -67,7 +67,7 @@ export const fetchRouteGroupList = () => request(`/names/routegroups`);
 export const fetchRouteGroupItem = (gid: string) => {
   return request(`/routegroups/${gid}`).then((data) => {
     return {
-      routeGroupName: data.name,
+      route_group_name: data.name,
       route_group_id: data.id,
     };
   });

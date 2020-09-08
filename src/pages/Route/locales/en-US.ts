@@ -62,9 +62,12 @@ export default {
   'rotue.meta.api.rule':
     'Only letters, numbers, _ and - are supported, and can only begin with letters',
   'route.meta.api.group.name': 'RouteGroup',
-  'route.meta.input.api.group.name': 'Please select group name',
-  'route.meta.description': 'Description',
+  'route.meta.group.name': 'GroupName',
+  'route.meta.input.api.group.name': 'Please enter the group name',
+  'route.meta.api.create.group.name': 'Create route group',
+  'route.meta.description': 'APIDescription',
   'route.meta.description.rule': 'Can not more than 200 characters',
+  'route.meta.group.description': 'GroupDescription',
 
   'route.request.config.domain.name': 'Domain Name',
   'route.request.config.domain.or.ip':

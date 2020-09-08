@@ -26,11 +26,15 @@ interface Props extends RouteModule.Data {}
 const MetaView: React.FC<Props> = ({ data, disabled, onChange }) => {
   const { step1Data } = data;
   const { formatMessage } = useIntl();
+  const routeGroupDisabled = disabled || !!step1Data.route_group_id;
   const [routeGroups, setRouteGroups] = useState<{ id: string; name: string }[]>();
   useEffect(() => {
     // eslint-disable-next-line no-shadow
     fetchRouteGroupList().then(({ data }) => {
-      setRouteGroups([...data]);
+      setRouteGroups([
+        { name: formatMessage({ id: 'route.meta.api.create.group.name' }), id: null },
+        ...data,
+      ]);
       if (step1Data.route_group_id) {
         onChange({ route_group_id: step1Data.route_group_id });
       }
@@ -55,16 +59,12 @@ const MetaView: React.FC<Props> = ({ data, disabled, onChange }) => {
           disabled={disabled}
         />
       </Form.Item>
-      <Form.Item
-        label={formatMessage({ id: 'route.meta.api.group.name' })}
-        name="route_group_id"
-        rules={[
-          { required: true, message: formatMessage({ id: 'route.meta.input.api.group.name' }) },
-        ]}
-      >
+      <Form.Item label={formatMessage({ id: 'route.meta.api.group.name' })} name="route_group_id">
         <Select
           onChange={(value) => {
-            onChange({ route_group_id: value });
+            if (step1Data.route_group_id) {
+              onChange({ route_group_id: value });
+            }
           }}
           disabled={disabled}
         >
@@ -76,6 +76,18 @@ const MetaView: React.FC<Props> = ({ data, disabled, onChange }) => {
             );
           })}
         </Select>
+      </Form.Item>
+      <Form.Item
+        label={formatMessage({ id: 'route.meta.group.name' })}
+        name="route_group_name"
+        rules={[
+          { required: true, message: formatMessage({ id: 'route.meta.input.api.group.name' }) },
+        ]}
+      >
+        <Input
+          placeholder={formatMessage({ id: 'route.meta.input.api.group.name' })}
+          disabled={routeGroupDisabled}
+        />
       </Form.Item>
       <Form.Item label={formatMessage({ id: 'route.meta.description' })} name="desc">
         <Input.TextArea
