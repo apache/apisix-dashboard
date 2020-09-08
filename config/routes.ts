@@ -40,11 +40,11 @@ const routes = [
     component: './RouteGroup/List',
   },
   {
-    path: 'routegroup/create',
+    path: '/routegroup/create',
     component: './RouteGroup/Create',
   },
   {
-    path: 'routegroup/:gid/edit',
+    path: '/routegroup/:gid/edit',
     component: './RouteGroup/Create',
   },
   {
