@@ -39,7 +39,7 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
         label={formatMessage({ id: 'routegroup.step.name' })}
         name="name"
         rules={[{ required: true }]}
-        extra={formatMessage({ id: 'upstream.step.name.should.unique' })}
+        extra={formatMessage({ id: 'routegroup.step.name.should.unique' })}
       >
         <Input
           placeholder={formatMessage({ id: 'routegroup.step.input.routegroup.name' })}
