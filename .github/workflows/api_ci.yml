@@ -77,4 +77,4 @@ jobs:
     
     - name: run Makefile
       run: |
-        sudo make license-check
+        make license-check
