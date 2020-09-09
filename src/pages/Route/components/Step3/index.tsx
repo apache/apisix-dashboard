@@ -3,16 +3,17 @@ import { Radio, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { isChrome } from 'react-device-detect';
 import { PluginPage, PluginPageType } from '@api7-dashboard/plugin';
-import PluginChart from '@api7-dashboard/pluginchart';
+import PluginOrchestration from '@api7-dashboard/pluginchart';
 
 type Props = {
   data: PluginPageType.PluginData;
   onChange(data: PluginPageType.PluginData): void;
+  readonly: boolean;
 };
 
 type Mode = 'NORMAL' | 'DRAW';
 
-const Page: React.FC<Props> = ({ data, onChange }) => {
+const Page: React.FC<Props> = ({ data, onChange, readonly = false }) => {
   const { plugins = {}, script = {} } = data;
 
   // NOTE: Currently only compatible with chrome
@@ -45,7 +46,11 @@ const Page: React.FC<Props> = ({ data, onChange }) => {
         <PluginPage data={plugins} onChange={(item) => onChange({ mode, data: item })} />
       )}
       {Boolean(mode === 'DRAW') && (
-        <PluginChart data={script.chart} onChange={(item) => onChange({ mode, data: item })} />
+        <PluginOrchestration
+          data={script.chart}
+          readonly={readonly}
+          onChange={(item) => onChange({ mode, data: item })}
+        />
       )}
     </>
   );
