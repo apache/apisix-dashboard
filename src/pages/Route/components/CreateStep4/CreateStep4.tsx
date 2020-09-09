@@ -18,7 +18,7 @@ import React from 'react';
 import { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 import { PluginPage } from '@api7-dashboard/plugin';
-import PluginChart from '@api7-dashboard/pluginchart';
+import PluginOrchestration from '@api7-dashboard/pluginchart';
 
 import Step1 from '../Step1';
 import Step2 from '../Step2';
@@ -50,7 +50,11 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, ...rest }) => {
             <PluginPage data={rest.data.step3Data.plugins} disabled />
           )}
           {Boolean(Object.keys(script).length !== 0) && (
-            <PluginChart data={rest.data.step3Data.script.chart} readonly onChange={() => {}} />
+            <PluginOrchestration
+              data={rest.data.step3Data.script.chart}
+              readonly
+              onChange={() => {}}
+            />
           )}
         </>
       )}
