@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useState, useEffect } from 'react';
-import { Card, Form, Steps } from 'antd';
+import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
 import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
