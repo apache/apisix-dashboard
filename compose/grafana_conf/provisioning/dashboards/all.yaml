@@ -25,3 +25,4 @@ providers:
   editable: false
   options:
     path: /var/lib/grafana/dashboards
+    

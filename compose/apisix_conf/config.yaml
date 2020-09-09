@@ -38,3 +38,4 @@ etcd:
   prefix: "/apisix"               # apisix configurations prefix
   timeout: 30                     # 30 seconds
   
+  
