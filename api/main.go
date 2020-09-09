@@ -18,7 +18,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/utils"
+	"github.com/spf13/viper"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/apisix/manager-api/conf"
@@ -29,8 +33,15 @@ import (
 var logger = log.GetLogger()
 
 func main() {
+	viper.SetEnvPrefix("APIX")
+	viper.AutomaticEnv()
+
+	if err := storage.InitETCDClient(strings.Split(viper.GetString("etcd_endpoints"), ",")); err != nil {
+		panic(err)
+	}
+
 	// init
-	conf.InitializeMysql()
+	//conf.InitializeMysql()
 	// routes
 	r := route.SetUpRouter()
 	addr := fmt.Sprintf(":%d", conf.ServerPort)
@@ -40,5 +51,9 @@ func main() {
 		ReadTimeout:  time.Duration(1000) * time.Millisecond,
 		WriteTimeout: time.Duration(5000) * time.Millisecond,
 	}
-	s.ListenAndServe()
+	if err := s.ListenAndServe(); err != nil {
+		logger.WithError(err)
+	}
+
+	utils.CloseAll()
 }

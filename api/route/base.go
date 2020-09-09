@@ -17,6 +17,8 @@
 package route
 
 import (
+	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/handler/route"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 
@@ -35,11 +37,22 @@ func SetUpRouter() *gin.Engine {
 	r.Use(filter.CORS(), filter.RequestId(), filter.RequestLogHandler(), filter.RecoverHandler())
 
 	AppendHealthCheck(r)
-	AppendRoute(r)
+	//AppendRoute(r)
 	AppendSsl(r)
 	AppendPlugin(r)
 	AppendUpstream(r)
 	AppendConsumer(r)
+
+	factories := []handler.RegisterFactory{
+		route.NewHandler,
+	}
+	for i := range factories {
+		h, err := factories[i]()
+		if err != nil {
+			panic(err)
+		}
+		h.ApplyRoute(r)
+	}
 
 	pprof.Register(r)
 
