@@ -1,4 +1,3 @@
-<!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -15,13 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
--->
-# PluginForm
+# If you want to set the specified configuration value, you can set the new
+# in this file. For example if you want to specify the etcd address:
+#
 
-> The PluginForm component aims to build UI according to the plugin schema.
+etcd:
+  host:
+    - "http://etcd:2379"
 
-## Usage
-
-1. Modify `list` variable in `data.ts` file.
-2. Modify filds under `/locales` folder to have a good translation.
-3. Import files under `/locales` folder to `/src/locales` to be localization.
+apisix:
+  allow_admin:                  # http://nginx.org/en/docs/http/ngx_http_access_module.html#allow
+    - 0.0.0.0/0              # If we don't set any IP list, then any IP access is allowed by default.

@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -202,4 +203,127 @@ func TestApisixRouteResponse_Parse(t *testing.T) {
 	}
 	_, err := arr.Parse()
 	a.Equal(nil, err)
+}
+
+// parse from params to RouteRequest
+func TestRouteRequest_Parse(t *testing.T) {
+	a := assert.New(t)
+	param := []byte(`{
+		 "name": "API 名称",
+		 "protocols": [
+			 "http",
+			 "https"
+		 ],
+		 "hosts": [
+			 "www.baidu.com"
+		 ],
+		 "methods": [
+			 "GET",
+			 "HEAD",
+			 "POST",
+			 "PUT",
+			 "DELETE",
+			 "OPTIONS",
+			 "PATCH"
+		 ],
+		 "redirect": {
+			 "code": 302,
+			 "uri": "11111"
+		 },
+		 "vars": [],
+		 "script": {
+			 "rule": {},
+			 "conf": {}
+		 }
+	 }`)
+	routeRequest := &RouteRequest{}
+	err := routeRequest.Parse(param)
+	a.Nil(err)
+	a.Equal("API 名称", routeRequest.Name)
+	a.Equal(int64(0), routeRequest.Priority)
+	a.Equal(2, len(routeRequest.Script))
+	a.Equal("/*", routeRequest.Uris[0])
+}
+
+// parse from RouteRequest and ApisixRouteRequest to Route
+func TestRoute_Parse(t *testing.T) {
+	a := assert.New(t)
+	rrb := []byte(`{"name":"API 名称2","methods":["GET","HEAD","POST","PUT","DELETE","OPTIONS","PATCH"],"uris":["/*"],"hosts":["www.baidu.com"],"protocols":["http","https"],"redirect":{"code":302,"uri":"11111"},"plugins":null}`)
+	routeRequest := &RouteRequest{}
+	json.Unmarshal(rrb, routeRequest)
+	arrb := []byte(`{"priority":0,"methods":["GET","HEAD","POST","PUT","DELETE","OPTIONS","PATCH"],"uris":["/*"],"hosts":["www.baidu.com"],"plugins":{"redirect":{"code":302,"uri":"11111"}}, "script":{
+    "rule":{
+        "root": "11-22-33-44",
+        "11-22-33-44":[
+            [
+                "code == 503",
+                "yy-uu-ii-oo"
+            ],
+            [
+                "",
+                "vv-cc-xx-zz"
+            ]
+        ]
+    },
+    "conf":{
+        "11-22-33-44":{
+            "name": "limit-count",
+            "conf": {
+                "count":2,
+                "time_window":60,
+                "rejected_code":503,
+                "key":"remote_addr"
+            }
+        },
+        "yy-uu-ii-oo":{
+            "name": "response-rewrite",
+            "conf": {
+                "body":{"code":"ok","message":"request has been limited."},
+                "headers":{
+                    "X-limit-status": "limited"
+                }
+            }
+        },
+        "vv-cc-xx-zz":{
+            "name": "response-rewrite",
+            "conf": {
+                "body":{"code":"ok","message":"normal request"},
+                "headers":{
+                    "X-limit-status": "normal"
+                }
+            }
+        }
+    }
+} }`)
+	arr := &ApisixRouteRequest{}
+	json.Unmarshal(arrb, arr)
+
+	rd := &Route{}
+	err := rd.Parse(routeRequest, arr)
+	a.Nil(err)
+}
+
+// parse Route
+func TestToRoute(t *testing.T) {
+	a := assert.New(t)
+	b1 := []byte(`{"name":"API 名称2","methods":["GET","HEAD","POST","PUT","DELETE","OPTIONS","PATCH"],"uris":["/*"],"hosts":["www.baidu.com"],"protocols":["http","https"],"redirect":{"code":302,"uri":"11111"},"plugins":null}`)
+	rr := &RouteRequest{}
+	err := json.Unmarshal(b1, &rr)
+	a.Nil(err)
+
+	b2 := []byte(`{"priority":0,"methods":["GET","HEAD","POST","PUT","DELETE","OPTIONS","PATCH"],"uris":["/*"],"hosts":["www.baidu.com"],"plugins":{"redirect":{"code":302,"uri":"11111"}},"script":"function(vars, opts) return vars[\"arg_key\"] == \"a\" or vars[\"arg_key\"] == \"b\" end"}`)
+	arr := &ApisixRouteRequest{}
+	err = json.Unmarshal(b2, &arr)
+	a.Nil(err)
+
+	b3 := []byte(`{"action":"set","node":{"value":{"id":"","name":"","priority":0,"methods":["GET","HEAD","POST","PUT","DELETE","OPTIONS","PATCH"],"uris":["/*"],"hosts":["www.baidu.com"],"vars":null,"plugins":{"redirect":{"code":302,"ret_code":302,"uri":"11111"}}},"modifiedIndex":75}}`)
+	arp := &ApisixRouteResponse{}
+	err = json.Unmarshal(b3, &arp)
+	a.Nil(err)
+
+	u4 := uuid.NewV4()
+	route, err := ToRoute(rr, arr, u4, arp)
+	a.Nil(err)
+	t.Log(route.Uris)
+	a.Equal("[\"/*\"]", route.Uris)
 }

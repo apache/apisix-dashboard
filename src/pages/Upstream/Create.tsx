@@ -17,9 +17,9 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Steps, notification, Form } from 'antd';
+import { history, useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
-import { history, useIntl } from 'umi';
 
 import Step1 from './components/Step1';
 import Preview from './components/Preview';

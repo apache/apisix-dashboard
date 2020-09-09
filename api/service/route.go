@@ -19,6 +19,9 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/apisix/manager-api/conf"
@@ -51,6 +54,13 @@ func (r *RouteRequest) Parse(body interface{}) error {
 		if r.Uris == nil || len(r.Uris) < 1 {
 			r.Uris = []string{"/*"}
 		}
+		if len(strings.Trim(r.RouteGroupId, "")) > 0 {
+			routeGroup := &RouteGroupDao{}
+			if err, _ := routeGroup.FindRouteGroup(r.RouteGroupId); err != nil {
+				return err
+			}
+			r.RouteGroupName = routeGroup.Name
+		}
 	}
 	return nil
 }
@@ -70,10 +80,17 @@ func (rd *Route) Parse(r *RouteRequest, arr *ApisixRouteRequest) error {
 	//rd.Name = arr.Name
 	rd.Description = arr.Desc
 	rd.UpstreamId = r.UpstreamId
+	rd.RouteGroupId = r.RouteGroupId
+	rd.RouteGroupName = r.RouteGroupName
 	if content, err := json.Marshal(r); err != nil {
 		return err
 	} else {
 		rd.Content = string(content)
+	}
+	if script, err := json.Marshal(r.Script); err != nil {
+		return err
+	} else {
+		rd.Script = string(script)
 	}
 	timestamp := time.Now().Unix()
 	rd.CreateTime = timestamp
@@ -172,6 +189,9 @@ type RouteRequest struct {
 	UpstreamPath     *UpstreamPath          `json:"upstream_path,omitempty"`
 	UpstreamHeader   map[string]string      `json:"upstream_header,omitempty"`
 	Plugins          map[string]interface{} `json:"plugins"`
+	Script           map[string]interface{} `json:"script"`
+	RouteGroupId     string                 `json:"route_group_id"`
+	RouteGroupName   string                 `json:"route_group_name"`
 }
 
 func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
@@ -269,6 +289,7 @@ func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
 		Redirect:         redirect,
 		Upstream:         o.Upstream,
 		UpstreamId:       o.UpstreamId,
+		RouteGroupId:     o.RouteGroupId,
 		UpstreamProtocol: upstreamProtocol,
 		UpstreamPath:     upstreamPath,
 		UpstreamHeader:   upstreamHeader,
@@ -333,10 +354,13 @@ func (r Redirect) MarshalJSON() ([]byte, error) {
 }
 
 type Upstream struct {
-	UType           string           `json:"type"`
-	Nodes           map[string]int64 `json:"nodes"`
-	Timeout         UpstreamTimeout  `json:"timeout"`
-	EnableWebsocket bool             `json:"enable_websocket"`
+	UType           string                 `json:"type"`
+	Nodes           map[string]int64       `json:"nodes"`
+	Timeout         UpstreamTimeout        `json:"timeout"`
+	EnableWebsocket bool                   `json:"enable_websocket"`
+	Checks          map[string]interface{} `json:"checks,omitempty"`
+	HashOn          string                 `json:"hash_on,omitempty"`
+	Key             string                 `json:"key,omitempty"`
 }
 
 type UpstreamTimeout struct {
@@ -361,6 +385,7 @@ type ApisixRouteRequest struct {
 	Upstream   *Upstream              `json:"upstream,omitempty"`
 	UpstreamId string                 `json:"upstream_id,omitempty"`
 	Plugins    map[string]interface{} `json:"plugins,omitempty"`
+	Script     string                 `json:"script,omitempty"`
 	//Name     string                 `json:"name"`
 }
 
@@ -376,17 +401,19 @@ type Node struct {
 }
 
 type Value struct {
-	Id         string                 `json:"id"`
-	Name       string                 `json:"name"`
-	Desc       string                 `json:"desc,omitempty"`
-	Priority   int64                  `json:"priority"`
-	Methods    []string               `json:"methods"`
-	Uris       []string               `json:"uris"`
-	Hosts      []string               `json:"hosts"`
-	Vars       [][]string             `json:"vars"`
-	Upstream   *Upstream              `json:"upstream,omitempty"`
-	UpstreamId string                 `json:"upstream_id,omitempty"`
-	Plugins    map[string]interface{} `json:"plugins"`
+	Id             string                 `json:"id"`
+	Name           string                 `json:"name"`
+	Desc           string                 `json:"desc,omitempty"`
+	Priority       int64                  `json:"priority"`
+	Methods        []string               `json:"methods"`
+	Uris           []string               `json:"uris"`
+	Hosts          []string               `json:"hosts"`
+	Vars           [][]string             `json:"vars"`
+	Upstream       *Upstream              `json:"upstream,omitempty"`
+	UpstreamId     string                 `json:"upstream_id,omitempty"`
+	Plugins        map[string]interface{} `json:"plugins"`
+	RouteGroupId   string                 `json:"route_group_id"`
+	RouteGroupName string                 `json:"route_group_name"`
 }
 
 type Route struct {
@@ -399,18 +426,23 @@ type Route struct {
 	UpstreamId      string `json:"upstream_id"`
 	Priority        int64  `json:"priority"`
 	Content         string `json:"content"`
+	Script          string `json:"script"`
 	ContentAdminApi string `json:"content_admin_api"`
+	RouteGroupId    string `json:"route_group_id"`
+	RouteGroupName  string `json:"route_group_name"`
 }
 
 type RouteResponse struct {
 	Base
-	Name        string    `json:"name"`
-	Description string    `json:"description,omitempty"`
-	Hosts       []string  `json:"hosts,omitempty"`
-	Uris        []string  `json:"uris,omitempty"`
-	Upstream    *Upstream `json:"upstream,omitempty"`
-	UpstreamId  string    `json:"upstream_id,omitempty"`
-	Priority    int64     `json:"priority"`
+	Name           string    `json:"name"`
+	Description    string    `json:"description,omitempty"`
+	Hosts          []string  `json:"hosts,omitempty"`
+	Uris           []string  `json:"uris,omitempty"`
+	Upstream       *Upstream `json:"upstream,omitempty"`
+	UpstreamId     string    `json:"upstream_id,omitempty"`
+	Priority       int64     `json:"priority"`
+	RouteGroupId   string    `json:"route_group_id"`
+	RouteGroupName string    `json:"route_group_name"`
 }
 
 type ListResponse struct {
@@ -424,6 +456,8 @@ func (rr *RouteResponse) Parse(r *Route) {
 	rr.Description = r.Description
 	rr.UpstreamId = r.UpstreamId
 	rr.Priority = r.Priority
+	rr.RouteGroupId = r.RouteGroupId
+	rr.RouteGroupName = r.RouteGroupName
 	// hosts
 	if len(r.Hosts) > 0 {
 		var hosts []string
@@ -513,7 +547,38 @@ func ToApisixRequest(routeRequest *RouteRequest) *ApisixRouteRequest {
 		arr.Plugins = nil
 	}
 
+	if routeRequest.Script != nil {
+		arr.Script, _ = generateLuaCode(routeRequest.Script)
+	}
+
 	return arr
+}
+
+func generateLuaCode(script map[string]interface{}) (string, error) {
+	scriptString, err := json.Marshal(script)
+	if err != nil {
+		return "", err
+	}
+
+	cmd := exec.Command("sh", "-c",
+		"cd /go/manager-api/dag-to-lua/ && lua cli.lua "+
+			"'"+string(scriptString)+"'")
+
+	logger.Info("generate conf:", string(scriptString))
+
+	stdout, _ := cmd.StdoutPipe()
+	defer stdout.Close()
+	if err := cmd.Start(); err != nil {
+		logger.Info("generate err:", err)
+		return "", err
+	}
+
+	result, _ := ioutil.ReadAll(stdout)
+	resData := string(result)
+
+	logger.Info("generated code:", resData)
+
+	return resData, nil
 }
 
 func ToRoute(routeRequest *RouteRequest,
@@ -531,6 +596,7 @@ func ToRoute(routeRequest *RouteRequest,
 	rd.ID = u4
 	// content_admin_api
 	if resp != nil {
+		resp.Node.Value.RouteGroupId = rd.RouteGroupId
 		if respStr, err := json.Marshal(resp); err != nil {
 			e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
 			return nil, e

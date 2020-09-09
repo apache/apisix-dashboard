@@ -16,14 +16,13 @@
  */
 import React from 'react';
 import { FormInstance } from 'antd/lib/form';
-
-import PluginPage from '@/components/PluginPage';
+import { PluginPage, PluginPageType } from '@api7-dashboard/plugin';
 
 import Step1 from './Step1';
 
 type Props = {
   form1: FormInstance;
-  plugins: PluginPage.PluginData;
+  plugins: PluginPageType.PluginData;
 };
 
 const Page: React.FC<Props> = ({ form1, plugins }) => {

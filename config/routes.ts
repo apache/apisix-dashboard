@@ -76,6 +76,16 @@ const routes = [
     component: './Setting',
   },
   {
+    path: '/user/login',
+    component: './User/Login',
+    layout: false,
+  },
+  {
+    path: '/user/logout',
+    component: './User/Logout',
+    layout: false,
+  },
+  {
     component: './404',
   },
 ];

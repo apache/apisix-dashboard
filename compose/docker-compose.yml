@@ -96,7 +96,7 @@ services:
     environment:
       - ENV=prod
     volumes:
-      - ./manager_conf/build.sh:/root/manager-api/build.sh
+      - ./manager_conf/build.sh:/go/manager-api/build.sh
     networks:
       apisix-dashboard:
         ipv4_address: 192.17.5.15

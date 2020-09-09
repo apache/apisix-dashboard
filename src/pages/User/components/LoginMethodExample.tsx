@@ -14,19 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { CSSProperties } from 'react';
-import { Divider } from 'antd';
+import React from 'react';
+import { UserModule } from '@/pages/User/typing';
+import { formatMessage } from '@@/plugin-locale/localeExports';
 
-const PanelSection: React.FC<{
-  title: string;
-  style?: CSSProperties;
-}> = ({ title, style, children }) => {
-  return (
-    <>
-      <Divider orientation="left">{title}</Divider>
-      <div style={style}>{children}</div>
-    </>
-  );
+const LoginMethodExample: UserModule.LoginMethod = {
+  id: 'example',
+  name: formatMessage({ id: 'component.user.loginMethodExample' }),
+  render: () => {
+    return <a href="https://www.example.com">example</a>;
+  },
+  getData(): UserModule.LoginData {
+    return {};
+  },
+  checkData: async () => {
+    return true;
+  },
+  submit: async (data) => {
+    return {
+      status: false,
+      message: formatMessage({ id: 'component.user.loginMethodExample.message' }),
+      data,
+    };
+  },
+  logout() {},
 };
 
-export default PanelSection;
+export default LoginMethodExample;

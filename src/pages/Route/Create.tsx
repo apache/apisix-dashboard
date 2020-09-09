@@ -17,10 +17,10 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { useIntl } from 'umi';
+import { history, useIntl } from 'umi';
+import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
 
 import ActionBar from '@/components/ActionBar';
-import PluginPage from '@/components/PluginPage';
 
 import {
   create,
@@ -32,11 +32,14 @@ import {
 } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
+import Step3 from './components/Step3';
+
 import CreateStep4 from './components/CreateStep4';
 import {
   DEFAULT_STEP_1_DATA,
   DEFAULT_STEP_2_DATA,
   DEFAULT_STEP_3_DATA,
+  INIT_CHART,
 } from './constants';
 import ResultView from './components/ResultView';
 import styles from './Create.less';
@@ -50,12 +53,19 @@ type Props = {
 };
 
 const Page: React.FC<Props> = (props) => {
-
   const { formatMessage } = useIntl();
 
-  const STEP_HEADER_2 = [formatMessage({ id: 'route.constants.define.api.request' }), formatMessage({ id: 'route.constants.preview' })];
+  const STEP_HEADER_2 = [
+    formatMessage({ id: 'route.constants.define.api.request' }),
+    formatMessage({ id: 'route.constants.preview' }),
+  ];
 
-  const STEP_HEADER_4 = [formatMessage({ id: 'route.constants.define.api.request' }), formatMessage({ id: 'route.constants.define.api.backend.serve' }), formatMessage({ id: 'route.constants.plugin.configuration' }), formatMessage({ id: 'route.constants.preview' })];
+  const STEP_HEADER_4 = [
+    formatMessage({ id: 'route.constants.define.api.request' }),
+    formatMessage({ id: 'route.constants.define.api.backend.serve' }),
+    formatMessage({ id: 'route.constants.plugin.configuration' }),
+    formatMessage({ id: 'route.constants.preview' }),
+  ];
 
   const [step1Data, setStep1Data] = useState(DEFAULT_STEP_1_DATA);
   const [step2Data, setStep2Data] = useState(DEFAULT_STEP_2_DATA);
@@ -69,12 +79,13 @@ const Page: React.FC<Props> = (props) => {
   const [step, setStep] = useState(1);
   const [stepHeader, setStepHeader] = useState(STEP_HEADER_4);
 
+  const [chart, setChart] = useState(INIT_CHART);
+
   const routeData = {
     step1Data,
     step2Data,
     step3Data,
   };
-
   const setupRoute = (rid: number) =>
     fetchItem(rid).then((data) => {
       form1.setFieldsValue(data.step1Data);
@@ -108,8 +119,9 @@ const Page: React.FC<Props> = (props) => {
     setStep1Data(DEFAULT_STEP_1_DATA);
     setStep2Data(DEFAULT_STEP_2_DATA);
     setStep3Data(DEFAULT_STEP_3_DATA);
-    form1.resetFields();
-    form2.resetFields();
+
+    form1.setFieldsValue(DEFAULT_STEP_1_DATA);
+    form2.setFieldsValue(DEFAULT_STEP_2_DATA);
     setStep(1);
   };
 
@@ -144,9 +156,19 @@ const Page: React.FC<Props> = (props) => {
                   ...form2.getFieldsValue(),
                   ...data,
                 });
+                setStep2Data({
+                  ...step2Data,
+                  ...form2.getFieldsValue(),
+                  ...params,
+                } as RouteModule.Step2Data);
               });
+              return;
             }
-            setStep2Data({ ...form2.getFieldsValue(), ...params } as RouteModule.Step2Data);
+            setStep2Data({
+              ...step2Data,
+              ...form2.getFieldsValue(),
+              ...params,
+            } as RouteModule.Step2Data);
           }}
         />
       );
@@ -154,9 +176,17 @@ const Page: React.FC<Props> = (props) => {
 
     if (step === 3) {
       return (
-        <PluginPage
-          data={routeData.step3Data.plugins}
-          onChange={(data) => setStep3Data({ plugins: data })}
+        <Step3
+          readonly={false}
+          data={routeData.step3Data}
+          onChange={({ mode, data }) => {
+            if (mode === 'NORMAL') {
+              setStep3Data({ plugins: data, script: {} });
+              setChart(INIT_CHART);
+            } else {
+              setChart(data);
+            }
+          }}
         />
       );
     }
@@ -166,9 +196,17 @@ const Page: React.FC<Props> = (props) => {
     }
 
     if (step === 5) {
-      return <ResultView onReset={onReset} />;
+      return (
+        <ResultView
+          createNew={() => {
+            if (props.route.path.indexOf('edit') !== -1) {
+              return history.replace('/routes/create');
+            }
+            return onReset();
+          }}
+        />
+      );
     }
-
     return null;
   };
 
@@ -182,6 +220,15 @@ const Page: React.FC<Props> = (props) => {
         create({ data: routeData }).then(() => {
           setStep(5);
         });
+      }
+    };
+
+    const savePlugins = () => {
+      if (Object.keys(chart.nodes).length) {
+        const transformChart = chartTransformer(chart);
+        setStep3Data({ script: { ...transformChart, chart }, plugins: {} });
+      } else {
+        setStep3Data({ ...step3Data, script: {} });
       }
     };
 
@@ -202,6 +249,7 @@ const Page: React.FC<Props> = (props) => {
           });
         });
       } else {
+        savePlugins();
         setStep(nextStep);
       }
       return;
@@ -220,6 +268,7 @@ const Page: React.FC<Props> = (props) => {
     }
 
     if (nextStep === 4) {
+      savePlugins();
       setStep(nextStep);
     }
 

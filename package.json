@@ -1,6 +1,6 @@
 {
   "name": "apisix-dashboard",
-  "version": "1.1.1",
+  "version": "1.5.3",
   "private": true,
   "description": "Dashboard for Apache APISIX",
   "scripts": {
@@ -53,7 +53,10 @@
   "dependencies": {
     "@ant-design/icons": "^4.0.0",
     "@ant-design/pro-layout": "^6.0.0",
-    "@ant-design/pro-table": "^2.4.0",
+    "@ant-design/pro-table": "2.6.3",
+    "@api7-dashboard/plugin": "^1.0.3",
+    "@api7-dashboard/pluginchart": "^1.0.9",
+    "@api7-dashboard/ui": "^1.0.0",
     "@rjsf/antd": "2.2.0",
     "@rjsf/core": "2.2.0",
     "antd": "^4.4.0",
@@ -67,6 +70,7 @@
     "path-to-regexp": "2.4.0",
     "qs": "^6.9.0",
     "react": "^16.8.6",
+    "react-device-detect": "^1.12.1",
     "react-dom": "^16.8.6",
     "react-helmet-async": "^1.0.4",
     "umi": "^3.1.2",

@@ -18,10 +18,9 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Steps, notification, Form } from 'antd';
 import { history, useIntl } from 'umi';
+import { PluginPage, PluginPageType } from '@api7-dashboard/plugin';
 
 import ActionBar from '@/components/ActionBar';
-import PluginPage from '@/components/PluginPage';
-import { PLUGIN_MAPPER_SOURCE } from '@/components/PluginPage/data';
 
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
@@ -29,7 +28,7 @@ import { fetchItem, create, update } from './service';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
-  const [plugins, setPlugins] = useState<PluginPage.PluginData>({});
+  const [plugins, setPlugins] = useState<PluginPageType.PluginData>({});
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
 
@@ -69,10 +68,7 @@ const Page: React.FC = (props) => {
         setStep(nextStep);
       });
     } else if (nextStep === 3) {
-      const authPluginNames = Object.entries(PLUGIN_MAPPER_SOURCE)
-        .filter(([name, value]) => name.includes('auth') && value.category === 'Security')
-        .map((item) => item[0]);
-      const isValid = Object.keys(plugins).some((name) => authPluginNames.includes(name));
+      const isValid = Object.keys(plugins).some((name) => name.includes('auth'));
       if (!isValid) {
         notification.warning({
           message: formatMessage({ id: 'consumer.create.enable.authentication.plugin' }),

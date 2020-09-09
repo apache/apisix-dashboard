@@ -1,6 +1,6 @@
 {
   "conf": {
-    "mysql":{
+    "mysql": {
       "address": "#mysqlAddress#",
       "user": "#mysqlUser#",
       "password": "#mysqlPWD#",
@@ -15,5 +15,21 @@
       "base_url": "#apisixBaseUrl#",
       "api_key": "#apisixApiKey#"
     }
+  },
+  "authentication": {
+    "session": {
+      "secret": "secret",
+      "expireTime": 3600
+    },
+    "user": [
+      {
+        "username": "admin",
+        "password": "admin"
+      },
+      {
+        "username": "user",
+        "password": "user"
+      }
+    ]
   }
 }

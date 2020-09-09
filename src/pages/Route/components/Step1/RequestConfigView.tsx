@@ -20,14 +20,13 @@ import { Checkbox, Button, Input, Switch, Select, Row, Col } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { useIntl } from 'umi';
+import { PanelSection } from '@api7-dashboard/ui';
 
 import {
   HTTP_METHOD_OPTION_LIST,
   FORM_ITEM_LAYOUT,
   FORM_ITEM_WITHOUT_LABEL,
 } from '@/pages/Route/constants';
-
-import PanelSection from '@/components/PanelSection';
 
 interface Props extends RouteModule.Data {}
 

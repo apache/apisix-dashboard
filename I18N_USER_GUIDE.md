@@ -90,18 +90,6 @@ we have already defined many global keys, before you do i18n, you can refer to [
 'page.route.button.returnList': '返回路由列表',
 ```
 
-- **PanelSection**
-
-| element      | props | locale subKey      |
-| ------------ | ----- | ------------------ |
-| PanelSection | title | panelSection.title |
-
-**Example:**
-
-```js
-'page.route.panelSection.title.nameDescription': '名称及其描述',
-```
-
 - **Steps**
 
 | element    | props | locale subKey   |

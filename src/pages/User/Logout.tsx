@@ -14,9 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { default } from './PluginPage';
-export { default as PluginCard } from './PluginCard';
-export { default as PluginDrawer } from './PluginDrawer';
+import React from 'react';
+import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
+import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
+import { UserModule } from '@/pages/User/typing';
+import { getUrlQuery } from '@/helpers';
 
-export { default as PluginPageZhCN } from './locales/zh-CN';
-export { default as PluginPageEnUS } from './locales/en-US';
+/**
+ * Login Methods List
+ */
+const loginMethods: UserModule.LoginMethod[] = [LoginMethodPassword, LoginMethodExample];
+
+/**
+ * User Logout Page
+ * @constructor
+ */
+const Page: React.FC = () => {
+  // run all logout method
+  loginMethods.forEach((item) => {
+    item.logout();
+  });
+
+  const redirect = getUrlQuery('redirect');
+  window.location.href = `/user/login${redirect ? `?redirect=${redirect}` : ''}`;
+
+  return null;
+};
+
+export default Page;

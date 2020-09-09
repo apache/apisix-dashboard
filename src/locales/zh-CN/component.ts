@@ -32,15 +32,6 @@ export default {
   'component.global.loading': '加载中',
   'component.status.success': '成功',
   'component.status.fail': '失败',
-  // User component
-  'component.user.loginByPassword': '账号密码登录',
-  'component.user.login': '登录',
-  'component.user.username': '账号',
-  'component.user.password': '密码',
-  'component.user.rememberMe': '自动登录',
-  'component.user.inputUsername': '请输入账号！',
-  'component.user.inputPassword': '请输入密码！',
-  'component.user.wrongUsernameOrPassword': '账号或密码错误！',
   // SSL Module
   'component.ssl.removeSSLItemModalContent': '确定要删除该项吗？',
   'component.ssl.removeSSLItemModalTitle': '删除 SSL',

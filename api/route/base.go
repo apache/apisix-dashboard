@@ -20,6 +20,8 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/handler/route"
 	"github.com/gin-contrib/pprof"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 
 	"github.com/apisix/manager-api/conf"
@@ -33,15 +35,18 @@ func SetUpRouter() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
-
-	r.Use(filter.CORS(), filter.RequestId(), filter.RequestLogHandler(), filter.RecoverHandler())
+	store := cookie.NewStore([]byte("secret"))
+	r.Use(sessions.Sessions("session", store))
+	r.Use(filter.CORS(), filter.Authentication(), filter.RequestId(), filter.RequestLogHandler(), filter.RecoverHandler())
 
 	AppendHealthCheck(r)
+	AppendAuthentication(r)
 	//AppendRoute(r)
 	AppendSsl(r)
 	AppendPlugin(r)
 	AppendUpstream(r)
 	AppendConsumer(r)
+	AppendRouteGroup(r)
 
 	factories := []handler.RegisterFactory{
 		route.NewHandler,

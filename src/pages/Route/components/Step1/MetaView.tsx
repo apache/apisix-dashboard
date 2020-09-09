@@ -18,8 +18,7 @@ import React from 'react';
 import Form from 'antd/es/form';
 import { Input } from 'antd';
 import { useIntl } from 'umi';
-
-import PanelSection from '@/components/PanelSection';
+import { PanelSection } from '@api7-dashboard/ui';
 
 interface Props extends RouteModule.Data {}
 
@@ -39,10 +38,16 @@ const MetaView: React.FC<Props> = ({ disabled }) => {
         ]}
         extra={formatMessage({ id: 'rotue.meta.api.rule' })}
       >
-        <Input placeholder={formatMessage({ id: 'route.meta.input.api.name' })} disabled={disabled} />
+        <Input
+          placeholder={formatMessage({ id: 'route.meta.input.api.name' })}
+          disabled={disabled}
+        />
       </Form.Item>
       <Form.Item label={formatMessage({ id: 'route.meta.description' })} name="desc">
-        <Input.TextArea placeholder={formatMessage({ id: 'route.meta.description.rule' })} disabled={disabled} />
+        <Input.TextArea
+          placeholder={formatMessage({ id: 'route.meta.description.rule' })}
+          disabled={disabled}
+        />
       </Form.Item>
     </PanelSection>
   );

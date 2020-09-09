@@ -19,6 +19,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Form, Input, Row, Col, notification } from 'antd';
 import { useIntl } from 'umi';
 
+import { getUrlQuery } from '@/helpers';
 import ActionBar from '@/components/ActionBar';
 import { getGrafanaURL } from '@/pages/Metrics/service';
 
@@ -45,23 +46,25 @@ const Setting: React.FC = () => {
   }, [canFetchGrafana]);
 
   const onSubmit = () => {
-    const { grafanaURL } = form.getFieldsValue();
-    Promise.all([
-      new Promise((resolve) => {
-        if (canFetchGrafana) {
-          updateMonitorURL(grafanaURL).then(resolve);
-        }
-        resolve();
-      }),
-    ]).then(() => {
-      notification.success({
-        message: formatMessage({
-          id: 'page.setting.notification.update.configuration.successfully',
+    form.validateFields().then((value) => {
+      Promise.all([
+        new Promise((resolve) => {
+          if (canFetchGrafana) {
+            updateMonitorURL(value.grafanaURL).then(resolve);
+          }
+          resolve();
         }),
+      ]).then(() => {
+        notification.success({
+          message: formatMessage({
+            id: 'page.setting.notification.update.configuration.successfully',
+          }),
+        });
+        setTimeout(() => {
+          const redirect = getUrlQuery('redirect');
+          window.location.href = redirect ? decodeURIComponent(redirect) : '/';
+        }, 500);
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
     });
   };
 

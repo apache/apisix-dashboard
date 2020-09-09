@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React from 'react';
-import { RequestConfig } from 'umi';
+import { RequestConfig, history } from 'umi';
 import {
   BasicLayoutProps,
   Settings as LayoutSettings,
@@ -32,6 +32,11 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   settings?: LayoutSettings;
 }> {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    history.replace(`/user/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+  }
+
   const currentUser = await queryCurrent();
   return {
     currentUser,
@@ -59,4 +64,17 @@ export const request: RequestConfig = {
   prefix: '/apisix/admin',
   errorHandler,
   credentials: 'same-origin',
+  requestInterceptors: [
+    (url, options) => {
+      const newOptions = options;
+      newOptions.headers = {
+        ...options.headers,
+        Authorization: localStorage.getItem('token') || '',
+      };
+      return {
+        url,
+        options: { ...newOptions, interceptors: true },
+      };
+    },
+  ],
 };

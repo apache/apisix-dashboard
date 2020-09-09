@@ -60,6 +60,7 @@ export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
   upstreamHostList: [{} as RouteModule.UpstreamHost],
   upstreamHeaderList: [],
   upstreamPath: undefined,
+  type: 'roundrobin',
   mappingStrategy: undefined,
   rewriteType: 'keep',
   timeout: {
@@ -71,4 +72,29 @@ export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
 
 export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
   plugins: {},
+  script: {},
 };
+
+export const INIT_CHART = {
+  offset: { x: 55.71, y: 21.69 },
+  scale: 0.329,
+  nodes: {},
+  links: {},
+  selected: {},
+  hovered: {},
+};
+
+export const HASH_KEY_LIST = [
+  'remote_addr',
+  'host',
+  'uri',
+  'server_name',
+  'server_addr',
+  'request_uri',
+  'query_string',
+  'remote_port',
+  'hostname',
+  'arg_id',
+];
+
+export const HASH_ON_LIST = ['vars', 'header', 'cookie', 'consumer'];

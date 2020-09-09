@@ -17,13 +17,16 @@
 #
 -->
 
+English | [简体中文](./README.zh-CN.md)
+
 # Apache APISIX Dashboard
 
-Dashboard for [Apache APISIX](https://github.com/apache/apisix-dashboard)
+Dashboard for [Apache APISIX](https://github.com/apache/apisix)
 
 [Online demo](http://139.217.190.60/)
 
 ## User Guide
+
 Please refer to [User Guide](./USER_GUIDE.md)
 
 ## Deploy with Docker
@@ -78,7 +81,7 @@ $ sh ./api/run/run.sh &
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
 
-1. Make sure you have `Node.js(version 8.10.0+)/Nginx` installed on your machine.
+1. Make sure you have `Node.js(version 10.0.0+)/Nginx` installed on your machine.
 2. Install [yarn](https://yarnpkg.com/).
 3. Install dependencies:
 
@@ -111,3 +114,5 @@ $ yarn start
 ## Other
 
 1. If you need the dashboard-1.0 which is built with Vue.js, please refer to [master-vue](https://github.com/apache/apisix-dashboard/tree/master-vue).
+
+2. More information about the new dashboard and manager-api please refer to [here](./manager-api.md)
