@@ -177,6 +177,7 @@ const Page: React.FC<Props> = (props) => {
     if (step === 3) {
       return (
         <Step3
+          readonly={false}
           data={routeData.step3Data}
           onChange={({ mode, data }) => {
             if (mode === 'NORMAL') {

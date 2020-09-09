@@ -18,6 +18,7 @@ import React from 'react';
 import { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 import { PluginPage } from '@api7-dashboard/plugin';
+import PluginOrchestration from '@api7-dashboard/pluginchart';
 
 import Step1 from '../Step1';
 import Step2 from '../Step2';
@@ -34,6 +35,7 @@ const style = {
 
 const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, ...rest }) => {
   const { formatMessage } = useIntl();
+  const { plugins = {}, script = {} } = rest.data.step3Data;
 
   return (
     <>
@@ -44,7 +46,16 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, ...rest }) => {
           <h2 style={style}>{formatMessage({ id: 'route.create.define.api.backend.server' })}</h2>
           <Step2 {...rest} form={form2} disabled />
           <h2 style={style}>{formatMessage({ id: 'route.create.plugin.configuration' })}</h2>
-          <PluginPage data={rest.data.step3Data.plugins} disabled />
+          {Boolean(Object.keys(plugins).length !== 0) && (
+            <PluginPage data={rest.data.step3Data.plugins} disabled />
+          )}
+          {Boolean(Object.keys(script).length !== 0) && (
+            <PluginOrchestration
+              data={rest.data.step3Data.script.chart}
+              readonly
+              onChange={() => {}}
+            />
+          )}
         </>
       )}
     </>
