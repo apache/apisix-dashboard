@@ -74,3 +74,7 @@ jobs:
       working-directory: ./api
       run: |
         go test ./...
+    
+    - name: run Makefile
+      run: |
+        make license-check

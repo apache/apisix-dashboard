@@ -37,4 +37,3 @@ etcd:
     - "http://192.17.5.10:2379"     # multiple etcd address
   prefix: "/apisix"               # apisix configurations prefix
   timeout: 30                     # 30 seconds
-  
