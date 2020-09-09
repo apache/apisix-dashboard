@@ -174,13 +174,6 @@ export default {
   'page.route.radio.static': 'Static',
   'page.route.radio.regx': 'Regx',
   'page.route.form.itemLabel.from': 'From',
-  'route.publish.env': 'Publish Environment',
-  'route.publish.env.head': 'Publish API',
-  'route.publish.env.comment': 'Please enter the comment about changes',
-  'route.publish.env.testing': 'testing',
-  'route.publish.env.pre': 'pre',
-  'route.publish.env.release': 'release',
-  'route.publish.ok': 'Publish',
-  'route.publish.env.click': 'Please select one env',
-  'route.publish.env.input.desc': 'Can not more than 200 characters',
+  'page.route.form.itemHelp.status':
+    'Whether a route can be used after it is created, the default value is false.',
 };

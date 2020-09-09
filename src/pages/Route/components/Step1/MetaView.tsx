@@ -95,6 +95,7 @@ const MetaView: React.FC<Props> = ({ data, disabled, onChange, isEdit }) => {
           label={formatMessage({ id: 'route.list.publish' })}
           name="status"
           valuePropName="checked"
+          help={formatMessage({ id: 'page.route.form.itemHelp.status' })}
         >
           <Switch disabled={disabled} />
         </Form.Item>

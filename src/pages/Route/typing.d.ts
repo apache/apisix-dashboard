@@ -120,7 +120,6 @@ declare namespace RouteModule {
     id?: number;
     route_group_id?: string;
     route_group_name: string;
-    env: string;
     status: boolean;
     name: string;
     desc: string;
