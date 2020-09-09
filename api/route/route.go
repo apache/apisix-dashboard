@@ -34,10 +34,10 @@ func AppendRoute(r *gin.Engine) *gin.Engine {
 	r.GET("/apisix/admin/routes/:rid", findRoute)
 	r.GET("/apisix/admin/routes", listRoute)
 	r.PUT("/apisix/admin/routes/:rid", updateRoute)
-	r.PUT("/apisix/admin/publishroutes/:rid", publishRoute)
+	r.PUT("/apisix/admin/routes/:rid/publish", publishRoute)
 	r.DELETE("/apisix/admin/routes/:rid", deleteRoute)
 	r.GET("/apisix/admin/notexist/routes", isRouteExist)
-	r.PUT("/apisix/admin/offlineroutes/:rid", offlineRoute)
+	r.PUT("/apisix/admin/routes/:rid/offline", offlineRoute)
 	return r
 }
 
