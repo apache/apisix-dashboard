@@ -50,8 +50,8 @@ export const fetchList = ({ current = 1, pageSize = 10 }, search: string) => {
 };
 
 export const remove = (rid: number) => request(`/routes/${rid}`, { method: 'DELETE' });
-export const offline = (rid: number) => request(`/offlineroutes/${rid}`, { method: 'PUT' });
-export const publish = (rid: number) => request(`/publishroutes/${rid}`, { method: 'PUT' });
+export const offline = (rid: number) => request(`/routes/${rid}/offline`, { method: 'PUT' });
+export const publish = (rid: number) => request(`/routes/${rid}/publish`, { method: 'PUT' });
 
 export const checkUniqueName = (name = '', exclude = '') =>
   request('/notexist/routes', {

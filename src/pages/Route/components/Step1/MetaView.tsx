@@ -90,7 +90,7 @@ const MetaView: React.FC<Props> = ({ data, disabled, onChange, isEdit }) => {
           disabled={routeGroupDisabled}
         />
       </Form.Item>
-      {!isEdit ? (
+      {!isEdit && (
         <Form.Item
           label={formatMessage({ id: 'route.list.publish' })}
           name="status"
@@ -98,7 +98,7 @@ const MetaView: React.FC<Props> = ({ data, disabled, onChange, isEdit }) => {
         >
           <Switch disabled={disabled} />
         </Form.Item>
-      ) : null}
+      )}
       <Form.Item label={formatMessage({ id: 'route.meta.description' })} name="desc">
         <Input.TextArea
           placeholder={formatMessage({ id: 'route.meta.description.rule' })}
