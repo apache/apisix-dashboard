@@ -23,13 +23,13 @@ import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
 import ActionBar from '@/components/ActionBar';
 
 import {
-  checkHostWithSSL,
-  checkUniqueName,
   create,
   fetchItem,
   fetchUpstreamItem,
   fetchRouteGroupItem,
   update,
+  checkUniqueName,
+  checkHostWithSSL
 } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
