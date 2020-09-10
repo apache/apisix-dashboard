@@ -23,16 +23,19 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-  
-    # Install dependencies
-    - name: Install dependencies
-      run: yarn
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Build the Dashboard
-      run: yarn build
+      # Install dependencies
+      - name: Install dependencies
+        run: yarn
+
+      - name: Build the Dashboard
+        run: yarn build
+
+      - name: Lint
+        run: yarn run lint:js && yarn run lint:style
