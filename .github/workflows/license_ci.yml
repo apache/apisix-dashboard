@@ -10,7 +10,7 @@ on:
 
 jobs:
 
-  check_license:
+  check-license:
 
     runs-on: ubuntu-latest
 
