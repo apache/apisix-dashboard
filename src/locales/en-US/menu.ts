@@ -66,6 +66,7 @@ export default {
   'menu.editor.koni': 'Koni Editor',
   'menu.metrics': 'Metrics',
   'menu.routes': 'Route',
+  'menu.routegroup': 'RouteGroup',
   'menu.ssl': 'SSL',
   'menu.upstream': 'Upstream',
   'menu.consumer': 'Consumer',

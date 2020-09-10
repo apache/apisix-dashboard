@@ -155,10 +155,23 @@ export const transformUpstreamNodes = (
 };
 
 export const transformRouteData = (data: RouteModule.Body) => {
-  const { name, desc, methods, uris, protocols, hosts, vars, redirect } = data;
+  const {
+    name,
+    route_group_id,
+    route_group_name,
+    desc,
+    methods,
+    uris,
+    protocols,
+    hosts,
+    vars,
+    redirect,
+  } = data;
 
   const step1Data: Partial<RouteModule.Step1Data> = {
     name,
+    route_group_id,
+    route_group_name,
     desc,
     protocols: protocols.filter((item) => item !== 'websocket'),
     websocket: protocols.includes('websocket'),
