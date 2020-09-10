@@ -61,8 +61,13 @@ export default {
     'Maximum length 100, only letters, Numbers, _, and - are supported, and can only begin with letters',
   'rotue.meta.api.rule':
     'Only letters, numbers, _ and - are supported, and can only begin with letters',
-  'route.meta.description': 'Description',
+  'route.meta.api.group.name': 'RouteGroup',
+  'route.meta.group.name': 'GroupName',
+  'route.meta.input.api.group.name': 'Please enter the group name',
+  'route.meta.api.create.group.name': 'Create route group',
+  'route.meta.description': 'APIDescription',
   'route.meta.description.rule': 'Can not more than 200 characters',
+  'route.meta.group.description': 'GroupDescription',
 
   'route.request.config.domain.name': 'Domain Name',
   'route.request.config.domain.or.ip':
@@ -146,6 +151,7 @@ export default {
   'route.list.domain.name': 'Domain Name',
   'route.list.path': 'Path',
   'route.list.description': 'Description',
+  'route.list.group.name': 'RouteGroup',
   'route.list.edit.time': 'Edit Time',
   'route.list.operation': 'Operation',
   'route.list.edit': 'Edit',

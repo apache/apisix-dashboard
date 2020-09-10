@@ -15,90 +15,63 @@
  * limitations under the License.
  */
 import React, { useRef, useState } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Button, Popconfirm, notification, Tag, Input } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import moment from 'moment';
+import { Popconfirm, Button, notification, Input } from 'antd';
 import { history, useIntl } from 'umi';
+import moment from 'moment';
 
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
+
   const [search, setSearch] = useState('');
   const { formatMessage } = useIntl();
 
-  const columns: ProColumns<RouteModule.BaseData>[] = [
+  const columns: ProColumns<RouteGroupModule.RouteGroupEntity>[] = [
     {
-      title: formatMessage({ id: 'route.list.name' }),
+      title: formatMessage({ id: 'routegroup.list.name' }),
       dataIndex: 'name',
     },
     {
-      title: formatMessage({ id: 'route.list.domain.name' }),
-      dataIndex: 'hosts',
-      render: (_, record) =>
-        record.hosts.map((host) => (
-          <Tag key={host} color="geekblue">
-            {host}
-          </Tag>
-        )),
-    },
-    {
-      title: formatMessage({ id: 'route.list.path' }),
-      dataIndex: 'uri',
-      render: (_, record) =>
-        record.uris.map((uri) => (
-          <Tag key={uri} color="geekblue">
-            {uri}
-          </Tag>
-        )),
-    },
-    // {
-    //   title: '优先级',
-    //   dataIndex: 'priority',
-    // },
-    {
-      title: formatMessage({ id: 'route.list.description' }),
+      title: formatMessage({ id: 'routegroup.list.description' }),
       dataIndex: 'description',
     },
     {
-      title: formatMessage({ id: 'route.list.group.name' }),
-      dataIndex: 'route_group_name',
-    },
-    {
-      title: formatMessage({ id: 'route.list.edit.time' }),
+      title: formatMessage({ id: 'routegroup.list.edit.time' }),
       dataIndex: 'update_time',
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },
     {
-      title: formatMessage({ id: 'route.list.operation' }),
+      title: formatMessage({ id: 'routegroup.list.operation' }),
       valueType: 'option',
       render: (_, record) => (
         <>
           <Button
             type="primary"
-            onClick={() => history.push(`/routes/${record.id}/edit`)}
             style={{ marginRight: 10 }}
+            onClick={() => history.push(`/routegroup/${record.id}/edit`)}
           >
-            {formatMessage({ id: 'route.list.edit' })}
+            {formatMessage({ id: 'routegroup.list.edit' })}
           </Button>
           <Popconfirm
-            title={formatMessage({ id: 'route.list.delete.confrim' })}
+            title={formatMessage({ id: 'routegroup.list.confirm.delete' })}
+            okText={formatMessage({ id: 'routegroup.list.confirm' })}
+            cancelText={formatMessage({ id: 'routegroup.list.cancel' })}
             onConfirm={() => {
               remove(record.id!).then(() => {
                 notification.success({
-                  message: formatMessage({ id: 'route.list.delete.success' }),
+                  message: formatMessage({ id: 'routegroup.list.delete.successfully' }),
                 });
                 /* eslint-disable no-unused-expressions */
                 ref.current?.reload();
               });
             }}
-            okText={formatMessage({ id: 'route.list.confirm' })}
-            cancelText={formatMessage({ id: 'route.list.cancel' })}
           >
             <Button type="primary" danger>
-              {formatMessage({ id: 'route.list.delete' })}
+              {formatMessage({ id: 'routegroup.list.delete' })}
             </Button>
           </Popconfirm>
         </>
@@ -107,29 +80,29 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'route.list' })}>
-      <ProTable<RouteModule.BaseData>
+    <PageContainer title={formatMessage({ id: 'routegroup.list' })}>
+      <ProTable<RouteGroupModule.RouteGroupEntity>
         actionRef={ref}
-        rowKey="name"
         columns={columns}
+        rowKey="id"
         search={false}
         request={(params) => fetchList(params, search)}
         toolBarRender={(action) => [
           <Input.Search
-            placeholder={formatMessage({ id: 'route.list.input' })}
+            placeholder={formatMessage({ id: 'routegroup.list.input' })}
             onSearch={(value) => {
               setSearch(value);
               action.setPageInfo({ page: 1 });
               action.reload();
             }}
           />,
-          <Button type="primary" onClick={() => history.push('/routes/create')}>
+          <Button type="primary" onClick={() => history.push('/routegroup/create')}>
             <PlusOutlined />
-            {formatMessage({ id: 'route.list.create' })}
+            {formatMessage({ id: 'routegroup.list.create' })}
           </Button>,
         ]}
       />
-    </PageHeaderWrapper>
+    </PageContainer>
   );
 };
 

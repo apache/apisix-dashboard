@@ -62,6 +62,17 @@ export const checkUniqueName = (name = '', exclude = '') =>
     ),
   });
 
+export const fetchRouteGroupList = () => request(`/names/routegroups`);
+
+export const fetchRouteGroupItem = (gid: string) => {
+  return request(`/routegroups/${gid}`).then((data) => {
+    return {
+      route_group_name: data.name,
+      route_group_id: data.id,
+    };
+  });
+};
+
 export const fetchUpstreamList = () => request(`/names/upstreams`);
 
 export const fetchUpstreamItem = (sid: string) => {
