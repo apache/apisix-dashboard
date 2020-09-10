@@ -54,6 +54,10 @@ jobs:
       run: |
         curl 127.0.0.1:9080
 
+    - name: run Makefile
+      run: |
+        make license-check
+
     - name: get lua lib
       run: |
         wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
@@ -74,7 +78,3 @@ jobs:
       working-directory: ./api
       run: |
         go test ./...
-    
-    - name: run Makefile
-      run: |
-        make license-check
