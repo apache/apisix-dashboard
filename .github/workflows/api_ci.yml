@@ -78,4 +78,3 @@ jobs:
       working-directory: ./api
       run: |
         go test ./...
-    
