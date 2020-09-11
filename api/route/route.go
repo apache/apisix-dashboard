@@ -59,6 +59,17 @@ func publishRoute(c *gin.Context) {
 			logger.Error(e.Msg)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
 			return
+		} else {
+			routeRequest.Status = true
+		}
+		if content, err := json.Marshal(routeRequest); err != nil {
+			tx.Rollback()
+			e := errno.FromMessage(errno.RoutePublishError, err.Error())
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+			return
+		} else {
+			r.Content = string(content)
 		}
 		arr := service.ToApisixRequest(routeRequest)
 		var resp *service.ApisixRouteResponse
@@ -100,13 +111,33 @@ func offlineRoute(c *gin.Context) {
 	rid := c.Param("rid")
 	db := conf.DB()
 	tx := db.Begin()
-	if err := tx.Model(&service.Route{}).Where("id = ?", rid).Update(map[string]interface{}{"status": 0, "content_admin_api": ""}).Error; err != nil {
+	route := &service.Route{}
+	if err := tx.Model(&service.Route{}).Where("id = ?", rid).Update(map[string]interface{}{"status": 0, "content_admin_api": ""}).First(&route).Error; err != nil {
 		tx.Rollback()
 		e := errno.FromMessage(errno.RoutePublishError, err.Error())
 		logger.Error(e.Msg)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
 		return
 	} else {
+		routeRequest := &service.RouteRequest{}
+		if err := json.Unmarshal([]byte(route.Content), routeRequest); err != nil {
+			tx.Rollback()
+			e := errno.FromMessage(errno.RoutePublishError, err.Error())
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+			return
+		} else {
+			routeRequest.Status = false
+		}
+		if content, err := json.Marshal(routeRequest); err != nil {
+			tx.Rollback()
+			e := errno.FromMessage(errno.RoutePublishError, err.Error())
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+			return
+		} else {
+			route.Content = string(content)
+		}
 		request := &service.ApisixRouteRequest{}
 		if _, err := request.Delete(rid); err != nil {
 			tx.Rollback()
@@ -119,6 +150,12 @@ func offlineRoute(c *gin.Context) {
 				c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
 				return
 			}
+		}
+		if err := tx.Model(&service.Route{}).Update(route).Error; err != nil {
+			tx.Rollback()
+			e := errno.FromMessage(errno.DBRouteUpdateError, err.Error())
+			logger.Error(e.Msg)
+			return
 		}
 	}
 	if err := tx.Commit().Error; err != nil {
