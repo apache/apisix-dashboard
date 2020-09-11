@@ -201,12 +201,17 @@ func updateRoute(c *gin.Context) {
 	}
 	routeGroup := &service.RouteGroupDao{}
 	isCreateGroup := false
+	isUngroup := false
 	if len(strings.Trim(routeRequest.RouteGroupId, "")) == 0 {
-		isCreateGroup = true
-		routeGroup.ID = uuid.NewV4()
-		// create route group
-		routeGroup.Name = routeRequest.RouteGroupName
-		routeRequest.RouteGroupId = routeGroup.ID.String()
+		if len(strings.Trim(routeRequest.RouteGroupName, "")) > 0 {
+			isCreateGroup = true
+			routeGroup.ID = uuid.NewV4()
+			// create route group
+			routeGroup.Name = routeRequest.RouteGroupName
+			routeRequest.RouteGroupId = routeGroup.ID.String()
+		} else {
+			isUngroup = true
+		}
 	}
 	logger.Info(routeRequest.Plugins)
 	db := conf.DB()
@@ -251,6 +256,15 @@ func updateRoute(c *gin.Context) {
 					c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
 					return
 				}
+			}
+		}
+		if isUngroup {
+			if err := tx.Model(&service.Route{}).Where("id = ?", rid).Update(map[string]interface{}{"route_group_id": "", "route_group_name": ""}).Error; err != nil {
+				tx.Rollback()
+				e := errno.FromMessage(errno.SetRouteUngroupError)
+				logger.Error(e.Msg)
+				c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+				return
 			}
 		}
 		if err := tx.Commit().Error; err == nil {
@@ -343,11 +357,13 @@ func createRoute(c *gin.Context) {
 	routeGroup := &service.RouteGroupDao{}
 	isCreateGroup := false
 	if len(strings.Trim(routeRequest.RouteGroupId, "")) == 0 {
-		isCreateGroup = true
-		routeGroup.ID = uuid.NewV4()
 		// create route group
-		routeGroup.Name = routeRequest.RouteGroupName
-		routeRequest.RouteGroupId = routeGroup.ID.String()
+		if len(strings.Trim(routeRequest.RouteGroupName, "")) > 0 {
+			isCreateGroup = true
+			routeGroup.ID = uuid.NewV4()
+			routeGroup.Name = routeRequest.RouteGroupName
+			routeRequest.RouteGroupId = routeGroup.ID.String()
+		}
 	}
 	logger.Info(routeRequest.Plugins)
 	db := conf.DB()
