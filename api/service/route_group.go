@@ -66,7 +66,25 @@ func (rd *RouteGroupDao) GetRouteGroupList(routeGroupList *[]RouteGroupDao, sear
 
 func (rd *RouteGroupDao) UpdateRouteGroup() error {
 	db := conf.DB()
-	return db.Model(&RouteGroupDao{}).Update(rd).Error
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	if err := tx.Model(&RouteGroupDao{}).Update(rd).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	if err := tx.Table("routes").Where("route_group_id = ?", rd.ID.String()).Update("route_group_name", rd.Name).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
 }
 
 func (rd *RouteGroupDao) DeleteRouteGroup() error {

@@ -17,45 +17,115 @@
 package route
 
 import (
+	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/service"
 	"net/http"
 	"testing"
 )
 
-func TestRouteGroupCurd(t *testing.T) {
+func TestCreateRouteGroup(t *testing.T) {
 	// create ok
 	handler.
 		Post(uriPrefix+"/routegroups").
 		Header("Authorization", token).
 		JSON(`{
-			"name": "routegroup_test",
+			"name": "create_route_group_test",
 			"description": "test description"
 		}`).
 		Expect(t).
 		Status(http.StatusOK).
 		End()
+}
 
-	//c1, _ := service.GetConsumerByUserName("e2e_test_consumer1")
-	id := "8954a39b-330e-4b85-89f5-d1bbfd785b5b"
-	//update ok
-	handler.
-		Put(uriPrefix+"/routegroups/"+id).
-		Header("Authorization", token).
-		JSON(`{
-			"name": "routegroup_test2",
-			"description": "test description"
-		}`).
-		Expect(t).
-		Status(http.StatusOK).
-		End()
-	// duplicate username
+func TestDuplicateGroupName(t *testing.T) {
+	 // duplicate name
 	handler.
 		Post(uriPrefix+"/routegroups").
 		Header("Authorization", token).
 		JSON(`{
-			"name": "routegroup_test",
+			"name": "create_route_group_test",
 			"description": "test description"
 		}`).
 		Expect(t).
 		Status(http.StatusInternalServerError).
 		End()
+}
+
+func TestUpdateRouteGroup(t *testing.T) {
+	routeGroup, _ := getRouteGroupByName("create_route_group_test")
+	//update ok
+	handler.
+		Put(uriPrefix+"/routegroups/"+routeGroup.ID.String()).
+		Header("Authorization", token).
+		JSON(`{
+			"name": "update_route_group_test",
+			"description": "test description"
+		}`).
+		Expect(t).
+		Status(http.StatusOK).
+		End()
+}
+
+func TestDeleteRouteGroupHasRoutes(t *testing.T) {
+	routeGroup, _ := getRouteGroupByName("update_route_group_test")
+	// create route
+	handler.Post(uriPrefix+"/routes").
+		Header("Authorization", token).
+		JSON(`{
+			"name":"api-test-for-delete-group",
+			"desc":"api-test",
+			"priority":0,
+			"protocols":["http"],
+			"hosts":["test.com"],
+			"paths":["/*"],
+			"methods":["GET","HEAD","POST","PUT","DELETE","OPTIONS","PATCH"],
+			"status":false,
+			"upstream_protocol":"keep",
+			"plugins":{},
+			"uris":["/*"],
+			"vars":[],
+			"upstream":{"type":"roundrobin","nodes":{"127.0.0.1:443":1},
+			"timeout":{"connect":6000,"send":6000,"read":6000}},
+			"upstream_header":{},
+			"route_group_id":"` + routeGroup.ID.String() + `",
+			"route_group_name":"` + routeGroup.Name + `"
+}`).Expect(t).
+		Status(http.StatusOK).
+		End()
+	// delete fail
+	handler.
+		Delete(uriPrefix+"/routegroups/"+routeGroup.ID.String()).
+		Header("Authorization", token).
+		Expect(t).
+		Status(http.StatusInternalServerError).
+		End()
+	// get api-test-for-group
+	route, _ := getRouteByName("api-test-for-delete-group")
+	// delete route
+	handler.
+		Delete(uriPrefix+"/routes/"+route.ID.String()).
+		Header("Authorization", token).
+		Expect(t).
+		Status(http.StatusOK).
+		End()
+}
+
+func TestDeleteRouteGroup(t *testing.T) {
+	routeGroup, _ := getRouteGroupByName("update_route_group_test")
+	// delete ok
+	handler.
+		Delete(uriPrefix+"/routegroups/"+routeGroup.ID.String()).
+		Header("Authorization", token).
+		Expect(t).
+		Status(http.StatusOK).
+		End()
+}
+
+func getRouteGroupByName(name string) (*service.RouteGroupDao, error) {
+	db := conf.DB()
+	routeGroup := &service.RouteGroupDao{}
+	if err := db.Table("route_group").Where("name = ?", name).First(&routeGroup).Error; err != nil {
+		return nil, err
+	}
+	return routeGroup, nil
 }
