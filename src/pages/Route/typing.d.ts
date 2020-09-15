@@ -36,11 +36,13 @@ declare namespace RouteModule {
     desc: string;
     uris: string[];
     hosts: string[];
+    status: boolean;
   };
 
   type Step1Data = {
     name: string;
     desc: string;
+    status: boolean;
     priority: number;
     protocols: RequestProtocol[];
     websocket: boolean;
@@ -69,6 +71,7 @@ declare namespace RouteModule {
       step3Data: Step3Data;
     };
     onChange(data: T): void;
+    isEdit?: boolean;
   }
 
   type UpstreamHost = {
@@ -117,6 +120,7 @@ declare namespace RouteModule {
     id?: number;
     route_group_id?: string;
     route_group_name: string;
+    status: boolean;
     name: string;
     desc: string;
     priority?: number;
