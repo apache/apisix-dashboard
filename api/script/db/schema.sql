@@ -18,7 +18,7 @@ CREATE TABLE `routes` (
   `update_time` bigint(20),
   `route_group_id` varchar(64) NOT NULL,
   `route_group_name` varchar(64) NOT NULL,
-
+  `status` tinyint(1),
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;
 
