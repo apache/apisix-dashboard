@@ -16,7 +16,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import Form from 'antd/es/form';
-import { Input, Select } from 'antd';
+import { Input, Select, Switch } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
@@ -24,7 +24,7 @@ import { fetchRouteGroupList } from '@/pages/Route/service';
 
 interface Props extends RouteModule.Data {}
 
-const MetaView: React.FC<Props> = ({ data, disabled, onChange }) => {
+const MetaView: React.FC<Props> = ({ data, disabled, onChange, isEdit }) => {
   const { step1Data } = data;
   const { formatMessage } = useIntl();
   const routeGroupDisabled = disabled || !!step1Data.route_group_id;
@@ -90,6 +90,16 @@ const MetaView: React.FC<Props> = ({ data, disabled, onChange }) => {
           disabled={routeGroupDisabled}
         />
       </Form.Item>
+      {!isEdit && (
+        <Form.Item
+          label={formatMessage({ id: 'route.list.publish' })}
+          name="status"
+          valuePropName="checked"
+          help={formatMessage({ id: 'page.route.form.itemHelp.status' })}
+        >
+          <Switch disabled={disabled} />
+        </Form.Item>
+      )}
       <Form.Item label={formatMessage({ id: 'route.meta.description' })} name="desc">
         <Input.TextArea
           placeholder={formatMessage({ id: 'route.meta.description.rule' })}

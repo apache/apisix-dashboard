@@ -25,11 +25,11 @@ import ActionBar from '@/components/ActionBar';
 import {
   create,
   fetchItem,
+  fetchUpstreamItem,
+  fetchRouteGroupItem,
   update,
   checkUniqueName,
-  fetchUpstreamItem,
-  checkHostWithSSL,
-  fetchRouteGroupItem,
+  checkHostWithSSL
 } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
@@ -143,6 +143,7 @@ const Page: React.FC<Props> = (props) => {
             }
             setStep1Data({ ...form1.getFieldsValue(), ...step1Data, ...params });
           }}
+          isEdit={props.route.path.indexOf('edit') > 0}
         />
       );
     }

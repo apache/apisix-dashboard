@@ -166,6 +166,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     hosts,
     vars,
     redirect,
+    status,
   } = data;
 
   const step1Data: Partial<RouteModule.Step1Data> = {
@@ -173,6 +174,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     route_group_id,
     route_group_name,
     desc,
+    status,
     protocols: protocols.filter((item) => item !== 'websocket'),
     websocket: protocols.includes('websocket'),
     hosts,
