@@ -66,13 +66,13 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false }) => {
       {Boolean(mode === 'NORMAL') && (
         <PluginPage
           initialData={plugins}
-          onChange={(data) => onChange({ plugins: data, script: {} })}
+          onChange={(data1) => onChange({ plugins: data1, script: {} })}
         />
       )}
       {Boolean(mode === 'DRAW') && (
         <PluginOrchestration
           data={script?.chart}
-          onChange={(data) => onChange({ plugins: {}, script: data })}
+          onChange={(data2) => onChange({ plugins: {}, script: data2 })}
           readonly={readonly}
         />
       )}
