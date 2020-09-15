@@ -82,6 +82,7 @@ func (rd *Route) Parse(r *RouteRequest, arr *ApisixRouteRequest) error {
 	rd.UpstreamId = r.UpstreamId
 	rd.RouteGroupId = r.RouteGroupId
 	rd.RouteGroupName = r.RouteGroupName
+	rd.Status = r.Status
 	if content, err := json.Marshal(r); err != nil {
 		return err
 	} else {
@@ -192,6 +193,7 @@ type RouteRequest struct {
 	Script           map[string]interface{} `json:"script"`
 	RouteGroupId     string                 `json:"route_group_id"`
 	RouteGroupName   string                 `json:"route_group_name"`
+	Status           bool                   `json:"status"`
 }
 
 func (r *ApisixRouteResponse) Parse() (*RouteRequest, error) {
@@ -414,6 +416,7 @@ type Value struct {
 	Plugins        map[string]interface{} `json:"plugins"`
 	RouteGroupId   string                 `json:"route_group_id"`
 	RouteGroupName string                 `json:"route_group_name"`
+	Status         bool                   `json:"status"`
 }
 
 type Route struct {
@@ -430,6 +433,7 @@ type Route struct {
 	ContentAdminApi string `json:"content_admin_api"`
 	RouteGroupId    string `json:"route_group_id"`
 	RouteGroupName  string `json:"route_group_name"`
+	Status          bool   `json:"status"`
 }
 
 type RouteResponse struct {
@@ -443,6 +447,7 @@ type RouteResponse struct {
 	Priority       int64     `json:"priority"`
 	RouteGroupId   string    `json:"route_group_id"`
 	RouteGroupName string    `json:"route_group_name"`
+	Status         bool      `json:"status"`
 }
 
 type ListResponse struct {
@@ -458,6 +463,7 @@ func (rr *RouteResponse) Parse(r *Route) {
 	rr.Priority = r.Priority
 	rr.RouteGroupId = r.RouteGroupId
 	rr.RouteGroupName = r.RouteGroupName
+	rr.Status = r.Status
 	// hosts
 	if len(r.Hosts) > 0 {
 		var hosts []string
@@ -597,6 +603,7 @@ func ToRoute(routeRequest *RouteRequest,
 	// content_admin_api
 	if resp != nil {
 		resp.Node.Value.RouteGroupId = rd.RouteGroupId
+		resp.Node.Value.Status = rd.Status
 		if respStr, err := json.Marshal(resp); err != nil {
 			e := errno.FromMessage(errno.DBRouteCreateError, err.Error())
 			return nil, e
