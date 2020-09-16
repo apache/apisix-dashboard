@@ -187,15 +187,10 @@ const Page: React.FC<Props> = (props) => {
     if (step === 3) {
       return (
         <Step3
-          readonly={false}
-          data={routeData.step3Data}
-          onChange={({ mode, data }) => {
-            if (mode === 'NORMAL') {
-              setStep3Data({ plugins: data, script: {} });
-              setChart(INIT_CHART);
-            } else {
-              setChart(data);
-            }
+          data={step3Data}
+          onChange={({ plugins, script = INIT_CHART }) => {
+            setStep3Data({ plugins, script });
+            setChart(script);
           }}
         />
       );
@@ -234,7 +229,7 @@ const Page: React.FC<Props> = (props) => {
     };
 
     const savePlugins = () => {
-      if (Object.keys(chart.nodes).length) {
+      if (Object.keys(chart.nodes || {}).length) {
         const transformChart = chartTransformer(chart);
         setStep3Data({ script: { ...transformChart, chart }, plugins: {} });
       } else {

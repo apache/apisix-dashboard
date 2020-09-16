@@ -47,7 +47,7 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, ...rest }) => {
           <Step2 {...rest} form={form2} disabled />
           <h2 style={style}>{formatMessage({ id: 'route.create.plugin.configuration' })}</h2>
           {Boolean(Object.keys(plugins).length !== 0) && (
-            <PluginPage data={rest.data.step3Data.plugins} disabled />
+            <PluginPage initialData={rest.data.step3Data.plugins} readonly />
           )}
           {Boolean(Object.keys(script).length !== 0) && (
             <PluginOrchestration
