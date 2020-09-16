@@ -41,8 +41,11 @@ export const FORM_ITEM_WITHOUT_LABEL = {
 };
 
 export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
+  route_group_id: '',
+  route_group_name: '',
   name: '',
   desc: '',
+  status: false,
   priority: 0,
   protocols: ['http', 'https'],
   websocket: false,

@@ -25,10 +25,11 @@ import ActionBar from '@/components/ActionBar';
 import {
   create,
   fetchItem,
+  fetchUpstreamItem,
+  fetchRouteGroupItem,
   update,
   checkUniqueName,
-  fetchUpstreamItem,
-  checkHostWithSSL,
+  checkHostWithSSL
 } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
@@ -132,8 +133,17 @@ const Page: React.FC<Props> = (props) => {
           data={routeData}
           form={form1}
           onChange={(params: RouteModule.Step1Data) => {
-            setStep1Data({ ...step1Data, ...params });
+            if (params.route_group_id) {
+              fetchRouteGroupItem(params.route_group_id).then((data) => {
+                form1.setFieldsValue({
+                  ...form1.getFieldsValue(),
+                  ...data,
+                });
+              });
+            }
+            setStep1Data({ ...form1.getFieldsValue(), ...step1Data, ...params });
           }}
+          isEdit={props.route.path.indexOf('edit') > 0}
         />
       );
     }
@@ -177,15 +187,10 @@ const Page: React.FC<Props> = (props) => {
     if (step === 3) {
       return (
         <Step3
-          readonly={false}
-          data={routeData.step3Data}
-          onChange={({ mode, data }) => {
-            if (mode === 'NORMAL') {
-              setStep3Data({ plugins: data, script: {} });
-              setChart(INIT_CHART);
-            } else {
-              setChart(data);
-            }
+          data={step3Data}
+          onChange={({ plugins, script = INIT_CHART }) => {
+            setStep3Data({ plugins, script });
+            setChart(script);
           }}
         />
       );
@@ -224,7 +229,7 @@ const Page: React.FC<Props> = (props) => {
     };
 
     const savePlugins = () => {
-      if (Object.keys(chart.nodes).length) {
+      if (Object.keys(chart.nodes || {}).length) {
         const transformChart = chartTransformer(chart);
         setStep3Data({ script: { ...transformChart, chart }, plugins: {} });
       } else {

@@ -14,6 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { request } from 'umi';
 
-export { default as UserZhCN } from './locales/zh-CN';
-export { default as UserEnUS } from './locales/en-US';
+export const fetchList = ({ current = 1, pageSize = 10 }, search: string) =>
+  request('/routegroups', {
+    params: {
+      page: current,
+      size: pageSize,
+      search,
+    },
+  }).then(({ data, count }) => ({
+    data,
+    total: count,
+  }));
+
+export const fetchOne = (id: string) =>
+  request<RouteGroupModule.RouteGroupEntity>(`/routegroups/${id}`);
+
+export const create = (data: RouteGroupModule.RouteGroupEntity) =>
+  request('/routegroups', {
+    method: 'POST',
+    data,
+  });
+
+export const update = (id: string, data: RouteGroupModule.RouteGroupEntity) =>
+  request(`/routegroups/${id}`, {
+    method: 'PUT',
+    data,
+  });
+
+export const remove = (id: string) => request(`/routegroups/${id}`, { method: 'DELETE' });

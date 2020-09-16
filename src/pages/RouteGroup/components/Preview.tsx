@@ -14,6 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import React from 'react';
+import { FormInstance } from 'antd/lib/form';
 
-export { default as UserZhCN } from './locales/zh-CN';
-export { default as UserEnUS } from './locales/en-US';
+import Step1 from './Step1';
+
+type Props = {
+  form1: FormInstance;
+};
+
+const Page: React.FC<Props> = ({ form1 }) => <Step1 form={form1} disabled />;
+
+export default Page;

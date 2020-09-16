@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-datasources:
- - access: 'proxy'
-   editable: true
-   is_default: true
-   name: 'apisix'
-   org_id: 1
-   type: 'prometheus'
-   url: 'http://prometheus:9090'
-   version: 1
+
+### license-check:    Check apisix-dashboard source code for Apache License
+.PHONY: license-check
+license-check:
+ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
+	git clone https://github.com/apache/openwhisk-utilities.git .actions/openwhisk-utilities
+	cp .actions/ASF* .actions/openwhisk-utilities/scancode/
+endif
+	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./

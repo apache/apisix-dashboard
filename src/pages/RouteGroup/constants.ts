@@ -14,6 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export const FORM_ITEM_LAYOUT = {
+  labelCol: {
+    span: 6,
+  },
+  wrapperCol: {
+    span: 18,
+  },
+};
 
-export { default as UserZhCN } from './locales/zh-CN';
-export { default as UserEnUS } from './locales/en-US';
+export const FORM_ITEM_WITHOUT_LABEL = {
+  wrapperCol: {
+    xs: { span: 24, offset: 0 },
+    sm: { span: 20, offset: 6 },
+  },
+};

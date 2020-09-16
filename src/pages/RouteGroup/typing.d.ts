@@ -14,6 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-export { default as UserZhCN } from './locales/zh-CN';
-export { default as UserEnUS } from './locales/en-US';
+declare namespace RouteGroupModule {
+  type RouteGroupEntity = {
+    id: string;
+    name: string;
+    description: string;
+  };
+}

@@ -50,6 +50,8 @@ export const fetchList = ({ current = 1, pageSize = 10 }, search: string) => {
 };
 
 export const remove = (rid: number) => request(`/routes/${rid}`, { method: 'DELETE' });
+export const offline = (rid: number) => request(`/routes/${rid}/offline`, { method: 'PUT' });
+export const publish = (rid: number) => request(`/routes/${rid}/publish`, { method: 'PUT' });
 
 export const checkUniqueName = (name = '', exclude = '') =>
   request('/notexist/routes', {
@@ -61,6 +63,17 @@ export const checkUniqueName = (name = '', exclude = '') =>
       identity,
     ),
   });
+
+export const fetchRouteGroupList = () => request(`/names/routegroups`);
+
+export const fetchRouteGroupItem = (gid: string) => {
+  return request(`/routegroups/${gid}`).then((data) => {
+    return {
+      route_group_name: data.name,
+      route_group_id: data.id,
+    };
+  });
+};
 
 export const fetchUpstreamList = () => request(`/names/upstreams`);
 

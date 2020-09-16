@@ -61,8 +61,13 @@ export default {
     'Maximum length 100, only letters, Numbers, _, and - are supported, and can only begin with letters',
   'rotue.meta.api.rule':
     'Only letters, numbers, _ and - are supported, and can only begin with letters',
-  'route.meta.description': 'Description',
+  'route.meta.api.group.name': 'RouteGroup',
+  'route.meta.group.name': 'GroupName',
+  'route.meta.input.api.group.name': 'Please enter the group name',
+  'route.meta.api.create.group.name': 'Create route group',
+  'route.meta.description': 'APIDescription',
   'route.meta.description.rule': 'Can not more than 200 characters',
+  'route.meta.group.description': 'GroupDescription',
 
   'route.request.config.domain.name': 'Domain Name',
   'route.request.config.domain.or.ip':
@@ -146,9 +151,18 @@ export default {
   'route.list.domain.name': 'Domain Name',
   'route.list.path': 'Path',
   'route.list.description': 'Description',
+  'route.list.group.name': 'RouteGroup',
+  'route.list.status': 'Status',
+  'route.list.status.publish': 'Published',
+  'route.list.status.offline': 'Offline',
   'route.list.edit.time': 'Edit Time',
   'route.list.operation': 'Operation',
   'route.list.edit': 'Edit',
+  'route.list.publish': 'Publish',
+  'route.list.publish.success': 'Route publish success',
+  'route.list.offline': 'Offline',
+  'route.list.offline.success': 'Offline success',
+  'route.list.offline.confirm': 'Are you sure to offline this route?',
   'route.list.delete.confrim': 'Are you sure to delete this route?',
   'route.list.delete.success': 'Delete Success!',
   'route.list.confirm': 'Confirm',
@@ -160,4 +174,6 @@ export default {
   'page.route.radio.static': 'Static',
   'page.route.radio.regx': 'Regx',
   'page.route.form.itemLabel.from': 'From',
+  'page.route.form.itemHelp.status':
+    'Whether a route can be used after it is created, the default value is false.',
 };

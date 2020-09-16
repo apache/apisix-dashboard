@@ -14,6 +14,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-export { default as UserZhCN } from './locales/zh-CN';
-export { default as UserEnUS } from './locales/en-US';
+export { default as RouteGroupCN } from './locales/zh-CN';
+export { default as RouteGroupUS } from './locales/en-US';
