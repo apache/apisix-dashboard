@@ -187,20 +187,21 @@
     lodash "^4.17.15"
     resize-observer-polyfill "^1.5.0"
 
-"@api7-dashboard/plugin@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@api7-dashboard/plugin/-/plugin-1.0.3.tgz#de51d10abdb5e64eede1699586fca9b532c46c00"
-  integrity sha512-jSl/r0Rjo4ePIPUZfTvRqFxzsVUsfn9Kyx/9PdvxLxLDR2DYEsajfNBRU+s7mUuwzRJ9djkMIqeA+FnFxTHLyQ==
+"@api7-dashboard/plugin@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@api7-dashboard/plugin/-/plugin-1.0.4.tgz#aaf945136398e61ef154b7cdd15319956854285b"
+  integrity sha512-hjwwhQCOWLR9ybIYeItSnTStU4A9ZcZMHsfrwXdLaWLGMVLLFhhopoBBtRUIszm5NHN1fCYNsLjGv4bNnCI/Qg==
   dependencies:
     "@rjsf/antd" "^2.3.0"
     "@rjsf/core" "^2.3.0"
+    "@uiw/react-codemirror" "^3.0.1"
     json-schema "^0.2.5"
     set-value "^3.0.2"
 
-"@api7-dashboard/pluginchart@^1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@api7-dashboard/pluginchart/-/pluginchart-1.0.9.tgz#306808dbe08f46ae02eca976d6495046830f8d3d"
-  integrity sha512-YCBQrwI/K2K2BFXWGy69BNbPiH+sxac0LpYDtiqhJFEGVZq1kR/OLh3eHeCRObpBuBGmGc+Bw3DGsrYd3v3c1Q==
+"@api7-dashboard/pluginchart@^1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@api7-dashboard/pluginchart/-/pluginchart-1.0.11.tgz#1269f541134423a723f8d2f9c59a6b3c4096ab8b"
+  integrity sha512-zGGdQFXhiFEKc9ZLN9WQf3kL4R9wwS/w15AJxbSfLdivyR9FgyBudgCMiCCQiJCuApDgFodG0i7RPbLdjxadyg==
   dependencies:
     "@ant-design/icons" "^4.2.2"
     "@mrblenny/react-flow-chart" "^0.0.14"
@@ -210,10 +211,10 @@
     lodash "^4.17.20"
     styled-components "^5.1.1"
 
-"@api7-dashboard/ui@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npm.taobao.org/@api7-dashboard/ui/download/@api7-dashboard/ui-1.0.0.tgz#4517b8405d9a55dd8817c85c42733b47bda81893"
-  integrity sha1-RRe4QF2aVd2IF8hcQnM7R72oGJM=
+"@api7-dashboard/ui@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@api7-dashboard/ui/-/ui-1.0.3.tgz#77011750bebee7bb6f6966ea0596c5576951e3ff"
+  integrity sha512-WSvcDBPcxmFb5b4nwUHlQ7J1IeA+buHs/if3wawSRU7imoUsuXb5BJ/39JPrOAoBmTjiuBOS6PChNGq4XUKCDg==
 
 "@babel/code-frame@7.0.0":
   version "7.0.0"
@@ -1389,19 +1390,19 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@7.11.2", "@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.4.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+  version "7.11.2"
+  resolved "https://registry.npm.taobao.org/@babel/runtime/download/@babel/runtime-7.11.2.tgz?cache=0&sync_timestamp=1596637761107&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fruntime%2Fdownload%2F%40babel%2Fruntime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
+  integrity sha1-9UnBPHVMxAuHZEufqfCaapX+BzY=
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/runtime@7.4.5":
   version "7.4.5"
   resolved "https://registry.npm.taobao.org/@babel/runtime/download/@babel/runtime-7.4.5.tgz?cache=0&sync_timestamp=1596637761107&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fruntime%2Fdownload%2F%40babel%2Fruntime-7.4.5.tgz#582bb531f5f9dc67d2fcb682979894f75e253f12"
   integrity sha1-WCu1MfX53GfS/LaCl5iU914lPxI=
   dependencies:
     regenerator-runtime "^0.13.2"
-
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.4", "@babel/runtime@^7.11.1", "@babel/runtime@^7.11.2", "@babel/runtime@^7.4.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
-  version "7.11.2"
-  resolved "https://registry.npm.taobao.org/@babel/runtime/download/@babel/runtime-7.11.2.tgz?cache=0&sync_timestamp=1596637761107&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fruntime%2Fdownload%2F%40babel%2Fruntime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
-  integrity sha1-9UnBPHVMxAuHZEufqfCaapX+BzY=
-  dependencies:
-    regenerator-runtime "^0.13.4"
 
 "@babel/template@^7.10.4", "@babel/template@^7.3.3", "@babel/template@^7.4.0":
   version "7.10.4"
@@ -2862,6 +2863,14 @@
   integrity sha1-zUJ0dz4+tjsuhwrGAidEh+zR6TE=
   dependencies:
     eslint-visitor-keys "^1.1.0"
+
+"@uiw/react-codemirror@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-3.0.1.tgz#415096bba81be2d2398467f0bca23b80a1d64426"
+  integrity sha512-k4sc57i2jw15pwyT9io3boFDsr8I9jjC3cQg+pZFog7u8ZRrAsS+GzAz/1uzU1p9S2cfESwj/H0f2oqfIwqj6w==
+  dependencies:
+    "@babel/runtime" "7.11.2"
+    codemirror "5.57.0"
 
 "@umijs/ast@3.2.17":
   version "3.2.17"
@@ -5233,6 +5242,11 @@ coa@^2.0.2:
     "@types/q" "^1.5.1"
     chalk "^2.4.1"
     q "^1.1.2"
+
+codemirror@5.57.0:
+  version "5.57.0"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.57.0.tgz#d26365b72f909f5d2dbb6b1209349ca1daeb2d50"
+  integrity sha512-WGc6UL7Hqt+8a6ZAsj/f1ApQl3NPvHY/UQSzG6fB6l4BjExgVdhFaxd7mRTw1UCiYe/6q86zHP+kfvBQcZGvUg==
 
 collapse-white-space@^1.0.2:
   version "1.0.6"

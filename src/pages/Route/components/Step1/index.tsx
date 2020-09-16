@@ -26,7 +26,7 @@ import MatchingRulesView from './MatchingRulesView';
 
 interface Props extends RouteModule.Data {
   form: FormInstance;
-  isEdit: boolean;
+  isEdit?: boolean;
 }
 
 const Step1: React.FC<Props> = (props) => {
