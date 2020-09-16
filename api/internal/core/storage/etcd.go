@@ -61,14 +61,7 @@ func (s *EtcdV3Storage) List(ctx context.Context, key string) ([]string, error) 
 }
 
 func (s *EtcdV3Storage) Create(ctx context.Context, key, val string) error {
-	resp, err := Client.Get(ctx, key, clientv3.WithCountOnly())
-	if err != nil {
-		return fmt.Errorf("etcd get failed: %w", err)
-	}
-	if resp.Count != 0 {
-		return fmt.Errorf("key: %s is conflicted", key)
-	}
-	_, err = Client.Put(ctx, key, val)
+	_, err := Client.Put(ctx, key, val)
 	if err != nil {
 		return fmt.Errorf("etcd put failed: %w", err)
 	}
@@ -76,14 +69,7 @@ func (s *EtcdV3Storage) Create(ctx context.Context, key, val string) error {
 }
 
 func (s *EtcdV3Storage) Update(ctx context.Context, key, val string) error {
-	resp, err := Client.Get(ctx, key, clientv3.WithCountOnly())
-	if err != nil {
-		return fmt.Errorf("etcd get failed: %w", err)
-	}
-	if resp.Count == 0 {
-		return fmt.Errorf("key: %s is not found", key)
-	}
-	_, err = Client.Put(ctx, key, val)
+	_, err := Client.Put(ctx, key, val)
 	if err != nil {
 		return fmt.Errorf("etcd put failed: %w", err)
 	}

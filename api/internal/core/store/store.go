@@ -101,19 +101,60 @@ func (s *GenericStore) Get(key string) (interface{}, error) {
 	return ret, nil
 }
 
-func (s *GenericStore) List(predicate func(obj interface{}) bool) ([]interface{}, error) {
+type ListInput struct {
+  Predicate func(obj interface{}) bool
+  PageSize int
+  // start from 1
+  PageNumber int
+}
+
+type ListOutput struct {
+  Rows []interface{} `json:"rows"`
+  TotalSize int `json:"total_size"`
+}
+
+func (s *GenericStore) List(input ListInput) (*ListOutput, error) {
 	var ret []interface{}
 	for k := range s.cache {
-		if predicate != nil && !predicate(s.cache[k]) {
+		if input.Predicate != nil && !input.Predicate(s.cache[k]) {
 			continue
 		}
 		ret = append(ret, s.cache[k])
 	}
 
-	return ret, nil
+	output := &ListOutput{
+	  Rows: ret,
+	  TotalSize: len(ret),
+  }
+	if input.PageSize > 0 && input.PageNumber > 0 {
+	  skipCount := ( input.PageNumber - 1) * input.PageSize
+	  if skipCount > output.TotalSize {
+	    output.Rows = []interface{}{}
+	    return output, nil
+    }
+
+    endIdx := skipCount + input.PageSize
+    if endIdx >= output.TotalSize {
+      output.Rows = ret[skipCount:]
+      return output, nil
+    }
+
+    output.Rows = ret[skipCount:endIdx]
+  }
+
+	return output, nil
 }
 
 func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
+  key := s.opt.KeyFunc(obj)
+  if key == "" {
+    return fmt.Errorf("key is required")
+  }
+  _, ok := s.cache[key]
+  if ok {
+    return fmt.Errorf("key: %s is conflicted", key)
+  }
+
 	bs, err := json.Marshal(obj)
 	if err != nil {
 		return fmt.Errorf("json marshal failed: %s", err)
@@ -126,6 +167,15 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 }
 
 func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
+  key := s.opt.KeyFunc(obj)
+  if key == "" {
+    return fmt.Errorf("key is required")
+  }
+  _, ok := s.cache[key]
+  if !ok {
+    return fmt.Errorf("key: %s is not found", key)
+  }
+
 	bs, err := json.Marshal(obj)
 	if err != nil {
 		return fmt.Errorf("json marshal failed: %s", err)

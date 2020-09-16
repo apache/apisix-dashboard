@@ -17,15 +17,15 @@
 package route
 
 import (
-	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/handler/route"
-	"github.com/gin-contrib/pprof"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
-	"github.com/gin-gonic/gin"
+  "github.com/apisix/manager-api/filter"
+  "github.com/apisix/manager-api/internal/handler"
+  "github.com/apisix/manager-api/internal/handler/route"
+  "github.com/gin-contrib/pprof"
+  "github.com/gin-contrib/sessions"
+  "github.com/gin-contrib/sessions/cookie"
+  "github.com/gin-gonic/gin"
 
-	"github.com/apisix/manager-api/conf"
-	"github.com/apisix/manager-api/filter"
+  "github.com/apisix/manager-api/conf"
 )
 
 func SetUpRouter() *gin.Engine {
@@ -37,7 +37,7 @@ func SetUpRouter() *gin.Engine {
 	r := gin.New()
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("session", store))
-	r.Use(filter.CORS(), filter.Authentication(), filter.RequestId(), filter.RequestLogHandler(), filter.RecoverHandler())
+	r.Use(filter.CORS(), filter.Authentication(), filter.RequestId(), filter.RecoverHandler())
 
 	AppendHealthCheck(r)
 	AppendAuthentication(r)

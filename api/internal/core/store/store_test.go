@@ -254,21 +254,23 @@ func TestGenericStore_Get(t *testing.T) {
 func TestGenericStore_List(t *testing.T) {
 	tests := []struct {
 		caseDesc      string
-		givePredicate func(obj interface{}) bool
+		giveInput     ListInput
 		giveStore     *GenericStore
-		wantRet       []interface{}
+		wantRet       *ListOutput
 		wantErr       error
 	}{
 		{
 			caseDesc: "sanity",
-			givePredicate: func(obj interface{}) bool {
-				for _, v := range strings.Split("test1-f2,test3-f2", ",") {
-					if v == obj.(*TestStruct).Field2 {
-						return true
-					}
-				}
-				return false
-			},
+			giveInput: ListInput{
+        Predicate:  func(obj interface{}) bool {
+          for _, v := range strings.Split("test1-f2,test3-f2", ",") {
+            if v == obj.(*TestStruct).Field2 {
+              return true
+            }
+          }
+          return false
+        },
+      },
 			giveStore: &GenericStore{
 				cache: map[string]interface{}{
 					"test1": &TestStruct{
@@ -289,22 +291,109 @@ func TestGenericStore_List(t *testing.T) {
 					},
 				},
 			},
-			wantRet: []interface{}{
-				&TestStruct{
-					Field1: "test1-f1",
-					Field2: "test1-f2",
-				},
-				&TestStruct{
-					Field1: "test3-f1",
-					Field2: "test3-f2",
-				},
-			},
+      wantRet: &ListOutput{
+        Rows: []interface{}{
+          &TestStruct{
+            Field1: "test1-f1",
+            Field2: "test1-f2",
+          },
+          &TestStruct{
+            Field1: "test3-f1",
+            Field2: "test3-f2",
+          },
+        },
+        TotalSize: 2,
+      },
 		},
+    {
+      caseDesc: "sanity-page",
+      giveInput: ListInput{
+        Predicate:  func(obj interface{}) bool {
+          for _, v := range strings.Split("test1-f2,test3-f2", ",") {
+            if v == obj.(*TestStruct).Field2 {
+              return true
+            }
+          }
+          return false
+        },
+        PageSize:   1,
+        PageNumber: 2,
+      },
+      giveStore: &GenericStore{
+        cache: map[string]interface{}{
+          "test1": &TestStruct{
+            Field1: "test1-f1",
+            Field2: "test1-f2",
+          },
+          "test2": &TestStruct{
+            Field1: "test2-f1",
+            Field2: "test2-f2",
+          },
+          "test3": &TestStruct{
+            Field1: "test3-f1",
+            Field2: "test3-f2",
+          },
+          "test4": &TestStruct{
+            Field1: "test4-f1",
+            Field2: "test4-f2",
+          },
+        },
+      },
+      wantRet: &ListOutput{
+        Rows: []interface{}{
+          &TestStruct{
+            Field1: "test3-f1",
+            Field2: "test3-f2",
+          },
+        },
+        TotalSize: 2,
+      },
+    },
+    {
+      caseDesc: "page overflow",
+      giveInput: ListInput{
+        Predicate:  func(obj interface{}) bool {
+          for _, v := range strings.Split("test1-f2,test3-f2", ",") {
+            if v == obj.(*TestStruct).Field2 {
+              return true
+            }
+          }
+          return false
+        },
+        PageSize:   1,
+        PageNumber: 33,
+      },
+      giveStore: &GenericStore{
+        cache: map[string]interface{}{
+          "test1": &TestStruct{
+            Field1: "test1-f1",
+            Field2: "test1-f2",
+          },
+          "test2": &TestStruct{
+            Field1: "test2-f1",
+            Field2: "test2-f2",
+          },
+          "test3": &TestStruct{
+            Field1: "test3-f1",
+            Field2: "test3-f2",
+          },
+          "test4": &TestStruct{
+            Field1: "test4-f1",
+            Field2: "test4-f2",
+          },
+        },
+      },
+      wantRet: &ListOutput{
+        Rows: []interface{}{
+        },
+        TotalSize: 2,
+      },
+    },
 	}
 
 	for _, tc := range tests {
-		ret, err := tc.giveStore.List(tc.givePredicate)
-		assert.ElementsMatch(t, tc.wantRet, ret, tc.caseDesc)
+		ret, err := tc.giveStore.List(tc.giveInput)
+		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
 		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
 	}
 }
@@ -355,6 +444,25 @@ func TestGenericStore_Create(t *testing.T) {
 			wantStr: `{"Field1":"test1","Field2":"test2"}`,
 			wantErr: fmt.Errorf("create failed"),
 		},
+    {
+      caseDesc: "conflicted",
+      giveObj: &TestStruct{
+        Field1: "test1",
+        Field2: "test2",
+      },
+      giveStore: &GenericStore{
+        cache: map[string]interface{}{
+          "test1": struct {}{},
+        },
+        opt: GenericStoreOption{
+          BasePath: "test/path",
+          KeyFunc: func(obj interface{}) string {
+            return obj.(*TestStruct).Field1
+          },
+        },
+      },
+      wantErr: fmt.Errorf("key: test1 is conflicted"),
+    },
 	}
 
 	for _, tc := range tests {
@@ -390,6 +498,9 @@ func TestGenericStore_Update(t *testing.T) {
 				Field2: "test2",
 			},
 			giveStore: &GenericStore{
+        cache: map[string]interface{}{
+          "test1": struct {}{},
+        },
 				opt: GenericStoreOption{
 					BasePath: "test/path",
 					KeyFunc: func(obj interface{}) string {
@@ -407,6 +518,9 @@ func TestGenericStore_Update(t *testing.T) {
 				Field2: "test2",
 			},
 			giveStore: &GenericStore{
+        cache: map[string]interface{}{
+          "test1": struct {}{},
+        },
 				opt: GenericStoreOption{
 					BasePath: "test/path",
 					KeyFunc: func(obj interface{}) string {
@@ -419,6 +533,25 @@ func TestGenericStore_Update(t *testing.T) {
 			wantStr: `{"Field1":"test1","Field2":"test2"}`,
 			wantErr: fmt.Errorf("create failed"),
 		},
+    {
+      caseDesc: "not found",
+      giveObj: &TestStruct{
+        Field1: "test1",
+        Field2: "test2",
+      },
+      giveStore: &GenericStore{
+        cache: map[string]interface{}{
+          "test2": struct {}{},
+        },
+        opt: GenericStoreOption{
+          BasePath: "test/path",
+          KeyFunc: func(obj interface{}) string {
+            return obj.(*TestStruct).Field1
+          },
+        },
+      },
+      wantErr: fmt.Errorf("key: test1 is not found"),
+    },
 	}
 
 	for _, tc := range tests {
@@ -432,8 +565,11 @@ func TestGenericStore_Update(t *testing.T) {
 
 		tc.giveStore.Stg = mStorage
 		err := tc.giveStore.Update(context.TODO(), tc.giveObj)
+		if err != nil {
+      assert.Equal(t, tc.wantErr, err, tc.caseDesc)
+      continue
+    }
 		assert.True(t, createCalled, tc.caseDesc)
-		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
 	}
 }
 
