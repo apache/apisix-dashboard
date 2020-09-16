@@ -53,15 +53,15 @@ func userLogin(c *gin.Context) {
 	} else {
 		// create JWT for session
 		claims := jwt.StandardClaims{
-			Subject: username,
-			IssuedAt: time.Now().Unix(),
+			Subject:   username,
+			IssuedAt:  time.Now().Unix(),
 			ExpiresAt: time.Now().Add(time.Second * time.Duration(conf.AuthenticationConfig.Session.ExpireTime)).Unix(),
 		}
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 		signedToken, _ := token.SignedString([]byte(conf.AuthenticationConfig.Session.Secret))
 
 		// output token
-		c.AbortWithStatusJSON(http.StatusOK, errno.FromMessage(errno.SystemSuccess).ItemResponse(&UserSession {
+		c.AbortWithStatusJSON(http.StatusOK, errno.FromMessage(errno.SystemSuccess).ItemResponse(&UserSession{
 			Token: signedToken,
 		}))
 	}

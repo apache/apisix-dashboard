@@ -38,7 +38,7 @@ func TestCreateRouteGroup(t *testing.T) {
 }
 
 func TestDuplicateGroupName(t *testing.T) {
-	 // duplicate name
+	// duplicate name
 	handler.
 		Post(uriPrefix+"/routegroups").
 		Header("Authorization", token).

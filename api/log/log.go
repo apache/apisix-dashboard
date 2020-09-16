@@ -33,57 +33,56 @@ type DefLogger struct {
 }
 
 func getLogrusFields(entry *logrus.Entry, fs []interface{}) *logrus.Entry {
-  if len(fs) == 0 {
-    return entry
-  }
+	if len(fs) == 0 {
+		return entry
+	}
 
-  fd := logrus.Fields{}
-  for i := 0; i < len(fs); i+=2 {
-    fd[fs[i].(string)] = fs[i+1]
-  }
-  return entry.WithFields(fd)
+	fd := logrus.Fields{}
+	for i := 0; i < len(fs); i += 2 {
+		fd[fs[i].(string)] = fs[i+1]
+	}
+	return entry.WithFields(fd)
 }
 
 func (e DefLogger) Debug(msg string, fields ...interface{}) {
-  getLogrusFields(logEntry, fields).Debug(msg)
+	getLogrusFields(logEntry, fields).Debug(msg)
 }
 
 func (e DefLogger) Debugf(msg string, args ...interface{}) {
-  logEntry.Debugf(msg, args...)
+	logEntry.Debugf(msg, args...)
 }
 
 func (e DefLogger) Info(msg string, fields ...interface{}) {
-  getLogrusFields(logEntry, fields).Info(msg)
+	getLogrusFields(logEntry, fields).Info(msg)
 }
 
 func (e DefLogger) Infof(msg string, args ...interface{}) {
-  logEntry.Infof(msg, args...)
+	logEntry.Infof(msg, args...)
 }
 
 func (e DefLogger) Warn(msg string, fields ...interface{}) {
-  getLogrusFields(logEntry, fields).Warn(msg)
+	getLogrusFields(logEntry, fields).Warn(msg)
 }
 
 func (e DefLogger) Warnf(msg string, args ...interface{}) {
-  logEntry.Warnf(msg, args...)
+	logEntry.Warnf(msg, args...)
 }
 
 func (e DefLogger) Error(msg string, fields ...interface{}) {
-  getLogrusFields(logEntry, fields).Error(msg)
+	getLogrusFields(logEntry, fields).Error(msg)
 }
 
 func (e DefLogger) Errorf(msg string, args ...interface{}) {
-  logEntry.Errorf(msg, args...)
+	logEntry.Errorf(msg, args...)
 }
 
 func (e DefLogger) Fatal(msg string, fields ...interface{}) {
-  getLogrusFields(logEntry, fields).Fatal(msg)
+	getLogrusFields(logEntry, fields).Fatal(msg)
 }
 
 func (e DefLogger) Fatalf(msg string, args ...interface{}) {
-  logEntry.Fatalf(msg, args...)
+	logEntry.Fatalf(msg, args...)
 }
-
 
 func GetLogger() *logrus.Entry {
 	if logEntry == nil {

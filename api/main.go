@@ -17,18 +17,18 @@
 package main
 
 import (
-  "fmt"
-  "github.com/apisix/manager-api/internal/core/storage"
-  "github.com/apisix/manager-api/internal/utils"
-  "github.com/spf13/viper"
-  "net/http"
-  "strings"
-  "time"
+	"fmt"
+	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/utils"
+	"github.com/spf13/viper"
+	"net/http"
+	"strings"
+	"time"
 
-  "github.com/apisix/manager-api/conf"
-  "github.com/apisix/manager-api/log"
-  "github.com/apisix/manager-api/route"
-  dlog "github.com/shiningrush/droplet/log"
+	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/log"
+	"github.com/apisix/manager-api/route"
+	dlog "github.com/shiningrush/droplet/log"
 )
 
 var logger = log.GetLogger()

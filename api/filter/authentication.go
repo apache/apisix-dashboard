@@ -27,7 +27,7 @@ import (
 
 func Authentication() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if c.Request.URL.Path != "/apisix/admin/user/login" && strings.HasPrefix(c.Request.URL.Path,"/apisix") {
+		if c.Request.URL.Path != "/apisix/admin/user/login" && strings.HasPrefix(c.Request.URL.Path, "/apisix") {
 			tokenStr := c.GetHeader("Authorization")
 
 			// verify token
@@ -57,9 +57,9 @@ func Authentication() gin.HandlerFunc {
 			}
 
 			if _, ok := conf.UserList[claims.Subject]; !ok {
-        c.AbortWithStatusJSON(http.StatusUnauthorized, errno.FromMessage(errno.ForbiddenError).Response())
-        return
-      }
+				c.AbortWithStatusJSON(http.StatusUnauthorized, errno.FromMessage(errno.ForbiddenError).Response())
+				return
+			}
 		}
 		c.Next()
 	}

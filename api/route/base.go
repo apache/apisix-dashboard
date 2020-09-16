@@ -17,15 +17,15 @@
 package route
 
 import (
-  "github.com/apisix/manager-api/filter"
-  "github.com/apisix/manager-api/internal/handler"
-  "github.com/apisix/manager-api/internal/handler/route"
-  "github.com/gin-contrib/pprof"
-  "github.com/gin-contrib/sessions"
-  "github.com/gin-contrib/sessions/cookie"
-  "github.com/gin-gonic/gin"
+	"github.com/apisix/manager-api/filter"
+	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/handler/route"
+	"github.com/gin-contrib/pprof"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-gonic/gin"
 
-  "github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/conf"
 )
 
 func SetUpRouter() *gin.Engine {

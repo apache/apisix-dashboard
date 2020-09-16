@@ -23,7 +23,7 @@ import (
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/service"
 )
- 
+
 func TestCreateRouteForUngroup(t *testing.T) {
 	// create route with no route group -- test ungroup
 	handler.Post(uriPrefix+"/routes").
@@ -47,10 +47,10 @@ func TestCreateRouteForUngroup(t *testing.T) {
 			"route_group_id":"",
 			"route_group_name":""
 }`).Expect(t).
-	Status(http.StatusOK).
-	End()
+		Status(http.StatusOK).
+		End()
 }
- 
+
 func TestUpdateRouteWithCreateRouteGroup(t *testing.T) {
 	route, _ := getRouteByName("api-test-no-group")
 
@@ -76,10 +76,10 @@ func TestUpdateRouteWithCreateRouteGroup(t *testing.T) {
 			"route_group_id":"",
 			"route_group_name":"route-update-test-create-group"
 }`).Expect(t).
-	Status(http.StatusOK).
-	End()
+		Status(http.StatusOK).
+		End()
 }
- 
+
 func TestCreateRouteWithCreateNewGroup(t *testing.T) {
 	// create route with new route group
 	handler.Post(uriPrefix+"/routes").
@@ -103,10 +103,10 @@ func TestCreateRouteWithCreateNewGroup(t *testing.T) {
 			"route_group_id":"",
 			"route_group_name":"route-create-test-create-group"
 }`).Expect(t).
-	Status(http.StatusOK).
-	End()
+		Status(http.StatusOK).
+		End()
 }
- 
+
 func TestCreateRouteWithDuplicateGroupName(t *testing.T) {
 	// create route with duplicate route group name
 	handler.Post(uriPrefix+"/routes").
@@ -130,11 +130,11 @@ func TestCreateRouteWithDuplicateGroupName(t *testing.T) {
 			"route_group_id":"",
 			"route_group_name":"route-create-test-create-group"
 }`).Expect(t).
-	Status(http.StatusInternalServerError).
-	End()
+		Status(http.StatusInternalServerError).
+		End()
 }
 
- func TestPublishRoute(t *testing.T) {
+func TestPublishRoute(t *testing.T) {
 	// create route
 	handler.Post(uriPrefix+"/routes").
 		Header("Authorization", token).
@@ -155,8 +155,8 @@ func TestCreateRouteWithDuplicateGroupName(t *testing.T) {
       "timeout":{"connect":6000,"send":6000,"read":6000}},
       "upstream_header":{}
 }`).Expect(t).
-	Status(http.StatusOK).
-	End()
+		Status(http.StatusOK).
+		End()
 	route, _ := getRouteByName("api-test")
 	// publish route
 	handler.Put(uriPrefix + "/routes/" + route.ID.String() + "/publish").Expect(t).Status(http.StatusOK).End()
@@ -183,8 +183,8 @@ func TestOfflineRoute(t *testing.T) {
       "timeout":{"connect":6000,"send":6000,"read":6000}},
       "upstream_header":{}
 }`).Expect(t).
-	Status(http.StatusOK).
-	End()
+		Status(http.StatusOK).
+		End()
 	routePublished, _ := getRouteByName("api-test-published")
 	// offline route
 	handler.Put(uriPrefix + "/routes/" + routePublished.ID.String() + "/offline").Expect(t).Status(http.StatusOK).End()
