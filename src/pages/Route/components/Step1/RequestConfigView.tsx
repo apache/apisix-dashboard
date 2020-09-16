@@ -47,7 +47,6 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
               <Form.Item
                 {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                 label={index === 0 ? formatMessage({ id: 'route.request.config.domain.name' }) : ''}
-                required
                 key={field.key}
                 extra={
                   index === 0 ? formatMessage({ id: 'route.request.config.domain.or.ip' }) : ''
