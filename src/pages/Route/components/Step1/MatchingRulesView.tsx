@@ -19,11 +19,11 @@ import { Button, Table, Modal, Form, Select, Input, Space } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
-interface Props extends RouteModule.Data {}
-
-const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
-  const { advancedMatchingRules } = data.step1Data;
-
+const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
+  advancedMatchingRules,
+  disabled,
+  onChange = () => {},
+}) => {
   const [visible, setVisible] = useState(false);
   const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
   const [namePlaceholder, setNamePlaceholder] = useState('');
@@ -38,8 +38,8 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
       if (mode === 'EDIT') {
         const key = modalForm.getFieldValue('key');
         onChange({
-          ...data.step1Data,
-          advancedMatchingRules: advancedMatchingRules.map((rule) => {
+          action: 'advancedMatchingRulesChange',
+          data: advancedMatchingRules.map((rule) => {
             if (rule.key === key) {
               return { ...(value as RouteModule.MatchingRule), key };
             }
@@ -51,7 +51,10 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
           ...(value as RouteModule.MatchingRule),
           key: Math.random().toString(36).slice(2),
         };
-        onChange({ ...data.step1Data, advancedMatchingRules: advancedMatchingRules.concat(rule) });
+        onChange({
+          action: 'advancedMatchingRulesChange',
+          data: advancedMatchingRules.concat(rule),
+        });
       }
       modalForm.resetFields();
       setVisible(false);
@@ -66,8 +69,8 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
 
   const handleRemove = (key: string) => {
     onChange({
-      ...data.step1Data,
-      advancedMatchingRules: advancedMatchingRules.filter((item) => item.key !== key),
+      action: 'advancedMatchingRulesChange',
+      data: advancedMatchingRules.filter((item) => item.key !== key),
     });
   };
 
@@ -164,7 +167,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
       cancelText={formatMessage({ id: 'route.match.cancel' })}
       destroyOnClose
     >
-      <Form form={modalForm} labelCol={{ span: 9 }} wrapperCol={{ span: 15 }}>
+      <Form form={modalForm} labelCol={{ span: 4 }}>
         <Form.Item
           label={formatMessage({ id: 'route.match.parameter.position' })}
           name="position"

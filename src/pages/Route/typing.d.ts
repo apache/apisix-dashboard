@@ -158,4 +158,41 @@ declare namespace RouteModule {
     };
     script: Record<string, any>;
   };
+  // step1
+  interface MatchingRule {
+    position: VarPosition;
+    name: string;
+    operator: Operator;
+    value: string;
+    key: string;
+  }
+
+  type Step1PassProps = {
+    form: FormInstance;
+    advancedMatchingRules: MatchingRule[];
+    disabled?: boolean;
+    isEdit?: boolean;
+    onChange?(data: {
+      action: 'redirectOptionChange' | 'advancedMatchingRulesChange';
+      data: T;
+    }): void;
+  };
+
+  type Form1Data = {
+    name: string;
+    desc: string;
+    priority: number;
+    protocols: RequestProtocol[];
+    websocket: boolean;
+    hosts: string[];
+    paths: string[];
+    methods: HttpMethod[];
+    redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
+    redirectURI?: string;
+    redirectCode?: number;
+  };
+
+  type AvancedMatchingRules = {
+    advancedMatchingRules: MatchingRule[];
+  };
 }
