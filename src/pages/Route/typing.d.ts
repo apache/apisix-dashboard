@@ -158,6 +158,7 @@ declare namespace RouteModule {
     };
     script: Record<string, any>;
   };
+
   // step1
   interface MatchingRule {
     position: VarPosition;
@@ -194,5 +195,19 @@ declare namespace RouteModule {
 
   type AvancedMatchingRules = {
     advancedMatchingRules: MatchingRule[];
+  };
+
+  // step2
+  type UpstreamHeader = {
+    key: string;
+    header_name: string;
+    header_value: string;
+  };
+
+  type Step2PassProps = {
+    form: FormInstance;
+    upstreamHeaderList: UpstreamHeader[] | undefined;
+    disabled?: boolean;
+    onChange(data: { action: 'upstreamHeaderListChange'; data: T }): void;
   };
 }
