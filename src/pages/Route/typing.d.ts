@@ -39,24 +39,6 @@ declare namespace RouteModule {
     status: boolean;
   };
 
-  type Step1Data = {
-    name: string;
-    desc: string;
-    status: boolean;
-    priority: number;
-    protocols: RequestProtocol[];
-    websocket: boolean;
-    hosts: string[];
-    paths: string[];
-    methods: HttpMethod[];
-    redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
-    redirectURI?: string;
-    redirectCode?: number;
-    advancedMatchingRules: MatchingRule[];
-    route_group_id?: string;
-    route_group_name: string;
-  };
-
   type Step3Data = {
     plugins: PluginPage.PluginData;
     //  TEMP
@@ -182,6 +164,8 @@ declare namespace RouteModule {
   type Form1Data = {
     name: string;
     desc: string;
+    route_group_id?: string;
+    route_group_name: string;
     priority: number;
     protocols: RequestProtocol[];
     websocket: boolean;
@@ -191,6 +175,7 @@ declare namespace RouteModule {
     redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
     redirectURI?: string;
     redirectCode?: number;
+    status: boolean;
   };
 
   type AvancedMatchingRules = {
@@ -209,5 +194,33 @@ declare namespace RouteModule {
     upstreamHeaderList: UpstreamHeader[] | undefined;
     disabled?: boolean;
     onChange(data: { action: 'upstreamHeaderListChange'; data: T }): void;
+  };
+
+  type Form2Data = {
+    upstream_protocol: 'http' | 'https' | 'keep';
+    type: 'roundrobin' | 'chash';
+    hash_on?: string;
+    key?: string;
+    mappingStrategy?: string;
+    rewriteType?: string;
+    upstreamPath?: string;
+    upstream_id: string | null;
+    timeout: {
+      connect: number;
+      send: number;
+      read: number;
+    };
+    upstream_id: string | undefined;
+    pass_host: 'pass' | 'node' | 'rewrite';
+    upstream_host?: string;
+    upstreamHostList: UpstreamHost[];
+  };
+
+  type RequestData = {
+    form1Data: Form1Data;
+    form2Data: Form2Data;
+    step3Data: Step3Data;
+    upstreamHeaderList: UpstreamHeader[];
+    advancedMatchingRules: MatchingRule[];
   };
 }
