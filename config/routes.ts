@@ -36,6 +36,10 @@ const routes = [
     component: './Route/Create',
   },
   {
+    path: '/routes/:rid/debug',
+    component: './Route/Debug',
+  },
+  {
     path: '/routegroup/list',
     component: './RouteGroup/List',
   },

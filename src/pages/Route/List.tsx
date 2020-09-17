@@ -113,6 +113,13 @@ const Page: React.FC = () => {
             >
               {formatMessage({ id: 'route.list.edit' })}
             </Button>
+            <Button
+              type="primary"
+              onClick={() => history.push(`/routes/${record.id}/debug`)}
+              style={{ marginRight: 10 }}
+            >
+              {formatMessage({ id: 'route.list.debug' })}
+            </Button>
             <Popconfirm
               title={formatMessage({ id: 'route.list.offline.confirm' })}
               onConfirm={() => {
