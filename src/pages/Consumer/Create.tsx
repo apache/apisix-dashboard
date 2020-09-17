@@ -28,7 +28,7 @@ import { fetchItem, create, update } from './service';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
-  const [plugins, setPlugins] = useState<PluginPageType.PluginData>({});
+  const [plugins, setPlugins] = useState<PluginPageType.FinalData>({});
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
 
@@ -100,7 +100,7 @@ const Page: React.FC = (props) => {
           </Steps>
 
           {step === 1 && <Step1 form={form1} />}
-          {step === 2 && <PluginPage data={plugins} onChange={setPlugins} />}
+          {step === 2 && <PluginPage initialData={plugins} onChange={setPlugins} />}
           {step === 3 && <Preview form1={form1} plugins={plugins} />}
         </Card>
       </PageContainer>

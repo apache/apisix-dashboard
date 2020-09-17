@@ -22,14 +22,14 @@ import Step1 from './Step1';
 
 type Props = {
   form1: FormInstance;
-  plugins: PluginPageType.PluginData;
+  plugins: PluginPageType.FinalData;
 };
 
 const Page: React.FC<Props> = ({ form1, plugins }) => {
   return (
     <>
       <Step1 form={form1} disabled />
-      <PluginPage data={plugins} disabled />
+      <PluginPage initialData={plugins} readonly />
     </>
   );
 };
