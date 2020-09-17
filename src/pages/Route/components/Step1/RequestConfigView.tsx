@@ -57,11 +57,6 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                   validateTrigger={['onChange', 'onBlur']}
                   rules={[
                     {
-                      required: true,
-                      whitespace: true,
-                      message: formatMessage({ id: 'route.request.config.input.domain.name' }),
-                    },
-                    {
                       pattern: new RegExp(/(^\*?[a-zA-Z0-9._-]+$|^\*$)/, 'g'),
                       message: formatMessage({ id: 'route.request.config.domain.name.rule' }),
                     },
