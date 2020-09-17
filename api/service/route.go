@@ -450,6 +450,11 @@ type RouteResponse struct {
 	Status         bool      `json:"status"`
 }
 
+type RouteResponseWithUrl struct {
+	RouteRequest
+	Url string `json:"url"`
+}
+
 type ListResponse struct {
 	Count int         `json:"count"`
 	Data  interface{} `json:"data"`
