@@ -39,7 +39,7 @@ func AppendRoute(r *gin.Engine) *gin.Engine {
 	r.DELETE("/apisix/admin/routes/:rid", deleteRoute)
 	r.GET("/apisix/admin/notexist/routes", isRouteExist)
 	r.PUT("/apisix/admin/routes/:rid/offline", offlineRoute)
-	r.GET("/apisix/admin/routeinfos/:rid", getRouteAndApisixUrl)
+	r.GET("/apisix/admin/routes/:rid/debuginfo", getRouteWithApisixUrl)
 	return r
 }
 
@@ -482,7 +482,7 @@ func findRoute(c *gin.Context) {
 	}
 }
 
-func getRouteAndApisixUrl(c *gin.Context) {
+func getRouteWithApisixUrl(c *gin.Context) {
 	rid := c.Param("rid")
 	var count int
 	if err := conf.DB().Table("routes").Where("id=?", rid).Count(&count).Error; err != nil {

@@ -40,7 +40,7 @@ export const fetchItem = (rid: number) =>
   request(`/routes/${rid}`).then((data) => transformRouteData(data));
 
 export const fetchItemDebugInfo = (rid: number) =>
-  request(`/routeinfos/${rid}`).then((data) => transformRouteDebugData(data));
+  request(`/routes/${rid}/debuginfo`).then((data) => transformRouteDebugData(data));
 
 export const fetchList = ({ current = 1, pageSize = 10 }, search: string) => {
   return request('/routes', {
