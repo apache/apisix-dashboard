@@ -139,7 +139,6 @@ func (s *GenericStore) List(input ListInput) (*ListOutput, error) {
 			output.Rows = ret[skipCount:]
 			return output, nil
 		}
-
 		output.Rows = ret[skipCount:endIdx]
 	}
 

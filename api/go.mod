@@ -17,7 +17,7 @@ require (
 	github.com/jinzhu/gorm v1.9.12
 	github.com/magiconair/properties v1.8.1
 	github.com/satori/go.uuid v1.2.0
-	github.com/shiningrush/droplet v0.1.1
+	github.com/shiningrush/droplet v0.1.2
 	github.com/shiningrush/droplet/wrapper/gin v0.1.0
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/viper v1.7.1

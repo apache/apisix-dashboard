@@ -278,6 +278,8 @@ github.com/shiningrush/droplet v0.1.0 h1:Lk/nzfouI8Xqv9VtzNZZISwTVxWeXmEd9IlgIZw
 github.com/shiningrush/droplet v0.1.0/go.mod h1:akW2vIeamvMD6zj6wIBfzYn6StGXBxwlW3gA+hcHu5M=
 github.com/shiningrush/droplet v0.1.1 h1:x+69JP60jzq6ROmsDooNhVSX8jhwFEmjBnryVvCHgjc=
 github.com/shiningrush/droplet v0.1.1/go.mod h1:akW2vIeamvMD6zj6wIBfzYn6StGXBxwlW3gA+hcHu5M=
+github.com/shiningrush/droplet v0.1.2 h1:nGE6Ii8Hgra6UQ6lr4jvkvFuSsmg3AASf+KCF8wQgxY=
+github.com/shiningrush/droplet v0.1.2/go.mod h1:akW2vIeamvMD6zj6wIBfzYn6StGXBxwlW3gA+hcHu5M=
 github.com/shiningrush/droplet/wrapper/gin v0.1.0 h1:eKUtuInaz8BH9dwjDnpdnP29iH7bhaB0NIOF9tL7nFM=
 github.com/shiningrush/droplet/wrapper/gin v0.1.0/go.mod h1:ZJu+sCRrVXn5Pg618c1KK3Ob2UiXGuPM1ROx5uMM9YQ=
 github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
