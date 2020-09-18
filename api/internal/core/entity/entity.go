@@ -2,7 +2,7 @@ package entity
 
 type Route struct {
 	ID              string      `json:"id"`
-	Uri             string      `json:"uri,omitempty" validate:"uri"`
+	URI             string      `json:"uri,omitempty" validate:"uri"`
 	Uris            []string    `json:"uris,omitempty"`
 	Name            string      `json:"name,omitempty" validate:"max=50"`
 	Desc            string      `json:"desc,omitempty" validate:"max=256"`
@@ -22,6 +22,7 @@ type Route struct {
 	ServiceProtocol string      `json:"service_protocol,omitempty"`
 }
 
+// --- structures for upstream start  ---
 type Timeout struct {
 	Connect int `json:"connect,omitempty"`
 	Send    int `json:"send,omitempty"`
@@ -44,15 +45,17 @@ type K8sInfo struct {
 }
 
 type Healthy struct {
+	Interval     int   `json:"interval,omitempty"`
 	HttpStatuses []int `json:"http_statuses,omitempty"`
 	Successes    int   `json:"successes,omitempty"`
 }
 
 type UnHealthy struct {
-	HttpStatuses []int `json:"http_statuses,omitempty"`
-	TcpFailures  int   `json:"tcp_failures,omitempty"`
+	Interval     int   `json:"interval,omitempty"`
+	HTTPStatuses []int `json:"http_statuses,omitempty"`
+	TCPFailures  int   `json:"tcp_failures,omitempty"`
 	Timeouts     int   `json:"timeouts,omitempty"`
-	HttpFailures int   `json:"http_failures,omitempty"`
+	HTTPFailures int   `json:"http_failures,omitempty"`
 }
 
 type Active struct {
@@ -61,8 +64,8 @@ type Active struct {
 	Concurrency            int       `json:"concurrency,omitempty"`
 	Host                   string    `json:"host,omitempty"`
 	Port                   int       `json:"port,omitempty"`
-	HttpPath               string    `json:"http_path,omitempty"`
-	HttpsVerifyCertificate string    `json:"https_verify_certificate,omitempty"`
+	HTTPPath               string    `json:"http_path,omitempty"`
+	HTTPSVerifyCertificate string    `json:"https_verify_certificate,omitempty"`
 	Healthy                Healthy   `json:"healthy,omitempty"`
 	UnHealthy              UnHealthy `json:"unhealthy,omitempty"`
 	ReqHeaders             []string  `json:"req_headers,omitempty"`
@@ -96,6 +99,8 @@ type Upstream struct {
 	ServiceName     string        `json:"service_name,omitempty"`
 	ID              string        `json:"id,omitempty"`
 }
+
+// --- structures for upstream end  ---
 
 type Consumer struct {
 	ID       string      `json:"id"`
