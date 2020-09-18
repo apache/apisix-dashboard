@@ -161,15 +161,15 @@ declare namespace RouteModule {
   };
 
   // for route debug
-  interface Server {
+  type Server = {
     url: string;
-  }
+  };
 
-  interface RouteParamSchema {
+  type RouteParamSchema = {
     type: string | integer | boolean | object | array;
-  }
+  };
 
-  interface RouteParam {
+  type RouteParam = {
     name: string;
     in: 'query' | 'header' | 'path' | 'cookie';
     description: string;
@@ -177,9 +177,9 @@ declare namespace RouteModule {
     style?: 'form' | 'simple';
     explode?: boolean;
     schema?: RouteParamSchema;
-  }
+  };
 
-  interface PathSchema {
+  type PathSchema = {
     tags: string;
     summary: string;
     description: string;
@@ -187,25 +187,25 @@ declare namespace RouteModule {
     requestBody?: object;
     parameters?: RouteParam[];
     responses: ResponseScheme;
-  }
+  };
 
-  interface ResponseSchema {
+  type ResponseSchema = {
     [code: string]: {
       description: string;
       content: ResponseItemContent;
     };
-  }
+  };
 
-  interface ResponseItemContent {
+  type ResponseItemContent = {
     'application/xml'?: {};
     'application/json'?: {};
-  }
+  };
 
-  interface TagSchema {
+  type TagSchema = {
     name: string;
     description: string;
     externalDocs?: object;
-  }
+  };
 
   type DebugData = {
     servers: Server[];

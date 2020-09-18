@@ -273,11 +273,11 @@ export const transformRouteDebugData = (data: RouteModule.Body) => {
       description: desc,
     },
   ];
-  const servers: RouteModule.Server[] = [];
+  let servers: RouteModule.Server[] = [];
   const responses: RouteModule.ResponseSchema = {
     // default response code
     '200': {
-      description: 'successful operation',
+      description: 'OK',
       content: {},
     },
     '400': {
@@ -326,33 +326,33 @@ export const transformRouteDebugData = (data: RouteModule.Body) => {
 
   protocols.forEach((protocol) => {
     if (protocol !== 'websocket') {
-      servers.push({
-        url: `${protocol}://${url}`,
-      });
-      // FIXME
-      servers.push({
-        url: `${protocol}://${window.location.hostname}:9080`,
-      });
+      servers = [
+        ...servers,
+        {
+          url: `${protocol}://${url}`,
+        },
+        {
+          // FIXME
+          url: `${protocol}://${window.location.hostname}:9080`,
+        },
+      ];
     }
   });
 
   uris.forEach((uri) => {
     if (uri.indexOf('*') > -1) {
-      paths[`${uri.split('*')[0]}{pathParam}`] = {
-        tags: [tags[0].name],
-      };
+      paths[`${uri.split('*')[0]}{pathParam}`] = {};
       return;
     }
-    paths[uri] = {
-      tags: [tags[0].name],
-    };
+    paths[uri] = {};
   });
 
   methods.forEach((method) => {
     Object.keys(paths).forEach((path) => {
       paths[path] = {
+        ...paths[path],
         [method.toLocaleLowerCase()]: {
-          ...paths[path],
+          tags: [tags[0].name],
           operationId: `${method.toLocaleLowerCase()}${path.split('/')[1]}`,
           parameters: [...formatParams],
           responses,
