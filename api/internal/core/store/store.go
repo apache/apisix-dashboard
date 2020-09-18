@@ -20,9 +20,10 @@ type GenericStore struct {
 }
 
 type GenericStoreOption struct {
-	BasePath string
-	ObjType  reflect.Type
-	KeyFunc  func(obj interface{}) string
+	BasePath  string
+	ObjType   reflect.Type
+	KeyFunc   func(obj interface{}) string
+	Validator Validator
 }
 
 func NewGenericStore(opt GenericStoreOption) (*GenericStore, error) {
@@ -146,6 +147,12 @@ func (s *GenericStore) List(input ListInput) (*ListOutput, error) {
 }
 
 func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
+	if s.opt.Validator != nil {
+		if err := s.opt.Validator.Validate(obj); err != nil {
+			return err
+		}
+	}
+
 	key := s.opt.KeyFunc(obj)
 	if key == "" {
 		return fmt.Errorf("key is required")
@@ -167,6 +174,12 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 }
 
 func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
+	if s.opt.Validator != nil {
+		if err := s.opt.Validator.Validate(obj); err != nil {
+			return err
+		}
+	}
+
 	key := s.opt.KeyFunc(obj)
 	if key == "" {
 		return fmt.Errorf("key is required")

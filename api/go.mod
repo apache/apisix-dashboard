@@ -15,16 +15,18 @@ require (
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/jinzhu/gorm v1.9.12
+	github.com/magiconair/properties v1.8.1
 	github.com/satori/go.uuid v1.2.0
-	github.com/shiningrush/droplet v0.1.0
+	github.com/shiningrush/droplet v0.1.1
 	github.com/shiningrush/droplet/wrapper/gin v0.1.0
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/viper v1.7.1
 	github.com/steinfletcher/apitest v1.4.10 // indirect
 	github.com/stretchr/testify v1.6.1
 	github.com/tidwall/gjson v1.6.0
+	github.com/xeipuuv/gojsonschema v1.2.0
 	go.etcd.io/etcd v3.3.25+incompatible
-	go.uber.org/zap v1.16.0 // indirect
+	go.uber.org/zap v1.16.0
 	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
 	golang.org/x/sys v0.0.0-20200915084602-288bc346aa39 // indirect
 	golang.org/x/text v0.3.3 // indirect

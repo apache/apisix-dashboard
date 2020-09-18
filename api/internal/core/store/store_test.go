@@ -399,13 +399,14 @@ func TestGenericStore_List(t *testing.T) {
 
 func TestGenericStore_Create(t *testing.T) {
 	tests := []struct {
-		caseDesc  string
-		giveStore *GenericStore
-		giveObj   *TestStruct
-		giveErr   error
-		wantKey   string
-		wantStr   string
-		wantErr   error
+		caseDesc        string
+		giveStore       *GenericStore
+		giveObj         *TestStruct
+		giveErr         error
+		giveValidateErr error
+		wantKey         string
+		wantStr         string
+		wantErr         error
 	}{
 		{
 			caseDesc: "sanity",
@@ -462,10 +463,25 @@ func TestGenericStore_Create(t *testing.T) {
 			},
 			wantErr: fmt.Errorf("key: test1 is conflicted"),
 		},
+		{
+			caseDesc: "validate failed",
+			giveObj: &TestStruct{
+				Field1: "test1",
+				Field2: "test2",
+			},
+			giveStore: &GenericStore{
+				cache: map[string]interface{}{
+					"test1": struct{}{},
+				},
+				opt: GenericStoreOption{},
+			},
+			giveValidateErr: fmt.Errorf("validate failed"),
+			wantErr:         fmt.Errorf("validate failed"),
+		},
 	}
 
 	for _, tc := range tests {
-		createCalled := false
+		createCalled, validateCalled := false, false
 		mStorage := &storage.MockInterface{}
 		mStorage.On("Create", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 			createCalled = true
@@ -473,22 +489,34 @@ func TestGenericStore_Create(t *testing.T) {
 			assert.Equal(t, tc.wantStr, args[2], tc.caseDesc)
 		}).Return(tc.giveErr)
 
+		mValidator := &MockValidator{}
+		mValidator.On("Validate", mock.Anything).Run(func(args mock.Arguments) {
+			validateCalled = true
+			assert.Equal(t, tc.giveObj, args.Get(0), tc.caseDesc)
+		}).Return(tc.giveValidateErr)
+
 		tc.giveStore.Stg = mStorage
+		tc.giveStore.opt.Validator = mValidator
 		err := tc.giveStore.Create(context.TODO(), tc.giveObj)
+		assert.True(t, validateCalled, tc.caseDesc)
+		if err != nil {
+			assert.Equal(t, tc.wantErr, err, tc.caseDesc)
+			continue
+		}
 		assert.True(t, createCalled, tc.caseDesc)
-		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
 	}
 }
 
 func TestGenericStore_Update(t *testing.T) {
 	tests := []struct {
-		caseDesc  string
-		giveStore *GenericStore
-		giveObj   *TestStruct
-		giveErr   error
-		wantKey   string
-		wantStr   string
-		wantErr   error
+		caseDesc        string
+		giveStore       *GenericStore
+		giveObj         *TestStruct
+		giveErr         error
+		giveValidateErr error
+		wantKey         string
+		wantStr         string
+		wantErr         error
 	}{
 		{
 			caseDesc: "sanity",
@@ -554,7 +582,7 @@ func TestGenericStore_Update(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		createCalled := false
+		createCalled, validateCalled := false, false
 		mStorage := &storage.MockInterface{}
 		mStorage.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 			createCalled = true
@@ -562,8 +590,17 @@ func TestGenericStore_Update(t *testing.T) {
 			assert.Equal(t, tc.wantStr, args[2], tc.caseDesc)
 		}).Return(tc.giveErr)
 
+		mValidator := &MockValidator{}
+		mValidator.On("Validate", mock.Anything).Run(func(args mock.Arguments) {
+			validateCalled = true
+			assert.Equal(t, tc.giveObj, args.Get(0), tc.caseDesc)
+		}).Return(tc.giveValidateErr)
+
 		tc.giveStore.Stg = mStorage
+		tc.giveStore.opt.Validator = mValidator
+
 		err := tc.giveStore.Update(context.TODO(), tc.giveObj)
+		assert.True(t, validateCalled, tc.caseDesc)
 		if err != nil {
 			assert.Equal(t, tc.wantErr, err, tc.caseDesc)
 			continue
