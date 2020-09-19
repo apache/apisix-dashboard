@@ -109,7 +109,7 @@ type Consumer struct {
 	Plugins  interface{} `json:"plugins,omitempty"`
 }
 
-type Ssl struct {
+type SSL struct {
 	ID      string   `json:"id"`
 	Cert    string   `json:"cert"`
 	Key     string   `json:"key"`
