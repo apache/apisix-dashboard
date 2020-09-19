@@ -157,5 +157,70 @@ declare namespace RouteModule {
       [name: string]: any;
     };
     script: Record<string, any>;
+    url?: string;
+  };
+
+  // for route debug
+  type Server = {
+    url: string;
+  };
+
+  type RouteParamSchema = {
+    type: string | integer | boolean | object | array;
+  };
+
+  type RouteParam = {
+    name: string;
+    in: 'query' | 'header' | 'path' | 'cookie';
+    description: string;
+    required: boolean;
+    style?: 'form' | 'simple';
+    explode?: boolean;
+    schema?: RouteParamSchema;
+  };
+
+  type PathSchema = {
+    tags: string;
+    summary: string;
+    description: string;
+    operationId: string;
+    requestBody?: object;
+    parameters?: RouteParam[];
+    responses: ResponseScheme;
+  };
+
+  type ResponseSchema = {
+    [code: string]: {
+      description: string;
+      content: ResponseItemContent;
+    };
+  };
+
+  type ResponseItemContent = {
+    'application/xml'?: {};
+    'application/json'?: {};
+  };
+
+  type TagSchema = {
+    name: string;
+    description: string;
+    externalDocs?: object;
+  };
+
+  type DebugData = {
+    servers: Server[];
+    tag: TagSchema[];
+    paths: {
+      [url: string]: {
+        [httpType: string]: {
+          tags: string;
+          summary: string;
+          operationId: string;
+          requestBody?: {};
+          parameters?: RouteParam[];
+          responses: ResponseSchema;
+        };
+      };
+    };
   };
 }

@@ -252,3 +252,131 @@ export const transformRouteData = (data: RouteModule.Body) => {
     step3Data,
   };
 };
+
+export const transformRouteDebugData = (data: RouteModule.Body) => {
+  const {
+    name,
+    desc,
+    methods,
+    uris,
+    protocols,
+    // hosts,
+    vars,
+    // redirect,
+    url,
+  } = data;
+
+  const paths = {};
+  const tags: RouteModule.TagSchema[] = [
+    {
+      name: `Route-${name}`,
+      description: desc,
+    },
+  ];
+  let servers: RouteModule.Server[] = [];
+  const responses: RouteModule.ResponseSchema = {
+    // default response code
+    '200': {
+      description: 'OK',
+      content: {},
+    },
+    '400': {
+      description: 'Invalid parameter',
+      content: {},
+    },
+    '500': {
+      description: 'Internal Server Error',
+      content: {},
+    },
+  };
+  const params = transformVarsToRules(vars);
+  const formatParams = params.map((param) => {
+    const { position, operator } = param;
+    let paramPostion;
+
+    switch (position) {
+      case 'cookie':
+        paramPostion = 'cookie';
+        break;
+      case 'http':
+        paramPostion = 'header';
+        break;
+      case 'arg':
+        paramPostion = 'query';
+        break;
+      default:
+        break;
+    }
+    return {
+      name: param.name,
+      in: paramPostion,
+      description: `default value should ${operator} ${param.value}`,
+      required: true,
+      type: 'string',
+    };
+  });
+  const pathParams = {
+    name: 'pathParam',
+    in: 'path',
+    description: `enter your path param`,
+    required: true,
+    type: 'string',
+  };
+  const requestBodyMethod = ['POST', 'PUT', 'PATCH'];
+
+  protocols.forEach((protocol) => {
+    if (protocol !== 'websocket') {
+      servers = [
+        ...servers,
+        {
+          url: `${protocol}://${url}`,
+        },
+        {
+          // FIXME
+          url: `${protocol}://${window.location.hostname}:9080`,
+        },
+      ];
+    }
+  });
+
+  uris.forEach((uri) => {
+    if (uri.indexOf('*') > -1) {
+      paths[`${uri.split('*')[0]}{pathParam}`] = {};
+      return;
+    }
+    paths[uri] = {};
+  });
+
+  methods.forEach((method) => {
+    Object.keys(paths).forEach((path) => {
+      paths[path] = {
+        ...paths[path],
+        [method.toLocaleLowerCase()]: {
+          tags: [tags[0].name],
+          operationId: `${method.toLocaleLowerCase()}${path.split('/')[1]}`,
+          parameters: [...formatParams],
+          responses,
+        },
+      };
+      // route contains *
+      if (path.match(/{pathParam}/)) {
+        paths[path][method.toLocaleLowerCase()].parameters.push(pathParams);
+      }
+      // post, put, patch add requestBody
+      if (requestBodyMethod.indexOf(method) > -1) {
+        paths[path][method.toLocaleLowerCase()] = {
+          ...paths[path][method.toLocaleLowerCase()],
+          requestBody: {
+            description: 'body parameters',
+            content: {},
+          },
+        };
+      }
+    });
+  });
+  return {
+    tags,
+    servers,
+    paths,
+  };
+};

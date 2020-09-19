@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"regexp"
 
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/errno"
@@ -38,6 +39,7 @@ func AppendRoute(r *gin.Engine) *gin.Engine {
 	r.DELETE("/apisix/admin/routes/:rid", deleteRoute)
 	r.GET("/apisix/admin/notexist/routes", isRouteExist)
 	r.PUT("/apisix/admin/routes/:rid/offline", offlineRoute)
+	r.GET("/apisix/admin/routes/:rid/debuginfo", getRouteWithApisixUrl)
 	return r
 }
 
@@ -476,6 +478,58 @@ func findRoute(c *gin.Context) {
 				resp, _ := json.Marshal(result)
 				c.Data(http.StatusOK, service.ContentType, resp)
 			}
+		}
+	}
+}
+
+func getRouteWithApisixUrl(c *gin.Context) {
+	rid := c.Param("rid")
+	var count int
+	if err := conf.DB().Table("routes").Where("id=?", rid).Count(&count).Error; err != nil {
+		e := errno.FromMessage(errno.RouteRequestError, err.Error()+" route ID: "+rid)
+		logger.Error(e.Msg)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, e.Response())
+		return
+	} else {
+		if count < 1 {
+			e := errno.FromMessage(errno.RouteRequestError, " route ID: "+rid+" not exist")
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(e.Status, e.Response())
+			return
+		}
+	}
+	// find from apisix
+	request := &service.ApisixRouteRequest{}
+	if response, err := request.FindById(rid); err != nil {
+		e := errno.FromMessage(errno.RouteRequestError, err.Error()+" route ID: "+rid)
+		logger.Error(e.Msg)
+		c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
+		return
+	} else {
+		// transfer response to dashboard struct
+		if result, err := response.Parse(); err != nil {
+			e := errno.FromMessage(errno.RouteRequestError, err.Error()+" route ID: "+rid)
+			logger.Error(e.Msg)
+			c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
+			return
+		} else {
+			// need to find name from mysql temporary
+			route := &service.Route{}
+			if err := conf.DB().Table("routes").Where("id=?", rid).First(&route).Error; err != nil {
+				e := errno.FromMessage(errno.RouteRequestError, err.Error()+" route ID: "+rid)
+				logger.Error(e.Msg)
+				c.AbortWithStatusJSON(http.StatusBadRequest, e.Response())
+				return
+			}
+			result.Name = route.Name
+			url := conf.BaseUrl
+			reg, _ := regexp.Compile("(\\d+\\.\\d+\\.\\d+\\.\\d+)\\:(\\d+)")
+			res := reg.FindSubmatch([]byte(url))
+			routeResponse := &service.RouteResponseWithUrl{}
+			routeResponse.Url = string(res[0])
+			routeResponse.RouteRequest = *result
+			resp, _ := json.Marshal(routeResponse)
+			c.Data(http.StatusOK, service.ContentType, resp)
 		}
 	}
 }
