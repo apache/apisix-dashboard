@@ -28,15 +28,29 @@ import { transformCreate, transformFetch } from './transform';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
+  const [active, setActive] = useState(false);
+  const [passive, setPassive] = useState(false);
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
+
+  const onChange = (checkActive: boolean, checkPassive: boolean) => {
+    setActive(checkActive);
+    setPassive(checkPassive);
+  };
 
   useEffect(() => {
     const { id } = (props as any).match.params;
 
     if (id) {
       fetchOne(id).then((data) => {
-        form1.setFieldsValue(transformFetch(data));
+        const transformData = transformFetch(data);
+        form1.setFieldsValue(transformData);
+        if (transformData.active) {
+          setActive(true);
+        }
+        if (transformData.passive) {
+          setPassive(true);
+        }
       });
     }
   }, []);
@@ -77,8 +91,12 @@ const Page: React.FC = (props) => {
             <Steps.Step title={formatMessage({ id: 'upstream.create.preview' })} />
           </Steps>
 
-          {step === 1 && <Step1 form={form1} />}
-          {step === 2 && <Preview form1={form1} />}
+          {step === 1 && (
+            <Step1 form={form1} isActive={active} onChange={onChange} isPassive={passive} />
+          )}
+          {step === 2 && (
+            <Preview form1={form1} isActive={active} onChange={onChange} isPassive={passive} />
+          )}
         </Card>
       </PageContainer>
       <ActionBar step={step} lastStep={2} onChange={onStepChange} />

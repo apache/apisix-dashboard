@@ -35,17 +35,26 @@ export const transformCreate = (props: UpstreamModule.Body): UpstreamModule.Enti
   props.upstreamHostList.forEach((node) => {
     nodes[`${node.host}:${node.port}`] = node.weight;
   });
-
   return {
-    ...omit(props, 'upstreamHostList'),
+    ...omit(props, 'upstreamHostList', 'active', 'passive'),
     nodes,
   };
 };
 
 export const transformFetch = (props: UpstreamModule.Entity) => {
   const upstreamHostList = transformUpstreamNodes(props.nodes);
+  let active = false;
+  let passive = false;
+  if (props.checks) {
+    active = true;
+    if (props.checks.passive) {
+      passive = true;
+    }
+  }
   return {
     ...omit(props, 'nodes'),
     upstreamHostList,
+    active,
+    passive,
   };
 };
