@@ -1,4 +1,4 @@
-package route
+package consumer
 
 import (
 	"reflect"
@@ -17,16 +17,16 @@ import (
 )
 
 type Handler struct {
-	routeStore *store.GenericStore
+	consumerStore *store.GenericStore
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	s, err := store.NewGenericStore(store.GenericStoreOption{
-		BasePath: "/apisix/routes",
-		ObjType:  reflect.TypeOf(entity.Route{}),
+		BasePath: "/apisix/consumers",
+		ObjType:  reflect.TypeOf(entity.Consumer{}),
 		KeyFunc: func(obj interface{}) string {
-			r := obj.(*entity.Route)
-			return r.ID
+			r := obj.(*entity.Consumer)
+			return r.Username
 		},
 	})
 	if err != nil {
@@ -38,20 +38,20 @@ func NewHandler() (handler.RouteRegister, error) {
 
 	utils.AppendToClosers(s.Close)
 	return &Handler{
-		routeStore: s,
+		consumerStore: s,
 	}, nil
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.GET("/apisix/admin/routes/:id", wgin.Wraps(h.Get,
+	r.GET("/apisix/admin/consumers/:id", wgin.Wraps(h.Get,
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
-	r.GET("/apisix/admin/routes", wgin.Wraps(h.List,
+	r.GET("/apisix/admin/consumers", wgin.Wraps(h.List,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
-	r.POST("/apisix/admin/routes", wgin.Wraps(h.Create,
-		wrapper.InputType(reflect.TypeOf(entity.Route{}))))
-	r.PUT("/apisix/admin/routes/:id", wgin.Wraps(h.Update,
+	r.POST("/apisix/admin/consumers", wgin.Wraps(h.Create,
+		wrapper.InputType(reflect.TypeOf(entity.Consumer{}))))
+	r.PUT("/apisix/admin/consumers/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
-	r.DELETE("/apisix/admin/routes", wgin.Wraps(h.BatchDelete,
+	r.DELETE("/apisix/admin/consumers", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 }
 
@@ -62,7 +62,7 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.routeStore.Get(input.ID)
+	r, err := h.consumerStore.Get(input.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -70,17 +70,17 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 }
 
 type ListInput struct {
-	Name string `auto_read:"name,query"`
+	Username string `auto_read:"username,query"`
 	data.Pager
 }
 
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	ret, err := h.routeStore.List(store.ListInput{
+	ret, err := h.consumerStore.List(store.ListInput{
 		Predicate: func(obj interface{}) bool {
-			if input.Name != "" {
-				return strings.Index(obj.(*entity.Route).Name, input.Name) > 0
+			if input.Username != "" {
+				return strings.Index(obj.(*entity.Consumer).Username, input.Username) > 0
 			}
 			return true
 		},
@@ -95,9 +95,9 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 }
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*entity.Route)
+	input := c.Input().(*entity.Consumer)
 
-	if err := h.routeStore.Create(c.Context(), input); err != nil {
+	if err := h.consumerStore.Create(c.Context(), input); err != nil {
 		return nil, err
 	}
 
@@ -106,14 +106,14 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 
 type UpdateInput struct {
 	ID string `auto_read:"id,path"`
-	entity.Route
+	entity.Consumer
 }
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
-	input.Route.ID = input.ID
+	input.Consumer.ID = input.ID
 
-	if err := h.routeStore.Update(c.Context(), &input.Route); err != nil {
+	if err := h.consumerStore.Update(c.Context(), &input.Consumer); err != nil {
 		return nil, err
 	}
 
@@ -121,13 +121,13 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 }
 
 type BatchDelete struct {
-	IDs string `auto_read:"ids,query"`
+	UserNames string `auto_read:"usernames,query"`
 }
 
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
 
-	if err := h.routeStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
+	if err := h.consumerStore.BatchDelete(c.Context(), strings.Split(input.UserNames, ",")); err != nil {
 		return nil, err
 	}
 
