@@ -61,6 +61,7 @@ export default {
   'upstream.step.input.healthy.checks.passive.http_statuses': 'Please input http_statuses',
   'upstream.step.healthy.checks.passive.tcp_failures': 'tcp_failures',
   'upstream.step.input.healthy.checks.passive.tcp_failures': 'Please input tcp_failures',
+  'upstream.notificationMessage.enableHealthCheckFirst': 'Please enable health check first.',
 
   'upstream.create.edit': 'Edit',
   'upstream.create.create': 'Create',

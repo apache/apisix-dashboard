@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React from 'react';
-import { Form, Input, Row, Col, InputNumber, Select, Switch } from 'antd';
+import { Form, Input, Row, Col, InputNumber, Select, Switch, notification } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 
@@ -205,10 +205,22 @@ const Step1: React.FC<Props> = ({ form, disabled, isActive, onChange, isPassive 
   const renderTimeUnit = () => <span style={{ margin: '0 8px' }}>ms</span>;
 
   function activeChange() {
+    if (isActive) {
+      onChange(!isActive, false);
+      form.setFieldsValue({ ...form.getFieldsValue(), passive: false });
+      return;
+    }
     onChange(!isActive, isPassive);
     form.setFieldsValue({ ...form.getFieldsValue(), active: !isActive });
   }
   function passiveChange() {
+    if (!isActive) {
+      notification.warning({
+        message: formatMessage({ id: 'upstream.notificationMessage.enableHealthCheckFirst' }),
+      });
+      form.setFieldsValue({ ...form.getFieldsValue(), passive: isPassive });
+      return;
+    }
     onChange(isActive, !isPassive);
     form.setFieldsValue({ ...form.getFieldsValue(), passive: !isPassive });
   }
@@ -574,14 +586,6 @@ const Step1: React.FC<Props> = ({ form, disabled, isActive, onChange, isPassive 
           </>
         )}
       </Form.List>
-      <Form.Item
-        label={formatMessage({ id: 'upstream.step.healthy.checks.passive' })}
-        name="passive"
-        valuePropName="checked"
-      >
-        <Switch disabled={disabled} onChange={passiveChange} />
-      </Form.Item>
-      {isPassive && renderPassiveHealthyCheck()}
     </>
   );
   return (
@@ -694,6 +698,14 @@ const Step1: React.FC<Props> = ({ form, disabled, isActive, onChange, isPassive 
           <Switch disabled={disabled} onChange={activeChange} />
         </Form.Item>
         {isActive && renderActiveHealthyCheck()}
+        <Form.Item
+          label={formatMessage({ id: 'upstream.step.healthy.checks.passive' })}
+          name="passive"
+          valuePropName="checked"
+        >
+          <Switch disabled={disabled} onChange={passiveChange} />
+        </Form.Item>
+        {isPassive && renderPassiveHealthyCheck()}
       </PanelSection>
     </Form>
   );

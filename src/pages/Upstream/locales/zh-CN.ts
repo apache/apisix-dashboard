@@ -61,6 +61,7 @@ export default {
   'upstream.step.input.healthy.checks.passive.http_statuses': '请输入状态码',
   'upstream.step.healthy.checks.passive.tcp_failures': 'tcp失败次数',
   'upstream.step.input.healthy.checks.passive.tcp_failures': '请输入tcp失败次数',
+  'upstream.notificationMessage.enableHealthCheckFirst': '请先启用探活健康检查。',
 
   'upstream.create.edit': '编辑',
   'upstream.create.create': '创建',
