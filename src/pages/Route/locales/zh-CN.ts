@@ -154,6 +154,7 @@ export default {
   'route.list.operation': '操作',
   'route.list.edit': '编辑',
   'route.list.publish': '发布',
+  'route.list.debug': '在线调试',
   'route.list.publish.success': 'API发布成功!',
   'route.list.offline': '下线',
   'route.list.offline.success': 'API下线成功！',

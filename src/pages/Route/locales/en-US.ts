@@ -159,6 +159,7 @@ export default {
   'route.list.operation': 'Operation',
   'route.list.edit': 'Edit',
   'route.list.publish': 'Publish',
+  'route.list.debug': 'Online Debug',
   'route.list.publish.success': 'Route publish success',
   'route.list.offline': 'Offline',
   'route.list.offline.success': 'Offline success',

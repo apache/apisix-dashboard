@@ -76,7 +76,8 @@
     "umi": "^3.1.2",
     "umi-request": "^1.0.8",
     "use-merge-value": "^1.0.1",
-    "uuid": "7.0.3"
+    "uuid": "7.0.3",
+    "swagger-ui-react": "^3.33.0"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^2.0.2",
@@ -91,6 +92,7 @@
     "@types/react-dom": "^16.8.4",
     "@types/react-helmet": "^5.0.13",
     "@types/uuid": "7.0.4",
+    "@types/swagger-ui-react": "^3.23.3",
     "@umijs/fabric": "^2.2.0",
     "@umijs/plugin-blocks": "^2.0.5",
     "@umijs/plugin-esbuild": "^1.0.0-beta.2",
