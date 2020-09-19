@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-type TestOjb struct {
+type TestObj struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 	Age   int    `json:"age"`
@@ -21,7 +21,7 @@ func TestJsonSchemaValidator_Validate(t *testing.T) {
 	}{
 		{
 			givePath: "./test_case.json",
-			giveObj: TestOjb{
+			giveObj: TestObj{
 				Name:  "lessName",
 				Email: "too long name greater than 10",
 				Age:   12,

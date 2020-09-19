@@ -20,10 +20,11 @@ type GenericStore struct {
 }
 
 type GenericStoreOption struct {
-	BasePath  string
-	ObjType   reflect.Type
-	KeyFunc   func(obj interface{}) string
-	Validator Validator
+	BasePath   string
+	ObjType    reflect.Type
+	KeyFunc    func(obj interface{}) string
+	StockCheck func(obj interface{}, stockObj interface{}) error
+	Validator  Validator
 }
 
 func NewGenericStore(opt GenericStoreOption) (*GenericStore, error) {
@@ -145,11 +146,26 @@ func (s *GenericStore) List(input ListInput) (*ListOutput, error) {
 	return output, nil
 }
 
-func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
+func (s *GenericStore) ingestValidate(obj interface{}) error {
 	if s.opt.Validator != nil {
 		if err := s.opt.Validator.Validate(obj); err != nil {
 			return err
 		}
+	}
+
+	if s.opt.StockCheck != nil {
+		for k := range s.cache {
+			if err := s.opt.StockCheck(obj, s.cache[k]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
+	if err := s.ingestValidate(obj); err != nil {
+		return err
 	}
 
 	key := s.opt.KeyFunc(obj)
@@ -173,10 +189,8 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 }
 
 func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
-	if s.opt.Validator != nil {
-		if err := s.opt.Validator.Validate(obj); err != nil {
-			return err
-		}
+	if err := s.ingestValidate(obj); err != nil {
+		return err
 	}
 
 	key := s.opt.KeyFunc(obj)
