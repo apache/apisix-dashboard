@@ -38,7 +38,7 @@ func SetUpRouter() *gin.Engine {
 	r := gin.New()
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("session", store))
-	r.Use(filter.CORS(), filter.Authentication(), filter.RequestId(), filter.RecoverHandler()) //
+	r.Use(filter.CORS(), filter.Authentication(), filter.RequestId(), filter.RecoverHandler())
 
 	AppendHealthCheck(r)
 	AppendAuthentication(r)
