@@ -25,7 +25,7 @@ export const transformStepData = ({
   step3Data,
 }: RouteModule.RequestData) => {
   const nodes = {};
-  form2Data.upstreamHostList.forEach((node) => {
+  (form2Data.upstreamHostList || []).forEach((node) => {
     nodes[`${node.host}:${node.port}`] = node.weight;
   });
 
@@ -101,13 +101,12 @@ export const transformStepData = ({
     }
   }
 
-  if (step3Data.plugins.prometheus) {
-    // eslint-disable-next-line no-param-reassign
-    step3Data.plugins.prometheus = {};
-  }
-
   // 未启用 redirect
   if (!redirect.uri) {
+    if (step3Data.plugins.prometheus) {
+      // eslint-disable-next-line no-param-reassign
+      step3Data.plugins.prometheus = {};
+    }
     // 移除前端部分自定义变量
     return omit(data, [
       'advancedMatchingRules',
@@ -127,7 +126,18 @@ export const transformStepData = ({
     ]);
   }
 
-  return pick(data, ['name', 'desc', 'protocols', 'hosts', 'uris', 'methods', 'redirect', 'vars']);
+  return pick(data, [
+    'name',
+    'desc',
+    'protocols',
+    'hosts',
+    'uris',
+    'methods',
+    'redirect',
+    'vars',
+    'route_group_id',
+    'route_group_name',
+  ]);
 };
 
 const transformVarsToRules = (
@@ -242,9 +252,10 @@ export const transformRouteData = (data: RouteModule.Body) => {
 
   const { plugins, script } = data;
 
-  if (plugins.prometheus) {
+  if (plugins && plugins.prometheus) {
     plugins.prometheus = { enabled: true };
   }
+
   const step3Data: RouteModule.Step3Data = {
     plugins,
     script,
