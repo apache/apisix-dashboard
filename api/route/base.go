@@ -27,6 +27,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/handler/consumer"
 	"github.com/apisix/manager-api/internal/handler/route"
+	"github.com/apisix/manager-api/internal/handler/ssl"
 )
 
 func SetUpRouter() *gin.Engine {
@@ -51,6 +52,7 @@ func SetUpRouter() *gin.Engine {
 
 	factories := []handler.RegisterFactory{
 		route.NewHandler,
+		ssl.NewHandler,
 		consumer.NewHandler,
 	}
 	for i := range factories {
