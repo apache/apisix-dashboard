@@ -68,7 +68,6 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled, isEdit
               return;
             }
             fetchRouteGroupItem(value.toString()).then((data) => {
-              console.log('data: ', data);
               form.setFieldsValue({
                 ...form.getFieldsValue(),
                 ...data,
