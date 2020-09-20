@@ -45,17 +45,6 @@ declare namespace RouteModule {
     script: any;
   };
 
-  interface Data {
-    disabled?: boolean;
-    data: {
-      step1Data: Step1Data;
-      step2Data: Step2Data;
-      step3Data: Step3Data;
-    };
-    onChange(data: T): void;
-    isEdit?: boolean;
-  }
-
   type UpstreamHost = {
     host: string;
     port: number;
@@ -71,24 +60,6 @@ declare namespace RouteModule {
     key: string;
   }
 
-  type Step2Data = {
-    upstream_protocol: 'http' | 'https' | 'keep';
-    type: 'roundrobin' | 'chash';
-    hash_on?: string;
-    key?: string;
-    upstreamHostList: UpstreamHost[];
-    mappingStrategy: string | undefined;
-    rewriteType: string | undefined;
-    upstreamPath: string | undefined;
-    upstreamHeaderList: UpstreamHeader[];
-    upstream_id?: string;
-    timeout: {
-      connect: number;
-      send: number;
-      read: number;
-    };
-  };
-
   type ModalType = 'CREATE' | 'EDIT';
 
   type Redirect = {
@@ -100,7 +71,7 @@ declare namespace RouteModule {
   // Request Body or Response Data for API
   type Body = {
     id?: number;
-    route_group_id?: string;
+    route_group_id: string;
     route_group_name: string;
     status: boolean;
     name: string;
@@ -164,7 +135,7 @@ declare namespace RouteModule {
   type Form1Data = {
     name: string;
     desc: string;
-    route_group_id?: string;
+    route_group_id: string | null;
     route_group_name: string;
     priority: number;
     protocols: RequestProtocol[];
@@ -210,7 +181,6 @@ declare namespace RouteModule {
       send: number;
       read: number;
     };
-    upstream_id: string | undefined;
     pass_host: 'pass' | 'node' | 'rewrite';
     upstream_host?: string;
     upstreamHostList: UpstreamHost[];

@@ -26,19 +26,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled, isEdit
   const { formatMessage } = useIntl();
 
   const [routeGroups, setRouteGroups] = useState<{ id: string; name: string }[]>();
-  const [routeGroupId, setRouteGroupId] = useState(form.getFieldValue('route_group_id'));
   let routeGroupDisabled = disabled || Boolean(form.getFieldValue('route_group_id'));
-
-  // TODO: EVENT LOOP
-  if (routeGroupId) {
-    fetchRouteGroupItem(routeGroupId).then((data) => {
-      form.setFieldsValue({
-        ...form.getFieldsValue(),
-        ...data,
-      });
-      routeGroupDisabled = true;
-    });
-  }
 
   useEffect(() => {
     // eslint-disable-next-line no-shadow
@@ -72,7 +60,21 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled, isEdit
       <Form.Item label={formatMessage({ id: 'route.meta.api.group.name' })} name="route_group_id">
         <Select
           onChange={(value) => {
-            setRouteGroupId(value);
+            if (!value) {
+              form.setFieldsValue({
+                ...form.getFieldsValue(),
+                route_group_name: '',
+              });
+              return;
+            }
+            fetchRouteGroupItem(value.toString()).then((data) => {
+              console.log('data: ', data);
+              form.setFieldsValue({
+                ...form.getFieldsValue(),
+                ...data,
+              });
+              routeGroupDisabled = true;
+            });
           }}
           disabled={disabled}
         >
