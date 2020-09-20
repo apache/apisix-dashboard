@@ -25,6 +25,7 @@ import (
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/filter"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/handler/consumer"
 	"github.com/apisix/manager-api/internal/handler/route"
 	"github.com/apisix/manager-api/internal/handler/ssl"
 )
@@ -46,12 +47,13 @@ func SetUpRouter() *gin.Engine {
 	AppendSsl(r)
 	AppendPlugin(r)
 	AppendUpstream(r)
-	AppendConsumer(r)
+	//AppendConsumer(r)
 	AppendRouteGroup(r)
 
 	factories := []handler.RegisterFactory{
 		route.NewHandler,
 		ssl.NewHandler,
+		consumer.NewHandler,
 	}
 	for i := range factories {
 		h, err := factories[i]()

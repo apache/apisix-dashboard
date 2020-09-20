@@ -397,6 +397,57 @@ func TestGenericStore_List(t *testing.T) {
 	}
 }
 
+func TestGenericStore_ingestValidate(t *testing.T) {
+	tests := []struct {
+		giveStore       *GenericStore
+		giveObj         interface{}
+		giveStockCheck  func(obj interface{}, stockObj interface{}) error
+		giveValidateErr error
+		wantErr         error
+	}{
+		{
+			giveStore: &GenericStore{
+				cache: map[string]interface{}{
+					"test1-f1": &TestStruct{Field1: "test1-f1", Field2: "test1-f2"},
+					"test2-f1": &TestStruct{Field1: "test2-f1", Field2: "test2-f2"},
+				},
+			},
+			giveObj: &TestStruct{
+				Field1: "test3-f1",
+				Field2: "test2-f2",
+			},
+			giveStockCheck: func(obj interface{}, stockObj interface{}) error {
+				if obj.(*TestStruct).Field2 == stockObj.(*TestStruct).Field2 {
+					return fmt.Errorf("field2: %s is conflicted", obj.(*TestStruct).Field2)
+				}
+				return nil
+			},
+			wantErr: fmt.Errorf("field2: test2-f2 is conflicted"),
+		},
+		{
+			giveStore:       &GenericStore{},
+			giveObj:         &TestStruct{},
+			giveValidateErr: fmt.Errorf("validate failed"),
+			wantErr:         fmt.Errorf("validate failed"),
+		},
+	}
+
+	for _, tc := range tests {
+		validateCalled := false
+		mValidator := &MockValidator{}
+		mValidator.On("Validate", mock.Anything).Run(func(args mock.Arguments) {
+			validateCalled = true
+			assert.Equal(t, tc.giveObj, args.Get(0))
+		}).Return(tc.giveValidateErr)
+
+		tc.giveStore.opt.Validator = mValidator
+		tc.giveStore.opt.StockCheck = tc.giveStockCheck
+		err := tc.giveStore.ingestValidate(tc.giveObj)
+		assert.True(t, validateCalled)
+		assert.Equal(t, tc.wantErr, err)
+	}
+}
+
 func TestGenericStore_Create(t *testing.T) {
 	tests := []struct {
 		caseDesc        string
