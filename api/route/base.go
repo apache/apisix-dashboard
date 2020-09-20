@@ -17,15 +17,16 @@
 package route
 
 import (
-	"github.com/apisix/manager-api/filter"
-	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/handler/route"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 
 	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/filter"
+	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/handler/consumer"
+	"github.com/apisix/manager-api/internal/handler/route"
 )
 
 func SetUpRouter() *gin.Engine {
@@ -45,11 +46,12 @@ func SetUpRouter() *gin.Engine {
 	AppendSsl(r)
 	AppendPlugin(r)
 	AppendUpstream(r)
-	AppendConsumer(r)
+	//AppendConsumer(r)
 	AppendRouteGroup(r)
 
 	factories := []handler.RegisterFactory{
 		route.NewHandler,
+		consumer.NewHandler,
 	}
 	for i := range factories {
 		h, err := factories[i]()
