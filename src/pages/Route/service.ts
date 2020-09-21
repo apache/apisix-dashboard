@@ -24,13 +24,13 @@ import {
   transformRouteDebugData,
 } from './transform';
 
-export const create = (data: Pick<RouteModule.Data, 'data'>) =>
+export const create = (data: RouteModule.RequestData) =>
   request(`/routes`, {
     method: 'POST',
     data: transformStepData(data),
   });
 
-export const update = (rid: number, data: Pick<RouteModule.Data, 'data'>) =>
+export const update = (rid: number, data: RouteModule.RequestData) =>
   request(`/routes/${rid}`, {
     method: 'PUT',
     data: transformStepData(data),
