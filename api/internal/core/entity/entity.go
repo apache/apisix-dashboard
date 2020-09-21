@@ -120,3 +120,13 @@ type SSL struct {
 	ExpTime int      `json:"exptime"`
 	Status  int      `json:"status"`
 }
+
+type Service struct {
+	ID         string      `json:"id"`
+	Name       string      `json:"name,omitempty"`
+	Desc       string      `json:"desc,omitempty"`
+	Upstream   Upstream    `json:"upstream,omitempty"`
+	UpstreamID string      `json:"upstream_id,omitempty"`
+	Plugins    interface{} `json:"plugins,omitempty"`
+	Script     string      `json:"script,omitempty"`
+}

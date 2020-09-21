@@ -17,6 +17,8 @@
 package route
 
 import (
+	"github.com/apisix/manager-api/internal/handler/service"
+	"github.com/apisix/manager-api/internal/handler/upstream"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -44,9 +46,9 @@ func SetUpRouter() *gin.Engine {
 	AppendHealthCheck(r)
 	AppendAuthentication(r)
 	//AppendRoute(r)
-	AppendSsl(r)
+	//AppendSsl(r)
 	AppendPlugin(r)
-	AppendUpstream(r)
+	//AppendUpstream(r)
 	//AppendConsumer(r)
 	AppendRouteGroup(r)
 
@@ -54,6 +56,8 @@ func SetUpRouter() *gin.Engine {
 		route.NewHandler,
 		ssl.NewHandler,
 		consumer.NewHandler,
+		upstream.NewHandler,
+		service.NewHandler,
 	}
 	for i := range factories {
 		h, err := factories[i]()
