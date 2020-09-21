@@ -226,6 +226,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
         </Select>
       </Form.Item>
       <Form.Item
+        noStyle
         shouldUpdate={(prev, next) => {
           onChange({ action: 'redirectOptionChange', data: next.redirectOption });
           return prev.redirectOption !== next.redirectOption;
@@ -235,7 +236,6 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
           if (form.getFieldValue('redirectOption') === 'customRedirect') {
             return (
               <Form.Item
-                labelCol={{ span: 8 }}
                 label={formatMessage({ id: 'route.request.config.redirect.custom' })}
                 required
               >

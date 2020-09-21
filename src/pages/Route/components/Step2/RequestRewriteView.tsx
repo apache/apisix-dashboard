@@ -65,12 +65,12 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
           <Select.Option value="chash">chash</Select.Option>
         </Select>
       </Form.Item>
-      <Form.Item shouldUpdate={(prev, next) => prev.type !== next.type}>
+      <Form.Item noStyle shouldUpdate={(prev, next) => prev.type !== next.type}>
         {() => {
           if (form.getFieldValue('type') === 'chash') {
             return (
               <>
-                <Form.Item label="Hash On" name="hash_on" labelCol={{ span: 8 }}>
+                <Form.Item label="Hash On" name="hash_on">
                   <Select disabled={upstreamDisabled}>
                     {HASH_ON_LIST.map((item) => (
                       <Select.Option value={item} key={item}>
@@ -79,7 +79,7 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
                     ))}
                   </Select>
                 </Form.Item>
-                <Form.Item label="Key" name="key" labelCol={{ span: 8 }}>
+                <Form.Item label="Key" name="key">
                   <Select disabled={upstreamDisabled}>
                     {HASH_KEY_LIST.map((item) => (
                       <Select.Option value={item} key={item}>
@@ -245,12 +245,11 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
             <Radio value="regx">{formatMessage({ id: 'page.route.radio.regx' })}</Radio>
           </Radio.Group>
         </Form.Item>
-        <Form.Item shouldUpdate={(prev, next) => prev.rewriteType !== next.rewriteType}>
+        <Form.Item noStyle shouldUpdate={(prev, next) => prev.rewriteType !== next.rewriteType}>
           {() => {
             if (form.getFieldValue('rewriteType') === 'regx') {
               return (
                 <Form.Item
-                  labelCol={{ span: 8 }}
                   label={formatMessage({ id: 'page.route.form.itemLabel.from' })}
                   name="mappingStrategy"
                   rules={[
@@ -270,7 +269,7 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
             return null;
           }}
         </Form.Item>
-        <Form.Item shouldUpdate={(prev, next) => prev.rewriteType !== next.rewriteType}>
+        <Form.Item noStyle shouldUpdate={(prev, next) => prev.rewriteType !== next.rewriteType}>
           {() => {
             if (
               form.getFieldValue('rewriteType') === 'static' ||
@@ -278,7 +277,6 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
             ) {
               return (
                 <Form.Item
-                  labelCol={{ span: 8 }}
                   label={formatMessage({ id: 'route.request.override.new.path' })}
                   name="upstreamPath"
                   rules={[
