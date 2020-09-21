@@ -20,15 +20,14 @@ import { Input, Select, Switch } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
-import { fetchRouteGroupList } from '@/pages/Route/service';
+import { fetchRouteGroupList, fetchRouteGroupItem } from '@/pages/Route/service';
 
-interface Props extends RouteModule.Data {}
-
-const MetaView: React.FC<Props> = ({ data, disabled, onChange, isEdit }) => {
-  const { step1Data } = data;
+const MetaView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled, isEdit }) => {
   const { formatMessage } = useIntl();
-  const routeGroupDisabled = disabled || !!step1Data.route_group_id;
+
   const [routeGroups, setRouteGroups] = useState<{ id: string; name: string }[]>();
+  let routeGroupDisabled = disabled || Boolean(form.getFieldValue('route_group_id'));
+
   useEffect(() => {
     // eslint-disable-next-line no-shadow
     fetchRouteGroupList().then(({ data }) => {
@@ -36,11 +35,9 @@ const MetaView: React.FC<Props> = ({ data, disabled, onChange, isEdit }) => {
         { name: formatMessage({ id: 'route.meta.api.create.group.name' }), id: null },
         ...data,
       ]);
-      if (step1Data.route_group_id) {
-        onChange({ route_group_id: step1Data.route_group_id });
-      }
     });
   }, []);
+
   return (
     <PanelSection title={formatMessage({ id: 'route.meta.name.description' })}>
       <Form.Item
@@ -63,9 +60,20 @@ const MetaView: React.FC<Props> = ({ data, disabled, onChange, isEdit }) => {
       <Form.Item label={formatMessage({ id: 'route.meta.api.group.name' })} name="route_group_id">
         <Select
           onChange={(value) => {
-            if (step1Data.route_group_id) {
-              onChange({ route_group_id: value });
+            if (!value) {
+              form.setFieldsValue({
+                ...form.getFieldsValue(),
+                route_group_name: '',
+              });
+              return;
             }
+            fetchRouteGroupItem(value.toString()).then((data) => {
+              form.setFieldsValue({
+                ...form.getFieldsValue(),
+                ...data,
+              });
+              routeGroupDisabled = true;
+            });
           }}
           disabled={disabled}
         >

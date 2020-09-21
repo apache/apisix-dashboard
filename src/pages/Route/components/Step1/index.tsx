@@ -16,7 +16,6 @@
  */
 import React from 'react';
 import { Form } from 'antd';
-import { FormInstance } from 'antd/lib/form';
 import { FORM_ITEM_LAYOUT } from '@/pages/Route/constants';
 import styles from '../../Create.less';
 
@@ -24,28 +23,10 @@ import MetaView from './MetaView';
 import RequestConfigView from './RequestConfigView';
 import MatchingRulesView from './MatchingRulesView';
 
-interface Props extends RouteModule.Data {
-  form: FormInstance;
-  isEdit?: boolean;
-}
-
-const Step1: React.FC<Props> = (props) => {
-  const { data, form, onChange } = props;
+const Step1: React.FC<RouteModule.Step1PassProps> = (props) => {
   return (
     <>
-      <Form
-        {...FORM_ITEM_LAYOUT}
-        form={form}
-        layout="horizontal"
-        className={styles.stepForm}
-        onValuesChange={(field) => {
-          if (field.redirectOption === 'forceHttps' || field.redirectOption === 'disabled') {
-            form.setFieldsValue({ redirectURI: '' });
-          }
-          onChange({ ...data.step1Data, ...field });
-        }}
-        initialValues={data.step1Data}
-      >
+      <Form {...FORM_ITEM_LAYOUT} form={props.form} layout="horizontal" className={styles.stepForm}>
         <MetaView {...props} />
         <RequestConfigView {...props} />
       </Form>

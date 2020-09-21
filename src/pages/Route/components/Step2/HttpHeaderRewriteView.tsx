@@ -20,10 +20,11 @@ import { Button, Table, Space, Modal, Input, Select } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
-interface Props extends RouteModule.Data {}
-
-const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) => {
-  const { upstreamHeaderList = [] } = data.step2Data;
+const HttpHeaderRewriteView: React.FC<RouteModule.Step2PassProps> = ({
+  upstreamHeaderList = [],
+  disabled,
+  onChange,
+}) => {
   const [visible, setVisible] = useState(false);
   const [modalForm] = Form.useForm();
   const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
@@ -36,7 +37,10 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
     modalForm.setFieldsValue(record);
   };
   const handleRemove = (key: string) => {
-    onChange({ upstreamHeaderList: upstreamHeaderList.filter((item) => item.key !== key) });
+    onChange({
+      action: 'upstreamHeaderListChange',
+      data: upstreamHeaderList.filter((item) => item.key !== key),
+    });
   };
 
   const columns = [
@@ -92,17 +96,18 @@ const HttpHeaderRewriteView: React.FC<Props> = ({ data, disabled, onChange }) =>
         if (mode === 'EDIT') {
           const key = modalForm.getFieldValue('key');
           onChange({
-            upstreamHeaderList: upstreamHeaderList.map((item) => {
+            action: 'upstreamHeaderListChange',
+            data: upstreamHeaderList.map((item) => {
               if (item.key === key) {
                 return { ...(value as RouteModule.UpstreamHeader), key };
               }
               return item;
             }),
-            key,
           });
         } else {
           onChange({
-            upstreamHeaderList: upstreamHeaderList.concat({
+            action: 'upstreamHeaderListChange',
+            data: upstreamHeaderList.concat({
               ...(value as RouteModule.UpstreamHeader),
               key: Math.random().toString(36).slice(2),
             }),

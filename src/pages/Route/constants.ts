@@ -40,8 +40,8 @@ export const FORM_ITEM_WITHOUT_LABEL = {
   },
 };
 
-export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
-  route_group_id: '',
+export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
+  route_group_id: null,
   route_group_name: '',
   name: '',
   desc: '',
@@ -55,13 +55,13 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Step1Data = {
   redirectURI: '',
   redirectCode: 302,
   methods: HTTP_METHOD_OPTION_LIST,
-  advancedMatchingRules: [],
 };
 
-export const DEFAULT_STEP_2_DATA: RouteModule.Step2Data = {
+export const DEFAULT_STEP_2_DATA: RouteModule.Form2Data = {
   upstream_protocol: 'keep',
   upstreamHostList: [{} as RouteModule.UpstreamHost],
-  upstreamHeaderList: [],
+  upstream_id: null,
+  pass_host: 'pass',
   upstreamPath: undefined,
   type: 'roundrobin',
   mappingStrategy: undefined,

@@ -18,7 +18,6 @@ import React from 'react';
 import Form from 'antd/es/form';
 import { Checkbox, Button, Input, Switch, Select, Row, Col } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
@@ -28,15 +27,11 @@ import {
   FORM_ITEM_WITHOUT_LABEL,
 } from '@/pages/Route/constants';
 
-interface Props extends RouteModule.Data {}
-
-const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
-  const { step1Data } = data;
-  const { protocols } = step1Data;
-  const onProtocolChange = (e: CheckboxValueType[]) => {
-    if (!e.includes('http') && !e.includes('https')) return;
-    onChange({ ...data.step1Data, protocols: e });
-  };
+const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
+  form,
+  disabled,
+  onChange = () => {},
+}) => {
   const { formatMessage } = useIntl();
   const renderHosts = () => (
     <Form.List name="hosts">
@@ -182,12 +177,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
           },
         ]}
       >
-        <Checkbox.Group
-          disabled={disabled}
-          options={['http', 'https']}
-          value={protocols}
-          onChange={onProtocolChange}
-        />
+        <Checkbox.Group disabled={disabled} options={['http', 'https']} />
       </Form.Item>
       <Form.Item label="WebSocket" name="websocket" valuePropName="checked">
         <Switch disabled={disabled} />
@@ -218,7 +208,12 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
         label={formatMessage({ id: 'route.request.config.redirect' })}
         name="redirectOption"
       >
-        <Select disabled={disabled}>
+        <Select
+          disabled={disabled}
+          onChange={(parmas) => {
+            onChange({ action: 'redirectOptionChange', data: parmas });
+          }}
+        >
           <Select.Option value="forceHttps">
             {formatMessage({ id: 'route.request.config.enable.https' })}
           </Select.Option>
@@ -230,34 +225,50 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
           </Select.Option>
         </Select>
       </Form.Item>
-      {step1Data.redirectOption === 'customRedirect' && (
-        <Form.Item label={formatMessage({ id: 'route.request.config.redirect.custom' })} required>
-          <Row gutter={10}>
-            <Col>
-              <Form.Item name="redirectURI" rules={[{ required: true }]}>
-                <Input
-                  placeholder={formatMessage({
-                    id: 'route.request.config.redirect.custom.example',
-                  })}
-                  disabled={disabled}
-                />
+      <Form.Item
+        noStyle
+        shouldUpdate={(prev, next) => {
+          onChange({ action: 'redirectOptionChange', data: next.redirectOption });
+          return prev.redirectOption !== next.redirectOption;
+        }}
+      >
+        {() => {
+          if (form.getFieldValue('redirectOption') === 'customRedirect') {
+            return (
+              <Form.Item
+                label={formatMessage({ id: 'route.request.config.redirect.custom' })}
+                required
+              >
+                <Row gutter={10}>
+                  <Col>
+                    <Form.Item name="redirectURI" rules={[{ required: true }]}>
+                      <Input
+                        placeholder={formatMessage({
+                          id: 'route.request.config.redirect.custom.example',
+                        })}
+                        disabled={disabled}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={10}>
+                    <Form.Item name="redirectCode" rules={[{ required: true }]}>
+                      <Select disabled={disabled}>
+                        <Select.Option value={301}>
+                          {formatMessage({ id: 'route.request.config.redirect.301' })}
+                        </Select.Option>
+                        <Select.Option value={302}>
+                          {formatMessage({ id: 'route.request.config.redirect.302' })}
+                        </Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                </Row>
               </Form.Item>
-            </Col>
-            <Col span={10}>
-              <Form.Item name="redirectCode" rules={[{ required: true }]}>
-                <Select disabled={disabled}>
-                  <Select.Option value={301}>
-                    {formatMessage({ id: 'route.request.config.redirect.301' })}
-                  </Select.Option>
-                  <Select.Option value={302}>
-                    {formatMessage({ id: 'route.request.config.redirect.302' })}
-                  </Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form.Item>
-      )}
+            );
+          }
+          return null;
+        }}
+      </Form.Item>
     </PanelSection>
   );
 };
