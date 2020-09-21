@@ -204,7 +204,7 @@ const Step1: React.FC<Props> = ({ form, disabled, isActive, onChange, isPassive 
 
   const renderTimeUnit = () => <span style={{ margin: '0 8px' }}>ms</span>;
 
-  function activeChange() {
+  const handleActiveChange = () => {
     if (isActive) {
       onChange(!isActive, false);
       form.setFieldsValue({ ...form.getFieldsValue(), passive: false });
@@ -212,8 +212,8 @@ const Step1: React.FC<Props> = ({ form, disabled, isActive, onChange, isPassive 
     }
     onChange(!isActive, isPassive);
     form.setFieldsValue({ ...form.getFieldsValue(), active: !isActive });
-  }
-  function passiveChange() {
+  };
+  const handlePassiveChange = () => {
     if (!isActive) {
       notification.warning({
         message: formatMessage({ id: 'upstream.notificationMessage.enableHealthCheckFirst' }),
@@ -223,7 +223,7 @@ const Step1: React.FC<Props> = ({ form, disabled, isActive, onChange, isPassive 
     }
     onChange(isActive, !isPassive);
     form.setFieldsValue({ ...form.getFieldsValue(), passive: !isPassive });
-  }
+  };
 
   const renderPassiveHealthyCheck = () => (
     <>
@@ -695,7 +695,7 @@ const Step1: React.FC<Props> = ({ form, disabled, isActive, onChange, isPassive 
           name="active"
           valuePropName="checked"
         >
-          <Switch disabled={disabled} onChange={activeChange} />
+          <Switch disabled={disabled} onChange={handleActiveChange} />
         </Form.Item>
         {isActive && renderActiveHealthyCheck()}
         <Form.Item
@@ -703,7 +703,7 @@ const Step1: React.FC<Props> = ({ form, disabled, isActive, onChange, isPassive 
           name="passive"
           valuePropName="checked"
         >
-          <Switch disabled={disabled} onChange={passiveChange} />
+          <Switch disabled={disabled} onChange={handlePassiveChange} />
         </Form.Item>
         {isPassive && renderPassiveHealthyCheck()}
       </PanelSection>
