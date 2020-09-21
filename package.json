@@ -54,7 +54,7 @@
     "@ant-design/icons": "^4.0.0",
     "@ant-design/pro-layout": "^6.0.0",
     "@ant-design/pro-table": "2.6.3",
-    "@api7-dashboard/plugin": "^1.0.4",
+    "@api7-dashboard/plugin": "^1.0.5",
     "@api7-dashboard/pluginchart": "^1.0.11",
     "@api7-dashboard/ui": "^1.0.3",
     "@rjsf/antd": "2.2.0",
