@@ -226,7 +226,7 @@ const Page: React.FC<Props> = (props) => {
       if (step === 1) {
         form1.validateFields().then((value) => {
           const { redirectOption, hosts } = value;
-          const filterHosts = hosts.filter((item: string) => item);
+          const filterHosts = hosts.filter(Boolean);
           Promise.all([
             redirectOption === 'forceHttps' && filterHosts.length !== 0
               ? checkHostWithSSL(hosts)
