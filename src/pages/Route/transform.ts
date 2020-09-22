@@ -121,6 +121,7 @@ export const transformStepData = ({
       'redirectCode',
       'forceHttps',
       'redirectOption',
+      form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
       form2Data.upstream_id ? 'upstream' : 'upstream_id',
     ]);
@@ -130,13 +131,13 @@ export const transformStepData = ({
     'name',
     'desc',
     'protocols',
-    'hosts',
     'uris',
     'methods',
     'redirect',
     'vars',
     'route_group_id',
     'route_group_name',
+    form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
   ]);
 };
 
@@ -191,7 +192,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     status,
     protocols: protocols.filter((item) => item !== 'websocket'),
     websocket: protocols.includes('websocket'),
-    hosts,
+    hosts: (hosts || []).filter(Boolean).length === 0 ? [''] : hosts,
     paths: uris,
     methods,
   };
