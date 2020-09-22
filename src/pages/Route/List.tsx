@@ -38,7 +38,7 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'route.list.domain.name' }),
       dataIndex: 'hosts',
       render: (_, record) =>
-        record.hosts.map((host) => (
+        (record.hosts || []).map((host) => (
           <Tag key={host} color="geekblue">
             {host}
           </Tag>
