@@ -21,8 +21,13 @@ import Step1 from './Step1';
 
 type Props = {
   form1: FormInstance;
+  isActive: boolean;
+  isPassive: boolean;
+  onChange(a: boolean, p: boolean): void;
 };
 
-const Page: React.FC<Props> = ({ form1 }) => <Step1 form={form1} disabled />;
+const Page: React.FC<Props> = ({ form1, isActive, onChange, isPassive }) => (
+  <Step1 form={form1} disabled isActive={isActive} onChange={onChange} isPassive={isPassive} />
+);
 
 export default Page;
