@@ -190,6 +190,35 @@ func TestOfflineRoute(t *testing.T) {
 	handler.Put(uriPrefix + "/routes/" + routePublished.ID.String() + "/offline").Expect(t).Status(http.StatusOK).End()
 }
 
+func TestGetRouteWithApisixUrl(t *testing.T) {
+	// create route
+	handler.Post(uriPrefix+"/routes").
+		Header("Authorization", token).
+		JSON(`{
+      "name":"api-test-get-url",
+      "desc":"",
+      "priority":0,
+      "protocols":["http"],
+      "hosts":["test.com"],
+      "paths":["/*"],
+      "methods":["GET","HEAD","POST","PUT","DELETE","OPTIONS","PATCH"],
+      "status":true,
+      "upstream_protocol":"keep",
+      "plugins":{},
+      "uris":["/*"],
+      "vars":[],
+      "upstream":{"type":"roundrobin","nodes":{"127.0.0.1:443":1},
+      "timeout":{"connect":6000,"send":6000,"read":6000}},
+      "upstream_header":{}
+}`).Expect(t).
+	Status(http.StatusOK).
+	End()
+	//get route
+	route, _ := getRouteByName("api-test-get-url")
+	// get route with apisix url
+	handler.Get(uriPrefix + "/routes/" + route.ID.String() + "/debuginfo").Expect(t).Status(http.StatusOK).End()
+}
+
 func getRouteByName(name string) (*service.Route, error) {
 	db := conf.DB()
 	route := &service.Route{}
