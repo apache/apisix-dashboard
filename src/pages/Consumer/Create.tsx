@@ -68,8 +68,18 @@ const Page: React.FC = (props) => {
         setStep(nextStep);
       });
     } else if (nextStep === 3) {
-      const isValid = Object.keys(plugins).some((name) => name.includes('auth'));
-      if (!isValid) {
+      const authPluginNames = [
+        'openid-connect',
+        'basic-auth',
+        'jwt-auth',
+        'key-auth',
+        'authz-keycloak',
+      ];
+      const currentAuthPlugin = Object.keys(plugins).filter((plugin) =>
+        authPluginNames.includes(plugin),
+      );
+      const currentAuthPluginLen = currentAuthPlugin.length;
+      if (currentAuthPluginLen > 1 || currentAuthPluginLen === 0) {
         notification.warning({
           message: formatMessage({ id: 'consumer.create.enable.authentication.plugin' }),
         });
