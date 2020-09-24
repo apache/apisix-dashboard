@@ -523,16 +523,15 @@ func getRouteWithApisixUrl(c *gin.Context) {
 			}
 			result.Name = route.Name
 			url := conf.BaseUrl
-			reg, _ := regexp.Compile("(\\d+\\.\\d+\\.\\d+\\.\\d+)")
-			reg2, _ := regexp.Compile("\\:(\\d+)")
+			reg, _ := regexp.Compile("://([^/:]+)(:\\d*)?")
 			res := reg.FindSubmatch([]byte(url))
-			res2 := reg2.FindSubmatch([]byte(url))
-			var port string
-			if len(res2) > 0 {
-				port = string(res2[0])
+			var addr string
+			if len(res) > 0 {
+				addr = string(res[0])
+				addr = strings.Replace(addr, "://", "", 1)
 			}
 			routeResponse := &service.RouteResponseWithUrl{}
-			routeResponse.Url = string(res[0]) + port
+			routeResponse.Url = addr
 			routeResponse.RouteRequest = *result
 			resp, _ := json.Marshal(routeResponse)
 			c.Data(http.StatusOK, service.ContentType, resp)
