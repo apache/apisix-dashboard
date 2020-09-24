@@ -349,10 +349,6 @@ export const transformRouteDebugData = (data: RouteModule.Body) => {
         {
           url: `${protocol}://${url}`,
         },
-        {
-          // FIXME
-          url: `${protocol}://${window.location.hostname}:9080`,
-        },
       ];
     }
   });
