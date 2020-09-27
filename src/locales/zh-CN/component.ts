@@ -37,6 +37,7 @@ export default {
   'component.status.fail': '失败',
   'component.global.pleaseEnter': '请输入',
   'component.global.pleaseChoose': '请选择',
+  'component.global.pleaseCheck': '请检查',
   'component.global.connectionTimeout': '连接超时时间',
   'component.global.sendTimeout': '发送超时时间',
   'component.global.receiveTimeout': '接收超时时间',
