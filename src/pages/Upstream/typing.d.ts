@@ -22,6 +22,7 @@ declare namespace UpstreamModule {
   };
 
   type Base = {
+    id?: string;
     name: string;
     timeout: {
       connect: number;

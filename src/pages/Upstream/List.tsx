@@ -30,7 +30,7 @@ const Page: React.FC = () => {
   const [search, setSearch] = useState('');
   const { formatMessage } = useIntl();
 
-  const columns: ProColumns<UpstreamModule.ResEntity>[] = [
+  const columns: ProColumns<UpstreamModule.Entity>[] = [
     {
       title: formatMessage({ id: 'upstream.list.name' }),
       dataIndex: 'name',
@@ -85,7 +85,7 @@ const Page: React.FC = () => {
 
   return (
     <PageContainer title={formatMessage({ id: 'upstream.list' })}>
-      <ProTable<UpstreamModule.ResEntity>
+      <ProTable<UpstreamModule.Entity>
         actionRef={ref}
         columns={columns}
         rowKey="id"
