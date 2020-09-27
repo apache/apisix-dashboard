@@ -54,7 +54,7 @@
     "@ant-design/icons": "^4.0.0",
     "@ant-design/pro-layout": "^6.0.0",
     "@ant-design/pro-table": "2.6.3",
-    "@api7-dashboard/plugin": "^1.0.5",
+    "@api7-dashboard/plugin": "^1.0.6",
     "@api7-dashboard/pluginchart": "^1.0.11",
     "@api7-dashboard/ui": "^1.0.3",
     "@rjsf/antd": "2.2.0",
@@ -73,11 +73,11 @@
     "react-device-detect": "^1.12.1",
     "react-dom": "^16.8.6",
     "react-helmet-async": "^1.0.4",
+    "swagger-ui-react": "^3.33.0",
     "umi": "^3.1.2",
     "umi-request": "^1.0.8",
     "use-merge-value": "^1.0.1",
-    "uuid": "7.0.3",
-    "swagger-ui-react": "^3.33.0"
+    "uuid": "7.0.3"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^2.0.2",
@@ -91,8 +91,8 @@
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.8.4",
     "@types/react-helmet": "^5.0.13",
-    "@types/uuid": "7.0.4",
     "@types/swagger-ui-react": "^3.23.3",
+    "@types/uuid": "7.0.4",
     "@umijs/fabric": "^2.2.0",
     "@umijs/plugin-blocks": "^2.0.5",
     "@umijs/plugin-esbuild": "^1.0.0-beta.2",
