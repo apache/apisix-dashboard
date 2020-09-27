@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consumer
+package upstream
 
 import (
 	"reflect"
 	"strings"
 
+	"github.com/api7/go-jsonpatch"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
@@ -33,16 +34,16 @@ import (
 )
 
 type Handler struct {
-	consumerStore *store.GenericStore
+	upstreamStore *store.GenericStore
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	s, err := store.NewGenericStore(store.GenericStoreOption{
-		BasePath: "/apisix/consumers",
-		ObjType:  reflect.TypeOf(entity.Consumer{}),
+		BasePath: "/apisix/upstreams",
+		ObjType:  reflect.TypeOf(entity.Upstream{}),
 		KeyFunc: func(obj interface{}) string {
-			r := obj.(*entity.Consumer)
-			return r.Username
+			r := obj.(*entity.Upstream)
+			return r.ID
 		},
 	})
 	if err != nil {
@@ -54,20 +55,20 @@ func NewHandler() (handler.RouteRegister, error) {
 
 	utils.AppendToClosers(s.Close)
 	return &Handler{
-		consumerStore: s,
+		upstreamStore: s,
 	}, nil
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.GET("/apisix/admin/consumers/:id", wgin.Wraps(h.Get,
+	r.GET("/apisix/admin/upstreams/:id", wgin.Wraps(h.Get,
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
-	r.GET("/apisix/admin/consumers", wgin.Wraps(h.List,
+	r.GET("/apisix/admin/upstreams", wgin.Wraps(h.List,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
-	r.POST("/apisix/admin/consumers", wgin.Wraps(h.Create,
-		wrapper.InputType(reflect.TypeOf(entity.Consumer{}))))
-	r.PUT("/apisix/admin/consumers/:id", wgin.Wraps(h.Update,
+	r.POST("/apisix/admin/upstreams", wgin.Wraps(h.Create,
+		wrapper.InputType(reflect.TypeOf(entity.Upstream{}))))
+	r.PUT("/apisix/admin/upstreams/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
-	r.DELETE("/apisix/admin/consumers", wgin.Wraps(h.BatchDelete,
+	r.DELETE("/apisix/admin/upstreams", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 }
 
@@ -78,7 +79,7 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.consumerStore.Get(input.ID)
+	r, err := h.upstreamStore.Get(input.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -86,17 +87,17 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 }
 
 type ListInput struct {
-	Username string `auto_read:"username,query"`
+	ID string `auto_read:"id,query"`
 	data.Pager
 }
 
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	ret, err := h.consumerStore.List(store.ListInput{
+	ret, err := h.upstreamStore.List(store.ListInput{
 		Predicate: func(obj interface{}) bool {
-			if input.Username != "" {
-				return strings.Index(obj.(*entity.Consumer).Username, input.Username) > 0
+			if input.ID != "" {
+				return strings.Index(obj.(*entity.Upstream).ID, input.ID) > 0
 			}
 			return true
 		},
@@ -111,9 +112,9 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 }
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*entity.Consumer)
+	input := c.Input().(*entity.Upstream)
 
-	if err := h.consumerStore.Create(c.Context(), input); err != nil {
+	if err := h.upstreamStore.Create(c.Context(), input); err != nil {
 		return nil, err
 	}
 
@@ -122,14 +123,14 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 
 type UpdateInput struct {
 	ID string `auto_read:"id,path"`
-	entity.Consumer
+	entity.Upstream
 }
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
-	input.Consumer.ID = input.ID
+	input.Upstream.ID = input.ID
 
-	if err := h.consumerStore.Update(c.Context(), &input.Consumer); err != nil {
+	if err := h.upstreamStore.Update(c.Context(), &input.Upstream); err != nil {
 		return nil, err
 	}
 
@@ -137,13 +138,53 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 }
 
 type BatchDelete struct {
-	UserNames string `auto_read:"usernames,query"`
+	IDs string `auto_read:"ids,query"`
 }
 
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
 
-	if err := h.consumerStore.BatchDelete(c.Context(), strings.Split(input.UserNames, ",")); err != nil {
+	if err := h.upstreamStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
+		return nil, err
+	}
+
+	return nil, nil
+}
+
+func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*UpdateInput)
+	arr := strings.Split(input.ID, "/")
+	var subPath string
+	if len(arr) > 1 {
+		input.ID = arr[0]
+		subPath = arr[1]
+	}
+
+	stored, err := h.upstreamStore.Get(input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	var patch jsonpatch.Patch
+	if subPath != "" {
+		patch = jsonpatch.Patch{
+			Operations: []jsonpatch.PatchOperation{
+				{Op: jsonpatch.Replace, Path: subPath, Value: c.Input()},
+			},
+		}
+	} else {
+		patch, err = jsonpatch.MakePatch(stored, input.Upstream)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	err = patch.Apply(&stored)
+	if err != nil {
+		panic(err)
+	}
+
+	if err := h.upstreamStore.Update(c.Context(), &stored); err != nil {
 		return nil, err
 	}
 
