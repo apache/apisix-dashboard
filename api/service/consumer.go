@@ -189,7 +189,7 @@ func ConsumerCreate(param interface{}, id string) error {
 		if _, ok := err.(*errno.HttpError); ok {
 			return err
 		}
-		e := errno.New(errno.ApisixSslCreateError, err.Error())
+		e := errno.New(errno.ApisixConsumerCreateError, err.Error())
 		return e
 	}
 

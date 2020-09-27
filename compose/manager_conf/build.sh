@@ -25,6 +25,7 @@ export MYSQL_PASSWORD=123456
 export SYSLOG_HOST=127.0.0.1
 export APISIX_BASE_URL="http://192.17.5.11:9080/apisix/admin"
 export APISIX_API_KEY="edd1c9f034335f136f87ad84b625c8f1"
+export APISIX_DEBUG_URL="http://127.0.0.1:9080/"
 
 sed -i -e "s%#mysqlAddress#%`echo $MYSQL_SERVER_ADDRESS`%g" ${pwd}/conf.json
 sed -i -e "s%#mysqlUser#%`echo $MYSQL_USER`%g" ${pwd}/conf.json
@@ -32,6 +33,7 @@ sed -i -e "s%#mysqlPWD#%`echo $MYSQL_PASSWORD`%g" ${pwd}/conf.json
 sed -i -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
 sed -i -e "s%#apisixBaseUrl#%`echo $APISIX_BASE_URL`%g" ${pwd}/conf.json
 sed -i -e "s%#apisixApiKey#%`echo $APISIX_API_KEY`%g" ${pwd}/conf.json
+sed -i -e "s%#apisixDebugUrl#%`echo $APISIX_DEBUG_URL`%g" ${pwd}/conf.json
 
 cd /go/manager-api
 exec ./manager-api

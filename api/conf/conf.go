@@ -39,6 +39,7 @@ var (
 	basePath string
 	ApiKey   = "edd1c9f034335f136f87ad84b625c8f1"
 	BaseUrl  = "http://127.0.0.1:9080/apisix/admin"
+	DebugUrl = "http://127.0.0.1:9080/"
 )
 
 func init() {
@@ -117,6 +118,7 @@ func initApisix() {
 		apisixConf := configuration.Get("conf.apisix")
 		BaseUrl = apisixConf.Get("base_url").String()
 		ApiKey = apisixConf.Get("api_key").String()
+		DebugUrl = apisixConf.Get("debug_url").String()
 	}
 }
 
