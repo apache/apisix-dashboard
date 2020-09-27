@@ -44,7 +44,6 @@ export default {
   'page.route.form.itemLable.routeGroup': 'Route Group Name',
   'page.route.form.itemRulesPatternMessage.apiNameRule':
     'Maximum length 100, only letters, Numbers, _, and - are supported, and can only begin with letters',
-  'page.route.input.placeholder.description': 'Can not more than 200 characters',
 
   'page.route.panelSection.title.requestConfigBasicDefine': 'Request Basic Define',
   'page.route.protocol': 'Protocol',
@@ -103,5 +102,4 @@ export default {
 
   'page.route.domainName': 'Domain Name',
   'page.route.path': 'Path',
-  'page.route.editTime': 'Edit Time',
 };

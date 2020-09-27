@@ -80,7 +80,7 @@ const Page: React.FC = () => {
       ),
     },
     {
-      title: formatMessage({ id: 'page.route.editTime' }),
+      title: formatMessage({ id: 'component.global.editTime' }),
       dataIndex: 'update_time',
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },

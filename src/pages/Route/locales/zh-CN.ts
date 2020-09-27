@@ -29,7 +29,6 @@ export default {
   'page.route.rule': '规则',
   'page.route.domainName': '域名',
   'page.route.path': '路径',
-  'page.route.editTime': '编辑时间',
   'page.route.value': '参数值',
   'page.route.protocol': '协议',
   'page.route.httpHeaderName': 'HTTP 请求头名称',
@@ -48,7 +47,6 @@ export default {
   // input
   'page.route.input.placeholder.parameterNameHttpHeader': '请求头键名，例如：HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': '参数名称，例如：id',
-  'page.route.input.placeholder.description': '不超过 200 个字符',
   'page.route.input.placeholder.redirectCustom': '例如：/foo/index.html',
   // form
   'page.route.form.itemRulesRequiredMessage.parameterName': '仅支持字母和数字，且只能以字母开头',

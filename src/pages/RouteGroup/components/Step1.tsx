@@ -36,19 +36,19 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
   return (
     <Form {...FORM_ITEM_LAYOUT} form={form} initialValues={initialValues}>
       <Form.Item
-        label={formatMessage({ id: 'routegroup.step.name' })}
+        label={formatMessage({ id: 'component.global.name' })}
         name="name"
         rules={[{ required: true }]}
-        extra={formatMessage({ id: 'routegroup.step.name.should.unique' })}
+        extra={formatMessage({ id: 'component.global.form.itemExtraMessage.nameGloballyUnique' })}
       >
         <Input
-          placeholder={formatMessage({ id: 'routegroup.step.input.routegroup.name' })}
+          placeholder={formatMessage({ id: 'page.routegroup.input.placeholder.name' })}
           disabled={disabled}
         />
       </Form.Item>
-      <Form.Item label={formatMessage({ id: 'routegroup.step.description' })} name="description">
+      <Form.Item label={formatMessage({ id: 'component.global.description' })} name="description">
         <Input.TextArea
-          placeholder={formatMessage({ id: 'routegroup.step.input.description' })}
+          placeholder={formatMessage({ id: 'component.global.input.placeholder.description' })}
           disabled={disabled}
         />
       </Form.Item>
