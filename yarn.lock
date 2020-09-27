@@ -199,12 +199,13 @@
     json-schema "^0.2.5"
     set-value "^3.0.2"
 
-"@api7-dashboard/pluginchart@^1.0.11":
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/@api7-dashboard/pluginchart/-/pluginchart-1.0.11.tgz#1269f541134423a723f8d2f9c59a6b3c4096ab8b"
-  integrity sha512-zGGdQFXhiFEKc9ZLN9WQf3kL4R9wwS/w15AJxbSfLdivyR9FgyBudgCMiCCQiJCuApDgFodG0i7RPbLdjxadyg==
+"@api7-dashboard/pluginchart@^1.0.13":
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/@api7-dashboard/pluginchart/-/pluginchart-1.0.13.tgz#93c24773f838ec9de45a7142a5e6932c1bfc5538"
+  integrity sha512-qcqzx0lNFX4lh63RW2GUrsdVQHI7sJgZwRnkPDFaZEh2O2o9HOf5Z7krnL61dI+uWZEh8RRqjAbSlaBKqxWUbg==
   dependencies:
     "@ant-design/icons" "^4.2.2"
+    "@api7-dashboard/plugin" "^1.0.6"
     "@mrblenny/react-flow-chart" "^0.0.14"
     "@rjsf/antd" "^2.3.0"
     "@rjsf/core" "^2.3.0"
