@@ -25,7 +25,7 @@ export default {
   'consumer.create.edit': '编辑',
   'consumer.create.create': '创建',
   'consumer.create.success': '成功',
-  'consumer.create.enable.authentication.plugin': '请启用至少一种身份认证类插件',
+  'consumer.create.enable.authentication.plugin': '请启用一种身份认证类插件',
   'consumer.create.basic.information': '基础信息',
   'consumer.create.plugin.config': '插件配置',
   'consumer.create.preview': '预览',

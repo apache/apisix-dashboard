@@ -16,7 +16,8 @@
  */
 export default {
   'consumer.step.username': 'Username',
-  'consumer.step.username.rule': 'Maximum length is 100, only letters, numbers and _ are supported, and can only begin with letters',
+  'consumer.step.username.rule':
+    'Maximum length is 100, only letters, numbers and _ are supported, and can only begin with letters',
   'consumer.step.username.unique': 'Username should be unique',
   'consumer.step.input.username': 'Please input username',
   'consumer.step.description': 'Description',
@@ -25,7 +26,7 @@ export default {
   'consumer.create.edit': 'Edit',
   'consumer.create.create': 'Create',
   'consumer.create.success': 'Success',
-  'consumer.create.enable.authentication.plugin': 'Please enable at least one authentication plugin',
+  'consumer.create.enable.authentication.plugin': 'Please enable one authentication plugin',
   'consumer.create.basic.information': 'Basic Information',
   'consumer.create.plugin.config': 'Plugin Config',
   'consumer.create.preview': 'Preview',
