@@ -51,6 +51,7 @@ export default {
   'component.global.connectionTimeout': 'Connection Timeout',
   'component.global.sendTimeout': 'Send Timeout',
   'component.global.receiveTimeout': 'Receive Timeout',
+  'component.global.name': 'Name',
   // User component
   'component.user.loginByPassword': 'Username & Password',
   'component.user.login': 'Login',

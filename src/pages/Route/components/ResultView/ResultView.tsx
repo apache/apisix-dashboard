@@ -27,7 +27,9 @@ const ResultView: React.FC<Props> = (props) => {
   return (
     <Result
       status="success"
-      title={formatMessage({ id: 'component.global.submit' })}
+      title={`${formatMessage({ id: 'component.global.submit' })}${formatMessage({
+        id: 'component.status.success',
+      })}`}
       extra={[
         <Button type="primary" key="goto-list" onClick={() => history.replace('/routes/list')}>
           {formatMessage({ id: 'page.route.button.returnList' })}

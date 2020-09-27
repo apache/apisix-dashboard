@@ -40,6 +40,7 @@ export default {
   'component.global.connectionTimeout': '连接超时时间',
   'component.global.sendTimeout': '发送超时时间',
   'component.global.receiveTimeout': '接收超时时间',
+  'component.global.name': '名称',
 
   'component.global.popconfirm.title.delete': '确定删除该条记录吗？',
   'component.global.steps.stepTitle.basicInformation': '基础信息',

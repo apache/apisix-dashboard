@@ -16,6 +16,7 @@
  */
 export default {
   'page.route.button.returnList': 'Return Route List',
+  'page.route.button.onlineDebug': 'Online Debug',
 
   'page.route.parameterPosition': 'Parameter Position',
   'page.route.httpRequestHeader': 'HTTP Request Header',
@@ -40,18 +41,9 @@ export default {
 
   'page.route.panelSection.title.nameDescription': 'Name And Description',
   'page.route.form.itemLabel.apiName': 'API Name',
+  'page.route.form.itemLable.routeGroup': 'Route Group Name',
   'page.route.form.itemRulesPatternMessage.apiNameRule':
     'Maximum length 100, only letters, Numbers, _, and - are supported, and can only begin with letters',
-  'rotue.meta.api.rule':
-    'Only letters, numbers, _ and - are supported, and can only begin with letters',
-  'route.meta.api.group.name': 'RouteGroup',
-  'route.meta.group.name': 'GroupName',
-  'route.meta.input.api.group.name': 'Please enter the group name',
-  'route.meta.api.create.group.name': 'Create route group',
-  'route.meta.description': 'APIDescription',
-  'route.meta.description.rule': 'Can not more than 200 characters',
-  'route.meta.group.description': 'GroupDescription',
-
   'page.route.input.placeholder.description': 'Can not more than 200 characters',
 
   'page.route.panelSection.title.requestConfigBasicDefine': 'Request Basic Define',
@@ -78,6 +70,13 @@ export default {
   'page.route.httpAction': 'Action',
   'page.route.httpOverrideOrCreate': 'Override/Create',
   'page.route.panelSection.title.httpOverrideRequestHeader': 'Override HTTP request header',
+  'page.route.routeGroup': 'RouteGroup',
+  'page.route.status': 'Status',
+  'page.route.published': 'Published',
+  'page.route.unpublished': 'Unpublished',
+  'page.route.groupName': 'GroupName',
+  'page.route.publish': 'Publish',
+  'page.route.offline': 'Offline',
 
   'page.route.select.option.inputManually': 'Input Manually',
   'page.route.form.itemLabel.domainNameOrIp': 'Domain Name/IP',
@@ -89,44 +88,19 @@ export default {
   'page.route.weight': 'Weight',
   'page.route.radio.staySame': 'Stay The Same',
   'page.route.form.itemLabel.newPath': 'New Path',
+  'page.route.form.itemLabel.rewriteType': 'Request Path',
   'page.route.input.placeholder.newPath': 'For example: /foo/bar/index.html',
 
   'page.route.steps.stepTitle.defineApiRequest': 'Define API Request',
   'page.route.steps.stepTitle.defineApiBackendServe': 'Define API Backend Server',
 
-  'route.list.name': 'Name',
-  'route.list.domain.name': 'Domain Name',
-  'route.list.path': 'Path',
-  'route.list.description': 'Description',
-  'route.list.group.name': 'RouteGroup',
-  'route.list.status': 'Status',
-  'route.list.status.publish': 'Published',
-  'route.list.status.offline': 'Offline',
-  'route.list.edit.time': 'Edit Time',
-  'route.list.operation': 'Operation',
-  'route.list.edit': 'Edit',
-  'route.list.publish': 'Publish',
-  'route.list.debug': 'Online Debug',
-  'route.list.publish.success': 'Route publish success',
-  'route.list.offline': 'Offline',
-  'route.list.offline.success': 'Offline success',
-  'route.list.offline.confirm': 'Are you sure to offline this route?',
-  'route.list.delete.confrim': 'Are you sure to delete this route?',
-  'route.list.delete.success': 'Delete Success!',
-  'route.list.confirm': 'Confirm',
-  'route.list.cancel': 'Cancel',
-  'route.list.delete': 'Delete',
-  'route.list': 'Route List',
-  'route.list.input': 'Please input',
-  'route.list.create': 'Create',
+  'page.route.popconfirm.title.offline': 'Are you sure to offline this route?',
   'page.route.radio.static': 'Static',
   'page.route.radio.regx': 'Regx',
   'page.route.form.itemLabel.from': 'From',
   'page.route.form.itemHelp.status':
     'Whether a route can be used after it is created, the default value is false.',
 
-
-  'page.route.name': 'Name',
   'page.route.domainName': 'Domain Name',
   'page.route.path': 'Path',
   'page.route.editTime': 'Edit Time',

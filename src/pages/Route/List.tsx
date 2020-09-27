@@ -31,7 +31,7 @@ const Page: React.FC = () => {
 
   const columns: ProColumns<RouteModule.BaseData>[] = [
     {
-      title: formatMessage({ id: 'page.route.name' }),
+      title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
     },
     {
@@ -63,18 +63,18 @@ const Page: React.FC = () => {
       dataIndex: 'description',
     },
     {
-      title: formatMessage({ id: 'route.list.group.name' }),
+      title: formatMessage({ id: 'page.route.routeGroup' }),
       dataIndex: 'route_group_name',
     },
     {
-      title: formatMessage({ id: 'route.list.status' }),
+      title: formatMessage({ id: 'page.route.status' }),
       dataIndex: 'status',
       render: (_, record) => (
         <>
           {record.status ? (
-            <Tag color="green">{formatMessage({ id: 'route.list.status.publish' })}</Tag>
+            <Tag color="green">{formatMessage({ id: 'page.route.published' })}</Tag>
           ) : (
-            <Tag color="red">{formatMessage({ id: 'route.list.status.offline' })}</Tag>
+            <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
           )}
         </>
       ),
@@ -95,7 +95,9 @@ const Page: React.FC = () => {
               onClick={() => {
                 publish(record.id!).then(() => {
                   notification.success({
-                    message: formatMessage({ id: 'route.list.publish.success' }),
+                    message: `${formatMessage({ id: 'page.route.publish' })} ${formatMessage({
+                      id: 'menu.routes',
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
                   });
                   /* eslint-disable no-unused-expressions */
                   ref.current?.reload();
@@ -104,7 +106,7 @@ const Page: React.FC = () => {
               style={{ marginRight: 10 }}
               disabled={record.status}
             >
-              {formatMessage({ id: 'route.list.publish' })}
+              {formatMessage({ id: 'page.route.publish' })}
             </Button>
             <Button
               type="primary"
@@ -138,42 +140,46 @@ const Page: React.FC = () => {
               onClick={() => history.push(`/routes/${record.id}/debug`)}
               style={{ marginRight: 10 }}
             >
-              {formatMessage({ id: 'route.list.debug' })}
+              {formatMessage({ id: 'page.route.button.onlineDebug' })}
             </Button>
             <Popconfirm
-              title={formatMessage({ id: 'route.list.offline.confirm' })}
+              title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
               onConfirm={() => {
                 offline(record.id!).then(() => {
                   notification.success({
-                    message: formatMessage({ id: 'route.list.offline.success' }),
+                    message: `${formatMessage({ id: 'menu.routes' })}
+                    ${formatMessage({ id: 'page.route.offline' })}
+                    ${formatMessage({ id: 'component.status.success' })}`,
                   });
                   /* eslint-disable no-unused-expressions */
                   ref.current?.reload();
                 });
               }}
-              okText={formatMessage({ id: 'route.list.offline' })}
-              cancelText={formatMessage({ id: 'route.list.cancel' })}
+              okText={formatMessage({ id: 'component.global.confirm' })}
+              cancelText={formatMessage({ id: 'component.global.cancel' })}
             >
               <Button type="primary" danger disabled={!record.status}>
-                {formatMessage({ id: 'route.list.offline' })}
+                {formatMessage({ id: 'page.route.offline' })}
               </Button>
             </Popconfirm>
             <Popconfirm
-              title={formatMessage({ id: 'route.list.delete.confrim' })}
+              title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
                 remove(record.id!).then(() => {
                   notification.success({
-                    message: formatMessage({ id: 'route.list.delete.success' }),
+                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                      id: 'menu.routes',
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
                   });
                   /* eslint-disable no-unused-expressions */
                   ref.current?.reload();
                 });
               }}
-              okText={formatMessage({ id: 'route.list.confirm' })}
-              cancelText={formatMessage({ id: 'route.list.cancel' })}
+              okText={formatMessage({ id: 'component.global.confirm' })}
+              cancelText={formatMessage({ id: 'component.global.cancel' })}
             >
               <Button type="primary" danger>
-                {formatMessage({ id: 'route.list.delete' })}
+                {formatMessage({ id: 'component.global.delete' })}
               </Button>
             </Popconfirm>
           </Space>
