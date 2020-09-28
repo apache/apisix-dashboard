@@ -53,14 +53,16 @@ const Step: React.FC<Props> = ({ form }) => {
   return (
     <>
       <Form.Item
-        label={formatMessage({ id: 'ssl.step.way' })}
+        label={formatMessage({ id: 'page.ssl.form.itemLabel.way' })}
         required
         extra={
-          window.location.pathname.indexOf('edit') === -1 ? '' : formatMessage({ id: 'ssl.step.rules' })
+          window.location.pathname.indexOf('edit') === -1
+            ? ''
+            : formatMessage({ id: 'page.ssl.form.itemExtraMessage.way' })
         }
       >
         <Select
-          placeholder={formatMessage({ id: 'ssl.step.select.create.ways' })}
+          placeholder={formatMessage({ id: 'page.ssl.select.placeholder.selectCreateWays' })}
           defaultValue="Input"
           onChange={(value: CreateType) => {
             form.setFieldsValue({
@@ -73,8 +75,10 @@ const Step: React.FC<Props> = ({ form }) => {
           }}
           style={{ width: 100 }}
         >
-          <Select.Option value="Input">{formatMessage({ id: 'ssl.step.input' })}</Select.Option>
-          <Select.Option value="Upload">{formatMessage({ id: 'ssl.step.upload' })}</Select.Option>
+          <Select.Option value="Input">
+            {formatMessage({ id: 'page.ssl.selectOption.input' })}
+          </Select.Option>
+          <Select.Option value="Upload">{formatMessage({ id: 'page.ssl.upload' })}</Select.Option>
         </Select>
       </Form.Item>
       <div style={createType === 'Input' ? {} : { display: 'none' }}>

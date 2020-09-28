@@ -31,11 +31,11 @@ const Page: React.FC = () => {
 
   const columns: ProColumns<RouteModule.BaseData>[] = [
     {
-      title: formatMessage({ id: 'route.list.name' }),
+      title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
     },
     {
-      title: formatMessage({ id: 'route.list.domain.name' }),
+      title: formatMessage({ id: 'page.route.domainName' }),
       dataIndex: 'hosts',
       render: (_, record) =>
         (record.hosts || []).map((host) => (
@@ -45,7 +45,7 @@ const Page: React.FC = () => {
         )),
     },
     {
-      title: formatMessage({ id: 'route.list.path' }),
+      title: formatMessage({ id: 'page.route.path' }),
       dataIndex: 'uri',
       render: (_, record) =>
         record.uris.map((uri) => (
@@ -59,33 +59,33 @@ const Page: React.FC = () => {
     //   dataIndex: 'priority',
     // },
     {
-      title: formatMessage({ id: 'route.list.description' }),
+      title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'description',
     },
     {
-      title: formatMessage({ id: 'route.list.group.name' }),
+      title: formatMessage({ id: 'page.route.routeGroup' }),
       dataIndex: 'route_group_name',
     },
     {
-      title: formatMessage({ id: 'route.list.status' }),
+      title: formatMessage({ id: 'page.route.status' }),
       dataIndex: 'status',
       render: (_, record) => (
         <>
           {record.status ? (
-            <Tag color="green">{formatMessage({ id: 'route.list.status.publish' })}</Tag>
+            <Tag color="green">{formatMessage({ id: 'page.route.published' })}</Tag>
           ) : (
-            <Tag color="red">{formatMessage({ id: 'route.list.status.offline' })}</Tag>
+            <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
           )}
         </>
       ),
     },
     {
-      title: formatMessage({ id: 'route.list.edit.time' }),
+      title: formatMessage({ id: 'component.global.editTime' }),
       dataIndex: 'update_time',
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },
     {
-      title: formatMessage({ id: 'route.list.operation' }),
+      title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
       render: (_, record) => (
         <>
@@ -95,7 +95,9 @@ const Page: React.FC = () => {
               onClick={() => {
                 publish(record.id!).then(() => {
                   notification.success({
-                    message: formatMessage({ id: 'route.list.publish.success' }),
+                    message: `${formatMessage({ id: 'page.route.publish' })} ${formatMessage({
+                      id: 'menu.routes',
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
                   });
                   /* eslint-disable no-unused-expressions */
                   ref.current?.reload();
@@ -104,56 +106,80 @@ const Page: React.FC = () => {
               style={{ marginRight: 10 }}
               disabled={record.status}
             >
-              {formatMessage({ id: 'route.list.publish' })}
+              {formatMessage({ id: 'page.route.publish' })}
             </Button>
             <Button
               type="primary"
               onClick={() => history.push(`/routes/${record.id}/edit`)}
               style={{ marginRight: 10 }}
             >
-              {formatMessage({ id: 'route.list.edit' })}
+              {formatMessage({ id: 'component.global.edit' })}
             </Button>
+            <Popconfirm
+              title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
+              onConfirm={() => {
+                remove(record.id!).then(() => {
+                  notification.success({
+                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                      id: 'menu.routes',
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
+                  });
+                  /* eslint-disable no-unused-expressions */
+                  ref.current?.reload();
+                });
+              }}
+              okText={formatMessage({ id: 'component.global.confirm' })}
+              cancelText={formatMessage({ id: 'component.global.cancel' })}
+            >
+              <Button type="primary" danger>
+                {formatMessage({ id: 'component.global.delete' })}
+              </Button>
+            </Popconfirm>
             <Button
               type="primary"
               onClick={() => history.push(`/routes/${record.id}/debug`)}
               style={{ marginRight: 10 }}
             >
-              {formatMessage({ id: 'route.list.debug' })}
+              {formatMessage({ id: 'page.route.button.onlineDebug' })}
             </Button>
             <Popconfirm
-              title={formatMessage({ id: 'route.list.offline.confirm' })}
+              title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
               onConfirm={() => {
                 offline(record.id!).then(() => {
                   notification.success({
-                    message: formatMessage({ id: 'route.list.offline.success' }),
+                    message: `${formatMessage({ id: 'menu.routes' })}
+                    ${formatMessage({ id: 'page.route.offline' })}
+                    ${formatMessage({ id: 'component.status.success' })}`,
                   });
                   /* eslint-disable no-unused-expressions */
                   ref.current?.reload();
                 });
               }}
-              okText={formatMessage({ id: 'route.list.offline' })}
-              cancelText={formatMessage({ id: 'route.list.cancel' })}
+              okText={formatMessage({ id: 'component.global.confirm' })}
+              cancelText={formatMessage({ id: 'component.global.cancel' })}
             >
               <Button type="primary" danger disabled={!record.status}>
-                {formatMessage({ id: 'route.list.offline' })}
+                {formatMessage({ id: 'page.route.offline' })}
               </Button>
             </Popconfirm>
             <Popconfirm
-              title={formatMessage({ id: 'route.list.delete.confrim' })}
+              title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
                 remove(record.id!).then(() => {
                   notification.success({
-                    message: formatMessage({ id: 'route.list.delete.success' }),
+                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                      id: 'menu.routes',
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
                   });
                   /* eslint-disable no-unused-expressions */
                   ref.current?.reload();
                 });
               }}
-              okText={formatMessage({ id: 'route.list.confirm' })}
-              cancelText={formatMessage({ id: 'route.list.cancel' })}
+              okText={formatMessage({ id: 'component.global.confirm' })}
+              cancelText={formatMessage({ id: 'component.global.cancel' })}
             >
               <Button type="primary" danger>
-                {formatMessage({ id: 'route.list.delete' })}
+                {formatMessage({ id: 'component.global.delete' })}
               </Button>
             </Popconfirm>
           </Space>
@@ -163,7 +189,11 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'route.list' })}>
+    <PageHeaderWrapper
+      title={`${formatMessage({ id: 'menu.routes' })} ${formatMessage({
+        id: 'component.global.list',
+      })}`}
+    >
       <ProTable<RouteModule.BaseData>
         actionRef={ref}
         rowKey="name"
@@ -172,7 +202,7 @@ const Page: React.FC = () => {
         request={(params) => fetchList(params, search)}
         toolBarRender={(action) => [
           <Input.Search
-            placeholder={formatMessage({ id: 'route.list.input' })}
+            placeholder={formatMessage({ id: 'component.global.pleaseEnter' })}
             onSearch={(value) => {
               setSearch(value);
               action.setPageInfo({ page: 1 });
@@ -181,7 +211,7 @@ const Page: React.FC = () => {
           />,
           <Button type="primary" onClick={() => history.push('/routes/create')}>
             <PlusOutlined />
-            {formatMessage({ id: 'route.list.create' })}
+            {formatMessage({ id: 'component.global.create' })}
           </Button>,
         ]}
       />

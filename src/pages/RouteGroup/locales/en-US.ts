@@ -15,31 +15,5 @@
  * limitations under the License.
  */
 export default {
-  'routegroup.step.create': 'Create',
-  'routegroup.step.name': 'Name',
-  'routegroup.step.name.should.unique': 'Name should be unique',
-  'routegroup.step.input.routegroup.name': 'Please input routegroup name',
-  'routegroup.step.description': 'Description',
-  'routegroup.step.input.description': 'Please input description',
-
-  'routegroup.create.edit': 'Edit',
-  'routegroup.create.create': 'Create',
-  'routegroup.create.routegroup.successfully': 'routegroup successfully',
-  'routegroup.create.basic.info': 'Basic Information',
-  'routegroup.create.preview': 'Preview',
-
-  'routegroup.list.name': 'Name',
-  'routegroup.list.type': 'Type',
-  'routegroup.list.description': 'Description',
-  'routegroup.list.edit.time': 'Edit Time',
-  'routegroup.list.operation': 'Operation',
-  'routegroup.list.edit': 'Edit',
-  'routegroup.list.confirm.delete': 'Are you sure to delete ?',
-  'routegroup.list.confirm': 'Confirm',
-  'routegroup.list.cancel': 'Cancel',
-  'routegroup.list.delete.successfully': 'Delete successfully',
-  'routegroup.list.delete': 'Delete',
-  'routegroup.list': 'routegroup List',
-  'routegroup.list.input': 'Please input',
-  'routegroup.list.create': 'Create',
+  'page.routegroup.input.placeholder.name': 'Please input routegroup name',
 };
