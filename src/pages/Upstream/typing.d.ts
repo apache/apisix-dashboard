@@ -15,63 +15,72 @@
  * limitations under the License.
  */
 declare namespace UpstreamModule {
+  type Node = Record<string, number>
+
+  type Timeout = Record<"connect" | "send" | "read", number>
+
+  type HealthCheck = {
+    active: {
+      timeout?: number;
+      http_path: string;
+      host: string;
+      healthy: {
+        interval: number;
+        successes: number;
+      };
+      unhealthy: {
+        interval: number;
+        http_failures: number;
+      };
+      req_headers?: string[];
+    };
+    passive?: {
+      healthy: {
+        http_statuses: number[];
+        successes: number;
+      };
+      unhealthy: {
+        http_statuses: number[];
+        http_failures: number;
+        tcp_failures: number;
+      };
+    };
+  }
+
   type UpstreamHost = {
     host: string;
     port: number;
     weight: number;
   };
 
-  type Base = {
-    id?: string;
-    name: string;
-    timeout: {
-      connect: number;
-      read: number;
-      send: number;
+  type RequestBody = {
+    type: "roundrobin" | "chash" | "ewma";
+    nodes?: Node;
+    k8s_deployment_info?: {
+      namespace: string;
+      deploy_name: string;
+      service_name: string;
+      backend_type: string;
+      port: number;
     };
-    type: 'roundrobin' | 'chash';
-    description: string;
-    checks: {
-      active: {
-        timeout?: number;
-        http_path: string;
-        host: string;
-        healthy: {
-          interval: number;
-          successes: number;
-        };
-        unhealthy: {
-          interval: number;
-          http_failures: number;
-        };
-        req_headers?: string[];
-      };
-      passive: {
-        healthy: {
-          http_statuses: number[];
-          successes: number;
-        };
-        unhealthy: {
-          http_statuses: number[];
-          http_failures: number;
-          tcp_failures: number;
-        };
-      };
-    };
-  };
+    hash_on?: "vars" | "header" | "cookie" | "consumer";
+    key?: string;
+    checks?: HealthCheck;
+    retries?: number;
+    enable_websocket?: boolean;
+    timeout?: Timeout;
+    name?: string;
+    desc?: string;
+    pass_host?: "pass" | "node" | "rewrite";
+    upstream_host: UpstreamHost[];
+  }
 
-  type Entity = Base & {
-    nodes: {
-      [ipWithPort: string]: number;
-    };
-  };
+  // TODO: typing
+  type ResponseBody = {} & RequestBody
 
-  type Body = Base & {
-    upstreamHostList: UpstreamHost[];
-  };
-
-  type ResEntity = Entity & {
-    id: string;
-    update_time: string;
-  };
+  type FormFieldsType = {
+    active: boolean;
+    passive: boolean;
+    nodes: UpstreamHost[];
+  } & Omit<RequestBody, 'nodes'>
 }

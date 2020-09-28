@@ -27,7 +27,7 @@ import { fetchList, remove } from './service';
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
 
-  const [search, setSearch] = useState('');
+  const [, setSearch] = useState('');
   const { formatMessage } = useIntl();
 
   const columns: ProColumns<UpstreamModule.Entity>[] = [
@@ -90,7 +90,7 @@ const Page: React.FC = () => {
         columns={columns}
         rowKey="id"
         search={false}
-        request={(params) => fetchList(params, search)}
+        request={() => fetchList()}
         toolBarRender={(action) => [
           <Input.Search
             placeholder={formatMessage({ id: 'upstream.list.input' })}
