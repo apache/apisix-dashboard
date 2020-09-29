@@ -58,6 +58,7 @@ export default {
   'page.route.form.itemLabel.redirect': '重定向',
   'page.route.form.itemLabel.redirectCustom': '自定义重定向',
   'page.route.form.itemLabel.rewriteType': '请求路径',
+  'page.route.form.itemLabel.redirectURI': '重定向路径',
   'page.route.form.itemExtraMessage.domain': '域名或IP，支持泛域名，如：*.test.com',
   'page.route.form.itemRulesPatternMessage.domain':
     '仅支持字母、数字和 * ，且 * 只能是在开头，支持单个 * ',
