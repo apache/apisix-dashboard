@@ -17,8 +17,6 @@
 package route
 
 import (
-	"github.com/apisix/manager-api/internal/handler/service"
-	"github.com/apisix/manager-api/internal/handler/upstream"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -29,7 +27,9 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/handler/consumer"
 	"github.com/apisix/manager-api/internal/handler/route"
+	"github.com/apisix/manager-api/internal/handler/service"
 	"github.com/apisix/manager-api/internal/handler/ssl"
+	"github.com/apisix/manager-api/internal/handler/upstream"
 )
 
 func SetUpRouter() *gin.Engine {

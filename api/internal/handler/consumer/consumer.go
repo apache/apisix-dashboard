@@ -130,7 +130,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
 	input.Consumer.Username = input.Username
 
-  //TODO: if not exists, create
+	//TODO: if not exists, create
 	if err := h.consumerStore.Update(c.Context(), &input.Consumer); err != nil {
 		return nil, err
 	}
