@@ -52,4 +52,5 @@ jobs:
     - name: run test
       working-directory: ./api
       run: |
+        export APIX_ETCD_ENDPOINTS=127.0.0.1:2379
         go test ./...
