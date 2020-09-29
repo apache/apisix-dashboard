@@ -126,15 +126,17 @@ type Consumer struct {
 }
 
 type SSL struct {
-	ID      string   `json:"id"`
-	Cert    string   `json:"cert"`
-	Key     string   `json:"key"`
-	Sni     string   `json:"sni"`
-	Snis    []string `json:"snis"`
-	Certs   []string `json:"certs"`
-	Keys    []string `json:"keys"`
-	ExpTime int      `json:"exptime"`
-	Status  int      `json:"status"`
+	ID            string   `json:"id"`
+	Cert          string   `json:"cert"`
+	Key           string   `json:"key"`
+	Sni           string   `json:"sni"`
+	Snis          []string `json:"snis"`
+	Certs         []string `json:"certs"`
+	Keys          []string `json:"keys"`
+	ExpTime       int64    `json:"exptime"`
+	Status        int      `json:"status"`
+	ValidityStart int64    `json:"validity_start"`
+	ValidityEnd   int64    `json:"validity_end"`
 }
 
 type Service struct {
