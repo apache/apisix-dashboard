@@ -19,17 +19,16 @@ package route
 import (
 	"net/http"
 	"testing"
-
-	"github.com/apisix/manager-api/service"
 )
 
 func TestConsumer(t *testing.T) {
 	// create ok
-	handler.
+	username1 := "e2e_test_consumer1"
+	testHandler.
 		Post(uriPrefix+"/consumers").
 		Header("Authorization", token).
 		JSON(`{
-			"username": "e2e_test_consumer1",
+			"username": "` + username1 + `",
 			"plugins": {
 				"limit-count": {
 					"count": 2,
@@ -48,11 +47,9 @@ func TestConsumer(t *testing.T) {
 		Status(http.StatusOK).
 		End()
 
-	c1, _ := service.GetConsumerByUserName("e2e_test_consumer1")
-
 	//update ok
-	handler.
-		Put(uriPrefix + "/consumers/" + c1.ID.String()).
+	testHandler.
+		Put(uriPrefix + "/consumers/" + username1).
 		JSON(`{
 			"username": "e2e_test_consumer1",
 			"plugins": {
@@ -73,26 +70,19 @@ func TestConsumer(t *testing.T) {
 		Status(http.StatusOK).
 		End()
 
-	// duplicate username
-	handler.
-		Post(uriPrefix + "/consumers").
-		JSON(`{
-			"username": "e2e_test_consumer1",
-			"plugins": {
-				"limit-count": {
-					"count": 2,
-					"time_window": 60,
-					"rejected_code": 503,
-					"key": "remote_addr"
-				},
-				"basic-auth": {
-					"username": "foo",
-					"password": "bar"
-				}
-			},
-			"desc": "test description"
-		}`).
+	//list
+	testHandler.
+		Get(uriPrefix + "/consumers").
+		Headers(map[string]string{"Authorization": token}).
 		Expect(t).
-		Status(http.StatusBadRequest).
+		Status(http.StatusOK).
 		End()
+
+	//delete
+	testHandler.
+		Delete(uriPrefix + "/consumers/" + username1).
+		Expect(t).
+		Status(http.StatusOK).
+		End()
+
 }
