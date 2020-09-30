@@ -32,7 +32,7 @@ import (
 )
 
 type Handler struct {
-	consumerStore *store.GenericStore
+	consumerStore store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {

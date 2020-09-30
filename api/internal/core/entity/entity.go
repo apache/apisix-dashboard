@@ -31,7 +31,7 @@ type BaseInfoGetter interface {
 }
 
 type Route struct {
-	ID              string      `json:"id"`
+	BaseInfo
 	URI             string      `json:"uri,omitempty" validate:"uri"`
 	Uris            []string    `json:"uris,omitempty"`
 	Name            string      `json:"name,omitempty" validate:"max=50"`

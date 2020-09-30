@@ -23,10 +23,19 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/utils"
+	"github.com/shiningrush/droplet/data"
 	"log"
 	"reflect"
 	"time"
 )
+
+type Interface interface {
+	Get(key string) (interface{}, error)
+	List(input ListInput) (*ListOutput, error)
+	Create(ctx context.Context, obj interface{}) error
+	Update(ctx context.Context, obj interface{}) error
+	BatchDelete(ctx context.Context, keys []string) error
+}
 
 type GenericStore struct {
 	Stg storage.Interface
@@ -116,7 +125,7 @@ func (s *GenericStore) Init() error {
 func (s *GenericStore) Get(key string) (interface{}, error) {
 	ret, ok := s.cache[key]
 	if !ok {
-		return nil, fmt.Errorf("id:%s not found", key)
+		return nil, data.ErrNotFound
 	}
 	return ret, nil
 }

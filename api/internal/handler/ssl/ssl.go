@@ -38,7 +38,7 @@ import (
 )
 
 type Handler struct {
-	sslStore *store.GenericStore
+	sslStore store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
