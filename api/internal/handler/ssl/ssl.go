@@ -35,7 +35,6 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
@@ -43,24 +42,8 @@ type Handler struct {
 }
 
 func NewHandler() (handler.RouteRegister, error) {
-	s, err := store.NewGenericStore(store.GenericStoreOption{
-		BasePath: "/apisix/ssl",
-		ObjType:  reflect.TypeOf(entity.SSL{}),
-		KeyFunc: func(obj interface{}) string {
-			r := obj.(*entity.SSL)
-			return r.ID
-		},
-	})
-	if err != nil {
-		return nil, err
-	}
-	if err := s.Init(); err != nil {
-		return nil, err
-	}
-
-	utils.AppendToClosers(s.Close)
 	return &Handler{
-		sslStore: s,
+		sslStore: store.GetStore(store.HubKeySsl),
 	}, nil
 }
 

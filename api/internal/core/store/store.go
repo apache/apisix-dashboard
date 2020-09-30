@@ -20,7 +20,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/utils"
 	"log"
 	"reflect"
 	"time"
@@ -193,6 +195,15 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 		return fmt.Errorf("key: %s is conflicted", key)
 	}
 
+	if getter, ok := obj.(entity.BaseInfoGetter); ok {
+		info := getter.GetBaseInfo()
+		if info.ID == "" {
+			info.ID = utils.GetFlakeUidStr()
+		}
+		info.CreateTime = time.Now().Unix()
+		info.UpdateTime = time.Now().Unix()
+	}
+
 	bs, err := json.Marshal(obj)
 	if err != nil {
 		return fmt.Errorf("json marshal failed: %s", err)
@@ -216,6 +227,11 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
 	_, ok := s.cache[key]
 	if !ok {
 		return fmt.Errorf("key: %s is not found", key)
+	}
+
+	if getter, ok := obj.(entity.BaseInfoGetter); ok {
+		info := getter.GetBaseInfo()
+		info.UpdateTime = time.Now().Unix()
 	}
 
 	bs, err := json.Marshal(obj)

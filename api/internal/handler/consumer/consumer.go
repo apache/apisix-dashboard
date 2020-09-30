@@ -29,7 +29,6 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
@@ -37,24 +36,8 @@ type Handler struct {
 }
 
 func NewHandler() (handler.RouteRegister, error) {
-	s, err := store.NewGenericStore(store.GenericStoreOption{
-		BasePath: "/apisix/consumers",
-		ObjType:  reflect.TypeOf(entity.Consumer{}),
-		KeyFunc: func(obj interface{}) string {
-			r := obj.(*entity.Consumer)
-			return r.Username
-		},
-	})
-	if err != nil {
-		return nil, err
-	}
-	if err := s.Init(); err != nil {
-		return nil, err
-	}
-
-	utils.AppendToClosers(s.Close)
 	return &Handler{
-		consumerStore: s,
+		consumerStore: store.GetStore(store.HubKeyConsumer),
 	}, nil
 }
 
