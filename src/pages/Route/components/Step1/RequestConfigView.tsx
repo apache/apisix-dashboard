@@ -254,15 +254,27 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
           if (form.getFieldValue('redirectOption') === 'customRedirect') {
             return (
               <Form.Item
-                label={formatMessage({ id: 'route.request.config.redirect.custom' })}
+                label={formatMessage({ id: 'page.route.form.itemLabel.redirectCustom' })}
                 required
               >
                 <Row gutter={10}>
                   <Col>
-                    <Form.Item name="redirectURI" rules={[{ required: true }]}>
+                    <Form.Item
+                      name="redirectURI"
+                      rules={[
+                        {
+                          required: true,
+                          message: `${formatMessage({
+                            id: 'component.global.pleaseEnter',
+                          })}${formatMessage({
+                            id: 'page.route.form.itemLabel.redirectURI',
+                          })}`,
+                        },
+                      ]}
+                    >
                       <Input
                         placeholder={formatMessage({
-                          id: 'route.request.config.redirect.custom.example',
+                          id: 'page.route.input.placeholder.redirectCustom',
                         })}
                         disabled={disabled}
                       />
@@ -272,10 +284,10 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                     <Form.Item name="redirectCode" rules={[{ required: true }]}>
                       <Select disabled={disabled}>
                         <Select.Option value={301}>
-                          {formatMessage({ id: 'route.request.config.redirect.301' })}
+                          {formatMessage({ id: 'page.route.select.option.redirect301' })}
                         </Select.Option>
                         <Select.Option value={302}>
-                          {formatMessage({ id: 'route.request.config.redirect.302' })}
+                          {formatMessage({ id: 'page.route.select.option.redirect302' })}
                         </Select.Option>
                       </Select>
                     </Form.Item>

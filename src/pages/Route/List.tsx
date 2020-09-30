@@ -115,26 +115,6 @@ const Page: React.FC = () => {
             >
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
-            <Popconfirm
-              title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
-              onConfirm={() => {
-                remove(record.id!).then(() => {
-                  notification.success({
-                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                      id: 'menu.routes',
-                    })} ${formatMessage({ id: 'component.status.success' })}`,
-                  });
-                  /* eslint-disable no-unused-expressions */
-                  ref.current?.reload();
-                });
-              }}
-              okText={formatMessage({ id: 'component.global.confirm' })}
-              cancelText={formatMessage({ id: 'component.global.cancel' })}
-            >
-              <Button type="primary" danger>
-                {formatMessage({ id: 'component.global.delete' })}
-              </Button>
-            </Popconfirm>
             <Button
               type="primary"
               onClick={() => history.push(`/routes/${record.id}/debug`)}

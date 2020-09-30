@@ -88,6 +88,7 @@ export default {
   'page.route.radio.staySame': 'Stay The Same',
   'page.route.form.itemLabel.newPath': 'New Path',
   'page.route.form.itemLabel.rewriteType': 'Request Path',
+  'page.route.form.itemLabel.redirectURI': 'Redirect URI',
   'page.route.input.placeholder.newPath': 'For example: /foo/bar/index.html',
 
   'page.route.steps.stepTitle.defineApiRequest': 'Define API Request',
