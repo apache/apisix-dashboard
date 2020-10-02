@@ -18,7 +18,10 @@ package store
 
 import (
 	"fmt"
-	"github.com/apisix/manager-api/internal/utils"
+	"reflect"
+
+  "github.com/apisix/manager-api/internal/core/entity"
+  "github.com/apisix/manager-api/internal/utils"
 )
 
 type HubKey string
@@ -54,4 +57,67 @@ func GetStore(key HubKey) *GenericStore {
 		return s
 	}
 	panic(fmt.Sprintf("no store with key: %s", key))
+}
+
+func InitStores() error {
+	err := InitStore(HubKeyConsumer, GenericStoreOption{
+		BasePath: "/apisix/consumers",
+		ObjType:  reflect.TypeOf(entity.Consumer{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.Consumer)
+			return r.Username
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeyRoute, GenericStoreOption{
+		BasePath: "/apisix/routes",
+		ObjType:  reflect.TypeOf(entity.Route{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.Route)
+			return r.ID
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeyService, GenericStoreOption{
+		BasePath: "/apisix/services",
+		ObjType:  reflect.TypeOf(entity.Service{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.Service)
+			return r.ID
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeySsl, GenericStoreOption{
+		BasePath: "/apisix/ssl",
+		ObjType:  reflect.TypeOf(entity.SSL{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.SSL)
+			return r.ID
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeyUpstream, GenericStoreOption{
+		BasePath: "/apisix/upstreams",
+		ObjType:  reflect.TypeOf(entity.Upstream{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.Upstream)
+			return r.ID
+		},
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }
