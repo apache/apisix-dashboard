@@ -151,6 +151,11 @@ func (s *GenericStore) List(input ListInput) (*ListOutput, error) {
 		ret = append(ret, s.cache[k])
 	}
 
+	//should return an empty array not a null for client
+	if ret == nil {
+		ret = []interface{}{}
+	}
+
 	output := &ListOutput{
 		Rows:      ret,
 		TotalSize: len(ret),

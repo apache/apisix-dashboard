@@ -17,23 +17,34 @@
 package route
 
 import (
+	"strings"
+
 	"github.com/api7/apitest"
-	"github.com/apisix/manager-api/conf"
+	dlog "github.com/shiningrush/droplet/log"
+	"github.com/spf13/viper"
+
+	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/log"
 )
 
-var handler *apitest.APITest
+var testHandler *apitest.APITest
 
 var (
 	uriPrefix = "/apisix/admin"
 )
 
 func init() {
-	//init mysql connect
-	conf.InitializeMysql()
+	//init etcd
+	viper.SetEnvPrefix("APIX")
+	viper.AutomaticEnv()
+	dlog.DefLogger = log.DefLogger{}
 
+	if err := storage.InitETCDClient(strings.Split(viper.GetString("etcd_endpoints"), ",")); err != nil {
+		panic(err)
+	}
 	r := SetUpRouter()
 
-	handler = apitest.
+	testHandler = apitest.
 		New().
 		Handler(r)
 }

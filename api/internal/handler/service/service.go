@@ -51,6 +51,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(entity.Service{}))))
 	r.PUT("/apisix/admin/services/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
+	r.PATCH("/apisix/admin/services/:id", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.DELETE("/apisix/admin/services", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 }
@@ -155,13 +157,13 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	} else {
 		patch, err = jsonpatch.MakePatch(stored, input.Service)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 	}
 
 	err = patch.Apply(&stored)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	if err := h.serviceStore.Update(c.Context(), &stored); err != nil {
