@@ -17,13 +17,16 @@
 package route
 
 import (
+	"reflect"
 	"strings"
 
 	"github.com/api7/apitest"
 	dlog "github.com/shiningrush/droplet/log"
 	"github.com/spf13/viper"
 
+	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/log"
 )
 
@@ -42,9 +45,77 @@ func init() {
 	if err := storage.InitETCDClient(strings.Split(viper.GetString("etcd_endpoints"), ",")); err != nil {
 		panic(err)
 	}
+
+	if err := initStores(); err != nil {
+		panic(err)
+	}
+
 	r := SetUpRouter()
 
 	testHandler = apitest.
 		New().
 		Handler(r)
+}
+
+func initStores() error {
+	err := store.InitStore(store.HubKeyConsumer, store.GenericStoreOption{
+		BasePath: "/apisix/consumers",
+		ObjType:  reflect.TypeOf(entity.Consumer{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.Consumer)
+			return r.Username
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = store.InitStore(store.HubKeyRoute, store.GenericStoreOption{
+		BasePath: "/apisix/routes",
+		ObjType:  reflect.TypeOf(entity.Route{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.Route)
+			return r.ID
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = store.InitStore(store.HubKeyService, store.GenericStoreOption{
+		BasePath: "/apisix/services",
+		ObjType:  reflect.TypeOf(entity.Service{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.Service)
+			return r.ID
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = store.InitStore(store.HubKeySsl, store.GenericStoreOption{
+		BasePath: "/apisix/ssl",
+		ObjType:  reflect.TypeOf(entity.SSL{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.SSL)
+			return r.ID
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = store.InitStore(store.HubKeyUpstream, store.GenericStoreOption{
+		BasePath: "/apisix/upstreams",
+		ObjType:  reflect.TypeOf(entity.Upstream{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.Upstream)
+			return r.ID
+		},
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }
