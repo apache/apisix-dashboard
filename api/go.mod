@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/api7/apitest v1.4.9
+	github.com/api7/go-jsonpatch v0.0.0-20180223123257-a8710867776e
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -20,6 +21,7 @@ require (
 	github.com/shiningrush/droplet v0.1.2
 	github.com/shiningrush/droplet/wrapper/gin v0.1.0
 	github.com/sirupsen/logrus v1.6.0
+	github.com/sony/sonyflake v1.0.0
 	github.com/spf13/viper v1.7.1
 	github.com/steinfletcher/apitest v1.4.10 // indirect
 	github.com/stretchr/testify v1.6.1

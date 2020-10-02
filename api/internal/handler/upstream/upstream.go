@@ -30,32 +30,15 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
-	upstreamStore *store.GenericStore
+	upstreamStore store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
-	s, err := store.NewGenericStore(store.GenericStoreOption{
-		BasePath: "/apisix/upstreams",
-		ObjType:  reflect.TypeOf(entity.Upstream{}),
-		KeyFunc: func(obj interface{}) string {
-			r := obj.(*entity.Upstream)
-			return r.ID
-		},
-	})
-	if err != nil {
-		return nil, err
-	}
-	if err := s.Init(); err != nil {
-		return nil, err
-	}
-
-	utils.AppendToClosers(s.Close)
 	return &Handler{
-		upstreamStore: s,
+		upstreamStore: store.GetStore(store.HubKeyUpstream),
 	}, nil
 }
 

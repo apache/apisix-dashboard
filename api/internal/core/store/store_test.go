@@ -18,7 +18,9 @@ package store
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -99,6 +101,7 @@ func TestNewGenericStore(t *testing.T) {
 }
 
 type TestStruct struct {
+	entity.BaseInfo
 	Field1 string
 	Field2 string
 }
@@ -408,7 +411,8 @@ func TestGenericStore_List(t *testing.T) {
 
 	for _, tc := range tests {
 		ret, err := tc.giveStore.List(tc.giveInput)
-		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
+		assert.Equal(t, tc.wantRet.TotalSize, ret.TotalSize, tc.caseDesc)
+		assert.ElementsMatch(t, tc.wantRet.Rows, ret.Rows, tc.caseDesc)
 		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
 	}
 }
@@ -472,7 +476,6 @@ func TestGenericStore_Create(t *testing.T) {
 		giveErr         error
 		giveValidateErr error
 		wantKey         string
-		wantStr         string
 		wantErr         error
 	}{
 		{
@@ -490,7 +493,6 @@ func TestGenericStore_Create(t *testing.T) {
 				},
 			},
 			wantKey: "test/path/test1",
-			wantStr: `{"Field1":"test1","Field2":"test2"}`,
 		},
 		{
 			caseDesc: "create failed",
@@ -508,7 +510,6 @@ func TestGenericStore_Create(t *testing.T) {
 			},
 			giveErr: fmt.Errorf("create failed"),
 			wantKey: "test/path/test1",
-			wantStr: `{"Field1":"test1","Field2":"test2"}`,
 			wantErr: fmt.Errorf("create failed"),
 		},
 		{
@@ -553,7 +554,13 @@ func TestGenericStore_Create(t *testing.T) {
 		mStorage.On("Create", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 			createCalled = true
 			assert.Equal(t, tc.wantKey, args[1], tc.caseDesc)
-			assert.Equal(t, tc.wantStr, args[2], tc.caseDesc)
+			input := TestStruct{}
+			_ = json.Unmarshal([]byte(args[2].(string)), &input)
+			assert.Equal(t, tc.giveObj.Field1, input.Field1, tc.caseDesc)
+			assert.Equal(t, tc.giveObj.Field2, input.Field2, tc.caseDesc)
+			assert.NotEqual(t, 0, len(input.ID), tc.caseDesc)
+			assert.NotEqual(t, 0, input.CreateTime, tc.caseDesc)
+			assert.NotEqual(t, 0, input.UpdateTime, tc.caseDesc)
 		}).Return(tc.giveErr)
 
 		mValidator := &MockValidator{}
@@ -582,7 +589,6 @@ func TestGenericStore_Update(t *testing.T) {
 		giveErr         error
 		giveValidateErr error
 		wantKey         string
-		wantStr         string
 		wantErr         error
 	}{
 		{
@@ -603,7 +609,6 @@ func TestGenericStore_Update(t *testing.T) {
 				},
 			},
 			wantKey: "test/path/test1",
-			wantStr: `{"Field1":"test1","Field2":"test2"}`,
 		},
 		{
 			caseDesc: "create failed",
@@ -624,7 +629,6 @@ func TestGenericStore_Update(t *testing.T) {
 			},
 			giveErr: fmt.Errorf("create failed"),
 			wantKey: "test/path/test1",
-			wantStr: `{"Field1":"test1","Field2":"test2"}`,
 			wantErr: fmt.Errorf("create failed"),
 		},
 		{
@@ -654,7 +658,11 @@ func TestGenericStore_Update(t *testing.T) {
 		mStorage.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 			createCalled = true
 			assert.Equal(t, tc.wantKey, args[1], tc.caseDesc)
-			assert.Equal(t, tc.wantStr, args[2], tc.caseDesc)
+			input := TestStruct{}
+			_ = json.Unmarshal([]byte(args[2].(string)), &input)
+			assert.Equal(t, tc.giveObj.Field1, input.Field1, tc.caseDesc)
+			assert.Equal(t, tc.giveObj.Field2, input.Field2, tc.caseDesc)
+			assert.NotEqual(t, 0, input.UpdateTime, tc.caseDesc)
 		}).Return(tc.giveErr)
 
 		mValidator := &MockValidator{}

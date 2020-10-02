@@ -20,11 +20,22 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/utils"
+	"github.com/shiningrush/droplet/data"
 	"log"
 	"reflect"
 	"time"
 )
+
+type Interface interface {
+	Get(key string) (interface{}, error)
+	List(input ListInput) (*ListOutput, error)
+	Create(ctx context.Context, obj interface{}) error
+	Update(ctx context.Context, obj interface{}) error
+	BatchDelete(ctx context.Context, keys []string) error
+}
 
 type GenericStore struct {
 	Stg storage.Interface
@@ -114,7 +125,7 @@ func (s *GenericStore) Init() error {
 func (s *GenericStore) Get(key string) (interface{}, error) {
 	ret, ok := s.cache[key]
 	if !ok {
-		return nil, fmt.Errorf("id:%s not found", key)
+		return nil, data.ErrNotFound
 	}
 	return ret, nil
 }
@@ -193,6 +204,15 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 		return fmt.Errorf("key: %s is conflicted", key)
 	}
 
+	if getter, ok := obj.(entity.BaseInfoGetter); ok {
+		info := getter.GetBaseInfo()
+		if info.ID == "" {
+			info.ID = utils.GetFlakeUidStr()
+		}
+		info.CreateTime = time.Now().Unix()
+		info.UpdateTime = time.Now().Unix()
+	}
+
 	bs, err := json.Marshal(obj)
 	if err != nil {
 		return fmt.Errorf("json marshal failed: %s", err)
@@ -216,6 +236,11 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
 	_, ok := s.cache[key]
 	if !ok {
 		return fmt.Errorf("key: %s is not found", key)
+	}
+
+	if getter, ok := obj.(entity.BaseInfoGetter); ok {
+		info := getter.GetBaseInfo()
+		info.UpdateTime = time.Now().Unix()
 	}
 
 	bs, err := json.Marshal(obj)

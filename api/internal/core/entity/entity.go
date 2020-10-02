@@ -16,8 +16,22 @@
  */
 package entity
 
+type BaseInfo struct {
+	ID         string `json:"id"`
+	CreateTime int64  `json:"create_time"`
+	UpdateTime int64  `json:"update_time"`
+}
+
+func (info *BaseInfo) GetBaseInfo() *BaseInfo {
+	return info
+}
+
+type BaseInfoGetter interface {
+	GetBaseInfo() *BaseInfo
+}
+
 type Route struct {
-	ID              string      `json:"id"`
+	BaseInfo
 	URI             string      `json:"uri,omitempty" validate:"uri"`
 	Uris            []string    `json:"uris,omitempty"`
 	Name            string      `json:"name,omitempty" validate:"max=50"`

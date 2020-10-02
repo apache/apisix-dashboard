@@ -17,6 +17,7 @@
 package route
 
 import (
+	"fmt"
 	"reflect"
 	"strings"
 
@@ -29,32 +30,19 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
-	routeStore *store.GenericStore
+	routeStore    store.Interface
+	svcStore      store.Interface
+	upstreamStore store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
-	s, err := store.NewGenericStore(store.GenericStoreOption{
-		BasePath: "/apisix/routes",
-		ObjType:  reflect.TypeOf(entity.Route{}),
-		KeyFunc: func(obj interface{}) string {
-			r := obj.(*entity.Route)
-			return r.ID
-		},
-	})
-	if err != nil {
-		return nil, err
-	}
-	if err := s.Init(); err != nil {
-		return nil, err
-	}
-
-	utils.AppendToClosers(s.Close)
 	return &Handler{
-		routeStore: s,
+		routeStore:    store.GetStore(store.HubKeyRoute),
+		svcStore:      store.GetStore(store.HubKeyService),
+		upstreamStore: store.GetStore(store.HubKeyUpstream),
 	}, nil
 }
 
@@ -112,6 +100,24 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Route)
+	if input.ServiceID != "" {
+		_, err := h.upstreamStore.Get(input.ServiceID)
+		if err != nil {
+			if err == data.ErrNotFound {
+				return nil, fmt.Errorf("service id: %s not found", input.ServiceID)
+			}
+			return nil, err
+		}
+	}
+	if input.UpstreamID != "" {
+		_, err := h.upstreamStore.Get(input.ServiceID)
+		if err != nil {
+			if err == data.ErrNotFound {
+				return nil, fmt.Errorf("upstream id: %s not found", input.UpstreamID)
+			}
+			return nil, err
+		}
+	}
 
 	if err := h.routeStore.Create(c.Context(), input); err != nil {
 		return nil, err
