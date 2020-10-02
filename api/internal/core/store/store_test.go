@@ -20,14 +20,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/internal/core/storage"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	"reflect"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/shiningrush/droplet/data"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+
+	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/internal/core/storage"
 )
 
 func TestNewGenericStore(t *testing.T) {
@@ -259,7 +262,7 @@ func TestGenericStore_Get(t *testing.T) {
 					},
 				},
 			},
-			wantErr: fmt.Errorf("id:not not found"),
+			wantErr: data.ErrNotFound,
 		},
 	}
 

@@ -54,7 +54,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 	r.POST("/apisix/admin/ssl", wgin.Wraps(h.Create,
 		wrapper.InputType(reflect.TypeOf(entity.SSL{}))))
-	r.POST("/apisix/admin/ssl/validate", wgin.Wraps(h.Validate,
+	r.POST("/apisix/admin/check_ssl_cert", wgin.Wraps(h.Validate,
 		wrapper.InputType(reflect.TypeOf(entity.SSL{}))))
 	r.PUT("/apisix/admin/ssl/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
@@ -106,7 +106,14 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.SSL)
 
-	if err := h.sslStore.Create(c.Context(), input); err != nil {
+	ssl, err := ParseCert(input.Cert, input.Key)
+	if err != nil {
+		return nil, err
+	}
+
+	ssl.ID = input.ID
+
+	if err := h.sslStore.Create(c.Context(), ssl); err != nil {
 		return nil, err
 	}
 
@@ -202,42 +209,48 @@ func ParseCert(crt, key string) (*entity.SSL, error) {
 
 	if err != nil {
 		return nil, errors.New("Certificate resolution failed")
+	}
+
+	ssl := entity.SSL{}
+	//domain
+	snis := []string{}
+	if x509Cert.DNSNames != nil && len(x509Cert.DNSNames) > 0 {
+		snis = x509Cert.DNSNames
+	} else if x509Cert.IPAddresses != nil && len(x509Cert.IPAddresses) > 0 {
+		for _, ip := range x509Cert.IPAddresses {
+			snis = append(snis, ip.String())
+		}
 	} else {
-		ssl := entity.SSL{}
-		//domain
-		snis := []string{}
-		if x509Cert.DNSNames != nil && len(x509Cert.DNSNames) > 0 {
-			snis = x509Cert.DNSNames
-		} else if x509Cert.IPAddresses != nil && len(x509Cert.IPAddresses) > 0 {
-			for _, ip := range x509Cert.IPAddresses {
-				snis = append(snis, ip.String())
+		if x509Cert.Subject.Names != nil && len(x509Cert.Subject.Names) > 1 {
+			var attributeTypeNames = map[string]string{
+				"2.5.4.6":  "C",
+				"2.5.4.10": "O",
+				"2.5.4.11": "OU",
+				"2.5.4.3":  "CN",
+				"2.5.4.5":  "SERIALNUMBER",
+				"2.5.4.7":  "L",
+				"2.5.4.8":  "ST",
+				"2.5.4.9":  "STREET",
+				"2.5.4.17": "POSTALCODE",
 			}
-		} else {
-			if x509Cert.Subject.Names != nil && len(x509Cert.Subject.Names) > 1 {
-				var attributeTypeNames = map[string]string{
-					"2.5.4.6":  "C",
-					"2.5.4.10": "O",
-					"2.5.4.11": "OU",
-					"2.5.4.3":  "CN",
-					"2.5.4.5":  "SERIALNUMBER",
-					"2.5.4.7":  "L",
-					"2.5.4.8":  "ST",
-					"2.5.4.9":  "STREET",
-					"2.5.4.17": "POSTALCODE",
-				}
-				for _, tv := range x509Cert.Subject.Names {
-					oidString := tv.Type.String()
-					typeName, ok := attributeTypeNames[oidString]
-					if ok && typeName == "CN" {
-						valueString := fmt.Sprint(tv.Value)
-						snis = append(snis, valueString)
-					}
+			for _, tv := range x509Cert.Subject.Names {
+				oidString := tv.Type.String()
+				typeName, ok := attributeTypeNames[oidString]
+				if ok && typeName == "CN" {
+					valueString := fmt.Sprint(tv.Value)
+					snis = append(snis, valueString)
 				}
 			}
 		}
-
-		return &ssl, nil
 	}
+
+	ssl.Snis = snis
+	ssl.Key = key
+	ssl.ValidityStart = x509Cert.NotBefore.Unix()
+	ssl.ValidityEnd = x509Cert.NotAfter.Unix()
+	ssl.Cert = crt
+
+	return &ssl, nil
 }
 
 func (h *Handler) Validate(c droplet.Context) (interface{}, error) {

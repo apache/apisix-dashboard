@@ -51,6 +51,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(entity.Upstream{}))))
 	r.PUT("/apisix/admin/upstreams/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
+	r.PATCH("/apisix/admin/upstreams/:id", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.DELETE("/apisix/admin/upstreams", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 }
@@ -158,13 +160,13 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	} else {
 		patch, err = jsonpatch.MakePatch(stored, input.Upstream)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 	}
 
 	err = patch.Apply(&stored)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	if err := h.upstreamStore.Update(c.Context(), &stored); err != nil {
