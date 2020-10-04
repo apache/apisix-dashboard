@@ -17,7 +17,6 @@
 package upstream
 
 import (
-	"github.com/apisix/manager-api/internal/utils/consts"
 	"reflect"
 	"strings"
 
@@ -31,6 +30,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -58,6 +58,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
 	r.GET("/apisix/admin/notexist/upstreams", consts.ErrorWrapper(Exist))
+	r.GET("/apisix/admin/names/upstreams", consts.ErrorWrapper(listUpstreamNames))
 }
 
 type GetInput struct {
@@ -223,4 +224,26 @@ func Exist(c *gin.Context) (interface{}, error) {
 	}
 
 	return nil, nil
+}
+
+func listUpstreamNames(c *gin.Context) (interface{}, error) {
+	routeStore := store.GetStore(store.HubKeyUpstream)
+
+	ret, err := routeStore.List(store.ListInput{
+		Predicate:  nil,
+		PageSize:   0,
+		PageNumber: 0,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	rows := make([]*entity.UpstreamNameResponse, ret.TotalSize)
+	for i := range ret.Rows {
+		row := ret.Rows[i].(*entity.Upstream)
+		rows[i], _ = row.Parse2NameResponse()
+	}
+
+	return rows, nil
 }

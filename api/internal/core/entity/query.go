@@ -34,10 +34,10 @@ func (p Route) GetProperty(name PropertyName) ComparableValue {
 	}
 }
 
-func (p Upstream) GetProperty(name PropertyName) ComparableValue {
+func (upstream Upstream) GetProperty(name PropertyName) ComparableValue {
 	switch name {
 	case NameProperty:
-		return ComparingString(p.Name)
+		return ComparingString(upstream.Name)
 	default:
 		return nil
 	}

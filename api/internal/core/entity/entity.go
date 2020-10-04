@@ -130,6 +130,19 @@ type Upstream struct {
 	ID              string        `json:"id,omitempty"`
 }
 
+type UpstreamNameResponse struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+func (upstream *Upstream) Parse2NameResponse() (*UpstreamNameResponse, error) {
+	nameResp := &UpstreamNameResponse{
+		ID:   upstream.ID,
+		Name: upstream.Name,
+	}
+	return nameResp, nil
+}
+
 // --- structures for upstream end  ---
 
 type Consumer struct {
