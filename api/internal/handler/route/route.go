@@ -30,7 +30,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-  "github.com/apisix/manager-api/internal/utils/consts"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -174,9 +174,10 @@ func toRows(list *store.ListOutput) []store.Row {
 func Exist(c *gin.Context) (interface{}, error) {
 	//input := c.Input().(*ExistInput)
 
-  //temporary
-  name := c.Query("name")
-  routeStore := store.GetStore(store.HubKeyRoute)
+	//temporary
+	name := c.Query("name")
+	exclude := c.Query("exclude")
+	routeStore := store.GetStore(store.HubKeyRoute)
 
 	ret, err := routeStore.List(store.ListInput{
 		Predicate:  nil,
@@ -191,14 +192,15 @@ func Exist(c *gin.Context) (interface{}, error) {
 	sort := store.NewSort(nil)
 	filter := store.NewFilter([]string{"name", name})
 	pagination := store.NewPagination(0, 0)
-
 	query := store.NewQuery(sort, filter, pagination)
-
 	rows := store.NewFilterSelector(toRows(ret), query)
 
 	if len(rows) > 0 {
-	  return rows, consts.InvalidParam("Route name is reduplicate")
-  }
+		r := rows[0].(*entity.Route)
+		if r.ID != exclude {
+			return rows, consts.InvalidParam("Route name is reduplicate")
+		}
+	}
 
-  return nil, nil
+	return nil, nil
 }

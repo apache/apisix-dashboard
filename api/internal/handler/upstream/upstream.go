@@ -17,6 +17,7 @@
 package upstream
 
 import (
+	"github.com/apisix/manager-api/internal/utils/consts"
 	"reflect"
 	"strings"
 
@@ -55,6 +56,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.DELETE("/apisix/admin/upstreams", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
+
+	r.GET("/apisix/admin/notexist/upstreams", consts.ErrorWrapper(Exist))
 }
 
 type GetInput struct {
@@ -171,6 +174,52 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 
 	if err := h.upstreamStore.Update(c.Context(), &stored); err != nil {
 		return nil, err
+	}
+
+	return nil, nil
+}
+
+type ExistInput struct {
+	Name string `auto_read:"name,query"`
+}
+
+func toRows(list *store.ListOutput) []store.Row {
+	rows := make([]store.Row, list.TotalSize)
+	for i := range list.Rows {
+		rows[i] = list.Rows[i].(*entity.Upstream)
+	}
+	return rows
+}
+
+func Exist(c *gin.Context) (interface{}, error) {
+	//input := c.Input().(*ExistInput)
+
+	//temporary
+	name := c.Query("name")
+	exclude := c.Query("exclude")
+	routeStore := store.GetStore(store.HubKeyUpstream)
+
+	ret, err := routeStore.List(store.ListInput{
+		Predicate:  nil,
+		PageSize:   0,
+		PageNumber: 0,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	sort := store.NewSort(nil)
+	filter := store.NewFilter([]string{"name", name})
+	pagination := store.NewPagination(0, 0)
+	query := store.NewQuery(sort, filter, pagination)
+	rows := store.NewFilterSelector(toRows(ret), query)
+
+	if len(rows) > 0 {
+		r := rows[0].(*entity.Upstream)
+		if r.ID != exclude {
+			return rows, consts.InvalidParam("Upstream name is reduplicate")
+		}
 	}
 
 	return nil, nil

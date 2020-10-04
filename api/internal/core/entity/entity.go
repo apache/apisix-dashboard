@@ -162,5 +162,3 @@ type Service struct {
 	Plugins    interface{} `json:"plugins,omitempty"`
 	Script     string      `json:"script,omitempty"`
 }
-
-
