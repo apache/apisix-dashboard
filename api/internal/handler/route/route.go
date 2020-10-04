@@ -30,6 +30,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+  "github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -57,8 +58,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.DELETE("/apisix/admin/routes", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
-	r.GET("/apisix/admin/notexist/routes", wgin.Wraps(h.Exist,
-		wrapper.InputType(reflect.TypeOf(ExistInput{}))))
+
+	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))
 }
 
 type GetInput struct {
@@ -170,10 +171,14 @@ func toRows(list *store.ListOutput) []store.Row {
 	return rows
 }
 
-func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*ExistInput)
+func Exist(c *gin.Context) (interface{}, error) {
+	//input := c.Input().(*ExistInput)
 
-	ret, err := h.routeStore.List(store.ListInput{
+  //temporary
+  name := c.Query("name")
+  routeStore := store.GetStore(store.HubKeyRoute)
+
+	ret, err := routeStore.List(store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,
@@ -184,12 +189,16 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 	}
 
 	sort := store.NewSort(nil)
-	filter := store.NewFilter([]string{"name", input.Name})
+	filter := store.NewFilter([]string{"name", name})
 	pagination := store.NewPagination(0, 0)
 
 	query := store.NewQuery(sort, filter, pagination)
 
 	rows := store.NewFilterSelector(toRows(ret), query)
 
-	return rows, nil
+	if len(rows) > 0 {
+	  return rows, consts.InvalidParam("Route name is reduplicate")
+  }
+
+  return nil, nil
 }
