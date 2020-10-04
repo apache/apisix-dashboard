@@ -24,11 +24,11 @@ import (
 	"reflect"
 	"time"
 
-  "github.com/shiningrush/droplet/data"
+	"github.com/shiningrush/droplet/data"
 
-  "github.com/apisix/manager-api/internal/core/entity"
-  "github.com/apisix/manager-api/internal/core/storage"
-  "github.com/apisix/manager-api/internal/utils"
+	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Interface interface {

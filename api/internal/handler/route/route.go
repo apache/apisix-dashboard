@@ -57,6 +57,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.DELETE("/apisix/admin/routes", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
+	r.GET("/apisix/admin/notexist/routes", wgin.Wraps(h.Exist,
+		wrapper.InputType(reflect.TypeOf(ExistInput{}))))
 }
 
 type GetInput struct {
@@ -154,4 +156,40 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	}
 
 	return nil, nil
+}
+
+type ExistInput struct {
+	Name string `auto_read:"name,query"`
+}
+
+func toRows(list *store.ListOutput) []store.Row {
+	rows := make([]store.Row, list.TotalSize)
+	for i := range list.Rows {
+		rows[i] = list.Rows[i].(*entity.Route)
+	}
+	return rows
+}
+
+func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*ExistInput)
+
+	ret, err := h.routeStore.List(store.ListInput{
+		Predicate:  nil,
+		PageSize:   0,
+		PageNumber: 0,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	sort := store.NewSort(nil)
+	filter := store.NewFilter([]string{"name", input.Name})
+	pagination := store.NewPagination(0, 0)
+
+	query := store.NewQuery(sort, filter, pagination)
+
+	rows := store.NewFilterSelector(toRows(ret), query)
+
+	return rows, nil
 }

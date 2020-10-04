@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"reflect"
 
-  "github.com/apisix/manager-api/internal/core/entity"
-  "github.com/apisix/manager-api/internal/utils"
+	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 type HubKey string
