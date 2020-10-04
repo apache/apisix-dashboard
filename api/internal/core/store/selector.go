@@ -49,7 +49,7 @@ func (self *Selector) Filter() *Selector {
 		matches := true
 		for _, filterBy := range self.Query.Filter.FilterByList {
 			v := c.GetProperty(filterBy.Property)
-			if v == nil || !v.Contains(filterBy.Value) {
+			if v == nil || v.Compare(filterBy.Value) != 0 {
 				matches = false
 				break
 			}
