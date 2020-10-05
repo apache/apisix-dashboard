@@ -23,8 +23,8 @@ import (
 
 type Message struct {
 	Code   string
-	Msg    string
-	Status int `json:"-"`
+	Msg    string `json:"message"`
+	Status int    `json:"-"`
 }
 
 var (
@@ -128,25 +128,25 @@ func New(m Message, args ...interface{}) *ManagerError {
 
 func (e *ManagerError) Response() map[string]interface{} {
 	return map[string]interface{}{
-		"code": e.Code,
-		"msg":  e.Msg,
+		"code":    e.Code,
+		"message": e.Msg,
 	}
 }
 
 func (e *ManagerError) ItemResponse(data interface{}) map[string]interface{} {
 	return map[string]interface{}{
-		"code": e.Code,
-		"msg":  e.Msg,
-		"data": data,
+		"code":    e.Code,
+		"message": e.Msg,
+		"data":    data,
 	}
 }
 
 func (e *ManagerError) ListResponse(count, list interface{}) map[string]interface{} {
 	return map[string]interface{}{
-		"code":  e.Code,
-		"msg":   e.Msg,
-		"count": count,
-		"list":  list,
+		"code":    e.Code,
+		"message": e.Msg,
+		"count":   count,
+		"list":    list,
 	}
 }
 
