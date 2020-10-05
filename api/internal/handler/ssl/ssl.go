@@ -36,6 +36,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -55,14 +56,16 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 	r.POST("/apisix/admin/ssl", wgin.Wraps(h.Create,
 		wrapper.InputType(reflect.TypeOf(entity.SSL{}))))
-	r.POST("/apisix/admin/check_ssl_cert", wgin.Wraps(h.Validate,
-		wrapper.InputType(reflect.TypeOf(entity.SSL{}))))
 	r.PUT("/apisix/admin/ssl/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PATCH("/apisix/admin/ssl/:id", wgin.Wraps(h.Patch,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.DELETE("/apisix/admin/ssl", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
+	r.POST("/apisix/admin/check_ssl_cert", wgin.Wraps(h.Validate,
+		wrapper.InputType(reflect.TypeOf(entity.SSL{}))))
+
+	r.GET("/apisix/admin/check_ssl_exists", consts.ErrorWrapper(Exist))
 }
 
 type GetInput struct {
@@ -265,4 +268,89 @@ func (h *Handler) Validate(c droplet.Context) (interface{}, error) {
 	}
 
 	return ssl, nil
+}
+
+type ExistInput struct {
+	Name string `auto_read:"name,query"`
+}
+
+func toRows(list *store.ListOutput) []store.Row {
+	rows := make([]store.Row, list.TotalSize)
+	for i := range list.Rows {
+		rows[i] = list.Rows[i].(*entity.SSL)
+	}
+	return rows
+}
+
+func Exist(c *gin.Context) (interface{}, error) {
+	//input := c.Input().(*ExistInput)
+
+	//temporary
+	sni := c.Query("sni")
+	exclude := c.Query("exclude")
+	routeStore := store.GetStore(store.HubKeySsl)
+
+	ret, err := routeStore.List(store.ListInput{
+		Predicate:  nil,
+		PageSize:   0,
+		PageNumber: 0,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	//sni
+	sort := store.NewSort(nil)
+	filter := store.NewFilter([]string{"sni", sni})
+	pagination := store.NewPagination(0, 0)
+	query := store.NewQuery(sort, filter, pagination)
+	rows := store.NewFilterSelector(toRows(ret), query)
+	if len(rows) > 0 {
+		r := rows[0].(*entity.SSL)
+		if r.ID != exclude {
+			return nil, consts.InvalidParam("SSL cert exists")
+		}
+	}
+
+	//snis
+	filter = store.NewFilter([]string{"snis", sni})
+	query = store.NewQuery(sort, filter, pagination)
+	rows = store.NewFilterSelector(toRows(ret), query)
+	if len(rows) > 0 {
+		r := rows[0].(*entity.SSL)
+		if r.ID != exclude {
+			return nil, consts.InvalidParam("SSL cert exists")
+		}
+	}
+
+	//extensive domain
+	firstDot := strings.Index(sni, ".")
+	if firstDot > 0 && sni[0:1] != "*" {
+		sni = "*" + sni[firstDot:]
+
+		//sni
+		filter = store.NewFilter([]string{"sni", sni})
+		query = store.NewQuery(sort, filter, pagination)
+		rows = store.NewFilterSelector(toRows(ret), query)
+		if len(rows) > 0 {
+			r := rows[0].(*entity.SSL)
+			if r.ID != exclude {
+				return nil, consts.InvalidParam("SSL cert exists")
+			}
+		}
+
+		//snis
+		filter = store.NewFilter([]string{"snis", sni})
+		query = store.NewQuery(sort, filter, pagination)
+		rows = store.NewFilterSelector(toRows(ret), query)
+		if len(rows) > 0 {
+			r := rows[0].(*entity.SSL)
+			if r.ID != exclude {
+				return nil, consts.InvalidParam("SSL cert exists")
+			}
+		}
+	}
+
+	return nil, nil
 }

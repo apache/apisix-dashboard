@@ -38,27 +38,36 @@ import (
 )
 
 type PaginationTestCase struct {
-	Info            string
-	PaginationQuery *Pagination
-	ExpectedOrder   []int
+	Info          string
+	Pagination    *Pagination
+	ExpectedOrder []int
 }
 
 type SortTestCase struct {
 	Info          string
-	SortQuery     *Sort
+	Sort          *Sort
+	ExpectedOrder []int
+}
+
+type FilterTestCase struct {
+	Info          string
+	Filter        *Filter
 	ExpectedOrder []int
 }
 
 type TestRow struct {
 	Name       string
-	CreateTime int
+	CreateTime int64
 	Id         int
+	Snis       []string
 }
 
 func (self TestRow) GetProperty(name entity.PropertyName) entity.ComparableValue {
 	switch name {
 	case entity.NameProperty:
 		return entity.ComparingString(self.Name)
+	case entity.SnisProperty:
+		return entity.ComparingStringArray(self.Snis)
 	case entity.CreateTimeProperty:
 		return entity.ComparingInt(self.CreateTime)
 	default:
@@ -69,7 +78,7 @@ func (self TestRow) GetProperty(name entity.PropertyName) entity.ComparableValue
 func toRows(std []TestRow) []Row {
 	rows := make([]Row, len(std))
 	for i := range std {
-		rows[i] = TestRow(std[i])
+		rows[i] = std[i]
 	}
 	return rows
 }
@@ -84,16 +93,16 @@ func fromRows(rows []Row) []TestRow {
 
 func getDataList() []Row {
 	return toRows([]TestRow{
-		{"b", 1, 1},
-		{"a", 2, 2},
-		{"a", 3, 3},
-		{"c", 4, 4},
-		{"c", 5, 5},
-		{"d", 6, 6},
-		{"e", 7, 7},
-		{"e", 8, 8},
-		{"f", 9, 9},
-		{"a", 10, 10},
+		{"b", 1, 1, []string{"a", "b"}},
+		{"a", 2, 2, []string{"c", "d"}},
+		{"a", 3, 3, []string{"f", "e"}},
+		{"c", 4, 4, []string{"g", "h"}},
+		{"c", 5, 5, []string{"k", "j"}},
+		{"d", 6, 6, []string{"i", "h"}},
+		{"e", 7, 7, []string{"t", "r"}},
+		{"e", 8, 8, []string{"q", "w"}},
+		{"f", 9, 9, []string{"x", "z"}},
+		{"a", 10, 10, []string{"v", "n"}},
 	})
 }
 
@@ -160,15 +169,15 @@ func TestSort(t *testing.T) {
 		},
 	}
 	for _, testCase := range testCases {
-		selectableData := Selector{
+		selector := Selector{
 			List:  getDataList(),
-			Query: &Query{Sort: testCase.SortQuery},
+			Query: &Query{Sort: testCase.Sort},
 		}
-		sortedData := fromRows(selectableData.Sort().List)
+		sortedData := fromRows(selector.Sort().List)
 		order := getOrder(sortedData)
 		if !reflect.DeepEqual(order, testCase.ExpectedOrder) {
 			t.Errorf(`Sort: %s. Received invalid items for %+v. Got %v, expected %v.`,
-				testCase.Info, testCase.SortQuery, order, testCase.ExpectedOrder)
+				testCase.Info, testCase.Sort, order, testCase.ExpectedOrder)
 		}
 	}
 
@@ -223,15 +232,53 @@ func TestPagination(t *testing.T) {
 		},
 	}
 	for _, testCase := range testCases {
-		selectableData := Selector{
+		selector := Selector{
 			List:  getDataList(),
-			Query: &Query{Pagination: testCase.PaginationQuery},
+			Query: &Query{Pagination: testCase.Pagination},
 		}
-		paginatedData := fromRows(selectableData.Paginate().List)
+		paginatedData := fromRows(selector.Paginate().List)
 		order := getOrder(paginatedData)
 		if !reflect.DeepEqual(order, testCase.ExpectedOrder) {
 			t.Errorf(`Pagination: %s. Received invalid items for %+v. Got %v, expected %v.`,
-				testCase.Info, testCase.PaginationQuery, order, testCase.ExpectedOrder)
+				testCase.Info, testCase.Pagination, order, testCase.ExpectedOrder)
+		}
+	}
+
+}
+
+func TestFilter(t *testing.T) {
+	testCases := []FilterTestCase{
+		{
+			"no sort - do not change the original order",
+			NewFilter(nil),
+			[]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+		},
+		{
+			"string filter",
+			NewFilter([]string{"name", "a"}),
+			[]int{2, 3, 10},
+		},
+		{
+			"string array filter",
+			NewFilter([]string{"snis", "x"}),
+			[]int{9},
+		},
+		{
+			"multi filter",
+			NewFilter([]string{"snis", "t", "name", "e"}),
+			[]int{7},
+		},
+	}
+	for _, testCase := range testCases {
+		selector := Selector{
+			List:  getDataList(),
+			Query: &Query{Filter: testCase.Filter},
+		}
+		filteredData := fromRows(selector.Filter().List)
+		order := getOrder(filteredData)
+		if !reflect.DeepEqual(order, testCase.ExpectedOrder) {
+			t.Errorf(`Filter: %s. Received invalid items for %+v. Got %v, expected %v.`,
+				testCase.Info, testCase.Filter, order, testCase.ExpectedOrder)
 		}
 	}
 

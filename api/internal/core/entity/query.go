@@ -40,16 +40,18 @@ type PropertyName string
 const (
 	IdProperty         = "id"
 	NameProperty       = "name"
+	SniProperty        = "sni"
+	SnisProperty       = "snis"
 	CreateTimeProperty = "create_time"
 	UpdateTimeProperty = "update_time"
 )
-
-type ComparingString string
 
 type ComparableValue interface {
 	Compare(ComparableValue) int
 	Contains(ComparableValue) bool
 }
+
+type ComparingString string
 
 func (comparing ComparingString) Compare(compared ComparableValue) int {
 	other := compared.(ComparingString)
@@ -59,6 +61,33 @@ func (comparing ComparingString) Compare(compared ComparableValue) int {
 func (comparing ComparingString) Contains(compared ComparableValue) bool {
 	other := compared.(ComparingString)
 	return strings.Contains(string(comparing), string(other))
+}
+
+type ComparingStringArray []string
+
+func (comparing ComparingStringArray) Compare(compared ComparableValue) int {
+	other := compared.(ComparingString)
+	res := -1
+	for _, str := range comparing {
+		result := strings.Compare(str, string(other))
+		if result == 0 {
+			res = 0
+			break
+		}
+	}
+	return res
+}
+
+func (comparing ComparingStringArray) Contains(compared ComparableValue) bool {
+	other := compared.(ComparingString)
+	res := false
+	for _, str := range comparing {
+		if strings.Contains(str, string(other)) {
+			res = true
+			break
+		}
+	}
+	return res
 }
 
 type ComparingInt int64
@@ -107,6 +136,17 @@ func (upstream Upstream) GetProperty(name PropertyName) ComparableValue {
 	switch name {
 	case NameProperty:
 		return ComparingString(upstream.Name)
+	default:
+		return nil
+	}
+}
+
+func (ssl SSL) GetProperty(name PropertyName) ComparableValue {
+	switch name {
+	case SniProperty:
+		return ComparingString(ssl.Sni)
+	case SnisProperty:
+		return ComparingStringArray(ssl.Snis)
 	default:
 		return nil
 	}
