@@ -241,13 +241,20 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
 	if key == "" {
 		return fmt.Errorf("key is required")
 	}
-	_, ok := s.cache[key]
+	oldObj, ok := s.cache[key]
 	if !ok {
 		return fmt.Errorf("key: %s is not found", key)
 	}
 
+	createTime := int64(0)
+	if oldGetter, ok := oldObj.(entity.BaseInfoGetter); ok {
+		oldInfo := oldGetter.GetBaseInfo()
+		createTime = oldInfo.CreateTime
+	}
+
 	if getter, ok := obj.(entity.BaseInfoGetter); ok {
 		info := getter.GetBaseInfo()
+		info.CreateTime = createTime
 		info.UpdateTime = time.Now().Unix()
 	}
 

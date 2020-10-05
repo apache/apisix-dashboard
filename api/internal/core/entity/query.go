@@ -38,10 +38,10 @@ import "strings"
 type PropertyName string
 
 const (
-	IdProperty = "id"
-  NameProperty = "name"
-  CreateTimeProperty = "create_time"
-  UpdateTimeProperty = "update_time"
+	IdProperty         = "id"
+	NameProperty       = "name"
+	CreateTimeProperty = "create_time"
+	UpdateTimeProperty = "update_time"
 )
 
 type ComparingString string
@@ -64,36 +64,34 @@ func (comparing ComparingString) Contains(compared ComparableValue) bool {
 type ComparingInt int64
 
 func int64Compare(a, b int64) int {
-  if a > b {
-    return 1
-  } else if a == b {
-    return 0
-  }
-  return -1
+	if a > b {
+		return 1
+	} else if a == b {
+		return 0
+	}
+	return -1
 }
 
 func (comparing ComparingInt) Compare(compared ComparableValue) int {
-  other := compared.(ComparingInt)
-  return int64Compare(int64(comparing), int64(other))
+	other := compared.(ComparingInt)
+	return int64Compare(int64(comparing), int64(other))
 }
 
 func (comparing ComparingInt) Contains(compared ComparableValue) bool {
-  return comparing.Compare(compared) == 0
+	return comparing.Compare(compared) == 0
 }
 
-
-
 func (info BaseInfo) GetProperty(name PropertyName) ComparableValue {
-  switch name {
-  case IdProperty:
-    return ComparingString(info.ID)
-  case CreateTimeProperty:
-    return ComparingInt(info.CreateTime)
-  case UpdateTimeProperty:
-    return ComparingInt(info.UpdateTime)
-  default:
-    return nil
-  }
+	switch name {
+	case IdProperty:
+		return ComparingString(info.ID)
+	case CreateTimeProperty:
+		return ComparingInt(info.CreateTime)
+	case UpdateTimeProperty:
+		return ComparingInt(info.UpdateTime)
+	default:
+		return nil
+	}
 }
 
 func (route Route) GetProperty(name PropertyName) ComparableValue {

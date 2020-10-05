@@ -50,17 +50,17 @@ type SortTestCase struct {
 }
 
 type TestRow struct {
-	Name string
+	Name       string
 	CreateTime int
-	Id   int
+	Id         int
 }
 
 func (self TestRow) GetProperty(name entity.PropertyName) entity.ComparableValue {
 	switch name {
 	case entity.NameProperty:
 		return entity.ComparingString(self.Name)
-  case entity.CreateTimeProperty:
-    return entity.ComparingInt(self.CreateTime)
+	case entity.CreateTimeProperty:
+		return entity.ComparingInt(self.CreateTime)
 	default:
 		return nil
 	}
@@ -69,7 +69,7 @@ func (self TestRow) GetProperty(name entity.PropertyName) entity.ComparableValue
 func toRows(std []TestRow) []Row {
 	rows := make([]Row, len(std))
 	for i := range std {
-    rows[i] = TestRow(std[i])
+		rows[i] = TestRow(std[i])
 	}
 	return rows
 }
@@ -85,22 +85,22 @@ func fromRows(rows []Row) []TestRow {
 func getDataList() []Row {
 	return toRows([]TestRow{
 		{"b", 1, 1},
-		{"a", 2,2},
-		{"a", 3,3},
-		{"c", 4,4},
-		{"c", 5,5},
-		{"d", 6,6},
-		{"e", 7,7},
-		{"e", 8,8},
-		{"f", 9,9},
-		{"a", 10,10},
+		{"a", 2, 2},
+		{"a", 3, 3},
+		{"c", 4, 4},
+		{"c", 5, 5},
+		{"d", 6, 6},
+		{"e", 7, 7},
+		{"e", 8, 8},
+		{"f", 9, 9},
+		{"a", 10, 10},
 	})
 }
 
 func getOrder(dataList []TestRow) []int {
 	ordered := []int{}
 	for _, e := range dataList {
-    ordered = append(ordered, e.Id)
+		ordered = append(ordered, e.Id)
 	}
 	return ordered
 }

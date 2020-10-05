@@ -22,6 +22,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 
@@ -105,14 +106,12 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.SSL)
-
 	ssl, err := ParseCert(input.Cert, input.Key)
 	if err != nil {
 		return nil, err
 	}
 
 	ssl.ID = input.ID
-
 	if err := h.sslStore.Create(c.Context(), ssl); err != nil {
 		return nil, err
 	}
@@ -127,9 +126,14 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
-	input.SSL.ID = input.ID
+	ssl, err := ParseCert(input.Cert, input.Key)
+	if err != nil {
+		return nil, err
+	}
 
-	if err := h.sslStore.Update(c.Context(), &input.SSL); err != nil {
+	ssl.ID = input.ID
+	log.Println("ssl", ssl)
+	if err := h.sslStore.Update(c.Context(), ssl); err != nil {
 		return nil, err
 	}
 

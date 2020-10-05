@@ -198,7 +198,7 @@ func Exist(c *gin.Context) (interface{}, error) {
 	if len(rows) > 0 {
 		r := rows[0].(*entity.Route)
 		if r.ID != exclude {
-			return rows, consts.InvalidParam("Route name is reduplicate")
+			return nil, consts.InvalidParam("Route name is reduplicate")
 		}
 	}
 

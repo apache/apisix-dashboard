@@ -113,6 +113,7 @@ type HealthChecker struct {
 }
 
 type Upstream struct {
+	BaseInfo
 	Nodes           []Node        `json:"nodes,omitempty"`
 	Retries         int           `json:"retries,omitempty"`
 	Timeout         Timeout       `json:"timeout,omitempty"`
@@ -127,7 +128,6 @@ type Upstream struct {
 	Name            string        `json:"name,omitempty"`
 	Desc            string        `json:"desc,omitempty"`
 	ServiceName     string        `json:"service_name,omitempty"`
-	ID              string        `json:"id,omitempty"`
 }
 
 type UpstreamNameResponse struct {
@@ -146,14 +146,14 @@ func (upstream *Upstream) Parse2NameResponse() (*UpstreamNameResponse, error) {
 // --- structures for upstream end  ---
 
 type Consumer struct {
-	ID       string      `json:"id"`
+	BaseInfo
 	Username string      `json:"username"`
 	Desc     string      `json:"desc,omitempty"`
 	Plugins  interface{} `json:"plugins,omitempty"`
 }
 
 type SSL struct {
-	ID            string   `json:"id"`
+	BaseInfo
 	Cert          string   `json:"cert"`
 	Key           string   `json:"key"`
 	Sni           string   `json:"sni"`
@@ -167,7 +167,7 @@ type SSL struct {
 }
 
 type Service struct {
-	ID         string      `json:"id"`
+	BaseInfo
 	Name       string      `json:"name,omitempty"`
 	Desc       string      `json:"desc,omitempty"`
 	Upstream   Upstream    `json:"upstream,omitempty"`

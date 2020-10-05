@@ -219,7 +219,7 @@ func Exist(c *gin.Context) (interface{}, error) {
 	if len(rows) > 0 {
 		r := rows[0].(*entity.Upstream)
 		if r.ID != exclude {
-			return rows, consts.InvalidParam("Upstream name is reduplicate")
+			return nil, consts.InvalidParam("Upstream name is reduplicate")
 		}
 	}
 
@@ -239,11 +239,16 @@ func listUpstreamNames(c *gin.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	rows := make([]*entity.UpstreamNameResponse, ret.TotalSize)
+	rows := make([]interface{}, ret.TotalSize)
 	for i := range ret.Rows {
 		row := ret.Rows[i].(*entity.Upstream)
 		rows[i], _ = row.Parse2NameResponse()
 	}
 
-	return rows, nil
+	output := &store.ListOutput{
+		Rows:      rows,
+		TotalSize: ret.TotalSize,
+	}
+
+	return output, nil
 }
