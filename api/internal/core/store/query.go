@@ -14,6 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// Copyright 2017 The Kubernetes Authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package store
 
 import (
@@ -27,7 +41,7 @@ type Query struct {
 }
 
 type Sort struct {
-	SortByList []SortBy
+	List []SortBy
 }
 
 type SortBy struct {
@@ -36,11 +50,11 @@ type SortBy struct {
 }
 
 var NoSort = &Sort{
-	SortByList: []SortBy{},
+	List: []SortBy{},
 }
 
 type Filter struct {
-	FilterByList []FilterBy
+	List []FilterBy
 }
 
 type FilterBy struct {
@@ -49,7 +63,7 @@ type FilterBy struct {
 }
 
 var NoFilter = &Filter{
-	FilterByList: []FilterBy{},
+	List: []FilterBy{},
 }
 
 type Pagination struct {
@@ -88,15 +102,15 @@ func NewQuery(sort *Sort, filter *Filter, pagination *Pagination) *Query {
 	}
 }
 
-func NewSort(sortByListRaw []string) *Sort {
-	if sortByListRaw == nil || len(sortByListRaw)%2 == 1 {
+func NewSort(sortRaw []string) *Sort {
+	if sortRaw == nil || len(sortRaw)%2 == 1 {
 		// Empty sort list or invalid (odd) length
 		return NoSort
 	}
-	sortByList := []SortBy{}
-	for i := 0; i+1 < len(sortByListRaw); i += 2 {
+	list := []SortBy{}
+	for i := 0; i+1 < len(sortRaw); i += 2 {
 		var ascending bool
-		orderOption := sortByListRaw[i]
+		orderOption := sortRaw[i]
 		if orderOption == "a" {
 			ascending = true
 		} else if orderOption == "d" {
@@ -105,33 +119,33 @@ func NewSort(sortByListRaw []string) *Sort {
 			return NoSort
 		}
 
-		propertyName := sortByListRaw[i+1]
+		propertyName := sortRaw[i+1]
 		sortBy := SortBy{
 			Property:  entity.PropertyName(propertyName),
 			Ascending: ascending,
 		}
-		sortByList = append(sortByList, sortBy)
+		list = append(list, sortBy)
 	}
 	return &Sort{
-		SortByList: sortByList,
+		List: list,
 	}
 }
 
-func NewFilter(filterByListRaw []string) *Filter {
-	if filterByListRaw == nil || len(filterByListRaw)%2 == 1 {
+func NewFilter(filterRaw []string) *Filter {
+	if filterRaw == nil || len(filterRaw)%2 == 1 {
 		return NoFilter
 	}
-	filterByList := []FilterBy{}
-	for i := 0; i+1 < len(filterByListRaw); i += 2 {
-		propertyName := filterByListRaw[i]
-		propertyValue := filterByListRaw[i+1]
+	list := []FilterBy{}
+	for i := 0; i+1 < len(filterRaw); i += 2 {
+		propertyName := filterRaw[i]
+		propertyValue := filterRaw[i+1]
 		filterBy := FilterBy{
 			Property: entity.PropertyName(propertyName),
 			Value:    entity.ComparingString(propertyValue),
 		}
-		filterByList = append(filterByList, filterBy)
+		list = append(list, filterBy)
 	}
 	return &Filter{
-		FilterByList: filterByList,
+		List: list,
 	}
 }

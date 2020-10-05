@@ -14,6 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// Copyright 2017 The Kubernetes Authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package store
 
 import (
@@ -38,7 +52,7 @@ func (self Selector) Swap(i, j int) {
 }
 
 func (self Selector) Less(i, j int) bool {
-	for _, sortBy := range self.Query.Sort.SortByList {
+	for _, sortBy := range self.Query.Sort.List {
 		a := self.List[i].GetProperty(sortBy.Property)
 		b := self.List[j].GetProperty(sortBy.Property)
 		if a == nil || b == nil {
@@ -63,7 +77,7 @@ func (self *Selector) Filter() *Selector {
 	filteredList := []Row{}
 	for _, c := range self.List {
 		matches := true
-		for _, filterBy := range self.Query.Filter.FilterByList {
+		for _, filterBy := range self.Query.Filter.List {
 			v := c.GetProperty(filterBy.Property)
 			if v == nil || v.Compare(filterBy.Value) != 0 {
 				matches = false
