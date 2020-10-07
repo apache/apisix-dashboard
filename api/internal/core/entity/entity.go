@@ -44,7 +44,7 @@ type Route struct {
 	RemoteAddrs     []string    `json:"remote_addrs,omitempty"`
 	Vars            string      `json:"vars,omitempty"`
 	FilterFunc      string      `json:"filter_func,omitempty"`
-	Script          string      `json:"script,omitempty"`
+	Script          interface{} `json:"script,omitempty"`
 	Plugins         interface{} `json:"plugins,omitempty"`
 	Upstream        Upstream    `json:"upstream,omitempty"`
 	ServiceID       string      `json:"service_id,omitempty"`
@@ -174,4 +174,9 @@ type Service struct {
 	UpstreamID string      `json:"upstream_id,omitempty"`
 	Plugins    interface{} `json:"plugins,omitempty"`
 	Script     string      `json:"script,omitempty"`
+}
+
+type Script struct {
+	ID     string      `json:"id"`
+	Script interface{} `json:"script,omitempty"`
 }

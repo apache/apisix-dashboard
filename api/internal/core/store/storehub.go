@@ -32,6 +32,7 @@ const (
 	HubKeyService  HubKey = "service"
 	HubKeySsl      HubKey = "ssl"
 	HubKeyUpstream HubKey = "upstream"
+	HubKeyScript   HubKey = "script"
 )
 
 var (
@@ -119,5 +120,18 @@ func InitStores() error {
 	if err != nil {
 		return err
 	}
+
+	err = InitStore(HubKeyScript, GenericStoreOption{
+		BasePath: "/apisix/scripts",
+		ObjType:  reflect.TypeOf(entity.Script{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.Script)
+			return r.ID
+		},
+	})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
