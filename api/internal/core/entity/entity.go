@@ -155,11 +155,11 @@ type Consumer struct {
 type SSL struct {
 	BaseInfo
 	Cert          string   `json:"cert"`
-	Key           string   `json:"key"`
+	Key           string   `json:"key,omitempty"`
 	Sni           string   `json:"sni"`
 	Snis          []string `json:"snis"`
 	Certs         []string `json:"certs"`
-	Keys          []string `json:"keys"`
+	Keys          []string `json:"keys,omitempty"`
 	ExpTime       int64    `json:"exptime"`
 	Status        int      `json:"status"`
 	ValidityStart int64    `json:"validity_start"`

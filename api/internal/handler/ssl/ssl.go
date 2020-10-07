@@ -75,11 +75,17 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.sslStore.Get(input.ID)
+	ret, err := h.sslStore.Get(input.ID)
 	if err != nil {
 		return nil, err
 	}
-	return r, nil
+
+	//format respond
+	ssl := ret.(*entity.SSL)
+	ssl.Key = ""
+	ssl.Keys = nil
+
+	return ssl, nil
 }
 
 type ListInput struct {
@@ -103,6 +109,17 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	//format respond
+	var list []interface{}
+	var ssl *entity.SSL
+	for _, item := range ret.Rows {
+		ssl = item.(*entity.SSL)
+		ssl.Key = ""
+		ssl.Keys = nil
+		list = append(list, ssl)
+	}
+	ret.Rows = list
 
 	return ret, nil
 }
