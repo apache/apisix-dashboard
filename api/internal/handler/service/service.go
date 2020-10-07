@@ -53,7 +53,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PATCH("/apisix/admin/services/:id", wgin.Wraps(h.Patch,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
-	r.DELETE("/apisix/admin/services", wgin.Wraps(h.BatchDelete,
+	r.DELETE("/apisix/admin/services/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 }
 
@@ -120,7 +120,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 }
 
 type BatchDelete struct {
-	IDs string `auto_read:"ids,query"`
+	IDs string `auto_read:"ids,path"`
 }
 
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {

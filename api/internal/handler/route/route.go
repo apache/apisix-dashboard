@@ -62,7 +62,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(entity.Route{}))))
 	r.PUT("/apisix/admin/routes/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
-	r.DELETE("/apisix/admin/routes/:id", wgin.Wraps(h.BatchDelete,
+	r.DELETE("/apisix/admin/routes/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
 	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))

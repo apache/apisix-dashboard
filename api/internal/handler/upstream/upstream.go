@@ -54,7 +54,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PATCH("/apisix/admin/upstreams/:id", wgin.Wraps(h.Patch,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
-	r.DELETE("/apisix/admin/upstreams", wgin.Wraps(h.BatchDelete,
+	r.DELETE("/apisix/admin/upstreams/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
 	r.GET("/apisix/admin/notexist/upstreams", consts.ErrorWrapper(Exist))
@@ -127,7 +127,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 }
 
 type BatchDelete struct {
-	IDs string `auto_read:"ids,query"`
+	IDs string `auto_read:"ids,path"`
 }
 
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
