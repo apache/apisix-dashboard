@@ -111,7 +111,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	}
 
 	//format respond
-	var list []interface{}
+  var list []interface{}
 	var ssl *entity.SSL
 	for _, item := range ret.Rows {
 		ssl = item.(*entity.SSL)
@@ -119,6 +119,9 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 		ssl.Keys = nil
 		list = append(list, ssl)
 	}
+	if list == nil {
+	  list = []interface{}{}
+  }
 	ret.Rows = list
 
 	return ret, nil
