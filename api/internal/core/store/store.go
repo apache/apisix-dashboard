@@ -212,14 +212,14 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 		info.UpdateTime = time.Now().Unix()
 	}
 
-  key := s.opt.KeyFunc(obj)
-  if key == "" {
-    return fmt.Errorf("key is required")
-  }
-  _, ok := s.cache[key]
-  if ok {
-    return fmt.Errorf("key: %s is conflicted", key)
-  }
+	key := s.opt.KeyFunc(obj)
+	if key == "" {
+		return fmt.Errorf("key is required")
+	}
+	_, ok := s.cache[key]
+	if ok {
+		return fmt.Errorf("key: %s is conflicted", key)
+	}
 
 	bs, err := json.Marshal(obj)
 	if err != nil {
