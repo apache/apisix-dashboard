@@ -171,6 +171,12 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 
 	if input.Script != nil {
+		if input.ID == "" {
+			input.ID = utils.GetFlakeUidStr()
+		}
+		script := &entity.Script{}
+		script.ID = input.ID
+		script.Script = input.Script
 		//to lua
 		var err error
 		input.Script, err = generateLuaCode(input.Script.(map[string]interface{}))
@@ -178,12 +184,6 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 			return nil, err
 		}
 		//save original conf
-		if input.ID == "" {
-			input.ID = utils.GetFlakeUidStr()
-		}
-		script := &entity.Script{}
-		script.ID = input.ID
-		script.Script = input.Script
 		if err = h.scriptStore.Create(c.Context(), script); err != nil {
 			return nil, err
 		}
@@ -226,6 +226,9 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	if input.Script != nil {
+		script := entity.Script{}
+		script.ID = input.ID
+		script.Script = input.Script
 		//to lua
 		var err error
 		input.Route.Script, err = generateLuaCode(input.Script.(map[string]interface{}))
@@ -233,9 +236,6 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 			return nil, err
 		}
 		//save original conf
-		script := entity.Script{}
-		script.ID = input.ID
-		script.Script = input.Script
 		if err = h.scriptStore.Create(c.Context(), script); err != nil {
 			return nil, err
 		}
