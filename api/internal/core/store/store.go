@@ -203,15 +203,6 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 		return err
 	}
 
-	key := s.opt.KeyFunc(obj)
-	if key == "" {
-		return fmt.Errorf("key is required")
-	}
-	_, ok := s.cache[key]
-	if ok {
-		return fmt.Errorf("key: %s is conflicted", key)
-	}
-
 	if getter, ok := obj.(entity.BaseInfoGetter); ok {
 		info := getter.GetBaseInfo()
 		if info.ID == "" {
@@ -220,6 +211,15 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 		info.CreateTime = time.Now().Unix()
 		info.UpdateTime = time.Now().Unix()
 	}
+
+  key := s.opt.KeyFunc(obj)
+  if key == "" {
+    return fmt.Errorf("key is required")
+  }
+  _, ok := s.cache[key]
+  if ok {
+    return fmt.Errorf("key: %s is conflicted", key)
+  }
 
 	bs, err := json.Marshal(obj)
 	if err != nil {
