@@ -19,6 +19,7 @@ package ssl
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/json"
 	"encoding/pem"
 	"errors"
 	"fmt"
@@ -65,7 +66,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.POST("/apisix/admin/check_ssl_cert", wgin.Wraps(h.Validate,
 		wrapper.InputType(reflect.TypeOf(entity.SSL{}))))
 
-	r.GET("/apisix/admin/check_ssl_exists", consts.ErrorWrapper(Exist))
+	r.POST("/apisix/admin/check_ssl_exists", consts.ErrorWrapper(Exist))
 }
 
 type GetInput struct {
@@ -302,14 +303,49 @@ func toRows(list *store.ListOutput) []store.Row {
 	return rows
 }
 
+func checkValueExists(rows []store.Row, field, value string) bool {
+	selector := store.Selector{
+		List:  rows,
+		Query: &store.Query{Filter: store.NewFilter([]string{field, value})},
+	}
+
+	list := selector.Filter().List
+
+	return len(list) > 0
+}
+
+func checkSniExists(rows []store.Row, sni string) bool {
+	if res := checkValueExists(rows, "sni", sni); res {
+		return true
+	}
+	if res := checkValueExists(rows, "snis", sni); res {
+		return true
+	}
+	//extensive domain
+	firstDot := strings.Index(sni, ".")
+	if firstDot > 0 && sni[0:1] != "*" {
+		sni = "*" + sni[firstDot:]
+		if res := checkValueExists(rows, "sni", sni); res {
+			return true
+		}
+		if res := checkValueExists(rows, "snis", sni); res {
+			return true
+		}
+	}
+
+	return false
+}
+
 func Exist(c *gin.Context) (interface{}, error) {
 	//input := c.Input().(*ExistInput)
-
 	//temporary
-	sni := c.Query("sni")
-	exclude := c.Query("exclude")
-	routeStore := store.GetStore(store.HubKeySsl)
+	reqBody, _ := c.GetRawData()
+	var hosts []string
+	if err := json.Unmarshal(reqBody, &hosts); err != nil {
+		return nil, err
+	}
 
+	routeStore := store.GetStore(store.HubKeySsl)
 	ret, err := routeStore.List(store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
@@ -320,55 +356,10 @@ func Exist(c *gin.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	//sni
-	sort := store.NewSort(nil)
-	filter := store.NewFilter([]string{"sni", sni})
-	pagination := store.NewPagination(0, 0)
-	query := store.NewQuery(sort, filter, pagination)
-	rows := store.NewFilterSelector(toRows(ret), query)
-	if len(rows) > 0 {
-		r := rows[0].(*entity.SSL)
-		if r.ID != exclude {
-			return nil, consts.InvalidParam("SSL cert exists")
-		}
-	}
-
-	//snis
-	filter = store.NewFilter([]string{"snis", sni})
-	query = store.NewQuery(sort, filter, pagination)
-	rows = store.NewFilterSelector(toRows(ret), query)
-	if len(rows) > 0 {
-		r := rows[0].(*entity.SSL)
-		if r.ID != exclude {
-			return nil, consts.InvalidParam("SSL cert exists")
-		}
-	}
-
-	//extensive domain
-	firstDot := strings.Index(sni, ".")
-	if firstDot > 0 && sni[0:1] != "*" {
-		sni = "*" + sni[firstDot:]
-
-		//sni
-		filter = store.NewFilter([]string{"sni", sni})
-		query = store.NewQuery(sort, filter, pagination)
-		rows = store.NewFilterSelector(toRows(ret), query)
-		if len(rows) > 0 {
-			r := rows[0].(*entity.SSL)
-			if r.ID != exclude {
-				return nil, consts.InvalidParam("SSL cert exists")
-			}
-		}
-
-		//snis
-		filter = store.NewFilter([]string{"snis", sni})
-		query = store.NewQuery(sort, filter, pagination)
-		rows = store.NewFilterSelector(toRows(ret), query)
-		if len(rows) > 0 {
-			r := rows[0].(*entity.SSL)
-			if r.ID != exclude {
-				return nil, consts.InvalidParam("SSL cert exists")
-			}
+	for _, host := range hosts {
+		res := checkSniExists(toRows(ret), host)
+		if !res {
+			return nil, consts.InvalidParam("SSL cert not exists for sni：" + host)
 		}
 	}
 
