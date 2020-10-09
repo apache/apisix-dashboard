@@ -44,7 +44,7 @@ type Route struct {
 	RemoteAddrs     []string    `json:"remote_addrs,omitempty"`
 	Vars            string      `json:"vars,omitempty"`
 	FilterFunc      string      `json:"filter_func,omitempty"`
-	Script          string      `json:"script,omitempty"`
+	Script          interface{} `json:"script,omitempty"`
 	Plugins         interface{} `json:"plugins,omitempty"`
 	Upstream        Upstream    `json:"upstream,omitempty"`
 	ServiceID       string      `json:"service_id,omitempty"`
@@ -113,6 +113,7 @@ type HealthChecker struct {
 }
 
 type Upstream struct {
+	BaseInfo
 	Nodes           []Node        `json:"nodes,omitempty"`
 	Retries         int           `json:"retries,omitempty"`
 	Timeout         Timeout       `json:"timeout,omitempty"`
@@ -127,26 +128,38 @@ type Upstream struct {
 	Name            string        `json:"name,omitempty"`
 	Desc            string        `json:"desc,omitempty"`
 	ServiceName     string        `json:"service_name,omitempty"`
-	ID              string        `json:"id,omitempty"`
+}
+
+type UpstreamNameResponse struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+func (upstream *Upstream) Parse2NameResponse() (*UpstreamNameResponse, error) {
+	nameResp := &UpstreamNameResponse{
+		ID:   upstream.ID,
+		Name: upstream.Name,
+	}
+	return nameResp, nil
 }
 
 // --- structures for upstream end  ---
 
 type Consumer struct {
-	ID       string      `json:"id"`
+	BaseInfo
 	Username string      `json:"username"`
 	Desc     string      `json:"desc,omitempty"`
 	Plugins  interface{} `json:"plugins,omitempty"`
 }
 
 type SSL struct {
-	ID            string   `json:"id"`
+	BaseInfo
 	Cert          string   `json:"cert"`
-	Key           string   `json:"key"`
+	Key           string   `json:"key,omitempty"`
 	Sni           string   `json:"sni"`
 	Snis          []string `json:"snis"`
 	Certs         []string `json:"certs"`
-	Keys          []string `json:"keys"`
+	Keys          []string `json:"keys,omitempty"`
 	ExpTime       int64    `json:"exptime"`
 	Status        int      `json:"status"`
 	ValidityStart int64    `json:"validity_start"`
@@ -154,11 +167,16 @@ type SSL struct {
 }
 
 type Service struct {
-	ID         string      `json:"id"`
+	BaseInfo
 	Name       string      `json:"name,omitempty"`
 	Desc       string      `json:"desc,omitempty"`
 	Upstream   Upstream    `json:"upstream,omitempty"`
 	UpstreamID string      `json:"upstream_id,omitempty"`
 	Plugins    interface{} `json:"plugins,omitempty"`
 	Script     string      `json:"script,omitempty"`
+}
+
+type Script struct {
+	ID     string      `json:"id"`
+	Script interface{} `json:"script,omitempty"`
 }

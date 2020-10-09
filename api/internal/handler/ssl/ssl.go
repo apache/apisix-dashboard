@@ -19,9 +19,11 @@ package ssl
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/json"
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 
@@ -35,6 +37,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -54,14 +57,16 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 	r.POST("/apisix/admin/ssl", wgin.Wraps(h.Create,
 		wrapper.InputType(reflect.TypeOf(entity.SSL{}))))
-	r.POST("/apisix/admin/check_ssl_cert", wgin.Wraps(h.Validate,
-		wrapper.InputType(reflect.TypeOf(entity.SSL{}))))
 	r.PUT("/apisix/admin/ssl/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PATCH("/apisix/admin/ssl/:id", wgin.Wraps(h.Patch,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
-	r.DELETE("/apisix/admin/ssl", wgin.Wraps(h.BatchDelete,
+	r.DELETE("/apisix/admin/ssl/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
+	r.POST("/apisix/admin/check_ssl_cert", wgin.Wraps(h.Validate,
+		wrapper.InputType(reflect.TypeOf(entity.SSL{}))))
+
+	r.POST("/apisix/admin/check_ssl_exists", consts.ErrorWrapper(Exist))
 }
 
 type GetInput struct {
@@ -71,11 +76,17 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.sslStore.Get(input.ID)
+	ret, err := h.sslStore.Get(input.ID)
 	if err != nil {
 		return nil, err
 	}
-	return r, nil
+
+	//format respond
+	ssl := ret.(*entity.SSL)
+	ssl.Key = ""
+	ssl.Keys = nil
+
+	return ssl, nil
 }
 
 type ListInput struct {
@@ -100,19 +111,31 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 		return nil, err
 	}
 
+	//format respond
+	var list []interface{}
+	var ssl *entity.SSL
+	for _, item := range ret.Rows {
+		ssl = item.(*entity.SSL)
+		ssl.Key = ""
+		ssl.Keys = nil
+		list = append(list, ssl)
+	}
+	if list == nil {
+		list = []interface{}{}
+	}
+	ret.Rows = list
+
 	return ret, nil
 }
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.SSL)
-
 	ssl, err := ParseCert(input.Cert, input.Key)
 	if err != nil {
 		return nil, err
 	}
 
 	ssl.ID = input.ID
-
 	if err := h.sslStore.Create(c.Context(), ssl); err != nil {
 		return nil, err
 	}
@@ -127,9 +150,14 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
-	input.SSL.ID = input.ID
+	ssl, err := ParseCert(input.Cert, input.Key)
+	if err != nil {
+		return nil, err
+	}
 
-	if err := h.sslStore.Update(c.Context(), &input.SSL); err != nil {
+	ssl.ID = input.ID
+	log.Println("ssl", ssl)
+	if err := h.sslStore.Update(c.Context(), ssl); err != nil {
 		return nil, err
 	}
 
@@ -177,7 +205,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 }
 
 type BatchDelete struct {
-	Ids string `auto_read:"ids,query"`
+	Ids string `auto_read:"ids,path"`
 }
 
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
@@ -261,4 +289,79 @@ func (h *Handler) Validate(c droplet.Context) (interface{}, error) {
 	}
 
 	return ssl, nil
+}
+
+type ExistInput struct {
+	Name string `auto_read:"name,query"`
+}
+
+func toRows(list *store.ListOutput) []store.Row {
+	rows := make([]store.Row, list.TotalSize)
+	for i := range list.Rows {
+		rows[i] = list.Rows[i].(*entity.SSL)
+	}
+	return rows
+}
+
+func checkValueExists(rows []store.Row, field, value string) bool {
+	selector := store.Selector{
+		List:  rows,
+		Query: &store.Query{Filter: store.NewFilter([]string{field, value})},
+	}
+
+	list := selector.Filter().List
+
+	return len(list) > 0
+}
+
+func checkSniExists(rows []store.Row, sni string) bool {
+	if res := checkValueExists(rows, "sni", sni); res {
+		return true
+	}
+	if res := checkValueExists(rows, "snis", sni); res {
+		return true
+	}
+	//extensive domain
+	firstDot := strings.Index(sni, ".")
+	if firstDot > 0 && sni[0:1] != "*" {
+		sni = "*" + sni[firstDot:]
+		if res := checkValueExists(rows, "sni", sni); res {
+			return true
+		}
+		if res := checkValueExists(rows, "snis", sni); res {
+			return true
+		}
+	}
+
+	return false
+}
+
+func Exist(c *gin.Context) (interface{}, error) {
+	//input := c.Input().(*ExistInput)
+	//temporary
+	reqBody, _ := c.GetRawData()
+	var hosts []string
+	if err := json.Unmarshal(reqBody, &hosts); err != nil {
+		return nil, err
+	}
+
+	routeStore := store.GetStore(store.HubKeySsl)
+	ret, err := routeStore.List(store.ListInput{
+		Predicate:  nil,
+		PageSize:   0,
+		PageNumber: 0,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, host := range hosts {
+		res := checkSniExists(toRows(ret), host)
+		if !res {
+			return nil, consts.InvalidParam("SSL cert not exists for sni：" + host)
+		}
+	}
+
+	return nil, nil
 }

@@ -30,6 +30,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -53,8 +54,11 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PATCH("/apisix/admin/upstreams/:id", wgin.Wraps(h.Patch,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
-	r.DELETE("/apisix/admin/upstreams", wgin.Wraps(h.BatchDelete,
+	r.DELETE("/apisix/admin/upstreams/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
+
+	r.GET("/apisix/admin/notexist/upstreams", consts.ErrorWrapper(Exist))
+	r.GET("/apisix/admin/names/upstreams", consts.ErrorWrapper(listUpstreamNames))
 }
 
 type GetInput struct {
@@ -123,7 +127,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 }
 
 type BatchDelete struct {
-	IDs string `auto_read:"ids,query"`
+	IDs string `auto_read:"ids,path"`
 }
 
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
@@ -174,4 +178,77 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	}
 
 	return nil, nil
+}
+
+type ExistInput struct {
+	Name string `auto_read:"name,query"`
+}
+
+func toRows(list *store.ListOutput) []store.Row {
+	rows := make([]store.Row, list.TotalSize)
+	for i := range list.Rows {
+		rows[i] = list.Rows[i].(*entity.Upstream)
+	}
+	return rows
+}
+
+func Exist(c *gin.Context) (interface{}, error) {
+	//input := c.Input().(*ExistInput)
+
+	//temporary
+	name := c.Query("name")
+	exclude := c.Query("exclude")
+	routeStore := store.GetStore(store.HubKeyUpstream)
+
+	ret, err := routeStore.List(store.ListInput{
+		Predicate:  nil,
+		PageSize:   0,
+		PageNumber: 0,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	sort := store.NewSort(nil)
+	filter := store.NewFilter([]string{"name", name})
+	pagination := store.NewPagination(0, 0)
+	query := store.NewQuery(sort, filter, pagination)
+	rows := store.NewFilterSelector(toRows(ret), query)
+
+	if len(rows) > 0 {
+		r := rows[0].(*entity.Upstream)
+		if r.ID != exclude {
+			return nil, consts.InvalidParam("Upstream name is reduplicate")
+		}
+	}
+
+	return nil, nil
+}
+
+func listUpstreamNames(c *gin.Context) (interface{}, error) {
+	routeStore := store.GetStore(store.HubKeyUpstream)
+
+	ret, err := routeStore.List(store.ListInput{
+		Predicate:  nil,
+		PageSize:   0,
+		PageNumber: 0,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	rows := make([]interface{}, ret.TotalSize)
+	for i := range ret.Rows {
+		row := ret.Rows[i].(*entity.Upstream)
+		rows[i], _ = row.Parse2NameResponse()
+	}
+
+	output := &store.ListOutput{
+		Rows:      rows,
+		TotalSize: ret.TotalSize,
+	}
+
+	return output, nil
 }

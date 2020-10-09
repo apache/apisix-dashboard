@@ -17,6 +17,7 @@
 package consumer
 
 import (
+	"fmt"
 	"reflect"
 	"strings"
 
@@ -95,8 +96,11 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Consumer)
+	if input.ID != "" && input.ID != input.Username {
+		return nil, fmt.Errorf("consumer's id and username must be a same value")
+	}
+	input.ID = input.Username
 
-	//TODO: check duplicate username
 	if err := h.consumerStore.Create(c.Context(), input); err != nil {
 		return nil, err
 	}
@@ -111,11 +115,21 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
+	if input.ID != "" && input.ID != input.Username {
+		return nil, fmt.Errorf("consumer's id and username must be a same value")
+	}
 	input.Consumer.Username = input.Username
+	input.Consumer.ID = input.Username
 
-	//TODO: if not exists, create
 	if err := h.consumerStore.Update(c.Context(), &input.Consumer); err != nil {
-		return nil, err
+		//if not exists, create
+		if err.Error() == fmt.Sprintf("key: %s is not found", input.Username) {
+			if err := h.consumerStore.Create(c.Context(), &input.Consumer); err != nil {
+				return nil, err
+			}
+		} else {
+			return nil, err
+		}
 	}
 
 	return nil, nil

@@ -14,43 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package route
+package consts
 
 import (
-	"strings"
-
-	"github.com/api7/apitest"
-	dlog "github.com/shiningrush/droplet/log"
-	"github.com/spf13/viper"
-
-	"github.com/apisix/manager-api/internal/core/storage"
-	"github.com/apisix/manager-api/internal/core/store"
-	"github.com/apisix/manager-api/log"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-var testHandler *apitest.APITest
+type WrapperHandle func(c *gin.Context) (interface{}, error)
 
-var (
-	uriPrefix = "/apisix/admin"
-)
-
-func init() {
-	//init etcd
-	viper.SetEnvPrefix("APIX")
-	viper.AutomaticEnv()
-	dlog.DefLogger = log.DefLogger{}
-
-	if err := storage.InitETCDClient(strings.Split(viper.GetString("etcd_endpoints"), ",")); err != nil {
-		panic(err)
+func ErrorWrapper(handle WrapperHandle) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		data, err := handle(c)
+		if err != nil {
+			apiError := err.(*ApiError)
+			c.JSON(apiError.Status, apiError)
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"data": data, "code": 200, "message": "success"})
 	}
+}
 
-	if err := store.InitStores(); err != nil {
-		panic(err)
-	}
+type ApiError struct {
+	Status  int    `json:"-"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
 
-	r := SetUpRouter()
+func (err ApiError) Error() string {
+	return err.Message
+}
 
-	testHandler = apitest.
-		New().
-		Handler(r)
+func InvalidParam(message string) *ApiError {
+	return &ApiError{400, 400, message}
+}
+
+func SystemError(message string) *ApiError {
+	return &ApiError{500, 500, message}
 }

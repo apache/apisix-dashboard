@@ -14,19 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package store
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/internal/core/storage"
-	"github.com/apisix/manager-api/internal/utils"
-	"github.com/shiningrush/droplet/data"
 	"log"
 	"reflect"
 	"time"
+
+	"github.com/shiningrush/droplet/data"
+
+	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Interface interface {
@@ -200,15 +203,6 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 		return err
 	}
 
-	key := s.opt.KeyFunc(obj)
-	if key == "" {
-		return fmt.Errorf("key is required")
-	}
-	_, ok := s.cache[key]
-	if ok {
-		return fmt.Errorf("key: %s is conflicted", key)
-	}
-
 	if getter, ok := obj.(entity.BaseInfoGetter); ok {
 		info := getter.GetBaseInfo()
 		if info.ID == "" {
@@ -216,6 +210,15 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 		}
 		info.CreateTime = time.Now().Unix()
 		info.UpdateTime = time.Now().Unix()
+	}
+
+	key := s.opt.KeyFunc(obj)
+	if key == "" {
+		return fmt.Errorf("key is required")
+	}
+	_, ok := s.cache[key]
+	if ok {
+		return fmt.Errorf("key: %s is conflicted", key)
 	}
 
 	bs, err := json.Marshal(obj)
@@ -238,13 +241,20 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
 	if key == "" {
 		return fmt.Errorf("key is required")
 	}
-	_, ok := s.cache[key]
+	oldObj, ok := s.cache[key]
 	if !ok {
 		return fmt.Errorf("key: %s is not found", key)
 	}
 
+	createTime := int64(0)
+	if oldGetter, ok := oldObj.(entity.BaseInfoGetter); ok {
+		oldInfo := oldGetter.GetBaseInfo()
+		createTime = oldInfo.CreateTime
+	}
+
 	if getter, ok := obj.(entity.BaseInfoGetter); ok {
 		info := getter.GetBaseInfo()
+		info.CreateTime = createTime
 		info.UpdateTime = time.Now().Unix()
 	}
 
