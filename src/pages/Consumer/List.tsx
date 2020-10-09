@@ -46,35 +46,37 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'consumer.list.operation' }),
       valueType: 'option',
-      render: (_, record) => (
-        <>
-          <Button
-            type="primary"
-            style={{ marginRight: 10 }}
-            onClick={() => history.push(`/consumer/${record.id}/edit`)}
-          >
-            {formatMessage({ id: 'consumer.list.edit' })}
-          </Button>
-          <Popconfirm
-            title={formatMessage({ id: 'consumer.list.delete.confirm' })}
-            okText={formatMessage({ id: 'consumer.list.confirm' })}
-            cancelText={formatMessage({ id: 'consumer.list.cancel' })}
-            onConfirm={() => {
-              remove(record.id).then(() => {
-                notification.success({
-                  message: formatMessage({ id: 'consumer.list.delete.success' }),
-                });
-                /* eslint-disable no-unused-expressions */
-                ref.current?.reload();
-              });
-            }}
-          >
-            <Button type="primary" danger>
-              {formatMessage({ id: 'consumer.list.delete' })}
+      render: (_, record) => {
+        return (
+          <>
+            <Button
+              type="primary"
+              style={{ marginRight: 10 }}
+              onClick={() => history.push(`/consumer/${record.id}/edit`)}
+            >
+              {formatMessage({ id: 'consumer.list.edit' })}
             </Button>
-          </Popconfirm>
-        </>
-      ),
+            <Popconfirm
+              title={formatMessage({ id: 'consumer.list.delete.confirm' })}
+              okText={formatMessage({ id: 'consumer.list.confirm' })}
+              cancelText={formatMessage({ id: 'consumer.list.cancel' })}
+              onConfirm={() => {
+                remove(record.id).then(() => {
+                  notification.success({
+                    message: formatMessage({ id: 'consumer.list.delete.success' }),
+                  });
+                  /* eslint-disable no-unused-expressions */
+                  ref.current?.reload();
+                });
+              }}
+            >
+              <Button type="primary" danger>
+                {formatMessage({ id: 'consumer.list.delete' })}
+              </Button>
+            </Popconfirm>
+          </>
+        );
+      },
     },
   ];
 
