@@ -23,9 +23,9 @@ export const fetchList = ({ current = 1, pageSize = 10 }, search: string) =>
       size: pageSize,
       search,
     },
-  }).then(({ list, count }) => ({
-    data: list,
-    total: count,
+  }).then(({ data }) => ({
+    data: data.rows,
+    total: data.total_size,
   }));
 
 export const fetchItem = (id: string) =>

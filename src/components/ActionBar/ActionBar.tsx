@@ -61,7 +61,7 @@ const ActionBar: React.FC<Props> = ({ step, lastStep, onChange, withResultView }
           <Button type="primary" onClick={() => onChange(step + 1)}>
             {step < lastStep
               ? formatMessage({ id: 'component.actionbar.button.nextStep' })
-              : formatMessage({ id: 'component.global.button.submit' })}
+              : formatMessage({ id: 'component.global.submit' })}
           </Button>
         </Col>
       </Row>

@@ -49,15 +49,15 @@ const Page: React.FC<Props> = (props) => {
   const { formatMessage } = useIntl();
 
   const STEP_HEADER_2 = [
-    formatMessage({ id: 'route.constants.define.api.request' }),
-    formatMessage({ id: 'route.constants.preview' }),
+    formatMessage({ id: 'page.route.steps.stepTitle.defineApiRequest' }),
+    formatMessage({ id: 'component.global.steps.stepTitle.preview' }),
   ];
 
   const STEP_HEADER_4 = [
-    formatMessage({ id: 'route.constants.define.api.request' }),
-    formatMessage({ id: 'route.constants.define.api.backend.serve' }),
-    formatMessage({ id: 'route.constants.plugin.configuration' }),
-    formatMessage({ id: 'route.constants.preview' }),
+    formatMessage({ id: 'page.route.steps.stepTitle.defineApiRequest' }),
+    formatMessage({ id: 'page.route.steps.stepTitle.defineApiBackendServe' }),
+    formatMessage({ id: 'component.global.steps.stepTitle.pluginConfig' }),
+    formatMessage({ id: 'component.global.steps.stepTitle.preview' }),
   ];
 
   const [advancedMatchingRules, setAdvancedMatchingRules] = useState<RouteModule.MatchingRule[]>(
@@ -266,7 +266,13 @@ const Page: React.FC<Props> = (props) => {
 
   return (
     <>
-      <PageHeaderWrapper title={formatMessage({ id: 'route.create.management' })}>
+      <PageHeaderWrapper
+        title={`${
+          (props as any).match.params.rid
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
+        } ${formatMessage({ id: 'menu.routes' })}`}
+      >
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>
             {stepHeader.map((item) => (

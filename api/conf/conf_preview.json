@@ -13,7 +13,8 @@
     },
     "apisix": {
       "base_url": "#apisixBaseUrl#",
-      "api_key": "#apisixApiKey#"
+      "api_key": "#apisixApiKey#",
+      "debug_url": "#apisixDebugUrl#"
     }
   },
   "authentication": {

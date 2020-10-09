@@ -24,7 +24,7 @@ import ActionBar from '@/components/ActionBar';
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
 import { fetchOne, create, update } from './service';
-import { transformCreate, transformFetch } from './transform';
+import { transformRequest, transformResponse } from './transform';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
@@ -43,12 +43,12 @@ const Page: React.FC = (props) => {
 
     if (id) {
       fetchOne(id).then((data) => {
-        const transformData = transformFetch(data);
-        form1.setFieldsValue(transformData);
-        if (transformData.active) {
+        const formData = transformResponse(data);
+        form1.setFieldsValue(formData);
+        if (formData.active) {
           setActive(true);
         }
-        if (transformData.passive) {
+        if (formData.passive) {
           setPassive(true);
         }
       });
@@ -56,7 +56,13 @@ const Page: React.FC = (props) => {
   }, []);
 
   const onSubmit = () => {
-    const data = transformCreate({ ...form1.getFieldsValue() } as UpstreamModule.Body);
+    const data = transformRequest(form1.getFieldsValue() as UpstreamModule.FormFieldsType);
+    if (!data) {
+      // TODO: i18n
+      notification.error({message: "请检查配置"})
+      return
+    }
+
     const { id } = (props as any).match.params;
     (id ? update(id, data) : create(data)).then(() => {
       notification.success({

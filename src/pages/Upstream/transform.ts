@@ -1,3 +1,5 @@
+import { pickBy, identity } from "lodash"
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -14,47 +16,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { omit } from 'lodash';
+export const transformRequest = (formData: UpstreamModule.FormFieldsType): UpstreamModule.RequestBody | undefined => {
+  const data = pickBy(formData, identity) as UpstreamModule.FormFieldsType
+  const { type, hash_on, key, k8s_deployment_info, nodes, pass_host, upstream_host } = data
 
-const transformUpstreamNodes = (
-  nodes: { [key: string]: number } = {},
-): RouteModule.UpstreamHost[] => {
-  const data: RouteModule.UpstreamHost[] = [];
-  Object.entries(nodes).forEach(([k, v]) => {
-    const [host, port] = k.split(':');
-    data.push({ host, port: Number(port), weight: Number(v) });
-  });
-  if (data.length === 0) {
-    data.push({} as RouteModule.UpstreamHost);
+  if (nodes && k8s_deployment_info) {
+    return undefined
   }
-  return data;
-};
 
-export const transformCreate = (props: UpstreamModule.Body): UpstreamModule.Entity => {
-  const nodes = {};
-  props.upstreamHostList.forEach((node) => {
-    nodes[`${node.host}:${node.port}`] = node.weight;
-  });
-  return {
-    ...omit(props, 'upstreamHostList', 'active', 'passive'),
-    nodes,
-  };
-};
+  if (!nodes && !k8s_deployment_info) {
+    return undefined
+  }
 
-export const transformFetch = (props: UpstreamModule.Entity) => {
-  const upstreamHostList = transformUpstreamNodes(props.nodes);
-  let active = false;
-  let passive = false;
-  if (props.checks) {
-    active = true;
-    if (props.checks.passive) {
-      passive = true;
+  if (type === 'chash') {
+    if (!hash_on) {
+      return undefined
+    }
+
+    if (hash_on !== "consumer" && !key) {
+      return undefined
     }
   }
+
+  if (pass_host === 'rewrite' && !upstream_host) {
+    return undefined
+  }
+
+  if (nodes) {
+    const nodeObjects = {}
+    nodes.forEach(({ host, port, weight }) => {
+      nodeObjects[`${host}:${port}`] = weight
+    })
+    return {
+      ...data,
+      nodes: nodeObjects
+    }
+  }
+
+  return undefined
+}
+
+export const transformResponse = (data: UpstreamModule.ResponseBody): UpstreamModule.FormFieldsType => {
   return {
-    ...omit(props, 'nodes'),
-    upstreamHostList,
-    active,
-    passive,
-  };
-};
+    ...data,
+    active: Boolean(data.checks),
+    passive: Boolean(data.checks?.passive),
+    nodes: Object.entries(data.nodes || {}).map(([key, weight]) => {
+      const [host, port] = key.split(':')
+      return {
+        host,
+        port: Number(port),
+        weight
+      }
+    })
+  }
+}

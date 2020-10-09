@@ -23,7 +23,7 @@
 
 [Apache APISIX](https://github.com/apache/apisix-dashboard) 的仪表盘
 
-[在线演示](http://139.217.190.60/)
+[在线演示](http://139.217.190.60/)，账户密码：`admin`。
 
 ## 用户指南
 

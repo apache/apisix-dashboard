@@ -82,7 +82,7 @@ const Step1: React.FC<Props> = ({ form, disabled, isActive, onChange, isPassive 
   const { formatMessage } = useIntl();
 
   const renderUpstreamMeta = () => (
-    <Form.List name="upstreamHostList">
+    <Form.List name="nodes">
       {(fields, { add, remove }) => (
         <>
           {fields.map((field, index) => (
@@ -601,7 +601,7 @@ const Step1: React.FC<Props> = ({ form, disabled, isActive, onChange, isPassive 
           disabled={disabled}
         />
       </Form.Item>
-      <Form.Item label={formatMessage({ id: 'upstream.step.description' })} name="description">
+      <Form.Item label={formatMessage({ id: 'upstream.step.description' })} name="desc">
         <Input.TextArea
           placeholder={formatMessage({ id: 'upstream.step.input.description' })}
           disabled={disabled}
@@ -617,12 +617,12 @@ const Step1: React.FC<Props> = ({ form, disabled, isActive, onChange, isPassive 
           <Select.Option value="chash">chash</Select.Option>
         </Select>
       </Form.Item>
-      <Form.Item shouldUpdate>
+      <Form.Item shouldUpdate noStyle>
         {() => {
           if (form.getFieldValue('type') === 'chash') {
             return (
               <>
-                <Form.Item label="Hash On" name="hash_on" labelCol={{ span: 6 }}>
+                <Form.Item label="Hash On" name="hash_on" labelCol={{ span: 6 }} rules={[{ required: true }]}>
                   <Select disabled={disabled}>
                     {HASH_ON_LIST.map((item) => (
                       <Select.Option value={item} key={item}>
@@ -631,7 +631,7 @@ const Step1: React.FC<Props> = ({ form, disabled, isActive, onChange, isPassive 
                     ))}
                   </Select>
                 </Form.Item>
-                <Form.Item label="Key" name="key" labelCol={{ span: 6 }}>
+                <Form.Item label="Key" name="key" labelCol={{ span: 6 }} rules={[{ required: true }]}>
                   <Select disabled={disabled}>
                     {HASH_KEY_LIST.map((item) => (
                       <Select.Option value={item} key={item}>

@@ -27,7 +27,6 @@ declare namespace RouteModule {
     key: string;
   }
 
-  type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH';
   type RequestProtocol = 'https' | 'http' | 'websocket';
 
   type BaseData = {
@@ -257,5 +256,51 @@ declare namespace RouteModule {
     step3Data: Step3Data;
     upstreamHeaderList: UpstreamHeader[];
     advancedMatchingRules: MatchingRule[];
+  };
+
+  type RequestBody = {
+    name?: string;
+    desc?: string;
+    uri: string;
+    host?: string;
+    hosts?: string[];
+    remote_addr?: string;
+    remote_addrs?: string[];
+    methods?: HttpMethod[];
+    priority?: number;
+    vars?: [string, Operator, string][];
+    filter_func?: string;
+    plugins?: Record<string, any>;
+    script?: Record<string, any>;
+    // TODO:
+    upstream?: any;
+    upstream_id?: string;
+    service_id?: string;
+    service_protocol?: 'grpc' | 'http';
+  };
+
+  type ResponseBody = {
+    hosts: string[];
+    id: string;
+    methods: HttpMethod[];
+    name: string;
+    remote_addrs: string[];
+    script: any;
+    desc?: string;
+    upstream: {
+      checks: UpstreamModule.HealthCheck;
+      create_time: number;
+      k8s_deployment_info: UpstreamModule.K8SDeploymentInfo;
+      id: string;
+      nodes: {
+        port: number;
+      }[];
+      timeout: UpstreamModule.Timeout;
+      type: UpstreamModule.Type;
+    };
+    uri: string;
+    uris?: string[];
+    create_time: number;
+    update_time: number;
   };
 }

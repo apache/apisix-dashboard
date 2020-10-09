@@ -84,7 +84,7 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
           beforeUpload={(file, fileList) => beforeUpload(file, fileList, 'PUBLIC_KEY')}
         >
           <Button disabled={publicKeyList.length === 1}>
-            <UploadOutlined /> {formatMessage({ id: 'ssl.upload.cert' })}
+            <UploadOutlined /> {formatMessage({ id: 'page.ssl.button.uploadCert' })}
           </Button>
         </Upload>
       </Form.Item>
@@ -96,7 +96,10 @@ const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, dat
           beforeUpload={(file, fileList) => beforeUpload(file, fileList, 'PRIVATE_KEY')}
         >
           <Button disabled={privateKeyList.length === 1}>
-            <UploadOutlined /> {formatMessage({ id: 'ssl.upload.private.key' })}
+            <UploadOutlined />{' '}
+            {`${formatMessage({ id: 'page.ssl.upload' })}${formatMessage({
+              id: 'page.ssl.form.itemLabel.privateKey',
+            })}`}
           </Button>
         </Upload>
       </Form.Item>

@@ -22,20 +22,20 @@ import { PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { history, useIntl } from 'umi';
 
-import { fetchList, offline, publish, remove } from './service';
+import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
-  const [search, setSearch] = useState('');
+  const [, setSearch] = useState('');
   const { formatMessage } = useIntl();
 
-  const columns: ProColumns<RouteModule.BaseData>[] = [
+  const columns: ProColumns<RouteModule.ResponseBody>[] = [
     {
-      title: formatMessage({ id: 'route.list.name' }),
+      title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
     },
     {
-      title: formatMessage({ id: 'route.list.domain.name' }),
+      title: formatMessage({ id: 'page.route.domainName' }),
       dataIndex: 'hosts',
       render: (_, record) =>
         (record.hosts || []).map((host) => (
@@ -45,115 +45,55 @@ const Page: React.FC = () => {
         )),
     },
     {
-      title: formatMessage({ id: 'route.list.path' }),
+      title: formatMessage({ id: 'page.route.path' }),
       dataIndex: 'uri',
       render: (_, record) =>
-        record.uris.map((uri) => (
+        record.uris?.map((uri) => (
           <Tag key={uri} color="geekblue">
             {uri}
           </Tag>
         )),
     },
-    // {
-    //   title: '优先级',
-    //   dataIndex: 'priority',
-    // },
     {
-      title: formatMessage({ id: 'route.list.description' }),
-      dataIndex: 'description',
+      title: formatMessage({ id: 'component.global.description' }),
+      dataIndex: 'desc',
     },
     {
-      title: formatMessage({ id: 'route.list.group.name' }),
-      dataIndex: 'route_group_name',
-    },
-    {
-      title: formatMessage({ id: 'route.list.status' }),
-      dataIndex: 'status',
-      render: (_, record) => (
-        <>
-          {record.status ? (
-            <Tag color="green">{formatMessage({ id: 'route.list.status.publish' })}</Tag>
-          ) : (
-            <Tag color="red">{formatMessage({ id: 'route.list.status.offline' })}</Tag>
-          )}
-        </>
-      ),
-    },
-    {
-      title: formatMessage({ id: 'route.list.edit.time' }),
+      title: formatMessage({ id: 'component.global.updateTime' }),
       dataIndex: 'update_time',
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },
     {
-      title: formatMessage({ id: 'route.list.operation' }),
+      title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
       render: (_, record) => (
         <>
           <Space align="baseline">
             <Button
               type="primary"
-              onClick={() => {
-                publish(record.id!).then(() => {
-                  notification.success({
-                    message: formatMessage({ id: 'route.list.publish.success' }),
-                  });
-                  /* eslint-disable no-unused-expressions */
-                  ref.current?.reload();
-                });
-              }}
-              style={{ marginRight: 10 }}
-              disabled={record.status}
-            >
-              {formatMessage({ id: 'route.list.publish' })}
-            </Button>
-            <Button
-              type="primary"
               onClick={() => history.push(`/routes/${record.id}/edit`)}
               style={{ marginRight: 10 }}
             >
-              {formatMessage({ id: 'route.list.edit' })}
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => history.push(`/routes/${record.id}/debug`)}
-              style={{ marginRight: 10 }}
-            >
-              {formatMessage({ id: 'route.list.debug' })}
+              {formatMessage({ id: 'component.global.edit' })}
             </Button>
             <Popconfirm
-              title={formatMessage({ id: 'route.list.offline.confirm' })}
-              onConfirm={() => {
-                offline(record.id!).then(() => {
-                  notification.success({
-                    message: formatMessage({ id: 'route.list.offline.success' }),
-                  });
-                  /* eslint-disable no-unused-expressions */
-                  ref.current?.reload();
-                });
-              }}
-              okText={formatMessage({ id: 'route.list.offline' })}
-              cancelText={formatMessage({ id: 'route.list.cancel' })}
-            >
-              <Button type="primary" danger disabled={!record.status}>
-                {formatMessage({ id: 'route.list.offline' })}
-              </Button>
-            </Popconfirm>
-            <Popconfirm
-              title={formatMessage({ id: 'route.list.delete.confrim' })}
+              title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
                 remove(record.id!).then(() => {
                   notification.success({
-                    message: formatMessage({ id: 'route.list.delete.success' }),
+                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                      id: 'menu.routes',
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
                   });
                   /* eslint-disable no-unused-expressions */
                   ref.current?.reload();
                 });
               }}
-              okText={formatMessage({ id: 'route.list.confirm' })}
-              cancelText={formatMessage({ id: 'route.list.cancel' })}
+              okText={formatMessage({ id: 'component.global.confirm' })}
+              cancelText={formatMessage({ id: 'component.global.cancel' })}
             >
               <Button type="primary" danger>
-                {formatMessage({ id: 'route.list.delete' })}
+                {formatMessage({ id: 'component.global.delete' })}
               </Button>
             </Popconfirm>
           </Space>
@@ -163,16 +103,20 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'route.list' })}>
-      <ProTable<RouteModule.BaseData>
+    <PageHeaderWrapper
+      title={`${formatMessage({ id: 'menu.routes' })} ${formatMessage({
+        id: 'component.global.list',
+      })}`}
+    >
+      <ProTable<RouteModule.ResponseBody>
         actionRef={ref}
         rowKey="name"
         columns={columns}
         search={false}
-        request={(params) => fetchList(params, search)}
+        request={fetchList}
         toolBarRender={(action) => [
           <Input.Search
-            placeholder={formatMessage({ id: 'route.list.input' })}
+            placeholder={formatMessage({ id: 'component.global.pleaseEnter' })}
             onSearch={(value) => {
               setSearch(value);
               action.setPageInfo({ page: 1 });
@@ -181,7 +125,7 @@ const Page: React.FC = () => {
           />,
           <Button type="primary" onClick={() => history.push('/routes/create')}>
             <PlusOutlined />
-            {formatMessage({ id: 'route.list.create' })}
+            {formatMessage({ id: 'component.global.create' })}
           </Button>,
         ]}
       />

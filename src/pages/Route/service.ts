@@ -42,24 +42,16 @@ export const fetchItem = (rid: number) =>
 export const fetchItemDebugInfo = (rid: number) =>
   request(`/routes/${rid}/debuginfo`).then((data) => transformRouteDebugData(data));
 
-export const fetchList = ({ current = 1, pageSize = 10 }, search: string) => {
-  return request('/routes', {
-    params: {
-      page: current,
-      size: pageSize,
-      search,
-    },
-  }).then(({ data, count }) => {
+export const fetchList = () => {
+  return request<Res<ResListData<RouteModule.ResponseBody>>>('/routes').then(({ data }) => {
     return {
-      data,
-      total: count,
+      data: data.rows,
+      total: data.total_size,
     };
   });
 };
 
-export const remove = (rid: number) => request(`/routes/${rid}`, { method: 'DELETE' });
-export const offline = (rid: number) => request(`/routes/${rid}/offline`, { method: 'PUT' });
-export const publish = (rid: number) => request(`/routes/${rid}/publish`, { method: 'PUT' });
+export const remove = (rid: string) => request(`/routes/${rid}`, { method: 'DELETE' });
 
 export const checkUniqueName = (name = '', exclude = '') =>
   request('/notexist/routes', {
@@ -71,17 +63,6 @@ export const checkUniqueName = (name = '', exclude = '') =>
       identity,
     ),
   });
-
-export const fetchRouteGroupList = () => request(`/names/routegroups`);
-
-export const fetchRouteGroupItem = (gid: string) => {
-  return request(`/routegroups/${gid}`).then((data) => {
-    return {
-      route_group_name: data.name,
-      route_group_id: data.id,
-    };
-  });
-};
 
 export const fetchUpstreamList = () => request(`/names/upstreams`);
 

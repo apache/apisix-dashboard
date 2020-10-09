@@ -45,7 +45,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
     if (mode === 'VIEW') {
       return (
         <Form.Item
-          label={formatMessage({ id: 'ssl.form.expiration.time' })}
+          label={formatMessage({ id: 'page.ssl.form.itemLabel.expireTime' })}
           name="expireTime"
           rules={[{ required: true, message: 'ExpireTime' }]}
         >
@@ -60,11 +60,19 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
     <Form form={form} layout="horizontal" initialValues={form?.getFieldsValue()}>
       {renderSNI()}
       <Form.Item
-        label={formatMessage({ id: 'ssl.form.cert' })}
+        label={formatMessage({ id: 'page.ssl.form.itemLabel.cert' })}
         name="cert"
         rules={[
-          { required: true, message: formatMessage({ id: 'ssl.form.check.cert.value' }) },
-          { min: 128, message: formatMessage({ id: 'ssl.form.cert.value.length' }) },
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseCheck' })}${formatMessage({
+              id: 'page.ssl.form.itemLabel.cert',
+            })}`,
+          },
+          {
+            min: 128,
+            message: formatMessage({ id: 'page.ssl.form.itemRuleMessage.certValueLength' }),
+          },
         ]}
       >
         <Input.TextArea
@@ -74,11 +82,19 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
         />
       </Form.Item>
       <Form.Item
-        label={formatMessage({ id: 'ssl.form.private.key' })}
+        label={formatMessage({ id: 'page.ssl.form.itemLabel.privateKey' })}
         name="key"
         rules={[
-          { required: true, message: formatMessage({ id: 'ssl.form.check.key.value' }) },
-          { min: 128, message: formatMessage({ id: 'ssl.form.key.value.length' }) },
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseCheck' })}${formatMessage({
+              id: 'page.ssl.form.itemLabel.privateKey',
+            })}`,
+          },
+          {
+            min: 128,
+            message: formatMessage({ id: 'page.ssl.form.itemRuleMessage.privateKeyLength' }),
+          },
         ]}
       >
         <Input.TextArea rows={6} disabled={mode !== 'EDIT'} />

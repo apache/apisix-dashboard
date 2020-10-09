@@ -18,7 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Steps, notification, Form } from 'antd';
 import { history, useIntl } from 'umi';
-import { PluginPage, PluginPageType } from '@api7-dashboard/plugin';
+import { PluginPage, PluginPageType, PLUGIN_MAPPER_SOURCE } from '@api7-dashboard/plugin';
 
 import ActionBar from '@/components/ActionBar';
 
@@ -51,9 +51,11 @@ const Page: React.FC = (props) => {
         notification.success({
           message: `${
             id
-              ? formatMessage({ id: 'consumer.create.edit' })
-              : formatMessage({ id: 'consumer.create.create' })
-          } Consumer ${formatMessage({ id: 'consumer.create.success' })}`,
+              ? formatMessage({ id: 'component.global.edit' })
+              : formatMessage({ id: 'component.global.create' })
+          } ${formatMessage({ id: 'menu.consumer' })} ${formatMessage({
+            id: 'component.status.success',
+          })}`,
         });
         history.push('/consumer/list');
       })
@@ -68,10 +70,18 @@ const Page: React.FC = (props) => {
         setStep(nextStep);
       });
     } else if (nextStep === 3) {
-      const isValid = Object.keys(plugins).some((name) => name.includes('auth'));
-      if (!isValid) {
+      const authPluginNames = Object.keys(PLUGIN_MAPPER_SOURCE).filter(
+        (pluginName) => PLUGIN_MAPPER_SOURCE[pluginName].category === 'Authentication',
+      );
+      const currentAuthPlugin = Object.keys(plugins).filter((plugin) =>
+        authPluginNames.includes(plugin),
+      );
+      const currentAuthPluginLen = currentAuthPlugin.length;
+      if (currentAuthPluginLen > 1 || currentAuthPluginLen === 0) {
         notification.warning({
-          message: formatMessage({ id: 'consumer.create.enable.authentication.plugin' }),
+          message: formatMessage({
+            id: 'page.consumer.notification.warning.enableAuthenticationPlugin',
+          }),
         });
         return;
       }
@@ -88,15 +98,19 @@ const Page: React.FC = (props) => {
       <PageContainer
         title={`${
           (props as any).match.params.id
-            ? formatMessage({ id: 'consumer.create.edit' })
-            : formatMessage({ id: 'consumer.create.create' })
-        } Consumer`}
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
+        } ${formatMessage({ id: 'menu.consumer' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
-            <Steps.Step title={formatMessage({ id: 'consumer.create.basic.information' })} />
-            <Steps.Step title={formatMessage({ id: 'consumer.create.plugin.config' })} />
-            <Steps.Step title={formatMessage({ id: 'consumer.create.preview' })} />
+            <Steps.Step
+              title={formatMessage({ id: 'component.global.steps.stepTitle.basicInformation' })}
+            />
+            <Steps.Step
+              title={formatMessage({ id: 'component.global.steps.stepTitle.pluginConfig' })}
+            />
+            <Steps.Step title={formatMessage({ id: 'component.global.steps.stepTitle.preview' })} />
           </Steps>
 
           {step === 1 && <Step1 form={form1} />}

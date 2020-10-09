@@ -21,4 +21,7 @@ module.exports = {
     page: true,
     REACT_APP_ENV: true,
   },
+  rules: {
+    '@typescript-eslint/naming-convention': 'off',
+  },
 };
