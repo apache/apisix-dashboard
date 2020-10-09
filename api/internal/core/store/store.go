@@ -23,6 +23,8 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"sort"
+	"sync"
 	"time"
 
 	"github.com/shiningrush/droplet/data"
@@ -43,7 +45,7 @@ type Interface interface {
 type GenericStore struct {
 	Stg storage.Interface
 
-	cache map[string]interface{}
+	cache sync.Map
 	opt   GenericStoreOption
 
 	cancel context.CancelFunc
@@ -75,8 +77,7 @@ func NewGenericStore(opt GenericStoreOption) (*GenericStore, error) {
 		return nil, fmt.Errorf("obj type is invalid")
 	}
 	s := &GenericStore{
-		opt:   opt,
-		cache: make(map[string]interface{}),
+		opt: opt,
 	}
 	s.Stg = &storage.EtcdV3Storage{}
 
@@ -95,7 +96,7 @@ func (s *GenericStore) Init() error {
 		if err != nil {
 			return err
 		}
-		s.cache[s.opt.KeyFunc(objPtr)] = objPtr
+		s.cache.Store(s.opt.KeyFunc(objPtr), objPtr)
 	}
 
 	c, cancel := context.WithCancel(context.TODO())
@@ -114,9 +115,9 @@ func (s *GenericStore) Init() error {
 						log.Println("value convert to obj failed", err)
 						continue
 					}
-					s.cache[event.Events[i].Key[len(s.opt.BasePath)+1:]] = objPtr
+					s.cache.Store(event.Events[i].Key[len(s.opt.BasePath)+1:], objPtr)
 				case storage.EventTypeDelete:
-					delete(s.cache, event.Events[i].Key[len(s.opt.BasePath)+1:])
+					s.cache.Delete(event.Events[i].Key[len(s.opt.BasePath)+1:])
 				}
 			}
 		}
@@ -126,7 +127,7 @@ func (s *GenericStore) Init() error {
 }
 
 func (s *GenericStore) Get(key string) (interface{}, error) {
-	ret, ok := s.cache[key]
+	ret, ok := s.cache.Load(key)
 	if !ok {
 		return nil, data.ErrNotFound
 	}
@@ -138,6 +139,7 @@ type ListInput struct {
 	PageSize  int
 	// start from 1
 	PageNumber int
+	Less       func(i, j interface{}) bool
 }
 
 type ListOutput struct {
@@ -145,14 +147,27 @@ type ListOutput struct {
 	TotalSize int           `json:"total_size"`
 }
 
+var defLessFunc = func(i, j interface{}) bool {
+	iBase := i.(entity.BaseInfoGetter).GetBaseInfo()
+	jBase := j.(entity.BaseInfoGetter).GetBaseInfo()
+	if iBase.CreateTime != jBase.CreateTime {
+		return iBase.CreateTime < jBase.CreateTime
+	}
+	if iBase.UpdateTime != jBase.UpdateTime {
+		return iBase.UpdateTime < jBase.UpdateTime
+	}
+	return iBase.ID < jBase.ID
+}
+
 func (s *GenericStore) List(input ListInput) (*ListOutput, error) {
 	var ret []interface{}
-	for k := range s.cache {
-		if input.Predicate != nil && !input.Predicate(s.cache[k]) {
-			continue
+	s.cache.Range(func(key, value interface{}) bool {
+		if input.Predicate != nil && !input.Predicate(value) {
+			return true
 		}
-		ret = append(ret, s.cache[k])
-	}
+		ret = append(ret, value)
+		return true
+	})
 
 	//should return an empty array not a null for client
 	if ret == nil {
@@ -163,6 +178,14 @@ func (s *GenericStore) List(input ListInput) (*ListOutput, error) {
 		Rows:      ret,
 		TotalSize: len(ret),
 	}
+	if input.Less == nil {
+		input.Less = defLessFunc
+	}
+
+	sort.Slice(output.Rows, func(i, j int) bool {
+		return input.Less(output.Rows[i], output.Rows[j])
+	})
+
 	if input.PageSize > 0 && input.PageNumber > 0 {
 		skipCount := (input.PageNumber - 1) * input.PageSize
 		if skipCount > output.TotalSize {
@@ -181,7 +204,7 @@ func (s *GenericStore) List(input ListInput) (*ListOutput, error) {
 	return output, nil
 }
 
-func (s *GenericStore) ingestValidate(obj interface{}) error {
+func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 	if s.opt.Validator != nil {
 		if err := s.opt.Validator.Validate(obj); err != nil {
 			return err
@@ -189,13 +212,14 @@ func (s *GenericStore) ingestValidate(obj interface{}) error {
 	}
 
 	if s.opt.StockCheck != nil {
-		for k := range s.cache {
-			if err := s.opt.StockCheck(obj, s.cache[k]); err != nil {
-				return err
+		s.cache.Range(func(key, value interface{}) bool {
+			if err = s.opt.StockCheck(obj, value); err != nil {
+				return false
 			}
-		}
+			return true
+		})
 	}
-	return nil
+	return err
 }
 
 func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
@@ -216,7 +240,7 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 	if key == "" {
 		return fmt.Errorf("key is required")
 	}
-	_, ok := s.cache[key]
+	_, ok := s.cache.Load(key)
 	if ok {
 		return fmt.Errorf("key: %s is conflicted", key)
 	}
@@ -241,7 +265,7 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
 	if key == "" {
 		return fmt.Errorf("key is required")
 	}
-	oldObj, ok := s.cache[key]
+	oldObj, ok := s.cache.Load(key)
 	if !ok {
 		return fmt.Errorf("key: %s is not found", key)
 	}
