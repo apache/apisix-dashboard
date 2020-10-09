@@ -74,27 +74,9 @@ const Page: React.FC = () => {
             <Button type="primary" danger>
               {formatMessage({ id: 'component.global.delete' })}
             </Button>
-            <Popconfirm
-              title={formatMessage({ id: 'consumer.list.delete.confirm' })}
-              okText={formatMessage({ id: 'consumer.list.confirm' })}
-              cancelText={formatMessage({ id: 'consumer.list.cancel' })}
-              onConfirm={() => {
-                remove(record.id).then(() => {
-                  notification.success({
-                    message: formatMessage({ id: 'consumer.list.delete.success' }),
-                  });
-                  /* eslint-disable no-unused-expressions */
-                  ref.current?.reload();
-                });
-              }}
-            >
-              <Button type="primary" danger>
-                {formatMessage({ id: 'consumer.list.delete' })}
-              </Button>
-            </Popconfirm>
-          </>
-        );
-      },
+          </Popconfirm>
+        </>
+      ),
     },
   ];
 
