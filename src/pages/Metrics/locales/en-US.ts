@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 export default {
-  'metrics.monitor': 'Monitor',
-  'metrics.grafana.not.config': 'You have not configured Grafana',
-  'metrics.grafana.config': 'Configure Now',
+  'page.metrics.empty.description.grafanaNotConfig': 'You have not configured Grafana',
+  'page.metrics.button.grafanaConfig': 'Configure Now',
 };

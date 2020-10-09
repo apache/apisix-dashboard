@@ -52,7 +52,7 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
     // eslint-disable-next-line no-shadow
     fetchUpstreamList().then(({ data }) => {
       setUpstreams([
-        { name: formatMessage({ id: 'route.request.override.input' }), id: null },
+        { name: formatMessage({ id: 'page.route.select.option.inputManually' }), id: null },
         ...data,
       ]);
     });
@@ -104,13 +104,13 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
                 {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                 label={
                   index === 0
-                    ? formatMessage({ id: 'route.request.override.domain.name.or.ip' })
+                    ? formatMessage({ id: 'page.route.form.itemLabel.domainNameOrIp' })
                     : ''
                 }
                 extra={
                   index === 0
                     ? formatMessage({
-                        id: 'route.request.override.use.domain.name.default.analysis',
+                        id: 'page.route.form.itemExtraMessage.domainNameOrIp',
                       })
                     : ''
                 }
@@ -123,9 +123,11 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
                       rules={[
                         {
                           required: true,
-                          message: formatMessage({
-                            id: 'route.request.override.input.domain.or.ip',
-                          }),
+                          message: `${formatMessage({
+                            id: 'component.global.pleaseEnter',
+                          })}${formatMessage({
+                            id: 'page.route.form.itemLabel.domainNameOrIp',
+                          })}`,
                         },
                         {
                           pattern: new RegExp(
@@ -133,14 +135,14 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
                             'g',
                           ),
                           message: formatMessage({
-                            id: 'route.request.override.domain.or.ip.rules',
+                            id: 'page.route.form.itemRulesPatternMessage.domainNameOrIp',
                           }),
                         },
                       ]}
                     >
                       <Input
                         placeholder={formatMessage({
-                          id: 'route.request.override.domain.name.or.ip',
+                          id: 'page.route.form.itemLabel.domainNameOrIp',
                         })}
                         disabled={upstreamDisabled}
                       />
@@ -153,14 +155,16 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
                       rules={[
                         {
                           required: true,
-                          message: formatMessage({
-                            id: 'route.request.override.input.port.number',
-                          }),
+                          message: `${formatMessage({
+                            id: 'component.global.pleaseEnter',
+                          })}${formatMessage({
+                            id: 'page.route.portNumber',
+                          })}`,
                         },
                       ]}
                     >
                       <InputNumber
-                        placeholder={formatMessage({ id: 'route.request.override.port.number' })}
+                        placeholder={formatMessage({ id: 'page.route.portNumber' })}
                         disabled={upstreamDisabled}
                         min={1}
                         max={65535}
@@ -174,12 +178,16 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
                       rules={[
                         {
                           required: true,
-                          message: formatMessage({ id: 'route.request.override.input.weight' }),
+                          message: `${formatMessage({
+                            id: 'component.global.pleaseEnter',
+                          })}${formatMessage({
+                            id: 'page.route.weight',
+                          })}`,
                         },
                       ]}
                     >
                       <InputNumber
-                        placeholder={formatMessage({ id: 'route.request.override.weight' })}
+                        placeholder={formatMessage({ id: 'page.route.weight' })}
                         disabled={upstreamDisabled}
                         min={0}
                         max={1000}
@@ -208,7 +216,7 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
                     add();
                   }}
                 >
-                  <PlusOutlined /> {formatMessage({ id: 'route.request.override.create' })}
+                  <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
                 </Button>
               </Form.Item>
             )}
@@ -220,27 +228,32 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
 
   const renderTimeUnit = () => <span style={{ margin: '0 8px' }}>ms</span>;
   return (
-    <PanelSection title={formatMessage({ id: 'route.request.override' })}>
+    <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.requestOverride' })}>
       <Form {...FORM_ITEM_LAYOUT} form={form} layout="horizontal" className={styles.stepForm}>
         <Form.Item
-          label={formatMessage({ id: 'route.request.override.protocol' })}
+          label={formatMessage({ id: 'page.route.protocol' })}
           name="upstream_protocol"
           rules={[
             {
               required: true,
-              message: formatMessage({ id: 'route.request.override.select.protocol' }),
+              message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
+                id: 'page.route.protocol',
+              })}`,
             },
           ]}
         >
           <Radio.Group name="upstream_protocol" disabled={disabled}>
-            <Radio value="keep">{formatMessage({ id: 'route.request.override.stay.same' })}</Radio>
+            <Radio value="keep">{formatMessage({ id: 'page.route.radio.staySame' })}</Radio>
             <Radio value="http">HTTP</Radio>
             <Radio value="https">HTTPS</Radio>
           </Radio.Group>
         </Form.Item>
-        <Form.Item label={formatMessage({ id: 'route.request.override.path' })} name="rewriteType">
+        <Form.Item
+          label={formatMessage({ id: 'page.route.form.itemLabel.rewriteType' })}
+          name="rewriteType"
+        >
           <Radio.Group disabled={disabled}>
-            <Radio value="keep">{formatMessage({ id: 'route.request.override.stay.same' })}</Radio>
+            <Radio value="keep">{formatMessage({ id: 'page.route.radio.staySame' })}</Radio>
             <Radio value="static">{formatMessage({ id: 'page.route.radio.static' })}</Radio>
             <Radio value="regx">{formatMessage({ id: 'page.route.radio.regx' })}</Radio>
           </Radio.Group>
@@ -255,13 +268,14 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
                   rules={[
                     {
                       required: true,
-                      message: formatMessage({ id: 'route.request.override.input.path' }),
+                      message: `${formatMessage({ id: 'component.global.pleaseEnter' })}
+                      ${formatMessage({ id: 'page.route.form.itemLabel.from' })}`,
                     },
                   ]}
                 >
                   <Input
                     disabled={disabled}
-                    placeholder={formatMessage({ id: 'route.request.override.path.example' })}
+                    placeholder={formatMessage({ id: 'page.route.input.placeholder.newPath' })}
                   />
                 </Form.Item>
               );
@@ -277,18 +291,20 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
             ) {
               return (
                 <Form.Item
-                  label={formatMessage({ id: 'route.request.override.new.path' })}
+                  label={formatMessage({ id: 'page.route.form.itemLabel.newPath' })}
                   name="upstreamPath"
                   rules={[
                     {
                       required: true,
-                      message: formatMessage({ id: 'route.request.override.input.path' }),
+                      message: `${formatMessage({
+                        id: 'component.global.pleaseEnter',
+                      })} ${formatMessage({ id: 'page.route.form.itemLabel.newPath' })}`,
                     },
                   ]}
                 >
                   <Input
                     disabled={disabled}
-                    placeholder={formatMessage({ id: 'route.request.override.path.example' })}
+                    placeholder={formatMessage({ id: 'page.route.input.placeholder.newPath' })}
                   />
                 </Form.Item>
               );
@@ -297,10 +313,7 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
           }}
         </Form.Item>
 
-        <Form.Item
-          label={formatMessage({ id: 'route.request.override.upstream' })}
-          name="upstream_id"
-        >
+        <Form.Item label={formatMessage({ id: 'menu.upstream' })} name="upstream_id">
           <Select
             onChange={(value) => {
               setUpstreamId(value);
@@ -317,17 +330,16 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
           </Select>
         </Form.Item>
         {renderUpstreamMeta()}
-        <Form.Item
-          label={formatMessage({ id: 'route.request.override.connection.timeout' })}
-          required
-        >
+        <Form.Item label={formatMessage({ id: 'component.global.connectionTimeout' })} required>
           <Form.Item
             name={['timeout', 'connect']}
             noStyle
             rules={[
               {
                 required: true,
-                message: formatMessage({ id: 'route.request.override.input.connection.timeout' }),
+                message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+                  id: 'component.global.connectionTimeout',
+                })}`,
               },
             ]}
           >
@@ -335,14 +347,16 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
           </Form.Item>
           {renderTimeUnit()}
         </Form.Item>
-        <Form.Item label={formatMessage({ id: 'route.request.override.send.timeout' })} required>
+        <Form.Item label={formatMessage({ id: 'component.global.sendTimeout' })} required>
           <Form.Item
             name={['timeout', 'send']}
             noStyle
             rules={[
               {
                 required: true,
-                message: formatMessage({ id: 'route.request.override.inout.send.timeout' }),
+                message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+                  id: 'component.global.sendTimeout',
+                })}`,
               },
             ]}
           >
@@ -350,14 +364,16 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
           </Form.Item>
           {renderTimeUnit()}
         </Form.Item>
-        <Form.Item label={formatMessage({ id: 'route.request.override.receive.timeout' })} required>
+        <Form.Item label={formatMessage({ id: 'component.global.receiveTimeout' })} required>
           <Form.Item
             name={['timeout', 'read']}
             noStyle
             rules={[
               {
                 required: true,
-                message: formatMessage({ id: 'route.request.override.inout.receive.timeout' }),
+                message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+                  id: 'component.global.receiveTimeout',
+                })}`,
               },
             ]}
           >

@@ -47,9 +47,11 @@ const Page: React.FC = (props) => {
       notification.success({
         message: `${
           gid
-            ? formatMessage({ id: 'routegroup.create.edit' })
-            : formatMessage({ id: 'routegroup.create.create' })
-        } ${formatMessage({ id: 'routegroup.create.routegroup.successfully' })}`,
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
+        }${formatMessage({ id: 'menu.routegroup' })}${formatMessage({
+          id: 'component.status.success',
+        })}`,
       });
       history.replace('/routegroup/list');
     });
@@ -69,11 +71,19 @@ const Page: React.FC = (props) => {
 
   return (
     <>
-      <PageContainer title={formatMessage({ id: 'routegroup.create.create' })}>
+      <PageContainer
+        title={`${
+          (props as any).match.params.gid
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
+        }${formatMessage({ id: 'menu.routegroup' })}`}
+      >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
-            <Steps.Step title={formatMessage({ id: 'routegroup.create.basic.info' })} />
-            <Steps.Step title={formatMessage({ id: 'routegroup.create.preview' })} />
+            <Steps.Step
+              title={formatMessage({ id: 'component.global.steps.stepTitle.basicInformation' })}
+            />
+            <Steps.Step title={formatMessage({ id: 'component.global.steps.stepTitle.preview' })} />
           </Steps>
 
           {step === 1 && <Step1 form={form1} />}

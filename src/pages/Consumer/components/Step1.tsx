@@ -38,24 +38,31 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
   return (
     <Form {...FORM_LAYOUT} form={form}>
       <Form.Item
-        label={formatMessage({ id: 'consumer.step.username' })} 
+        label={formatMessage({ id: 'page.consumer.username' })}
         name="username"
         rules={[
           { required: true },
           {
             pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_]{0,100}$/, 'g'),
-            message: formatMessage({ id: 'consumer.step.username.rule' }),
+            message: formatMessage({ id: 'page.consumer.form.itemRuleMessage.username' }),
           },
         ]}
-        extra={formatMessage({ id: 'consumer.step.username.unique' })}
+        extra={formatMessage({ id: 'page.consumer.form.itemExtraMessage.username' })}
       >
         <Input
-          placeholder={formatMessage({ id: 'consumer.step.input.username' })}
+          placeholder={`${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+            id: 'page.consumer.username',
+          })}`}
           disabled={disabled || window.location.pathname.indexOf('edit') !== -1}
         />
       </Form.Item>
-      <Form.Item label={formatMessage({ id: 'consumer.step.description' })}  name="desc">
-        <Input.TextArea placeholder={formatMessage({ id: 'consumer.step.input.description' })} disabled={disabled} />
+      <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
+        <Input.TextArea
+          placeholder={`${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+            id: 'component.global.description',
+          })}`}
+          disabled={disabled}
+        />
       </Form.Item>
     </Form>
   );
