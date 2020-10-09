@@ -16,13 +16,13 @@
  */
 import React, { useEffect, useState } from 'react';
 import Form from 'antd/es/form';
-import { Input, Select, Switch } from 'antd';
+import { Input, Select } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
 import { fetchRouteGroupList, fetchRouteGroupItem } from '@/pages/Route/service';
 
-const MetaView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled, isEdit }) => {
+const MetaView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) => {
   const { formatMessage } = useIntl();
 
   const [routeGroups, setRouteGroups] = useState<{ id: string; name: string }[]>();
@@ -117,16 +117,6 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled, isEdit
           disabled={routeGroupDisabled}
         />
       </Form.Item>
-      {!isEdit && (
-        <Form.Item
-          label={formatMessage({ id: 'page.route.publish' })}
-          name="status"
-          valuePropName="checked"
-          help={formatMessage({ id: 'page.route.form.itemHelp.status' })}
-        >
-          <Switch disabled={disabled} />
-        </Form.Item>
-      )}
       <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
         <Input.TextArea
           placeholder={formatMessage({ id: 'component.global.input.placeholder.description' })}

@@ -71,10 +71,7 @@ export default {
   'page.route.panelSection.title.httpOverrideRequestHeader': 'Override HTTP request header',
   'page.route.routeGroup': 'RouteGroup',
   'page.route.status': 'Status',
-  'page.route.published': 'Published',
-  'page.route.unpublished': 'Unpublished',
   'page.route.groupName': 'GroupName',
-  'page.route.publish': 'Publish',
   'page.route.offline': 'Offline',
 
   'page.route.select.option.inputManually': 'Input Manually',

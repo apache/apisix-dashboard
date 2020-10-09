@@ -258,4 +258,29 @@ declare namespace RouteModule {
     upstreamHeaderList: UpstreamHeader[];
     advancedMatchingRules: MatchingRule[];
   };
+
+  type ResponseBody = {
+    hosts: string[];
+    id: string;
+    methods: HttpMethod[];
+    name: string;
+    remote_addrs: string[];
+    script: any;
+    desc?: string;
+    upstream: {
+      checks: UpstreamModule.HealthCheck;
+      create_time: number;
+      k8s_deployment_info: UpstreamModule.K8SDeploymentInfo;
+      id: string;
+      nodes: {
+        port: number;
+      }[];
+      timeout: UpstreamModule.Timeout;
+      type: UpstreamModule.Type;
+    };
+    uri: string;
+    uris?: string[];
+    create_time: number;
+    update_time: number;
+  };
 }

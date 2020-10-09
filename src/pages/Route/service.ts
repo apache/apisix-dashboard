@@ -42,14 +42,8 @@ export const fetchItem = (rid: number) =>
 export const fetchItemDebugInfo = (rid: number) =>
   request(`/routes/${rid}/debuginfo`).then((data) => transformRouteDebugData(data));
 
-export const fetchList = ({ current = 1, pageSize = 10 }, search: string) => {
-  return request('/routes', {
-    params: {
-      page: current,
-      size: pageSize,
-      search,
-    },
-  }).then(({ data }) => {
+export const fetchList = () => {
+  return request<Res<ResListData<RouteModule.ResponseBody>>>('/routes').then(({ data }) => {
     return {
       data: data.rows,
       total: data.total_size,
@@ -57,9 +51,7 @@ export const fetchList = ({ current = 1, pageSize = 10 }, search: string) => {
   });
 };
 
-export const remove = (rid: number) => request(`/routes/${rid}`, { method: 'DELETE' });
-export const offline = (rid: number) => request(`/routes/${rid}/offline`, { method: 'PUT' });
-export const publish = (rid: number) => request(`/routes/${rid}/publish`, { method: 'PUT' });
+export const remove = (rid: string) => request(`/routes/${rid}`, { method: 'DELETE' });
 
 export const checkUniqueName = (name = '', exclude = '') =>
   request('/notexist/routes', {

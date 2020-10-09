@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 declare namespace UpstreamModule {
-  type Node = Record<string, number>
+  type Node = Record<string, number>;
+  type Type = 'roundrobin' | 'chash' | 'ewma';
 
-  type Timeout = Record<"connect" | "send" | "read", number>
+  type Timeout = Record<'connect' | 'send' | 'read', number>;
 
   type HealthCheck = {
     active: {
@@ -45,7 +46,7 @@ declare namespace UpstreamModule {
         tcp_failures: number;
       };
     };
-  }
+  };
 
   type UpstreamHost = {
     host: string;
@@ -53,17 +54,19 @@ declare namespace UpstreamModule {
     weight: number;
   };
 
+  type K8SDeploymentInfo = {
+    namespace: string;
+    deploy_name: string;
+    service_name: string;
+    backend_type: string;
+    port: number;
+  };
+
   type RequestBody = {
-    type: "roundrobin" | "chash" | "ewma";
+    type: Type;
     nodes?: Node;
-    k8s_deployment_info?: {
-      namespace: string;
-      deploy_name: string;
-      service_name: string;
-      backend_type: string;
-      port: number;
-    };
-    hash_on?: "vars" | "header" | "cookie" | "consumer";
+    k8s_deployment_info?: K8SDeploymentInfo;
+    hash_on?: 'vars' | 'header' | 'cookie' | 'consumer';
     key?: string;
     checks?: HealthCheck;
     retries?: number;
@@ -71,16 +74,16 @@ declare namespace UpstreamModule {
     timeout?: Timeout;
     name?: string;
     desc?: string;
-    pass_host?: "pass" | "node" | "rewrite";
+    pass_host?: 'pass' | 'node' | 'rewrite';
     upstream_host: UpstreamHost[];
-  }
+  };
 
   // TODO: typing
-  type ResponseBody = {} & RequestBody
+  type ResponseBody = {} & RequestBody;
 
   type FormFieldsType = {
     active: boolean;
     passive: boolean;
     nodes: UpstreamHost[];
-  } & Omit<RequestBody, 'nodes'>
+  } & Omit<RequestBody, 'nodes'>;
 }
