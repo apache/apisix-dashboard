@@ -195,9 +195,6 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
       >
         <Checkbox.Group disabled={disabled} options={['http', 'https']} />
       </Form.Item>
-      <Form.Item label="WebSocket" name="websocket" valuePropName="checked">
-        <Switch disabled={disabled} />
-      </Form.Item>
       {/* <Form.Item
         label="优先级"
         name="priority"

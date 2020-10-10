@@ -53,7 +53,7 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
     fetchUpstreamList().then(({ data }) => {
       setUpstreams([
         { name: formatMessage({ id: 'page.route.select.option.inputManually' }), id: null },
-        ...data,
+        ...data.rows,
       ]);
     });
   }, []);
