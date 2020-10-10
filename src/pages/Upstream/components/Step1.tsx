@@ -24,76 +24,36 @@ import UpstreamForm from '@/components/Upstream';
 type Props = {
   form: FormInstance;
   disabled?: boolean;
-  isActive: boolean;
-  isPassive: boolean;
-  onChange(checkActive: boolean, checkPassive: boolean): void;
 };
 
-const initialValues = {
-  name: '',
-  description: '',
-  type: 'roundrobin',
-  upstreamHostList: [{} as UpstreamModule.UpstreamHost],
-  timeout: {
-    connect: 6000,
-    send: 6000,
-    read: 6000,
-  },
-  active: false,
-  passive: false,
-  checks: {
-    active: {
-      timeout: 5,
-      http_path: '',
-      host: '',
-      healthy: {
-        interval: 2,
-        successes: 1,
-      },
-      unhealthy: {
-        interval: 1,
-        http_failures: 2,
-      },
-      req_headers: [''],
-    },
-    passive: {
-      healthy: {
-        http_statuses: [undefined],
-        successes: 3,
-      },
-      unhealthy: {
-        http_statuses: [undefined],
-        http_failures: 3,
-        tcp_failures: 3,
-      },
-    },
-  },
-};
+const initialValues = {};
 
 const Step1: React.FC<Props> = ({ form, disabled }) => {
   const { formatMessage } = useIntl();
 
   return (
-    <Form labelCol={{ span: 3 }} form={form} initialValues={initialValues}>
-      <Form.Item
-        label={formatMessage({ id: 'upstream.step.name' })}
-        name="name"
-        rules={[{ required: true }]}
-        extra={formatMessage({ id: 'upstream.step.name.should.unique' })}
-      >
-        <Input
-          placeholder={formatMessage({ id: 'upstream.step.input.upstream.name' })}
-          disabled={disabled}
-        />
-      </Form.Item>
-      <Form.Item label={formatMessage({ id: 'upstream.step.description' })} name="desc">
-        <Input.TextArea
-          placeholder={formatMessage({ id: 'upstream.step.input.description' })}
-          disabled={disabled}
-        />
-      </Form.Item>
-      <UpstreamForm />
-    </Form>
+    <>
+      <Form labelCol={{ span: 3 }} form={form} initialValues={initialValues}>
+        <Form.Item
+          label={formatMessage({ id: 'upstream.step.name' })}
+          name="name"
+          rules={[{ required: true }]}
+          extra={formatMessage({ id: 'upstream.step.name.should.unique' })}
+        >
+          <Input
+            placeholder={formatMessage({ id: 'upstream.step.input.upstream.name' })}
+            disabled={disabled}
+          />
+        </Form.Item>
+        <Form.Item label={formatMessage({ id: 'upstream.step.description' })} name="desc">
+          <Input.TextArea
+            placeholder={formatMessage({ id: 'upstream.step.input.description' })}
+            disabled={disabled}
+          />
+        </Form.Item>
+      </Form>
+      <UpstreamForm form={form} />
+    </>
   );
 };
 

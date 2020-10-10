@@ -2,6 +2,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Divider, Form, Input, InputNumber, Row, Select, Switch } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
+import type { FormInstance } from 'antd/lib/form';
 
 import { PanelSection } from '@api7-dashboard/ui';
 
@@ -33,6 +34,7 @@ enum HashKey {
 type Upstream = {};
 
 type Props = {
+  form: FormInstance;
   upstream?: Upstream;
   id?: string;
 };
@@ -52,9 +54,8 @@ const timeoutFields = [
   },
 ];
 
-const UpstreamForm: React.FC<Props> = ({ id }) => {
+const UpstreamForm: React.FC<Props> = ({ form, id }) => {
   const [readonly] = useState(false);
-  const [form] = Form.useForm();
   const { formatMessage } = useIntl();
 
   useEffect(() => {
