@@ -1,4 +1,4 @@
-import { pickBy, identity } from "lodash"
+import { pickBy, identity, omit } from 'lodash';
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,58 +16,40 @@ import { pickBy, identity } from "lodash"
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const transformRequest = (formData: UpstreamModule.FormFieldsType): UpstreamModule.RequestBody | undefined => {
-  const data = pickBy(formData, identity) as UpstreamModule.FormFieldsType
-  const { type, hash_on, key, k8s_deployment_info, nodes, pass_host, upstream_host } = data
-
+export const transformRequest = (
+  formData: UpstreamModule.RequestBody,
+): UpstreamModule.RequestBody | undefined => {
+  let data = pickBy(formData, identity) as UpstreamModule.RequestBody;
+  const { type, hash_on, key, k8s_deployment_info, nodes, pass_host, upstream_host } = data;
+  data.checks = pickBy(data.checks, identity);
+  if (Object.keys(data.checks).length === 0) {
+    data = omit(data, 'checks');
+  }
   if (nodes && k8s_deployment_info) {
-    return undefined
+    return undefined;
   }
 
   if (!nodes && !k8s_deployment_info) {
-    return undefined
+    return undefined;
   }
 
   if (type === 'chash') {
     if (!hash_on) {
-      return undefined
+      return undefined;
     }
 
-    if (hash_on !== "consumer" && !key) {
-      return undefined
+    if (hash_on !== 'consumer' && !key) {
+      return undefined;
     }
   }
 
   if (pass_host === 'rewrite' && !upstream_host) {
-    return undefined
+    return undefined;
   }
 
   if (nodes) {
-    const nodeObjects = {}
-    nodes.forEach(({ host, port, weight }) => {
-      nodeObjects[`${host}:${port}`] = weight
-    })
-    return {
-      ...data,
-      nodes: nodeObjects
-    }
+    return data;
   }
 
-  return undefined
-}
-
-export const transformResponse = (data: UpstreamModule.ResponseBody): UpstreamModule.FormFieldsType => {
-  return {
-    ...data,
-    active: Boolean(data.checks),
-    passive: Boolean(data.checks?.passive),
-    nodes: Object.entries(data.nodes || {}).map(([key, weight]) => {
-      const [host, port] = key.split(':')
-      return {
-        host,
-        port: Number(port),
-        weight
-      }
-    })
-  }
-}
+  return undefined;
+};

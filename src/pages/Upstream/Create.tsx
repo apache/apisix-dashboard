@@ -22,45 +22,30 @@ import { history, useIntl } from 'umi';
 import ActionBar from '@/components/ActionBar';
 
 import Step1 from './components/Step1';
-import Preview from './components/Preview';
 import { fetchOne, create, update } from './service';
-import { transformRequest, transformResponse } from './transform';
+import { transformRequest } from './transform';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
-  const [active, setActive] = useState(false);
-  const [passive, setPassive] = useState(false);
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
-
-  const onChange = (checkActive: boolean, checkPassive: boolean) => {
-    setActive(checkActive);
-    setPassive(checkPassive);
-  };
 
   useEffect(() => {
     const { id } = (props as any).match.params;
 
     if (id) {
       fetchOne(id).then((data) => {
-        const formData = transformResponse(data);
-        form1.setFieldsValue(formData);
-        if (formData.active) {
-          setActive(true);
-        }
-        if (formData.passive) {
-          setPassive(true);
-        }
+        form1.setFieldsValue(data.data);
       });
     }
   }, []);
 
   const onSubmit = () => {
-    const data = transformRequest(form1.getFieldsValue() as UpstreamModule.FormFieldsType);
+    const data = transformRequest(form1.getFieldsValue());
     if (!data) {
       // TODO: i18n
-      notification.error({message: "请检查配置"})
-      return
+      notification.error({ message: '请检查配置' });
+      return;
     }
 
     const { id } = (props as any).match.params;
@@ -97,12 +82,8 @@ const Page: React.FC = (props) => {
             <Steps.Step title={formatMessage({ id: 'upstream.create.preview' })} />
           </Steps>
 
-          {step === 1 && (
-            <Step1 form={form1} isActive={active} onChange={onChange} isPassive={passive} />
-          )}
-          {step === 2 && (
-            <Preview form1={form1} isActive={active} onChange={onChange} isPassive={passive} />
-          )}
+          {step === 1 && <Step1 form={form1} />}
+          {step === 2 && <Step1 form={form1} disabled />}
         </Card>
       </PageContainer>
       <ActionBar step={step} lastStep={2} onChange={onStepChange} />
