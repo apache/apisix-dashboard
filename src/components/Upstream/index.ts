@@ -14,28 +14,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { request } from 'umi';
-
-export const fetchList = () => {
-  // TODO: Use Cache and search on local
-  return request<Res<ResListData<UpstreamModule.RequestBody>>>('/upstreams').then(({ data }) => ({
-    data: data.rows,
-    total: data.total_size,
-  }));
-};
-
-export const fetchOne = (id: string) => request<Res<any>>(`/upstreams/${id}`);
-
-export const create = (data: UpstreamModule.RequestBody) =>
-  request('/upstreams', {
-    method: 'POST',
-    data,
-  });
-
-export const update = (id: string, data: UpstreamModule.RequestBody) =>
-  request(`/upstreams/${id}`, {
-    method: 'PUT',
-    data,
-  });
-
-export const remove = (id: string) => request(`/upstreams/${id}`, { method: 'DELETE' });
+export { default } from './UpstreamForm';
+export * from './constant';

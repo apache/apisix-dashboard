@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Steps, notification, Form } from 'antd';
 import { history, useIntl } from 'umi';
@@ -22,57 +22,44 @@ import { history, useIntl } from 'umi';
 import ActionBar from '@/components/ActionBar';
 
 import Step1 from './components/Step1';
-import Preview from './components/Preview';
 import { fetchOne, create, update } from './service';
-import { transformRequest, transformResponse } from './transform';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
-  const [active, setActive] = useState(false);
-  const [passive, setPassive] = useState(false);
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
-
-  const onChange = (checkActive: boolean, checkPassive: boolean) => {
-    setActive(checkActive);
-    setPassive(checkPassive);
-  };
+  const upstreamRef = useRef<any>();
 
   useEffect(() => {
     const { id } = (props as any).match.params;
 
     if (id) {
       fetchOne(id).then((data) => {
-        const formData = transformResponse(data);
-        form1.setFieldsValue(formData);
-        if (formData.active) {
-          setActive(true);
-        }
-        if (formData.passive) {
-          setPassive(true);
-        }
+        form1.setFieldsValue(data.data);
       });
     }
   }, []);
 
   const onSubmit = () => {
-    const data = transformRequest(form1.getFieldsValue() as UpstreamModule.FormFieldsType);
-    if (!data) {
-      // TODO: i18n
-      notification.error({message: "请检查配置"})
-      return
-    }
+    form1.validateFields().then(() => {
+      const data = upstreamRef.current?.getData();
+      if (!data) {
+        // TODO: i18n
+        notification.error({ message: '请检查配置' });
+        return;
+      }
 
-    const { id } = (props as any).match.params;
-    (id ? update(id, data) : create(data)).then(() => {
-      notification.success({
-        message: `${
-          id
-            ? formatMessage({ id: 'upstream.create.edit' })
-            : formatMessage({ id: 'upstream.create.create' })
-        } ${formatMessage({ id: 'upstream.create.upstream.successfully' })}`,
+      const { id } = (props as any).match.params;
+      (id ? update(id, data) : create(data)).then(() => {
+        notification.success({
+          message: `${
+            id
+              ? formatMessage({ id: 'upstream.create.edit' })
+              : formatMessage({ id: 'upstream.create.create' })
+          } ${formatMessage({ id: 'upstream.create.upstream.successfully' })}`,
+        });
+        history.replace('/upstream/list');
       });
-      history.replace('/upstream/list');
     });
   };
 
@@ -97,12 +84,8 @@ const Page: React.FC = (props) => {
             <Steps.Step title={formatMessage({ id: 'upstream.create.preview' })} />
           </Steps>
 
-          {step === 1 && (
-            <Step1 form={form1} isActive={active} onChange={onChange} isPassive={passive} />
-          )}
-          {step === 2 && (
-            <Preview form1={form1} isActive={active} onChange={onChange} isPassive={passive} />
-          )}
+          {step === 1 && <Step1 form={form1} upstreamRef={upstreamRef} />}
+          {step === 2 && <Step1 form={form1} upstreamRef={upstreamRef} disabled />}
         </Card>
       </PageContainer>
       <ActionBar step={step} lastStep={2} onChange={onStepChange} />

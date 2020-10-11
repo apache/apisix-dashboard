@@ -21,7 +21,7 @@ declare namespace UpstreamModule {
   type Timeout = Record<'connect' | 'send' | 'read', number>;
 
   type HealthCheck = {
-    active: {
+    active?: {
       timeout?: number;
       http_path: string;
       host: string;
@@ -80,10 +80,4 @@ declare namespace UpstreamModule {
 
   // TODO: typing
   type ResponseBody = {} & RequestBody;
-
-  type FormFieldsType = {
-    active: boolean;
-    passive: boolean;
-    nodes: UpstreamHost[];
-  } & Omit<RequestBody, 'nodes'>;
 }

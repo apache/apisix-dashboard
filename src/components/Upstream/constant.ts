@@ -14,20 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import { FormInstance } from 'antd/lib/form';
-
-import Step1 from './Step1';
-
-type Props = {
-  form1: FormInstance;
-  isActive: boolean;
-  isPassive: boolean;
-  onChange(a: boolean, p: boolean): void;
+export const DEFAULT_UPSTREAM = {
+  nodes: [{ host: '', port: 80, weight: 1 }],
+  type: 'roundrobin',
+  timeout: {
+    connect: 6000,
+    send: 6000,
+    read: 6000,
+  },
 };
-
-const Page: React.FC<Props> = ({ form1, isActive, onChange, isPassive }) => (
-  <Step1 form={form1} disabled isActive={isActive} onChange={onChange} isPassive={isPassive} />
-);
-
-export default Page;
