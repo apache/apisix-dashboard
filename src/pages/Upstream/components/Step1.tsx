@@ -19,14 +19,14 @@ import { Form, Input } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 
-import UpstreamForm from '@/components/Upstream';
+import UpstreamForm, { DEFAULT_UPSTREAM } from '@/components/Upstream';
 
 type Props = {
   form: FormInstance;
   disabled?: boolean;
 };
 
-const initialValues = {};
+const initialValues = DEFAULT_UPSTREAM;
 
 const Step1: React.FC<Props> = ({ form, disabled }) => {
   const { formatMessage } = useIntl();

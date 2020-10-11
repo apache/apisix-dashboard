@@ -15,3 +15,4 @@
  * limitations under the License.
  */
 export { default } from './UpstreamForm';
+export * from './constant';
