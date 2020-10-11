@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import Form from 'antd/es/form';
-import { Checkbox, Button, Input, Switch, Select, Row, Col } from 'antd';
+import { Checkbox, Button, Input, Select, Row, Col } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
@@ -99,8 +99,8 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
     </Form.List>
   );
 
-  const renderPaths = () => (
-    <Form.List name="paths">
+  const renderUris = () => (
+    <Form.List name="uris">
       {(fields, { add, remove }) => {
         return (
           <div>
@@ -204,7 +204,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
         <InputNumber placeholder="优先级" disabled={disabled} min={0} max={1000} />
       </Form.Item> */}
       {renderHosts()}
-      {renderPaths()}
+      {renderUris()}
       <Form.Item
         label={formatMessage({ id: 'page.route.form.itemLabel.httpMethod' })}
         name="methods"

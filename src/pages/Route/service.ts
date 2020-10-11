@@ -64,7 +64,13 @@ export const checkUniqueName = (name = '', exclude = '') =>
     ),
   });
 
-export const fetchUpstreamList = () => request(`/names/upstreams`);
+export const fetchUpstreamList = () => {
+  // TODO: Use Cache and search on local
+  return request<Res<ResListData<UpstreamModule.RequestBody>>>('/upstreams').then(({ data }) => ({
+    data: data.rows,
+    total: data.total_size,
+  }));
+};
 
 export const fetchUpstreamItem = (sid: string) => {
   return request(`/upstreams/${sid}`).then(({ nodes, timeout, id }) => {

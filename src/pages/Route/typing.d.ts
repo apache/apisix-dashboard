@@ -228,6 +228,7 @@ declare namespace RouteModule {
     form: FormInstance;
     upstreamHeaderList: UpstreamHeader[] | undefined;
     disabled?: boolean;
+    upstreamRef: any;
     onChange(data: { action: 'upstreamHeaderListChange'; data: T }): void;
   };
 

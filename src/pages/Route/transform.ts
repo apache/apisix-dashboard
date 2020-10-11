@@ -24,21 +24,10 @@ export const transformStepData = ({
   upstreamHeaderList,
   step3Data,
 }: RouteModule.RequestData) => {
-  const nodes = {};
-  (form2Data.upstreamHostList || []).forEach((node) => {
-    nodes[`${node.host}:${node.port}`] = node.weight;
-  });
-
   const upstream_header = {};
   (upstreamHeaderList || []).forEach((header) => {
     upstream_header[header.header_name] = header.header_value || '';
   });
-
-  const chashData: any = {};
-  if (form2Data.type === 'chash') {
-    chashData.key = form2Data.key;
-    chashData.hash_on = form2Data.hash_on;
-  }
 
   let redirect: RouteModule.Redirect = {};
   if (form1Data.redirectOption === 'disabled') {
@@ -59,10 +48,8 @@ export const transformStepData = ({
 
   const data: Partial<RouteModule.Body> = {
     ...form1Data,
-    ...form2Data,
     ...step3Data,
     protocols,
-    uris: form1Data.paths,
     redirect,
     vars: advancedMatchingRules.map((rule) => {
       const { operator, position, name, value } = rule;
@@ -79,27 +66,9 @@ export const transformStepData = ({
       }
       return [key, operator, value];
     }),
-    upstream: {
-      type: form2Data.type,
-      ...chashData,
-      nodes,
-      timeout: form2Data.timeout,
-    },
+    upstream: form2Data,
     upstream_header,
   };
-
-  if (form2Data.upstreamPath) {
-    data.upstream_path = {
-      to: form2Data.upstreamPath,
-    };
-    if (form2Data.mappingStrategy) {
-      data.upstream_path = {
-        ...data.upstream_path,
-        from: form2Data.mappingStrategy,
-        type: 'regx',
-      };
-    }
-  }
 
   // 未启用 redirect
   if (!redirect.uri) {
@@ -123,7 +92,6 @@ export const transformStepData = ({
       'redirectOption',
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
-      form2Data.upstream_id ? 'upstream' : 'upstream_id',
     ]);
   }
 
