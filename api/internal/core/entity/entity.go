@@ -46,7 +46,7 @@ type Route struct {
 	FilterFunc      string      `json:"filter_func,omitempty"`
 	Script          interface{} `json:"script,omitempty"`
 	Plugins         interface{} `json:"plugins,omitempty"`
-	Upstream        Upstream    `json:"upstream,omitempty"`
+	Upstream        interface{} `json:"upstream,omitempty"`
 	ServiceID       string      `json:"service_id,omitempty"`
 	UpstreamID      string      `json:"upstream_id,omitempty"`
 	ServiceProtocol string      `json:"service_protocol,omitempty"`
@@ -114,12 +114,12 @@ type HealthChecker struct {
 
 type Upstream struct {
 	BaseInfo
-	Nodes           []Node        `json:"nodes,omitempty"`
+	Nodes           []interface{} `json:"nodes,omitempty"`
 	Retries         int           `json:"retries,omitempty"`
-	Timeout         Timeout       `json:"timeout,omitempty"`
-	K8sInfo         K8sInfo       `json:"k8s_deployment_info,omitempty"`
+	Timeout         interface{}   `json:"timeout,omitempty"`
+	K8sInfo         interface{}   `json:"k8s_deployment_info,omitempty"`
 	Type            string        `json:"type,omitempty"`
-	Checks          HealthChecker `json:"checks,omitempty"`
+	Checks          interface{}   `json:"checks,omitempty"`
 	HashOn          string        `json:"hash_on,omitempty"`
 	Key             string        `json:"key,omitempty"`
 	EnableWebsocket bool          `json:"enable_websocket,omitempty"`
@@ -170,7 +170,7 @@ type Service struct {
 	BaseInfo
 	Name       string      `json:"name,omitempty"`
 	Desc       string      `json:"desc,omitempty"`
-	Upstream   Upstream    `json:"upstream,omitempty"`
+	Upstream   interface{} `json:"upstream,omitempty"`
 	UpstreamID string      `json:"upstream_id,omitempty"`
 	Plugins    interface{} `json:"plugins,omitempty"`
 	Script     string      `json:"script,omitempty"`

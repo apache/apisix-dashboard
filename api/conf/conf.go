@@ -36,11 +36,12 @@ const schemaPath = "/go/manager-api/schema.json"
 const RequestId = "requestId"
 
 var (
-	ENV      string
-	basePath string
-	ApiKey   = "edd1c9f034335f136f87ad84b625c8f1"
-	BaseUrl  = "http://127.0.0.1:9080/apisix/admin"
-	Schema   gjson.Result
+	ENV        string
+	basePath   string
+	Schema     gjson.Result
+	ApiKey     = "edd1c9f034335f136f87ad84b625c8f1"
+	BaseUrl    = "http://127.0.0.1:9080/apisix/admin"
+	DagLibPath = "/go/manager-api/dag-to-lua/"
 )
 
 func init() {
@@ -57,6 +58,11 @@ func setEnvironment() {
 	} else {
 		ENV = env
 	}
+
+	if env := os.Getenv("APIX_DAG_LIB_PATH"); env != "" {
+		DagLibPath = env
+	}
+
 	_, basePath, _, _ = runtime.Caller(1)
 }
 

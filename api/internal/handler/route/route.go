@@ -30,6 +30,7 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
+	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
@@ -133,7 +134,7 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 	}
 
 	cmd := exec.Command("sh", "-c",
-		"cd /go/manager-api/dag-to-lua/ && lua cli.lua "+
+		"cd "+conf.DagLibPath+" && lua cli.lua "+
 			"'"+string(scriptString)+"'")
 
 	stdout, _ := cmd.StdoutPipe()
