@@ -14,26 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 
 import UpstreamForm, { DEFAULT_UPSTREAM } from '@/components/Upstream';
+import { fetchList } from '../service';
 
 type Props = {
   form: FormInstance;
   disabled?: boolean;
+  upstreamRef?: React.MutableRefObject<any>;
 };
 
-const initialValues = DEFAULT_UPSTREAM;
-
-const Step1: React.FC<Props> = ({ form, disabled }) => {
+const Step1: React.FC<Props> = ({ form, disabled, upstreamRef }) => {
   const { formatMessage } = useIntl();
+  const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
+
+  useEffect(() => {
+    fetchList().then(({ data }) => setList(data));
+  }, []);
 
   return (
     <>
-      <Form labelCol={{ span: 3 }} form={form} initialValues={initialValues}>
+      <Form labelCol={{ span: 3 }} form={form} initialValues={DEFAULT_UPSTREAM}>
         <Form.Item
           label={formatMessage({ id: 'upstream.step.name' })}
           name="name"
@@ -52,7 +57,7 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
           />
         </Form.Item>
       </Form>
-      <UpstreamForm form={form} />
+      <UpstreamForm ref={upstreamRef} form={form} disabled={disabled} list={list} />
     </>
   );
 };

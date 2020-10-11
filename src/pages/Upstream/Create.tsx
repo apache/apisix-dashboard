@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Steps, notification, Form } from 'antd';
 import { history, useIntl } from 'umi';
@@ -23,12 +23,12 @@ import ActionBar from '@/components/ActionBar';
 
 import Step1 from './components/Step1';
 import { fetchOne, create, update } from './service';
-import { transformRequest } from './transform';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
+  const upstreamRef = useRef<any>();
 
   useEffect(() => {
     const { id } = (props as any).match.params;
@@ -41,23 +41,25 @@ const Page: React.FC = (props) => {
   }, []);
 
   const onSubmit = () => {
-    const data = transformRequest(form1.getFieldsValue());
-    if (!data) {
-      // TODO: i18n
-      notification.error({ message: '请检查配置' });
-      return;
-    }
+    form1.validateFields().then(() => {
+      const data = upstreamRef.current?.getData();
+      if (!data) {
+        // TODO: i18n
+        notification.error({ message: '请检查配置' });
+        return;
+      }
 
-    const { id } = (props as any).match.params;
-    (id ? update(id, data) : create(data)).then(() => {
-      notification.success({
-        message: `${
-          id
-            ? formatMessage({ id: 'upstream.create.edit' })
-            : formatMessage({ id: 'upstream.create.create' })
-        } ${formatMessage({ id: 'upstream.create.upstream.successfully' })}`,
+      const { id } = (props as any).match.params;
+      (id ? update(id, data) : create(data)).then(() => {
+        notification.success({
+          message: `${
+            id
+              ? formatMessage({ id: 'upstream.create.edit' })
+              : formatMessage({ id: 'upstream.create.create' })
+          } ${formatMessage({ id: 'upstream.create.upstream.successfully' })}`,
+        });
+        history.replace('/upstream/list');
       });
-      history.replace('/upstream/list');
     });
   };
 
@@ -82,8 +84,8 @@ const Page: React.FC = (props) => {
             <Steps.Step title={formatMessage({ id: 'upstream.create.preview' })} />
           </Steps>
 
-          {step === 1 && <Step1 form={form1} />}
-          {step === 2 && <Step1 form={form1} disabled />}
+          {step === 1 && <Step1 form={form1} upstreamRef={upstreamRef} />}
+          {step === 2 && <Step1 form={form1} upstreamRef={upstreamRef} disabled />}
         </Card>
       </PageContainer>
       <ActionBar step={step} lastStep={2} onChange={onStepChange} />
