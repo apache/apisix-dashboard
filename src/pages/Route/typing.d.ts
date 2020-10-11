@@ -205,7 +205,7 @@ declare namespace RouteModule {
     protocols: RequestProtocol[];
     websocket: boolean;
     hosts: string[];
-    paths: string[];
+    uris: string[];
     methods: HttpMethod[];
     redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
     redirectURI?: string;

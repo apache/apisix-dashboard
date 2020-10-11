@@ -28,12 +28,9 @@ import Step2 from './components/Step2';
 import Step3 from './components/Step3';
 
 import CreateStep4 from './components/CreateStep4';
-import {
-  DEFAULT_STEP_1_DATA,
-  DEFAULT_STEP_2_DATA,
-  DEFAULT_STEP_3_DATA,
-  INIT_CHART,
-} from './constants';
+import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA, INIT_CHART } from './constants';
+import { DEFAULT_UPSTREAM } from '@/components/Upstream';
+
 import ResultView from './components/ResultView';
 import styles from './Create.less';
 
@@ -89,7 +86,7 @@ const Page: React.FC<Props> = (props) => {
     setUpstreamHeaderList([]);
     setStep3Data(DEFAULT_STEP_3_DATA);
     form1.setFieldsValue(DEFAULT_STEP_1_DATA);
-    form2.setFieldsValue(DEFAULT_STEP_2_DATA);
+    form2.setFieldsValue(DEFAULT_UPSTREAM);
     setStep(1);
   };
 

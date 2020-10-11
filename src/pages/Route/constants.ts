@@ -50,27 +50,11 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   protocols: ['http', 'https'],
   websocket: false,
   hosts: [''],
-  paths: ['/*'],
+  uris: ['/*'],
   redirectOption: 'disabled',
   redirectURI: '',
   redirectCode: 302,
   methods: HTTP_METHOD_OPTION_LIST,
-};
-
-export const DEFAULT_STEP_2_DATA: RouteModule.Form2Data = {
-  upstream_protocol: 'keep',
-  upstreamHostList: [{} as RouteModule.UpstreamHost],
-  upstream_id: null,
-  pass_host: 'pass',
-  upstreamPath: undefined,
-  type: 'roundrobin',
-  mappingStrategy: undefined,
-  rewriteType: 'keep',
-  timeout: {
-    connect: 6000,
-    send: 6000,
-    read: 6000,
-  },
 };
 
 export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {

@@ -25,9 +25,6 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({
 
   disabled,
 }) => {
-  console.log('upstreamRef: ', upstreamRef);
-  console.log('form:', form);
-  console.log('disabled: ', disabled);
   const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
   useEffect(() => {
     fetchUpstreamList().then(({ data }) => setList(data));
