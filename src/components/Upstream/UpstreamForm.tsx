@@ -70,6 +70,12 @@ const timeoutFields = [
   },
 ];
 
+const removeBtnStyle = {
+  marginLeft: -10,
+  display: 'flex',
+  alignItems: 'center',
+};
+
 const UpstreamForm: React.FC<Props> = ({ form, id }) => {
   const [readonly] = useState(false);
   const { formatMessage } = useIntl();
@@ -123,7 +129,7 @@ const UpstreamForm: React.FC<Props> = ({ form, id }) => {
               labelCol={{ span: index === 0 ? 3 : 0 }}
               wrapperCol={{ offset: index === 0 ? 0 : 3 }}
             >
-              <Row style={{ marginBottom: '10px' }} gutter={16}>
+              <Row style={{ marginBottom: 10 }} gutter={16}>
                 <Col span={5}>
                   <Form.Item
                     style={{ marginBottom: 0 }}
@@ -169,13 +175,7 @@ const UpstreamForm: React.FC<Props> = ({ form, id }) => {
                     <InputNumber placeholder="权重" disabled={readonly} min={0} max={1000} />
                   </Form.Item>
                 </Col>
-                <Col
-                  style={{
-                    marginLeft: -10,
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
+                <Col style={removeBtnStyle}>
                   {!readonly && fields.length > 1 && (
                     <MinusCircleOutlined onClick={() => remove(field.name)} />
                   )}
@@ -339,7 +339,7 @@ const UpstreamForm: React.FC<Props> = ({ form, id }) => {
                 }
                 wrapperCol={{ offset: index === 0 ? 0 : 3 }}
               >
-                <Row style={{ marginBottom: '10px' }} gutter={16}>
+                <Row style={{ marginBottom: 10 }} gutter={16}>
                   <Col span={10}>
                     <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
                       <Input
@@ -350,13 +350,7 @@ const UpstreamForm: React.FC<Props> = ({ form, id }) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col
-                    style={{
-                      marginLeft: -10,
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                  >
+                  <Col style={removeBtnStyle}>
                     {!readonly && fields.length > 1 && (
                       <MinusCircleOutlined
                         style={{ margin: '0 8px' }}
@@ -401,19 +395,13 @@ const UpstreamForm: React.FC<Props> = ({ form, id }) => {
                 labelCol={{ span: index === 0 ? 3 : 0 }}
                 wrapperCol={{ offset: index === 0 ? 0 : 3 }}
               >
-                <Row style={{ marginBottom: '10px' }}>
+                <Row style={{ marginBottom: 10 }}>
                   <Col span={2}>
                     <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
                       <InputNumber disabled={readonly} />
                     </Form.Item>
                   </Col>
-                  <Col
-                    style={{
-                      marginLeft: -10,
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                  >
+                  <Col style={removeBtnStyle}>
                     {!readonly && fields.length > 1 && (
                       <MinusCircleOutlined
                         onClick={() => {
@@ -468,19 +456,13 @@ const UpstreamForm: React.FC<Props> = ({ form, id }) => {
                 labelCol={{ span: index === 0 ? 3 : 0 }}
                 wrapperCol={{ offset: index === 0 ? 0 : 3 }}
               >
-                <Row style={{ marginBottom: '10px' }}>
+                <Row style={{ marginBottom: 10 }}>
                   <Col span={2}>
                     <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
                       <InputNumber disabled={readonly} max={599} />
                     </Form.Item>
                   </Col>
-                  <Col
-                    style={{
-                      marginLeft: -10,
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                  >
+                  <Col style={removeBtnStyle}>
                     {!readonly && fields.length > 1 && (
                       <MinusCircleOutlined
                         onClick={() => {

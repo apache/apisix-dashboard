@@ -115,7 +115,7 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({ form, disabl
                     : ''
                 }
               >
-                <Row style={{ marginBottom: '10px' }} gutter={16}>
+                <Row style={{ marginBottom: 10 }} gutter={16}>
                   <Col span={9}>
                     <Form.Item
                       style={{ marginBottom: 0 }}
