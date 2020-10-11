@@ -30,6 +30,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
@@ -101,6 +102,10 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 	input.ID = input.Username
 
+	if err := utils.SchemaCheck("main.consumer", input); err != nil {
+		return nil, err
+	}
+
 	if err := h.consumerStore.Create(c.Context(), input); err != nil {
 		return nil, err
 	}
@@ -120,6 +125,10 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 	input.Consumer.Username = input.Username
 	input.Consumer.ID = input.Username
+
+	if err := utils.SchemaCheck("main.consumer", input.Consumer); err != nil {
+		return nil, err
+	}
 
 	if err := h.consumerStore.Update(c.Context(), &input.Consumer); err != nil {
 		//if not exists, create

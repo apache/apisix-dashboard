@@ -189,6 +189,10 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 
+	if err := utils.SchemaCheck("main.route", input); err != nil {
+		return nil, err
+	}
+
 	if err := h.routeStore.Create(c.Context(), input); err != nil {
 		return nil, err
 	}
@@ -239,6 +243,10 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		if err = h.scriptStore.Create(c.Context(), script); err != nil {
 			return nil, err
 		}
+	}
+
+	if err := utils.SchemaCheck("main.route", input.Route); err != nil {
+		return nil, err
 	}
 
 	if err := h.routeStore.Update(c.Context(), &input.Route); err != nil {
