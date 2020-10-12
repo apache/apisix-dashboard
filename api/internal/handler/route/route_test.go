@@ -45,7 +45,7 @@ func TestRoute(t *testing.T) {
 	}
 	assert.NotNil(t, handler)
 
-	//create
+	//create Note: depends on lib `dag-to-lua` if script exists
 	ctx := droplet.NewContext()
 	route := &entity.Route{}
 	reqBody := `{
