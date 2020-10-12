@@ -223,10 +223,6 @@ func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 }
 
 func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
-	if err := s.ingestValidate(obj); err != nil {
-		return err
-	}
-
 	if getter, ok := obj.(entity.BaseInfoGetter); ok {
 		info := getter.GetBaseInfo()
 		if info.ID == "" {
@@ -234,6 +230,10 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 		}
 		info.CreateTime = time.Now().Unix()
 		info.UpdateTime = time.Now().Unix()
+	}
+
+	if err := s.ingestValidate(obj); err != nil {
+		return err
 	}
 
 	key := s.opt.KeyFunc(obj)
