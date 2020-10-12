@@ -30,7 +30,6 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
@@ -97,10 +96,6 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Service)
 
-	if err := utils.SchemaCheck("main.service", input); err != nil {
-		return nil, err
-	}
-
 	if err := h.serviceStore.Create(c.Context(), input); err != nil {
 		return nil, err
 	}
@@ -116,10 +111,6 @@ type UpdateInput struct {
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
 	input.Service.ID = input.ID
-
-	if err := utils.SchemaCheck("main.service", input.Service); err != nil {
-		return nil, err
-	}
 
 	if err := h.serviceStore.Update(c.Context(), &input.Service); err != nil {
 		return nil, err
@@ -174,9 +165,6 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	if err := utils.SchemaCheck("main.service", stored); err != nil {
-		return nil, err
-	}
 	if err := h.serviceStore.Update(c.Context(), &stored); err != nil {
 		return nil, err
 	}

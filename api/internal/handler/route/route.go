@@ -153,7 +153,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Route)
 	//check depend
 	if input.ServiceID != "" {
-		_, err := h.upstreamStore.Get(input.ServiceID)
+		_, err := h.svcStore.Get(input.ServiceID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return nil, fmt.Errorf("service id: %s not found", input.ServiceID)
@@ -162,7 +162,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 	if input.UpstreamID != "" {
-		_, err := h.upstreamStore.Get(input.ServiceID)
+		_, err := h.upstreamStore.Get(input.UpstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return nil, fmt.Errorf("upstream id: %s not found", input.UpstreamID)
@@ -190,10 +190,6 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	if err := utils.SchemaCheck("main.route", input); err != nil {
-		return nil, err
-	}
-
 	if err := h.routeStore.Create(c.Context(), input); err != nil {
 		return nil, err
 	}
@@ -212,7 +208,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 
 	//check depend
 	if input.ServiceID != "" {
-		_, err := h.upstreamStore.Get(input.ServiceID)
+		_, err := h.svcStore.Get(input.ServiceID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return nil, fmt.Errorf("service id: %s not found", input.ServiceID)
@@ -221,7 +217,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 	if input.UpstreamID != "" {
-		_, err := h.upstreamStore.Get(input.ServiceID)
+		_, err := h.upstreamStore.Get(input.UpstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return nil, fmt.Errorf("upstream id: %s not found", input.UpstreamID)
@@ -251,10 +247,6 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 				return nil, err
 			}
 		}
-	}
-
-	if err := utils.SchemaCheck("main.route", input.Route); err != nil {
-		return nil, err
 	}
 
 	if err := h.routeStore.Update(c.Context(), &input.Route); err != nil {

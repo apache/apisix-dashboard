@@ -40,6 +40,14 @@ var (
 )
 
 func InitStore(key HubKey, opt GenericStoreOption) error {
+	if key == HubKeyConsumer || key == HubKeyRoute ||
+		key == HubKeyService || key == HubKeySsl || key == HubKeyUpstream {
+		validator, err := NewAPISIXJsonSchemaValidator("main." + string(key))
+		if err != nil {
+			return err
+		}
+		opt.Validator = validator
+	}
 	s, err := NewGenericStore(opt)
 	if err != nil {
 		return err

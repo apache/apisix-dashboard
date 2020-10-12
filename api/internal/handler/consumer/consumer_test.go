@@ -161,4 +161,22 @@ func TestConsumer(t *testing.T) {
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)
 
+	//create consumer fail
+	consumer_fail := &entity.Consumer{}
+	reqBody = `{
+      "plugins": {
+          "limit-count": {
+              "count": 2,
+              "time_window": 60,
+              "rejected_code": 503,
+              "key": "remote_addr"
+          }
+      },
+    "desc": "test description"
+  }`
+	json.Unmarshal([]byte(reqBody), consumer_fail)
+	ctx.SetInput(consumer_fail)
+	_, err = handler.Create(ctx)
+	assert.NotNil(t, err)
+
 }

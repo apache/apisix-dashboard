@@ -30,7 +30,6 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
@@ -104,10 +103,6 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Upstream)
 
-	if err := utils.SchemaCheck("main.upstream", input); err != nil {
-		return nil, err
-	}
-
 	if err := h.upstreamStore.Create(c.Context(), input); err != nil {
 		return nil, err
 	}
@@ -123,10 +118,6 @@ type UpdateInput struct {
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
 	input.Upstream.ID = input.ID
-
-	if err := utils.SchemaCheck("main.upstream", input.Upstream); err != nil {
-		return nil, err
-	}
 
 	if err := h.upstreamStore.Update(c.Context(), &input.Upstream); err != nil {
 		return nil, err
@@ -178,10 +169,6 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	}
 
 	if err := patch.Apply(&stored); err != nil {
-		return nil, err
-	}
-
-	if err := utils.SchemaCheck("main.upstream", stored); err != nil {
 		return nil, err
 	}
 

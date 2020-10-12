@@ -19,9 +19,13 @@ package store
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
+
 	"github.com/xeipuuv/gojsonschema"
 	"go.uber.org/zap/buffer"
-	"io/ioutil"
+
+	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/internal/core/entity"
 )
 
 type Validator interface {
@@ -61,5 +65,91 @@ func (v *JsonSchemaValidator) Validate(obj interface{}) error {
 		}
 		return errors.New(errString.String())
 	}
+	return nil
+}
+
+type APISIXJsonSchemaValidator struct {
+	schema *gojsonschema.Schema
+}
+
+func NewAPISIXJsonSchemaValidator(jsonPath string) (Validator, error) {
+	schemaDef := conf.Schema.Get(jsonPath).String()
+	if schemaDef == "" {
+		return nil, fmt.Errorf("schema not found")
+	}
+
+	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
+	if err != nil {
+		return nil, fmt.Errorf("new schema failed: %w", err)
+	}
+	return &APISIXJsonSchemaValidator{
+		schema: s,
+	}, nil
+}
+
+func getPlugins(reqBody interface{}) map[string]interface{} {
+	switch reqBody.(type) {
+	case *entity.Route:
+		route := reqBody.(*entity.Route)
+		return route.Plugins
+	case *entity.Service:
+		service := reqBody.(*entity.Service)
+		return service.Plugins
+	case *entity.Consumer:
+		consumer := reqBody.(*entity.Consumer)
+		return consumer.Plugins
+	}
+	return nil
+}
+
+func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
+	ret, err := v.schema.Validate(gojsonschema.NewGoLoader(obj))
+	if err != nil {
+		return fmt.Errorf("validate failed: %w", err)
+	}
+
+	if !ret.Valid() {
+		errString := buffer.Buffer{}
+		for i, vErr := range ret.Errors() {
+			if i != 0 {
+				errString.AppendString("\n")
+			}
+			errString.AppendString(vErr.String())
+		}
+		return fmt.Errorf("scheme validate fail: %s", errString.String())
+	}
+
+	//check plugin json schema
+	plugins := getPlugins(obj)
+	if plugins != nil {
+		for pluginName, pluginConf := range plugins {
+			schemaDef := conf.Schema.Get("plugins." + pluginName).String()
+			if schemaDef == "" {
+				return fmt.Errorf("schema not found")
+			}
+
+			s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
+			if err != nil {
+				return fmt.Errorf("new schema failed: %w", err)
+			}
+
+			ret, err := s.Validate(gojsonschema.NewGoLoader(pluginConf))
+			if err != nil {
+				return fmt.Errorf("validate failed: %w", err)
+			}
+
+			if !ret.Valid() {
+				errString := buffer.Buffer{}
+				for i, vErr := range ret.Errors() {
+					if i != 0 {
+						errString.AppendString("\n")
+					}
+					errString.AppendString(vErr.String())
+				}
+				return fmt.Errorf("scheme validate fail: %s", errString.String())
+			}
+		}
+	}
+
 	return nil
 }

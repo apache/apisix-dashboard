@@ -36,7 +36,6 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
@@ -136,10 +135,6 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 
 	ssl.ID = input.ID
-	if err := utils.SchemaCheck("main.ssl", ssl); err != nil {
-		return nil, err
-	}
-
 	if err := h.sslStore.Create(c.Context(), ssl); err != nil {
 		return nil, err
 	}
@@ -160,10 +155,6 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	ssl.ID = input.ID
-	if err = utils.SchemaCheck("main.ssl", ssl); err != nil {
-		return nil, err
-	}
-
 	if err := h.sslStore.Update(c.Context(), ssl); err != nil {
 		return nil, err
 	}
@@ -202,10 +193,6 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	err = patch.Apply(&stored)
 	if err != nil {
 		panic(err)
-	}
-
-	if err := utils.SchemaCheck("main.ssl", stored); err != nil {
-		return nil, err
 	}
 
 	if err := h.sslStore.Update(c.Context(), &stored); err != nil {
