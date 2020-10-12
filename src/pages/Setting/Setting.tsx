@@ -17,7 +17,7 @@
 import React, { useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Form, Input, Row, Col, notification } from 'antd';
-import { useIntl } from 'umi';
+import { history, useIntl } from 'umi';
 
 import { getUrlQuery } from '@/helpers';
 import ActionBar from '@/components/ActionBar';
@@ -62,7 +62,9 @@ const Setting: React.FC = () => {
         });
         setTimeout(() => {
           const redirect = getUrlQuery('redirect');
-          window.location.href = redirect ? decodeURIComponent(redirect) : '/';
+          history.replace({
+            pathname: redirect ? decodeURIComponent(redirect) : '/',
+          });
         }, 500);
       });
     });

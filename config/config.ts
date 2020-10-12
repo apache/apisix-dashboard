@@ -46,7 +46,7 @@ export default defineConfig({
     logo: '/favicon.png',
   },
   base: '/',
-  publicPath: '/',
+  publicPath: '/dashboard/',
   define: {
     REACT_APP_ENV: REACT_APP_ENV || false,
   },
@@ -60,5 +60,35 @@ export default defineConfig({
   proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
     basePath: '/',
+  },
+  history: { type: 'hash' },
+  chainWebpack: function (config, { webpack }) {
+    const useHash = this.hash && process.env.NODE_ENV === 'production';
+
+    // js files
+    config.output
+      .filename(useHash ? 'js/[name].[contenthash:8].js' : `js/[name].js`)
+      .chunkFilename(useHash ? `js/[name].[contenthash:8].async.js` : `js/[name].js`)
+      .end();
+
+    // css files
+    config.plugin('extract-css').tap((options) => {
+      options[0].filename = useHash ? 'css/[name].[contenthash:8].css' : 'css/[name].css';
+      options[0].chunkFilename = useHash
+        ? 'css/[name].[contenthash:8].chunk.css'
+        : 'css/[name].chunk.css';
+      return options;
+    });
+
+    // svg
+    config.module
+      .rule('svg')
+      .test(/\.(svg)(\?.*)?$/)
+      .use('file-loader')
+      .loader(require.resolve('file-loader'))
+      .options({
+        name: 'img/[name].[hash:8].[ext]',
+        esModule: false,
+      });
   },
 });

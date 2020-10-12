@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 import React from 'react';
+import { history } from 'umi';
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
 import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
 import { UserModule } from '@/pages/User/typing';
 import { getUrlQuery } from '@/helpers';
+import { stringify } from 'querystring';
 
 /**
  * Login Methods List
@@ -36,7 +38,12 @@ const Page: React.FC = () => {
   });
 
   const redirect = getUrlQuery('redirect');
-  window.location.href = `/user/login${redirect ? `?redirect=${redirect}` : ''}`;
+  history.replace({
+    pathname: '/user/login',
+    search: stringify({
+      redirect: redirect !== '' ? redirect : '',
+    }),
+  });
 
   return null;
 };
