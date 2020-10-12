@@ -21,16 +21,14 @@ import { history, useIntl } from 'umi';
 import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
 
 import ActionBar from '@/components/ActionBar';
+import { DEFAULT_UPSTREAM } from '@/components/Upstream';
 
 import { create, fetchItem, update, checkUniqueName, checkHostWithSSL } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
-
 import CreateStep4 from './components/CreateStep4';
 import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA, INIT_CHART } from './constants';
-import { DEFAULT_UPSTREAM } from '@/components/Upstream';
-
 import ResultView from './components/ResultView';
 import styles from './Create.less';
 
