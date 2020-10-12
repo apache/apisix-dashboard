@@ -42,7 +42,7 @@ type Route struct {
 	Hosts           []string               `json:"hosts,omitempty"`
 	RemoteAddr      string                 `json:"remote_addr,omitempty"`
 	RemoteAddrs     []string               `json:"remote_addrs,omitempty"`
-	Vars            string                 `json:"vars,omitempty"`
+	Vars            interface{}            `json:"vars,omitempty"`
 	FilterFunc      string                 `json:"filter_func,omitempty"`
 	Script          interface{}            `json:"script,omitempty"`
 	Plugins         map[string]interface{} `json:"plugins,omitempty"`

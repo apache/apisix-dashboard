@@ -271,9 +271,13 @@ type BatchDelete struct {
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
 
+	//delete route
 	if err := h.routeStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
 		return nil, err
 	}
+
+	//delete stored script
+	h.scriptStore.BatchDelete(c.Context(), strings.Split(input.IDs, ","))
 
 	return nil, nil
 }

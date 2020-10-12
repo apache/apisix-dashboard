@@ -53,6 +53,7 @@ func TestRoute(t *testing.T) {
       "name": "aaaa",
       "uri": "/index.html",
       "hosts": ["foo.com", "*.bar.com"],
+      "vars": [],
       "remote_addrs": ["127.0.0.0/8"],
       "methods": ["PUT", "GET"],
       "upstream": {

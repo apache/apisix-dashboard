@@ -20,6 +20,7 @@ local json = require("json")
 package.loaded['cjson'] = {}
 package.loaded['cjson.safe'] = {}
 package.loaded['bit'] = {}
+package.loaded['lfs'] = {}
 package.loaded['ngx.process'] = {}
 package.loaded['ngx.re'] = {}
 package.loaded['net.url'] = {}
