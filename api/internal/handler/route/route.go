@@ -231,7 +231,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	if input.Script != nil {
-		script := entity.Script{}
+		script := &entity.Script{}
 		script.ID = input.ID
 		script.Script = input.Script
 		//to lua
@@ -241,8 +241,15 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 			return nil, err
 		}
 		//save original conf
-		if err = h.scriptStore.Create(c.Context(), script); err != nil {
-			return nil, err
+		if err = h.scriptStore.Update(c.Context(), script); err != nil {
+			//if not exists, create
+			if err.Error() == fmt.Sprintf("key: %s is not found", script.ID) {
+				if err := h.scriptStore.Create(c.Context(), script); err != nil {
+					return nil, err
+				}
+			} else {
+				return nil, err
+			}
 		}
 	}
 
