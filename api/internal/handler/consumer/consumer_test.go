@@ -81,6 +81,9 @@ func TestConsumer(t *testing.T) {
 	_, err = handler.Create(ctx)
 	assert.Nil(t, err)
 
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
 	//get consumer
 	input := &GetInput{}
 	reqBody = `{"username": "jack"}`
@@ -112,8 +115,8 @@ func TestConsumer(t *testing.T) {
 	_, err = handler.Update(ctx)
 	assert.Nil(t, err)
 
-	//
-	time.Sleep(time.Duration(1) * time.Second)
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
 
 	//check update
 	input3 := &GetInput{}
