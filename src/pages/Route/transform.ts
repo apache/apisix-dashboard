@@ -150,7 +150,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     form1Data.redirectOption = 'forceHttps';
   } else if (redirect?.uri) {
     form1Data.redirectOption = 'customRedirect';
-    form1Data.ret_code = redirect?.code;
+    form1Data.ret_code = redirect?.ret_code;
     form1Data.redirectURI = redirect?.uri;
   } else {
     form1Data.redirectOption = 'disabled';
