@@ -18,10 +18,24 @@ import { pickBy, identity, omit } from 'lodash';
  */
 export const transformRequest = (
   formData: UpstreamModule.RequestBody,
-): UpstreamModule.RequestBody | undefined => {
+): UpstreamModule.RequestBody | undefined | { upstream_id: string } => {
   let data = pickBy(formData, identity) as UpstreamModule.RequestBody;
-  const { type, hash_on, key, k8s_deployment_info, nodes, pass_host, upstream_host } = data;
+  const {
+    type,
+    hash_on,
+    key,
+    k8s_deployment_info,
+    nodes,
+    pass_host,
+    upstream_host,
+    upstream_id,
+  } = data;
   data.checks = pickBy(data.checks, identity);
+
+  if (upstream_id) {
+    return { upstream_id: upstream_id };
+  }
+
   if (Object.keys(data.checks).length === 0) {
     data = omit(data, 'checks');
   }

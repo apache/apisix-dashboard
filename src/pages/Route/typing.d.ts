@@ -27,7 +27,6 @@ declare namespace RouteModule {
     key: string;
   }
 
-  type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH';
   type RequestProtocol = 'https' | 'http' | 'websocket';
 
   type BaseData = {
@@ -63,7 +62,7 @@ declare namespace RouteModule {
   type ModalType = 'CREATE' | 'EDIT';
 
   type Redirect = {
-    code?: number;
+    ret_code?: number;
     uri?: string;
     http_to_https?: boolean;
   };
@@ -80,8 +79,6 @@ declare namespace RouteModule {
     methods: HttpMethod[];
     uris: string[];
     hosts: string[];
-    protocols: RequestProtocol[];
-    redirect?: Redirect;
     vars: [string, Operator, string][];
     upstream: {
       type: 'roundrobin' | 'chash';
@@ -206,11 +203,11 @@ declare namespace RouteModule {
     protocols: RequestProtocol[];
     websocket: boolean;
     hosts: string[];
-    paths: string[];
+    uris: string[];
     methods: HttpMethod[];
     redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
     redirectURI?: string;
-    redirectCode?: number;
+    ret_code?: number;
     status: boolean;
   };
 
@@ -229,26 +226,24 @@ declare namespace RouteModule {
     form: FormInstance;
     upstreamHeaderList: UpstreamHeader[] | undefined;
     disabled?: boolean;
+    upstreamRef: any;
     onChange(data: { action: 'upstreamHeaderListChange'; data: T }): void;
   };
 
   type Form2Data = {
-    upstream_protocol: 'http' | 'https' | 'keep';
     type: 'roundrobin' | 'chash';
     hash_on?: string;
     key?: string;
-    mappingStrategy?: string;
-    rewriteType?: string;
     upstreamPath?: string;
-    upstream_id: string | null;
+    upstream_id?: string | null;
     timeout: {
       connect: number;
       send: number;
       read: number;
     };
-    pass_host: 'pass' | 'node' | 'rewrite';
-    upstream_host?: string;
-    upstreamHostList: UpstreamHost[];
+    nodes: {
+      [key: string]: number;
+    };
   };
 
   type RequestData = {
@@ -257,5 +252,51 @@ declare namespace RouteModule {
     step3Data: Step3Data;
     upstreamHeaderList: UpstreamHeader[];
     advancedMatchingRules: MatchingRule[];
+  };
+
+  type RequestBody = {
+    name?: string;
+    desc?: string;
+    uri: string;
+    host?: string;
+    hosts?: string[];
+    remote_addr?: string;
+    remote_addrs?: string[];
+    methods?: HttpMethod[];
+    priority?: number;
+    vars?: [string, Operator, string][];
+    filter_func?: string;
+    plugins?: Record<string, any>;
+    script?: Record<string, any>;
+    // TODO:
+    upstream?: any;
+    upstream_id?: string;
+    service_id?: string;
+    service_protocol?: 'grpc' | 'http';
+  };
+
+  type ResponseBody = {
+    hosts: string[];
+    id: string;
+    methods: HttpMethod[];
+    name: string;
+    remote_addrs: string[];
+    script: any;
+    desc?: string;
+    upstream: {
+      checks: UpstreamModule.HealthCheck;
+      create_time: number;
+      k8s_deployment_info: UpstreamModule.K8SDeploymentInfo;
+      id: string;
+      nodes: {
+        port: number;
+      }[];
+      timeout: UpstreamModule.Timeout;
+      type: UpstreamModule.Type;
+    };
+    uri: string;
+    uris?: string[];
+    create_time: number;
+    update_time: number;
   };
 }

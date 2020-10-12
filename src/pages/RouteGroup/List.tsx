@@ -40,7 +40,7 @@ const Page: React.FC = () => {
       dataIndex: 'description',
     },
     {
-      title: formatMessage({ id: 'component.global.editTime' }),
+      title: formatMessage({ id: 'component.global.updateTime' }),
       dataIndex: 'update_time',
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },

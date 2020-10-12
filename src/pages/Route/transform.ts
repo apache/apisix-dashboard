@@ -24,21 +24,10 @@ export const transformStepData = ({
   upstreamHeaderList,
   step3Data,
 }: RouteModule.RequestData) => {
-  const nodes = {};
-  (form2Data.upstreamHostList || []).forEach((node) => {
-    nodes[`${node.host}:${node.port}`] = node.weight;
-  });
-
   const upstream_header = {};
   (upstreamHeaderList || []).forEach((header) => {
     upstream_header[header.header_name] = header.header_value || '';
   });
-
-  const chashData: any = {};
-  if (form2Data.type === 'chash') {
-    chashData.key = form2Data.key;
-    chashData.hash_on = form2Data.hash_on;
-  }
 
   let redirect: RouteModule.Redirect = {};
   if (form1Data.redirectOption === 'disabled') {
@@ -47,23 +36,14 @@ export const transformStepData = ({
     redirect = { http_to_https: true };
   } else if (form1Data.redirectURI !== '') {
     redirect = {
-      code: form1Data.redirectCode,
+      ret_code: form1Data.ret_code,
       uri: form1Data.redirectURI,
     };
   }
 
-  let { protocols } = form1Data;
-  if (form1Data.websocket) {
-    protocols = protocols.concat('websocket');
-  }
-
   const data: Partial<RouteModule.Body> = {
     ...form1Data,
-    ...form2Data,
     ...step3Data,
-    protocols,
-    uris: form1Data.paths,
-    redirect,
     vars: advancedMatchingRules.map((rule) => {
       const { operator, position, name, value } = rule;
       let key = '';
@@ -79,27 +59,8 @@ export const transformStepData = ({
       }
       return [key, operator, value];
     }),
-    upstream: {
-      type: form2Data.type,
-      ...chashData,
-      nodes,
-      timeout: form2Data.timeout,
-    },
     upstream_header,
   };
-
-  if (form2Data.upstreamPath) {
-    data.upstream_path = {
-      to: form2Data.upstreamPath,
-    };
-    if (form2Data.mappingStrategy) {
-      data.upstream_path = {
-        ...data.upstream_path,
-        from: form2Data.mappingStrategy,
-        type: 'regx',
-      };
-    }
-  }
 
   // 未启用 redirect
   if (!redirect.uri) {
@@ -107,26 +68,29 @@ export const transformStepData = ({
       // eslint-disable-next-line no-param-reassign
       step3Data.plugins.prometheus = {};
     }
+
+    if (form2Data.upstream_id) {
+      data.upstream_id = form2Data.upstream_id;
+    } else {
+      data.upstream = form2Data;
+    }
+
     // 移除前端部分自定义变量
     return omit(data, [
       'advancedMatchingRules',
       'upstreamHostList',
       'upstreamPath',
-      'rewriteType',
-      'mappingStrategy',
       'upstreamHeaderList',
-      'websocket',
       'timeout',
       'redirectURI',
-      'redirectCode',
-      'forceHttps',
+      'ret_code',
       'redirectOption',
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
-      form2Data.upstream_id ? 'upstream' : 'upstream_id',
     ]);
   }
 
+  data.plugins = { redirect };
   return pick(data, [
     'name',
     'desc',
@@ -137,6 +101,7 @@ export const transformStepData = ({
     'vars',
     'route_group_id',
     'route_group_name',
+    'plugins',
     form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
   ]);
 };
@@ -170,61 +135,30 @@ export const transformUpstreamNodes = (
 };
 
 export const transformRouteData = (data: RouteModule.Body) => {
-  const {
-    name,
-    route_group_id,
-    route_group_name,
-    desc,
-    methods,
-    uris,
-    protocols,
-    hosts,
-    vars,
-    redirect,
-    status,
-  } = data;
-
+  const { name, desc, methods, uris, hosts, vars, status, upstream, upstream_id } = data;
   const form1Data: Partial<RouteModule.Form1Data> = {
     name,
-    route_group_id,
-    route_group_name,
     desc,
     status,
-    protocols: protocols.filter((item) => item !== 'websocket'),
-    websocket: protocols.includes('websocket'),
     hosts: (hosts || []).filter(Boolean).length === 0 ? [''] : hosts,
-    paths: uris,
+    uris,
     methods,
   };
 
-  const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);
+  const { redirect } = data.plugins;
   if (redirect?.http_to_https) {
     form1Data.redirectOption = 'forceHttps';
   } else if (redirect?.uri) {
     form1Data.redirectOption = 'customRedirect';
-    form1Data.redirectCode = redirect?.code;
+    form1Data.ret_code = redirect?.ret_code;
     form1Data.redirectURI = redirect?.uri;
   } else {
     form1Data.redirectOption = 'disabled';
   }
 
-  const {
-    upstream,
-    upstream_path,
-    upstream_header,
-    upstream_protocol = 'keep',
-    upstream_id,
-  } = data;
-  let rewriteType = 'keep';
-  if (upstream_path && upstream_path.to) {
-    if (upstream_path.from) {
-      rewriteType = 'regx';
-    } else {
-      rewriteType = 'static';
-    }
-  }
+  const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);
 
-  const upstreamHeaderList = Object.entries(upstream_header || {}).map(([k, v]) => {
+  const upstreamHeaderList = Object.entries(data.upstream_header || {}).map(([k, v]) => {
     return {
       header_name: k,
       header_value: v,
@@ -233,23 +167,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     };
   });
 
-  const form2Data: RouteModule.Form2Data = {
-    upstream_protocol,
-    upstreamHeaderList,
-    type: upstream ? upstream.type : 'roundrobin',
-    hash_on: upstream ? upstream.hash_on : undefined,
-    key: upstream ? upstream.key : undefined,
-    upstreamHostList: transformUpstreamNodes(upstream?.nodes),
-    upstream_id,
-    upstreamPath: upstream_path?.to,
-    mappingStrategy: upstream_path?.from,
-    rewriteType,
-    timeout: upstream?.timeout || {
-      connect: 6000,
-      send: 6000,
-      read: 6000,
-    },
-  };
+  const form2Data: RouteModule.Form2Data = upstream || { upstream_id };
 
   const { plugins, script } = data;
 
@@ -271,6 +189,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
   };
 };
 
+// TODO: neet to check transformRouteDebugData
 export const transformRouteDebugData = (data: RouteModule.Body) => {
   const {
     name,

@@ -536,7 +536,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     return (
       <Form form={form} labelCol={{ span: 3 }}>
         {showSelector && (
-          <Form.Item label="选择上游">
+          <Form.Item label="选择上游" name="upstream_id">
             <Select
               defaultValue={form.getFieldValue('upstream_id')}
               onChange={(id) => {

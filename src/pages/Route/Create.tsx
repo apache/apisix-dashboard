@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
@@ -28,12 +28,9 @@ import Step2 from './components/Step2';
 import Step3 from './components/Step3';
 
 import CreateStep4 from './components/CreateStep4';
-import {
-  DEFAULT_STEP_1_DATA,
-  DEFAULT_STEP_2_DATA,
-  DEFAULT_STEP_3_DATA,
-  INIT_CHART,
-} from './constants';
+import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA, INIT_CHART } from './constants';
+import { DEFAULT_UPSTREAM } from '@/components/Upstream';
+
 import ResultView from './components/ResultView';
 import styles from './Create.less';
 
@@ -69,6 +66,7 @@ const Page: React.FC<Props> = (props) => {
 
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
+  const upstreamRef = useRef<any>();
 
   const [step, setStep] = useState(1);
   const [stepHeader, setStepHeader] = useState(STEP_HEADER_4);
@@ -88,7 +86,7 @@ const Page: React.FC<Props> = (props) => {
     setUpstreamHeaderList([]);
     setStep3Data(DEFAULT_STEP_3_DATA);
     form1.setFieldsValue(DEFAULT_STEP_1_DATA);
-    form2.setFieldsValue(DEFAULT_STEP_2_DATA);
+    form2.setFieldsValue(DEFAULT_UPSTREAM);
     setStep(1);
   };
 
@@ -132,6 +130,7 @@ const Page: React.FC<Props> = (props) => {
             form1={form1}
             form2={form2}
             step3Data={step3Data}
+            upstreamRef={upstreamRef}
             redirect
           />
         );
@@ -141,6 +140,7 @@ const Page: React.FC<Props> = (props) => {
         <Step2
           upstreamHeaderList={upstreamHeaderList}
           form={form2}
+          upstreamRef={upstreamRef}
           onChange={({ action, data }) => {
             if (action === 'upstreamHeaderListChange') {
               setUpstreamHeaderList(data);
@@ -169,6 +169,7 @@ const Page: React.FC<Props> = (props) => {
           upstreamHeaderList={upstreamHeaderList}
           form1={form1}
           form2={form2}
+          upstreamRef={upstreamRef}
           step3Data={step3Data}
         />
       );
@@ -190,14 +191,14 @@ const Page: React.FC<Props> = (props) => {
   };
 
   const onStepChange = (nextStep: number) => {
-    const routeData = {
-      form1Data: form1.getFieldsValue(),
-      form2Data: form2.getFieldsValue(),
-      step3Data,
-      upstreamHeaderList,
-      advancedMatchingRules,
-    } as RouteModule.RequestData;
     const onUpdateOrCreate = () => {
+      const routeData = {
+        form1Data: form1.getFieldsValue(),
+        form2Data: upstreamRef.current?.getData(),
+        step3Data,
+        upstreamHeaderList,
+        advancedMatchingRules,
+      } as RouteModule.RequestData;
       if (props.route.path.indexOf('edit') !== -1) {
         update((props as any).match.params.rid, routeData).then(() => {
           setStep(5);

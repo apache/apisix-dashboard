@@ -60,9 +60,11 @@ type Res<T> = {
   message: string;
   request_id: string;
   data: T;
-}
+};
 
 type ResListData<T> = {
   rows: T[];
   total_size: number;
-}
+};
+
+type HttpMethod = 'GET' | 'POST' | 'DELETE' | 'PUT' | 'OPTIONS' | 'HEAD';

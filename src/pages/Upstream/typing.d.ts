@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 declare namespace UpstreamModule {
-  type Node = UpstreamHost[];
+  type Node = Record<string, number>;
+  type Type = 'roundrobin' | 'chash' | 'ewma';
 
   type Timeout = Record<'connect' | 'send' | 'read', number>;
 
@@ -53,16 +54,19 @@ declare namespace UpstreamModule {
     weight: number;
   };
 
+  type K8SDeploymentInfo = {
+    namespace: string;
+    deploy_name: string;
+    service_name: string;
+    backend_type: string;
+    port: number;
+  };
+
   type RequestBody = {
-    type: 'roundrobin' | 'chash' | 'ewma';
-    nodes?: Node[];
-    k8s_deployment_info?: {
-      namespace: string;
-      deploy_name: string;
-      service_name: string;
-      backend_type: string;
-      port: number;
-    };
+    upstream_id:string;
+    type: Type;
+    nodes?: Node;
+    k8s_deployment_info?: K8SDeploymentInfo;
     hash_on?: 'vars' | 'header' | 'cookie' | 'consumer';
     key?: string;
     checks?: HealthCheck;
