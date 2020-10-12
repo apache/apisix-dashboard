@@ -53,7 +53,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   uris: ['/*'],
   redirectOption: 'disabled',
   redirectURI: '',
-  redirectCode: 302,
+  ret_code: 302,
   methods: HTTP_METHOD_OPTION_LIST,
 };
 

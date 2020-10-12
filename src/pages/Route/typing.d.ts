@@ -62,7 +62,7 @@ declare namespace RouteModule {
   type ModalType = 'CREATE' | 'EDIT';
 
   type Redirect = {
-    code?: number;
+    ret_code?: number;
     uri?: string;
     http_to_https?: boolean;
   };
@@ -79,8 +79,6 @@ declare namespace RouteModule {
     methods: HttpMethod[];
     uris: string[];
     hosts: string[];
-    protocols: RequestProtocol[];
-    redirect?: Redirect;
     vars: [string, Operator, string][];
     upstream: {
       type: 'roundrobin' | 'chash';
@@ -209,7 +207,7 @@ declare namespace RouteModule {
     methods: HttpMethod[];
     redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
     redirectURI?: string;
-    redirectCode?: number;
+    ret_code?: number;
     status: boolean;
   };
 
@@ -233,22 +231,19 @@ declare namespace RouteModule {
   };
 
   type Form2Data = {
-    upstream_protocol: 'http' | 'https' | 'keep';
     type: 'roundrobin' | 'chash';
     hash_on?: string;
     key?: string;
-    mappingStrategy?: string;
-    rewriteType?: string;
     upstreamPath?: string;
-    upstream_id: string | null;
+    upstream_id?: string | null;
     timeout: {
       connect: number;
       send: number;
       read: number;
     };
-    pass_host: 'pass' | 'node' | 'rewrite';
-    upstream_host?: string;
-    upstreamHostList: UpstreamHost[];
+    nodes: {
+      [key: string]: number;
+    };
   };
 
   type RequestData = {

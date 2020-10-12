@@ -181,28 +181,6 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
     <PanelSection
       title={formatMessage({ id: 'page.route.panelSection.title.requestConfigBasicDefine' })}
     >
-      <Form.Item
-        label={formatMessage({ id: 'page.route.protocol' })}
-        name="protocols"
-        rules={[
-          {
-            required: true,
-            message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
-              id: 'page.route.protocol',
-            })}`,
-          },
-        ]}
-      >
-        <Checkbox.Group disabled={disabled} options={['http', 'https']} />
-      </Form.Item>
-      {/* <Form.Item
-        label="优先级"
-        name="priority"
-        rules={[{ required: true, message: '请输入优先级' }]}
-        extra=""
-      >
-        <InputNumber placeholder="优先级" disabled={disabled} min={0} max={1000} />
-      </Form.Item> */}
       {renderHosts()}
       {renderUris()}
       <Form.Item
@@ -278,7 +256,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                     </Form.Item>
                   </Col>
                   <Col span={10}>
-                    <Form.Item name="redirectCode" rules={[{ required: true }]}>
+                    <Form.Item name="ret_code" rules={[{ required: true }]}>
                       <Select disabled={disabled}>
                         <Select.Option value={301}>
                           {formatMessage({ id: 'page.route.select.option.redirect301' })}

@@ -63,6 +63,7 @@ declare namespace UpstreamModule {
   };
 
   type RequestBody = {
+    upstream_id:string;
     type: Type;
     nodes?: Node;
     k8s_deployment_info?: K8SDeploymentInfo;

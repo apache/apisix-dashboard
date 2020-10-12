@@ -37,7 +37,7 @@ export const update = (rid: number, data: RouteModule.RequestData) =>
   });
 
 export const fetchItem = (rid: number) =>
-  request(`/routes/${rid}`).then((data) => transformRouteData(data));
+  request(`/routes/${rid}`).then((data) => transformRouteData(data.data));
 
 export const fetchItemDebugInfo = (rid: number) =>
   request(`/routes/${rid}/debuginfo`).then((data) => transformRouteDebugData(data));
