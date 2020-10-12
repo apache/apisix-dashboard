@@ -14,50 +14,56 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
-package.loaded["apisix.core.schema"] = {}
 local json = require("json")
 
-package.loaded['cjson'] = {}
-package.loaded['cjson.safe'] = {}
-package.loaded['bit'] = {}
-package.loaded['lfs'] = {}
-package.loaded['ngx.process'] = {}
-package.loaded['ngx.re'] = {}
-package.loaded['net.url'] = {}
-package.loaded['opentracing.tracer'] = {}
-package.loaded['pb'] = {}
-package.loaded['prometheus'] = {}
-package.loaded['protoc'] = {}
+-- simulate loading modules to avoid errors that will cause fail to read json schema
+local fake_module_list = {
+    'cjson',
+    'cjson.safe',
+    'bit',
+    'lfs',
+    'ngx.process',
+    'ngx.re',
+    'net.url',
+    'opentracing.tracer',
+    'pb',
+    'prometheus',
+    'protoc',
 
-package.loaded["resty.cookie"] = {}
-package.loaded["resty.core.regex"] = {}
-package.loaded["resty.hmac"] = {}
-package.loaded['resty.http'] = {}
-package.loaded['resty.ipmatcher'] = {}
-package.loaded["resty.jit-uuid"] = {}
-package.loaded["resty.jwt"] = {}
-package.loaded['resty.kafka.producer'] = {}
-package.loaded['resty.limit.count'] = {}
-package.loaded['resty.limit.conn'] = {}
-package.loaded['resty.limit.req'] = {}
-package.loaded["resty.logger.socket"] = {}
-package.loaded["resty.lock"] = {}
-package.loaded["resty.openidc"] = {}
-package.loaded["resty.random"] = {}
-package.loaded["resty.redis"] = {}
-package.loaded["resty.signal"] = {}
-package.loaded["resty.string"] = {}
+    'resty.cookie',
+    'resty.core.regex',
+    'resty.hmac',
+    'resty.http',
+    'resty.ipmatcher',
+    'resty.jit-uuid',
+    'resty.jwt',
+    'resty.kafka.producer',
+    'resty.limit.count',
+    'resty.limit.conn',
+    'resty.limit.req',
+    'resty.logger.socket',
+    'resty.lock',
+    'resty.openidc',
+    'resty.random',
+    'resty.redis',
+    'resty.signal',
+    'resty.string',
 
-package.loaded["apisix.consumer"] = {}
-package.loaded["apisix.core.json"] = {}
-package.loaded["apisix.upstream"] = {}
-package.loaded["apisix.utils.log-util"] = {}
-package.loaded["apisix.utils.batch-processor"] = {}
-package.loaded["apisix.plugins.skywalking.client"] = {}
-package.loaded["apisix.plugins.skywalking.tracer"] = {}
-package.loaded["apisix.plugins.zipkin.codec"] = {}
-package.loaded["apisix.plugins.zipkin.random_sampler"] = {}
-package.loaded["apisix.plugins.zipkin.reporter"] = {}
+    'apisix.consumer',
+    'apisix.core.json',
+    'apisix.core.schema',
+    'apisix.upstream',
+    'apisix.utils.log-util',
+    'apisix.utils.batch-processor',
+    'apisix.plugins.skywalking.client',
+    'apisix.plugins.skywalking.tracer',
+    'apisix.plugins.zipkin.codec',
+    'apisix.plugins.zipkin.random_sampler',
+    'apisix.plugins.zipkin.reporter'
+}
+for _, name in ipairs(fake_module_list) do
+    package.loaded[name] = {}
+end
 
 ngx = {}
 ngx.re = {}
@@ -70,6 +76,7 @@ ngx.re.gmatch = empty_function
 local empty_function = function()
 end
 
+
 -- additional define for management
 local time_def = {
    type = "integer",
@@ -81,7 +88,6 @@ for _, resource in ipairs({"ssl", "route", "service", "upstream", "consumer"}) d
 end
 schema.ssl.properties.validity_start = time_def
 schema.ssl.properties.validity_end = time_def
-
 
 package.loaded["apisix.core"] = {
     lrucache = {
@@ -96,6 +102,7 @@ package.loaded["apisix.core"] = {
     }
 }
 
+
 function get_plugin_list()
     local all = io.popen("ls apisix/plugins");
     local list = {};
@@ -108,6 +115,7 @@ function get_plugin_list()
     all:close()
     return list
 end
+
 
 local schema_all = {}
 schema_all.main = schema
@@ -123,25 +131,3 @@ end
 
 print(json.encode(schema_all))
 
--- local function plugin_schema()
---   schema = {}
---   local plugins = get_plugin_list()
---   for idx, plugin_name in pairs(plugins) do
---     local plugin = require("apisix.plugins." .. plugin_name)
---     if plugin and type(plugin) == "table" and plugin.schema then
---       schema[plugin_name] = plugin.schema
---     end
---   end
---   print(json.encode(schema))
--- end
---
--- local function main()
---   local schema = require("apisix.schema_def")
---   print(json.encode(schema))
--- end
---
--- if arg[1] == "main" then
---   main()
--- else
---   plugin_schema()
--- end
