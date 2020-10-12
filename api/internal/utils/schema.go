@@ -24,7 +24,23 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 
 	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/internal/core/entity"
 )
+
+func getPlugins(reqBody interface{}) map[string]interface{} {
+	switch reqBody.(type) {
+	case *entity.Route:
+		route := reqBody.(*entity.Route)
+		return route.Plugins
+	case *entity.Service:
+		service := reqBody.(*entity.Service)
+		return service.Plugins
+	case *entity.Consumer:
+		consumer := reqBody.(*entity.Consumer)
+		return consumer.Plugins
+	}
+	return nil
+}
 
 func SchemaCheck(jsonPath string, reqBody interface{}) error {
 	schemaDef := conf.Schema.Get(jsonPath).String()
@@ -56,6 +72,16 @@ func SchemaCheck(jsonPath string, reqBody interface{}) error {
 		actual := result.Errors()[0].String()
 		log.Println("body:", body, " schemaDef:", schemaDef)
 		return fmt.Errorf("scheme validate fail: %s", actual)
+	}
+
+	plugins := getPlugins(reqBody)
+	if plugins != nil {
+		for pluginName, pluginConf := range plugins {
+			err := SchemaCheck("plugins."+pluginName, pluginConf)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil

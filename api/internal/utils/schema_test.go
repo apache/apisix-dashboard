@@ -77,4 +77,24 @@ func TestSchemaCheck(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Errorf(t, err, "schema not found")
 
+	//plugin schema fail
+	consumer3 := &entity.Consumer{}
+	reqBody = `{
+      "id": "jack",
+      "username": "jack",
+      "plugins": {
+          "limit-count": {
+              "time_window": 60,
+              "rejected_code": 503,
+              "key": "remote_addr"
+          }
+      },
+    "desc": "test description"
+  }`
+	json.Unmarshal([]byte(reqBody), consumer3)
+
+	err = SchemaCheck("main.consumer", consumer3)
+	assert.NotNil(t, err)
+	assert.Errorf(t, err, "scheme validate fail: (root): count is required")
+
 }

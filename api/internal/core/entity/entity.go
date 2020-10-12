@@ -32,24 +32,24 @@ type BaseInfoGetter interface {
 
 type Route struct {
 	BaseInfo
-	URI             string      `json:"uri,omitempty" validate:"uri"`
-	Uris            []string    `json:"uris,omitempty"`
-	Name            string      `json:"name,omitempty" validate:"max=50"`
-	Desc            string      `json:"desc,omitempty" validate:"max=256"`
-	Priority        int         `json:"priority,omitempty"`
-	Methods         []string    `json:"methods,omitempty"`
-	Host            string      `json:"host,omitempty"`
-	Hosts           []string    `json:"hosts,omitempty"`
-	RemoteAddr      string      `json:"remote_addr,omitempty"`
-	RemoteAddrs     []string    `json:"remote_addrs,omitempty"`
-	Vars            string      `json:"vars,omitempty"`
-	FilterFunc      string      `json:"filter_func,omitempty"`
-	Script          interface{} `json:"script,omitempty"`
-	Plugins         interface{} `json:"plugins,omitempty"`
-	Upstream        interface{} `json:"upstream,omitempty"`
-	ServiceID       string      `json:"service_id,omitempty"`
-	UpstreamID      string      `json:"upstream_id,omitempty"`
-	ServiceProtocol string      `json:"service_protocol,omitempty"`
+	URI             string                 `json:"uri,omitempty" validate:"uri"`
+	Uris            []string               `json:"uris,omitempty"`
+	Name            string                 `json:"name,omitempty" validate:"max=50"`
+	Desc            string                 `json:"desc,omitempty" validate:"max=256"`
+	Priority        int                    `json:"priority,omitempty"`
+	Methods         []string               `json:"methods,omitempty"`
+	Host            string                 `json:"host,omitempty"`
+	Hosts           []string               `json:"hosts,omitempty"`
+	RemoteAddr      string                 `json:"remote_addr,omitempty"`
+	RemoteAddrs     []string               `json:"remote_addrs,omitempty"`
+	Vars            string                 `json:"vars,omitempty"`
+	FilterFunc      string                 `json:"filter_func,omitempty"`
+	Script          interface{}            `json:"script,omitempty"`
+	Plugins         map[string]interface{} `json:"plugins,omitempty"`
+	Upstream        interface{}            `json:"upstream,omitempty"`
+	ServiceID       string                 `json:"service_id,omitempty"`
+	UpstreamID      string                 `json:"upstream_id,omitempty"`
+	ServiceProtocol string                 `json:"service_protocol,omitempty"`
 }
 
 // --- structures for upstream start  ---
@@ -147,9 +147,9 @@ func (upstream *Upstream) Parse2NameResponse() (*UpstreamNameResponse, error) {
 
 type Consumer struct {
 	BaseInfo
-	Username string      `json:"username"`
-	Desc     string      `json:"desc,omitempty"`
-	Plugins  interface{} `json:"plugins,omitempty"`
+	Username string                 `json:"username"`
+	Desc     string                 `json:"desc,omitempty"`
+	Plugins  map[string]interface{} `json:"plugins,omitempty"`
 }
 
 type SSL struct {
@@ -168,12 +168,12 @@ type SSL struct {
 
 type Service struct {
 	BaseInfo
-	Name       string      `json:"name,omitempty"`
-	Desc       string      `json:"desc,omitempty"`
-	Upstream   interface{} `json:"upstream,omitempty"`
-	UpstreamID string      `json:"upstream_id,omitempty"`
-	Plugins    interface{} `json:"plugins,omitempty"`
-	Script     string      `json:"script,omitempty"`
+	Name       string                 `json:"name,omitempty"`
+	Desc       string                 `json:"desc,omitempty"`
+	Upstream   interface{}            `json:"upstream,omitempty"`
+	UpstreamID string                 `json:"upstream_id,omitempty"`
+	Plugins    map[string]interface{} `json:"plugins,omitempty"`
+	Script     string                 `json:"script,omitempty"`
 }
 
 type Script struct {
