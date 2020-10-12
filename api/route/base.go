@@ -17,13 +17,14 @@
 package route
 
 import (
-	"github.com/gin-contrib/pprof"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
-	"github.com/gin-gonic/gin"
-
-	"github.com/apisix/manager-api/conf"
-	"github.com/apisix/manager-api/filter"
+  "github.com/apisix/manager-api/conf"
+  "github.com/apisix/manager-api/filter"
+  _ "github.com/apisix/manager-api/statik"
+  "github.com/gin-contrib/pprof"
+  "github.com/gin-contrib/sessions"
+  "github.com/gin-contrib/sessions/cookie"
+  "github.com/gin-gonic/gin"
+  "github.com/rakyll/statik/fs"
 )
 
 func SetUpRouter() *gin.Engine {
@@ -45,6 +46,9 @@ func SetUpRouter() *gin.Engine {
 	AppendUpstream(r)
 	AppendConsumer(r)
 	AppendRouteGroup(r)
+
+	vfs, _ := fs.New()
+	r.StaticFS("/dashboard/", vfs)
 
 	pprof.Register(r)
 
