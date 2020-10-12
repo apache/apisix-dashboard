@@ -33,7 +33,7 @@ export const transformRequest = (
   data.checks = pickBy(data.checks, identity);
 
   if (upstream_id) {
-    return { upstream_id: upstream_id };
+    return { upstream_id };
   }
 
   if (Object.keys(data.checks).length === 0) {
