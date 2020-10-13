@@ -145,15 +145,17 @@ export const transformRouteData = (data: RouteModule.Body) => {
     methods,
   };
 
-  const { redirect } = data.plugins;
-  if (redirect?.http_to_https) {
-    form1Data.redirectOption = 'forceHttps';
-  } else if (redirect?.uri) {
-    form1Data.redirectOption = 'customRedirect';
-    form1Data.ret_code = redirect?.ret_code;
-    form1Data.redirectURI = redirect?.uri;
-  } else {
-    form1Data.redirectOption = 'disabled';
+  if (data.plugins) {
+    const { redirect } = data.plugins;
+    if (redirect?.http_to_https) {
+      form1Data.redirectOption = 'forceHttps';
+    } else if (redirect?.uri) {
+      form1Data.redirectOption = 'customRedirect';
+      form1Data.ret_code = redirect?.ret_code;
+      form1Data.redirectURI = redirect?.uri;
+    } else {
+      form1Data.redirectOption = 'disabled';
+    }
   }
 
   const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);
