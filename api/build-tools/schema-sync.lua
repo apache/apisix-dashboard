@@ -65,17 +65,17 @@ for _, name in ipairs(fake_module_list) do
     package.loaded[name] = {}
 end
 
+
+local empty_function = function()
+end
+
+
 ngx = {}
 ngx.re = {}
 ngx.timer = {}
 ngx.location = {}
 ngx.socket = {}
 ngx.re.gmatch = empty_function
-
-
-local empty_function = function()
-end
-
 
 -- additional define for management
 local time_def = {
@@ -130,4 +130,3 @@ for idx, plugin_name in pairs(plugins) do
 end
 
 print(json.encode(schema_all))
-
