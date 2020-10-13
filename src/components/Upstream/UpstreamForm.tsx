@@ -16,7 +16,7 @@
  */
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Divider, Form, Input, InputNumber, Row, Select, Switch } from 'antd';
-import React, { useState, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { useIntl } from 'umi';
 
 import { PanelSection } from '@api7-dashboard/ui';
@@ -93,6 +93,11 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     useImperativeHandle(ref, () => ({
       getData: () => transformRequest(form.getFieldsValue()),
     }));
+
+    useEffect(() => {
+      const id = form.getFieldValue('upstream_id');
+      id && form.setFieldsValue(list.find((item) => item.id === id));
+    }, [list]);
 
     const CHash = () => (
       <>
