@@ -30,6 +30,7 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
+	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
@@ -92,7 +93,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 
 type ListInput struct {
 	Name string `auto_read:"name,query"`
-	data.Pager
+	store.Pagination
 }
 
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
@@ -133,7 +134,7 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 	}
 
 	cmd := exec.Command("sh", "-c",
-		"cd /go/manager-api/dag-to-lua/ && lua cli.lua "+
+		"cd "+conf.DagLibPath+" && lua cli.lua "+
 			"'"+string(scriptString)+"'")
 
 	stdout, _ := cmd.StdoutPipe()
@@ -152,7 +153,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Route)
 	//check depend
 	if input.ServiceID != "" {
-		_, err := h.upstreamStore.Get(input.ServiceID)
+		_, err := h.svcStore.Get(input.ServiceID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return nil, fmt.Errorf("service id: %s not found", input.ServiceID)
@@ -161,7 +162,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 	if input.UpstreamID != "" {
-		_, err := h.upstreamStore.Get(input.ServiceID)
+		_, err := h.upstreamStore.Get(input.UpstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return nil, fmt.Errorf("upstream id: %s not found", input.UpstreamID)
@@ -207,7 +208,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 
 	//check depend
 	if input.ServiceID != "" {
-		_, err := h.upstreamStore.Get(input.ServiceID)
+		_, err := h.svcStore.Get(input.ServiceID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return nil, fmt.Errorf("service id: %s not found", input.ServiceID)
@@ -216,7 +217,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 	if input.UpstreamID != "" {
-		_, err := h.upstreamStore.Get(input.ServiceID)
+		_, err := h.upstreamStore.Get(input.UpstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return nil, fmt.Errorf("upstream id: %s not found", input.UpstreamID)
@@ -226,7 +227,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	if input.Script != nil {
-		script := entity.Script{}
+		script := &entity.Script{}
 		script.ID = input.ID
 		script.Script = input.Script
 		//to lua
@@ -236,8 +237,15 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 			return nil, err
 		}
 		//save original conf
-		if err = h.scriptStore.Create(c.Context(), script); err != nil {
-			return nil, err
+		if err = h.scriptStore.Update(c.Context(), script); err != nil {
+			//if not exists, create
+			if err.Error() == fmt.Sprintf("key: %s is not found", script.ID) {
+				if err := h.scriptStore.Create(c.Context(), script); err != nil {
+					return nil, err
+				}
+			} else {
+				return nil, err
+			}
 		}
 	}
 
@@ -255,9 +263,13 @@ type BatchDelete struct {
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
 
+	//delete route
 	if err := h.routeStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
 		return nil, err
 	}
+
+	//delete stored script
+	h.scriptStore.BatchDelete(c.Context(), strings.Split(input.IDs, ","))
 
 	return nil, nil
 }

@@ -23,14 +23,12 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"log"
 	"reflect"
 	"strings"
 
 	"github.com/api7/go-jsonpatch"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
-	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -91,7 +89,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 
 type ListInput struct {
 	ID string `auto_read:"id,query"`
-	data.Pager
+	store.Pagination
 }
 
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
@@ -156,7 +154,6 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	ssl.ID = input.ID
-	log.Println("ssl", ssl)
 	if err := h.sslStore.Update(c.Context(), ssl); err != nil {
 		return nil, err
 	}

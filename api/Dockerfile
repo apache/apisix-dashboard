@@ -20,10 +20,12 @@ FROM golang:1.13.8 AS build-env
 WORKDIR /go/src/github.com/apisix/manager-api
 COPY . .
 RUN mkdir /go/manager-api \
+    && mkdir /go/manager-api/build-tools \
     && go env -w GOPROXY=https://goproxy.io,direct \
     && export GOPROXY=https://goproxy.io \
     && go build -o /go/manager-api/manager-api \
     && mv /go/src/github.com/apisix/manager-api/build.sh /go/manager-api/ \
+    && mv /go/src/github.com/apisix/manager-api/build-tools/* /go/manager-api/build-tools/ \
     && mv /go/src/github.com/apisix/manager-api/conf/conf_preview.json /go/manager-api/conf.json \
     && rm -rf /go/src/github.com/apisix/manager-api \
     && rm -rf /etc/localtime \
@@ -34,6 +36,12 @@ RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz \
     && tar -zxvf v1.1.tar.gz \
     && mkdir /go/manager-api/dag-to-lua \
     && mv ./dag-to-lua-1.1/lib/* /go/manager-api/dag-to-lua/
+
+RUN  wget https://github.com/apache/apisix/archive/master.zip \
+     && mkdir /go/manager-api/build-tools/apisix \
+     && apt-get update && apt-get install zip -y \
+     && unzip master.zip \
+     && mv ./apisix-master/apisix/* /go/manager-api/build-tools/apisix/
 
 FROM alpine:3.11
 
@@ -50,6 +58,12 @@ RUN apk add lua5.1
 WORKDIR /go/manager-api
 COPY --from=build-env /go/manager-api/ /go/manager-api/
 COPY --from=build-env /usr/share/zoneinfo/Hongkong /etc/localtime
+
+RUN  cd /go/manager-api/build-tools \
+     && lua schema-sync.lua > /go/manager-api/schema.json \
+     && cd /go/manager-api/ \
+     && rm -rf /go/manager-api/build-tools/
+
 EXPOSE 8080
 RUN chmod +x ./build.sh
 CMD ["/bin/ash", "-c", "/go/manager-api/build.sh"]

@@ -32,13 +32,16 @@ const BETA = "beta"
 const DEV = "dev"
 const LOCAL = "local"
 const confPath = "/go/manager-api/conf.json"
+const schemaPath = "/go/manager-api/schema.json"
 const RequestId = "requestId"
 
 var (
-	ENV      string
-	basePath string
-	ApiKey   = "edd1c9f034335f136f87ad84b625c8f1"
-	BaseUrl  = "http://127.0.0.1:9080/apisix/admin"
+	ENV        string
+	basePath   string
+	Schema     gjson.Result
+	ApiKey     = "edd1c9f034335f136f87ad84b625c8f1"
+	BaseUrl    = "http://127.0.0.1:9080/apisix/admin"
+	DagLibPath = "/go/manager-api/dag-to-lua/"
 )
 
 func init() {
@@ -46,6 +49,7 @@ func init() {
 	initMysql()
 	initApisix()
 	initAuthentication()
+	initSchema()
 }
 
 func setEnvironment() {
@@ -54,6 +58,11 @@ func setEnvironment() {
 	} else {
 		ENV = env
 	}
+
+	if env := os.Getenv("APIX_DAG_LIB_PATH"); env != "" {
+		DagLibPath = env
+	}
+
 	_, basePath, _, _ = runtime.Caller(1)
 }
 
@@ -62,6 +71,14 @@ func configurationPath() string {
 		return filepath.Join(filepath.Dir(basePath), "conf.json")
 	} else {
 		return confPath
+	}
+}
+
+func getSchemaPath() string {
+	if ENV == LOCAL {
+		return filepath.Join(filepath.Dir(basePath), "schema.json")
+	} else {
+		return schemaPath
 	}
 }
 
@@ -136,5 +153,14 @@ func initAuthentication() {
 		}
 		AuthenticationConfig.Session.Secret = configuration.Get("authentication.session.secret").String()
 		AuthenticationConfig.Session.ExpireTime = configuration.Get("authentication.session.expireTime").Uint()
+	}
+}
+
+func initSchema() {
+	filePath := getSchemaPath()
+	if schemaContent, err := ioutil.ReadFile(filePath); err != nil {
+		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
+	} else {
+		Schema = gjson.ParseBytes(schemaContent)
 	}
 }

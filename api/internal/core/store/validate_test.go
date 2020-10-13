@@ -17,9 +17,13 @@
 package store
 
 import (
+	"encoding/json"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/apisix/manager-api/internal/core/entity"
 )
 
 type TestObj struct {
@@ -64,4 +68,73 @@ func TestJsonSchemaValidator_Validate(t *testing.T) {
 		}
 		assert.True(t, ret)
 	}
+}
+
+func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
+	validator, err := NewAPISIXJsonSchemaValidator("main.consumer")
+	assert.Nil(t, err)
+
+	consumer := &entity.Consumer{}
+	reqBody := `{
+      "id": "jack",
+      "username": "jack",
+      "plugins": {
+          "limit-count": {
+              "count": 2,
+              "time_window": 60,
+              "rejected_code": 503,
+              "key": "remote_addr"
+          }
+      },
+    "desc": "test description"
+  }`
+	json.Unmarshal([]byte(reqBody), consumer)
+
+	err = validator.Validate(consumer)
+	assert.Nil(t, err)
+
+	consumer2 := &entity.Consumer{}
+	reqBody = `{
+      "username": "jack",
+      "plugins": {
+          "limit-count": {
+              "count": 2,
+              "time_window": 60,
+              "rejected_code": 503,
+              "key": "remote_addr"
+          }
+      },
+    "desc": "test description"
+  }`
+	json.Unmarshal([]byte(reqBody), consumer2)
+
+	err = validator.Validate(consumer2)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "scheme validate fail: id: Must validate at least one schema (anyOf)\nid: String length must be greater than or equal to 1\nid: Does not match pattern '^[a-zA-Z0-9-_]+$'")
+
+	//check nil obj
+	err = validator.Validate(nil)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "scheme validate fail: (root): Invalid type. Expected: object, given: null")
+
+	//plugin schema fail
+	consumer3 := &entity.Consumer{}
+	reqBody = `{
+      "id": "jack",
+      "username": "jack",
+      "plugins": {
+          "limit-count": {
+              "time_window": 60,
+              "rejected_code": 503,
+              "key": "remote_addr"
+          }
+      },
+    "desc": "test description"
+  }`
+	json.Unmarshal([]byte(reqBody), consumer3)
+
+	err = validator.Validate(consumer3)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "scheme validate fail: (root): count is required")
+
 }
