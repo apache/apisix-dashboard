@@ -57,11 +57,6 @@ export const transformStepData = ({
 
   // 未启用 redirect
   if (!redirect.uri) {
-    if (step3Data.plugins.prometheus) {
-      // eslint-disable-next-line no-param-reassign
-      step3Data.plugins.prometheus = {};
-    }
-
     if (form2Data.upstream_id) {
       data.upstream_id = form2Data.upstream_id;
     } else {
@@ -77,8 +72,8 @@ export const transformStepData = ({
       'redirectURI',
       'ret_code',
       'redirectOption',
-      !Object.keys(step3Data.plugins).length ? 'plugins' : '',
-      !Object.keys(step3Data.script).length ? 'script' : '',
+      !Object.keys(step3Data.plugins || {}).length ? 'plugins' : '',
+      !Object.keys(step3Data.script || {}).length ? 'script' : '',
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
     ]);
