@@ -22,7 +22,6 @@ import { fetchUpstreamList } from '../../service';
 const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({
   form,
   upstreamRef,
-
   disabled,
 }) => {
   const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);

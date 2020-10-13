@@ -21,14 +21,8 @@ export const transformStepData = ({
   form1Data,
   form2Data,
   advancedMatchingRules,
-  upstreamHeaderList,
   step3Data,
 }: RouteModule.RequestData) => {
-  const upstream_header = {};
-  (upstreamHeaderList || []).forEach((header) => {
-    upstream_header[header.header_name] = header.header_value || '';
-  });
-
   let redirect: RouteModule.Redirect = {};
   if (form1Data.redirectOption === 'disabled') {
     redirect = {};
@@ -59,7 +53,6 @@ export const transformStepData = ({
       }
       return [key, operator, value];
     }),
-    upstream_header,
   };
 
   // 未启用 redirect
@@ -80,7 +73,6 @@ export const transformStepData = ({
       'advancedMatchingRules',
       'upstreamHostList',
       'upstreamPath',
-      'upstreamHeaderList',
       'timeout',
       'redirectURI',
       'ret_code',
@@ -90,17 +82,17 @@ export const transformStepData = ({
     ]);
   }
 
-  data.plugins = { redirect };
+  if (Object.keys(redirect).length) {
+    data.plugins = { redirect };
+  }
+
   return pick(data, [
     'name',
     'desc',
-    'protocols',
     'uris',
     'methods',
     'redirect',
     'vars',
-    'route_group_id',
-    'route_group_name',
     'plugins',
     form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
   ]);
@@ -160,15 +152,6 @@ export const transformRouteData = (data: RouteModule.Body) => {
 
   const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);
 
-  const upstreamHeaderList = Object.entries(data.upstream_header || {}).map(([k, v]) => {
-    return {
-      header_name: k,
-      header_value: v,
-      key: Math.random().toString(36).slice(2),
-      header_action: v ? 'override' : 'remove',
-    };
-  });
-
   const form2Data: RouteModule.Form2Data = upstream || { upstream_id };
 
   const { plugins, script } = data;
@@ -186,24 +169,13 @@ export const transformRouteData = (data: RouteModule.Body) => {
     form1Data,
     form2Data,
     step3Data,
-    upstreamHeaderList,
     advancedMatchingRules,
   };
 };
 
 // TODO: neet to check transformRouteDebugData
 export const transformRouteDebugData = (data: RouteModule.Body) => {
-  const {
-    name,
-    desc,
-    methods,
-    uris,
-    protocols,
-    // hosts,
-    vars,
-    // redirect,
-    url,
-  } = data;
+  const { name, desc, methods, uris, vars } = data;
 
   const paths = {};
   const tags: RouteModule.TagSchema[] = [
@@ -212,7 +184,6 @@ export const transformRouteDebugData = (data: RouteModule.Body) => {
       description: desc,
     },
   ];
-  let servers: RouteModule.Server[] = [];
   const responses: RouteModule.ResponseSchema = {
     // default response code
     '200': {
@@ -263,17 +234,6 @@ export const transformRouteDebugData = (data: RouteModule.Body) => {
   };
   const requestBodyMethod = ['POST', 'PUT', 'PATCH'];
 
-  protocols.forEach((protocol) => {
-    if (protocol !== 'websocket') {
-      servers = [
-        ...servers,
-        {
-          url: `${protocol}://${url}`,
-        },
-      ];
-    }
-  });
-
   uris.forEach((uri) => {
     if (uri.indexOf('*') > -1) {
       paths[`${uri.split('*')[0]}{pathParam}`] = {};
@@ -311,7 +271,6 @@ export const transformRouteDebugData = (data: RouteModule.Body) => {
   });
   return {
     tags,
-    servers,
     paths,
   };
 };

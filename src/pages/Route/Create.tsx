@@ -58,7 +58,6 @@ const Page: React.FC<Props> = (props) => {
   const [advancedMatchingRules, setAdvancedMatchingRules] = useState<RouteModule.MatchingRule[]>(
     [],
   );
-  const [upstreamHeaderList, setUpstreamHeaderList] = useState<RouteModule.UpstreamHeader[]>([]);
   const [step3Data, setStep3Data] = useState(DEFAULT_STEP_3_DATA);
   const [redirect, setRedirect] = useState(false);
 
@@ -75,13 +74,11 @@ const Page: React.FC<Props> = (props) => {
       form1.setFieldsValue(data.form1Data);
       setAdvancedMatchingRules(data.advancedMatchingRules);
       form2.setFieldsValue(data.form2Data);
-      setUpstreamHeaderList(data.upstreamHeaderList);
       setStep3Data(data.step3Data);
     });
 
   const onReset = () => {
     setAdvancedMatchingRules([]);
-    setUpstreamHeaderList([]);
     setStep3Data(DEFAULT_STEP_3_DATA);
     form1.setFieldsValue(DEFAULT_STEP_1_DATA);
     form2.setFieldsValue(DEFAULT_UPSTREAM);
@@ -124,7 +121,6 @@ const Page: React.FC<Props> = (props) => {
         return (
           <CreateStep4
             advancedMatchingRules={advancedMatchingRules}
-            upstreamHeaderList={upstreamHeaderList}
             form1={form1}
             form2={form2}
             step3Data={step3Data}
@@ -134,18 +130,7 @@ const Page: React.FC<Props> = (props) => {
         );
       }
 
-      return (
-        <Step2
-          upstreamHeaderList={upstreamHeaderList}
-          form={form2}
-          upstreamRef={upstreamRef}
-          onChange={({ action, data }) => {
-            if (action === 'upstreamHeaderListChange') {
-              setUpstreamHeaderList(data);
-            }
-          }}
-        />
-      );
+      return <Step2 form={form2} upstreamRef={upstreamRef} />;
     }
 
     if (step === 3) {
@@ -164,7 +149,6 @@ const Page: React.FC<Props> = (props) => {
       return (
         <CreateStep4
           advancedMatchingRules={advancedMatchingRules}
-          upstreamHeaderList={upstreamHeaderList}
           form1={form1}
           form2={form2}
           upstreamRef={upstreamRef}
@@ -194,7 +178,6 @@ const Page: React.FC<Props> = (props) => {
         form1Data: form1.getFieldsValue(),
         form2Data: upstreamRef.current?.getData(),
         step3Data,
-        upstreamHeaderList,
         advancedMatchingRules,
       } as RouteModule.RequestData;
       if (props.route.path.indexOf('edit') !== -1) {

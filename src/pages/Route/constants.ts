@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const HTTP_METHOD_OPTION_LIST: RouteModule.HttpMethod[] = [
+export const HTTP_METHOD_OPTION_LIST: HttpMethod[] = [
   'GET',
   'HEAD',
   'POST',
@@ -41,13 +41,10 @@ export const FORM_ITEM_WITHOUT_LABEL = {
 };
 
 export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
-  route_group_id: null,
-  route_group_name: '',
   name: '',
   desc: '',
   status: false,
   priority: 0,
-  protocols: ['http', 'https'],
   websocket: false,
   hosts: [''],
   uris: ['/*'],

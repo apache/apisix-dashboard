@@ -70,8 +70,6 @@ declare namespace RouteModule {
   // Request Body or Response Data for API
   type Body = {
     id?: number;
-    route_group_id: string;
-    route_group_name: string;
     status: boolean;
     name: string;
     desc: string;
@@ -99,10 +97,6 @@ declare namespace RouteModule {
       to: string;
     };
     upstream_id?: string;
-    upstream_protocol: 'keep' | 'http' | 'https';
-    upstream_header: {
-      [key: string]: string;
-    };
     plugins: {
       [name: string]: any;
     };
@@ -197,10 +191,7 @@ declare namespace RouteModule {
   type Form1Data = {
     name: string;
     desc: string;
-    route_group_id: string | null;
-    route_group_name: string;
     priority: number;
-    protocols: RequestProtocol[];
     websocket: boolean;
     hosts: string[];
     uris: string[];
@@ -224,10 +215,8 @@ declare namespace RouteModule {
 
   type Step2PassProps = {
     form: FormInstance;
-    upstreamHeaderList: UpstreamHeader[] | undefined;
     disabled?: boolean;
     upstreamRef: any;
-    onChange(data: { action: 'upstreamHeaderListChange'; data: T }): void;
   };
 
   type Form2Data = {
@@ -250,7 +239,6 @@ declare namespace RouteModule {
     form1Data: Form1Data;
     form2Data: Form2Data;
     step3Data: Step3Data;
-    upstreamHeaderList: UpstreamHeader[];
     advancedMatchingRules: MatchingRule[];
   };
 

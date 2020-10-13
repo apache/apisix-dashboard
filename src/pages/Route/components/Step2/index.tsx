@@ -17,15 +17,7 @@
 import React from 'react';
 
 import RequestRewriteView from './RequestRewriteView';
-import HttpHeaderRewriteView from './HttpHeaderRewriteView';
 
-const Step2: React.FC<RouteModule.Step2PassProps> = (props) => {
-  return (
-    <>
-      <RequestRewriteView {...props} />
-      <HttpHeaderRewriteView {...props} />
-    </>
-  );
-};
+const Step2: React.FC<RouteModule.Step2PassProps> = (props) => <RequestRewriteView {...props} />;
 
 export default Step2;

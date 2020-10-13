@@ -29,7 +29,6 @@ type Props = {
   redirect?: boolean;
   step3Data: RouteModule.Step3Data;
   advancedMatchingRules: RouteModule.MatchingRule[];
-  upstreamHeaderList: RouteModule.UpstreamHeader[];
   upstreamRef: any;
 };
 
@@ -50,13 +49,7 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, upstreamRef, ...
           <h2 style={style}>
             {formatMessage({ id: 'page.route.steps.stepTitle.defineApiBackendServe' })}
           </h2>
-          <Step2
-            upstreamHeaderList={rest.upstreamHeaderList}
-            form={form2}
-            upstreamRef={upstreamRef}
-            disabled
-            onChange={() => {}}
-          />
+          <Step2 form={form2} upstreamRef={upstreamRef} disabled />
           <h2 style={style}>
             {formatMessage({ id: 'component.global.steps.stepTitle.pluginConfig' })}
           </h2>

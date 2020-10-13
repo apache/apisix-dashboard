@@ -539,7 +539,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           <Form.Item label="选择上游" name="upstream_id">
             <Select
               defaultValue={form.getFieldValue('upstream_id')}
-              disabled={readonly}
+              disabled={disabled}
               onChange={(id) => {
                 setReadonly(Boolean(id));
                 if (id) {
