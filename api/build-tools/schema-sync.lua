@@ -55,6 +55,7 @@ local fake_module_list = {
     'apisix.upstream',
     'apisix.utils.log-util',
     'apisix.utils.batch-processor',
+    'apisix.plugin',
     'apisix.plugins.skywalking.client',
     'apisix.plugins.skywalking.tracer',
     'apisix.plugins.zipkin.codec',
