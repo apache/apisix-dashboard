@@ -93,7 +93,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 
 type ListInput struct {
 	Name string `auto_read:"name,query"`
-	data.Pager
+	store.Pagination
 }
 
 func (h *Handler) List(c droplet.Context) (interface{}, error) {

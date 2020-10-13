@@ -109,7 +109,7 @@ func TestService(t *testing.T) {
 
 	//list
 	listInput := &ListInput{}
-	reqBody = `{"page_size": 1, "page_number": 1}`
+	reqBody = `{"pageSize": 1, "page": 1}`
 	json.Unmarshal([]byte(reqBody), listInput)
 	ctx.SetInput(listInput)
 	retPage, err := handler.List(ctx)

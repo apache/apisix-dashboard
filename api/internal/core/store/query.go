@@ -67,8 +67,8 @@ var NoFilter = &Filter{
 }
 
 type Pagination struct {
-	PageSize   int
-	PageNumber int
+	PageSize   int `json:"pageSize" form:"pageSize" auto_read:"pageSize"`
+	PageNumber int `json:"page" form:"page" auto_read:"page"`
 }
 
 func NewPagination(PageSize, pageNumber int) *Pagination {

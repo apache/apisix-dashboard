@@ -23,7 +23,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
-	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -71,7 +70,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 
 type ListInput struct {
 	Username string `auto_read:"username,query"`
-	data.Pager
+	store.Pagination
 }
 
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
