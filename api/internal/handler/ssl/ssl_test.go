@@ -82,7 +82,7 @@ func TestSSL(t *testing.T) {
 
 	//list
 	listInput := &ListInput{}
-	reqBody = `{"pageSize": 1, "page": 1}`
+	reqBody = `{"page_size": 1, "page": 1}`
 	json.Unmarshal([]byte(reqBody), listInput)
 	ctx.SetInput(listInput)
 	retPage, err := handler.List(ctx)

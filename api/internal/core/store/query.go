@@ -67,7 +67,7 @@ var NoFilter = &Filter{
 }
 
 type Pagination struct {
-	PageSize   int `json:"pageSize" form:"pageSize" auto_read:"pageSize"`
+	PageSize   int `json:"page_size" form:"page_size" auto_read:"page_size"`
 	PageNumber int `json:"page" form:"page" auto_read:"page"`
 }
 

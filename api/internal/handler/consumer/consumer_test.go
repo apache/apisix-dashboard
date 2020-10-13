@@ -131,7 +131,7 @@ func TestConsumer(t *testing.T) {
 
 	//list page 1
 	listInput := &ListInput{}
-	reqBody = `{"pageSize": 1, "page": 1}`
+	reqBody = `{"page_size": 1, "page": 1}`
 	json.Unmarshal([]byte(reqBody), listInput)
 	ctx.SetInput(listInput)
 	retPage1, err := handler.List(ctx)
@@ -140,7 +140,7 @@ func TestConsumer(t *testing.T) {
 
 	//list page 2
 	listInput2 := &ListInput{}
-	reqBody = `{"pageSize": 1, "page": 2}`
+	reqBody = `{"page_size": 1, "page": 2}`
 	json.Unmarshal([]byte(reqBody), listInput2)
 	ctx.SetInput(listInput2)
 	retPage2, err := handler.List(ctx)
