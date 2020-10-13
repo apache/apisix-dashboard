@@ -39,7 +39,6 @@ export default {
 
   // button
   'page.route.button.returnList': '返回路由列表',
-  'page.route.button.onlineDebug': '在线调试',
 
   // input
   'page.route.input.placeholder.parameterNameHttpHeader': '请求头键名，例如：HOST',

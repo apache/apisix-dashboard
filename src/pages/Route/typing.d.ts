@@ -104,11 +104,6 @@ declare namespace RouteModule {
     url?: string;
   };
 
-  // for route debug
-  type Server = {
-    url: string;
-  };
-
   type RouteParamSchema = {
     type: string | integer | boolean | object | array;
   };
@@ -149,23 +144,6 @@ declare namespace RouteModule {
     name: string;
     description: string;
     externalDocs?: object;
-  };
-
-  type DebugData = {
-    servers: Server[];
-    tag: TagSchema[];
-    paths: {
-      [url: string]: {
-        [httpType: string]: {
-          tags: string;
-          summary: string;
-          operationId: string;
-          requestBody?: {};
-          parameters?: RouteParam[];
-          responses: ResponseSchema;
-        };
-      };
-    };
   };
 
   // step1

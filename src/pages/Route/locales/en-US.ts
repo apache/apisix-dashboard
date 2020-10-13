@@ -16,7 +16,6 @@
  */
 export default {
   'page.route.button.returnList': 'Return Route List',
-  'page.route.button.onlineDebug': 'Online Debug',
 
   'page.route.parameterPosition': 'Parameter Position',
   'page.route.httpRequestHeader': 'HTTP Request Header',

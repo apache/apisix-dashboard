@@ -17,12 +17,7 @@
 import { request } from 'umi';
 import { pickBy, identity } from 'lodash';
 
-import {
-  transformStepData,
-  transformRouteData,
-  transformUpstreamNodes,
-  transformRouteDebugData,
-} from './transform';
+import { transformStepData, transformRouteData, transformUpstreamNodes } from './transform';
 
 export const create = (data: RouteModule.RequestData) =>
   request(`/routes`, {
@@ -38,9 +33,6 @@ export const update = (rid: number, data: RouteModule.RequestData) =>
 
 export const fetchItem = (rid: number) =>
   request(`/routes/${rid}`).then((data) => transformRouteData(data.data));
-
-export const fetchItemDebugInfo = (rid: number) =>
-  request(`/routes/${rid}/debuginfo`).then((data) => transformRouteDebugData(data));
 
 export const fetchList = () => {
   return request<Res<ResListData<RouteModule.ResponseBody>>>('/routes').then(({ data }) => {
