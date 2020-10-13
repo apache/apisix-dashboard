@@ -77,6 +77,8 @@ export const transformStepData = ({
       'redirectURI',
       'ret_code',
       'redirectOption',
+      !Object.keys(step3Data.plugins).length ? 'plugins' : '',
+      !Object.keys(step3Data.script).length ? 'script' : '',
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
     ]);
