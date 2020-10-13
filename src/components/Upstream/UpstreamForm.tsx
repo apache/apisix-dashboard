@@ -543,7 +543,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         {showSelector && (
           <Form.Item label="选择上游" name="upstream_id">
             <Select
-              defaultValue={form.getFieldValue('upstream_id')}
               disabled={disabled}
               onChange={(id) => {
                 setReadonly(Boolean(id));
@@ -556,7 +555,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               }}
             >
               {[{ name: '手动填写', id: '' }, ...list].map((item) => (
-                <Select.Option value={item.id!} key={item.name}>
+                <Select.Option value={item.id!} key={item.id}>
                   {item.name}
                 </Select.Option>
               ))}
