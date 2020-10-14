@@ -17,7 +17,6 @@
 package plugin
 
 import (
-	"log"
 	"reflect"
 
 	"github.com/gin-gonic/gin"
@@ -49,7 +48,6 @@ type GetInput struct {
 func (h *Handler) Schema(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 	ret := conf.Schema.Get("plugins." + input.Name).Value()
-	log.Println("ret:", ret)
 	return ret, nil
 }
 
