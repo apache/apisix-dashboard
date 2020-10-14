@@ -147,6 +147,24 @@ func TestConsumer(t *testing.T) {
 	dataPage2 := retPage2.(*store.ListOutput)
 	assert.Equal(t, len(dataPage2.Rows), 1)
 
+	//list search match
+	listInput3 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "username": "pony"}`
+	json.Unmarshal([]byte(reqBody), listInput3)
+	ctx.SetInput(listInput3)
+	retPage, err := handler.List(ctx)
+	dataPage := retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
+	//list search not match
+	listInput4 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "username": "not-exists"}`
+	json.Unmarshal([]byte(reqBody), listInput4)
+	ctx.SetInput(listInput4)
+	retPage, err = handler.List(ctx)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 0)
+
 	//delete consumer
 	inputDel := &BatchDelete{}
 	reqBody = `{"usernames": "jack"}`

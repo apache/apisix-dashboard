@@ -755,6 +755,36 @@ func TestRoute(t *testing.T) {
 	dataPage := retPage.(*store.ListOutput)
 	assert.Equal(t, len(dataPage.Rows), 1)
 
+	//list search match
+	listInput2 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "name": "a", "uri": "index"}`
+	json.Unmarshal([]byte(reqBody), listInput2)
+	ctx.SetInput(listInput2)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
+	//list search name not match
+	listInput3 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "name": "not-exists", "uri": "index"}`
+	json.Unmarshal([]byte(reqBody), listInput3)
+	ctx.SetInput(listInput3)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 0)
+
+	//list search uri not match
+	listInput4 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "name": "a", "uri": "not-exists"}`
+	json.Unmarshal([]byte(reqBody), listInput4)
+	ctx.SetInput(listInput4)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 0)
+
 	//delete test data
 	inputDel := &BatchDelete{}
 	reqBody = `{"ids": "1"}`

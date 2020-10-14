@@ -93,6 +93,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 
 type ListInput struct {
 	Name string `auto_read:"name,query"`
+	URI  string `auto_read:"uri,query"`
 	store.Pagination
 }
 
@@ -101,8 +102,15 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 
 	ret, err := h.routeStore.List(store.ListInput{
 		Predicate: func(obj interface{}) bool {
+			if input.Name != "" && input.URI != "" {
+				return strings.Contains(obj.(*entity.Route).Name, input.Name) &&
+					strings.Contains(obj.(*entity.Route).URI, input.URI)
+			}
 			if input.Name != "" {
-				return strings.Index(obj.(*entity.Route).Name, input.Name) > 0
+				return strings.Contains(obj.(*entity.Route).Name, input.Name)
+			}
+			if input.URI != "" {
+				return strings.Contains(obj.(*entity.Route).URI, input.URI)
 			}
 			return true
 		},

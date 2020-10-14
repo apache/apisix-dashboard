@@ -88,7 +88,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 }
 
 type ListInput struct {
-	ID string `auto_read:"id,query"`
+	SNI string `auto_read:"sni,query"`
 	store.Pagination
 }
 
@@ -97,8 +97,17 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 
 	ret, err := h.sslStore.List(store.ListInput{
 		Predicate: func(obj interface{}) bool {
-			if input.ID != "" {
-				return strings.Index(obj.(*entity.SSL).ID, input.ID) > 0
+			if input.SNI != "" {
+				if strings.Contains(obj.(*entity.SSL).Sni, input.SNI) {
+					return true
+				}
+				for _, str := range obj.(*entity.SSL).Snis {
+					result := strings.Contains(str, input.SNI)
+					if result {
+						return true
+					}
+				}
+				return false
 			}
 			return true
 		},

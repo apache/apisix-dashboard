@@ -85,6 +85,7 @@ func TestService(t *testing.T) {
 	service2 := &UpdateInput{}
 	service2.ID = "1"
 	reqBody = `{
+      "name": "test-service",
       "plugins": {
           "limit-count": {
               "count": 2,
@@ -116,6 +117,26 @@ func TestService(t *testing.T) {
 	assert.Nil(t, err)
 	dataPage := retPage.(*store.ListOutput)
 	assert.Equal(t, len(dataPage.Rows), 1)
+
+	//list search match
+	listInput2 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "name": "test"}`
+	json.Unmarshal([]byte(reqBody), listInput2)
+	ctx.SetInput(listInput2)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
+	//list search not match
+	listInput3 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "name": "not-exists"}`
+	json.Unmarshal([]byte(reqBody), listInput3)
+	ctx.SetInput(listInput3)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 0)
 
 	//delete test data
 	inputDel := &BatchDelete{}

@@ -90,6 +90,26 @@ func TestSSL(t *testing.T) {
 	dataPage := retPage.(*store.ListOutput)
 	assert.Equal(t, len(dataPage.Rows), 1)
 
+	//list search match
+	listInput2 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "sni": "route"}`
+	json.Unmarshal([]byte(reqBody), listInput2)
+	ctx.SetInput(listInput2)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
+	//list search not match
+	listInput3 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "sni": "not-exists"}`
+	json.Unmarshal([]byte(reqBody), listInput3)
+	ctx.SetInput(listInput3)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 0)
+
 	//delete test data
 	inputDel := &BatchDelete{}
 	reqBody = `{"ids": "1"}`
