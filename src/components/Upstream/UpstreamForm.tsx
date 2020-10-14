@@ -96,7 +96,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
     useEffect(() => {
       const id = form.getFieldValue('upstream_id');
-      id && form.setFieldsValue(list.find((item) => item.id === id));
+      if (id) {
+        form.setFieldsValue(list.find((item) => item.id === id));
+      }
     }, [list]);
 
     const CHash = () => (
