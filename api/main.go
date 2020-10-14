@@ -18,19 +18,19 @@ package main
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"net/http"
 	"strings"
 	"time"
 
 	dlog "github.com/shiningrush/droplet/log"
+	"github.com/spf13/viper"
 
 	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/internal"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/log"
-	"github.com/apisix/manager-api/route"
 )
 
 var logger = log.GetLogger()
@@ -47,10 +47,8 @@ func main() {
 		panic(err)
 	}
 
-	// init
-	//conf.InitializeMysql()
 	// routes
-	r := route.SetUpRouter()
+	r := internal.SetUpRouter()
 	addr := fmt.Sprintf(":%d", conf.ServerPort)
 	s := &http.Server{
 		Addr:         addr,
