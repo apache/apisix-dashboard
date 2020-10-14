@@ -17,8 +17,6 @@
 package route
 
 import (
-	"github.com/apisix/manager-api/internal/handler/healthz"
-	"github.com/apisix/manager-api/internal/handler/plugin"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -27,7 +25,10 @@ import (
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/filter"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/handler/authentication"
 	"github.com/apisix/manager-api/internal/handler/consumer"
+	"github.com/apisix/manager-api/internal/handler/healthz"
+	"github.com/apisix/manager-api/internal/handler/plugin"
 	"github.com/apisix/manager-api/internal/handler/route"
 	"github.com/apisix/manager-api/internal/handler/service"
 	"github.com/apisix/manager-api/internal/handler/ssl"
@@ -45,15 +46,6 @@ func SetUpRouter() *gin.Engine {
 	r.Use(sessions.Sessions("session", store))
 	r.Use(filter.CORS(), filter.Authentication(), filter.RequestId(), filter.RecoverHandler())
 
-	//AppendHealthCheck(r)
-	AppendAuthentication(r)
-	//AppendRoute(r)
-	//AppendSsl(r)
-	//AppendPlugin(r)
-	//AppendUpstream(r)
-	//AppendConsumer(r)
-	AppendRouteGroup(r)
-
 	factories := []handler.RegisterFactory{
 		route.NewHandler,
 		ssl.NewHandler,
@@ -62,7 +54,9 @@ func SetUpRouter() *gin.Engine {
 		service.NewHandler,
 		plugin.NewHandler,
 		healthz.NewHandler,
+		authentication.NewHandler,
 	}
+
 	for i := range factories {
 		h, err := factories[i]()
 		if err != nil {

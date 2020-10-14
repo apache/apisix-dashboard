@@ -14,12 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package plugin
+package authentication
 
 import (
-	"log"
+	"fmt"
 	"reflect"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/wrapper"
@@ -37,31 +39,40 @@ func NewHandler() (handler.RouteRegister, error) {
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.GET("/apisix/admin/plugins", wgin.Wraps(h.Plugins))
-	r.GET("/apisix/admin/schema/plugins/:name", wgin.Wraps(h.Schema,
-		wrapper.InputType(reflect.TypeOf(GetInput{}))))
+	r.POST("/apisix/admin/user/login", wgin.Wraps(h.userLogin,
+		wrapper.InputType(reflect.TypeOf(LoginInput{}))))
 }
 
-type GetInput struct {
-	Name string `auto_read:"name,path" validate:"required"`
+type UserSession struct {
+	Token string `json:"token"`
 }
 
-func (h *Handler) Schema(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*GetInput)
-	ret := conf.Schema.Get("plugins." + input.Name).Value()
-	log.Println("ret:", ret)
-	return ret, nil
+type LoginInput struct {
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
 
-func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
-	list := conf.Schema.Get("plugins").Map()
+func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*LoginInput)
+	username := input.Username
+	password := input.Password
 
-	var ret []string
-	for pluginName, _ := range list {
-		if pluginName != "serverless-post-function" && pluginName != "serverless-pre-function" {
-			ret = append(ret, pluginName)
-		}
+	user := conf.UserList[username]
+	if username != user.Username || password != user.Password {
+		return nil, fmt.Errorf("username or password error")
 	}
 
-	return ret, nil
+	// create JWT for session
+	claims := jwt.StandardClaims{
+		Subject:   username,
+		IssuedAt:  time.Now().Unix(),
+		ExpiresAt: time.Now().Add(time.Second * time.Duration(conf.AuthenticationConfig.Session.ExpireTime)).Unix(),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedToken, _ := token.SignedString([]byte(conf.AuthenticationConfig.Session.Secret))
+
+	// output token
+	return &UserSession{
+		Token: signedToken,
+	}, nil
 }
