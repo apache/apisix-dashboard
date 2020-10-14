@@ -90,7 +90,7 @@ const Page: React.FC = () => {
         columns={columns}
         rowKey="id"
         search={false}
-        request={() => fetchList()}
+        request={fetchList}
         toolBarRender={(action) => [
           <Input.Search
             placeholder={formatMessage({ id: 'upstream.list.input' })}

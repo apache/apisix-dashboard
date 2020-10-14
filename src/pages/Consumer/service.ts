@@ -20,7 +20,7 @@ export const fetchList = ({ current = 1, pageSize = 10 }, search: string) =>
   request('/consumers', {
     params: {
       page: current,
-      size: pageSize,
+      page_size: pageSize,
       search,
     },
   }).then(({ data }) => ({

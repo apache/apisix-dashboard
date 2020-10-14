@@ -34,8 +34,13 @@ export const update = (rid: number, data: RouteModule.RequestData) =>
 export const fetchItem = (rid: number) =>
   request(`/routes/${rid}`).then((data) => transformRouteData(data.data));
 
-export const fetchList = () => {
-  return request<Res<ResListData<RouteModule.ResponseBody>>>('/routes').then(({ data }) => {
+export const fetchList = ({ current = 1, pageSize = 10 }) => {
+  return request<Res<ResListData<RouteModule.ResponseBody>>>('/routes', {
+    params: {
+      page: current,
+      page_size: pageSize,
+    },
+  }).then(({ data }) => {
     return {
       data: data.rows,
       total: data.total_size,
