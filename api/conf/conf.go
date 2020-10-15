@@ -19,6 +19,7 @@ package conf
 import (
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -137,23 +138,36 @@ func initApisix() {
 	}
 }
 
+func randomString(n int) string {
+	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
+}
+
 func initAuthentication() {
 	filePath := configurationPath()
-	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
+	configurationContent, err := ioutil.ReadFile(filePath)
+	if err != nil {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
-	} else {
-		configuration := gjson.ParseBytes(configurationContent)
-		userList := configuration.Get("authentication.user").Array()
-
-		// create user list
-		for _, item := range userList {
-			username := item.Map()["username"].String()
-			password := item.Map()["password"].String()
-			UserList[item.Map()["username"].String()] = user{Username: username, Password: password}
-		}
-		AuthenticationConfig.Session.Secret = configuration.Get("authentication.session.secret").String()
-		AuthenticationConfig.Session.ExpireTime = configuration.Get("authentication.session.expireTime").Uint()
 	}
+
+	configuration := gjson.ParseBytes(configurationContent)
+	userList := configuration.Get("authentication.user").Array()
+	// create user list
+	for _, item := range userList {
+		username := item.Map()["username"].String()
+		password := item.Map()["password"].String()
+		UserList[item.Map()["username"].String()] = user{Username: username, Password: password}
+	}
+	AuthenticationConfig.Session.Secret = configuration.Get("authentication.session.secret").String()
+	if "secret" == AuthenticationConfig.Session.Secret {
+		AuthenticationConfig.Session.Secret = randomString(10)
+	}
+
+	AuthenticationConfig.Session.ExpireTime = configuration.Get("authentication.session.expireTime").Uint()
 }
 
 func initSchema() {

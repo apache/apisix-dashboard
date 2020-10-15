@@ -14,25 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package route
+package healthz
 
 import (
-	"net/http"
-
-	"github.com/apisix/manager-api/log"
 	"github.com/gin-gonic/gin"
+	"github.com/shiningrush/droplet"
+	wgin "github.com/shiningrush/droplet/wrapper/gin"
+
+	"github.com/apisix/manager-api/internal/handler"
 )
 
-var logger = log.GetLogger()
-
-func healthzHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Copy()
-		c.String(http.StatusOK, "pong")
-	}
+type Handler struct {
 }
 
-func AppendHealthCheck(r *gin.Engine) *gin.Engine {
-	r.GET("/ping", healthzHandler())
-	return r
+func NewHandler() (handler.RouteRegister, error) {
+	return &Handler{}, nil
+}
+
+func (h *Handler) ApplyRoute(r *gin.Engine) {
+	r.GET("/ping", wgin.Wraps(h.healthZHandler))
+}
+
+func (h *Handler) healthZHandler(c droplet.Context) (interface{}, error) {
+	return "pong", nil
 }

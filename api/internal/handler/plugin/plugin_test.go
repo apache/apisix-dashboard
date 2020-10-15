@@ -14,28 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package utils
 
-func CopyMap(origin map[string]interface{}) map[string]interface{} {
-	result := make(map[string]interface{})
-	for k, v := range origin {
-		result[k] = v
-	}
-	return result
-}
+package plugin
 
-func CopyStrings(origin [][]string) [][]string {
-	result := make([][]string, 0)
-	for _, s := range origin {
-		result = append(result, s)
-	}
-	return result
-}
+import (
+	"encoding/json"
+	"testing"
 
-func Set2Map(origin []string) map[string]int {
-	result := make(map[string]int)
-	for _, s := range origin {
-		result[s] = 1
-	}
-	return result
+	"github.com/shiningrush/droplet"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestPlugin(t *testing.T) {
+	// init
+	handler := &Handler{}
+	assert.NotNil(t, handler)
+
+	//plugin list
+	ctx := droplet.NewContext()
+	list, err := handler.Plugins(ctx)
+	assert.Nil(t, err)
+	assert.Contains(t, list.([]string), "limit-count")
+
+	//schema
+	input := &GetInput{}
+	reqBody := `{
+	  "name": "limit-count"
+  }`
+	json.Unmarshal([]byte(reqBody), input)
+	ctx.SetInput(input)
+	val, _ := handler.Schema(ctx)
+	assert.NotNil(t, val)
+
+	//not exists
+	input2 := &GetInput{}
+	reqBody = `{
+	  "name": "not-exists"
+  }`
+	json.Unmarshal([]byte(reqBody), input2)
+	ctx.SetInput(input2)
+	val, _ = handler.Schema(ctx)
+	assert.Nil(t, val)
 }

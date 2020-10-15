@@ -21,7 +21,6 @@ import (
 	"io/ioutil"
 	"time"
 
-	"github.com/apisix/manager-api/errno"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -60,9 +59,7 @@ func RequestLogHandler() gin.HandlerFunc {
 		}
 		var errs []string
 		for _, err := range c.Errors {
-			if e, ok := err.Err.(*errno.ManagerError); ok {
-				errs = append(errs, e.Error())
-			}
+			errs = append(errs, err.Error())
 		}
 		logger.WithFields(logrus.Fields{
 			"requestId":  uuid,
