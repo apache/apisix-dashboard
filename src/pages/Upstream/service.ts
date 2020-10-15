@@ -16,10 +16,11 @@
  */
 import { request } from 'umi';
 
-export const fetchList = ({ current = 1, pageSize = 10 }) => {
+export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
   // TODO: Use Cache and search on local
   return request<Res<ResListData<UpstreamModule.RequestBody>>>('/upstreams', {
     params: {
+      name: res.name,
       page: current,
       page_size: pageSize,
     },

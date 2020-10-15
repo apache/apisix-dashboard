@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Button, Popconfirm, notification, Tag, Input, Space } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, notification, Tag, Space } from 'antd';
 import moment from 'moment';
 import { history, useIntl } from 'umi';
 
@@ -26,7 +25,6 @@ import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
-  const [, setSearch] = useState('');
   const { formatMessage } = useIntl();
 
   const columns: ProColumns<RouteModule.ResponseBody>[] = [
@@ -37,6 +35,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'page.route.domainName' }),
       dataIndex: 'hosts',
+      hideInSearch: true,
       render: (_, record) =>
         (record.hosts || []).map((host) => (
           <Tag key={host} color="geekblue">
@@ -57,15 +56,18 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'desc',
+      hideInSearch: true,
     },
     {
       title: formatMessage({ id: 'component.global.updateTime' }),
       dataIndex: 'update_time',
+      hideInSearch: true,
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },
     {
       title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
+      hideInSearch: true,
       render: (_, record) => (
         <>
           <Space align="baseline">
@@ -112,22 +114,7 @@ const Page: React.FC = () => {
         actionRef={ref}
         rowKey="name"
         columns={columns}
-        search={false}
         request={fetchList}
-        toolBarRender={(action) => [
-          <Input.Search
-            placeholder={formatMessage({ id: 'component.global.pleaseEnter' })}
-            onSearch={(value) => {
-              setSearch(value);
-              action.setPageInfo({ page: 1 });
-              action.reload();
-            }}
-          />,
-          <Button type="primary" onClick={() => history.push('/routes/create')}>
-            <PlusOutlined />
-            {formatMessage({ id: 'component.global.create' })}
-          </Button>,
-        ]}
       />
     </PageHeaderWrapper>
   );
