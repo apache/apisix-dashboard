@@ -97,26 +97,42 @@ type ListInput struct {
 	store.Pagination
 }
 
+func uriContains(obj *entity.Route, uri string) bool {
+	if strings.Contains(obj.URI, uri) {
+		return true
+	}
+	for _, str := range obj.Uris {
+		result := strings.Contains(str, uri)
+		if result {
+			return true
+		}
+	}
+	return false
+}
+
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
 	ret, err := h.routeStore.List(store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			if input.Name != "" && input.URI != "" {
-				return strings.Contains(obj.(*entity.Route).Name, input.Name) &&
-					strings.Contains(obj.(*entity.Route).URI, input.URI)
+				if strings.Contains(obj.(*entity.Route).Name, input.Name) {
+					return uriContains(obj.(*entity.Route), input.URI)
+				}
+				return false
 			}
 			if input.Name != "" {
 				return strings.Contains(obj.(*entity.Route).Name, input.Name)
 			}
 			if input.URI != "" {
-				return strings.Contains(obj.(*entity.Route).URI, input.URI)
+				return uriContains(obj.(*entity.Route), input.URI)
 			}
 			return true
 		},
 		PageSize:   input.PageSize,
 		PageNumber: input.PageNumber,
 	})
+
 	if err != nil {
 		return nil, err
 	}

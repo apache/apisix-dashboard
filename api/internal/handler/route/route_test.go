@@ -745,6 +745,9 @@ func TestRoute(t *testing.T) {
 	_, err = handler.Update(ctx)
 	assert.Nil(t, err)
 
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
 	//list
 	listInput := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1}`
@@ -785,12 +788,60 @@ func TestRoute(t *testing.T) {
 	dataPage = retPage.(*store.ListOutput)
 	assert.Equal(t, len(dataPage.Rows), 0)
 
+	//create route using uris
+	route3 := &entity.Route{}
+	reqBody = `{
+      "id": "2",
+      "name": "bbbbb",
+      "uris": ["/aa", "/bb"],
+      "hosts": ["foo.com", "*.bar.com"],
+      "remote_addrs": ["127.0.0.0/8"],
+      "methods": ["PUT", "GET"],
+      "upstream": {
+          "type": "roundrobin",
+          "nodes": [{
+              "host": "www.a.com",
+              "port": 80,
+              "weight": 1
+          }]
+      }
+  }`
+	json.Unmarshal([]byte(reqBody), route3)
+	ctx.SetInput(route3)
+	_, err = handler.Create(ctx)
+	assert.Nil(t, err)
+
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
+	//list search match uris
+	listInput5 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "name": "bbb", "uri": "bb"}`
+	json.Unmarshal([]byte(reqBody), listInput5)
+	ctx.SetInput(listInput5)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
 	//delete test data
 	inputDel := &BatchDelete{}
-	reqBody = `{"ids": "1"}`
+	reqBody = `{"ids": "1,2"}`
 	json.Unmarshal([]byte(reqBody), inputDel)
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)
+
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
+	//get route -- deleted, not found
+	getInput := &GetInput{}
+	reqBody = `{"id": "1"}`
+	json.Unmarshal([]byte(reqBody), getInput)
+	ctx.SetInput(getInput)
+	ret, err = handler.Get(ctx)
+	assert.Nil(t, ret)
+	assert.EqualError(t, err, "data not found")
 
 }
