@@ -108,8 +108,8 @@ func TestService(t *testing.T) {
 	_, err = handler.Update(ctx)
 	assert.Nil(t, err)
 
-  //sleep
-  time.Sleep(time.Duration(100) * time.Millisecond)
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
 
 	//list
 	listInput := &ListInput{}

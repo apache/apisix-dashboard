@@ -19,12 +19,13 @@ package conf
 import (
 	"fmt"
 	"io/ioutil"
-	"math/rand"
 	"os"
 	"path/filepath"
 	"runtime"
 
 	"github.com/tidwall/gjson"
+
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 const ServerPort = 8080
@@ -138,15 +139,6 @@ func initApisix() {
 	}
 }
 
-func randomString(n int) string {
-	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(b)
-}
-
 func initAuthentication() {
 	filePath := configurationPath()
 	configurationContent, err := ioutil.ReadFile(filePath)
@@ -164,7 +156,7 @@ func initAuthentication() {
 	}
 	AuthenticationConfig.Session.Secret = configuration.Get("authentication.session.secret").String()
 	if "secret" == AuthenticationConfig.Session.Secret {
-		AuthenticationConfig.Session.Secret = randomString(10)
+		AuthenticationConfig.Session.Secret = utils.GetFlakeUidStr()
 	}
 
 	AuthenticationConfig.Session.ExpireTime = configuration.Get("authentication.session.expireTime").Uint()
