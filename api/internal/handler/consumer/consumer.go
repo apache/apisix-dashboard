@@ -79,7 +79,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	ret, err := h.consumerStore.List(store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			if input.Username != "" {
-				return strings.Index(obj.(*entity.Consumer).Username, input.Username) > 0
+				return strings.Contains(obj.(*entity.Consumer).Username, input.Username)
 			}
 			return true
 		},

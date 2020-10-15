@@ -71,7 +71,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 }
 
 type ListInput struct {
-	ID string `auto_read:"id,query"`
+	Name string `auto_read:"name,query"`
 	store.Pagination
 }
 
@@ -80,6 +80,9 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 
 	ret, err := h.serviceStore.List(store.ListInput{
 		Predicate: func(obj interface{}) bool {
+			if input.Name != "" {
+				return strings.Contains(obj.(*entity.Service).Name, input.Name)
+			}
 			return true
 		},
 		PageSize:   input.PageSize,
