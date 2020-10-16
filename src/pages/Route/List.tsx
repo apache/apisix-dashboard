@@ -22,6 +22,7 @@ import moment from 'moment';
 import { history, useIntl } from 'umi';
 
 import { fetchList, remove } from './service';
+import { PlusOutlined } from '@ant-design/icons';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
@@ -115,6 +116,12 @@ const Page: React.FC = () => {
         rowKey="name"
         columns={columns}
         request={fetchList}
+        toolBarRender={() => [
+          <Button type="primary" onClick={() => history.push(`/routes/create`)}>
+            <PlusOutlined />
+            {formatMessage({ id: 'component.global.create' })}
+          </Button>,
+        ]}
       />
     </PageHeaderWrapper>
   );

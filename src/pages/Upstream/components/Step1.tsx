@@ -33,7 +33,7 @@ const Step1: React.FC<Props> = ({ form, disabled, upstreamRef }) => {
   const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
 
   useEffect(() => {
-    fetchList().then(({ data }) => setList(data));
+    fetchList({}).then(({ data }) => setList(data));
   }, []);
 
   return (

@@ -33,7 +33,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
   onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
-  const renderHosts = () => (
+  const HostList = () => (
     <Form.List name="hosts">
       {(fields, { add, remove }) => {
         return (
@@ -99,7 +99,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
     </Form.List>
   );
 
-  const renderUris = () => (
+  const UriList = () => (
     <Form.List name="uris">
       {(fields, { add, remove }) => {
         return (
@@ -181,8 +181,8 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
     <PanelSection
       title={formatMessage({ id: 'page.route.panelSection.title.requestConfigBasicDefine' })}
     >
-      {renderHosts()}
-      {renderUris()}
+      <HostList />
+      <UriList />
       <Form.Item
         label={formatMessage({ id: 'page.route.form.itemLabel.httpMethod' })}
         name="methods"

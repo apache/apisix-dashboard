@@ -93,7 +93,7 @@ const Page: React.FC<Props> = (props) => {
     }
   }, []);
 
-  const renderStep = () => {
+  const StepList = () => {
     if (step === 1) {
       return (
         <Step1
@@ -261,7 +261,7 @@ const Page: React.FC<Props> = (props) => {
               <Step title={item} key={item} />
             ))}
           </Steps>
-          {renderStep()}
+          <StepList />
         </Card>
       </PageHeaderWrapper>
       <ActionBar step={step} lastStep={redirect ? 2 : 4} onChange={onStepChange} withResultView />
