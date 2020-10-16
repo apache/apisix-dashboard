@@ -46,7 +46,7 @@ type Route struct {
 	FilterFunc      string                 `json:"filter_func,omitempty"`
 	Script          interface{}            `json:"script,omitempty"`
 	Plugins         map[string]interface{} `json:"plugins,omitempty"`
-	Upstream        interface{}            `json:"upstream,omitempty"`
+	Upstream        *UpstreamDef           `json:"upstream,omitempty"`
 	ServiceID       string                 `json:"service_id,omitempty"`
 	UpstreamID      string                 `json:"upstream_id,omitempty"`
 	ServiceProtocol string                 `json:"service_protocol,omitempty"`
@@ -113,8 +113,7 @@ type HealthChecker struct {
 	Passive Passive `json:"passive,omitempty"`
 }
 
-type Upstream struct {
-	BaseInfo
+type UpstreamDef struct {
 	Nodes           interface{}       `json:"nodes,omitempty"`
 	Retries         int               `json:"retries,omitempty"`
 	Timeout         interface{}       `json:"timeout,omitempty"`
@@ -130,6 +129,11 @@ type Upstream struct {
 	Desc            string            `json:"desc,omitempty"`
 	ServiceName     string            `json:"service_name,omitempty"`
 	Labels          map[string]string `json:"labels,omitempty"`
+}
+
+type Upstream struct {
+	BaseInfo
+	UpstreamDef
 }
 
 type UpstreamNameResponse struct {
@@ -174,7 +178,7 @@ type Service struct {
 	BaseInfo
 	Name       string                 `json:"name,omitempty"`
 	Desc       string                 `json:"desc,omitempty"`
-	Upstream   interface{}            `json:"upstream,omitempty"`
+	Upstream   *UpstreamDef           `json:"upstream,omitempty"`
 	UpstreamID string                 `json:"upstream_id,omitempty"`
 	Plugins    map[string]interface{} `json:"plugins,omitempty"`
 	Script     string                 `json:"script,omitempty"`

@@ -73,6 +73,10 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	upstream := r.(*entity.Upstream)
+	upstream.Nodes = entity.NodesFormat(upstream.Nodes)
+
 	return r, nil
 }
 
@@ -90,6 +94,11 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 				return strings.Contains(obj.(*entity.Upstream).Name, input.Name)
 			}
 			return true
+		},
+		Format: func(obj interface{}) interface{} {
+			upstream := obj.(*entity.Upstream)
+			upstream.Nodes = entity.NodesFormat(upstream.Nodes)
+			return upstream
 		},
 		PageSize:   input.PageSize,
 		PageNumber: input.PageNumber,

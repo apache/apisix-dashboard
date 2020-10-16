@@ -91,6 +91,9 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 		route.Script = script.(*entity.Script).Script
 	}
 
+	//format
+	route.Upstream.Nodes = entity.NodesFormat(route.Upstream.Nodes)
+
 	return route, nil
 }
 
@@ -131,6 +134,11 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 				return uriContains(obj.(*entity.Route), input.URI)
 			}
 			return true
+		},
+		Format: func(obj interface{}) interface{} {
+			route := obj.(*entity.Route)
+			route.Upstream.Nodes = entity.NodesFormat(route.Upstream.Nodes)
+			return route
 		},
 		PageSize:   input.PageSize,
 		PageNumber: input.PageNumber,

@@ -139,6 +139,7 @@ func (s *GenericStore) Get(key string) (interface{}, error) {
 
 type ListInput struct {
 	Predicate func(obj interface{}) bool
+	Format    func(obj interface{}) interface{}
 	PageSize  int
 	// start from 1
 	PageNumber int
@@ -167,6 +168,9 @@ func (s *GenericStore) List(input ListInput) (*ListOutput, error) {
 	s.cache.Range(func(key, value interface{}) bool {
 		if input.Predicate != nil && !input.Predicate(value) {
 			return true
+		}
+		if input.Format != nil {
+			value = input.Format(value)
 		}
 		ret = append(ret, value)
 		return true

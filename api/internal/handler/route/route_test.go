@@ -799,11 +799,7 @@ func TestRoute(t *testing.T) {
       "methods": ["PUT", "GET"],
       "upstream": {
           "type": "roundrobin",
-          "nodes": [{
-              "host": "www.a.com",
-              "port": 80,
-              "weight": 1
-          }]
+          "nodes": {"www.a.com:80": 1}
       }
   }`
 	json.Unmarshal([]byte(reqBody), route3)
