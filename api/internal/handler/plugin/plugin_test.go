@@ -14,30 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package filter
+
+package plugin
 
 import (
-	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
+	"encoding/json"
+	"testing"
+
+	"github.com/shiningrush/droplet"
+	"github.com/stretchr/testify/assert"
 )
 
-func RequestId() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// Check for incoming header, use it if exists
-		requestId := c.Request.Header.Get("X-Request-Id")
+func TestPlugin(t *testing.T) {
+	// init
+	handler := &Handler{}
+	assert.NotNil(t, handler)
 
-		// Create request id with UUID4
-		if requestId == "" {
-			u4 := uuid.NewV4()
-			requestId = u4.String()
-		}
+	//plugin list
+	ctx := droplet.NewContext()
+	list, err := handler.Plugins(ctx)
+	assert.Nil(t, err)
+	assert.Contains(t, list.([]string), "limit-count")
 
-		// Expose it for use in the application
-		c.Set("X-Request-Id", requestId)
-		c.Request.Header.Set("X-Request-Id", requestId)
+	//schema
+	input := &GetInput{}
+	reqBody := `{
+	  "name": "limit-count"
+  }`
+	json.Unmarshal([]byte(reqBody), input)
+	ctx.SetInput(input)
+	val, _ := handler.Schema(ctx)
+	assert.NotNil(t, val)
 
-		// Set X-Request-Id header
-		c.Writer.Header().Set("X-Request-Id", requestId)
-		c.Next()
-	}
+	//not exists
+	input2 := &GetInput{}
+	reqBody = `{
+	  "name": "not-exists"
+  }`
+	json.Unmarshal([]byte(reqBody), input2)
+	ctx.SetInput(input2)
+	val, _ = handler.Schema(ctx)
+	assert.Nil(t, val)
 }

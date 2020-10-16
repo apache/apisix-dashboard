@@ -19,20 +19,36 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
+	dlog "github.com/shiningrush/droplet/log"
+	"github.com/spf13/viper"
+
 	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/internal"
+	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/log"
-	"github.com/apisix/manager-api/route"
 )
 
 var logger = log.GetLogger()
 
 func main() {
-	// init
-	conf.InitializeMysql()
+	viper.SetEnvPrefix("APIX")
+	viper.AutomaticEnv()
+	dlog.DefLogger = log.DefLogger{}
+
+	if err := storage.InitETCDClient(strings.Split(viper.GetString("etcd_endpoints"), ",")); err != nil {
+		panic(err)
+	}
+	if err := store.InitStores(); err != nil {
+		panic(err)
+	}
+
 	// routes
-	r := route.SetUpRouter()
+	r := internal.SetUpRouter()
 	addr := fmt.Sprintf(":%d", conf.ServerPort)
 	s := &http.Server{
 		Addr:         addr,
@@ -41,6 +57,8 @@ func main() {
 		WriteTimeout: time.Duration(5000) * time.Millisecond,
 	}
 	if err := s.ListenAndServe(); err != nil {
-		panic(err)
+		logger.WithError(err)
 	}
+
+	utils.CloseAll()
 }
