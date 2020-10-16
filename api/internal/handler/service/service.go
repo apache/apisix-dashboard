@@ -116,7 +116,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
 	input.Service.ID = input.ID
 
-	if err := h.serviceStore.Update(c.Context(), &input.Service); err != nil {
+	if err := h.serviceStore.Update(c.Context(), &input.Service, true); err != nil {
 		return nil, err
 	}
 
@@ -169,7 +169,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	if err := h.serviceStore.Update(c.Context(), &stored); err != nil {
+	if err := h.serviceStore.Update(c.Context(), &stored, false); err != nil {
 		return nil, err
 	}
 

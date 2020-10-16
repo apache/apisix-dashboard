@@ -264,7 +264,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 			return nil, err
 		}
 		//save original conf
-		if err = h.scriptStore.Update(c.Context(), script); err != nil {
+		if err = h.scriptStore.Update(c.Context(), script, true); err != nil {
 			//if not exists, create
 			if err.Error() == fmt.Sprintf("key: %s is not found", script.ID) {
 				if err := h.scriptStore.Create(c.Context(), script); err != nil {
@@ -276,7 +276,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	if err := h.routeStore.Update(c.Context(), &input.Route); err != nil {
+	if err := h.routeStore.Update(c.Context(), &input.Route, true); err != nil {
 		return nil, err
 	}
 

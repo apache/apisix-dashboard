@@ -38,7 +38,7 @@ type Interface interface {
 	Get(key string) (interface{}, error)
 	List(input ListInput) (*ListOutput, error)
 	Create(ctx context.Context, obj interface{}) error
-	Update(ctx context.Context, obj interface{}) error
+	Update(ctx context.Context, obj interface{}, createOnFail bool) error
 	BatchDelete(ctx context.Context, keys []string) error
 }
 
@@ -259,7 +259,7 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 	return nil
 }
 
-func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
+func (s *GenericStore) Update(ctx context.Context, obj interface{}, createOnFail bool) error {
 	if err := s.ingestValidate(obj); err != nil {
 		return err
 	}
@@ -270,7 +270,10 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
 	}
 	oldObj, ok := s.cache.Load(key)
 	if !ok {
-		return s.Create(ctx, obj)
+		if createOnFail {
+			return s.Create(ctx, obj)
+		}
+		return fmt.Errorf("key: %s is not found", key)
 	}
 
 	createTime := int64(0)

@@ -165,7 +165,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	ssl.ID = input.ID
-	if err := h.sslStore.Update(c.Context(), ssl); err != nil {
+	if err := h.sslStore.Update(c.Context(), ssl, true); err != nil {
 		return nil, err
 	}
 
@@ -205,7 +205,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		panic(err)
 	}
 
-	if err := h.sslStore.Update(c.Context(), &stored); err != nil {
+	if err := h.sslStore.Update(c.Context(), &stored, false); err != nil {
 		return nil, err
 	}
 

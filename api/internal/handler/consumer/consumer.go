@@ -124,7 +124,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 	input.Consumer.ID = input.Consumer.Username
 
-	if err := h.consumerStore.Update(c.Context(), &input.Consumer); err != nil {
+	if err := h.consumerStore.Update(c.Context(), &input.Consumer, true); err != nil {
 		//if not exists, create
 		if err.Error() == fmt.Sprintf("key: %s is not found", input.Username) {
 			if err := h.consumerStore.Create(c.Context(), &input.Consumer); err != nil {

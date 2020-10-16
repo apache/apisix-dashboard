@@ -120,7 +120,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
 	input.Upstream.ID = input.ID
 
-	if err := h.upstreamStore.Update(c.Context(), &input.Upstream); err != nil {
+	if err := h.upstreamStore.Update(c.Context(), &input.Upstream, true); err != nil {
 		return nil, err
 	}
 
@@ -173,7 +173,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	if err := h.upstreamStore.Update(c.Context(), &stored); err != nil {
+	if err := h.upstreamStore.Update(c.Context(), &stored, false); err != nil {
 		return nil, err
 	}
 
