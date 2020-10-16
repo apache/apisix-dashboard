@@ -48,6 +48,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 	r.POST("/apisix/admin/services", wgin.Wraps(h.Create,
 		wrapper.InputType(reflect.TypeOf(entity.Service{}))))
+	r.PUT("/apisix/admin/services", wgin.Wraps(h.Update,
+		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PUT("/apisix/admin/services/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PATCH("/apisix/admin/services/:id", wgin.Wraps(h.Patch,

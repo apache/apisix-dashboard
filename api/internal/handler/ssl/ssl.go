@@ -55,6 +55,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 	r.POST("/apisix/admin/ssl", wgin.Wraps(h.Create,
 		wrapper.InputType(reflect.TypeOf(entity.SSL{}))))
+	r.PUT("/apisix/admin/ssl", wgin.Wraps(h.Update,
+		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PUT("/apisix/admin/ssl/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PATCH("/apisix/admin/ssl/:id", wgin.Wraps(h.Patch,

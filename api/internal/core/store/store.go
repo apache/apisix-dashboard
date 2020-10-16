@@ -92,6 +92,9 @@ func (s *GenericStore) Init() error {
 		return err
 	}
 	for i := range ret {
+		if ret[i] == "init_dir" {
+			continue
+		}
 		objPtr, err := s.StringToObjPtr(ret[i])
 		if err != nil {
 			return err
@@ -267,7 +270,7 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
 	}
 	oldObj, ok := s.cache.Load(key)
 	if !ok {
-		return fmt.Errorf("key: %s is not found", key)
+		return s.Create(ctx, obj)
 	}
 
 	createTime := int64(0)

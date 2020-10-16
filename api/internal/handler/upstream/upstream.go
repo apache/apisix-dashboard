@@ -49,6 +49,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 	r.POST("/apisix/admin/upstreams", wgin.Wraps(h.Create,
 		wrapper.InputType(reflect.TypeOf(entity.Upstream{}))))
+	r.PUT("/apisix/admin/upstreams", wgin.Wraps(h.Update,
+		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PUT("/apisix/admin/upstreams/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PATCH("/apisix/admin/upstreams/:id", wgin.Wraps(h.Patch,
