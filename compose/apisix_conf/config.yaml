@@ -22,18 +22,17 @@ apisix:
   allow_admin:
     - 0.0.0.0/0
   admin_key:
-    -
-      name: "admin"
+    - name: 'admin'
       key: edd1c9f034335f136f87ad84b625c8f1
-      role: admin                 # admin: manage all configuration data
-                                  # viewer: only can view configuration data
-    -
-      name: "viewer"
+      role:
+        admin # admin: manage all configuration data
+        # viewer: only can view configuration data
+    - name: 'viewer'
       key: 4054f7cf07e344346cd3f287985e76a1
       role: viewer
 
 etcd:
-  host:                           # it's possible to define multiple etcd hosts addresses of the same etcd cluster.
-    - "http://192.17.5.10:2379"     # multiple etcd address
-  prefix: "/apisix"               # apisix configurations prefix
-  timeout: 30                     # 30 seconds
+  host: # it's possible to define multiple etcd hosts addresses of the same etcd cluster.
+    - 'http://192.17.5.10:2379' # multiple etcd address
+  prefix: '/apisix' # apisix configurations prefix
+  timeout: 30 # 30 seconds

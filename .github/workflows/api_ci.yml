@@ -9,9 +9,7 @@ on:
       - master
 
 jobs:
-
   run-test:
-
     runs-on: ubuntu-latest
 
     services:
@@ -28,53 +26,51 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: 123456
         ports:
-            - '3306:3306'
+          - '3306:3306'
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
-
     steps:
+      - uses: actions/checkout@v2
 
-    - uses: actions/checkout@v2
+      - name: run apisix
+        run: |
+          network=$(docker network ls | grep github_network | awk '{print $2}')
+          docker run --name apisix  -d -p 9080:9080 \
+          -v ${{ github.workspace }}/.github/apisix-config.yaml:/usr/local/apisix/conf/config.yaml \
+          --network "$network" --network-alias apisix \
+          apache/apisix:dev
+          sleep 5
+          docker logs apisix
 
-    - name: run apisix
-      run: |
-        network=$(docker network ls | grep github_network | awk '{print $2}')
-        docker run --name apisix  -d -p 9080:9080 \
-        -v ${{ github.workspace }}/.github/apisix-config.yaml:/usr/local/apisix/conf/config.yaml \
-        --network "$network" --network-alias apisix \
-        apache/apisix:dev
-        sleep 5
-        docker logs apisix
+      - name: setting up database
+        run: |
+          mysql -h 127.0.0.1 --port 3306 -u root -p123456  < ./api/script/db/schema.sql
 
-    - name: setting up database
-      run: |
-        mysql -h 127.0.0.1 --port 3306 -u root -p123456  < ./api/script/db/schema.sql
+      - name: ping apisix
+        run: |
+          curl 127.0.0.1:9080
 
-    - name: ping apisix
-      run: |
-        curl 127.0.0.1:9080
+      - name: run Makefile
+        run: |
+          make license-check
 
-    - name: run Makefile
-      run: |
-        make license-check
+      - name: get lua lib
+        run: |
+          wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
+          sudo mkdir -p /go/api7-manager-api/dag-to-lua/
+          tar -zxvf v1.1.tar.gz
+          sudo mv ./dag-to-lua-1.1/lib/* /go/api7-manager-api/dag-to-lua/
 
-    - name: get lua lib
-      run: |
-        wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
-        sudo mkdir -p /go/api7-manager-api/dag-to-lua/
-        tar -zxvf v1.1.tar.gz
-        sudo mv ./dag-to-lua-1.1/lib/* /go/api7-manager-api/dag-to-lua/
+      - name: install runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install lua5.1
+          sudo add-apt-repository ppa:longsleep/golang-backports
+          sudo apt update
+          export GO111MOUDULE=on
+          sudo apt install golang-1.14-go
 
-    - name: install runtime
-      run: |
-        sudo apt-get update
-        sudo apt-get install lua5.1
-        sudo add-apt-repository ppa:longsleep/golang-backports
-        sudo apt update
-        export GO111MOUDULE=on
-        sudo apt install golang-1.14-go
-
-    - name: run test
-      working-directory: ./api
-      run: |
-        go test ./...
+      - name: run test
+        working-directory: ./api
+        run: |
+          go test ./...

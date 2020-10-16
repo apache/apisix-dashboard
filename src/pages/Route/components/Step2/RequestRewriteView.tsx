@@ -29,7 +29,14 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({
     fetchUpstreamList().then(({ data }) => setList(data));
   }, []);
   return (
-    <UpstreamForm ref={upstreamRef} form={form} disabled={disabled} list={list} showSelector key={1} />
+    <UpstreamForm
+      ref={upstreamRef}
+      form={form}
+      disabled={disabled}
+      list={list}
+      showSelector
+      key={1}
+    />
   );
 };
 

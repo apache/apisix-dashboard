@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-version: "3"
+version: '3'
 
 services:
   apisix:
@@ -27,8 +27,8 @@ services:
       - etcd
     ##network_mode: host
     ports:
-      - "9080:9080/tcp"
-      - "9443:9443/tcp"
+      - '9080:9080/tcp'
+      - '9443:9443/tcp'
     networks:
       apisix-dashboard:
         ipv4_address: 192.17.5.11
@@ -41,12 +41,12 @@ services:
       - ./etcd_data:/etcd_data
     environment:
       ETCD_DATA_DIR: /etcd_data
-      ETCD_ENABLE_V2: "true"
-      ALLOW_NONE_AUTHENTICATION: "yes"
-      ETCD_ADVERTISE_CLIENT_URLS: "http://0.0.0.0:2379"
-      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+      ETCD_ENABLE_V2: 'true'
+      ALLOW_NONE_AUTHENTICATION: 'yes'
+      ETCD_ADVERTISE_CLIENT_URLS: 'http://0.0.0.0:2379'
+      ETCD_LISTEN_CLIENT_URLS: 'http://0.0.0.0:2379'
     ports:
-      - "2379:2379/tcp"
+      - '2379:2379/tcp'
     networks:
       apisix-dashboard:
         ipv4_address: 192.17.5.10
@@ -56,7 +56,7 @@ services:
     command: sh -c "mkdir -p /tmp/www && echo 'web1' > /tmp/www/web1.txt && ruby -run -ehttpd /tmp/www -p8000"
     restart: always
     ports:
-      - "9081:8000/tcp"
+      - '9081:8000/tcp'
     networks:
       apisix-dashboard:
         ipv4_address: 192.17.5.12
@@ -66,7 +66,7 @@ services:
     command: sh -c "mkdir -p /tmp/www && echo 'web2' > /tmp/www/web2.txt && ruby -run -ehttpd /tmp/www -p8000"
     restart: always
     ports:
-      - "9082:8000/tcp"
+      - '9082:8000/tcp'
     networks:
       apisix-dashboard:
         ipv4_address: 192.17.5.13
@@ -75,7 +75,7 @@ services:
     image: mysql:latest
     restart: always
     ports:
-      - "3309:3306/tcp"
+      - '3309:3306/tcp'
     environment:
       - MYSQL_ROOT_PASSWORD=123456
     volumes:
@@ -92,7 +92,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "8080:8080/tcp"
+      - '8080:8080/tcp'
     environment:
       - ENV=prod
     volumes:
@@ -108,7 +108,7 @@ services:
     volumes:
       - ./prometheus_conf/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - "9090:9090"
+      - '9090:9090'
     networks:
       apisix-dashboard:
         ipv4_address: 192.17.5.16
@@ -119,11 +119,11 @@ services:
     hostname: grafana
     restart: always
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
-      - "./grafana_conf/provisioning:/etc/grafana/provisioning"
-      - "./grafana_conf/dashboards:/var/lib/grafana/dashboards"
-      - "./grafana_conf/config/grafana.ini:/etc/grafana/grafana.ini"
+      - './grafana_conf/provisioning:/etc/grafana/provisioning'
+      - './grafana_conf/dashboards:/var/lib/grafana/dashboards'
+      - './grafana_conf/config/grafana.ini:/etc/grafana/grafana.ini'
     networks:
       apisix-dashboard:
         ipv4_address: 192.17.5.17
@@ -134,9 +134,9 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "80:80/tcp"
+      - '80:80/tcp'
     volumes:
-      - "./dashboard_conf/nginx.conf:/etc/nginx/conf.d/default.conf"
+      - './dashboard_conf/nginx.conf:/etc/nginx/conf.d/default.conf'
     networks:
       apisix-dashboard:
         ipv4_address: 192.17.5.18
@@ -146,4 +146,4 @@ networks:
     driver: bridge
     ipam:
       config:
-      - subnet: 192.17.0.0/16
+        - subnet: 192.17.0.0/16
