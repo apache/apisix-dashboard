@@ -31,7 +31,6 @@ import (
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
-	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Interface interface {
@@ -230,13 +229,9 @@ func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 }
 
 func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
-	if getter, ok := obj.(entity.BaseInfoGetter); ok {
-		info := getter.GetBaseInfo()
-		if info.ID == "" {
-			info.ID = utils.GetFlakeUidStr()
-		}
-		info.CreateTime = time.Now().Unix()
-		info.UpdateTime = time.Now().Unix()
+	if setter, ok := obj.(entity.BaseInfoSetter); ok {
+		info := setter.GetBaseInfo()
+		info.Creating()
 	}
 
 	if err := s.ingestValidate(obj); err != nil {
@@ -263,7 +258,7 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 	return nil
 }
 
-func (s *GenericStore) Update(ctx context.Context, obj interface{}, createOnFail bool) error {
+func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotExist bool) error {
 	if err := s.ingestValidate(obj); err != nil {
 		return err
 	}
@@ -272,24 +267,19 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}, createOnFail
 	if key == "" {
 		return fmt.Errorf("key is required")
 	}
-	oldObj, ok := s.cache.Load(key)
+	storedObj, ok := s.cache.Load(key)
 	if !ok {
-		if createOnFail {
+		if createIfNotExist {
 			return s.Create(ctx, obj)
 		}
 		return fmt.Errorf("key: %s is not found", key)
 	}
 
-	createTime := int64(0)
-	if oldGetter, ok := oldObj.(entity.BaseInfoGetter); ok {
-		oldInfo := oldGetter.GetBaseInfo()
-		createTime = oldInfo.CreateTime
-	}
-
-	if getter, ok := obj.(entity.BaseInfoGetter); ok {
-		info := getter.GetBaseInfo()
-		info.CreateTime = createTime
-		info.UpdateTime = time.Now().Unix()
+	if setter, ok := obj.(entity.BaseInfoGetter); ok {
+		storedGetter := storedObj.(entity.BaseInfoGetter)
+		storedInfo := storedGetter.GetBaseInfo()
+		info := setter.GetBaseInfo()
+		info.Updating(storedInfo)
 	}
 
 	bs, err := json.Marshal(obj)

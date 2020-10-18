@@ -16,6 +16,12 @@
  */
 package entity
 
+import (
+	"time"
+
+	"github.com/apisix/manager-api/internal/utils"
+)
+
 type BaseInfo struct {
 	ID         string `json:"id"`
 	CreateTime int64  `json:"create_time"`
@@ -24,6 +30,24 @@ type BaseInfo struct {
 
 func (info *BaseInfo) GetBaseInfo() *BaseInfo {
 	return info
+}
+
+func (info *BaseInfo) Creating() {
+	if info.ID == "" {
+		info.ID = utils.GetFlakeUidStr()
+	}
+	info.CreateTime = time.Now().Unix()
+	info.UpdateTime = time.Now().Unix()
+}
+
+func (info *BaseInfo) Updating(storedInfo *BaseInfo) {
+	info.ID = storedInfo.ID
+	info.CreateTime = storedInfo.CreateTime
+	info.UpdateTime = time.Now().Unix()
+}
+
+type BaseInfoSetter interface {
+	GetBaseInfo() *BaseInfo
 }
 
 type BaseInfoGetter interface {
