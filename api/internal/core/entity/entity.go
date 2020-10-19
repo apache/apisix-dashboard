@@ -16,6 +16,12 @@
  */
 package entity
 
+import (
+	"time"
+
+	"github.com/apisix/manager-api/internal/utils"
+)
+
 type BaseInfo struct {
 	ID         string `json:"id"`
 	CreateTime int64  `json:"create_time"`
@@ -24,6 +30,24 @@ type BaseInfo struct {
 
 func (info *BaseInfo) GetBaseInfo() *BaseInfo {
 	return info
+}
+
+func (info *BaseInfo) Creating() {
+	if info.ID == "" {
+		info.ID = utils.GetFlakeUidStr()
+	}
+	info.CreateTime = time.Now().Unix()
+	info.UpdateTime = time.Now().Unix()
+}
+
+func (info *BaseInfo) Updating(storedInfo *BaseInfo) {
+	info.ID = storedInfo.ID
+	info.CreateTime = storedInfo.CreateTime
+	info.UpdateTime = time.Now().Unix()
+}
+
+type BaseInfoSetter interface {
+	GetBaseInfo() *BaseInfo
 }
 
 type BaseInfoGetter interface {
@@ -46,10 +70,11 @@ type Route struct {
 	FilterFunc      string                 `json:"filter_func,omitempty"`
 	Script          interface{}            `json:"script,omitempty"`
 	Plugins         map[string]interface{} `json:"plugins,omitempty"`
-	Upstream        interface{}            `json:"upstream,omitempty"`
+	Upstream        *UpstreamDef           `json:"upstream,omitempty"`
 	ServiceID       string                 `json:"service_id,omitempty"`
 	UpstreamID      string                 `json:"upstream_id,omitempty"`
 	ServiceProtocol string                 `json:"service_protocol,omitempty"`
+	Labels          map[string]string      `json:"labels,omitempty"`
 }
 
 // --- structures for upstream start  ---
@@ -112,22 +137,27 @@ type HealthChecker struct {
 	Passive Passive `json:"passive,omitempty"`
 }
 
+type UpstreamDef struct {
+	Nodes           interface{}       `json:"nodes,omitempty"`
+	Retries         int               `json:"retries,omitempty"`
+	Timeout         interface{}       `json:"timeout,omitempty"`
+	K8sInfo         interface{}       `json:"k8s_deployment_info,omitempty"`
+	Type            string            `json:"type,omitempty"`
+	Checks          interface{}       `json:"checks,omitempty"`
+	HashOn          string            `json:"hash_on,omitempty"`
+	Key             string            `json:"key,omitempty"`
+	EnableWebsocket bool              `json:"enable_websocket,omitempty"`
+	PassHost        string            `json:"pass_host,omitempty"`
+	UpstreamHost    string            `json:"upstream_host,omitempty"`
+	Name            string            `json:"name,omitempty"`
+	Desc            string            `json:"desc,omitempty"`
+	ServiceName     string            `json:"service_name,omitempty"`
+	Labels          map[string]string `json:"labels,omitempty"`
+}
+
 type Upstream struct {
 	BaseInfo
-	Nodes           []interface{} `json:"nodes,omitempty"`
-	Retries         int           `json:"retries,omitempty"`
-	Timeout         interface{}   `json:"timeout,omitempty"`
-	K8sInfo         interface{}   `json:"k8s_deployment_info,omitempty"`
-	Type            string        `json:"type,omitempty"`
-	Checks          interface{}   `json:"checks,omitempty"`
-	HashOn          string        `json:"hash_on,omitempty"`
-	Key             string        `json:"key,omitempty"`
-	EnableWebsocket bool          `json:"enable_websocket,omitempty"`
-	PassHost        string        `json:"pass_host,omitempty"`
-	UpstreamHost    string        `json:"upstream_host,omitempty"`
-	Name            string        `json:"name,omitempty"`
-	Desc            string        `json:"desc,omitempty"`
-	ServiceName     string        `json:"service_name,omitempty"`
+	UpstreamDef
 }
 
 type UpstreamNameResponse struct {
@@ -150,30 +180,33 @@ type Consumer struct {
 	Username string                 `json:"username"`
 	Desc     string                 `json:"desc,omitempty"`
 	Plugins  map[string]interface{} `json:"plugins,omitempty"`
+	Labels   map[string]string      `json:"labels,omitempty"`
 }
 
 type SSL struct {
 	BaseInfo
-	Cert          string   `json:"cert,omitempty"`
-	Key           string   `json:"key,omitempty"`
-	Sni           string   `json:"sni,omitempty"`
-	Snis          []string `json:"snis,omitempty"`
-	Certs         []string `json:"certs,omitempty"`
-	Keys          []string `json:"keys,omitempty"`
-	ExpTime       int64    `json:"exptime,omitempty"`
-	Status        int      `json:"status"`
-	ValidityStart int64    `json:"validity_start,omitempty"`
-	ValidityEnd   int64    `json:"validity_end,omitempty"`
+	Cert          string            `json:"cert,omitempty"`
+	Key           string            `json:"key,omitempty"`
+	Sni           string            `json:"sni,omitempty"`
+	Snis          []string          `json:"snis,omitempty"`
+	Certs         []string          `json:"certs,omitempty"`
+	Keys          []string          `json:"keys,omitempty"`
+	ExpTime       int64             `json:"exptime,omitempty"`
+	Status        int               `json:"status"`
+	ValidityStart int64             `json:"validity_start,omitempty"`
+	ValidityEnd   int64             `json:"validity_end,omitempty"`
+	Labels        map[string]string `json:"labels,omitempty"`
 }
 
 type Service struct {
 	BaseInfo
 	Name       string                 `json:"name,omitempty"`
 	Desc       string                 `json:"desc,omitempty"`
-	Upstream   interface{}            `json:"upstream,omitempty"`
+	Upstream   *UpstreamDef           `json:"upstream,omitempty"`
 	UpstreamID string                 `json:"upstream_id,omitempty"`
 	Plugins    map[string]interface{} `json:"plugins,omitempty"`
 	Script     string                 `json:"script,omitempty"`
+	Labels     map[string]string      `json:"labels,omitempty"`
 }
 
 type Script struct {

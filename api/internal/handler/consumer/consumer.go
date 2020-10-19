@@ -50,6 +50,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(entity.Consumer{}))))
 	r.PUT("/apisix/admin/consumers/:username", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
+	r.PUT("/apisix/admin/consumers", wgin.Wraps(h.Update,
+		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.DELETE("/apisix/admin/consumers/:usernames", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 }
@@ -117,10 +119,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	if input.ID != "" && input.ID != input.Username {
 		return nil, fmt.Errorf("consumer's id and username must be a same value")
 	}
-	input.Consumer.Username = input.Username
-	input.Consumer.ID = input.Username
+	if input.Username != "" {
+		input.Consumer.Username = input.Username
+	}
+	input.Consumer.ID = input.Consumer.Username
 
-	if err := h.consumerStore.Update(c.Context(), &input.Consumer); err != nil {
+	if err := h.consumerStore.Update(c.Context(), &input.Consumer, true); err != nil {
 		//if not exists, create
 		if err.Error() == fmt.Sprintf("key: %s is not found", input.Username) {
 			if err := h.consumerStore.Create(c.Context(), &input.Consumer); err != nil {

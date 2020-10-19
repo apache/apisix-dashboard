@@ -49,6 +49,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 	r.POST("/apisix/admin/upstreams", wgin.Wraps(h.Create,
 		wrapper.InputType(reflect.TypeOf(entity.Upstream{}))))
+	r.PUT("/apisix/admin/upstreams", wgin.Wraps(h.Update,
+		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PUT("/apisix/admin/upstreams/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PATCH("/apisix/admin/upstreams/:id", wgin.Wraps(h.Patch,
@@ -71,6 +73,10 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	upstream := r.(*entity.Upstream)
+	upstream.Nodes = entity.NodesFormat(upstream.Nodes)
+
 	return r, nil
 }
 
@@ -88,6 +94,11 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 				return strings.Contains(obj.(*entity.Upstream).Name, input.Name)
 			}
 			return true
+		},
+		Format: func(obj interface{}) interface{} {
+			upstream := obj.(*entity.Upstream)
+			upstream.Nodes = entity.NodesFormat(upstream.Nodes)
+			return upstream
 		},
 		PageSize:   input.PageSize,
 		PageNumber: input.PageNumber,
@@ -118,7 +129,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
 	input.Upstream.ID = input.ID
 
-	if err := h.upstreamStore.Update(c.Context(), &input.Upstream); err != nil {
+	if err := h.upstreamStore.Update(c.Context(), &input.Upstream, true); err != nil {
 		return nil, err
 	}
 
@@ -171,7 +182,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	if err := h.upstreamStore.Update(c.Context(), &stored); err != nil {
+	if err := h.upstreamStore.Update(c.Context(), &stored, false); err != nil {
 		return nil, err
 	}
 

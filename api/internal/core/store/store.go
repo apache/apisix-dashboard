@@ -31,14 +31,13 @@ import (
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
-	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Interface interface {
 	Get(key string) (interface{}, error)
 	List(input ListInput) (*ListOutput, error)
 	Create(ctx context.Context, obj interface{}) error
-	Update(ctx context.Context, obj interface{}) error
+	Update(ctx context.Context, obj interface{}, createOnFail bool) error
 	BatchDelete(ctx context.Context, keys []string) error
 }
 
@@ -92,6 +91,9 @@ func (s *GenericStore) Init() error {
 		return err
 	}
 	for i := range ret {
+		if ret[i] == "init_dir" {
+			continue
+		}
 		objPtr, err := s.StringToObjPtr(ret[i])
 		if err != nil {
 			return err
@@ -136,6 +138,7 @@ func (s *GenericStore) Get(key string) (interface{}, error) {
 
 type ListInput struct {
 	Predicate func(obj interface{}) bool
+	Format    func(obj interface{}) interface{}
 	PageSize  int
 	// start from 1
 	PageNumber int
@@ -164,6 +167,9 @@ func (s *GenericStore) List(input ListInput) (*ListOutput, error) {
 	s.cache.Range(func(key, value interface{}) bool {
 		if input.Predicate != nil && !input.Predicate(value) {
 			return true
+		}
+		if input.Format != nil {
+			value = input.Format(value)
 		}
 		ret = append(ret, value)
 		return true
@@ -223,13 +229,9 @@ func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 }
 
 func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
-	if getter, ok := obj.(entity.BaseInfoGetter); ok {
-		info := getter.GetBaseInfo()
-		if info.ID == "" {
-			info.ID = utils.GetFlakeUidStr()
-		}
-		info.CreateTime = time.Now().Unix()
-		info.UpdateTime = time.Now().Unix()
+	if setter, ok := obj.(entity.BaseInfoSetter); ok {
+		info := setter.GetBaseInfo()
+		info.Creating()
 	}
 
 	if err := s.ingestValidate(obj); err != nil {
@@ -256,7 +258,7 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 	return nil
 }
 
-func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
+func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotExist bool) error {
 	if err := s.ingestValidate(obj); err != nil {
 		return err
 	}
@@ -265,21 +267,19 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}) error {
 	if key == "" {
 		return fmt.Errorf("key is required")
 	}
-	oldObj, ok := s.cache.Load(key)
+	storedObj, ok := s.cache.Load(key)
 	if !ok {
+		if createIfNotExist {
+			return s.Create(ctx, obj)
+		}
 		return fmt.Errorf("key: %s is not found", key)
 	}
 
-	createTime := int64(0)
-	if oldGetter, ok := oldObj.(entity.BaseInfoGetter); ok {
-		oldInfo := oldGetter.GetBaseInfo()
-		createTime = oldInfo.CreateTime
-	}
-
-	if getter, ok := obj.(entity.BaseInfoGetter); ok {
-		info := getter.GetBaseInfo()
-		info.CreateTime = createTime
-		info.UpdateTime = time.Now().Unix()
+	if setter, ok := obj.(entity.BaseInfoGetter); ok {
+		storedGetter := storedObj.(entity.BaseInfoGetter)
+		storedInfo := storedGetter.GetBaseInfo()
+		info := setter.GetBaseInfo()
+		info.Updating(storedInfo)
 	}
 
 	bs, err := json.Marshal(obj)

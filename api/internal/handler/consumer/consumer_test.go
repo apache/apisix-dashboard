@@ -197,4 +197,33 @@ func TestConsumer(t *testing.T) {
 	_, err = handler.Create(ctx)
 	assert.NotNil(t, err)
 
+	//create consumer using Update
+	consumer6 := &UpdateInput{}
+	reqBody = `{
+      "username": "nnn",
+      "plugins": {
+          "limit-count": {
+              "count": 2,
+              "time_window": 60,
+              "rejected_code": 503,
+              "key": "remote_addr"
+          }
+      },
+    "desc": "test description"
+  }`
+	json.Unmarshal([]byte(reqBody), consumer6)
+	ctx.SetInput(consumer6)
+	_, err = handler.Update(ctx)
+	assert.Nil(t, err)
+
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
+	//delete consumer
+	reqBody = `{"usernames": "nnn"}`
+	json.Unmarshal([]byte(reqBody), inputDel)
+	ctx.SetInput(inputDel)
+	_, err = handler.BatchDelete(ctx)
+	assert.Nil(t, err)
+
 }

@@ -61,8 +61,11 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 	r.POST("/apisix/admin/routes", wgin.Wraps(h.Create,
 		wrapper.InputType(reflect.TypeOf(entity.Route{}))))
+	r.PUT("/apisix/admin/routes", wgin.Wraps(h.Update,
+		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PUT("/apisix/admin/routes/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
+
 	r.DELETE("/apisix/admin/routes/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
@@ -87,6 +90,9 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	if script != nil {
 		route.Script = script.(*entity.Script).Script
 	}
+
+	//format
+	route.Upstream.Nodes = entity.NodesFormat(route.Upstream.Nodes)
 
 	return route, nil
 }
@@ -128,6 +134,11 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 				return uriContains(obj.(*entity.Route), input.URI)
 			}
 			return true
+		},
+		Format: func(obj interface{}) interface{} {
+			route := obj.(*entity.Route)
+			route.Upstream.Nodes = entity.NodesFormat(route.Upstream.Nodes)
+			return route
 		},
 		PageSize:   input.PageSize,
 		PageNumber: input.PageNumber,
@@ -261,7 +272,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 			return nil, err
 		}
 		//save original conf
-		if err = h.scriptStore.Update(c.Context(), script); err != nil {
+		if err = h.scriptStore.Update(c.Context(), script, true); err != nil {
 			//if not exists, create
 			if err.Error() == fmt.Sprintf("key: %s is not found", script.ID) {
 				if err := h.scriptStore.Create(c.Context(), script); err != nil {
@@ -273,7 +284,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	if err := h.routeStore.Update(c.Context(), &input.Route); err != nil {
+	if err := h.routeStore.Update(c.Context(), &input.Route, true); err != nil {
 		return nil, err
 	}
 

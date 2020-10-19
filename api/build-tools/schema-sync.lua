@@ -46,6 +46,7 @@ local fake_module_list = {
     'resty.openidc',
     'resty.random',
     'resty.redis',
+    'resty.rediscluster',
     'resty.signal',
     'resty.string',
 

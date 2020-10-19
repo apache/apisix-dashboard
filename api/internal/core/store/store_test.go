@@ -624,7 +624,7 @@ func TestGenericStore_Update(t *testing.T) {
 				Field2: "test2",
 			},
 			giveCache: map[string]interface{}{
-				"test1": struct{}{},
+				"test1": &TestStruct{},
 			},
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
@@ -643,7 +643,7 @@ func TestGenericStore_Update(t *testing.T) {
 				Field2: "test2",
 			},
 			giveCache: map[string]interface{}{
-				"test1": struct{}{},
+				"test1": &TestStruct{},
 			},
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
@@ -664,7 +664,7 @@ func TestGenericStore_Update(t *testing.T) {
 				Field2: "test2",
 			},
 			giveCache: map[string]interface{}{
-				"test2": struct{}{},
+				"test2": &TestStruct{},
 			},
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
@@ -704,7 +704,7 @@ func TestGenericStore_Update(t *testing.T) {
 		tc.giveStore.Stg = mStorage
 		tc.giveStore.opt.Validator = mValidator
 
-		err := tc.giveStore.Update(context.TODO(), tc.giveObj)
+		err := tc.giveStore.Update(context.TODO(), tc.giveObj, false)
 		assert.True(t, validateCalled, tc.caseDesc)
 		if err != nil {
 			assert.Equal(t, tc.wantErr, err, tc.caseDesc)
