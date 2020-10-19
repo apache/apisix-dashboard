@@ -23,12 +23,14 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"net/http"
 	"reflect"
 	"strings"
 
 	"github.com/api7/go-jsonpatch"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -78,7 +80,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 
 	ret, err := h.sslStore.Get(input.ID)
 	if err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	//format respond
@@ -141,12 +143,12 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.SSL)
 	ssl, err := ParseCert(input.Cert, input.Key)
 	if err != nil {
-		return nil, err
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
 	ssl.ID = input.ID
 	if err := h.sslStore.Create(c.Context(), ssl); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil
@@ -161,12 +163,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
 	ssl, err := ParseCert(input.Cert, input.Key)
 	if err != nil {
-		return nil, err
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
 	ssl.ID = input.ID
 	if err := h.sslStore.Update(c.Context(), ssl, true); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil
@@ -183,7 +185,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 
 	stored, err := h.sslStore.Get(input.ID)
 	if err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	var patch jsonpatch.Patch
@@ -196,17 +198,17 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	} else {
 		patch, err = jsonpatch.MakePatch(stored, input.SSL)
 		if err != nil {
-			panic(err)
+			return handler.SpecCodeResponse(err), err
 		}
 	}
 
 	err = patch.Apply(&stored)
 	if err != nil {
-		panic(err)
+		return handler.SpecCodeResponse(err), err
 	}
 
 	if err := h.sslStore.Update(c.Context(), &stored, false); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil
@@ -220,7 +222,7 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
 
 	if err := h.sslStore.BatchDelete(c.Context(), strings.Split(input.Ids, ",")); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil
@@ -350,7 +352,7 @@ func Exist(c *gin.Context) (interface{}, error) {
 	reqBody, _ := c.GetRawData()
 	var hosts []string
 	if err := json.Unmarshal(reqBody, &hosts); err != nil {
-		return nil, err
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
 	routeStore := store.GetStore(store.HubKeySsl)
@@ -367,7 +369,8 @@ func Exist(c *gin.Context) (interface{}, error) {
 	for _, host := range hosts {
 		res := checkSniExists(toRows(ret), host)
 		if !res {
-			return nil, consts.InvalidParam("SSL cert not exists for sni：" + host)
+			return &data.SpecCodeResponse{StatusCode: http.StatusNotFound},
+				consts.InvalidParam("SSL cert not exists for sni：" + host)
 		}
 	}
 

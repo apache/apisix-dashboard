@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os/exec"
 	"reflect"
 	"strings"
@@ -81,7 +82,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 
 	r, err := h.routeStore.Get(input.ID)
 	if err != nil {
-		return nil, err
+		return &data.SpecCodeResponse{StatusCode: http.StatusNotFound}, err
 	}
 
 	//format respond
@@ -191,18 +192,18 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		_, err := h.svcStore.Get(input.ServiceID)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return nil, fmt.Errorf("service id: %s not found", input.ServiceID)
+				return handler.SpecCodeResponse(err), fmt.Errorf("service id: %s not found", input.ServiceID)
 			}
-			return nil, err
+			return handler.SpecCodeResponse(err), err
 		}
 	}
 	if input.UpstreamID != "" {
 		_, err := h.upstreamStore.Get(input.UpstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return nil, fmt.Errorf("upstream id: %s not found", input.UpstreamID)
+				return handler.SpecCodeResponse(err), fmt.Errorf("upstream id: %s not found", input.UpstreamID)
 			}
-			return nil, err
+			return handler.SpecCodeResponse(err), err
 		}
 	}
 
@@ -226,7 +227,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 
 	if err := h.routeStore.Create(c.Context(), input); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil
@@ -246,18 +247,18 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		_, err := h.svcStore.Get(input.ServiceID)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return nil, fmt.Errorf("service id: %s not found", input.ServiceID)
+				return handler.SpecCodeResponse(err), fmt.Errorf("service id: %s not found", input.ServiceID)
 			}
-			return nil, err
+			return handler.SpecCodeResponse(err), err
 		}
 	}
 	if input.UpstreamID != "" {
 		_, err := h.upstreamStore.Get(input.UpstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return nil, fmt.Errorf("upstream id: %s not found", input.UpstreamID)
+				return handler.SpecCodeResponse(err), fmt.Errorf("upstream id: %s not found", input.UpstreamID)
 			}
-			return nil, err
+			return handler.SpecCodeResponse(err), err
 		}
 	}
 
@@ -269,23 +270,23 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		var err error
 		input.Route.Script, err = generateLuaCode(input.Script.(map[string]interface{}))
 		if err != nil {
-			return nil, err
+			return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 		}
 		//save original conf
 		if err = h.scriptStore.Update(c.Context(), script, true); err != nil {
 			//if not exists, create
 			if err.Error() == fmt.Sprintf("key: %s is not found", script.ID) {
 				if err := h.scriptStore.Create(c.Context(), script); err != nil {
-					return nil, err
+					return handler.SpecCodeResponse(err), err
 				}
 			} else {
-				return nil, err
+				return handler.SpecCodeResponse(err), err
 			}
 		}
 	}
 
 	if err := h.routeStore.Update(c.Context(), &input.Route, true); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil
@@ -300,7 +301,7 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 
 	//delete route
 	if err := h.routeStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	//delete stored script
@@ -348,7 +349,8 @@ func Exist(c *gin.Context) (interface{}, error) {
 	if len(rows) > 0 {
 		r := rows[0].(*entity.Route)
 		if r.ID != exclude {
-			return nil, consts.InvalidParam("Route name is reduplicate")
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				consts.InvalidParam("Route name is reduplicate")
 		}
 	}
 

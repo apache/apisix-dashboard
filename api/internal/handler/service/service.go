@@ -67,7 +67,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 
 	r, err := h.serviceStore.Get(input.ID)
 	if err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	service := r.(*entity.Service)
@@ -110,7 +110,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Service)
 
 	if err := h.serviceStore.Create(c.Context(), input); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil
@@ -126,7 +126,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input.Service.ID = input.ID
 
 	if err := h.serviceStore.Update(c.Context(), &input.Service, true); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil
@@ -140,7 +140,7 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
 
 	if err := h.serviceStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil
@@ -157,7 +157,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 
 	stored, err := h.serviceStore.Get(input.ID)
 	if err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	var patch jsonpatch.Patch
@@ -170,16 +170,16 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	} else {
 		patch, err = jsonpatch.MakePatch(stored, input.Service)
 		if err != nil {
-			return nil, err
+			return handler.SpecCodeResponse(err), err
 		}
 	}
 
 	if err := patch.Apply(&stored); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	if err := h.serviceStore.Update(c.Context(), &stored, false); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil

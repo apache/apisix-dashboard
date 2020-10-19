@@ -17,11 +17,28 @@
 package handler
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
+	"github.com/shiningrush/droplet/data"
 )
 
 type RegisterFactory func() (RouteRegister, error)
 
 type RouteRegister interface {
 	ApplyRoute(r *gin.Engine)
+}
+
+func SpecCodeResponse(err error) *data.SpecCodeResponse {
+	if strings.Contains(err.Error(), "required") ||
+		strings.Contains(err.Error(), "conflicted") {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}
+	}
+
+	if strings.Contains(err.Error(), "not found") {
+		return &data.SpecCodeResponse{StatusCode: http.StatusNotFound}
+	}
+
+	return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}
 }
