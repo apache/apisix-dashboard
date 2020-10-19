@@ -192,18 +192,20 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		_, err := h.svcStore.Get(input.ServiceID)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return handler.SpecCodeResponse(err), fmt.Errorf("service id: %s not found", input.ServiceID)
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+					fmt.Errorf("service id: %s not found", input.ServiceID)
 			}
-			return handler.SpecCodeResponse(err), err
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
 	}
 	if input.UpstreamID != "" {
 		_, err := h.upstreamStore.Get(input.UpstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return handler.SpecCodeResponse(err), fmt.Errorf("upstream id: %s not found", input.UpstreamID)
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+					fmt.Errorf("upstream id: %s not found", input.UpstreamID)
 			}
-			return handler.SpecCodeResponse(err), err
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
 	}
 
@@ -247,18 +249,20 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		_, err := h.svcStore.Get(input.ServiceID)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return handler.SpecCodeResponse(err), fmt.Errorf("service id: %s not found", input.ServiceID)
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+					fmt.Errorf("service id: %s not found", input.ServiceID)
 			}
-			return handler.SpecCodeResponse(err), err
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
 	}
 	if input.UpstreamID != "" {
 		_, err := h.upstreamStore.Get(input.UpstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return handler.SpecCodeResponse(err), fmt.Errorf("upstream id: %s not found", input.UpstreamID)
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+					fmt.Errorf("upstream id: %s not found", input.UpstreamID)
 			}
-			return handler.SpecCodeResponse(err), err
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
 	}
 

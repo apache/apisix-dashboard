@@ -135,6 +135,6 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 
 	err = validator.Validate(consumer3)
 	assert.NotNil(t, err)
-	assert.EqualError(t, err, "scheme validate fail: (root): count is required")
+	assert.EqualError(t, err, "scheme validate failed: (root): count is required")
 
 }

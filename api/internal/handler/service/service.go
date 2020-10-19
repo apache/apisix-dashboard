@@ -17,12 +17,15 @@
 package service
 
 import (
+	"fmt"
+	"net/http"
 	"reflect"
 	"strings"
 
 	"github.com/api7/go-jsonpatch"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -32,12 +35,14 @@ import (
 )
 
 type Handler struct {
-	serviceStore store.Interface
+	serviceStore  store.Interface
+	upstreamStore store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{
-		serviceStore: store.GetStore(store.HubKeyService),
+		serviceStore:  store.GetStore(store.HubKeyService),
+		upstreamStore: store.GetStore(store.HubKeyUpstream),
 	}, nil
 }
 
@@ -109,6 +114,17 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Service)
 
+	if input.UpstreamID != "" {
+		_, err := h.upstreamStore.Get(input.UpstreamID)
+		if err != nil {
+			if err == data.ErrNotFound {
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+					fmt.Errorf("upstream id: %s not found", input.UpstreamID)
+			}
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+		}
+	}
+
 	if err := h.serviceStore.Create(c.Context(), input); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -124,6 +140,17 @@ type UpdateInput struct {
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
 	input.Service.ID = input.ID
+
+	if input.UpstreamID != "" {
+		_, err := h.upstreamStore.Get(input.UpstreamID)
+		if err != nil {
+			if err == data.ErrNotFound {
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+					fmt.Errorf("upstream id: %s not found", input.UpstreamID)
+			}
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+		}
+	}
 
 	if err := h.serviceStore.Update(c.Context(), &input.Service, true); err != nil {
 		return handler.SpecCodeResponse(err), err

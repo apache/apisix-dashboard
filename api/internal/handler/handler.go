@@ -31,12 +31,14 @@ type RouteRegister interface {
 }
 
 func SpecCodeResponse(err error) *data.SpecCodeResponse {
-	if strings.Contains(err.Error(), "required") ||
-		strings.Contains(err.Error(), "conflicted") {
+	errMsg := err.Error()
+	if strings.Contains(errMsg, "required") ||
+		strings.Contains(errMsg, "conflicted") ||
+		strings.Contains(errMsg, "scheme validate fail") {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}
 	}
 
-	if strings.Contains(err.Error(), "not found") {
+	if strings.Contains(errMsg, "not found") {
 		return &data.SpecCodeResponse{StatusCode: http.StatusNotFound}
 	}
 

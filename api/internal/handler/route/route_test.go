@@ -19,10 +19,12 @@ package route
 
 import (
 	"encoding/json"
+	"net/http"
 	"testing"
 	"time"
 
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/apisix/manager-api/internal/core/entity"
@@ -837,7 +839,29 @@ func TestRoute(t *testing.T) {
 	json.Unmarshal([]byte(reqBody), getInput)
 	ctx.SetInput(getInput)
 	ret, err = handler.Get(ctx)
-	assert.Nil(t, ret)
 	assert.EqualError(t, err, "data not found")
+	assert.Equal(t, http.StatusNotFound, ret.(*data.SpecCodeResponse).StatusCode)
+
+	//delete test data
+	reqBody = `{"ids": "not-exists"}`
+	json.Unmarshal([]byte(reqBody), inputDel)
+	ctx.SetInput(inputDel)
+	ret, err = handler.BatchDelete(ctx)
+	assert.NotNil(t, err)
+	assert.Equal(t, http.StatusNotFound, ret.(*data.SpecCodeResponse).StatusCode)
+
+	//create route with not exist upstream id
+	route4 := &entity.Route{}
+	reqBody = `{
+      "id": "2222",
+      "name": "r222",
+      "uris": ["/aa", "/bb"],
+      "upstream_id": "not-exists"
+  }`
+	json.Unmarshal([]byte(reqBody), route4)
+	ctx.SetInput(route4)
+	ret, err = handler.Create(ctx)
+	assert.NotNil(t, err)
+	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 
 }
