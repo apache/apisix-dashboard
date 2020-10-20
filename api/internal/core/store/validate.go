@@ -105,7 +105,7 @@ func getPlugins(reqBody interface{}) map[string]interface{} {
 func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 	ret, err := v.schema.Validate(gojsonschema.NewGoLoader(obj))
 	if err != nil {
-		return fmt.Errorf("validate failed: %w", err)
+		return fmt.Errorf("scheme validate failed: %w", err)
 	}
 
 	if !ret.Valid() {
@@ -125,17 +125,17 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 		for pluginName, pluginConf := range plugins {
 			schemaDef := conf.Schema.Get("plugins." + pluginName).String()
 			if schemaDef == "" {
-				return fmt.Errorf("schema not found")
+				return fmt.Errorf("scheme validate failed: schema not found")
 			}
 
 			s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
 			if err != nil {
-				return fmt.Errorf("new schema failed: %w", err)
+				return fmt.Errorf("scheme validate failed: %w", err)
 			}
 
 			ret, err := s.Validate(gojsonschema.NewGoLoader(pluginConf))
 			if err != nil {
-				return fmt.Errorf("validate failed: %w", err)
+				return fmt.Errorf("scheme validate failed: %w", err)
 			}
 
 			if !ret.Valid() {
@@ -146,7 +146,7 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 					}
 					errString.AppendString(vErr.String())
 				}
-				return fmt.Errorf("scheme validate fail: %s", errString.String())
+				return fmt.Errorf("scheme validate failed: %s", errString.String())
 			}
 		}
 	}

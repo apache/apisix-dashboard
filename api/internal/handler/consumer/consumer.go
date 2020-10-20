@@ -18,11 +18,13 @@ package consumer
 
 import (
 	"fmt"
+	"net/http"
 	"reflect"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -65,7 +67,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 
 	r, err := h.consumerStore.Get(input.Username)
 	if err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 	return r, nil
 }
@@ -98,12 +100,13 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Consumer)
 	if input.ID != "" && input.ID != input.Username {
-		return nil, fmt.Errorf("consumer's id and username must be a same value")
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("consumer's id and username must be a same value")
 	}
 	input.ID = input.Username
 
 	if err := h.consumerStore.Create(c.Context(), input); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil
@@ -117,7 +120,8 @@ type UpdateInput struct {
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
 	if input.ID != "" && input.ID != input.Username {
-		return nil, fmt.Errorf("consumer's id and username must be a same value")
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("consumer's id and username must be a same value")
 	}
 	if input.Username != "" {
 		input.Consumer.Username = input.Username
@@ -128,10 +132,10 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		//if not exists, create
 		if err.Error() == fmt.Sprintf("key: %s is not found", input.Username) {
 			if err := h.consumerStore.Create(c.Context(), &input.Consumer); err != nil {
-				return nil, err
+				return handler.SpecCodeResponse(err), err
 			}
 		} else {
-			return nil, err
+			return handler.SpecCodeResponse(err), err
 		}
 	}
 
@@ -146,7 +150,7 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
 
 	if err := h.consumerStore.BatchDelete(c.Context(), strings.Split(input.UserNames, ",")); err != nil {
-		return nil, err
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil
