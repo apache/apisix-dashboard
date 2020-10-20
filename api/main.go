@@ -19,11 +19,11 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
 	dlog "github.com/shiningrush/droplet/log"
-	"github.com/spf13/viper"
 
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal"
@@ -36,11 +36,8 @@ import (
 var logger = log.GetLogger()
 
 func main() {
-	viper.SetEnvPrefix("APIX")
-	viper.AutomaticEnv()
 	dlog.DefLogger = log.DefLogger{}
-
-	if err := storage.InitETCDClient(strings.Split(viper.GetString("etcd_endpoints"), ",")); err != nil {
+	if err := storage.InitETCDClient(strings.Split(os.Getenv("APIX_ETCD_ENDPOINTS"), ",")); err != nil {
 		panic(err)
 	}
 	if err := store.InitStores(); err != nil {
