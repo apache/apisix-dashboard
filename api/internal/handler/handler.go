@@ -14,30 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package filter
+package handler
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
+	"github.com/shiningrush/droplet/data"
 )
 
-func RequestId() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// Check for incoming header, use it if exists
-		requestId := c.Request.Header.Get("X-Request-Id")
+type RegisterFactory func() (RouteRegister, error)
 
-		// Create request id with UUID4
-		if requestId == "" {
-			u4 := uuid.NewV4()
-			requestId = u4.String()
-		}
+type RouteRegister interface {
+	ApplyRoute(r *gin.Engine)
+}
 
-		// Expose it for use in the application
-		c.Set("X-Request-Id", requestId)
-		c.Request.Header.Set("X-Request-Id", requestId)
-
-		// Set X-Request-Id header
-		c.Writer.Header().Set("X-Request-Id", requestId)
-		c.Next()
+func SpecCodeResponse(err error) *data.SpecCodeResponse {
+	errMsg := err.Error()
+	if strings.Contains(errMsg, "required") ||
+		strings.Contains(errMsg, "conflicted") ||
+		strings.Contains(errMsg, "scheme validate fail") {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}
 	}
+
+	if strings.Contains(errMsg, "not found") {
+		return &data.SpecCodeResponse{StatusCode: http.StatusNotFound}
+	}
+
+	return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}
 }

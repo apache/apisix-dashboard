@@ -14,30 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package filter
+package entity
 
 import (
-	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
+	"encoding/json"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func RequestId() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// Check for incoming header, use it if exists
-		requestId := c.Request.Header.Get("X-Request-Id")
+func TestConsumer(t *testing.T) {
+	nodesStr := `{
+    "127.0.0.1:8080": 1
+  }`
+	nodesMap := map[string]float64{}
+	json.Unmarshal([]byte(nodesStr), &nodesMap)
+	res := NodesFormat(nodesMap)
+	nodes := res.([]*Node)
 
-		// Create request id with UUID4
-		if requestId == "" {
-			u4 := uuid.NewV4()
-			requestId = u4.String()
-		}
-
-		// Expose it for use in the application
-		c.Set("X-Request-Id", requestId)
-		c.Request.Header.Set("X-Request-Id", requestId)
-
-		// Set X-Request-Id header
-		c.Writer.Header().Set("X-Request-Id", requestId)
-		c.Next()
-	}
+	assert.Equal(t, 1, len(nodes))
+	assert.Equal(t, "127.0.0.1", nodes[0].Host)
+	assert.Equal(t, 8080, nodes[0].Port)
+	assert.Equal(t, 1, nodes[0].Weight)
 }

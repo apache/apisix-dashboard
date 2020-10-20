@@ -14,30 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package filter
+package healthz
 
 import (
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
+	"github.com/shiningrush/droplet"
+	wgin "github.com/shiningrush/droplet/wrapper/gin"
+
+	"github.com/apisix/manager-api/internal/handler"
 )
 
-func RequestId() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// Check for incoming header, use it if exists
-		requestId := c.Request.Header.Get("X-Request-Id")
+type Handler struct {
+}
 
-		// Create request id with UUID4
-		if requestId == "" {
-			u4 := uuid.NewV4()
-			requestId = u4.String()
-		}
+func NewHandler() (handler.RouteRegister, error) {
+	return &Handler{}, nil
+}
 
-		// Expose it for use in the application
-		c.Set("X-Request-Id", requestId)
-		c.Request.Header.Set("X-Request-Id", requestId)
+func (h *Handler) ApplyRoute(r *gin.Engine) {
+	r.GET("/ping", wgin.Wraps(h.healthZHandler))
+}
 
-		// Set X-Request-Id header
-		c.Writer.Header().Set("X-Request-Id", requestId)
-		c.Next()
-	}
+func (h *Handler) healthZHandler(c droplet.Context) (interface{}, error) {
+	return "pong", nil
 }
