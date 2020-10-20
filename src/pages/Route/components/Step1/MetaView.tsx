@@ -20,52 +20,72 @@ import { Input, Select, Switch } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
-import { fetchRouteGroupList } from '@/pages/Route/service';
+import { fetchRouteGroupList, fetchRouteGroupItem } from '@/pages/Route/service';
 
-interface Props extends RouteModule.Data {}
-
-const MetaView: React.FC<Props> = ({ data, disabled, onChange, isEdit }) => {
-  const { step1Data } = data;
+const MetaView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled, isEdit }) => {
   const { formatMessage } = useIntl();
-  const routeGroupDisabled = disabled || !!step1Data.route_group_id;
+
   const [routeGroups, setRouteGroups] = useState<{ id: string; name: string }[]>();
+  let routeGroupDisabled = disabled || Boolean(form.getFieldValue('route_group_id'));
+
   useEffect(() => {
     // eslint-disable-next-line no-shadow
     fetchRouteGroupList().then(({ data }) => {
       setRouteGroups([
-        { name: formatMessage({ id: 'route.meta.api.create.group.name' }), id: null },
+        {
+          name: `${formatMessage({ id: 'component.global.create' })} ${formatMessage({
+            id: 'page.route.routeGroup',
+          })}`,
+          id: null,
+        },
         ...data,
       ]);
-      if (step1Data.route_group_id) {
-        onChange({ route_group_id: step1Data.route_group_id });
-      }
     });
   }, []);
+
   return (
-    <PanelSection title={formatMessage({ id: 'route.meta.name.description' })}>
+    <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>
       <Form.Item
-        label={formatMessage({ id: 'route.meta.api.name' })}
+        label={formatMessage({ id: 'component.global.name' })}
         name="name"
         rules={[
-          { required: true, message: formatMessage({ id: 'route.meta.input.api.name' }) },
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+              id: 'page.route.form.itemLabel.apiName',
+            })}`,
+          },
           {
             pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
-            message: formatMessage({ id: 'route.meta.api.name.rule' }),
+            message: formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' }),
           },
         ]}
-        extra={formatMessage({ id: 'rotue.meta.api.rule' })}
+        extra={formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' })}
       >
         <Input
-          placeholder={formatMessage({ id: 'route.meta.input.api.name' })}
+          placeholder={`${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+            id: 'page.route.form.itemLabel.apiName',
+          })}`}
           disabled={disabled}
         />
       </Form.Item>
-      <Form.Item label={formatMessage({ id: 'route.meta.api.group.name' })} name="route_group_id">
+      <Form.Item label={formatMessage({ id: 'page.route.routeGroup' })} name="route_group_id">
         <Select
           onChange={(value) => {
-            if (step1Data.route_group_id) {
-              onChange({ route_group_id: value });
+            if (!value) {
+              form.setFieldsValue({
+                ...form.getFieldsValue(),
+                route_group_name: '',
+              });
+              return;
             }
+            fetchRouteGroupItem(value.toString()).then((data) => {
+              form.setFieldsValue({
+                ...form.getFieldsValue(),
+                ...data,
+              });
+              routeGroupDisabled = true;
+            });
           }}
           disabled={disabled}
         >
@@ -79,20 +99,27 @@ const MetaView: React.FC<Props> = ({ data, disabled, onChange, isEdit }) => {
         </Select>
       </Form.Item>
       <Form.Item
-        label={formatMessage({ id: 'route.meta.group.name' })}
+        label={formatMessage({ id: 'page.route.groupName' })}
         name="route_group_name"
         rules={[
-          { required: true, message: formatMessage({ id: 'route.meta.input.api.group.name' }) },
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })}${formatMessage({
+              id: 'page.route.form.itemLable.routeGroup',
+            })}`,
+          },
         ]}
       >
         <Input
-          placeholder={formatMessage({ id: 'route.meta.input.api.group.name' })}
+          placeholder={`${formatMessage({ id: 'component.global.pleaseEnter' })}${formatMessage({
+            id: 'page.route.form.itemLable.routeGroup',
+          })}`}
           disabled={routeGroupDisabled}
         />
       </Form.Item>
       {!isEdit && (
         <Form.Item
-          label={formatMessage({ id: 'route.list.publish' })}
+          label={formatMessage({ id: 'page.route.publish' })}
           name="status"
           valuePropName="checked"
           help={formatMessage({ id: 'page.route.form.itemHelp.status' })}
@@ -100,9 +127,9 @@ const MetaView: React.FC<Props> = ({ data, disabled, onChange, isEdit }) => {
           <Switch disabled={disabled} />
         </Form.Item>
       )}
-      <Form.Item label={formatMessage({ id: 'route.meta.description' })} name="desc">
+      <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
         <Input.TextArea
-          placeholder={formatMessage({ id: 'route.meta.description.rule' })}
+          placeholder={formatMessage({ id: 'component.global.input.placeholder.description' })}
           disabled={disabled}
         />
       </Form.Item>

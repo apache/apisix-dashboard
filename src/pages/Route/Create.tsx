@@ -22,15 +22,7 @@ import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
 
 import ActionBar from '@/components/ActionBar';
 
-import {
-  create,
-  fetchItem,
-  fetchUpstreamItem,
-  fetchRouteGroupItem,
-  update,
-  checkUniqueName,
-  checkHostWithSSL
-} from './service';
+import { create, fetchItem, update, checkUniqueName, checkHostWithSSL } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
@@ -57,21 +49,22 @@ const Page: React.FC<Props> = (props) => {
   const { formatMessage } = useIntl();
 
   const STEP_HEADER_2 = [
-    formatMessage({ id: 'route.constants.define.api.request' }),
-    formatMessage({ id: 'route.constants.preview' }),
+    formatMessage({ id: 'page.route.steps.stepTitle.defineApiRequest' }),
+    formatMessage({ id: 'component.global.steps.stepTitle.preview' }),
   ];
 
   const STEP_HEADER_4 = [
-    formatMessage({ id: 'route.constants.define.api.request' }),
-    formatMessage({ id: 'route.constants.define.api.backend.serve' }),
-    formatMessage({ id: 'route.constants.plugin.configuration' }),
-    formatMessage({ id: 'route.constants.preview' }),
+    formatMessage({ id: 'page.route.steps.stepTitle.defineApiRequest' }),
+    formatMessage({ id: 'page.route.steps.stepTitle.defineApiBackendServe' }),
+    formatMessage({ id: 'component.global.steps.stepTitle.pluginConfig' }),
+    formatMessage({ id: 'component.global.steps.stepTitle.preview' }),
   ];
 
-  const [step1Data, setStep1Data] = useState(DEFAULT_STEP_1_DATA);
-  const [step2Data, setStep2Data] = useState(DEFAULT_STEP_2_DATA);
+  const [advancedMatchingRules, setAdvancedMatchingRules] = useState<RouteModule.MatchingRule[]>(
+    [],
+  );
+  const [upstreamHeaderList, setUpstreamHeaderList] = useState<RouteModule.UpstreamHeader[]>([]);
   const [step3Data, setStep3Data] = useState(DEFAULT_STEP_3_DATA);
-
   const [redirect, setRedirect] = useState(false);
 
   const [form1] = Form.useForm();
@@ -79,69 +72,51 @@ const Page: React.FC<Props> = (props) => {
 
   const [step, setStep] = useState(1);
   const [stepHeader, setStepHeader] = useState(STEP_HEADER_4);
-
   const [chart, setChart] = useState(INIT_CHART);
 
-  const routeData = {
-    step1Data,
-    step2Data,
-    step3Data,
-  };
   const setupRoute = (rid: number) =>
     fetchItem(rid).then((data) => {
-      form1.setFieldsValue(data.step1Data);
-      setStep1Data(data.step1Data as RouteModule.Step1Data);
-
-      form2.setFieldsValue(data.step2Data);
-      setStep2Data(data.step2Data);
-
+      form1.setFieldsValue(data.form1Data);
+      setAdvancedMatchingRules(data.advancedMatchingRules);
+      form2.setFieldsValue(data.form2Data);
+      setUpstreamHeaderList(data.upstreamHeaderList);
       setStep3Data(data.step3Data);
     });
 
-  useEffect(() => {
-    if (props.route.path.indexOf('edit') !== -1) {
-      setupRoute(props.match.params.rid);
-    }
-  }, []);
-
-  useEffect(() => {
-    const { redirectOption } = step1Data;
-
-    if (redirectOption === 'customRedirect') {
-      setRedirect(true);
-      setStepHeader(STEP_HEADER_2);
-      return;
-    }
-    setRedirect(false);
-    setStepHeader(STEP_HEADER_4);
-  }, [step1Data]);
-
   const onReset = () => {
-    setStep1Data(DEFAULT_STEP_1_DATA);
-    setStep2Data(DEFAULT_STEP_2_DATA);
+    setAdvancedMatchingRules([]);
+    setUpstreamHeaderList([]);
     setStep3Data(DEFAULT_STEP_3_DATA);
-
     form1.setFieldsValue(DEFAULT_STEP_1_DATA);
     form2.setFieldsValue(DEFAULT_STEP_2_DATA);
     setStep(1);
   };
 
+  useEffect(() => {
+    if (props.route.path.indexOf('edit') !== -1) {
+      setupRoute(props.match.params.rid);
+    } else {
+      onReset();
+    }
+  }, []);
+
   const renderStep = () => {
     if (step === 1) {
       return (
         <Step1
-          data={routeData}
           form={form1}
-          onChange={(params: RouteModule.Step1Data) => {
-            if (params.route_group_id) {
-              fetchRouteGroupItem(params.route_group_id).then((data) => {
-                form1.setFieldsValue({
-                  ...form1.getFieldsValue(),
-                  ...data,
-                });
-              });
+          advancedMatchingRules={advancedMatchingRules}
+          onChange={({ action, data }) => {
+            if (action === 'redirectOptionChange' && data === 'customRedirect') {
+              setStepHeader(STEP_HEADER_2);
+              setRedirect(true);
+            } else {
+              setStepHeader(STEP_HEADER_4);
+              setRedirect(false);
             }
-            setStep1Data({ ...form1.getFieldsValue(), ...step1Data, ...params });
+            if (action === 'advancedMatchingRulesChange') {
+              setAdvancedMatchingRules(data);
+            }
           }}
           isEdit={props.route.path.indexOf('edit') > 0}
         />
@@ -151,34 +126,25 @@ const Page: React.FC<Props> = (props) => {
     if (step === 2) {
       if (redirect) {
         return (
-          <CreateStep4 data={routeData} form1={form1} form2={form2} onChange={() => {}} redirect />
+          <CreateStep4
+            advancedMatchingRules={advancedMatchingRules}
+            upstreamHeaderList={upstreamHeaderList}
+            form1={form1}
+            form2={form2}
+            step3Data={step3Data}
+            redirect
+          />
         );
       }
 
       return (
         <Step2
-          data={routeData}
+          upstreamHeaderList={upstreamHeaderList}
           form={form2}
-          onChange={(params: RouteModule.Step2Data) => {
-            if (params.upstream_id) {
-              fetchUpstreamItem(params.upstream_id).then((data) => {
-                form2.setFieldsValue({
-                  ...form2.getFieldsValue(),
-                  ...data,
-                });
-                setStep2Data({
-                  ...step2Data,
-                  ...form2.getFieldsValue(),
-                  ...params,
-                } as RouteModule.Step2Data);
-              });
-              return;
+          onChange={({ action, data }) => {
+            if (action === 'upstreamHeaderListChange') {
+              setUpstreamHeaderList(data);
             }
-            setStep2Data({
-              ...step2Data,
-              ...form2.getFieldsValue(),
-              ...params,
-            } as RouteModule.Step2Data);
           }}
         />
       );
@@ -197,7 +163,15 @@ const Page: React.FC<Props> = (props) => {
     }
 
     if (step === 4) {
-      return <CreateStep4 data={routeData} form1={form1} form2={form2} onChange={() => {}} />;
+      return (
+        <CreateStep4
+          advancedMatchingRules={advancedMatchingRules}
+          upstreamHeaderList={upstreamHeaderList}
+          form1={form1}
+          form2={form2}
+          step3Data={step3Data}
+        />
+      );
     }
 
     if (step === 5) {
@@ -216,13 +190,20 @@ const Page: React.FC<Props> = (props) => {
   };
 
   const onStepChange = (nextStep: number) => {
+    const routeData = {
+      form1Data: form1.getFieldsValue(),
+      form2Data: form2.getFieldsValue(),
+      step3Data,
+      upstreamHeaderList,
+      advancedMatchingRules,
+    } as RouteModule.RequestData;
     const onUpdateOrCreate = () => {
       if (props.route.path.indexOf('edit') !== -1) {
-        update((props as any).match.params.rid, { data: routeData }).then(() => {
+        update((props as any).match.params.rid, routeData).then(() => {
           setStep(5);
         });
       } else {
-        create({ data: routeData }).then(() => {
+        create(routeData).then(() => {
           setStep(5);
         });
       }
@@ -245,11 +226,13 @@ const Page: React.FC<Props> = (props) => {
       if (step === 1) {
         form1.validateFields().then((value) => {
           const { redirectOption, hosts } = value;
+          const filterHosts = hosts.filter(Boolean);
           Promise.all([
-            redirectOption === 'forceHttps' ? checkHostWithSSL(hosts) : Promise.resolve(),
+            redirectOption === 'forceHttps' && filterHosts.length !== 0
+              ? checkHostWithSSL(hosts)
+              : Promise.resolve(),
             checkUniqueName(value.name, (props as any).match.params.rid || ''),
           ]).then(() => {
-            setStep1Data({ ...step1Data, ...value });
             setStep(nextStep);
           });
         });
@@ -265,8 +248,7 @@ const Page: React.FC<Props> = (props) => {
         onUpdateOrCreate();
         return;
       }
-      form2.validateFields().then((value) => {
-        setStep2Data({ ...step2Data, ...value });
+      form2.validateFields().then(() => {
         setStep(nextStep);
       });
       return;
@@ -284,7 +266,13 @@ const Page: React.FC<Props> = (props) => {
 
   return (
     <>
-      <PageHeaderWrapper title={formatMessage({ id: 'route.create.management' })}>
+      <PageHeaderWrapper
+        title={`${
+          (props as any).match.params.rid
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
+        } ${formatMessage({ id: 'menu.routes' })}`}
+      >
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>
             {stepHeader.map((item) => (

@@ -30,6 +30,33 @@ declare namespace UpstreamModule {
     };
     type: 'roundrobin' | 'chash';
     description: string;
+    checks: {
+      active: {
+        timeout?: number;
+        http_path: string;
+        host: string;
+        healthy: {
+          interval: number;
+          successes: number;
+        };
+        unhealthy: {
+          interval: number;
+          http_failures: number;
+        };
+        req_headers?: string[];
+      };
+      passive: {
+        healthy: {
+          http_statuses: number[];
+          successes: number;
+        };
+        unhealthy: {
+          http_statuses: number[];
+          http_failures: number;
+          tcp_failures: number;
+        };
+      };
+    };
   };
 
   type Entity = Base & {

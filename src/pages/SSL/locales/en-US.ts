@@ -15,42 +15,28 @@
  * limitations under the License.
  */
 export default {
-  'ssl.form.expiration.time': 'Expiration Time',
-  'ssl.form.cert': 'Certificate Content',
-  'ssl.form.check.cert.value': 'Please check Certificate Content',
-  'ssl.form.cert.value.length': 'The Certificate Content requires at least 128 characters',
-  'ssl.form.private.key': 'Private Key',
-  'ssl.form.check.key.value': 'Please check Private Key',
-  'ssl.form.key.value.length': 'The Private Key requires at least 128 characters',
+  'page.ssl.form.itemLabel.expireTime': 'Expiration Time',
+  'page.ssl.form.itemLabel.cert': 'Certificate Content',
+  'page.ssl.form.itemRuleMessage.certValueLength':
+    'The Certificate Content requires at least 128 characters',
+  'page.ssl.form.itemLabel.privateKey': 'Private Key',
+  'page.ssl.form.itemRuleMessage.privateKeyLength':
+    'The Private Key requires at least 128 characters',
   'page.ssl.textAreaPlaceholder.cert': 'Please enter the SSL Certificate Content',
 
-  'ssl.upload.cert': 'Upload Certificate',
-  'ssl.upload.private.key': 'Upload Private Key',
+  'page.ssl.button.uploadCert': 'Upload Certificate',
 
-  'ssl.step.way': 'Way',
-  'ssl.step.rules':
+  'page.ssl.form.itemLabel.way': 'Way',
+  'page.ssl.form.itemExtraMessage.way':
     'The new certificate should contain the same about SNI as the current certificate',
-  'ssl.step.select.create.ways': 'Please select create ways',
-  'ssl.step.input': 'Input',
-  'ssl.step.upload': 'Upload',
+  'page.ssl.select.placeholder.selectCreateWays': 'Please select create ways',
+  'page.ssl.selectOption.input': 'Input',
+  'page.ssl.upload': 'Upload',
 
-  'ssl.create.check': 'Please check certificate content',
-  'ssl.create': 'Create Certificate',
-  'ssl.create.complete.cert.info': 'Complete Certificate Information',
-  'ssl.create.preview': 'Preview',
-
-  'ssl.list.update.cert.enable.status.successfully':
+  'page.ssl.notification.updateCertEnableStatusSuccessfully':
     'Update certificate enable status successfully',
-  'ssl.list.expiration.time': 'Expiration Time',
-  'ssl.list.if.enable': 'If Enable',
-  'ssl.list.update.time': 'Update Time',
-  'ssl.list.operation': 'Operation',
-  'ssl.list.edit': 'Edit',
-  'ssl.list.delete': 'Delete',
-  'ssl.list.cancel': 'Cancle',
-  'ssl.list.confirm': 'Confirm',
-  'ssl.list.period.of.validity': 'Period Of Validity',
-  'ssl.list': 'Certificate List',
-  'ssl.list.input': 'Please input',
-  'ssl.list.create': 'Create',
+  'page.ssl.list.expirationTime': 'Expiration Time',
+  'page.ssl.list.ifEnable': 'If Enable',
+  'page.ssl.list.periodOfValidity': 'Period Of Validity',
+  'page.ssl.steps.stepTitle.completeCertInfo': 'Complete Certificate Information',
 };

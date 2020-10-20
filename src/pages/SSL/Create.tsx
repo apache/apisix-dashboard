@@ -50,7 +50,11 @@ const Page: React.FC = (props) => {
         setStep(2);
       })
       .catch(() => {
-        notification.warning({ message: formatMessage({ id: 'ssl.create.check' }) });
+        notification.warning({
+          message: `${formatMessage({ id: 'component.global.pleaseCheck' })}${formatMessage({
+            id: 'page.ssl.form.itemLabel.cert',
+          })}`,
+        });
       });
   };
 
@@ -84,12 +88,18 @@ const Page: React.FC = (props) => {
 
   return (
     <>
-      <PageHeaderWrapper title={formatMessage({ id: 'ssl.create' })}>
+      <PageHeaderWrapper
+        title={`${
+          (props as any).match.params.id
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
+        }${formatMessage({ id: 'menu.ssl' })}`}
+      >
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>
             {[
-              formatMessage({ id: 'ssl.create.complete.cert.info' }),
-              formatMessage({ id: 'ssl.create.preview' }),
+              formatMessage({ id: 'page.ssl.steps.stepTitle.completeCertInfo' }),
+              formatMessage({ id: 'component.global.steps.stepTitle.preview' }),
             ].map((item) => (
               <Steps.Step title={item} key={item} />
             ))}

@@ -27,13 +27,17 @@ const ResultView: React.FC<Props> = (props) => {
   return (
     <Result
       status="success"
-      title={formatMessage({ id: 'route.result.submit.success' })}
+      title={`${formatMessage({ id: 'component.global.submit' })}${formatMessage({
+        id: 'component.status.success',
+      })}`}
       extra={[
         <Button type="primary" key="goto-list" onClick={() => history.replace('/routes/list')}>
-          {formatMessage({ id: 'route.result.return.list' })}
+          {formatMessage({ id: 'page.route.button.returnList' })}
         </Button>,
         <Button key="create-new" onClick={() => props.createNew()}>
-          {formatMessage({ id: 'route.result.create' })}
+          {`${formatMessage({ id: 'component.global.create' })} ${formatMessage({
+            id: 'menu.routes',
+          })}`}
         </Button>,
       ]}
     />

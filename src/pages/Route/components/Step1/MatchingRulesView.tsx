@@ -19,11 +19,11 @@ import { Button, Table, Modal, Form, Select, Input, Space } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
-interface Props extends RouteModule.Data {}
-
-const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
-  const { advancedMatchingRules } = data.step1Data;
-
+const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
+  advancedMatchingRules,
+  disabled,
+  onChange = () => {},
+}) => {
   const [visible, setVisible] = useState(false);
   const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
   const [namePlaceholder, setNamePlaceholder] = useState('');
@@ -38,8 +38,8 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
       if (mode === 'EDIT') {
         const key = modalForm.getFieldValue('key');
         onChange({
-          ...data.step1Data,
-          advancedMatchingRules: advancedMatchingRules.map((rule) => {
+          action: 'advancedMatchingRulesChange',
+          data: advancedMatchingRules.map((rule) => {
             if (rule.key === key) {
               return { ...(value as RouteModule.MatchingRule), key };
             }
@@ -51,7 +51,10 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
           ...(value as RouteModule.MatchingRule),
           key: Math.random().toString(36).slice(2),
         };
-        onChange({ ...data.step1Data, advancedMatchingRules: advancedMatchingRules.concat(rule) });
+        onChange({
+          action: 'advancedMatchingRulesChange',
+          data: advancedMatchingRules.concat(rule),
+        });
       }
       modalForm.resetFields();
       setVisible(false);
@@ -66,23 +69,23 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
 
   const handleRemove = (key: string) => {
     onChange({
-      ...data.step1Data,
-      advancedMatchingRules: advancedMatchingRules.filter((item) => item.key !== key),
+      action: 'advancedMatchingRulesChange',
+      data: advancedMatchingRules.filter((item) => item.key !== key),
     });
   };
 
   const columns = [
     {
-      title: formatMessage({ id: 'route.match.parameter.position' }),
+      title: formatMessage({ id: 'page.route.parameterPosition' }),
       key: 'position',
       render: (text: RouteModule.MatchingRule) => {
         let renderText;
         switch (text.position) {
           case 'http':
-            renderText = formatMessage({ id: 'route.match.http.request.header' });
+            renderText = formatMessage({ id: 'page.route.httpRequestHeader' });
             break;
           case 'arg':
-            renderText = formatMessage({ id: 'route.match.request.parameter' });
+            renderText = formatMessage({ id: 'page.route.requestParameter' });
             break;
           case 'cookie':
             renderText = 'Cookie';
@@ -94,30 +97,30 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
       },
     },
     {
-      title: formatMessage({ id: 'route.match.parameter.name' }),
+      title: formatMessage({ id: 'page.route.parameterName' }),
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: formatMessage({ id: 'route.match.operational.character' }),
+      title: formatMessage({ id: 'page.route.operationalCharacter' }),
       key: 'operator',
       render: (text: RouteModule.MatchingRule) => {
         let renderText;
         switch (text.operator) {
           case '==':
-            renderText = formatMessage({ id: 'route.match.equal' });
+            renderText = formatMessage({ id: 'page.route.equal' });
             break;
           case '~=':
-            renderText = formatMessage({ id: 'route.match.unequal' });
+            renderText = formatMessage({ id: 'page.route.unequal' });
             break;
           case '>':
-            renderText = formatMessage({ id: 'route.match.greater.than' });
+            renderText = formatMessage({ id: 'page.route.greaterThan' });
             break;
           case '<':
-            renderText = formatMessage({ id: 'route.match.less.than' });
+            renderText = formatMessage({ id: 'page.route.lessThan' });
             break;
           case '~~':
-            renderText = formatMessage({ id: 'route.match.regex.match' });
+            renderText = formatMessage({ id: 'page.route.regexMatch' });
             break;
           default:
             renderText = '';
@@ -126,20 +129,22 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
       },
     },
     {
-      title: formatMessage({ id: 'route.match.parameter.value' }),
+      title: formatMessage({ id: 'page.route.value' }),
       dataIndex: 'value',
       key: 'value',
     },
     disabled
       ? {}
       : {
-          title: formatMessage({ id: 'route.match.operation' }),
+          title: formatMessage({ id: 'component.global.operation' }),
           key: 'action',
           render: (_: any, record: RouteModule.MatchingRule) => (
             <Space size="middle">
-              <a onClick={() => handleEdit(record)}>{formatMessage({ id: 'route.match.edit' })}</a>
+              <a onClick={() => handleEdit(record)}>
+                {formatMessage({ id: 'component.global.edit' })}
+              </a>
               <a onClick={() => handleRemove(record.key)}>
-                {formatMessage({ id: 'route.match.delete' })}
+                {formatMessage({ id: 'component.global.delete' })}
               </a>
             </Space>
           ),
@@ -148,11 +153,11 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
 
   const renderModal = () => (
     <Modal
-      title={
+      title={`${
         mode === 'EDIT'
-          ? formatMessage({ id: 'route.match.edit.rule' })
-          : formatMessage({ id: 'route.match.create.rule' })
-      }
+          ? formatMessage({ id: 'component.global.edit' })
+          : formatMessage({ id: 'component.global.create' })
+      } ${formatMessage({ id: 'page.route.rule' })}`}
       centered
       visible
       onOk={onOk}
@@ -160,72 +165,92 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
         setVisible(false);
         modalForm.resetFields();
       }}
-      okText={formatMessage({ id: 'route.match.confirm' })}
-      cancelText={formatMessage({ id: 'route.match.cancel' })}
+      okText={formatMessage({ id: 'component.global.confirm' })}
+      cancelText={formatMessage({ id: 'component.global.cancel' })}
       destroyOnClose
     >
-      <Form form={modalForm} labelCol={{ span: 9 }} wrapperCol={{ span: 15 }}>
+      <Form form={modalForm} labelCol={{ span: 4 }}>
         <Form.Item
-          label={formatMessage({ id: 'route.match.parameter.position' })}
+          label={formatMessage({ id: 'page.route.parameterPosition' })}
           name="position"
           rules={[
             {
               required: true,
-              message: formatMessage({ id: 'route.match.select.parameter.position' }),
+              message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+                id: 'page.route.parameterPosition',
+              })}`,
             },
           ]}
         >
           <Select
             onChange={(value) => {
               if (value === 'http') {
-                setNamePlaceholder(formatMessage({ id: 'route.match.request.header.example' }));
+                setNamePlaceholder(
+                  formatMessage({ id: 'page.route.input.placeholder.parameterNameHttpHeader' }),
+                );
               } else {
-                setNamePlaceholder(formatMessage({ id: 'route.match.parameter.name.example' }));
+                setNamePlaceholder(
+                  formatMessage({
+                    id: 'page.route.input.placeholder.parameterNameRequestParameter',
+                  }),
+                );
               }
             }}
           >
-            <Option value="http">{formatMessage({ id: 'route.match.http.request.header' })}</Option>
-            <Option value="arg">{formatMessage({ id: 'route.match.request.parameter' })}</Option>
+            <Option value="http">{formatMessage({ id: 'page.route.httpRequestHeader' })}</Option>
+            <Option value="arg">{formatMessage({ id: 'page.route.requestParameter' })}</Option>
             <Option value="cookie">Cookie</Option>
           </Select>
         </Form.Item>
         <Form.Item
-          label={formatMessage({ id: 'route.match.parameter.name' })}
+          label={formatMessage({ id: 'page.route.parameterName' })}
           name="name"
           rules={[
-            { required: true, message: formatMessage({ id: 'route.match.input.parameter.name' }) },
+            {
+              required: true,
+              message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+                id: 'page.route.parameterName',
+              })}`,
+            },
             {
               pattern: new RegExp(/^([a-zA-Z][a-zA-Z0-9_-]*$)/, 'g'),
-              message: formatMessage({ id: 'route.match.parameter.name.rule' }),
+              message: formatMessage({ id: 'component.global.input.ruleMessage.name' }),
             },
           ]}
-          extra={formatMessage({ id: 'route.match.rule' })}
+          extra={formatMessage({ id: 'page.route.form.itemRulesRequiredMessage.parameterName' })}
         >
           <Input placeholder={namePlaceholder} />
         </Form.Item>
         <Form.Item
-          label={formatMessage({ id: 'route.match.operational.character' })}
+          label={formatMessage({ id: 'page.route.operationalCharacter' })}
           name="operator"
           rules={[
             {
               required: true,
-              message: formatMessage({ id: 'route.match.choose.operational.character' }),
+              message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
+                id: 'page.route.operationalCharacter',
+              })}`,
             },
           ]}
         >
           <Select>
-            <Option value="==">{formatMessage({ id: 'route.match.equal' })}</Option>
-            <Option value="~=">{formatMessage({ id: 'route.match.unequal' })}</Option>
-            <Option value=">">{formatMessage({ id: 'route.match.greater.than' })}</Option>
-            <Option value="<">{formatMessage({ id: 'route.match.less.than' })}</Option>
-            <Option value="~~">{formatMessage({ id: 'route.match.regex.match' })}</Option>
+            <Option value="==">{formatMessage({ id: 'page.route.equal' })}</Option>
+            <Option value="~=">{formatMessage({ id: 'page.route.unequal' })}</Option>
+            <Option value=">">{formatMessage({ id: 'page.route.greaterThan' })}</Option>
+            <Option value="<">{formatMessage({ id: 'page.route.lessThan' })}</Option>
+            <Option value="~~">{formatMessage({ id: 'page.route.regexMatch' })}</Option>
           </Select>
         </Form.Item>
         <Form.Item
-          label={formatMessage({ id: 'route.match.value' })}
+          label={formatMessage({ id: 'page.route.value' })}
           name="value"
           rules={[
-            { required: true, message: formatMessage({ id: 'route.match.input.parameter.value' }) },
+            {
+              required: true,
+              message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+                id: 'page.route.value',
+              })}`,
+            },
           ]}
         >
           <Input />
@@ -235,7 +260,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
   );
 
   return (
-    <PanelSection title={formatMessage({ id: 'route.match.advanced.match.rule' })}>
+    <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.advancedMatchRule' })}>
       {!disabled && (
         <Button
           onClick={() => {
@@ -247,7 +272,7 @@ const MatchingRulesView: React.FC<Props> = ({ data, disabled, onChange }) => {
             marginBottom: 16,
           }}
         >
-          {formatMessage({ id: 'route.match.create' })}
+          {formatMessage({ id: 'component.global.create' })}
         </Button>
       )}
       <Table key="table" bordered dataSource={advancedMatchingRules} columns={columns} />

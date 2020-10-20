@@ -23,11 +23,14 @@ import PluginOrchestration from '@api7-dashboard/pluginchart';
 import Step1 from '../Step1';
 import Step2 from '../Step2';
 
-interface Props extends RouteModule.Data {
+type Props = {
   form1: FormInstance;
   form2: FormInstance;
   redirect?: boolean;
-}
+  step3Data: RouteModule.Step3Data;
+  advancedMatchingRules: RouteModule.MatchingRule[];
+  upstreamHeaderList: RouteModule.UpstreamHeader[];
+};
 
 const style = {
   marginTop: '40px',
@@ -35,26 +38,27 @@ const style = {
 
 const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, ...rest }) => {
   const { formatMessage } = useIntl();
-  const { plugins = {}, script = {} } = rest.data.step3Data;
+  const { plugins = {}, script = {} } = rest.step3Data;
 
   return (
     <>
-      <h2>{formatMessage({ id: 'route.create.define.api.request' })}</h2>
+      <h2>{formatMessage({ id: 'page.route.steps.stepTitle.defineApiRequest' })}</h2>
       <Step1 {...rest} form={form1} disabled />
       {!redirect && (
         <>
-          <h2 style={style}>{formatMessage({ id: 'route.create.define.api.backend.server' })}</h2>
-          <Step2 {...rest} form={form2} disabled />
-          <h2 style={style}>{formatMessage({ id: 'route.create.plugin.configuration' })}</h2>
+          <h2 style={style}>{formatMessage({ id: 'page.route.steps.stepTitle.defineApiBackendServe' })}</h2>
+          <Step2
+            upstreamHeaderList={rest.upstreamHeaderList}
+            form={form2}
+            disabled
+            onChange={() => {}}
+          />
+          <h2 style={style}>{formatMessage({ id: 'component.global.steps.stepTitle.pluginConfig' })}</h2>
           {Boolean(Object.keys(plugins).length !== 0) && (
-            <PluginPage initialData={rest.data.step3Data.plugins} readonly />
+            <PluginPage initialData={rest.step3Data.plugins} readonly />
           )}
           {Boolean(Object.keys(script).length !== 0) && (
-            <PluginOrchestration
-              data={rest.data.step3Data.script.chart}
-              readonly
-              onChange={() => {}}
-            />
+            <PluginOrchestration data={rest.step3Data.script.chart} readonly onChange={() => {}} />
           )}
         </>
       )}

@@ -32,20 +32,20 @@ const Page: React.FC = () => {
 
   const columns: ProColumns<RouteGroupModule.RouteGroupEntity>[] = [
     {
-      title: formatMessage({ id: 'routegroup.list.name' }),
+      title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
     },
     {
-      title: formatMessage({ id: 'routegroup.list.description' }),
+      title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'description',
     },
     {
-      title: formatMessage({ id: 'routegroup.list.edit.time' }),
+      title: formatMessage({ id: 'component.global.editTime' }),
       dataIndex: 'update_time',
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },
     {
-      title: formatMessage({ id: 'routegroup.list.operation' }),
+      title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
       render: (_, record) => (
         <>
@@ -54,16 +54,18 @@ const Page: React.FC = () => {
             style={{ marginRight: 10 }}
             onClick={() => history.push(`/routegroup/${record.id}/edit`)}
           >
-            {formatMessage({ id: 'routegroup.list.edit' })}
+            {formatMessage({ id: 'component.global.edit' })}
           </Button>
           <Popconfirm
-            title={formatMessage({ id: 'routegroup.list.confirm.delete' })}
-            okText={formatMessage({ id: 'routegroup.list.confirm' })}
-            cancelText={formatMessage({ id: 'routegroup.list.cancel' })}
+            title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
+            okText={formatMessage({ id: 'component.global.confirm' })}
+            cancelText={formatMessage({ id: 'component.global.cancel' })}
             onConfirm={() => {
               remove(record.id!).then(() => {
                 notification.success({
-                  message: formatMessage({ id: 'routegroup.list.delete.successfully' }),
+                  message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                    id: 'menu.routegroup',
+                  })} ${formatMessage({ id: 'component.status.success' })}`,
                 });
                 /* eslint-disable no-unused-expressions */
                 ref.current?.reload();
@@ -71,7 +73,7 @@ const Page: React.FC = () => {
             }}
           >
             <Button type="primary" danger>
-              {formatMessage({ id: 'routegroup.list.delete' })}
+              {formatMessage({ id: 'component.global.delete' })}
             </Button>
           </Popconfirm>
         </>
@@ -80,7 +82,11 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageContainer title={formatMessage({ id: 'routegroup.list' })}>
+    <PageContainer
+      title={`${formatMessage({ id: 'menu.routegroup' })}${formatMessage({
+        id: 'component.global.list',
+      })}`}
+    >
       <ProTable<RouteGroupModule.RouteGroupEntity>
         actionRef={ref}
         columns={columns}
@@ -89,7 +95,7 @@ const Page: React.FC = () => {
         request={(params) => fetchList(params, search)}
         toolBarRender={(action) => [
           <Input.Search
-            placeholder={formatMessage({ id: 'routegroup.list.input' })}
+            placeholder={formatMessage({ id: 'component.global.pleaseEnter' })}
             onSearch={(value) => {
               setSearch(value);
               action.setPageInfo({ page: 1 });
@@ -98,7 +104,7 @@ const Page: React.FC = () => {
           />,
           <Button type="primary" onClick={() => history.push('/routegroup/create')}>
             <PlusOutlined />
-            {formatMessage({ id: 'routegroup.list.create' })}
+            {formatMessage({ id: 'component.global.create' })}
           </Button>,
         ]}
       />

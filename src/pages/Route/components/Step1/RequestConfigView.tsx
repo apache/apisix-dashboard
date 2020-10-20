@@ -18,7 +18,6 @@ import React from 'react';
 import Form from 'antd/es/form';
 import { Checkbox, Button, Input, Switch, Select, Row, Col } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { CheckboxValueType } from 'antd/lib/checkbox/Group';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
@@ -28,15 +27,11 @@ import {
   FORM_ITEM_WITHOUT_LABEL,
 } from '@/pages/Route/constants';
 
-interface Props extends RouteModule.Data {}
-
-const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
-  const { step1Data } = data;
-  const { protocols } = step1Data;
-  const onProtocolChange = (e: CheckboxValueType[]) => {
-    if (!e.includes('http') && !e.includes('https')) return;
-    onChange({ ...data.step1Data, protocols: e });
-  };
+const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
+  form,
+  disabled,
+  onChange = () => {},
+}) => {
   const { formatMessage } = useIntl();
   const renderHosts = () => (
     <Form.List name="hosts">
@@ -46,10 +41,12 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
             {fields.map((field, index) => (
               <Form.Item
                 {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-                label={index === 0 ? formatMessage({ id: 'route.request.config.domain.name' }) : ''}
+                label={index === 0 ? formatMessage({ id: 'page.route.domainName' }) : ''}
                 key={field.key}
                 extra={
-                  index === 0 ? formatMessage({ id: 'route.request.config.domain.or.ip' }) : ''
+                  index === 0
+                    ? formatMessage({ id: 'page.route.form.itemExtraMessage.domain' })
+                    : ''
                 }
               >
                 <Form.Item
@@ -57,19 +54,18 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                   validateTrigger={['onChange', 'onBlur']}
                   rules={[
                     {
-                      required: true,
-                      whitespace: true,
-                      message: formatMessage({ id: 'route.request.config.input.domain.name' }),
-                    },
-                    {
                       pattern: new RegExp(/(^\*?[a-zA-Z0-9._-]+$|^\*$)/, 'g'),
-                      message: formatMessage({ id: 'route.request.config.domain.name.rule' }),
+                      message: formatMessage({
+                        id: 'page.route.form.itemRulesPatternMessage.domain',
+                      }),
                     },
                   ]}
                   noStyle
                 >
                   <Input
-                    placeholder={formatMessage({ id: 'route.request.config.input.domain.name' })}
+                    placeholder={`${formatMessage({
+                      id: 'component.global.pleaseEnter',
+                    })} ${formatMessage({ id: 'page.route.domainName' })}`}
                     style={{ width: '60%' }}
                     disabled={disabled}
                   />
@@ -93,7 +89,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                     add();
                   }}
                 >
-                  <PlusOutlined /> {formatMessage({ id: 'route.request.config.create' })}
+                  <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
                 </Button>
               </Form.Item>
             )}
@@ -111,15 +107,15 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
             {fields.map((field, index) => (
               <Form.Item
                 {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-                label={index === 0 ? formatMessage({ id: 'route.request.config.path' }) : ''}
+                label={index === 0 ? formatMessage({ id: 'page.route.path' }) : ''}
                 required
                 key={field.key}
                 extra={
                   index === 0 ? (
                     <div>
-                      {formatMessage({ id: 'route.request.config.path.description1' })}
+                      {formatMessage({ id: 'page.route.form.itemExtraMessage1.path' })}
                       <br />
-                      {formatMessage({ id: 'route.request.config.path.description2' })}
+                      {formatMessage({ id: 'page.route.form.itemExtraMessage2.path' })}
                     </div>
                   ) : null
                 }
@@ -131,17 +127,23 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                     {
                       required: true,
                       whitespace: true,
-                      message: formatMessage({ id: 'route.request.config.input.path' }),
+                      message: `${formatMessage({
+                        id: 'component.global.pleaseEnter',
+                      })} ${formatMessage({ id: 'page.route.path' })}`,
                     },
                     {
                       pattern: new RegExp(/^\/[a-zA-Z0-9\-._~%!$&'()+,;=:@/]*\*?$/, 'g'),
-                      message: formatMessage({ id: 'route.request.config.path.rule' }),
+                      message: formatMessage({
+                        id: 'page.route.form.itemRulesPatternMessage.path',
+                      }),
                     },
                   ]}
                   noStyle
                 >
                   <Input
-                    placeholder={formatMessage({ id: 'route.request.config.input.path' })}
+                    placeholder={`${formatMessage({
+                      id: 'component.global.pleaseEnter',
+                    })} ${formatMessage({ id: 'page.route.path' })}`}
                     style={{ width: '60%' }}
                     disabled={disabled}
                   />
@@ -165,7 +167,7 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
                     add();
                   }}
                 >
-                  <PlusOutlined /> {formatMessage({ id: 'route.request.config.create' })}
+                  <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
                 </Button>
               </Form.Item>
             )}
@@ -176,23 +178,22 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
   );
 
   return (
-    <PanelSection title={formatMessage({ id: 'route.request.config.basic.define' })}>
+    <PanelSection
+      title={formatMessage({ id: 'page.route.panelSection.title.requestConfigBasicDefine' })}
+    >
       <Form.Item
-        label={formatMessage({ id: 'route.request.config.protocol' })}
+        label={formatMessage({ id: 'page.route.protocol' })}
         name="protocols"
         rules={[
           {
             required: true,
-            message: formatMessage({ id: 'route.request.config.choose.protocol' }),
+            message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
+              id: 'page.route.protocol',
+            })}`,
           },
         ]}
       >
-        <Checkbox.Group
-          disabled={disabled}
-          options={['http', 'https']}
-          value={protocols}
-          onChange={onProtocolChange}
-        />
+        <Checkbox.Group disabled={disabled} options={['http', 'https']} />
       </Form.Item>
       <Form.Item label="WebSocket" name="websocket" valuePropName="checked">
         <Switch disabled={disabled} />
@@ -208,61 +209,96 @@ const RequestConfigView: React.FC<Props> = ({ data, disabled, onChange }) => {
       {renderHosts()}
       {renderPaths()}
       <Form.Item
-        label={formatMessage({ id: 'route.request.config.http.method' })}
+        label={formatMessage({ id: 'page.route.form.itemLabel.httpMethod' })}
         name="methods"
         rules={[
           {
             required: true,
-            message: formatMessage({ id: 'route.request.config.choose.http.method' }),
+            message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
+              id: 'page.route.form.itemLabel.httpMethod',
+            })}`,
           },
         ]}
       >
         <Checkbox.Group options={HTTP_METHOD_OPTION_LIST} disabled={disabled} />
       </Form.Item>
       <Form.Item
-        label={formatMessage({ id: 'route.request.config.redirect' })}
+        label={formatMessage({ id: 'page.route.form.itemLabel.redirect' })}
         name="redirectOption"
       >
-        <Select disabled={disabled}>
+        <Select
+          disabled={disabled}
+          onChange={(parmas) => {
+            onChange({ action: 'redirectOptionChange', data: parmas });
+          }}
+        >
           <Select.Option value="forceHttps">
-            {formatMessage({ id: 'route.request.config.enable.https' })}
+            {formatMessage({ id: 'page.route.select.option.enableHttps' })}
           </Select.Option>
           <Select.Option value="customRedirect">
-            {formatMessage({ id: 'route.request.config.custom' })}
+            {formatMessage({ id: 'page.route.select.option.configCustom' })}
           </Select.Option>
           <Select.Option value="disabled">
-            {formatMessage({ id: 'route.request.config.forbidden' })}
+            {formatMessage({ id: 'page.route.select.option.forbidden' })}
           </Select.Option>
         </Select>
       </Form.Item>
-      {step1Data.redirectOption === 'customRedirect' && (
-        <Form.Item label={formatMessage({ id: 'route.request.config.redirect.custom' })} required>
-          <Row gutter={10}>
-            <Col>
-              <Form.Item name="redirectURI" rules={[{ required: true }]}>
-                <Input
-                  placeholder={formatMessage({
-                    id: 'route.request.config.redirect.custom.example',
-                  })}
-                  disabled={disabled}
-                />
+      <Form.Item
+        noStyle
+        shouldUpdate={(prev, next) => {
+          onChange({ action: 'redirectOptionChange', data: next.redirectOption });
+          return prev.redirectOption !== next.redirectOption;
+        }}
+      >
+        {() => {
+          if (form.getFieldValue('redirectOption') === 'customRedirect') {
+            return (
+              <Form.Item
+                label={formatMessage({ id: 'page.route.form.itemLabel.redirectCustom' })}
+                required
+              >
+                <Row gutter={10}>
+                  <Col>
+                    <Form.Item
+                      name="redirectURI"
+                      rules={[
+                        {
+                          required: true,
+                          message: `${formatMessage({
+                            id: 'component.global.pleaseEnter',
+                          })}${formatMessage({
+                            id: 'page.route.form.itemLabel.redirectURI',
+                          })}`,
+                        },
+                      ]}
+                    >
+                      <Input
+                        placeholder={formatMessage({
+                          id: 'page.route.input.placeholder.redirectCustom',
+                        })}
+                        disabled={disabled}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={10}>
+                    <Form.Item name="redirectCode" rules={[{ required: true }]}>
+                      <Select disabled={disabled}>
+                        <Select.Option value={301}>
+                          {formatMessage({ id: 'page.route.select.option.redirect301' })}
+                        </Select.Option>
+                        <Select.Option value={302}>
+                          {formatMessage({ id: 'page.route.select.option.redirect302' })}
+                        </Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                </Row>
               </Form.Item>
-            </Col>
-            <Col span={10}>
-              <Form.Item name="redirectCode" rules={[{ required: true }]}>
-                <Select disabled={disabled}>
-                  <Select.Option value={301}>
-                    {formatMessage({ id: 'route.request.config.redirect.301' })}
-                  </Select.Option>
-                  <Select.Option value={302}>
-                    {formatMessage({ id: 'route.request.config.redirect.302' })}
-                  </Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form.Item>
-      )}
+            );
+          }
+          return null;
+        }}
+      </Form.Item>
     </PanelSection>
   );
 };
