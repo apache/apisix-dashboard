@@ -4,7 +4,6 @@ go 1.13
 
 require (
 	github.com/api7/go-jsonpatch v0.0.0-20180223123257-a8710867776e
-	github.com/cameront/go-jsonpatch v0.0.0-20180223123257-a8710867776e // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -12,10 +11,8 @@ require (
 	github.com/gin-contrib/pprof v1.3.0
 	github.com/gin-contrib/sessions v0.0.3
 	github.com/gin-gonic/gin v1.6.3
-	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/google/uuid v1.1.2 // indirect
-	github.com/jinzhu/gorm v1.9.12
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiningrush/droplet v0.2.1
 	github.com/shiningrush/droplet/wrapper/gin v0.2.0
