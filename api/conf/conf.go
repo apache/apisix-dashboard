@@ -24,6 +24,8 @@ import (
 	"runtime"
 
 	"github.com/tidwall/gjson"
+
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 const ServerPort = 8080
@@ -32,14 +34,16 @@ const BETA = "beta"
 const DEV = "dev"
 const LOCAL = "local"
 const confPath = "/go/manager-api/conf.json"
+const schemaPath = "/go/manager-api/schema.json"
 const RequestId = "requestId"
 
 var (
-	ENV      string
-	basePath string
-	ApiKey   = "edd1c9f034335f136f87ad84b625c8f1"
-	BaseUrl  = "http://127.0.0.1:9080/apisix/admin"
-	DebugUrl = "http://127.0.0.1:9080/"
+	ENV        string
+	basePath   string
+	Schema     gjson.Result
+	ApiKey     = "edd1c9f034335f136f87ad84b625c8f1"
+	BaseUrl    = "http://127.0.0.1:9080/apisix/admin"
+	DagLibPath = "/go/manager-api/dag-to-lua/"
 )
 
 func init() {
@@ -47,6 +51,7 @@ func init() {
 	initMysql()
 	initApisix()
 	initAuthentication()
+	initSchema()
 }
 
 func setEnvironment() {
@@ -55,6 +60,11 @@ func setEnvironment() {
 	} else {
 		ENV = env
 	}
+
+	if env := os.Getenv("APIX_DAG_LIB_PATH"); env != "" {
+		DagLibPath = env
+	}
+
 	_, basePath, _, _ = runtime.Caller(1)
 }
 
@@ -63,6 +73,14 @@ func configurationPath() string {
 		return filepath.Join(filepath.Dir(basePath), "conf.json")
 	} else {
 		return confPath
+	}
+}
+
+func getSchemaPath() string {
+	if ENV == LOCAL {
+		return filepath.Join(filepath.Dir(basePath), "schema.json")
+	} else {
+		return schemaPath
 	}
 }
 
@@ -118,25 +136,37 @@ func initApisix() {
 		apisixConf := configuration.Get("conf.apisix")
 		BaseUrl = apisixConf.Get("base_url").String()
 		ApiKey = apisixConf.Get("api_key").String()
-		DebugUrl = apisixConf.Get("debug_url").String()
 	}
 }
 
 func initAuthentication() {
 	filePath := configurationPath()
-	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
+	configurationContent, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
+	}
+
+	configuration := gjson.ParseBytes(configurationContent)
+	userList := configuration.Get("authentication.user").Array()
+	// create user list
+	for _, item := range userList {
+		username := item.Map()["username"].String()
+		password := item.Map()["password"].String()
+		UserList[item.Map()["username"].String()] = user{Username: username, Password: password}
+	}
+	AuthenticationConfig.Session.Secret = configuration.Get("authentication.session.secret").String()
+	if "secret" == AuthenticationConfig.Session.Secret {
+		AuthenticationConfig.Session.Secret = utils.GetFlakeUidStr()
+	}
+
+	AuthenticationConfig.Session.ExpireTime = configuration.Get("authentication.session.expireTime").Uint()
+}
+
+func initSchema() {
+	filePath := getSchemaPath()
+	if schemaContent, err := ioutil.ReadFile(filePath); err != nil {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
 	} else {
-		configuration := gjson.ParseBytes(configurationContent)
-		userList := configuration.Get("authentication.user").Array()
-
-		// create user list
-		for _, item := range userList {
-			username := item.Map()["username"].String()
-			password := item.Map()["password"].String()
-			UserList[item.Map()["username"].String()] = user{Username: username, Password: password}
-		}
-		AuthenticationConfig.Session.Secret = configuration.Get("authentication.session.secret").String()
-		AuthenticationConfig.Session.ExpireTime = configuration.Get("authentication.session.expireTime").Uint()
+		Schema = gjson.ParseBytes(schemaContent)
 	}
 }

@@ -14,30 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package filter
+package consts
 
 import (
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
+	"net/http"
 )
 
-func RequestId() gin.HandlerFunc {
+type WrapperHandle func(c *gin.Context) (interface{}, error)
+
+func ErrorWrapper(handle WrapperHandle) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Check for incoming header, use it if exists
-		requestId := c.Request.Header.Get("X-Request-Id")
-
-		// Create request id with UUID4
-		if requestId == "" {
-			u4 := uuid.NewV4()
-			requestId = u4.String()
+		data, err := handle(c)
+		if err != nil {
+			apiError := err.(*ApiError)
+			c.JSON(apiError.Status, apiError)
+			return
 		}
-
-		// Expose it for use in the application
-		c.Set("X-Request-Id", requestId)
-		c.Request.Header.Set("X-Request-Id", requestId)
-
-		// Set X-Request-Id header
-		c.Writer.Header().Set("X-Request-Id", requestId)
-		c.Next()
+		c.JSON(http.StatusOK, gin.H{"data": data, "code": 200, "message": "success"})
 	}
+}
+
+type ApiError struct {
+	Status  int    `json:"-"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+func (err ApiError) Error() string {
+	return err.Message
+}
+
+func InvalidParam(message string) *ApiError {
+	return &ApiError{400, 400, message}
+}
+
+func SystemError(message string) *ApiError {
+	return &ApiError{500, 500, message}
 }

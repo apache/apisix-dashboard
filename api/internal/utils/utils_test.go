@@ -14,30 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package filter
+package utils
 
 import (
-	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
-func RequestId() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// Check for incoming header, use it if exists
-		requestId := c.Request.Header.Get("X-Request-Id")
+func TestGetFlakeUid(t *testing.T) {
+	id := GetFlakeUid()
+	assert.NotEqual(t, 0, id)
+}
 
-		// Create request id with UUID4
-		if requestId == "" {
-			u4 := uuid.NewV4()
-			requestId = u4.String()
-		}
-
-		// Expose it for use in the application
-		c.Set("X-Request-Id", requestId)
-		c.Request.Header.Set("X-Request-Id", requestId)
-
-		// Set X-Request-Id header
-		c.Writer.Header().Set("X-Request-Id", requestId)
-		c.Next()
-	}
+func TestGetFlakeUidStr(t *testing.T) {
+	id := GetFlakeUidStr()
+	assert.NotEqual(t, "", id)
 }

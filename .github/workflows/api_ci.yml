@@ -16,43 +16,16 @@ jobs:
 
     services:
       etcd:
-        image: bitnami/etcd:3.3.13-r80
+        image: bitnami/etcd:3.4.13
         ports:
           - 2379:2379
           - 2380:2380
         env:
           ALLOW_NONE_AUTHENTICATION: yes
 
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: 123456
-        ports:
-            - '3306:3306'
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
-
     steps:
 
     - uses: actions/checkout@v2
-
-    - name: run apisix
-      run: |
-        network=$(docker network ls | grep github_network | awk '{print $2}')
-        docker run --name apisix  -d -p 9080:9080 \
-        -v ${{ github.workspace }}/.github/apisix-config.yaml:/usr/local/apisix/conf/config.yaml \
-        --network "$network" --network-alias apisix \
-        apache/apisix:dev
-        sleep 5
-        docker logs apisix
-
-    - name: setting up database
-      run: |
-        mysql -h 127.0.0.1 --port 3306 -u root -p123456  < ./api/script/db/schema.sql
-
-    - name: ping apisix
-      run: |
-        curl 127.0.0.1:9080
 
     - name: run Makefile
       run: |
@@ -61,9 +34,9 @@ jobs:
     - name: get lua lib
       run: |
         wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
-        sudo mkdir -p /go/api7-manager-api/dag-to-lua/
+        sudo mkdir -p /go/manager-api/dag-to-lua/
         tar -zxvf v1.1.tar.gz
-        sudo mv ./dag-to-lua-1.1/lib/* /go/api7-manager-api/dag-to-lua/
+        sudo mv ./dag-to-lua-1.1/lib/* /go/manager-api/dag-to-lua/
 
     - name: install runtime
       run: |
@@ -74,7 +47,18 @@ jobs:
         export GO111MOUDULE=on
         sudo apt install golang-1.14-go
 
+    - name: generate json schema
+      working-directory: ./api
+      run: |
+        wget https://github.com/apache/apisix/archive/master.zip
+        mkdir ./build-tools/apisix/
+        unzip master.zip
+        sudo mv ./apisix-master/apisix/* ./build-tools/apisix/
+        rm -rf ./apisix-master
+        cd ./build-tools/ && lua schema-sync.lua > ../conf/schema.json
+
     - name: run test
       working-directory: ./api
       run: |
+        export APIX_ETCD_ENDPOINTS=127.0.0.1:2379
         go test ./...

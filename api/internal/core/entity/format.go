@@ -14,30 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package filter
+package entity
 
 import (
-	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
+	"log"
+	"strconv"
+	"strings"
 )
 
-func RequestId() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// Check for incoming header, use it if exists
-		requestId := c.Request.Header.Get("X-Request-Id")
+func NodesFormat(obj interface{}) interface{} {
+	if value, ok := obj.(map[string]float64); ok {
+		var nodes []*Node
+		var strArr []string
+		for key, val := range value {
+			node := &Node{}
+			strArr = strings.Split(key, ":")
+			if len(strArr) != 2 {
+				log.Println("length of string array is not 2")
+				return obj
+			}
 
-		// Create request id with UUID4
-		if requestId == "" {
-			u4 := uuid.NewV4()
-			requestId = u4.String()
+			port, err := strconv.Atoi(strArr[1])
+			if err != nil {
+				log.Println("parse int fail:", err)
+				return obj
+			}
+
+			node.Host = strArr[0]
+			node.Port = port
+			node.Weight = int(val)
+			nodes = append(nodes, node)
 		}
-
-		// Expose it for use in the application
-		c.Set("X-Request-Id", requestId)
-		c.Request.Header.Set("X-Request-Id", requestId)
-
-		// Set X-Request-Id header
-		c.Writer.Header().Set("X-Request-Id", requestId)
-		c.Next()
+		return nodes
 	}
+
+	return obj
 }

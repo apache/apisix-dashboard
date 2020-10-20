@@ -14,30 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package filter
+package consts
 
-import (
-	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
+import "github.com/shiningrush/droplet/data"
+
+const (
+	ErrCodeDemoBiz = 20000
 )
 
-func RequestId() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// Check for incoming header, use it if exists
-		requestId := c.Request.Header.Get("X-Request-Id")
-
-		// Create request id with UUID4
-		if requestId == "" {
-			u4 := uuid.NewV4()
-			requestId = u4.String()
-		}
-
-		// Expose it for use in the application
-		c.Set("X-Request-Id", requestId)
-		c.Request.Header.Set("X-Request-Id", requestId)
-
-		// Set X-Request-Id header
-		c.Writer.Header().Set("X-Request-Id", requestId)
-		c.Next()
-	}
-}
+var (
+	// base error please refer to github.com/shiningrush/droplet/data, such as data.ErrNotFound, data.ErrConflicted
+	ErrDemoBiz = data.BaseError{Code: ErrCodeDemoBiz, Message: "this is just a demo error"}
+)
