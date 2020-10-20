@@ -139,7 +139,9 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
-	input.Service.ID = input.ID
+	if input.ID != "" {
+		input.Service.ID = input.ID
+	}
 
 	if input.UpstreamID != "" {
 		_, err := h.upstreamStore.Get(input.UpstreamID)

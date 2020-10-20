@@ -127,7 +127,9 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
-	input.Upstream.ID = input.ID
+	if input.ID != "" {
+		input.Upstream.ID = input.ID
+	}
 
 	if err := h.upstreamStore.Update(c.Context(), &input.Upstream, true); err != nil {
 		return handler.SpecCodeResponse(err), err

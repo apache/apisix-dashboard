@@ -242,7 +242,9 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
-	input.Route.ID = input.ID
+	if input.ID != "" {
+		input.Route.ID = input.ID
+	}
 
 	//check depend
 	if input.ServiceID != "" {
@@ -272,7 +274,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		script.Script = input.Script
 		//to lua
 		var err error
-		input.Route.Script, err = generateLuaCode(input.Script.(map[string]interface{}))
+		scriptConf, ok := input.Script.(map[string]interface{})
+		if !ok {
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				fmt.Errorf("invalid `script`")
+		}
+		input.Route.Script, err = generateLuaCode(scriptConf)
 		if err != nil {
 			return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 		}

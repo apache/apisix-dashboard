@@ -166,7 +166,9 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
-	ssl.ID = input.ID
+	if input.ID != "" {
+		ssl.ID = input.ID
+	}
 	if err := h.sslStore.Update(c.Context(), ssl, true); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
