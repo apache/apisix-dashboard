@@ -49,34 +49,29 @@ $ cd apisix-dashboard
 
 `manager-api` 用于为仪表盘提供接口，就像 Apache APISIX 和仪表盘之间的桥梁。下面是手动构建步骤：
 
-1. 需要预先安装 `MySQL/Golang`。
+1. 需要预先安装 `Go` 1.11+ 、`ETCD` 3.4+ 、`Lua` 5.1+
 
-```sh
-# 例如：初始化时，推荐使用更加安全的密码，而不是 123456
-$ mysql –uroot –p123456
-> source ./api/script/db/schema.sql
+2. 检查环境变量
+
+- 开启 go module
+```
+go env -w GO111MODULE=on
 ```
 
-2. 启动 Apache APISIX
+- 根据您的本地部署环境，检查 `./api/run/run.sh` 中的环境变量，如果需要请修改环境变量。
 
-[请参考这份指南](https://github.com/apache/apisix#configure-and-installation)
+- 对于大多数中国用户，我们可以使用 [Goproxy](https://goproxy.cn/) 加快模块下载速度。
 
-3. 检查环境变量
-
-根据您的本地部署环境，检查 `./api/run/run.sh` 中的环境变量，如果需要请修改环境变量。
-
-对于大多数中国用户，我们可以使用 [Goproxy](https://goproxy.cn/) 加快模块下载速度。
-
-4. 构建
+3. 构建
 
 ```sh
-$ cd api && go build -o ../manager-api . && cd ..
+$ sh ./api/build.sh 
 ```
 
-5. 启动
+4. 启动
 
 ```sh
-$ sh ./api/run/run.sh &
+$ sh ./api/run.sh &
 ```
 
 ### 构建仪表盘
