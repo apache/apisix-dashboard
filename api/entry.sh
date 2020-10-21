@@ -34,6 +34,4 @@ fi
 
 cp ${pwd}/conf.json ${pwd}/api/conf/conf.json
 
-
 exec ./manager-api
-
