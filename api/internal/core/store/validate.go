@@ -102,25 +102,54 @@ func getPlugins(reqBody interface{}) map[string]interface{} {
 	return nil
 }
 
-//local function get_chash_key_schema(hash_on)
-//if not hash_on then
-//return nil, "hash_on is nil"
-//end
-//
-//if hash_on == "vars" then
-//return core.schema.upstream_hash_vars_schema
-//end
-//
-//if hash_on == "header" or hash_on == "cookie" then
-//return core.schema.upstream_hash_header_schema
-//end
-//
-//if hash_on == "consumer" then
-//return nil, nil
-//end
-//
-//return nil, "invalid hash_on type " .. hash_on
-//end
+func cHashKeySchemaCheck(upstream *entity.UpstreamDef) error {
+	if upstream.HashOn == "consumer" {
+		return nil
+	}
+	if upstream.HashOn != "vars" &&
+		upstream.HashOn != "vars" &&
+		upstream.HashOn != "vars" {
+		fmt.Errorf("invalid hash_on type: %s", upstream.HashOn)
+	}
+
+	var schemaDef string
+	if upstream.HashOn == "vars" {
+		schemaDef = conf.Schema.Get("plugins.upstream_hash_vars_schema").String()
+		if schemaDef == "" {
+			return fmt.Errorf("scheme validate failed: schema not found")
+		}
+	}
+
+	if upstream.HashOn == "header" || upstream.HashOn == "cookie" {
+		schemaDef = conf.Schema.Get("plugins.upstream_hash_header_schema").String()
+		if schemaDef == "" {
+			return fmt.Errorf("scheme validate failed: schema not found")
+		}
+	}
+
+	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
+	if err != nil {
+		return fmt.Errorf("scheme validate failed: %w", err)
+	}
+
+	ret, err := s.Validate(gojsonschema.NewGoLoader(upstream.Key))
+	if err != nil {
+		return fmt.Errorf("scheme validate failed: %w", err)
+	}
+
+	if !ret.Valid() {
+		errString := buffer.Buffer{}
+		for i, vErr := range ret.Errors() {
+			if i != 0 {
+				errString.AppendString("\n")
+			}
+			errString.AppendString(vErr.String())
+		}
+		return fmt.Errorf("scheme validate failed: %s", errString.String())
+	}
+
+	return nil
+}
 
 func checkUpstream(upstream *entity.UpstreamDef) error {
 	if upstream == nil {
@@ -141,7 +170,7 @@ func checkUpstream(upstream *entity.UpstreamDef) error {
 		return nil
 	}
 
-	//?
+	//to confirm
 	if upstream.HashOn == "" {
 		upstream.HashOn = "vars"
 	}
@@ -150,17 +179,9 @@ func checkUpstream(upstream *entity.UpstreamDef) error {
 		return fmt.Errorf("missing key")
 	}
 
-	//local key_schema, err = get_chash_key_schema(conf.hash_on)
-	//if err then
-	//return false, "type is chash, err: " .. err
-	//end
-	//
-	//if key_schema then
-	//local ok, err = core.schema.check(key_schema, conf.key)
-	//if not ok then
-	//return false, "invalid configuration: " .. err
-	//end
-	//end
+	if err := cHashKeySchemaCheck(upstream); err != nil {
+		return err
+	}
 
 	return nil
 }
