@@ -221,7 +221,9 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
       <Form.Item
         noStyle
         shouldUpdate={(prev, next) => {
-          onChange({ action: 'redirectOptionChange', data: next.redirectOption });
+          if (prev.redirectOption !== next.redirectOption) {
+            onChange({ action: 'redirectOptionChange', data: next.redirectOption });
+          }
           return prev.redirectOption !== next.redirectOption;
         }}
       >
