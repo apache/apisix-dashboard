@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-### license-check:    Check apisix-dashboard source code for Apache License
+### license-check:    Check apisix-dashboard source codes for Apache License
 .PHONY: license-check
 license-check:
 ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")

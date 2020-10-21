@@ -21,6 +21,8 @@
 
 # Apache APISIX 仪表盘
 
+_注意：当前分支仍在开发中，当前请勿使用。_
+
 [Apache APISIX](https://github.com/apache/apisix-dashboard) 的仪表盘
 
 [在线演示](http://139.217.190.60/)，账户密码：`admin`。

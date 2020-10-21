@@ -21,6 +21,8 @@ English | [简体中文](./README.zh-CN.md)
 
 # Apache APISIX Dashboard
 
+_Please Note: This branch is still under development, please DO NOT use this branch currently._
+
 Dashboard for [Apache APISIX](https://github.com/apache/apisix)
 
 [Online Demo](http://139.217.190.60/), Username/Password: `admin`.

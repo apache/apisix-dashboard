@@ -1,6 +1,6 @@
 {
   "name": "apisix-dashboard",
-  "version": "1.5.4",
+  "version": "1.6.1",
   "private": true,
   "description": "Dashboard for Apache APISIX",
   "scripts": {
