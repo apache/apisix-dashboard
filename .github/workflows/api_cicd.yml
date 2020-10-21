@@ -18,33 +18,12 @@ jobs:
         env:
           ALLOW_NONE_AUTHENTICATION: yes
 
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: 123456
-        ports:
-            - '3306:3306'
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
-
     steps:
     - uses: actions/checkout@v2
-    
-    - name: run apisix
+
+    - name: run Makefile
       run: |
-        network=$(docker network ls | grep github_network | awk '{print $2}')
-        docker run --name apisix  -d -p 9080:9080 \
-        -v ${{ github.workspace }}/.github/apisix-config.yaml:/usr/local/apisix/conf/config.yaml \
-        --network "$network" --network-alias apisix \
-        apache/apisix:dev
-        sleep 5
-        docker logs apisix
-    - name: setting up database
-      run: |
-        mysql -h 127.0.0.1 --port 3306 -u root -p123456  < ./api/script/db/schema.sql
-    - name: ping apisix
-      run: |
-        curl 127.0.0.1:9080
+        make license-check
     - name: get lua lib
       run: |
         wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
@@ -68,6 +47,11 @@ jobs:
         sudo mv ./apisix-master/apisix/* ./build-tools/apisix/
         rm -rf ./apisix-master
         cd ./build-tools/ && lua schema-sync.lua > ../conf/schema.json
+    - name: run test
+      working-directory: ./api
+      run: |
+        export APIX_ETCD_ENDPOINTS=127.0.0.1:2379
+        go test ./...
     - uses: Azure/docker-login@v1
       with:
         login-server: apisixacr.azurecr.cn
