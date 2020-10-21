@@ -49,35 +49,25 @@ $ cd apisix-dashboard
 
 The `manager-api` is used to provide APIs for Dashboard, just like a bridge between the Apache APISIX and the Dashboard. Here are the steps to build it manually:
 
-1. We need `MySQL/Golang` to be preinstalled.
+1. We need `Go` 1.11+, `ETCD` 3.4+ and `Lua` 5.1+ to be preinstalled.
 
-```sh
-# e.g Initialization for MySQL, please use a more secure Password instead of 123456.
-$ mysql –uroot –p123456
-> source ./api/script/db/schema.sql
+2. Check environment variables
+
+- enable Go MODULE
+```
+go env -w GO111MODULE=on
 ```
 
-2. Start the Apache APISIX.
+- According to your local deployment environment, check the environment variables in `./api/run.sh`, modify the environment variables if needed.
 
-[Please follow this guide](https://github.com/apache/apisix#configure-and-installation)
+- For most users in China, we could use [Goproxy](https://goproxy.cn/) to speed up downloading modules.
 
-3. Check environment variables
-
-According to your local deployment environment, check the environment variables in `./api/run/run.sh`, modify the environment variables if needed.
-
-For most users in China, we could use [Goproxy](https://goproxy.cn/) to speed up downloading modules.
-
-4. Build
+3. Build and Run
 
 ```sh
-$ cd api && go build -o ../manager-api . && cd ..
+$ sh ./api/run.sh &
 ```
 
-5. Run
-
-```sh
-$ sh ./api/run/run.sh &
-```
 
 ### Build the Dashboard
 
