@@ -60,11 +60,11 @@ jobs:
         export APIX_ETCD_ENDPOINTS=127.0.0.1:2379
         go test ./...
 
-    # - uses: Azure/docker-login@v1
-    #   with:
-    #     login-server: apisixacr.azurecr.cn
-    #     username: ${{ secrets.REGISTRY_USERNAME }}
-    #     password: ${{ secrets.REGISTRY_PASSWORD }}
+    - uses: Azure/docker-login@v1
+      with:
+        login-server: apisixacr.azurecr.cn
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
 
     - name: build and push docker image
       working-directory: ./api
