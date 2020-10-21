@@ -49,7 +49,7 @@ $ cd apisix-dashboard
 
 `manager-api` 用于为仪表盘提供接口，就像 Apache APISIX 和仪表盘之间的桥梁。下面是手动构建步骤：
 
-1. 需要预先安装 `Go` 1.11+ 、`ETCD` 3.4+ 、`Lua` 5.1+
+1. 需要预先安装 `Go` 1.13+ 、`ETCD` 3.4+ 、`Lua` 5.1+
 
 2. 检查环境变量
 

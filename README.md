@@ -49,7 +49,7 @@ $ cd apisix-dashboard
 
 The `manager-api` is used to provide APIs for Dashboard, just like a bridge between the Apache APISIX and the Dashboard. Here are the steps to build it manually:
 
-1. We need `Go` 1.11+, `ETCD` 3.4+ and `Lua` 5.1+ to be preinstalled.
+1. We need `Go` 1.13+, `ETCD` 3.4+ and `Lua` 5.1+ to be preinstalled.
 
 2. Check environment variables
 
