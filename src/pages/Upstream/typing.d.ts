@@ -15,62 +15,71 @@
  * limitations under the License.
  */
 declare namespace UpstreamModule {
+  type Node = Record<string, number>;
+  type Type = 'roundrobin' | 'chash' | 'ewma';
+
+  type Timeout = Record<'connect' | 'send' | 'read', number>;
+
+  type HealthCheck = {
+    active?: {
+      timeout?: number;
+      http_path: string;
+      host: string;
+      healthy: {
+        interval: number;
+        successes: number;
+      };
+      unhealthy: {
+        interval: number;
+        http_failures: number;
+      };
+      req_headers?: string[];
+    };
+    passive?: {
+      healthy: {
+        http_statuses: number[];
+        successes: number;
+      };
+      unhealthy: {
+        http_statuses: number[];
+        http_failures: number;
+        tcp_failures: number;
+      };
+    };
+  };
+
   type UpstreamHost = {
     host: string;
     port: number;
     weight: number;
   };
 
-  type Base = {
-    name: string;
-    timeout: {
-      connect: number;
-      read: number;
-      send: number;
-    };
-    type: 'roundrobin' | 'chash';
-    description: string;
-    checks: {
-      active: {
-        timeout?: number;
-        http_path: string;
-        host: string;
-        healthy: {
-          interval: number;
-          successes: number;
-        };
-        unhealthy: {
-          interval: number;
-          http_failures: number;
-        };
-        req_headers?: string[];
-      };
-      passive: {
-        healthy: {
-          http_statuses: number[];
-          successes: number;
-        };
-        unhealthy: {
-          http_statuses: number[];
-          http_failures: number;
-          tcp_failures: number;
-        };
-      };
-    };
+  type K8SDeploymentInfo = {
+    namespace: string;
+    deploy_name: string;
+    service_name: string;
+    backend_type: string;
+    port: number;
   };
 
-  type Entity = Base & {
-    nodes: {
-      [ipWithPort: string]: number;
-    };
-  };
-
-  type Body = Base & {
-    upstreamHostList: UpstreamHost[];
-  };
-
-  type ResEntity = Entity & {
+  type RequestBody = {
     id: string;
-    update_time: string;
+    upstream_id: string;
+    type: Type;
+    nodes?: Node;
+    k8s_deployment_info?: K8SDeploymentInfo;
+    hash_on?: 'vars' | 'header' | 'cookie' | 'consumer';
+    key?: string;
+    checks?: HealthCheck;
+    retries?: number;
+    enable_websocket?: boolean;
+    timeout?: Timeout;
+    name?: string;
+    desc?: string;
+    pass_host?: 'pass' | 'node' | 'rewrite';
+    upstream_host: UpstreamHost[];
   };
+
+  // TODO: typing
+  type ResponseBody = {} & RequestBody;
 }

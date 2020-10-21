@@ -53,7 +53,7 @@ export default {
   'component.global.sendTimeout': 'Send Timeout',
   'component.global.receiveTimeout': 'Receive Timeout',
   'component.global.name': 'Name',
-  'component.global.editTime': 'Edit Time',
+  'component.global.updateTime': 'UpdateAt',
   'component.global.form.itemExtraMessage.nameGloballyUnique': 'Name should be globally unique',
   'component.global.input.placeholder.description': 'Can not more than 200 characters',
   // User component

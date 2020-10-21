@@ -16,16 +16,16 @@
  */
 import { request } from 'umi';
 
-export const fetchList = ({ current = 1, pageSize = 10 }, search: string) =>
+export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
   request('/consumers', {
     params: {
+      username: res.username,
       page: current,
-      size: pageSize,
-      search,
+      page_size: pageSize,
     },
-  }).then(({ list, count }) => ({
-    data: list,
-    total: count,
+  }).then(({ data }) => ({
+    data: data.rows,
+    total: data.total_size,
   }));
 
 export const fetchItem = (id: string) =>

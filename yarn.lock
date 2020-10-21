@@ -199,10 +199,22 @@
     json-schema "^0.2.5"
     set-value "^3.0.2"
 
-"@api7-dashboard/pluginchart@^1.0.13":
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/@api7-dashboard/pluginchart/-/pluginchart-1.0.13.tgz#93c24773f838ec9de45a7142a5e6932c1bfc5538"
-  integrity sha512-qcqzx0lNFX4lh63RW2GUrsdVQHI7sJgZwRnkPDFaZEh2O2o9HOf5Z7krnL61dI+uWZEh8RRqjAbSlaBKqxWUbg==
+"@api7-dashboard/plugin@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@api7-dashboard/plugin/-/plugin-1.0.7.tgz#ab4bd47c0ce3f3aac3c1ed5de7f78725f77d31de"
+  integrity sha512-VVQW6xfrKou2n1UBTBZVwZbvc1ZSskvvGlDb7x5kBbVoAzAVAT8bZqGnvrn6aZtei4f8YKkmSWFCD7+zBAKx8w==
+  dependencies:
+    "@rjsf/antd" "^2.3.0"
+    "@rjsf/core" "^2.3.0"
+    "@uiw/react-codemirror" "^3.0.1"
+    ajv "^6.12.5"
+    json-schema "^0.2.5"
+    set-value "^3.0.2"
+
+"@api7-dashboard/pluginchart@^1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@api7-dashboard/pluginchart/-/pluginchart-1.0.14.tgz#3147b7e89cdcb541ed1559970b77cc443a3ef15d"
+  integrity sha512-LD5uhQgDwmsWkK7PfMl1XZulIU7klpFvBDHTrXIvJ23xwSPnT6tYlNS256O1QyVMuQaKRRH/lqbtPPop+Sgg1w==
   dependencies:
     "@ant-design/icons" "^4.2.2"
     "@api7-dashboard/plugin" "^1.0.6"

@@ -36,22 +36,6 @@ const routes = [
     component: './Route/Create',
   },
   {
-    path: '/routes/:rid/debug',
-    component: './Route/Debug',
-  },
-  {
-    path: '/routegroup/list',
-    component: './RouteGroup/List',
-  },
-  {
-    path: '/routegroup/create',
-    component: './RouteGroup/Create',
-  },
-  {
-    path: '/routegroup/:gid/edit',
-    component: './RouteGroup/Create',
-  },
-  {
     path: '/ssl/:id/edit',
     component: './SSL/Create',
   },

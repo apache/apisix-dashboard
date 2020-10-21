@@ -39,22 +39,18 @@ jobs:
         apache/apisix:dev
         sleep 5
         docker logs apisix
-
     - name: setting up database
       run: |
         mysql -h 127.0.0.1 --port 3306 -u root -p123456  < ./api/script/db/schema.sql
-
     - name: ping apisix
       run: |
         curl 127.0.0.1:9080
-
     - name: get lua lib
       run: |
         wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
         sudo mkdir -p /go/manager-api/dag-to-lua/
         tar -zxvf v1.1.tar.gz
         sudo mv ./dag-to-lua-1.1/lib/* /go/manager-api/dag-to-lua/
-
     - name: install runtime
       run: |
         sudo apt-get update
@@ -63,7 +59,6 @@ jobs:
         sudo apt update
         export GO111MOUDULE=on
         sudo apt install golang-1.14-go
-
     - name: generate json schema
       working-directory: ./api
       run: |
@@ -73,7 +68,6 @@ jobs:
         sudo mv ./apisix-master/apisix/* ./build-tools/apisix/
         rm -rf ./apisix-master
         cd ./build-tools/ && lua schema-sync.lua > ../conf/schema.json
-
     - uses: Azure/docker-login@v1
       with:
         login-server: apisixacr.azurecr.cn

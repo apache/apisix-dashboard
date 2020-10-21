@@ -27,7 +27,6 @@ declare namespace RouteModule {
     key: string;
   }
 
-  type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH';
   type RequestProtocol = 'https' | 'http' | 'websocket';
 
   type BaseData = {
@@ -63,7 +62,7 @@ declare namespace RouteModule {
   type ModalType = 'CREATE' | 'EDIT';
 
   type Redirect = {
-    code?: number;
+    ret_code?: number;
     uri?: string;
     http_to_https?: boolean;
   };
@@ -71,8 +70,6 @@ declare namespace RouteModule {
   // Request Body or Response Data for API
   type Body = {
     id?: number;
-    route_group_id: string;
-    route_group_name: string;
     status: boolean;
     name: string;
     desc: string;
@@ -80,8 +77,6 @@ declare namespace RouteModule {
     methods: HttpMethod[];
     uris: string[];
     hosts: string[];
-    protocols: RequestProtocol[];
-    redirect?: Redirect;
     vars: [string, Operator, string][];
     upstream: {
       type: 'roundrobin' | 'chash';
@@ -102,20 +97,11 @@ declare namespace RouteModule {
       to: string;
     };
     upstream_id?: string;
-    upstream_protocol: 'keep' | 'http' | 'https';
-    upstream_header: {
-      [key: string]: string;
-    };
     plugins: {
       [name: string]: any;
     };
     script: Record<string, any>;
     url?: string;
-  };
-
-  // for route debug
-  type Server = {
-    url: string;
   };
 
   type RouteParamSchema = {
@@ -160,23 +146,6 @@ declare namespace RouteModule {
     externalDocs?: object;
   };
 
-  type DebugData = {
-    servers: Server[];
-    tag: TagSchema[];
-    paths: {
-      [url: string]: {
-        [httpType: string]: {
-          tags: string;
-          summary: string;
-          operationId: string;
-          requestBody?: {};
-          parameters?: RouteParam[];
-          responses: ResponseSchema;
-        };
-      };
-    };
-  };
-
   // step1
   interface MatchingRule {
     position: VarPosition;
@@ -200,17 +169,14 @@ declare namespace RouteModule {
   type Form1Data = {
     name: string;
     desc: string;
-    route_group_id: string | null;
-    route_group_name: string;
     priority: number;
-    protocols: RequestProtocol[];
     websocket: boolean;
     hosts: string[];
-    paths: string[];
+    uris: string[];
     methods: HttpMethod[];
     redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
     redirectURI?: string;
-    redirectCode?: number;
+    ret_code?: number;
     status: boolean;
   };
 
@@ -227,35 +193,76 @@ declare namespace RouteModule {
 
   type Step2PassProps = {
     form: FormInstance;
-    upstreamHeaderList: UpstreamHeader[] | undefined;
     disabled?: boolean;
-    onChange(data: { action: 'upstreamHeaderListChange'; data: T }): void;
+    upstreamRef: any;
   };
 
   type Form2Data = {
-    upstream_protocol: 'http' | 'https' | 'keep';
     type: 'roundrobin' | 'chash';
     hash_on?: string;
     key?: string;
-    mappingStrategy?: string;
-    rewriteType?: string;
     upstreamPath?: string;
-    upstream_id: string | null;
+    upstream_id?: string | null;
     timeout: {
       connect: number;
       send: number;
       read: number;
     };
-    pass_host: 'pass' | 'node' | 'rewrite';
-    upstream_host?: string;
-    upstreamHostList: UpstreamHost[];
+    nodes: {
+      [key: string]: number;
+    };
   };
 
   type RequestData = {
     form1Data: Form1Data;
     form2Data: Form2Data;
     step3Data: Step3Data;
-    upstreamHeaderList: UpstreamHeader[];
     advancedMatchingRules: MatchingRule[];
+  };
+
+  type RequestBody = {
+    name?: string;
+    desc?: string;
+    uri: string;
+    host?: string;
+    hosts?: string[];
+    remote_addr?: string;
+    remote_addrs?: string[];
+    methods?: HttpMethod[];
+    priority?: number;
+    vars?: [string, Operator, string][];
+    filter_func?: string;
+    plugins?: Record<string, any>;
+    script?: Record<string, any>;
+    // TODO:
+    upstream?: any;
+    upstream_id?: string;
+    service_id?: string;
+    service_protocol?: 'grpc' | 'http';
+  };
+
+  type ResponseBody = {
+    hosts: string[];
+    id: string;
+    methods: HttpMethod[];
+    name: string;
+    remote_addrs: string[];
+    script: any;
+    desc?: string;
+    upstream: {
+      checks: UpstreamModule.HealthCheck;
+      create_time: number;
+      k8s_deployment_info: UpstreamModule.K8SDeploymentInfo;
+      id: string;
+      nodes: {
+        port: number;
+      }[];
+      timeout: UpstreamModule.Timeout;
+      type: UpstreamModule.Type;
+    };
+    uri: string;
+    uris?: string[];
+    create_time: number;
+    update_time: number;
   };
 }

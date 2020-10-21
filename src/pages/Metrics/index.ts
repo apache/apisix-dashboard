@@ -15,4 +15,3 @@
  * limitations under the License.
  */
 export { default } from './Metrics';
-

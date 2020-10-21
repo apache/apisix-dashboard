@@ -16,27 +16,29 @@
  */
 import { request } from 'umi';
 
-export const fetchList = ({ current = 1, pageSize = 10 }, search: string) =>
-  request('/upstreams', {
+export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
+  // TODO: Use Cache and search on local
+  return request<Res<ResListData<UpstreamModule.RequestBody>>>('/upstreams', {
     params: {
+      name: res.name,
       page: current,
-      size: pageSize,
-      search,
+      page_size: pageSize,
     },
-  }).then(({ data, count }) => ({
-    data,
-    total: count,
+  }).then(({ data }) => ({
+    data: data.rows,
+    total: data.total_size,
   }));
+};
 
-export const fetchOne = (id: string) => request<UpstreamModule.ResEntity>(`/upstreams/${id}`);
+export const fetchOne = (id: string) => request<Res<any>>(`/upstreams/${id}`);
 
-export const create = (data: UpstreamModule.Entity) =>
+export const create = (data: UpstreamModule.RequestBody) =>
   request('/upstreams', {
     method: 'POST',
     data,
   });
 
-export const update = (id: string, data: UpstreamModule.Entity) =>
+export const update = (id: string, data: UpstreamModule.RequestBody) =>
   request(`/upstreams/${id}`, {
     method: 'PUT',
     data,

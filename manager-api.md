@@ -34,4 +34,3 @@ The manager-api has its own storage. The currently used mysql, mysql stores some
 When deploying dashboard, we are divided into 3 modules, namely dashboard page, manager-api, and the mysql database that manager-api depends on. The purple part in the figure is the two new modules added this time.
 
 You can also use docker-compose for one-click deployment, refer to [here](./compose/README.md)
-

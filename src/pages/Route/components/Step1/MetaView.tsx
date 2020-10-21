@@ -14,34 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Form from 'antd/es/form';
-import { Input, Select, Switch } from 'antd';
+import { Input } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
-import { fetchRouteGroupList, fetchRouteGroupItem } from '@/pages/Route/service';
-
-const MetaView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled, isEdit }) => {
+const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled }) => {
   const { formatMessage } = useIntl();
-
-  const [routeGroups, setRouteGroups] = useState<{ id: string; name: string }[]>();
-  let routeGroupDisabled = disabled || Boolean(form.getFieldValue('route_group_id'));
-
-  useEffect(() => {
-    // eslint-disable-next-line no-shadow
-    fetchRouteGroupList().then(({ data }) => {
-      setRouteGroups([
-        {
-          name: `${formatMessage({ id: 'component.global.create' })} ${formatMessage({
-            id: 'page.route.routeGroup',
-          })}`,
-          id: null,
-        },
-        ...data,
-      ]);
-    });
-  }, []);
 
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>
@@ -69,64 +49,6 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled, isEdit
           disabled={disabled}
         />
       </Form.Item>
-      <Form.Item label={formatMessage({ id: 'page.route.routeGroup' })} name="route_group_id">
-        <Select
-          onChange={(value) => {
-            if (!value) {
-              form.setFieldsValue({
-                ...form.getFieldsValue(),
-                route_group_name: '',
-              });
-              return;
-            }
-            fetchRouteGroupItem(value.toString()).then((data) => {
-              form.setFieldsValue({
-                ...form.getFieldsValue(),
-                ...data,
-              });
-              routeGroupDisabled = true;
-            });
-          }}
-          disabled={disabled}
-        >
-          {(routeGroups || []).map((item) => {
-            return (
-              <Select.Option value={item.id} key={item.id}>
-                {item.name}
-              </Select.Option>
-            );
-          })}
-        </Select>
-      </Form.Item>
-      <Form.Item
-        label={formatMessage({ id: 'page.route.groupName' })}
-        name="route_group_name"
-        rules={[
-          {
-            required: true,
-            message: `${formatMessage({ id: 'component.global.pleaseEnter' })}${formatMessage({
-              id: 'page.route.form.itemLable.routeGroup',
-            })}`,
-          },
-        ]}
-      >
-        <Input
-          placeholder={`${formatMessage({ id: 'component.global.pleaseEnter' })}${formatMessage({
-            id: 'page.route.form.itemLable.routeGroup',
-          })}`}
-          disabled={routeGroupDisabled}
-        />
-      </Form.Item>
-      {!isEdit && (
-        <Form.Item
-          label={formatMessage({ id: 'page.route.publish' })}
-          name="status"
-          valuePropName="checked"
-          help={formatMessage({ id: 'page.route.form.itemHelp.status' })}
-        >
-          <Switch disabled={disabled} />
-        </Form.Item>
-      )}
       <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
         <Input.TextArea
           placeholder={formatMessage({ id: 'component.global.input.placeholder.description' })}
