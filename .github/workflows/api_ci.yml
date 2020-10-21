@@ -48,7 +48,7 @@ jobs:
       working-directory: ./api
       run: |
         wget https://github.com/apache/apisix/archive/master.zip
-        mkdir ./build-tools/apisix/
+        mkdir -p ./build-tools/apisix/
         unzip master.zip
         sudo mv ./apisix-master/apisix/* ./build-tools/apisix/
         rm -rf ./apisix-master
