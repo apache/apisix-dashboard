@@ -66,7 +66,7 @@ export const request: RequestConfig = {
   credentials: 'same-origin',
   requestInterceptors: [
     (url, options) => {
-      const newOptions = options;
+      const newOptions = { ...options };
       newOptions.headers = {
         ...options.headers,
         Authorization: localStorage.getItem('token') || '',
