@@ -54,7 +54,8 @@ $ cd apisix-dashboard
 2. 检查环境变量
 
 - 开启 Go MODULE
-```shell
+
+```sh
 $ go env -w GO111MODULE=on
 ```
 
@@ -62,9 +63,13 @@ $ go env -w GO111MODULE=on
 
 - 对于大多数中国用户，我们可以使用 [Goproxy](https://goproxy.cn/) 加快模块下载速度。
 
+```sh
+$ go env -w GOPROXY=https://goproxy.cn,direct
+```
+
 3. 构建并启动
 
-```shell
+```sh
 $ sh ./api/run.sh &
 ```
 

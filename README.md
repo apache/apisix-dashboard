@@ -54,13 +54,18 @@ The `manager-api` is used to provide APIs for Dashboard, just like a bridge betw
 2. Check environment variables
 
 - enable Go MODULE
-```
-go env -w GO111MODULE=on
+
+```sh
+$ go env -w GO111MODULE=on
 ```
 
 - According to your local deployment environment, check the environment variables in `./api/run.sh`, modify the environment variables if needed.
 
 - For most users in China, we could use [Goproxy](https://goproxy.cn/) to speed up downloading modules.
+
+```sh
+$ go env -w GOPROXY=https://goproxy.cn,direct
+```
 
 3. Build and Run
 
