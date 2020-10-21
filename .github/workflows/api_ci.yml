@@ -12,6 +12,7 @@ jobs:
 
   run-test:
     runs-on: ubuntu-latest
+    
     services:
       etcd:
         image: bitnami/etcd:3.4.13
@@ -23,12 +24,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
-    - uses: Azure/docker-login@v1
-      with:
-        login-server: apisixacr.azurecr.cn
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}    
 
     - name: run Makefile
       run: |
