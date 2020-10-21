@@ -41,7 +41,8 @@ RUN  wget https://github.com/apache/apisix/archive/master.zip \
      && mkdir -p /go/manager-api/build-tools/apisix \
      && apt-get update && apt-get install zip -y \
      && unzip master.zip \
-     && mv -u ./apisix-master/apisix/* /go/manager-api/build-tools/apisix/
+     && rm -rf /go/manager-api/build-tools/apisix/ \
+     && mv ./apisix-master/apisix/* /go/manager-api/build-tools/apisix/
 
 FROM alpine:3.11
 
