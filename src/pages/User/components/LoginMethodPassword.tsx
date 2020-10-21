@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 import React from 'react';
-import { UserModule } from '@/pages/User/typing';
 import { Form, Input } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { UserOutlined, LockTwoTone } from '@ant-design/icons';
-import { formatMessage } from '@@/plugin-locale/localeExports';
-import { request } from '@@/plugin-request/request';
+import { request, formatMessage } from 'umi';
+
+import { UserModule } from '@/pages/User/typing';
 
 const formRef = React.createRef<FormInstance>();
 

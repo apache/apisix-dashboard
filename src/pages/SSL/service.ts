@@ -28,7 +28,7 @@ export const fetchList = (
   queryObj = pickBy({ ...queryObj, expire_start, expire_end, sni: search }, identity);
   const query = querystring.encode(queryObj);
   return request<{ count: number; list: SSLModule.ResSSL[] }>(
-    `/ssls?page=${current}&size=${pageSize}&${query}`,
+    `/ssl?page=${current}&page_size=${pageSize}&${query}`,
   ).then((data) => {
     return {
       total: data.count,
