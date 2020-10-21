@@ -38,10 +38,10 @@ RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz \
     && mv -u ./dag-to-lua-1.1/lib/* /go/manager-api/dag-to-lua/
 
 RUN  wget https://github.com/apache/apisix/archive/master.zip \
-     && mkdir -p /go/manager-api/build-tools/apisix \
      && apt-get update && apt-get install zip -y \
      && unzip master.zip \
      && rm -rf /go/manager-api/build-tools/apisix/ \
+     && mkdir -p /go/manager-api/build-tools/apisix \
      && mv ./apisix-master/apisix/* /go/manager-api/build-tools/apisix/
 
 FROM alpine:3.11
