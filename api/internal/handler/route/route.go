@@ -138,7 +138,9 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 		},
 		Format: func(obj interface{}) interface{} {
 			route := obj.(*entity.Route)
-			route.Upstream.Nodes = entity.NodesFormat(route.Upstream.Nodes)
+			if route.Upstream != nil {
+				route.Upstream.Nodes = entity.NodesFormat(route.Upstream.Nodes)
+			}
 			return route
 		},
 		PageSize:   input.PageSize,

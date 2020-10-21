@@ -1,5 +1,4 @@
-#!/bin/sh
-#	
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -16,26 +15,24 @@
 # limitations under the License.
 #
 
-export ENV=prod
+#!/bin/sh
+
 pwd=`pwd`
 
-# get dag-to-lua lib
-if [ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]; then
-    wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
-    tar -zxvf v1.1.tar.gz
+# config
+cp ${pwd}/api/conf/conf_preview.json ${pwd}/conf.json
+
+export APIX_ETCD_ENDPOINTS="192.17.5.10:2379"
+
+export SYSLOG_HOST=127.0.0.1
+
+if [[ "$unamestr" == 'Darwin' ]]; then
+	sed -i '' -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
+else
+	sed -i -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
 fi
 
+cp ${pwd}/conf.json ${pwd}/api/conf/conf.json
 
-# generate json schema
-if [ ! -f "./master.zip" ]; then
-    rm -rf ./api/build-tools/apisix/
-    wget https://github.com/apache/apisix/archive/master.zip
-    unzip master.zip
-    mkdir -p ./api/build-tools/apisix/
-    mv ./apisix-master/apisix/* ./api/build-tools/apisix/
-    rm -rf ./apisix-master
-fi
-
-cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/schema.json
-
-cd ../ && go build -o ../manager-api .
+cd /go/manager-api
+exec ./manager-api

@@ -41,15 +41,11 @@ var (
 	ENV        string
 	basePath   string
 	Schema     gjson.Result
-	ApiKey     = "edd1c9f034335f136f87ad84b625c8f1"
-	BaseUrl    = "http://127.0.0.1:9080/apisix/admin"
 	DagLibPath = "/go/manager-api/dag-to-lua/"
 )
 
 func init() {
 	setEnvironment()
-	initMysql()
-	initApisix()
 	initAuthentication()
 	initSchema()
 }
@@ -84,16 +80,6 @@ func getSchemaPath() string {
 	}
 }
 
-type mysqlConfig struct {
-	Address  string
-	User     string
-	Password string
-
-	MaxConns     int
-	MaxIdleConns int
-	MaxLifeTime  int
-}
-
 type user struct {
 	Username string
 	Password string
@@ -108,36 +94,7 @@ type authenticationConfig struct {
 
 var UserList = make(map[string]user, 1)
 
-var MysqlConfig mysqlConfig
 var AuthenticationConfig authenticationConfig
-
-func initMysql() {
-	filePath := configurationPath()
-	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
-		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
-	} else {
-		configuration := gjson.ParseBytes(configurationContent)
-		mysqlConf := configuration.Get("conf.mysql")
-		MysqlConfig.Address = mysqlConf.Get("address").String()
-		MysqlConfig.User = mysqlConf.Get("user").String()
-		MysqlConfig.Password = mysqlConf.Get("password").String()
-		MysqlConfig.MaxConns = int(mysqlConf.Get("maxConns").Int())
-		MysqlConfig.MaxIdleConns = int(mysqlConf.Get("maxIdleConns").Int())
-		MysqlConfig.MaxLifeTime = int(mysqlConf.Get("maxLifeTime").Int())
-	}
-}
-
-func initApisix() {
-	filePath := configurationPath()
-	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
-		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
-	} else {
-		configuration := gjson.ParseBytes(configurationContent)
-		apisixConf := configuration.Get("conf.apisix")
-		BaseUrl = apisixConf.Get("base_url").String()
-		ApiKey = apisixConf.Get("api_key").String()
-	}
-}
 
 func initAuthentication() {
 	filePath := configurationPath()
