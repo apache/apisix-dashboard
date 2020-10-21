@@ -102,6 +102,90 @@ func getPlugins(reqBody interface{}) map[string]interface{} {
 	return nil
 }
 
+//local function get_chash_key_schema(hash_on)
+//if not hash_on then
+//return nil, "hash_on is nil"
+//end
+//
+//if hash_on == "vars" then
+//return core.schema.upstream_hash_vars_schema
+//end
+//
+//if hash_on == "header" or hash_on == "cookie" then
+//return core.schema.upstream_hash_header_schema
+//end
+//
+//if hash_on == "consumer" then
+//return nil, nil
+//end
+//
+//return nil, "invalid hash_on type " .. hash_on
+//end
+
+func checkUpstream(upstream *entity.UpstreamDef) error {
+	if upstream == nil {
+		return nil
+	}
+
+	if upstream.PassHost == "node" && upstream.Nodes != nil {
+		if nodes := entity.NodesFormat(upstream.Nodes); len(nodes.([]*entity.Node)) != 1 {
+			return fmt.Errorf("only support single node for `node` mode currently")
+		}
+	}
+
+	if upstream.PassHost == "rewrite" && upstream.UpstreamHost == "" {
+		return fmt.Errorf("`upstream_host` can't be empty when `pass_host` is `rewrite`")
+	}
+
+	if upstream.Type != "chash" {
+		return nil
+	}
+
+	//?
+	if upstream.HashOn == "" {
+		upstream.HashOn = "vars"
+	}
+
+	if upstream.HashOn == "consumer" && upstream.Key == "" {
+		return fmt.Errorf("missing key")
+	}
+
+	//local key_schema, err = get_chash_key_schema(conf.hash_on)
+	//if err then
+	//return false, "type is chash, err: " .. err
+	//end
+	//
+	//if key_schema then
+	//local ok, err = core.schema.check(key_schema, conf.key)
+	//if not ok then
+	//return false, "invalid configuration: " .. err
+	//end
+	//end
+
+	return nil
+}
+
+func checkConf(reqBody interface{}) error {
+	switch reqBody.(type) {
+	case *entity.Route:
+		route := reqBody.(*entity.Route)
+		if err := checkUpstream(route.Upstream); err != nil {
+			return err
+		}
+	case *entity.Service:
+		service := reqBody.(*entity.Service)
+		if err := checkUpstream(service.Upstream); err != nil {
+			return err
+		}
+	case *entity.Upstream:
+		upstream := reqBody.(*entity.Upstream)
+		if err := checkUpstream(&upstream.UpstreamDef); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 	ret, err := v.schema.Validate(gojsonschema.NewGoLoader(obj))
 	if err != nil {
@@ -117,6 +201,11 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 			errString.AppendString(vErr.String())
 		}
 		return fmt.Errorf("scheme validate fail: %s", errString.String())
+	}
+
+	//custom check
+	if err := checkConf(obj); err != nil {
+		return err
 	}
 
 	//check plugin json schema
