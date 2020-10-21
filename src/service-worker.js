@@ -73,7 +73,7 @@ workbox.routing.registerRoute(/\/color.less/, workbox.strategies.networkFirst())
 /**
  * Response to client after skipping waiting with MessageChannel
  */
-addEventListener('message', event => {
+addEventListener('message', (event) => {
   const replyPort = event.ports[0];
   const message = event.data;
   if (replyPort && message && message.type === 'skip-waiting') {
@@ -83,7 +83,7 @@ addEventListener('message', event => {
           replyPort.postMessage({
             error: null,
           }),
-        error =>
+        (error) =>
           replyPort.postMessage({
             error,
           }),

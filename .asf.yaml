@@ -16,22 +16,22 @@
 #
 
 github:
-    description: Dashboard for Apache APISIX
-    homepage: https://apisix.apache.org/
-    labels:
-      - dashboard
-      - api
-      - api-management
-      - apisix
-      - devops
-      - docker
+  description: Dashboard for Apache APISIX
+  homepage: https://apisix.apache.org/
+  labels:
+    - dashboard
+    - api
+    - api-management
+    - apisix
+    - devops
+    - docker
 
-    enabled_merge_buttons:
-      squash:  true
-      merge:   false
-      rebase:  false
+  enabled_merge_buttons:
+    squash: true
+    merge: false
+    rebase: false
 
-    notifications:
-      commits:      notifications@apisix.apache.org
-      issues:       notifications@apisix.apache.org
-      pullrequests: notifications@apisix.apache.org
+  notifications:
+    commits: notifications@apisix.apache.org
+    issues: notifications@apisix.apache.org
+    pullrequests: notifications@apisix.apache.org

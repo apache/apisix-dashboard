@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import Form from 'antd/es/form';
-import { Checkbox, Button, Input, Switch, Select, Row, Col } from 'antd';
+import { Checkbox, Button, Input, Select, Row, Col } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
@@ -33,7 +33,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
   onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
-  const renderHosts = () => (
+  const HostList = () => (
     <Form.List name="hosts">
       {(fields, { add, remove }) => {
         return (
@@ -99,8 +99,8 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
     </Form.List>
   );
 
-  const renderPaths = () => (
-    <Form.List name="paths">
+  const UriList = () => (
+    <Form.List name="uris">
       {(fields, { add, remove }) => {
         return (
           <div>
@@ -181,33 +181,8 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
     <PanelSection
       title={formatMessage({ id: 'page.route.panelSection.title.requestConfigBasicDefine' })}
     >
-      <Form.Item
-        label={formatMessage({ id: 'page.route.protocol' })}
-        name="protocols"
-        rules={[
-          {
-            required: true,
-            message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
-              id: 'page.route.protocol',
-            })}`,
-          },
-        ]}
-      >
-        <Checkbox.Group disabled={disabled} options={['http', 'https']} />
-      </Form.Item>
-      <Form.Item label="WebSocket" name="websocket" valuePropName="checked">
-        <Switch disabled={disabled} />
-      </Form.Item>
-      {/* <Form.Item
-        label="优先级"
-        name="priority"
-        rules={[{ required: true, message: '请输入优先级' }]}
-        extra=""
-      >
-        <InputNumber placeholder="优先级" disabled={disabled} min={0} max={1000} />
-      </Form.Item> */}
-      {renderHosts()}
-      {renderPaths()}
+      <HostList />
+      <UriList />
       <Form.Item
         label={formatMessage({ id: 'page.route.form.itemLabel.httpMethod' })}
         name="methods"
@@ -281,7 +256,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                     </Form.Item>
                   </Col>
                   <Col span={10}>
-                    <Form.Item name="redirectCode" rules={[{ required: true }]}>
+                    <Form.Item name="ret_code" rules={[{ required: true }]}>
                       <Select disabled={disabled}>
                         <Select.Option value={301}>
                           {formatMessage({ id: 'page.route.select.option.redirect301' })}

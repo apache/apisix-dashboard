@@ -9,15 +9,12 @@ on:
       - master
 
 jobs:
-
   check-license:
-
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
 
-    - uses: actions/checkout@v2
-
-    - name: run license check
-      run: |
-        make license-check
+      - name: run license check
+        run: |
+          make license-check

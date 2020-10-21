@@ -29,14 +29,14 @@ type Props = {
   redirect?: boolean;
   step3Data: RouteModule.Step3Data;
   advancedMatchingRules: RouteModule.MatchingRule[];
-  upstreamHeaderList: RouteModule.UpstreamHeader[];
+  upstreamRef: any;
 };
 
 const style = {
   marginTop: '40px',
 };
 
-const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, ...rest }) => {
+const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, upstreamRef, ...rest }) => {
   const { formatMessage } = useIntl();
   const { plugins = {}, script = {} } = rest.step3Data;
 
@@ -46,14 +46,13 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, ...rest }) => {
       <Step1 {...rest} form={form1} disabled />
       {!redirect && (
         <>
-          <h2 style={style}>{formatMessage({ id: 'page.route.steps.stepTitle.defineApiBackendServe' })}</h2>
-          <Step2
-            upstreamHeaderList={rest.upstreamHeaderList}
-            form={form2}
-            disabled
-            onChange={() => {}}
-          />
-          <h2 style={style}>{formatMessage({ id: 'component.global.steps.stepTitle.pluginConfig' })}</h2>
+          <h2 style={style}>
+            {formatMessage({ id: 'page.route.steps.stepTitle.defineApiBackendServe' })}
+          </h2>
+          <Step2 form={form2} upstreamRef={upstreamRef} disabled />
+          <h2 style={style}>
+            {formatMessage({ id: 'component.global.steps.stepTitle.pluginConfig' })}
+          </h2>
           {Boolean(Object.keys(plugins).length !== 0) && (
             <PluginPage initialData={rest.step3Data.plugins} readonly />
           )}

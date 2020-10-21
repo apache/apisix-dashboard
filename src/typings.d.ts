@@ -54,3 +54,17 @@ declare let ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: 'site' | undefine
 declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 
 type PageMode = 'CREATE' | 'EDIT' | 'VIEW';
+
+type Res<T> = {
+  code: number;
+  message: string;
+  request_id: string;
+  data: T;
+};
+
+type ResListData<T> = {
+  rows: T[];
+  total_size: number;
+};
+
+type HttpMethod = 'GET' | 'POST' | 'DELETE' | 'PUT' | 'OPTIONS' | 'HEAD' | 'PATCH';

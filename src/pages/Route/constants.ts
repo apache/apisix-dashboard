@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const HTTP_METHOD_OPTION_LIST: RouteModule.HttpMethod[] = [
+export const HTTP_METHOD_OPTION_LIST: HttpMethod[] = [
   'GET',
   'HEAD',
   'POST',
@@ -41,36 +41,17 @@ export const FORM_ITEM_WITHOUT_LABEL = {
 };
 
 export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
-  route_group_id: null,
-  route_group_name: '',
   name: '',
   desc: '',
   status: false,
   priority: 0,
-  protocols: ['http', 'https'],
   websocket: false,
   hosts: [''],
-  paths: ['/*'],
+  uris: ['/*'],
   redirectOption: 'disabled',
   redirectURI: '',
-  redirectCode: 302,
+  ret_code: 302,
   methods: HTTP_METHOD_OPTION_LIST,
-};
-
-export const DEFAULT_STEP_2_DATA: RouteModule.Form2Data = {
-  upstream_protocol: 'keep',
-  upstreamHostList: [{} as RouteModule.UpstreamHost],
-  upstream_id: null,
-  pass_host: 'pass',
-  upstreamPath: undefined,
-  type: 'roundrobin',
-  mappingStrategy: undefined,
-  rewriteType: 'keep',
-  timeout: {
-    connect: 6000,
-    send: 6000,
-    read: 6000,
-  },
 };
 
 export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {

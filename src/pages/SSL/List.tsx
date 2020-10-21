@@ -77,7 +77,7 @@ const Page: React.FC = () => {
       ),
     },
     {
-      title: formatMessage({ id: 'component.global.editTime' }),
+      title: formatMessage({ id: 'component.global.updateTime' }),
       dataIndex: 'update_time',
       hideInSearch: true,
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,

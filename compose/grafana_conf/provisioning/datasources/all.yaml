@@ -15,11 +15,11 @@
 # limitations under the License.
 #
 datasources:
- - access: 'proxy'
-   editable: true
-   is_default: true
-   name: 'apisix'
-   org_id: 1
-   type: 'prometheus'
-   url: 'http://prometheus:9090'
-   version: 1
+  - access: 'proxy'
+    editable: true
+    is_default: true
+    name: 'apisix'
+    org_id: 1
+    type: 'prometheus'
+    url: 'http://prometheus:9090'
+    version: 1

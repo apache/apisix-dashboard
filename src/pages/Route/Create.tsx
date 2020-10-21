@@ -14,26 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
 import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
 
 import ActionBar from '@/components/ActionBar';
+import { DEFAULT_UPSTREAM } from '@/components/Upstream';
 
 import { create, fetchItem, update, checkUniqueName, checkHostWithSSL } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
-
 import CreateStep4 from './components/CreateStep4';
-import {
-  DEFAULT_STEP_1_DATA,
-  DEFAULT_STEP_2_DATA,
-  DEFAULT_STEP_3_DATA,
-  INIT_CHART,
-} from './constants';
+import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA, INIT_CHART } from './constants';
 import ResultView from './components/ResultView';
 import styles from './Create.less';
 
@@ -63,12 +58,12 @@ const Page: React.FC<Props> = (props) => {
   const [advancedMatchingRules, setAdvancedMatchingRules] = useState<RouteModule.MatchingRule[]>(
     [],
   );
-  const [upstreamHeaderList, setUpstreamHeaderList] = useState<RouteModule.UpstreamHeader[]>([]);
   const [step3Data, setStep3Data] = useState(DEFAULT_STEP_3_DATA);
   const [redirect, setRedirect] = useState(false);
 
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
+  const upstreamRef = useRef<any>();
 
   const [step, setStep] = useState(1);
   const [stepHeader, setStepHeader] = useState(STEP_HEADER_4);
@@ -79,16 +74,14 @@ const Page: React.FC<Props> = (props) => {
       form1.setFieldsValue(data.form1Data);
       setAdvancedMatchingRules(data.advancedMatchingRules);
       form2.setFieldsValue(data.form2Data);
-      setUpstreamHeaderList(data.upstreamHeaderList);
       setStep3Data(data.step3Data);
     });
 
   const onReset = () => {
     setAdvancedMatchingRules([]);
-    setUpstreamHeaderList([]);
     setStep3Data(DEFAULT_STEP_3_DATA);
     form1.setFieldsValue(DEFAULT_STEP_1_DATA);
-    form2.setFieldsValue(DEFAULT_STEP_2_DATA);
+    form2.setFieldsValue(DEFAULT_UPSTREAM);
     setStep(1);
   };
 
@@ -100,7 +93,7 @@ const Page: React.FC<Props> = (props) => {
     }
   }, []);
 
-  const renderStep = () => {
+  const StepList = () => {
     if (step === 1) {
       return (
         <Step1
@@ -128,26 +121,16 @@ const Page: React.FC<Props> = (props) => {
         return (
           <CreateStep4
             advancedMatchingRules={advancedMatchingRules}
-            upstreamHeaderList={upstreamHeaderList}
             form1={form1}
             form2={form2}
             step3Data={step3Data}
+            upstreamRef={upstreamRef}
             redirect
           />
         );
       }
 
-      return (
-        <Step2
-          upstreamHeaderList={upstreamHeaderList}
-          form={form2}
-          onChange={({ action, data }) => {
-            if (action === 'upstreamHeaderListChange') {
-              setUpstreamHeaderList(data);
-            }
-          }}
-        />
-      );
+      return <Step2 form={form2} upstreamRef={upstreamRef} />;
     }
 
     if (step === 3) {
@@ -166,9 +149,9 @@ const Page: React.FC<Props> = (props) => {
       return (
         <CreateStep4
           advancedMatchingRules={advancedMatchingRules}
-          upstreamHeaderList={upstreamHeaderList}
           form1={form1}
           form2={form2}
+          upstreamRef={upstreamRef}
           step3Data={step3Data}
         />
       );
@@ -190,14 +173,13 @@ const Page: React.FC<Props> = (props) => {
   };
 
   const onStepChange = (nextStep: number) => {
-    const routeData = {
-      form1Data: form1.getFieldsValue(),
-      form2Data: form2.getFieldsValue(),
-      step3Data,
-      upstreamHeaderList,
-      advancedMatchingRules,
-    } as RouteModule.RequestData;
     const onUpdateOrCreate = () => {
+      const routeData = {
+        form1Data: form1.getFieldsValue(),
+        form2Data: upstreamRef.current?.getData(),
+        step3Data,
+        advancedMatchingRules,
+      } as RouteModule.RequestData;
       if (props.route.path.indexOf('edit') !== -1) {
         update((props as any).match.params.rid, routeData).then(() => {
           setStep(5);
@@ -279,7 +261,7 @@ const Page: React.FC<Props> = (props) => {
               <Step title={item} key={item} />
             ))}
           </Steps>
-          {renderStep()}
+          <StepList />
         </Card>
       </PageHeaderWrapper>
       <ActionBar step={step} lastStep={redirect ? 2 : 4} onChange={onStepChange} withResultView />

@@ -14,19 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { PlusOutlined } from '@ant-design/icons';
-import { Popconfirm, Button, notification, Input } from 'antd';
+import { Popconfirm, Button, notification } from 'antd';
 import moment from 'moment';
-
 import { history, useIntl } from 'umi';
+import { PlusOutlined } from '@ant-design/icons';
+
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
-  const [search, setSearch] = useState('');
   const { formatMessage } = useIntl();
 
   const columns: ProColumns<ConsumerModule.ResEntity>[] = [
@@ -37,15 +36,18 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'desc',
+      hideInSearch: true,
     },
     {
       title: formatMessage({ id: 'page.consumer.updateTime' }),
       dataIndex: 'update_time',
+      hideInSearch: true,
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },
     {
       title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
+      hideInSearch: true,
       render: (_, record) => (
         <>
           <Button
@@ -90,18 +92,9 @@ const Page: React.FC = () => {
         actionRef={ref}
         columns={columns}
         rowKey="id"
-        search={false}
-        request={(params) => fetchList(params, search)}
-        toolBarRender={(action) => [
-          <Input.Search
-            placeholder={formatMessage({ id: 'component.global.pleaseEnter' })}
-            onSearch={(value) => {
-              setSearch(value);
-              action.setPageInfo({ page: 1 });
-              action.reload();
-            }}
-          />,
-          <Button type="primary" onClick={() => history.push('/consumer/create')}>
+        request={fetchList}
+        toolBarRender={() => [
+          <Button type="primary" onClick={() => history.push(`/consumer/create`)}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,

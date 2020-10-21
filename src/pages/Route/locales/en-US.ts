@@ -16,7 +16,6 @@
  */
 export default {
   'page.route.button.returnList': 'Return Route List',
-  'page.route.button.onlineDebug': 'Online Debug',
 
   'page.route.parameterPosition': 'Parameter Position',
   'page.route.httpRequestHeader': 'HTTP Request Header',
@@ -41,7 +40,6 @@ export default {
 
   'page.route.panelSection.title.nameDescription': 'Name And Description',
   'page.route.form.itemLabel.apiName': 'API Name',
-  'page.route.form.itemLable.routeGroup': 'Route Group Name',
   'page.route.form.itemRulesPatternMessage.apiNameRule':
     'Maximum length 100, only letters, Numbers, _, and - are supported, and can only begin with letters',
 
@@ -69,12 +67,8 @@ export default {
   'page.route.httpAction': 'Action',
   'page.route.httpOverrideOrCreate': 'Override/Create',
   'page.route.panelSection.title.httpOverrideRequestHeader': 'Override HTTP request header',
-  'page.route.routeGroup': 'RouteGroup',
   'page.route.status': 'Status',
-  'page.route.published': 'Published',
-  'page.route.unpublished': 'Unpublished',
   'page.route.groupName': 'GroupName',
-  'page.route.publish': 'Publish',
   'page.route.offline': 'Offline',
 
   'page.route.select.option.inputManually': 'Input Manually',

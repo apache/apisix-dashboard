@@ -14,23 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { PlusOutlined } from '@ant-design/icons';
-import { Popconfirm, Button, notification, Input } from 'antd';
+import { Popconfirm, Button, notification } from 'antd';
 import { history, useIntl } from 'umi';
 import moment from 'moment';
+import { PlusOutlined } from '@ant-design/icons';
 
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
 
-  const [search, setSearch] = useState('');
   const { formatMessage } = useIntl();
 
-  const columns: ProColumns<UpstreamModule.ResEntity>[] = [
+  const columns: ProColumns<UpstreamModule.ResponseBody>[] = [
     {
       title: formatMessage({ id: 'upstream.list.name' }),
       dataIndex: 'name',
@@ -38,19 +37,23 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'upstream.list.type' }),
       dataIndex: 'type',
+      hideInSearch: true,
     },
     {
       title: formatMessage({ id: 'upstream.list.description' }),
       dataIndex: 'description',
+      hideInSearch: true,
     },
     {
       title: formatMessage({ id: 'upstream.list.edit.time' }),
       dataIndex: 'update_time',
+      hideInSearch: true,
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
     },
     {
       title: formatMessage({ id: 'upstream.list.operation' }),
       valueType: 'option',
+      hideInSearch: true,
       render: (_, record) => (
         <>
           <Button
@@ -85,24 +88,15 @@ const Page: React.FC = () => {
 
   return (
     <PageContainer title={formatMessage({ id: 'upstream.list' })}>
-      <ProTable<UpstreamModule.ResEntity>
+      <ProTable<UpstreamModule.ResponseBody>
         actionRef={ref}
         columns={columns}
         rowKey="id"
-        search={false}
-        request={(params) => fetchList(params, search)}
-        toolBarRender={(action) => [
-          <Input.Search
-            placeholder={formatMessage({ id: 'upstream.list.input' })}
-            onSearch={(value) => {
-              setSearch(value);
-              action.setPageInfo({ page: 1 });
-              action.reload();
-            }}
-          />,
-          <Button type="primary" onClick={() => history.push('/upstream/create')}>
+        request={fetchList}
+        toolBarRender={() => [
+          <Button type="primary" onClick={() => history.push(`/upstream/create`)}>
             <PlusOutlined />
-            {formatMessage({ id: 'upstream.list.create' })}
+            {formatMessage({ id: 'component.global.create' })}
           </Button>,
         ]}
       />
