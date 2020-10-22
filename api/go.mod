@@ -26,4 +26,5 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0
 	go.etcd.io/etcd v3.3.25+incompatible
 	go.uber.org/zap v1.16.0
+	github.com/rakyll/statik v0.1.7
 )
