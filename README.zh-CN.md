@@ -49,7 +49,7 @@ $ cd apisix-dashboard
 
 `manager-api` 用于为仪表盘提供接口，就像 Apache APISIX 和仪表盘之间的桥梁。下面是手动构建步骤：
 
-1. 需要预先安装 `Go` 1.13+ 、`ETCD` 3.4+ 、`Lua` 5.1+
+1. 需要预先安装 `Go` 1.13+ 、`Lua` 5.1+
 
 2. 检查环境变量
 
@@ -60,6 +60,17 @@ $ go env -w GO111MODULE=on
 ```
 
 - 根据您的本地部署环境，检查 `./api/run.sh` 中的环境变量，如果需要请修改环境变量。
+例如, 把 ETCD 地址改为你的与 APISIX 一起工作的 ETCD 实例:
+
+```
+export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
+```
+
+如果有多个实例，请使用英文逗号分隔，如：
+
+```
+export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
+```
 
 - 对于大多数中国用户，我们可以使用 [Goproxy](https://goproxy.cn/) 加快模块下载速度。
 

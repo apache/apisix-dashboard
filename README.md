@@ -49,7 +49,7 @@ $ cd apisix-dashboard
 
 The `manager-api` is used to provide APIs for Dashboard, just like a bridge between the Apache APISIX and the Dashboard. Here are the steps to build it manually:
 
-1. We need `Go` 1.13+, `ETCD` 3.4+ and `Lua` 5.1+ to be preinstalled.
+1. We need `Go` 1.13+ and `Lua` 5.1+ to be preinstalled.
 
 2. Check environment variables
 
@@ -60,6 +60,17 @@ $ go env -w GO111MODULE=on
 ```
 
 - According to your local deployment environment, check the environment variables in `./api/run.sh`, modify the environment variables if needed.
+For example, change the ETCD endpoints to your ETCD instances work with APISIX:
+
+```
+export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
+```
+
+If you have multiple instances, please use commas to separate:
+
+```
+export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
+```
 
 - For most users in China, we could use [Goproxy](https://goproxy.cn/) to speed up downloading modules.
 
