@@ -77,4 +77,20 @@ export const request: RequestConfig = {
       };
     },
   ],
+  responseInterceptors: [
+    async (res) => {
+      if (!res.ok) {
+        // NOTE: http code >= 400, using errorHandler
+        return res;
+      }
+
+      const data = await res.json();
+      const { code = -1 } = data as Res<any>;
+      if (code !== 0) {
+        // eslint-disable-next-line
+        return Promise.reject({ response: res, data });
+      }
+      return data;
+    },
+  ],
 };
