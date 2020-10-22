@@ -907,4 +907,64 @@ func TestRoute(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 
+	//create route with out upstream
+	route11 := &entity.Route{}
+	reqBody = `{
+      "id": "11",
+      "name": "bbbbb",
+      "uri": "/r11",
+      "hosts": ["foo.com", "*.bar.com"],
+      "remote_addrs": ["127.0.0.0/8"],
+      "methods": ["PUT", "GET"],
+      "plugins": {
+          "limit-count": {
+              "count": 2,
+              "time_window": 60,
+              "rejected_code": 503,
+              "key": "remote_addr"
+          }
+      }
+  }`
+	json.Unmarshal([]byte(reqBody), route11)
+	ctx.SetInput(route11)
+	_, err = handler.Create(ctx)
+	assert.Nil(t, err)
+
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
+	//get
+	input11 := &GetInput{}
+	input11.ID = "11"
+	ctx.SetInput(input11)
+	ret, err = handler.Get(ctx)
+	assert.Nil(t, err)
+	stored = ret.(*entity.Route)
+	assert.Equal(t, "11", stored.ID)
+
+	//list
+	listInput11 := &ListInput{}
+	reqBody = `{"page_size": 10, "page": 1}`
+	json.Unmarshal([]byte(reqBody), listInput11)
+	ctx.SetInput(listInput11)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+
+	//list search match
+	listInput12 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1,  "uri": "r11"}`
+	json.Unmarshal([]byte(reqBody), listInput12)
+	ctx.SetInput(listInput12)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
+	//delete test data
+	reqBody = `{"ids": "11"}`
+	json.Unmarshal([]byte(reqBody), inputDel)
+	ctx.SetInput(inputDel)
+	_, err = handler.BatchDelete(ctx)
+	assert.Nil(t, err)
+
 }
