@@ -138,3 +138,113 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 	assert.EqualError(t, err, "scheme validate failed: (root): count is required")
 
 }
+
+func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
+	validator, err := NewAPISIXJsonSchemaValidator("main.route")
+	assert.Nil(t, err)
+
+	// type:chash, hash_on: consumer, missing key, ok
+	route := &entity.Route{}
+	reqBody := `{
+      "id": "1",
+      "methods": ["GET"],
+      "upstream": {
+          "nodes": {
+              "127.0.0.1:8080": 1
+          },
+          "type": "chash",
+          "hash_on":"consumer"
+      },
+      "desc": "new route",
+      "uri": "/index.html"
+  }`
+	json.Unmarshal([]byte(reqBody), route)
+
+	err = validator.Validate(route)
+	assert.Nil(t, err)
+
+	// type:chash, hash_on: default(vars), missing key
+	route2 := &entity.Route{}
+	reqBody = `{
+      "id": "1",
+      "methods": ["GET"],
+      "upstream": {
+          "nodes": {
+              "127.0.0.1:8080": 1
+          },
+          "type": "chash"
+      },
+      "desc": "new route",
+      "uri": "/index.html"
+  }`
+	json.Unmarshal([]byte(reqBody), route2)
+
+	err = validator.Validate(route2)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "missing key")
+
+	//type:chash, hash_on: header, missing key
+	route3 := &entity.Route{}
+	reqBody = `{
+      "id": "1",
+      "methods": ["GET"],
+      "upstream": {
+          "nodes": {
+              "127.0.0.1:8080": 1
+          },
+          "type": "chash",
+          "hash_on":"header"
+      },
+      "desc": "new route",
+      "uri": "/index.html"
+  }`
+	json.Unmarshal([]byte(reqBody), route3)
+
+	err = validator.Validate(route3)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "missing key")
+
+	//type:chash, hash_on: cookie, missing key
+	route4 := &entity.Route{}
+	reqBody = `{
+      "id": "1",
+      "methods": ["GET"],
+      "upstream": {
+          "nodes": {
+              "127.0.0.1:8080": 1
+          },
+          "type": "chash",
+          "hash_on":"cookie"
+      },
+      "desc": "new route",
+      "uri": "/index.html"
+  }`
+	json.Unmarshal([]byte(reqBody), route4)
+
+	err = validator.Validate(route4)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "missing key")
+
+	//type:chash, hash_on: vars, wrong key
+	route5 := &entity.Route{}
+	reqBody = `{
+      "id": "1",
+      "methods": ["GET"],
+      "upstream": {
+          "nodes": {
+              "127.0.0.1:8080": 1
+          },
+          "type": "chash",
+          "hash_on":"vars",
+          "key": "not_support"
+      },
+      "desc": "new route",
+      "uri": "/index.html"
+  }`
+	json.Unmarshal([]byte(reqBody), route5)
+
+	err = validator.Validate(route5)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "scheme validate failed: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$'")
+
+}

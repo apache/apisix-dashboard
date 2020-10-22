@@ -864,4 +864,47 @@ func TestRoute(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 
+	//type:chash, hash_on: vars, wrong key
+	route5 := &entity.Route{}
+	reqBody = `{
+      "id": "1",
+      "methods": ["GET"],
+      "upstream": {
+          "nodes": {
+              "127.0.0.1:8080": 1
+          },
+          "type": "chash",
+          "hash_on":"vars",
+          "key": "not_support"
+      },
+      "desc": "new route",
+      "uri": "/index.html"
+  }`
+	json.Unmarshal([]byte(reqBody), route5)
+	ctx.SetInput(route5)
+	ret, err = handler.Create(ctx)
+	assert.NotNil(t, err)
+	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
+
+	//type:chash, hash_on: cookie, missing key
+	route6 := &entity.Route{}
+	reqBody = `{
+      "id": "1",
+      "methods": ["GET"],
+      "upstream": {
+          "nodes": {
+              "127.0.0.1:8080": 1
+          },
+          "type": "chash",
+          "hash_on":"cookie"
+      },
+      "desc": "new route",
+      "uri": "/index.html"
+  }`
+	json.Unmarshal([]byte(reqBody), route6)
+	ctx.SetInput(route6)
+	ret, err = handler.Create(ctx)
+	assert.NotNil(t, err)
+	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
+
 }

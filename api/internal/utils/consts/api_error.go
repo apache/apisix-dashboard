@@ -31,7 +31,7 @@ func ErrorWrapper(handle WrapperHandle) gin.HandlerFunc {
 			c.JSON(apiError.Status, apiError)
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"data": data, "code": 200, "message": "success"})
+		c.JSON(http.StatusOK, gin.H{"data": data, "code": 0, "message": "success"})
 	}
 }
 

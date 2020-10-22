@@ -75,7 +75,7 @@ type APISIXJsonSchemaValidator struct {
 func NewAPISIXJsonSchemaValidator(jsonPath string) (Validator, error) {
 	schemaDef := conf.Schema.Get(jsonPath).String()
 	if schemaDef == "" {
-		return nil, fmt.Errorf("schema not found")
+		return nil, fmt.Errorf("scheme validate failed: schema not found, path: %s", jsonPath)
 	}
 
 	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
@@ -102,6 +102,111 @@ func getPlugins(reqBody interface{}) map[string]interface{} {
 	return nil
 }
 
+func cHashKeySchemaCheck(upstream *entity.UpstreamDef) error {
+	if upstream.HashOn == "consumer" {
+		return nil
+	}
+	if upstream.HashOn != "vars" &&
+		upstream.HashOn != "header" &&
+		upstream.HashOn != "cookie" {
+		fmt.Errorf("invalid hash_on type: %s", upstream.HashOn)
+	}
+
+	var schemaDef string
+	if upstream.HashOn == "vars" {
+		schemaDef = conf.Schema.Get("main.upstream_hash_vars_schema").String()
+		if schemaDef == "" {
+			return fmt.Errorf("scheme validate failed: schema not found, patch: main.upstream_hash_vars_schema")
+		}
+	}
+
+	if upstream.HashOn == "header" || upstream.HashOn == "cookie" {
+		schemaDef = conf.Schema.Get("main.upstream_hash_header_schema").String()
+		if schemaDef == "" {
+			return fmt.Errorf("scheme validate failed: schema not found, path: main.upstream_hash_header_schema")
+		}
+	}
+
+	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
+	if err != nil {
+		return fmt.Errorf("scheme validate failed: %w", err)
+	}
+
+	ret, err := s.Validate(gojsonschema.NewGoLoader(upstream.Key))
+	if err != nil {
+		return fmt.Errorf("scheme validate failed: %w", err)
+	}
+
+	if !ret.Valid() {
+		errString := buffer.Buffer{}
+		for i, vErr := range ret.Errors() {
+			if i != 0 {
+				errString.AppendString("\n")
+			}
+			errString.AppendString(vErr.String())
+		}
+		return fmt.Errorf("scheme validate failed: %s", errString.String())
+	}
+
+	return nil
+}
+
+func checkUpstream(upstream *entity.UpstreamDef) error {
+	if upstream == nil {
+		return nil
+	}
+
+	if upstream.PassHost == "node" && upstream.Nodes != nil {
+		if nodes := entity.NodesFormat(upstream.Nodes); len(nodes.([]*entity.Node)) != 1 {
+			return fmt.Errorf("only support single node for `node` mode currently")
+		}
+	}
+
+	if upstream.PassHost == "rewrite" && upstream.UpstreamHost == "" {
+		return fmt.Errorf("`upstream_host` can't be empty when `pass_host` is `rewrite`")
+	}
+
+	if upstream.Type != "chash" {
+		return nil
+	}
+
+	//to confirm
+	if upstream.HashOn == "" {
+		upstream.HashOn = "vars"
+	}
+
+	if upstream.HashOn != "consumer" && upstream.Key == "" {
+		return fmt.Errorf("missing key")
+	}
+
+	if err := cHashKeySchemaCheck(upstream); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func checkConf(reqBody interface{}) error {
+	switch reqBody.(type) {
+	case *entity.Route:
+		route := reqBody.(*entity.Route)
+		if err := checkUpstream(route.Upstream); err != nil {
+			return err
+		}
+	case *entity.Service:
+		service := reqBody.(*entity.Service)
+		if err := checkUpstream(service.Upstream); err != nil {
+			return err
+		}
+	case *entity.Upstream:
+		upstream := reqBody.(*entity.Upstream)
+		if err := checkUpstream(&upstream.UpstreamDef); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 	ret, err := v.schema.Validate(gojsonschema.NewGoLoader(obj))
 	if err != nil {
@@ -119,13 +224,18 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 		return fmt.Errorf("scheme validate fail: %s", errString.String())
 	}
 
+	//custom check
+	if err := checkConf(obj); err != nil {
+		return err
+	}
+
 	//check plugin json schema
 	plugins := getPlugins(obj)
 	if plugins != nil {
 		for pluginName, pluginConf := range plugins {
 			schemaDef := conf.Schema.Get("plugins." + pluginName).String()
 			if schemaDef == "" {
-				return fmt.Errorf("scheme validate failed: schema not found")
+				return fmt.Errorf("scheme validate failed: schema not found, path: %s", "plugins."+pluginName)
 			}
 
 			s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
