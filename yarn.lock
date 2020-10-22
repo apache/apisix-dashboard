@@ -199,10 +199,10 @@
     json-schema "^0.2.5"
     set-value "^3.0.2"
 
-"@api7-dashboard/plugin@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@api7-dashboard/plugin/-/plugin-1.0.7.tgz#ab4bd47c0ce3f3aac3c1ed5de7f78725f77d31de"
-  integrity sha512-VVQW6xfrKou2n1UBTBZVwZbvc1ZSskvvGlDb7x5kBbVoAzAVAT8bZqGnvrn6aZtei4f8YKkmSWFCD7+zBAKx8w==
+"@api7-dashboard/plugin@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@api7-dashboard/plugin/-/plugin-1.0.8.tgz#31ab85755d5df69d22b4f45b0097f0da1b6a22ea"
+  integrity sha512-RK5R9rqRpEiNYmGvJjtVmkvwf7G2r2fZ4Ufbra/pOOTL8DyuvQHzw1JHOSWuO7qfjK4QDxf/SVKYOdJYy/CTZQ==
   dependencies:
     "@rjsf/antd" "^2.3.0"
     "@rjsf/core" "^2.3.0"
