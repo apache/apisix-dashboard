@@ -107,8 +107,8 @@ func cHashKeySchemaCheck(upstream *entity.UpstreamDef) error {
 		return nil
 	}
 	if upstream.HashOn != "vars" &&
-		upstream.HashOn != "vars" &&
-		upstream.HashOn != "vars" {
+		upstream.HashOn != "header" &&
+		upstream.HashOn != "cookie" {
 		fmt.Errorf("invalid hash_on type: %s", upstream.HashOn)
 	}
 
@@ -175,7 +175,7 @@ func checkUpstream(upstream *entity.UpstreamDef) error {
 		upstream.HashOn = "vars"
 	}
 
-	if upstream.HashOn == "consumer" && upstream.Key == "" {
+	if upstream.HashOn != "consumer" && upstream.Key == "" {
 		return fmt.Errorf("missing key")
 	}
 
