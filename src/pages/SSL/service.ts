@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { request } from 'umi';
 import querystring from 'querystring';
 import { identity, pickBy, omit } from 'lodash';
@@ -28,7 +27,7 @@ export const fetchList = (
   queryObj = pickBy({ ...queryObj, expire_start, expire_end, sni: search }, identity);
   const query = querystring.encode(queryObj);
   return request<{ count: number; list: SSLModule.ResSSL[] }>(
-    `/ssls?page=${current}&size=${pageSize}&${query}`,
+    `/ssl?page=${current}&page_size=${pageSize}&${query}`,
   ).then((data) => {
     return {
       total: data.count,

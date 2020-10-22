@@ -36,7 +36,7 @@ const Metrics: React.FC = () => {
       <Card>
         {!grafanaURL && (
           <Empty
-            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+            image="empty.svg"
             imageStyle={{
               height: 60,
             }}

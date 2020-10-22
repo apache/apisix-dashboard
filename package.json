@@ -1,6 +1,6 @@
 {
   "name": "apisix-dashboard",
-  "version": "1.6.1",
+  "version": "2.0.2",
   "private": true,
   "description": "Dashboard for Apache APISIX",
   "scripts": {
@@ -54,7 +54,7 @@
     "@ant-design/icons": "^4.0.0",
     "@ant-design/pro-layout": "^6.0.0",
     "@ant-design/pro-table": "2.6.3",
-    "@api7-dashboard/plugin": "^1.0.7",
+    "@api7-dashboard/plugin": "^1.0.8",
     "@api7-dashboard/pluginchart": "^1.0.14",
     "@api7-dashboard/ui": "^1.0.3",
     "@rjsf/antd": "2.2.0",

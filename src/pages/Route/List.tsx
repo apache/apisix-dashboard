@@ -113,7 +113,7 @@ const Page: React.FC = () => {
     >
       <ProTable<RouteModule.ResponseBody>
         actionRef={ref}
-        rowKey="name"
+        rowKey="id"
         columns={columns}
         request={fetchList}
         toolBarRender={() => [

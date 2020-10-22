@@ -18,11 +18,12 @@ import React, { useState } from 'react';
 import { Button, notification, Tabs } from 'antd';
 import { SelectLang } from '@@/plugin-locale/SelectLang';
 import { Link, useIntl, history } from 'umi';
+import { SettingOutlined } from '@ant-design/icons';
+
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
 import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
 import { UserModule } from '@/pages/User/typing';
 import logo from '@/assets/logo.svg';
-import { SettingOutlined } from '@ant-design/icons';
 import { getUrlQuery } from '@/helpers';
 import Footer from '@/components/Footer';
 import styles from './Login.less';
@@ -65,11 +66,6 @@ const Page: React.FC = () => {
                 const redirect = getUrlQuery('redirect');
                 history.replace(redirect ? decodeURIComponent(redirect) : '/');
               },
-            });
-          } else {
-            notification.error({
-              message: formatMessage({ id: 'component.status.fail' }),
-              description: response.message,
             });
           }
         });
