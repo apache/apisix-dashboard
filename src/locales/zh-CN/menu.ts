@@ -68,6 +68,6 @@ export default {
   'menu.routes': '路由',
   'menu.ssl': '证书',
   'menu.upstream': '上游',
-  'menu.consumer': '用户',
+  'menu.consumer': 'Consumer',
   'menu.setting': '设置',
 };
