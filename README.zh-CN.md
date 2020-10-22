@@ -70,7 +70,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 3. 构建并启动
 
 ```sh
-$ sh ./api/run.sh &
+$ ./api/run.sh &
 ```
 
 ### 构建仪表盘

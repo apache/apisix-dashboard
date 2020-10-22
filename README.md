@@ -70,7 +70,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 3. Build and Run
 
 ```sh
-$ sh ./api/run.sh &
+$ ./api/run.sh &
 ```
 
 

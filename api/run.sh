@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -55,7 +55,7 @@ if [[ ! -f "${pwd}/schema.json" ]]; then
 fi
 
 # build
-if [[ ! -f "${pwd}/schema.json" ]]; then
+if [[ ! -f "${pwd}/manager-api" ]]; then
     cd ./api && go build -o ../manager-api .
     cd ../
 fi
