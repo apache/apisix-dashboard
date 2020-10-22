@@ -75,7 +75,7 @@ type APISIXJsonSchemaValidator struct {
 func NewAPISIXJsonSchemaValidator(jsonPath string) (Validator, error) {
 	schemaDef := conf.Schema.Get(jsonPath).String()
 	if schemaDef == "" {
-		return nil, fmt.Errorf("schema not found")
+		return nil, fmt.Errorf("scheme validate failed: schema not found, path: %s", jsonPath)
 	}
 
 	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
@@ -114,16 +114,16 @@ func cHashKeySchemaCheck(upstream *entity.UpstreamDef) error {
 
 	var schemaDef string
 	if upstream.HashOn == "vars" {
-		schemaDef = conf.Schema.Get("plugins.upstream_hash_vars_schema").String()
+		schemaDef = conf.Schema.Get("main.upstream_hash_vars_schema").String()
 		if schemaDef == "" {
-			return fmt.Errorf("scheme validate failed: schema not found")
+			return fmt.Errorf("scheme validate failed: schema not found, patch: main.upstream_hash_vars_schema")
 		}
 	}
 
 	if upstream.HashOn == "header" || upstream.HashOn == "cookie" {
-		schemaDef = conf.Schema.Get("plugins.upstream_hash_header_schema").String()
+		schemaDef = conf.Schema.Get("main.upstream_hash_header_schema").String()
 		if schemaDef == "" {
-			return fmt.Errorf("scheme validate failed: schema not found")
+			return fmt.Errorf("scheme validate failed: schema not found, path: main.upstream_hash_header_schema")
 		}
 	}
 
@@ -235,7 +235,7 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 		for pluginName, pluginConf := range plugins {
 			schemaDef := conf.Schema.Get("plugins." + pluginName).String()
 			if schemaDef == "" {
-				return fmt.Errorf("scheme validate failed: schema not found")
+				return fmt.Errorf("scheme validate failed: schema not found, path: %s", "plugins."+pluginName)
 			}
 
 			s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))

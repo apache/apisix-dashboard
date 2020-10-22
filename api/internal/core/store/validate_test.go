@@ -225,4 +225,26 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "missing key")
 
+	//type:chash, hash_on: vars, wrong key
+	route5 := &entity.Route{}
+	reqBody = `{
+      "id": "1",
+      "methods": ["GET"],
+      "upstream": {
+          "nodes": {
+              "127.0.0.1:8080": 1
+          },
+          "type": "chash",
+          "hash_on":"vars",
+          "key": "not_support"
+      },
+      "desc": "new route",
+      "uri": "/index.html"
+  }`
+	json.Unmarshal([]byte(reqBody), route5)
+
+	err = validator.Validate(route5)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "scheme validate failed: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$'")
+
 }
