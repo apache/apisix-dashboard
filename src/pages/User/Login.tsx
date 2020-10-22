@@ -67,11 +67,6 @@ const Page: React.FC = () => {
                 history.replace(redirect ? decodeURIComponent(redirect) : '/');
               },
             });
-          } else {
-            notification.error({
-              message: formatMessage({ id: 'component.status.fail' }),
-              description: response.message,
-            });
           }
         });
       }

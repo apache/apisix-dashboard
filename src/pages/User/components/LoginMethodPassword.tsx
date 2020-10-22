@@ -112,9 +112,10 @@ const LoginMethodPassword: UserModule.LoginMethod = {
           data: [],
         };
       } catch (e) {
+        // NOTE: API failed, using errorHandler
         return {
           status: false,
-          message: formatMessage({ id: 'component.user.loginMethodPassword.incorrectPassword' }),
+          message: '',
           data: [],
         };
       }
