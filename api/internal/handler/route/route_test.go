@@ -19,7 +19,6 @@ package route
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"testing"
 	"time"
@@ -905,7 +904,6 @@ func TestRoute(t *testing.T) {
 	json.Unmarshal([]byte(reqBody), route6)
 	ctx.SetInput(route6)
 	ret, err = handler.Create(ctx)
-	log.Println("ret:", ret)
 	assert.NotNil(t, err)
 	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 
