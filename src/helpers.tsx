@@ -34,11 +34,12 @@ export const getMenuData = (): MenuDataItem[] => {
       path: '/routes/list',
       icon: <IconFont type="iconroute" />,
     },
-    {
-      name: 'ssl',
-      path: '/ssl/list',
-      icon: <IconFont type="iconSSLshuzizhengshu" />,
-    },
+    // NOTE: disable SSL module in v2.0
+    // {
+    //   name: 'ssl',
+    //   path: '/ssl/list',
+    //   icon: <IconFont type="iconSSLshuzizhengshu" />,
+    // },
     {
       name: 'upstream',
       path: '/upstream/list',
@@ -64,24 +65,23 @@ export const isLoginPage = () => window.location.pathname.indexOf('/user/login')
  */
 export const errorHandler = (error: { response: Response; data: any }): Promise<Response> => {
   const { response } = error;
-  if (response && response.status) {
+  if (error && response && response.status) {
     if ([401].includes(response.status) && !isLoginPage()) {
       history.replace(`/user/logout?redirect=${encodeURIComponent(window.location.pathname)}`);
       return Promise.reject(response);
     }
     if ([401].includes(response.status) && isLoginPage()) return Promise.reject(response);
 
-    const errorText =
-      error.data.msg || error.data.message || error.data.error_msg || codeMessage[response.status];
-
+    // TODO: improve code message mapper
+    const errorText = error.data?.message || codeMessage[response.status];
     notification.error({
-      message: `请求错误，错误码： ${error.data.errorCode || response.status}`,
+      message: `Request Error Code: ${error.data.code}`,
       description: errorText,
     });
   } else if (!response) {
     notification.error({
-      description: '您的网络发生异常，无法连接服务器',
-      message: '网络异常',
+      description: 'Network Error',
+      message: '',
     });
   }
   return Promise.reject(response);

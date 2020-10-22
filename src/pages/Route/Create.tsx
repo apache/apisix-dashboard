@@ -93,7 +93,7 @@ const Page: React.FC<Props> = (props) => {
     }
   }, []);
 
-  const StepList = () => {
+  const renderStepList = () => {
     if (step === 1) {
       return (
         <Step1
@@ -261,7 +261,8 @@ const Page: React.FC<Props> = (props) => {
               <Step title={item} key={item} />
             ))}
           </Steps>
-          <StepList />
+          {renderStepList()}
+          {/* NOTE: PluginOrchestration works unexpected when using <renderStepList/> */}
         </Card>
       </PageHeaderWrapper>
       <ActionBar step={step} lastStep={redirect ? 2 : 4} onChange={onStepChange} withResultView />
