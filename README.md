@@ -27,7 +27,7 @@ Dashboard for [Apache APISIX](https://github.com/apache/apisix)
 
 ## User Guide
 
-Please refer to [User Guide](./USER_GUIDE.md)
+Please refer to [User Guide](./docs/USER_GUIDE.md)
 
 ## Deployment
 

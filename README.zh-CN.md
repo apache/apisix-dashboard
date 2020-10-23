@@ -25,7 +25,7 @@
 
 ## 用户指南
 
-请参考 [用户指南](./USER_GUIDE.zh-CN.md)
+请参考 [用户指南](./docs/USER_GUIDE.zh-CN.md)
 
 ## 部署
 
