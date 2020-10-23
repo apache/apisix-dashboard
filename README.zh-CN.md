@@ -19,17 +19,13 @@
 
 [English](./README.md) | 简体中文
 
-# Apache APISIX 仪表盘
+# [Apache APISIX](https://github.com/apache/apisix) 控制台
 
-_注意：当前分支仍在开发中，当前请勿使用。_
-
-[Apache APISIX](https://github.com/apache/apisix-dashboard) 的仪表盘
-
-[在线演示](http://139.217.190.60/)，账户密码：`admin`。
+[在线演示](http://139.217.190.60/)，账户与密码：`admin`。
 
 ## 用户指南
 
-请参考 [用户指南](./USER_GUIDE.md)
+请参考 [用户指南](./USER_GUIDE.zh-CN.md)
 
 ## 使用 Docker 部署
 
@@ -47,7 +43,7 @@ $ cd apisix-dashboard
 
 ### 生成 manager-api
 
-`manager-api` 用于为仪表盘提供接口，就像 Apache APISIX 和仪表盘之间的桥梁。下面是手动构建步骤：
+`manager-api` 用于为控制台提供接口，就像 Apache APISIX 和控制台之间的桥梁。下面是手动构建步骤：
 
 1. 需要预先安装 `Go` 1.13+ 、`Lua` 5.1+
 
@@ -83,7 +79,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 $ ./api/run.sh &
 ```
 
-### 构建仪表盘
+### 构建控制台
 
 该项目使用 [Ant Design Pro](https://pro.ant.design) 初始化。以下是一些使用方法的快速指南。
 
@@ -131,4 +127,4 @@ $ yarn start
 
 1. 如果你需要 Vue.js 构建的 dashboard-1.0，请参考 [master-vue](https://github.com/apache/apisix-dashboard/tree/master-vue)。
 
-2. 关于新版仪表盘和 manager-api 的更多信息请参阅 [这里](./manager-api.md)
+2. 关于新版控制台和 manager-api 的更多信息请参阅 [这里](./manager-api.md)
