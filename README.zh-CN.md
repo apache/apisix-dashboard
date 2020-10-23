@@ -59,8 +59,7 @@ $ cd apisix-dashboard
 $ go env -w GO111MODULE=on
 ```
 
-- 根据您的本地部署环境，检查 `./api/run.sh` 中的环境变量，如果需要请修改环境变量。
-例如, 把 ETCD 地址改为你的与 APISIX 一起工作的 ETCD 实例:
+- 根据您的本地部署环境，检查 `./api/run.sh` 中的环境变量，如果需要请修改环境变量。例如, 把 ETCD 地址改为你的与 APISIX 一起工作的 ETCD 实例:
 
 ```
 export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"

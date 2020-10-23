@@ -59,8 +59,7 @@ The `manager-api` is used to provide APIs for Dashboard, just like a bridge betw
 $ go env -w GO111MODULE=on
 ```
 
-- According to your local deployment environment, check the environment variables in `./api/run.sh`, modify the environment variables if needed.
-For example, change the ETCD endpoints to your ETCD instances work with APISIX:
+- According to your local deployment environment, check the environment variables in `./api/run.sh`, modify the environment variables if needed. For example, change the ETCD endpoints to your ETCD instances work with APISIX:
 
 ```
 export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
@@ -83,7 +82,6 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 ```sh
 $ ./api/run.sh &
 ```
-
 
 ### Build the Dashboard
 
