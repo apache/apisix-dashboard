@@ -1,4 +1,4 @@
-name: Test then deploy API to Azure
+name: Deploy API to Azure
 
 on:
   push:

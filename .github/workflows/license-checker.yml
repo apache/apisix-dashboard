@@ -1,4 +1,4 @@
-name: License Checker
+name: License checker
 
 on:
   push:
