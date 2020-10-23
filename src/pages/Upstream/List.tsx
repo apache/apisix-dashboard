@@ -41,7 +41,7 @@ const Page: React.FC = () => {
     },
     {
       title: formatMessage({ id: 'upstream.list.description' }),
-      dataIndex: 'description',
+      dataIndex: 'desc',
       hideInSearch: true,
     },
     {
