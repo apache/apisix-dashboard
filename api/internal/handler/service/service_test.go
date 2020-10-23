@@ -149,4 +149,50 @@ func TestService(t *testing.T) {
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)
 
+	//create without upstream
+	service11 := &entity.Service{}
+	reqBody = `{
+      "id": "11",
+      "plugins": {
+          "limit-count": {
+              "count": 2,
+              "time_window": 60,
+              "rejected_code": 503,
+              "key": "remote_addr"
+          }
+      }
+  }`
+	json.Unmarshal([]byte(reqBody), service11)
+	ctx.SetInput(service11)
+	_, err = handler.Create(ctx)
+	assert.Nil(t, err)
+
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
+	//get
+	input11 := &GetInput{}
+	input11.ID = "11"
+	ctx.SetInput(input11)
+	ret, err = handler.Get(ctx)
+	stored = ret.(*entity.Service)
+	assert.Nil(t, err)
+	assert.Equal(t, "11", stored.ID)
+
+	//list
+	listInput11 := &ListInput{}
+	reqBody = `{"page_size": 10, "page": 1}`
+	json.Unmarshal([]byte(reqBody), listInput11)
+	ctx.SetInput(listInput11)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+
+	//delete test data
+	inputDel11 := &BatchDelete{}
+	reqBody = `{"ids": "11"}`
+	json.Unmarshal([]byte(reqBody), inputDel11)
+	ctx.SetInput(inputDel11)
+	_, err = handler.BatchDelete(ctx)
+	assert.Nil(t, err)
+
 }

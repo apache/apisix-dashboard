@@ -76,7 +76,9 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	}
 
 	service := r.(*entity.Service)
-	service.Upstream.Nodes = entity.NodesFormat(service.Upstream.Nodes)
+	if service.Upstream != nil && service.Upstream.Nodes != nil {
+		service.Upstream.Nodes = entity.NodesFormat(service.Upstream.Nodes)
+	}
 
 	return r, nil
 }
@@ -98,7 +100,9 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 		},
 		Format: func(obj interface{}) interface{} {
 			service := obj.(*entity.Service)
-			service.Upstream.Nodes = entity.NodesFormat(service.Upstream.Nodes)
+			if service.Upstream != nil && service.Upstream.Nodes != nil {
+				service.Upstream.Nodes = entity.NodesFormat(service.Upstream.Nodes)
+			}
 			return service
 		},
 		PageSize:   input.PageSize,
