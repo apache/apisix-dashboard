@@ -17,28 +17,20 @@
 #
 -->
 
-# Dashboard 开发
+# Dashboard Devlopment
 
-## 前端开发
+## Frontend
 
-1. 确保你的设备已经安装了 `Node.js(version version 10.0.0+)`。
-
-2. 安装 [yarn](https://yarnpkg.com/)。
-
-3. 安装依赖:
-
-```sh
-$ yarn install
-```
-
-4. 若需要修改 manager-api 地址，请访问 `config/proxy.ts` 文件。
-
-5. 启动开发模式
+1. Make sure you have `Node.js(version version 10.0.0+)` installed on your machine.
+2. Install [yarn](https://yarnpkg.com/).
+3. Install dependencies:
+4. If we want to modify the API, please refer to the `config/proxy.ts` file.
+5. Start the development mode
 
 ```sh
 $ yarn start
 ```
 
-## manager-api 开发
+## manager-api
 
-待补充
+TODO
