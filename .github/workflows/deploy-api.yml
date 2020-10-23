@@ -1,4 +1,4 @@
-name: API CI && CD
+name: Test then deploy API to Azure
 
 on:
   push:

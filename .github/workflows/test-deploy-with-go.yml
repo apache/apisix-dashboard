@@ -1,10 +1,12 @@
-name: NewCI
+name: Test deploy frontend and API using Go
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
   frontend:
@@ -30,11 +32,11 @@ jobs:
           name: dist
           path: ./dist/
 
-  backend: 
+  backend:
     name: Back-End compile
     needs: frontend
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v2
 
