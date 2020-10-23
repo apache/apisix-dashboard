@@ -65,7 +65,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 $ ./api/run.sh &
 ```
 
-## 构建控制台
+## 构建前端
 
 该项目使用 [Ant Design Pro](https://pro.ant.design) 初始化。以下是一些使用方法的快速指南。
 
