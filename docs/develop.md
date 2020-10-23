@@ -1,3 +1,4 @@
+<!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -14,14 +15,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# If you want to set the specified configuration value, you can set the new
-# in this file. For example if you want to specify the etcd address:
-#
+-->
 
-etcd:
-  host:
-    - 'http://etcd:2379'
+# Dashboard Devlopment
 
-apisix:
-  allow_admin: # http://nginx.org/en/docs/http/ngx_http_access_module.html#allow
-    - 0.0.0.0/0 # If we don't set any IP list, then any IP access is allowed by default.
+## Frontend
+
+1. Make sure you have `Node.js(version version 10.0.0+)` installed on your machine.
+2. Install [yarn](https://yarnpkg.com/).
+3. Install dependencies:
+
+```sh
+$ yarn install
+```
+
+4. If we want to modify the API, please refer to the `config/proxy.ts` file.
+5. Start the development mode
+
+```sh
+$ yarn start
+```
+
+## manager-api
+
+TODO
