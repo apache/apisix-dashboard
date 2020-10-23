@@ -71,21 +71,6 @@ services:
       apisix-dashboard:
         ipv4_address: 192.17.5.13
 
-  mysql:
-    image: mysql:latest
-    restart: always
-    ports:
-      - '3309:3306/tcp'
-    environment:
-      - MYSQL_ROOT_PASSWORD=123456
-    volumes:
-      - /tmp/datadir:/var/lib/mysql
-      - /tmp/conf.d:/etc/mysql/conf.d
-      - ../api/script/db:/docker-entrypoint-initdb.d
-    networks:
-      apisix-dashboard:
-        ipv4_address: 192.17.5.14
-
   manager:
     build:
       context: ./../api
@@ -96,7 +81,7 @@ services:
     environment:
       - ENV=prod
     volumes:
-      - ./manager_conf/build.sh:/go/manager-api/build.sh
+      - ./manager_conf/entry.sh:/go/manager-api/entry.sh
     networks:
       apisix-dashboard:
         ipv4_address: 192.17.5.15

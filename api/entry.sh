@@ -1,5 +1,5 @@
 #!/bin/sh
-#	
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -16,17 +16,22 @@
 # limitations under the License.
 #
 
-export ENV=prod
 pwd=`pwd`
 
-sed -i -e "s%#mysqlAddress#%`echo $MYSQL_SERVER_ADDRESS`%g" ${pwd}/conf.json
-sed -i -e "s%#mysqlUser#%`echo $MYSQL_USER`%g" ${pwd}/conf.json
-sed -i -e "s%#mysqlPWD#%`echo $MYSQL_PASSWORD`%g" ${pwd}/conf.json
-sed -i -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
-sed -i -e "s%#apisixBaseUrl#%`echo $APISIX_BASE_URL`%g" ${pwd}/conf.json
-sed -i -e "s%#apisixApiKey#%`echo $APISIX_API_KEY`%g" ${pwd}/conf.json
-sed -i -e "s%#apisixDebugUrl#%`echo $APISIX_DEBUG_URL`%g" ${pwd}/conf.json
+# config
+cp ${pwd}/api/conf/conf_preview.json ${pwd}/conf.json
 
-cd /go/manager-api
+# export APIX_DAG_LIB_PATH="${pwd}/dag-to-lua-1.1/lib/"
+# export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
+
+export SYSLOG_HOST=127.0.0.1
+
+if [[ "$unamestr" == 'Darwin' ]]; then
+	sed -i '' -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
+else
+	sed -i -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
+fi
+
+cp ${pwd}/conf.json ${pwd}/api/conf/conf.json
+
 exec ./manager-api
-

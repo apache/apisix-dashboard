@@ -49,34 +49,39 @@ $ cd apisix-dashboard
 
 `manager-api` 用于为仪表盘提供接口，就像 Apache APISIX 和仪表盘之间的桥梁。下面是手动构建步骤：
 
-1. 需要预先安装 `MySQL/Golang`。
+1. 需要预先安装 `Go` 1.13+ 、`Lua` 5.1+
+
+2. 检查环境变量
+
+- 开启 Go MODULE
 
 ```sh
-# 例如：初始化时，推荐使用更加安全的密码，而不是 123456
-$ mysql –uroot –p123456
-> source ./api/script/db/schema.sql
+$ go env -w GO111MODULE=on
 ```
 
-2. 启动 Apache APISIX
+- 根据您的本地部署环境，检查 `./api/run.sh` 中的环境变量，如果需要请修改环境变量。
+例如, 把 ETCD 地址改为你的与 APISIX 一起工作的 ETCD 实例:
 
-[请参考这份指南](https://github.com/apache/apisix#configure-and-installation)
-
-3. 检查环境变量
-
-根据您的本地部署环境，检查 `./api/run/run.sh` 中的环境变量，如果需要请修改环境变量。
-
-对于大多数中国用户，我们可以使用 [Goproxy](https://goproxy.cn/) 加快模块下载速度。
-
-4. 构建
-
-```sh
-$ cd api && go build -o ../manager-api . && cd ..
+```
+export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
 ```
 
-5. 启动
+如果有多个实例，请使用英文逗号分隔，如：
+
+```
+export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
+```
+
+- 对于大多数中国用户，我们可以使用 [Goproxy](https://goproxy.cn/) 加快模块下载速度。
 
 ```sh
-$ sh ./api/run/run.sh &
+$ go env -w GOPROXY=https://goproxy.cn,direct
+```
+
+3. 构建并启动
+
+```sh
+$ ./api/run.sh &
 ```
 
 ### 构建仪表盘
