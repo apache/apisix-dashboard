@@ -17,9 +17,11 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 
 	"github.com/apisix/manager-api/conf"
@@ -36,7 +38,7 @@ import (
 )
 
 func SetUpRouter() *gin.Engine {
-	if conf.ENV != conf.LOCAL && conf.ENV != conf.BETA {
+	if conf.ENV != conf.EnvLOCAL && conf.ENV != conf.EnvBETA {
 		gin.SetMode(gin.DebugMode)
 	} else {
 		gin.SetMode(gin.ReleaseMode)
@@ -45,6 +47,10 @@ func SetUpRouter() *gin.Engine {
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("session", store))
 	r.Use(filter.CORS(), filter.Authentication(), filter.RequestId(), filter.RecoverHandler())
+	r.Use(static.Serve("/", static.LocalFile(conf.WebDir, false)))
+	r.NoRoute(func(c *gin.Context) {
+		c.File(fmt.Sprintf("%s/index.html", conf.WebDir))
+	})
 
 	factories := []handler.RegisterFactory{
 		route.NewHandler,
