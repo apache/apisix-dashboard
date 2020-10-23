@@ -24,6 +24,11 @@
 1. Make sure you have `Node.js(version version 10.0.0+)` installed on your machine.
 2. Install [yarn](https://yarnpkg.com/).
 3. Install dependencies:
+
+```sh
+$ yarn install
+```
+
 4. If we want to modify the API, please refer to the `config/proxy.ts` file.
 5. Start the development mode
 

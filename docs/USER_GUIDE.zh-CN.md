@@ -27,7 +27,7 @@
 
 ## 路由
 
-The Route module aims to control routes by UI instead of calling APIs.
+路由模块用于通过界面控制路由，以取代手动调用 API。
 
 ### 路由列表
 

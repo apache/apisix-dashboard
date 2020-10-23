@@ -65,7 +65,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 $ ./api/run.sh &
 ```
 
-## Build the Dashboard
+## Build the frontend
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
 
