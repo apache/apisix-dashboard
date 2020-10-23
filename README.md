@@ -31,7 +31,7 @@ Dashboard for [Apache APISIX](https://github.com/apache/apisix)
 
 Please refer to [User Guide](./USER_GUIDE.md)
 
-## Deploy
+## Deployment
 
 - [Deploy Manually](./docs/deploy.md)
 - [Deploy with Docker](./compose/README.md)
