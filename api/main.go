@@ -43,7 +43,6 @@ func main() {
 	if err := store.InitStores(); err != nil {
 		panic(err)
 	}
-
 	// routes
 	r := internal.SetUpRouter()
 	addr := fmt.Sprintf(":%d", conf.ServerPort)

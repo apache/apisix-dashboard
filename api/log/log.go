@@ -89,7 +89,7 @@ func GetLogger() *logrus.Entry {
 		var log = logrus.New()
 		setNull(log)
 		log.SetLevel(logrus.DebugLevel)
-		if conf.ENV != conf.LOCAL {
+		if conf.ENV != conf.EnvLOCAL {
 			log.SetLevel(logrus.ErrorLevel)
 		}
 		log.SetFormatter(&logrus.JSONFormatter{})

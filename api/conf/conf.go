@@ -28,14 +28,18 @@ import (
 	"github.com/apisix/manager-api/internal/utils"
 )
 
-const ServerPort = 8080
-const PROD = "prod"
-const BETA = "beta"
-const DEV = "dev"
-const LOCAL = "local"
-const confPath = "/go/manager-api/conf.json"
-const schemaPath = "/go/manager-api/schema.json"
-const RequestId = "requestId"
+const (
+	ServerPort = 8080
+	WebDir     = "./dist"
+
+	EnvPROD  = "prod"
+	EnvBETA  = "beta"
+	EnvDEV   = "dev"
+	EnvLOCAL = "local"
+
+	confPath   = "/go/manager-api/conf.json"
+	schemaPath = "/go/manager-api/schema.json"
+)
 
 var (
 	ENV        string
@@ -52,7 +56,7 @@ func init() {
 
 func setEnvironment() {
 	if env := os.Getenv("ENV"); env == "" {
-		ENV = LOCAL
+		ENV = EnvLOCAL
 	} else {
 		ENV = env
 	}
@@ -65,7 +69,7 @@ func setEnvironment() {
 }
 
 func configurationPath() string {
-	if ENV == LOCAL {
+	if ENV == EnvLOCAL {
 		return filepath.Join(filepath.Dir(basePath), "conf.json")
 	} else {
 		return confPath
@@ -73,7 +77,7 @@ func configurationPath() string {
 }
 
 func getSchemaPath() string {
-	if ENV == LOCAL {
+	if ENV == EnvLOCAL {
 		return filepath.Join(filepath.Dir(basePath), "schema.json")
 	} else {
 		return schemaPath
