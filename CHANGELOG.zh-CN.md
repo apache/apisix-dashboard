@@ -30,13 +30,13 @@
 
 ### 核心
 
-- 前端根据新的 admin-api 进行重构
-- 后端移除对 mysql 的依赖
-- 支持插件编排模式
-- 制定前端国际化标准
-- Dashboard 新的部署方式
-- 增加更多测试用例
-- 文档增强
+- 前端根据新的 admin-api 进行重构。
+- 后端移除对 mysql 的依赖。
+- 支持插件编排模式。
+- 制定前端国际化标准。
+- Dashboard 新的部署方式。
+- 增加更多测试用例。
+- 文档增强。
 
 更多的变动可以参考[里程碑](https://github.com/apache/apisix-dashboard/milestone/4)
 
