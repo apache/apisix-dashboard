@@ -64,6 +64,7 @@ RUN  cd /go/manager-api/build-tools \
      && lua schema-sync.lua > /go/manager-api/schema.json \
      && cd /go/manager-api/ \
      && rm -rf /go/manager-api/build-tools/
+ADD ./dist /go/manager-api
 
 EXPOSE 8080
 

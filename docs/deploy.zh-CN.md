@@ -85,6 +85,5 @@ $ yarn install
 $ yarn build
 ```
 
-5. 如果第 4 步成功的话，那么构建后的文件在 `/dist` 目录下，接着我们推荐使用 `nginx` 处理这些文件，请手动安装 `nginx` 并参考 `compose/dashboard_conf/nginx.conf` 配置。
-
-6. 移动 `dist` 目录下的文件到 nginx 的默认 html 目录，然后在浏览器中访问 `http://127.0.0.1`。
+5. 如果第 4 步成功的话，那么构建后的文件在 `/dist` 目录下。
+6. 移动 `dist` 目录下的文件到 manager-api 的 `dist` 目录下，然后在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
