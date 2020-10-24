@@ -34,6 +34,6 @@ export default {
   'page.ssl.list.ifEnable': '是否启用',
   'page.ssl.list.periodOfValidity': '有效期',
   'page.ssl.steps.stepTitle.completeCertInfo': '完善证书信息',
-  'component.ssl.removeSSLSuccess': '删除 SSL 成功',
+  'component.ssl.removeSSLSuccess': '删除证书成功',
   'component.ssl.removeSSLItemModalContent': '确定要删除该证书吗？',
 };
