@@ -19,7 +19,7 @@
 
 # Deploy manually
 
-## Clone the project
+## 1. Clone the project
 
 ```sh
 $ git clone https://github.com/apache/apisix-dashboard.git
@@ -27,13 +27,13 @@ $ git clone https://github.com/apache/apisix-dashboard.git
 $ cd apisix-dashboard
 ```
 
-## Build the manager-api
+## 2. Build the manager-api
 
 The `manager-api` is used to provide APIs for Dashboard, just like a bridge between the Apache APISIX and the Dashboard. Here are the steps to build it manually:
 
 1. We need `Go` 1.13+ to be preinstalled.
 
-NOTE: You also need to install `Lua` 5.1+ if you want to use the Plugin Orchestration, we will improve this part and remove Lua's dependency in the future.
+NOTE: You also need to install `Lua` 5.1+ if you want to use the Plugin Orchestration, we will improve this part and omit Lua's dependency in the future.
 
 2. Check environment variables
 
@@ -67,7 +67,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 $ ./api/run.sh &
 ```
 
-## Build the frontend
+## 3. Build the frontend
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
 
@@ -86,4 +86,7 @@ $ yarn build
 ```
 
 5. The bundled files are under `/dist` folder if the step 4 is successful, then we recommend using `nginx` to handle those files, please install `nginx` manually, then refer to the nginx conf `compose/dashboard_conf/nginx.conf`.
-6. Move files under `dist` folder to nginx's default html folder, then visit `http://127.0.0.1` in your browser.
+
+## 5. Finally
+
+Move files under `dist` folder to nginx's default html folder, then visit `http://127.0.0.1` in your browser.
