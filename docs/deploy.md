@@ -83,5 +83,5 @@ $ yarn install
 $ yarn build
 ```
 
-5. The bundled files are under `/dist` folder if the step 4 is successful, then we recommend using `nginx` to handle those files, please install `nginx` manually, then refer to the nginx conf `compose/dashboard_conf/nginx.conf`.
-6. Move files under `dist` folder to nginx's default html folder, then visit `http://127.0.0.1` in your browser.
+5. The bundled files are under `/dist` folder if the step 4 is successful.
+6. Move files under `dist` folder to manager-api's `dist` folder, then visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
