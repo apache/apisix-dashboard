@@ -59,21 +59,4 @@ export default {
   // User component
   'component.user.loginByPassword': 'Username & Password',
   'component.user.login': 'Login',
-  'component.user.username': 'Username',
-  'component.user.password': 'Password',
-  'component.user.rememberMe': 'Remember Me',
-  'component.user.inputUsername': 'Please input username!',
-  'component.user.inputPassword': 'Please input password!',
-  'component.user.wrongUsernameOrPassword': 'Wrong account or password!',
-  // SSL Module
-  'component.ssl.removeSSLItemModalContent': 'You are going to remove this item!',
-  'component.ssl.removeSSLItemModalTitle': 'SSL Remove Alert',
-  'component.ssl.fetchSSLListSuccess': 'Fetch SSL list successfully',
-  'component.ssl.removeSSLSuccess': 'Remove target SSL successfully',
-  'component.ssl.fieldSNIInvalid': 'Please check SNI',
-  'component.ssl.fieldKeyInvalid': 'Please check Key',
-  'component.ssl.fieldCertInvalid': 'Please check Cert',
-  'component.ssl.invalidKey': 'Invalid Key',
-  'component.ssl.fieldKeyTooShort': 'Key is too short, 128 characters at least.',
-  'component.ssl.fieldCertTooShort': 'Cert is too short, 128 characters at least.',
 };

@@ -17,40 +17,25 @@
 import React, { useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Button, Switch, Popconfirm, notification, Tag, Input } from 'antd';
+import { Button, Popconfirm, notification, Tag, Input } from 'antd';
 import { useIntl, history } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
-import { fetchList as fetchSSLList, remove as removeSSL, switchEnable } from '@/pages/SSL/service';
+import { fetchList as fetchSSLList, remove as removeSSL } from '@/pages/SSL/service';
 
 const Page: React.FC = () => {
-  const [search, setSearch] = useState('');
+  const [, setSearch] = useState('');
 
   const tableRef = useRef<ActionType>();
   const { formatMessage } = useIntl();
 
-  const onEnableChange = (id: string, checked: boolean) => {
-    switchEnable(id, checked)
-      .then(() => {
-        notification.success({
-          message: formatMessage({
-            id: 'page.ssl.notification.updateCertEnableStatusSuccessfully',
-          }),
-        });
-      })
-      .catch(() => {
-        /* eslint-disable no-unused-expressions */
-        tableRef.current?.reload();
-      });
-  };
-
-  const columns: ProColumns<SSLModule.ResSSL>[] = [
+  const columns: ProColumns<SSLModule.ResponseBody>[] = [
     {
       title: 'SNI',
       dataIndex: 'sni',
       render: (_, record) => {
-        return record.snis.map((sni) => (
+        return (record.snis || []).map((sni) => (
           <Tag color="geekblue" key={sni}>
             {sni}
           </Tag>
@@ -62,19 +47,6 @@ const Page: React.FC = () => {
       dataIndex: 'validity_end',
       hideInSearch: true,
       render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
-    },
-    {
-      title: formatMessage({ id: 'page.ssl.list.ifEnable' }),
-      dataIndex: 'status',
-      hideInSearch: true,
-      render: (text, record) => (
-        <Switch
-          defaultChecked={Number(text) === 1}
-          onChange={(checked: boolean) => {
-            onEnableChange(record.id, checked);
-          }}
-        />
-      ),
     },
     {
       title: formatMessage({ id: 'component.global.updateTime' }),
@@ -97,7 +69,7 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'component.global.edit' })}
           </Button>
           <Popconfirm
-            title={formatMessage({ id: 'component.global.delete' })}
+            title={formatMessage({ id: 'component.ssl.removeSSLItemModalContent' })}
             onConfirm={() =>
               removeSSL(record.id).then(() => {
                 notification.success({
@@ -111,7 +83,7 @@ const Page: React.FC = () => {
             okText={formatMessage({ id: 'component.global.confirm' })}
           >
             <Button type="primary" danger>
-              {formatMessage({ id: 'component.global.remove' })}
+              {formatMessage({ id: 'component.global.delete' })}
             </Button>
           </Popconfirm>
         </>
@@ -131,12 +103,12 @@ const Page: React.FC = () => {
         id: 'component.global.list',
       })}`}
     >
-      <ProTable<SSLModule.ResSSL>
+      <ProTable<SSLModule.ResponseBody>
         search={false}
         rowKey="id"
         columns={columns}
         actionRef={tableRef}
-        request={(params) => fetchSSLList(params, search)}
+        request={() => fetchSSLList()}
         toolBarRender={(action) => [
           <Input.Search
             placeholder={formatMessage({ id: 'component.global.pleaseEnter' })}
