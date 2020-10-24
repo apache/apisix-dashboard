@@ -14,19 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Button, Popconfirm, notification, Tag, Input } from 'antd';
+import { Button, Popconfirm, notification, Tag } from 'antd';
 import { useIntl, history } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
-import { fetchList as fetchSSLList, remove as removeSSL } from '@/pages/SSL/service';
+import { fetchList, remove as removeSSL } from '@/pages/SSL/service';
 
 const Page: React.FC = () => {
-  const [, setSearch] = useState('');
-
   const tableRef = useRef<ActionType>();
   const { formatMessage } = useIntl();
 
@@ -104,20 +102,11 @@ const Page: React.FC = () => {
       })}`}
     >
       <ProTable<SSLModule.ResponseBody>
-        search={false}
         rowKey="id"
         columns={columns}
         actionRef={tableRef}
-        request={() => fetchSSLList()}
-        toolBarRender={(action) => [
-          <Input.Search
-            placeholder={formatMessage({ id: 'component.global.pleaseEnter' })}
-            onSearch={(value) => {
-              setSearch(value);
-              action.setPageInfo({ page: 1 });
-              action.reload();
-            }}
-          />,
+        request={fetchList}
+        toolBarRender={() => [
           <Button type="primary" onClick={() => history.push(`/ssl/create`)}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}

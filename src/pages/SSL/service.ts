@@ -16,8 +16,14 @@
  */
 import { request } from 'umi';
 
-export const fetchList = () => {
-  return request<Res<ResListData<SSLModule.ResponseBody>>>(`/ssl`).then(({ data }) => {
+export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
+  return request<Res<ResListData<SSLModule.ResponseBody>>>('/ssl', {
+    params: {
+      page: current,
+      page_size: pageSize,
+      ...res,
+    },
+  }).then(({ data }) => {
     return {
       total: data.total_size,
       data: data.rows,
