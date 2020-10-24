@@ -16,11 +16,10 @@
  */
 export default {
   'page.ssl.form.itemLabel.expireTime': '过期时间',
-  'page.ssl.form.itemLabel.cert': '证书内容',
+  'page.ssl.form.itemLabel.cert': '证书',
   'page.ssl.form.itemRuleMessage.certValueLength': '证书内容至少需要128个字符',
   'page.ssl.form.itemLabel.privateKey': '私钥',
   'page.ssl.form.itemRuleMessage.privateKeyLength': '私钥 至少需要128个字符',
-  'page.ssl.textAreaPlaceholder.cert': '请填写SSL证书内容',
 
   'page.ssl.button.uploadCert': '上传证书',
 
@@ -35,4 +34,6 @@ export default {
   'page.ssl.list.ifEnable': '是否启用',
   'page.ssl.list.periodOfValidity': '有效期',
   'page.ssl.steps.stepTitle.completeCertInfo': '完善证书信息',
+  'component.ssl.removeSSLSuccess': '删除证书成功',
+  'component.ssl.removeSSLItemModalContent': '确定要删除该证书吗？',
 };

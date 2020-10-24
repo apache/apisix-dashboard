@@ -1,4 +1,4 @@
-name: LICENSE CI
+name: License checker
 
 on:
   push:
