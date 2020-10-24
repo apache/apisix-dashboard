@@ -31,7 +31,9 @@ $ cd apisix-dashboard
 
 The `manager-api` is used to provide APIs for Dashboard, just like a bridge between the Apache APISIX and the Dashboard. Here are the steps to build it manually:
 
-1. We need `Go` 1.13+ and `Lua` 5.1+ to be preinstalled.
+1. We need `Go` 1.13+ to be preinstalled.
+
+NOTE: You also need to install `Lua` 5.1+ if you want to use the Plugin Orchestration, we will improve this part and omit Lua's dependency in the future.
 
 2. Check environment variables
 
@@ -84,4 +86,5 @@ $ yarn build
 ```
 
 5. The bundled files are under `/dist` folder if the step 4 is successful.
+
 6. Move files under `dist` folder to manager-api's `dist` folder, then visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
