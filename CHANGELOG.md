@@ -28,13 +28,13 @@ This is release candidate.
 
 # Core
 
-- Refactor front-end with admin-api
-- Manage-api removes dependency on mysql
-- Support Plugin orchestration
-- Setting standards for front-end internationalization
-- New deployment pattern
-- Add more test cases
-- Document Enhancement
+- Refactor front-end with admin-api.
+- Manage-api removes dependency on mysql.
+- Support Plugin orchestration.
+- Setting standards for front-end internationalization.
+- New deployment pattern.
+- Add more test cases.
+- Document Enhancement.
 
 For more changes, please refer to [Milestone](https://github.com/apache/apisix-dashboard/milestone/4)
 
