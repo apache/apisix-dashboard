@@ -33,7 +33,7 @@ The `manager-api` is used to provide APIs for Dashboard, just like a bridge betw
 
 1. We need `Go` 1.13+ to be preinstalled.
 
-If want to use the plugin orchestration, `Lua` 5.1+ to need be preinstalled at the same time. And we will optimize this part and remove the dependency on `Lua` in the future.
+NOTE: You also need to install `Lua` 5.1+ if you want to use the Plugin Orchestration, we will optimize this part and remove the dependency about `Lua` in the future.
 
 2. Check environment variables
 
