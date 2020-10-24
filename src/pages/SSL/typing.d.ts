@@ -21,17 +21,6 @@ declare namespace SSLModule {
     key: string;
   };
 
-  type ResSSL = {
-    id: string;
-    create_time: number;
-    update_time: number;
-    validity_start: number;
-    validity_end: number;
-    status: number;
-    snis: string[];
-    public_key: string;
-  };
-
   type UploadPublicSuccessData = {
     cert: string;
     publicKeyList: UploadFile[];
@@ -56,13 +45,14 @@ declare namespace SSLModule {
     };
   };
 
-  type FetchListParams = {
-    current?: number;
-    pageSize?: number;
-    sni?: string;
-    expire_range?: string;
-    expire_start?: number;
-    expire_end?: number;
-    status?: 0;
+  type ResponseBody = {
+    id: string;
+    cert: string;
+    create_time: number;
+    snis: string[];
+    status: number;
+    update_time: number;
+    validity_start: number;
+    validity_end: number;
   };
 }

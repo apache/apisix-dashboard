@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
-import { Card, Steps, notification, Form } from 'antd';
+import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
 import { history, useIntl } from 'umi';
@@ -48,13 +48,6 @@ const Page: React.FC = (props) => {
           expireTime: moment.unix(Number(data.validity_end)).format('YYYY-MM-DD HH:mm:ss'),
         });
         setStep(2);
-      })
-      .catch(() => {
-        notification.warning({
-          message: `${formatMessage({ id: 'component.global.pleaseCheck' })}${formatMessage({
-            id: 'page.ssl.form.itemLabel.cert',
-          })}`,
-        });
       });
   };
 

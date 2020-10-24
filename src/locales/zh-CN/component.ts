@@ -55,21 +55,4 @@ export default {
   // User component
   'component.user.loginByPassword': '账号密码登录',
   'component.user.login': '登录',
-  'component.user.username': '账号',
-  'component.user.password': '密码',
-  'component.user.rememberMe': '自动登录',
-  'component.user.inputUsername': '请输入账号！',
-  'component.user.inputPassword': '请输入密码！',
-  'component.user.wrongUsernameOrPassword': '账号或密码错误！',
-  // SSL Module
-  'component.ssl.removeSSLItemModalContent': '确定要删除该项吗？',
-  'component.ssl.removeSSLItemModalTitle': '删除 SSL',
-  'component.ssl.fetchSSLListSuccess': '获取 SSL 列表成功',
-  'component.ssl.removeSSLSuccess': '删除 SSL 成功',
-  'component.ssl.fieldSNIInvalid': '请检查 SNI 值',
-  'component.ssl.fieldKeyInvalid': '请检查 Key 值',
-  'component.ssl.fieldCertInvalid': '请检查 Cert 值',
-  'component.ssl.invalidKey': '非法的 Key',
-  'component.ssl.fieldKeyTooShort': 'Key 值过短，至少需要128位！',
-  'component.ssl.fieldCertTooShort': 'Cert 值过短，至少需要128位！',
 };

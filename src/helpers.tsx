@@ -34,12 +34,11 @@ export const getMenuData = (): MenuDataItem[] => {
       path: '/routes/list',
       icon: <IconFont type="iconroute" />,
     },
-    // NOTE: disable SSL module in v2.0
-    // {
-    //   name: 'ssl',
-    //   path: '/ssl/list',
-    //   icon: <IconFont type="iconSSLshuzizhengshu" />,
-    // },
+    {
+      name: 'ssl',
+      path: '/ssl/list',
+      icon: <IconFont type="iconSSLshuzizhengshu" />,
+    },
     {
       name: 'upstream',
       path: '/upstream/list',

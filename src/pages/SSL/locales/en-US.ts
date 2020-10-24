@@ -22,7 +22,6 @@ export default {
   'page.ssl.form.itemLabel.privateKey': 'Private Key',
   'page.ssl.form.itemRuleMessage.privateKeyLength':
     'The Private Key requires at least 128 characters',
-  'page.ssl.textAreaPlaceholder.cert': 'Please enter the SSL Certificate Content',
 
   'page.ssl.button.uploadCert': 'Upload Certificate',
 
@@ -39,4 +38,6 @@ export default {
   'page.ssl.list.ifEnable': 'If Enable',
   'page.ssl.list.periodOfValidity': 'Period Of Validity',
   'page.ssl.steps.stepTitle.completeCertInfo': 'Complete Certificate Information',
+  'component.ssl.removeSSLSuccess': 'Remove target SSL successfully',
+  'component.ssl.removeSSLItemModalContent': 'You are going to remove this item!',
 };
