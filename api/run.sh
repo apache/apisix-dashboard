@@ -42,7 +42,7 @@ fi
 
 
 # generate json schema if need a new one
-if [[ ! -f "${pwd}/api/confschema.json" ]]; then
+if [[ ! -f "${pwd}/api/conf/schema.json" ]]; then
     rm master.zip
     rm -rf ./api/build-tools/apisix/
     wget https://github.com/apache/apisix/archive/master.zip
