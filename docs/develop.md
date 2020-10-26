@@ -38,4 +38,17 @@ $ yarn start
 
 ## manager-api
 
-TODO
+
+### Sync json schema
+
+To sync json schema from Apache APISIX, need to install `Lua` 5.1+ and execute the command `api/build-tools/schema-sync.sh $version`, where $version is the APISIX version number or master. Such as:
+
+```sh
+$ api/build-tools/schema-sync.sh 2.0
+```
+
+or
+
+```sh
+$ api/build-tools/schema-sync.sh master
+```

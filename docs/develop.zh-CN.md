@@ -41,4 +41,18 @@ $ yarn start
 
 ## manager-api 开发
 
-待补充
+
+### 同步 json schema
+
+从 Apache APISIX 同步 json schema ，需要安装 `Lua` 5.1+ ，并执行命令 `api/build-tools/schema-sync.sh $version` ，其中 $version 为 APISIX 版本号或 master 。如： 
+
+```sh
+$ api/build-tools/schema-sync.sh 2.0
+```
+
+或
+
+```sh
+$ api/build-tools/schema-sync.sh master
+```
+

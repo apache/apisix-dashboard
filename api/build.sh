@@ -27,3 +27,5 @@ fi
 
 # build
 cd ./api && go build -o ../manager-api .
+
+echo "done."
