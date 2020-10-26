@@ -41,8 +41,8 @@ if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
 fi
 
 
-# generate json schema
-if [[ ! -f "${pwd}/schema.json" ]]; then
+# generate json schema if need a new one
+if [[ ! -f "${pwd}/api/conf/schema.json" ]]; then
     rm master.zip
     rm -rf ./api/build-tools/apisix/
     wget https://github.com/apache/apisix/archive/master.zip
@@ -50,8 +50,8 @@ if [[ ! -f "${pwd}/schema.json" ]]; then
     mkdir -p ./api/build-tools/apisix/
     mv ./apisix-master/apisix/* ./api/build-tools/apisix/
     rm -rf ./apisix-master
-    cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/schema.json
-    cd ../../
+    cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/api/conf/schema.json
+    cd ../../    
 fi
 
 # build
