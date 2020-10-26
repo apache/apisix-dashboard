@@ -19,8 +19,11 @@
 export ENV=local
 pwd=`pwd`
 
-# config
-export APIX_DAG_LIB_PATH="${pwd}/dag-to-lua-1.1/lib/"
-export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
+# get dag-to-lua lib
+if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
+    wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
+    tar -zxvf v1.1.tar.gz
+fi
 
-exec ./manager-api
+# build
+cd ./api && go build -o ../manager-api .

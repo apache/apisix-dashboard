@@ -15,12 +15,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-export ENV=local
 pwd=`pwd`
 
-# config
-export APIX_DAG_LIB_PATH="${pwd}/dag-to-lua-1.1/lib/"
-export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
+version="master"
+if [[ -n $1 ]]; then
+version=$1
+fi 
 
-exec ./manager-api
+rm -rf ./api/build-tools/apisix/
+wget https://github.com/apache/apisix/archive/$version.zip
+
+unzip $version.zip
+mkdir -p ./api/build-tools/apisix/
+mv ./apisix-$version/apisix/* ./api/build-tools/apisix/
+rm -rf ./apisix-$version
+cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/api/conf/schema.json
+
+echo "sync succeed:" 
+echo "${pwd}/api/conf/schema.json"
