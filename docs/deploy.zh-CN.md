@@ -61,10 +61,16 @@ $ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-3. 构建并启动
+3. 构建
 
 ```sh
-$ ./api/run.sh &
+$ api/build.sh
+```
+
+4. 启动
+
+```sh
+$ api/run.sh
 ```
 
 ## 构建前端

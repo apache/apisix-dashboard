@@ -61,10 +61,16 @@ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-3. Build and Run
+3. Build
 
 ```sh
-$ ./api/run.sh &
+$ api/build.sh
+```
+
+4. Run
+
+```sh
+$ api/run.sh &
 ```
 
 ## Build the frontend

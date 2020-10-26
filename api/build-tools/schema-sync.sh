@@ -1,4 +1,4 @@
-<!--
+#!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -15,41 +15,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
--->
+pwd=`pwd`
 
-# Dashboard Devlopment
+version="master"
+if [[ -n $1 ]]; then
+version=$1
+fi 
 
-## Frontend
+rm -rf ./api/build-tools/apisix/
+wget https://github.com/apache/apisix/archive/$version.zip
 
-1. Make sure you have `Node.js(version version 10.0.0+)` installed on your machine.
-2. Install [yarn](https://yarnpkg.com/).
-3. Install dependencies:
+unzip $version.zip
+mkdir -p ./api/build-tools/apisix/
+mv ./apisix-$version/apisix/* ./api/build-tools/apisix/
+rm -rf ./apisix-$version
+cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/api/conf/schema.json
 
-```sh
-$ yarn install
-```
-
-4. If we want to modify the API, please refer to the `config/proxy.ts` file.
-5. Start the development mode
-
-```sh
-$ yarn start
-```
-
-## manager-api
-
-### Sync jsonschema
-
-To sync jsonschema from Apache APISIX, `Lua` 5.1+ and `zip` need to be preinstalled, then execute this command: `api/build-tools/schema-sync.sh $version`.
-
-NOTE: `$version` should be `master` or Apache APISIX's version. 
-
-Example:
-
-```sh
-# Using "master"
-$ api/build-tools/schema-sync.sh master
-
-# Using Apache APISIX's version
-$ api/build-tools/schema-sync.sh 2.0
-```
+echo "sync success:" 
+echo "${pwd}/api/conf/schema.json"

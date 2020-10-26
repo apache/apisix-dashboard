@@ -1,4 +1,4 @@
-<!--
+#!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -15,41 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
--->
 
-# Dashboard Devlopment
+export ENV=local
+pwd=`pwd`
 
-## Frontend
+# get dag-to-lua lib
+if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
+    wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
+    tar -zxvf v1.1.tar.gz
+fi
 
-1. Make sure you have `Node.js(version version 10.0.0+)` installed on your machine.
-2. Install [yarn](https://yarnpkg.com/).
-3. Install dependencies:
+# build
+cd ./api && go build -o ../manager-api .
 
-```sh
-$ yarn install
-```
-
-4. If we want to modify the API, please refer to the `config/proxy.ts` file.
-5. Start the development mode
-
-```sh
-$ yarn start
-```
-
-## manager-api
-
-### Sync jsonschema
-
-To sync jsonschema from Apache APISIX, `Lua` 5.1+ and `zip` need to be preinstalled, then execute this command: `api/build-tools/schema-sync.sh $version`.
-
-NOTE: `$version` should be `master` or Apache APISIX's version. 
-
-Example:
-
-```sh
-# Using "master"
-$ api/build-tools/schema-sync.sh master
-
-# Using Apache APISIX's version
-$ api/build-tools/schema-sync.sh 2.0
-```
+echo "done."
