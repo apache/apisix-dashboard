@@ -53,3 +53,5 @@ See [CONTRIBUTING](./CONTRIBUTING.md) for details on submitting patches and the 
 1. If you need the dashboard-1.0 which is built with Vue.js, please refer to [master-vue](https://github.com/apache/apisix-dashboard/tree/master-vue).
 
 2. The dashboard 2.0 removes MySQL which [dashboard 1.5](https://github.com/apache/apisix-dashboard/tree/backup-1.5-latest) is relied on.
+
+3. If you are using APISIX 1.5 and below, note that the v2 api store and v3 api store are [separate and isolated](https://etcd.io/docs/v3.4.0/op-guide/v2-migration/). Dashboard v2.0 and above use the etcd v3 api, APISIX 1.5 and below use the etcd v2 api.
