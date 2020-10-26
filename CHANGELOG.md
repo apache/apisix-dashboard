@@ -24,13 +24,13 @@
 
 # 2.0.0
 
-This is release candidate.
+This is a release candidate.
 
 # Core
 
-- Refactor front-end with admin-api.
-- Manage-api removes dependency on mysql.
-- Support Plugin orchestration.
+- Refactor front-end with Admin-API.
+- Manager-API removes dependency on MySQL.
+- Support plugin orchestration.
 - Setting standards for front-end internationalization.
 - New deployment pattern.
 - Add more test cases.
