@@ -31,5 +31,5 @@ mv ./apisix-$version/apisix/* ./api/build-tools/apisix/
 rm -rf ./apisix-$version
 cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/api/conf/schema.json
 
-echo "sync succeed:" 
+echo "sync success:" 
 echo "${pwd}/api/conf/schema.json"
