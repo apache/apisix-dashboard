@@ -76,14 +76,14 @@ func TestConsumer(t *testing.T) {
 		Expect().
 		Status(http.StatusOK)
 
-	// hit route
+	//invalid consumer
 	e2 := httpexpect.New(t, "http://127.0.0.1:9080")
 	e2.GET("/hello").
 		WithHeader("apikey", "123").
 		Expect().
 		Status(http.StatusUnauthorized)
 
-	//invalid consumer
+	//hit route
 	e3 := httpexpect.New(t, "http://127.0.0.1:9080")
 	e3.GET("/hello").
 		WithHeader("apikey", "auth-one").
