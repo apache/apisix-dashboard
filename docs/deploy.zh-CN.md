@@ -22,7 +22,7 @@
 ## 克隆项目
 
 ```sh
-$ git clone https://github.com/apache/apisix-dashboard.git
+$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 
 $ cd apisix-dashboard
 ```
@@ -88,10 +88,11 @@ $ yarn build
 ```
 
 5. 如果第 4 步成功的话，那么构建后的文件在 `/dist` 目录下。
-6. 在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
 
 ## 启动
 
 ```sh
 $ api/run.sh &
 ```
+
+在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
