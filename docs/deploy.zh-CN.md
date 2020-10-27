@@ -77,7 +77,7 @@ $ api/run.sh
 
 该项目使用 [Ant Design Pro](https://pro.ant.design) 初始化。以下是一些使用方法的快速指南。
 
-1. 确保你的设备已经安装了 `Node.js(version 10.0.0+)/Nginx`。
+1. 确保你的设备已经安装了 `Node.js(version 10.0.0+)`。
 
 2. 安装 [yarn](https://yarnpkg.com/)。
 
