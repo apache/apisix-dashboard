@@ -66,7 +66,7 @@ func TestConsumer(t *testing.T) {
         },
         "upstream": {
             "nodes": {
-                "127.0.0.1:1980": 1
+                "172.16.238.120:1980": 1
             },
             "type": "roundrobin"
         },
@@ -88,6 +88,6 @@ func TestConsumer(t *testing.T) {
 	e3.GET("/hello").
 		WithHeader("apikey", "auth-one").
 		Expect().
-		Status(http.StatusBadGateway)
+		Status(http.StatusOK)
 
 }

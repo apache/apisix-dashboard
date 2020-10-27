@@ -113,6 +113,20 @@ services:
       - --initial-cluster-token
       - docker-etcd
 
+  upstream:
+    image: johz/upstream:v2.0
+    restart: always
+    ports:
+      - '80:80/tcp'
+      - '1980:1980/tcp'
+      - '1981:1981/tcp'
+      - '1982:1982/tcp'
+      - '1983:1983/tcp'
+      - '1984:1984/tcp'
+    networks:
+      apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.120
+
   apisix:
     image: apisix:dev
     restart: always
