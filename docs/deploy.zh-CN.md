@@ -95,3 +95,13 @@ $ api/run.sh &
 ```
 
 3. 在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
+
+## FAQ
+
+1. 当 manager-api 在后台模式下运行，在重新编译、重新部署它之前，我们需要查找其进程并结束掉它：
+
+```sh
+$ ps aux | grep manager-api
+
+$ kill $process_id
+```
