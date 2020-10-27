@@ -43,18 +43,6 @@ $ cd apisix-dashboard
 $ go env -w GO111MODULE=on
 ```
 
-- 根据您的本地部署环境，检查 `./api/run.sh` 中的环境变量，如果需要请修改环境变量。例如, 把 ETCD 地址改为你的与 APISIX 一起工作的 ETCD 实例:
-
-```sh
-$ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
-```
-
-如果有多个实例，请使用英文逗号分隔，如：
-
-```sh
-$ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
-```
-
 - 对于大多数中国用户，我们可以使用 [Goproxy](https://goproxy.cn/) 加快模块下载速度。
 
 ```sh
@@ -91,8 +79,19 @@ $ yarn build
 
 ## 启动
 
+1. 根据您的本地部署环境，检查 `./api/run.sh` 中的环境变量，如果需要请修改环境变量。例如：把 ETCD 地址改为与你的 Apache APISIX 一起工作的 ETCD 实例:
+
+```sh
+$ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
+
+# 如果有多个实例，请使用英文逗号分隔，如：
+$ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
+```
+
+2. 启动 manager-api
+
 ```sh
 $ api/run.sh &
 ```
 
-在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
+3. 在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。

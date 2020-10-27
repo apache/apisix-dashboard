@@ -43,18 +43,6 @@ NOTE: You also need to install `Lua` 5.1+ if you want to use the Plugin Orchestr
 $ go env -w GO111MODULE=on
 ```
 
-- According to your local deployment environment, check the environment variables in `./api/run.sh`, modify the environment variables if needed. For example, change the ETCD endpoints to your ETCD instances work with APISIX:
-
-```
-export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
-```
-
-If you have multiple instances, please use commas to separate:
-
-```
-export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
-```
-
 - For most users in China, we could use [Goproxy](https://goproxy.cn/) to speed up downloading modules.
 
 ```sh
@@ -89,8 +77,19 @@ $ yarn build
 
 ## Run
 
+1. According to your local deployment environment, check the environment variables in `./api/run.sh`, modify the environment variables if needed. For example, change the ETCD endpoints to your ETCD instances work with APISIX:
+
+```sh
+$ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
+
+# If you have multiple instances, please use commas to separate:
+$ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
+```
+
+2. Run manager-api
+
 ```sh
 $ api/run.sh &
 ```
 
-Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
+3. Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
