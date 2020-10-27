@@ -67,17 +67,11 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 $ api/build.sh
 ```
 
-4. 启动
-
-```sh
-$ api/run.sh
-```
-
 ## 构建前端
 
 该项目使用 [Ant Design Pro](https://pro.ant.design) 初始化。以下是一些使用方法的快速指南。
 
-1. 确保你的设备已经安装了 `Node.js(version 10.0.0+)`。
+1. 确保你的设备已经安装了 `Node.js(版本 10.0.0+)`。
 
 2. 安装 [yarn](https://yarnpkg.com/)。
 
@@ -95,3 +89,9 @@ $ yarn build
 
 5. 如果第 4 步成功的话，那么构建后的文件在 `/dist` 目录下。
 6. 在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
+
+## 启动
+
+```sh
+$ api/run.sh &
+```

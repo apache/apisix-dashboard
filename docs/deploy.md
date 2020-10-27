@@ -67,12 +67,6 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 $ api/build.sh
 ```
 
-4. Run
-
-```sh
-$ api/run.sh &
-```
-
 ## Build the frontend
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
@@ -95,3 +89,8 @@ $ yarn build
 
 6. Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
 
+## Run
+
+```sh
+$ api/run.sh &
+```
