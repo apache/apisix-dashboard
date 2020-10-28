@@ -18,43 +18,12 @@ package e2e
 
 import (
 	"net/http"
-	"os"
-	"strings"
 	"testing"
-	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gavv/httpexpect/v2"
-
-	"github.com/apisix/manager-api/conf"
-	"github.com/apisix/manager-api/internal"
-	"github.com/apisix/manager-api/internal/core/storage"
-	"github.com/apisix/manager-api/internal/core/store"
 )
 
-var accessToken string
-
-func init() {
-	if err := storage.InitETCDClient(strings.Split(os.Getenv("APIX_ETCD_ENDPOINTS"), ",")); err != nil {
-		panic(err)
-	}
-	if err := store.InitStores(); err != nil {
-		panic(err)
-	}
-
-	claims := jwt.StandardClaims{
-		Subject:   "admin",
-		IssuedAt:  time.Now().Unix(),
-		ExpiresAt: time.Now().Add(time.Second * time.Duration(conf.AuthenticationConfig.Session.ExpireTime)).Unix(),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	accessToken, _ = token.SignedString([]byte(conf.AuthenticationConfig.Session.Secret))
-}
-
-func TestBalancer(t *testing.T) {
-
-	handler := internal.SetUpRouter()
-
+func TestRouteHost(t *testing.T) {
 	e := httpexpect.WithConfig(httpexpect.Config{
 		Client: &http.Client{
 			Transport: httpexpect.NewBinder(handler),
@@ -66,24 +35,39 @@ func TestBalancer(t *testing.T) {
 		},
 	})
 
-	e.PUT("/apisix/admin/routes/1").WithText(`{
-        "uri": "/server_port",
+	//create route
+	e.PUT("/apisix/admin/routes/r1").WithText(`{
+        "uri": "/hello_",
+        "hosts": ["foo.com", "*.bar.com"],
         "upstream": {
-            "key": "remote_addr",
-            "type": "chash",
             "nodes": {
-                "127.0.0.1:1980": 1,
-                "127.0.0.1:1981": 1
-            }
+                "172.16.238.120:1980": 1
+            },
+            "type": "roundrobin"
         }
     }`).
 		WithHeader("Authorization", accessToken).
 		Expect().
 		Status(http.StatusOK)
 
+	//access to APISIX
 	e2 := httpexpect.New(t, "http://127.0.0.1:9080")
-	e2.GET("/bad-path").
+
+	//hit route -- not found
+	e2.GET("/not_found").
 		Expect().
 		Status(http.StatusNotFound)
+
+	//hit route -- not found
+	e2.GET("/not_found").
+		WithHeader("Host", "not_found.com").
+		Expect().
+		Status(http.StatusNotFound)
+
+	//hit route - ok
+	e2.GET("/hello_").
+		WithHeader("Host", "foo.com").
+		Expect().
+		Status(http.StatusOK)
 
 }

@@ -60,7 +60,7 @@ func TestConsumer(t *testing.T) {
 		Status(http.StatusOK)
 
 	//create route
-	e.PUT("/apisix/admin/routes/1").WithText(`{
+	e.PUT("/apisix/admin/routes/c1").WithText(`{
         "plugins": {
             "key-auth": {}
         },
@@ -89,5 +89,47 @@ func TestConsumer(t *testing.T) {
 		WithHeader("apikey", "auth-one").
 		Expect().
 		Status(http.StatusOK)
+
+	//TODO -- TEST 5: up the limit at consumer-plugin.t
+
+	////create consumer with two auth plugins - fail
+	//e.PUT("/apisix/admin/consumers").WithText(`{
+	//      "username": "jack",
+	//      "plugins": {
+	//          "limit-count": {
+	//              "count": 2,
+	//              "time_window": 60,
+	//              "rejected_code": 503,
+	//              "key": "remote_addr"
+	//          },
+	//          "key-auth": {
+	//              "key": "auth-one"
+	//          },
+	//          "jwt-auth": {
+	//              "key": "auth-one"
+	//          }
+	//      }
+	//  }`).
+	//	WithHeader("Authorization", accessToken).
+	//	Expect().
+	//	Status(http.StatusBadRequest)
+
+	//missing auth plugins - fail
+	//e.PUT("/apisix/admin/consumers").WithText(`{
+	//      "username": "jack",
+	//      "plugins": {
+	//          "limit-count": {
+	//              "count": 2,
+	//              "time_window": 60,
+	//              "rejected_code": 503,
+	//              "key": "remote_addr"
+	//          }
+	//      }
+	//  }`).
+	//	WithHeader("Authorization", accessToken).
+	//	Expect().
+	//	Status(http.StatusBadRequest)
+
+	//TODO -- TEST 8: use the new configuration after the consumer's configuration is updated
 
 }
