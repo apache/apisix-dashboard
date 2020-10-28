@@ -36,7 +36,6 @@ const (
 	EnvBETA  = "beta"
 	EnvDEV   = "dev"
 	EnvLOCAL = "local"
-	EnvPOC   = "poc"
 
 	confPath   = "/go/manager-api/conf.json"
 	schemaPath = "/go/manager-api/schema.json"
@@ -70,20 +69,20 @@ func setEnvironment() {
 }
 
 func configurationPath() string {
-	if ENV == EnvLOCAL {
+	if confPath := os.Getenv("APISIX_CONF_PATH"); confPath != "" {
+		return filepath.Join(confPath, "/conf.json")
+	} else if ENV == EnvLOCAL {
 		return filepath.Join(filepath.Dir(basePath), "conf.json")
-	} else if ENV == EnvPOC {
-		return "conf/conf.json"
 	} else {
 		return confPath
 	}
 }
 
 func getSchemaPath() string {
-	if ENV == EnvLOCAL {
+	if confPath := os.Getenv("APISIX_CONF_PATH"); confPath != "" {
+		return filepath.Join(confPath, "/schema.json")
+	} else if ENV == EnvLOCAL {
 		return filepath.Join(filepath.Dir(basePath), "schema.json")
-	} else if ENV == EnvPOC {
-		return "conf/schema.json"
 	} else {
 		return schemaPath
 	}
