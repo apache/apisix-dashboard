@@ -3,7 +3,7 @@ const puppeteer = require('puppeteer');
 
 let browser;
 beforeAll(async () => {
-  browser = await puppeteer.launch({ headless: false });
+  browser = await puppeteer.launch({ headless: true });
 });
 
 describe('Login', () => {
