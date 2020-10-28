@@ -20,8 +20,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path/filepath"
-	"runtime"
 
 	"github.com/tidwall/gjson"
 
@@ -65,12 +63,13 @@ func setEnvironment() {
 		DagLibPath = env
 	}
 
-	_, basePath, _, _ = runtime.Caller(1)
+	//_, basePath, _, _ = runtime.Caller(1)
+
 }
 
 func configurationPath() string {
 	if ENV == EnvLOCAL {
-		return filepath.Join(filepath.Dir(basePath), "conf.json")
+		return "conf/conf.json"
 	} else {
 		return confPath
 	}
@@ -78,7 +77,7 @@ func configurationPath() string {
 
 func getSchemaPath() string {
 	if ENV == EnvLOCAL {
-		return filepath.Join(filepath.Dir(basePath), "schema.json")
+		return "conf/schema.json"
 	} else {
 		return schemaPath
 	}
