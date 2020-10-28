@@ -69,7 +69,9 @@ func setEnvironment() {
 }
 
 func configurationPath() string {
-	if ENV == EnvLOCAL {
+	if confPath := os.Getenv("APISIX_CONF_PATH"); confPath != "" {
+		return filepath.Join(confPath, "/conf.json")
+	} else if ENV == EnvLOCAL {
 		return filepath.Join(filepath.Dir(basePath), "conf.json")
 	} else {
 		return confPath
@@ -77,7 +79,9 @@ func configurationPath() string {
 }
 
 func getSchemaPath() string {
-	if ENV == EnvLOCAL {
+	if confPath := os.Getenv("APISIX_CONF_PATH"); confPath != "" {
+		return filepath.Join(confPath, "/schema.json")
+	} else if ENV == EnvLOCAL {
 		return filepath.Join(filepath.Dir(basePath), "schema.json")
 	} else {
 		return schemaPath
