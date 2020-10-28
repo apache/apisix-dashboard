@@ -20,6 +20,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
+	"runtime"
 
 	"github.com/tidwall/gjson"
 
@@ -34,6 +36,7 @@ const (
 	EnvBETA  = "beta"
 	EnvDEV   = "dev"
 	EnvLOCAL = "local"
+	EnvPOC   = "poc"
 
 	confPath   = "/go/manager-api/conf.json"
 	schemaPath = "/go/manager-api/schema.json"
@@ -63,12 +66,13 @@ func setEnvironment() {
 		DagLibPath = env
 	}
 
-	//_, basePath, _, _ = runtime.Caller(1)
-
+	_, basePath, _, _ = runtime.Caller(1)
 }
 
 func configurationPath() string {
 	if ENV == EnvLOCAL {
+		return filepath.Join(filepath.Dir(basePath), "conf.json")
+	} else if ENV == EnvPOC {
 		return "conf/conf.json"
 	} else {
 		return confPath
@@ -77,6 +81,8 @@ func configurationPath() string {
 
 func getSchemaPath() string {
 	if ENV == EnvLOCAL {
+		return filepath.Join(filepath.Dir(basePath), "schema.json")
+	} else if ENV == EnvPOC {
 		return "conf/schema.json"
 	} else {
 		return schemaPath
