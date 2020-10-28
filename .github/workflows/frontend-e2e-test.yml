@@ -1,0 +1,31 @@
+name: Front-end e2e test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  frontend-e2e:
+    name: Front-end e2e test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.JS environment for Front-end
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: Install Front-end dependencies
+        run: yarn install
+
+      - name: start Front-end and Test
+        run: |
+          yarn start &
+          sleep 10 && 
+          curl http://localhost:8000 &&
+          yarn test
