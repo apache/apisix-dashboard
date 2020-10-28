@@ -19,29 +19,12 @@ package e2e
 import (
 	"net/http"
 	"testing"
-
-	"github.com/gavv/httpexpect/v2"
-
-	"github.com/apisix/manager-api/internal"
 )
 
 func TestConsumer(t *testing.T) {
 
-	handler := internal.SetUpRouter()
-
-	e := httpexpect.WithConfig(httpexpect.Config{
-		Client: &http.Client{
-			Transport: httpexpect.NewBinder(handler),
-			Jar:       httpexpect.NewJar(),
-		},
-		Reporter: httpexpect.NewAssertReporter(t),
-		Printers: []httpexpect.Printer{
-			httpexpect.NewDebugPrinter(t, true),
-		},
-	})
-
 	//create consumer
-	e.PUT("/apisix/admin/consumers").WithText(`{
+	MangerApiExpect(t).PUT("/apisix/admin/consumers").WithText(`{
         "username": "jack",
         "plugins": {
             "limit-count": {
@@ -59,8 +42,8 @@ func TestConsumer(t *testing.T) {
 		Expect().
 		Status(http.StatusOK)
 
-	//create route
-	e.PUT("/apisix/admin/routes/c1").WithText(`{
+		//create route
+	MangerApiExpect(t).PUT("/apisix/admin/routes/c1").WithText(`{
         "plugins": {
             "key-auth": {}
         },
@@ -76,16 +59,14 @@ func TestConsumer(t *testing.T) {
 		Expect().
 		Status(http.StatusOK)
 
-	//invalid consumer
-	e2 := httpexpect.New(t, "http://127.0.0.1:9080")
-	e2.GET("/hello").
+		//invalid consumer
+	APISIXExpect(t).GET("/hello").
 		WithHeader("apikey", "123").
 		Expect().
 		Status(http.StatusUnauthorized)
 
-	//hit route
-	e3 := httpexpect.New(t, "http://127.0.0.1:9080")
-	e3.GET("/hello").
+		//hit route
+	APISIXExpect(t).GET("/hello").
 		WithHeader("apikey", "auth-one").
 		Expect().
 		Status(http.StatusOK)

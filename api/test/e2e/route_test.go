@@ -19,24 +19,12 @@ package e2e
 import (
 	"net/http"
 	"testing"
-
-	"github.com/gavv/httpexpect/v2"
 )
 
 func TestRouteHost(t *testing.T) {
-	e := httpexpect.WithConfig(httpexpect.Config{
-		Client: &http.Client{
-			Transport: httpexpect.NewBinder(handler),
-			Jar:       httpexpect.NewJar(),
-		},
-		Reporter: httpexpect.NewAssertReporter(t),
-		Printers: []httpexpect.Printer{
-			httpexpect.NewDebugPrinter(t, true),
-		},
-	})
 
 	//create route
-	e.PUT("/apisix/admin/routes/r1").WithText(`{
+	MangerApiExpect(t).PUT("/apisix/admin/routes/r1").WithText(`{
         "uri": "/hello_",
         "hosts": ["foo.com", "*.bar.com"],
         "upstream": {
@@ -50,22 +38,19 @@ func TestRouteHost(t *testing.T) {
 		Expect().
 		Status(http.StatusOK)
 
-	//access to APISIX
-	e2 := httpexpect.New(t, "http://127.0.0.1:9080")
-
-	//hit route -- not found
-	e2.GET("/not_found").
+		//hit route -- not found
+	APISIXExpect(t).GET("/not_found").
 		Expect().
 		Status(http.StatusNotFound)
 
-	//hit route -- not found
-	e2.GET("/not_found").
+		//hit route -- not found
+	APISIXExpect(t).GET("/not_found").
 		WithHeader("Host", "not_found.com").
 		Expect().
 		Status(http.StatusNotFound)
 
-	//hit route - ok
-	e2.GET("/hello_").
+		//hit route - ok
+	APISIXExpect(t).GET("/hello_").
 		WithHeader("Host", "foo.com").
 		Expect().
 		Status(http.StatusOK)
