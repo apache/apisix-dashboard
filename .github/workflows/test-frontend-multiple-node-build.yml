@@ -35,12 +35,13 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
-        run: |
-          cd frontend
-          yarn
-
-      - name: Build the Dashboard
-        run: yarn build
+        working-directory: frontend
+        run: yarn
 
       - name: Lint
+        working-directory: frontend
         run: yarn run lint:js && yarn run lint:style
+
+      - name: Build the Dashboard
+        working-directory: frontend
+        run: yarn build
