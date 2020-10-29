@@ -29,8 +29,7 @@ import (
 )
 
 const (
-	ServerPort = 8080
-	WebDir     = "./dist"
+	WebDir   = "./dist"
 
 	EnvPROD  = "prod"
 	EnvBETA  = "beta"
@@ -46,12 +45,30 @@ var (
 	basePath   string
 	Schema     gjson.Result
 	DagLibPath = "/go/manager-api/dag-to-lua/"
+	ServerPort = 8080
 )
 
 func init() {
 	setEnvironment()
 	initAuthentication()
 	initSchema()
+	setConf()
+}
+
+func setConf() {
+	filePath := configurationPath()
+	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
+		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
+	} else {
+		configuration := gjson.ParseBytes(configurationContent)
+		//listen
+		ServerPort = int(configuration.Get("conf.listen.port").Int())
+		//dag lib path
+		dagLibPath := configuration.Get("conf.dag-lib-path").String()
+		if dagLibPath != "" {
+			DagLibPath = dagLibPath
+		}
+	}
 }
 
 func setEnvironment() {

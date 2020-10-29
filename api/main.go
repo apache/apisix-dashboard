@@ -18,6 +18,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -30,13 +31,13 @@ import (
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/utils"
-	"github.com/apisix/manager-api/log"
+	alog "github.com/apisix/manager-api/log"
 )
 
-var logger = log.GetLogger()
+var logger = alog.GetLogger()
 
 func main() {
-	dlog.DefLogger = log.DefLogger{}
+	dlog.DefLogger = alog.DefLogger{}
 	if err := storage.InitETCDClient(strings.Split(os.Getenv("APIX_ETCD_ENDPOINTS"), ",")); err != nil {
 		panic(err)
 	}
@@ -52,6 +53,9 @@ func main() {
 		ReadTimeout:  time.Duration(1000) * time.Millisecond,
 		WriteTimeout: time.Duration(5000) * time.Millisecond,
 	}
+
+	log.Printf("The Manager API is listening on %s ", addr)
+
 	if err := s.ListenAndServe(); err != nil {
 		logger.WithError(err)
 	}

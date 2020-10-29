@@ -2,7 +2,11 @@
   "conf": {
     "syslog": {
       "host": "127.0.0.1"
-    }
+    },
+    "listen": {
+      "port": 8080
+    },
+    "dag-lib-path": ""
   },
   "authentication": {
     "session": {
