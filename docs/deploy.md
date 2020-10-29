@@ -77,7 +77,7 @@ $ yarn build
 
 ## Run
 
-1. According to your local deployment environment, check the related configurations in `./conf/conf.json`, modify those variables if needed.
+1. According to your local deployment environment, check the related configurations in `api/conf/conf.json`, modify those variables if needed.
 
 Example:
 
@@ -133,7 +133,7 @@ $ ps aux | grep manager-api
 $ kill $process_id
 ```
 
-2. If you have multiple ETCD instances, please use commas to separate each endpoint in `/conf/conf.json`.
+2. If you have multiple ETCD instances, please use commas to separate each endpoint in `api/conf/conf.json`.
 
 Example:
 

@@ -79,7 +79,7 @@ $ yarn build
 
 ## 启动
 
-1. 根据您的本地部署环境，检查并修改 `./conf/conf.json` 中的配置。
+1. 根据您的本地部署环境，检查并修改 `api/conf/conf.json` 中的配置。
 
 例如：
 
@@ -135,7 +135,7 @@ $ ps aux | grep manager-api
 $ kill $process_id
 ```
 
-2. 若您有多个 ETCD 地址，请修改 `./conf/conf.json` 中的相关配置。
+2. 若您有多个 ETCD 地址，请修改 `api/conf/conf.json` 中的相关配置。
 
 例如：
 
