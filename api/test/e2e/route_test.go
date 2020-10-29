@@ -90,20 +90,20 @@ func TestRouteHost(t *testing.T) {
 		//Status(http.StatusBadRequest)
 		JSON().Object().ValueNotEqual("code", 0)
 
-	////todo create route  -- fail - config host and hosts at the same time
-	//MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
-	//      "uri": "/hello_",
-	//      "host": "github.com",
-	//      "hosts": ["foo.com", "*.bar.com"],
-	//      "upstream": {
-	//          "nodes": {
-	//              "172.16.238.120:1980": 1
-	//          },
-	//          "type": "roundrobin"
-	//      }
-	//  }`).
-	//	WithHeader("Authorization", accessToken).
-	//	Expect().
-	//	Status(http.StatusBadRequest)
+	//create route  -- fail - config host and hosts at the same time
+	MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
+	     "uri": "/hello_",
+	     "host": "github.com",
+	     "hosts": ["foo.com", "*.bar.com"],
+	     "upstream": {
+	         "nodes": {
+	             "172.16.238.120:1980": 1
+	         },
+	         "type": "roundrobin"
+	     }
+	 }`).
+		WithHeader("Authorization", accessToken).
+		Expect().
+		Status(http.StatusBadRequest)
 
 }
