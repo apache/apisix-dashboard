@@ -34,7 +34,9 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
-        run: yarn
+        run: |
+          cd frontend
+          yarn
 
       - name: Build the Dashboard
         run: yarn build
