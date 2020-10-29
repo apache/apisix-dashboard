@@ -42,8 +42,6 @@ build
 /compose/**/nginx.pid
 /compose/etcd_data
 manager-api
-conf.json
-conf.json-e
 
 output
 default.etcd
