@@ -125,7 +125,7 @@ $ api/run.sh &
 
 ## Configuration
 
-1. `conf.dag-lib-path` MUST use absoluet path, we could use `pwd` command. Only used when enable Plugin Orchestration.
+1. `conf.dag-lib-path` MUST use absolute path, we could use `pwd` command. Only used when enable Plugin Orchestration.
 
 2. `conf.listen.host` is set to `127.0.0.1` so we could only visit it in private, we could change it to `0.0.0.0` to allow any visitors.
 
