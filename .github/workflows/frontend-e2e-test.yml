@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Node.JS environment for Front-end
+      - name: Setup Node.js environment for Front-end
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
@@ -23,9 +23,5 @@ jobs:
       - name: Install Front-end dependencies
         run: yarn install
 
-      - name: start Front-end and Test
-        run: |
-          yarn start &
-          sleep 10 && 
-          curl http://localhost:8000 &&
-          yarn test
+      - name: Start Front-end and Test
+        run: yarn test:e2e
