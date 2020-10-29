@@ -19,6 +19,7 @@ package e2e
 import (
 	"net/http"
 	"testing"
+	"time"
 )
 
 func TestRouteHost(t *testing.T) {
@@ -38,7 +39,10 @@ func TestRouteHost(t *testing.T) {
 		Expect().
 		Status(http.StatusOK)
 
-		//hit route -- not found
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
+	//hit route -- not found
 	APISIXExpect(t).GET("/not_found").
 		Expect().
 		Status(http.StatusNotFound)
