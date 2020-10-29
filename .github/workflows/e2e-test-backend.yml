@@ -37,16 +37,10 @@ jobs:
         run: |
           docker run --name managerapi  -d -p 8080:8080 \
           -e APIX_ETCD_ENDPOINTS=127.0.0.1:2379,127.0.0.1:3379,127.0.0.1:4379 \
-          --network "apisix_dashboard_e2e" --network-alias managerapi \
+          --network "docker_apisix_dashboard_e2e" --network-alias managerapi \
           managerapi:ci
           sleep 5
           docker logs managerapi
-
-      # - name: run manager api
-      #   working-directory: ./api
-      #   run: |
-      #     export APIX_ETCD_ENDPOINTS=127.0.0.1:2379,127.0.0.1:3379,127.0.0.1:4379
-      #     go run main.go &
 
       - name: run test
         working-directory: ./api/test/e2e
