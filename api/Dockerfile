@@ -60,12 +60,6 @@ WORKDIR /go/manager-api
 COPY --from=build-env /go/manager-api/ /go/manager-api/
 COPY --from=build-env /usr/share/zoneinfo/Hongkong /etc/localtime
 
-RUN  cd /go/manager-api/build-tools \
-     && lua schema-sync.lua > /go/manager-api/schema.json \
-     && cd /go/manager-api/ \
-     && rm -rf /go/manager-api/build-tools/
-ADD ./dist /go/manager-api
-
 EXPOSE 8080
 
 RUN chmod +x ./entry.sh
