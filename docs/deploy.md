@@ -91,7 +91,7 @@ Example:
       "host": "127.0.0.1",
       "port": 8080
     },
-    "dag-lib-path": "/home/www/workspace/apisix-dashboard/dag-to-lua-1.1/",
+    "dag-lib-path": "/home/demo_user/workspace/apisix-dashboard/dag-to-lua-1.1/",
     "etcd": {
       "endpoints": "127.0.0.1:2379"
     }
@@ -123,6 +123,12 @@ $ api/run.sh &
 
 3. Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
 
+## Configuration
+
+1. `conf.dag-lib-path` MUST use absoluet path, we could use `pwd` command. Only used when enable Plugin Orchestration.
+
+2. `conf.listen.host` is set to `127.0.0.1` so we could only visit it in private, we could change it to `0.0.0.0` to allow any visitors.
+
 ## NOTE
 
 1. When the manager-api is running in background, before we want to rebuild & re-deploy it, we should find the process id then kill it.
@@ -145,6 +151,8 @@ Example:
 }
 ```
 
-3. In configuration file, `conf.dag-lib-path` MUST use absoluet path, we could use `pwd` command. Only used when enable Plugin Orchestration.
+3. After compiling the Manager API, if you move the compiled product to another location, an error will be reported at startup, this is because the configuration file's **absolute path** is fixed in the product and needs to be resolved by running an environment variable to set the location of the configuration file before running.
 
-4. In configuration file, `conf.listen.host` is set to `127.0.0.1` so we could only visit it in private, we could change it to `0.0.0.0` to allow any visitors.
+```sh
+$ export APISIX_CONF_PATH=/home/demo_user/workspace/apisix-dashboard/api/conf
+```

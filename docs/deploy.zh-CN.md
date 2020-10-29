@@ -93,7 +93,7 @@ $ yarn build
       "host": "127.0.0.1",
       "port": 8080
     },
-    "dag-lib-path": "/home/www/workspace/apisix-dashboard/dag-to-lua-1.1/",
+    "dag-lib-path": "/home/demo_user/workspace/apisix-dashboard/dag-to-lua-1.1/",
     "etcd": {
       "endpoints": "127.0.0.1:2379"
     }
@@ -125,6 +125,12 @@ $ api/run.sh &
 
 3. 在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
 
+## 配置参数
+
+1. `conf.dag-lib-path` 参数需要使用绝对路径，可通过 `pwd` 指令获取。仅在使用插件编排功能时需要指定。
+
+2. `conf.listen.host` 默认为 `127.0.0.1`，这意味着只能在本地网络中访问，如需允许外部网络访问，请修改为 `0.0.0.0`，无需重新编译代码。
+
 ## 注意
 
 1. 当 manager-api 在后台模式下运行，在重新编译、重新部署它之前，我们需要查找其进程并结束掉它：
@@ -147,6 +153,8 @@ $ kill $process_id
 }
 ```
 
-3. 在配置文件中，`conf.dag-lib-path` 参数需要使用绝对路径，可通过 `pwd` 指令获取。仅在使用插件编排功能时需要指定。
+3. 在编译 Manager API 后，如移动编译后产物到其它位置，启动时将会报错，这是由于配置文件**绝对路径**被固定在了产物中，需要在运行前，通过执行环境变量设置配置文件位置来解决。
 
-4. 在配置文件中，`conf.listen.host` 默认为 `127.0.0.1`，这意味着只能在本地网络中访问，如需允许外部网络访问，请修改为 `0.0.0.0`，无需重新编译代码。
+```sh
+$ export APISIX_CONF_PATH=/home/demo_user/workspace/apisix-dashboard/api/conf
+```
