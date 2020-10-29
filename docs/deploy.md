@@ -77,7 +77,7 @@ $ yarn build
 
 ## Run
 
-1. According to your local deployment environment, check the related configurations in `api/conf/conf.json`, modify those variables if needed.
+1. According to your deploy environment, check the related configurations in `api/conf/conf.json`, modify those variables if needed.
 
 Example:
 
@@ -123,7 +123,7 @@ $ api/run.sh &
 
 3. Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
 
-## FAQ
+## NOTE
 
 1. When the manager-api is running in background, before we want to rebuild & re-deploy it, we should find the process id then kill it.
 
@@ -144,3 +144,7 @@ Example:
   }
 }
 ```
+
+3. In configuration file, `conf.dag-lib-path` MUST use absoluet path, we could use `pwd` command. Only used when enable Plugin Orchestration.
+
+4. In configuration file, `conf.listen.host` is set to `127.0.0.1` so we could only visit it in private, we could change it to `0.0.0.0` to allow any visitors.
