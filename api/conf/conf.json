@@ -4,6 +4,7 @@
       "host": "127.0.0.1"
     },
     "listen": {
+      "host": "",
       "port": 8080
     },
     "dag-lib-path": ""

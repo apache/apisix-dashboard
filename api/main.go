@@ -46,7 +46,7 @@ func main() {
 	}
 	// routes
 	r := internal.SetUpRouter()
-	addr := fmt.Sprintf(":%d", conf.ServerPort)
+	addr := fmt.Sprintf("%s:%d", conf.ServerHost, conf.ServerPort)
 	s := &http.Server{
 		Addr:         addr,
 		Handler:      r,
