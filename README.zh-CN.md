@@ -32,7 +32,6 @@
 当前支持如下方式部署：
 
 - [手动部署](./docs/deploy.zh-CN.md)
-- [使用 Docker 部署](./compose/README.md)
 
 ## 开发
 

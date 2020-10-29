@@ -32,7 +32,6 @@ Please refer to [User Guide](./docs/USER_GUIDE.md)
 ## Deployment
 
 - [Deploy Manually](./docs/deploy.md)
-- [Deploy with Docker](./compose/README.md)
 
 ## Development
 

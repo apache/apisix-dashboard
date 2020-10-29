@@ -55,6 +55,8 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 $ api/build.sh
 ```
 
+The bundled files are located in the root directory `/output`.
+
 ## Build the frontend
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
@@ -64,6 +66,8 @@ This project is initialized with [Ant Design Pro](https://pro.ant.design). The f
 3. Install dependencies:
 
 ```sh
+$ cd /frontend
+
 $ yarn install
 ```
 
@@ -73,7 +77,7 @@ $ yarn install
 $ yarn build
 ```
 
-5. The bundled files are under `/dist` folder if the step 4 is successful.
+The bundled files are located in the root directory `/output/html`.
 
 ## Run
 

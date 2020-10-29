@@ -7,7 +7,7 @@
 _roadhog-api-doc
 
 # production
-/dist
+dist
 /.vscode
 
 # misc
@@ -44,3 +44,6 @@ build
 manager-api
 conf.json
 conf.json-e
+
+output
+default.etcd

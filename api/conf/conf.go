@@ -29,7 +29,7 @@ import (
 )
 
 const (
-	WebDir = "./dist"
+	WebDir = "./output/html"
 
 	EnvPROD  = "prod"
 	EnvBETA  = "beta"

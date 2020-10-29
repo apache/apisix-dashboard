@@ -55,6 +55,8 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 $ api/build.sh
 ```
 
+构建完成后的文件在根目录 `/output` 下。
+
 ## 构建前端
 
 该项目使用 [Ant Design Pro](https://pro.ant.design) 初始化。以下是一些使用方法的快速指南。
@@ -66,6 +68,8 @@ $ api/build.sh
 3. 安装依赖:
 
 ```sh
+$ cd /frontend
+
 $ yarn install
 ```
 
@@ -75,7 +79,7 @@ $ yarn install
 $ yarn build
 ```
 
-5. 如果第 4 步成功的话，那么构建后的文件在 `/dist` 目录下。
+构建完成后的文件在根目录 `/output/html` 目录下。
 
 ## 启动
 
