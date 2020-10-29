@@ -36,6 +36,7 @@ jobs:
       - name: run manager api
         run: |
           docker run --name managerapi  -d -p 8080:8080 \
+          -e APISIX_CONF_PATH=/go/manager-api/ \
           -e APIX_ETCD_ENDPOINTS=127.0.0.1:2379,127.0.0.1:3379,127.0.0.1:4379 \
           --network "docker_apisix_dashboard_e2e" --network-alias managerapi \
           managerapi:ci
