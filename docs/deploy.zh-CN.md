@@ -131,6 +131,16 @@ $ api/run.sh &
 
 2. `conf.listen.host` 默认为 `127.0.0.1`，这意味着只能在本地网络中访问，如需允许外部网络访问，请修改为 `0.0.0.0`，无需重新编译代码。
 
+3. `conf.etcd.endpoints` 用于配置 ETCD 实例，支持集群模式。
+
+```json
+{
+  "etcd": {
+    "endpoints": "127.0.0.1:2379,127.0.0.1:3379"
+  }
+}
+```
+
 ## 注意
 
 1. 当 manager-api 在后台模式下运行，在重新编译、重新部署它之前，我们需要查找其进程并结束掉它：
@@ -141,19 +151,7 @@ $ ps aux | grep manager-api
 $ kill $process_id
 ```
 
-2. 若您有多个 ETCD 地址，请修改 `api/conf/conf.json` 中的相关配置。
-
-例如：
-
-```json
-{
-  "etcd": {
-    "endpoints": "127.0.0.1:2379,127.0.0.1:3379"
-  }
-}
-```
-
-3. 在编译 Manager API 后，如移动编译后产物到其它位置，启动时将会报错，这是由于配置文件**绝对路径**被固定在了产物中，需要在运行前，通过执行环境变量设置配置文件位置来解决。
+2. 在编译 Manager API 后，如移动编译后产物到其它位置，启动时将会报错，这是由于配置文件**绝对路径**被固定在了产物中，需要在运行前，通过执行环境变量设置配置文件位置来解决。
 
 ```sh
 $ export APISIX_CONF_PATH=/home/demo_user/workspace/apisix-dashboard/api/conf

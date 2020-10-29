@@ -129,6 +129,16 @@ $ api/run.sh &
 
 2. `conf.listen.host` is set to `127.0.0.1` so we could only visit it in private, we could change it to `0.0.0.0` to allow any visitors.
 
+3. `conf.etcd.endpoints` is used to set ETCD's instances address, it supports multiple instances mode.
+
+```json
+{
+  "etcd": {
+    "endpoints": "127.0.0.1:2379,127.0.0.1:3379"
+  }
+}
+```
+
 ## NOTE
 
 1. When the manager-api is running in background, before we want to rebuild & re-deploy it, we should find the process id then kill it.
@@ -139,19 +149,7 @@ $ ps aux | grep manager-api
 $ kill $process_id
 ```
 
-2. If you have multiple ETCD instances, please use commas to separate each endpoint in `api/conf/conf.json`.
-
-Example:
-
-```json
-{
-  "etcd": {
-    "endpoints": "127.0.0.1:2379,127.0.0.1:3379"
-  }
-}
-```
-
-3. After compiling the Manager API, if you move the compiled product to another location, an error will be reported at startup, this is because the configuration file's **absolute path** is fixed in the product and needs to be resolved by running an environment variable to set the location of the configuration file before running.
+2. After compiling the Manager API, if you move the compiled product to another location, an error will be reported at startup, this is because the configuration file's **absolute path** is fixed in the product and needs to be resolved by running an environment variable to set the location of the configuration file before running.
 
 ```sh
 $ export APISIX_CONF_PATH=/home/demo_user/workspace/apisix-dashboard/api/conf
