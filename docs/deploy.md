@@ -77,13 +77,42 @@ $ yarn build
 
 ## Run
 
-1. According to your local deployment environment, check the environment variables in `./api/run.sh`, modify the environment variables if needed. For example, change the ETCD endpoints to your ETCD instances work with APISIX:
+1. According to your local deployment environment, check the related configurations in `./api/conf/conf.json`, modify those variables if needed.
 
-```sh
-$ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
+Example:
 
-# If you have multiple instances, please use commas to separate:
-$ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
+```json
+{
+  "conf": {
+    "syslog": {
+      "host": "127.0.0.1"
+    },
+    "listen": {
+      "host": "127.0.0.1",
+      "port": 8080
+    },
+    "dag-lib-path": "/home/www/workspace/apisix-dashboard/dag-to-lua-1.1/",
+    "etcd": {
+      "endpoints": "127.0.0.1:2379"
+    }
+  },
+  "authentication": {
+    "session": {
+      "secret": "secret",
+      "expireTime": 3600
+    },
+    "user": [
+      {
+        "username": "admin",
+        "password": "admin"
+      },
+      {
+        "username": "user",
+        "password": "user"
+      }
+    ]
+  }
+}
 ```
 
 2. Run manager-api
@@ -102,4 +131,16 @@ $ api/run.sh &
 $ ps aux | grep manager-api
 
 $ kill $process_id
+```
+
+2. If you have multiple ETCD instances, please use commas to separate each endpoint in `/conf/conf.json`.
+
+Example:
+
+```json
+{
+  "etcd": {
+    "endpoints": "127.0.0.1:2379,127.0.0.1:3379"
+  }
+}
 ```
