@@ -128,7 +128,7 @@ services:
         ipv4_address: 172.16.238.120
 
   apisix:
-    image: apisix:dev
+    image: apache/apisix:dev
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
@@ -144,7 +144,7 @@ services:
         ipv4_address: 172.16.238.110
 
   apisix2:
-    image: apisix:dev
+    image: apache/apisix:dev
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
