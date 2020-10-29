@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
@@ -38,7 +37,7 @@ var logger = alog.GetLogger()
 
 func main() {
 	dlog.DefLogger = alog.DefLogger{}
-	if err := storage.InitETCDClient(strings.Split(os.Getenv("APIX_ETCD_ENDPOINTS"), ",")); err != nil {
+	if err := storage.InitETCDClient(strings.Split(conf.ETCDEndpoints, ",")); err != nil {
 		panic(err)
 	}
 	if err := store.InitStores(); err != nil {

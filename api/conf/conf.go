@@ -41,12 +41,13 @@ const (
 )
 
 var (
-	ENV        string
-	basePath   string
-	Schema     gjson.Result
-	DagLibPath = "/go/manager-api/dag-to-lua/"
-	ServerHost = ""
-	ServerPort = 8080
+	ENV           string
+	basePath      string
+	Schema        gjson.Result
+	DagLibPath    = "/go/manager-api/dag-to-lua/"
+	ServerHost    = ""
+	ServerPort    = 8080
+	ETCDEndpoints = ""
 )
 
 func init() {
@@ -77,6 +78,12 @@ func setConf() {
 		if dagLibPath != "" {
 			DagLibPath = dagLibPath
 		}
+		//etcd
+		eTCDEndpoints := configuration.Get("conf.etcd.endpoints").String()
+		if eTCDEndpoints != "" {
+			ETCDEndpoints = eTCDEndpoints
+		}
+
 	}
 }
 
@@ -85,10 +92,6 @@ func setEnvironment() {
 		ENV = EnvLOCAL
 	} else {
 		ENV = env
-	}
-
-	if env := os.Getenv("APIX_DAG_LIB_PATH"); env != "" {
-		DagLibPath = env
 	}
 
 	_, basePath, _, _ = runtime.Caller(1)

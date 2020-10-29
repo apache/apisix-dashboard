@@ -19,8 +19,5 @@
 export ENV=local
 pwd=`pwd`
 
-# config
-export APIX_DAG_LIB_PATH="${pwd}/dag-to-lua-1.1/lib/"
-export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
 
 exec ./manager-api
