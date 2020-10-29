@@ -24,13 +24,13 @@ beforeAll(async () => {
 });
 
 describe('Login', () => {
-  test('Login fail', async () => {
+  test('Login failed', async () => {
     const page = await browser.newPage();
     await page.goto('http://localhost:8000');
     await page.type('#control-ref_username', 'admin');
     await page.type('#control-ref_password', 'wrong_password');
     await page.click('.ant-btn-lg');
-    await page.waitForSelector('.ant-notification-notice-icon-error'); // should display error
+    await page.waitForSelector('.ant-notification-notice-icon-error');
     const element = await page.$('.ant-notification-notice-description');
     const text = await (await element.getProperty('textContent')).jsonValue();
     expect(text).toBe('username or password error');
