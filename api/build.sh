@@ -15,22 +15,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+set -ex
 export ENV=local
 pwd=`pwd`
 
-mkdir -p output
+rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua-1.1
 
 # get dag-to-lua lib
 if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
-    wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -P ./output
-    cd ./output
-    tar -zxvf v1.1.tar.gz
-    rm v1.1.tar.gz
-    cd ..
+    wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -P /tmp
+    tar -zxvf /tmp/v1.1.tar.gz -C /tmp
+    cp -r /tmp/dag-to-lua-1.1/lib ./output/dag-to-lua-1.1
 fi
 
 # build
-cd ./api && go build -o ../output/manager-api .
+cd ./api && go build -o ../output/manager-api . && cd ..
+
+cp ./api/conf/schema.json ./output/conf/schema.json
+cp ./api/conf/conf.json ./output/conf/conf.json
 
 echo "Build the Manager API successfully"
