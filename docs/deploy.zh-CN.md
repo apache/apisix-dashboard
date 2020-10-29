@@ -79,13 +79,42 @@ $ yarn build
 
 ## 启动
 
-1. 根据您的本地部署环境，检查 `./api/run.sh` 中的环境变量，如果需要请修改环境变量。例如：把 ETCD 地址改为与你的 Apache APISIX 一起工作的 ETCD 实例:
+1. 根据您的本地部署环境，检查并修改 `./conf/conf.json` 中的配置。
 
-```sh
-$ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
+例如：
 
-# 如果有多个实例，请使用英文逗号分隔，如：
-$ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
+```json
+{
+  "conf": {
+    "syslog": {
+      "host": "127.0.0.1"
+    },
+    "listen": {
+      "host": "127.0.0.1",
+      "port": 8080
+    },
+    "dag-lib-path": "/home/www/workspace/apisix-dashboard/dag-to-lua-1.1/",
+    "etcd": {
+      "endpoints": "127.0.0.1:2379"
+    }
+  },
+  "authentication": {
+    "session": {
+      "secret": "secret",
+      "expireTime": 3600
+    },
+    "user": [
+      {
+        "username": "admin",
+        "password": "admin"
+      },
+      {
+        "username": "user",
+        "password": "user"
+      }
+    ]
+  }
+}
 ```
 
 2. 启动 manager-api
@@ -104,4 +133,16 @@ $ api/run.sh &
 $ ps aux | grep manager-api
 
 $ kill $process_id
+```
+
+2. 若您有多个 ETCD 地址，请修改 `./conf/conf.json` 中的相关配置。
+
+例如：
+
+```json
+{
+  "etcd": {
+    "endpoints": "127.0.0.1:2379,127.0.0.1:3379"
+  }
+}
 ```
