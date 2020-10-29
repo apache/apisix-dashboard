@@ -21,8 +21,6 @@
 
 # [Apache APISIX](https://github.com/apache/apisix) 控制台
 
-访问 [http://139.217.190.60/](http://139.217.190.60/) 查看在线预览，账户与密码：`admin`。
-
 ## 用户指南
 
 请参考 [用户指南](./docs/USER_GUIDE.zh-CN.md)
@@ -32,7 +30,6 @@
 当前支持如下方式部署：
 
 - [手动部署](./docs/deploy.zh-CN.md)
-- [使用 Docker 部署](./compose/README.md)
 
 ## 开发
 

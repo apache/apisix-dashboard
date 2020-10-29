@@ -23,8 +23,6 @@ English | [简体中文](./README.zh-CN.md)
 
 Dashboard for [Apache APISIX](https://github.com/apache/apisix)
 
-[Online Demo](http://139.217.190.60/), Username/Password: `admin`.
-
 ## User Guide
 
 Please refer to [User Guide](./docs/USER_GUIDE.md)
@@ -32,7 +30,6 @@ Please refer to [User Guide](./docs/USER_GUIDE.md)
 ## Deployment
 
 - [Deploy Manually](./docs/deploy.md)
-- [Deploy with Docker](./compose/README.md)
 
 ## Development
 

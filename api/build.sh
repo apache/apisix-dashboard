@@ -19,13 +19,18 @@
 export ENV=local
 pwd=`pwd`
 
+mkdir -p output
+
 # get dag-to-lua lib
 if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
-    wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
+    wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -P ./output
+    cd ./output
     tar -zxvf v1.1.tar.gz
+    rm v1.1.tar.gz
+    cd ..
 fi
 
 # build
-cd ./api && go build -o ../manager-api .
+cd ./api && go build -o ../output/manager-api .
 
-echo "done."
+echo "Build the Manager API successfully"

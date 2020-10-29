@@ -61,4 +61,5 @@ export default defineConfig({
   manifest: {
     basePath: '/',
   },
+  outputPath: '../output/html'
 });

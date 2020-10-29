@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - master
+      - v2.0
 
 jobs:
   run-test:
@@ -23,10 +24,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      - name: run Makefile
-        run: |
-          make license-check
 
       - name: get lua lib
         run: |
@@ -46,9 +43,7 @@ jobs:
 
       - name: run test
         working-directory: ./api
-        run: |
-          export APIX_ETCD_ENDPOINTS=127.0.0.1:2379
-          go test ./...
+        run: go test ./...
 
       - name: run with custom port
         working-directory: ./api
