@@ -17,58 +17,47 @@
 package e2e
 
 import (
+	"bytes"
+	"fmt"
+	"io/ioutil"
 	"net/http"
-	"os"
-	"strings"
 	"testing"
-	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gavv/httpexpect/v2"
 	"github.com/gin-gonic/gin"
-
-	"github.com/apisix/manager-api/conf"
-	"github.com/apisix/manager-api/internal"
-	"github.com/apisix/manager-api/internal/core/storage"
-	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/tidwall/gjson"
 )
 
 var accessToken string
 var handler *gin.Engine
 
 func init() {
-	//init auth token
-	if err := storage.InitETCDClient(strings.Split(os.Getenv("APIX_ETCD_ENDPOINTS"), ",")); err != nil {
-		panic(err)
-	}
-	if err := store.InitStores(); err != nil {
+	//login to get auth token
+	requestBody := []byte(`{
+    "username": "admin",
+    "password": "admin"
+  }`)
+	url := "http://127.0.0.1:8080/apisix/admin/user/login"
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestBody))
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
 		panic(err)
 	}
 
-	claims := jwt.StandardClaims{
-		Subject:   "admin",
-		IssuedAt:  time.Now().Unix(),
-		ExpiresAt: time.Now().Add(time.Second * time.Duration(conf.AuthenticationConfig.Session.ExpireTime)).Unix(),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	accessToken, _ = token.SignedString([]byte(conf.AuthenticationConfig.Session.Secret))
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
 
-	// init handler
-	handler = internal.SetUpRouter()
+	respond := gjson.ParseBytes(body)
+	accessToken = respond.Get("data.token").String()
+
+	fmt.Println("response Body:", string(body), " resp end. ")
 
 }
 
 func MangerApiExpect(t *testing.T) *httpexpect.Expect {
-	return httpexpect.WithConfig(httpexpect.Config{
-		Client: &http.Client{
-			Transport: httpexpect.NewBinder(handler),
-			Jar:       httpexpect.NewJar(),
-		},
-		Reporter: httpexpect.NewAssertReporter(t),
-		Printers: []httpexpect.Printer{
-			httpexpect.NewDebugPrinter(t, true),
-		},
-	})
+	return httpexpect.New(t, "http://127.0.0.1:8080")
 }
 
 func APISIXExpect(t *testing.T) *httpexpect.Expect {

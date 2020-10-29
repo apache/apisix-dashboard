@@ -28,8 +28,13 @@ jobs:
           export GO111MOUDULE=on
           sudo apt install golang-1.14-go
 
+      - name: run manager api
+        run: |
+          export APIX_ETCD_ENDPOINTS=127.0.0.1:2379,127.0.0.1:3379,127.0.0.1:4379
+          api/build.sh
+          api/run.sh &
+
       - name: run test
         working-directory: ./api/test/e2e
         run: |
-          export APIX_ETCD_ENDPOINTS=127.0.0.1:2379,127.0.0.1:3379,127.0.0.1:4379
           go test
