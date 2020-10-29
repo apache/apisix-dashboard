@@ -18,7 +18,7 @@ jobs:
       - name: run docker compose
         working-directory: ./api/test/docker
         run: |
-          docker-compose up
+          docker-compose up -d
 
       - name: install runtime
         run: |
