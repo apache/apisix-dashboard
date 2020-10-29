@@ -27,6 +27,7 @@ RUN mkdir -p /go/manager-api \
     && mv /go/src/github.com/apisix/manager-api/entry.sh /go/manager-api/ \
     && mv /go/src/github.com/apisix/manager-api/build-tools/* /go/manager-api/build-tools/ \
     && mv /go/src/github.com/apisix/manager-api/conf/conf_preview.json /go/manager-api/conf.json \
+    && mv /go/src/github.com/apisix/manager-api/conf/schema.json /go/manager-api/schema.json \
     && rm -rf /go/src/github.com/apisix/manager-api \
     && rm -rf /etc/localtime \
     && ln -s  /usr/share/zoneinfo/Hongkong /etc/localtime \
