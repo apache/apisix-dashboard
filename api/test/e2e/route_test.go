@@ -43,8 +43,8 @@ func TestRouteHost(t *testing.T) {
 		Expect().
 		Status(http.StatusNotFound)
 
-		//hit route -- not found
-	APISIXExpect(t).GET("/not_found").
+		//hit route -- not found, wrong host
+	APISIXExpect(t).GET("/hello_").
 		WithHeader("Host", "not_found.com").
 		Expect().
 		Status(http.StatusNotFound)
@@ -54,5 +54,52 @@ func TestRouteHost(t *testing.T) {
 		WithHeader("Host", "foo.com").
 		Expect().
 		Status(http.StatusOK)
+
+	//create route  -- invalid host
+	MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
+        "uri": "/hello_",
+        "hosts": ["$%$foo.com", "*.bar.com"],
+        "upstream": {
+            "nodes": {
+                "172.16.238.120:1980": 1
+            },
+            "type": "roundrobin"
+        }
+    }`).
+		WithHeader("Authorization", accessToken).
+		Expect().
+		Status(http.StatusBadRequest)
+
+	//create route  -- invalid type for host
+	MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
+       "uri": "/hello_",
+       "hosts": [1, "*.bar.com"],
+       "upstream": {
+           "nodes": {
+               "172.16.238.120:1980": 1
+           },
+           "type": "roundrobin"
+       }
+   }`).
+		WithHeader("Authorization", accessToken).
+		Expect().
+		//Status(http.StatusBadRequest)
+		JSON().Object().ValueNotEqual("code", 0)
+
+	////todo create route  -- fail - config host and hosts at the same time
+	//MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
+	//      "uri": "/hello_",
+	//      "host": "github.com",
+	//      "hosts": ["foo.com", "*.bar.com"],
+	//      "upstream": {
+	//          "nodes": {
+	//              "172.16.238.120:1980": 1
+	//          },
+	//          "type": "roundrobin"
+	//      }
+	//  }`).
+	//	WithHeader("Authorization", accessToken).
+	//	Expect().
+	//	Status(http.StatusBadRequest)
 
 }

@@ -1,0 +1,35 @@
+name: Backend E2E Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  run-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: run docker compose
+        working-directory: ./api/test/docker
+        run: |
+          docker-compose up
+
+      - name: install runtime
+        run: |
+          sudo apt-get update
+          sudo add-apt-repository ppa:longsleep/golang-backports
+          sudo apt update
+          export GO111MOUDULE=on
+          sudo apt install golang-1.14-go
+
+      - name: run test
+        working-directory: ./api/test/e2e
+        run: |
+          export APIX_ETCD_ENDPOINTS=127.0.0.1:2379,127.0.0.1:3379,127.0.0.1:4379
+          go test
