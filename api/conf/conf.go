@@ -45,9 +45,9 @@ var (
 	basePath      string
 	Schema        gjson.Result
 	DagLibPath    = "/go/manager-api/dag-to-lua/"
-	ServerHost    = ""
-	ServerPort    = 8080
-	ETCDEndpoints = ""
+	ServerHost    = "127.0.0.1"
+	ServerPort    = 80
+	ETCDEndpoints = "127.0.0.1:2379"
 )
 
 func init() {
