@@ -29,10 +29,10 @@ jobs:
           sudo apt install golang-1.14-go
 
       - name: run manager api
+        working-directory: ./api
         run: |
           export APIX_ETCD_ENDPOINTS=127.0.0.1:2379,127.0.0.1:3379,127.0.0.1:4379
-          api/build.sh
-          api/run.sh &
+          go run main.go &
 
       - name: run test
         working-directory: ./api/test/e2e
