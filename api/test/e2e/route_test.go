@@ -25,27 +25,29 @@ import (
 func TestRoute_Host(t *testing.T) {
 
 	//create route use hosts
-    MangerApiExpect(t).PUT("/apisix/admin/routes/r1").WithText(`{
-        "uri": "/hello_",
-        "hosts": ["foo.com", "*.bar.com"],
-        "upstream": {
-            "nodes": {
-                "172.16.238.120:1980": 1
-            },
-            "type": "roundrobin"
-        }
-    }`).
-	    WithHeader("Authorization", accessToken).
-	    Expect().
-	    Status(http.StatusOK)
+    MangerApiExpect(t).
+        PUT("/apisix/admin/routes/r1").
+        WithText(`{
+            "uri": "/hello_",
+            "hosts": ["foo.com", "*.bar.com"],
+            "upstream": {
+                "nodes": {
+                    "172.16.238.120:1980": 1
+                },
+                "type": "roundrobin"
+            }
+        }`).
+        WithHeader("Authorization", accessToken).
+        Expect().
+        Status(http.StatusOK)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
 
 	//hit route -- not found
-	APISIXExpect(t).GET("/not_found").
-		Expect().
-		Status(http.StatusNotFound)
+    APISIXExpect(t).GET("/not_found").
+        Expect().
+        Status(http.StatusNotFound)
 
 	//hit route -- not found, wrong host
 	APISIXExpect(t).GET("/hello_").
@@ -138,7 +140,7 @@ func TestRoute_Host(t *testing.T) {
 		JSON().Object().ValueNotEqual("code", 0)
 
 	//create route use host
-    MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
+	MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
         "uri": "/hello_",
         "host": "test.com",
         "upstream": {
@@ -148,9 +150,9 @@ func TestRoute_Host(t *testing.T) {
             "type": "roundrobin"
         }
     }`).
-	    WithHeader("Authorization", accessToken).
-	    Expect().
-	    Status(http.StatusOK)
+		WithHeader("Authorization", accessToken).
+		Expect().
+		Status(http.StatusOK)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
