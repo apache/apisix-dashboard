@@ -16,4 +16,6 @@
 # limitations under the License.
 #
 
+export ENV=prod
+
 exec ./manager-api
