@@ -25,7 +25,7 @@ import (
 func TestRoute_Host(t *testing.T) {
 
 	//create route use hosts
-	MangerApiExpect(t).PUT("/apisix/admin/routes/r1").WithText(`{
+    MangerApiExpect(t).PUT("/apisix/admin/routes/r1").WithText(`{
         "uri": "/hello_",
         "hosts": ["foo.com", "*.bar.com"],
         "upstream": {
@@ -35,9 +35,9 @@ func TestRoute_Host(t *testing.T) {
             "type": "roundrobin"
         }
     }`).
-		WithHeader("Authorization", accessToken).
-		Expect().
-		Status(http.StatusOK)
+	    WithHeader("Authorization", accessToken).
+	    Expect().
+	    Status(http.StatusOK)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -138,7 +138,7 @@ func TestRoute_Host(t *testing.T) {
 		JSON().Object().ValueNotEqual("code", 0)
 
 	//create route use host
-	MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
+    MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
         "uri": "/hello_",
         "host": "test.com",
         "upstream": {
@@ -148,9 +148,9 @@ func TestRoute_Host(t *testing.T) {
             "type": "roundrobin"
         }
     }`).
-		WithHeader("Authorization", accessToken).
-		Expect().
-		Status(http.StatusOK)
+	    WithHeader("Authorization", accessToken).
+	    Expect().
+	    Status(http.StatusOK)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
