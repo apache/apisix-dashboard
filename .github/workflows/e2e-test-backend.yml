@@ -34,7 +34,7 @@ jobs:
         run: |
           docker-compose up -d
           sleep 5
-          docker logs managerapi
+          docker logs docker_managerapi_1
 
       # - name: run manager api
       #   run: |
