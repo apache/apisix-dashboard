@@ -32,9 +32,10 @@ var token string
 func init() {
 	//login to get auth token
 	requestBody := []byte(`{
-    "username": "admin",
-    "password": "admin"
-  }`)
+		"username": "admin",
+		"password": "admin"
+	}`)
+
 	url := "http://127.0.0.1:8080/apisix/admin/user/login"
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestBody))
 	if err != nil {
@@ -58,7 +59,6 @@ func init() {
 	token = respond.Get("data.token").String()
 
 	fmt.Println("response Body:", string(body), " resp end. ")
-
 }
 
 func MangerApiExpect(t *testing.T) *httpexpect.Expect {
