@@ -42,7 +42,6 @@ jobs:
           sudo apt install golang-1.14-go
 
       - name: run test
-
         working-directory: ./api
         run: go test $(go list ./... | grep -v /e2e)
 

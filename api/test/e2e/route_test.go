@@ -37,7 +37,7 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", accessToken).
+        WithHeader("Authorization", token).
         Expect().
         Status(http.StatusOK)
 
@@ -74,7 +74,7 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", accessToken).
+        WithHeader("Authorization", token).
         Expect().
         Status(http.StatusBadRequest)
 
@@ -91,7 +91,7 @@ func TestRoute_Host(t *testing.T) {
             "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", accessToken).
+        WithHeader("Authorization", token).
         Expect().
         //Status(http.StatusBadRequest)
         JSON().Object().ValueNotEqual("code", 0)
@@ -110,7 +110,7 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", accessToken).
+        WithHeader("Authorization", token).
         Expect().
         Status(http.StatusBadRequest)
 
@@ -127,7 +127,7 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", accessToken).
+        WithHeader("Authorization", token).
         Expect().
         Status(http.StatusBadRequest)
 
@@ -144,7 +144,7 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", accessToken).
+        WithHeader("Authorization", token).
         Expect().
         //Status(http.StatusBadRequest)
         JSON().Object().ValueNotEqual("code", 0)
@@ -160,7 +160,7 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", accessToken).
+        WithHeader("Authorization", token).
         Expect().
         Status(http.StatusOK)
 

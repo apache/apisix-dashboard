@@ -28,7 +28,7 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-var accessToken string
+var token string
 var handler *gin.Engine
 
 func init() {
@@ -50,7 +50,7 @@ func init() {
 	body, _ := ioutil.ReadAll(resp.Body)
 
 	respond := gjson.ParseBytes(body)
-	accessToken = respond.Get("data.token").String()
+	token = respond.Get("data.token").String()
 
 	fmt.Println("response Body:", string(body), " resp end. ")
 
