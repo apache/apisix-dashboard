@@ -19,26 +19,28 @@
 const puppeteer = require('puppeteer');
 
 let browser;
-const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
+const BASE_URL = `http://localhost:${process.env.PORT || 8002}`;
 const domSelectors = {
   inputUserName: '#control-ref_username',
   inputPassWord: '#control-ref_password',
   buttonLogin: '.ant-btn-lg',
   notificationNotice: '.ant-notification-notice',
   notificationLogin: '.ant-notification-notice-description',
+  loginSuccessIcon: '.ant-notification-notice-icon-success',
+  loginFailedIcon: '.ant-notification-notice-icon-error',
 };
-const loginFailedDatas = {
+const loginFailedData = {
   userName: 'admin',
   passWord: '123456',
 };
-const loginSuccessDatas = {
+const loginSuccessData = {
   userName: 'admin',
   passWord: 'admin',
 };
 
 beforeAll(async () => {
   browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
   });
 });
 
@@ -46,26 +48,20 @@ describe('Login', () => {
   test('Login failed with wrong password', async () => {
     const page = await browser.newPage();
     await page.goto(BASE_URL);
-    await page.type(domSelectors.inputUserName, loginFailedDatas.userName);
-    await page.type(domSelectors.inputPassWord, loginFailedDatas.passWord);
+    await page.type(domSelectors.inputUserName, loginFailedData.userName);
+    await page.type(domSelectors.inputPassWord, loginFailedData.passWord);
     await page.click(domSelectors.buttonLogin);
-    await page.waitForSelector(domSelectors.notificationNotice);
-    const element = await page.$(domSelectors.notificationLogin);
-    const text = await (await element.getProperty('textContent')).jsonValue();
-    expect(text).toBe('username or password error');
+    await page.waitForSelector(domSelectors.loginFailedIcon);
     await page.close();
   }, 10000);
 
-  test('Login success', async () => {
+  test('Login success then Logout', async () => {
     const page = await browser.newPage();
     await page.goto(BASE_URL);
-    await page.type(domSelectors.inputUserName, loginSuccessDatas.userName);
-    await page.type(domSelectors.inputPassWord, loginSuccessDatas.passWord);
+    await page.type(domSelectors.inputUserName, loginSuccessData.userName);
+    await page.type(domSelectors.inputPassWord, loginSuccessData.passWord);
     await page.click(domSelectors.buttonLogin);
-    await page.waitForSelector(domSelectors.notificationNotice);
-    const element = await page.$(domSelectors.notificationLogin);
-    const text = await (await element.getProperty('textContent')).jsonValue();
-    expect(text).toBe('Login Success');
+    await page.waitForSelector(domSelectors.loginSuccessIcon);
     await page.close();
   }, 10000);
 
