@@ -162,7 +162,7 @@ services:
     image: managerapi:ci
     restart: always
     volumes:
-      - ./manager-api-conf.json:/go/manager-api/config.json:ro
+      - ./manager-api-conf.json:/go/manager-api/conf.json:ro
     depends_on:
       - node1
       - node2
