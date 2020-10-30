@@ -1,0 +1,32 @@
+{
+    "conf": {
+      "syslog": {
+        "host": "127.0.0.1"
+      },
+      "listen": {
+        "host": "",
+        "port": 8080
+      },
+      "dag-lib-path": "",
+      "etcd": {
+        "endpoints": "172.16.238.100:2379,172.16.238.101:2379,172.16.238.102:2379"
+      }
+    },
+    "authentication": {
+      "session": {
+        "secret": "secret",
+        "expireTime": 3600
+      },
+      "user": [
+        {
+          "username": "admin",
+          "password": "admin"
+        },
+        {
+          "username": "user",
+          "password": "user"
+        }
+      ]
+    }
+  }
+  

@@ -156,7 +156,22 @@ services:
       - '9081:9080/tcp'
     networks:
       apisix_dashboard_e2e:
-        ipv4_address: 172.16.238.111       
+        ipv4_address: 172.16.238.111 
+
+  managerapi:
+    image: managerapi:ci
+    restart: always
+    volumes:
+      - ./manager-api-conf.json:/go/manager-api/config.json:ro
+    depends_on:
+      - node1
+      - node2
+      - node3
+    ports:
+      - '8080:8080/tcp'
+    networks:
+      apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.120
 
 networks:
   apisix_dashboard_e2e:
