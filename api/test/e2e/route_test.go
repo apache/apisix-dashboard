@@ -47,13 +47,13 @@ func TestRoute_Host(t *testing.T) {
 		Expect().
 		Status(http.StatusNotFound)
 
-		//hit route -- not found, wrong host
+	//hit route -- not found, wrong host
 	APISIXExpect(t).GET("/hello_").
 		WithHeader("Host", "not_found.com").
 		Expect().
 		Status(http.StatusNotFound)
 
-		//hit route - ok
+	//hit route - ok
 	APISIXExpect(t).GET("/hello_").
 		WithHeader("Host", "foo.com").
 		Expect().
@@ -76,15 +76,15 @@ func TestRoute_Host(t *testing.T) {
 
 	//create route  -- invalid type for hosts
 	MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
-       "uri": "/hello_",
-       "hosts": [1, "*.bar.com"],
-       "upstream": {
-           "nodes": {
-               "172.16.238.120:1980": 1
-           },
-           "type": "roundrobin"
-       }
-   }`).
+        "uri": "/hello_",
+        "hosts": [1, "*.bar.com"],
+        "upstream": {
+        "nodes": {
+            "172.16.238.120:1980": 1
+        },
+        "type": "roundrobin"
+        }
+    }`).
 		WithHeader("Authorization", accessToken).
 		Expect().
 		//Status(http.StatusBadRequest)
@@ -92,16 +92,16 @@ func TestRoute_Host(t *testing.T) {
 
 	//create route  -- fail - config host and hosts at the same time
 	MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
-	     "uri": "/hello_",
-	     "host": "github.com",
-	     "hosts": ["foo.com", "*.bar.com"],
-	     "upstream": {
-	         "nodes": {
-	             "172.16.238.120:1980": 1
-	         },
-	         "type": "roundrobin"
-	     }
-	 }`).
+        "uri": "/hello_",
+        "host": "github.com",
+        "hosts": ["foo.com", "*.bar.com"],
+        "upstream": {
+        "nodes": {
+            "172.16.238.120:1980": 1
+        },
+        "type": "roundrobin"
+        }
+    }`).
 		WithHeader("Authorization", accessToken).
 		Expect().
 		Status(http.StatusBadRequest)
@@ -123,15 +123,15 @@ func TestRoute_Host(t *testing.T) {
 
 	//create route  -- invalid type for host
 	MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
-       "uri": "/hello_",
-       "host": 1,
-       "upstream": {
-           "nodes": {
-               "172.16.238.120:1980": 1
-           },
-           "type": "roundrobin"
-       }
-   }`).
+        "uri": "/hello_",
+        "host": 1,
+        "upstream": {
+        "nodes": {
+            "172.16.238.120:1980": 1
+        },
+        "type": "roundrobin"
+        }
+    }`).
 		WithHeader("Authorization", accessToken).
 		Expect().
 		//Status(http.StatusBadRequest)
