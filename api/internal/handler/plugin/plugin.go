@@ -18,7 +18,6 @@ package plugin
 
 import (
 	"reflect"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
@@ -49,7 +48,7 @@ type GetInput struct {
 func (h *Handler) Schema(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 	//TODO: how to get query from request url?
-	// schema_type := 
+	var schema_type string
 	var ret interface{}
 	if schema_type == "consumer" {
 		ret = conf.Schema.Get("plugins." + input.Name + ".consumer_schema").Value()
