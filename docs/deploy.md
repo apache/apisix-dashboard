@@ -22,7 +22,7 @@
 ## Clone the project
 
 ```sh
-$ git clone https://github.com/apache/apisix-dashboard.git
+$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 
 $ cd apisix-dashboard
 ```
@@ -43,39 +43,31 @@ NOTE: You also need to install `Lua` 5.1+ if you want to use the Plugin Orchestr
 $ go env -w GO111MODULE=on
 ```
 
-- According to your local deployment environment, check the environment variables in `./api/run.sh`, modify the environment variables if needed. For example, change the ETCD endpoints to your ETCD instances work with APISIX:
-
-```
-export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
-```
-
-If you have multiple instances, please use commas to separate:
-
-```
-export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
-```
-
 - For most users in China, we could use [Goproxy](https://goproxy.cn/) to speed up downloading modules.
 
 ```sh
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-3. Build and Run
+3. Build
 
 ```sh
-$ ./api/run.sh &
+$ api/build.sh
 ```
+
+The bundled files are located in the root directory `/output`.
 
 ## Build the frontend
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
 
-1. Make sure you have `Node.js(version 10.0.0+)/Nginx` installed on your machine.
+1. Make sure you have `Node.js(version 10.0.0+)` installed on your machine.
 2. Install [yarn](https://yarnpkg.com/).
 3. Install dependencies:
 
 ```sh
+$ cd /frontend
+
 $ yarn install
 ```
 
@@ -85,6 +77,84 @@ $ yarn install
 $ yarn build
 ```
 
-5. The bundled files are under `/dist` folder if the step 4 is successful.
+The bundled files are located in the root directory `/output/html`.
 
-6. Move files under `dist` folder to manager-api's `dist` folder, then visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
+## Run
+
+1. According to your deploy environment, check the related configurations in `api/conf/conf.json`, modify those variables if needed.
+
+Example:
+
+```json
+{
+  "conf": {
+    "syslog": {
+      "host": "127.0.0.1"
+    },
+    "listen": {
+      "host": "127.0.0.1",
+      "port": 8080
+    },
+    "dag-lib-path": "/home/demo_user/workspace/apisix-dashboard/dag-to-lua-1.1/",
+    "etcd": {
+      "endpoints": "127.0.0.1:2379"
+    }
+  },
+  "authentication": {
+    "session": {
+      "secret": "secret",
+      "expireTime": 3600
+    },
+    "user": [
+      {
+        "username": "admin",
+        "password": "admin"
+      },
+      {
+        "username": "user",
+        "password": "user"
+      }
+    ]
+  }
+}
+```
+
+2. Run manager-api
+
+```sh
+$ api/run.sh &
+```
+
+3. Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
+
+## Configuration
+
+1. `conf.dag-lib-path` MUST use absolute path, we could use `pwd` command. Only used when enable Plugin Orchestration.
+
+2. `conf.listen.host` is set to `127.0.0.1` so we could only visit it in private, we could change it to `0.0.0.0` to allow any visitors.
+
+3. `conf.etcd.endpoints` is used to set ETCD's instances address, it supports multiple instances mode.
+
+```json
+{
+  "etcd": {
+    "endpoints": "127.0.0.1:2379,127.0.0.1:3379"
+  }
+}
+```
+
+## NOTE
+
+1. When the manager-api is running in background, before we want to rebuild & re-deploy it, we should find the process id then kill it.
+
+```sh
+$ ps aux | grep manager-api
+
+$ kill $process_id
+```
+
+2. After compiling the Manager API, if you move the compiled product to another location, an error will be reported at startup, this is because the configuration file's **absolute path** is fixed in the product and needs to be resolved by running an environment variable to set the location of the configuration file before running.
+
+```sh
+$ export APISIX_CONF_PATH=/home/demo_user/workspace/apisix-dashboard/api/conf
+```

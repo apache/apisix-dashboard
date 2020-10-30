@@ -18,8 +18,8 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
@@ -30,14 +30,14 @@ import (
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/utils"
-	"github.com/apisix/manager-api/log"
+	alog "github.com/apisix/manager-api/log"
 )
 
-var logger = log.GetLogger()
+var logger = alog.GetLogger()
 
 func main() {
-	dlog.DefLogger = log.DefLogger{}
-	if err := storage.InitETCDClient(strings.Split(os.Getenv("APIX_ETCD_ENDPOINTS"), ",")); err != nil {
+	dlog.DefLogger = alog.DefLogger{}
+	if err := storage.InitETCDClient(strings.Split(conf.ETCDEndpoints, ",")); err != nil {
 		panic(err)
 	}
 	if err := store.InitStores(); err != nil {
@@ -45,13 +45,16 @@ func main() {
 	}
 	// routes
 	r := internal.SetUpRouter()
-	addr := fmt.Sprintf(":%d", conf.ServerPort)
+	addr := fmt.Sprintf("%s:%d", conf.ServerHost, conf.ServerPort)
 	s := &http.Server{
 		Addr:         addr,
 		Handler:      r,
 		ReadTimeout:  time.Duration(1000) * time.Millisecond,
 		WriteTimeout: time.Duration(5000) * time.Millisecond,
 	}
+
+	log.Printf("The Manager API is listening on %s ", addr)
+
 	if err := s.ListenAndServe(); err != nil {
 		logger.WithError(err)
 	}

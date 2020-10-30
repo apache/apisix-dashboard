@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -14,12 +15,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-datasources:
-  - access: 'proxy'
-    editable: true
-    is_default: true
-    name: 'apisix'
-    org_id: 1
-    type: 'prometheus'
-    url: 'http://prometheus:9090'
-    version: 1
+pwd=`pwd`
+
+version="master"
+if [[ -n $1 ]]; then
+version=$1
+fi 
+
+rm -rf ./api/build-tools/apisix/
+wget https://github.com/apache/apisix/archive/$version.zip
+
+unzip $version.zip
+mkdir -p ./api/build-tools/apisix/
+mv ./apisix-$version/apisix/* ./api/build-tools/apisix/
+rm -rf ./apisix-$version
+cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/api/conf/schema.json
+
+echo "sync success:" 
+echo "${pwd}/api/conf/schema.json"

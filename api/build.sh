@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -14,25 +15,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-#!/bin/sh
-
+set -ex
+export ENV=local
 pwd=`pwd`
 
-# config
-cp ${pwd}/api/conf/conf_preview.json ${pwd}/conf.json
+rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua-1.1
 
-export APIX_ETCD_ENDPOINTS="192.17.5.10:2379"
-
-export SYSLOG_HOST=127.0.0.1
-
-if [[ "$unamestr" == 'Darwin' ]]; then
-	sed -i '' -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
-else
-	sed -i -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
+# get dag-to-lua lib
+if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
+    wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -P /tmp
+    tar -zxvf /tmp/v1.1.tar.gz -C /tmp
+    cp -r /tmp/dag-to-lua-1.1/lib ./output/dag-to-lua-1.1
 fi
 
-cp ${pwd}/conf.json ${pwd}/api/conf/conf.json
+# build
+cd ./api && go build -o ../output/manager-api . && cd ..
 
-cd /go/manager-api
-exec ./manager-api
+cp ./api/conf/schema.json ./output/conf/schema.json
+cp ./api/conf/conf.json ./output/conf/conf.json
+
+echo "Build the Manager API successfully"

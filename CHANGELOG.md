@@ -19,8 +19,25 @@
 
 # Table of Contents
 
+- [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+# 2.0.0
+
+This is a release candidate.
+
+# Core
+
+- Refactor front-end with Admin-API.
+- Manager-API removes dependency on MySQL.
+- Support plugin orchestration.
+- Setting standards for front-end internationalization.
+- New deployment pattern.
+- Add more test cases.
+- Document Enhancement.
+
+For more changes, please refer to [Milestone](https://github.com/apache/apisix-dashboard/milestone/4)
 
 # 1.5.0
 

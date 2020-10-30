@@ -2,6 +2,14 @@
   "conf": {
     "syslog": {
       "host": "127.0.0.1"
+    },
+    "listen": {
+      "host": "127.0.0.1",
+      "port": 8080
+    },
+    "dag-lib-path": "",
+    "etcd": {
+      "endpoints": "127.0.0.1:2379"
     }
   },
   "authentication": {
