@@ -32,7 +32,9 @@ jobs:
       - name: run docker compose
         working-directory: ./api/test/docker
         run: |
-          docker-compose up -d          
+          docker-compose up -d
+          sleep 5
+          docker logs managerapi
 
       # - name: run manager api
       #   run: |
