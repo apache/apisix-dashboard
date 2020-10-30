@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -14,25 +15,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-#!/bin/sh
-
 pwd=`pwd`
 
-# config
-cp ${pwd}/api/conf/conf_preview.json ${pwd}/conf.json
+version="master"
+if [[ -n $1 ]]; then
+version=$1
+fi 
 
-export APIX_ETCD_ENDPOINTS="192.17.5.10:2379"
+rm -rf ./api/build-tools/apisix/
+wget https://github.com/apache/apisix/archive/$version.zip
 
-export SYSLOG_HOST=127.0.0.1
+unzip $version.zip
+mkdir -p ./api/build-tools/apisix/
+mv ./apisix-$version/apisix/* ./api/build-tools/apisix/
+rm -rf ./apisix-$version
+cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/api/conf/schema.json
 
-if [[ "$unamestr" == 'Darwin' ]]; then
-	sed -i '' -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
-else
-	sed -i -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
-fi
-
-cp ${pwd}/conf.json ${pwd}/api/conf/conf.json
-
-cd /go/manager-api
-exec ./manager-api
+echo "sync success:" 
+echo "${pwd}/api/conf/schema.json"

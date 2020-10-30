@@ -1,4 +1,4 @@
-import { pickBy, identity, omit } from 'lodash';
+import { pickBy, identity, omit, pick } from 'lodash';
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -62,6 +62,10 @@ export const transformRequest = (
   }
 
   if (nodes) {
+    // NOTE: https://github.com/ant-design/ant-design/issues/27396
+    data.nodes = data.nodes?.map((item) => {
+      return pick(item, ['host', 'port', 'weight']);
+    });
     return data;
   }
 

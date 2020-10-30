@@ -19,7 +19,7 @@
 const puppeteer = require('puppeteer');
 
 let browser;
-const BASE_URL = `http://localhost:${process.env.PORT || 8002}`;
+const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
 const domSelectors = {
   inputUserName: '#control-ref_username',
   inputPassWord: '#control-ref_password',

@@ -1,3 +1,4 @@
+<!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -14,25 +15,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# PLEASE DO NOT UPDATE THIS FILE!
-# If you want to set the specified configuration value, you can set the new
-# value in the conf/config.yaml file.
-#
-apisix:
-  allow_admin:
-    - 0.0.0.0/0
-  admin_key:
-    - name: 'admin'
-      key: edd1c9f034335f136f87ad84b625c8f1
-      role:
-        admin # admin: manage all configuration data
-        # viewer: only can view configuration data
-    - name: 'viewer'
-      key: 4054f7cf07e344346cd3f287985e76a1
-      role: viewer
+-->
 
-etcd:
-  host: # it's possible to define multiple etcd hosts addresses of the same etcd cluster.
-    - 'http://192.17.5.10:2379' # multiple etcd address
-  prefix: '/apisix' # apisix configurations prefix
-  timeout: 30 # 30 seconds
+### 本地书写测试案例
+
+1. 安装依赖并运行本地开发环境
+
+   ```sh
+   yarn install && yarn start
+   ```
+
+2. 在 `src/e2e` 文件夹增加新的测试案例文件
+3. 运行测试案例
+
+   ```sh
+   yarn test
+   ```
+
+   如果你想单独运行某一个测试文件，可以执行如下命令
+
+   ```sh
+   yarn test ${yourFileName}.e2e.js
+   ```
+
+   测试结果将会在控制台显示。

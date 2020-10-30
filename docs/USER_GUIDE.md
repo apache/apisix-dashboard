@@ -19,8 +19,6 @@
 
 # User Guide
 
-Please visit [http://139.217.190.60/](http://139.217.190.60/) in browser to have a full-preview of the Apache APISIX Dashboard.
-
 The following are parts of the modules' snapshot.
 
 ## Metrics

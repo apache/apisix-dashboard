@@ -1,3 +1,4 @@
+<!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -14,12 +15,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-datasources:
-  - access: 'proxy'
-    editable: true
-    is_default: true
-    name: 'apisix'
-    org_id: 1
-    type: 'prometheus'
-    url: 'http://prometheus:9090'
-    version: 1
+-->
+
+### Writing test cases
+
+1. Installing dependencies and running local development environments
+
+   ```sh
+   yarn install && yarn start
+   ```
+
+2. Add a new test case file to the `src/e2e` folder
+3. Run test cases
+
+   ```sh
+   yarn test
+   ```
+
+   If you want to run a particular test file separately, you can execute the following command
+
+   ```sh
+   yarn test ${yourFileName}.e2e.js
+   ```
+
+   The test results will be displayed on the console.

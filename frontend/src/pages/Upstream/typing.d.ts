@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 declare namespace UpstreamModule {
-  type Node = Record<string, number>;
+  type Node = Record<string, number | string>;
   type Type = 'roundrobin' | 'chash' | 'ewma';
 
   type Timeout = Record<'connect' | 'send' | 'read', number>;
@@ -66,7 +66,7 @@ declare namespace UpstreamModule {
     id: string;
     upstream_id: string;
     type: Type;
-    nodes?: Node;
+    nodes?: Node[];
     k8s_deployment_info?: K8SDeploymentInfo;
     hash_on?: 'vars' | 'header' | 'cookie' | 'consumer';
     key?: string;

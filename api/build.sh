@@ -1,4 +1,4 @@
-<!--
+#!/usr/bin/env bash
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -15,27 +15,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
--->
+set -ex
+export ENV=local
+pwd=`pwd`
 
-### 本地书写测试案例
+rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua-1.1
 
-1. 安装依赖并运行本地开发环境
+# get dag-to-lua lib
+if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
+    wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -P /tmp
+    tar -zxvf /tmp/v1.1.tar.gz -C /tmp
+    cp -r /tmp/dag-to-lua-1.1/lib ./output/dag-to-lua-1.1
+fi
 
-   ```Bash
-   yarn install && yarn start
-   ```
+# build
+cd ./api && go build -o ../output/manager-api . && cd ..
 
-2. 在 `src/e2e` 文件夹增加新的测试案例文件
-3. 运行测试案例
+cp ./api/conf/schema.json ./output/conf/schema.json
+cp ./api/conf/conf.json ./output/conf/conf.json
 
-   ```Bash
-   yarn test
-   ```
-
-   如果你想单独运行某一个测试文件，可以执行如下命令
-
-   ```Bash
-   yarn test ${yourFileName}.e2e.js
-   ```
-
-   测试结果将会在控制台显示。
+echo "Build the Manager API successfully"

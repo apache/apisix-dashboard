@@ -29,8 +29,7 @@ import (
 )
 
 const (
-	ServerPort = 8080
-	WebDir     = "./dist"
+	WebDir = "./output/html"
 
 	EnvPROD  = "prod"
 	EnvBETA  = "beta"
@@ -42,16 +41,50 @@ const (
 )
 
 var (
-	ENV        string
-	basePath   string
-	Schema     gjson.Result
-	DagLibPath = "/go/manager-api/dag-to-lua/"
+	ENV           string
+	basePath      string
+	Schema        gjson.Result
+	DagLibPath    = "/go/manager-api/dag-to-lua/"
+	ServerHost    = "127.0.0.1"
+	ServerPort    = 80
+	ETCDEndpoints = "127.0.0.1:2379"
 )
 
 func init() {
 	setEnvironment()
 	initAuthentication()
 	initSchema()
+	setConf()
+}
+
+func setConf() {
+	filePath := configurationPath()
+	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
+		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
+	} else {
+		configuration := gjson.ParseBytes(configurationContent)
+		//listen
+		serverPort := int(configuration.Get("conf.listen.port").Int())
+		if serverPort != 0 {
+			ServerPort = serverPort
+		}
+		serverHost := configuration.Get("conf.listen.host").String()
+		if serverHost != "" {
+			ServerHost = serverHost
+		}
+
+		//dag lib path
+		dagLibPath := configuration.Get("conf.dag-lib-path").String()
+		if dagLibPath != "" {
+			DagLibPath = dagLibPath
+		}
+		//etcd
+		eTCDEndpoints := configuration.Get("conf.etcd.endpoints").String()
+		if eTCDEndpoints != "" {
+			ETCDEndpoints = eTCDEndpoints
+		}
+
+	}
 }
 
 func setEnvironment() {
@@ -61,15 +94,13 @@ func setEnvironment() {
 		ENV = env
 	}
 
-	if env := os.Getenv("APIX_DAG_LIB_PATH"); env != "" {
-		DagLibPath = env
-	}
-
 	_, basePath, _, _ = runtime.Caller(1)
 }
 
 func configurationPath() string {
-	if ENV == EnvLOCAL {
+	if confPath := os.Getenv("APISIX_CONF_PATH"); confPath != "" {
+		return filepath.Join(confPath, "/conf.json")
+	} else if ENV == EnvLOCAL {
 		return filepath.Join(filepath.Dir(basePath), "conf.json")
 	} else {
 		return confPath
@@ -77,7 +108,9 @@ func configurationPath() string {
 }
 
 func getSchemaPath() string {
-	if ENV == EnvLOCAL {
+	if confPath := os.Getenv("APISIX_CONF_PATH"); confPath != "" {
+		return filepath.Join(confPath, "/schema.json")
+	} else if ENV == EnvLOCAL {
 		return filepath.Join(filepath.Dir(basePath), "schema.json")
 	} else {
 		return schemaPath

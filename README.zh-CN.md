@@ -21,8 +21,6 @@
 
 # [Apache APISIX](https://github.com/apache/apisix) 控制台
 
-访问 [http://139.217.190.60/](http://139.217.190.60/) 查看在线预览，账户与密码：`admin`。
-
 ## 用户指南
 
 请参考 [用户指南](./docs/USER_GUIDE.zh-CN.md)
@@ -32,7 +30,6 @@
 当前支持如下方式部署：
 
 - [手动部署](./docs/deploy.zh-CN.md)
-- [使用 Docker 部署](./compose/README.md)
 
 ## 开发
 
@@ -54,3 +51,4 @@
 
 1. 如果你需要 Vue.js 构建的 dashboard-1.0，请使用 [master-vue 分支](https://github.com/apache/apisix-dashboard/tree/master-vue)。
 2. 2.0 版本的控制台移除了[1.5 版本](https://github.com/apache/apisix-dashboard/tree/backup-1.5-latest)中的 MySQL，将直接操作 etcd。
+3. 如果你使用 v2.0 以下版本的 Apache APISIX，需要注意 etcd v2 API 的数据与 v3 API 的数据是[不互通的](https://etcd.io/docs/v3.4.0/op-guide/v2-migration/)。Dashboard v2.0 及以上版本使用 etcd v3 API，apisix 1.5 及以下版本使用 etcd v2 API。

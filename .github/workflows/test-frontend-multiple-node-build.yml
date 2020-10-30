@@ -11,6 +11,7 @@ on:
   pull_request:
     branches:
       - master
+      - v2.0
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -34,10 +35,13 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
+        working-directory: frontend
         run: yarn
 
-      - name: Build the Dashboard
-        run: yarn build
-
       - name: Lint
+        working-directory: frontend
         run: yarn run lint:js && yarn run lint:style
+
+      - name: Build the Dashboard
+        working-directory: frontend
+        run: yarn build
