@@ -24,12 +24,10 @@ import (
 	"testing"
 
 	"github.com/gavv/httpexpect/v2"
-	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
 )
 
 var token string
-var handler *gin.Engine
 
 func init() {
 	//login to get auth token
@@ -39,6 +37,9 @@ func init() {
   }`)
 	url := "http://127.0.0.1:8080/apisix/admin/user/login"
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestBody))
+	if err != nil {
+		panic(err)
+	}
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -47,7 +48,11 @@ func init() {
 	}
 
 	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
+	
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
 
 	respond := gjson.ParseBytes(body)
 	token = respond.Get("data.token").String()
