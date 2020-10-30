@@ -171,7 +171,7 @@ services:
       - '8080:8080/tcp'
     networks:
       apisix_dashboard_e2e:
-        ipv4_address: 172.16.238.120
+        ipv4_address: 172.16.238.130
 
 networks:
   apisix_dashboard_e2e:
