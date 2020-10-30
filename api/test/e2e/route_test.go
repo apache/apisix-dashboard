@@ -17,17 +17,17 @@
 package e2e
 
 import (
-    "net/http"
-    "testing"
-    "time"
+	"net/http"
+	"testing"
+	"time"
 )
 
 func TestRoute_Host(t *testing.T) {
 
-    //create route use hosts
-    MangerApiExpect(t).
-        PUT("/apisix/admin/routes/r1").
-        WithText(`{
+	//create route use hosts
+	MangerApiExpect(t).
+		PUT("/apisix/admin/routes/r1").
+		WithText(`{
             "uri": "/hello_",
             "hosts": ["foo.com", "*.bar.com"],
             "upstream": {
@@ -37,34 +37,34 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", token).
-        Expect().
-        Status(http.StatusOK)
+		WithHeader("Authorization", token).
+		Expect().
+		Status(http.StatusOK)
 
-    //sleep
-    time.Sleep(time.Duration(100) * time.Millisecond)
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
 
 	//hit route -- not found
-    APISIXExpect(t).GET("/not_found").
-        Expect().
-        Status(http.StatusNotFound)
+	APISIXExpect(t).GET("/not_found").
+		Expect().
+		Status(http.StatusNotFound)
 
-    //hit route -- not found, wrong host
-    APISIXExpect(t).GET("/hello_").
-        WithHeader("Host", "not_found.com").
-        Expect().
-        Status(http.StatusNotFound)
+	//hit route -- not found, wrong host
+	APISIXExpect(t).GET("/hello_").
+		WithHeader("Host", "not_found.com").
+		Expect().
+		Status(http.StatusNotFound)
 
-    //hit route - ok
-    APISIXExpect(t).GET("/hello_").
-        WithHeader("Host", "foo.com").
-        Expect().
-        Status(http.StatusOK)
+	//hit route - ok
+	APISIXExpect(t).GET("/hello_").
+		WithHeader("Host", "foo.com").
+		Expect().
+		Status(http.StatusOK)
 
-    //create route  -- invalid hosts
-    MangerApiExpect(t).
-        PUT("/apisix/admin/routes/r2").
-        WithText(`{
+	//create route  -- invalid hosts
+	MangerApiExpect(t).
+		PUT("/apisix/admin/routes/r2").
+		WithText(`{
             "uri": "/hello_",
             "hosts": ["$%$foo.com", "*.bar.com"],
             "upstream": {
@@ -74,14 +74,14 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", token).
-        Expect().
-        Status(http.StatusBadRequest)
+		WithHeader("Authorization", token).
+		Expect().
+		Status(http.StatusBadRequest)
 
-    //create route  -- invalid type for hosts
-    MangerApiExpect(t).
-        PUT("/apisix/admin/routes/r2").
-        WithText(`{
+	//create route  -- invalid type for hosts
+	MangerApiExpect(t).
+		PUT("/apisix/admin/routes/r2").
+		WithText(`{
             "uri": "/hello_",
             "hosts": [1, "*.bar.com"],
             "upstream": {
@@ -91,15 +91,15 @@ func TestRoute_Host(t *testing.T) {
             "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", token).
-        Expect().
-        //Status(http.StatusBadRequest)
-        JSON().Object().ValueNotEqual("code", 0)
+		WithHeader("Authorization", token).
+		Expect().
+		//Status(http.StatusBadRequest)
+		JSON().Object().ValueNotEqual("code", 0)
 
 	//create route  -- fail - config host and hosts at the same time
-    MangerApiExpect(t).
-        PUT("/apisix/admin/routes/r2").
-        WithText(`{
+	MangerApiExpect(t).
+		PUT("/apisix/admin/routes/r2").
+		WithText(`{
             "uri": "/hello_",
             "host": "github.com",
             "hosts": ["foo.com", "*.bar.com"],
@@ -110,14 +110,14 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", token).
-        Expect().
-        Status(http.StatusBadRequest)
+		WithHeader("Authorization", token).
+		Expect().
+		Status(http.StatusBadRequest)
 
-    //create route  -- invalid host
-    MangerApiExpect(t).
-        PUT("/apisix/admin/routes/r2").
-        WithText(`{
+	//create route  -- invalid host
+	MangerApiExpect(t).
+		PUT("/apisix/admin/routes/r2").
+		WithText(`{
             "uri": "/hello_",
             "host": "$%$foo.com",
             "upstream": {
@@ -127,14 +127,14 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", token).
-        Expect().
-        Status(http.StatusBadRequest)
+		WithHeader("Authorization", token).
+		Expect().
+		Status(http.StatusBadRequest)
 
-	//create route  -- invalid type for host
-    MangerApiExpect(t).
-        PUT("/apisix/admin/routes/r2").
-        WithText(`{
+		//create route  -- invalid type for host
+	MangerApiExpect(t).
+		PUT("/apisix/admin/routes/r2").
+		WithText(`{
             "uri": "/hello_",
             "host": 1,
             "upstream": {
@@ -144,13 +144,13 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", token).
-        Expect().
-        //Status(http.StatusBadRequest)
-        JSON().Object().ValueNotEqual("code", 0)
+		WithHeader("Authorization", token).
+		Expect().
+		//Status(http.StatusBadRequest)
+		JSON().Object().ValueNotEqual("code", 0)
 
-    //create route use host
-    MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
+	//create route use host
+	MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
             "uri": "/hello_",
             "host": "test.com",
             "upstream": {
@@ -160,23 +160,23 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", token).
-        Expect().
-        Status(http.StatusOK)
+		WithHeader("Authorization", token).
+		Expect().
+		Status(http.StatusOK)
 
-    //sleep
-    time.Sleep(time.Duration(100) * time.Millisecond)
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
 
-    //hit route - ok
-    APISIXExpect(t).GET("/hello_").
-        WithHeader("Host", "test.com").
-        Expect().
-        Status(http.StatusOK)
+	//hit route - ok
+	APISIXExpect(t).GET("/hello_").
+		WithHeader("Host", "test.com").
+		Expect().
+		Status(http.StatusOK)
 
-    //create route without host and hosts
-    MangerApiExpect(t).
-        PUT("/apisix/admin/routes/r3").
-        WithText(`{
+	//create route without host and hosts
+	MangerApiExpect(t).
+		PUT("/apisix/admin/routes/r3").
+		WithText(`{
             "uri": "/hello1",
             "upstream": {
                 "nodes": {
@@ -185,47 +185,47 @@ func TestRoute_Host(t *testing.T) {
                 "type": "roundrobin"
             }
         }`).
-        WithHeader("Authorization", token).
-        Expect().
-        Status(http.StatusOK)
+		WithHeader("Authorization", token).
+		Expect().
+		Status(http.StatusOK)
 
-    //sleep
-    time.Sleep(time.Duration(100) * time.Millisecond)
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
 
-    //hit route - ok, match any host
-    APISIXExpect(t).GET("/hello1").
-        WithHeader("Host", "test.com").
-        Expect().
-        Status(http.StatusOK)
+	//hit route - ok, match any host
+	APISIXExpect(t).GET("/hello1").
+		WithHeader("Host", "test.com").
+		Expect().
+		Status(http.StatusOK)
 
-    //hit route - ok, match any host
-    APISIXExpect(t).GET("/hello1").
-        WithHeader("Host", "foo.com").
-        Expect().
-        Status(http.StatusOK)
+	//hit route - ok, match any host
+	APISIXExpect(t).GET("/hello1").
+		WithHeader("Host", "foo.com").
+		Expect().
+		Status(http.StatusOK)
 
-    //hit route -- not found, wrong uri
-    APISIXExpect(t).GET("/not_found").
-        Expect().
-        Status(http.StatusNotFound)
+	//hit route -- not found, wrong uri
+	APISIXExpect(t).GET("/not_found").
+		Expect().
+		Status(http.StatusNotFound)
 
-    //delete test data
-    MangerApiExpect(t).
-        DELETE("/apisix/admin/routes/r3").
-        WithHeader("Authorization", token).
-        Expect().
-        Status(http.StatusOK)
+	//delete test data
+	MangerApiExpect(t).
+		DELETE("/apisix/admin/routes/r3").
+		WithHeader("Authorization", token).
+		Expect().
+		Status(http.StatusOK)
 
-    MangerApiExpect(t).
-        DELETE("/apisix/admin/routes/r2").
-        WithHeader("Authorization", token).
-        Expect().
-        Status(http.StatusOK)
+	MangerApiExpect(t).
+		DELETE("/apisix/admin/routes/r2").
+		WithHeader("Authorization", token).
+		Expect().
+		Status(http.StatusOK)
 
-    MangerApiExpect(t).
-        DELETE("/apisix/admin/routes/r1").
-        WithHeader("Authorization", token).
-        Expect().
-        Status(http.StatusOK)        
+	MangerApiExpect(t).
+		DELETE("/apisix/admin/routes/r1").
+		WithHeader("Authorization", token).
+		Expect().
+		Status(http.StatusOK)
 
 }
