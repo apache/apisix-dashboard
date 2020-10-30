@@ -17,14 +17,14 @@
 package e2e
 
 import (
-	"net/http"
-	"testing"
-	"time"
+    "net/http"
+    "testing"
+    "time"
 )
 
 func TestRoute_Host(t *testing.T) {
 
-	//create route use hosts
+    //create route use hosts
     MangerApiExpect(t).
         PUT("/apisix/admin/routes/r1").
         WithText(`{
