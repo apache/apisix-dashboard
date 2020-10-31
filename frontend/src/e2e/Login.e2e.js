@@ -21,21 +21,24 @@ const puppeteer = require('puppeteer');
 let browser;
 const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
 const domSelectors = {
-  inputUserName: '#control-ref_username',
-  inputPassWord: '#control-ref_password',
+  inputusername: '#control-ref_username',
+  inputpassword: '#control-ref_password',
   buttonLogin: '.ant-btn-lg',
   notificationNotice: '.ant-notification-notice',
   notificationLogin: '.ant-notification-notice-description',
   loginSuccessIcon: '.ant-notification-notice-icon-success',
   loginFailedIcon: '.ant-notification-notice-icon-error',
+  userProfile: '.ant-space-horizontal div:nth-child(2)',
+  dropdownMenuItem: '.ant-dropdown-menu-item',
+  logoutButton: '.ant-dropdown-menu-item span[aria-label="logout"]',
 };
 const loginFailedData = {
-  userName: 'admin',
-  passWord: '123456',
+  username: 'admin',
+  password: '123456',
 };
 const loginSuccessData = {
-  userName: 'admin',
-  passWord: 'admin',
+  username: 'admin',
+  password: 'admin',
 };
 
 beforeAll(async () => {
@@ -48,8 +51,8 @@ describe('Login', () => {
   test('Login failed with wrong password', async () => {
     const page = await browser.newPage();
     await page.goto(BASE_URL);
-    await page.type(domSelectors.inputUserName, loginFailedData.userName);
-    await page.type(domSelectors.inputPassWord, loginFailedData.passWord);
+    await page.type(domSelectors.inputusername, loginFailedData.username);
+    await page.type(domSelectors.inputpassword, loginFailedData.password);
     await page.click(domSelectors.buttonLogin);
     await page.waitForSelector(domSelectors.loginFailedIcon);
     await page.close();
@@ -58,10 +61,15 @@ describe('Login', () => {
   test('Login success then Logout', async () => {
     const page = await browser.newPage();
     await page.goto(BASE_URL);
-    await page.type(domSelectors.inputUserName, loginSuccessData.userName);
-    await page.type(domSelectors.inputPassWord, loginSuccessData.passWord);
+    await page.type(domSelectors.inputusername, loginSuccessData.username);
+    await page.type(domSelectors.inputpassword, loginSuccessData.password);
     await page.click(domSelectors.buttonLogin);
     await page.waitForSelector(domSelectors.loginSuccessIcon);
+    await page.waitForNavigation();
+    await page.click(domSelectors.userProfile);
+    await page.waitForSelector(domSelectors.dropdownMenuItem);
+    await page.click(domSelectors.logoutButton);
+    await page.waitForNavigation();
     await page.close();
   }, 10000);
 
