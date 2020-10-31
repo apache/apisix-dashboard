@@ -43,7 +43,9 @@ jobs:
 
       - name: run test
         working-directory: ./api
-        run: go test ./...
+        run: |
+          go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
+          bash <(curl -s https://codecov.io/bash)
 
       - name: run with custom port
         working-directory: ./api
@@ -60,30 +62,3 @@ jobs:
               echo "failed: failed to custom port"
               exit 1
           fi
-
-  coverage:
-    runs-on: ubuntu-latest
-    services:
-      etcd:
-        image: bitnami/etcd:3.4.13
-        ports:
-          - 2379:2379
-          - 2380:2380
-        env:
-          ALLOW_NONE_AUTHENTICATION: yes
-
-    steps:
-    - name: set up Go
-      uses: actions/setup-go@v1
-      with:
-        go-version: '1.14'
-
-    - name: check out code
-      uses: actions/checkout@v2
-
-    - name: run test
-      working-directory: ./api
-      run: |
-        export GO111MOUDULE=on
-        go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
-        bash <(curl -s https://codecov.io/bash)
