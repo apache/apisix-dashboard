@@ -21,6 +21,9 @@ jobs:
         with:
           node-version: 14.x
 
+      - name: Go to front-end directory
+        run: cd frontend/
+        
       - name: Install Front-end dependencies
         run: yarn install
 
