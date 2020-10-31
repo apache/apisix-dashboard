@@ -55,4 +55,48 @@ func TestPlugin(t *testing.T) {
 	ctx.SetInput(input2)
 	val, _ = handler.Schema(ctx)
 	assert.Nil(t, val)
+
+	/*
+	 get plugin schema with schema_type: consumer
+	 plugin has consumer_schema
+	 return plugin`s consumer_schema
+	*/
+	input3 := &GetInput{}
+	reqBody = `{
+		"name": "jwt-auth",
+		"schema_type": "consumer"
+  }`
+	json.Unmarshal([]byte(reqBody), input3)
+	ctx.SetInput(input3)
+	val, _ = handler.Schema(ctx)
+	assert.NotNil(t, val)
+
+	/*
+	 get plugin schema with schema_type: consumer
+	 plugin does not have consumer_schema
+	 return plugin`s schema
+	*/
+	input4 := &GetInput{}
+	reqBody = `{
+		"name": "limit-count",
+		"schema_type": "consumer"
+  }`
+	json.Unmarshal([]byte(reqBody), input4)
+	ctx.SetInput(input4)
+	val, _ = handler.Schema(ctx)
+	assert.NotNil(t, val)
+
+	/*
+	 get plugin schema with wrong schema_type: type,
+	 return plugin`s schema
+	*/
+	input5 := &GetInput{}
+	reqBody = `{
+		"name": "jwt-auth",
+		"schema_type": "type"
+  }`
+	json.Unmarshal([]byte(reqBody), input5)
+	ctx.SetInput(input5)
+	val, _ = handler.Schema(ctx)
+	assert.NotNil(t, val)
 }
