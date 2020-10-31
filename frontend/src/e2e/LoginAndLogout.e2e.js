@@ -58,6 +58,16 @@ describe('Login', () => {
     await page.close();
   }, 10000);
 
+  test('Login failed with empty username password', async () => {
+    const page = await browser.newPage();
+    await page.goto(BASE_URL);
+    await page.type(domSelectors.inputusername, '');
+    await page.type(domSelectors.inputpassword, '');
+    await page.click(domSelectors.buttonLogin);
+    await page.waitForSelector('.ant-form-item-explain');
+    await page.close();
+  }, 10000);
+
   test('Login success then Logout', async () => {
     const page = await browser.newPage();
     await page.goto(BASE_URL);
