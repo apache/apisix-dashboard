@@ -78,6 +78,9 @@ ngx.timer = {}
 ngx.location = {}
 ngx.socket = {}
 ngx.re.gmatch = empty_function
+ngx.shared = {
+    ["plugin-api-breaker"] = {}
+}
 
 -- additional define for management
 local time_def = {
