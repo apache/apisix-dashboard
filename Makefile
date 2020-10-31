@@ -15,6 +15,8 @@
 # limitations under the License.
 #
 
+export GO111MODULE=on
+
 ### license-check:    Check apisix-dashboard source codes for Apache License
 .PHONY: license-check
 license-check:
@@ -23,3 +25,8 @@ ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
 	cp .actions/ASF* .actions/openwhisk-utilities/scancode/
 endif
 	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./
+
+
+.PHONY: api-test
+api-test:
+	cd api/ && go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
