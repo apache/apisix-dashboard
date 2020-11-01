@@ -19,5 +19,3 @@ jobs:
         run: |
           docker build -t apisix-dashboard:dev .
           docker run -d -p 8081:8080 apisix-dashboard:dev
-  test:
-    # Check if running up
