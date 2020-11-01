@@ -37,7 +37,9 @@ func TestAuthentication(t *testing.T) {
 	  "username": "admin",
 	  "password": "admin"
   }`
-	json.Unmarshal([]byte(reqBody), input)
+	if err := json.Unmarshal([]byte(reqBody), input); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(input)
 	_, err := handler.userLogin(ctx)
 	assert.Nil(t, err)
@@ -48,7 +50,9 @@ func TestAuthentication(t *testing.T) {
 	  "username": "sdfasdf",
 	  "password": "admin"
   }`
-	json.Unmarshal([]byte(reqBody), input2)
+	if err := json.Unmarshal([]byte(reqBody), input2); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(input2)
 	_, err = handler.userLogin(ctx)
 	assert.EqualError(t, err, "username or password error")
@@ -59,7 +63,9 @@ func TestAuthentication(t *testing.T) {
 	  "username": "admin",
 	  "password": "admin9384938"
   }`
-	json.Unmarshal([]byte(reqBody), input3)
+	if err := json.Unmarshal([]byte(reqBody), input3); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(input3)
 	_, err = handler.userLogin(ctx)
 	assert.EqualError(t, err, "username or password error")

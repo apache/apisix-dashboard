@@ -91,7 +91,9 @@ func TestUpstream(t *testing.T) {
           }
       }
   }`
-	json.Unmarshal([]byte(reqBody), upstream)
+	if err := json.Unmarshal([]byte(reqBody), upstream); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(upstream)
 	_, err = handler.Create(ctx)
 	assert.Nil(t, err)
@@ -157,7 +159,9 @@ func TestUpstream(t *testing.T) {
           }
       }
   }`
-	json.Unmarshal([]byte(reqBody), upstream2)
+	if err := json.Unmarshal([]byte(reqBody), upstream2); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(upstream2)
 	_, err = handler.Update(ctx)
 	assert.Nil(t, err)
@@ -165,7 +169,9 @@ func TestUpstream(t *testing.T) {
 	//list
 	listInput := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1}`
-	json.Unmarshal([]byte(reqBody), listInput)
+	if err := json.Unmarshal([]byte(reqBody), listInput); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(listInput)
 	retPage, err := handler.List(ctx)
 	assert.Nil(t, err)
@@ -175,7 +181,9 @@ func TestUpstream(t *testing.T) {
 	//delete test data
 	inputDel := &BatchDelete{}
 	reqBody = `{"ids": "1"}`
-	json.Unmarshal([]byte(reqBody), inputDel)
+	if err := json.Unmarshal([]byte(reqBody), inputDel); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)

@@ -64,7 +64,9 @@ func TestService(t *testing.T) {
           }]
       }
   }`
-	json.Unmarshal([]byte(reqBody), service)
+	if err := json.Unmarshal([]byte(reqBody), service); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(service)
 	_, err = handler.Create(ctx)
 	assert.Nil(t, err)
@@ -103,7 +105,9 @@ func TestService(t *testing.T) {
           }]
       }
   }`
-	json.Unmarshal([]byte(reqBody), service2)
+	if err := json.Unmarshal([]byte(reqBody), service2); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(service2)
 	_, err = handler.Update(ctx)
 	assert.Nil(t, err)
@@ -114,7 +118,9 @@ func TestService(t *testing.T) {
 	//list
 	listInput := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1}`
-	json.Unmarshal([]byte(reqBody), listInput)
+	if err := json.Unmarshal([]byte(reqBody), listInput); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(listInput)
 	retPage, err := handler.List(ctx)
 	assert.Nil(t, err)
@@ -124,7 +130,9 @@ func TestService(t *testing.T) {
 	//list search match
 	listInput2 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "test"}`
-	json.Unmarshal([]byte(reqBody), listInput2)
+	if err := json.Unmarshal([]byte(reqBody), listInput2); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(listInput2)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
@@ -134,7 +142,9 @@ func TestService(t *testing.T) {
 	//list search not match
 	listInput3 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "not-exists"}`
-	json.Unmarshal([]byte(reqBody), listInput3)
+	if err := json.Unmarshal([]byte(reqBody), listInput3); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(listInput3)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
@@ -144,7 +154,9 @@ func TestService(t *testing.T) {
 	//delete test data
 	inputDel := &BatchDelete{}
 	reqBody = `{"ids": "1"}`
-	json.Unmarshal([]byte(reqBody), inputDel)
+	if err := json.Unmarshal([]byte(reqBody), inputDel); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)
@@ -162,7 +174,9 @@ func TestService(t *testing.T) {
           }
       }
   }`
-	json.Unmarshal([]byte(reqBody), service11)
+	if err := json.Unmarshal([]byte(reqBody), service11); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(service11)
 	_, err = handler.Create(ctx)
 	assert.Nil(t, err)
@@ -182,15 +196,19 @@ func TestService(t *testing.T) {
 	//list
 	listInput11 := &ListInput{}
 	reqBody = `{"page_size": 10, "page": 1}`
-	json.Unmarshal([]byte(reqBody), listInput11)
+	if err := json.Unmarshal([]byte(reqBody), listInput11); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(listInput11)
-	retPage, err = handler.List(ctx)
+	_, err = handler.List(ctx)
 	assert.Nil(t, err)
 
 	//delete test data
 	inputDel11 := &BatchDelete{}
 	reqBody = `{"ids": "11"}`
-	json.Unmarshal([]byte(reqBody), inputDel11)
+	if err := json.Unmarshal([]byte(reqBody), inputDel11); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(inputDel11)
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)

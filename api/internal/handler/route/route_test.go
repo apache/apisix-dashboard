@@ -386,7 +386,9 @@ func TestRoute(t *testing.T) {
           }
       }
   }`
-	json.Unmarshal([]byte(reqBody), route)
+	if err := json.Unmarshal([]byte(reqBody), route); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(route)
 	_, err = handler.Create(ctx)
 	assert.Nil(t, err)
@@ -742,7 +744,9 @@ func TestRoute(t *testing.T) {
       }
   }`
 
-	json.Unmarshal([]byte(reqBody), route2)
+	if err := json.Unmarshal([]byte(reqBody), route2); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(route2)
 	_, err = handler.Update(ctx)
 	assert.Nil(t, err)
@@ -753,7 +757,9 @@ func TestRoute(t *testing.T) {
 	//list
 	listInput := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1}`
-	json.Unmarshal([]byte(reqBody), listInput)
+	if err := json.Unmarshal([]byte(reqBody), listInput); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(listInput)
 	retPage, err := handler.List(ctx)
 	assert.Nil(t, err)
@@ -763,7 +769,9 @@ func TestRoute(t *testing.T) {
 	//list search match
 	listInput2 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "a", "uri": "index"}`
-	json.Unmarshal([]byte(reqBody), listInput2)
+	if err := json.Unmarshal([]byte(reqBody), listInput2); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(listInput2)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
@@ -773,7 +781,9 @@ func TestRoute(t *testing.T) {
 	//list search name not match
 	listInput3 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "not-exists", "uri": "index"}`
-	json.Unmarshal([]byte(reqBody), listInput3)
+	if err := json.Unmarshal([]byte(reqBody), listInput3); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(listInput3)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
@@ -783,7 +793,9 @@ func TestRoute(t *testing.T) {
 	//list search uri not match
 	listInput4 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "a", "uri": "not-exists"}`
-	json.Unmarshal([]byte(reqBody), listInput4)
+	if err := json.Unmarshal([]byte(reqBody), listInput4); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(listInput4)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
@@ -804,7 +816,9 @@ func TestRoute(t *testing.T) {
           "nodes": {"www.a.com:80": 1}
       }
   }`
-	json.Unmarshal([]byte(reqBody), route3)
+	if err := json.Unmarshal([]byte(reqBody), route3); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(route3)
 	_, err = handler.Create(ctx)
 	assert.Nil(t, err)
@@ -815,7 +829,9 @@ func TestRoute(t *testing.T) {
 	//list search match uris
 	listInput5 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "bbb", "uri": "bb"}`
-	json.Unmarshal([]byte(reqBody), listInput5)
+	if err := json.Unmarshal([]byte(reqBody), listInput5); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(listInput5)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
@@ -825,7 +841,9 @@ func TestRoute(t *testing.T) {
 	//delete test data
 	inputDel := &BatchDelete{}
 	reqBody = `{"ids": "1,2"}`
-	json.Unmarshal([]byte(reqBody), inputDel)
+	if err := json.Unmarshal([]byte(reqBody), inputDel); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)
@@ -836,7 +854,9 @@ func TestRoute(t *testing.T) {
 	//get route -- deleted, not found
 	getInput := &GetInput{}
 	reqBody = `{"id": "1"}`
-	json.Unmarshal([]byte(reqBody), getInput)
+	if err := json.Unmarshal([]byte(reqBody), getInput); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(getInput)
 	ret, err = handler.Get(ctx)
 	assert.EqualError(t, err, "data not found")
@@ -844,7 +864,9 @@ func TestRoute(t *testing.T) {
 
 	//delete test data
 	reqBody = `{"ids": "not-exists"}`
-	json.Unmarshal([]byte(reqBody), inputDel)
+	if err := json.Unmarshal([]byte(reqBody), inputDel); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(inputDel)
 	ret, err = handler.BatchDelete(ctx)
 	assert.NotNil(t, err)
@@ -858,7 +880,9 @@ func TestRoute(t *testing.T) {
       "uris": ["/aa", "/bb"],
       "upstream_id": "not-exists"
   }`
-	json.Unmarshal([]byte(reqBody), route4)
+	if err := json.Unmarshal([]byte(reqBody), route4); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(route4)
 	ret, err = handler.Create(ctx)
 	assert.NotNil(t, err)
@@ -880,7 +904,9 @@ func TestRoute(t *testing.T) {
       "desc": "new route",
       "uri": "/index.html"
   }`
-	json.Unmarshal([]byte(reqBody), route5)
+	if err := json.Unmarshal([]byte(reqBody), route5); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(route5)
 	ret, err = handler.Create(ctx)
 	assert.NotNil(t, err)
@@ -901,7 +927,9 @@ func TestRoute(t *testing.T) {
       "desc": "new route",
       "uri": "/index.html"
   }`
-	json.Unmarshal([]byte(reqBody), route6)
+	if err := json.Unmarshal([]byte(reqBody), route6); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(route6)
 	ret, err = handler.Create(ctx)
 	assert.NotNil(t, err)
@@ -925,7 +953,9 @@ func TestRoute(t *testing.T) {
           }
       }
   }`
-	json.Unmarshal([]byte(reqBody), route11)
+	if err := json.Unmarshal([]byte(reqBody), route11); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(route11)
 	_, err = handler.Create(ctx)
 	assert.Nil(t, err)
@@ -945,15 +975,19 @@ func TestRoute(t *testing.T) {
 	//list
 	listInput11 := &ListInput{}
 	reqBody = `{"page_size": 10, "page": 1}`
-	json.Unmarshal([]byte(reqBody), listInput11)
+	if err := json.Unmarshal([]byte(reqBody), listInput11); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(listInput11)
-	retPage, err = handler.List(ctx)
+	_, err = handler.List(ctx)
 	assert.Nil(t, err)
 
 	//list search match
 	listInput12 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1,  "uri": "r11"}`
-	json.Unmarshal([]byte(reqBody), listInput12)
+	if err := json.Unmarshal([]byte(reqBody), listInput12); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(listInput12)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
@@ -962,7 +996,9 @@ func TestRoute(t *testing.T) {
 
 	//delete test data
 	reqBody = `{"ids": "11"}`
-	json.Unmarshal([]byte(reqBody), inputDel)
+	if err := json.Unmarshal([]byte(reqBody), inputDel); err != nil {
+		panic(err)
+	}
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)

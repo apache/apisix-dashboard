@@ -88,7 +88,9 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
       },
     "desc": "test description"
   }`
-	json.Unmarshal([]byte(reqBody), consumer)
+	if err := json.Unmarshal([]byte(reqBody), consumer); err != nil {
+		panic(err)
+	}
 
 	err = validator.Validate(consumer)
 	assert.Nil(t, err)
@@ -106,7 +108,9 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
       },
     "desc": "test description"
   }`
-	json.Unmarshal([]byte(reqBody), consumer2)
+	if err := json.Unmarshal([]byte(reqBody), consumer2); err != nil {
+		panic(err)
+	}
 
 	err = validator.Validate(consumer2)
 	assert.NotNil(t, err)
@@ -131,8 +135,9 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
       },
     "desc": "test description"
   }`
-	json.Unmarshal([]byte(reqBody), consumer3)
-
+	if err := json.Unmarshal([]byte(reqBody), consumer3); err != nil {
+		panic(err)
+	}
 	err = validator.Validate(consumer3)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "scheme validate failed: (root): count is required")
@@ -158,8 +163,9 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
       "desc": "new route",
       "uri": "/index.html"
   }`
-	json.Unmarshal([]byte(reqBody), route)
-
+	if err := json.Unmarshal([]byte(reqBody), route); err != nil {
+		panic(err)
+	}
 	err = validator.Validate(route)
 	assert.Nil(t, err)
 
@@ -177,8 +183,9 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
       "desc": "new route",
       "uri": "/index.html"
   }`
-	json.Unmarshal([]byte(reqBody), route2)
-
+	if err := json.Unmarshal([]byte(reqBody), route2); err != nil {
+		panic(err)
+	}
 	err = validator.Validate(route2)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "missing key")
@@ -198,8 +205,9 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
       "desc": "new route",
       "uri": "/index.html"
   }`
-	json.Unmarshal([]byte(reqBody), route3)
-
+	if err := json.Unmarshal([]byte(reqBody), route3); err != nil {
+		panic(err)
+	}
 	err = validator.Validate(route3)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "missing key")
@@ -219,8 +227,9 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
       "desc": "new route",
       "uri": "/index.html"
   }`
-	json.Unmarshal([]byte(reqBody), route4)
-
+	if err := json.Unmarshal([]byte(reqBody), route4); err != nil {
+		panic(err)
+	}
 	err = validator.Validate(route4)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "missing key")
@@ -241,8 +250,9 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
       "desc": "new route",
       "uri": "/index.html"
   }`
-	json.Unmarshal([]byte(reqBody), route5)
-
+	if err := json.Unmarshal([]byte(reqBody), route5); err != nil {
+		panic(err)
+	}
 	err = validator.Validate(route5)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "scheme validate failed: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$'")
