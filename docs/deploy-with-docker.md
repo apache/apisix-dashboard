@@ -19,8 +19,18 @@
 
 # Deploy with Docker
 
+1. Build image
+
 ```sh
-$ docker build -t apisix-dashboard:2.0 .
+$ docker build -t apisix-dashboard:2.0-rc3 .
 ```
 
-<!-- TODO -->
+2. Run container
+
+```sh
+$ docker run -d -p 80:8080 --name apisix-dashboard-2.0 apisix-dashboard:2.0-rc3
+```
+
+## Note
+
+1. After building the image, if you want to modify the configuration file, you can use the `docker -v /local-path-to-conf-file:/conf/conf.json` parameter to specify the configuration file required for `manager-api` to be loaded dynamically when the container is started.

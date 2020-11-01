@@ -19,8 +19,18 @@
 
 # 使用 Docker 部署
 
+1. 构建镜像
+
 ```sh
-$ docker build -t apisix-dashboard:2.0 .
+$ docker build -t apisix-dashboard:2.0-rc3 .
 ```
 
-待补充
+2. 启动容器
+
+```sh
+$ docker run -d -p 80:8080 --name apisix-dashboard-2.0 apisix-dashboard:2.0-rc3
+```
+
+## 注意
+
+1. 构建镜像后，如需修改配置文件，可通过使用 `docker -v /local-path-to-conf-file:/conf/conf.json` 参数指定 `manager-api` 所需要的配置文件，以便启动容器时动态加载配置文件。
