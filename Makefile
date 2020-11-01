@@ -23,3 +23,12 @@ ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
 	cp .actions/ASF* .actions/openwhisk-utilities/scancode/
 endif
 	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./
+
+.PHONY: golangci-lint
+golangci-lint: ## Run the golangci-lint application (install if not found)
+	@#Brew - MacOS
+	@if [ "$(shell command -v golangci-lint)" = "" ] && [ "$(shell command -v brew)" != "" ]; then brew install golangci-lint; fi;
+	@#has sudo
+	@if [ "$(shell command -v golangci-lint)" = "" ]; then curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.32.0 && sudo cp ./bin/golangci-lint $(go env GOPATH)/bin/; fi;
+	@echo "running golangci-lint..."
+	@cd api && golangci-lint run ./...
