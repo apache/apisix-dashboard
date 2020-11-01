@@ -42,16 +42,25 @@ jobs:
           sudo apt install golang-1.14-go
 
       - name: run test
+        run: |
+          make api-test
+
+      - name: upload coverage profile
         working-directory: ./api
         run: |
-          go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
           bash <(curl -s https://codecov.io/bash)
 
       - name: run with custom port
         working-directory: ./api
         run: |
-          sed -i 's/8080/\# 8088/' conf/conf.json
-          go run main.go &
+          export GO111MOUDULE=on
+          export APISIX_CONF_PATH=$PWD/conf
+          sed -i 's/8080/8088/' conf/conf.json
+          go build -o ./manager-api
+          ./manager-api > ./api.log 2>&1 &
+          sleep 2
+          cat ./api.log
+          cat conf/conf.json
 
       - name: run with custom port
         working-directory: ./api
