@@ -23,7 +23,7 @@
 
 ```sh
 # NOTE: $tag should be set manually
-$ docker build -t apisix-dashboard:{$tag} . --build-arg ENABLE_PROXY=true
+$ docker build -t apisix-dashboard:{$tag} .
 ```
 
 2. Run container
