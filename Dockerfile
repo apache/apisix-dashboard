@@ -29,15 +29,15 @@ RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz \
     && mkdir -p /go/output/dag-to-lua \
     && mv -u ./dag-to-lua-1.1/lib/* /go/output/dag-to-lua/
 
-RUN go build -o /go/output/manager-api .
+RUN go env -w GO111MODULE=on \
+    && go env -w GOPROXY=https://goproxy.io,direct \
+    && go build -o /go/output/manager-api .
 
 FROM node:14-alpine as fe-builder
 
 WORKDIR /frontend/app
 
-COPY ./frontend/package.json .
-
-COPY ./frontend/yarn.lock .
+COPY ./frontend/package.json ./frontend/yarn.lock ./
 
 RUN yarn install
 
@@ -45,10 +45,9 @@ COPY ./frontend .
 
 RUN yarn build
 
-FROM alpine:latest as prod
+FROM alpine:3.11 as prod
 
-RUN apk update \
-    && apk add lua5.1
+RUN apk add lua5.1
 
 WORKDIR /app
 
@@ -57,6 +56,4 @@ COPY --from=fe-builder /frontend/output .
 
 EXPOSE 8080
 
-RUN chmod +x ./manager-api
-
-CMD [ "/bin/ash", "-c", "./manager-api" ]
+CMD [ "/bin/ash", "-c", "manager-api" ]
