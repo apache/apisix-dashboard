@@ -57,7 +57,7 @@ func TestConsumer(t *testing.T) {
       },
     "desc": "test description"
   }`
-	err := json.Unmarshal([]byte(reqBody), consumer)
+	err = json.Unmarshal([]byte(reqBody), consumer)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer)
 	_, err = handler.Create(ctx)
@@ -66,18 +66,18 @@ func TestConsumer(t *testing.T) {
 	//create consumer 2
 	consumer2 := &entity.Consumer{}
 	reqBody = `{
-      "username": "pony",
-      "plugins": {
-          "limit-count": {
-              "count": 2,
-              "time_window": 60,
-              "rejected_code": 503,
-              "key": "remote_addr"
-          }
-      },
-    "desc": "test description"
-  }`
-	err := json.Unmarshal([]byte(reqBody), consumer2)
+		"username": "pony",
+		"plugins": {
+		  "limit-count": {
+		      "count": 2,
+		      "time_window": 60,
+		      "rejected_code": 503,
+		      "key": "remote_addr"
+		  }
+		},
+		"desc": "test description"
+	}`
+	err = json.Unmarshal([]byte(reqBody), consumer2)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer2)
 	_, err = handler.Create(ctx)
@@ -89,7 +89,7 @@ func TestConsumer(t *testing.T) {
 	//get consumer
 	input := &GetInput{}
 	reqBody = `{"username": "jack"}`
-	err := json.Unmarshal([]byte(reqBody), input)
+	err = json.Unmarshal([]byte(reqBody), input)
 	assert.Nil(t, err)
 	ctx.SetInput(input)
 	ret, err := handler.Get(ctx)
@@ -102,18 +102,18 @@ func TestConsumer(t *testing.T) {
 	consumer3 := &UpdateInput{}
 	consumer3.Username = "pony"
 	reqBody = `{
-      "username": "pony",
-      "plugins": {
-          "limit-count": {
-              "count": 2,
-              "time_window": 60,
-              "rejected_code": 503,
-              "key": "remote_addr"
-          }
-      },
-    "desc": "test description2"
-  }`
-	err := json.Unmarshal([]byte(reqBody), consumer3)
+		"username": "pony",
+		"plugins": {
+		  "limit-count": {
+		      "count": 2,
+		      "time_window": 60,
+		      "rejected_code": 503,
+		      "key": "remote_addr"
+		  }
+		},
+		"desc": "test description2"
+	}`
+	err = json.Unmarshal([]byte(reqBody), consumer3)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer3)
 	_, err = handler.Update(ctx)
@@ -125,7 +125,7 @@ func TestConsumer(t *testing.T) {
 	//check update
 	input3 := &GetInput{}
 	reqBody = `{"username": "pony"}`
-	err := json.Unmarshal([]byte(reqBody), input3)
+	err = json.Unmarshal([]byte(reqBody), input3)
 	assert.Nil(t, err)
 	ctx.SetInput(input3)
 	ret3, err := handler.Get(ctx)
@@ -137,7 +137,7 @@ func TestConsumer(t *testing.T) {
 	//list page 1
 	listInput := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1}`
-	err := json.Unmarshal([]byte(reqBody), listInput)
+	err = json.Unmarshal([]byte(reqBody), listInput)
 	assert.Nil(t, err)
 	ctx.SetInput(listInput)
 	retPage1, err := handler.List(ctx)
@@ -148,7 +148,7 @@ func TestConsumer(t *testing.T) {
 	//list page 2
 	listInput2 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 2}`
-	err := json.Unmarshal([]byte(reqBody), listInput2)
+	err = json.Unmarshal([]byte(reqBody), listInput2)
 	assert.Nil(t, err)
 	ctx.SetInput(listInput2)
 	retPage2, err := handler.List(ctx)
@@ -159,7 +159,7 @@ func TestConsumer(t *testing.T) {
 	//list search match
 	listInput3 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "username": "pony"}`
-	err := json.Unmarshal([]byte(reqBody), listInput3)
+	err = json.Unmarshal([]byte(reqBody), listInput3)
 	assert.Nil(t, err)
 	ctx.SetInput(listInput3)
 	retPage, err := handler.List(ctx)
@@ -170,7 +170,7 @@ func TestConsumer(t *testing.T) {
 	//list search not match
 	listInput4 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "username": "not-exists"}`
-	err := json.Unmarshal([]byte(reqBody), listInput4)
+	err = json.Unmarshal([]byte(reqBody), listInput4)
 	assert.Nil(t, err)
 	ctx.SetInput(listInput4)
 	retPage, err = handler.List(ctx)
@@ -181,14 +181,14 @@ func TestConsumer(t *testing.T) {
 	//delete consumer
 	inputDel := &BatchDelete{}
 	reqBody = `{"usernames": "jack"}`
-	err := json.Unmarshal([]byte(reqBody), inputDel)
+	err = json.Unmarshal([]byte(reqBody), inputDel)
 	assert.Nil(t, err)
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)
 
 	reqBody = `{"usernames": "pony"}`
-	err := json.Unmarshal([]byte(reqBody), inputDel)
+	err = json.Unmarshal([]byte(reqBody), inputDel)
 	assert.Nil(t, err)
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
@@ -207,7 +207,7 @@ func TestConsumer(t *testing.T) {
       },
     "desc": "test description"
   }`
-	err := json.Unmarshal([]byte(reqBody), consumer_fail)
+	err = json.Unmarshal([]byte(reqBody), consumer_fail)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer_fail)
 	_, err = handler.Create(ctx)
@@ -227,7 +227,7 @@ func TestConsumer(t *testing.T) {
       },
     "desc": "test description"
   }`
-	err := json.Unmarshal([]byte(reqBody), consumer6)
+	err = json.Unmarshal([]byte(reqBody), consumer6)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer6)
 	_, err = handler.Update(ctx)
@@ -238,7 +238,7 @@ func TestConsumer(t *testing.T) {
 
 	//delete consumer
 	reqBody = `{"usernames": "nnn"}`
-	err := json.Unmarshal([]byte(reqBody), inputDel)
+	err = json.Unmarshal([]byte(reqBody), inputDel)
 	assert.Nil(t, err)
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
