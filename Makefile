@@ -30,3 +30,11 @@ endif
 .PHONY: api-test
 api-test:
 	cd api/ && go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
+
+
+### help:             Show Makefile rules
+.PHONY: help
+help: default
+	@echo Makefile rules:
+	@echo
+	@grep -E '^### [-A-Za-z0-9_]+:' Makefile | sed 's/###/   /'
