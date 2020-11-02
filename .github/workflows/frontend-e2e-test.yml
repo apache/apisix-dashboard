@@ -8,7 +8,10 @@ on:
     branches:
       - master
       - v2.0
-      
+defaults:
+  run:
+    working-directory: frontend
+
 jobs:
   frontend-e2e:
     name: Front-end e2e test
@@ -21,11 +24,8 @@ jobs:
         with:
           node-version: 14.x
 
-      - name: Go to Front-end directory
-        run: cd frontend/
-
       - name: Install Front-end dependencies
         run: yarn install
 
-      - name: Start Front-end and Test
+      - name: Start Front-end then Test
         run: yarn test:e2e
