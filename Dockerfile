@@ -19,9 +19,9 @@ FROM alpine:latest as pre-build
 ARG APISIX_DASHBOARD_VERSION=v2.0
 
 RUN set -x \
-    && wget https://github.com/apache/apisix-dashboard/archive/${APISIX_DASHBOARD_VERSION}.tar.gz -P /tmp \
+    && wget https://github.com/apache/apisix-dashboard/archive/${APISIX_DASHBOARD_VERSION}.tar.gz -O /tmp/apisix-dashboard.tar.gz \
     && mkdir /usr/local/apisix-dashboard \
-    && tar -xvf /tmp/${APISIX_DASHBOARD_VERSION}.tar.gz -C /usr/local/apisix-dashboard --strip 1
+    && tar -xvf /tmp/apisix-dashboard.tar.gz -C /usr/local/apisix-dashboard --strip 1
 
 FROM golang:1.14 as api-builder
 
@@ -36,10 +36,11 @@ WORKDIR /usr/local/apisix-dashboard/api
 RUN mkdir -p ../output/conf \
     && cp ./conf/*.json ../output/conf
 
-RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -P /tmp \
-    && tar -zxvf /tmp/v1.1.tar.gz -C /tmp \
+RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -O /tmp/v1.1.tar.gz \
+    && mkdir /tmp/dag-to-lua \
+    && tar -xvf /tmp/v1.1.tar.gz -C /tmp/dag-to-lua --strip 1 \
     && mkdir -p ../output/dag-to-lua \
-    && cp -r /tmp/dag-to-lua-1.1/lib/* ../output/dag-to-lua
+    && mv /tmp/dag-to-lua/lib/* ../output/dag-to-lua/
 
 RUN if [ "$ENABLE_PROXY" = "true" ] ; then go env -w GOPROXY=https://goproxy.io,direct ; fi
 
