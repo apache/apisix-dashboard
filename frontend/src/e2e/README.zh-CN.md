@@ -17,46 +17,25 @@
 #
 -->
 
-# Dashboard 开发
+### 本地编写测试案例
 
-## 前端开发
-
-1. 确保你的设备已经安装了 `Node.js(version version 10.0.0+)`。
-
-2. 安装 [yarn](https://yarnpkg.com/)。
-
-3. 安装依赖:
+1. 安装依赖并运行本地开发环境
 
 ```sh
-$ yarn install
+$ yarn install && yarn start
 ```
 
-4. 若需要修改 manager-api 地址，请访问 `config/proxy.ts` 文件。
-
-5. 启动开发模式
+2. 在 `src/e2e` 文件夹增加新的测试案例文件
+3. 运行测试案例
 
 ```sh
-$ yarn start
+$ yarn test
 ```
 
-### 编写 E2E 测试案例
-
-请参考 [E2E 文档](../frontend/src/e2e/README.zh-CN.md)。
-
-## manager-api 开发
-
-### 同步 jsonschema
-
-从 Apache APISIX 同步 jsonschema ，需要预安装 `Lua` 5.1+ 和 `zip` ，并执行命令 `api/build-tools/schema-sync.sh $version`。
-
-注意：`$version` 为 `master` 或者 Apache APISIX 的版本号。 
-
-示例：
+如果你想单独运行某一个测试文件，可以执行如下命令
 
 ```sh
-# 使用 "master"
-$ api/build-tools/schema-sync.sh master
-
-# 使用 Apache APISIX 的版本号
-$ api/build-tools/schema-sync.sh 2.0
+$ yarn test ${yourFileName}.e2e.js
 ```
+
+测试结果将会在控制台显示。
