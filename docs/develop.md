@@ -35,8 +35,10 @@ $ yarn install
 ```sh
 $ yarn start
 ```
-### wirte e2e test case
-Please refer to [e2e documentation](../frontend/src/e2e/README.md).
+
+### Add E2E test cases
+
+Please refer to [E2E Documentation](../frontend/src/e2e/README.md).
 
 ## manager-api
 
