@@ -18,7 +18,6 @@ package e2e
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -38,7 +37,7 @@ func init() {
 	}`)
 
 	url := "http://127.0.0.1:8080/apisix/admin/user/login"
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestBody))
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		panic(err)
 	}
@@ -58,8 +57,6 @@ func init() {
 
 	respond := gjson.ParseBytes(body)
 	token = respond.Get("data.token").String()
-
-	fmt.Println("response Body:", string(body), " resp end. ")
 }
 
 func MangerApiExpect(t *testing.T) *httpexpect.Expect {
