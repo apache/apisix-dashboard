@@ -35,5 +35,6 @@ jobs:
         working-directory: ./api/test/e2e
         run: |
           docker ps
+          curl 127.0.0.1:8080
           docker logs docker_managerapi_1
           go test
