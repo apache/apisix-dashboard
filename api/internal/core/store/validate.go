@@ -20,6 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"regexp"
 
 	"github.com/xeipuuv/gojsonschema"
 	"go.uber.org/zap/buffer"
@@ -231,6 +232,8 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 
 	//check plugin json schema
 	plugins, schemaType := getPlugins(obj)
+	//fix lua json.encode transform lua{properties={}} to json{"properties":[]}
+	reg := regexp.MustCompile(`\"properties\":\[\]`)
 	if plugins != nil {
 		for pluginName, pluginConf := range plugins {
 			var schemaDef string
@@ -242,6 +245,7 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 				return fmt.Errorf("scheme validate failed: schema not found, path: %s", "plugins."+pluginName)
 			}
 
+			schemaDef = reg.ReplaceAllString(schemaDef, `"properties":{}`)
 			s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
 			if err != nil {
 				return fmt.Errorf("scheme validate failed: %w", err)
