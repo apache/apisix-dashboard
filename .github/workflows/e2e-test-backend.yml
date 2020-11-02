@@ -33,4 +33,7 @@ jobs:
 
       - name: run test
         working-directory: ./api/test/e2e
-        run: go test
+        run: |
+          docker ps
+          docker logs docker_managerapi_1
+          go test
