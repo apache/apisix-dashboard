@@ -33,7 +33,7 @@ func TestRoute_Host_Params(t *testing.T) {
 				"host": "$%$foo.com",
 				"upstream": {
 					"nodes": {
-						"10.1.1.20:1980": 1
+						"172.16.238.20:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -51,7 +51,7 @@ func TestRoute_Host_Params(t *testing.T) {
 	            "hosts": ["$%$foo.com", "*.bar.com"],
 	            "upstream": {
 	                "nodes": {
-	                    "10.1.1.20:1980": 1
+	                    "172.16.238.20:1980": 1
 	                },
 	                "type": "roundrobin"
 	            }
@@ -70,7 +70,7 @@ func TestRoute_Host_Params(t *testing.T) {
 	            "hosts": ["foo.com", "*.bar.com"],
 	            "upstream": {
 	                "nodes": {
-	                    "10.1.1.20:1980": 1
+	                    "172.16.238.20:1980": 1
 	                },
 	                "type": "roundrobin"
 	            }
@@ -124,7 +124,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 	            "hosts": ["foo.com", "*.bar.com"],
 	            "upstream": {
 	                "nodes": {
-	                    "10.1.1.20:1980": 1
+	                    "172.16.238.20:1980": 1
 	                },
 	                "type": "roundrobin"
 	            }
@@ -171,7 +171,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 	            "hosts": ["bar.com"],
 	            "upstream": {
 	                "nodes": {
-	                    "10.1.1.20:1980": 1
+	                    "172.16.238.20:1980": 1
 	                },
 	                "type": "roundrobin"
 	            }

@@ -26,7 +26,7 @@ services:
       - 2380
     networks:
       apisix_dashboard_e2e:
-        ipv4_address: 10.1.1.10
+        ipv4_address: 172.16.238.10
     environment:
       - ETCDCTL_API=3
     command:
@@ -35,15 +35,15 @@ services:
       - --name
       - node1
       - --initial-advertise-peer-urls
-      - http://10.1.1.10:2380
+      - http://172.16.238.10:2380
       - --listen-peer-urls
       - http://0.0.0.0:2380
       - --advertise-client-urls
-      - http://10.1.1.10:2379
+      - http://172.16.238.10:2379
       - --listen-client-urls
       - http://0.0.0.0:2379
       - --initial-cluster
-      - node1=http://10.1.1.10:2380,node2=http://10.1.1.11:2380,node3=http://10.1.1.12:2380
+      - node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
       - --initial-cluster-state
       - new
       - --initial-cluster-token
@@ -53,7 +53,7 @@ services:
     image: quay.io/coreos/etcd:v3.4.0
     networks:
       apisix_dashboard_e2e:
-        ipv4_address: 10.1.1.11
+        ipv4_address: 172.16.238.11
     environment:
       - ETCDCTL_API=3
     ports:
@@ -67,15 +67,15 @@ services:
       - --name
       - node2
       - --initial-advertise-peer-urls
-      - http://10.1.1.11:2380
+      - http://172.16.238.11:2380
       - --listen-peer-urls
       - http://0.0.0.0:2380
       - --advertise-client-urls
-      - http://10.1.1.11:2379
+      - http://172.16.238.11:2379
       - --listen-client-urls
       - http://0.0.0.0:2379
       - --initial-cluster
-      - node1=http://10.1.1.10:2380,node2=http://10.1.1.11:2380,node3=http://10.1.1.12:2380
+      - node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
       - --initial-cluster-state
       - new
       - --initial-cluster-token
@@ -85,7 +85,7 @@ services:
     image: quay.io/coreos/etcd:v3.4.0
     networks:
       apisix_dashboard_e2e:
-        ipv4_address: 10.1.1.12
+        ipv4_address: 172.16.238.12
     environment:
       - ETCDCTL_API=3
     ports:
@@ -99,15 +99,15 @@ services:
       - --name
       - node3
       - --initial-advertise-peer-urls
-      - http://10.1.1.12:2380
+      - http://172.16.238.12:2380
       - --listen-peer-urls
       - http://0.0.0.0:2380
       - --advertise-client-urls
-      - http://10.1.1.12:2379
+      - http://172.16.238.12:2379
       - --listen-client-urls
       - http://0.0.0.0:2379
       - --initial-cluster
-      - node1=http://10.1.1.10:2380,node2=http://10.1.1.11:2380,node3=http://10.1.1.12:2380
+      - node1=http://172.16.238.10:2380,node2=http://172.16.238.11:2380,node3=http://172.16.238.12:2380
       - --initial-cluster-state
       - new
       - --initial-cluster-token
@@ -127,7 +127,7 @@ services:
       - '1984:1984/tcp'
     networks:
       apisix_dashboard_e2e:
-        ipv4_address: 10.1.1.20
+        ipv4_address: 172.16.238.20
 
   apisix:
     image: apache/apisix:dev
@@ -143,7 +143,7 @@ services:
       - '9443:9443/tcp'
     networks:
       apisix_dashboard_e2e:
-        ipv4_address: 10.1.1.30
+        ipv4_address: 172.16.238.30
 
   apisix2:
     image: apache/apisix:dev
@@ -158,7 +158,7 @@ services:
       - '9081:9080/tcp'
     networks:
       apisix_dashboard_e2e:
-        ipv4_address: 10.1.1.31 
+        ipv4_address: 172.16.238.31 
 
   managerapi:
     image: managerapi:ci
@@ -173,7 +173,7 @@ services:
       - '8080:8080/tcp'
     networks:
       apisix_dashboard_e2e:
-        ipv4_address: 10.1.1.40
+        ipv4_address: 172.16.238.40
 
 networks:
   apisix_dashboard_e2e:
@@ -182,4 +182,4 @@ networks:
       driver: default
       config:
       -
-        subnet: 10.0.0.0/8
+        subnet: 172.16.238.0/24
