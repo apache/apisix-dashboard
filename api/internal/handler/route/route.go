@@ -328,7 +328,7 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	//delete stored script
 	if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
 		//try again
-		log.Warn("try to delete script %s again", input.IDs)
+		log.Warnf("try to delete script %s again", input.IDs)
 		if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
 			return nil, nil
 		}
