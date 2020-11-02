@@ -18,32 +18,27 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const puppeteer = require('puppeteer');
 
+const {
+  setupLogin,
+  BASE_URL
+} = require('./public')
+
 let browser;
-const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
 const domSelectors = {
   inputUsername: '#control-ref_username',
   inputPassword: '#control-ref_password',
   buttonLogin: '.ant-btn-lg',
-  notificationNotice: '.ant-notification-notice',
-  notificationLogin: '.ant-notification-notice-description',
-  loginSuccessIcon: '.ant-notification-notice-icon-success',
   loginFailedIcon: '.ant-notification-notice-icon-error',
-  userProfile: '.ant-space-horizontal div:nth-child(2)',
-  dropdownMenuItem: '.ant-dropdown-menu-item',
-  logoutButton: '.ant-dropdown-menu-item span[aria-label="logout"]',
 };
 const loginFailedData = {
   username: 'admin',
   password: '123456',
 };
-const loginSuccessData = {
-  username: 'admin',
-  password: 'admin',
-};
 
 beforeAll(async () => {
   browser = await puppeteer.launch({
     headless: true,
+    slowMo: 100
   });
 });
 
@@ -68,19 +63,9 @@ describe('Login', () => {
     await page.close();
   }, 10000);
 
-  test('Login success then Logout', async () => {
+  test('Login success', async () => {
     const page = await browser.newPage();
-    await page.goto(BASE_URL);
-    await page.type(domSelectors.inputUsername, loginSuccessData.username);
-    await page.type(domSelectors.inputPassword, loginSuccessData.password);
-    await page.click(domSelectors.buttonLogin);
-    await page.waitForSelector(domSelectors.loginSuccessIcon);
-    await page.waitForNavigation();
-    await page.click(domSelectors.userProfile);
-    await page.waitForSelector(domSelectors.dropdownMenuItem);
-    await page.waitForSelector(domSelectors.logoutButton);
-    await page.click(domSelectors.logoutButton);
-    await page.waitForNavigation();
+    await setupLogin(page);
     await page.close();
   }, 10000);
 
