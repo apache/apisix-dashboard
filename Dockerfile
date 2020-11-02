@@ -45,7 +45,7 @@ RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -O /tmp/v1.1.tar
 RUN if [ "$ENABLE_PROXY" = "true" ] ; then go env -w GOPROXY=https://goproxy.io,direct ; fi
 
 RUN go env -w GO111MODULE=on \
-    && go build -o ../output/manager-api .
+    && CGO_ENABLED=0 go build -o ../output/manager-api .
 
 FROM node:14-alpine as fe-builder
 
@@ -72,6 +72,8 @@ WORKDIR /usr/local/apisix-dashboard
 COPY --from=api-builder /usr/local/apisix-dashboard/output/ ./
 COPY --from=fe-builder /usr/local/apisix-dashboard/output/ ./
 
+ENV APISIX_CONF_PATH /usr/local/apisix-dashboard/conf
+
 EXPOSE 8080
 
-CMD [ "/bin/ash", "-c", "manager-api" ]
+CMD [ "/usr/local/apisix-dashboard/manager-api" ]
