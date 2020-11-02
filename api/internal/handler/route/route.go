@@ -250,6 +250,11 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		input.Route.ID = input.ID
 	}
 
+	if input.Route.Host != "" && len(input.Route.Hosts) > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("only one of host or hosts is allowed")
+	}
+
 	//check depend
 	if input.ServiceID != "" {
 		_, err := h.svcStore.Get(input.ServiceID)
