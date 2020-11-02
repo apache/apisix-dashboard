@@ -24,6 +24,11 @@ jobs:
           export GO111MOUDULE=on
           sudo apt install golang-1.14-go
 
+      - name: build manager api
+        working-directory: ./api
+        run: |
+          docker build -t managerapi:ci .
+
       - name: run docker compose
         working-directory: ./api/test/docker
         run: |
@@ -34,7 +39,4 @@ jobs:
       - name: run test
         working-directory: ./api/test/e2e
         run: |
-          docker ps
-          curl 127.0.0.1:8080
-          docker logs docker_managerapi_1
           go test

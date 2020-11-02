@@ -161,9 +161,7 @@ services:
         ipv4_address: 10.1.1.31 
 
   managerapi:
-    build:
-      context: ../../
-      dockerfile: Dockerfile
+    image: managerapi:ci
     restart: always
     volumes:
       - ./manager-api-conf.json:/go/manager-api/conf.json:ro
