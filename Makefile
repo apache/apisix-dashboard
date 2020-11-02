@@ -27,6 +27,7 @@ endif
 	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./
 
 
+### api-test:         Run the tests of manager-api
 .PHONY: api-test
 api-test:
 	cd api/ && go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
