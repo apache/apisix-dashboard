@@ -85,7 +85,7 @@ func TestRoute_Host_Params(t *testing.T) {
 			Path:         "/hello_",
 			Headers:      map[string]string{"Host": "foo.com"},
 			ExpectStatus: http.StatusNotFound,
-			ExpectBody:   "",
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 		{
 			caseDesc:     "hit route not created",
@@ -112,7 +112,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			Path:         "/hello_",
 			Headers:      map[string]string{"Host": "foo.com"},
 			ExpectStatus: http.StatusNotFound,
-			ExpectBody:   "",
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 		{
 			caseDesc: "create route",
@@ -139,7 +139,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			Path:         "/hello_",
 			Headers:      map[string]string{"Host": "test.bar.com"},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "",
+			ExpectBody:   "hello world\n",
 			Sleep:        sleepTime,
 		},
 		{
@@ -149,7 +149,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			Path:         "/hello_",
 			Headers:      map[string]string{"Host": "foo.com"},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "",
+			ExpectBody:   "hello world\n",
 			Sleep:        sleepTime,
 		},
 	}
@@ -186,7 +186,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			Path:         "/hello_",
 			Headers:      map[string]string{"Host": "foo.com"},
 			ExpectStatus: http.StatusNotFound,
-			ExpectBody:   "",
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        sleepTime,
 		},
 		{
@@ -196,7 +196,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			Path:         "/hello1",
 			Headers:      map[string]string{"Host": "bar.com"},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "",
+			ExpectBody:   "hello1 world\n",
 		},
 	}
 
@@ -222,7 +222,7 @@ func TestRoute_Delete_Routes_With_Hosts(t *testing.T) {
 			Path:         "/hello1",
 			Headers:      map[string]string{"Host": "bar.com"},
 			ExpectStatus: http.StatusNotFound,
-			ExpectBody:   "",
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        sleepTime,
 		},
 	}
