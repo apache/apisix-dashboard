@@ -56,8 +56,6 @@ services:
         ipv4_address: 172.16.238.11
     environment:
       - ETCDCTL_API=3
-    ports:
-      - "3379:2379"
     expose:
       - 2379
       - 2380
@@ -88,8 +86,6 @@ services:
         ipv4_address: 172.16.238.12
     environment:
       - ETCDCTL_API=3
-    ports:
-      - "4379:2379"
     expose:
       - 2379
       - 2380

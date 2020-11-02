@@ -21,7 +21,7 @@ import (
 	"testing"
 )
 
-func TestRoute_Host_Params(t *testing.T) {
+func TestRoute_Invalid_Host(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "invalid host",
