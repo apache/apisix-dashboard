@@ -51,45 +51,45 @@ func TestUpstream(t *testing.T) {
 		"description": "upstream upstream",
 		"type": "roundrobin",
 		"nodes": [{
-		          "host": "a.a.com",
-		          "port": 80,
-		          "weight": 1
-		      }],
+			"host": "a.a.com",
+			"port": 80,
+			"weight": 1
+		}],
 		"timeout":{
-		  "connect":15,
-		      "send":15,
-		      "read":15
+			"connect":15,
+			"send":15,
+			"read":15
 		},
 		"enable_websocket": true,
-		  "hash_on": "header",
-		  "key": "server_addr",
-		  "checks": {
-		      "active": {
-		          "timeout": 5,
-		          "http_path": "/status",
-		          "host": "foo.com",
-		          "healthy": {
-		              "interval": 2,
-		              "successes": 1
-		          },
-		          "unhealthy": {
-		              "interval": 1,
-		              "http_failures": 2
-		          },
-		          "req_headers": ["User-Agent: curl/7.29.0"]
-		      },
-		      "passive": {
-		          "healthy": {
-		              "http_statuses": [200, 201],
-		              "successes": 3
-		          },
-		          "unhealthy": {
-		              "http_statuses": [500],
-		              "http_failures": 3,
-		              "tcp_failures": 3
-		          }
-		      }
-		  }
+		"hash_on": "header",
+		"key": "server_addr",
+		"checks": {
+			"active": {
+				"timeout": 5,
+				"http_path": "/status",
+				"host": "foo.com",
+				"healthy": {
+					"interval": 2,
+					"successes": 1
+				},
+				"unhealthy": {
+					"interval": 1,
+					"http_failures": 2
+				},
+				"req_headers": ["User-Agent: curl/7.29.0"]
+			},
+			"passive": {
+				"healthy": {
+					"http_statuses": [200, 201],
+					"successes": 3
+				},
+				"unhealthy": {
+					"http_statuses": [500],
+					"http_failures": 3,
+					"tcp_failures": 3
+				}
+			}
+		}
 	}`
 	err = json.Unmarshal([]byte(reqBody), upstream)
 	assert.Nil(t, err)
@@ -118,45 +118,45 @@ func TestUpstream(t *testing.T) {
 		"description": "upstream upstream",
 		"type": "roundrobin",
 		"nodes": [{
-		          "host": "a.a.com",
-		          "port": 80,
-		          "weight": 1
-		      }],
+			"host": "a.a.com",
+			"port": 80,
+			"weight": 1
+		}],
 		"timeout":{
-		  "connect":15,
-		      "send":15,
-		      "read":15
+			"connect":15,
+			"send":15,
+			"read":15
 		},
 		"enable_websocket": true,
-		  "hash_on": "header",
-		  "key": "server_addr",
-		  "checks": {
-		      "active": {
-		          "timeout": 5,
-		          "http_path": "/status",
-		          "host": "foo.com",
-		          "healthy": {
-		              "interval": 2,
-		              "successes": 1
-		          },
-		          "unhealthy": {
-		              "interval": 1,
-		              "http_failures": 2
-		          },
-		          "req_headers": ["User-Agent: curl/7.29.0"]
-		      },
-		      "passive": {
-		          "healthy": {
-		              "http_statuses": [200, 201],
-		              "successes": 3
-		          },
-		          "unhealthy": {
-		              "http_statuses": [500],
-		              "http_failures": 3,
-		              "tcp_failures": 3
-		          }
-		      }
-		  }
+		"hash_on": "header",
+		"key": "server_addr",
+		"checks": {
+			"active": {
+				"timeout": 5,
+				"http_path": "/status",
+				"host": "foo.com",
+				"healthy": {
+					"interval": 2,
+					"successes": 1
+				},
+				"unhealthy": {
+					"interval": 1,
+					"http_failures": 2
+				},
+				"req_headers": ["User-Agent: curl/7.29.0"]
+			},
+			"passive": {
+				"healthy": {
+					"http_statuses": [200, 201],
+					"successes": 3
+				},
+				"unhealthy": {
+					"http_statuses": [500],
+					"http_failures": 3,
+					"tcp_failures": 3
+				}
+			}
+		}
 	}`
 	err = json.Unmarshal([]byte(reqBody), upstream2)
 	assert.Nil(t, err)
