@@ -69,8 +69,8 @@ RUN apk add lua5.1
 
 WORKDIR /usr/local/apisix-dashboard
 
-COPY --from=api-builder /usr/local/apisix-dashboard/output/**/* ./
-COPY --from=fe-builder /usr/local/apisix-dashboard/output/**/* ./
+COPY --from=api-builder /usr/local/apisix-dashboard/output/ ./
+COPY --from=fe-builder /usr/local/apisix-dashboard/output/ ./
 
 EXPOSE 8080
 
