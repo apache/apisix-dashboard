@@ -1,0 +1,31 @@
+name: Front-end e2e test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+      - v2.0
+defaults:
+  run:
+    working-directory: frontend
+
+jobs:
+  frontend-e2e:
+    name: Front-end e2e test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment for Front-end
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: Install Front-end dependencies
+        run: yarn install
+
+      - name: Start Front-end then test
+        run: yarn test:e2e

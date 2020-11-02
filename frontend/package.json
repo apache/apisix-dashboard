@@ -20,6 +20,7 @@
     "prettier": "prettier -c --write \"**/*\"",
     "site": "yarn run fetch:blocks && yarn run build",
     "start": "umi dev",
+    "test:e2e": "start-server-and-test 'yarn start' http://localhost:8000 'yarn test'",
     "start:dev": "cross-env REACT_APP_ENV=dev MOCK=none umi dev",
     "start:no-mock": "cross-env MOCK=none umi dev",
     "start:no-ui": "cross-env UMI_UI=none umi dev",
@@ -73,6 +74,7 @@
     "react-device-detect": "^1.12.1",
     "react-dom": "^16.8.6",
     "react-helmet-async": "^1.0.4",
+    "start-server-and-test": "^1.11.5",
     "swagger-ui-react": "^3.33.0",
     "umi": "^3.1.2",
     "umi-request": "^1.0.8",
@@ -112,6 +114,7 @@
     "mockjs": "^1.0.1-beta3",
     "prettier": "^2.0.1",
     "pro-download": "1.0.1",
+    "puppeteer": "^5.4.1",
     "puppeteer-core": "^4.0.1",
     "stylelint": "^13.0.0"
   },

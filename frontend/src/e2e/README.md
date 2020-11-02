@@ -1,4 +1,4 @@
-#!/bin/sh
+<!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -15,7 +15,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+-->
 
-export ENV=prod
+### Add E2E test cases
 
-exec ./manager-api
+1. Install dependencies then run in development mode
+
+```sh
+$ yarn install && yarn start
+```
+
+2. Add a new test case file under the `src/e2e` folder
+3. Run test cases
+
+```sh
+$ yarn test
+```
+
+If you want to run a particular test file separately, you can execute the following command
+
+```sh
+$ yarn test ${yourFileName}.e2e.js
+```
+
+The test results will be displayed on the console.

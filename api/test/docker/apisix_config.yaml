@@ -1,4 +1,3 @@
-#!/bin/sh
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -15,7 +14,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# If you want to set the specified configuration value, you can set the new
+# in this file. For example if you want to specify the etcd address:
+#
+etcd:
+    host:
+      - "http://172.16.238.10:2379"
+      - "http://172.16.238.11:2379"
+      - "http://172.16.238.12:2379"
 
-export ENV=prod
+apisix:
+  admin_key:
+    -
+      name: "admin"
+      key: edd1c9f034335f136f87ad84b625c8f1 # using fixed API token has security risk, please
+                                            # update it when you deploy to production environment
+      role: admin
 
-exec ./manager-api
+  allow_admin:                  # http://nginx.org/en/docs/http/ngx_http_access_module.html#allow
+    - 0.0.0.0/0              # If we don't set any IP list, then any IP access is allowed by default.
