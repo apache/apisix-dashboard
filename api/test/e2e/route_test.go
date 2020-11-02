@@ -29,15 +29,15 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			Path:     "/apisix/admin/routes/r1",
 			Method:   http.MethodPut,
 			Body: `{
-				"uri": "/hello_",
-				"host": "$%$foo.com",
-				"upstream": {
-					"nodes": {
-						"172.16.238.20:1980": 1
-					},
-					"type": "roundrobin"
-				}
-			}`,
+						"uri": "/hello_",
+						"host": "$%$foo.com",
+						"upstream": {
+							"nodes": {
+								"172.16.238.20:1980": 1
+							},
+							"type": "roundrobin"
+						}
+					}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
 		},
@@ -47,15 +47,15 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-	            "uri": "/hello_",
-	            "hosts": ["$%$foo.com", "*.bar.com"],
-	            "upstream": {
-	                "nodes": {
-	                    "172.16.238.20:1980": 1
-	                },
-	                "type": "roundrobin"
-	            }
-            }`,
+			            "uri": "/hello_",
+			            "hosts": ["$%$foo.com", "*.bar.com"],
+			            "upstream": {
+			                "nodes": {
+			                    "172.16.238.20:1980": 1
+			                },
+			                "type": "roundrobin"
+			            }
+		            }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
 		},
@@ -65,16 +65,16 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-	            "uri": "/hello_",
-	            "host": "github.com",
-	            "hosts": ["foo.com", "*.bar.com"],
-	            "upstream": {
-	                "nodes": {
-	                    "172.16.238.20:1980": 1
-	                },
-	                "type": "roundrobin"
-	            }
-	        }`,
+			            "uri": "/hello_",
+			            "host": "github.com",
+			            "hosts": ["foo.com", "*.bar.com"],
+			            "upstream": {
+			                "nodes": {
+			                    "172.16.238.20:1980": 1
+			                },
+			                "type": "roundrobin"
+			            }
+			        }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
 		},
@@ -120,15 +120,15 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-	            "uri": "/hello_",
-	            "hosts": ["foo.com", "*.bar.com"],
-	            "upstream": {
-	                "nodes": {
-	                    "172.16.238.20:1980": 1
-	                },
-	                "type": "roundrobin"
-	            }
-	        }`,
+			            "uri": "/hello_",
+			            "hosts": ["foo.com", "*.bar.com"],
+			            "upstream": {
+			                "nodes": {
+			                    "172.16.238.20:1980": 1
+			                },
+			                "type": "roundrobin"
+			            }
+			        }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -175,15 +175,15 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-	            "uri": "/hello1",
-	            "hosts": ["bar.com"],
-	            "upstream": {
-	                "nodes": {
-	                    "172.16.238.20:1980": 1
-	                },
-	                "type": "roundrobin"
-	            }
-	        }`,
+			            "uri": "/hello1",
+			            "hosts": ["bar.com"],
+			            "upstream": {
+			                "nodes": {
+			                    "172.16.238.20:1980": 1
+			                },
+			                "type": "roundrobin"
+			            }
+			        }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
