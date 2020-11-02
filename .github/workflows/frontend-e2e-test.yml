@@ -27,5 +27,5 @@ jobs:
       - name: Install Front-end dependencies
         run: yarn install
 
-      - name: Start Front-end then Test
+      - name: Start Front-end then test
         run: yarn test:e2e

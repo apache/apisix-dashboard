@@ -21,8 +21,8 @@ const puppeteer = require('puppeteer');
 let browser;
 const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
 const domSelectors = {
-  inputusername: '#control-ref_username',
-  inputpassword: '#control-ref_password',
+  inputUsername: '#control-ref_username',
+  inputPassword: '#control-ref_password',
   buttonLogin: '.ant-btn-lg',
   notificationNotice: '.ant-notification-notice',
   notificationLogin: '.ant-notification-notice-description',
@@ -43,7 +43,7 @@ const loginSuccessData = {
 
 beforeAll(async () => {
   browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
   });
 });
 
@@ -51,8 +51,8 @@ describe('Login', () => {
   test('Login failed with wrong password', async () => {
     const page = await browser.newPage();
     await page.goto(BASE_URL);
-    await page.type(domSelectors.inputusername, loginFailedData.username);
-    await page.type(domSelectors.inputpassword, loginFailedData.password);
+    await page.type(domSelectors.inputUsername, loginFailedData.username);
+    await page.type(domSelectors.inputPassword, loginFailedData.password);
     await page.click(domSelectors.buttonLogin);
     await page.waitForSelector(domSelectors.loginFailedIcon);
     await page.close();
@@ -61,8 +61,8 @@ describe('Login', () => {
   test('Login failed with empty username password', async () => {
     const page = await browser.newPage();
     await page.goto(BASE_URL);
-    await page.type(domSelectors.inputusername, '');
-    await page.type(domSelectors.inputpassword, '');
+    await page.type(domSelectors.inputUsername, '');
+    await page.type(domSelectors.inputPassword, '');
     await page.click(domSelectors.buttonLogin);
     await page.waitForSelector('.ant-form-item-explain');
     await page.close();
@@ -71,13 +71,14 @@ describe('Login', () => {
   test('Login success then Logout', async () => {
     const page = await browser.newPage();
     await page.goto(BASE_URL);
-    await page.type(domSelectors.inputusername, loginSuccessData.username);
-    await page.type(domSelectors.inputpassword, loginSuccessData.password);
+    await page.type(domSelectors.inputUsername, loginSuccessData.username);
+    await page.type(domSelectors.inputPassword, loginSuccessData.password);
     await page.click(domSelectors.buttonLogin);
     await page.waitForSelector(domSelectors.loginSuccessIcon);
     await page.waitForNavigation();
     await page.click(domSelectors.userProfile);
     await page.waitForSelector(domSelectors.dropdownMenuItem);
+    await page.waitForSelector(domSelectors.logoutButton);
     await page.click(domSelectors.logoutButton);
     await page.waitForNavigation();
     await page.close();
