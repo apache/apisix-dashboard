@@ -43,7 +43,7 @@ jobs:
 
       - name: run test
         working-directory: ./api
-        run: go test ./...
+        run: go test $(go list ./... | grep -v /e2e)
 
       - name: run with custom port
         working-directory: ./api
