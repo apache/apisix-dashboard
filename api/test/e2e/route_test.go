@@ -150,7 +150,15 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			Headers:      map[string]string{"Host": "foo.com"},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world\n",
-			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "hit the route not exists",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello_111",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 	}
 
@@ -214,6 +222,14 @@ func TestRoute_Delete_Routes_With_Hosts(t *testing.T) {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "delete not exist route",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/not-exist",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
 		},
 		{
 			caseDesc:     "hit the route just deleted",
