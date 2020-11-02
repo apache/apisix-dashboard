@@ -20,37 +20,37 @@ const puppeteer = require('puppeteer');
 
 const {
   setupLogin
-} = require('./public')
+} = require('./service')
 
-let browser
+let browser;
 const domSelectors = {
   userProfile: '.ant-space-horizontal div:nth-child(2)',
   dropdownMenuItem: '.ant-dropdown-menu-item',
-  buttonLogin:".ant-btn-lg",
+  buttonLogin: ".ant-btn-lg",
   logoutButton: '.ant-dropdown > ul > li:nth-child(3)',
 };
 
 describe('Logout', () => {
 
-beforeAll(async () => {
-  browser = await puppeteer.launch({
-    headless: true,
-    slowMo: 100
+  beforeAll(async () => {
+    browser = await puppeteer.launch({
+      headless: true,
+      slowMo: 100
+    });
   });
-});
 
-test('Logout', async () => {
-  const page = await browser.newPage();
-  await setupLogin(page)
-  await page.click(domSelectors.userProfile);
-  await page.waitForSelector(domSelectors.dropdownMenuItem);
-  await page.waitForSelector(domSelectors.logoutButton);
-  await page.click(domSelectors.logoutButton);
-  await page.waitForSelector(domSelectors.buttonLogin);
-  await page.close();
-}, 50000);
+  test('Logout', async () => {
+    const page = await browser.newPage();
+    await setupLogin(page);
+    await page.click(domSelectors.userProfile);
+    await page.waitForSelector(domSelectors.dropdownMenuItem);
+    await page.waitForSelector(domSelectors.logoutButton);
+    await page.click(domSelectors.logoutButton);
+    await page.waitForSelector(domSelectors.buttonLogin);
+    await page.close();
+  }, 50000);
 
-afterAll(async () => {
-  await browser.close();
-});
+  afterAll(async () => {
+    await browser.close();
+  });
 });

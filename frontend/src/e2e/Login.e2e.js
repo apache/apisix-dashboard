@@ -21,7 +21,7 @@ const puppeteer = require('puppeteer');
 const {
   setupLogin,
   BASE_URL
-} = require('./public')
+} = require('./service')
 
 let browser;
 const domSelectors = {

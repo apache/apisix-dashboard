@@ -38,6 +38,8 @@ $ yarn install
 ```sh
 $ yarn start
 ```
+### 编写 e2e 测试案例
+请参考 [e2e 文档](../frontend/src/e2e/README.zh-CN.md)。
 
 ## manager-api 开发
 
