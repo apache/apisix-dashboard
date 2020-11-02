@@ -1,4 +1,4 @@
-name: golangci-lint
+name: golang-lint
 on:
   push:
     branches:
@@ -8,11 +8,9 @@ on:
       - master
 jobs:
   golangci:
-    name: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: lint
-        run: |
-          make golangci-lint
+      - name: run lint
+        run: make golang-lint

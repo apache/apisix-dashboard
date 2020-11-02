@@ -41,9 +41,8 @@ func TestPlugin(t *testing.T) {
 	reqBody := `{
 	  "name": "limit-count"
   }`
-	if err := json.Unmarshal([]byte(reqBody), input); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), input)
+	assert.Nil(t, err)
 	ctx.SetInput(input)
 	val, _ := handler.Schema(ctx)
 	assert.NotNil(t, val)
@@ -53,9 +52,8 @@ func TestPlugin(t *testing.T) {
 	reqBody = `{
 	  "name": "not-exists"
   }`
-	if err := json.Unmarshal([]byte(reqBody), input2); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), input2)
+	assert.Nil(t, err)
 	ctx.SetInput(input2)
 	val, _ = handler.Schema(ctx)
 	assert.Nil(t, val)

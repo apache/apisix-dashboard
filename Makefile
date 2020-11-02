@@ -15,6 +15,16 @@
 # limitations under the License.
 #
 
+SHELL := /bin/bash -o pipefail
+
+
+### help:             Show Makefile rules
+.PHONY: help
+help:
+	@echo Makefile rules:
+	@echo
+	@grep -E '^### [-A-Za-z0-9_]+:' Makefile | sed 's/###/   /'
+
 ### license-check:    Check apisix-dashboard source codes for Apache License
 .PHONY: license-check
 license-check:
@@ -24,8 +34,9 @@ ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
 endif
 	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./
 
-.PHONY: golangci-lint
-golangci-lint: ## Run the golangci-lint application (install if not found)
+### golang-lint:             Lint Go source code
+.PHONY: golang-lint
+golang-lint: ## Run the golangci-lint application (install if not found)
 	@#Brew - MacOS
 	@if [ "$(shell command -v golangci-lint)" = "" ] && [ "$(shell command -v brew)" != "" ]; then brew install golangci-lint; fi;
 	@#has sudo

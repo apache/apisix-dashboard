@@ -57,9 +57,8 @@ func TestConsumer(t *testing.T) {
       },
     "desc": "test description"
   }`
-	if err := json.Unmarshal([]byte(reqBody), consumer); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), consumer)
+	assert.Nil(t, err)
 	ctx.SetInput(consumer)
 	_, err = handler.Create(ctx)
 	assert.Nil(t, err)
@@ -78,9 +77,8 @@ func TestConsumer(t *testing.T) {
       },
     "desc": "test description"
   }`
-	if err := json.Unmarshal([]byte(reqBody), consumer2); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), consumer2)
+	assert.Nil(t, err)
 	ctx.SetInput(consumer2)
 	_, err = handler.Create(ctx)
 	assert.Nil(t, err)
@@ -91,9 +89,8 @@ func TestConsumer(t *testing.T) {
 	//get consumer
 	input := &GetInput{}
 	reqBody = `{"username": "jack"}`
-	if err := json.Unmarshal([]byte(reqBody), input); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), input)
+	assert.Nil(t, err)
 	ctx.SetInput(input)
 	ret, err := handler.Get(ctx)
 	stored := ret.(*entity.Consumer)
@@ -116,9 +113,8 @@ func TestConsumer(t *testing.T) {
       },
     "desc": "test description2"
   }`
-	if err := json.Unmarshal([]byte(reqBody), consumer3); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), consumer3)
+	assert.Nil(t, err)
 	ctx.SetInput(consumer3)
 	_, err = handler.Update(ctx)
 	assert.Nil(t, err)
@@ -129,9 +125,8 @@ func TestConsumer(t *testing.T) {
 	//check update
 	input3 := &GetInput{}
 	reqBody = `{"username": "pony"}`
-	if err := json.Unmarshal([]byte(reqBody), input3); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), input3)
+	assert.Nil(t, err)
 	ctx.SetInput(input3)
 	ret3, err := handler.Get(ctx)
 	stored3 := ret3.(*entity.Consumer)
@@ -142,9 +137,8 @@ func TestConsumer(t *testing.T) {
 	//list page 1
 	listInput := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1}`
-	if err := json.Unmarshal([]byte(reqBody), listInput); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), listInput)
+	assert.Nil(t, err)
 	ctx.SetInput(listInput)
 	retPage1, err := handler.List(ctx)
 	assert.Nil(t, err)
@@ -154,9 +148,8 @@ func TestConsumer(t *testing.T) {
 	//list page 2
 	listInput2 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 2}`
-	if err := json.Unmarshal([]byte(reqBody), listInput2); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), listInput2)
+	assert.Nil(t, err)
 	ctx.SetInput(listInput2)
 	retPage2, err := handler.List(ctx)
 	assert.Nil(t, err)
@@ -166,9 +159,8 @@ func TestConsumer(t *testing.T) {
 	//list search match
 	listInput3 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "username": "pony"}`
-	if err := json.Unmarshal([]byte(reqBody), listInput3); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), listInput3)
+	assert.Nil(t, err)
 	ctx.SetInput(listInput3)
 	retPage, err := handler.List(ctx)
 	assert.Nil(t, err)
@@ -178,9 +170,8 @@ func TestConsumer(t *testing.T) {
 	//list search not match
 	listInput4 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "username": "not-exists"}`
-	if err := json.Unmarshal([]byte(reqBody), listInput4); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), listInput4)
+	assert.Nil(t, err)
 	ctx.SetInput(listInput4)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
@@ -190,17 +181,15 @@ func TestConsumer(t *testing.T) {
 	//delete consumer
 	inputDel := &BatchDelete{}
 	reqBody = `{"usernames": "jack"}`
-	if err := json.Unmarshal([]byte(reqBody), inputDel); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), inputDel)
+	assert.Nil(t, err)
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)
 
 	reqBody = `{"usernames": "pony"}`
-	if err := json.Unmarshal([]byte(reqBody), inputDel); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), inputDel)
+	assert.Nil(t, err)
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)
@@ -218,9 +207,8 @@ func TestConsumer(t *testing.T) {
       },
     "desc": "test description"
   }`
-	if err := json.Unmarshal([]byte(reqBody), consumer_fail); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), consumer_fail)
+	assert.Nil(t, err)
 	ctx.SetInput(consumer_fail)
 	_, err = handler.Create(ctx)
 	assert.NotNil(t, err)
@@ -239,9 +227,8 @@ func TestConsumer(t *testing.T) {
       },
     "desc": "test description"
   }`
-	if err := json.Unmarshal([]byte(reqBody), consumer6); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), consumer6)
+	assert.Nil(t, err)
 	ctx.SetInput(consumer6)
 	_, err = handler.Update(ctx)
 	assert.Nil(t, err)
@@ -251,9 +238,8 @@ func TestConsumer(t *testing.T) {
 
 	//delete consumer
 	reqBody = `{"usernames": "nnn"}`
-	if err := json.Unmarshal([]byte(reqBody), inputDel); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(reqBody), inputDel)
+	assert.Nil(t, err)
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)

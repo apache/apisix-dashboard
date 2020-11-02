@@ -28,9 +28,9 @@ func TestConsumer(t *testing.T) {
     "127.0.0.1:8080": 1
   }`
 	nodesMap := map[string]float64{}
-	if err := json.Unmarshal([]byte(nodesStr), &nodesMap); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal([]byte(nodesStr), &nodesMap)
+	assert.Nil(t, err)
+
 	res := NodesFormat(nodesMap)
 	nodes := res.([]*Node)
 
