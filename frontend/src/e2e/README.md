@@ -17,7 +17,7 @@
 #
 -->
 
-### Writing test cases
+### Add E2E test cases
 
 1. Install dependencies then run in development mode
 
