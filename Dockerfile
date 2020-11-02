@@ -14,45 +14,63 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+FROM alpine:latest as pre-build
+
+ARG APISIX_DASHBOARD_VERSION=v2.0
+
+RUN set -x \
+    && wget https://github.com/apache/apisix-dashboard/archive/${APISIX_DASHBOARD_VERSION}.tar.gz -O /tmp/apisix-dashboard.tar.gz \
+    && mkdir /usr/local/apisix-dashboard \
+    && tar -xvf /tmp/apisix-dashboard.tar.gz -C /usr/local/apisix-dashboard --strip 1
 
 FROM golang:1.14 as api-builder
 
-WORKDIR /go/src/app
+ARG ENABLE_PROXY=false
 
-COPY ./api .
+WORKDIR /usr/local/apisix-dashboard
 
-RUN mkdir -p /go/output/conf \
-    && cp ./conf/*.json /go/output/conf
+COPY --from=pre-build /usr/local/apisix-dashboard .
 
-RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz \
-    && tar -zxvf v1.1.tar.gz \
-    && mkdir -p /go/output/dag-to-lua \
-    && mv -u ./dag-to-lua-1.1/lib/* /go/output/dag-to-lua/
+WORKDIR /usr/local/apisix-dashboard/api
+
+RUN mkdir -p ../output/conf \
+    && cp ./conf/*.json ../output/conf
+
+RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -O /tmp/v1.1.tar.gz \
+    && mkdir /tmp/dag-to-lua \
+    && tar -xvf /tmp/v1.1.tar.gz -C /tmp/dag-to-lua --strip 1 \
+    && mkdir -p ../output/dag-to-lua \
+    && mv /tmp/dag-to-lua/lib/* ../output/dag-to-lua/
+
+RUN if [ "$ENABLE_PROXY" = "true" ] ; then go env -w GOPROXY=https://goproxy.io,direct ; fi
 
 RUN go env -w GO111MODULE=on \
-    && go env -w GOPROXY=https://goproxy.io,direct \
-    && go build -o /go/output/manager-api .
+    && go build -o ../output/manager-api .
 
 FROM node:14-alpine as fe-builder
 
-WORKDIR /frontend/app
+ARG ENABLE_PROXY=false
 
-COPY ./frontend/package.json ./frontend/yarn.lock ./
+WORKDIR /usr/local/apisix-dashboard
+
+COPY --from=pre-build /usr/local/apisix-dashboard .
+
+WORKDIR /usr/local/apisix-dashboard/frontend
+
+RUN if [ "$ENABLE_PROXY" = "true" ] ; then yarn config set registry https://registry.npm.taobao.org/ ; fi
 
 RUN yarn install
 
-COPY ./frontend .
-
 RUN yarn build
 
-FROM alpine:3.11 as prod
+FROM alpine:latest as prod
 
 RUN apk add lua5.1
 
-WORKDIR /app
+WORKDIR /usr/local/apisix-dashboard
 
-COPY --from=api-builder /go/output .
-COPY --from=fe-builder /frontend/output .
+COPY --from=api-builder /usr/local/apisix-dashboard/output/**/* ./
+COPY --from=fe-builder /usr/local/apisix-dashboard/output/**/* ./
 
 EXPOSE 8080
 

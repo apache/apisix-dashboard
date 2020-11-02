@@ -22,15 +22,21 @@
 1. Build image
 
 ```sh
-$ docker build -t apisix-dashboard:2.0-rc3 .
+# NOTE: $tag should be set manually
+$ docker build -t apisix-dashboard:{$tag} . --build-arg ENABLE_PROXY=true
 ```
 
 2. Run container
 
 ```sh
-$ docker run -d -p 80:8080 --name apisix-dashboard-2.0 apisix-dashboard:2.0-rc3
+$ docker run -d -p 80:8080 --name apisix-dashboard apisix-dashboard:{$tag}
 ```
 
 ## Note
 
 1. After building the image, if you want to modify the configuration file, you can use the `docker -v /local-path-to-conf-file:/conf/conf.json` parameter to specify the configuration file required for `manager-api` to be loaded dynamically when the container is started.
+2. For users in China, we could use the `ENABLE_PROXY` flag to speed up dependencies downloading.
+
+```sh
+$ docker build -t apisix-dashboard:{$tag} . --build-arg ENABLE_PROXY=true
+```
