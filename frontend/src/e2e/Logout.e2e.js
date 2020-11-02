@@ -48,7 +48,7 @@ test('Logout', async () => {
   await page.click(domSelectors.logoutButton);
   await page.waitForSelector(domSelectors.buttonLogin);
   await page.close();
-}, 10000);
+}, 50000);
 
 afterAll(async () => {
   await browser.close();
