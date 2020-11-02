@@ -36,8 +36,8 @@ const (
 	EnvDEV   = "dev"
 	EnvLOCAL = "local"
 
-	confJsonPath   = "/go/manager-api/conf.json"
-	schemaPath = "/go/manager-api/schema.json"
+	confJsonPath = "/go/manager-api/conf.json"
+	schemaPath   = "/go/manager-api/schema.json"
 )
 
 var (

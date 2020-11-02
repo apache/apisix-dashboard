@@ -19,213 +19,215 @@ package e2e
 import (
 	"net/http"
 	"testing"
-	"time"
 )
 
-func TestRoute_Host(t *testing.T) {
+func TestRoute_Host_Params(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "invalid host",
+			Object:   MangerApiExpect(t),
+			Path:     "/apisix/admin/routes/r1",
+			Method:   http.MethodPut,
+			Body: `{
+				"uri": "/hello_",
+				"host": "$%$foo.com",
+				"upstream": {
+					"nodes": {
+						"172.16.238.120:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			caseDesc: "invalid hosts",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+	            "uri": "/hello_",
+	            "hosts": ["$%$foo.com", "*.bar.com"],
+	            "upstream": {
+	                "nodes": {
+	                    "172.16.238.120:1980": 1
+	                },
+	                "type": "roundrobin"
+	            }
+            }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			caseDesc: "create route with host and hosts together at the same time",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+	            "uri": "/hello_",
+	            "host": "github.com",
+	            "hosts": ["foo.com", "*.bar.com"],
+	            "upstream": {
+	                "nodes": {
+	                    "172.16.238.120:1980": 1
+	                },
+	                "type": "roundrobin"
+	            }
+	        }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			caseDesc:     "hit route not created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "",
+		},
+		{
+			caseDesc:     "hit route not created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			Headers:      map[string]string{"Host": "$%$foo.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+		},
+	}
 
-	//create route use hosts
-	MangerApiExpect(t).
-		PUT("/apisix/admin/routes/r1").
-		WithText(`{
-            "uri": "/hello_",
-            "hosts": ["foo.com", "*.bar.com"],
-            "upstream": {
-                "nodes": {
-                    "172.16.238.120:1980": 1
-                },
-                "type": "roundrobin"
-            }
-        }`).
-		WithHeader("Authorization", token).
-		Expect().
-		Status(http.StatusOK)
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
 
-	//sleep
-	time.Sleep(time.Duration(100) * time.Millisecond)
+func TestRoute_Create_With_Hosts(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc:     "hit route that not exist",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "",
+		},
+		{
+			caseDesc: "create route",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+	            "uri": "/hello_",
+	            "hosts": ["foo.com", "*.bar.com"],
+	            "upstream": {
+	                "nodes": {
+	                    "172.16.238.120:1980": 1
+	                },
+	                "type": "roundrobin"
+	            }
+	        }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "hit the route just created - wildcard domain name",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			Headers:      map[string]string{"Host": "test.bar.com"},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "hit the route just created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "",
+			Sleep:        sleepTime,
+		},
+	}
 
-	//hit route -- not found
-	APISIXExpect(t).GET("/not_found").
-		Expect().
-		Status(http.StatusNotFound)
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
 
-	//hit route -- not found, wrong host
-	APISIXExpect(t).GET("/hello_").
-		WithHeader("Host", "not_found.com").
-		Expect().
-		Status(http.StatusNotFound)
+func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "update route",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+	            "uri": "/hello1",
+	            "hosts": ["bar.com"],
+	            "upstream": {
+	                "nodes": {
+	                    "172.16.238.120:1980": 1
+	                },
+	                "type": "roundrobin"
+	            }
+	        }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "hit the route just updated",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "hit the route just updated",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello1",
+			Headers:      map[string]string{"Host": "bar.com"},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "",
+		},
+	}
 
-	//hit route - ok
-	APISIXExpect(t).GET("/hello_").
-		WithHeader("Host", "foo.com").
-		Expect().
-		Status(http.StatusOK)
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
 
-	//create route  -- invalid hosts
-	MangerApiExpect(t).
-		PUT("/apisix/admin/routes/r2").
-		WithText(`{
-            "uri": "/hello_",
-            "hosts": ["$%$foo.com", "*.bar.com"],
-            "upstream": {
-                "nodes": {
-                    "172.16.238.120:1980": 1
-                },
-                "type": "roundrobin"
-            }
-        }`).
-		WithHeader("Authorization", token).
-		Expect().
-		Status(http.StatusBadRequest)
+func TestRoute_Delete_Routes_With_Hosts(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc:     "delete route",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "hit the route just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello1",
+			Headers:      map[string]string{"Host": "bar.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "",
+			Sleep:        sleepTime,
+		},
+	}
 
-	//create route  -- invalid type for hosts
-	MangerApiExpect(t).
-		PUT("/apisix/admin/routes/r2").
-		WithText(`{
-            "uri": "/hello_",
-            "hosts": [1, "*.bar.com"],
-            "upstream": {
-            "nodes": {
-            "172.16.238.120:1980": 1
-            },
-            "type": "roundrobin"
-            }
-        }`).
-		WithHeader("Authorization", token).
-		Expect().
-		//Status(http.StatusBadRequest)
-		JSON().Object().ValueNotEqual("code", 0)
-
-	//create route  -- fail - config host and hosts at the same time
-	MangerApiExpect(t).
-		PUT("/apisix/admin/routes/r2").
-		WithText(`{
-            "uri": "/hello_",
-            "host": "github.com",
-            "hosts": ["foo.com", "*.bar.com"],
-            "upstream": {
-                "nodes": {
-                    "172.16.238.120:1980": 1
-                },
-                "type": "roundrobin"
-            }
-        }`).
-		WithHeader("Authorization", token).
-		Expect().
-		Status(http.StatusBadRequest)
-
-	//create route  -- invalid host
-	MangerApiExpect(t).
-		PUT("/apisix/admin/routes/r2").
-		WithText(`{
-            "uri": "/hello_",
-            "host": "$%$foo.com",
-            "upstream": {
-                "nodes": {
-                    "172.16.238.120:1980": 1
-                },
-                "type": "roundrobin"
-            }
-        }`).
-		WithHeader("Authorization", token).
-		Expect().
-		Status(http.StatusBadRequest)
-
-		//create route  -- invalid type for host
-	MangerApiExpect(t).
-		PUT("/apisix/admin/routes/r2").
-		WithText(`{
-            "uri": "/hello_",
-            "host": 1,
-            "upstream": {
-                "nodes": {
-                    "172.16.238.120:1980": 1
-                },
-                "type": "roundrobin"
-            }
-        }`).
-		WithHeader("Authorization", token).
-		Expect().
-		//Status(http.StatusBadRequest)
-		JSON().Object().ValueNotEqual("code", 0)
-
-	//create route use host
-	MangerApiExpect(t).PUT("/apisix/admin/routes/r2").WithText(`{
-            "uri": "/hello_",
-            "host": "test.com",
-            "upstream": {
-                "nodes": {
-                    "172.16.238.120:1980": 1
-                },
-                "type": "roundrobin"
-            }
-        }`).
-		WithHeader("Authorization", token).
-		Expect().
-		Status(http.StatusOK)
-
-	//sleep
-	time.Sleep(time.Duration(100) * time.Millisecond)
-
-	//hit route - ok
-	APISIXExpect(t).GET("/hello_").
-		WithHeader("Host", "test.com").
-		Expect().
-		Status(http.StatusOK)
-
-	//create route without host and hosts
-	MangerApiExpect(t).
-		PUT("/apisix/admin/routes/r3").
-		WithText(`{
-            "uri": "/hello1",
-            "upstream": {
-                "nodes": {
-                    "172.16.238.120:1980": 1
-                },
-                "type": "roundrobin"
-            }
-        }`).
-		WithHeader("Authorization", token).
-		Expect().
-		Status(http.StatusOK)
-
-	//sleep
-	time.Sleep(time.Duration(100) * time.Millisecond)
-
-	//hit route - ok, match any host
-	APISIXExpect(t).GET("/hello1").
-		WithHeader("Host", "test.com").
-		Expect().
-		Status(http.StatusOK)
-
-	//hit route - ok, match any host
-	APISIXExpect(t).GET("/hello1").
-		WithHeader("Host", "foo.com").
-		Expect().
-		Status(http.StatusOK)
-
-	//hit route -- not found, wrong uri
-	APISIXExpect(t).GET("/not_found").
-		Expect().
-		Status(http.StatusNotFound)
-
-	//delete test data
-	MangerApiExpect(t).
-		DELETE("/apisix/admin/routes/r3").
-		WithHeader("Authorization", token).
-		Expect().
-		Status(http.StatusOK)
-
-	MangerApiExpect(t).
-		DELETE("/apisix/admin/routes/r2").
-		WithHeader("Authorization", token).
-		Expect().
-		Status(http.StatusOK)
-
-	MangerApiExpect(t).
-		DELETE("/apisix/admin/routes/r1").
-		WithHeader("Authorization", token).
-		Expect().
-		Status(http.StatusOK)
-
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
 }

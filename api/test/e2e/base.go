@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/gavv/httpexpect/v2"
 	"github.com/tidwall/gjson"
@@ -67,4 +68,70 @@ func MangerApiExpect(t *testing.T) *httpexpect.Expect {
 
 func APISIXExpect(t *testing.T) *httpexpect.Expect {
 	return httpexpect.New(t, "http://127.0.0.1:9080")
+}
+
+var sleepTime = time.Duration(100) * time.Millisecond
+
+type HttpTestCase struct {
+	caseDesc      string
+	Object        *httpexpect.Expect
+	Method        string
+	Path          string
+	Body          string
+	Headers       map[string]string
+	ExpectStatus  int
+	ExpectCode    int
+	ExpectMessage string
+	ExpectBody    string
+	Sleep         time.Duration //ms
+}
+
+func testCaseCheck(tc HttpTestCase) {
+	//init
+	expectObj := tc.Object
+	var req *httpexpect.Request
+	switch tc.Method {
+	case http.MethodGet:
+		req = expectObj.GET(tc.Path)
+	case http.MethodPut:
+		req = expectObj.PUT(tc.Path)
+	case http.MethodPost:
+		req = expectObj.POST(tc.Path)
+	case http.MethodDelete:
+		req = expectObj.DELETE(tc.Path)
+	case http.MethodPatch:
+		req = expectObj.PATCH(tc.Path)
+	default:
+	}
+
+	if req == nil {
+		panic("fail to init request")
+	}
+
+	if tc.Sleep != 0 {
+		time.Sleep(tc.Sleep)
+	}
+
+	//set header
+	for key, val := range tc.Headers {
+		req.WithHeader(key, val)
+	}
+
+	//set body
+	if tc.Body != "" {
+		req.WithText(tc.Body)
+	}
+
+	//respond check
+	resp := req.Expect()
+
+	//match http status
+	if tc.ExpectStatus != 0 {
+		resp.Status(tc.ExpectStatus)
+	}
+
+	//match body
+	if tc.ExpectBody != "" {
+		resp.Body().Equal(tc.ExpectBody)
+	}
 }
