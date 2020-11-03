@@ -10,10 +10,10 @@ on:
       - v2.0
 defaults:
   run:
-    working-directory: frontend
+    working-directory: web
 
 jobs:
-  frontend-e2e:
+  web-e2e:
     name: Front-end e2e test
     runs-on: ubuntu-latest
     steps:

@@ -152,10 +152,6 @@ export const transformRouteData = (data: RouteModule.Body) => {
 
   const { plugins, script } = data;
 
-  if (plugins && plugins.prometheus) {
-    plugins.prometheus = { enabled: true };
-  }
-
   const step3Data: RouteModule.Step3Data = {
     plugins,
     script,
