@@ -19,7 +19,7 @@
 
 # Dashboard Devlopment
 
-## Frontend
+## Web
 
 1. Make sure you have `Node.js(version version 10.0.0+)` installed on your machine.
 2. Install [yarn](https://yarnpkg.com/).
@@ -38,7 +38,7 @@ $ yarn start
 
 ### Add E2E test cases
 
-Please refer to [E2E Documentation](../frontend/src/e2e/README.md).
+Please refer to [E2E Documentation](../web/src/e2e/README.md).
 
 ## manager-api
 
