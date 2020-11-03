@@ -38,7 +38,7 @@ $ yarn start
 
 ### Add E2E test cases
 
-Please refer to [E2E Documentation](../frontend/src/e2e/README.md).
+Please refer to [E2E Documentation](../web/src/e2e/README.md).
 
 ## manager-api
 

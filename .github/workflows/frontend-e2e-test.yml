@@ -10,7 +10,7 @@ on:
       - v2.0
 defaults:
   run:
-    working-directory: frontend
+    working-directory: web
 
 jobs:
   frontend-e2e:

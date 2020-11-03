@@ -55,7 +55,7 @@ WORKDIR /usr/local/apisix-dashboard
 
 COPY --from=pre-build /usr/local/apisix-dashboard .
 
-WORKDIR /usr/local/apisix-dashboard/frontend
+WORKDIR /usr/local/apisix-dashboard/web
 
 RUN if [ "$ENABLE_PROXY" = "true" ] ; then yarn config set registry https://registry.npm.taobao.org/ ; fi
 

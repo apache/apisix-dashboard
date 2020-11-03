@@ -66,7 +66,7 @@ This project is initialized with [Ant Design Pro](https://pro.ant.design). The f
 3. Install dependencies:
 
 ```sh
-$ cd /frontend
+$ cd /web
 
 $ yarn install
 ```

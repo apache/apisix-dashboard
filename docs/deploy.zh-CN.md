@@ -68,7 +68,7 @@ $ api/build.sh
 3. 安装依赖:
 
 ```sh
-$ cd /frontend
+$ cd /web
 
 $ yarn install
 ```
