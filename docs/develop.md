@@ -19,7 +19,7 @@
 
 # Dashboard Devlopment
 
-## Frontend
+## Web
 
 1. Make sure you have `Node.js(version version 10.0.0+)` installed on your machine.
 2. Install [yarn](https://yarnpkg.com/).

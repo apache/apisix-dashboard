@@ -57,7 +57,7 @@ $ api/build.sh
 
 The bundled files are located in the root directory `/output`.
 
-## Build the frontend
+## Build the web
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
 

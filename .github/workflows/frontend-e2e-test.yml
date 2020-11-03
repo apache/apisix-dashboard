@@ -13,7 +13,7 @@ defaults:
     working-directory: web
 
 jobs:
-  frontend-e2e:
+  web-e2e:
     name: Front-end e2e test
     runs-on: ubuntu-latest
     steps:
