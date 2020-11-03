@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"regexp"
 
+	"github.com/shiningrush/droplet/log"
 	"github.com/xeipuuv/gojsonschema"
 	"go.uber.org/zap/buffer"
 
@@ -89,14 +90,17 @@ func NewAPISIXJsonSchemaValidator(jsonPath string) (Validator, error) {
 }
 
 func getPlugins(reqBody interface{}) (map[string]interface{}, string) {
-	switch reqBody.(type) {
+	switch bodyType := reqBody.(type) {
 	case *entity.Route:
+		log.Infof("type of reqBody: %#v", bodyType)
 		route := reqBody.(*entity.Route)
 		return route.Plugins, "schema"
 	case *entity.Service:
+		log.Infof("type of reqBody: %#v", bodyType)
 		service := reqBody.(*entity.Service)
 		return service.Plugins, "schema"
 	case *entity.Consumer:
+		log.Infof("type of reqBody: %#v", bodyType)
 		consumer := reqBody.(*entity.Consumer)
 		return consumer.Plugins, "consumer_schema"
 	}
@@ -110,7 +114,7 @@ func cHashKeySchemaCheck(upstream *entity.UpstreamDef) error {
 	if upstream.HashOn != "vars" &&
 		upstream.HashOn != "header" &&
 		upstream.HashOn != "cookie" {
-		fmt.Errorf("invalid hash_on type: %s", upstream.HashOn)
+		return fmt.Errorf("invalid hash_on type: %s", upstream.HashOn)
 	}
 
 	var schemaDef string
@@ -188,9 +192,10 @@ func checkUpstream(upstream *entity.UpstreamDef) error {
 }
 
 func checkConf(reqBody interface{}) error {
-	switch reqBody.(type) {
+	switch bodyType := reqBody.(type) {
 	case *entity.Route:
 		route := reqBody.(*entity.Route)
+		log.Infof("type of reqBody: %#v", bodyType)
 		if err := checkUpstream(route.Upstream); err != nil {
 			return err
 		}
@@ -230,42 +235,39 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 		return err
 	}
 
-	//check plugin json schema
 	plugins, schemaType := getPlugins(obj)
 	//fix lua json.encode transform lua{properties={}} to json{"properties":[]}
 	reg := regexp.MustCompile(`\"properties\":\[\]`)
-	if plugins != nil {
-		for pluginName, pluginConf := range plugins {
-			var schemaDef string
-			schemaDef = conf.Schema.Get("plugins." + pluginName + "." + schemaType).String()
-			if (schemaDef == "" && schemaType == "consumer_schema") {
-				schemaDef = conf.Schema.Get("plugins." + pluginName + ".schema").String()
-			}
-			if schemaDef == "" {
-				return fmt.Errorf("scheme validate failed: schema not found, path: %s", "plugins."+pluginName)
-			}
+	for pluginName, pluginConf := range plugins {
+		var schemaDef string
+		schemaDef = conf.Schema.Get("plugins." + pluginName + "." + schemaType).String()
+		if schemaDef == "" && schemaType == "consumer_schema" {
+			schemaDef = conf.Schema.Get("plugins." + pluginName + ".schema").String()
+		}
+		if schemaDef == "" {
+			return fmt.Errorf("scheme validate failed: schema not found, path: %s", "plugins."+pluginName)
+		}
 
-			schemaDef = reg.ReplaceAllString(schemaDef, `"properties":{}`)
-			s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
-			if err != nil {
-				return fmt.Errorf("scheme validate failed: %w", err)
-			}
+		schemaDef = reg.ReplaceAllString(schemaDef, `"properties":{}`)
+		s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
+		if err != nil {
+			return fmt.Errorf("scheme validate failed: %w", err)
+		}
 
-			ret, err := s.Validate(gojsonschema.NewGoLoader(pluginConf))
-			if err != nil {
-				return fmt.Errorf("scheme validate failed: %w", err)
-			}
+		ret, err := s.Validate(gojsonschema.NewGoLoader(pluginConf))
+		if err != nil {
+			return fmt.Errorf("scheme validate failed: %w", err)
+		}
 
-			if !ret.Valid() {
-				errString := buffer.Buffer{}
-				for i, vErr := range ret.Errors() {
-					if i != 0 {
-						errString.AppendString("\n")
-					}
-					errString.AppendString(vErr.String())
+		if !ret.Valid() {
+			errString := buffer.Buffer{}
+			for i, vErr := range ret.Errors() {
+				if i != 0 {
+					errString.AppendString("\n")
 				}
-				return fmt.Errorf("scheme validate failed: %s", errString.String())
+				errString.AppendString(vErr.String())
 			}
+			return fmt.Errorf("scheme validate failed: %s", errString.String())
 		}
 	}
 

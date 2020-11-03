@@ -15,6 +15,16 @@
 # limitations under the License.
 #
 
+SHELL := /bin/bash -o pipefail
+UNAME ?= $(shell uname)
+
+### help:             Show Makefile rules
+.PHONY: help
+help:
+	@echo Makefile rules:
+	@echo
+	@grep -E '^### [-A-Za-z0-9_]+:' Makefile | sed 's/###/   /'
+
 export GO111MODULE=on
 
 ### license-check:    Check apisix-dashboard source codes for Apache License
@@ -26,16 +36,18 @@ ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
 endif
 	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./
 
+### golang-lint:             Lint Go source code
+.PHONY: golang-lint
+golang-lint: ## Run the golangci-lint application (install if not found)
+	@#Brew - MacOS
+	@if [ "$(shell command -v golangci-lint)" = "" ] && [ "$(shell command -v brew)" != "" ] && [ "$(UNAME)" = "Darwin" ]; then brew install golangci-lint; fi;
+	@#has sudo
+	@if [ "$(shell command -v golangci-lint)" = "" ]; then curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.32.0 && sudo cp ./bin/golangci-lint $(go env GOPATH)/bin/; fi;
+	@echo "running golangci-lint..."
+	@cd api && golangci-lint run --tests=false ./...
 
 ### api-test:         Run the tests of manager-api
 .PHONY: api-test
 api-test:
 	cd api/ && go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
 
-
-### help:             Show Makefile rules
-.PHONY: help
-help: default
-	@echo Makefile rules:
-	@echo
-	@grep -E '^### [-A-Za-z0-9_]+:' Makefile | sed 's/###/   /'

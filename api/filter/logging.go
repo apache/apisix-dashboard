@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/shiningrush/droplet/log"
 	"github.com/sirupsen/logrus"
 )
 
@@ -42,16 +43,17 @@ func RequestLogHandler() gin.HandlerFunc {
 
 		param, _ := c.Get("requestBody")
 
-		switch param.(type) {
+		switch paramType := param.(type) {
 		case []byte:
 			param = string(param.([]byte))
+			log.Infof("type of param: %#v", paramType)
 		default:
 		}
 
 		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
 		c.Writer = blw
 		c.Next()
-		latency := time.Now().Sub(start) / 1000000
+		latency := time.Since(start) / 1000000
 		statusCode := c.Writer.Status()
 		respBody := blw.body.String()
 		if uuid == "" {
