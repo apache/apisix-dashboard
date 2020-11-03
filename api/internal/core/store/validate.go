@@ -194,7 +194,7 @@ func checkConf(reqBody interface{}) error {
 	switch bodyType := reqBody.(type) {
 	case *entity.Route:
 		route := reqBody.(*entity.Route)
-		fmt.Printf("type of reqBody: %#v", bodyType)
+		log.Printf("type of reqBody: %#v", bodyType)
 		if err := checkUpstream(route.Upstream); err != nil {
 			return err
 		}
