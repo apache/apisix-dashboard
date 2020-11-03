@@ -19,7 +19,6 @@ package route
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/shiningrush/droplet/log"
 	"io/ioutil"
 	"net/http"
 	"os/exec"
@@ -29,6 +28,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
+	"github.com/shiningrush/droplet/log"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 

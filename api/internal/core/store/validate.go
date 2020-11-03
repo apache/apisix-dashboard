@@ -20,8 +20,8 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 
+	"github.com/shiningrush/droplet/log"
 	"github.com/xeipuuv/gojsonschema"
 	"go.uber.org/zap/buffer"
 
@@ -91,15 +91,15 @@ func NewAPISIXJsonSchemaValidator(jsonPath string) (Validator, error) {
 func getPlugins(reqBody interface{}) map[string]interface{} {
 	switch bodyType := reqBody.(type) {
 	case *entity.Route:
-		log.Printf("type of reqBody: %#v", bodyType)
+		log.Infof("type of reqBody: %#v", bodyType)
 		route := reqBody.(*entity.Route)
 		return route.Plugins
 	case *entity.Service:
-		log.Printf("type of reqBody: %#v", bodyType)
+		log.Infof("type of reqBody: %#v", bodyType)
 		service := reqBody.(*entity.Service)
 		return service.Plugins
 	case *entity.Consumer:
-		log.Printf("type of reqBody: %#v", bodyType)
+		log.Infof("type of reqBody: %#v", bodyType)
 		consumer := reqBody.(*entity.Consumer)
 		return consumer.Plugins
 	}
@@ -194,7 +194,7 @@ func checkConf(reqBody interface{}) error {
 	switch bodyType := reqBody.(type) {
 	case *entity.Route:
 		route := reqBody.(*entity.Route)
-		log.Printf("type of reqBody: %#v", bodyType)
+		log.Infof("type of reqBody: %#v", bodyType)
 		if err := checkUpstream(route.Upstream); err != nil {
 			return err
 		}

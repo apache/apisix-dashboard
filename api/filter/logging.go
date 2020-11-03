@@ -19,10 +19,10 @@ package filter
 import (
 	"bytes"
 	"io/ioutil"
-	"log"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/shiningrush/droplet/log"
 	"github.com/sirupsen/logrus"
 )
 
@@ -46,7 +46,7 @@ func RequestLogHandler() gin.HandlerFunc {
 		switch paramType := param.(type) {
 		case []byte:
 			param = string(param.([]byte))
-			log.Printf("type of param: %#v", paramType)
+			log.Infof("type of param: %#v", paramType)
 		default:
 		}
 
