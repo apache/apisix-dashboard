@@ -25,6 +25,8 @@ help:
 	@echo
 	@grep -E '^### [-A-Za-z0-9_]+:' Makefile | sed 's/###/   /'
 
+export GO111MODULE=on
+
 ### license-check:    Check apisix-dashboard source codes for Apache License
 .PHONY: license-check
 license-check:
@@ -43,3 +45,9 @@ golang-lint: ## Run the golangci-lint application (install if not found)
 	@if [ "$(shell command -v golangci-lint)" = "" ]; then curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.32.0 && sudo cp ./bin/golangci-lint $(go env GOPATH)/bin/; fi;
 	@echo "running golangci-lint..."
 	@cd api && golangci-lint run --tests=false ./...
+
+### api-test:         Run the tests of manager-api
+.PHONY: api-test
+api-test:
+	cd api/ && go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
+
