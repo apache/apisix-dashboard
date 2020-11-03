@@ -36,8 +36,8 @@ const (
 	EnvDEV   = "dev"
 	EnvLOCAL = "local"
 
-	confJsonPath = "/go/manager-api/conf.json"
-	schemaPath   = "/go/manager-api/schema.json"
+	confPath   = "/go/manager-api/conf.json"
+	schemaPath = "/go/manager-api/schema.json"
 )
 
 var (
@@ -103,7 +103,7 @@ func configurationPath() string {
 	} else if ENV == EnvLOCAL {
 		return filepath.Join(filepath.Dir(basePath), "conf.json")
 	} else {
-		return confJsonPath
+		return confPath
 	}
 }
 

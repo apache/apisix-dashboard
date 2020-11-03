@@ -16,6 +16,22 @@
 # limitations under the License.
 #
 
-export ENV=prod
+pwd=`pwd`
+
+# config
+cp ${pwd}/api/conf/conf_preview.json ${pwd}/conf.json
+
+# export APIX_DAG_LIB_PATH="${pwd}/dag-to-lua-1.1/lib/"
+# export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
+
+export SYSLOG_HOST=127.0.0.1
+
+if [[ "$unamestr" == 'Darwin' ]]; then
+	sed -i '' -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
+else
+	sed -i -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
+fi
+
+cp ${pwd}/conf.json ${pwd}/api/conf/conf.json
 
 exec ./manager-api
