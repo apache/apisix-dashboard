@@ -26,10 +26,20 @@
 $ docker build -t apisix-dashboard:{$tag} .
 ```
 
-2. Run container
+2. Prepare the configuration file
+
+Before starting the container, the configuration file `conf.json` needs to be prepared inside the **host** to override the default configuration file inside the container. Please refer to [example configuration file](./examples/docker-conf-example.json).
+
+Example configuration notes:
+
+- `conf.listen.host` To listen for IP within the container, it must be `0.0.0.0`, so the host can access the container's network.
+- `conf.listen.port` The default is `8080` for the container listening port. If you need to change it, please change the [Dockerfile](../Dockerfile) too.
+- `conf.etcd.endpoints` For the list of ETCD hosts, multiple nodes are connected with **English commas**. Make sure the container has access to these hosts. e.g. Example configuration `conf.etcd.endpoints` for `host.docker.internal` is intended to allow the container to access the network on the host.
+
+3. Run container
 
 ```sh
-$ docker run -d -p 80:8080 --name apisix-dashboard apisix-dashboard:{$tag}
+$ docker run -d -p 80:8080 -v /path/to/conf.json:/usr/local/apisix-dashboard/conf/conf.json --name apisix-dashboard apisix-dashboard:{$tag}
 ```
 
 ## Note

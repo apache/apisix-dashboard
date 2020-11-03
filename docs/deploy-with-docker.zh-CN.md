@@ -26,10 +26,20 @@
 $ docker build -t apisix-dashboard:{$tag} .
 ```
 
-2. 启动容器
+2. 准备配置文件
+
+在启动容器前，需要在**宿主主机**内准备配置文件 `conf.json`，以便覆盖容器内部默认的配置文件。请参考[示例配置文件](./examples/docker-conf-example.json)。
+
+示例配置说明：
+
+- `conf.listen.host` 为容器内监听 IP，必须为 `0.0.0.0`，这样宿主才能访问容器内网络。
+- `conf.listen.port` 为容器内监听端口，默认为 `8080`。如需修改，请同步修改 [Dockerfile](../Dockerfile)。
+- `conf.etcd.endpoints` 为 ETCD 主机列表，多个节点以**英文逗号**连接，请确保容器可以访问到这些主机，例如：示例配置中 `conf.etcd.endpoints` 为 `host.docker.internal` 旨在允许容器访问宿主主机上的网络。
+
+3. 启动容器
 
 ```sh
-$ docker run -d -p 80:8080 --name apisix-dashboard apisix-dashboard:{$tag}
+$ docker run -d -p 80:8080 -v /path/to/conf.json:/usr/local/apisix-dashboard/conf/conf.json --name apisix-dashboard apisix-dashboard:{$tag}
 ```
 
 ## 注意
