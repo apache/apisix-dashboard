@@ -1,4 +1,4 @@
-#!/bin/sh
+<!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -15,7 +15,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+-->
 
-export ENV=prod
+### 本地编写测试案例
 
-exec ./manager-api
+1. 安装依赖并运行本地开发环境
+
+```sh
+$ yarn install && yarn start
+```
+
+2. 在 `src/e2e` 文件夹增加新的测试案例文件
+3. 运行测试案例
+
+```sh
+$ yarn test
+```
+
+如果你想单独运行某一个测试文件，可以执行如下命令
+
+```sh
+$ yarn test ${yourFileName}.e2e.js
+```
+
+测试结果将会在控制台显示。
