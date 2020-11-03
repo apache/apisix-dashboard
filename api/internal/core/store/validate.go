@@ -237,7 +237,7 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 	if plugins != nil {
 		for pluginName, pluginConf := range plugins {
 			var schemaDef string
-			schemaDef = conf.Schema.Get("plugins." + pluginName + "." +schemaType).String()
+			schemaDef = conf.Schema.Get("plugins." + pluginName + "." + schemaType).String()
 			if (schemaDef == "" && schemaType == "consumer_schema") {
 				schemaDef = conf.Schema.Get("plugins." + pluginName + ".schema").String()
 			}

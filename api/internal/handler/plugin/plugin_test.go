@@ -39,20 +39,19 @@ func TestPlugin(t *testing.T) {
 	//schema
 	input := &GetInput{}
 	reqBody := `{
-	  "name": "limit-count"
-  }`
+		"name": "limit-count"
+  	}`
 	json.Unmarshal([]byte(reqBody), input)
 	ctx.SetInput(input)
 	val, _ := handler.Schema(ctx)
 	assert.NotNil(t, val)
 
 	//not exists
-	input2 := &GetInput{}
 	reqBody = `{
-	  "name": "not-exists"
-  }`
-	json.Unmarshal([]byte(reqBody), input2)
-	ctx.SetInput(input2)
+		"name": "not-exists"
+  	}`
+	json.Unmarshal([]byte(reqBody), input)
+	ctx.SetInput(input)
 	val, _ = handler.Schema(ctx)
 	assert.Nil(t, val)
 
@@ -61,13 +60,12 @@ func TestPlugin(t *testing.T) {
 	 plugin has consumer_schema
 	 return plugin`s consumer_schema
 	*/
-	input3 := &GetInput{}
 	reqBody = `{
-		"name": "jwt-auth",
+	 	"name": "jwt-auth",
 		"schema_type": "consumer"
-  }`
-	json.Unmarshal([]byte(reqBody), input3)
-	ctx.SetInput(input3)
+  	}`
+	json.Unmarshal([]byte(reqBody), input)
+	ctx.SetInput(input)
 	val, _ = handler.Schema(ctx)
 	assert.NotNil(t, val)
 
@@ -76,13 +74,12 @@ func TestPlugin(t *testing.T) {
 	 plugin does not have consumer_schema
 	 return plugin`s schema
 	*/
-	input4 := &GetInput{}
 	reqBody = `{
 		"name": "limit-count",
 		"schema_type": "consumer"
-  }`
-	json.Unmarshal([]byte(reqBody), input4)
-	ctx.SetInput(input4)
+    }`
+	json.Unmarshal([]byte(reqBody), input)
+	ctx.SetInput(input)
 	val, _ = handler.Schema(ctx)
 	assert.NotNil(t, val)
 
@@ -90,13 +87,12 @@ func TestPlugin(t *testing.T) {
 	 get plugin schema with wrong schema_type: type,
 	 return plugin`s schema
 	*/
-	input5 := &GetInput{}
 	reqBody = `{
 		"name": "jwt-auth",
 		"schema_type": "type"
-  }`
-	json.Unmarshal([]byte(reqBody), input5)
-	ctx.SetInput(input5)
+  	}`
+	json.Unmarshal([]byte(reqBody), input)
+	ctx.SetInput(input)
 	val, _ = handler.Schema(ctx)
 	assert.NotNil(t, val)
 }
