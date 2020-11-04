@@ -10,6 +10,17 @@
     "dag-lib-path": "",
     "etcd": {
       "endpoints": "127.0.0.1:2379"
+    },
+    "log": {
+      "error_log": {
+        "level": "info",
+        "file_path": "./logs/error.log"
+      },
+      "rotate": {
+        "interval": 20,
+        "max_size": 100,
+        "max_age": 2592000
+      }
     }
   },
   "authentication": {

@@ -48,6 +48,11 @@ var (
 	ServerHost    = "127.0.0.1"
 	ServerPort    = 80
 	ETCDEndpoints = "127.0.0.1:2379"
+	ErrorLogLevel = "warn"
+	ErrorLogPath  = "./logs/error.log"
+	LogRotateInterval int64 = 86400 //second
+	LogRotateMaxSize int64 = 100000000 //byte
+	LogRotateMaxAge  int64 = 2592000 //second
 )
 
 func init() {
@@ -68,6 +73,7 @@ func setConf() {
 		if serverPort != 0 {
 			ServerPort = serverPort
 		}
+
 		serverHost := configuration.Get("conf.listen.host").String()
 		if serverHost != "" {
 			ServerHost = serverHost
@@ -78,12 +84,38 @@ func setConf() {
 		if dagLibPath != "" {
 			DagLibPath = dagLibPath
 		}
+
 		//etcd
 		eTCDEndpoints := configuration.Get("conf.etcd.endpoints").String()
 		if eTCDEndpoints != "" {
 			ETCDEndpoints = eTCDEndpoints
 		}
 
+		//log
+		logLevel := configuration.Get("conf.log.error_log.level").String()
+		if logLevel != "" {
+			ErrorLogLevel = logLevel
+		}
+
+		errorLogPath := configuration.Get("conf.log.error_log.file_path").String()
+		if errorLogPath != "" {
+			ErrorLogPath = errorLogPath
+		}
+
+		rotateInterval := configuration.Get("conf.log.rotate.interval").Int()
+		if rotateInterval > 0 {
+			LogRotateInterval = rotateInterval
+		}
+
+		rotateMaxSize := configuration.Get("conf.log.rotate.max_size").Int()
+		if rotateMaxSize > 0 {
+			LogRotateMaxSize = rotateMaxSize
+		}
+
+		rotateMaxAge := configuration.Get("conf.log.rotate.max_age").Int()
+		if rotateMaxAge > 0 {
+			LogRotateMaxAge = rotateMaxAge
+		}
 	}
 }
 
