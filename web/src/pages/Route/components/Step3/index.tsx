@@ -29,15 +29,19 @@ type Props = {
   };
   onChange(data: { plugins: PluginPageType.FinalData; script: any }): void;
   readonly?: boolean;
+  isForceHttps: boolean
 };
 
 type Mode = 'NORMAL' | 'DRAW';
 
-const Page: React.FC<Props> = ({ data, onChange, readonly = false }) => {
+const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps }) => {
   const { plugins = {}, script = {} } = data;
 
   // NOTE: Currently only compatible with chrome
-  const type = Object.keys(script || {}).length === 0 || !isChrome ? 'NORMAL' : 'DRAW';
+  const disableDraw = !isChrome || isForceHttps;
+
+  const type = Object.keys(script || {}).length === 0 || disableDraw ? 'NORMAL' : 'DRAW';
+
   const [mode, setMode] = useState<Mode>(type);
 
   return (
@@ -51,31 +55,48 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false }) => {
           style={{ marginBottom: 10 }}
         >
           <Radio.Button value="NORMAL">普通模式</Radio.Button>
-          <Radio.Button value="DRAW" disabled={!isChrome}>
+          <Radio.Button value="DRAW" disabled={disableDraw}>
             插件编排
           </Radio.Button>
         </Radio.Group>
-        {Boolean(!isChrome) && (
+        {Boolean(disableDraw) && (
           <div style={{ marginLeft: '10px' }}>
-            <Tooltip placement="right" title="插件编排仅支持 Chorme 浏览器">
+            <Tooltip placement="right" title={() => {
+              // NOTE: forceHttps do not support DRAW mode
+              // TODO: i18n
+              const titleArr: string[] = [];
+              if (!isChrome) {
+                titleArr.push('插件编排仅支持 Chrome 浏览器。');
+              }
+              if (isForceHttps) {
+                titleArr.push('当步骤一中 重定向 选择为 启用 HTTPS 时，不可使用插件编排模式。');
+              }
+              return (
+                titleArr.map((item, index) => `${index + 1}.${item}`).join("")
+              )
+            }}>
               <QuestionCircleOutlined />
             </Tooltip>
           </div>
         )}
       </div>
-      {Boolean(mode === 'NORMAL') && (
-        <PluginPage
-          initialData={plugins}
-          onChange={(pluginsData) => onChange({ plugins: pluginsData, script: {} })}
-        />
-      )}
-      {Boolean(mode === 'DRAW') && (
-        <PluginOrchestration
-          data={script?.chart}
-          onChange={(scriptData) => onChange({ plugins: {}, script: scriptData })}
-          readonly={readonly}
-        />
-      )}
+      {
+        Boolean(mode === 'NORMAL') && (
+          <PluginPage
+            initialData={plugins}
+            onChange={(pluginsData) => onChange({ plugins: pluginsData, script: {} })}
+          />
+        )
+      }
+      {
+        Boolean(mode === 'DRAW') && (
+          <PluginOrchestration
+            data={script?.chart}
+            onChange={(scriptData) => onChange({ plugins: {}, script: scriptData })}
+            readonly={readonly}
+          />
+        )
+      }
     </>
   );
 };
