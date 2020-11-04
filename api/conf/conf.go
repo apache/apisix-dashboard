@@ -17,147 +17,128 @@
 package conf
 
 import (
+	"flag"
 	"fmt"
-	"io/ioutil"
-	"os"
-	"path/filepath"
-	"runtime"
-
 	"github.com/tidwall/gjson"
-
-	"github.com/apisix/manager-api/internal/utils"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"log"
+	"os"
 )
 
 const (
-	WebDir = "./output/html"
-
 	EnvPROD  = "prod"
 	EnvBETA  = "beta"
 	EnvDEV   = "dev"
 	EnvLOCAL = "local"
 
-	confJsonPath = "/go/manager-api/conf.json"
-	schemaPath   = "/go/manager-api/schema.json"
+	WebDir  = "./html/"
 )
 
 var (
 	ENV           string
-	basePath      string
 	Schema        gjson.Result
-	DagLibPath    = "/go/manager-api/dag-to-lua/"
+	confDir       = "./conf/"
+	DagLibPath    = "./dag-to-lua/"
 	ServerHost    = "127.0.0.1"
 	ServerPort    = 80
-	ETCDEndpoints = "127.0.0.1:2379"
+	ETCDEndpoints = []string{"127.0.0.1:2379"}
+	UserList      = make(map[string]User, 2)
+	AuthConf   Authentication
 )
 
+type Etcd struct {
+	Endpoints []string
+}
+
+type Listen struct {
+	Host string
+	Port int
+}
+
+type Conf struct {
+	DagLib string `yaml:"dag_lib_path"`
+	Etcd   Etcd
+	Listen Listen
+}
+
+type User struct {
+	Username string
+	Password string
+}
+
+type Authentication struct {
+	Secret     string
+	ExpireTime int
+	Users   []User
+}
+
+type Config struct {
+	Conf           Conf
+	Authentication Authentication
+}
+
 func init() {
+	flag.StringVar(&confDir, "c", "./conf/", "conf dir")
+	flag.Parse()
+
 	setEnvironment()
-	initAuthentication()
 	initSchema()
 	setConf()
 }
 
 func setConf() {
-	filePath := configurationPath()
+	filePath := confDir + "conf.yaml"
 	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
 	} else {
-		configuration := gjson.ParseBytes(configurationContent)
-		//listen
-		serverPort := int(configuration.Get("conf.listen.port").Int())
-		if serverPort != 0 {
-			ServerPort = serverPort
+		//configuration := gjson.ParseBytes(configurationContent)
+		config := Config{}
+		err := yaml.Unmarshal(configurationContent, &config)
+		if err != nil {
+			log.Printf("conf: %s, error: %v", configurationContent, err)
 		}
-		serverHost := configuration.Get("conf.listen.host").String()
-		if serverHost != "" {
-			ServerHost = serverHost
+		//listen
+		if config.Conf.Listen.Port != 0 {
+			ServerPort = config.Conf.Listen.Port
+		}
+		if config.Conf.Listen.Host != "" {
+			ServerHost = config.Conf.Listen.Host
 		}
 
 		//dag lib path
-		dagLibPath := configuration.Get("conf.dag-lib-path").String()
-		if dagLibPath != "" {
-			DagLibPath = dagLibPath
+		if config.Conf.DagLib != "" {
+			DagLibPath = config.Conf.DagLib
 		}
 		//etcd
-		eTCDEndpoints := configuration.Get("conf.etcd.endpoints").String()
-		if eTCDEndpoints != "" {
-			ETCDEndpoints = eTCDEndpoints
+		if len(config.Conf.Etcd.Endpoints) > 0 {
+			ETCDEndpoints = config.Conf.Etcd.Endpoints
 		}
 
+		//auth
+		initAuthentication(config.Authentication)
 	}
 }
 
 func setEnvironment() {
-	if env := os.Getenv("ENV"); env == "" {
-		ENV = EnvLOCAL
-	} else {
+	ENV = EnvPROD
+	if env := os.Getenv("ENV"); env != "" {
 		ENV = env
 	}
-
-	_, basePath, _, _ = runtime.Caller(1)
 }
 
-func configurationPath() string {
-	if confPath := os.Getenv("APISIX_CONF_PATH"); confPath != "" {
-		return filepath.Join(confPath, "/conf.json")
-	} else if ENV == EnvLOCAL {
-		return filepath.Join(filepath.Dir(basePath), "conf.json")
-	} else {
-		return confJsonPath
-	}
-}
 
-func getSchemaPath() string {
-	if confPath := os.Getenv("APISIX_CONF_PATH"); confPath != "" {
-		return filepath.Join(confPath, "/schema.json")
-	} else if ENV == EnvLOCAL {
-		return filepath.Join(filepath.Dir(basePath), "schema.json")
-	} else {
-		return schemaPath
-	}
-}
-
-type user struct {
-	Username string
-	Password string
-}
-
-type authenticationConfig struct {
-	Session struct {
-		Secret     string
-		ExpireTime uint64
-	}
-}
-
-var UserList = make(map[string]user, 1)
-
-var AuthenticationConfig authenticationConfig
-
-func initAuthentication() {
-	filePath := configurationPath()
-	configurationContent, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
-	}
-
-	configuration := gjson.ParseBytes(configurationContent)
-	userList := configuration.Get("authentication.user").Array()
+func initAuthentication(conf Authentication) {
+	AuthConf = conf
+	userList := conf.Users
 	// create user list
 	for _, item := range userList {
-		username := item.Map()["username"].String()
-		password := item.Map()["password"].String()
-		UserList[item.Map()["username"].String()] = user{Username: username, Password: password}
+		UserList[item.Username] = item
 	}
-	AuthenticationConfig.Session.Secret = configuration.Get("authentication.session.secret").String()
-	if "secret" == AuthenticationConfig.Session.Secret {
-		AuthenticationConfig.Session.Secret = utils.GetFlakeUidStr()
-	}
-
-	AuthenticationConfig.Session.ExpireTime = configuration.Get("authentication.session.expireTime").Uint()
 }
 
 func initSchema() {
-	filePath := getSchemaPath()
+	filePath := confDir + "schema.json"
 	if schemaContent, err := ioutil.ReadFile(filePath); err != nil {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
 	} else {

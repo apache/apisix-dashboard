@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 
 	dlog "github.com/shiningrush/droplet/log"
@@ -37,7 +36,7 @@ var logger = alog.GetLogger()
 
 func main() {
 	dlog.DefLogger = alog.DefLogger{}
-	if err := storage.InitETCDClient(strings.Split(conf.ETCDEndpoints, ",")); err != nil {
+	if err := storage.InitETCDClient(conf.ETCDEndpoints); err != nil {
 		panic(err)
 	}
 	if err := store.InitStores(); err != nil {
