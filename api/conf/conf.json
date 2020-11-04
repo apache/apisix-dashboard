@@ -13,8 +13,8 @@
     },
     "log": {
       "error_log": {
-        "level": "warn",
-        "file_path": "./logs/error.log"
+        "level": "info",
+        "file_path": ""
       },
       "rotate": {
         "interval": 86400,

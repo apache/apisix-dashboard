@@ -49,7 +49,7 @@ var (
 	ServerPort              = 80
 	ETCDEndpoints           = "127.0.0.1:2379"
 	ErrorLogLevel           = "warn"
-	ErrorLogPath            = "./logs/error.log"
+	ErrorLogPath            = ""
 	LogRotateInterval int64 = 86400     //second
 	LogRotateMaxSize  int64 = 100000000 //byte
 	LogRotateMaxAge   int64 = 2592000   //second

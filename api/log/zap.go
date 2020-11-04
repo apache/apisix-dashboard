@@ -17,6 +17,8 @@
 package log
 
 import (
+	"os"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
@@ -57,6 +59,11 @@ func getEncoder() zapcore.Encoder {
 }
 
 func fileWriter() zapcore.WriteSyncer {
+	//if not config file path
+	if conf.ErrorLogPath == "" {
+		return zapcore.Lock(os.Stdout)
+	}
+
 	writer, _, err := zap.Open(conf.ErrorLogPath)
 	if err != nil {
 		panic(err)
