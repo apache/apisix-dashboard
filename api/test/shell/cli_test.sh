@@ -29,7 +29,7 @@ clean_up() {
 
 trap clean_up EXIT
 
-sed -i 's/"file_path": ""/"file_path": "./error.log"/' conf/conf.json
+sed -i 's/"file_path": ""/"file_path": ".\/error.log"/' conf/conf.json
 sed -i 's/warn/info/' conf/conf.json
 
 go run main.go &
