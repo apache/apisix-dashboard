@@ -21,7 +21,7 @@ func init() {
 	logger = zapLogger.Sugar()
 }
 
-func getLogLevel() zapcore.LevelEnabler{
+func getLogLevel() zapcore.LevelEnabler {
 	level := zapcore.WarnLevel
 	switch conf.ErrorLogLevel {
 	case "debug":
@@ -47,16 +47,15 @@ func rotateWriter() zapcore.WriteSyncer {
 	interval := time.Duration(conf.LogRotateInterval)
 
 	logf, _ := rotatelogs.New(
-		conf.ErrorLogPath + ".%Y%m%d%H%M%S",
-		rotatelogs.WithMaxAge(maxAge * time.Second),
-		rotatelogs.WithRotationTime(interval * time.Second),
+		conf.ErrorLogPath+".%Y%m%d%H%M%S",
+		rotatelogs.WithMaxAge(maxAge*time.Second),
+		rotatelogs.WithRotationTime(interval*time.Second),
 		//rotatelogs.WithRotationCount(7),
 		rotatelogs.WithRotationSize(maxSize),
 	)
 
 	return zapcore.AddSync(logf)
 }
-
 
 func getZapFields(logger *zap.SugaredLogger, fields []interface{}) *zap.SugaredLogger {
 	if len(fields) == 0 {
