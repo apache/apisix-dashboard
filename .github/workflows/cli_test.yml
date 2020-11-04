@@ -27,4 +27,5 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: run test
-        run: sudo ./api/test/shell/cli_test.sh
+        working-directory: ./api
+        run: sudo ./test/shell/cli_test.sh
