@@ -28,7 +28,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
-	"github.com/shiningrush/droplet/log"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -38,6 +37,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
+	"github.com/apisix/manager-api/log"
 )
 
 type Handler struct {
@@ -328,7 +328,7 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	//delete stored script
 	if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
 		//try again
-		log.Warnf("try to delete script %s again", input.IDs)
+		log.Warn("try to delete script %s again", input.IDs)
 		if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
 			return nil, nil
 		}

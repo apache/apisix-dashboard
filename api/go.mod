@@ -17,6 +17,7 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/google/uuid v1.1.2 // indirect
+	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/satori/go.uuid v1.2.0
 	github.com/shiningrush/droplet v0.2.1
 	github.com/shiningrush/droplet/wrapper/gin v0.2.0
