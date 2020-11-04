@@ -32,7 +32,7 @@ const (
 	EnvDEV   = "dev"
 	EnvLOCAL = "local"
 
-	WebDir  = "./html/"
+	WebDir = "./html/"
 )
 
 var (
@@ -44,7 +44,7 @@ var (
 	ServerPort    = 80
 	ETCDEndpoints = []string{"127.0.0.1:2379"}
 	UserList      = make(map[string]User, 2)
-	AuthConf   Authentication
+	AuthConf      Authentication
 )
 
 type Etcd struct {
@@ -70,7 +70,7 @@ type User struct {
 type Authentication struct {
 	Secret     string
 	ExpireTime int
-	Users   []User
+	Users      []User
 }
 
 type Config struct {
@@ -126,7 +126,6 @@ func setEnvironment() {
 		ENV = env
 	}
 }
-
 
 func initAuthentication(conf Authentication) {
 	AuthConf = conf
