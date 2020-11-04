@@ -36,8 +36,6 @@ go run main.go &
 
 sleep 3
 
-ps -aux | grep "main.go" | awk {'print $2'} | xargs kill -9
-
 if [ ! -f "./error.log" ]; then
     echo "failed: failed to write log"
     exit 1
