@@ -1,9 +1,10 @@
-name: Test API
+name: Test CLI
 
 on:
   push:
     branches:
       - master
+      - v2.0
   pull_request:
     branches:
       - master
@@ -26,4 +27,4 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: run test
-        run: sudo ./test/shell/cli_test.sh
+        run: sudo ./api/test/shell/cli_test.sh
