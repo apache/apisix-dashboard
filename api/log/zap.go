@@ -1,17 +1,32 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package log
 
 import (
-	"github.com/apisix/manager-api/conf"
-	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"time"
+
+	"github.com/apisix/manager-api/conf"
 )
 
 var logger *zap.SugaredLogger
 
 func init() {
-	writeSyncer := rotateWriter()
+	writeSyncer := fileWriter()
 	encoder := getEncoder()
 	logLevel := getLogLevel()
 	core := zapcore.NewCore(encoder, writeSyncer, logLevel)
@@ -41,20 +56,12 @@ func getEncoder() zapcore.Encoder {
 	return zapcore.NewConsoleEncoder(encoderConfig)
 }
 
-func rotateWriter() zapcore.WriteSyncer {
-	maxAge := time.Duration(conf.LogRotateMaxAge)
-	maxSize := conf.LogRotateMaxSize
-	interval := time.Duration(conf.LogRotateInterval)
-
-	logf, _ := rotatelogs.New(
-		conf.ErrorLogPath+".%Y%m%d%H%M%S",
-		rotatelogs.WithMaxAge(maxAge*time.Second),
-		rotatelogs.WithRotationTime(interval*time.Second),
-		//rotatelogs.WithRotationCount(7),
-		rotatelogs.WithRotationSize(maxSize),
-	)
-
-	return zapcore.AddSync(logf)
+func fileWriter() zapcore.WriteSyncer {
+	writer, _, err := zap.Open(conf.ErrorLogPath)
+	if err != nil {
+		panic(err)
+	}
+	return writer
 }
 
 func getZapFields(logger *zap.SugaredLogger, fields []interface{}) *zap.SugaredLogger {
