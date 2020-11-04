@@ -52,7 +52,7 @@ func main() {
 	log.Infof("The Manager API is listening on %s ", addr)
 
 	if err := s.ListenAndServe(); err != nil {
-		log.Error("listen and serv fail: %w", err)
+		log.Errorf("listen and serv fail: %w", err)
 	}
 
 	utils.CloseAll()

@@ -13,7 +13,7 @@
     },
     "log": {
       "error_log": {
-        "level": "info",
+        "level": "warn",
         "file_path": ""
       },
       "rotate": {
