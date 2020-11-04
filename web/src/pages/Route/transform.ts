@@ -63,7 +63,10 @@ export const transformStepData = ({
     }
 
     if (redirect.http_to_https) {
-      // TODO: if we set http_to_https to true, Temporarily disabled Plugin orchestration and show user tips.
+      if (Object(data.plugins).length === 0) {
+        data.plugins = {};
+      }
+      data.plugins!.redirect = redirect;
     }
 
     // Remove some of the front-end custom variables
