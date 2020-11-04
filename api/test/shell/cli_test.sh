@@ -32,16 +32,19 @@ trap clean_up EXIT
 sed -i 's/"file_path": ""/"file_path": ".\/error.log"/' conf/conf.json
 sed -i 's/warn/info/' conf/conf.json
 
-go run main.go &
+export GO111MODULE=on
+go build -o ./manager-api .
+
+./manager-api &
 
 sleep 3
 
-if [ ! -f "./error.log" ]; then
+if [[ ! -f "./error.log" ]]; then
     echo "failed: failed to write log"
     exit 1
 fi
 
-if [ ! cat "./error.log" | grep INFO ]; then
+if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     echo "failed: failed to write log on right level"
     exit 1
 fi
