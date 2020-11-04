@@ -32,6 +32,6 @@ fi
 cd ./api && go build -o ../output/manager-api . && cd ..
 
 cp ./api/conf/schema.json ./output/conf/schema.json
-cp ./api/conf/conf.json ./output/conf/conf.json
+cp ./api/conf/conf.yaml ./output/conf/conf.yaml
 
 echo "Build the Manager API successfully"
