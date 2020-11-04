@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { omit, pick } from 'lodash';
+import { omit, pick, cloneDeep } from 'lodash';
 
 export const transformStepData = ({
   form1Data,
@@ -23,8 +23,9 @@ export const transformStepData = ({
   step3Data,
 }: RouteModule.RequestData) => {
   let redirect: RouteModule.Redirect = {};
+  const step3DataCloned = cloneDeep(step3Data);
   if (form1Data.redirectOption === 'disabled') {
-    redirect = {};
+    step3DataCloned.plugins = omit(step3Data.plugins, ['redirect']);
   } else if (form1Data.redirectOption === 'forceHttps') {
     redirect = { http_to_https: true };
   } else if (form1Data.redirectURI !== '') {
@@ -36,7 +37,7 @@ export const transformStepData = ({
 
   const data: Partial<RouteModule.Body> = {
     ...form1Data,
-    ...step3Data,
+    ...step3DataCloned,
     vars: advancedMatchingRules.map((rule) => {
       const { operator, position, name, value } = rule;
       let key = '';
@@ -54,15 +55,18 @@ export const transformStepData = ({
     }),
   };
 
-  // 未启用 redirect
-  if (!redirect.uri) {
+  if (Object.keys(redirect).length === 0 || redirect.http_to_https) {
     if (form2Data.upstream_id) {
       data.upstream_id = form2Data.upstream_id;
     } else {
       data.upstream = form2Data;
     }
 
-    // 移除前端部分自定义变量
+    if (redirect.http_to_https) {
+      // TODO: if we set http_to_https to true, Temporarily disabled Plugin orchestration and show user tips.
+    }
+
+    // Remove some of the front-end custom variables
     return omit(data, [
       'advancedMatchingRules',
       'upstreamHostList',
@@ -71,8 +75,8 @@ export const transformStepData = ({
       'redirectURI',
       'ret_code',
       'redirectOption',
-      !Object.keys(step3Data.plugins || {}).length ? 'plugins' : '',
-      !Object.keys(step3Data.script || {}).length ? 'script' : '',
+      !Object.keys(step3DataCloned.plugins || {}).length ? 'plugins' : '',
+      !Object.keys(step3DataCloned.script || {}).length ? 'script' : '',
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
     ]);
@@ -133,17 +137,15 @@ export const transformRouteData = (data: RouteModule.Body) => {
     methods,
   };
 
-  if (data.plugins) {
-    const { redirect } = data.plugins;
-    if (redirect?.http_to_https) {
-      form1Data.redirectOption = 'forceHttps';
-    } else if (redirect?.uri) {
-      form1Data.redirectOption = 'customRedirect';
-      form1Data.ret_code = redirect?.ret_code;
-      form1Data.redirectURI = redirect?.uri;
-    } else {
-      form1Data.redirectOption = 'disabled';
-    }
+  const redirect = data.plugins?.redirect || {};
+  if (redirect?.http_to_https) {
+    form1Data.redirectOption = 'forceHttps';
+  } else if (redirect?.uri) {
+    form1Data.redirectOption = 'customRedirect';
+    form1Data.ret_code = redirect?.ret_code;
+    form1Data.redirectURI = redirect?.uri;
+  } else {
+    form1Data.redirectOption = 'disabled';
   }
 
   const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);

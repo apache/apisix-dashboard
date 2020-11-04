@@ -100,12 +100,14 @@ const Page: React.FC<Props> = (props) => {
           form={form1}
           advancedMatchingRules={advancedMatchingRules}
           onChange={({ action, data }) => {
-            if (action === 'redirectOptionChange' && data === 'customRedirect') {
-              setStepHeader(STEP_HEADER_2);
-              setRedirect(true);
-            } else {
-              setStepHeader(STEP_HEADER_4);
-              setRedirect(false);
+            if (action === 'redirectOptionChange') {
+              if (data === 'customRedirect') {
+                setStepHeader(STEP_HEADER_2);
+                setRedirect(true);
+              } else {
+                setStepHeader(STEP_HEADER_4);
+                setRedirect(false);
+              }
             }
             if (action === 'advancedMatchingRulesChange') {
               setAdvancedMatchingRules(data);
