@@ -17,34 +17,45 @@
 
 FROM golang:1.13.8 AS build-env
 
-RUN mkdir -p /usr/local/apisix-dashboard/api
-
-WORKDIR /usr/local/apisix-dashboard/api
-
+WORKDIR /go/src/github.com/apisix/manager-api
 COPY . .
-
-RUN mkdir -p ../output/conf \
-    && cp ./conf/* ../output/conf
-
-RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -O /tmp/v1.1.tar.gz \
-    && mkdir /tmp/dag-to-lua \
-    && tar -xvf /tmp/v1.1.tar.gz -C /tmp/dag-to-lua --strip 1 \
-    && mkdir -p ../output/dag-to-lua \
-    && mv /tmp/dag-to-lua/lib/* ../output/dag-to-lua/
-
-RUN go env -w GO111MODULE=on \
+RUN mkdir -p /go/manager-api/conf \
+    && mkdir -p /go/manager-api/build-tools \
     && go env -w GOPROXY=https://goproxy.io,direct \
-    && CGO_ENABLED=0 go build -o ../output/manager-api .
+    && export GOPROXY=https://goproxy.io \
+    && go build -o /go/manager-api/manager-api \
+    && mv /go/src/github.com/apisix/manager-api/entry.sh /go/manager-api/ \
+    && mv /go/src/github.com/apisix/manager-api/build-tools/* /go/manager-api/build-tools/ \
+    && mv /go/src/github.com/apisix/manager-api/conf/conf.yaml /go/manager-api/conf/conf.yaml \
+    && mv /go/src/github.com/apisix/manager-api/conf/schema.json /go/manager-api/conf/schema.json \
+    && rm -rf /go/src/github.com/apisix/manager-api \
+    && rm -rf /etc/localtime \
+    && ln -s  /usr/share/zoneinfo/Hongkong /etc/localtime \
+    && dpkg-reconfigure -f noninteractive tzdata
 
+RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz \
+    && tar -zxvf v1.1.tar.gz \
+    && mkdir -p /go/manager-api/dag-to-lua \
+    && mv -u ./dag-to-lua-1.1/lib/* /go/manager-api/dag-to-lua/
 
-FROM alpine:latest as prod
+FROM alpine:3.11
+
+RUN mkdir -p /go/manager-api \
+   && apk update  \
+   && apk add ca-certificates \
+   && update-ca-certificates \
+   && apk add --no-cache libc6-compat \
+   && echo "hosts: files dns" > /etc/nsswitch.conf \
+   && rm -rf /var/cache/apk/*
 
 RUN apk add lua5.1
 
-WORKDIR /usr/local/apisix-dashboard
-
-COPY --from=build-env /usr/local/apisix-dashboard/output/ ./
+WORKDIR /go/manager-api
+COPY --from=build-env /go/manager-api/ /go/manager-api/
+COPY --from=build-env /usr/share/zoneinfo/Hongkong /etc/localtime
 
 EXPOSE 8080
 
-CMD [ "/usr/local/apisix-dashboard/manager-api" ]
+RUN chmod +x ./entry.sh
+
+CMD ["/bin/ash", "-c", "/go/manager-api/entry.sh"]
