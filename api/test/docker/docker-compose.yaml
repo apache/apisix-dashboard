@@ -162,7 +162,7 @@ services:
       dockerfile: Dockerfile    
     restart: always
     volumes:
-      - ./manager-api-conf.json:/go/manager-api/conf.json:ro
+      - ./manager-api-conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml:ro
     depends_on:
       - node1
       - node2
