@@ -19,11 +19,14 @@ package conf
 import (
 	"flag"
 	"fmt"
-	"github.com/tidwall/gjson"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"os"
+
+	"github.com/tidwall/gjson"
+	"gopkg.in/yaml.v2"
+
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 const (
@@ -67,7 +70,7 @@ type User struct {
 
 type Authentication struct {
 	Secret     string
-	ExpireTime int
+	ExpireTime int `yaml:"expire_time"`
 	Users      []User
 }
 
