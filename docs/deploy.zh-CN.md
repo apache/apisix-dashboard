@@ -83,42 +83,27 @@ $ yarn build
 
 ## 启动
 
-1. 根据您的部署环境，检查并修改 `api/conf/conf.json` 中的配置。
+1. 根据您的部署环境，检查并修改 `api/conf/conf.yaml` 中的配置。
 
 例如：
 
-```json
-{
-  "conf": {
-    "syslog": {
-      "host": "127.0.0.1"
-    },
-    "listen": {
-      "host": "127.0.0.1",
-      "port": 8080
-    },
-    "dag-lib-path": "/home/demo_user/workspace/apisix-dashboard/dag-to-lua-1.1/",
-    "etcd": {
-      "endpoints": "127.0.0.1:2379"
-    }
-  },
-  "authentication": {
-    "session": {
-      "secret": "secret",
-      "expireTime": 3600
-    },
-    "user": [
-      {
-        "username": "admin",
-        "password": "admin"
-      },
-      {
-        "username": "user",
-        "password": "user"
-      }
-    ]
-  }
-}
+```yaml
+conf:
+  listen:
+    host: 127.0.0.1
+    port: 8080
+  dag_lib_path: ''
+  etcd:
+    endpoints:
+      - 127.0.0.1:2379
+authentication:
+  secret: secret
+  expireTime: 3600
+  users:
+    - username: admin
+      password: admin
+    - username: user
+      password: user
 ```
 
 2. 启动 manager-api
