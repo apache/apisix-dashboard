@@ -38,10 +38,10 @@ import (
 )
 
 func SetUpRouter() *gin.Engine {
-	if conf.ENV == conf.EnvLOCAL && conf.ENV == conf.EnvDEV {
-		gin.SetMode(gin.ReleaseMode)
-	} else {
+	if conf.ENV == conf.EnvLOCAL || conf.ENV == conf.EnvDEV {
 		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
 	store := cookie.NewStore([]byte("secret"))
