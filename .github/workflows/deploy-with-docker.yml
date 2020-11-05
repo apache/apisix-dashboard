@@ -1,0 +1,40 @@
+name: Deploy with Docker
+
+on:
+  push:
+    branches:
+      - master
+      - v2.0
+  pull_request:
+    branches:
+      - master
+      # NOTE: Just to trigger CD in this PR, will be removed before being merged
+      - v2.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      etcd:
+        image: bitnami/etcd:3.3.13-r80
+        ports:
+          - 2379:2379
+          - 2380:2380
+        env:
+          ALLOW_NONE_AUTHENTICATION: yes
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: Azure/docker-login@v1
+        with:
+          login-server: apisixacr.azurecr.cn
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build then Deploy
+        run: |
+          docker build -t apisixacr.azurecr.cn/dashboard:${{ github.sha }} .
+          docker push apisixacr.azurecr.cn/dashboard:${{ github.sha }}
+          docker run -d -p 80:8080 -v ${pwd}/docs/examples/docker-conf-example.json:/usr/local/apisix-dashboard/conf/conf.json apisixacr.azurecr.cn/dashboard:${{ github.sha }}
