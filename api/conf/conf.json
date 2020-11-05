@@ -14,7 +14,7 @@
     "log": {
       "error_log": {
         "level": "warn",
-        "file_path": "logs/error.log"
+        "file_path": "/dev/stdout"
       }
     }
   },
