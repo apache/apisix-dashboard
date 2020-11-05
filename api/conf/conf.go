@@ -24,6 +24,9 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
+	"strings"
 )
 
 const (
@@ -79,12 +82,19 @@ type Config struct {
 }
 
 func init() {
-	flag.StringVar(&confDir, "c", "./conf/", "conf dir")
-	flag.Parse()
+	//go test
+	if strings.HasSuffix(os.Args[0], ".test") {
+		_, basePath, _, _ := runtime.Caller(0)
+		confDir = filepath.Dir(basePath) + "/"
+		fmt.Println("confDir:", confDir)
+	} else {
+		flag.StringVar(&confDir, "c", "./conf/", "conf dir")
+		flag.Parse()
+	}
 
+	setConf()
 	setEnvironment()
 	initSchema()
-	setConf()
 }
 
 func setConf() {
