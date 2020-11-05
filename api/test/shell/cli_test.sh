@@ -29,15 +29,31 @@ clean_up() {
 
 trap clean_up EXIT
 
-sed -i 's/"file_path": ""/"file_path": ".\/error.log"/' conf/conf.json
-sed -i 's/warn/info/' conf/conf.json
-
 export GO111MODULE=on
 go build -o ./manager-api .
 
+#default level: warn, path: logs/error.log
 ./manager-api &
-
 sleep 3
+pkill -f manager-api
+
+if [[ ! -f "./logs/error.log" ]]; then
+    echo "failed: failed to write log"
+    exit 1
+fi
+
+if [[ `grep -c "INFO" ./error.log` -neq '0' ]]; then
+    echo "failed: should not write info log when level is warn"
+    exit 1
+fi
+
+#change level and path
+sed -i 's/"file_path": ""/"file_path": ".\/error.log"/' conf/conf.json
+sed -i 's/warn/info/' conf/conf.json
+
+./manager-api &
+sleep 3
+pkill -f manager-api
 
 if [[ ! -f "./error.log" ]]; then
     echo "failed: failed to write log"
@@ -48,5 +64,3 @@ if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     echo "failed: failed to write log on right level"
     exit 1
 fi
-
-
