@@ -132,6 +132,10 @@ func setEnvironment() {
 
 func initAuthentication(conf Authentication) {
 	AuthConf = conf
+	if AuthConf.Secret == "secret" {
+		AuthConf.Secret = utils.GetFlakeUidStr()
+	}
+
 	userList := conf.Users
 	// create user list
 	for _, item := range userList {
