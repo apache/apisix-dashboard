@@ -39,7 +39,7 @@ if [[ ! -f "./logs/error.log" ]]; then
     exit 1
 fi
 
-if [[ `grep -c "INFO" ./error.log` -ne '0' ]]; then
+if [[ `grep -c "INFO" ./logs/error.log` -ne '0' ]]; then
     echo "failed: should not write info log when level is warn"
     exit 1
 fi
