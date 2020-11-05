@@ -14,10 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# PLEASE DO NOT UPDATE THIS FILE!
-# If you want to set the specified configuration value, you can set the new
-# value in the conf/config.yaml file.
-#
 
 conf:
   listen:
