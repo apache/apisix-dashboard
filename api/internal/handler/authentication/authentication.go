@@ -66,10 +66,10 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 	claims := jwt.StandardClaims{
 		Subject:   username,
 		IssuedAt:  time.Now().Unix(),
-		ExpiresAt: time.Now().Add(time.Second * time.Duration(conf.AuthenticationConfig.Session.ExpireTime)).Unix(),
+		ExpiresAt: time.Now().Add(time.Second * time.Duration(conf.AuthConf.ExpireTime)).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, _ := token.SignedString([]byte(conf.AuthenticationConfig.Session.Secret))
+	signedToken, _ := token.SignedString([]byte(conf.AuthConf.Secret))
 
 	// output token
 	return &UserSession{

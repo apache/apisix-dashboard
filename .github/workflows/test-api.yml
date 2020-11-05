@@ -28,18 +28,19 @@ jobs:
       - name: get lua lib
         run: |
           wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
-          sudo mkdir -p /go/manager-api/dag-to-lua/
+          sudo mkdir -p ./api/dag-to-lua
           tar -zxvf v1.1.tar.gz
-          sudo mv ./dag-to-lua-1.1/lib/* /go/manager-api/dag-to-lua/
+          sudo mv ./dag-to-lua-1.1/lib/* ./api/dag-to-lua/
 
-      - name: install runtime
-        run: |
-          sudo apt-get update
-          sudo apt-get install lua5.1
-          sudo add-apt-repository ppa:longsleep/golang-backports
-          sudo apt update
-          export GO111MOUDULE=on
-          sudo apt install golang-1.14-go
+      - name: setup go
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.13'
+
+      - name: setup lua
+        uses: leafo/gh-actions-lua@v7
+        with:
+          luaVersion: "5.1.5"
 
       - name: run test
         run: |
@@ -55,12 +56,12 @@ jobs:
         run: |
           export GO111MOUDULE=on
           export APISIX_CONF_PATH=$PWD/conf
-          sed -i 's/8080/8088/' conf/conf.json
+          sed -i 's/8080/8088/' conf/conf.yaml
           go build -o ./manager-api
           ./manager-api > ./api.log 2>&1 &
           sleep 2
           cat ./api.log
-          cat conf/conf.json
+          cat conf/conf.yaml
 
       - name: run with custom port
         working-directory: ./api

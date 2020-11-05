@@ -19,15 +19,15 @@ FROM golang:1.13.8 AS build-env
 
 WORKDIR /go/src/github.com/apisix/manager-api
 COPY . .
-RUN mkdir -p /go/manager-api \
+RUN mkdir -p /go/manager-api/conf \
     && mkdir -p /go/manager-api/build-tools \
     && go env -w GOPROXY=https://goproxy.io,direct \
     && export GOPROXY=https://goproxy.io \
     && go build -o /go/manager-api/manager-api \
     && mv /go/src/github.com/apisix/manager-api/entry.sh /go/manager-api/ \
     && mv /go/src/github.com/apisix/manager-api/build-tools/* /go/manager-api/build-tools/ \
-    && mv /go/src/github.com/apisix/manager-api/conf/conf_preview.json /go/manager-api/conf.json \
-    && mv /go/src/github.com/apisix/manager-api/conf/schema.json /go/manager-api/schema.json \
+    && mv /go/src/github.com/apisix/manager-api/conf/conf.yaml /go/manager-api/conf/conf.yaml \
+    && mv /go/src/github.com/apisix/manager-api/conf/schema.json /go/manager-api/conf/schema.json \
     && rm -rf /go/src/github.com/apisix/manager-api \
     && rm -rf /etc/localtime \
     && ln -s  /usr/share/zoneinfo/Hongkong /etc/localtime \

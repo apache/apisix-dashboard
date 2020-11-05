@@ -28,7 +28,7 @@ $ docker build -t apisix-dashboard:{$tag} .
 
 2. 准备配置文件
 
-在启动容器前，需要在**宿主主机**内准备配置文件 `conf.json`，以便覆盖容器内部默认的配置文件。请参考[示例配置文件](./examples/docker-conf-example.json)。
+在启动容器前，需要在**宿主主机**内准备配置文件 `conf.yaml`，以便覆盖容器内部默认的配置文件。请参考[示例配置文件](./examples/docker-conf-example.yaml)。
 
 示例配置说明：
 
@@ -39,12 +39,12 @@ $ docker build -t apisix-dashboard:{$tag} .
 3. 启动容器
 
 ```sh
-$ docker run -d -p 80:8080 -v /path/to/conf.json:/usr/local/apisix-dashboard/conf/conf.json --name apisix-dashboard apisix-dashboard:{$tag}
+$ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:{$tag}
 ```
 
 ## 注意
 
-1. 构建镜像后，如需修改配置文件，可通过使用 `docker -v /local-path-to-conf-file:/conf/conf.json` 参数指定 `manager-api` 所需要的配置文件，以便启动容器时动态加载配置文件。
+1. 构建镜像后，如需修改配置文件，可通过使用 `docker -v /local-path-to-conf-file:/conf/conf.yaml` 参数指定 `manager-api` 所需要的配置文件，以便启动容器时动态加载配置文件。
 2. 中国用户可使用 `ENABLE_PROXY` 指令以加速所需依赖的下载。
 
 ```sh
