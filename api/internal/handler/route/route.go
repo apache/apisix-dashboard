@@ -309,7 +309,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		script, _ := h.scriptStore.Get(input.Route.ID)
 		if script != nil {
 			if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.Route.ID, ",")); err != nil {
-				log.Warnf("try to delete script %s again", input.Route.ID)
+				log.Warnf("script %s failed", input.Route.ID)
 			}
 		}
 	}
