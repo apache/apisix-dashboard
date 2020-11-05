@@ -14,12 +14,7 @@
     "log": {
       "error_log": {
         "level": "warn",
-        "file_path": ""
-      },
-      "rotate": {
-        "interval": 86400,
-        "max_size": 100000000,
-        "max_age": 2592000
+        "file_path": "logs/error.log"
       }
     }
   },
