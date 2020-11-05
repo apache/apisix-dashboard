@@ -24,9 +24,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
-	"runtime"
-	"strings"
 )
 
 const (
@@ -41,8 +38,7 @@ const (
 var (
 	ENV           string
 	Schema        gjson.Result
-	confDir       = "./conf/"
-	DagLibPath    = "./dag-to-lua/"
+	WorkDir       = "."
 	ServerHost    = "127.0.0.1"
 	ServerPort    = 80
 	ETCDEndpoints = []string{"127.0.0.1:2379"}
@@ -60,7 +56,6 @@ type Listen struct {
 }
 
 type Conf struct {
-	DagLib string `yaml:"dag_lib_path"`
 	Etcd   Etcd
 	Listen Listen
 }
@@ -83,12 +78,10 @@ type Config struct {
 
 func init() {
 	//go test
-	if strings.HasSuffix(os.Args[0], ".test") {
-		_, basePath, _, _ := runtime.Caller(0)
-		confDir = filepath.Dir(basePath) + "/"
-		fmt.Println("confDir:", confDir)
+	if workDir := os.Getenv("APISIX_API_WORKDIR"); workDir != "" {
+		WorkDir = workDir
 	} else {
-		flag.StringVar(&confDir, "c", "./conf/", "conf dir")
+		flag.StringVar(&WorkDir, "p", ".", "current work dir")
 		flag.Parse()
 	}
 
@@ -98,7 +91,7 @@ func init() {
 }
 
 func setConf() {
-	filePath := confDir + "conf.yaml"
+	filePath := WorkDir + "/conf/conf.yaml"
 	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
 	} else {
@@ -108,6 +101,7 @@ func setConf() {
 		if err != nil {
 			log.Printf("conf: %s, error: %v", configurationContent, err)
 		}
+
 		//listen
 		if config.Conf.Listen.Port != 0 {
 			ServerPort = config.Conf.Listen.Port
@@ -116,10 +110,6 @@ func setConf() {
 			ServerHost = config.Conf.Listen.Host
 		}
 
-		//dag lib path
-		if config.Conf.DagLib != "" {
-			DagLibPath = config.Conf.DagLib
-		}
 		//etcd
 		if len(config.Conf.Etcd.Endpoints) > 0 {
 			ETCDEndpoints = config.Conf.Etcd.Endpoints
@@ -147,7 +137,7 @@ func initAuthentication(conf Authentication) {
 }
 
 func initSchema() {
-	filePath := confDir + "schema.json"
+	filePath := WorkDir + "/conf/schema.json"
 	if schemaContent, err := ioutil.ReadFile(filePath); err != nil {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
 	} else {
