@@ -32,7 +32,7 @@ const (
 	EnvDEV   = "dev"
 	EnvLOCAL = "local"
 
-	WebDir = "./html/"
+	WebDir = "./html"
 )
 
 var (
