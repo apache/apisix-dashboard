@@ -17,10 +17,6 @@
 # limitations under the License.
 #
 
-# 'make init' operates scripts and related configuration files in the current directory
-# The 'apisix' command is a command in the /usr/local/apisix,
-# and the configuration file for the operation is in the /usr/local/apisix/conf
-
 set -ex
 
 clean_up() {
@@ -33,6 +29,7 @@ export GO111MODULE=on
 go build -o ./manager-api .
 
 #default level: warn, path: logs/error.log
+
 ./manager-api &
 sleep 3
 pkill -f manager-api
@@ -42,13 +39,14 @@ if [[ ! -f "./logs/error.log" ]]; then
     exit 1
 fi
 
-if [[ `grep -c "INFO" ./error.log` -neq '0' ]]; then
+if [[ `grep -c "INFO" ./error.log` -ne '0' ]]; then
     echo "failed: should not write info log when level is warn"
     exit 1
 fi
 
 #change level and path
-sed -i 's/"file_path": ""/"file_path": ".\/error.log"/' conf/conf.json
+
+sed -i 's/"file_path": "logs\/error.log"/"file_path": ".\/error.log"/' conf/conf.json
 sed -i 's/warn/info/' conf/conf.json
 
 ./manager-api &
