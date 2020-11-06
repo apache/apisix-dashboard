@@ -65,9 +65,12 @@ func getEncoder() zapcore.Encoder {
 }
 
 func fileWriter() zapcore.WriteSyncer {
-	//if not config file path
-	if conf.ErrorLogPath == "" {
+	//standard output
+	if conf.ErrorLogPath == "/dev/stdout" {
 		return zapcore.Lock(os.Stdout)
+	}
+	if conf.ErrorLogPath == "/dev/stderr" {
+		return zapcore.Lock(os.Stderr)
 	}
 
 	writer, _, err := zap.Open(conf.ErrorLogPath)

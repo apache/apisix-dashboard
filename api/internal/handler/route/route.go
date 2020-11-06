@@ -175,7 +175,7 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 	}
 
 	cmd := exec.Command("sh", "-c",
-		"cd "+conf.DagLibPath+" && lua cli.lua "+
+		"cd "+conf.WorkDir+"/dag-to-lua && lua cli.lua "+
 			"'"+string(scriptString)+"'")
 
 	stdout, _ := cmd.StdoutPipe()

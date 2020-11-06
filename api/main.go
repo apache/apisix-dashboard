@@ -19,7 +19,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/apisix/manager-api/conf"
@@ -31,7 +30,8 @@ import (
 )
 
 func main() {
-	if err := storage.InitETCDClient(strings.Split(conf.ETCDEndpoints, ",")); err != nil {
+
+	if err := storage.InitETCDClient(conf.ETCDEndpoints); err != nil {
 		log.Error("init etcd client fail: %w", err)
 		panic(err)
 	}
