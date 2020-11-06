@@ -81,7 +81,7 @@ The bundled files are located in the root directory `/output/html`.
 
 ## Run
 
-1. According to your deploy environment, check the related configurations in `api/conf/conf.yaml`, modify those variables if needed.
+1. According to your deploy environment, check the related configurations in `output/conf/conf.yaml`, modify those variables if needed.
 
 Example:
 
@@ -90,7 +90,6 @@ conf:
   listen:
     host: 127.0.0.1
     port: 8080
-  dag_lib_path: ''
   etcd:
     endpoints:
       - 127.0.0.1:2379
@@ -114,18 +113,15 @@ $ api/run.sh &
 
 ## Configuration
 
-1. `conf.dag-lib-path` MUST use absolute path, we could use `pwd` command. Only used when enable Plugin Orchestration.
+1. `conf.listen.host` is set to `127.0.0.1` so we could only visit it in private, we could change it to `0.0.0.0` to allow any visitors.
 
-2. `conf.listen.host` is set to `127.0.0.1` so we could only visit it in private, we could change it to `0.0.0.0` to allow any visitors.
-
-3. `conf.etcd.endpoints` is used to set ETCD's instances address, it supports multiple instances mode.
+2. `conf.etcd.endpoints` is used to set ETCD's instances address, it supports multiple instances mode.
 
 ```json
-{
-  "etcd": {
-    "endpoints": "127.0.0.1:2379,127.0.0.1:3379"
-  }
-}
+  etcd:
+    endpoints:
+      - 127.0.0.1:2379
+      - 127.0.0.1:3379
 ```
 
 ## NOTE
@@ -136,10 +132,4 @@ $ api/run.sh &
 $ ps aux | grep manager-api
 
 $ kill $process_id
-```
-
-2. After compiling the Manager API, if you move the compiled product to another location, an error will be reported at startup, this is because the configuration file's **absolute path** is fixed in the product and needs to be resolved by running an environment variable to set the location of the configuration file before running.
-
-```sh
-$ export APISIX_CONF_PATH=/home/demo_user/workspace/apisix-dashboard/api/conf
 ```

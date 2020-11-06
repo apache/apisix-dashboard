@@ -83,7 +83,7 @@ $ yarn build
 
 ## 启动
 
-1. 根据您的部署环境，检查并修改 `api/conf/conf.yaml` 中的配置。
+1. 根据您的部署环境，检查并修改 `output/conf/conf.yaml` 中的配置。
 
 例如：
 
@@ -92,7 +92,6 @@ conf:
   listen:
     host: 127.0.0.1
     port: 8080
-  dag_lib_path: ''
   etcd:
     endpoints:
       - 127.0.0.1:2379
@@ -116,18 +115,15 @@ $ api/run.sh &
 
 ## 配置参数
 
-1. `conf.dag-lib-path` 参数需要使用绝对路径，可通过 `pwd` 指令获取。仅在使用插件编排功能时需要指定。
+1. `conf.listen.host` 默认为 `127.0.0.1`，这意味着只能在本地网络中访问，如需允许外部网络访问，请修改为 `0.0.0.0`，无需重新编译代码。
 
-2. `conf.listen.host` 默认为 `127.0.0.1`，这意味着只能在本地网络中访问，如需允许外部网络访问，请修改为 `0.0.0.0`，无需重新编译代码。
-
-3. `conf.etcd.endpoints` 用于配置 ETCD 实例，支持集群模式。
+2. `conf.etcd.endpoints` 用于配置 ETCD 实例，支持集群模式。
 
 ```json
-{
-  "etcd": {
-    "endpoints": "127.0.0.1:2379,127.0.0.1:3379"
-  }
-}
+  etcd:
+    endpoints:
+      - 127.0.0.1:2379
+      - 127.0.0.1:3379
 ```
 
 ## 注意
@@ -138,10 +134,4 @@ $ api/run.sh &
 $ ps aux | grep manager-api
 
 $ kill $process_id
-```
-
-2. 在编译 Manager API 后，如移动编译后产物到其它位置，启动时将会报错，这是由于配置文件**绝对路径**被固定在了产物中，需要在运行前，通过执行环境变量设置配置文件位置来解决。
-
-```sh
-$ export APISIX_CONF_PATH=/home/demo_user/workspace/apisix-dashboard/api/conf
 ```
