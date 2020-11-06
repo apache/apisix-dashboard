@@ -20,7 +20,7 @@
 set -ex
 
 clean_up() {
-    git checkout conf/conf.json
+    git checkout conf/conf.yaml
 }
 
 trap clean_up EXIT
