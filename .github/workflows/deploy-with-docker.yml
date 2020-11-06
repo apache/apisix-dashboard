@@ -15,15 +15,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      etcd:
-        image: bitnami/etcd:3.3.13-r80
-        ports:
-          - 2379:2379
-          - 2380:2380
-        env:
-          ALLOW_NONE_AUTHENTICATION: yes
-
     steps:
       - uses: actions/checkout@v2
 
@@ -40,6 +31,7 @@ jobs:
       - name: Modify ETCD IP
         run: |
           sed -i 's/127.0.0.1:2379/172.16.238.10:2379/' api/conf/conf.yaml
+          sed -i 's/host: 127.0.0.1/host: 0.0.0.0/' api/conf/conf.yaml
 
       - name: Run Docker Compose
         working-directory: ./api/test/docker-deploy
