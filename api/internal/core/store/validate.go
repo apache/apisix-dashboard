@@ -77,11 +77,13 @@ type APISIXJsonSchemaValidator struct {
 func NewAPISIXJsonSchemaValidator(jsonPath string) (Validator, error) {
 	schemaDef := conf.Schema.Get(jsonPath).String()
 	if schemaDef == "" {
+		log.Warnf("scheme validate failed: schema not found, path: %s", jsonPath)
 		return nil, fmt.Errorf("scheme validate failed: schema not found, path: %s", jsonPath)
 	}
 
 	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
 	if err != nil {
+		log.Warnf("new schema failed: %w", err)
 		return nil, fmt.Errorf("new schema failed: %w", err)
 	}
 	return &APISIXJsonSchemaValidator{
@@ -216,6 +218,7 @@ func checkConf(reqBody interface{}) error {
 func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 	ret, err := v.schema.Validate(gojsonschema.NewGoLoader(obj))
 	if err != nil {
+		log.Warnf("scheme validate failed: %w", err)
 		return fmt.Errorf("scheme validate failed: %w", err)
 	}
 
@@ -245,12 +248,14 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 			schemaDef = conf.Schema.Get("plugins." + pluginName + ".schema").String()
 		}
 		if schemaDef == "" {
+			log.Warnf("scheme validate failed: schema not found, path: %s", "plugins."+pluginName)
 			return fmt.Errorf("scheme validate failed: schema not found, path: %s", "plugins."+pluginName)
 		}
 
 		schemaDef = reg.ReplaceAllString(schemaDef, `"properties":{}`)
 		s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
 		if err != nil {
+			log.Warnf("init scheme validate failed: %w", err)
 			return fmt.Errorf("scheme validate failed: %w", err)
 		}
 

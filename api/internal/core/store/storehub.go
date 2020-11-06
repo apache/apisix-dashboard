@@ -22,6 +22,7 @@ import (
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/utils"
+	"github.com/apisix/manager-api/log"
 )
 
 type HubKey string
@@ -50,9 +51,11 @@ func InitStore(key HubKey, opt GenericStoreOption) error {
 	}
 	s, err := NewGenericStore(opt)
 	if err != nil {
+		log.Warnf("NewGenericStore error: %w", err)
 		return err
 	}
 	if err := s.Init(); err != nil {
+		log.Warnf("GenericStore init error: %w", err)
 		return err
 	}
 

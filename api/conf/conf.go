@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/tidwall/gjson"
 	"gopkg.in/yaml.v2"
@@ -45,6 +46,8 @@ var (
 	ServerHost    = "127.0.0.1"
 	ServerPort    = 80
 	ETCDEndpoints = []string{"127.0.0.1:2379"}
+	ErrorLogLevel = "warn"
+	ErrorLogPath  = "logs/error.log"
 	UserList      = make(map[string]User, 2)
 	AuthConf      Authentication
 )
@@ -58,9 +61,19 @@ type Listen struct {
 	Port int
 }
 
+type ErrorLog struct {
+	Level    string
+	FilePath string `yaml:"file_path"`
+}
+
+type Log struct {
+	ErrorLog ErrorLog `yaml:"error_log"`
+}
+
 type Conf struct {
 	Etcd   Etcd
 	Listen Listen
+	Log    Log
 }
 
 type User struct {
@@ -109,6 +122,7 @@ func setConf() {
 		if config.Conf.Listen.Port != 0 {
 			ServerPort = config.Conf.Listen.Port
 		}
+
 		if config.Conf.Listen.Host != "" {
 			ServerHost = config.Conf.Listen.Host
 		}
@@ -116,6 +130,20 @@ func setConf() {
 		//etcd
 		if len(config.Conf.Etcd.Endpoints) > 0 {
 			ETCDEndpoints = config.Conf.Etcd.Endpoints
+		}
+
+		//error log
+		if config.Conf.Log.ErrorLog.Level != "" {
+			ErrorLogLevel = config.Conf.Log.ErrorLog.Level
+		}
+		if config.Conf.Log.ErrorLog.FilePath != "" {
+			ErrorLogPath = config.Conf.Log.ErrorLog.FilePath
+		}
+		if !filepath.IsAbs(ErrorLogPath) {
+			ErrorLogPath, err = filepath.Abs(WorkDir + "/" + ErrorLogPath)
+			if err != nil {
+				panic(err)
+			}
 		}
 
 		//auth

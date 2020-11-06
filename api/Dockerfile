@@ -54,6 +54,8 @@ WORKDIR /go/manager-api
 COPY --from=build-env /go/manager-api/ /go/manager-api/
 COPY --from=build-env /usr/share/zoneinfo/Hongkong /etc/localtime
 
+RUN mkdir logs
+
 EXPOSE 8080
 
 RUN chmod +x ./entry.sh

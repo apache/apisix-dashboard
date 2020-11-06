@@ -25,6 +25,11 @@ conf:
       - 172.16.238.10:2379   # ips here are defined in docker compose.
       - 172.16.238.11:2379
       - 172.16.238.12:2379
+  log:
+    error_log:
+      level: warn                  # supports levels, lower to higher: debug, info, warn, error, panic, fatal
+      file_path: logs/error.log    # supports relative path, absolute path, standard output
+                                   # such as: logs/error.log, /tmp/logs/error.log, /dev/stdout, /dev/stderr
 authentication:
   secret: secret             # secret for jwt token generation.
                              # *NOTE*: Highly recommended to modify this value to protect `manager api`.
