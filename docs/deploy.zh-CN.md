@@ -119,7 +119,7 @@ $ api/run.sh &
 
 2. `conf.etcd.endpoints` 用于配置 ETCD 实例，支持集群模式。
 
-```json
+```yaml
   etcd:
     endpoints:
       - 127.0.0.1:2379

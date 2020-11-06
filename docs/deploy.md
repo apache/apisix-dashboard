@@ -117,7 +117,7 @@ $ api/run.sh &
 
 2. `conf.etcd.endpoints` is used to set ETCD's instances address, it supports multiple instances mode.
 
-```json
+```yaml
   etcd:
     endpoints:
       - 127.0.0.1:2379
