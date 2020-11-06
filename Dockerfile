@@ -77,6 +77,8 @@ COPY --from=api-builder /usr/local/apisix-dashboard/output/ ./
 
 COPY --from=fe-builder /usr/local/apisix-dashboard/output/ ./
 
+RUN mkdir logs
+
 EXPOSE 8080
 
 CMD [ "/usr/local/apisix-dashboard/manager-api" ]
