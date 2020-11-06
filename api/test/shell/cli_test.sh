@@ -28,7 +28,7 @@ trap clean_up EXIT
 export GO111MODULE=on
 go build -o ./manager-api .
 
-#default level: warn, path: logs/error.log
+# default level: warn, path: logs/error.log
 
 ./manager-api &
 sleep 3
@@ -44,7 +44,7 @@ if [[ `grep -c "INFO" ./logs/error.log` -ne '0' ]]; then
     exit 1
 fi
 
-#change level and path
+# change level and path
 
 sed -i 's/file_path: logs\/error.log/file_path: .\/error.log/' conf/conf.yaml
 sed -i 's/warn/info/' conf/conf.yaml
@@ -60,5 +60,20 @@ fi
 
 if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     echo "failed: failed to write log on right level"
+    exit 1
+fi
+
+git checkout conf/conf.yaml
+
+# use a un-exist dir
+
+sed -i 's/file_path: logs\/error.log/file_path: logdir\/error.log/' conf/conf.yaml
+
+./manager-api &
+sleep 3
+pkill -f manager-api
+
+if [[ ! -f "./logdir/error.log" ]]; then
+    echo "failed: failed to write log when dir not exists"
     exit 1
 fi

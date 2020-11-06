@@ -18,6 +18,7 @@ package log
 
 import (
 	"os"
+	"path/filepath"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -64,6 +65,17 @@ func getEncoder() zapcore.Encoder {
 	return zapcore.NewConsoleEncoder(encoderConfig)
 }
 
+func PathExists(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		if os.IsExist(err) {
+			return true
+		}
+		return false
+	}
+	return true
+}
+
 func fileWriter() zapcore.WriteSyncer {
 	//standard output
 	if conf.ErrorLogPath == "/dev/stdout" {
@@ -71,6 +83,15 @@ func fileWriter() zapcore.WriteSyncer {
 	}
 	if conf.ErrorLogPath == "/dev/stderr" {
 		return zapcore.Lock(os.Stderr)
+	}
+
+	//create dir if not exists
+	logDir := filepath.Dir(conf.ErrorLogPath)
+	if !PathExists(logDir) {
+		err := os.MkdirAll(logDir, 0744)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	writer, _, err := zap.Open(conf.ErrorLogPath)
