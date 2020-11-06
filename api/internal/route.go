@@ -38,7 +38,7 @@ import (
 )
 
 func SetUpRouter() *gin.Engine {
-	if conf.ENV != conf.EnvLOCAL && conf.ENV != conf.EnvBETA {
+	if conf.ENV == conf.EnvLOCAL || conf.ENV == conf.EnvDEV {
 		gin.SetMode(gin.DebugMode)
 	} else {
 		gin.SetMode(gin.ReleaseMode)

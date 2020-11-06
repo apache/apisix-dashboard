@@ -986,3 +986,146 @@ func TestRoute(t *testing.T) {
 	assert.Nil(t, err)
 
 }
+
+func Test_Route_With_Script(t *testing.T) {
+	// init
+	err := storage.InitETCDClient([]string{"127.0.0.1:2379"})
+	assert.Nil(t, err)
+	err = store.InitStores()
+	assert.Nil(t, err)
+
+	handler := &Handler{
+		routeStore:    store.GetStore(store.HubKeyRoute),
+		svcStore:      store.GetStore(store.HubKeyService),
+		upstreamStore: store.GetStore(store.HubKeyUpstream),
+		scriptStore:   store.GetStore(store.HubKeyScript),
+	}
+	assert.NotNil(t, handler)
+
+	//create Note: depends on lib `dag-to-lua` if script exists
+	ctx := droplet.NewContext()
+	route := &entity.Route{}
+	reqBody := `{
+		  "id": "1",
+		  "uri": "/index.html",
+		  "upstream": {
+		      "type": "roundrobin",
+		      "nodes": [{
+		          "host": "www.a.com",
+		          "port": 80,
+		          "weight": 1
+		      }]
+		  },
+		  "script":{
+		      "rule":{
+		          "root":"451106f8-560c-43a4-acf2-2a6ed0ea57b8",
+		          "451106f8-560c-43a4-acf2-2a6ed0ea57b8":[
+		              [
+		                  "code == 403",
+		                  "b93d622c-92ef-48b4-b6bb-57e1ce893ee3"
+		              ],
+		              [
+		                  "",
+		                  "988ef5c2-c896-4606-a666-3d4cbe24a731"
+		              ]
+		          ]
+		      },
+		      "conf":{
+		          "451106f8-560c-43a4-acf2-2a6ed0ea57b8":{
+		              "name":"uri-blocker",
+		              "conf":{
+		                  "block_rules":[
+		                      "root.exe",
+		                      "root.m+"
+		                  ],
+		                  "rejected_code":403
+		              }
+		          },
+		          "988ef5c2-c896-4606-a666-3d4cbe24a731":{
+		              "name":"kafka-logger",
+		              "conf":{
+		                  "batch_max_size":1000,
+		                  "broker_list":{
+		                  },
+		                  "buffer_duration":60,
+		                  "inactive_timeout":5,
+		                  "include_req_body":false,
+		                  "kafka_topic":"1",
+		                  "key":"2",
+		                  "max_retry_count":0,
+		                  "name":"kafka logger",
+		                  "retry_delay":1,
+		                  "timeout":3
+		              }
+		          },
+		          "b93d622c-92ef-48b4-b6bb-57e1ce893ee3":{
+		              "name":"fault-injection",
+		              "conf":{
+		                  "abort":{
+		                      "body":"200",
+		                      "http_status":300
+		                  },
+		                  "delay":{
+		                      "duration":500
+		                  }
+		              }
+		          }
+		      },
+		      "chart":{
+		      }
+		  }
+		}`
+	err = json.Unmarshal([]byte(reqBody), route)
+	assert.Nil(t, err)
+	ctx.SetInput(route)
+	_, err = handler.Create(ctx)
+	assert.Nil(t, err)
+
+	//sleep
+	time.Sleep(time.Duration(20) * time.Millisecond)
+
+	//get
+	input := &GetInput{}
+	input.ID = "1"
+	ctx.SetInput(input)
+	ret, err := handler.Get(ctx)
+	stored := ret.(*entity.Route)
+	assert.Nil(t, err)
+	assert.Equal(t, stored.ID, route.ID)
+	assert.NotNil(t, stored.Script)
+
+	//update
+	route2 := &UpdateInput{}
+	route2.ID = "1"
+	reqBody = `{
+		  "id": "1",
+		  "uri": "/index.html",
+		  "upstream": {
+		      "type": "roundrobin",
+		      "nodes": [{
+		          "host": "www.a.com",
+		          "port": 80,
+		          "weight": 1
+		      }]
+		  }
+		}`
+
+	err = json.Unmarshal([]byte(reqBody), route2)
+	assert.Nil(t, err)
+	ctx.SetInput(route2)
+	_, err = handler.Update(ctx)
+	assert.Nil(t, err)
+
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
+	//get, script should be nil
+	input = &GetInput{}
+	input.ID = "1"
+	ctx.SetInput(input)
+	ret, err = handler.Get(ctx)
+	stored = ret.(*entity.Route)
+	assert.Nil(t, err)
+	assert.Equal(t, stored.ID, route.ID)
+	assert.Nil(t, stored.Script)
+}
