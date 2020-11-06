@@ -28,7 +28,7 @@ $ docker build -t apisix-dashboard:{$tag} .
 
 2. Prepare the configuration file
 
-Before starting the container, the configuration file `conf.json` needs to be prepared inside the **host** to override the default configuration file inside the container. Please refer to [example configuration file](./examples/docker-conf-example.json).
+Before starting the container, the configuration file `conf.yaml` needs to be prepared inside the **host** to override the default configuration file inside the container. Please refer to [example configuration file](./examples/docker-conf-example.yaml).
 
 Example configuration notes:
 
@@ -39,12 +39,12 @@ Example configuration notes:
 3. Run container
 
 ```sh
-$ docker run -d -p 80:8080 -v /path/to/conf.json:/usr/local/apisix-dashboard/conf/conf.json --name apisix-dashboard apisix-dashboard:{$tag}
+$ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:{$tag}
 ```
 
 ## Note
 
-1. After building the image, if you want to modify the configuration file, you can use the `docker -v /local-path-to-conf-file:/conf/conf.json` parameter to specify the configuration file required for `manager-api` to be loaded dynamically when the container is started.
+1. After building the image, if you want to modify the configuration file, you can use the `docker -v /local-path-to-conf-file:/conf/conf.yaml` parameter to specify the configuration file required for `manager-api` to be loaded dynamically when the container is started.
 2. For users in China, we could use the `ENABLE_PROXY` flag to speed up dependencies downloading.
 
 ```sh

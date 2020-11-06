@@ -28,7 +28,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
-	"github.com/shiningrush/droplet/log"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -38,6 +37,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
+	"github.com/apisix/manager-api/log"
 )
 
 type Handler struct {
@@ -175,7 +175,7 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 	}
 
 	cmd := exec.Command("sh", "-c",
-		"cd "+conf.DagLibPath+" && lua cli.lua "+
+		"cd "+conf.WorkDir+"/dag-to-lua && lua cli.lua "+
 			"'"+string(scriptString)+"'")
 
 	stdout, _ := cmd.StdoutPipe()
@@ -304,6 +304,14 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 				return handler.SpecCodeResponse(err), err
 			}
 		}
+	} else {
+		//remove exists script
+		script, _ := h.scriptStore.Get(input.Route.ID)
+		if script != nil {
+			if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.Route.ID, ",")); err != nil {
+				log.Warnf("delete script %s failed", input.Route.ID)
+			}
+		}
 	}
 
 	if err := h.routeStore.Update(c.Context(), &input.Route, true); err != nil {
@@ -328,7 +336,7 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	//delete stored script
 	if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
 		//try again
-		log.Warnf("try to delete script %s again", input.IDs)
+		log.Warn("try to delete script %s again", input.IDs)
 		if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
 			return nil, nil
 		}

@@ -19,5 +19,6 @@
 export ENV=local
 pwd=`pwd`
 
+cd ./output
 
-exec ./output/manager-api
+exec ./manager-api

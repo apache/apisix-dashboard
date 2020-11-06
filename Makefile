@@ -49,5 +49,5 @@ golang-lint: ## Run the golangci-lint application (install if not found)
 ### api-test:         Run the tests of manager-api
 .PHONY: api-test
 api-test:
-	cd api/ && go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
+	cd api/ && APISIX_API_WORKDIR=$$PWD go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
 

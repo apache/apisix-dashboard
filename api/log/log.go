@@ -16,188 +16,93 @@
  */
 package log
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"runtime"
-	"strings"
-
-	"github.com/apisix/manager-api/conf"
-	"github.com/sirupsen/logrus"
+var (
+	DefLogger Interface = emptyLog{}
 )
 
-var logEntry *logrus.Entry
-
-type DefLogger struct {
+type emptyLog struct {
 }
 
-func getLogrusFields(entry *logrus.Entry, fs []interface{}) *logrus.Entry {
-	if len(fs) == 0 {
-		return entry
-	}
-
-	fd := logrus.Fields{}
-	for i := 0; i < len(fs); i += 2 {
-		fd[fs[i].(string)] = fs[i+1]
-	}
-	return entry.WithFields(fd)
+type Interface interface {
+	Debug(msg string, fields ...interface{})
+	Debugf(msg string, args ...interface{})
+	Info(msg string, fields ...interface{})
+	Infof(msg string, args ...interface{})
+	Warn(msg string, fields ...interface{})
+	Warnf(msg string, args ...interface{})
+	Error(msg string, fields ...interface{})
+	Errorf(msg string, args ...interface{})
+	Fatal(msg string, fields ...interface{})
+	Fatalf(msg string, args ...interface{})
 }
 
-func (e DefLogger) Debug(msg string, fields ...interface{}) {
-	getLogrusFields(logEntry, fields).Debug(msg)
+func (e emptyLog) Debug(msg string, fields ...interface{}) {
+	getZapFields(logger, fields).Debug(msg)
 }
 
-func (e DefLogger) Debugf(msg string, args ...interface{}) {
-	logEntry.Debugf(msg, args...)
+func (e emptyLog) Debugf(msg string, args ...interface{}) {
+	logger.Debugf(msg, args...)
 }
 
-func (e DefLogger) Info(msg string, fields ...interface{}) {
-	getLogrusFields(logEntry, fields).Info(msg)
+func (e emptyLog) Info(msg string, fields ...interface{}) {
+	getZapFields(logger, fields).Info(msg)
 }
 
-func (e DefLogger) Infof(msg string, args ...interface{}) {
-	logEntry.Infof(msg, args...)
+func (e emptyLog) Infof(msg string, args ...interface{}) {
+	logger.Infof(msg, args...)
 }
 
-func (e DefLogger) Warn(msg string, fields ...interface{}) {
-	getLogrusFields(logEntry, fields).Warn(msg)
+func (e emptyLog) Warn(msg string, fields ...interface{}) {
+	getZapFields(logger, fields).Warn(msg)
 }
 
-func (e DefLogger) Warnf(msg string, args ...interface{}) {
-	logEntry.Warnf(msg, args...)
+func (e emptyLog) Warnf(msg string, args ...interface{}) {
+	logger.Warnf(msg, args...)
 }
 
-func (e DefLogger) Error(msg string, fields ...interface{}) {
-	getLogrusFields(logEntry, fields).Error(msg)
+func (e emptyLog) Error(msg string, fields ...interface{}) {
+	getZapFields(logger, fields).Error(msg)
 }
 
-func (e DefLogger) Errorf(msg string, args ...interface{}) {
-	logEntry.Errorf(msg, args...)
+func (e emptyLog) Errorf(msg string, args ...interface{}) {
+	logger.Errorf(msg, args...)
 }
 
-func (e DefLogger) Fatal(msg string, fields ...interface{}) {
-	getLogrusFields(logEntry, fields).Fatal(msg)
+func (e emptyLog) Fatal(msg string, fields ...interface{}) {
+	getZapFields(logger, fields).Fatal(msg)
 }
 
-func (e DefLogger) Fatalf(msg string, args ...interface{}) {
-	logEntry.Fatalf(msg, args...)
+func (e emptyLog) Fatalf(msg string, args ...interface{}) {
+	logger.Fatalf(msg, args...)
 }
 
-func GetLogger() *logrus.Entry {
-	if logEntry == nil {
-		var log = logrus.New()
-		setNull(log)
-		log.SetLevel(logrus.DebugLevel)
-		if conf.ENV != conf.EnvLOCAL {
-			log.SetLevel(logrus.ErrorLevel)
-		}
-		log.SetFormatter(&logrus.JSONFormatter{})
-		logEntry = log.WithFields(logrus.Fields{
-			"app": "manager-api",
-		})
-		if hook, err := createHook(); err == nil {
-			log.AddHook(hook)
-		}
-	}
-	return logEntry
+func Debug(msg string, fields ...interface{}) {
+	DefLogger.Debug(msg, fields...)
 }
-
-func setNull(log *logrus.Logger) {
-	src, err := os.OpenFile(os.DevNull, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
-	if err != nil {
-		fmt.Println("err", err)
-	}
-	writer := bufio.NewWriter(src)
-	log.SetOutput(writer)
+func Debugf(msg string, args ...interface{}) {
+	DefLogger.Debugf(msg, args...)
 }
-
-type Hook struct {
-	Formatter func(file, function string, line int) string
+func Info(msg string, fields ...interface{}) {
+	DefLogger.Info(msg, fields...)
 }
-
-func createHook() (*Hook, error) {
-	return &Hook{
-		func(file, function string, line int) string {
-			return fmt.Sprintf("%s:%d", file, line)
-		},
-	}, nil
+func Infof(msg string, args ...interface{}) {
+	DefLogger.Infof(msg, args...)
 }
-
-func (hook *Hook) Fire(entry *logrus.Entry) error {
-	str := hook.Formatter(findCaller(5))
-	en := entry.WithField("line", str)
-	en.Level = entry.Level
-	en.Message = entry.Message
-	en.Time = entry.Time
-	line, err := en.String()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to read entry, %v", err)
-		return err
-	}
-	switch en.Level {
-	case logrus.PanicLevel:
-		fmt.Print(line)
-		return nil
-	case logrus.FatalLevel:
-		fmt.Print(line)
-		return nil
-	case logrus.ErrorLevel:
-		fmt.Print(line)
-		return nil
-	case logrus.WarnLevel:
-		fmt.Print(line)
-		return nil
-	case logrus.InfoLevel:
-		fmt.Print(line)
-		return nil
-	case logrus.DebugLevel:
-		fmt.Print(line)
-		return nil
-	default:
-		return nil
-	}
+func Warn(msg string, fields ...interface{}) {
+	DefLogger.Warn(msg, fields...)
 }
-
-func (hook *Hook) Levels() []logrus.Level {
-	return logrus.AllLevels
+func Warnf(msg string, args ...interface{}) {
+	DefLogger.Warnf(msg, args...)
 }
-
-func findCaller(skip int) (string, string, int) {
-	var (
-		pc       uintptr
-		file     string
-		function string
-		line     int
-	)
-	for i := 0; i < 10; i++ {
-		pc, file, line = getCaller(skip + i)
-		if !strings.HasPrefix(file, "logrus") {
-			break
-		}
-	}
-	if pc != 0 {
-		frames := runtime.CallersFrames([]uintptr{pc})
-		frame, _ := frames.Next()
-		function = frame.Function
-	}
-	return file, function, line
+func Error(msg string, fields ...interface{}) {
+	DefLogger.Error(msg, fields...)
 }
-
-func getCaller(skip int) (uintptr, string, int) {
-	pc, file, line, ok := runtime.Caller(skip)
-	if !ok {
-		return 0, "", 0
-	}
-	n := 0
-	for i := len(file) - 1; i > 0; i-- {
-		if file[i] == '/' {
-			n += 1
-			if n >= 2 {
-				file = file[i+1:]
-				break
-			}
-		}
-	}
-	return pc, file, line
+func Errorf(msg string, args ...interface{}) {
+	DefLogger.Errorf(msg, args...)
+}
+func Fatal(msg string, fields ...interface{}) {
+	DefLogger.Fatal(msg, fields...)
+}
+func Fatalf(msg string, args ...interface{}) {
+	DefLogger.Fatalf(msg, args...)
 }

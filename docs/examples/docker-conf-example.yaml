@@ -14,12 +14,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-version: '3'
+# PLEASE DO NOT UPDATE THIS FILE!
+# If you want to set the specified configuration value, you can set the new
+# value in the conf/config.yaml file.
+#
 
-services:
-  manager:
-    image: golang:1.13.8
-    volumes:
-      - .:/go/src/github.com/apisix/manager-api
-    working_dir: /go/src/github.com/apisix/manager-api
-    command: go test -v github.com/apisix/manager-api/service
+conf:
+  listen:
+    host: 0.0.0.0
+    port: 8080
+  dag_lib_path: ''
+  etcd:
+    endpoints:
+      - 127.0.0.1:2379
+authentication:
+  secret: secret
+  expireTime: 3600
+  users:
+    - username: admin
+      password: admin
+    - username: user
+      password: user

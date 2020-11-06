@@ -18,29 +18,25 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"strings"
 	"time"
-
-	dlog "github.com/shiningrush/droplet/log"
 
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/utils"
-	alog "github.com/apisix/manager-api/log"
+	"github.com/apisix/manager-api/log"
 )
 
-var logger = alog.GetLogger()
-
 func main() {
-	dlog.DefLogger = alog.DefLogger{}
-	if err := storage.InitETCDClient(strings.Split(conf.ETCDEndpoints, ",")); err != nil {
+
+	if err := storage.InitETCDClient(conf.ETCDEndpoints); err != nil {
+		log.Error("init etcd client fail: %w", err)
 		panic(err)
 	}
 	if err := store.InitStores(); err != nil {
+		log.Error("init stores fail: %w", err)
 		panic(err)
 	}
 	// routes
@@ -53,10 +49,10 @@ func main() {
 		WriteTimeout: time.Duration(5000) * time.Millisecond,
 	}
 
-	log.Printf("The Manager API is listening on %s ", addr)
+	log.Infof("The Manager API is listening on %s ", addr)
 
 	if err := s.ListenAndServe(); err != nil {
-		logger.WithError(err)
+		log.Errorf("listen and serv fail: %w", err)
 	}
 
 	utils.CloseAll()

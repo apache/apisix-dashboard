@@ -81,42 +81,27 @@ The bundled files are located in the root directory `/output/html`.
 
 ## Run
 
-1. According to your deploy environment, check the related configurations in `api/conf/conf.json`, modify those variables if needed.
+1. According to your deploy environment, check the related configurations in `api/conf/conf.yaml`, modify those variables if needed.
 
 Example:
 
-```json
-{
-  "conf": {
-    "syslog": {
-      "host": "127.0.0.1"
-    },
-    "listen": {
-      "host": "127.0.0.1",
-      "port": 8080
-    },
-    "dag-lib-path": "/home/demo_user/workspace/apisix-dashboard/dag-to-lua-1.1/",
-    "etcd": {
-      "endpoints": "127.0.0.1:2379"
-    }
-  },
-  "authentication": {
-    "session": {
-      "secret": "secret",
-      "expireTime": 3600
-    },
-    "user": [
-      {
-        "username": "admin",
-        "password": "admin"
-      },
-      {
-        "username": "user",
-        "password": "user"
-      }
-    ]
-  }
-}
+```yaml
+conf:
+  listen:
+    host: 127.0.0.1
+    port: 8080
+  dag_lib_path: ''
+  etcd:
+    endpoints:
+      - 127.0.0.1:2379
+authentication:
+  secret: secret
+  expireTime: 3600
+  users:
+    - username: admin
+      password: admin
+    - username: user
+      password: user
 ```
 
 2. Run manager-api

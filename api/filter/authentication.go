@@ -33,7 +33,7 @@ func Authentication() gin.HandlerFunc {
 
 			// verify token
 			token, err := jwt.ParseWithClaims(tokenStr, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-				return []byte(conf.AuthenticationConfig.Session.Secret), nil
+				return []byte(conf.AuthConf.Secret), nil
 			})
 
 			errResp := gin.H{

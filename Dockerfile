@@ -75,11 +75,9 @@ WORKDIR /usr/local/apisix-dashboard
 
 COPY --from=api-builder /usr/local/apisix-dashboard/output/ ./
 
-# NOTE: Just to compatible with /api/conf/conf.go WebDir
-RUN mkdir -p ./output
-COPY --from=fe-builder /usr/local/apisix-dashboard/output/ ./output
+COPY --from=fe-builder /usr/local/apisix-dashboard/output/ ./
 
-ENV APISIX_CONF_PATH /usr/local/apisix-dashboard/conf
+RUN mkdir logs
 
 EXPOSE 8080
 
