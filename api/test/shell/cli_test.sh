@@ -46,8 +46,8 @@ fi
 
 #change level and path
 
-sed -i 's/"file_path": "logs\/error.log"/"file_path": ".\/error.log"/' conf/conf.json
-sed -i 's/warn/info/' conf/conf.json
+sed -i 's/file_path: logs\/error.log/file_path: .\/error.log/' conf/conf.yaml
+sed -i 's/warn/info/' conf/conf.yaml
 
 ./manager-api &
 sleep 3
