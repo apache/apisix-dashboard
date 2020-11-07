@@ -67,6 +67,10 @@ func APISIXExpect(t *testing.T) *httpexpect.Expect {
 	return httpexpect.New(t, "http://127.0.0.1:9080")
 }
 
+func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
+	return httpexpect.New(t, "https://www.test2.com:9443")
+}
+
 var sleepTime = time.Duration(100) * time.Millisecond
 
 type HttpTestCase struct {
