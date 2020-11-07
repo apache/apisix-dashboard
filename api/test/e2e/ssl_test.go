@@ -17,11 +17,13 @@
 package e2e
 
 import (
+	"crypto/tls"
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSSL_Basic(t *testing.T) {
@@ -43,6 +45,12 @@ func TestSSL_Basic(t *testing.T) {
 		"key":  string(apisixKey),
 	})
 
+	//Before configuring SSL, make a HTTPS request
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	_, err = http.Get("https://www.test2.com:9443")
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "Get \"https://www.test2.com:9443\": remote error: tls: internal error")
+
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "create ssl fail - key and cert not match",
@@ -54,7 +62,7 @@ func TestSSL_Basic(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:     "create ssl successful",
+			caseDesc:     "create ssl successfully",
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodPost,
 			Path:         "/apisix/admin/ssl",
@@ -81,14 +89,13 @@ func TestSSL_Basic(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just created",
+			caseDesc:     "hit the route just created using HTTPS",
 			Object:       APISIXHTTPSExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
 			Headers:      map[string]string{"Host": "www.test2.com"},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world\n",
-			SkipVerify:   true,
 			Sleep:        sleepTime,
 		},
 		{

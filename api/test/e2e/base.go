@@ -69,7 +69,19 @@ func APISIXExpect(t *testing.T) *httpexpect.Expect {
 }
 
 func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
-	return httpexpect.New(t, "https://www.test2.com:9443")
+	e := httpexpect.WithConfig(httpexpect.Config{
+		BaseURL:  "https://www.test2.com:9443",
+		Reporter: httpexpect.NewAssertReporter(t),
+		Client: &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					// accept any certificate; for testing only!
+					InsecureSkipVerify: true,
+				},
+			},
+		},
+	})
+	return e
 }
 
 var sleepTime = time.Duration(100) * time.Millisecond
@@ -81,7 +93,6 @@ type HttpTestCase struct {
 	Path          string
 	Body          string
 	Headers       map[string]string
-	SkipVerify    bool
 	ExpectStatus  int
 	ExpectCode    int
 	ExpectMessage string
@@ -109,15 +120,6 @@ func testCaseCheck(tc HttpTestCase) {
 
 	if req == nil {
 		panic("fail to init request")
-	}
-
-	if tc.SkipVerify {
-		tr := &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		}
-		req.WithClient(&http.Client{
-			Transport: tr,
-		})
 	}
 
 	if tc.Sleep != 0 {
