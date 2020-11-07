@@ -147,6 +147,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 
 	ssl.ID = input.ID
+	ssl.Status = 1
 	if err := h.sslStore.Create(c.Context(), ssl); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -169,6 +170,8 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	if input.ID != "" {
 		ssl.ID = input.ID
 	}
+
+	ssl.Status = 1
 	if err := h.sslStore.Update(c.Context(), ssl, true); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
