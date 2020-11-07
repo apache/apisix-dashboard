@@ -47,7 +47,7 @@ services:
     image: dashboard:ci   
     restart: always
     volumes:
-      - ../../conf/conf.yaml:/go/manager-api/conf/conf.yaml:ro
+      - ../../conf/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml:ro
     depends_on:
       - etcd
     ports:
