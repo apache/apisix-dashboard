@@ -88,6 +88,7 @@ func TestSSL_Basic(t *testing.T) {
 			Headers:      map[string]string{"Host": "www.test2.com"},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world\n",
+			SkipVerify:   true,
 			Sleep:        sleepTime,
 		},
 		{
@@ -95,6 +96,14 @@ func TestSSL_Basic(t *testing.T) {
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "delete ssl",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/ssl/1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},

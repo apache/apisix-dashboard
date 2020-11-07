@@ -18,6 +18,7 @@ package e2e
 
 import (
 	"bytes"
+	"crypto/tls"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -80,6 +81,7 @@ type HttpTestCase struct {
 	Path          string
 	Body          string
 	Headers       map[string]string
+	SkipVerify    bool
 	ExpectStatus  int
 	ExpectCode    int
 	ExpectMessage string
@@ -107,6 +109,15 @@ func testCaseCheck(tc HttpTestCase) {
 
 	if req == nil {
 		panic("fail to init request")
+	}
+
+	if tc.SkipVerify {
+		tr := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+		req.WithClient(&http.Client{
+			Transport: tr,
+		})
 	}
 
 	if tc.Sleep != 0 {
