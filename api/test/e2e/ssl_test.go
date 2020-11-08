@@ -49,7 +49,7 @@ func TestSSL_Basic(t *testing.T) {
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	_, err = http.Get("https://www.test2.com:9443")
 	assert.NotNil(t, err)
-	assert.EqualError(t, err, "Get \"https://www.test2.com:9443\": remote error: tls: internal error")
+	assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")
 
 	tests := []HttpTestCase{
 		{
