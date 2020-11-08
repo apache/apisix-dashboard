@@ -19,6 +19,13 @@
 
 # Dashboard Devlopment
 
+## Preconditions
+
+```
+$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+$ cd apisix-dashboard
+```
+
 ## Web
 
 1. Make sure you have `Node.js(version version 10.0.0+)` installed on your machine.
@@ -26,14 +33,15 @@
 3. Install dependencies:
 
 ```sh
-$ yarn install
+$ make frontend-install
 ```
 
 4. If we want to modify the API, please refer to the `config/proxy.ts` file.
-5. Start the development mode
+
+5. Start (the development mode)
 
 ```sh
-$ yarn start
+$ make frontend-run
 ```
 
 ### Add E2E test cases
@@ -41,6 +49,35 @@ $ yarn start
 Please refer to [E2E Documentation](../web/src/e2e/README.md).
 
 ## manager-api
+
+### start
+
+1. modify `config.yaml` in `api/conf/conf.yaml`
+
+```
+conf:
+  listen:
+    host: 127.0.0.1
+    port: 8080
+  dag_lib_path: ''
+  etcd:
+    endpoints:
+      - 127.0.0.1:2379
+authentication:
+  secret: secret
+  expireTime: 3600
+  users:
+    - username: admin
+      password: admin
+    - username: user
+      password: user
+```
+
+2. start (the development mode)
+
+```
+$ make api-run
+```
 
 ### Sync jsonschema
 

@@ -27,7 +27,9 @@ $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 $ cd apisix-dashboard
 ```
 
-## Build the manager-api
+## build
+
+### checklist for manager-api
 
 The `manager-api` is used to provide APIs for Dashboard, just like a bridge between the Apache APISIX and the Dashboard. Here are the steps to build it manually:
 
@@ -37,51 +39,32 @@ NOTE: You also need to install `Lua` 5.1+ if you want to use the Plugin Orchestr
 
 2. Check environment variables
 
-- enable Go MODULE
-
-```sh
-$ go env -w GO111MODULE=on
-```
-
 - For most users in China, we could use [Goproxy](https://goproxy.cn/) to speed up downloading modules.
 
 ```sh
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-3. Build
-
-```sh
-$ api/build.sh
-```
-
 The bundled files are located in the root directory `/output`.
 
-## Build the web
+### checklist for web
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
 
 1. Make sure you have `Node.js(version 10.0.0+)` installed on your machine.
 2. Install [yarn](https://yarnpkg.com/).
-3. Install dependencies:
+
+### building
 
 ```sh
-$ cd /web
-
-$ yarn install
+$ make dashboard-build
 ```
 
-4. Build
-
-```sh
-$ yarn build
-```
-
-The bundled files are located in the root directory `/output/html`.
+The bundled files are located in the root directory `/output`.
 
 ## Run
 
-1. According to your deploy environment, check the related configurations in `api/conf/conf.yaml`, modify those variables if needed.
+1. According to your deploy environment, check the related configurations in `output/conf/conf.yaml`, modify those variables if needed.
 
 Example:
 
@@ -104,10 +87,10 @@ authentication:
       password: user
 ```
 
-2. Run manager-api
+2. Run
 
 ```sh
-$ api/run.sh &
+$ make dashboard-run
 ```
 
 3. Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
@@ -120,12 +103,12 @@ $ api/run.sh &
 
 3. `conf.etcd.endpoints` is used to set ETCD's instances address, it supports multiple instances mode.
 
-```json
-{
-  "etcd": {
-    "endpoints": "127.0.0.1:2379,127.0.0.1:3379"
-  }
-}
+```yaml
+conf:
+  etcd:
+    endpoints:
+      - 127.0.0.1:2379
+      - 127.0.0.1:3379
 ```
 
 ## NOTE

@@ -27,7 +27,9 @@ $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 $ cd apisix-dashboard
 ```
 
-## 构建 manager-api
+## 构建 
+
+### manager-api 检查项
 
 `manager-api` 用于为控制台提供接口，就像 Apache APISIX 和控制台之间的桥梁。下面是手动构建步骤：
 
@@ -37,27 +39,13 @@ $ cd apisix-dashboard
 
 2. 检查环境变量
 
-- 开启 Go MODULE
-
-```sh
-$ go env -w GO111MODULE=on
-```
-
 - 对于大多数中国用户，我们可以使用 [Goproxy](https://goproxy.cn/) 加快模块下载速度。
 
 ```sh
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-3. 构建
-
-```sh
-$ api/build.sh
-```
-
-构建完成后的文件在根目录 `/output` 下。
-
-## 构建前端
+### 前端 检查项
 
 该项目使用 [Ant Design Pro](https://pro.ant.design) 初始化。以下是一些使用方法的快速指南。
 
@@ -65,25 +53,19 @@ $ api/build.sh
 
 2. 安装 [yarn](https://yarnpkg.com/)。
 
-3. 安装依赖:
+
+### 开始构建
+
 
 ```sh
-$ cd /web
-
-$ yarn install
+$ make dashboard-build
 ```
 
-4. 构建
-
-```sh
-$ yarn build
-```
-
-构建完成后的文件在根目录 `/output/html` 目录下。
+构建完成后的文件在根目录 `/output` 下。
 
 ## 启动
 
-1. 根据您的部署环境，检查并修改 `api/conf/conf.yaml` 中的配置。
+1. 根据您的部署环境，检查并修改 `output/conf/conf.yaml` 中的配置。
 
 例如：
 
@@ -106,10 +88,10 @@ authentication:
       password: user
 ```
 
-2. 启动 manager-api
+2. 启动
 
 ```sh
-$ api/run.sh &
+$ make dashboard-run
 ```
 
 3. 在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
@@ -122,12 +104,12 @@ $ api/run.sh &
 
 3. `conf.etcd.endpoints` 用于配置 ETCD 实例，支持集群模式。
 
-```json
-{
-  "etcd": {
-    "endpoints": "127.0.0.1:2379,127.0.0.1:3379"
-  }
-}
+```yaml
+conf:
+  etcd:
+    endpoints:
+      - 127.0.0.1:2379
+      - 127.0.0.1:3379
 ```
 
 ## 注意
