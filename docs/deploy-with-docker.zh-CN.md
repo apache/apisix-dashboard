@@ -34,7 +34,7 @@ $ docker build -t apisix-dashboard:{$tag} .
 
 - `conf.listen.host` 为容器内监听 IP，必须为 `0.0.0.0`，这样宿主才能访问容器内网络。
 - `conf.listen.port` 为容器内监听端口，默认为 `8080`。如需修改，请同步修改 [Dockerfile](../Dockerfile)。
-- `conf.etcd.endpoints` 为 ETCD 主机列表，支持多多个节点，请确保容器可以访问到这些主机，例如：示例配置中 `conf.etcd.endpoints` 为 `host.docker.internal` 旨在允许容器访问宿主主机上的网络。
+- `conf.etcd.endpoints` 为 ETCD 主机列表，支持多个节点，请确保容器可以访问到这些主机，例如：示例配置中 `conf.etcd.endpoints` 为 `host.docker.internal` 旨在允许容器访问宿主主机上的网络。
 
 3. 启动容器
 
