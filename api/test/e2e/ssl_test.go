@@ -17,9 +17,11 @@
 package e2e
 
 import (
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"testing"
 
@@ -47,6 +49,13 @@ func TestSSL_Basic(t *testing.T) {
 
 	//Before configuring SSL, make a HTTPS request
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	http.DefaultTransport.(*http.Transport).DialContext = func(ctx context.Context, network, addr string) (net.Conn, error) {
+		if addr == "www.test2.com:9443" {
+			addr = "127.0.0.1:9443"
+		}
+		dialer := &net.Dialer{}
+		return dialer.DialContext(ctx, network, addr)
+	}
 	_, err = http.Get("https://www.test2.com:9443")
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")

@@ -28,10 +28,6 @@ jobs:
           sleep 5
           docker logs docker_managerapi_1
 
-      - name: set hosts
-        working-directory: ./api/test/e2e
-        run: echo "127.0.0.1 www.test2.com" | sudo tee -a /etc/hosts
-
       - name: run test
         working-directory: ./api/test/e2e
         run: go test

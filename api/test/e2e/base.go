@@ -18,8 +18,10 @@ package e2e
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"testing"
 	"time"
@@ -78,9 +80,17 @@ func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
 					// accept any certificate; for testing only!
 					InsecureSkipVerify: true,
 				},
+				DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+					if addr == "www.test2.com:9443" {
+						addr = "127.0.0.1:9443"
+					}
+					dialer := &net.Dialer{}
+					return dialer.DialContext(ctx, network, addr)
+				},
 			},
 		},
 	})
+
 	return e
 }
 
