@@ -24,6 +24,7 @@ import (
 	"net"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -128,4 +129,10 @@ func TestSSL_Basic(t *testing.T) {
 	for _, tc := range tests {
 		testCaseCheck(tc)
 	}
+
+	//try again after deleting SSL, make a HTTPS request
+	time.Sleep(time.Duration(20) * time.Millisecond)
+	_, err = http.Get("https://www.test2.com:9443")
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")
 }
