@@ -68,7 +68,7 @@ api-stop:
 	kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 
 
-### go-lint:	Lint Go source code
+### go-lint:		Lint Go source code
 .PHONY: go-lint
 go-lint: ## Run the golangci-lint application (install if not found)
 	@#Brew - MacOS
@@ -79,7 +79,7 @@ go-lint: ## Run the golangci-lint application (install if not found)
 	@cd api && golangci-lint run --tests=false ./...
 
 
-### license-check:	Check apisix-dashboard source codes for Apache License
+### license-check:		Check apisix-dashboard source codes for Apache License
 .PHONY: license-check
 license-check:
 ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
@@ -87,4 +87,9 @@ ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
 	cp .actions/ASF* .actions/openwhisk-utilities/scancode/
 endif
 	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./
+
+
+.PHONY: release-src
+release-src:
+	tar –cvf dashboard.tar ./output/*
 

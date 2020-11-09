@@ -17,9 +17,9 @@
 #
 -->
 
-# Deploy manually
+# Deploy Manually
 
-## Clone the project
+## Clone The Project
 
 ```sh
 $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
@@ -27,9 +27,9 @@ $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 $ cd apisix-dashboard
 ```
 
-## build
+## Build
 
-### manager-api dependencies
+### Manager-api Dependencies
 
 The `manager-api` is used to provide APIs for Dashboard, just like a bridge between the Apache APISIX and the Dashboard. Here are the steps to build it manually:
 
@@ -47,14 +47,14 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 
 The bundled files are located in the root directory `/output`.
 
-### web dependencies
+### Web Dependencies
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
 
 1. Make sure you have `Node.js(version 10.0.0+)` installed on your machine.
 2. Install [yarn](https://yarnpkg.com/).
 
-### building
+### Build
 
 ```sh
 $ make build
@@ -102,12 +102,12 @@ $ export ENV=local && exec ./manager-api
 $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 ```
 
-## tar
+## Pack
 
-You can package the output directory as a whole, copy it to other places to decompress and run. The output directory contains all the files needed to run the dashboard (configuration files, executable files, web static resources)
+Package the output directory, The output directory contains all the files needed to run the dashboard (configuration files, executable files, web static resources)
 
 ```sh
-$ tar –cvf dashboard.tar ./output/*
+$ make release-src
 ```
 
 ## Configuration

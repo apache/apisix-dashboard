@@ -21,15 +21,17 @@
 
 # [Apache APISIX](https://github.com/apache/apisix) 控制台
 
-Apache APISIX Dashboard 项目的目标是为了让大家快速上手体验和学习 Apache APISIX，并不能直接用于生产环境。所以它的功能点覆盖永远都是 Apache APISIX 的子集，也可能会滞后于 Apache APISIX 的快速迭代。如果你需要把 Dashboard 项目用于生产系统，需要对用户权限、通讯安全、高可用、高级功能等方面做增强。
+Apache APISIX Dashboard 项目的目标是为了让大家快速上手体验和学习 Apache APISIX，并不能直接用于生产环境。所以它的功能点覆盖永远都是 Apache APISIX 的子集，也可能会滞后于 Apache APISIX 的快速迭代。
+
+如果你需要把 Dashboard 项目用于生产系统，需要对用户权限、通讯安全、高可用、高级功能等方面做增强。
 
 ## 安装
 
-我们有多种方式来安装 APISIX dashboard
+提供多种方式来安装 APISIX dashboard
 
 ### Docker
 
-我们可以通过下面的方法来启动一个可运行的版本
+通过下面的方法来启动一个可运行的版本
 
 - [使用 Docker 一键部署](./docs/deploy-with-docker.zh-CN.md)
 
@@ -68,7 +70,7 @@ Makefile rules:
 
 更详细的构建步骤参见这里 - [从源代码构建](./docs/deploy.zh-CN.md)
 
-### 开发者
+### 对于开发者
 
 apisix-dashboard 为 [Apache APISIX](https://github.com/apache/apisix) 提供管理界面，需要先[安装 APISIX](https://github.com/apache/apisix#configure-and-installation).
 

@@ -29,7 +29,7 @@ $ cd apisix-dashboard
 
 ## 构建
 
-### manager-api 检查项
+### Manager-api 检查项
 
 `manager-api` 用于为控制台提供接口，就像 Apache APISIX 和控制台之间的桥梁。下面是手动构建步骤：
 
@@ -102,12 +102,12 @@ $ export ENV=local && exec ./manager-api
 $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 ```
 
-## 打包
+## 打包 output 目录
 
 你可以把刚刚 output 目录整体打包，copy 到其他地方解压运行，output 目录包含运行 dashboard 需要的所有文件(配置文件、可执行文件、web静态资源)
 
 ```sh
-$ tar –cvf dashboard.tar ./output/*
+$ make release-src
 ```
 
 ## 配置参数
