@@ -70,7 +70,7 @@ Makefile rules:
 
 ### 开发者
 
-apisix-dashboard 为 [Apache APISIX](https://github.com/apache/apisix) 提供管理界面，需要先 [安装 APISIX](https://github.com/apache/apisix#configure-and-installation).
+apisix-dashboard 为 [Apache APISIX](https://github.com/apache/apisix) 提供管理界面，需要先[安装 APISIX](https://github.com/apache/apisix#configure-and-installation).
 
 然后请参考这里分别启动 `manager-api` 和 `web`
 
