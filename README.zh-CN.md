@@ -21,6 +21,8 @@
 
 # [Apache APISIX](https://github.com/apache/apisix) 控制台
 
+Apache APISIX Dashboard 项目的目标是为了让大家快速上手体验和学习 Apache APISIX，并不能直接用于生产环境。所以它的功能点覆盖永远都是 Apache APISIX 的子集，也可能会滞后于 Apache APISIX 的快速迭代。如果你需要把 Dashboard 项目用于生产系统，需要对用户权限、通讯安全、高可用、高级功能等方面做增强。
+
 ## 用户指南
 
 请参考 [用户指南](./docs/USER_GUIDE.zh-CN.md)
