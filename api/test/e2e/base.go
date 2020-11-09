@@ -137,6 +137,7 @@ func testCaseCheck(tc HttpTestCase) {
 
 	//match body
 	if tc.ExpectBody != "" {
-		resp.Body().Equal(tc.ExpectBody)
+		resp.Body().Contains(tc.ExpectBody)
 	}
+
 }
