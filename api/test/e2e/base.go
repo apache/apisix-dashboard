@@ -80,6 +80,7 @@ type HttpTestCase struct {
 	ExpectCode    int
 	ExpectMessage string
 	ExpectBody    string
+	PartialBody   string
 	Sleep         time.Duration //ms
 }
 
@@ -130,5 +131,10 @@ func testCaseCheck(tc HttpTestCase) {
 	//match body
 	if tc.ExpectBody != "" {
 		resp.Body().Equal(tc.ExpectBody)
+	}
+
+	//Partial body
+	if tc.PartialBody != "" {
+		resp.Body().Contains(tc.PartialBody)
 	}
 }
