@@ -75,7 +75,9 @@ declare namespace RouteModule {
     desc: string;
     priority?: number;
     methods: HttpMethod[];
+    uri?: string;
     uris: string[];
+    host?: string;
     hosts: string[];
     vars: [string, Operator, string][];
     upstream: {
@@ -262,6 +264,8 @@ declare namespace RouteModule {
     };
     uri: string;
     uris?: string[];
+    host: string;
+    hosts?: string[];
     create_time: number;
     update_time: number;
   };
