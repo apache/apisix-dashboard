@@ -23,6 +23,7 @@ type PropertyName string
 
 const (
 	IdProperty         = "id"
+	UpstreamIdProperty = "upstream_id"
 	NameProperty       = "name"
 	SniProperty        = "sni"
 	SnisProperty       = "snis"
@@ -111,6 +112,8 @@ func (route Route) GetProperty(name PropertyName) ComparableValue {
 	switch name {
 	case NameProperty:
 		return ComparingString(route.Name)
+	case UpstreamIdProperty:
+		return ComparingString(route.UpstreamID)
 	default:
 		return nil
 	}

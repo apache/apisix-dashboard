@@ -80,6 +80,7 @@ type HttpTestCase struct {
 	ExpectCode    int
 	ExpectMessage string
 	ExpectBody    string
+	ExpectHeaders map[string]string
 	Sleep         time.Duration //ms
 }
 
@@ -125,6 +126,13 @@ func testCaseCheck(tc HttpTestCase) {
 	//match http status
 	if tc.ExpectStatus != 0 {
 		resp.Status(tc.ExpectStatus)
+	}
+
+	//match headers
+	if tc.ExpectHeaders != nil {
+		for key, val := range tc.ExpectHeaders {
+			resp.Header(key).Equal(val)
+		}
 	}
 
 	//match body
