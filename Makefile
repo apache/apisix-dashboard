@@ -38,10 +38,12 @@ build: web-default api-default
 	yarn install; \
 	yarn build
 
+
 ### run:		run dashboard, it contains web and manager-api
 .PHONY: run
 run:
 	api/run.sh &
+
 
 ### stop:		stop dashboard
 stop:
@@ -75,6 +77,7 @@ api-test: api-default
 api-run: api-default
 	cd api/ && go run .
 
+
 ### golang-lint:	Lint Go source code
 .PHONY: golang-lint
 golang-lint: ## Run the golangci-lint application (install if not found)
@@ -84,6 +87,7 @@ golang-lint: ## Run the golangci-lint application (install if not found)
 	@if [ "$(shell command -v golangci-lint)" = "" ]; then curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.32.0 && sudo cp ./bin/golangci-lint $(go env GOPATH)/bin/; fi;
 	@echo "running golangci-lint..."
 	@cd api && golangci-lint run --tests=false ./...
+
 
 ### license-check:	Check apisix-dashboard source codes for Apache License
 .PHONY: license-check
