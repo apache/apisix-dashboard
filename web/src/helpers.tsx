@@ -100,6 +100,7 @@ export const getUrlQuery: (key: string) => string | false = (key: string) => {
 
 export const timestampToLocaleString = (timestamp: number) => {
   if (!timestamp) {
+    // TODO: i18n
     return "None"
   }
 
