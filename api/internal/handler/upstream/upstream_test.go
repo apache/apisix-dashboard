@@ -30,6 +30,8 @@ import (
 	"github.com/apisix/manager-api/internal/core/store"
 )
 
+var upstreamHandler *Handler
+
 func TestUpstream(t *testing.T) {
 	// init
 	err := storage.InitETCDClient([]string{"127.0.0.1:2379"})
@@ -37,10 +39,10 @@ func TestUpstream(t *testing.T) {
 	err = store.InitStores()
 	assert.Nil(t, err)
 
-	handler := &Handler{
+	upstreamHandler = &Handler{
 		upstreamStore: store.GetStore(store.HubKeyUpstream),
 	}
-	assert.NotNil(t, handler)
+	assert.NotNil(t, upstreamHandler)
 
 	//create
 	ctx := droplet.NewContext()
@@ -94,7 +96,7 @@ func TestUpstream(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), upstream)
 	assert.Nil(t, err)
 	ctx.SetInput(upstream)
-	_, err = handler.Create(ctx)
+	_, err = upstreamHandler.Create(ctx)
 	assert.Nil(t, err)
 
 	//sleep
@@ -104,7 +106,7 @@ func TestUpstream(t *testing.T) {
 	input := &GetInput{}
 	input.ID = "1"
 	ctx.SetInput(input)
-	ret, err := handler.Get(ctx)
+	ret, err := upstreamHandler.Get(ctx)
 	stored := ret.(*entity.Upstream)
 	assert.Nil(t, err)
 	assert.Equal(t, stored.ID, upstream.ID)
@@ -161,7 +163,7 @@ func TestUpstream(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), upstream2)
 	assert.Nil(t, err)
 	ctx.SetInput(upstream2)
-	_, err = handler.Update(ctx)
+	_, err = upstreamHandler.Update(ctx)
 	assert.Nil(t, err)
 
 	//list
@@ -170,7 +172,7 @@ func TestUpstream(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), listInput)
 	assert.Nil(t, err)
 	ctx.SetInput(listInput)
-	retPage, err := handler.List(ctx)
+	retPage, err := upstreamHandler.List(ctx)
 	assert.Nil(t, err)
 	dataPage := retPage.(*store.ListOutput)
 	assert.Equal(t, len(dataPage.Rows), 1)
@@ -181,7 +183,40 @@ func TestUpstream(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), inputDel)
 	assert.Nil(t, err)
 	ctx.SetInput(inputDel)
-	_, err = handler.BatchDelete(ctx)
+	_, err = upstreamHandler.BatchDelete(ctx)
 	assert.Nil(t, err)
 
+}
+
+func TestUpstream_Pass_Host(t *testing.T) {
+	//create
+	ctx := droplet.NewContext()
+	upstream := &entity.Upstream{}
+	reqBody := `{
+		"id": "1",
+		"nodes": [{
+			"host": "httpbin.org",
+			"port": 80,
+			"weight": 1
+		}],
+		"type": "roundrobin",
+		"pass_host": "node"
+	}`
+	err := json.Unmarshal([]byte(reqBody), upstream)
+	assert.Nil(t, err)
+	ctx.SetInput(upstream)
+	_, err = upstreamHandler.Create(ctx)
+	assert.Nil(t, err)
+
+	//sleep
+	time.Sleep(time.Duration(20) * time.Millisecond)
+
+	//get
+	input := &GetInput{}
+	input.ID = "1"
+	ctx.SetInput(input)
+	ret, err := upstreamHandler.Get(ctx)
+	stored := ret.(*entity.Upstream)
+	assert.Nil(t, err)
+	assert.Equal(t, stored.ID, upstream.ID)
 }
