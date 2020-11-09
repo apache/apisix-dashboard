@@ -127,7 +127,7 @@ func TestSSL_Basic(t *testing.T) {
 
 	// try again after deleting SSL, make a HTTPS request
 	// If use the test framework, errors will cause failure, so we need to make a separate https request for testing.
-	time.Sleep(time.Duration(20) * time.Millisecond)
+	time.Sleep(sleepTime)
 	_, err = http.Get("https://www.test2.com:9443")
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")

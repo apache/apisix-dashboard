@@ -94,7 +94,7 @@ func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
 	return e
 }
 
-var sleepTime = time.Duration(20) * time.Millisecond
+var sleepTime = time.Duration(50) * time.Millisecond
 
 type HttpTestCase struct {
 	caseDesc      string
@@ -107,6 +107,7 @@ type HttpTestCase struct {
 	ExpectCode    int
 	ExpectMessage string
 	ExpectBody    string
+	ExpectHeaders map[string]string
 	Sleep         time.Duration //ms
 }
 
@@ -154,8 +155,16 @@ func testCaseCheck(tc HttpTestCase) {
 		resp.Status(tc.ExpectStatus)
 	}
 
+	//match headers
+	if tc.ExpectHeaders != nil {
+		for key, val := range tc.ExpectHeaders {
+			resp.Header(key).Equal(val)
+		}
+	}
+
 	//match body
 	if tc.ExpectBody != "" {
-		resp.Body().Equal(tc.ExpectBody)
+		resp.Body().Contains(tc.ExpectBody)
 	}
+
 }
