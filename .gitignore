@@ -43,3 +43,5 @@ manager-api
 
 output
 default.etcd
+api/build-tools/apisix
+/*.zip

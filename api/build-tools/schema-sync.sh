@@ -15,15 +15,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+set -ex
+
 pwd=`pwd`
 
 version="master"
 if [[ -n $1 ]]; then
 version=$1
-fi 
+fi
 
 rm -rf ./api/build-tools/apisix/
-wget https://github.com/apache/apisix/archive/$version.zip
+wget -O $version.zip https://github.com/apache/apisix/archive/$version.zip
 
 unzip $version.zip
 mkdir -p ./api/build-tools/apisix/
@@ -31,5 +34,5 @@ mv ./apisix-$version/apisix/* ./api/build-tools/apisix/
 rm -rf ./apisix-$version
 cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/api/conf/schema.json
 
-echo "sync success:" 
+echo "sync success:"
 echo "${pwd}/api/conf/schema.json"
