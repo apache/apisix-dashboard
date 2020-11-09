@@ -58,7 +58,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 
 
 ```sh
-$ make dashboard-build
+$ make build
 ```
 
 构建完成后的文件在根目录 `/output` 下。
@@ -91,10 +91,16 @@ authentication:
 2. 启动
 
 ```sh
-$ make dashboard-run
+$ make run
 ```
 
 3. 在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
+
+3. 关闭
+
+```sh
+$ make stop
+```
 
 ## 配置参数
 
@@ -114,15 +120,7 @@ conf:
 
 ## 注意
 
-1. 当 manager-api 在后台模式下运行，在重新编译、重新部署它之前，我们需要查找其进程并结束掉它：
-
-```sh
-$ ps aux | grep manager-api
-
-$ kill $process_id
-```
-
-2. 在编译 Manager API 后，如移动编译后产物到其它位置，启动时将会报错，这是由于配置文件**绝对路径**被固定在了产物中，需要在运行前，通过执行环境变量设置配置文件位置来解决。
+1. 在编译 Manager API 后，如移动编译后产物到其它位置，启动时将会报错，这是由于配置文件**绝对路径**被固定在了产物中，需要在运行前，通过执行环境变量设置配置文件位置来解决。
 
 ```sh
 $ export APISIX_CONF_PATH=/home/demo_user/workspace/apisix-dashboard/api/conf

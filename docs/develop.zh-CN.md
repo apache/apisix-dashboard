@@ -36,7 +36,7 @@ $ cd apisix-dashboard
 3. 安装依赖:
 
 ```sh
-$ make frontend-install
+$ yarn install
 ```
 
 4. 若需要修改 manager-api 地址，请访问 `config/proxy.ts` 文件。
@@ -44,7 +44,7 @@ $ make frontend-install
 5. 启动 (开发模式)
 
 ```sh
-$ make frontend-run
+$ yarn start
 ```
 
 ### 编写 E2E 测试案例

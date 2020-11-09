@@ -33,7 +33,7 @@ $ cd apisix-dashboard
 3. Install dependencies:
 
 ```sh
-$ make frontend-install
+$ yarn install
 ```
 
 4. If we want to modify the API, please refer to the `config/proxy.ts` file.
@@ -41,7 +41,7 @@ $ make frontend-install
 5. Start (the development mode)
 
 ```sh
-$ make frontend-run
+$ yarn start
 ```
 
 ### Add E2E test cases

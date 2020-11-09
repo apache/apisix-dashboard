@@ -57,7 +57,7 @@ This project is initialized with [Ant Design Pro](https://pro.ant.design). The f
 ### building
 
 ```sh
-$ make dashboard-build
+$ make build
 ```
 
 The bundled files are located in the root directory `/output`.
@@ -90,7 +90,7 @@ authentication:
 2. Run
 
 ```sh
-$ make dashboard-run
+$ make run
 ```
 
 3. Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
@@ -113,15 +113,7 @@ conf:
 
 ## NOTE
 
-1. When the manager-api is running in background, before we want to rebuild & re-deploy it, we should find the process id then kill it.
-
-```sh
-$ ps aux | grep manager-api
-
-$ kill $process_id
-```
-
-2. After compiling the Manager API, if you move the compiled product to another location, an error will be reported at startup, this is because the configuration file's **absolute path** is fixed in the product and needs to be resolved by running an environment variable to set the location of the configuration file before running.
+1. After compiling the Manager API, if you move the compiled product to another location, an error will be reported at startup, this is because the configuration file's **absolute path** is fixed in the product and needs to be resolved by running an environment variable to set the location of the configuration file before running.
 
 ```sh
 $ export APISIX_CONF_PATH=/home/demo_user/workspace/apisix-dashboard/api/conf

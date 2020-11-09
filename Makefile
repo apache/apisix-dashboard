@@ -22,7 +22,7 @@ GO_EXEC ?= $(shell which go)
 
 export GO111MODULE=on
 
-### help:             Show Makefile rules
+### help:		Show Makefile rules
 .PHONY: help
 help:
 	@echo Makefile rules:
@@ -30,18 +30,22 @@ help:
 	@grep -E '^### [-A-Za-z0-9_]+:' Makefile | sed 's/###/   /'
 
 
-### dashboard-build:   build dashboard, it contains frontend and manager-api
-.PHONY: dashboard-build
-dashboard-build: frontend-default api-default
+### build:		build dashboard, it contains frontend and manager-api
+.PHONY: build
+build: frontend-default api-default
 	api/build.sh; \
 	cd /web; \
 	yarn install; \
 	yarn build
 
-### dashboard-run:   run dashboard, it contains frontend and manager-api
-.PHONY: dashboard-run
-dashboard-run:
+### run:		run dashboard, it contains frontend and manager-api
+.PHONY: run
+run:
 	api/run.sh &
+
+### stop:		stop dashboard
+stop:
+	kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 
 
 .PHONY: frontend-default
@@ -52,20 +56,6 @@ ifeq ("$(wildcard $(YARN_EXEC))", "")
 endif
 
 
-### frontend-install:   yarn install dashboard frontend 
-.PHONY: frontend-install
-frontend-install: frontend-default
-	cd ./web; \
-	yarn install
-
-
-### frontend-run:   run dashboard frontend 
-.PHONY: frontend-run
-frontend-run: frontend-install
-	cd ./web; \
-	yarn start
-	@echo "If we want to modify the API, please refer to the config/proxy.ts file."
-
 .PHONY: api-default
 api-default:
 ifeq ("$(wildcard $(GO_EXEC))", "")
@@ -74,7 +64,18 @@ ifeq ("$(wildcard $(GO_EXEC))", "")
 endif
 
 
-### golang-lint:             Lint Go source code
+### api-test:		Run the tests of manager-api 
+.PHONY: api-test
+api-test: api-default
+	cd api/ && APISIX_API_WORKDIR=$$PWD go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
+
+
+### api-run:		Run the manager-api
+.PHONY: api-run
+api-run: api-default
+	cd api/ && go run .
+
+### golang-lint:	Lint Go source code
 .PHONY: golang-lint
 golang-lint: ## Run the golangci-lint application (install if not found)
 	@#Brew - MacOS
@@ -84,18 +85,7 @@ golang-lint: ## Run the golangci-lint application (install if not found)
 	@echo "running golangci-lint..."
 	@cd api && golangci-lint run --tests=false ./...
 
-### api-test:         Run the tests of manager-api 
-.PHONY: api-test
-api-test: api-default
-	cd api/ && APISIX_API_WORKDIR=$$PWD go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
-
-
-### api-run:         Run the manager-api
-.PHONY: api-run
-api-run: api-default
-	cd api/ && go run .
-
-### license-check:    Check apisix-dashboard source codes for Apache License
+### license-check:	Check apisix-dashboard source codes for Apache License
 .PHONY: license-check
 license-check:
 ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
