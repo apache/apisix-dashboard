@@ -213,7 +213,7 @@ func TestUpstream_Pass_Host(t *testing.T) {
 
 	//get
 	input := &GetInput{}
-	input.ID = "1"
+	input.ID = "2"
 	ctx.SetInput(input)
 	ret, err := upstreamHandler.Get(ctx)
 	stored := ret.(*entity.Upstream)
