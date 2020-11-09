@@ -21,7 +21,7 @@
 	 "testing"
  )
 
-//TEST 1: add consumer with username
+//CASE 1: add consumer with username
  func TestConsumer_add_consumer_with_username(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -70,6 +70,14 @@
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime, //sleep x millisecond before verify route
 		},
+		{
+			caseDesc:     "verify route without auth",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusUnauthorized,
+			Sleep:        sleepTime, 
+		},
 	}
 
 	for _, tc := range tests {
@@ -77,7 +85,7 @@
 	}
 }
 
-//TEST 2: add consumer without username
+//CASE 2: add consumer without username
 func TestConsumer_add_consumer_without_username(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -88,13 +96,22 @@ func TestConsumer_add_consumer_without_username(t *testing.T) {
 			Body: `{
 				"plugins": {
 					"key-auth": {
-						"key": "auth-one"
+						"key": "auth-new"
 					}
 				},
 			  "desc": "test description"
 			  }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			caseDesc:     "verify route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"apikey": "auth-new"},
+			ExpectStatus: http.StatusUnauthorized,
+			Sleep:        sleepTime,
 		},
 	}
 
@@ -103,7 +120,7 @@ func TestConsumer_add_consumer_without_username(t *testing.T) {
 	}
 }
 
-//TEST 3: add consumer with labels
+//CASE 3: add consumer with labels
 func TestConsumer_add_consumer_with_labels(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -112,7 +129,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-				"username": "jack",
+				"username": "jack2",
 				"labels": {
 					"build":"16",
 					"env":"production",
@@ -120,7 +137,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 				},
 				"plugins": {
 					"key-auth": {
-						"key": "auth-one"
+						"key": "auth-two"
 					}
 				},
 			  "desc": "test description"
@@ -132,11 +149,11 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			caseDesc:     "verify consumer",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/apisix/admin/consumers/jack",
+			Path:         "/apisix/admin/consumers/jack2",
 			Headers:      map[string]string{"X-API-KEY": "edd1c9f034335f136f87ad84b625c8f1"},
 			ExpectStatus: http.StatusOK,
 			PartialBody:   "\"env\":\"production\"",
-			Sleep:        sleepTime, //sleep x millisecond before verify route
+			Sleep:        sleepTime, 
 		},
 		{
 			caseDesc: "create route",
@@ -163,7 +180,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"apikey": "auth-one"},
+			Headers:      map[string]string{"apikey": "auth-two"},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime, //sleep x millisecond before verify route
 		},
@@ -174,55 +191,9 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 	}
 }
 
-//TEST 4: delete consumer
+//CASE 4: delete consumer
 func TestConsumer_delete_consumer(t *testing.T) {
 	tests := []HttpTestCase{
-		{
-			caseDesc: "create consumer",
-			Object:   MangerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
-			Body: `{
-				"username": "jack",
-				"plugins": {
-					"key-auth": {
-						"key": "auth-one"
-					}
-				},
-			  "desc": "test description"
-			  }`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc: "create route",
-			Object:   MangerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
-			Body: `{
-				"uri": "/hello",
-				"plugins": {
-					"key-auth": {}
-				},
-				"upstream": {
-					"type": "roundrobin",
-					"nodes": {
-						"172.16.238.20:1980": 1
-					}
-				}
-			  }`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc:     "verify route",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"apikey": "auth-one"},
-			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime, //sleep x millisecond before verify route
-		},
 		{
 			caseDesc:     "delete consumer",
 			Object:       APISIXExpect(t),
@@ -251,7 +222,7 @@ func TestConsumer_delete_consumer(t *testing.T) {
 }
 
 
-//Test 5: Teardown
+//CASE 5: Teardown
 func TestConsumer_teardown(t *testing.T) {
 	_ = []HttpTestCase{
 		{
