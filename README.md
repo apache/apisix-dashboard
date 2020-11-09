@@ -25,25 +25,66 @@ Dashboard for [Apache APISIX](https://github.com/apache/apisix)
 
 The goal of the Apache APISIX Dashboard project is to enable everyone to quickly experience and learn Apache APISIX, and it cannot be used directly in a production environment. Therefore, its function point coverage is always a subset of Apache APISIX, and may lag behind the rapid iteration of Apache APISIX. If you need to use the Dashboard project in a production system, you need to enhance user permissions, communication security, high availability and advanced features.
 
-## User Guide
+## Install
 
-Please refer to [User Guide](./docs/USER_GUIDE.md)
+We have multiple ways to install APISIX dashboard
 
-## For Developer
+### Docker
 
-If you are a developer, please refer to start manager-api and Web separately
-
-- [dependencies](#dependencies)
-- [develop Dashboard](./docs/develop.md)
-
-## deployment
+We can start a runnable version by the following method
 
 - [one click with Docker](./docs/deploy-with-docker.md)
-- [build from source code](./docs/deploy.md)
+
+### Build from source code
+
+To build from source code, first make sure that your `golang` version is 1.13 or greater.
+Also you need to follow the `node` and `yarn` in advance
+
+```
+$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git && cd apisix-dashboard
+$ make build
+```
+
+Then you can find all files (configuration files, executable files, web static resources) needed to run dashboard in the `./output` directory.
+
+Start by the following command
+
+```sh
+$ cd ./output
+$ export ENV=local && exec ./manager-api
+```
+
+`makefile` provides the following commands
+
+```
+Makefile rules:
+
+    help:		    Show Makefile rules
+    build:		    build dashboard, it contains web and manager-api
+    api-test:		Run the tests of manager-api
+    api-run:		Run the manager-api
+    api-stop:		stop manager-api
+    golang-lint:	Lint Go source code
+    license-check:	Check apisix-dashboard source codes for Apache License
+```
+
+For more detailed construction steps, see -  [build from source code](./docs/deploy.md)
+
+### For developer
+
+If you are a developer, please refer to here to start `manager-api` and `web`respectively.
+
+- [dependencies](#dependencies)
+
+- [develop Dashboard](./docs/develop.md)
 
 ## dependencies
 
 apisix-dashboard provides a management interface for [Apache APISIX](https://github.com/apache/apisix), you need to [install APISIX first](https://github.com/apache/apisix#configure-and-installation).
+
+## Dashboard user guide
+
+Please refer to [User Guide](./docs/USER_GUIDE.md)
 
 ## Milestones
 
@@ -53,6 +94,10 @@ apisix-dashboard provides a management interface for [Apache APISIX](https://git
 ## Contributing
 
 See [CONTRIBUTING](./CONTRIBUTING.md) for details on submitting patches and the contribution workflow.
+
+## License
+
+Apache License 2.0, [LICENSE](https://github.com/apache/apisix-dashboard/blob/master/LICENSE)
 
 ## FAQ
 
