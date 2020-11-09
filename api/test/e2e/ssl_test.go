@@ -30,6 +30,7 @@ import (
 )
 
 func TestSSL_Basic(t *testing.T) {
+	// build test body
 	testCert, err := ioutil.ReadFile("../certs/test2.crt")
 	assert.Nil(t, err)
 	testKey, err := ioutil.ReadFile("../certs/test2.key")
@@ -48,7 +49,7 @@ func TestSSL_Basic(t *testing.T) {
 		"key":  string(apisixKey),
 	})
 
-	//Before configuring SSL, make a HTTPS request
+	// Before configuring SSL, make a HTTPS request
 	// If use the test framework, errors will cause failure, so we need to make a separate https request for testing.
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	http.DefaultTransport.(*http.Transport).DialContext = func(ctx context.Context, network, addr string) (net.Conn, error) {
@@ -62,6 +63,7 @@ func TestSSL_Basic(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")
 
+	// main test cases
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "create ssl fail - key and cert not match",
