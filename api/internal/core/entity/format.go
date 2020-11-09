@@ -48,6 +48,10 @@ func NodesFormat(obj interface{}) interface{} {
 		return nodes
 	}
 
+	if nodes, ok := obj.([]*Node); ok {
+		return nodes
+	}
+
 	list := obj.([]interface{})
 	for _, v := range list {
 		val := v.(map[string]interface{})
