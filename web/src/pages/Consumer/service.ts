@@ -28,8 +28,8 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
     total: data.total_size,
   }));
 
-export const fetchItem = (id: string) =>
-  request<{ data: ConsumerModule.ResEntity }>(`/consumers/${id}`);
+export const fetchItem = (username: string) =>
+  request<{ data: ConsumerModule.ResEntity }>(`/consumers/${username}`);
 
 export const create = (data: ConsumerModule.Entity) =>
   request('/consumers', {
@@ -37,10 +37,10 @@ export const create = (data: ConsumerModule.Entity) =>
     data,
   });
 
-export const update = (id: string, data: ConsumerModule.Entity) =>
-  request(`/consumers/${id}`, {
+export const update = (username: string, data: ConsumerModule.Entity) =>
+  request(`/consumers/${username}`, {
     method: 'PUT',
     data,
   });
 
-export const remove = (id: string) => request(`/consumers/${id}`, { method: 'DELETE' });
+export const remove = (username: string) => request(`/consumers/${username}`, { method: 'DELETE' });

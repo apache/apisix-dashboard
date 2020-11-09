@@ -53,7 +53,7 @@ const Page: React.FC = () => {
           <Button
             type="primary"
             style={{ marginRight: 10 }}
-            onClick={() => history.push(`/consumer/${record.id}/edit`)}
+            onClick={() => history.push(`/consumer/${record.username}/edit`)}
           >
             {formatMessage({ id: 'component.global.edit' })}
           </Button>
@@ -62,7 +62,7 @@ const Page: React.FC = () => {
             okText={formatMessage({ id: 'component.global.confirm' })}
             cancelText={formatMessage({ id: 'component.global.cancel' })}
             onConfirm={() => {
-              remove(record.id).then(() => {
+              remove(record.username).then(() => {
                 notification.success({
                   message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
                     id: 'menu.consumer',
