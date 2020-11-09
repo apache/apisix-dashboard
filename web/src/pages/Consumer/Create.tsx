@@ -36,7 +36,7 @@ const Page: React.FC = (props) => {
     const { username } = (props as any).match.params;
     if (username) {
       fetchItem(username).then(({ data }) => {
-        const { username, desc, ...rest } = data;
+        const { desc, ...rest } = data;
         form1.setFieldsValue({ username, desc });
         setPlugins(rest.plugins);
       });
