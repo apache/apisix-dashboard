@@ -19,7 +19,7 @@ FROM golang:1.13.8 AS build-env
 
 WORKDIR /go/src/github.com/apisix/manager-api
 
-COPY . .
+COPY ./ ./
 
 RUN mkdir -p /go/manager-api/conf \
     && mkdir -p /go/manager-api/build-tools \
