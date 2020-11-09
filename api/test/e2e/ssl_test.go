@@ -49,6 +49,7 @@ func TestSSL_Basic(t *testing.T) {
 	})
 
 	//Before configuring SSL, make a HTTPS request
+	// If use the test framework, errors will cause failure, so we need to make a separate https request for testing.
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	http.DefaultTransport.(*http.Transport).DialContext = func(ctx context.Context, network, addr string) (net.Conn, error) {
 		if addr == "www.test2.com:9443" {
@@ -109,14 +110,6 @@ func TestSSL_Basic(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
 			caseDesc:     "delete ssl",
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
@@ -130,9 +123,22 @@ func TestSSL_Basic(t *testing.T) {
 		testCaseCheck(tc)
 	}
 
-	//try again after deleting SSL, make a HTTPS request
+	// try again after deleting SSL, make a HTTPS request
+	// If use the test framework, errors will cause failure, so we need to make a separate https request for testing.
 	time.Sleep(time.Duration(20) * time.Millisecond)
 	_, err = http.Get("https://www.test2.com:9443")
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")
+
+	// clean test data
+	delRoute := HttpTestCase{
+		caseDesc:     "delete route",
+		Object:       MangerApiExpect(t),
+		Method:       http.MethodDelete,
+		Path:         "/apisix/admin/routes/r1",
+		Headers:      map[string]string{"Authorization": token},
+		ExpectStatus: http.StatusOK,
+	}
+	testCaseCheck(delRoute)
+
 }
