@@ -91,7 +91,7 @@ authentication:
 
 ```sh
 $ cd ./output
-$ export ENV=local && exec ./manager-api
+$ ./manager-api
 ```
 
 3. 在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。

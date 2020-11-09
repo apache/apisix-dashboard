@@ -91,7 +91,7 @@ authentication:
 
 ```sh
 $ cd ./output
-$ export ENV=local && exec ./manager-api
+$ ./manager-api
 ```
 
 3. Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
