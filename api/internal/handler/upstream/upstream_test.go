@@ -193,7 +193,7 @@ func TestUpstream_Pass_Host(t *testing.T) {
 	ctx := droplet.NewContext()
 	upstream := &entity.Upstream{}
 	reqBody := `{
-		"id": "1",
+		"id": "2",
 		"nodes": [{
 			"host": "httpbin.org",
 			"port": 80,
@@ -219,4 +219,14 @@ func TestUpstream_Pass_Host(t *testing.T) {
 	stored := ret.(*entity.Upstream)
 	assert.Nil(t, err)
 	assert.Equal(t, stored.ID, upstream.ID)
+
+	//delete test data
+	inputDel := &BatchDelete{}
+	reqBody = `{"ids": "2"}`
+	err = json.Unmarshal([]byte(reqBody), inputDel)
+	assert.Nil(t, err)
+	ctx.SetInput(inputDel)
+	_, err = upstreamHandler.BatchDelete(ctx)
+	assert.Nil(t, err)
+
 }
