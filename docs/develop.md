@@ -79,6 +79,13 @@ authentication:
 $ make api-run
 ```
 
+3. stop (the development mode)
+
+```
+$ make api-stop
+```
+
+
 ### Sync jsonschema
 
 To sync jsonschema from Apache APISIX, `Lua` 5.1+ and `zip` need to be preinstalled, then execute this command: `api/build-tools/schema-sync.sh $version`.

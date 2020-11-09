@@ -29,7 +29,7 @@ $ cd apisix-dashboard
 
 ## build
 
-### checklist for manager-api
+### manager-api dependencies
 
 The `manager-api` is used to provide APIs for Dashboard, just like a bridge between the Apache APISIX and the Dashboard. Here are the steps to build it manually:
 
@@ -47,7 +47,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 
 The bundled files are located in the root directory `/output`.
 
-### checklist for web
+### web dependencies
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
 
@@ -60,7 +60,7 @@ This project is initialized with [Ant Design Pro](https://pro.ant.design). The f
 $ make build
 ```
 
-The bundled files are located in the root directory `/output`.
+The bundled files are located in the root directory `output`.
 
 ## Run
 
@@ -90,7 +90,8 @@ authentication:
 2. Run
 
 ```sh
-$ ./api/run.sh &
+$ cd ./output
+$ export ENV=local && exec ./manager-api
 ```
 
 3. Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
@@ -99,6 +100,14 @@ $ ./api/run.sh &
 
 ```sh
 $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
+```
+
+## tar
+
+You can package the output directory as a whole, copy it to other places to decompress and run. The output directory contains all the files needed to run the dashboard (configuration files, executable files, web static resources)
+
+```sh
+$ tar –cvf dashboard.tar ./output/*
 ```
 
 ## Configuration

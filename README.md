@@ -27,15 +27,21 @@ Dashboard for [Apache APISIX](https://github.com/apache/apisix)
 
 Please refer to [User Guide](./docs/USER_GUIDE.md)
 
-## Deployment
+## For Developer
 
-- [Deploy Manually](./docs/deploy.md)
-- [Deploy with Docker](./docs/deploy-with-docker.md)
+If you are a developer, please refer to start manager-api and Web separately
 
-## Development
+- [dependencies](#dependencies)
+- [develop Dashboard](./docs/develop.md)
 
-- [Apache APISIX](https://github.com/apache/apisix)
-- [Dashboard](./docs/develop.md)
+## deployment
+
+- [one click with Docker](./docs/deploy-with-docker.md)
+- [build from source code](./docs/deploy.md)
+
+## dependencies
+
+apisix-dashboard provides a management interface for [Apache APISIX](https://github.com/apache/apisix), you need to [install APISIX first](https://github.com/apache/apisix#configure-and-installation).
 
 ## Milestones
 

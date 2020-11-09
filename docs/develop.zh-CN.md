@@ -82,6 +82,12 @@ authentication:
 $ make api-run
 ```
 
+3. 关闭 (关闭)
+
+```
+$ make api-stop
+```
+
 ### 同步 jsonschema
 
 从 Apache APISIX 同步 jsonschema ，需要预安装 `Lua` 5.1+ 和 `zip` ，并执行命令 `api/build-tools/schema-sync.sh $version`。

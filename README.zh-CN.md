@@ -25,19 +25,24 @@
 
 请参考 [用户指南](./docs/USER_GUIDE.zh-CN.md)
 
-## 部署
+## 开发者
 
-当前支持如下方式部署：
+如果你是开发者，请参考这里分别启动 manager-api 和 web
 
-- [手动部署](./docs/deploy.zh-CN.md)
-- [使用 Docker 部署](./docs/deploy-with-docker.zh-CN.md)
+- [依赖检查](#依赖检查)
+- [开发 Dashboard](./docs/develop.zh-CN.md)
 
-## 开发
+## 部署运行
 
-开发分为 Apache APISIX 开发、Dashboard 开发
+我们有多种部署方式
 
-- [Apache APISIX](https://github.com/apache/apisix)
-- [Dashboard](./docs/develop.zh-CN.md)
+- [使用 Docker 一键部署](./docs/deploy-with-docker.zh-CN.md)
+
+- [从源文件打包部署](./docs/deploy.zh-CN.md)
+
+## 依赖检查
+
+apisix-dashboard 为 [Apache APISIX](https://github.com/apache/apisix) 提供管理界面，需要先 [安装 APISIX](https://github.com/apache/apisix#configure-and-installation).
 
 ## 里程碑
 

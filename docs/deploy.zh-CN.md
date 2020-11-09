@@ -17,7 +17,7 @@
 #
 -->
 
-# 手动部署
+# 从源文件打包部署
 
 ## 克隆项目
 
@@ -27,7 +27,7 @@ $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 $ cd apisix-dashboard
 ```
 
-## 构建 
+## 构建
 
 ### manager-api 检查项
 
@@ -53,7 +53,6 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 
 2. 安装 [yarn](https://yarnpkg.com/)。
 
-
 ### 开始构建
 
 
@@ -61,7 +60,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 $ make build
 ```
 
-构建完成后的文件在根目录 `/output` 下。
+构建完成后的文件在根目录 `output` 下。
 
 ## 启动
 
@@ -91,7 +90,8 @@ authentication:
 2. 启动
 
 ```sh
-$ ./api/run.sh &
+$ cd ./output
+$ export ENV=local && exec ./manager-api
 ```
 
 3. 在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
@@ -100,6 +100,14 @@ $ ./api/run.sh &
 
 ```sh
 $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
+```
+
+## 打包
+
+你可以把刚刚 output 目录整体打包，copy 到其他地方解压运行，output 目录包含运行 dashboard 需要的所有文件(配置文件、可执行文件、web静态资源)
+
+```sh
+$ tar –cvf dashboard.tar ./output/*
 ```
 
 ## 配置参数
