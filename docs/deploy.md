@@ -90,10 +90,16 @@ authentication:
 2. Run
 
 ```sh
-$ make run
+$ ./api/run.sh &
 ```
 
 3. Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
+
+3. stop
+
+```sh
+$ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
+```
 
 ## Configuration
 

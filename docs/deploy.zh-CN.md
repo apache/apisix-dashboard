@@ -91,15 +91,15 @@ authentication:
 2. 启动
 
 ```sh
-$ make run
+$ ./api/run.sh &
 ```
 
 3. 在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
 
-3. 关闭
+4. 关闭
 
 ```sh
-$ make stop
+$ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 ```
 
 ## 配置参数

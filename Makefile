@@ -33,21 +33,7 @@ help:
 ### build:		build dashboard, it contains web and manager-api
 .PHONY: build
 build: web-default api-default
-	api/build.sh; \
-	cd /web; \
-	yarn install; \
-	yarn build
-
-
-### run:		run dashboard, it contains web and manager-api
-.PHONY: run
-run:
-	api/run.sh &
-
-
-### stop:		stop dashboard
-stop:
-	kill $(ps aux | grep 'manager-api' | awk '{print $2}')
+	api/build.sh && cd /web && yarn install && yarn build 
 
 
 .PHONY: web-default
@@ -76,6 +62,10 @@ api-test: api-default
 .PHONY: api-run
 api-run: api-default
 	cd api/ && go run .
+
+### api-stop:		stop manager-api
+api-stop:
+	kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 
 
 ### golang-lint:	Lint Go source code
