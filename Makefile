@@ -98,6 +98,3 @@ ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
 endif
 	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./
 
-
-
-
