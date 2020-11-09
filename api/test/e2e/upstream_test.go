@@ -161,12 +161,12 @@ func TestRoute_Node_Host(t *testing.T) {
 			Body: `{
                "nodes": [{
                    "host": "172.16.238.20",
-                   "port": 80,
+                   "port": 1980,
                    "weight": 1
                }],
                "type": "roundrobin",
 				"pass_host": "rewrite",
-				"upstream_host": "apache.org"  
+				"upstream_host": "httpbin.org"  
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -175,9 +175,9 @@ func TestRoute_Node_Host(t *testing.T) {
 			caseDesc:     "hit the route ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/foundation/",
+			Path:         "/uri",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"Host\": \"httpbin.org\"",
+			ExpectBody:   "x-forwarded-host: 127.0.0.1",
 			Sleep:        sleepTime,
 		},
 	}
