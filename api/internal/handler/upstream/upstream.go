@@ -17,8 +17,6 @@
 package upstream
 
 import (
-	"github.com/shiningrush/droplet/data"
-	"net/http"
 	"reflect"
 	"strings"
 
@@ -146,33 +144,8 @@ type BatchDelete struct {
 
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
-	ids := strings.Split(input.IDs, ",")
 
-	for _, id := range ids {
-		routeStore := store.GetStore(store.HubKeyRoute)
-
-		routeList, err := routeStore.List(store.ListInput{
-			Predicate:  nil,
-			PageSize:   0,
-			PageNumber: 0,
-		})
-
-		if err != nil {
-			return handler.SpecCodeResponse(err), err
-		}
-
-		filter := store.NewFilter([]string{"upstream_id", id})
-		query := store.NewQuery(nil, filter, store.NewPagination(0, 0))
-		rows := store.NewFilterSelector(toRouteList(routeList), query)
-		if len(rows) > 0 {
-			route := rows[0].(*entity.Route)
-			errMsg := "can not delete this upstream," + " route [" + route.ID + "] is still using it now"
-			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-				consts.InvalidParam(errMsg)
-		}
-	}
-
-	if err := h.upstreamStore.BatchDelete(c.Context(), ids); err != nil {
+	if err := h.upstreamStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
@@ -220,14 +193,6 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 
 type ExistInput struct {
 	Name string `auto_read:"name,query"`
-}
-
-func toRouteList(list *store.ListOutput) []store.Row {
-	rows := make([]store.Row, list.TotalSize)
-	for i := range list.Rows {
-		rows[i] = list.Rows[i].(*entity.Route)
-	}
-	return rows
 }
 
 func toRows(list *store.ListOutput) []store.Row {
