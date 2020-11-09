@@ -64,7 +64,7 @@ Makefile rules:
     api-test:		Run the tests of manager-api
     api-run:		Run the manager-api
     api-stop:		stop manager-api
-    golang-lint:	Lint Go source code
+    go-lint:    	Lint Go source code
     license-check:	Check apisix-dashboard source codes for Apache License
 ```
 
