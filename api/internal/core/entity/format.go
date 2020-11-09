@@ -23,8 +23,8 @@ import (
 )
 
 func NodesFormat(obj interface{}) interface{} {
+	var nodes []*Node
 	if value, ok := obj.(map[string]float64); ok {
-		var nodes []*Node
 		var strArr []string
 		for key, val := range value {
 			node := &Node{}
@@ -48,5 +48,23 @@ func NodesFormat(obj interface{}) interface{} {
 		return nodes
 	}
 
-	return obj
+	if nodes, ok := obj.([]*Node); ok {
+		return nodes
+	}
+
+	if value, ok := obj.(map[string]interface{}); ok {
+
+	}
+
+	list := obj.([]interface{})
+	for _, v := range list {
+		val := v.(map[string]interface{})
+		node := &Node{}
+		node.Host = val["host"].(string)
+		node.Port = int(val["port"].(float64))
+		node.Weight = int(val["weight"].(float64))
+		nodes = append(nodes, node)
+	}
+
+	return nodes
 }
