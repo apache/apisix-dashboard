@@ -23,7 +23,7 @@ English | [简体中文](./README.zh-CN.md)
 
 Dashboard for [Apache APISIX](https://github.com/apache/apisix)
 
-The goal of the Apache APISIX Dashboard project is to enable everyone to quickly experience and learn Apache APISIX, and it still cannot be used directly in a production environment. its function point coverage is always a subset of Apache APISIX, and may lag behind the rapid iteration of Apache APISIX. If you need to use the Dashboard project in a production system, you need to enhance user permissions, communication security, high availability and other advanced features.
+The goal of Apache APISIX Dashboard project is to enable everyone to quickly experience and learn Apache APISIX, and it still cannot be used directly in a production environment. its function point coverage is always a subset of Apache APISIX, and may lag behind the rapid iteration of Apache APISIX. If you need to use the Dashboard project in a production system, you need to enhance user permissions, communication security, high availability and other advanced features.
 
 ## Install
 
@@ -35,7 +35,7 @@ We can start a runnable version by the following method
 
 - [one click with Docker](./docs/deploy-with-docker.md)
 
-### Build from source code
+### Build From Source Code
 
 To build from source code, first make sure that your `golang` version is 1.13 or greater.
 Also you need to follow the `node` and `yarn` in advance
@@ -70,7 +70,7 @@ Makefile rules:
 
 For more detailed construction steps, see -  [build from source code](./docs/deploy.md)
 
-### For developer
+### For Developer
 
 apisix-dashboard provides a management interface for [Apache APISIX](https://github.com/apache/apisix), you need to [install APISIX first](https://github.com/apache/apisix#configure-and-installation).
 
@@ -80,11 +80,7 @@ then, please refer to here to start `manager-api` and `web`respectively.
 
 - [develop Dashboard](./docs/develop.md)
 
-## dependencies
-
-
-
-## Dashboard user guide
+## Dashboard User Guide
 
 Please refer to [User Guide](./docs/USER_GUIDE.md)
 

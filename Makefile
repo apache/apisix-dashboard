@@ -63,14 +63,14 @@ api-test: api-default
 api-run: api-default
 	cd api/ && go run .
 
-### api-stop:		stop manager-api
+### api-stop:		stop the manager-api
 api-stop:
 	kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 
 
-### golang-lint:	Lint Go source code
-.PHONY: golang-lint
-golang-lint: ## Run the golangci-lint application (install if not found)
+### go-lint:	Lint Go source code
+.PHONY: go-lint
+go-lint: ## Run the golangci-lint application (install if not found)
 	@#Brew - MacOS
 	@if [ "$(shell command -v golangci-lint)" = "" ] && [ "$(shell command -v brew)" != "" ] && [ "$(UNAME)" = "Darwin" ]; then brew install golangci-lint; fi;
 	@#has sudo
