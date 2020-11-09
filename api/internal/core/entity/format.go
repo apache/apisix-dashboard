@@ -52,19 +52,18 @@ func NodesFormat(obj interface{}) interface{} {
 		return nodes
 	}
 
-	if value, ok := obj.(map[string]interface{}); ok {
+	if list, ok := obj.([]interface{}); ok {
+		for _, v := range list {
+			val := v.(map[string]interface{})
+			node := &Node{}
+			node.Host = val["host"].(string)
+			node.Port = int(val["port"].(float64))
+			node.Weight = int(val["weight"].(float64))
+			nodes = append(nodes, node)
+		}
 
+		return nodes
 	}
 
-	list := obj.([]interface{})
-	for _, v := range list {
-		val := v.(map[string]interface{})
-		node := &Node{}
-		node.Host = val["host"].(string)
-		node.Port = int(val["port"].(float64))
-		node.Weight = int(val["weight"].(float64))
-		nodes = append(nodes, node)
-	}
-
-	return nodes
+	return obj
 }
