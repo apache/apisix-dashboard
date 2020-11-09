@@ -23,7 +23,7 @@ English | [简体中文](./README.zh-CN.md)
 
 Dashboard for [Apache APISIX](https://github.com/apache/apisix)
 
-The goal of the Apache APISIX Dashboard project is to enable everyone to quickly experience and learn Apache APISIX, and it cannot be used directly in a production environment. Therefore, its function point coverage is always a subset of Apache APISIX, and may lag behind the rapid iteration of Apache APISIX. If you need to use the Dashboard project in a production system, you need to enhance user permissions, communication security, high availability and advanced features.
+The goal of the Apache APISIX Dashboard project is to enable everyone to quickly experience and learn Apache APISIX, and it still cannot be used directly in a production environment. its function point coverage is always a subset of Apache APISIX, and may lag behind the rapid iteration of Apache APISIX. If you need to use the Dashboard project in a production system, you need to enhance user permissions, communication security, high availability and other advanced features.
 
 ## Install
 
