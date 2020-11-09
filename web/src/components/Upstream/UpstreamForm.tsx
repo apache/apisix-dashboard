@@ -618,7 +618,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               component: <InActiveHealthCheck />,
             },
           ].map(({ label, name, component }) => (
-            <>
+            <div key={label}>
               <Form.Item label={label} name={name} valuePropName="checked" key={label}>
                 <Switch disabled={readonly} />
               </Form.Item>
@@ -630,7 +630,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   return null;
                 }}
               </Form.Item>
-            </>
+            </div>
           ))}
         </PanelSection>
       </Form>
