@@ -159,7 +159,7 @@ services:
   managerapi:
     build:
       context: ../../
-      dockerfile: Dockerfile    
+      dockerfile: Dockerfile-for-test    
     restart: always
     volumes:
       - ./manager-api-conf.yaml:/go/manager-api/conf/conf.yaml:ro
