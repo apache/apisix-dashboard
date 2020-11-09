@@ -30,15 +30,15 @@ help:
 	@grep -E '^### [-A-Za-z0-9_]+:' Makefile | sed 's/###/   /'
 
 
-### build:		build dashboard, it contains frontend and manager-api
+### build:		build dashboard, it contains web and manager-api
 .PHONY: build
-build: frontend-default api-default
+build: web-default api-default
 	api/build.sh; \
 	cd /web; \
 	yarn install; \
 	yarn build
 
-### run:		run dashboard, it contains frontend and manager-api
+### run:		run dashboard, it contains web and manager-api
 .PHONY: run
 run:
 	api/run.sh &
@@ -48,8 +48,8 @@ stop:
 	kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 
 
-.PHONY: frontend-default
-frontend-default:
+.PHONY: web-default
+web-default:
 ifeq ("$(wildcard $(YARN_EXEC))", "")
 	@echo "ERROR: Need to install yarn first"
 	exit 1
