@@ -34,6 +34,7 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
+	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
@@ -147,6 +148,8 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 
 	ssl.ID = input.ID
+	//set default value for SSL status, if not set, it will be 0 which means disable.
+	ssl.Status = conf.SSLDefaultStatus
 	if err := h.sslStore.Create(c.Context(), ssl); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -169,6 +172,9 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	if input.ID != "" {
 		ssl.ID = input.ID
 	}
+
+	//set default value for SSL status, if not set, it will be 0 which means disable.
+	ssl.Status = conf.SSLDefaultStatus
 	if err := h.sslStore.Update(c.Context(), ssl, true); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
