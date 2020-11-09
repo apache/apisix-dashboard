@@ -72,7 +72,9 @@ For more detailed construction steps, see -  [build from source code](./docs/dep
 
 ### For developer
 
-If you are a developer, please refer to here to start `manager-api` and `web`respectively.
+apisix-dashboard provides a management interface for [Apache APISIX](https://github.com/apache/apisix), you need to [install APISIX first](https://github.com/apache/apisix#configure-and-installation).
+
+then, please refer to here to start `manager-api` and `web`respectively.
 
 - [dependencies](#dependencies)
 
@@ -80,7 +82,7 @@ If you are a developer, please refer to here to start `manager-api` and `web`res
 
 ## dependencies
 
-apisix-dashboard provides a management interface for [Apache APISIX](https://github.com/apache/apisix), you need to [install APISIX first](https://github.com/apache/apisix#configure-and-installation).
+
 
 ## Dashboard user guide
 

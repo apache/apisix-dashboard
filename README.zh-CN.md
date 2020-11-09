@@ -70,14 +70,12 @@ Makefile rules:
 
 ### 开发者
 
-如果你是开发者，请参考这里分别启动 `manager-api` 和 `web`
+apisix-dashboard 为 [Apache APISIX](https://github.com/apache/apisix) 提供管理界面，需要先 [安装 APISIX](https://github.com/apache/apisix#configure-and-installation).
+
+然后请参考这里分别启动 `manager-api` 和 `web`
 
 - [依赖检查](#依赖检查)
 - [开发 Dashboard](./docs/develop.zh-CN.md)
-
-### 依赖检查
-
-apisix-dashboard 为 [Apache APISIX](https://github.com/apache/apisix) 提供管理界面，需要先 [安装 APISIX](https://github.com/apache/apisix#configure-and-installation).
 
 ## Dashboard 使用指南
 
