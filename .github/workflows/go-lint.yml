@@ -1,4 +1,4 @@
-name: golang-lint
+name: go-lint
 on:
   push:
     branches:
