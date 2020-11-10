@@ -24,6 +24,13 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
+      - uses: Azure/docker-login@v1
+        with:
+          login-server: apisixacr.azurecr.cn
+          username: 1 ${{secrets.REGISTRY_USERNAME}}
+          password: 1 ${{secrets.REGISTRY_PASSWORD}}
+
+
       - name: Build Docker Image
         run: |
           docker build -t dashboard:ci .
