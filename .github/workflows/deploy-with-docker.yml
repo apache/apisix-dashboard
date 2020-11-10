@@ -47,4 +47,3 @@ jobs:
         run: |
           docker tag dashboard:ci apisixacr.azurecr.cn/dashboard:${{ github.sha }}
           docker push apisixacr.azurecr.cn/dashboard:${{ github.sha }}
-

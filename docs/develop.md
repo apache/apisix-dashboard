@@ -87,7 +87,11 @@ $ make api-stop
 
 ### Sync jsonschema
 
-To sync jsonschema from Apache APISIX, `Lua` 5.1+ and `zip` need to be preinstalled, then execute this command: `api/build-tools/schema-sync.sh $version`.
+To sync jsonschema from Apache APISIX, `Lua` 5.1+ and `zip` need to be preinstalled, then execute this command: 
+
+```sh
+$ api/build-tools/schema-sync.sh $version
+```
 
 NOTE: `$version` should be `master` or Apache APISIX's version.
 
@@ -99,4 +103,10 @@ $ api/build-tools/schema-sync.sh master
 
 # Using Apache APISIX's version
 $ api/build-tools/schema-sync.sh 2.0
+```
+
+If you have custom plugin, please make sure your custom plugin is placed in the APISIX directory, and change the parameters of the execution script to the APISIX directory path, example:
+
+```sh
+$ api/build-tools/schema-sync.sh /usr/local/apisix
 ```
