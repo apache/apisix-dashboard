@@ -42,9 +42,10 @@ Start a runnable version by the following method
 ### Build from Source Code
 
 To build Apache APISIX Dashboard from source code, first make sure that your `golang` version is 1.13 or greater.
-Also you need to follow the `node` and `yarn` in advance
 
-```
+Also you need to make sure that node and yarn are installed.
+
+```sh
 $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 $ cd apisix-dashboard
 $ make build
@@ -61,7 +62,7 @@ $ exec ./manager-api
 
 `makefile` provides the following commands
 
-```
+```text
 Makefile rules:
 
     help:		    Show Makefile rules

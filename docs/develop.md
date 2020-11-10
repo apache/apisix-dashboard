@@ -21,7 +21,7 @@
 
 ## Dependencies
 
-```
+```sh
 $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 $ cd apisix-dashboard
 ```
@@ -54,7 +54,7 @@ Please refer to [E2E Documentation](../web/src/e2e/README.md).
 
 1. Modify `config.yaml` in `api/conf/conf.yaml`
 
-```
+```yaml
 conf:
   listen:
     host: 127.0.0.1
@@ -75,13 +75,13 @@ authentication:
 
 2. Start (the development mode)
 
-```
+```sh
 $ make api-run
 ```
 
 3. Stop (the development mode)
 
-```
+```sh
 $ make api-stop
 ```
 

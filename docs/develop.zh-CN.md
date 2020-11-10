@@ -21,7 +21,7 @@
 
 ## 前置条件
 
-```
+```sh
 $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 $ cd apisix-dashboard
 ```
@@ -56,7 +56,7 @@ $ yarn start
 
 1. 修改配置文件 目录: `api/conf/conf.yaml`
 
-```
+```yaml
 conf:
   listen:
     host: 127.0.0.1
@@ -77,13 +77,13 @@ authentication:
 
 2. 启动 (开发模式)
 
-```
+```sh
 $ make api-run
 ```
 
 3. 关闭 (开发模式)
 
-```
+```sh
 $ make api-stop
 ```
 
