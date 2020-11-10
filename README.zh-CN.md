@@ -69,7 +69,7 @@ Makefile rules:
     api-run:		Run the manager-api
     api-stop:		stop manager-api
     go-lint:	    Lint Go source code
-    license-check:	Check Apache APISIX Dashboard source codes for Apache License
+    license-check:	Check Apache APISIX Dashboard Source Codes for Apache License
 ```
 
 更详细的构建步骤参见这里 - [从源代码构建](./docs/deploy.zh-CN.md)

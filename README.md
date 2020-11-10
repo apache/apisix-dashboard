@@ -71,10 +71,10 @@ Makefile rules:
     api-run:		Run the manager-api
     api-stop:		stop manager-api
     go-lint:    	Lint Go source code
-    license-check:	Check Apache APISIX Dashboard source codes for Apache License
+    license-check:	Check Apache APISIX Dashboard Source Codes for Apache License
 ```
 
-For more detailed construction steps, see -  [Build from Source Code](./docs/deploy.md)
+For more detailed construction steps, see -  [Build from Source Codes](./docs/deploy.md)
 
 ### For developer
 
