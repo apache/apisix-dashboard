@@ -84,7 +84,7 @@ Please refer to here to start `manager-api` and `web`respectively.
 
 - [Develop Apache APISIX Dashboard](./docs/develop.md)
 
-## Apache APISIX Dashboard User Guide
+## User Guide
 
 Please refer to [User Guide](./docs/USER_GUIDE.md)
 

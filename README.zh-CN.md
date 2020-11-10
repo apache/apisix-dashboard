@@ -82,7 +82,7 @@ Apache APISIX Dashboard 为 [Apache APISIX](https://github.com/apache/apisix) �
 
 - [开发 Apache APISIX Dashboard](./docs/develop.zh-CN.md)
 
-## Apache APISIX Dashboard 使用指南
+## 使用指南
 
 请参考 [用户指南](./docs/USER_GUIDE.zh-CN.md)
 
