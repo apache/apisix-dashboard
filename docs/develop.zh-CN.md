@@ -17,7 +17,7 @@
 #
 -->
 
-# Dashboard 开发
+# Apache APISIX Dashboard 开发
 
 ## 前置条件
 
@@ -25,7 +25,6 @@
 $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 $ cd apisix-dashboard
 ```
-
 
 ## 前端开发
 
@@ -51,7 +50,7 @@ $ yarn start
 
 请参考 [E2E 文档](../web/src/e2e/README.zh-CN.md)。
 
-## manager-api 开发
+## 开发 manager-api
 
 ### 启动
 
@@ -82,7 +81,7 @@ authentication:
 $ make api-run
 ```
 
-3. 关闭 (关闭)
+3. 关闭 (开发模式)
 
 ```
 $ make api-stop

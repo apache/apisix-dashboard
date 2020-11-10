@@ -104,7 +104,7 @@ $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 
 ## 打包 output 目录
 
-你可以把刚刚 output 目录整体打包，copy 到其他地方解压运行，output 目录包含运行 dashboard 需要的所有文件(配置文件、可执行文件、web静态资源)
+你可以把刚刚 output 目录整体打包，copy 到其他地方解压运行，output 目录包含运行 Apache APISIX Dashboard 需要的所有文件(配置文件、可执行文件、web静态资源)
 
 ```sh
 $ make release-src

@@ -21,15 +21,17 @@ English | [简体中文](./README.zh-CN.md)
 
 # Apache APISIX Dashboard
 
-Dashboard for [Apache APISIX](https://github.com/apache/apisix)
+Apache APISIX Dashboard for [Apache APISIX](https://github.com/apache/apisix)
 
-The goal of Apache APISIX Dashboard project is to enable everyone to quickly experience and learn Apache APISIX, and it still cannot be used directly in a production environment. its function point coverage is always a subset of Apache APISIX, and may lag behind the rapid iteration of Apache APISIX. 
+The goal of Apache APISIX Dashboard project is to let users to quickly experience and learn Apache APISIX, but it still cannot be used directly in a production environment. 
 
-If you need to use the Dashboard project in a production system, you need to enhance user permissions, communication security, high availability and other advanced features.
+Its function is always a subset of Apache APISIX, and may lag behind the rapid iteration of Apache APISIX.
+
+If you need to use the Apache APISIX Dashboard project in a production system, you need to enhance user permissions, communication security, high availability and other advanced features.
 
 ## Install
 
-Support multiple ways to install APISIX dashboard
+Support multiple ways to install Apache APISIX Dashboard
 
 ### Docker
 
@@ -43,17 +45,18 @@ To build from source code, first make sure that your `golang` version is 1.13 or
 Also you need to follow the `node` and `yarn` in advance
 
 ```
-$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git && cd apisix-dashboard
+$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+$ cd apisix-dashboard
 $ make build
 ```
 
-Then you can find all files (configuration files, executable files, web static resources) needed to run dashboard in the `./output` directory.
+Then you can find all files (configuration files, executable files, web static resources) needed to run Apache APISIX Dashboard in the `./output` directory.
 
 Start by the following command
 
 ```sh
 $ cd ./output
-$ export ENV=local && exec ./manager-api
+$ exec ./manager-api
 ```
 
 `makefile` provides the following commands
@@ -62,27 +65,27 @@ $ export ENV=local && exec ./manager-api
 Makefile rules:
 
     help:		    Show Makefile rules
-    build:		    build dashboard, it contains web and manager-api
+    build:		    Build Apache APISIX Dashboard, it contains web and manager-api
     api-test:		Run the tests of manager-api
     api-run:		Run the manager-api
     api-stop:		stop manager-api
     go-lint:    	Lint Go source code
-    license-check:	Check apisix-dashboard source codes for Apache License
+    license-check:	Check Apache APISIX Dashboard source codes for Apache License
 ```
 
 For more detailed construction steps, see -  [Build from source code](./docs/deploy.md)
 
 ### For Developer
 
-apisix-dashboard provides a management interface for [Apache APISIX](https://github.com/apache/apisix), you need to [install APISIX first](https://github.com/apache/apisix#configure-and-installation).
+Apache APISIX Dashboard provides a management interface for [Apache APISIX](https://github.com/apache/apisix), you need to [install APISIX first](https://github.com/apache/apisix#configure-and-installation).
 
-then, please refer to here to start `manager-api` and `web`respectively.
+Please refer to here to start `manager-api` and `web`respectively.
 
 - [Dependencies](#dependencies)
 
-- [Develop Dashboard](./docs/develop.md)
+- [Develop Apache APISIX Dashboard](./docs/develop.md)
 
-## Dashboard User Guide
+## Apache APISIX Dashboard User Guide
 
 Please refer to [User Guide](./docs/USER_GUIDE.md)
 
@@ -101,8 +104,8 @@ Apache License 2.0, [LICENSE](https://github.com/apache/apisix-dashboard/blob/ma
 
 ## FAQ
 
-1. If you need the dashboard-1.0 which is built with Vue.js, please refer to [master-vue](https://github.com/apache/apisix-dashboard/tree/master-vue).
+1. If you need the Apache APISIX Dashboard 1.0 which is built with Vue.js, please refer to [master-vue](https://github.com/apache/apisix-dashboard/tree/master-vue).
 
-2. The dashboard 2.0 removes MySQL which [dashboard 1.5](https://github.com/apache/apisix-dashboard/tree/backup-1.5-latest) is relied on.
+2. The Apache APISIX Dashboard 2.0 removes MySQL which [Apache APISIX Dashboard 1.5](https://github.com/apache/apisix-dashboard/tree/backup-1.5-latest) is relied on.
 
-3. If you are using APISIX 1.5 or below, kindly note that the v2 api store and v3 api store are [separate and isolated](https://etcd.io/docs/v3.4.0/op-guide/v2-migration/). Dashboard v2.0 and above use the etcd v3 api, APISIX 1.5 and below use the etcd v2 api.
+3. If you are using APISIX 1.5 or below, kindly note that the v2 api store and v3 api store are [separate and isolated](https://etcd.io/docs/v3.4.0/op-guide/v2-migration/). Apache APISIX Dashboard v2.0 and above use the etcd v3 api, APISIX 1.5 and below use the etcd v2 api.

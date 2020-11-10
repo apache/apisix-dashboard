@@ -30,7 +30,7 @@ help:
 	@grep -E '^### [-A-Za-z0-9_]+:' Makefile | sed 's/###/   /'
 
 
-### build:		build dashboard, it contains web and manager-api
+### build:		Build Apache APISIX Dashboard, it contains web and manager-api
 .PHONY: build
 build: web-default api-default
 	api/build.sh && cd /web && yarn install && yarn build 
@@ -63,7 +63,7 @@ api-test: api-default
 api-run: api-default
 	cd api/ && go run .
 
-### api-stop:		stop the manager-api
+### api-stop:		Stop the manager-api
 api-stop:
 	kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 
@@ -79,7 +79,7 @@ go-lint: ## Run the golangci-lint application (install if not found)
 	@cd api && golangci-lint run --tests=false ./...
 
 
-### license-check:		Check apisix-dashboard source codes for Apache License
+### license-check:		Check Apache APISIX Dashboard source codes for Apache License
 .PHONY: license-check
 license-check:
 ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
@@ -91,5 +91,5 @@ endif
 
 .PHONY: release-src
 release-src:
-	tar –cvf dashboard.tar ./output/*
+	tar –cf dashboard.tar ./output/*
 

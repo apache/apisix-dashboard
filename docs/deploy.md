@@ -31,7 +31,7 @@ $ cd apisix-dashboard
 
 ### Manager-api Dependencies
 
-The `manager-api` is used to provide APIs for Dashboard, just like a bridge between the Apache APISIX and the Dashboard. Here are the steps to build it manually:
+The `manager-api` is used to provide APIs for Apache APISIX Dashboard, just like a bridge between the Apache APISIX and the Apache APISIX Dashboard. Here are the steps to build it manually:
 
 1. We need `Go` 1.13+ to be preinstalled.
 
@@ -104,7 +104,7 @@ $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 
 ## Pack
 
-Package the output directory, The output directory contains all the files needed to run the dashboard (configuration files, executable files, web static resources)
+Package the output directory, The output directory contains all the files needed to run the Apache APISIX Dashboard (configuration files, executable files, web static resources)
 
 ```sh
 $ make release-src
@@ -112,7 +112,7 @@ $ make release-src
 
 ## Configuration
 
-1. `conf.dag-lib-path` MUST use absolute path, we could use `pwd` command. Only used when enable Plugin Orchestration.
+1. `conf.dag-lib-path` must use absolute path, we could use `pwd` command. Only used when enable Plugin Orchestration.
 
 2. `conf.listen.host` is set to `127.0.0.1` so we could only visit it in private, we could change it to `0.0.0.0` to allow any visitors.
 
