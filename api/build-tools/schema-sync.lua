@@ -62,7 +62,8 @@ local fake_module_list = {
     'apisix.plugins.skywalking.tracer',
     'apisix.plugins.zipkin.codec',
     'apisix.plugins.zipkin.random_sampler',
-    'apisix.plugins.zipkin.reporter'
+    'apisix.plugins.zipkin.reporter',
+    'apisix.timers'
 }
 for _, name in ipairs(fake_module_list) do
     package.loaded[name] = {}
