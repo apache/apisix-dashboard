@@ -53,14 +53,14 @@ $ make build
 
 Then you can find all files (configuration files, executable files, web static resources) needed to run Apache APISIX Dashboard in the `./output` directory.
 
-Start by the following command
+Start by the following commands.
 
 ```sh
 $ cd ./output
 $ exec ./manager-api
 ```
 
-`makefile` provides the following commands
+`makefile` provides the following commands.
 
 ```text
 Makefile rules:
