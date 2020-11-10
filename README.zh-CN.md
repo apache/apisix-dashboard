@@ -80,7 +80,6 @@ Apache APISIX Dashboard 为 [Apache APISIX](https://github.com/apache/apisix) �
 
 然后请参考这里分别启动 `manager-api` 和 `web`
 
-- [依赖检查](#依赖检查)
 - [开发 Apache APISIX Dashboard](./docs/develop.zh-CN.md)
 
 ## Apache APISIX Dashboard 使用指南

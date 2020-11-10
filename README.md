@@ -82,8 +82,6 @@ Apache APISIX Dashboard provides a management interface for [Apache APISIX](http
 
 Please refer to here to start `manager-api` and `web`respectively.
 
-- [Dependencies](#dependencies)
-
 - [Develop Apache APISIX Dashboard](./docs/develop.md)
 
 ## Apache APISIX Dashboard User Guide
