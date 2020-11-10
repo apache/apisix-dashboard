@@ -35,24 +35,28 @@ const Page: React.FC = () => {
     },
     {
       title: formatMessage({ id: 'page.route.domainName' }),
-      dataIndex: 'hosts',
       hideInSearch: true,
-      render: (_, record) =>
-        (record.hosts || []).map((host) => (
-          <Tag key={host} color="geekblue">
-            {host}
+      render: (_, record) => {
+        const list = record.hosts || (record.host && [record.host]) || [];
+
+        return list.map((item) => (
+          <Tag key={item} color="geekblue">
+            {item}
           </Tag>
-        )),
+        ));
+      },
     },
     {
       title: formatMessage({ id: 'page.route.path' }),
-      dataIndex: 'uri',
-      render: (_, record) =>
-        record.uris?.map((uri) => (
-          <Tag key={uri} color="geekblue">
-            {uri}
+      render: (_, record) => {
+        const list = record.uris || (record.uri && [record.uri]) || [];
+
+        return list.map((item) => (
+          <Tag key={item} color="geekblue">
+            {item}
           </Tag>
-        )),
+        ));
+      },
     },
     {
       title: formatMessage({ id: 'component.global.description' }),

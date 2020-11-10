@@ -130,13 +130,13 @@ export const transformUpstreamNodes = (
 };
 
 export const transformRouteData = (data: RouteModule.Body) => {
-  const { name, desc, methods, uris, hosts, vars, status, upstream, upstream_id } = data;
+  const { name, desc, methods, uris, uri, hosts, host, vars, status, upstream, upstream_id } = data;
   const form1Data: Partial<RouteModule.Form1Data> = {
     name,
     desc,
     status,
-    hosts: (hosts || []).filter(Boolean).length === 0 ? [''] : hosts,
-    uris,
+    hosts: hosts || (host && [host]) || [''],
+    uris: uris || (uri && [uri]) || [],
     methods,
   };
 
