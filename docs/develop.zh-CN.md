@@ -47,7 +47,11 @@ $ yarn start
 
 ### 同步 jsonschema
 
-从 Apache APISIX 同步 jsonschema ，需要预安装 `Lua` 5.1+ 和 `zip` ，并执行命令 `api/build-tools/schema-sync.sh $version`。
+从 Apache APISIX 同步 jsonschema ，需要预安装 `Lua` 5.1+ 和 `zip` ，并执行命令 
+
+```sh
+api/build-tools/schema-sync.sh $version
+```
 
 注意：`$version` 为 `master` 或者 Apache APISIX 的版本号。 
 
@@ -59,4 +63,10 @@ $ api/build-tools/schema-sync.sh master
 
 # 使用 Apache APISIX 的版本号
 $ api/build-tools/schema-sync.sh 2.0
+```
+
+如果您有自定义插件，请确保您的自定义插件放在 APISIX 目录中，并将执行脚本的参数改为 APISIX 目录路径, 如：
+
+```sh
+api/build-tools/schema-sync.sh /usr/local/apisix
 ```
