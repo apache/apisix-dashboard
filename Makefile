@@ -17,17 +17,70 @@
 
 SHELL := /bin/bash -o pipefail
 UNAME ?= $(shell uname)
+YARN_EXEC ?= $(shell which yarn)
+GO_EXEC ?= $(shell which go)
 
-### help:             Show Makefile rules
+export GO111MODULE=on
+
+### help:		Show Makefile rules
 .PHONY: help
 help:
 	@echo Makefile rules:
 	@echo
 	@grep -E '^### [-A-Za-z0-9_]+:' Makefile | sed 's/###/   /'
 
-export GO111MODULE=on
 
-### license-check:    Check apisix-dashboard source codes for Apache License
+### build:		Build Apache APISIX Dashboard, it contains web and manager-api
+.PHONY: build
+build: web-default api-default
+	api/build.sh && cd /web && yarn install && yarn build 
+	mkdir -p ./output/logs
+
+
+.PHONY: web-default
+web-default:
+ifeq ("$(wildcard $(YARN_EXEC))", "")
+	@echo "ERROR: Need to install yarn first"
+	exit 1
+endif
+
+
+.PHONY: api-default
+api-default:
+ifeq ("$(wildcard $(GO_EXEC))", "")
+	@echo "ERROR: Need to install golang 1.13+ first"
+	exit 1
+endif
+
+
+### api-test:		Run the tests of manager-api 
+.PHONY: api-test
+api-test: api-default
+	cd api/ && APISIX_API_WORKDIR=$$PWD go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
+
+
+### api-run:		Run the manager-api
+.PHONY: api-run
+api-run: api-default
+	cd api/ && go run .
+
+### api-stop:		Stop the manager-api
+api-stop:
+	kill $(ps aux | grep 'manager-api' | awk '{print $2}')
+
+
+### go-lint:		Lint Go source code
+.PHONY: go-lint
+go-lint: ## Run the golangci-lint application (install if not found)
+	@#Brew - MacOS
+	@if [ "$(shell command -v golangci-lint)" = "" ] && [ "$(shell command -v brew)" != "" ] && [ "$(UNAME)" = "Darwin" ]; then brew install golangci-lint; fi;
+	@#has sudo
+	@if [ "$(shell command -v golangci-lint)" = "" ]; then curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.32.0 && sudo cp ./bin/golangci-lint $(go env GOPATH)/bin/; fi;
+	@echo "running golangci-lint..."
+	@cd api && golangci-lint run --tests=false ./...
+
+
+### license-check:	Check Apache APISIX Dashboard Source Codes for Apache License
 .PHONY: license-check
 license-check:
 ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
@@ -36,18 +89,8 @@ ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
 endif
 	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./
 
-### golang-lint:             Lint Go source code
-.PHONY: golang-lint
-golang-lint: ## Run the golangci-lint application (install if not found)
-	@#Brew - MacOS
-	@if [ "$(shell command -v golangci-lint)" = "" ] && [ "$(shell command -v brew)" != "" ] && [ "$(UNAME)" = "Darwin" ]; then brew install golangci-lint; fi;
-	@#has sudo
-	@if [ "$(shell command -v golangci-lint)" = "" ]; then curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.32.0 && sudo cp ./bin/golangci-lint $(go env GOPATH)/bin/; fi;
-	@echo "running golangci-lint..."
-	@cd api && golangci-lint run --tests=false ./...
 
-### api-test:         Run the tests of manager-api
-.PHONY: api-test
-api-test:
-	cd api/ && APISIX_API_WORKDIR=$$PWD go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
+.PHONY: release-src
+release-src:
+	tar –cf dashboard.tar ./output/*
 
