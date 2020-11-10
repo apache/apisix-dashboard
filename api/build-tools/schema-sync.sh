@@ -20,19 +20,29 @@ set -ex
 
 pwd=`pwd`
 
-version="master"
-if [[ -n $1 ]]; then
-version=$1
+if [[ -n $1 && -d "$1" ]]; then
+  path=$1
+  if [[ -d "${path}/apisix" ]]; then
+    cp -R ${path}/apisix/ ./api/build-tools/apisix/
+  else
+    cp -R ${path}/ ./api/build-tools/apisix/
+  fi
+else
+  version="master"
+  if [[ -n $1 ]]; then
+  version=$1
+  fi
+  wget -O $version.zip https://github.com/apache/apisix/archive/$version.zip
+
+  unzip $version.zip
+  mkdir -p ./api/build-tools/apisix/
+  cp -R ./apisix-$version/apisix/ ./api/build-tools/
+  rm -rf ./apisix-$version
 fi
 
-rm -rf ./api/build-tools/apisix/
-wget -O $version.zip https://github.com/apache/apisix/archive/$version.zip
+cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/api/conf/schema.json && cd ../../
 
-unzip $version.zip
-mkdir -p ./api/build-tools/apisix/
-mv ./apisix-$version/apisix/* ./api/build-tools/apisix/
-rm -rf ./apisix-$version
-cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/api/conf/schema.json
+rm -rf ./api/build-tools/apisix/
 
 echo "sync success:"
 echo "${pwd}/api/conf/schema.json"
