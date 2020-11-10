@@ -79,7 +79,7 @@ go-lint: ## Run the golangci-lint application (install if not found)
 	@cd api && golangci-lint run --tests=false ./...
 
 
-### license-check:		Check Apache APISIX Dashboard source codes for Apache License
+### license-check:	Check Apache APISIX Dashboard source codes for Apache License
 .PHONY: license-check
 license-check:
 ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
