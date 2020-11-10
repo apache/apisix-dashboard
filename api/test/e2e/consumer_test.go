@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package e2e
+package e2e
 
- import (
-	 "net/http"
-	 "testing"
- )
+import (
+	"net/http"
+	"testing"
+)
 
 //CASE 1: add consumer with username
- func TestConsumer_add_consumer_with_username(t *testing.T) {
+func TestConsumer_add_consumer_with_username(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create consumer",
@@ -36,8 +36,8 @@
 						"key": "auth-one"
 					}
 				},
-			  "desc": "test description"
-			  }`,
+				"desc": "test description"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -57,7 +57,7 @@
 						"172.16.238.20:1980": 1
 					}
 				}
-			  }`,
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -76,7 +76,7 @@
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusUnauthorized,
-			Sleep:        sleepTime, 
+			Sleep:        sleepTime,
 		},
 	}
 
@@ -99,8 +99,8 @@ func TestConsumer_add_consumer_without_username(t *testing.T) {
 						"key": "auth-new"
 					}
 				},
-			  "desc": "test description"
-			  }`,
+			    "desc": "test description"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
 		},
@@ -140,9 +140,9 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 						"key": "auth-two"
 					}
 				},
-			  "desc": "test description"
-			  }`,
-			Headers:      map[string]string{"Authorization": token},  
+			    "desc": "test description"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
 		{
@@ -152,8 +152,8 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			Path:         "/apisix/admin/consumers/jack2",
 			Headers:      map[string]string{"X-API-KEY": "edd1c9f034335f136f87ad84b625c8f1"},
 			ExpectStatus: http.StatusOK,
-			PartialBody:   "\"env\":\"production\"",
-			Sleep:        sleepTime, 
+			PartialBody:  "\"env\":\"production\"",
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc: "create route",
@@ -171,7 +171,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 						"172.16.238.20:1980": 1
 					}
 				}
-			  }`,
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -211,16 +211,12 @@ func TestConsumer_delete_consumer(t *testing.T) {
 			ExpectStatus: http.StatusUnauthorized,
 			Sleep:        sleepTime, //sleep x millisecond before verify route
 		},
-
-
-
 	}
 
 	for _, tc := range tests {
 		testCaseCheck(tc)
 	}
 }
-
 
 //CASE 5: Teardown
 func TestConsumer_teardown(t *testing.T) {
