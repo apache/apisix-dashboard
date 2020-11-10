@@ -34,6 +34,7 @@ help:
 .PHONY: build
 build: web-default api-default
 	api/build.sh && cd /web && yarn install && yarn build 
+	mkdir -p ./output/logs
 
 
 .PHONY: web-default
