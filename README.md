@@ -74,7 +74,7 @@ Makefile rules:
     license-check:	Check Apache APISIX Dashboard source codes for Apache License
 ```
 
-For more detailed construction steps, see -  [Build from source code](./docs/deploy.md)
+For more detailed construction steps, see -  [Build from Source Code](./docs/deploy.md)
 
 ### For developer
 
