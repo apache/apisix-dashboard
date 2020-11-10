@@ -73,13 +73,12 @@ conf:
   listen:
     host: 127.0.0.1
     port: 8080
-  dag_lib_path: ''
   etcd:
     endpoints:
       - 127.0.0.1:2379
 authentication:
   secret: secret
-  expireTime: 3600
+  expire_time: 3600
   users:
     - username: admin
       password: admin
