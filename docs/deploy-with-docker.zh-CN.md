@@ -42,6 +42,8 @@ $ docker build -t apisix-dashboard:{$tag} .
 $ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:{$tag}
 ```
 
+现在你可以在浏览器中通过 `http://127.0.0.1` 使用 Dashboard。
+
 ## 注意
 
 1. 构建镜像后，如需修改配置文件，可通过使用 `docker -v /local-path-to-conf-file:/conf/conf.yaml` 参数指定 `manager-api` 所需要的配置文件，以便启动容器时动态加载配置文件。

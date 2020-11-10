@@ -20,9 +20,9 @@ import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag } from 'antd';
 import { useIntl, history } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
-import moment from 'moment';
 
 import { fetchList, remove as removeSSL } from '@/pages/SSL/service';
+import { timestampToLocaleString } from '@/helpers';
 
 const Page: React.FC = () => {
   const tableRef = useRef<ActionType>();
@@ -44,13 +44,13 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'page.ssl.list.expirationTime' }),
       dataIndex: 'validity_end',
       hideInSearch: true,
-      render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
+      render: (text) => timestampToLocaleString(text as number),
     },
     {
       title: formatMessage({ id: 'component.global.updateTime' }),
       dataIndex: 'update_time',
       hideInSearch: true,
-      render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
+      render: (text) => timestampToLocaleString(text as number),
     },
     {
       title: formatMessage({ id: 'component.global.operation' }),

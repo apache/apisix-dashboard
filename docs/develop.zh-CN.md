@@ -17,7 +17,14 @@
 #
 -->
 
-# Dashboard 开发
+# Apache APISIX Dashboard 开发
+
+## 前置条件
+
+```sh
+$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+$ cd apisix-dashboard
+```
 
 ## 前端开发
 
@@ -33,7 +40,7 @@ $ yarn install
 
 4. 若需要修改 manager-api 地址，请访问 `config/proxy.ts` 文件。
 
-5. 启动开发模式
+5. 启动 (开发模式)
 
 ```sh
 $ yarn start
@@ -43,7 +50,42 @@ $ yarn start
 
 请参考 [E2E 文档](../web/src/e2e/README.zh-CN.md)。
 
-## manager-api 开发
+## 开发 manager-api
+
+### 启动
+
+1. 修改配置文件 目录: `api/conf/conf.yaml`
+
+```yaml
+conf:
+  listen:
+    host: 127.0.0.1
+    port: 8080
+  dag_lib_path: ''
+  etcd:
+    endpoints:
+      - 127.0.0.1:2379
+authentication:
+  secret: secret
+  expireTime: 3600
+  users:
+    - username: admin
+      password: admin
+    - username: user
+      password: user
+```
+
+2. 启动 (开发模式)
+
+```sh
+$ make api-run
+```
+
+3. 关闭 (开发模式)
+
+```sh
+$ make api-stop
+```
 
 ### 同步 jsonschema
 
