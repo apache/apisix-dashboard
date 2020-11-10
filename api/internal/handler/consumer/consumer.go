@@ -105,6 +105,13 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 	input.ID = input.Username
 
+	if _, ok := input.Plugins["jwt-auth"]; ok {
+		jwt := input.Plugins["jwt-auth"].(map[string]interface{})
+		jwt["exp"] = 86400
+
+		input.Plugins["jwt-auth"] = jwt
+	}
+
 	if err := h.consumerStore.Create(c.Context(), input); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -127,6 +134,13 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		input.Consumer.Username = input.Username
 	}
 	input.Consumer.ID = input.Consumer.Username
+
+	if _, ok := input.Consumer.Plugins["jwt-auth"]; ok {
+		jwt := input.Consumer.Plugins["jwt-auth"].(map[string]interface{})
+		jwt["exp"] = 86400
+
+		input.Consumer.Plugins["jwt-auth"] = jwt
+	}
 
 	if err := h.consumerStore.Update(c.Context(), &input.Consumer, true); err != nil {
 		//if not exists, create
