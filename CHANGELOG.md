@@ -36,6 +36,13 @@ This is a release candidate.
 - New deployment pattern.
 - Add more test cases.
 - Document Enhancement.
+- Add back-end E2E test examples.
+- Improve CI testing.
+- Support log save to local file.
+- Optimize the deployment process.
+- Add E2E test examples to the front-end. [#619](https://github.com/apache/apisix-dashboard/pull/619)
+- Fix the Promethues plugin updating incorrect values when updating routes. [#666](https://github.com/apache/apisix-dashboard/pull/666)
+- Fix page display exceptions when the Redirect option is selected as Enable HTTPS in the Route page. [#692](https://github.com/apache/apisix-dashboard/pull/692)
 
 For more changes, please refer to [Milestone](https://github.com/apache/apisix-dashboard/milestone/4)
 
