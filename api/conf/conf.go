@@ -40,16 +40,17 @@ const (
 )
 
 var (
-	ENV           string
-	Schema        gjson.Result
-	WorkDir       = "."
-	ServerHost    = "127.0.0.1"
-	ServerPort    = 80
-	ETCDEndpoints = []string{"127.0.0.1:2379"}
-	ErrorLogLevel = "warn"
-	ErrorLogPath  = "logs/error.log"
-	UserList      = make(map[string]User, 2)
-	AuthConf      Authentication
+	ENV              string
+	Schema           gjson.Result
+	WorkDir          = "."
+	ServerHost       = "127.0.0.1"
+	ServerPort       = 80
+	ETCDEndpoints    = []string{"127.0.0.1:2379"}
+	ErrorLogLevel    = "warn"
+	ErrorLogPath     = "logs/error.log"
+	UserList         = make(map[string]User, 2)
+	AuthConf         Authentication
+	SSLDefaultStatus = 1 //enable ssl by default
 )
 
 type Etcd struct {

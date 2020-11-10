@@ -34,13 +34,15 @@ $ docker build -t apisix-dashboard:{$tag} .
 
 - `conf.listen.host` 为容器内监听 IP，必须为 `0.0.0.0`，这样宿主才能访问容器内网络。
 - `conf.listen.port` 为容器内监听端口，默认为 `8080`。如需修改，请同步修改 [Dockerfile](../Dockerfile)。
-- `conf.etcd.endpoints` 为 ETCD 主机列表，多个节点以**英文逗号**连接，请确保容器可以访问到这些主机，例如：示例配置中 `conf.etcd.endpoints` 为 `host.docker.internal` 旨在允许容器访问宿主主机上的网络。
+- `conf.etcd.endpoints` 为 ETCD 主机列表，支持多个节点，请确保容器可以访问到这些主机，例如：示例配置中 `conf.etcd.endpoints` 为 `host.docker.internal` 旨在允许容器访问宿主主机上的网络。
 
 3. 启动容器
 
 ```sh
 $ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:{$tag}
 ```
+
+现在你可以在浏览器中通过 `http://127.0.0.1` 使用 Dashboard。
 
 ## 注意
 
@@ -49,4 +51,10 @@ $ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/con
 
 ```sh
 $ docker build -t apisix-dashboard:{$tag} . --build-arg ENABLE_PROXY=true
+```
+
+3. 如果不是第一次构建，建议不要使用缓存。
+
+```sh
+$ docker build -t apisix-dashboard:{$tag} . --build-arg ENABLE_PROXY=true --no-cache=true
 ```

@@ -68,7 +68,7 @@ const routes = [
     component: './Consumer/Create',
   },
   {
-    path: '/consumer/:id/edit',
+    path: '/consumer/:username/edit',
     component: './Consumer/Create',
   },
   {

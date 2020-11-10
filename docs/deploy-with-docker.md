@@ -50,3 +50,9 @@ $ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/con
 ```sh
 $ docker build -t apisix-dashboard:{$tag} . --build-arg ENABLE_PROXY=true
 ```
+
+3. If it's not the first time to build, it is recommended not to use cache.
+
+```sh
+$ docker build -t apisix-dashboard:{$tag} . --build-arg ENABLE_PROXY=true --no-cache=true
+```

@@ -18,6 +18,7 @@ import React from 'react';
 import { notification } from 'antd';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { history } from 'umi';
+import moment from 'moment';
 
 import { codeMessage } from './constants';
 import IconFont from './iconfont';
@@ -96,3 +97,12 @@ export const getUrlQuery: (key: string) => string | false = (key: string) => {
   }
   return false;
 };
+
+export const timestampToLocaleString = (timestamp: number) => {
+  if (!timestamp) {
+    // TODO: i18n
+    return "None"
+  }
+
+  return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss')
+}

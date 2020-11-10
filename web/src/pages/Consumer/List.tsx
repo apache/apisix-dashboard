@@ -18,11 +18,11 @@ import React, { useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Popconfirm, Button, notification } from 'antd';
-import moment from 'moment';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 
 import { fetchList, remove } from './service';
+import { timestampToLocaleString } from '@/helpers';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
@@ -42,7 +42,7 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'page.consumer.updateTime' }),
       dataIndex: 'update_time',
       hideInSearch: true,
-      render: (text) => `${moment.unix(Number(text)).format('YYYY-MM-DD HH:mm:ss')}`,
+      render: (text) => timestampToLocaleString(text as number),
     },
     {
       title: formatMessage({ id: 'component.global.operation' }),
@@ -53,7 +53,7 @@ const Page: React.FC = () => {
           <Button
             type="primary"
             style={{ marginRight: 10 }}
-            onClick={() => history.push(`/consumer/${record.id}/edit`)}
+            onClick={() => history.push(`/consumer/${record.username}/edit`)}
           >
             {formatMessage({ id: 'component.global.edit' })}
           </Button>
@@ -62,7 +62,7 @@ const Page: React.FC = () => {
             okText={formatMessage({ id: 'component.global.confirm' })}
             cancelText={formatMessage({ id: 'component.global.cancel' })}
             onConfirm={() => {
-              remove(record.id).then(() => {
+              remove(record.username).then(() => {
                 notification.success({
                   message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
                     id: 'menu.consumer',

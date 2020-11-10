@@ -17,7 +17,14 @@
 #
 -->
 
-# Dashboard Devlopment
+# Apache APISIX Dashboard Devlopment
+
+## Dependencies
+
+```sh
+$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+$ cd apisix-dashboard
+```
 
 ## Web
 
@@ -30,7 +37,8 @@ $ yarn install
 ```
 
 4. If we want to modify the API, please refer to the `config/proxy.ts` file.
-5. Start the development mode
+
+5. Start (the development mode)
 
 ```sh
 $ yarn start
@@ -40,13 +48,48 @@ $ yarn start
 
 Please refer to [E2E Documentation](../web/src/e2e/README.md).
 
-## manager-api
+## Manager-api
+
+### Start
+
+1. Modify `config.yaml` in `api/conf/conf.yaml`
+
+```yaml
+conf:
+  listen:
+    host: 127.0.0.1
+    port: 8080
+  dag_lib_path: ''
+  etcd:
+    endpoints:
+      - 127.0.0.1:2379
+authentication:
+  secret: secret
+  expireTime: 3600
+  users:
+    - username: admin
+      password: admin
+    - username: user
+      password: user
+```
+
+2. Start (the development mode)
+
+```sh
+$ make api-run
+```
+
+3. Stop (the development mode)
+
+```sh
+$ make api-stop
+```
 
 ### Sync jsonschema
 
 To sync jsonschema from Apache APISIX, `Lua` 5.1+ and `zip` need to be preinstalled, then execute this command: `api/build-tools/schema-sync.sh $version`.
 
-NOTE: `$version` should be `master` or Apache APISIX's version. 
+NOTE: `$version` should be `master` or Apache APISIX's version.
 
 Example:
 

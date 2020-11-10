@@ -1,1 +1,3325 @@
-{"main":{"consumer":{"type":"object","additionalProperties":false,"required":["username"],"properties":{"labels":{"description":"key/value pairs to specify attributes","maxProperties":16,"type":"object","patternProperties":{".*":{"description":"value of label","maxLength":64,"type":"string","minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$"}}},"username":{"type":"string","pattern":"^[a-zA-Z0-9_]+$","maxLength":32,"minLength":1},"update_time":{"type":"integer"},"id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"desc":{"type":"string","maxLength":256},"create_time":{"type":"integer"},"plugins":{"type":"object"}}},"proto":{"type":"object","additionalProperties":false,"required":["content"],"properties":{"content":{"type":"string","maxLength":1048576,"minLength":1}}},"ip_def":[{"type":"string","title":"IPv4","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$"},{"type":"string","title":"IPv4/CIDR","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$"},{"type":"string","title":"IPv6","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$"},{"type":"string","title":"IPv6/CIDR","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$"}],"upstream_hash_vars_schema":{"type":"string","pattern":"^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$"},"global_rule":{"type":"object","additionalProperties":false,"required":["plugins"],"properties":{"id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"plugins":{"type":"object"}}},"label_value_def":{"description":"value of label","maxLength":64,"type":"string","minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$"},"id_schema":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"ssl":{"type":"object","additionalProperties":false,"oneOf":[{"required":["sni","key","cert"]},{"required":["snis","key","cert"]}],"properties":{"create_time":{"type":"integer"},"update_time":{"type":"integer"},"id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"certs":{"type":"array","items":{"type":"string","maxLength":65536,"minLength":128}},"keys":{"type":"array","items":{"type":"string","maxLength":65536,"minLength":128}},"validity_start":{"type":"integer"},"validity_end":{"type":"integer"},"key":{"type":"string","maxLength":65536,"minLength":128},"labels":{"description":"key/value pairs to specify attributes","maxProperties":16,"type":"object","patternProperties":{".*":{"description":"value of label","maxLength":64,"type":"string","minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$"}}},"status":{"description":"ssl status, 1 to enable, 0 to disable","enum":[1,0],"type":"integer","default":1},"snis":{"type":"array","items":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"}},"sni":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"exptime":{"type":"integer","minimum":1588262400},"cert":{"type":"string","maxLength":65536,"minLength":128}}},"plugin_disable_schema":{"disable":{"type":"boolean"}},"service":{"type":"object","additionalProperties":false,"properties":{"create_time":{"type":"integer"},"id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"upstream_id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"labels":{"description":"key/value pairs to specify attributes","maxProperties":16,"type":"object","patternProperties":{".*":{"description":"value of label","maxLength":64,"type":"string","minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$"}}},"upstream":{"type":"object","additionalProperties":false,"anyOf":[{"required":["type","nodes"]},{"required":["type","k8s_deployment_info"]},{"required":["type","service_name"]}],"properties":{"create_time":{"type":"integer"},"nodes":{"anyOf":[{"type":"object","minProperties":1,"patternProperties":{".*":{"description":"weight of node","type":"integer","minimum":0}}},{"type":"array","items":{"type":"object","required":["host","port","weight"],"properties":{"metadata":{"description":"metadata of node","type":"object"},"host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"port":{"description":"port of node","type":"integer","minimum":1},"weight":{"description":"weight of node","type":"integer","minimum":0}}},"minItems":1}]},"upstream_host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"desc":{"type":"string","maxLength":256},"hash_on":{"type":"string","enum":["vars","header","cookie","consumer"],"default":"vars"},"checks":{"type":"object","anyOf":[{"required":["active"]},{"required":["active","passive"]}],"additionalProperties":false,"properties":{"active":{"type":"object","properties":{"host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"port":{"type":"integer","maximum":65535,"minimum":1},"http_path":{"type":"string","default":"/"},"req_headers":{"type":"array","items":{"type":"string","uniqueItems":true},"minItems":1},"timeout":{"type":"number","default":1},"healthy":{"type":"object","properties":{"successes":{"type":"integer","default":2,"maximum":254,"minimum":1},"interval":{"type":"integer","default":0,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[200,302]}}},"type":{"type":"string","enum":["http","https","tcp"],"default":"http"},"concurrency":{"type":"integer","default":10},"unhealthy":{"type":"object","properties":{"timeouts":{"type":"integer","default":3,"maximum":254,"minimum":1},"tcp_failures":{"type":"integer","default":2,"maximum":254,"minimum":1},"interval":{"type":"integer","default":0,"minimum":1},"http_failures":{"type":"integer","default":5,"maximum":254,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[429,404,500,501,502,503,504,505]}}},"https_verify_certificate":{"type":"boolean","default":true}}},"passive":{"type":"object","properties":{"type":{"type":"string","enum":["http","https","tcp"],"default":"http"},"healthy":{"type":"object","properties":{"successes":{"type":"integer","default":5,"maximum":254,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[200,201,202,203,204,205,206,207,208,226,300,301,302,303,304,305,306,307,308]}}},"unhealthy":{"type":"object","properties":{"http_failures":{"type":"integer","default":5,"maximum":254,"minimum":1},"tcp_failures":{"type":"integer","default":2,"maximum":254,"minimum":1},"timeouts":{"type":"integer","default":7,"maximum":254,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[429,500,503]}}}}}}},"service_name":{"type":"string","maxLength":50},"id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"enable_websocket":{"description":"enable websocket for request","type":"boolean"},"name":{"type":"string","maxLength":50},"pass_host":{"description":"mod of host passing","enum":["pass","node","rewrite"],"type":"string","default":"pass"},"discovery_type":{"description":"discovery type","type":"string"},"timeout":{"type":"object","required":["connect","send","read"],"properties":{"send":{"type":"number","minimum":0},"connect":{"type":"number","minimum":0},"read":{"type":"number","minimum":0}}},"labels":{"description":"key/value pairs to specify attributes","maxProperties":16,"type":"object","patternProperties":{".*":{"description":"value of label","maxLength":64,"type":"string","minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$"}}},"update_time":{"type":"integer"},"type":{"description":"algorithms of load balancing","enum":["chash","roundrobin","ewma"],"type":"string"},"key":{"description":"the key of chash for dynamic load balancing","type":"string"},"retries":{"type":"integer","minimum":0},"k8s_deployment_info":{"type":"object","anyOf":[{"required":["namespace","deploy_name","port"]},{"required":["namespace","service_name","port"]}],"properties":{"namespace":{"type":"string","description":"k8s namespace"},"backend_type":{"type":"string","enum":["svc","pod"],"description":"k8s service name","default":"pod"},"service_name":{"type":"string","description":"k8s service name"},"deploy_name":{"type":"string","description":"k8s deployment name"},"port":{"type":"number","minimum":0}}}}},"update_time":{"type":"integer"},"desc":{"type":"string","maxLength":256},"script":{"type":"string","maxLength":102400,"minLength":10},"plugins":{"type":"object"},"name":{"type":"string","maxLength":50}}},"upstream":{"type":"object","additionalProperties":false,"anyOf":[{"required":["type","nodes"]},{"required":["type","k8s_deployment_info"]},{"required":["type","service_name"]}],"properties":{"create_time":{"type":"integer"},"nodes":{"anyOf":[{"type":"object","minProperties":1,"patternProperties":{".*":{"description":"weight of node","type":"integer","minimum":0}}},{"type":"array","items":{"type":"object","required":["host","port","weight"],"properties":{"metadata":{"description":"metadata of node","type":"object"},"host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"port":{"description":"port of node","type":"integer","minimum":1},"weight":{"description":"weight of node","type":"integer","minimum":0}}},"minItems":1}]},"upstream_host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"desc":{"type":"string","maxLength":256},"hash_on":{"type":"string","enum":["vars","header","cookie","consumer"],"default":"vars"},"checks":{"type":"object","anyOf":[{"required":["active"]},{"required":["active","passive"]}],"additionalProperties":false,"properties":{"active":{"type":"object","properties":{"host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"port":{"type":"integer","maximum":65535,"minimum":1},"http_path":{"type":"string","default":"/"},"req_headers":{"type":"array","items":{"type":"string","uniqueItems":true},"minItems":1},"timeout":{"type":"number","default":1},"healthy":{"type":"object","properties":{"successes":{"type":"integer","default":2,"maximum":254,"minimum":1},"interval":{"type":"integer","default":0,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[200,302]}}},"type":{"type":"string","enum":["http","https","tcp"],"default":"http"},"concurrency":{"type":"integer","default":10},"unhealthy":{"type":"object","properties":{"timeouts":{"type":"integer","default":3,"maximum":254,"minimum":1},"tcp_failures":{"type":"integer","default":2,"maximum":254,"minimum":1},"interval":{"type":"integer","default":0,"minimum":1},"http_failures":{"type":"integer","default":5,"maximum":254,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[429,404,500,501,502,503,504,505]}}},"https_verify_certificate":{"type":"boolean","default":true}}},"passive":{"type":"object","properties":{"type":{"type":"string","enum":["http","https","tcp"],"default":"http"},"healthy":{"type":"object","properties":{"successes":{"type":"integer","default":5,"maximum":254,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[200,201,202,203,204,205,206,207,208,226,300,301,302,303,304,305,306,307,308]}}},"unhealthy":{"type":"object","properties":{"http_failures":{"type":"integer","default":5,"maximum":254,"minimum":1},"tcp_failures":{"type":"integer","default":2,"maximum":254,"minimum":1},"timeouts":{"type":"integer","default":7,"maximum":254,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[429,500,503]}}}}}}},"service_name":{"type":"string","maxLength":50},"id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"enable_websocket":{"description":"enable websocket for request","type":"boolean"},"name":{"type":"string","maxLength":50},"pass_host":{"description":"mod of host passing","enum":["pass","node","rewrite"],"type":"string","default":"pass"},"discovery_type":{"description":"discovery type","type":"string"},"timeout":{"type":"object","required":["connect","send","read"],"properties":{"send":{"type":"number","minimum":0},"connect":{"type":"number","minimum":0},"read":{"type":"number","minimum":0}}},"labels":{"description":"key/value pairs to specify attributes","maxProperties":16,"type":"object","patternProperties":{".*":{"description":"value of label","maxLength":64,"type":"string","minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$"}}},"update_time":{"type":"integer"},"type":{"description":"algorithms of load balancing","enum":["chash","roundrobin","ewma"],"type":"string"},"key":{"description":"the key of chash for dynamic load balancing","type":"string"},"retries":{"type":"integer","minimum":0},"k8s_deployment_info":{"type":"object","anyOf":[{"required":["namespace","deploy_name","port"]},{"required":["namespace","service_name","port"]}],"properties":{"namespace":{"type":"string","description":"k8s namespace"},"backend_type":{"type":"string","enum":["svc","pod"],"description":"k8s service name","default":"pod"},"service_name":{"type":"string","description":"k8s service name"},"deploy_name":{"type":"string","description":"k8s deployment name"},"port":{"type":"number","minimum":0}}}}},"route":{"anyOf":[{"required":["plugins","uri"]},{"required":["upstream","uri"]},{"required":["upstream_id","uri"]},{"required":["service_id","uri"]},{"required":["plugins","uris"]},{"required":["upstream","uris"]},{"required":["upstream_id","uris"]},{"required":["service_id","uris"]},{"required":["script","uri"]},{"required":["script","uris"]}],"properties":{"hosts":{"type":"array","uniqueItems":true,"items":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"}},"host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"create_time":{"type":"integer"},"uris":{"type":"array","uniqueItems":true,"items":{"description":"HTTP uri","type":"string"}},"filter_func":{"type":"string","pattern":"^function","minLength":10},"vars":{"type":"array","items":{"description":"Nginx builtin variable name and value","items":{"maxItems":3,"anyOf":[{"type":"string"},{"type":"number"}],"minItems":2},"type":"array"}},"script":{"type":"string","maxLength":102400,"minLength":10},"uri":{"type":"string","maxLength":4096,"minLength":1},"id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"priority":{"type":"integer","default":0},"plugins":{"type":"object"},"service_protocol":{"enum":["grpc","http"]},"methods":{"type":"array","uniqueItems":true,"items":{"description":"HTTP method","enum":["GET","POST","PUT","DELETE","PATCH","HEAD","OPTIONS","CONNECT","TRACE"],"type":"string"}},"upstream_id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"remote_addr":{"description":"client IP","anyOf":[{"type":"string","title":"IPv4","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$"},{"type":"string","title":"IPv4/CIDR","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$"},{"type":"string","title":"IPv6","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$"},{"type":"string","title":"IPv6/CIDR","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$"}],"type":"string"},"labels":{"description":"key/value pairs to specify attributes","maxProperties":16,"type":"object","patternProperties":{".*":{"description":"value of label","maxLength":64,"type":"string","minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$"}}},"upstream":{"type":"object","additionalProperties":false,"anyOf":[{"required":["type","nodes"]},{"required":["type","k8s_deployment_info"]},{"required":["type","service_name"]}],"properties":{"create_time":{"type":"integer"},"nodes":{"anyOf":[{"type":"object","minProperties":1,"patternProperties":{".*":{"description":"weight of node","type":"integer","minimum":0}}},{"type":"array","items":{"type":"object","required":["host","port","weight"],"properties":{"metadata":{"description":"metadata of node","type":"object"},"host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"port":{"description":"port of node","type":"integer","minimum":1},"weight":{"description":"weight of node","type":"integer","minimum":0}}},"minItems":1}]},"upstream_host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"desc":{"type":"string","maxLength":256},"hash_on":{"type":"string","enum":["vars","header","cookie","consumer"],"default":"vars"},"checks":{"type":"object","anyOf":[{"required":["active"]},{"required":["active","passive"]}],"additionalProperties":false,"properties":{"active":{"type":"object","properties":{"host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"port":{"type":"integer","maximum":65535,"minimum":1},"http_path":{"type":"string","default":"/"},"req_headers":{"type":"array","items":{"type":"string","uniqueItems":true},"minItems":1},"timeout":{"type":"number","default":1},"healthy":{"type":"object","properties":{"successes":{"type":"integer","default":2,"maximum":254,"minimum":1},"interval":{"type":"integer","default":0,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[200,302]}}},"type":{"type":"string","enum":["http","https","tcp"],"default":"http"},"concurrency":{"type":"integer","default":10},"unhealthy":{"type":"object","properties":{"timeouts":{"type":"integer","default":3,"maximum":254,"minimum":1},"tcp_failures":{"type":"integer","default":2,"maximum":254,"minimum":1},"interval":{"type":"integer","default":0,"minimum":1},"http_failures":{"type":"integer","default":5,"maximum":254,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[429,404,500,501,502,503,504,505]}}},"https_verify_certificate":{"type":"boolean","default":true}}},"passive":{"type":"object","properties":{"type":{"type":"string","enum":["http","https","tcp"],"default":"http"},"healthy":{"type":"object","properties":{"successes":{"type":"integer","default":5,"maximum":254,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[200,201,202,203,204,205,206,207,208,226,300,301,302,303,304,305,306,307,308]}}},"unhealthy":{"type":"object","properties":{"http_failures":{"type":"integer","default":5,"maximum":254,"minimum":1},"tcp_failures":{"type":"integer","default":2,"maximum":254,"minimum":1},"timeouts":{"type":"integer","default":7,"maximum":254,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[429,500,503]}}}}}}},"service_name":{"type":"string","maxLength":50},"id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"enable_websocket":{"description":"enable websocket for request","type":"boolean"},"name":{"type":"string","maxLength":50},"pass_host":{"description":"mod of host passing","enum":["pass","node","rewrite"],"type":"string","default":"pass"},"discovery_type":{"description":"discovery type","type":"string"},"timeout":{"type":"object","required":["connect","send","read"],"properties":{"send":{"type":"number","minimum":0},"connect":{"type":"number","minimum":0},"read":{"type":"number","minimum":0}}},"labels":{"description":"key/value pairs to specify attributes","maxProperties":16,"type":"object","patternProperties":{".*":{"description":"value of label","maxLength":64,"type":"string","minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$"}}},"update_time":{"type":"integer"},"type":{"description":"algorithms of load balancing","enum":["chash","roundrobin","ewma"],"type":"string"},"key":{"description":"the key of chash for dynamic load balancing","type":"string"},"retries":{"type":"integer","minimum":0},"k8s_deployment_info":{"type":"object","anyOf":[{"required":["namespace","deploy_name","port"]},{"required":["namespace","service_name","port"]}],"properties":{"namespace":{"type":"string","description":"k8s namespace"},"backend_type":{"type":"string","enum":["svc","pod"],"description":"k8s service name","default":"pod"},"service_name":{"type":"string","description":"k8s service name"},"deploy_name":{"type":"string","description":"k8s deployment name"},"port":{"type":"number","minimum":0}}}}},"update_time":{"type":"integer"},"desc":{"type":"string","maxLength":256},"service_id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"remote_addrs":{"type":"array","uniqueItems":true,"items":{"description":"client IP","anyOf":[{"type":"string","title":"IPv4","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$"},{"type":"string","title":"IPv4/CIDR","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$"},{"type":"string","title":"IPv6","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$"},{"type":"string","title":"IPv6/CIDR","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$"}],"type":"string"}},"name":{"type":"string","maxLength":50}},"type":"object","not":{"anyOf":[{"required":["script","plugins"]}]},"additionalProperties":false},"version":0.5,"stream_route":{"type":"object","properties":{"remote_addr":{"description":"client IP","anyOf":[{"type":"string","title":"IPv4","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$"},{"type":"string","title":"IPv4/CIDR","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$"},{"type":"string","title":"IPv6","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$"},{"type":"string","title":"IPv6/CIDR","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$"}],"type":"string"},"upstream":{"type":"object","additionalProperties":false,"anyOf":[{"required":["type","nodes"]},{"required":["type","k8s_deployment_info"]},{"required":["type","service_name"]}],"properties":{"create_time":{"type":"integer"},"nodes":{"anyOf":[{"type":"object","minProperties":1,"patternProperties":{".*":{"description":"weight of node","type":"integer","minimum":0}}},{"type":"array","items":{"type":"object","required":["host","port","weight"],"properties":{"metadata":{"description":"metadata of node","type":"object"},"host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"port":{"description":"port of node","type":"integer","minimum":1},"weight":{"description":"weight of node","type":"integer","minimum":0}}},"minItems":1}]},"upstream_host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"desc":{"type":"string","maxLength":256},"hash_on":{"type":"string","enum":["vars","header","cookie","consumer"],"default":"vars"},"checks":{"type":"object","anyOf":[{"required":["active"]},{"required":["active","passive"]}],"additionalProperties":false,"properties":{"active":{"type":"object","properties":{"host":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"port":{"type":"integer","maximum":65535,"minimum":1},"http_path":{"type":"string","default":"/"},"req_headers":{"type":"array","items":{"type":"string","uniqueItems":true},"minItems":1},"timeout":{"type":"number","default":1},"healthy":{"type":"object","properties":{"successes":{"type":"integer","default":2,"maximum":254,"minimum":1},"interval":{"type":"integer","default":0,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[200,302]}}},"type":{"type":"string","enum":["http","https","tcp"],"default":"http"},"concurrency":{"type":"integer","default":10},"unhealthy":{"type":"object","properties":{"timeouts":{"type":"integer","default":3,"maximum":254,"minimum":1},"tcp_failures":{"type":"integer","default":2,"maximum":254,"minimum":1},"interval":{"type":"integer","default":0,"minimum":1},"http_failures":{"type":"integer","default":5,"maximum":254,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[429,404,500,501,502,503,504,505]}}},"https_verify_certificate":{"type":"boolean","default":true}}},"passive":{"type":"object","properties":{"type":{"type":"string","enum":["http","https","tcp"],"default":"http"},"healthy":{"type":"object","properties":{"successes":{"type":"integer","default":5,"maximum":254,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[200,201,202,203,204,205,206,207,208,226,300,301,302,303,304,305,306,307,308]}}},"unhealthy":{"type":"object","properties":{"http_failures":{"type":"integer","default":5,"maximum":254,"minimum":1},"tcp_failures":{"type":"integer","default":2,"maximum":254,"minimum":1},"timeouts":{"type":"integer","default":7,"maximum":254,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":200},"default":[429,500,503]}}}}}}},"service_name":{"type":"string","maxLength":50},"id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"enable_websocket":{"description":"enable websocket for request","type":"boolean"},"name":{"type":"string","maxLength":50},"pass_host":{"description":"mod of host passing","enum":["pass","node","rewrite"],"type":"string","default":"pass"},"discovery_type":{"description":"discovery type","type":"string"},"timeout":{"type":"object","required":["connect","send","read"],"properties":{"send":{"type":"number","minimum":0},"connect":{"type":"number","minimum":0},"read":{"type":"number","minimum":0}}},"labels":{"description":"key/value pairs to specify attributes","maxProperties":16,"type":"object","patternProperties":{".*":{"description":"value of label","maxLength":64,"type":"string","minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$"}}},"update_time":{"type":"integer"},"type":{"description":"algorithms of load balancing","enum":["chash","roundrobin","ewma"],"type":"string"},"key":{"description":"the key of chash for dynamic load balancing","type":"string"},"retries":{"type":"integer","minimum":0},"k8s_deployment_info":{"type":"object","anyOf":[{"required":["namespace","deploy_name","port"]},{"required":["namespace","service_name","port"]}],"properties":{"namespace":{"type":"string","description":"k8s namespace"},"backend_type":{"type":"string","enum":["svc","pod"],"description":"k8s service name","default":"pod"},"service_name":{"type":"string","description":"k8s service name"},"deploy_name":{"type":"string","description":"k8s deployment name"},"port":{"type":"number","minimum":0}}}}},"plugins":{"type":"object"},"id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"server_port":{"description":"server port","type":"integer"},"server_addr":{"description":"server IP","anyOf":[{"type":"string","title":"IPv4","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$"},{"type":"string","title":"IPv4/CIDR","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$"},{"type":"string","title":"IPv6","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$"},{"type":"string","title":"IPv6/CIDR","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$"}],"type":"string"},"upstream_id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]}}},"upstream_hash_header_schema":{"type":"string","pattern":"^[a-zA-Z0-9-_]+$"},"host_def":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"}},"plugins":{"zipkin":{"schema":{"type":"object","required":["endpoint","sample_ratio"],"properties":{"service_name":{"type":"string","description":"service name for zipkin reporter","default":"APISIX"},"endpoint":{"type":"string"},"sample_ratio":{"type":"number","maximum":1,"minimum":1e-05},"server_addr":{"type":"string","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$","description":"default is $server_addr, you can speific your external ip address"}}}},"udp-logger":{"schema":{"type":"object","required":["host","port"],"properties":{"include_req_body":{"type":"boolean","default":false},"host":{"type":"string"},"port":{"type":"integer","minimum":0},"batch_max_size":{"type":"integer","default":1000,"minimum":1},"inactive_timeout":{"type":"integer","default":5,"minimum":1},"buffer_duration":{"type":"integer","default":60,"minimum":1},"timeout":{"type":"integer","default":3,"minimum":1},"name":{"type":"string","default":"udp logger"}}}},"uri-blocker":{"schema":{"type":"object","required":["block_rules"],"properties":{"rejected_code":{"type":"integer","default":403,"minimum":200},"block_rules":{"type":"array","uniqueItems":true,"items":{"type":"string","maxLength":4096,"minLength":1}}}}},"authz-keycloak":{"schema":{"type":"object","required":["token_endpoint"],"properties":{"ssl_verify":{"type":"boolean","default":true},"token_endpoint":{"type":"string","maxLength":4096,"minLength":1},"policy_enforcement_mode":{"type":"string","enum":["ENFORCING","PERMISSIVE"],"default":"ENFORCING"},"permissions":{"type":"array","uniqueItems":true,"items":{"type":"string","maxLength":100,"minLength":1}},"audience":{"type":"string","maxLength":100,"minLength":1},"timeout":{"type":"integer","default":3000,"minimum":1000},"grant_type":{"minLength":1,"maxLength":100,"type":"string","enum":["urn:ietf:params:oauth:grant-type:uma-ticket"],"default":"urn:ietf:params:oauth:grant-type:uma-ticket"},"keepalive_pool":{"type":"integer","default":5,"minimum":1},"keepalive_timeout":{"type":"integer","default":60000,"minimum":1000},"keepalive":{"type":"boolean","default":true}}}},"limit-count":{"schema":{"type":"object","dependencies":{"policy":{"oneOf":[{"properties":{"policy":{"enum":["local"]}}},{"required":["redis_host"],"properties":{"redis_timeout":{"type":"integer","default":1000,"minimum":1},"redis_password":{"type":"string","minLength":0},"policy":{"enum":["redis"]},"redis_host":{"type":"string","minLength":2},"redis_port":{"type":"integer","default":6379,"minimum":1}}},{"required":["redis_cluster_nodes"],"properties":{"redis_timeout":{"type":"integer","default":1000,"minimum":1},"policy":{"enum":["redis-cluster"]},"redis_cluster_nodes":{"type":"array","items":{"type":"string","maxLength":100,"minLength":2},"minItems":2},"redis_password":{"type":"string","minLength":0}}}]}},"required":["count","time_window","key"],"properties":{"key":{"type":"string","enum":["remote_addr","server_addr","http_x_real_ip","http_x_forwarded_for","consumer_name","service_id"]},"time_window":{"type":"integer","minimum":0},"policy":{"type":"string","enum":["local","redis","redis-cluster"],"default":"local"},"rejected_code":{"type":"integer","default":503,"maximum":600,"minimum":200},"count":{"type":"integer","minimum":0}}}},"hmac-auth":{"schema":{"type":"object","additionalProperties":false,"title":"work with route or service object","properties":[]},"consumer_schema":{"properties":{"clock_skew":{"type":"integer","default":0},"signed_headers":{"type":"array","items":{"type":"string","maxLength":50,"minLength":1}},"keep_headers":{"type":"boolean","title":"whether to keep the http request header","default":false},"secret_key":{"type":"string","maxLength":256,"minLength":1},"algorithm":{"type":"string","enum":["hmac-sha1","hmac-sha256","hmac-sha512"],"default":"hmac-sha256"},"access_key":{"type":"string","maxLength":256,"minLength":1}},"type":"object","additionalProperties":false,"title":"work with consumer object","required":["access_key","secret_key"]}},"request-id":{"schema":{"type":"object","properties":{"header_name":{"type":"string","default":"X-Request-Id"},"include_in_response":{"type":"boolean","default":true}}}},"proxy-cache":{"schema":{"type":"object","required":["cache_zone"],"properties":{"cache_http_status":{"minItems":1,"type":"array","uniqueItems":true,"items":{"description":"http response status","maximum":599,"type":"integer","minimum":200},"default":[200,301,404]},"cache_bypass":{"type":"array","items":{"type":"string","pattern":"(^[^\\$].+$|^\\$[0-9a-zA-Z_]+$)"},"minItems":1},"cache_method":{"minItems":1,"type":"array","uniqueItems":true,"items":{"description":"http method","enum":["GET","POST","PUT","DELETE","PATCH","HEAD","OPTIONS","CONNECT","TRACE"],"type":"string"},"default":["GET","HEAD"]},"cache_zone":{"type":"string","minLength":1},"no_cache":{"type":"array","items":{"type":"string","pattern":"(^[^\\$].+$|^\\$[0-9a-zA-Z_]+$)"},"minItems":1},"cache_key":{"type":"array","minItems":1,"items":{"description":"a key for caching","pattern":"(^[^\\$].+$|^\\$[0-9a-zA-Z_]+$)","type":"string"},"default":["$host","$request_uri"]},"hide_cache_headers":{"type":"boolean","default":false}}}},"fault-injection":{"schema":{"type":"object","minProperties":1,"properties":{"delay":{"type":"object","minProperties":1,"properties":{"duration":{"type":"number","minimum":0},"percentage":{"type":"integer","maximum":100,"minimum":0}}},"abort":{"type":"object","minProperties":1,"properties":{"percentage":{"type":"integer","maximum":100,"minimum":0},"http_status":{"type":"integer","minimum":200},"body":{"type":"string","minLength":0}}}}}},"serverless-post-function":{"schema":{"type":"object","required":["functions"],"properties":{"functions":{"type":"array","items":{"type":"string"},"minItems":1},"phase":{"type":"string","enum":["rewrite","access","header_filter","body_filter","log","balancer"]}}}},"ip-restriction":{"schema":{"type":"object","oneOf":[{"additionalProperties":false,"required":["whitelist"],"title":"whitelist","properties":{"whitelist":{"type":"array","items":{"anyOf":[{"type":"string","title":"IPv4","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$"},{"type":"string","title":"IPv4/CIDR","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$"},{"type":"string","title":"IPv6","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$"},{"type":"string","title":"IPv6/CIDR","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$"}]},"minItems":1}}},{"additionalProperties":false,"required":["blacklist"],"title":"blacklist","properties":{"blacklist":{"type":"array","items":{"anyOf":[{"type":"string","title":"IPv4","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$"},{"type":"string","title":"IPv4/CIDR","pattern":"^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$"},{"type":"string","title":"IPv6","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$"},{"type":"string","title":"IPv6/CIDR","pattern":"^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$"}]},"minItems":1}}}]}},"cors":{"schema":{"type":"object","properties":{"allow_methods":{"description":"you can use '*' to allow all methods when no credentials and '**','**' to allow forcefully(it will bring some security risks, be carefully),multiple method use ',' to split. default: *.","type":"string","default":"*"},"allow_headers":{"description":"you can use '*' to allow all header when no credentials,'**' to allow forcefully(it will bring some security risks, be carefully),multiple header use ',' to split. default: *.","type":"string","default":"*"},"max_age":{"description":"maximum number of seconds the results can be cached.-1 mean no cached,the max value is depend on browser,more detail plz check MDN. default: 5.","type":"integer","default":5},"allow_origins":{"description":"you can use '*' to allow all origins when no credentials,'**' to allow forcefully(it will bring some security risks, be carefully),multiple origin use ',' to split. default: *.","type":"string","default":"*"},"expose_headers":{"description":"you can use '*' to expose all header when no credentials,multiple header use ',' to split. default: *.","type":"string","default":"*"},"allow_credential":{"description":"allow client append crendential. according to CORS specification,if you set this option to 'true', you can not use '*' for other options.","type":"boolean","default":false}}}},"key-auth":{"schema":{"type":"object","properties":{"key":{"type":"string"}}}},"node-status":{"schema":{"type":"object","additionalProperties":false}},"http-logger":{"schema":{"type":"object","required":["uri"],"properties":{"retry_delay":{"type":"integer","default":1,"minimum":0},"include_req_body":{"type":"boolean","default":false},"concat_method":{"type":"string","enum":["json","new_line"],"default":"json"},"max_retry_count":{"type":"integer","default":0,"minimum":0},"timeout":{"type":"integer","default":3,"minimum":1},"batch_max_size":{"type":"integer","default":1000,"minimum":1},"auth_header":{"type":"string","default":""},"inactive_timeout":{"type":"integer","default":5,"minimum":1},"buffer_duration":{"type":"integer","default":60,"minimum":1},"uri":{"type":"string"},"name":{"type":"string","default":"http logger"}}}},"openid-connect":{"schema":{"type":"object","required":["client_id","client_secret","discovery"],"properties":{"ssl_verify":{"type":"boolean"},"redirect_uri":{"type":"string"},"discovery":{"type":"string"},"scope":{"type":"string"},"client_secret":{"type":"string"},"introspection_endpoint":{"type":"string"},"logout_path":{"type":"string"},"timeout":{"type":"integer","minimum":1},"public_key":{"type":"string"},"token_signing_alg_values_expected":{"type":"string"},"realm":{"type":"string"},"introspection_endpoint_auth_method":{"type":"string"},"client_id":{"type":"string"},"bearer_only":{"type":"boolean"}}}},"kafka-logger":{"schema":{"type":"object","required":["broker_list","kafka_topic","key"],"properties":{"meta_format":{"type":"string","enum":["default","origin"],"default":"default"},"include_req_body":{"type":"boolean","default":false},"max_retry_count":{"type":"integer","default":0,"minimum":0},"batch_max_size":{"type":"integer","default":1000,"minimum":1},"inactive_timeout":{"type":"integer","default":5,"minimum":1},"key":{"type":"string"},"buffer_duration":{"type":"integer","default":60,"minimum":1},"retry_delay":{"type":"integer","default":1,"minimum":0},"name":{"type":"string","default":"kafka logger"},"timeout":{"type":"integer","default":3,"minimum":1},"broker_list":{"type":"object"},"kafka_topic":{"type":"string"}}}},"jwt-auth":{"schema":{"type":"object","properties":[],"additionalProperties":false},"consumer_schema":{"type":"object","properties":{"key":{"type":"string"},"base64_secret":{"type":"boolean","default":false},"secret":{"type":"string"},"algorithm":{"type":"string","enum":["HS256","HS512","RS256"],"default":"HS256"},"exp":{"type":"integer","minimum":1}},"required":["key"],"additionalProperties":false}},"proxy-mirror":{"schema":{"type":"object","minProperties":1,"required":["host"],"properties":{"host":{"type":"string","pattern":"^http(s)?:\\/\\/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:[0-9]{1,5})?$"}}}},"api-breaker":{"schema":{"type":"object","required":["break_response_code"],"properties":{"healthy":{"type":"object","default":{"successes":3,"http_statuses":[200]},"properties":{"successes":{"type":"integer","default":3,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":499,"minimum":200},"default":[200]}}},"break_response_code":{"type":"integer","maximum":599,"minimum":200},"unhealthy":{"type":"object","default":{"failures":3,"http_statuses":[500]},"properties":{"failures":{"type":"integer","default":3,"minimum":1},"http_statuses":{"minItems":1,"type":"array","uniqueItems":true,"items":{"type":"integer","maximum":599,"minimum":500},"default":[500]}}},"max_breaker_sec":{"type":"integer","default":300,"minimum":3}}}},"request-validation":{"schema":{"type":"object","anyOf":[{"required":["body_schema"],"title":"Body schema","properties":{"body_schema":{"type":"object"}}},{"required":["header_schema"],"title":"Header schema","properties":{"header_schema":{"type":"object"}}}]}},"limit-conn":{"schema":{"type":"object","required":["conn","burst","default_conn_delay","key"],"properties":{"default_conn_delay":{"type":"number","exclusiveMinimum":0},"conn":{"type":"integer","exclusiveMinimum":0},"key":{"type":"string","enum":["remote_addr","server_addr","http_x_real_ip","http_x_forwarded_for","consumer_name"]},"rejected_code":{"type":"integer","default":503,"minimum":200},"burst":{"type":"integer","minimum":0}}}},"tcp-logger":{"schema":{"type":"object","required":["host","port"],"properties":{"retry_delay":{"type":"integer","default":1,"minimum":0},"host":{"type":"string"},"port":{"type":"integer","minimum":0},"max_retry_count":{"type":"integer","default":0,"minimum":0},"include_req_body":{"type":"boolean","default":false},"timeout":{"type":"integer","default":1000,"minimum":1},"batch_max_size":{"type":"integer","default":1000,"minimum":1},"inactive_timeout":{"type":"integer","default":5,"minimum":1},"tls":{"type":"boolean","default":false},"buffer_duration":{"type":"integer","default":60,"minimum":1},"tls_options":{"type":"string"},"name":{"type":"string","default":"tcp logger"}}}},"referer-restriction":{"schema":{"type":"object","additionalProperties":false,"required":["whitelist"],"properties":{"whitelist":{"type":"array","items":{"type":"string","pattern":"^\\*?[0-9a-zA-Z-.]+$"},"minItems":1},"bypass_missing":{"type":"boolean","default":false}}}},"syslog":{"schema":{"type":"object","required":["host","port"],"properties":{"host":{"type":"string"},"port":{"type":"integer"},"include_req_body":{"type":"boolean","default":false},"drop_limit":{"type":"integer","default":1048576},"buffer_duration":{"type":"integer","default":60,"minimum":1},"flush_limit":{"type":"integer","default":4096,"minimum":1},"batch_max_size":{"type":"integer","default":1000,"minimum":1},"timeout":{"type":"integer","default":3,"minimum":1},"retry_interval":{"type":"integer","default":1,"minimum":0},"max_retry_times":{"type":"integer","default":1,"minimum":1},"tls":{"type":"boolean","default":false},"pool_size":{"type":"integer","default":5,"minimum":5},"sock_type":{"type":"string","enum":["tcp","udp"],"default":"tcp"},"name":{"type":"string","default":"sys logger"}}}},"grpc-transcode":{"schema":{"type":"object","additionalProperties":true,"required":["proto_id","service","method"],"properties":{"service":{"description":"the grpc service name","type":"string"},"deadline":{"description":"deadline for grpc, millisecond","type":"number","default":0},"pb_option":{"type":"array","items":{"type":"string","anyOf":[{"description":"enum as result","enum":["int64_as_number","int64_as_string","int64_as_hexstring"],"type":"string"},{"description":"int64 as result","enum":["ienum_as_name","enum_as_value"],"type":"string"},{"description":"default values option","enum":["auto_default_values","no_default_values","use_default_values","use_default_metatable"],"type":"string"},{"description":"hooks option","enum":["enable_hooks","disable_hooks"],"type":"string"}]},"minItems":1},"proto_id":{"anyOf":[{"type":"string","pattern":"^[a-zA-Z0-9-_]+$","maxLength":64,"minLength":1},{"type":"integer","minimum":1}]},"method":{"description":"the method name in the grpc service.","type":"string"}}}},"limit-req":{"schema":{"type":"object","required":["rate","burst","key"],"properties":{"burst":{"type":"number","minimum":0},"key":{"type":"string","enum":["remote_addr","server_addr","http_x_real_ip","http_x_forwarded_for","consumer_name"]},"rate":{"type":"number","minimum":0},"rejected_code":{"type":"integer","default":503,"minimum":200}}}},"example-plugin":{"schema":{"type":"object","required":["i"],"properties":{"t":{"type":"array","minItems":1},"port":{"type":"integer"},"i":{"type":"number","minimum":0},"ip":{"type":"string"},"s":{"type":"string"}}}},"serverless-pre-function":{"schema":{"type":"object","required":["functions"],"properties":{"functions":{"type":"array","items":{"type":"string"},"minItems":1},"phase":{"type":"string","enum":["rewrite","access","header_filter","body_filter","log","balancer"]}}}},"basic-auth":{"schema":{"type":"object","additionalProperties":false,"title":"work with route or service object","properties":[]},"consumer_schema":{"properties":{"username":{"type":"string"},"password":{"type":"string"}},"type":"object","additionalProperties":false,"title":"work with consumer object","required":["username","password"]}},"wolf-rbac":{"schema":{"type":"object","properties":{"server":{"type":"string","default":"http://127.0.0.1:10080"},"appid":{"type":"string","default":"unset"},"header_prefix":{"type":"string","default":"X-"}}}},"log-rotate":{"schema":{"type":"object","additionalProperties":false,"properties":[]}},"response-rewrite":{"schema":{"type":"object","minProperties":1,"additionalProperties":false,"properties":{"body_base64":{"description":"whether new body for repsonse need base64 decode before return","type":"boolean","default":false},"status_code":{"description":"new status code for repsonse","maximum":598,"type":"integer","minimum":200},"body":{"description":"new body for repsonse","type":"string"},"headers":{"description":"new headers for repsonse","minProperties":1,"type":"object"}}}},"consumer-restriction":{"schema":{"type":"object","oneOf":[{"required":["blacklist"],"title":"blacklist","properties":{"type":{"type":"string","enum":["consumer_name","service_id"],"default":"consumer_name"},"rejected_code":{"type":"integer","default":403,"minimum":200},"blacklist":{"type":"array","items":{"type":"string"},"minItems":1}}},{"required":["whitelist"],"title":"whitelist","properties":{"type":{"type":"string","enum":["consumer_name","service_id"],"default":"consumer_name"},"rejected_code":{"type":"integer","default":403,"minimum":200},"whitelist":{"type":"array","items":{"type":"string"},"minItems":1}}}]}},"redirect":{"schema":{"type":"object","oneOf":[{"required":["uri"]},{"required":["http_to_https"]}],"properties":{"http_to_https":{"type":"boolean"},"ret_code":{"type":"integer","default":302,"minimum":200},"uri":{"type":"string","minLength":2}}}},"proxy-rewrite":{"schema":{"type":"object","minProperties":1,"additionalProperties":false,"properties":{"scheme":{"description":"new scheme for upstream","enum":["http","https"],"type":"string"},"host":{"description":"new host for upstream","pattern":"^[0-9a-zA-Z-.]+$","type":"string"},"regex_uri":{"description":"new uri that substitute from client uri for upstream, lower priority than uri property","type":"array","minItems":2,"items":{"description":"regex uri","type":"string"},"maxItems":2},"headers":{"description":"new headers for request","minProperties":1,"type":"object"},"uri":{"description":"new uri for upstream","maxLength":4096,"type":"string","pattern":"^\\/.*","minLength":1}}}},"batch-requests":{"schema":{"type":"object","additionalProperties":false}},"prometheus":{"schema":{"type":"object","additionalProperties":false}},"echo":{"schema":{"anyOf":[{"required":["before_body"]},{"required":["body"]},{"required":["after_body"]}],"properties":{"after_body":{"description":"body after the modification of filter phase.","type":"string"},"headers":{"description":"new headers for response","minProperties":1,"type":"object"},"before_body":{"description":"body before the filter phase.","type":"string"},"auth_value":{"description":"auth value","type":"string"},"body":{"description":"body to replace upstream response.","type":"string"}},"type":"object","minProperties":1,"additionalProperties":false}}}}
+{
+  "main": {
+    "host_def": {
+      "type": "string",
+      "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+    },
+    "service": {
+      "properties": {
+        "update_time": {
+          "type": "integer"
+        },
+        "id": {
+          "anyOf": [{
+            "pattern": "^[a-zA-Z0-9-_]+$",
+            "maxLength": 64,
+            "type": "string",
+            "minLength": 1
+          }, {
+            "type": "integer",
+            "minimum": 1
+          }]
+        },
+        "upstream_id": {
+          "anyOf": [{
+            "pattern": "^[a-zA-Z0-9-_]+$",
+            "maxLength": 64,
+            "type": "string",
+            "minLength": 1
+          }, {
+            "type": "integer",
+            "minimum": 1
+          }]
+        },
+        "script": {
+          "maxLength": 102400,
+          "type": "string",
+          "minLength": 10
+        },
+        "labels": {
+          "patternProperties": {
+            ".*": {
+              "type": "string",
+              "maxLength": 64,
+              "description": "value of label",
+              "pattern": "^[a-zA-Z0-9-_.]+$",
+              "minLength": 1
+            }
+          },
+          "description": "key/value pairs to specify attributes",
+          "type": "object",
+          "maxProperties": 16
+        },
+        "create_time": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "plugins": {
+          "type": "object"
+        },
+        "desc": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "upstream": {
+          "properties": {
+            "pass_host": {
+              "default": "pass",
+              "description": "mod of host passing",
+              "type": "string",
+              "enum": ["pass", "node", "rewrite"]
+            },
+            "id": {
+              "anyOf": [{
+                "pattern": "^[a-zA-Z0-9-_]+$",
+                "maxLength": 64,
+                "type": "string",
+                "minLength": 1
+              }, {
+                "type": "integer",
+                "minimum": 1
+              }]
+            },
+            "key": {
+              "type": "string",
+              "description": "the key of chash for dynamic load balancing"
+            },
+            "timeout": {
+              "properties": {
+                "send": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "connect": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "read": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "type": "object",
+              "required": ["connect", "send", "read"]
+            },
+            "upstream_host": {
+              "type": "string",
+              "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+            },
+            "create_time": {
+              "type": "integer"
+            },
+            "update_time": {
+              "type": "integer"
+            },
+            "nodes": {
+              "anyOf": [{
+                "patternProperties": {
+                  ".*": {
+                    "description": "weight of node",
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "type": "object",
+                "minProperties": 1
+              }, {
+                "items": {
+                  "properties": {
+                    "metadata": {
+                      "type": "object",
+                      "description": "metadata of node"
+                    },
+                    "host": {
+                      "type": "string",
+                      "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+                    },
+                    "weight": {
+                      "description": "weight of node",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "port": {
+                      "description": "port of node",
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "type": "object",
+                  "required": ["host", "port", "weight"]
+                },
+                "type": "array",
+                "minItems": 1
+              }]
+            },
+            "type": {
+              "description": "algorithms of load balancing",
+              "type": "string",
+              "enum": ["chash", "roundrobin", "ewma"]
+            },
+            "k8s_deployment_info": {
+              "properties": {
+                "namespace": {
+                  "type": "string",
+                  "description": "k8s namespace"
+                },
+                "deploy_name": {
+                  "type": "string",
+                  "description": "k8s deployment name"
+                },
+                "port": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "backend_type": {
+                  "default": "pod",
+                  "description": "k8s service name",
+                  "type": "string",
+                  "enum": ["svc", "pod"]
+                },
+                "service_name": {
+                  "type": "string",
+                  "description": "k8s service name"
+                }
+              },
+              "type": "object",
+              "anyOf": [{
+                "required": ["namespace", "deploy_name", "port"]
+              }, {
+                "required": ["namespace", "service_name", "port"]
+              }]
+            },
+            "hash_on": {
+              "default": "vars",
+              "type": "string",
+              "enum": ["vars", "header", "cookie", "consumer"]
+            },
+            "retries": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "enable_websocket": {
+              "type": "boolean",
+              "description": "enable websocket for request"
+            },
+            "labels": {
+              "patternProperties": {
+                ".*": {
+                  "type": "string",
+                  "maxLength": 64,
+                  "description": "value of label",
+                  "pattern": "^[a-zA-Z0-9-_.]+$",
+                  "minLength": 1
+                }
+              },
+              "description": "key/value pairs to specify attributes",
+              "type": "object",
+              "maxProperties": 16
+            },
+            "checks": {
+              "properties": {
+                "active": {
+                  "type": "object",
+                  "properties": {
+                    "host": {
+                      "type": "string",
+                      "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+                    },
+                    "type": {
+                      "default": "http",
+                      "type": "string",
+                      "enum": ["http", "https", "tcp"]
+                    },
+                    "http_path": {
+                      "type": "string",
+                      "default": "/"
+                    },
+                    "https_verify_certificate": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "concurrency": {
+                      "type": "integer",
+                      "default": 10
+                    },
+                    "timeout": {
+                      "type": "number",
+                      "default": 1
+                    },
+                    "req_headers": {
+                      "items": {
+                        "type": "string",
+                        "uniqueItems": true
+                      },
+                      "type": "array",
+                      "minItems": 1
+                    },
+                    "unhealthy": {
+                      "type": "object",
+                      "properties": {
+                        "http_failures": {
+                          "default": 5,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "interval": {
+                          "minimum": 1,
+                          "type": "integer",
+                          "default": 0
+                        },
+                        "http_statuses": {
+                          "type": "array",
+                          "default": [429, 404, 500, 501, 502, 503, 504, 505],
+                          "items": {
+                            "minimum": 200,
+                            "type": "integer",
+                            "maximum": 599
+                          },
+                          "uniqueItems": true,
+                          "minItems": 1
+                        },
+                        "tcp_failures": {
+                          "default": 2,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "timeouts": {
+                          "default": 3,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        }
+                      }
+                    },
+                    "port": {
+                      "minimum": 1,
+                      "type": "integer",
+                      "maximum": 65535
+                    },
+                    "healthy": {
+                      "type": "object",
+                      "properties": {
+                        "interval": {
+                          "minimum": 1,
+                          "type": "integer",
+                          "default": 0
+                        },
+                        "http_statuses": {
+                          "type": "array",
+                          "default": [200, 302],
+                          "items": {
+                            "minimum": 200,
+                            "type": "integer",
+                            "maximum": 599
+                          },
+                          "uniqueItems": true,
+                          "minItems": 1
+                        },
+                        "successes": {
+                          "default": 2,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        }
+                      }
+                    }
+                  }
+                },
+                "passive": {
+                  "type": "object",
+                  "properties": {
+                    "unhealthy": {
+                      "type": "object",
+                      "properties": {
+                        "tcp_failures": {
+                          "default": 2,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "http_statuses": {
+                          "type": "array",
+                          "default": [429, 500, 503],
+                          "items": {
+                            "minimum": 200,
+                            "type": "integer",
+                            "maximum": 599
+                          },
+                          "uniqueItems": true,
+                          "minItems": 1
+                        },
+                        "http_failures": {
+                          "default": 5,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "timeouts": {
+                          "default": 7,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        }
+                      }
+                    },
+                    "type": {
+                      "default": "http",
+                      "type": "string",
+                      "enum": ["http", "https", "tcp"]
+                    },
+                    "healthy": {
+                      "type": "object",
+                      "properties": {
+                        "successes": {
+                          "default": 5,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "http_statuses": {
+                          "type": "array",
+                          "default": [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308],
+                          "items": {
+                            "minimum": 200,
+                            "type": "integer",
+                            "maximum": 599
+                          },
+                          "uniqueItems": true,
+                          "minItems": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "anyOf": [{
+                "required": ["active"]
+              }, {
+                "required": ["active", "passive"]
+              }],
+              "type": "object",
+              "additionalProperties": false
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 50
+            },
+            "desc": {
+              "type": "string",
+              "maxLength": 256
+            },
+            "service_name": {
+              "type": "string",
+              "maxLength": 50
+            }
+          },
+          "anyOf": [{
+            "required": ["type", "nodes"]
+          }, {
+            "required": ["type", "k8s_deployment_info"]
+          }, {
+            "required": ["type", "service_name"]
+          }],
+          "type": "object",
+          "additionalProperties": false
+        }
+      },
+      "type": "object",
+      "additionalProperties": false
+    },
+    "id_schema": {
+      "anyOf": [{
+        "pattern": "^[a-zA-Z0-9-_]+$",
+        "maxLength": 64,
+        "type": "string",
+        "minLength": 1
+      }, {
+        "type": "integer",
+        "minimum": 1
+      }]
+    },
+    "upstream_hash_vars_schema": {
+      "type": "string",
+      "pattern": "^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$"
+    },
+    "version": 0.5,
+    "plugin_disable_schema": {
+      "disable": {
+        "type": "boolean"
+      }
+    },
+    "stream_route": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "anyOf": [{
+            "pattern": "^[a-zA-Z0-9-_]+$",
+            "maxLength": 64,
+            "type": "string",
+            "minLength": 1
+          }, {
+            "type": "integer",
+            "minimum": 1
+          }]
+        },
+        "server_addr": {
+          "anyOf": [{
+            "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+            "type": "string",
+            "title": "IPv4"
+          }, {
+            "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+            "type": "string",
+            "title": "IPv4/CIDR"
+          }, {
+            "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+            "type": "string",
+            "title": "IPv6"
+          }, {
+            "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+            "type": "string",
+            "title": "IPv6/CIDR"
+          }],
+          "description": "server IP",
+          "type": "string"
+        },
+        "server_port": {
+          "type": "integer",
+          "description": "server port"
+        },
+        "upstream_id": {
+          "anyOf": [{
+            "pattern": "^[a-zA-Z0-9-_]+$",
+            "maxLength": 64,
+            "type": "string",
+            "minLength": 1
+          }, {
+            "type": "integer",
+            "minimum": 1
+          }]
+        },
+        "plugins": {
+          "type": "object"
+        },
+        "remote_addr": {
+          "anyOf": [{
+            "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+            "type": "string",
+            "title": "IPv4"
+          }, {
+            "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+            "type": "string",
+            "title": "IPv4/CIDR"
+          }, {
+            "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+            "type": "string",
+            "title": "IPv6"
+          }, {
+            "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+            "type": "string",
+            "title": "IPv6/CIDR"
+          }],
+          "description": "client IP",
+          "type": "string"
+        },
+        "upstream": {
+          "properties": {
+            "pass_host": {
+              "default": "pass",
+              "description": "mod of host passing",
+              "type": "string",
+              "enum": ["pass", "node", "rewrite"]
+            },
+            "id": {
+              "anyOf": [{
+                "pattern": "^[a-zA-Z0-9-_]+$",
+                "maxLength": 64,
+                "type": "string",
+                "minLength": 1
+              }, {
+                "type": "integer",
+                "minimum": 1
+              }]
+            },
+            "key": {
+              "type": "string",
+              "description": "the key of chash for dynamic load balancing"
+            },
+            "timeout": {
+              "properties": {
+                "send": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "connect": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "read": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "type": "object",
+              "required": ["connect", "send", "read"]
+            },
+            "upstream_host": {
+              "type": "string",
+              "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+            },
+            "create_time": {
+              "type": "integer"
+            },
+            "update_time": {
+              "type": "integer"
+            },
+            "nodes": {
+              "anyOf": [{
+                "patternProperties": {
+                  ".*": {
+                    "description": "weight of node",
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "type": "object",
+                "minProperties": 1
+              }, {
+                "items": {
+                  "properties": {
+                    "metadata": {
+                      "type": "object",
+                      "description": "metadata of node"
+                    },
+                    "host": {
+                      "type": "string",
+                      "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+                    },
+                    "weight": {
+                      "description": "weight of node",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "port": {
+                      "description": "port of node",
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "type": "object",
+                  "required": ["host", "port", "weight"]
+                },
+                "type": "array",
+                "minItems": 1
+              }]
+            },
+            "type": {
+              "description": "algorithms of load balancing",
+              "type": "string",
+              "enum": ["chash", "roundrobin", "ewma"]
+            },
+            "k8s_deployment_info": {
+              "properties": {
+                "namespace": {
+                  "type": "string",
+                  "description": "k8s namespace"
+                },
+                "deploy_name": {
+                  "type": "string",
+                  "description": "k8s deployment name"
+                },
+                "port": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "backend_type": {
+                  "default": "pod",
+                  "description": "k8s service name",
+                  "type": "string",
+                  "enum": ["svc", "pod"]
+                },
+                "service_name": {
+                  "type": "string",
+                  "description": "k8s service name"
+                }
+              },
+              "type": "object",
+              "anyOf": [{
+                "required": ["namespace", "deploy_name", "port"]
+              }, {
+                "required": ["namespace", "service_name", "port"]
+              }]
+            },
+            "hash_on": {
+              "default": "vars",
+              "type": "string",
+              "enum": ["vars", "header", "cookie", "consumer"]
+            },
+            "retries": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "enable_websocket": {
+              "type": "boolean",
+              "description": "enable websocket for request"
+            },
+            "labels": {
+              "patternProperties": {
+                ".*": {
+                  "type": "string",
+                  "maxLength": 64,
+                  "description": "value of label",
+                  "pattern": "^[a-zA-Z0-9-_.]+$",
+                  "minLength": 1
+                }
+              },
+              "description": "key/value pairs to specify attributes",
+              "type": "object",
+              "maxProperties": 16
+            },
+            "checks": {
+              "properties": {
+                "active": {
+                  "type": "object",
+                  "properties": {
+                    "host": {
+                      "type": "string",
+                      "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+                    },
+                    "type": {
+                      "default": "http",
+                      "type": "string",
+                      "enum": ["http", "https", "tcp"]
+                    },
+                    "http_path": {
+                      "type": "string",
+                      "default": "/"
+                    },
+                    "https_verify_certificate": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "concurrency": {
+                      "type": "integer",
+                      "default": 10
+                    },
+                    "timeout": {
+                      "type": "number",
+                      "default": 1
+                    },
+                    "req_headers": {
+                      "items": {
+                        "type": "string",
+                        "uniqueItems": true
+                      },
+                      "type": "array",
+                      "minItems": 1
+                    },
+                    "unhealthy": {
+                      "type": "object",
+                      "properties": {
+                        "http_failures": {
+                          "default": 5,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "interval": {
+                          "minimum": 1,
+                          "type": "integer",
+                          "default": 0
+                        },
+                        "http_statuses": {
+                          "type": "array",
+                          "default": [429, 404, 500, 501, 502, 503, 504, 505],
+                          "items": {
+                            "minimum": 200,
+                            "type": "integer",
+                            "maximum": 599
+                          },
+                          "uniqueItems": true,
+                          "minItems": 1
+                        },
+                        "tcp_failures": {
+                          "default": 2,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "timeouts": {
+                          "default": 3,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        }
+                      }
+                    },
+                    "port": {
+                      "minimum": 1,
+                      "type": "integer",
+                      "maximum": 65535
+                    },
+                    "healthy": {
+                      "type": "object",
+                      "properties": {
+                        "interval": {
+                          "minimum": 1,
+                          "type": "integer",
+                          "default": 0
+                        },
+                        "http_statuses": {
+                          "type": "array",
+                          "default": [200, 302],
+                          "items": {
+                            "minimum": 200,
+                            "type": "integer",
+                            "maximum": 599
+                          },
+                          "uniqueItems": true,
+                          "minItems": 1
+                        },
+                        "successes": {
+                          "default": 2,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        }
+                      }
+                    }
+                  }
+                },
+                "passive": {
+                  "type": "object",
+                  "properties": {
+                    "unhealthy": {
+                      "type": "object",
+                      "properties": {
+                        "tcp_failures": {
+                          "default": 2,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "http_statuses": {
+                          "type": "array",
+                          "default": [429, 500, 503],
+                          "items": {
+                            "minimum": 200,
+                            "type": "integer",
+                            "maximum": 599
+                          },
+                          "uniqueItems": true,
+                          "minItems": 1
+                        },
+                        "http_failures": {
+                          "default": 5,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "timeouts": {
+                          "default": 7,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        }
+                      }
+                    },
+                    "type": {
+                      "default": "http",
+                      "type": "string",
+                      "enum": ["http", "https", "tcp"]
+                    },
+                    "healthy": {
+                      "type": "object",
+                      "properties": {
+                        "successes": {
+                          "default": 5,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "http_statuses": {
+                          "type": "array",
+                          "default": [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308],
+                          "items": {
+                            "minimum": 200,
+                            "type": "integer",
+                            "maximum": 599
+                          },
+                          "uniqueItems": true,
+                          "minItems": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "anyOf": [{
+                "required": ["active"]
+              }, {
+                "required": ["active", "passive"]
+              }],
+              "type": "object",
+              "additionalProperties": false
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 50
+            },
+            "desc": {
+              "type": "string",
+              "maxLength": 256
+            },
+            "service_name": {
+              "type": "string",
+              "maxLength": 50
+            }
+          },
+          "anyOf": [{
+            "required": ["type", "nodes"]
+          }, {
+            "required": ["type", "k8s_deployment_info"]
+          }, {
+            "required": ["type", "service_name"]
+          }],
+          "type": "object",
+          "additionalProperties": false
+        }
+      }
+    },
+    "ip_def": [{
+      "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+      "type": "string",
+      "title": "IPv4"
+    }, {
+      "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+      "type": "string",
+      "title": "IPv4/CIDR"
+    }, {
+      "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+      "type": "string",
+      "title": "IPv6"
+    }, {
+      "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+      "type": "string",
+      "title": "IPv6/CIDR"
+    }],
+    "proto": {
+      "properties": {
+        "content": {
+          "maxLength": 1048576,
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": ["content"]
+    },
+    "ssl": {
+      "properties": {
+        "update_time": {
+          "type": "integer"
+        },
+        "id": {
+          "anyOf": [{
+            "pattern": "^[a-zA-Z0-9-_]+$",
+            "maxLength": 64,
+            "type": "string",
+            "minLength": 1
+          }, {
+            "type": "integer",
+            "minimum": 1
+          }]
+        },
+        "certs": {
+          "type": "array",
+          "items": {
+            "maxLength": 65536,
+            "type": "string",
+            "minLength": 128
+          }
+        },
+        "snis": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+          }
+        },
+        "exptime": {
+          "type": "integer",
+          "minimum": 1588262400
+        },
+        "keys": {
+          "type": "array",
+          "items": {
+            "maxLength": 65536,
+            "type": "string",
+            "minLength": 128
+          }
+        },
+        "validity_end": {
+          "type": "integer"
+        },
+        "key": {
+          "maxLength": 65536,
+          "type": "string",
+          "minLength": 128
+        },
+        "labels": {
+          "patternProperties": {
+            ".*": {
+              "type": "string",
+              "maxLength": 64,
+              "description": "value of label",
+              "pattern": "^[a-zA-Z0-9-_.]+$",
+              "minLength": 1
+            }
+          },
+          "description": "key/value pairs to specify attributes",
+          "type": "object",
+          "maxProperties": 16
+        },
+        "sni": {
+          "type": "string",
+          "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+        },
+        "validity_start": {
+          "type": "integer"
+        },
+        "cert": {
+          "maxLength": 65536,
+          "type": "string",
+          "minLength": 128
+        },
+        "create_time": {
+          "type": "integer"
+        },
+        "status": {
+          "default": 1,
+          "description": "ssl status, 1 to enable, 0 to disable",
+          "type": "integer",
+          "enum": [1, 0]
+        }
+      },
+      "oneOf": [{
+        "required": ["sni", "key", "cert"]
+      }, {
+        "required": ["snis", "key", "cert"]
+      }],
+      "type": "object",
+      "additionalProperties": false
+    },
+    "consumer": {
+      "properties": {
+        "update_time": {
+          "type": "integer"
+        },
+        "id": {
+          "anyOf": [{
+            "pattern": "^[a-zA-Z0-9-_]+$",
+            "maxLength": 64,
+            "type": "string",
+            "minLength": 1
+          }, {
+            "type": "integer",
+            "minimum": 1
+          }]
+        },
+        "labels": {
+          "patternProperties": {
+            ".*": {
+              "type": "string",
+              "maxLength": 64,
+              "description": "value of label",
+              "pattern": "^[a-zA-Z0-9-_.]+$",
+              "minLength": 1
+            }
+          },
+          "description": "key/value pairs to specify attributes",
+          "type": "object",
+          "maxProperties": 16
+        },
+        "username": {
+          "pattern": "^[a-zA-Z0-9_]+$",
+          "maxLength": 32,
+          "type": "string",
+          "minLength": 1
+        },
+        "plugins": {
+          "type": "object"
+        },
+        "create_time": {
+          "type": "integer"
+        },
+        "desc": {
+          "type": "string",
+          "maxLength": 256
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": ["username"]
+    },
+    "route": {
+      "not": {
+        "anyOf": [{
+          "required": ["script", "plugins"]
+        }]
+      },
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "priority": {
+          "type": "integer",
+          "default": 0
+        },
+        "host": {
+          "type": "string",
+          "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+        },
+        "uris": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "HTTP uri"
+          }
+        },
+        "upstream_id": {
+          "anyOf": [{
+            "pattern": "^[a-zA-Z0-9-_]+$",
+            "maxLength": 64,
+            "type": "string",
+            "minLength": 1
+          }, {
+            "type": "integer",
+            "minimum": 1
+          }]
+        },
+        "vars": {
+          "type": "array",
+          "items": {
+            "description": "Nginx builtin variable name and value",
+            "type": "array",
+            "items": {
+              "maxItems": 3,
+              "anyOf": [{
+                "type": "string"
+              }, {
+                "type": "number"
+              }],
+              "minItems": 2
+            }
+          }
+        },
+        "plugins": {
+          "type": "object"
+        },
+        "create_time": {
+          "type": "integer"
+        },
+        "filter_func": {
+          "pattern": "^function",
+          "type": "string",
+          "minLength": 10
+        },
+        "update_time": {
+          "type": "integer"
+        },
+        "id": {
+          "anyOf": [{
+            "pattern": "^[a-zA-Z0-9-_]+$",
+            "maxLength": 64,
+            "type": "string",
+            "minLength": 1
+          }, {
+            "type": "integer",
+            "minimum": 1
+          }]
+        },
+        "uri": {
+          "maxLength": 4096,
+          "type": "string",
+          "minLength": 1
+        },
+        "upstream": {
+          "properties": {
+            "pass_host": {
+              "default": "pass",
+              "description": "mod of host passing",
+              "type": "string",
+              "enum": ["pass", "node", "rewrite"]
+            },
+            "id": {
+              "anyOf": [{
+                "pattern": "^[a-zA-Z0-9-_]+$",
+                "maxLength": 64,
+                "type": "string",
+                "minLength": 1
+              }, {
+                "type": "integer",
+                "minimum": 1
+              }]
+            },
+            "key": {
+              "type": "string",
+              "description": "the key of chash for dynamic load balancing"
+            },
+            "timeout": {
+              "properties": {
+                "send": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "connect": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "read": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "type": "object",
+              "required": ["connect", "send", "read"]
+            },
+            "upstream_host": {
+              "type": "string",
+              "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+            },
+            "create_time": {
+              "type": "integer"
+            },
+            "update_time": {
+              "type": "integer"
+            },
+            "nodes": {
+              "anyOf": [{
+                "patternProperties": {
+                  ".*": {
+                    "description": "weight of node",
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "type": "object",
+                "minProperties": 1
+              }, {
+                "items": {
+                  "properties": {
+                    "metadata": {
+                      "type": "object",
+                      "description": "metadata of node"
+                    },
+                    "host": {
+                      "type": "string",
+                      "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+                    },
+                    "weight": {
+                      "description": "weight of node",
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "port": {
+                      "description": "port of node",
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "type": "object",
+                  "required": ["host", "port", "weight"]
+                },
+                "type": "array",
+                "minItems": 1
+              }]
+            },
+            "type": {
+              "description": "algorithms of load balancing",
+              "type": "string",
+              "enum": ["chash", "roundrobin", "ewma"]
+            },
+            "k8s_deployment_info": {
+              "properties": {
+                "namespace": {
+                  "type": "string",
+                  "description": "k8s namespace"
+                },
+                "deploy_name": {
+                  "type": "string",
+                  "description": "k8s deployment name"
+                },
+                "port": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "backend_type": {
+                  "default": "pod",
+                  "description": "k8s service name",
+                  "type": "string",
+                  "enum": ["svc", "pod"]
+                },
+                "service_name": {
+                  "type": "string",
+                  "description": "k8s service name"
+                }
+              },
+              "type": "object",
+              "anyOf": [{
+                "required": ["namespace", "deploy_name", "port"]
+              }, {
+                "required": ["namespace", "service_name", "port"]
+              }]
+            },
+            "hash_on": {
+              "default": "vars",
+              "type": "string",
+              "enum": ["vars", "header", "cookie", "consumer"]
+            },
+            "retries": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "enable_websocket": {
+              "type": "boolean",
+              "description": "enable websocket for request"
+            },
+            "labels": {
+              "patternProperties": {
+                ".*": {
+                  "type": "string",
+                  "maxLength": 64,
+                  "description": "value of label",
+                  "pattern": "^[a-zA-Z0-9-_.]+$",
+                  "minLength": 1
+                }
+              },
+              "description": "key/value pairs to specify attributes",
+              "type": "object",
+              "maxProperties": 16
+            },
+            "checks": {
+              "properties": {
+                "active": {
+                  "type": "object",
+                  "properties": {
+                    "host": {
+                      "type": "string",
+                      "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+                    },
+                    "type": {
+                      "default": "http",
+                      "type": "string",
+                      "enum": ["http", "https", "tcp"]
+                    },
+                    "http_path": {
+                      "type": "string",
+                      "default": "/"
+                    },
+                    "https_verify_certificate": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "concurrency": {
+                      "type": "integer",
+                      "default": 10
+                    },
+                    "timeout": {
+                      "type": "number",
+                      "default": 1
+                    },
+                    "req_headers": {
+                      "items": {
+                        "type": "string",
+                        "uniqueItems": true
+                      },
+                      "type": "array",
+                      "minItems": 1
+                    },
+                    "unhealthy": {
+                      "type": "object",
+                      "properties": {
+                        "http_failures": {
+                          "default": 5,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "interval": {
+                          "minimum": 1,
+                          "type": "integer",
+                          "default": 0
+                        },
+                        "http_statuses": {
+                          "type": "array",
+                          "default": [429, 404, 500, 501, 502, 503, 504, 505],
+                          "items": {
+                            "minimum": 200,
+                            "type": "integer",
+                            "maximum": 599
+                          },
+                          "uniqueItems": true,
+                          "minItems": 1
+                        },
+                        "tcp_failures": {
+                          "default": 2,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "timeouts": {
+                          "default": 3,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        }
+                      }
+                    },
+                    "port": {
+                      "minimum": 1,
+                      "type": "integer",
+                      "maximum": 65535
+                    },
+                    "healthy": {
+                      "type": "object",
+                      "properties": {
+                        "interval": {
+                          "minimum": 1,
+                          "type": "integer",
+                          "default": 0
+                        },
+                        "http_statuses": {
+                          "type": "array",
+                          "default": [200, 302],
+                          "items": {
+                            "minimum": 200,
+                            "type": "integer",
+                            "maximum": 599
+                          },
+                          "uniqueItems": true,
+                          "minItems": 1
+                        },
+                        "successes": {
+                          "default": 2,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        }
+                      }
+                    }
+                  }
+                },
+                "passive": {
+                  "type": "object",
+                  "properties": {
+                    "unhealthy": {
+                      "type": "object",
+                      "properties": {
+                        "tcp_failures": {
+                          "default": 2,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "http_statuses": {
+                          "type": "array",
+                          "default": [429, 500, 503],
+                          "items": {
+                            "minimum": 200,
+                            "type": "integer",
+                            "maximum": 599
+                          },
+                          "uniqueItems": true,
+                          "minItems": 1
+                        },
+                        "http_failures": {
+                          "default": 5,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "timeouts": {
+                          "default": 7,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        }
+                      }
+                    },
+                    "type": {
+                      "default": "http",
+                      "type": "string",
+                      "enum": ["http", "https", "tcp"]
+                    },
+                    "healthy": {
+                      "type": "object",
+                      "properties": {
+                        "successes": {
+                          "default": 5,
+                          "minimum": 1,
+                          "type": "integer",
+                          "maximum": 254
+                        },
+                        "http_statuses": {
+                          "type": "array",
+                          "default": [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308],
+                          "items": {
+                            "minimum": 200,
+                            "type": "integer",
+                            "maximum": 599
+                          },
+                          "uniqueItems": true,
+                          "minItems": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "anyOf": [{
+                "required": ["active"]
+              }, {
+                "required": ["active", "passive"]
+              }],
+              "type": "object",
+              "additionalProperties": false
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 50
+            },
+            "desc": {
+              "type": "string",
+              "maxLength": 256
+            },
+            "service_name": {
+              "type": "string",
+              "maxLength": 50
+            }
+          },
+          "anyOf": [{
+            "required": ["type", "nodes"]
+          }, {
+            "required": ["type", "k8s_deployment_info"]
+          }, {
+            "required": ["type", "service_name"]
+          }],
+          "type": "object",
+          "additionalProperties": false
+        },
+        "remote_addr": {
+          "anyOf": [{
+            "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+            "type": "string",
+            "title": "IPv4"
+          }, {
+            "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+            "type": "string",
+            "title": "IPv4/CIDR"
+          }, {
+            "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+            "type": "string",
+            "title": "IPv6"
+          }, {
+            "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+            "type": "string",
+            "title": "IPv6/CIDR"
+          }],
+          "description": "client IP",
+          "type": "string"
+        },
+        "hosts": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+          }
+        },
+        "methods": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "description": "HTTP method",
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS", "CONNECT", "TRACE"]
+          }
+        },
+        "script": {
+          "maxLength": 102400,
+          "type": "string",
+          "minLength": 10
+        },
+        "labels": {
+          "patternProperties": {
+            ".*": {
+              "type": "string",
+              "maxLength": 64,
+              "description": "value of label",
+              "pattern": "^[a-zA-Z0-9-_.]+$",
+              "minLength": 1
+            }
+          },
+          "description": "key/value pairs to specify attributes",
+          "type": "object",
+          "maxProperties": 16
+        },
+        "service_protocol": {
+          "enum": ["grpc", "http"]
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "remote_addrs": {
+          "uniqueItems": true,
+          "type": "array",
+          "items": {
+            "anyOf": [{
+              "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+              "type": "string",
+              "title": "IPv4"
+            }, {
+              "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+              "type": "string",
+              "title": "IPv4/CIDR"
+            }, {
+              "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+              "type": "string",
+              "title": "IPv6"
+            }, {
+              "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+              "type": "string",
+              "title": "IPv6/CIDR"
+            }],
+            "description": "client IP",
+            "type": "string"
+          }
+        },
+        "desc": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "service_id": {
+          "anyOf": [{
+            "pattern": "^[a-zA-Z0-9-_]+$",
+            "maxLength": 64,
+            "type": "string",
+            "minLength": 1
+          }, {
+            "type": "integer",
+            "minimum": 1
+          }]
+        }
+      },
+      "anyOf": [{
+        "required": ["plugins", "uri"]
+      }, {
+        "required": ["upstream", "uri"]
+      }, {
+        "required": ["upstream_id", "uri"]
+      }, {
+        "required": ["service_id", "uri"]
+      }, {
+        "required": ["plugins", "uris"]
+      }, {
+        "required": ["upstream", "uris"]
+      }, {
+        "required": ["upstream_id", "uris"]
+      }, {
+        "required": ["service_id", "uris"]
+      }, {
+        "required": ["script", "uri"]
+      }, {
+        "required": ["script", "uris"]
+      }]
+    },
+    "upstream": {
+      "properties": {
+        "pass_host": {
+          "default": "pass",
+          "description": "mod of host passing",
+          "type": "string",
+          "enum": ["pass", "node", "rewrite"]
+        },
+        "id": {
+          "anyOf": [{
+            "pattern": "^[a-zA-Z0-9-_]+$",
+            "maxLength": 64,
+            "type": "string",
+            "minLength": 1
+          }, {
+            "type": "integer",
+            "minimum": 1
+          }]
+        },
+        "key": {
+          "type": "string",
+          "description": "the key of chash for dynamic load balancing"
+        },
+        "timeout": {
+          "properties": {
+            "send": {
+              "type": "number",
+              "minimum": 0
+            },
+            "connect": {
+              "type": "number",
+              "minimum": 0
+            },
+            "read": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "type": "object",
+          "required": ["connect", "send", "read"]
+        },
+        "upstream_host": {
+          "type": "string",
+          "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+        },
+        "create_time": {
+          "type": "integer"
+        },
+        "update_time": {
+          "type": "integer"
+        },
+        "nodes": {
+          "anyOf": [{
+            "patternProperties": {
+              ".*": {
+                "description": "weight of node",
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "type": "object",
+            "minProperties": 1
+          }, {
+            "items": {
+              "properties": {
+                "metadata": {
+                  "type": "object",
+                  "description": "metadata of node"
+                },
+                "host": {
+                  "type": "string",
+                  "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+                },
+                "weight": {
+                  "description": "weight of node",
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "port": {
+                  "description": "port of node",
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "type": "object",
+              "required": ["host", "port", "weight"]
+            },
+            "type": "array",
+            "minItems": 1
+          }]
+        },
+        "type": {
+          "description": "algorithms of load balancing",
+          "type": "string",
+          "enum": ["chash", "roundrobin", "ewma"]
+        },
+        "k8s_deployment_info": {
+          "properties": {
+            "namespace": {
+              "type": "string",
+              "description": "k8s namespace"
+            },
+            "deploy_name": {
+              "type": "string",
+              "description": "k8s deployment name"
+            },
+            "port": {
+              "type": "number",
+              "minimum": 0
+            },
+            "backend_type": {
+              "default": "pod",
+              "description": "k8s service name",
+              "type": "string",
+              "enum": ["svc", "pod"]
+            },
+            "service_name": {
+              "type": "string",
+              "description": "k8s service name"
+            }
+          },
+          "type": "object",
+          "anyOf": [{
+            "required": ["namespace", "deploy_name", "port"]
+          }, {
+            "required": ["namespace", "service_name", "port"]
+          }]
+        },
+        "hash_on": {
+          "default": "vars",
+          "type": "string",
+          "enum": ["vars", "header", "cookie", "consumer"]
+        },
+        "retries": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "enable_websocket": {
+          "type": "boolean",
+          "description": "enable websocket for request"
+        },
+        "labels": {
+          "patternProperties": {
+            ".*": {
+              "type": "string",
+              "maxLength": 64,
+              "description": "value of label",
+              "pattern": "^[a-zA-Z0-9-_.]+$",
+              "minLength": 1
+            }
+          },
+          "description": "key/value pairs to specify attributes",
+          "type": "object",
+          "maxProperties": 16
+        },
+        "checks": {
+          "properties": {
+            "active": {
+              "type": "object",
+              "properties": {
+                "host": {
+                  "type": "string",
+                  "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+                },
+                "type": {
+                  "default": "http",
+                  "type": "string",
+                  "enum": ["http", "https", "tcp"]
+                },
+                "http_path": {
+                  "type": "string",
+                  "default": "/"
+                },
+                "https_verify_certificate": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "concurrency": {
+                  "type": "integer",
+                  "default": 10
+                },
+                "timeout": {
+                  "type": "number",
+                  "default": 1
+                },
+                "req_headers": {
+                  "items": {
+                    "type": "string",
+                    "uniqueItems": true
+                  },
+                  "type": "array",
+                  "minItems": 1
+                },
+                "unhealthy": {
+                  "type": "object",
+                  "properties": {
+                    "http_failures": {
+                      "default": 5,
+                      "minimum": 1,
+                      "type": "integer",
+                      "maximum": 254
+                    },
+                    "interval": {
+                      "minimum": 1,
+                      "type": "integer",
+                      "default": 0
+                    },
+                    "http_statuses": {
+                      "type": "array",
+                      "default": [429, 404, 500, 501, 502, 503, 504, 505],
+                      "items": {
+                        "minimum": 200,
+                        "type": "integer",
+                        "maximum": 599
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1
+                    },
+                    "tcp_failures": {
+                      "default": 2,
+                      "minimum": 1,
+                      "type": "integer",
+                      "maximum": 254
+                    },
+                    "timeouts": {
+                      "default": 3,
+                      "minimum": 1,
+                      "type": "integer",
+                      "maximum": 254
+                    }
+                  }
+                },
+                "port": {
+                  "minimum": 1,
+                  "type": "integer",
+                  "maximum": 65535
+                },
+                "healthy": {
+                  "type": "object",
+                  "properties": {
+                    "interval": {
+                      "minimum": 1,
+                      "type": "integer",
+                      "default": 0
+                    },
+                    "http_statuses": {
+                      "type": "array",
+                      "default": [200, 302],
+                      "items": {
+                        "minimum": 200,
+                        "type": "integer",
+                        "maximum": 599
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1
+                    },
+                    "successes": {
+                      "default": 2,
+                      "minimum": 1,
+                      "type": "integer",
+                      "maximum": 254
+                    }
+                  }
+                }
+              }
+            },
+            "passive": {
+              "type": "object",
+              "properties": {
+                "unhealthy": {
+                  "type": "object",
+                  "properties": {
+                    "tcp_failures": {
+                      "default": 2,
+                      "minimum": 1,
+                      "type": "integer",
+                      "maximum": 254
+                    },
+                    "http_statuses": {
+                      "type": "array",
+                      "default": [429, 500, 503],
+                      "items": {
+                        "minimum": 200,
+                        "type": "integer",
+                        "maximum": 599
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1
+                    },
+                    "http_failures": {
+                      "default": 5,
+                      "minimum": 1,
+                      "type": "integer",
+                      "maximum": 254
+                    },
+                    "timeouts": {
+                      "default": 7,
+                      "minimum": 1,
+                      "type": "integer",
+                      "maximum": 254
+                    }
+                  }
+                },
+                "type": {
+                  "default": "http",
+                  "type": "string",
+                  "enum": ["http", "https", "tcp"]
+                },
+                "healthy": {
+                  "type": "object",
+                  "properties": {
+                    "successes": {
+                      "default": 5,
+                      "minimum": 1,
+                      "type": "integer",
+                      "maximum": 254
+                    },
+                    "http_statuses": {
+                      "type": "array",
+                      "default": [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308],
+                      "items": {
+                        "minimum": 200,
+                        "type": "integer",
+                        "maximum": 599
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "anyOf": [{
+            "required": ["active"]
+          }, {
+            "required": ["active", "passive"]
+          }],
+          "type": "object",
+          "additionalProperties": false
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "desc": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "service_name": {
+          "type": "string",
+          "maxLength": 50
+        }
+      },
+      "anyOf": [{
+        "required": ["type", "nodes"]
+      }, {
+        "required": ["type", "k8s_deployment_info"]
+      }, {
+        "required": ["type", "service_name"]
+      }],
+      "type": "object",
+      "additionalProperties": false
+    },
+    "label_value_def": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "value of label",
+      "pattern": "^[a-zA-Z0-9-_.]+$",
+      "minLength": 1
+    },
+    "global_rule": {
+      "properties": {
+        "plugins": {
+          "type": "object"
+        },
+        "id": {
+          "anyOf": [{
+            "pattern": "^[a-zA-Z0-9-_]+$",
+            "maxLength": 64,
+            "type": "string",
+            "minLength": 1
+          }, {
+            "type": "integer",
+            "minimum": 1
+          }]
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": ["plugins"]
+    },
+    "upstream_hash_header_schema": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9-_]+$"
+    }
+  },
+  "plugins": {
+    "log-rotate": {
+      "schema": {
+        "properties": [],
+        "type": "object",
+        "additionalProperties": false
+      }
+    },
+    "openid-connect": {
+      "schema": {
+        "properties": {
+          "realm": {
+            "type": "string"
+          },
+          "ssl_verify": {
+            "type": "boolean"
+          },
+          "client_id": {
+            "type": "string"
+          },
+          "token_signing_alg_values_expected": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "public_key": {
+            "type": "string"
+          },
+          "redirect_uri": {
+            "type": "string"
+          },
+          "introspection_endpoint_auth_method": {
+            "type": "string"
+          },
+          "discovery": {
+            "type": "string"
+          },
+          "timeout": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "client_secret": {
+            "type": "string"
+          },
+          "bearer_only": {
+            "type": "boolean"
+          },
+          "introspection_endpoint": {
+            "type": "string"
+          },
+          "logout_path": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": ["client_id", "client_secret", "discovery"]
+      }
+    },
+    "request-id": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "include_in_response": {
+            "type": "boolean",
+            "default": true
+          },
+          "header_name": {
+            "type": "string",
+            "default": "X-Request-Id"
+          }
+        }
+      }
+    },
+    "proxy-rewrite": {
+      "schema": {
+        "properties": {
+          "regex_uri": {
+            "type": "array",
+            "maxItems": 2,
+            "description": "new uri that substitute from client uri for upstream, lower priority than uri property",
+            "items": {
+              "type": "string",
+              "description": "regex uri"
+            },
+            "minItems": 2
+          },
+          "host": {
+            "description": "new host for upstream",
+            "type": "string",
+            "pattern": "^[0-9a-zA-Z-.]+$"
+          },
+          "headers": {
+            "description": "new headers for request",
+            "type": "object",
+            "minProperties": 1
+          },
+          "uri": {
+            "type": "string",
+            "maxLength": 4096,
+            "description": "new uri for upstream",
+            "pattern": "^\\/.*",
+            "minLength": 1
+          },
+          "scheme": {
+            "description": "new scheme for upstream",
+            "type": "string",
+            "enum": ["http", "https"]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "minProperties": 1
+      }
+    },
+    "zipkin": {
+      "schema": {
+        "properties": {
+          "sample_ratio": {
+            "minimum": 1e-05,
+            "type": "number",
+            "maximum": 1
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "server_addr": {
+            "description": "default is $server_addr, you can speific your external ip address",
+            "type": "string",
+            "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$"
+          },
+          "service_name": {
+            "description": "service name for zipkin reporter",
+            "type": "string",
+            "default": "APISIX"
+          }
+        },
+        "type": "object",
+        "required": ["endpoint", "sample_ratio"]
+      }
+    },
+    "limit-req": {
+      "schema": {
+        "properties": {
+          "rejected_code": {
+            "minimum": 200,
+            "type": "integer",
+            "default": 503
+          },
+          "burst": {
+            "type": "number",
+            "minimum": 0
+          },
+          "key": {
+            "type": "string",
+            "enum": ["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name"]
+          },
+          "rate": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "type": "object",
+        "required": ["rate", "burst", "key"]
+      }
+    },
+    "ip-restriction": {
+      "schema": {
+        "type": "object",
+        "oneOf": [{
+          "properties": {
+            "whitelist": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "anyOf": [{
+                  "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+                  "type": "string",
+                  "title": "IPv4"
+                }, {
+                  "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+                  "type": "string",
+                  "title": "IPv4/CIDR"
+                }, {
+                  "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+                  "type": "string",
+                  "title": "IPv6"
+                }, {
+                  "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+                  "type": "string",
+                  "title": "IPv6/CIDR"
+                }]
+              }
+            }
+          },
+          "additionalProperties": false,
+          "required": ["whitelist"],
+          "title": "whitelist"
+        }, {
+          "properties": {
+            "blacklist": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "anyOf": [{
+                  "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+                  "type": "string",
+                  "title": "IPv4"
+                }, {
+                  "pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+                  "type": "string",
+                  "title": "IPv4/CIDR"
+                }, {
+                  "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+                  "type": "string",
+                  "title": "IPv6"
+                }, {
+                  "pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+                  "type": "string",
+                  "title": "IPv6/CIDR"
+                }]
+              }
+            }
+          },
+          "additionalProperties": false,
+          "required": ["blacklist"],
+          "title": "blacklist"
+        }]
+      }
+    },
+    "limit-conn": {
+      "schema": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": ["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for"]
+          },
+          "conn": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "default_conn_delay": {
+            "type": "number",
+            "minimum": 0
+          },
+          "burst": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rejected_code": {
+            "minimum": 200,
+            "type": "integer",
+            "default": 503
+          }
+        },
+        "type": "object",
+        "required": ["conn", "burst", "default_conn_delay", "key"]
+      }
+    },
+    "cors": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "allow_headers": {
+            "description": "you can use '*' to allow all header when no credentials,'**' to allow forcefully(it will bring some security risks, be carefully),multiple header use ',' to split. default: *.",
+            "type": "string",
+            "default": "*"
+          },
+          "allow_origins": {
+            "description": "you can use '*' to allow all origins when no credentials,'**' to allow forcefully(it will bring some security risks, be carefully),multiple origin use ',' to split. default: *.",
+            "type": "string",
+            "default": "*"
+          },
+          "allow_methods": {
+            "description": "you can use '*' to allow all methods when no credentials and '**','**' to allow forcefully(it will bring some security risks, be carefully),multiple method use ',' to split. default: *.",
+            "type": "string",
+            "default": "*"
+          },
+          "max_age": {
+            "description": "maximum number of seconds the results can be cached.-1 mean no cached,the max value is depend on browser,more detail plz check MDN. default: 5.",
+            "type": "integer",
+            "default": 5
+          },
+          "expose_headers": {
+            "description": "you can use '*' to expose all header when no credentials,multiple header use ',' to split. default: *.",
+            "type": "string",
+            "default": "*"
+          },
+          "allow_credential": {
+            "description": "allow client append crendential. according to CORS specification,if you set this option to 'true', you can not use '*' for other options.",
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    },
+    "prometheus": {
+      "schema": {
+        "type": "object",
+        "additionalProperties": false
+      }
+    },
+    "key-auth": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "kafka-logger": {
+      "schema": {
+        "properties": {
+          "batch_max_size": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1000
+          },
+          "buffer_duration": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 60
+          },
+          "include_req_body": {
+            "type": "boolean",
+            "default": false
+          },
+          "retry_delay": {
+            "minimum": 0,
+            "type": "integer",
+            "default": 1
+          },
+          "inactive_timeout": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 5
+          },
+          "key": {
+            "type": "string"
+          },
+          "kafka_topic": {
+            "type": "string"
+          },
+          "timeout": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 3
+          },
+          "name": {
+            "type": "string",
+            "default": "kafka logger"
+          },
+          "max_retry_count": {
+            "minimum": 0,
+            "type": "integer",
+            "default": 0
+          },
+          "meta_format": {
+            "default": "default",
+            "type": "string",
+            "enum": ["default", "origin"]
+          },
+          "broker_list": {
+            "type": "object"
+          }
+        },
+        "type": "object",
+        "required": ["broker_list", "kafka_topic", "key"]
+      }
+    },
+    "uri-blocker": {
+      "schema": {
+        "properties": {
+          "rejected_code": {
+            "minimum": 200,
+            "type": "integer",
+            "default": 403
+          },
+          "block_rules": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "maxLength": 4096,
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "type": "object",
+        "required": ["block_rules"]
+      }
+    },
+    "jwt-auth": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "secret": {
+            "type": "string"
+          },
+          "exp": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "algorithm": {
+            "default": "HS256",
+            "type": "string",
+            "enum": ["HS256", "HS512", "RS256"]
+          },
+          "base64_secret": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    },
+    "example-plugin": {
+      "schema": {
+        "properties": {
+          "s": {
+            "type": "string"
+          },
+          "t": {
+            "type": "array",
+            "minItems": 1
+          },
+          "i": {
+            "type": "number",
+            "minimum": 0
+          },
+          "port": {
+            "type": "integer"
+          },
+          "ip": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "required": ["i"]
+      }
+    },
+    "proxy-cache": {
+      "schema": {
+        "properties": {
+          "cache_zone": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cache_key": {
+            "default": ["$host", "$request_uri"],
+            "items": {
+              "description": "a key for caching",
+              "type": "string",
+              "pattern": "(^[^\\$].+$|^\\$[0-9a-zA-Z_]+$)"
+            },
+            "type": "array",
+            "minItems": 1
+          },
+          "hide_cache_headers": {
+            "type": "boolean",
+            "default": false
+          },
+          "cache_bypass": {
+            "items": {
+              "type": "string",
+              "pattern": "(^[^\\$].+$|^\\$[0-9a-zA-Z_]+$)"
+            },
+            "type": "array",
+            "minItems": 1
+          },
+          "no_cache": {
+            "items": {
+              "type": "string",
+              "pattern": "(^[^\\$].+$|^\\$[0-9a-zA-Z_]+$)"
+            },
+            "type": "array",
+            "minItems": 1
+          },
+          "cache_method": {
+            "type": "array",
+            "default": ["GET", "HEAD"],
+            "items": {
+              "description": "http method",
+              "type": "string",
+              "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS", "CONNECT", "TRACE"]
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "cache_http_status": {
+            "type": "array",
+            "default": [200, 301, 404],
+            "items": {
+              "maximum": 599,
+              "description": "http response status",
+              "type": "integer",
+              "minimum": 200
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          }
+        },
+        "type": "object",
+        "required": ["cache_zone"]
+      }
+    },
+    "request-validation": {
+      "schema": {
+        "properties": {
+          "body_schema": {
+            "type": "object"
+          },
+          "header_schema": {
+            "type": "object"
+          }
+        },
+        "type": "object",
+        "anyOf": [{
+          "required": ["body_schema"]
+        }, {
+          "required": ["header_schema"]
+        }]
+      }
+    },
+    "hmac-auth": {
+      "schema": {
+        "properties": [],
+        "additionalProperties": false,
+        "type": "object",
+        "title": "work with route or service object"
+      }
+    },
+    "http-logger": {
+      "schema": {
+        "properties": {
+          "batch_max_size": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1000
+          },
+          "uri": {
+            "type": "string"
+          },
+          "concat_method": {
+            "default": "json",
+            "type": "string",
+            "enum": ["json", "new_line"]
+          },
+          "inactive_timeout": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 5
+          },
+          "include_req_body": {
+            "type": "boolean",
+            "default": false
+          },
+          "max_retry_count": {
+            "minimum": 0,
+            "type": "integer",
+            "default": 0
+          },
+          "timeout": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 3
+          },
+          "name": {
+            "type": "string",
+            "default": "http logger"
+          },
+          "buffer_duration": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 60
+          },
+          "auth_header": {
+            "type": "string",
+            "default": ""
+          },
+          "retry_delay": {
+            "minimum": 0,
+            "type": "integer",
+            "default": 1
+          }
+        },
+        "type": "object",
+        "required": ["uri"]
+      }
+    },
+    "serverless-pre-function": {
+      "schema": {
+        "properties": {
+          "phase": {
+            "type": "string",
+            "enum": ["rewrite", "access", "header_filter", "body_filter", "log", "balancer"]
+          },
+          "functions": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "type": "object",
+        "required": ["functions"]
+      }
+    },
+    "wolf-rbac": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "appid": {
+            "type": "string",
+            "default": "unset"
+          },
+          "server": {
+            "type": "string",
+            "default": "http://127.0.0.1:10080"
+          },
+          "header_prefix": {
+            "type": "string",
+            "default": "X-"
+          }
+        }
+      }
+    },
+    "skywalking": {
+      "schema": {
+        "properties": {
+          "sample_ratio": {
+            "default": 1,
+            "minimum": 1e-05,
+            "type": "number",
+            "maximum": 1
+          },
+          "endpoint": {
+            "type": "string"
+          }
+        },
+        "required": ["endpoint"],
+        "type": "object",
+        "service_name": {
+          "description": "service name for skywalking",
+          "type": "string",
+          "default": "APISIX"
+        }
+      }
+    },
+    "udp-logger": {
+      "schema": {
+        "properties": {
+          "inactive_timeout": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 5
+          },
+          "host": {
+            "type": "string"
+          },
+          "include_req_body": {
+            "type": "boolean",
+            "default": false
+          },
+          "port": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "name": {
+            "type": "string",
+            "default": "udp logger"
+          },
+          "batch_max_size": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1000
+          },
+          "buffer_duration": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 60
+          },
+          "timeout": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 3
+          }
+        },
+        "type": "object",
+        "required": ["host", "port"]
+      }
+    },
+    "serverless-post-function": {
+      "schema": {
+        "properties": {
+          "phase": {
+            "type": "string",
+            "enum": ["rewrite", "access", "header_filter", "body_filter", "log", "balancer"]
+          },
+          "functions": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "type": "object",
+        "required": ["functions"]
+      }
+    },
+    "consumer-restriction": {
+      "schema": {
+        "type": "object",
+        "oneOf": [{
+          "properties": {
+            "blacklist": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "minItems": 1
+            },
+            "type": {
+              "default": "consumer_name",
+              "type": "string",
+              "enum": ["consumer_name", "service_id"]
+            },
+            "rejected_code": {
+              "minimum": 200,
+              "type": "integer",
+              "default": 403
+            }
+          },
+          "required": ["blacklist"],
+          "title": "blacklist"
+        }, {
+          "properties": {
+            "whitelist": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "minItems": 1
+            },
+            "type": {
+              "default": "consumer_name",
+              "type": "string",
+              "enum": ["consumer_name", "service_id"]
+            },
+            "rejected_code": {
+              "minimum": 200,
+              "type": "integer",
+              "default": 403
+            }
+          },
+          "required": ["whitelist"],
+          "title": "whitelist"
+        }]
+      }
+    },
+    "tcp-logger": {
+      "schema": {
+        "properties": {
+          "tls": {
+            "type": "boolean",
+            "default": false
+          },
+          "host": {
+            "type": "string"
+          },
+          "tls_options": {
+            "type": "string"
+          },
+          "include_req_body": {
+            "type": "boolean",
+            "default": false
+          },
+          "inactive_timeout": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 5
+          },
+          "batch_max_size": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1000
+          },
+          "max_retry_count": {
+            "minimum": 0,
+            "type": "integer",
+            "default": 0
+          },
+          "port": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "name": {
+            "type": "string",
+            "default": "tcp logger"
+          },
+          "buffer_duration": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 60
+          },
+          "retry_delay": {
+            "minimum": 0,
+            "type": "integer",
+            "default": 1
+          },
+          "timeout": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1000
+          }
+        },
+        "type": "object",
+        "required": ["host", "port"]
+      }
+    },
+    "limit-count": {
+      "schema": {
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "key": {
+            "type": "string",
+            "enum": ["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name"]
+          },
+          "rejected_code": {
+            "default": 503,
+            "minimum": 200,
+            "type": "integer",
+            "maximum": 600
+          },
+          "time_window": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "policy": {
+            "default": "local",
+            "type": "string",
+            "enum": ["local", "redis", "redis-cluster"]
+          }
+        },
+        "dependencies": {
+          "policy": {
+            "oneOf": [{
+              "properties": {
+                "policy": {
+                  "enum": ["local"]
+                }
+              }
+            }, {
+              "properties": {
+                "policy": {
+                  "enum": ["redis"]
+                },
+                "redis_host": {
+                  "type": "string",
+                  "minLength": 2
+                },
+                "redis_timeout": {
+                  "minimum": 1,
+                  "type": "integer",
+                  "default": 1000
+                },
+                "redis_port": {
+                  "minimum": 1,
+                  "type": "integer",
+                  "default": 6379
+                },
+                "redis_password": {
+                  "type": "string",
+                  "minLength": 0
+                }
+              },
+              "required": ["redis_host"]
+            }, {
+              "properties": {
+                "redis_timeout": {
+                  "minimum": 1,
+                  "type": "integer",
+                  "default": 1000
+                },
+                "policy": {
+                  "enum": ["redis-cluster"]
+                },
+                "redis_cluster_nodes": {
+                  "items": {
+                    "maxLength": 100,
+                    "type": "string",
+                    "minLength": 2
+                  },
+                  "type": "array",
+                  "minItems": 2
+                },
+                "redis_password": {
+                  "type": "string",
+                  "minLength": 0
+                }
+              },
+              "required": ["redis_cluster_nodes"]
+            }]
+          }
+        },
+        "type": "object",
+        "required": ["count", "time_window", "key"]
+      }
+    },
+    "fault-injection": {
+      "schema": {
+        "properties": {
+          "delay": {
+            "properties": {
+              "duration": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "type": "object",
+            "minProperties": 1
+          },
+          "abort": {
+            "properties": {
+              "body": {
+                "type": "string",
+                "minLength": 0
+              },
+              "http_status": {
+                "type": "integer",
+                "minimum": 200
+              }
+            },
+            "type": "object",
+            "minProperties": 1
+          }
+        },
+        "type": "object",
+        "minProperties": 1
+      }
+    },
+    "proxy-mirror": {
+      "schema": {
+        "properties": {
+          "host": {
+            "type": "string",
+            "pattern": "^http(s)?:\\/\\/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:[0-9]{1,5})?$"
+          }
+        },
+        "minProperties": 1,
+        "type": "object",
+        "required": ["host"]
+      }
+    },
+    "response-rewrite": {
+      "schema": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "description": "new body for repsonse"
+          },
+          "status_code": {
+            "maximum": 598,
+            "description": "new status code for repsonse",
+            "type": "integer",
+            "minimum": 200
+          },
+          "body_base64": {
+            "description": "whether new body for repsonse need base64 decode before return",
+            "type": "boolean",
+            "default": false
+          },
+          "headers": {
+            "description": "new headers for repsonse",
+            "type": "object",
+            "minProperties": 1
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "minProperties": 1
+      }
+    },
+    "basic-auth": {
+      "schema": {
+        "properties": [],
+        "additionalProperties": false,
+        "type": "object",
+        "title": "work with route or service object"
+      }
+    },
+    "grpc-transcode": {
+      "schema": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "description": "the grpc service name"
+          },
+          "proto_id": {
+            "anyOf": [{
+              "pattern": "^[a-zA-Z0-9-_]+$",
+              "maxLength": 64,
+              "type": "string",
+              "minLength": 1
+            }, {
+              "type": "integer",
+              "minimum": 1
+            }]
+          },
+          "deadline": {
+            "description": "deadline for grpc, millisecond",
+            "type": "number",
+            "default": 0
+          },
+          "pb_option": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "anyOf": [{
+                "description": "enum as result",
+                "type": "string",
+                "enum": ["int64_as_number", "int64_as_string", "int64_as_hexstring"]
+              }, {
+                "description": "int64 as result",
+                "type": "string",
+                "enum": ["ienum_as_name", "enum_as_value"]
+              }, {
+                "description": "default values option",
+                "type": "string",
+                "enum": ["auto_default_values", "no_default_values", "use_default_values", "use_default_metatable"]
+              }, {
+                "description": "hooks option",
+                "type": "string",
+                "enum": ["enable_hooks", "disable_hooks"]
+              }]
+            }
+          },
+          "method": {
+            "type": "string",
+            "description": "the method name in the grpc service."
+          }
+        },
+        "required": ["proto_id", "service", "method"],
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "batch-requests": {
+      "schema": {
+        "type": "object",
+        "additionalProperties": false
+      }
+    },
+    "referer-restriction": {
+      "schema": {
+        "properties": {
+          "whitelist": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^\\*?[0-9a-zA-Z-.]+$"
+            }
+          },
+          "bypass_missing": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": ["whitelist"]
+      }
+    },
+    "syslog": {
+      "schema": {
+        "properties": {
+          "tls": {
+            "type": "boolean",
+            "default": false
+          },
+          "host": {
+            "type": "string"
+          },
+          "sock_type": {
+            "default": "tcp",
+            "type": "string",
+            "enum": ["tcp", "udp"]
+          },
+          "retry_interval": {
+            "minimum": 0,
+            "type": "integer",
+            "default": 1
+          },
+          "buffer_duration": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 60
+          },
+          "flush_limit": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 4096
+          },
+          "drop_limit": {
+            "type": "integer",
+            "default": 1048576
+          },
+          "include_req_body": {
+            "type": "boolean",
+            "default": false
+          },
+          "max_retry_times": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1
+          },
+          "port": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string",
+            "default": "sys logger"
+          },
+          "batch_max_size": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 1000
+          },
+          "timeout": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 3
+          },
+          "pool_size": {
+            "minimum": 5,
+            "type": "integer",
+            "default": 5
+          }
+        },
+        "type": "object",
+        "required": ["host", "port"]
+      }
+    },
+    "authz-keycloak": {
+      "schema": {
+        "properties": {
+          "keepalive_pool": {
+            "minimum": 1,
+            "type": "integer",
+            "default": 5
+          },
+          "token_endpoint": {
+            "maxLength": 4096,
+            "type": "string",
+            "minLength": 1
+          },
+          "policy_enforcement_mode": {
+            "default": "ENFORCING",
+            "type": "string",
+            "enum": ["ENFORCING", "PERMISSIVE"]
+          },
+          "keepalive": {
+            "type": "boolean",
+            "default": true
+          },
+          "ssl_verify": {
+            "type": "boolean",
+            "default": true
+          },
+          "timeout": {
+            "minimum": 1000,
+            "type": "integer",
+            "default": 3000
+          },
+          "permissions": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "maxLength": 100,
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "keepalive_timeout": {
+            "minimum": 1000,
+            "type": "integer",
+            "default": 60000
+          },
+          "grant_type": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "default": "urn:ietf:params:oauth:grant-type:uma-ticket",
+            "enum": ["urn:ietf:params:oauth:grant-type:uma-ticket"]
+          },
+          "audience": {
+            "maxLength": 100,
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "type": "object",
+        "required": ["token_endpoint"]
+      }
+    },
+    "echo": {
+      "schema": {
+        "type": "object",
+        "minProperties": 1,
+        "properties": {
+          "before_body": {
+            "type": "string",
+            "description": "body before the filter phase."
+          },
+          "body": {
+            "type": "string",
+            "description": "body to replace upstream response."
+          },
+          "auth_value": {
+            "type": "string",
+            "description": "auth value"
+          },
+          "headers": {
+            "description": "new headers for response",
+            "type": "object",
+            "minProperties": 1
+          },
+          "after_body": {
+            "type": "string",
+            "description": "body after the modification of filter phase."
+          }
+        },
+        "additionalProperties": false,
+        "anyOf": [{
+          "required": ["before_body"]
+        }, {
+          "required": ["body"]
+        }, {
+          "required": ["after_body"]
+        }]
+      }
+    },
+    "redirect": {
+      "schema": {
+        "properties": {
+          "ret_code": {
+            "minimum": 200,
+            "type": "integer",
+            "default": 302
+          },
+          "http_to_https": {
+            "type": "boolean"
+          },
+          "uri": {
+            "type": "string",
+            "minLength": 2
+          }
+        },
+        "oneOf": [{
+          "required": ["uri"]
+        }, {
+          "required": ["http_to_https"]
+        }],
+        "type": "object"
+      }
+    },
+    "node-status": {
+      "schema": {
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  }
+}

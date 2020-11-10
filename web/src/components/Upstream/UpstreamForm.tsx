@@ -216,30 +216,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           <span style={{ margin: '0 8px' }}>s</span>
         </Form.Item>
         <Form.Item
-          label={formatMessage({ id: 'upstream.step.healthy.checks.active.http_path' })}
-          required
-        >
-          <Form.Item
-            name={['checks', 'active', 'http_path']}
-            noStyle
-            rules={[
-              {
-                required: true,
-                message: formatMessage({
-                  id: 'upstream.step.input.healthy.checks.active.http_path',
-                }),
-              },
-            ]}
-          >
-            <Input
-              disabled={readonly}
-              placeholder={formatMessage({
-                id: 'upstream.step.input.healthy.checks.active.http_path',
-              })}
-            />
-          </Form.Item>
-        </Form.Item>
-        <Form.Item
           label={formatMessage({ id: 'upstream.step.healthy.checks.active.host' })}
           required
         >
@@ -263,6 +239,31 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             <Input
               placeholder={formatMessage({ id: 'upstream.step.input.healthy.checks.active.host' })}
               disabled={readonly}
+            />
+          </Form.Item>
+        </Form.Item>
+
+        <Form.Item
+          label={formatMessage({ id: 'upstream.step.healthy.checks.active.http_path' })}
+          required
+        >
+          <Form.Item
+            name={['checks', 'active', 'http_path']}
+            noStyle
+            rules={[
+              {
+                required: true,
+                message: formatMessage({
+                  id: 'upstream.step.input.healthy.checks.active.http_path',
+                }),
+              },
+            ]}
+          >
+            <Input
+              disabled={readonly}
+              placeholder={formatMessage({
+                id: 'upstream.step.input.healthy.checks.active.http_path',
+              })}
             />
           </Form.Item>
         </Form.Item>
@@ -617,7 +618,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               component: <InActiveHealthCheck />,
             },
           ].map(({ label, name, component }) => (
-            <>
+            <div key={label}>
               <Form.Item label={label} name={name} valuePropName="checked" key={label}>
                 <Switch disabled={readonly} />
               </Form.Item>
@@ -629,7 +630,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   return null;
                 }}
               </Form.Item>
-            </>
+            </div>
           ))}
         </PanelSection>
       </Form>

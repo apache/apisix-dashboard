@@ -17,7 +17,7 @@
 #
 -->
 
-# 手动部署
+# 从源文件打包部署
 
 ## 克隆项目
 
@@ -27,7 +27,9 @@ $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 $ cd apisix-dashboard
 ```
 
-## 构建 manager-api
+## 构建
+
+### Manager-api 检查项
 
 `manager-api` 用于为控制台提供接口，就像 Apache APISIX 和控制台之间的桥梁。下面是手动构建步骤：
 
@@ -37,27 +39,13 @@ $ cd apisix-dashboard
 
 2. 检查环境变量
 
-- 开启 Go MODULE
-
-```sh
-$ go env -w GO111MODULE=on
-```
-
 - 对于大多数中国用户，我们可以使用 [Goproxy](https://goproxy.cn/) 加快模块下载速度。
 
 ```sh
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-3. 构建
-
-```sh
-$ api/build.sh
-```
-
-构建完成后的文件在根目录 `/output` 下。
-
-## 构建前端
+### 前端 检查项
 
 该项目使用 [Ant Design Pro](https://pro.ant.design) 初始化。以下是一些使用方法的快速指南。
 
@@ -65,25 +53,18 @@ $ api/build.sh
 
 2. 安装 [yarn](https://yarnpkg.com/)。
 
-3. 安装依赖:
+### 开始构建
+
 
 ```sh
-$ cd /web
-
-$ yarn install
+$ make build
 ```
 
-4. 构建
-
-```sh
-$ yarn build
-```
-
-构建完成后的文件在根目录 `/output/html` 目录下。
+构建完成后的文件在根目录 `output` 下。
 
 ## 启动
 
-1. 根据您的部署环境，检查并修改 `api/conf/conf.yaml` 中的配置。
+1. 根据您的部署环境，检查并修改 `output/conf/conf.yaml` 中的配置。
 
 例如：
 
@@ -106,13 +87,28 @@ authentication:
       password: user
 ```
 
-2. 启动 manager-api
+2. 启动 Apache APISIX Dashboard
 
 ```sh
-$ api/run.sh &
+$ cd ./output
+$ ./manager-api
 ```
 
 3. 在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
+
+4. 关闭 Apache APISIX Dashboard
+
+```sh
+$ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
+```
+
+## 打包 output 目录
+
+你可以把刚刚 output 目录整体打包，copy 到其他地方解压运行，output 目录包含运行 Apache APISIX Dashboard 需要的所有文件(配置文件、可执行文件、web静态资源)
+
+```sh
+$ make release-src
+```
 
 ## 配置参数
 
@@ -122,25 +118,17 @@ $ api/run.sh &
 
 3. `conf.etcd.endpoints` 用于配置 ETCD 实例，支持集群模式。
 
-```json
-{
-  "etcd": {
-    "endpoints": "127.0.0.1:2379,127.0.0.1:3379"
-  }
-}
+```yaml
+conf:
+  etcd:
+    endpoints:
+      - 127.0.0.1:2379
+      - 127.0.0.1:3379
 ```
 
 ## 注意
 
-1. 当 manager-api 在后台模式下运行，在重新编译、重新部署它之前，我们需要查找其进程并结束掉它：
-
-```sh
-$ ps aux | grep manager-api
-
-$ kill $process_id
-```
-
-2. 在编译 Manager API 后，如移动编译后产物到其它位置，启动时将会报错，这是由于配置文件**绝对路径**被固定在了产物中，需要在运行前，通过执行环境变量设置配置文件位置来解决。
+1. 在编译 Manager API 后，如移动编译后产物到其它位置，启动时将会报错，这是由于配置文件**绝对路径**被固定在了产物中，需要在运行前，通过执行环境变量设置配置文件位置来解决。
 
 ```sh
 $ export APISIX_CONF_PATH=/home/demo_user/workspace/apisix-dashboard/api/conf

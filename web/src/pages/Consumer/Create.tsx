@@ -33,10 +33,10 @@ const Page: React.FC = (props) => {
   const { formatMessage } = useIntl();
 
   useEffect(() => {
-    const { id } = (props as any).match.params;
-    if (id) {
-      fetchItem(id).then(({ data }) => {
-        const { username, desc, ...rest } = data;
+    const { username } = (props as any).match.params;
+    if (username) {
+      fetchItem(username).then(({ data }) => {
+        const { desc, ...rest } = data;
         form1.setFieldsValue({ username, desc });
         setPlugins(rest.plugins);
       });
@@ -45,12 +45,12 @@ const Page: React.FC = (props) => {
 
   const onSubmit = () => {
     const data = { ...form1.getFieldsValue(), plugins } as ConsumerModule.Entity;
-    const { id } = (props as any).match.params;
-    (id ? update(id, data) : create(data))
+    const { username } = (props as any).match.params;
+    (username ? update(username, data) : create(data))
       .then(() => {
         notification.success({
           message: `${
-            id
+            username
               ? formatMessage({ id: 'component.global.edit' })
               : formatMessage({ id: 'component.global.create' })
           } ${formatMessage({ id: 'menu.consumer' })} ${formatMessage({

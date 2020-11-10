@@ -18,7 +18,10 @@ package e2e
 
 import (
 	"bytes"
+	"context"
+	"crypto/tls"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"testing"
 	"time"
@@ -67,7 +70,31 @@ func APISIXExpect(t *testing.T) *httpexpect.Expect {
 	return httpexpect.New(t, "http://127.0.0.1:9080")
 }
 
-var sleepTime = time.Duration(100) * time.Millisecond
+func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
+	e := httpexpect.WithConfig(httpexpect.Config{
+		BaseURL:  "https://www.test2.com:9443",
+		Reporter: httpexpect.NewAssertReporter(t),
+		Client: &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					// accept any certificate; for testing only!
+					InsecureSkipVerify: true,
+				},
+				DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+					if addr == "www.test2.com:9443" {
+						addr = "127.0.0.1:9443"
+					}
+					dialer := &net.Dialer{}
+					return dialer.DialContext(ctx, network, addr)
+				},
+			},
+		},
+	})
+
+	return e
+}
+
+var sleepTime = time.Duration(50) * time.Millisecond
 
 type HttpTestCase struct {
 	caseDesc      string
@@ -81,6 +108,7 @@ type HttpTestCase struct {
 	ExpectMessage string
 	ExpectBody    string
 	PartialBody   string
+	ExpectHeaders map[string]string
 	Sleep         time.Duration //ms
 }
 
@@ -128,13 +156,21 @@ func testCaseCheck(tc HttpTestCase) {
 		resp.Status(tc.ExpectStatus)
 	}
 
+	//match headers
+	if tc.ExpectHeaders != nil {
+		for key, val := range tc.ExpectHeaders {
+			resp.Header(key).Equal(val)
+		}
+	}
+
 	//match body
 	if tc.ExpectBody != "" {
-		resp.Body().Equal(tc.ExpectBody)
+		resp.Body().Contains(tc.ExpectBody)
 	}
 
 	//Partial body
 	if tc.PartialBody != "" {
 		resp.Body().Contains(tc.PartialBody)
 	}
+
 }
