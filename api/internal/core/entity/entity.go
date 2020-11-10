@@ -75,6 +75,7 @@ type Route struct {
 	UpstreamID      string                 `json:"upstream_id,omitempty"`
 	ServiceProtocol string                 `json:"service_protocol,omitempty"`
 	Labels          map[string]string      `json:"labels,omitempty"`
+	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
 }
 
 // --- structures for upstream start  ---
@@ -138,21 +139,20 @@ type HealthChecker struct {
 }
 
 type UpstreamDef struct {
-	Nodes           interface{}       `json:"nodes,omitempty"`
-	Retries         int               `json:"retries,omitempty"`
-	Timeout         interface{}       `json:"timeout,omitempty"`
-	K8sInfo         interface{}       `json:"k8s_deployment_info,omitempty"`
-	Type            string            `json:"type,omitempty"`
-	Checks          interface{}       `json:"checks,omitempty"`
-	HashOn          string            `json:"hash_on,omitempty"`
-	Key             string            `json:"key,omitempty"`
-	EnableWebsocket bool              `json:"enable_websocket,omitempty"`
-	PassHost        string            `json:"pass_host,omitempty"`
-	UpstreamHost    string            `json:"upstream_host,omitempty"`
-	Name            string            `json:"name,omitempty"`
-	Desc            string            `json:"desc,omitempty"`
-	ServiceName     string            `json:"service_name,omitempty"`
-	Labels          map[string]string `json:"labels,omitempty"`
+	Nodes        interface{}       `json:"nodes,omitempty"`
+	Retries      int               `json:"retries,omitempty"`
+	Timeout      interface{}       `json:"timeout,omitempty"`
+	K8sInfo      interface{}       `json:"k8s_deployment_info,omitempty"`
+	Type         string            `json:"type,omitempty"`
+	Checks       interface{}       `json:"checks,omitempty"`
+	HashOn       string            `json:"hash_on,omitempty"`
+	Key          string            `json:"key,omitempty"`
+	PassHost     string            `json:"pass_host,omitempty"`
+	UpstreamHost string            `json:"upstream_host,omitempty"`
+	Name         string            `json:"name,omitempty"`
+	Desc         string            `json:"desc,omitempty"`
+	ServiceName  string            `json:"service_name,omitempty"`
+	Labels       map[string]string `json:"labels,omitempty"`
 }
 
 type Upstream struct {
@@ -200,13 +200,14 @@ type SSL struct {
 
 type Service struct {
 	BaseInfo
-	Name       string                 `json:"name,omitempty"`
-	Desc       string                 `json:"desc,omitempty"`
-	Upstream   *UpstreamDef           `json:"upstream,omitempty"`
-	UpstreamID string                 `json:"upstream_id,omitempty"`
-	Plugins    map[string]interface{} `json:"plugins,omitempty"`
-	Script     string                 `json:"script,omitempty"`
-	Labels     map[string]string      `json:"labels,omitempty"`
+	Name            string                 `json:"name,omitempty"`
+	Desc            string                 `json:"desc,omitempty"`
+	Upstream        *UpstreamDef           `json:"upstream,omitempty"`
+	UpstreamID      string                 `json:"upstream_id,omitempty"`
+	Plugins         map[string]interface{} `json:"plugins,omitempty"`
+	Script          string                 `json:"script,omitempty"`
+	Labels          map[string]string      `json:"labels,omitempty"`
+	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
 }
 
 type Script struct {

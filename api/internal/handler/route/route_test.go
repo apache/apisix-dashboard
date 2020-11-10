@@ -1098,17 +1098,18 @@ func Test_Route_With_Script(t *testing.T) {
 	route2 := &UpdateInput{}
 	route2.ID = "1"
 	reqBody = `{
-		  "id": "1",
-		  "uri": "/index.html",
-		  "upstream": {
-		      "type": "roundrobin",
-		      "nodes": [{
-		          "host": "www.a.com",
-		          "port": 80,
-		          "weight": 1
-		      }]
-		  }
-		}`
+		"id": "1",
+		"uri": "/index.html",
+		"enable_websocket": true,
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "www.a.com",
+				"port": 80,
+				"weight": 1
+			}]
+		}
+	}`
 
 	err = json.Unmarshal([]byte(reqBody), route2)
 	assert.Nil(t, err)
