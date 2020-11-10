@@ -29,6 +29,7 @@ local fake_module_list = {
     'pb',
     'prometheus',
     'protoc',
+    'skywalking.tracer',
 
     'resty.cookie',
     'resty.core.regex',
@@ -61,7 +62,8 @@ local fake_module_list = {
     'apisix.plugins.skywalking.tracer',
     'apisix.plugins.zipkin.codec',
     'apisix.plugins.zipkin.random_sampler',
-    'apisix.plugins.zipkin.reporter'
+    'apisix.plugins.zipkin.reporter',
+    'apisix.timers'
 }
 for _, name in ipairs(fake_module_list) do
     package.loaded[name] = {}
@@ -77,6 +79,7 @@ ngx.re = {}
 ngx.timer = {}
 ngx.location = {}
 ngx.socket = {}
+ngx.thread = {}
 ngx.re.gmatch = empty_function
 ngx.shared = {
     ["plugin-api-breaker"] = {}
