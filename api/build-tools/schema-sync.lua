@@ -29,6 +29,7 @@ local fake_module_list = {
     'pb',
     'prometheus',
     'protoc',
+    'skywalking.tracer',
 
     'resty.cookie',
     'resty.core.regex',
@@ -77,6 +78,7 @@ ngx.re = {}
 ngx.timer = {}
 ngx.location = {}
 ngx.socket = {}
+ngx.thread = {}
 ngx.re.gmatch = empty_function
 ngx.shared = {
     ["plugin-api-breaker"] = {}
