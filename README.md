@@ -29,7 +29,7 @@ Its function is always a subset of Apache APISIX, and may lag behind the rapid i
 
 If you need to use the Apache APISIX Dashboard project in a production system, you need to enhance user permissions, communication security, high availability and other advanced features.
 
-## Install
+## Installation
 
 Support multiple ways to install Apache APISIX Dashboard
 
