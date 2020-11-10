@@ -17,9 +17,9 @@
 #
 -->
 
-# Deploy Manually
+# Deploy manually
 
-## Clone The Project
+## Clone the project
 
 ```sh
 $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
@@ -29,7 +29,7 @@ $ cd apisix-dashboard
 
 ## Build
 
-### Manager-api Dependencies
+### Manager-api dependencies
 
 The `manager-api` is used to provide APIs for Apache APISIX Dashboard, just like a bridge between the Apache APISIX and the Apache APISIX Dashboard. Here are the steps to build it manually:
 
@@ -47,7 +47,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 
 The bundled files are located in the root directory `/output`.
 
-### Web Dependencies
+### Web dependencies
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
 

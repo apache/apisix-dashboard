@@ -76,7 +76,7 @@ Makefile rules:
 
 For more detailed construction steps, see -  [Build from source code](./docs/deploy.md)
 
-### For Developer
+### For developer
 
 Apache APISIX Dashboard provides a management interface for [Apache APISIX](https://github.com/apache/apisix), you need to [install APISIX first](https://github.com/apache/apisix#configure-and-installation).
 
@@ -84,7 +84,7 @@ Please refer to here to start `manager-api` and `web`respectively.
 
 - [Develop Apache APISIX Dashboard](./docs/develop.md)
 
-## User Guide
+## User guide
 
 Please refer to [User Guide](./docs/USER_GUIDE.md)
 

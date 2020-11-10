@@ -42,7 +42,7 @@ $ docker build -t apisix-dashboard:{$tag} .
 $ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:{$tag}
 ```
 
-现在你可以在浏览器中通过 `http://127.0.0.1` 访问。
+现在你可以在浏览器中通过 `http://127.0.0.1` 使用 Dashboard。
 
 ## 注意
 
