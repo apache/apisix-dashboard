@@ -111,3 +111,5 @@ $ api/build-tools/schema-sync.sh 2.0
 ```sh
 $ api/build-tools/schema-sync.sh /usr/local/apisix
 ```
+
+脚本执行完后，如果您不是通过 `make api-run` 运行的，需要将 `api/conf/schema.json` 拷贝到 Apache APISIX Dashboard 的工作目录的 `conf` 目录下。

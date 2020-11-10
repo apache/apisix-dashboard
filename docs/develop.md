@@ -109,3 +109,6 @@ If you have custom plugin, please make sure your custom plugin is placed in the 
 ```sh
 $ api/build-tools/schema-sync.sh /usr/local/apisix
 ```
+
+After the script is executed, if you are not running it by `make api-run`, you need to copy `api/conf/schema.json` to `conf` directory under the working directory of Apache APISIX Dashboard.
+
