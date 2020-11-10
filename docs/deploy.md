@@ -100,9 +100,9 @@ $ ./manager-api
 $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 ```
 
-## Pack
+## Package
 
-Package the output directory, The output directory contains all the files needed to run the Apache APISIX Dashboard (configuration files, executable files, web static resources)
+Package the output directory, the output directory contains all the files needed to run the Apache APISIX Dashboard (configuration files, executable files, web static resources)
 
 ```sh
 $ make release-src
