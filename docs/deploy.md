@@ -45,8 +45,6 @@ NOTE: You also need to install `Lua` 5.1+ if you want to use the Plugin Orchestr
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-The bundled files are located in the root directory `/output`.
-
 ### Web dependencies
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
@@ -87,7 +85,7 @@ authentication:
       password: user
 ```
 
-2. Run
+2. Run Apache APISIX Dashboard
 
 ```sh
 $ cd ./output
@@ -96,7 +94,7 @@ $ ./manager-api
 
 3. Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
 
-3. stop
+3. Stop Apache APISIX Dashboard
 
 ```sh
 $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
