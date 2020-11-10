@@ -19,7 +19,7 @@
 
 [English](./README.md) | 简体中文
 
-# [Apache APISIX](https://github.com/apache/apisix) 控制台
+# Apache APISIX Dashboard
 
 Apache APISIX Dashboard 项目的目标是为了让大家快速上手体验和学习 Apache APISIX，并不能直接用于生产环境。
 
