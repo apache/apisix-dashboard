@@ -5,11 +5,6 @@ on:
     branches:
       - master
       - v2.0
-  pull_request:
-    branches:
-      - master
-      # NOTE: Just to trigger CD in this PR, will be removed before being merged
-      - v2.0
 
 jobs:
   build:
