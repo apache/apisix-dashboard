@@ -43,7 +43,7 @@ Start a runnable version by the following method
 
 To build Apache APISIX Dashboard from source code, first make sure that your `golang` version is 1.13 or greater.
 
-Also you need to make sure that node and yarn are installed.
+Also you need to make sure that `Node.js` and `yarn` are installed.
 
 ```sh
 $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git

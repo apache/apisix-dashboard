@@ -41,7 +41,7 @@ Apache APISIX Dashboard 项目的目标是为了让大家快速上手体验和�
 
 从源代码构建，首先先确认你的 `golang` 版本在 1.13 或者 更高的版本。
 
-同样你也需要提前安装好 `node` 和 `yarn`。
+同样你也需要提前安装好 `Node.js` 和 `yarn`。
 
 ```sh
 $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
