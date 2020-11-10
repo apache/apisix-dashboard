@@ -39,9 +39,9 @@ Start a runnable version by the following method
 
 - [Deploy With Docker](./docs/deploy-with-docker.md)
 
-### Build From Source Code
+### Build from Source Code
 
-To build from source code, first make sure that your `golang` version is 1.13 or greater.
+To build Apache APISIX Dashboard from source code, first make sure that your `golang` version is 1.13 or greater.
 Also you need to follow the `node` and `yarn` in advance
 
 ```
