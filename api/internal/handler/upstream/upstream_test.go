@@ -62,7 +62,6 @@ func TestUpstream(t *testing.T) {
 			"send":15,
 			"read":15
 		},
-		"enable_websocket": true,
 		"hash_on": "header",
 		"key": "server_addr",
 		"checks": {

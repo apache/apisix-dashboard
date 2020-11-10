@@ -95,6 +95,7 @@ func TestService(t *testing.T) {
 		      "key": "remote_addr"
 		  }
 		},
+		"enable_websocket": true,
 		"upstream": {
 		  "type": "roundrobin",
 		  "nodes": [{
