@@ -21,11 +21,17 @@
 
 # Apache APISIX Dashboard
 
+## 介绍
+
 Apache APISIX Dashboard 旨在通过前端界面，让用户尽可能更方便地操作 [Apache APISIX](https://github.com/apache/apisix)。
 
-![architecture](./docs/images/architecture.png)
+Dashboard 为控制平面，完成所有参数的校验；Apache APISIX 混合了数据平面与控制平面，会逐渐演进为纯粹的数据平面。
+
+本项目包含了 `manager-api` 与前端界面，前者将逐渐替代 Apache APISIX 中的 `admin-api`，我们正在积极地迁移相关逻辑。
 
 注意：目前 Dashboard 尚未完整覆盖 Apache APISIX 的功能，[访问此处](https://github.com/apache/apisix-dashboard/milestones)以查看里程碑。
+
+![architecture](./docs/images/architecture.png)
 
 ## 目录结构
 
