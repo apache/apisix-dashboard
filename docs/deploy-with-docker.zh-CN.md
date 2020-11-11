@@ -24,6 +24,9 @@
 ```sh
 # 在根目录下执行构建命令，请手动指定 tag。
 $ docker build -t apisix-dashboard:$tag .
+
+# 对于中国大陆的用户，可启用 `ENABLE_PROXY` 参数加快模块下载速度。
+$ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
 ```
 
 2. 准备配置文件
@@ -35,6 +38,7 @@ $ docker build -t apisix-dashboard:$tag .
 3. 启动容器
 
 ```sh
+# /path/to/conf.yaml 需指向上述提到的配置文件
 $ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:$tag
 ```
 
@@ -48,13 +52,7 @@ $ docker ps -a
 
 ## 其它
 
-1. 对于中国大陆的用户，可启用 `ENABLE_PROXY` 参数加快模块下载速度。
-
-```sh
-$ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
-```
-
-2. 多次构建镜像时，不建议使用缓存。
+1. 多次构建镜像时，不建议使用缓存。
 
 ```sh
 $ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true --no-cache=true
