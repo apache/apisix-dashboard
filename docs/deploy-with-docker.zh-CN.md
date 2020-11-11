@@ -77,5 +77,5 @@ $ docker stop apisix-dashboard
 1. 多次构建镜像时，不建议使用缓存。
 
 ```sh
-$ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true --no-cache=true
+$ docker build -t apisix-dashboard:$tag . --no-cache=true
 ```
