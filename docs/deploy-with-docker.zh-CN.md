@@ -30,7 +30,7 @@ $ docker build -t apisix-dashboard:$tag .
 
 在启动容器前，需要在**宿主主机**内准备配置文件 `conf.yaml`，以便覆盖容器内部默认的配置文件。
 
-请参考[配置文件](./api/conf/conf.yaml)。
+请参考[配置文件](../api/conf/conf.yaml)。
 
 3. 启动容器
 
