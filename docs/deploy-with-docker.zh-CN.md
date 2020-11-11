@@ -31,9 +31,12 @@ $ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
 
 2. 准备配置文件
 
-在启动容器前，需要在**宿主主机**内准备配置文件 `conf.yaml`，以便覆盖容器内部默认的配置文件。
+在启动容器前，需要在**宿主主机**内准备配置文件 `conf.yaml`，以便覆盖容器内部默认的[配置文件](../api/conf/conf.yaml)。
 
-请参考[配置文件](../api/conf/conf.yaml)。
+配置文件有如下注意事项：
+
+1. `conf.listen.host` 为 `0.0.0.0` 时，才能使外部网络访问到容器内的服务。
+1. `conf.etcd.endpoints` 可使用 `host.docker.internal:2379` 以便容器能够正常访问宿主机的 `etcd` 服务。
 
 3. 启动容器
 
