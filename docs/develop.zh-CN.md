@@ -49,7 +49,7 @@ $ make api-run
 $ make api-stop
 ```
 
-4. 关于增加自定义插件或修改插件 schema 后在控制台显示异常的问题，请查阅 [FAQ 汇总](./FAQ.zh-CN.md)。
+4. 关于增加自定义插件或修改插件 schema 后在控制台显示异常的问题，请查阅 [FAQ 汇总](./FAQ.zh-CN.md)关于该问题的描述。
 
 ### web
 

@@ -19,23 +19,23 @@
 
 # FAQ
 
-### Vue.js 版本的 Dashboard
+### 1. Vue.js 版本的 Dashboard
 
 若您需要 Vue.js 构建的 Apache APISIX Dashboard 1.0，请使用 [master-vue 分支](https://github.com/apache/apisix-dashboard/tree/master-vue)。
 
-### Dashboard 2.0 版本与 1.5 版本有什么差异？
+### 2. Dashboard 2.0 版本与 1.5 版本有什么差异？
 
 2.0 版本的控制台移除了[1.5 版本](https://github.com/apache/apisix-dashboard/tree/backup-1.5-latest)中的 MySQL，将直接操作 etcd。
 
-### ETCD 兼容性问题
+### 3. etcd 兼容性问题
 
 若您使用 v2.0 以下版本的 Apache APISIX，需要注意 etcd v2 API 的数据与 v3 API 的数据是[不互通的](https://etcd.io/docs/v3.4.0/op-guide/v2-migration/)。Apache APISIX Dashboard v2.0 及以上版本使用 etcd v3 API，apisix 1.5 及以下版本使用 etcd v2 API。
 
-### 在 Apache APISIX 中修改插件 schema 或创建自定义插件后，为什么在控制台找不到？
+### 4. 在 Apache APISIX 中修改插件 schema 或创建自定义插件后，为什么在控制台找不到？
 
 由于 Dashboard 缓存了 Apache APISIX 中插件的 jsonschema 数据，因此您在 Apache APISIX 中创建自定义插件后，需要同步 Dashboard 中的数据，当前**仅支持手动操作**，该问题会在后续版本得到优化。如下为操作步骤：
 
-1. 安装 `Lua` 与 `zip`。
+1. 安装 [Lua](https://www.lua.org/download.html) 与 `zip`。
 
 2. 执行如下命令：
 
