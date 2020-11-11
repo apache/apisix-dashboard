@@ -21,7 +21,7 @@
 
 # Apache APISIX Dashboard
 
-Apache APISIX Dashboard 旨在通过界面，让用户尽可能更方便地操作 [Apache APISIX](https://github.com/apache/apisix)。
+Apache APISIX Dashboard 旨在通过前端界面，让用户尽可能更方便地操作 [Apache APISIX](https://github.com/apache/apisix)。
 
 ![architecture](./docs/images/architecture.png)
 
@@ -47,7 +47,7 @@ Apache APISIX Dashboard 旨在通过界面，让用户尽可能更方便地操�
 └── web
 ```
 
-1. `api` 目录用于存放 `manager-api` 源码，它用于为前端界面提供接口。
+1. `api` 目录用于存放 `manager-api` 源码，它用于管理 `etcd` 并为前端界面提供接口。
 2. `web` 目录用于存放前端源码。
 
 ## 构建并启动
@@ -65,7 +65,7 @@ Apache APISIX Dashboard 旨在通过界面，让用户尽可能更方便地操�
 
 请参考[用户指南](./docs/USER_GUIDE.zh-CN.md)
 
-## 贡献
+## 参与贡献
 
 请参考[贡献指南](./CONTRIBUTING.md)以获取更详细的流程
 
