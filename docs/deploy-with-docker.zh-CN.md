@@ -41,7 +41,7 @@ $ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
 3. 启动容器
 
 ```sh
-# /path/to/conf.yaml 需指向上述提到的配置文件
+# /path/to/conf.yaml 需使用 绝对路径 指向上述提到的配置文件
 $ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:$tag
 ```
 
