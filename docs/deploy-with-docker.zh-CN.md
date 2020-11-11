@@ -54,7 +54,7 @@ $ docker ps -a
 $ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
 ```
 
-2. 如果不是第一次构建，建议不要使用缓存。
+2. 如果多次构建，建议不使用缓存。
 
 ```sh
 $ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true --no-cache=true

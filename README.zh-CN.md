@@ -81,4 +81,4 @@ Dashboard 为控制平面，完成所有参数的校验；Apache APISIX 混合�
 
 ## License
 
-Apache License 2.0, [LICENSE](https://github.com/apache/apisix-dashboard/blob/master/LICENSE)
+[Apache License 2.0](./LICENSE)
