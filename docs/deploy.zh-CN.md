@@ -17,19 +17,17 @@
 #
 -->
 
-# 源码构建并启动
+# 使用源码构建并启动
 
 Dashboard 包含了 `manager-api` 与 `web` 两部分，其中 `web` 是*可选*的。
 
-## 构建
+本构建指南产物中，将包含 `manager-api` 与 `web`。
 
-本构建指南将包含 `web` 控制台。
+## 环境准备
 
-### 环境准备
+在使用源码构建前，请确认您的环境中，已安装如下依赖：
 
-在构建之前，请确认您的环境中，已安装如下依赖：
-
-#### manager-api
+### manager-api
 
 1. [Golang](https://golang.org/dl/) 1.13+：对于中国大陆的用户，可使用如下命令加快模块下载速度。
 
@@ -39,18 +37,18 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 
 2. [Lua](https://www.lua.org/download.html) 5.1+：仅在使用**插件编排**功能时，需要安装本依赖。在后续版本中，会对该部分进行优化以取消对其依赖。
 
-#### web
+### web
 
 1. [Node.js](https://nodejs.org/en/download/) 10.23.0+
 2. [Yarn](https://yarnpkg.com/getting-started/install)
 
-### 克隆项目
+## 克隆项目
 
 ```sh
 $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 ```
 
-### 开始构建
+## 构建
 
 ```sh
 $ cd apisix-dashboard
@@ -63,9 +61,13 @@ $ make build
 
 ## 启动
 
-1. 根据您的部署环境，检查并修改 `output/conf/conf.yaml` 中的配置信息。
+1. 在构建完成后、启动前，请确认您的环境中，已安装如下依赖：
 
-2. 启动 Dashboard
+- [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
+
+2. 根据您的部署环境，检查并修改 `output/conf/conf.yaml` 中的配置信息。
+
+3. 启动 Dashboard
 
 ```sh
 $ cd ./output
@@ -77,9 +79,9 @@ $ ./manager-api &
 
 启动成功后，控制台将输出启动成功信息。
 
-3. 在未修改配置的情况下，访问 `http://127.0.0.1:8080` 以使用有前端界面的控制台，默认用户密码均为 `admin`。
+4. 在未修改配置的情况下，访问 `http://127.0.0.1:8080` 以使用有前端界面的控制台，默认用户密码均为 `admin`。
 
-4. 停止 Dashboard
+5. 停止 Dashboard
 
 ```sh
 $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
@@ -87,9 +89,7 @@ $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 
 ## 其它
 
-### 打包构建结果
-
-如有需要，在构建完成后使用如下命令，将会对 `output` 目录进行打包操作，以便您将构建结果移动到其它位置。
+1. 如有需要，在构建完成后使用如下命令，将会对 `output` 目录进行打包操作，以便您将构建结果移动到其它位置。
 
 ```sh
 $ make release-src

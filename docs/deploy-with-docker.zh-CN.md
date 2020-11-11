@@ -17,9 +17,20 @@
 #
 -->
 
-# 使用 Docker 部署
+# 使用 Docker 构建并启动
 
-1. 构建镜像
+使用 Docker 构建 Dashboard，您只需下载**根目录**中的 `Dockerfile` 文件到您的设备（无需下载源码），并根据本指南操作即可。
+
+本构建指南产物中，将包含 `manager-api` 与 `web`。
+
+## 环境准备
+
+在使用 Docker 构建镜像、启动容器前，请确认您的环境中，已安装并运行如下依赖：
+
+1. [Docker](https://docs.docker.com/engine/install/)
+2. [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
+
+## 构建
 
 ```sh
 # 在根目录下执行构建命令，请手动指定 tag。
@@ -29,7 +40,9 @@ $ docker build -t apisix-dashboard:$tag .
 $ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
 ```
 
-2. 准备配置文件
+## 启动
+
+1. 准备配置文件
 
 在启动容器前，需要在**宿主主机**内准备配置文件 `conf.yaml`，以便覆盖容器内部默认的[配置文件](../api/conf/conf.yaml)。
 
@@ -38,20 +51,26 @@ $ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
 - `conf.listen.host` 为 `0.0.0.0` 时，才能使外部网络访问到容器内的服务。
 - `conf.etcd.endpoints` 必须能够在容器内访问 `etcd` 服务。例如：使用 `host.docker.internal:2379` 以便容器能够访问宿主机网络中的 `etcd`。
 
-3. 启动容器
+2. 启动 Dashboard
 
 ```sh
 # /path/to/conf.yaml 需使用 绝对路径 指向上述提到的配置文件
 $ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:$tag
 ```
 
-4. 检查容器是否启动成功
+3. 检查容器是否启动成功
 
 ```sh
 $ docker ps -a
 ```
 
 若容器 `apisix-dashboard` 状态正常，访问 `http://127.0.0.1:8080` 以使用有前端界面的控制台，默认用户密码均为 `admin`。
+
+4. 停止 Dashboard
+
+```sh
+$ docker stop apisix-dashboard
+```
 
 ## 其它
 
