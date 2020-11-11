@@ -23,6 +23,8 @@ Dashboard 包含了 `manager-api` 与 `web` 两部分，其中 `web` 是*可选*
 
 ## 构建
 
+本构建指南将包含 `web` 控制台。
+
 ### 环境准备
 
 在构建之前，请确认您的环境中，已安装如下依赖：
@@ -38,8 +40,6 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 2. [Lua](https://www.lua.org/download.html) 5.1+：仅在使用**插件编排**功能时，需要安装本依赖。在后续版本中，会对该部分进行优化以取消对其依赖。
 
 #### web
-
-> 若无前端控制台需求，可忽略下方依赖。
 
 1. [Node.js](https://nodejs.org/en/download/) 10.23.0+
 2. [Yarn](https://yarnpkg.com/getting-started/install)
