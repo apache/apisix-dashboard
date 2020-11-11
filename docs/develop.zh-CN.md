@@ -33,17 +33,21 @@ $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 
 ## 开始开发
 
+```sh
+$ cd apisix-dashboard
+```
+
 ### manager-api
 
 1. 请在 `api/conf/conf.yaml` 中修改配置信息。
 
-2. 启动开发模式
+2. 在根目录下，启动开发模式
 
 ```sh
 $ make api-run
 ```
 
-3. 关闭开发模式
+3. 在根目录下，关闭开发模式
 
 ```sh
 $ make api-stop
@@ -53,16 +57,20 @@ $ make api-stop
 
 ### web
 
-1. 请在 `config/proxy.ts` 文件中修改 `manager-api` 地址。
-
-2. 启动开发模式
+1. 进入 `web` 目录。
 
 ```sh
-$ cd /web
+$ cd ./web
+```
 
+2. 请在 `config/proxy.ts` 文件中修改 `manager-api` 地址。
+
+3. 启动开发模式
+
+```sh
 $ yarn install
 
 $ yarn start
 ```
 
-3. 如编写 E2E 测试，请参考 [E2E 编写指南](../web/src/e2e/README.zh-CN.md)
+4. 如编写 E2E 测试，请参考 [E2E 编写指南](../web/src/e2e/README.zh-CN.md)
