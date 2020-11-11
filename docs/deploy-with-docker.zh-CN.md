@@ -33,7 +33,7 @@
 ## 构建
 
 ```sh
-# 在根目录下执行构建命令，请手动指定 tag。
+# 在 Dockerfile 所在目录下（默认为项目根目录）执行构建命令，请手动指定 tag。
 $ docker build -t apisix-dashboard:$tag .
 
 # 对于中国大陆的用户，可启用 `ENABLE_PROXY` 参数加快模块下载速度。
