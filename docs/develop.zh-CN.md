@@ -17,99 +17,52 @@
 #
 -->
 
-# Apache APISIX Dashboard 开发
+# 开发指南
 
-## 前置条件
+Dashboard 包含了 `manager-api` 与 `web` 两部分，因此需要分别启动开发环境。
+
+## 环境准备
+
+在开发前，请参考该[指南](./deploy.zh-CN.md#环境准备)以安装依赖。
+
+## 克隆项目
 
 ```sh
 $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
-$ cd apisix-dashboard
 ```
 
-## 前端开发
+## 开始开发
 
-1. 确保你的设备已经安装了 `Node.js(version version 10.0.0+)`。
+### manager-api
 
-2. 安装 [yarn](https://yarnpkg.com/)。
+1. 请在 `api/conf/conf.yaml` 中修改配置信息。
 
-3. 安装依赖:
-
-```sh
-$ yarn install
-```
-
-4. 若需要修改 manager-api 地址，请访问 `config/proxy.ts` 文件。
-
-5. 启动 (开发模式)
-
-```sh
-$ yarn start
-```
-
-### 编写 E2E 测试案例
-
-请参考 [E2E 文档](../web/src/e2e/README.zh-CN.md)。
-
-## 开发 manager-api
-
-### 启动
-
-1. 修改配置文件 目录: `api/conf/conf.yaml`
-
-```yaml
-conf:
-  listen:
-    host: 127.0.0.1
-    port: 8080
-  etcd:
-    endpoints:
-      - 127.0.0.1:2379
-authentication:
-  secret: secret
-  expire_time: 3600
-  users:
-    - username: admin
-      password: admin
-    - username: user
-      password: user
-```
-
-2. 启动 (开发模式)
+2. 启动开发模式
 
 ```sh
 $ make api-run
 ```
 
-3. 关闭 (开发模式)
+3. 关闭开发模式
 
 ```sh
 $ make api-stop
 ```
 
-### 同步 jsonschema
+4. 关于增加自定义插件或修改插件 schema 后在控制台显示异常的问题，请查阅 [FAQ 汇总](./FAQ.zh-CN.md)。
 
-从 Apache APISIX 同步 jsonschema ，需要预安装 `Lua` 5.1+ 和 `zip` ，并执行命令 
+### web
 
-```sh
-$ api/build-tools/schema-sync.sh $version
-```
+1. 请在 `config/proxy.ts` 文件中修改 `manager-api` 地址。
 
-注意：`$version` 为 `master` 或者 Apache APISIX 的版本号。 
-
-示例：
+2. 启动开发模式
 
 ```sh
-# 使用 "master"
-$ api/build-tools/schema-sync.sh master
+$ cd /web
 
-# 使用 Apache APISIX 的版本号
-$ api/build-tools/schema-sync.sh 2.0
+$ yarn install
+
+$ yarn start
 ```
 
-如果您有自定义插件，请确保您的自定义插件放在 APISIX 目录中，并将执行脚本的参数改为 APISIX 目录路径, 如：
-
-```sh
-$ api/build-tools/schema-sync.sh /usr/local/apisix
-```
-
-脚本执行完后，如果您不是通过 `make api-run` 运行的，需要将 `api/conf/schema.json` 拷贝到 Apache APISIX Dashboard 的工作目录的 `conf` 目录下。
+3. 如编写 E2E 测试，请参考 [E2E 编写指南](../web/src/e2e/README.zh-CN.md)
