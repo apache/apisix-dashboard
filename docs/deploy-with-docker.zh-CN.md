@@ -35,8 +35,8 @@ $ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
 
 配置文件有如下注意事项：
 
-1. `conf.listen.host` 为 `0.0.0.0` 时，才能使外部网络访问到容器内的服务。
-1. `conf.etcd.endpoints` 可使用 `host.docker.internal:2379` 以便容器能够正常访问宿主机的 `etcd` 服务。
+- `conf.listen.host` 为 `0.0.0.0` 时，才能使外部网络访问到容器内的服务。
+- `conf.etcd.endpoints` 必须能够在容器内访问 `etcd` 服务。例如：使用 `host.docker.internal:2379` 以便容器能够访问宿主机网络中的 `etcd`。
 
 3. 启动容器
 
