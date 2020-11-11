@@ -53,4 +53,4 @@ $ api/build-tools/schema-sync.sh /path/to/apisix
 $ api/build-tools/schema-sync.sh /usr/local/apisix
 ```
 
-脚本执行完后，若您不是通过 `make api-run` 运行的，需要将 `api/conf/schema.json` 拷贝到 Apache APISIX Dashboard 的工作目录的 `conf` 目录下。
+命令执行完成后，若您使用的是已经完成构建的二进制 `manager-api`，那么需要手动将 `api/conf/schema.json` 拷贝到 Dashboard **工作目录**下的 `conf` 目录中。其中，**工作目录**是指根据该[文档](./deploy.zh-CN.md)构建完成后，在根目录下生成的 `output` 目录或修改名称后的目录。
