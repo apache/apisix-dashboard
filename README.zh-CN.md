@@ -21,60 +21,43 @@
 
 # Apache APISIX Dashboard
 
-Apache APISIX Dashboard 项目的目标是为了让大家快速上手体验和学习 Apache APISIX，并不能直接用于生产环境。
+Apache APISIX Dashboard 旨在通过界面，让用户尽可能更方便地操作 [Apache APISIX](https://github.com/apache/apisix)。
 
-它的功能永远都是 Apache APISIX 的子集，也可能会滞后于 Apache APISIX 的快速迭代。
+![architecture](./docs/images/architecture.png)
 
-如果你需要把 Apache APISIX Dashboard 项目用于生产系统，需要对用户权限、通讯安全、高可用、高级功能等方面做增强。
+注意：目前 Dashboard 尚未完整覆盖 Apache APISIX 的功能，[访问此处](https://github.com/apache/apisix-dashboard/milestones)以查看里程碑。
 
-## 安装
+## 目录结构
 
-提供多种方式来安装 Apache APISIX Dashboard
-
-### Docker
-
-通过下面的方法来启动一个可运行的版本
-
-- [使用 Docker 一键部署](./docs/deploy-with-docker.zh-CN.md)
-
-### 从源代码构建
-
-从源代码构建，首先先确认你的 `golang` 版本在 1.13 或者 更高的版本。
-
-同样你也需要提前安装好 `Node.js` 和 `yarn`。
-
-```sh
-$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
-$ cd apisix-dashboard
-$ make build
+```
+.
+├── CHANGELOG.md
+├── CHANGELOG.zh-CN.md
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── Dockerfile
+├── LICENSE
+├── Makefile
+├── NOTICE
+├── README.md
+├── README.zh-CN.md
+├── api
+├── docs
+├── licenses
+└── web
 ```
 
-然后你可以在 `./output` 目录下找到运行 Apache APISIX Dashboard 需要的所有文件(配置文件、可执行文件、web静态资源)
+1. `api` 目录用于存放 `manager-api` 源码，它用于为前端界面提供接口。
+2. `web` 目录用于存放前端源码。
 
-通过下面的命令启动
+## 构建并启动
 
-```sh
-$ cd ./output
-$ exec ./manager-api
-```
+支持以下构建部署方式：
 
-`makefile` 提供以下几种命令
+- [源码构建并启动](./docs/deploy.zh-CN.md)
+- [Docker](./docs/deploy-with-docker.zh-CN.md)
 
-```text
-Makefile rules:
-
-    help:		    Show Makefile rules
-    build:		    Build Apache APISIX Dashboard, it contains web and manager-api
-    api-test:		Run the tests of manager-api
-    api-run:		Run the manager-api
-    api-stop:		stop manager-api
-    go-lint:	    Lint Go source code
-    license-check:	Check Apache APISIX Dashboard Source Codes for Apache License
-```
-
-更详细的构建步骤参见这里 - [从源代码构建](./docs/deploy.zh-CN.md)
-
-### 对于开发者
+## 开发
 
 Apache APISIX Dashboard 为 [Apache APISIX](https://github.com/apache/apisix) 提供管理界面，需要先[安装 APISIX](https://github.com/apache/apisix#configure-and-installation).
 
@@ -101,6 +84,6 @@ Apache License 2.0, [LICENSE](https://github.com/apache/apisix-dashboard/blob/ma
 
 ## FAQ
 
-1. 如果你需要 Vue.js 构建的 Apache APISIX Dashboard 1.0，请使用 [master-vue 分支](https://github.com/apache/apisix-dashboard/tree/master-vue)。
+1. 如您需要 Vue.js 构建的 Apache APISIX Dashboard 1.0，请使用 [master-vue 分支](https://github.com/apache/apisix-dashboard/tree/master-vue)。
 2. 2.0 版本的控制台移除了[1.5 版本](https://github.com/apache/apisix-dashboard/tree/backup-1.5-latest)中的 MySQL，将直接操作 etcd。
 3. 如果你使用 v2.0 以下版本的 Apache APISIX，需要注意 etcd v2 API 的数据与 v3 API 的数据是[不互通的](https://etcd.io/docs/v3.4.0/op-guide/v2-migration/)。Apache APISIX Dashboard v2.0 及以上版本使用 etcd v3 API，apisix 1.5 及以下版本使用 etcd v2 API。
