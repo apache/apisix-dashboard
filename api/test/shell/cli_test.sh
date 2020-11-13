@@ -46,7 +46,7 @@ fi
 
 #change level and path
 
-sed -i 's/logs\/error.log/.\/error.log/' conf/conf.yaml
+sed -i 's/file_path: logs\/error.log/file_path: .\/error.log/' conf/conf.yaml
 sed -i 's/warn/info/' conf/conf.yaml
 
 ./manager-api &
