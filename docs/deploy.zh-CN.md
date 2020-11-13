@@ -17,118 +17,78 @@
 #
 -->
 
-# 从源文件打包部署
+# 使用源码构建并启动
 
-## 克隆项目
+Dashboard 包含了 `manager-api` 与 `web` 两部分，其中 `web` 是*可选*的。
 
-```sh
-$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+本构建指南产物中，将包含 `manager-api` 与 `web`。
 
-$ cd apisix-dashboard
-```
+## 环境准备
 
-## 构建
+在使用源码构建前，请确认您的环境中，已安装如下依赖：
 
-### Manager-api 检查项
+### manager-api
 
-`manager-api` 用于为控制台提供接口，就像 Apache APISIX 和控制台之间的桥梁。下面是手动构建步骤：
-
-1. 需要预先安装 `Go` 1.13+
-
-注意：如果使用插件编排，需要同时预先安装 `Lua` 5.1+ ，后续版本会对此进行优化，取消对 `Lua` 的依赖。
-
-2. 检查环境变量
-
-- 对于大多数中国用户，我们可以使用 [Goproxy](https://goproxy.cn/) 加快模块下载速度。
+1. [Golang](https://golang.org/dl/) 1.13+：对于中国大陆的用户，可使用如下命令加快模块下载速度。
 
 ```sh
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-### 前端 检查项
+2. [Lua](https://www.lua.org/download.html) 5.1+：仅在使用**插件编排**功能时，需要安装本依赖。在后续版本中，会对该部分进行优化以取消对其依赖。
 
-该项目使用 [Ant Design Pro](https://pro.ant.design) 初始化。以下是一些使用方法的快速指南。
+### web
 
-1. 确保你的设备已经安装了 `Node.js(版本 10.0.0+)`。
+1. [Node.js](https://nodejs.org/en/download/) 10.23.0+
+2. [Yarn](https://yarnpkg.com/getting-started/install)
 
-2. 安装 [yarn](https://yarnpkg.com/)。
-
-### 开始构建
-
+## 克隆项目
 
 ```sh
+$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+```
+
+## 构建
+
+```sh
+$ cd apisix-dashboard
 $ make build
 ```
 
-构建完成后的文件在根目录 `output` 下。
+构建完成后，构建结果将存放在根目录下 `output` 目录中。
+
+注意：`make build` 将会构建 `manger-api` 与 `web`，使用 `make help` 命令以查看更多指令。
 
 ## 启动
 
-1. 根据您的部署环境，检查并修改 `output/conf/conf.yaml` 中的配置。
+1. 在构建完成后、启动前，请确认您的环境中，已安装并运行如下依赖：
 
-例如：
+- [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
 
-```yaml
-conf:
-  listen:
-    host: 127.0.0.1
-    port: 8080
-  etcd:
-    endpoints:
-      - 127.0.0.1:2379
-authentication:
-  secret: secret
-  expire_time: 3600
-  users:
-    - username: admin
-      password: admin
-    - username: user
-      password: user
-```
+2. 根据您的部署环境，检查并修改 `output/conf/conf.yaml` 中的配置信息。
 
-2. 启动 Apache APISIX Dashboard
+3. 启动 Dashboard
 
 ```sh
 $ cd ./output
+
 $ ./manager-api
+# 或后台常驻
+$ ./manager-api &
 ```
 
-3. 在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
+4. 在未修改配置的情况下，访问 `http://127.0.0.1:8080` 以使用有前端界面的控制台，默认用户密码均为 `admin`。
 
-4. 关闭 Apache APISIX Dashboard
+5. 停止 Dashboard
 
 ```sh
 $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 ```
 
-## 打包 output 目录
+## 其它
 
-你可以把刚刚 output 目录整体打包，copy 到其他地方解压运行，output 目录包含运行 Apache APISIX Dashboard 需要的所有文件(配置文件、可执行文件、web静态资源)
+1. 如有需要，在构建完成后使用如下命令，将会对 `output` 目录进行打包操作，以便您将构建结果移动到其它位置。
 
 ```sh
 $ make release-src
-```
-
-## 配置参数
-
-1. `conf.dag-lib-path` 参数需要使用绝对路径，可通过 `pwd` 指令获取。仅在使用插件编排功能时需要指定。
-
-2. `conf.listen.host` 默认为 `127.0.0.1`，这意味着只能在本地网络中访问，如需允许外部网络访问，请修改为 `0.0.0.0`，无需重新编译代码。
-
-3. `conf.etcd.endpoints` 用于配置 ETCD 实例，支持集群模式。
-
-```yaml
-conf:
-  etcd:
-    endpoints:
-      - 127.0.0.1:2379
-      - 127.0.0.1:3379
-```
-
-## 注意
-
-1. 在编译 Manager API 后，如移动编译后产物到其它位置，启动时将会报错，这是由于配置文件**绝对路径**被固定在了产物中，需要在运行前，通过执行环境变量设置配置文件位置来解决。
-
-```sh
-$ export APISIX_CONF_PATH=/home/demo_user/workspace/apisix-dashboard/api/conf
 ```

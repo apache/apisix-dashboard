@@ -17,42 +17,65 @@
 #
 -->
 
-# Deploy with Docker
+# Building and Launching with Docker
 
-1. Build image
+To build a Dashboard with Docker, you simply download the `Dockerfile` file from the **root directory** to your device (no need to download all source codes) then follow this guide.
+
+The `manager-api` and `web` will be included in this build guide product.
+
+## Prerequisites
+
+Before using Docker to build images and start containers, make sure that the following dependencies are installed and running in your environment.
+
+1. [Docker](https://docs.docker.com/engine/install/)
+2. [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
+
+## Build
 
 ```sh
-# NOTE: $tag should be set manually
-$ docker build -t apisix-dashboard:{$tag} .
+# Execute the build command in the directory where the Dockerfile is located (by default, the project root), specifying the tag manually.
+$ docker build -t apisix-dashboard:$tag .
+
+# For users in mainland China, the `ENABLE_PROXY` parameter can be provided to speed up module downloads.
+$ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
 ```
 
-2. Prepare the configuration file
+## Launch
 
-Before starting the container, the configuration file `conf.yaml` needs to be prepared inside the **host** to override the default configuration file inside the container. Please refer to [example configuration file](./examples/docker-conf-example.yaml).
+1. Preparing configuration files
 
-Example configuration notes:
+Before starting the container, the configuration file `conf.yaml` needs to be prepared inside the **host** to override the default [configuration file](../api/conf/conf.yaml) inside the container.
 
-- `conf.listen.host` To listen for IP within the container, it must be `0.0.0.0`, so the host can access the container's network.
-- `conf.listen.port` The default is `8080` for the container listening port. If you need to change it, please change the [Dockerfile](../Dockerfile) too.
-- `conf.etcd.endpoints` For the list of ETCD hosts, multiple nodes are connected with **English commas**. Make sure the container has access to these hosts. e.g. Example configuration `conf.etcd.endpoints` for `host.docker.internal` is intended to allow the container to access the network on the host.
+Kindly note:
 
-3. Run container
+- Only when `conf.listen.host` is `0.0.0.0` can the external network access the services within the container.
+- `conf.etcd.endpoints` must be able to access the `etcd` service within the container. For example: use `host.docker.internal:2379` so that the container can access `etcd` on the host network.
+
+2. Launch the Dashboard
 
 ```sh
-$ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:{$tag}
+# /path/to/conf.yaml Requires an absolute path pointing to the configuration file mentioned above.
+$ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:$tag
 ```
 
-## Note
-
-1. After building the image, if you want to modify the configuration file, you can use the `docker -v /local-path-to-conf-file:/conf/conf.yaml` parameter to specify the configuration file required for `manager-api` to be loaded dynamically when the container is started.
-2. For users in China, we could use the `ENABLE_PROXY` flag to speed up dependencies downloading.
+3. Check if the container started successfully
 
 ```sh
-$ docker build -t apisix-dashboard:{$tag} . --build-arg ENABLE_PROXY=true
+$ docker ps -a
 ```
 
-3. If it's not the first time to build, it is recommended not to use cache.
+If the container `apisix-dashboard` is ok, visit `http://127.0.0.1:8080` to use the dashboard with GUI, where the default username and password are `admin`.
+
+4. Stop the Dashboard
 
 ```sh
-$ docker build -t apisix-dashboard:{$tag} . --build-arg ENABLE_PROXY=true --no-cache=true
+$ docker stop apisix-dashboard
+```
+
+## Other
+
+1. Caching is not recommended when building a image multiple times.
+
+```sh
+$ docker build -t apisix-dashboard:$tag . --no-cache=true
 ```

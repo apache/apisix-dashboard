@@ -29,10 +29,10 @@ This is a release candidate.
 
 # Core
 
-- Refactor front-end with Admin-API.
+- Refactor frontend with Admin-API.
 - Manager-API removes dependency on MySQL.
 - Support plugin orchestration.
-- Setting standards for front-end internationalization.
+- Setting standards for frontend internationalization.
 - New deployment pattern.
 - Add more test cases.
 - Document Enhancement.
@@ -40,7 +40,7 @@ This is a release candidate.
 - Improve CI testing.
 - Support log save to local file.
 - Optimize the deployment process.
-- Add E2E test examples to the front-end. [#619](https://github.com/apache/apisix-dashboard/pull/619)
+- Add E2E test examples to the frontend. [#619](https://github.com/apache/apisix-dashboard/pull/619)
 - Fix the Promethues plugin updating incorrect values when updating routes. [#666](https://github.com/apache/apisix-dashboard/pull/666)
 - Fix page display exceptions when the Redirect option is selected as Enable HTTPS in the Route page. [#692](https://github.com/apache/apisix-dashboard/pull/692)
 

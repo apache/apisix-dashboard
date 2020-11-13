@@ -1,4 +1,4 @@
-name: Front-end e2e test
+name: Frontend e2e test
 
 on:
   push:
@@ -14,7 +14,7 @@ defaults:
 
 jobs:
   web-e2e:
-    name: Front-end e2e test
+    name: Frontend e2e test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,5 +36,5 @@ jobs:
         if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
         run: yarn install
 
-      - name: Start Front-end then test
+      - name: Start frontend then test
         run: yarn test:e2e
