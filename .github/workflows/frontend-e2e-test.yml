@@ -1,4 +1,4 @@
-name: frontend e2e test
+name: Frontend e2e test
 
 on:
   push:
@@ -14,7 +14,7 @@ defaults:
 
 jobs:
   web-e2e:
-    name: frontend e2e test
+    name: Frontend e2e test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
