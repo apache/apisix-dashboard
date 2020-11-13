@@ -17,116 +17,81 @@
 #
 -->
 
-# Deploy manually
+# Build and launch with source codes
 
-## Clone the project
+The Dashboard contains both `manager-api` and `web`, but `web` is _optional_.
 
-```sh
-$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+The `manager-api` and `web` will be included in this build guide product.
 
-$ cd apisix-dashboard
-```
+## Prerequisites
 
-## Build
+Before using source codes to build, make sure that the following dependencies are installed in your environment.
 
-### Manager-api dependencies
+### manager-api
 
-The `manager-api` is used to provide APIs for Apache APISIX Dashboard, just like a bridge between the Apache APISIX and the Apache APISIX Dashboard. Here are the steps to build it manually:
-
-1. We need `Go` 1.13+ to be preinstalled.
-
-NOTE: You also need to install `Lua` 5.1+ if you want to use the Plugin Orchestration, we will improve this part and omit Lua's dependency in the future.
-
-2. Check environment variables
-
-- For most users in China, we could use [Goproxy](https://goproxy.cn/) to speed up downloading modules.
+1. [Golang](https://golang.org/dl/) 1.13+: For users in mainland China, you can use the following command to speed up the module downloads.
 
 ```sh
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-### Web dependencies
+2. [Lua](https://www.lua.org/download.html) 5.1+: This dependency needs to be installed only when using the **Plugin Orchestration** feature. In subsequent versions, this section will be optimized to remove the dependency.
 
-This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
+### web
 
-1. Make sure you have `Node.js(version 10.0.0+)` installed on your machine.
-2. Install [yarn](https://yarnpkg.com/).
+1. [Node.js](https://nodejs.org/en/download/) 10.23.0+
+2. [Yarn](https://yarnpkg.com/getting-started/install)
 
-### Build
+## Clone the project
 
 ```sh
+$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+```
+
+## Build
+
+```sh
+$ cd apisix-dashboard
 $ make build
 ```
 
-The bundled files are located in the root directory `output`.
+When the build is complete, the results are stored in the root `output` directory.
 
-## Run
+Note: `make build` will build `manger-api` and `web`, use the `make help` command to see more commands.
 
-1. According to your deploy environment, check the related configurations in `output/conf/conf.yaml`, modify those variables if needed.
+## Launch
 
-Example:
+1. After the build is complete and before you start, make sure the following dependencies are installed and running in your environment.
 
-```yaml
-conf:
-  listen:
-    host: 127.0.0.1
-    port: 8080
-  etcd:
-    endpoints:
-      - 127.0.0.1:2379
-authentication:
-  secret: secret
-  expire_time: 3600
-  users:
-    - username: admin
-      password: admin
-    - username: user
-      password: user
-```
+- [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
 
-2. Run Apache APISIX Dashboard
+2. Check and modify the configuration information in `output/conf/conf.yaml` according to your deployment environment.
+
+3. Launch the Dashboard
 
 ```sh
 $ cd ./output
+
 $ ./manager-api
+
+# or running in background
+$ ./manager-api &
 ```
 
-3. Visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
+After successful startup, the console will output a startup success message.
 
-3. Stop Apache APISIX Dashboard
+4. Without changing the configuration, access `http://127.0.0.1:8080` to use the dashboard with a front-end GUI, where the default username and password are `admin`.
+
+5. Stop the Dashboard
 
 ```sh
 $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 ```
 
-## Package
+## Other
 
-Package the output directory, the output directory contains all the files needed to run the Apache APISIX Dashboard (configuration files, executable files, web static resources)
+1. If necessary, using the following command after the build is complete will pack the `output` directory so that you can move the build to another location.
 
 ```sh
 $ make release-src
-```
-
-## Configuration
-
-1. `conf.dag-lib-path` must use absolute path, we could use `pwd` command. Only used when enable Plugin Orchestration.
-
-2. `conf.listen.host` is set to `127.0.0.1` so we could only visit it in private, we could change it to `0.0.0.0` to allow any visitors.
-
-3. `conf.etcd.endpoints` is used to set ETCD's instances address, it supports multiple instances mode.
-
-```yaml
-conf:
-  etcd:
-    endpoints:
-      - 127.0.0.1:2379
-      - 127.0.0.1:3379
-```
-
-## NOTE
-
-1. After compiling the `manager-api`, if you move the compiled product to another location, an error will be reported at startup, this is because the configuration file's **absolute path** is fixed in the product and needs to be resolved by running an environment variable to set the location of the configuration file before running.
-
-```sh
-$ export APISIX_CONF_PATH=/home/demo_user/workspace/apisix-dashboard/api/conf
 ```

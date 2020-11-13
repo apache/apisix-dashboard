@@ -17,98 +17,60 @@
 #
 -->
 
-# Apache APISIX Dashboard Devlopment
+# Development Guide
 
-## Dependencies
+The Dashboard contains both `manager-api` and `web` parts, so you need to start the development environment separately.
+
+## Prerequisites
+
+Before development, refer to this [guide](./deploy.md) to install dependencies.
+
+## Clone the project
 
 ```sh
 $ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+```
+
+## Start developing
+
+```sh
 $ cd apisix-dashboard
 ```
 
-## Web
+### manager-api
 
-1. Make sure you have `Node.js(version version 10.0.0+)` installed on your machine.
-2. Install [yarn](https://yarnpkg.com/).
-3. Install dependencies:
+1. Please change the configuration in `api/conf/conf.yaml`.
 
-```sh
-$ yarn install
-```
-
-4. If we want to modify the API, please refer to the `config/proxy.ts` file.
-
-5. Start (the development mode)
-
-```sh
-$ yarn start
-```
-
-### Add E2E test cases
-
-Please refer to [E2E Documentation](../web/src/e2e/README.md).
-
-## Manager-api
-
-### Start
-
-1. Modify `config.yaml` in `api/conf/conf.yaml`
-
-```yaml
-conf:
-  listen:
-    host: 127.0.0.1
-    port: 8080
-  etcd:
-    endpoints:
-      - 127.0.0.1:2379
-authentication:
-  secret: secret
-  expire_time: 3600
-  users:
-    - username: admin
-      password: admin
-    - username: user
-      password: user
-```
-
-2. Start (the development mode)
+2. In the root directory, launch development mode.
 
 ```sh
 $ make api-run
 ```
 
-3. Stop (the development mode)
+3. In the root directory, stop development mode.
 
 ```sh
 $ make api-stop
 ```
 
-### Sync jsonschema
+4. Please refer to the [FAQ](./FAQ.md) about the problem of displaying exception in the dashboard after adding custom plugins or modifying plugin's schema.
 
-To sync jsonschema from Apache APISIX, `Lua` 5.1+ and `zip` need to be preinstalled, then execute this command: 
+### web
 
-```sh
-$ api/build-tools/schema-sync.sh $version
-```
-
-NOTE: `$version` should be `master` or Apache APISIX's version.
-
-Example:
+1. Go to the `web` directory.
 
 ```sh
-# Using "master"
-$ api/build-tools/schema-sync.sh master
-
-# Using Apache APISIX's version
-$ api/build-tools/schema-sync.sh 2.0
+$ cd ./web
 ```
 
-If you have custom plugin, please make sure your custom plugin is placed in the APISIX directory, and change the parameters of the execution script to the APISIX directory path, example:
+2. Please change the `manager-api` address in the `config/proxy.ts` file if needed.
+
+3. Launch development mode
 
 ```sh
-$ api/build-tools/schema-sync.sh /usr/local/apisix
+$ yarn install
+
+$ yarn start
 ```
 
-After the script is executed, if you are not running it by `make api-run`, you need to copy `api/conf/schema.json` to `conf` directory under the working directory of Apache APISIX Dashboard.
-
+4. If writing an E2E test, refer to the [E2E Writing Guide](../web/src/e2e/README.md)
