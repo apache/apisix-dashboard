@@ -80,7 +80,7 @@ $ ./manager-api &
 
 After successful startup, the console will output a startup success message.
 
-4. Without changing the configuration, access `http://127.0.0.1:8080` to use the dashboard with a frontend GUI, where the default username and password are `admin`.
+4. Without changing the configuration, visit `http://127.0.0.1:8080` to use the dashboard with GUI, where the default username and password are `admin`.
 
 5. Stop the Dashboard
 

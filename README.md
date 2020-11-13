@@ -53,7 +53,7 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 └── web
 ```
 
-1. The `api` directory is used to store the `manager-api` source codes, which is used to manage `etcd` and provide an interface to the frontend interface.
+1. The `api` directory is used to store the `manager-api` source codes, which is used to manage `etcd` and provide APIs to the frontend interface.
 2. The `web` directory is used to store the frontend source codes.
 
 ## Build then launch
@@ -77,7 +77,7 @@ Please refer to the [Contribution Guide](./CONTRIBUTING.md) for a more detailed 
 
 ## FAQ
 
-Please refer to the [FAQ](./docs/FAQ.zh-CN.md) for more known issues.
+Please refer to the [FAQ](./docs/FAQ.md) for more known issues.
 
 ## License
 

@@ -64,7 +64,7 @@ $ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/con
 $ docker ps -a
 ```
 
-If the container `apisix-dashboard` is ok, access `http://127.0.0.1:8080` to use the dashboard with a frontend GUI, where the default username and password are `admin`.
+If the container `apisix-dashboard` is ok, visit `http://127.0.0.1:8080` to use the dashboard with GUI, where the default username and password are `admin`.
 
 4. Stop the Dashboard
 
