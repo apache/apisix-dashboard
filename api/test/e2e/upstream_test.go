@@ -62,6 +62,7 @@ func TestUpstream_Create(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "hit the route just created",

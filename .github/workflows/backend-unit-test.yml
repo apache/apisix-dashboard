@@ -1,4 +1,4 @@
-name: Test API
+name: Backend Unit Test
 
 on:
   push:

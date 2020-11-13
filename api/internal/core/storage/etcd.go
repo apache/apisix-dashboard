@@ -19,9 +19,10 @@ package storage
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/apisix/manager-api/internal/utils"
 	"go.etcd.io/etcd/clientv3"
-	"time"
 )
 
 var (
@@ -132,6 +133,8 @@ func (s *EtcdV3Storage) Watch(ctx context.Context, key string) <-chan WatchRespo
 			}
 			ch <- output
 		}
+
+		close(ch)
 	}()
 
 	return ch
