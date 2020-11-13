@@ -27,7 +27,7 @@ The Apache APISIX Dashboard is designed to make it as easy as possible for users
 
 The Dashboard is the control plane and performs all parameter checks; Apache APISIX mixes data and control planes and will evolve to a pure data plane.
 
-This project includes `manager-api`, which will gradually replace `admin-api` in Apache APISIX, and the frontend interface, which we are actively migrating logic from.
+This project includes `manager-api`, which will gradually replace `admin-api` in Apache APISIX.
 
 Note: Currently the Dashboard does not have complete coverage of Apache APISIX features, [visit here](https://github.com/apache/apisix-dashboard/milestones) to view the milestones.
 
