@@ -23,11 +23,11 @@ English | [简体中文](./README.zh-CN.md)
 
 ## What's Apache APISIX Dashboard
 
-The Apache APISIX Dashboard is designed to make it as easy as possible for users to operate [Apache APISIX](https://github.com/apache/apisix) through a front-end interface.
+The Apache APISIX Dashboard is designed to make it as easy as possible for users to operate [Apache APISIX](https://github.com/apache/apisix) through a frontend interface.
 
 The Dashboard is the control plane and performs all parameter checks; Apache APISIX mixes data and control planes and will evolve to a pure data plane.
 
-This project includes `manager-api`, which will gradually replace `admin-api` in Apache APISIX, and the front-end interface, which we are actively migrating logic from.
+This project includes `manager-api`, which will gradually replace `admin-api` in Apache APISIX, and the frontend interface, which we are actively migrating logic from.
 
 Note: Currently the Dashboard does not have complete coverage of Apache APISIX features, [visit here](https://github.com/apache/apisix-dashboard/milestones) to view the milestones.
 
@@ -53,8 +53,8 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 └── web
 ```
 
-1. The `api` directory is used to store the `manager-api` source codes, which is used to manage `etcd` and provide an interface to the front-end interface.
-2. The `web` directory is used to store the front-end source codes.
+1. The `api` directory is used to store the `manager-api` source codes, which is used to manage `etcd` and provide an interface to the frontend interface.
+2. The `web` directory is used to store the frontend source codes.
 
 ## Build then launch
 

@@ -69,7 +69,7 @@ export const transformStepData = ({
       data.plugins!.redirect = redirect;
     }
 
-    // Remove some of the front-end custom variables
+    // Remove some of the frontend custom variables
     return omit(data, [
       'advancedMatchingRules',
       'upstreamHostList',
