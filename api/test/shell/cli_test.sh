@@ -23,6 +23,19 @@ clean_up() {
     git checkout conf/conf.yaml
 }
 
+logfile="./logs/error.log"
+
+check_logfile() {
+    if [[ ! -f $logfile ]]; then
+        echo "failed: failed to write log"
+        exit 1
+    fi
+}
+
+clean_logfile() {
+    echo > $logfile
+}
+
 trap clean_up EXIT
 
 export GO111MODULE=on
@@ -34,29 +47,47 @@ go build -o ./manager-api .
 sleep 3
 pkill -f manager-api
 
-if [[ ! -f "./logs/error.log" ]]; then
-    echo "failed: failed to write log"
-    exit 1
-fi
+check_logfile
 
-if [[ `grep -c "INFO" ./logs/error.log` -ne '0' ]]; then
+if [[ `grep -c "INFO" ${logfile}` -ne '0' ]]; then
     echo "failed: should not write info log when level is warn"
     exit 1
 fi
 
-#change level and path
+clean_logfile
+
+# change level and test signal
+
+sed -i 's/level: warn/level: info/' conf/conf.yaml
+
+./manager-api &>/dev/null &
+sleep 3
+pkill -2 -f manager-api
+sleep 6
+
+check_logfile
+
+if [[ `ps -ef | grep "[m]anager-api" -c` -eq '1' ]]; then
+    echo "failed: the manager server didn't deal with signal in correct way"
+    exit 1
+fi
+
+if [[ `grep -c "server receive interrupt" ${logfile}` -ne '1' ]]; then
+    echo "failed: the manager server didn't deal with signal in correct way"
+    exit 1
+fi
+
+clean_logfile
+
+#change path
 
 sed -i 's/logs\/error.log/.\/error.log/' conf/conf.yaml
-sed -i 's/warn/info/' conf/conf.yaml
 
 ./manager-api &
 sleep 3
 pkill -f manager-api
 
-if [[ ! -f "./error.log" ]]; then
-    echo "failed: failed to write log"
-    exit 1
-fi
+check_logfile
 
 if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     echo "failed: failed to write log on right level"
