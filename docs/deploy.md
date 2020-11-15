@@ -93,3 +93,6 @@ $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 ```sh
 $ make release
 ```
+
+The release packages will be in the `release` directory.
+

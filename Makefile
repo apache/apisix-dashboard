@@ -19,6 +19,8 @@ SHELL := /bin/bash -o pipefail
 UNAME ?= $(shell uname)
 YARN_EXEC ?= $(shell which yarn)
 GO_EXEC ?= $(shell which go)
+VERSION ?= latest
+RELEASE = apache-apisix-dashboard-${VERSION}
 
 export GO111MODULE=on
 
@@ -91,5 +93,10 @@ endif
 
 .PHONY: release
 release:
-	tar –cf dashboard.tar ./output/*
+	tar -zcvf $(RELEASE).tgz ./output/*
+	shasum -a 512 $(RELEASE).tgz > $(RELEASE).tgz.sha512
+	mkdir -p release
+	mv $(RELEASE).tgz release/$(RELEASE).tgz
+	mv $(RELEASE).tgz.sha512 release/$(RELEASE).tgz.sha512
+
 

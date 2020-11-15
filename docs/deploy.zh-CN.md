@@ -92,3 +92,6 @@ $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 ```sh
 $ make release
 ```
+
+发布包将在`release`目录中.
+
