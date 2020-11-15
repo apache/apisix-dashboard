@@ -91,5 +91,5 @@ $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 1. If necessary, using the following command after the build is complete will pack the `output` directory so that you can move the build to another location.
 
 ```sh
-$ make release-src
+$ make release
 ```

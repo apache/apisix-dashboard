@@ -89,7 +89,7 @@ endif
 	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./
 
 
-.PHONY: release-src
-release-src:
+.PHONY: release
+release:
 	tar –cf dashboard.tar ./output/*
 
