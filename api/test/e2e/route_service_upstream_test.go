@@ -138,7 +138,7 @@ func TestRoute_Create_Service(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r2",
 			Body: `{
-				"uri": "/server_port",
+				"uri": "/hello",
 				"service_id": "200"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
@@ -149,9 +149,9 @@ func TestRoute_Create_Service(t *testing.T) {
 			caseDesc:     "hit the route just created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/server_port",
+			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "1980",
+			ExpectBody:   "hello world\n",
 			Sleep:        sleepTime,
 		},
 	}
