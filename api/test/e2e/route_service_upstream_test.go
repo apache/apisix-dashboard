@@ -66,7 +66,7 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 	}
 }
 
-func TestRoute_Upstream(t *testing.T) {
+func TestRoute_Create_Upstream(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create upstream",
@@ -112,7 +112,7 @@ func TestRoute_Upstream(t *testing.T) {
 	}
 }
 
-func TestRoute_Service(t *testing.T) {
+func TestRoute_Create_Service(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create service",
@@ -138,7 +138,7 @@ func TestRoute_Service(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r2",
 			Body: `{
-				"uri": "/server_port_service",
+				"uri": "/server_port",
 				"service_id": "200"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
@@ -149,7 +149,7 @@ func TestRoute_Service(t *testing.T) {
 			caseDesc:     "hit the route just created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/server_port_service",
+			Path:         "/server_port",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "1980",
 			Sleep:        sleepTime,
@@ -159,3 +159,35 @@ func TestRoute_Service(t *testing.T) {
 		testCaseCheck(tc)
 	}
 }
+
+//func TestRoute_Delete_Upstream(t *testing.T) {
+//	tests := []HttpTestCase{
+//		{
+//			caseDesc:     "remove upstream before deleting route",
+//			Object:       MangerApiExpect(t),
+//			Method:       http.MethodDelete,
+//			Path:         "/apisix/admin/upstreams/1",
+//			Headers:      map[string]string{"Authorization": token},
+//			ExpectStatus: http.StatusBadRequest,
+//		},
+//		{
+//			caseDesc:     "delete route",
+//			Object:       MangerApiExpect(t),
+//			Method:       http.MethodDelete,
+//			Path:         "/apisix/admin/routes/r1",
+//			Headers:      map[string]string{"Authorization": token},
+//			ExpectStatus: http.StatusOK,
+//		},
+//		{
+//			caseDesc:     "remove upstream",
+//			Object:       MangerApiExpect(t),
+//			Method:       http.MethodDelete,
+//			Path:         "/apisix/admin/upstreams/1",
+//			Headers:      map[string]string{"Authorization": token},
+//			ExpectStatus: http.StatusBadRequest,
+//		},
+//	}
+//	for _, tc := range tests {
+//		testCaseCheck(tc)
+//	}
+//}
