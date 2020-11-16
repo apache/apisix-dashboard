@@ -46,6 +46,8 @@ var (
 	ServerHost       = "127.0.0.1"
 	ServerPort       = 80
 	ETCDEndpoints    = []string{"127.0.0.1:2379"}
+	ETCDUsername     = ""
+	ETCDPassword     = ""
 	ErrorLogLevel    = "warn"
 	ErrorLogPath     = "logs/error.log"
 	UserList         = make(map[string]User, 2)
@@ -55,6 +57,8 @@ var (
 
 type Etcd struct {
 	Endpoints []string
+	Username  string
+	Password  string
 }
 
 type Listen struct {
@@ -131,6 +135,11 @@ func setConf() {
 		//etcd
 		if len(config.Conf.Etcd.Endpoints) > 0 {
 			ETCDEndpoints = config.Conf.Etcd.Endpoints
+		}
+
+		if config.Conf.Etcd.Username != "" {
+			ETCDUsername = config.Conf.Etcd.Username
+			ETCDPassword = config.Conf.Etcd.Password
 		}
 
 		//error log

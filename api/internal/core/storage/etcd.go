@@ -32,11 +32,16 @@ var (
 type EtcdV3Storage struct {
 }
 
-func InitETCDClient(endpoints []string) error {
-	cli, err := clientv3.New(clientv3.Config{
+func InitETCDClient(endpoints []string, username, password string) error {
+	config := clientv3.Config{
 		Endpoints:   endpoints,
 		DialTimeout: 5 * time.Second,
-	})
+	}
+	if username != "" {
+		config.Username = username
+		config.Password = password
+	}
+	cli, err := clientv3.New(config)
 	if err != nil {
 		return fmt.Errorf("init etcd failed: %w", err)
 	}

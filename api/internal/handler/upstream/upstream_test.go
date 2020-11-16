@@ -34,7 +34,7 @@ var upstreamHandler *Handler
 
 func TestUpstream(t *testing.T) {
 	// init
-	err := storage.InitETCDClient([]string{"127.0.0.1:2379"})
+	err := storage.InitETCDClient([]string{"127.0.0.1:2379"}, "", "")
 	assert.Nil(t, err)
 	err = store.InitStores()
 	assert.Nil(t, err)
