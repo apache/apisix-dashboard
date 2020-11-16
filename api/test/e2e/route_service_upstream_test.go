@@ -55,7 +55,7 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 			Body: `{
 				"uri": "/hello_",
 				"service_id": "not-exists-service",
-				"upstream_id": "not-exists-upstream",
+				"upstream_id": "not-exists-upstream"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
@@ -160,34 +160,50 @@ func TestRoute_Create_Service(t *testing.T) {
 	}
 }
 
-//func TestRoute_Delete_Upstream(t *testing.T) {
-//	tests := []HttpTestCase{
-//		{
-//			caseDesc:     "remove upstream before deleting route",
-//			Object:       MangerApiExpect(t),
-//			Method:       http.MethodDelete,
-//			Path:         "/apisix/admin/upstreams/1",
-//			Headers:      map[string]string{"Authorization": token},
-//			ExpectStatus: http.StatusBadRequest,
-//		},
-//		{
-//			caseDesc:     "delete route",
-//			Object:       MangerApiExpect(t),
-//			Method:       http.MethodDelete,
-//			Path:         "/apisix/admin/routes/r1",
-//			Headers:      map[string]string{"Authorization": token},
-//			ExpectStatus: http.StatusOK,
-//		},
-//		{
-//			caseDesc:     "remove upstream",
-//			Object:       MangerApiExpect(t),
-//			Method:       http.MethodDelete,
-//			Path:         "/apisix/admin/upstreams/1",
-//			Headers:      map[string]string{"Authorization": token},
-//			ExpectStatus: http.StatusBadRequest,
-//		},
-//	}
-//	for _, tc := range tests {
-//		testCaseCheck(tc)
-//	}
-//}
+func TestRoute_Delete_Upstream(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc:     "delete route",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "remove upstream",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+func TestRoute_Delete_Service(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc:     "delete route",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "remove service",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/200",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
