@@ -42,7 +42,7 @@ build
 manager-api
 
 output
-release
+publish
 default.etcd
 api/build-tools/apisix
 /*.zip

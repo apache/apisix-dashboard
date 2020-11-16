@@ -20,7 +20,7 @@ UNAME ?= $(shell uname)
 YARN_EXEC ?= $(shell which yarn)
 GO_EXEC ?= $(shell which go)
 VERSION ?= latest
-RELEASE = apache-apisix-dashboard-${VERSION}
+PUBLISH = apache-apisix-dashboard-${VERSION}
 
 export GO111MODULE=on
 
@@ -91,12 +91,12 @@ endif
 	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./
 
 
-.PHONY: release
-release:
-	tar -zcvf $(RELEASE).tgz ./output/*
-	shasum -a 512 $(RELEASE).tgz > $(RELEASE).tgz.sha512
-	mkdir -p release
-	mv $(RELEASE).tgz release/$(RELEASE).tgz
-	mv $(RELEASE).tgz.sha512 release/$(RELEASE).tgz.sha512
+.PHONY: publish
+publish:
+	tar -zcvf $(PUBLISH).tgz ./output/*
+	shasum -a 512 $(PUBLISH).tgz > $(PUBLISH).tgz.sha512
+	mkdir -p publish
+	mv $(PUBLISH).tgz publish/$(PUBLISH).tgz
+	mv $(PUBLISH).tgz.sha512 publish/$(PUBLISH).tgz.sha512
 
 
