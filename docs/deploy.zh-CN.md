@@ -84,11 +84,3 @@ $ ./manager-api &
 ```sh
 $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 ```
-
-## 其它
-
-1. 如有需要，在构建完成后使用如下命令，将会对 `output` 目录进行打包操作，以便您将构建结果移动到其它位置。
-
-```sh
-$ make release-src
-```

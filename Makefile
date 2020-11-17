@@ -20,6 +20,9 @@ UNAME ?= $(shell uname)
 YARN_EXEC ?= $(shell which yarn)
 GO_EXEC ?= $(shell which go)
 
+VERSION ?= latest
+RELEASE_SRC = apache-apisix-dashboard-${VERSION}-src
+
 export GO111MODULE=on
 
 ### help:		Show Makefile rules
@@ -91,5 +94,26 @@ endif
 
 .PHONY: release-src
 release-src:
-	tar –cf dashboard.tar ./output/*
+	git clean -Xdf
+	tar -zcvf $(RELEASE_SRC).tgz \
+	--exclude .github \
+	--exclude .git \
+	--exclude .gitattributes \
+	--exclude .idea \
+	--exclude .vscode \
+	--exclude .gitignore \
+	--exclude .DS_Store \
+	--exclude docs \
+	--exclude release \
+	--exclude api/internal/core/store/validate_mock.go \
+	--exclude api/internal/core/storage/storage_mock.go \
+	.
+
+	gpg --batch --yes --armor --detach-sig $(RELEASE_SRC).tgz
+	shasum -a 512 $(RELEASE_SRC).tgz > $(RELEASE_SRC).tgz.sha512
+
+	mkdir -p release
+	mv $(RELEASE_SRC).tgz release/$(RELEASE_SRC).tgz
+	mv $(RELEASE_SRC).tgz.asc release/$(RELEASE_SRC).tgz.asc
+	mv $(RELEASE_SRC).tgz.sha512 release/$(RELEASE_SRC).tgz.sha512
 
