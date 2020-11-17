@@ -95,6 +95,7 @@ func TestRoute_Create_Service(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/services/200",
 			Body: `{
+<<<<<<< HEAD
 					"upstream": {
 					"type": "roundrobin",
 					"nodes": [
@@ -115,6 +116,14 @@ func TestRoute_Create_Service(t *testing.T) {
 						}
 					]
             	}
+=======
+                		"nodes": [{
+                    			"host": "172.16.238.20",
+                    			"port": 1980,
+                    			"weight": 1
+                		}],
+                		"type": "roundrobin"
+>>>>>>> feffc04b3959d80081d15bbaef3706bb1a27a57f
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -204,6 +213,7 @@ func TestRoute_Create_Upstream(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
+<<<<<<< HEAD
                 "nodes": [
 					{
                     	"host": "172.16.238.20",
@@ -222,6 +232,16 @@ func TestRoute_Create_Upstream(t *testing.T) {
 					}
 				],
                 "type": "roundrobin"
+=======
+    			"upstream": {
+        				"type": "roundrobin",
+                			"nodes": [{
+                    				"host": "172.16.238.20",
+                    				"port": 1980,
+                    				"weight": 1
+                			}]
+                		}
+>>>>>>> feffc04b3959d80081d15bbaef3706bb1a27a57f
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
