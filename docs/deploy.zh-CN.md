@@ -84,4 +84,3 @@ $ ./manager-api &
 ```sh
 $ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
 ```
-
