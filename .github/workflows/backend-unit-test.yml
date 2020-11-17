@@ -38,9 +38,9 @@ jobs:
           go-version: '1.13'
 
       - name: setup lua
-        uses: leafo/gh-actions-lua@v7
+        uses: xpol/setup-lua@v1
         with:
-          luaVersion: "5.1.5"
+          lua-version: "5.1.5"
 
       - name: run test
         run: |
