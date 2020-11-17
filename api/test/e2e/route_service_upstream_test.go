@@ -24,7 +24,7 @@ import (
 func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "use service that not exist",
+			caseDesc: "use service that not exist - dashboard",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
@@ -34,6 +34,13 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			caseDesc:   "hit invalid route on data plane",
+			Object:     APISIXExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/hello_",
+			ExpectCode: http.StatusNotFound,
 		},
 		{
 			caseDesc: "use upstream that not exist",
@@ -48,6 +55,13 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
+			caseDesc:   "hit invalid route on data plane",
+			Object:     APISIXExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/hello_",
+			ExpectCode: http.StatusNotFound,
+		},
+		{
 			caseDesc: "create service and upstream together at the same time",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
@@ -59,6 +73,122 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			caseDesc:   "hit invalid route on data plane",
+			Object:     APISIXExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/hello_",
+			ExpectCode: http.StatusNotFound,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+func TestRoute_Create_Service(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create service",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/services/200",
+			Body: `{
+					"upstream": {
+					"type": "roundrobin",
+					"nodes": [
+						{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						},
+						{
+							"host": "172.16.238.20",
+							"port": 1981,
+							"weight": 1
+						},
+						{
+							"host": "172.16.238.20",
+							"port": 1982,
+							"weight": 1
+						}
+					]
+            	}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc: "create route using the service just created",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r2",
+			Body: `{
+				"uri": "/server_port",
+				"service_id": "200"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "hit the route just created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "1982",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "hit the route just created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "1981",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "hit the route just created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "1980",
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+func TestRoute_Delete_Service(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc:     "delete route",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "remove service",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/200",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "hit deleted route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusNotFound,
 		},
 	}
 	for _, tc := range tests {
@@ -74,11 +204,23 @@ func TestRoute_Create_Upstream(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-                "nodes": [{
-                    "host": "172.16.238.20",
-                    "port": 1980,
-                    "weight": 1
-                }],
+                "nodes": [
+					{
+                    	"host": "172.16.238.20",
+                    	"port": 1980,
+                    	"weight": 1
+					},
+					{
+                    	"host": "172.16.238.20",
+                    	"port": 1981,
+                    	"weight": 1
+					},
+					{
+                    	"host": "172.16.238.20",
+                    	"port": 1982,
+                    	"weight": 1
+					}
+				],
                 "type": "roundrobin"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
@@ -103,55 +245,25 @@ func TestRoute_Create_Upstream(t *testing.T) {
 			Method:       http.MethodGet,
 			Path:         "/server_port",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "1980",
-			Sleep:        sleepTime,
-		},
-	}
-	for _, tc := range tests {
-		testCaseCheck(tc)
-	}
-}
-
-func TestRoute_Create_Service(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			caseDesc: "create service",
-			Object:   MangerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/services/200",
-			Body: `{
-    			"upstream": {
-        			"type": "roundrobin",
-                	"nodes": [{
-                    	"host": "172.16.238.20",
-                    	"port": 1980,
-                    	"weight": 1
-                		}]
-                }
-			}`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc: "create route using the service just created",
-			Object:   MangerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r2",
-			Body: `{
-				"uri": "/hello",
-				"service_id": "200"
-			}`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
+			ExpectBody:   "1982",
 			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "hit the route just created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello",
+			Path:         "/server_port",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world\n",
+			ExpectBody:   "1981",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "hit the route just created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "1980",
 			Sleep:        sleepTime,
 		},
 	}
@@ -178,29 +290,12 @@ func TestRoute_Delete_Upstream(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
-	}
-	for _, tc := range tests {
-		testCaseCheck(tc)
-	}
-}
-
-func TestRoute_Delete_Service(t *testing.T) {
-	tests := []HttpTestCase{
 		{
-			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/r2",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc:     "remove service",
-			Object:       MangerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/services/200",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
+			caseDesc:     "hit deleted route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusNotFound,
 		},
 	}
 	for _, tc := range tests {
