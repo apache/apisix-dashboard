@@ -25,23 +25,6 @@ import (
 func TestConsumer_add_consumer_with_username(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create consumer",
-			Object:   MangerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
-			Body: `{
-				 "username": "jack",
-				 "plugins": {
-					 "key-auth": {
-						 "key": "auth-one"
-					 }
-				 },
-				 "desc": "test description"
-			 }`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
 			caseDesc: "create route",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
@@ -66,16 +49,45 @@ func TestConsumer_add_consumer_with_username(t *testing.T) {
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"apikey": "auth-one"},
-			ExpectStatus: http.StatusOK,
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   "Missing API key found in request",
 			Sleep:        sleepTime, //sleep x millisecond before verify route
 		},
 		{
-			caseDesc:     "verify route without auth",
+			caseDesc: "create consumer",
+			Object:   MangerApiExpect(t),
+			Path:     "/apisix/admin/consumers",
+			Method:   http.MethodPut,
+			Body: `{
+				 "username": "jack",
+				 "plugins": {
+					 "key-auth": {
+						 "key": "auth-one"
+					 }
+				 },
+				 "desc": "test description"
+			 }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
+			Headers:      map[string]string{"apikey": "auth-one"},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        sleepTime, 
+		},
+		{
+			caseDesc:     "verify route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"apikey": "auth-new"},
 			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   "Invalid API key in request",
 			Sleep:        sleepTime,
 		},
 	}
@@ -111,6 +123,7 @@ func TestConsumer_add_consumer_without_username(t *testing.T) {
 			Path:         "/hello",
 			Headers:      map[string]string{"apikey": "auth-new"},
 			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   "Invalid API key in request",
 			Sleep:        sleepTime,
 		},
 	}
@@ -120,9 +133,7 @@ func TestConsumer_add_consumer_without_username(t *testing.T) {
 	}
 }
 
-//CASE 3: add consumer with labels
-
-//CASE 4: delete consumer
+//CASE 3: delete consumer
 func TestConsumer_delete_consumer(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -140,6 +151,7 @@ func TestConsumer_delete_consumer(t *testing.T) {
 			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   "Missing API key found in request",
 			Sleep:        sleepTime, //sleep x millisecond before verify route
 		},
 	}
@@ -149,7 +161,53 @@ func TestConsumer_delete_consumer(t *testing.T) {
 	}
 }
 
-//CASE 5: Teardown
+//CASE 4: delete not exit consumer
+func TestConsumer_delete_notexit_consumer(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc:     "delete notexit consumer",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/notexit",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+//CASE 5: create consumer with error key
+func TestConsumer_create_consumer_with_error_key(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create consumer with error key",
+			Object:   MangerApiExpect(t),
+			Path:     "/apisix/admin/consumers",
+			Method:   http.MethodPut,
+			Body: `{
+				 "username": "jack_2",
+				 "plugins": {
+					 "key-authaa": {
+						 "key": "auth-one"
+					 }
+				 },
+				 "desc": "test description"
+			 }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "scheme validate failed",
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+//Teardown
 func TestConsumer_teardown(t *testing.T) {
 	_ = []HttpTestCase{
 		{
