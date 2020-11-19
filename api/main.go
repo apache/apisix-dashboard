@@ -17,8 +17,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/apisix/manager-api/conf"
@@ -51,9 +55,27 @@ func main() {
 
 	log.Infof("The Manager API is listening on %s ", addr)
 
-	if err := s.ListenAndServe(); err != nil {
-		log.Errorf("listen and serv fail: %w", err)
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+
+	go func() {
+		if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			utils.CloseAll()
+			log.Fatalf("listen and serv fail: %w", err)
+		}
+	}()
+
+	sig := <-quit
+	log.Infof("The Manager API server receive %s and start shutting down", sig.String())
+
+	ctx, cancel := context.WithTimeout(context.TODO(), 5*time.Second)
+	defer cancel()
+
+	if err := s.Shutdown(ctx); err != nil {
+		log.Errorf("Shutting down server error: %w", err)
 	}
+
+	log.Infof("The Manager API server exited")
 
 	utils.CloseAll()
 }
