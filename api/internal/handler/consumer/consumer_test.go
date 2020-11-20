@@ -19,6 +19,10 @@ package consumer
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/shiningrush/droplet/data"
+	"github.com/stretchr/testify/mock"
+	"net/http"
 	"testing"
 	"time"
 
@@ -29,6 +33,53 @@ import (
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
 )
+
+func TestHandler_Get(t *testing.T) {
+	tests := []struct {
+		caseDesc   string
+		giveInput  *GetInput
+		giveRet    interface{}
+		giveErr    error
+		wantErr    error
+		wantGetKey string
+		wantRet    interface{}
+	}{
+		{
+			caseDesc:   "normal",
+			giveInput:  &GetInput{Username: "test"},
+			wantGetKey: "test",
+			giveRet:    "hello",
+			wantRet:    "hello",
+		},
+		{
+			caseDesc:   "failed",
+			giveInput:  &GetInput{Username: "failed key"},
+			wantGetKey: "failed key",
+			giveErr:    fmt.Errorf("get failed"),
+			wantErr:    fmt.Errorf("get failed"),
+			wantRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		getCalled := true
+		mStore := &store.MockInterface{}
+		mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+			getCalled = true
+			assert.Equal(t, tc.wantGetKey, args.Get(0), tc.caseDesc)
+		}).Return(tc.giveRet, tc.giveErr)
+
+		h := Handler{consumerStore: mStore}
+		ctx := droplet.NewContext()
+		ctx.SetInput(tc.giveInput)
+		ret, err := h.Get(ctx)
+		assert.True(t, getCalled, tc.caseDesc)
+		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
+		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
+	}
+}
 
 func TestConsumer(t *testing.T) {
 	// init
