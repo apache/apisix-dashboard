@@ -93,7 +93,7 @@ type Config struct {
 	Authentication Authentication
 }
 
-func InitConf() {
+func init() {
 	//go test
 	if workDir := os.Getenv("APISIX_API_WORKDIR"); workDir != "" {
 		WorkDir = workDir
