@@ -105,8 +105,6 @@ release-src:
 	--exclude .DS_Store \
 	--exclude docs \
 	--exclude release \
-	--exclude api/internal/core/store/validate_mock.go \
-	--exclude api/internal/core/storage/storage_mock.go \
 	.
 
 	gpg --batch --yes --armor --detach-sig $(RELEASE_SRC).tgz
