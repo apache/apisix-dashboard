@@ -28,7 +28,7 @@
 
 This is a release candidate.
 
-# Core
+### Core
 
 - Install signal handler for graceful shutdown.[#796](https://github.com/apache/apisix-dashboard/pull/796)
 - Add e2e test for config route with service_id or upstream_id.[#810](https://github.com/apache/apisix-dashboard/pull/810)
@@ -39,7 +39,7 @@ For more changes, please refer to [Milestone](https://github.com/apache/apisix-d
 
 This is a release candidate.
 
-# Core
+### Core
 
 - Refactor frontend with Admin-API.
 - Manager-API removes dependency on MySQL.
