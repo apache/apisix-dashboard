@@ -27,7 +27,7 @@ import (
 
 var logger *zap.SugaredLogger
 
-func InitLog() {
+func init() {
 	writeSyncer := fileWriter()
 	encoder := getEncoder()
 	logLevel := getLogLevel()
