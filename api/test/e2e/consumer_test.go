@@ -78,7 +78,7 @@ func TestConsumer_add_consumer_with_username(t *testing.T) {
 			Headers:      map[string]string{"apikey": "auth-one"},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        sleepTime, 
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "verify route",
@@ -200,6 +200,59 @@ func TestConsumer_create_consumer_with_error_key(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   "scheme validate failed",
 		},
+		{
+			caseDesc:     "verify consumer",
+			Object:       MangerApiExpect(t),
+			Path:         "/apisix/admin/consumers/jack_2",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime, //sleep x millisecond before verify route
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+//CASE 6: create consumer with no value
+func TestConsumer_create_consumer_with_no_value(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create consumer with no value",
+			Object:   MangerApiExpect(t),
+			Path:     "/apisix/admin/consumers",
+			Method:   http.MethodPut,
+			Body: `{
+				 "username": "jack_3",
+				 "plugins": {
+					 "key-auth": {
+						 "key": ""
+					 }
+				 },
+				 "desc": "test description"
+			 }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify consumer",
+			Object:       MangerApiExpect(t),
+			Path:         "/apisix/admin/consumers/jack_3",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime, //sleep x millisecond before verify route
+		},
+		{
+			caseDesc:     "delete consumer",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/jack_3",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
 	}
 
 	for _, tc := range tests {
@@ -215,14 +268,6 @@ func TestConsumer_teardown(t *testing.T) {
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc:     "delete consumer",
-			Object:       MangerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
