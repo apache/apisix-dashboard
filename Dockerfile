@@ -14,24 +14,71 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+FROM alpine:latest as pre-build
 
-# phase-build
-FROM node:12 as builder
+ARG APISIX_DASHBOARD_VERSION=v2.0
 
-WORKDIR /usr/src/app/
-USER root
+RUN set -x \
+    && wget https://github.com/apache/apisix-dashboard/archive/${APISIX_DASHBOARD_VERSION}.tar.gz -O /tmp/apisix-dashboard.tar.gz \
+    && mkdir /usr/local/apisix-dashboard \
+    && tar -xvf /tmp/apisix-dashboard.tar.gz -C /usr/local/apisix-dashboard --strip 1
 
-COPY package.json ./
-COPY yarn.lock ./
-RUN yarn
+FROM golang:1.14 as api-builder
 
-COPY ./ ./
-RUN yarn build && rm -rf /usr/src/app/node_modules
+ARG ENABLE_PROXY=false
 
-# phase-run
-FROM nginx:1.16-alpine
+WORKDIR /usr/local/apisix-dashboard
 
-COPY ./docker/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
+COPY --from=pre-build /usr/local/apisix-dashboard .
 
-EXPOSE 80
+WORKDIR /usr/local/apisix-dashboard/api
+
+RUN mkdir -p ../output/conf \
+    && cp ./conf/*.json ../output/conf
+
+RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -O /tmp/v1.1.tar.gz \
+    && mkdir /tmp/dag-to-lua \
+    && tar -xvf /tmp/v1.1.tar.gz -C /tmp/dag-to-lua --strip 1 \
+    && mkdir -p ../output/dag-to-lua \
+    && mv /tmp/dag-to-lua/lib/* ../output/dag-to-lua/
+
+RUN if [ "$ENABLE_PROXY" = "true" ] ; then go env -w GOPROXY=https://goproxy.io,direct ; fi
+
+RUN go env -w GO111MODULE=on \
+    && CGO_ENABLED=0 go build -o ../output/manager-api .
+
+FROM node:14-alpine as fe-builder
+
+ARG ENABLE_PROXY=false
+
+WORKDIR /usr/local/apisix-dashboard
+
+COPY --from=pre-build /usr/local/apisix-dashboard .
+
+WORKDIR /usr/local/apisix-dashboard/web
+
+RUN if [ "$ENABLE_PROXY" = "true" ] ; then yarn config set registry https://registry.npm.taobao.org/ ; fi
+
+RUN yarn install
+
+RUN yarn build
+
+FROM alpine:latest as prod
+
+ARG ENABLE_PROXY=false
+
+RUN if [ "$ENABLE_PROXY" = "true" ] ; then sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories ; fi
+
+RUN apk add lua5.1
+
+WORKDIR /usr/local/apisix-dashboard
+
+COPY --from=api-builder /usr/local/apisix-dashboard/output/ ./
+
+COPY --from=fe-builder /usr/local/apisix-dashboard/output/ ./
+
+RUN mkdir logs
+
+EXPOSE 8080
+
+CMD [ "/usr/local/apisix-dashboard/manager-api" ]

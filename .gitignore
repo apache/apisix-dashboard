@@ -7,8 +7,7 @@
 _roadhog-api-doc
 
 # production
-/dist
-/.vscode
+dist
 
 # misc
 .DS_Store
@@ -19,7 +18,6 @@ yarn-error.log
 .idea
 package-lock.json
 *bak
-.vscode
 
 # visual studio code
 .history
@@ -42,5 +40,8 @@ build
 /compose/**/nginx.pid
 /compose/etcd_data
 manager-api
-conf.json
-conf.json-e
+
+output
+default.etcd
+api/build-tools/apisix
+/*.zip

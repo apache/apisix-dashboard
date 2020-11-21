@@ -17,74 +17,71 @@
 #
 -->
 
-# Deploy manually
+# Build and launch with source codes
 
-## Clone the project
+The Dashboard contains both `manager-api` and `web`, but `web` is _optional_.
 
-```sh
-$ git clone https://github.com/apache/apisix-dashboard.git
+The `manager-api` and `web` will be included in this build guide product.
 
-$ cd apisix-dashboard
-```
+## Prerequisites
 
-## Build the manager-api
+Before using source codes to build, make sure that the following dependencies are installed in your environment.
 
-The `manager-api` is used to provide APIs for Dashboard, just like a bridge between the Apache APISIX and the Dashboard. Here are the steps to build it manually:
+### manager-api
 
-1. We need `Go` 1.13+ to be preinstalled.
-
-NOTE: You also need to install `Lua` 5.1+ if you want to use the Plugin Orchestration, we will improve this part and omit Lua's dependency in the future.
-
-2. Check environment variables
-
-- enable Go MODULE
-
-```sh
-$ go env -w GO111MODULE=on
-```
-
-- According to your local deployment environment, check the environment variables in `./api/run.sh`, modify the environment variables if needed. For example, change the ETCD endpoints to your ETCD instances work with APISIX:
-
-```
-export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
-```
-
-If you have multiple instances, please use commas to separate:
-
-```
-export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
-```
-
-- For most users in China, we could use [Goproxy](https://goproxy.cn/) to speed up downloading modules.
+1. [Golang](https://golang.org/dl/) 1.13+: For users in mainland China, you can use the following command to speed up the module downloads.
 
 ```sh
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-3. Build and Run
+2. [Lua](https://www.lua.org/download.html) 5.1+: This dependency needs to be installed only when using the **Plugin Orchestration** feature. In subsequent versions, this section will be optimized to remove the dependency.
+
+### web
+
+1. [Node.js](https://nodejs.org/en/download/) 10.23.0+
+2. [Yarn](https://yarnpkg.com/getting-started/install)
+
+## Clone the project
 
 ```sh
-$ ./api/run.sh &
+$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 ```
 
-## Build the frontend
-
-This project is initialized with [Ant Design Pro](https://pro.ant.design). The following are some quick guides for how to use.
-
-1. Make sure you have `Node.js(version 10.0.0+)/Nginx` installed on your machine.
-2. Install [yarn](https://yarnpkg.com/).
-3. Install dependencies:
+## Build
 
 ```sh
-$ yarn install
+$ cd apisix-dashboard
+$ make build
 ```
 
-4. Build
+When the build is complete, the results are stored in the root `output` directory.
+
+Note: `make build` will build `manger-api` and `web`, use the `make help` command to see more commands.
+
+## Launch
+
+1. After the build is complete and before you start, make sure the following dependencies are installed and running in your environment.
+
+- [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
+
+2. Check and modify the configuration information in `output/conf/conf.yaml` according to your deployment environment.
+
+3. Launch the Dashboard
 
 ```sh
-$ yarn build
+$ cd ./output
+
+$ ./manager-api
+
+# or running in background
+$ ./manager-api &
 ```
 
-5. The bundled files are under `/dist` folder if the step 4 is successful.
+4. Without changing the configuration, visit `http://127.0.0.1:8080` to use the dashboard with GUI, where the default username and password are `admin`.
 
-6. Move files under `dist` folder to manager-api's `dist` folder, then visit `http://127.0.0.1:8080` in your browser, `8080` is the default listen port of manager-api.
+5. Stop the Dashboard
+
+```sh
+$ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
+```

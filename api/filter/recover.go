@@ -26,11 +26,9 @@ import (
 
 	"github.com/apisix/manager-api/log"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 var (
-	logger    = log.GetLogger()
 	dunno     = []byte("???")
 	centerDot = []byte("·")
 	dot       = []byte(".")
@@ -41,12 +39,13 @@ func RecoverHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
-				uuid := c.Writer.Header().Get("X-Request-Id")
-				logger.WithFields(logrus.Fields{
-					"uuid": uuid,
-				})
+				fmt.Println("err；", err)
+				//uuid := c.Writer.Header().Get("X-Request-Id")
 				stack := stack(3)
-				logger.Errorf("[Recovery] %s panic recovered:\n\n%s\n%s", timeFormat(time.Now()), err, stack)
+				fmt.Printf("[Recovery] %s panic recovered:\n\n%s\n%s", timeFormat(time.Now()), err, stack)
+
+				//log.With(zap.String("uuid", uuid))
+				log.Errorf("[Recovery] %s panic recovered:\n\n%s\n%s", timeFormat(time.Now()), err, stack)
 				c.AbortWithStatus(http.StatusInternalServerError)
 			}
 		}()
@@ -58,7 +57,7 @@ func WrapGo(f func(...interface{}), args ...interface{}) {
 	defer func() {
 		if err := recover(); err != nil {
 			stack := stack(3)
-			logger.Errorf("[Recovery] %s panic recovered:\n\n%s\n%s", timeFormat(time.Now()), err, stack)
+			log.Errorf("[Recovery] %s panic recovered:\n\n%s\n%s", timeFormat(time.Now()), err, stack)
 		}
 	}()
 	f(args...)

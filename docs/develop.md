@@ -17,25 +17,60 @@
 #
 -->
 
-# Dashboard Devlopment
+# Development Guide
 
-## Frontend
+The Dashboard contains both `manager-api` and `web` parts, so you need to start the development environment separately.
 
-1. Make sure you have `Node.js(version version 10.0.0+)` installed on your machine.
-2. Install [yarn](https://yarnpkg.com/).
-3. Install dependencies:
+## Prerequisites
+
+Before development, refer to this [guide](./deploy.md) to install dependencies.
+
+## Clone the project
+
+```sh
+$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+```
+
+## Start developing
+
+```sh
+$ cd apisix-dashboard
+```
+
+### manager-api
+
+1. Please change the configuration in `api/conf/conf.yaml`.
+
+2. In the root directory, launch development mode.
+
+```sh
+$ make api-run
+```
+
+3. In the root directory, stop development mode.
+
+```sh
+$ make api-stop
+```
+
+4. Please refer to the [FAQ](./FAQ.md) about the problem of displaying exception in the dashboard after adding custom plugins or modifying plugin's schema.
+
+### web
+
+1. Go to the `web` directory.
+
+```sh
+$ cd ./web
+```
+
+2. Please change the `manager-api` address in the `config/proxy.ts` file if needed.
+
+3. Launch development mode
 
 ```sh
 $ yarn install
-```
 
-4. If we want to modify the API, please refer to the `config/proxy.ts` file.
-5. Start the development mode
-
-```sh
 $ yarn start
 ```
 
-## manager-api
-
-TODO
+4. If writing an E2E test, refer to the [E2E Writing Guide](../web/src/e2e/README.md)

@@ -37,6 +37,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
+	"github.com/apisix/manager-api/log"
 )
 
 type Handler struct {
@@ -174,7 +175,7 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 	}
 
 	cmd := exec.Command("sh", "-c",
-		"cd "+conf.DagLibPath+" && lua cli.lua "+
+		"cd "+conf.WorkDir+"/dag-to-lua && lua cli.lua "+
 			"'"+string(scriptString)+"'")
 
 	stdout, _ := cmd.StdoutPipe()
@@ -250,6 +251,11 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		input.Route.ID = input.ID
 	}
 
+	if input.Route.Host != "" && len(input.Route.Hosts) > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("only one of host or hosts is allowed")
+	}
+
 	//check depend
 	if input.ServiceID != "" {
 		_, err := h.svcStore.Get(input.ServiceID)
@@ -298,6 +304,14 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 				return handler.SpecCodeResponse(err), err
 			}
 		}
+	} else {
+		//remove exists script
+		script, _ := h.scriptStore.Get(input.Route.ID)
+		if script != nil {
+			if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.Route.ID, ",")); err != nil {
+				log.Warnf("delete script %s failed", input.Route.ID)
+			}
+		}
 	}
 
 	if err := h.routeStore.Update(c.Context(), &input.Route, true); err != nil {
@@ -320,7 +334,13 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	}
 
 	//delete stored script
-	h.scriptStore.BatchDelete(c.Context(), strings.Split(input.IDs, ","))
+	if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
+		//try again
+		log.Warn("try to delete script %s again", input.IDs)
+		if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
+			return nil, nil
+		}
+	}
 
 	return nil, nil
 }

@@ -21,35 +21,64 @@ English | [简体中文](./README.zh-CN.md)
 
 # Apache APISIX Dashboard
 
-Dashboard for [Apache APISIX](https://github.com/apache/apisix)
+## What's Apache APISIX Dashboard
 
-[Online Demo](http://139.217.190.60/), Username/Password: `admin`.
+The Apache APISIX Dashboard is designed to make it as easy as possible for users to operate [Apache APISIX](https://github.com/apache/apisix) through a frontend interface.
 
-## User Guide
+The Dashboard is the control plane and performs all parameter checks; Apache APISIX mixes data and control planes and will evolve to a pure data plane.
 
-Please refer to [User Guide](./docs/USER_GUIDE.md)
+This project includes `manager-api`, which will gradually replace `admin-api` in Apache APISIX.
 
-## Deployment
+Note: Currently the Dashboard does not have complete coverage of Apache APISIX features, [visit here](https://github.com/apache/apisix-dashboard/milestones) to view the milestones.
 
-- [Deploy Manually](./docs/deploy.md)
-- [Deploy with Docker](./compose/README.md)
+![architecture](./docs/images/architecture.png)
+
+## Project structure
+
+```
+.
+├── CHANGELOG.md
+├── CHANGELOG.zh-CN.md
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── Dockerfile
+├── LICENSE
+├── Makefile
+├── NOTICE
+├── README.md
+├── README.zh-CN.md
+├── api
+├── docs
+├── licenses
+└── web
+```
+
+1. The `api` directory is used to store the `manager-api` source codes, which is used to manage `etcd` and provide APIs to the frontend interface.
+2. The `web` directory is used to store the frontend source codes.
+
+## Build then launch
+
+Support the following ways currently.
+
+- [Source Codes](./docs/deploy.md)
+- [Docker](./docs/deploy-with-docker.md)
 
 ## Development
 
-- [Apache APISIX](https://github.com/apache/apisix)
-- [Dashboard](./docs/develop.md)
+Please refer to the [Development Guide](./docs/develop.md).
 
-## Milestones
+## User Guide
 
-- [2.0](https://github.com/apache/apisix-dashboard/milestone/4)
-- [2.1](https://github.com/apache/apisix-dashboard/milestone/5)
+Please refer to the [User Guide](./docs/USER_GUIDE.md).
 
 ## Contributing
 
-See [CONTRIBUTING](./CONTRIBUTING.md) for details on submitting patches and the contribution workflow.
+Please refer to the [Contribution Guide](./CONTRIBUTING.md) for a more detailed infomation.
 
 ## FAQ
 
-1. If you need the dashboard-1.0 which is built with Vue.js, please refer to [master-vue](https://github.com/apache/apisix-dashboard/tree/master-vue).
+Please refer to the [FAQ](./docs/FAQ.md) for more known issues.
 
-2. The dashboard 2.0 removes MySQL which [dashboard 1.5](https://github.com/apache/apisix-dashboard/tree/backup-1.5-latest) is relied on.
+## License
+
+[Apache License 2.0](./LICENSE)

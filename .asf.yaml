@@ -24,7 +24,6 @@ github:
     - api-management
     - apisix
     - devops
-    - docker
 
   enabled_merge_buttons:
     squash: true

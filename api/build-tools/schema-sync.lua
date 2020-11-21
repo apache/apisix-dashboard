@@ -29,6 +29,7 @@ local fake_module_list = {
     'pb',
     'prometheus',
     'protoc',
+    'skywalking.tracer',
 
     'resty.cookie',
     'resty.core.regex',
@@ -61,7 +62,8 @@ local fake_module_list = {
     'apisix.plugins.skywalking.tracer',
     'apisix.plugins.zipkin.codec',
     'apisix.plugins.zipkin.random_sampler',
-    'apisix.plugins.zipkin.reporter'
+    'apisix.plugins.zipkin.reporter',
+    'apisix.timers'
 }
 for _, name in ipairs(fake_module_list) do
     package.loaded[name] = {}
@@ -77,7 +79,11 @@ ngx.re = {}
 ngx.timer = {}
 ngx.location = {}
 ngx.socket = {}
+ngx.thread = {}
 ngx.re.gmatch = empty_function
+ngx.shared = {
+    ["plugin-api-breaker"] = {}
+}
 
 -- additional define for management
 local time_def = {
@@ -127,7 +133,12 @@ local plugins = get_plugin_list()
 for idx, plugin_name in pairs(plugins) do
     local plugin = require("apisix.plugins." .. plugin_name)
     if plugin and type(plugin) == "table" and plugin.schema then
-        schema_all.plugins[plugin_name] = plugin.schema
+        schema_all.plugins[plugin_name]= {
+            ['schema'] = plugin.schema
+        }
+    end
+    if plugin and type(plugin) == "table" and plugin.consumer_schema then
+        schema_all.plugins[plugin_name]['consumer_schema'] = plugin.consumer_schema
     end
 end
 

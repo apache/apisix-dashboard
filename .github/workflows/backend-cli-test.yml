@@ -1,0 +1,31 @@
+name: Backend CLI Test
+
+on:
+  push:
+    branches:
+      - master
+      - v2.0
+  pull_request:
+    branches:
+      - master
+      - v2.0
+
+jobs:
+  run-test:
+    runs-on: ubuntu-latest
+
+    services:
+      etcd:
+        image: bitnami/etcd:3.4.13
+        ports:
+          - 2379:2379
+          - 2380:2380
+        env:
+          ALLOW_NONE_AUTHENTICATION: yes
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: run test
+        working-directory: ./api
+        run: sudo ./test/shell/cli_test.sh

@@ -16,6 +16,7 @@ package store
 
 import (
 	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/log"
 )
 
 type Query struct {
@@ -88,7 +89,7 @@ func NewQuery(sort *Sort, filter *Filter, pagination *Pagination) *Query {
 
 func NewSort(sortRaw []string) *Sort {
 	if sortRaw == nil || len(sortRaw)%2 == 1 {
-		// Empty sort list or invalid (odd) length
+		log.Info("empty sort for query")
 		return NoSort
 	}
 	list := []SortBy{}
@@ -117,6 +118,7 @@ func NewSort(sortRaw []string) *Sort {
 
 func NewFilter(filterRaw []string) *Filter {
 	if filterRaw == nil || len(filterRaw)%2 == 1 {
+		log.Info("empty filter for query")
 		return NoFilter
 	}
 	list := []FilterBy{}

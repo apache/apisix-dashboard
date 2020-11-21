@@ -19,45 +19,6 @@
 export ENV=local
 pwd=`pwd`
 
-# config
-cp ${pwd}/api/conf/conf_preview.json ${pwd}/conf.json
-export APIX_DAG_LIB_PATH="${pwd}/dag-to-lua-1.1/lib/"
-export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
-export SYSLOG_HOST=127.0.0.1
-
-if [[ "$unamestr" == 'Darwin' ]]; then
-	sed -i '' -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
-else
-	sed -i -e "s%#syslogAddress#%`echo $SYSLOG_HOST`%g" ${pwd}/conf.json
-fi
-
-cp ${pwd}/conf.json ${pwd}/api/conf/conf.json
-
-
-# get dag-to-lua lib
-if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
-    wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
-    tar -zxvf v1.1.tar.gz
-fi
-
-
-# generate json schema if need a new one
-if [[ ! -f "${pwd}/api/conf/schema.json" ]]; then
-    rm master.zip
-    rm -rf ./api/build-tools/apisix/
-    wget https://github.com/apache/apisix/archive/master.zip
-    unzip master.zip
-    mkdir -p ./api/build-tools/apisix/
-    mv ./apisix-master/apisix/* ./api/build-tools/apisix/
-    rm -rf ./apisix-master
-    cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/api/conf/schema.json
-    cd ../../    
-fi
-
-# build
-if [[ ! -f "${pwd}/manager-api" ]]; then
-    cd ./api && go build -o ../manager-api .
-    cd ../
-fi
+cd ./output
 
 exec ./manager-api

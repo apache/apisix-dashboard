@@ -19,38 +19,66 @@
 
 [English](./README.md) | 简体中文
 
-# [Apache APISIX](https://github.com/apache/apisix) 控制台
+# Apache APISIX Dashboard
 
-访问 [http://139.217.190.60/](http://139.217.190.60/) 查看在线预览，账户与密码：`admin`。
+## 介绍
 
-## 用户指南
+Apache APISIX Dashboard 旨在通过前端界面，让用户尽可能更方便地操作 [Apache APISIX](https://github.com/apache/apisix)。
 
-请参考 [用户指南](./docs/USER_GUIDE.zh-CN.md)
+Dashboard 为控制平面，完成所有参数的校验；Apache APISIX 混合了数据平面与控制平面，会逐渐演进为纯粹的数据平面。
 
-## 部署
+本项目包含了 `manager-api` 与前端界面，前者将逐渐替代 Apache APISIX 中的 `admin-api`，我们正在积极地迁移相关逻辑。
 
-当前支持如下方式部署：
+注意：目前 Dashboard 尚未完整覆盖 Apache APISIX 的功能，[访问此处](https://github.com/apache/apisix-dashboard/milestones)以查看里程碑。
 
-- [手动部署](./docs/deploy.zh-CN.md)
-- [使用 Docker 部署](./compose/README.md)
+![architecture](./docs/images/architecture.png)
 
-## 开发
+## 目录结构
 
-开发分为 Apache APISIX 开发、Dashboard 开发
+```
+.
+├── CHANGELOG.md
+├── CHANGELOG.zh-CN.md
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── Dockerfile
+├── LICENSE
+├── Makefile
+├── NOTICE
+├── README.md
+├── README.zh-CN.md
+├── api
+├── docs
+├── licenses
+└── web
+```
 
-- [Apache APISIX](https://github.com/apache/apisix)
-- [Dashboard](./docs/develop.zh-CN.md)
+1. `api` 目录用于存放 `manager-api` 源码，它用于管理 `etcd` 并为前端界面提供接口。
+2. `web` 目录用于存放前端源码。
 
-## 里程碑
+## 构建并启动
 
-- [2.0](https://github.com/apache/apisix-dashboard/milestone/4)
-- [2.1](https://github.com/apache/apisix-dashboard/milestone/5)
+支持以下方式：
 
-## 贡献
+- [源码](./docs/deploy.zh-CN.md)
+- [Docker](./docs/deploy-with-docker.zh-CN.md)
 
-请参考[贡献指南](./CONTRIBUTING.md)以获取更详细的流程。
+## 本地开发
+
+请参考[开发指南](./docs/develop.zh-CN.md)
+
+## 使用指南
+
+请参考[用户指南](./docs/USER_GUIDE.zh-CN.md)
+
+## 参与贡献
+
+请参考[贡献指南](./CONTRIBUTING.md)以获取更详细的流程
 
 ## FAQ
 
-1. 如果你需要 Vue.js 构建的 dashboard-1.0，请使用 [master-vue 分支](https://github.com/apache/apisix-dashboard/tree/master-vue)。
-2. 2.0 版本的控制台移除了[1.5 版本](https://github.com/apache/apisix-dashboard/tree/backup-1.5-latest)中的 MySQL，将直接操作 etcd。
+请参考 [FAQ 汇总](./docs/FAQ.zh-CN.md)以查看更多已知问题
+
+## License
+
+[Apache License 2.0](./LICENSE)

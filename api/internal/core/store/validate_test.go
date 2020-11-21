@@ -76,20 +76,20 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 
 	consumer := &entity.Consumer{}
 	reqBody := `{
-      "id": "jack",
-      "username": "jack",
-      "plugins": {
-          "limit-count": {
-              "count": 2,
-              "time_window": 60,
-              "rejected_code": 503,
-              "key": "remote_addr"
-          }
-      },
-    "desc": "test description"
-  }`
-	json.Unmarshal([]byte(reqBody), consumer)
-
+		"id": "jack",
+		"username": "jack",
+		"plugins": {
+		  "limit-count": {
+		      "count": 2,
+		      "time_window": 60,
+		      "rejected_code": 503,
+		      "key": "remote_addr"
+		  }
+		},
+		"desc": "test description"
+	}`
+	err = json.Unmarshal([]byte(reqBody), consumer)
+	assert.Nil(t, err)
 	err = validator.Validate(consumer)
 	assert.Nil(t, err)
 
@@ -106,7 +106,8 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
       },
     "desc": "test description"
   }`
-	json.Unmarshal([]byte(reqBody), consumer2)
+	err = json.Unmarshal([]byte(reqBody), consumer2)
+	assert.Nil(t, err)
 
 	err = validator.Validate(consumer2)
 	assert.NotNil(t, err)
@@ -131,8 +132,8 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
       },
     "desc": "test description"
   }`
-	json.Unmarshal([]byte(reqBody), consumer3)
-
+	err = json.Unmarshal([]byte(reqBody), consumer3)
+	assert.Nil(t, err)
 	err = validator.Validate(consumer3)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "scheme validate failed: (root): count is required")
@@ -146,39 +147,39 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	// type:chash, hash_on: consumer, missing key, ok
 	route := &entity.Route{}
 	reqBody := `{
-      "id": "1",
-      "methods": ["GET"],
-      "upstream": {
-          "nodes": {
-              "127.0.0.1:8080": 1
-          },
-          "type": "chash",
-          "hash_on":"consumer"
-      },
-      "desc": "new route",
-      "uri": "/index.html"
-  }`
-	json.Unmarshal([]byte(reqBody), route)
-
+		"id": "1",
+		"methods": ["GET"],
+		"upstream": {
+		  "nodes": {
+		      "127.0.0.1:8080": 1
+		  },
+		  "type": "chash",
+		  "hash_on":"consumer"
+		},
+		"desc": "new route",
+		"uri": "/index.html"
+	}`
+	err = json.Unmarshal([]byte(reqBody), route)
+	assert.Nil(t, err)
 	err = validator.Validate(route)
 	assert.Nil(t, err)
 
 	// type:chash, hash_on: default(vars), missing key
 	route2 := &entity.Route{}
 	reqBody = `{
-      "id": "1",
-      "methods": ["GET"],
-      "upstream": {
-          "nodes": {
-              "127.0.0.1:8080": 1
-          },
-          "type": "chash"
-      },
-      "desc": "new route",
-      "uri": "/index.html"
-  }`
-	json.Unmarshal([]byte(reqBody), route2)
-
+		"id": "1",
+		"methods": ["GET"],
+		"upstream": {
+		  "nodes": {
+		      "127.0.0.1:8080": 1
+		  },
+		  "type": "chash"
+		},
+		"desc": "new route",
+		"uri": "/index.html"
+	}`
+	err = json.Unmarshal([]byte(reqBody), route2)
+	assert.Nil(t, err)
 	err = validator.Validate(route2)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "missing key")
@@ -186,20 +187,20 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	//type:chash, hash_on: header, missing key
 	route3 := &entity.Route{}
 	reqBody = `{
-      "id": "1",
-      "methods": ["GET"],
-      "upstream": {
-          "nodes": {
-              "127.0.0.1:8080": 1
-          },
-          "type": "chash",
-          "hash_on":"header"
-      },
-      "desc": "new route",
-      "uri": "/index.html"
-  }`
-	json.Unmarshal([]byte(reqBody), route3)
-
+		"id": "1",
+		"methods": ["GET"],
+		"upstream": {
+		  "nodes": {
+		      "127.0.0.1:8080": 1
+		  },
+		  "type": "chash",
+		  "hash_on":"header"
+		},
+		"desc": "new route",
+		"uri": "/index.html"
+	}`
+	err = json.Unmarshal([]byte(reqBody), route3)
+	assert.Nil(t, err)
 	err = validator.Validate(route3)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "missing key")
@@ -207,20 +208,20 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	//type:chash, hash_on: cookie, missing key
 	route4 := &entity.Route{}
 	reqBody = `{
-      "id": "1",
-      "methods": ["GET"],
-      "upstream": {
-          "nodes": {
-              "127.0.0.1:8080": 1
-          },
-          "type": "chash",
-          "hash_on":"cookie"
-      },
-      "desc": "new route",
-      "uri": "/index.html"
-  }`
-	json.Unmarshal([]byte(reqBody), route4)
-
+		"id": "1",
+		"methods": ["GET"],
+		"upstream": {
+		  "nodes": {
+		      "127.0.0.1:8080": 1
+		  },
+		  "type": "chash",
+		  "hash_on":"cookie"
+		},
+		"desc": "new route",
+		"uri": "/index.html"
+	}`
+	err = json.Unmarshal([]byte(reqBody), route4)
+	assert.Nil(t, err)
 	err = validator.Validate(route4)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "missing key")
@@ -228,21 +229,21 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	//type:chash, hash_on: vars, wrong key
 	route5 := &entity.Route{}
 	reqBody = `{
-      "id": "1",
-      "methods": ["GET"],
-      "upstream": {
-          "nodes": {
-              "127.0.0.1:8080": 1
-          },
-          "type": "chash",
-          "hash_on":"vars",
-          "key": "not_support"
-      },
-      "desc": "new route",
-      "uri": "/index.html"
-  }`
-	json.Unmarshal([]byte(reqBody), route5)
-
+		"id": "1",
+		"methods": ["GET"],
+		"upstream": {
+		  "nodes": {
+		      "127.0.0.1:8080": 1
+		  },
+		  "type": "chash",
+		  "hash_on":"vars",
+		  "key": "not_support"
+		},
+		"desc": "new route",
+		"uri": "/index.html"
+	}`
+	err = json.Unmarshal([]byte(reqBody), route5)
+	assert.Nil(t, err)
 	err = validator.Validate(route5)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "scheme validate failed: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$'")

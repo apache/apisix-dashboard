@@ -17,75 +17,70 @@
 #
 -->
 
-# 手动部署
+# 使用源码构建并启动
 
-## 克隆项目
+Dashboard 包含了 `manager-api` 与 `web` 两部分，其中 `web` 是*可选*的。
 
-```sh
-$ git clone https://github.com/apache/apisix-dashboard.git
+本构建指南产物中，将包含 `manager-api` 与 `web`。
 
-$ cd apisix-dashboard
-```
+## 环境准备
 
-## 构建 manager-api
+在使用源码构建前，请确认您的环境中，已安装如下依赖：
 
-`manager-api` 用于为控制台提供接口，就像 Apache APISIX 和控制台之间的桥梁。下面是手动构建步骤：
+### manager-api
 
-1. 需要预先安装 `Go` 1.13+
-
-注意：如果使用插件编排，需要同时预先安装 `Lua` 5.1+ ，后续版本会对此进行优化，取消对 `Lua` 的依赖。
-
-2. 检查环境变量
-
-- 开启 Go MODULE
-
-```sh
-$ go env -w GO111MODULE=on
-```
-
-- 根据您的本地部署环境，检查 `./api/run.sh` 中的环境变量，如果需要请修改环境变量。例如, 把 ETCD 地址改为你的与 APISIX 一起工作的 ETCD 实例:
-
-```sh
-$ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379"
-```
-
-如果有多个实例，请使用英文逗号分隔，如：
-
-```sh
-$ export APIX_ETCD_ENDPOINTS="127.0.0.1:2379,127.0.0.1:3379"
-```
-
-- 对于大多数中国用户，我们可以使用 [Goproxy](https://goproxy.cn/) 加快模块下载速度。
+1. [Golang](https://golang.org/dl/) 1.13+：对于中国大陆的用户，可使用如下命令加快模块下载速度。
 
 ```sh
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-3. 构建并启动
+2. [Lua](https://www.lua.org/download.html) 5.1+：仅在使用**插件编排**功能时，需要安装本依赖。在后续版本中，会对该部分进行优化以取消对其依赖。
+
+### web
+
+1. [Node.js](https://nodejs.org/en/download/) 10.23.0+
+2. [Yarn](https://yarnpkg.com/getting-started/install)
+
+## 克隆项目
 
 ```sh
-$ ./api/run.sh &
+$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
 ```
 
-## 构建前端
-
-该项目使用 [Ant Design Pro](https://pro.ant.design) 初始化。以下是一些使用方法的快速指南。
-
-1. 确保你的设备已经安装了 `Node.js(version 10.0.0+)/Nginx`。
-
-2. 安装 [yarn](https://yarnpkg.com/)。
-
-3. 安装依赖:
+## 构建
 
 ```sh
-$ yarn install
+$ cd apisix-dashboard
+$ make build
 ```
 
-4. 构建
+构建完成后，构建结果将存放在根目录下 `output` 目录中。
+
+注意：`make build` 将会构建 `manger-api` 与 `web`，使用 `make help` 命令以查看更多指令。
+
+## 启动
+
+1. 在构建完成后、启动前，请确认您的环境中，已安装并运行如下依赖：
+
+- [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
+
+2. 根据您的部署环境，检查并修改 `output/conf/conf.yaml` 中的配置信息。
+
+3. 启动 Dashboard
 
 ```sh
-$ yarn build
+$ cd ./output
+
+$ ./manager-api
+# 或后台常驻
+$ ./manager-api &
 ```
 
-5. 如果第 4 步成功的话，那么构建后的文件在 `/dist` 目录下。
-6. 移动 `dist` 目录下的文件到 manager-api 的 `dist` 目录下，然后在浏览器中访问 `http://127.0.0.1:8080`，`8080` 是 manager-api 的默认监听端口。
+4. 在未修改配置的情况下，访问 `http://127.0.0.1:8080` 以使用有前端界面的控制台，默认用户密码均为 `admin`。
+
+5. 停止 Dashboard
+
+```sh
+$ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
+```

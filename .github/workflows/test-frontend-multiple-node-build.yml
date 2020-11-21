@@ -1,6 +1,6 @@
 # This is a basic test to build the dashboard
 
-name: Test building frontend in multiple node version
+name: Test building web in multiple node version
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -11,6 +11,7 @@ on:
   pull_request:
     branches:
       - master
+      - v2.0
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -34,10 +35,13 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
+        working-directory: web
         run: yarn
 
-      - name: Build the Dashboard
-        run: yarn build
-
       - name: Lint
+        working-directory: web
         run: yarn run lint:js && yarn run lint:style
+
+      - name: Build the Dashboard
+        working-directory: web
+        run: yarn build
