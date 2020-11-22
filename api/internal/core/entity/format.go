@@ -17,26 +17,30 @@
 package entity
 
 import (
-	"log"
 	"strconv"
 	"strings"
+
+	"github.com/apisix/manager-api/log"
 )
 
 func NodesFormat(obj interface{}) interface{} {
 	var nodes []*Node
-	if value, ok := obj.(map[string]float64); ok {
+	switch objType := obj.(type) {
+	case map[string]float64:
+		log.Infof("nodes type: %v", objType)
 		var strArr []string
+		value := obj.(map[string]float64)
 		for key, val := range value {
 			node := &Node{}
 			strArr = strings.Split(key, ":")
 			if len(strArr) != 2 {
-				log.Println("length of string array is not 2")
+				log.Warn("length of string array is not 2")
 				return obj
 			}
 
 			port, err := strconv.Atoi(strArr[1])
 			if err != nil {
-				log.Println("parse int fail:", err)
+				log.Errorf("parse int fail:", err)
 				return obj
 			}
 
@@ -46,13 +50,35 @@ func NodesFormat(obj interface{}) interface{} {
 			nodes = append(nodes, node)
 		}
 		return nodes
-	}
+	case map[string]interface{}:
+		log.Infof("nodes type: %v", objType)
+		var strArr []string
+		value := obj.(map[string]interface{})
+		for key, val := range value {
+			node := &Node{}
+			strArr = strings.Split(key, ":")
+			if len(strArr) != 2 {
+				log.Warn("length of string array is not 2")
+				return obj
+			}
 
-	if nodes, ok := obj.([]*Node); ok {
+			port, err := strconv.Atoi(strArr[1])
+			if err != nil {
+				log.Errorf("parse int fail:", err)
+				return obj
+			}
+
+			node.Host = strArr[0]
+			node.Port = port
+			node.Weight = int(val.(float64))
+			nodes = append(nodes, node)
+		}
 		return nodes
-	}
-
-	if list, ok := obj.([]interface{}); ok {
+	case []*Node:
+		log.Infof("nodes type: %v", objType)
+		return nodes
+	case []interface{}:
+		list := obj.([]interface{})
 		for _, v := range list {
 			val := v.(map[string]interface{})
 			node := &Node{}
@@ -61,7 +87,6 @@ func NodesFormat(obj interface{}) interface{} {
 			node.Weight = int(val["weight"].(float64))
 			nodes = append(nodes, node)
 		}
-
 		return nodes
 	}
 
