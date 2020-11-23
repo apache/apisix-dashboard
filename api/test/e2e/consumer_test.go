@@ -21,7 +21,7 @@ import (
 	"testing"
 )
 
-//CASE 1: add consumer with username
+//case 1: add consumer with username
 func TestConsumer_add_consumer_with_username(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -59,7 +59,7 @@ func TestConsumer_add_consumer_with_username(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-				 "username": "jack",
+				 "username": "case",
 				 "plugins": {
 					 "key-auth": {
 						 "key": "auth-one"
@@ -97,7 +97,7 @@ func TestConsumer_add_consumer_with_username(t *testing.T) {
 	}
 }
 
-//CASE 2: add consumer without username
+//case 2: add consumer without username
 func TestConsumer_add_consumer_without_username(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -133,14 +133,14 @@ func TestConsumer_add_consumer_without_username(t *testing.T) {
 	}
 }
 
-//CASE 3: delete consumer
+//case 3: delete consumer
 func TestConsumer_delete_consumer(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "delete consumer",
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/consumers/jack",
+			Path:         "/apisix/admin/consumers/case",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -161,7 +161,7 @@ func TestConsumer_delete_consumer(t *testing.T) {
 	}
 }
 
-//CASE 4: delete not exit consumer
+//case 4: delete consumer(id: not_found)
 func TestConsumer_delete_notexit_consumer(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -179,7 +179,7 @@ func TestConsumer_delete_notexit_consumer(t *testing.T) {
 	}
 }
 
-//CASE 5: create consumer with error key
+//case 5: create consumer with error key
 func TestConsumer_create_consumer_with_error_key(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -188,7 +188,7 @@ func TestConsumer_create_consumer_with_error_key(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-				 "username": "jack_2",
+				 "username": "case_2",
 				 "plugins": {
 					 "key-authaa": {
 						 "key": "auth-one"
@@ -203,7 +203,7 @@ func TestConsumer_create_consumer_with_error_key(t *testing.T) {
 		{
 			caseDesc:     "verify consumer",
 			Object:       MangerApiExpect(t),
-			Path:         "/apisix/admin/consumers/jack_2",
+			Path:         "/apisix/admin/consumers/case_2",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
@@ -216,7 +216,7 @@ func TestConsumer_create_consumer_with_error_key(t *testing.T) {
 	}
 }
 
-//CASE 6: create consumer with no value
+//case 6: create consumer with no value
 func TestConsumer_create_consumer_with_no_value(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -225,7 +225,7 @@ func TestConsumer_create_consumer_with_no_value(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-				 "username": "jack_3",
+				 "username": "case_3",
 				 "plugins": {
 					 "key-auth": {
 						 "key": ""
@@ -239,7 +239,7 @@ func TestConsumer_create_consumer_with_no_value(t *testing.T) {
 		{
 			caseDesc:     "verify consumer",
 			Object:       MangerApiExpect(t),
-			Path:         "/apisix/admin/consumers/jack_3",
+			Path:         "/apisix/admin/consumers/case_3",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -249,7 +249,162 @@ func TestConsumer_create_consumer_with_no_value(t *testing.T) {
 			caseDesc:     "delete consumer",
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/consumers/jack_3",
+			Path:         "/apisix/admin/consumers/case_3",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+//case 7: create consumer with labels
+func TestConsumer_add_consumer_with_labels(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create consumer",
+			Object:   MangerApiExpect(t),
+			Path:     "/apisix/admin/consumers",
+			Method:   http.MethodPut,
+			Body: `{
+				"username": "case_7",
+				"labels": {
+					"build":"16",
+					"env":"production",
+					"version":"v2"
+				},
+				"plugins": {
+					"key-auth": {
+						"key": "auth-two"
+					}
+				},
+			    "desc": "test description"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify consumer",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/consumers/case_7",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"username\":\"case_7\",\"desc\":\"test description\",\"plugins\":{\"key-auth\":{\"key\":\"auth-two\"}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"}",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc: "create route",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"plugins": {
+					"key-auth": {}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": {
+						"172.16.238.20:1980": 1
+					}
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"apikey": "auth-two"},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime, //sleep x millisecond before verify route
+		},
+		{
+			caseDesc:     "delete consumer",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/case_7",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+//case 8: create consumer with create_time and update_time
+func TestConsumer_create_consumer_with_createtime_updatetime(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create consumer with create_time and update_time",
+			Object:   MangerApiExpect(t),
+			Path:     "/apisix/admin/consumers",
+			Method:   http.MethodPut,
+			Body: `{
+				"username":"case_8",
+				"desc": "new consumer",
+				"create_time": 1602883670,
+				"update_time": 1602893670
+		   }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify consumer",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/consumers/case_8",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectJSON:   map[string]interface{}{"code": 0},
+			ExpectBody:   "{\"id\":\"case_8\",\"create_time\":1602883670,\"update_time\":1602893670,\"username\":\"case_8\",\"desc\":\"new consumer\"}",
+			Sleep: sleepTime,
+		},
+		{
+			caseDesc:     "delete consumer",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/case_8",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+
+//case9: create consumers with post method
+func TestConsumer_create_consumer_with_post_method(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create consumers with post method",
+			Object:   MangerApiExpect(t),
+			Path:     "/apisix/admin/consumers",
+			Method:   http.MethodPost,
+			Body: `{
+				"username":"case_9",
+				"desc": "new consumer",
+				"create_time": 1602883670,
+				"update_time": 1602893670
+		   }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusMethodNotAllowed,
+		},
+		{
+			caseDesc:     "delete consumer",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/case_9",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
