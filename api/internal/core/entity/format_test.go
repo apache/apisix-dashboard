@@ -79,5 +79,4 @@ func TestNodesFormat_Map(t *testing.T) {
 	assert.Contains(t, jsonStr, `"weight":0`)
 	assert.Contains(t, jsonStr, `"port":8080`)
 	assert.Contains(t, jsonStr, `"host":"127.0.0.1"`)
-
 }
