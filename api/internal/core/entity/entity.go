@@ -36,8 +36,14 @@ func (info *BaseInfo) Creating() {
 	if info.ID == "" {
 		info.ID = utils.GetFlakeUidStr()
 	}
-	info.CreateTime = time.Now().Unix()
-	info.UpdateTime = time.Now().Unix()
+
+	if info.CreateTime == 0 {
+		info.CreateTime = time.Now().Unix()
+	}
+
+	if info.UpdateTime == 0 {
+		info.UpdateTime = time.Now().Unix()
+	}
 }
 
 func (info *BaseInfo) Updating(storedInfo *BaseInfo) {
