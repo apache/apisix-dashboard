@@ -57,12 +57,12 @@ func TestNodesFormat(t *testing.T) {
 func TestNodesFormat_Map(t *testing.T) {
 	// route data saved in ETCD
 	routeStr := `{
-        "uris": ["/*"],
-        "upstream": {
-            "type": "roundrobin",
-            "nodes": {"127.0.0.1:8080": 0}
-        }
-    }`
+		"uris": ["/*"],
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": {"127.0.0.1:8080": 0}
+		}
+	}`
 
 	// bind struct
 	var route Route
