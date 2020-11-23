@@ -19,15 +19,27 @@
 
 # Table of Contents
 
+- [2.1.0](#210)
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
 
+# 2.1.0
+
+This release mainly adds test cases for manager-api.
+
+### Core
+
+- Install signal handler for graceful shutdown.[#796](https://github.com/apache/apisix-dashboard/pull/796)
+- Add e2e test for config route with service_id or upstream_id.[#810](https://github.com/apache/apisix-dashboard/pull/810)
+
+For more changes, please refer to [Milestone](https://github.com/apache/apisix-dashboard/milestone/7).
+
 # 2.0.0
 
-This is a release candidate.
+This release mainly refactors the dashboard, omitting MySQL, improve test cases.
 
-# Core
+### Core
 
 - Refactor frontend with Admin-API.
 - Manager-API removes dependency on MySQL.

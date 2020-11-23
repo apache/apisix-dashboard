@@ -18,15 +18,25 @@
 -->
 
 # 目录
-
+- [2.1.0](#210)
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
 
+# 2.1.0
+
+该版本主要提升了 manager-api 的 E2E 测试。
+
+### 核心
+
+- 支持优雅退出。[#796](https://github.com/apache/apisix-dashboard/pull/796)
+- 增加了后端 e2e 测试用例。[#810](https://github.com/apache/apisix-dashboard/pull/810)
+
+更多的变动可以参考[里程碑](https://github.com/apache/apisix-dashboard/milestone/7)。
 
 # 2.0.0
 
-这是一个候选版本。
+该版本主要移除了 MySQL 并增加了 E2E 测试。
 
 ### 核心
 

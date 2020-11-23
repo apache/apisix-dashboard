@@ -74,7 +74,7 @@ $ cd ./output
 
 $ ./manager-api
 # 或后台常驻
-$ ./manager-api &
+$ nohup ./manager-api &
 ```
 
 4. 在未修改配置的情况下，访问 `http://127.0.0.1:8080` 以使用有前端界面的控制台，默认用户密码均为 `admin`。
