@@ -88,7 +88,7 @@ type Timeout struct {
 type Node struct {
 	Host     string      `json:"host,omitempty"`
 	Port     int         `json:"port,omitempty"`
-	Weight   int         `json:"weight,omitempty"`
+	Weight   int         `json:"weight"`
 	Metadata interface{} `json:"metadata,omitempty"`
 }
 
