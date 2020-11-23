@@ -26,7 +26,7 @@
 
 # 2.1.0
 
-This is a release candidate.
+This release mainly add test cases for manager-api.
 
 ### Core
 
@@ -37,7 +37,7 @@ For more changes, please refer to [Milestone](https://github.com/apache/apisix-d
 
 # 2.0.0
 
-This is a release candidate.
+This release mainly refactors the dashboard, omitting MySQL, improve test cases.
 
 ### Core
 
