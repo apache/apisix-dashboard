@@ -7,7 +7,6 @@ on:
   pull_request:
     branches:
       - master
-      - v2.0
 defaults:
   run:
     working-directory: web
