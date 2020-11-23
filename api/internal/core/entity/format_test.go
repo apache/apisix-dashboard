@@ -26,16 +26,16 @@ import (
 func TestNodesFormat(t *testing.T) {
 	// route data saved in ETCD
 	routeStr := `{
-        "uris": ["/*"],
-        "upstream": {
-            "type": "roundrobin",
-            "nodes": [{
-                "host": "127.0.0.1",
-                "port": 80,
-                "weight": 0
-            }]
-        }
-    }`
+		"uris": ["/*"],
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "127.0.0.1",
+				"port": 80,
+				"weight": 0
+			}]
+		}
+	}`
 
 	// bind struct
 	var route Route

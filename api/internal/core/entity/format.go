@@ -23,7 +23,7 @@ import (
 	"github.com/apisix/manager-api/log"
 )
 
-func MapKV2Node(key string, val float64) (*Node, error) {
+func mapKV2Node(key string, val float64) (*Node, error) {
 	host, port, err := net.SplitHostPort(key)
 	if err != nil {
 		log.Warn("split host port fail: %s", err)
@@ -52,7 +52,7 @@ func NodesFormat(obj interface{}) interface{} {
 		log.Infof("nodes type: %v", objType)
 		value := obj.(map[string]float64)
 		for key, val := range value {
-			node, err := MapKV2Node(key, val)
+			node, err := mapKV2Node(key, val)
 			if err != nil {
 				return obj
 			}
@@ -63,7 +63,7 @@ func NodesFormat(obj interface{}) interface{} {
 		log.Infof("nodes type: %v", objType)
 		value := obj.(map[string]interface{})
 		for key, val := range value {
-			node, err := MapKV2Node(key, val.(float64))
+			node, err := mapKV2Node(key, val.(float64))
 			if err != nil {
 				return obj
 			}
