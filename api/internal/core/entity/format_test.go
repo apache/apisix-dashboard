@@ -23,19 +23,60 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestConsumer(t *testing.T) {
-	nodesStr := `{
-    "127.0.0.1:8080": 1
-  }`
-	nodesMap := map[string]float64{}
-	err := json.Unmarshal([]byte(nodesStr), &nodesMap)
+func TestNodesFormat(t *testing.T) {
+	// route data saved in ETCD
+	routeStr := `{
+		"uris": ["/*"],
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "127.0.0.1",
+				"port": 80,
+				"weight": 0
+			}]
+		}
+	}`
+
+	// bind struct
+	var route Route
+	err := json.Unmarshal([]byte(routeStr), &route)
 	assert.Nil(t, err)
 
-	res := NodesFormat(nodesMap)
-	nodes := res.([]*Node)
+	// nodes format
+	nodes := NodesFormat(route.Upstream.Nodes)
 
-	assert.Equal(t, 1, len(nodes))
-	assert.Equal(t, "127.0.0.1", nodes[0].Host)
-	assert.Equal(t, 8080, nodes[0].Port)
-	assert.Equal(t, 1, nodes[0].Weight)
+	// json encode for client
+	res, err := json.Marshal(nodes)
+	assert.Nil(t, err)
+	jsonStr := string(res)
+	assert.Contains(t, jsonStr, `"weight":0`)
+	assert.Contains(t, jsonStr, `"port":80`)
+	assert.Contains(t, jsonStr, `"host":"127.0.0.1"`)
+}
+
+func TestNodesFormat_Map(t *testing.T) {
+	// route data saved in ETCD
+	routeStr := `{
+		"uris": ["/*"],
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": {"127.0.0.1:8080": 0}
+		}
+	}`
+
+	// bind struct
+	var route Route
+	err := json.Unmarshal([]byte(routeStr), &route)
+	assert.Nil(t, err)
+
+	// nodes format
+	nodes := NodesFormat(route.Upstream.Nodes)
+
+	// json encode for client
+	res, err := json.Marshal(nodes)
+	assert.Nil(t, err)
+	jsonStr := string(res)
+	assert.Contains(t, jsonStr, `"weight":0`)
+	assert.Contains(t, jsonStr, `"port":8080`)
+	assert.Contains(t, jsonStr, `"host":"127.0.0.1"`)
 }

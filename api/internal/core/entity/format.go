@@ -17,51 +17,73 @@
 package entity
 
 import (
-	"log"
+	"net"
 	"strconv"
-	"strings"
+
+	"github.com/apisix/manager-api/log"
 )
+
+func mapKV2Node(key string, val float64) (*Node, error) {
+	host, port, err := net.SplitHostPort(key)
+	if err != nil {
+		log.Warn("split host port fail: %s", err)
+		return nil, err
+	}
+
+	portInt, err := strconv.Atoi(port)
+	if err != nil {
+		log.Errorf("parse port to int fail: %s", err)
+		return nil, err
+	}
+
+	node := &Node{
+		Host:   host,
+		Port:   portInt,
+		Weight: int(val),
+	}
+
+	return node, nil
+}
 
 func NodesFormat(obj interface{}) interface{} {
 	var nodes []*Node
-	if value, ok := obj.(map[string]float64); ok {
-		var strArr []string
+	switch objType := obj.(type) {
+	case map[string]float64:
+		log.Infof("nodes type: %v", objType)
+		value := obj.(map[string]float64)
 		for key, val := range value {
-			node := &Node{}
-			strArr = strings.Split(key, ":")
-			if len(strArr) != 2 {
-				log.Println("length of string array is not 2")
-				return obj
-			}
-
-			port, err := strconv.Atoi(strArr[1])
+			node, err := mapKV2Node(key, val)
 			if err != nil {
-				log.Println("parse int fail:", err)
 				return obj
 			}
-
-			node.Host = strArr[0]
-			node.Port = port
-			node.Weight = int(val)
 			nodes = append(nodes, node)
 		}
 		return nodes
-	}
-
-	if nodes, ok := obj.([]*Node); ok {
+	case map[string]interface{}:
+		log.Infof("nodes type: %v", objType)
+		value := obj.(map[string]interface{})
+		for key, val := range value {
+			node, err := mapKV2Node(key, val.(float64))
+			if err != nil {
+				return obj
+			}
+			nodes = append(nodes, node)
+		}
 		return nodes
-	}
-
-	if list, ok := obj.([]interface{}); ok {
+	case []*Node:
+		log.Infof("nodes type: %v", objType)
+		return nodes
+	case []interface{}:
+		list := obj.([]interface{})
 		for _, v := range list {
 			val := v.(map[string]interface{})
-			node := &Node{}
-			node.Host = val["host"].(string)
-			node.Port = int(val["port"].(float64))
-			node.Weight = int(val["weight"].(float64))
+			node := &Node{
+				Host:   val["host"].(string),
+				Port:   int(val["port"].(float64)),
+				Weight: int(val["weight"].(float64)),
+			}
 			nodes = append(nodes, node)
 		}
-
 		return nodes
 	}
 
