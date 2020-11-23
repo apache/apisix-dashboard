@@ -26,7 +26,7 @@
 
 # 2.1.0
 
-This release mainly add test cases for manager-api.
+This release mainly adds test cases for manager-api.
 
 ### Core
 
