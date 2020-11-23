@@ -23,7 +23,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNodesFormat(t *testing.T){
+func TestNodesFormat(t *testing.T) {
 	// route data saved in ETCD
 	routeStr := `{
         "uris": ["/*"],
@@ -38,7 +38,7 @@ func TestNodesFormat(t *testing.T){
     }`
 
 	// bind struct
-	var  route Route
+	var route Route
 	err := json.Unmarshal([]byte(routeStr), &route)
 	assert.Nil(t, err)
 
@@ -47,14 +47,14 @@ func TestNodesFormat(t *testing.T){
 
 	// json encode for client
 	res, err := json.Marshal(nodes)
-	assert.Nil(t,err)
+	assert.Nil(t, err)
 	jsonStr := string(res)
 	assert.Contains(t, jsonStr, `"weight":0`)
 	assert.Contains(t, jsonStr, `"port":80`)
 	assert.Contains(t, jsonStr, `"host":"127.0.0.1"`)
 }
 
-func TestNodesFormat_Map(t *testing.T){
+func TestNodesFormat_Map(t *testing.T) {
 	// route data saved in ETCD
 	routeStr := `{
         "uris": ["/*"],
@@ -65,7 +65,7 @@ func TestNodesFormat_Map(t *testing.T){
     }`
 
 	// bind struct
-	var  route Route
+	var route Route
 	err := json.Unmarshal([]byte(routeStr), &route)
 	assert.Nil(t, err)
 
@@ -74,11 +74,10 @@ func TestNodesFormat_Map(t *testing.T){
 
 	// json encode for client
 	res, err := json.Marshal(nodes)
-	assert.Nil(t,err)
+	assert.Nil(t, err)
 	jsonStr := string(res)
 	assert.Contains(t, jsonStr, `"weight":0`)
 	assert.Contains(t, jsonStr, `"port":8080`)
 	assert.Contains(t, jsonStr, `"host":"127.0.0.1"`)
 
 }
-
