@@ -243,7 +243,8 @@ func TestConsumer_create_consumer_with_no_value(t *testing.T) {
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime, //sleep x millisecond before verify route
+			ExpectBody:   "\"username\":\"case_3\",\"desc\":\"test description\",\"plugins\":{\"key-auth\":{\"key\":\"\"}}}",
+			Sleep:        sleepTime, 
 		},
 		{
 			caseDesc:     "delete consumer",
@@ -407,6 +408,31 @@ func TestConsumer_create_consumer_with_post_method(t *testing.T) {
 			Path:         "/apisix/admin/consumers/case_9",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+//case10: create consumers with invalid format of label value
+func TestConsumer_create_consumer_with_invalid_format_of_label(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create consumers with invalid format of label value",
+			Object:   MangerApiExpect(t),
+			Path:     "/apisix/admin/consumers",
+			Method:   http.MethodPost,
+			Body: `{
+				"username":"case_10",
+				"desc": "new consumer",
+				"labels": {
+				   "env": ["production", "release"]
+				}
+		   }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
 		},
 	}
 
