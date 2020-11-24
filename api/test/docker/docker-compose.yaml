@@ -129,6 +129,8 @@ services:
     build:
       context: ../../
       dockerfile: test/docker/Dockerfile-apisix
+      args:
+        - APISIX_VERSION=master
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
