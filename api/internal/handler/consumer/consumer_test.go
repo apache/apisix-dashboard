@@ -44,7 +44,7 @@ func TestConsumer(t *testing.T) {
 
 	//create consumer
 	ctx := droplet.NewContext()
-	consumer := &entity.Consumer{}
+	consumer := &SetInput{}
 	reqBody := `{
       "username": "jack",
       "plugins": {
@@ -60,11 +60,11 @@ func TestConsumer(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), consumer)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer)
-	_, err = handler.Create(ctx)
+	_, err = handler.Set(ctx)
 	assert.Nil(t, err)
 
 	//create consumer 2
-	consumer2 := &entity.Consumer{}
+	consumer2 := &SetInput{}
 	reqBody = `{
 		"username": "pony",
 		"plugins": {
@@ -80,7 +80,7 @@ func TestConsumer(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), consumer2)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer2)
-	_, err = handler.Create(ctx)
+	_, err = handler.Set(ctx)
 	assert.Nil(t, err)
 
 	//sleep
@@ -96,10 +96,10 @@ func TestConsumer(t *testing.T) {
 	stored := ret.(*entity.Consumer)
 	assert.Nil(t, err)
 	assert.Equal(t, stored.ID, consumer.ID)
-	assert.Equal(t, stored.Username, consumer.Username)
+	assert.Equal(t, stored.Username, consumer.Consumer.Username)
 
 	//update consumer
-	consumer3 := &UpdateInput{}
+	consumer3 := &SetInput{}
 	consumer3.Username = "pony"
 	reqBody = `{
 		"username": "pony",
@@ -116,7 +116,7 @@ func TestConsumer(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), consumer3)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer3)
-	_, err = handler.Update(ctx)
+	_, err = handler.Set(ctx)
 	assert.Nil(t, err)
 
 	//sleep
@@ -195,7 +195,7 @@ func TestConsumer(t *testing.T) {
 	assert.Nil(t, err)
 
 	//create consumer fail
-	consumer_fail := &entity.Consumer{}
+	consumer_fail := &SetInput{}
 	reqBody = `{
       "plugins": {
           "limit-count": {
@@ -210,11 +210,11 @@ func TestConsumer(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), consumer_fail)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer_fail)
-	_, err = handler.Create(ctx)
+	_, err = handler.Set(ctx)
 	assert.NotNil(t, err)
 
 	//create consumer using Update
-	consumer6 := &UpdateInput{}
+	consumer6 := &SetInput{}
 	reqBody = `{
       "username": "nnn",
       "plugins": {
@@ -230,7 +230,7 @@ func TestConsumer(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), consumer6)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer6)
-	_, err = handler.Update(ctx)
+	_, err = handler.Set(ctx)
 	assert.Nil(t, err)
 
 	//sleep
