@@ -33,3 +33,8 @@ apisix:
 
   allow_admin:                  # http://nginx.org/en/docs/http/ngx_http_access_module.html#allow
     - 0.0.0.0/0              # If we don't set any IP list, then any IP access is allowed by default.
+
+  ssl:
+      enable: true
+      ssl_cert: "/usr/local/apisix/certs/apisix.crt"
+      ssl_cert_key: "/usr/local/apisix/certs/apisix.key"

@@ -132,6 +132,8 @@ services:
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
+      - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
+      - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro      
     depends_on:
       - node1
       - node2
@@ -150,6 +152,8 @@ services:
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
+      - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
+      - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
     depends_on:
       - node1
       - node2
