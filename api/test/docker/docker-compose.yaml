@@ -126,7 +126,9 @@ services:
         ipv4_address: 172.16.238.20
 
   apisix:
-    image: apache/apisix:dev
+    build:
+      context: ../../
+      dockerfile: test/docker/Dockerfile-apisix
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
@@ -142,7 +144,9 @@ services:
         ipv4_address: 172.16.238.30
 
   apisix2:
-    image: apache/apisix:dev
+    build:
+      context: ../../
+      dockerfile: test/docker/Dockerfile-apisix
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
@@ -159,7 +163,7 @@ services:
   managerapi:
     build:
       context: ../../
-      dockerfile: test/docker/Dockerfile    
+      dockerfile: test/docker/Dockerfile
     restart: always
     volumes:
       - ./manager-api-conf.yaml:/go/manager-api/conf/conf.yaml:ro
