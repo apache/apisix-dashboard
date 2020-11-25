@@ -324,7 +324,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 
 //Teardown
 func TestConsumer_teardown(t *testing.T) {
-	_ = []HttpTestCase{
+	tests := []HttpTestCase{
 		{
 			caseDesc:     "delete route",
 			Object:       MangerApiExpect(t),
@@ -333,5 +333,8 @@ func TestConsumer_teardown(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc)
 	}
 }

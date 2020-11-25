@@ -186,13 +186,12 @@ func TestConsumer_create_consumer_with_two_authplugin(t *testing.T) {
 			ExpectBody:   "scheme validate failed",
 		},
 		{
-			caseDesc:     "verify consumer",
+			caseDesc:     "delete consumer",
 			Object:       MangerApiExpect(t),
-			Path:         "/apisix/admin/consumers/case_2",
-			Method:       http.MethodGet,
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/case_11",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
-			Sleep:        sleepTime,
 		},
 	}
 
