@@ -371,7 +371,7 @@ func TestConsumer_create_consumer_with_createtime_updatetime(t *testing.T) {
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
 
-	//create consumer again, compair the new result and the result_A
+	//create consumer again, compare the new result and the result_A
 	data = `{
 		"username":"case_8",
 		"desc": "new consumer haha"
@@ -454,6 +454,46 @@ func TestConsumer_create_consumer_with_invalid_format_of_label(t *testing.T) {
 		   }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+//case11: create consumers with two auth plugin
+func TestConsumer_create_consumer_with_two_authplugin(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create consumers with two auth plugin",
+			Object:   MangerApiExpect(t),
+			Path:     "/apisix/admin/consumers",
+			Method:   http.MethodPut,
+			Body: `{
+						"username": "case_11",
+						"plugins": {
+							"jwt-auth": {
+								"key": "a36c3049b36249a3c9f8891cb127243c",
+								"secret": "e71829c351aa4242c2719cbfbe671c09"
+							},
+							"key-auth": {
+							"key": "auth-one"
+							}
+						}
+			   		}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "only one auth plugin is allowed",
+		},
+		{
+			caseDesc:     "verify consumer",
+			Object:       MangerApiExpect(t),
+			Path:         "/apisix/admin/consumers/case_11",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime, //sleep x millisecond before verify route
 		},
 	}
 
