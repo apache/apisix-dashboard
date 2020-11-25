@@ -17,8 +17,14 @@
 package e2e
 
 import (
+	"io/ioutil"
 	"net/http"
+	"strings"
 	"testing"
+	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/tidwall/gjson"
 )
 
 //case 1: add consumer with username
@@ -244,7 +250,7 @@ func TestConsumer_create_consumer_with_no_value(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"username\":\"case_3\",\"desc\":\"test description\",\"plugins\":{\"key-auth\":{\"key\":\"\"}}}",
-			Sleep:        sleepTime, 
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "delete consumer",
@@ -340,49 +346,64 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 	}
 }
 
-//case 8: create consumer with create_time and update_time
+//case 8: update consumer, check if updatetime is updated
 func TestConsumer_create_consumer_with_createtime_updatetime(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			caseDesc: "create consumer with create_time and update_time",
-			Object:   MangerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
-			Body: `{
-				"username":"case_8",
-				"desc": "new consumer",
-				"create_time": 1602883670,
-				"update_time": 1602893670
-		   }`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc:     "verify consumer",
-			Object:       MangerApiExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/consumers/case_8",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectJSON:   map[string]interface{}{"code": 0},
-			ExpectBody:   "{\"id\":\"case_8\",\"create_time\":1602883670,\"update_time\":1602893670,\"username\":\"case_8\",\"desc\":\"new consumer\"}",
-			Sleep: sleepTime,
-		},
-		{
-			caseDesc:     "delete consumer",
-			Object:       MangerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/consumers/case_8",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-	}
+	//create consumer, save the result_A ( create_time and update_time )
+	data := `{
+		"username":"case_8",
+		"desc": "new consumer"
+   }`
+	request, _ := http.NewRequest("PUT", "http://127.0.0.1:8080/apisix/admin/consumers", strings.NewReader(data))
+	request.Header.Add("Authorization", token)
+	resp, _ := http.DefaultClient.Do(request)
+	defer resp.Body.Close()
+	respBody, _ := ioutil.ReadAll(resp.Body)
+	code := gjson.Get(string(respBody), "code")
+	assert.Equal(t, code.String(), "0")
 
-	for _, tc := range tests {
-		testCaseCheck(tc)
-	}
+	time.Sleep(1 * time.Second)
+
+	request, _ = http.NewRequest("GET", "http://127.0.0.1:8080/apisix/admin/consumers/case_8", nil)
+	request.Header.Add("Authorization", token)
+	resp, _ = http.DefaultClient.Do(request)
+	defer resp.Body.Close()
+	respBody, _ = ioutil.ReadAll(resp.Body)
+	createtime := gjson.Get(string(respBody), "data.create_time")
+	updatetime := gjson.Get(string(respBody), "data.update_time")
+
+	//create consumer again, compair the new result and the result_A
+	data = `{
+		"username":"case_8",
+		"desc": "new consumer haha"
+   }`
+	request, _ = http.NewRequest("PUT", "http://127.0.0.1:8080/apisix/admin/consumers", strings.NewReader(data))
+	request.Header.Add("Authorization", token)
+	resp, _ = http.DefaultClient.Do(request)
+	defer resp.Body.Close()
+	respBody, _ = ioutil.ReadAll(resp.Body)
+	code = gjson.Get(string(respBody), "code")
+	assert.Equal(t, code.String(), "0")
+
+	time.Sleep(1 * time.Second)
+
+	request, _ = http.NewRequest("GET", "http://127.0.0.1:8080/apisix/admin/consumers/case_8", nil)
+	request.Header.Add("Authorization", token)
+	resp, _ = http.DefaultClient.Do(request)
+	defer resp.Body.Close()
+	respBody, _ = ioutil.ReadAll(resp.Body)
+	createtime2 := gjson.Get(string(respBody), "data.create_time")
+	updatetime2 := gjson.Get(string(respBody), "data.update_time")
+
+	assert.Equal(t, createtime.String(), createtime2.String())
+	assert.NotEqual(t, updatetime.String(), updatetime2.String())
+
+	//deletea consumer
+	request, _ = http.NewRequest("DELETE", "http://127.0.0.1:8080/apisix/admin/consumers/case_8", nil)
+	request.Header.Add("Authorization", token)
+	_, err := http.DefaultClient.Do(request)
+	assert.Nil(t, err)
+
 }
-
 
 //case9: create consumers with post method
 func TestConsumer_create_consumer_with_post_method(t *testing.T) {
