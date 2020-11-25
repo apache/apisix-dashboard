@@ -19,9 +19,6 @@ package e2e
 import (
 	"net/http"
 	"testing"
-	//  "time"
-	//  "github.com/stretchr/testify/assert"
-	//  "github.com/tidwall/gjson"
 )
 
 //case 1: config route with invalid remote_addr
@@ -85,19 +82,5 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 
 	for _, tc := range tests {
 		testCaseCheck(tc)
-	}
-}
-
-//Teardown
-func TestConsumer_teardown(t *testing.T) {
-	_ = []HttpTestCase{
-		{
-			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
 	}
 }
