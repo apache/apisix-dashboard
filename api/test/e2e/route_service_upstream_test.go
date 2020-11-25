@@ -17,9 +17,45 @@
 package e2e
 
 import (
+	"io/ioutil"
 	"net/http"
 	"testing"
+	"time"
+
+	"github.com/stretchr/testify/assert"
 )
+
+func batchTestServerPort(t *testing.T, times int) map[string]int {
+	url := "http://127.0.0.1:9080/server_port"
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	assert.Nil(t, err)
+
+	res := map[string]int{}
+	var resp *http.Response
+	var client *http.Client
+	var body string
+	var bodyByte []byte
+
+	for i := 0; i < times; i++ {
+		client = &http.Client{}
+		resp, err = client.Do(req)
+		assert.Nil(t, err)
+
+		bodyByte, err = ioutil.ReadAll(resp.Body)
+		assert.Nil(t, err)
+		body = string(bodyByte)
+
+		if _, ok := res[body]; !ok {
+			res[body] = 1
+		} else {
+			res[body] += 1
+		}
+	}
+
+	defer resp.Body.Close()
+
+	return res
+}
 
 func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 	tests := []HttpTestCase{
@@ -132,37 +168,20 @@ func TestRoute_Create_Service(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
 		},
-		{
-			caseDesc:     "hit the route just created",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/server_port",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "1982",
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc:     "hit the route just created",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/server_port",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "1981",
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc:     "hit the route just created",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/server_port",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "1980",
-			Sleep:        sleepTime,
-		},
 	}
 	for _, tc := range tests {
 		testCaseCheck(tc)
 	}
+
+	// sleep for etcd sync
+	time.Sleep(sleepTime)
+
+	// batch test /server_port api
+	res := batchTestServerPort(t, 18)
+
+	assert.Equal(t, 6, res["1980"])
+	assert.Equal(t, 6, res["1981"])
+	assert.Equal(t, 6, res["1982"])
 }
 
 func TestRoute_Delete_Service(t *testing.T) {
@@ -204,24 +223,24 @@ func TestRoute_Create_Upstream(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-                		"nodes": [
+				"nodes": [
 					{
-                    				"host": "172.16.238.20",
-                    				"port": 1980,
-                    				"weight": 1
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
 					},
 					{
-                    				"host": "172.16.238.20",
-                    				"port": 1981,
-                    				"weight": 1
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
 					},
 					{
-                    				"host": "172.16.238.20",
-                    				"port": 1982,
-                    				"weight": 1
+						"host": "172.16.238.20",
+						"port": 1982,
+						"weight": 1
 					}
 				],
-                		"type": "roundrobin"
+				"type": "roundrobin"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -239,37 +258,20 @@ func TestRoute_Create_Upstream(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
 		},
-		{
-			caseDesc:     "hit the route just created",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/server_port",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "1982",
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc:     "hit the route just created",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/server_port",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "1981",
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc:     "hit the route just created",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/server_port",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "1980",
-			Sleep:        sleepTime,
-		},
 	}
 	for _, tc := range tests {
 		testCaseCheck(tc)
 	}
+
+	// sleep for etcd sync
+	time.Sleep(sleepTime)
+
+	// batch test /server_port api
+	res := batchTestServerPort(t, 12)
+
+	assert.Equal(t, 4, res["1980"])
+	assert.Equal(t, 4, res["1981"])
+	assert.Equal(t, 4, res["1982"])
 }
 
 func TestRoute_Delete_Upstream(t *testing.T) {
