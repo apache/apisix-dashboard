@@ -70,44 +70,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 					   "uri": "/test_uri",
-					   "remote_addrs": "127.0.0.1",
-					   "upstream": {
-						   "type": "roundrobin",
-						   "nodes": {
-							   "172.16.238.20:1980": 1
-						   }
-					   }
-				   }`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusBadRequest,
-		},
-		{
-			caseDesc: "config route with invalid remote_addrs",
-			Object:   MangerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
-			Body: `{
-					   "uri": "/test_uri",
 					   "remote_addrs": ["127.0.0.1","192.168.0."],
-					   "upstream": {
-						   "type": "roundrobin",
-						   "nodes": {
-							   "172.16.238.20:1980": 1
-						   }
-					   }
-				   }`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusBadRequest,
-		},
-		{
-			caseDesc: "config route with remote_addr and remote_addrs at the same time",
-			Object:   MangerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
-			Body: `{
-					   "uri": "/test_uri",
-					   "remote_addrs": ["127.0.0.1","192.168.0.1"],
-					   "remote_addr": "127.0.0.1",
 					   "upstream": {
 						   "type": "roundrobin",
 						   "nodes": {
