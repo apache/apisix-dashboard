@@ -21,10 +21,10 @@ import (
 	"testing"
 )
 
-func TestRoute_with_vaild_remote_addr(t *testing.T) {
+func TestRoute_with_valid_remote_addr(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "add route with vaild remote_address",
+			caseDesc: "add route with valid remote_addr",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
@@ -54,7 +54,7 @@ func TestRoute_with_vaild_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "add route with vaild remote_address (CIDR)",
+			caseDesc: "add route with valid remote_addr (CIDR)",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
@@ -84,7 +84,7 @@ func TestRoute_with_vaild_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "add route with vaild remote_address",
+			caseDesc: "add route with valid remote_addr",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
