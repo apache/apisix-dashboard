@@ -194,7 +194,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 	}
 }
 
-func TestConsumer__with_createtime_updatetime(t *testing.T) {
+func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	//create consumer
 	basepath := "http://127.0.0.1:8080/apisix/admin/consumers"
 	data := `{
