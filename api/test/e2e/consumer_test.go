@@ -17,18 +17,18 @@
 package e2e
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
 	"testing"
 	"time"
-	"fmt"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
 )
 
-func TestConsumer_with_error_key(t *testing.T) {
+func TestConsumer_with_error_plugin(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create consumer with error key",
@@ -168,7 +168,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	assert.Equal(t, code.String(), "0")
 
 	time.Sleep(time.Duration(100) * time.Millisecond)
-	
+
 	//get the consumer, save createtime and updatetime
 	request, _ = http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
@@ -177,7 +177,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
 
-	//Wait one second for update time to be different
+	//wait one second for update time to be different
 	time.Sleep(time.Duration(1000) * time.Millisecond)
 
 	//update the consumer with new desc
@@ -189,14 +189,14 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	request.Header.Add("Authorization", token)
 	resp, err = http.DefaultClient.Do(request)
 	if err != nil {
-        return
-    }
+		return
+	}
 	respBody, _ = ioutil.ReadAll(resp.Body)
 	code = gjson.Get(string(respBody), "code")
 	assert.Equal(t, code.String(), "0")
 
 	time.Sleep(time.Duration(100) * time.Millisecond)
-	
+
 	//get the consumer
 	request, err = http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
@@ -206,7 +206,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	updatetime2 := gjson.Get(string(respBody), "data.update_time")
 
 	//verify the consumer and compare result
-	assert.Equal(t, "updated consumer",gjson.Get(string(respBody), "data.desc").String())
+	assert.Equal(t, "updated consumer", gjson.Get(string(respBody), "data.desc").String())
 	assert.Equal(t, createtime.String(), createtime2.String())
 	assert.NotEqual(t, updatetime.String(), updatetime2.String())
 
