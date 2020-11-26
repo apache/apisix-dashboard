@@ -100,6 +100,14 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
+			caseDesc:     "delete consumer (as delete not exist consumer)",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+		},
+		{
 			caseDesc:     "hit route (consumer deleted)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
