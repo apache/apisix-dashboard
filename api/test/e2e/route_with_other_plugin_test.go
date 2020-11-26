@@ -37,22 +37,22 @@ func TestRoute_With_Other_Plugin(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/hello",
-                "plugins": {
-                    "proxy-rewrite": {
-                        "uri": "/plugin_proxy_rewrite",
-                        "host": "test.com"
-                    }
-                },
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1981,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/hello",
+				"plugins": {
+					"proxy-rewrite": {
+						"uri": "/plugin_proxy_rewrite",
+						"host": "test.com"
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -71,24 +71,24 @@ func TestRoute_With_Other_Plugin(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/hello",
-                "plugins": {
-                    "proxy-rewrite": {
-                        "uri": "/uri/plugin_proxy_rewrite",
-                        "headers": {
-                            "X-Api-Version": "v2"
-                        }
-                    }
-                },
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1981,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/hello",
+				"plugins": {
+					"proxy-rewrite": {
+						"uri": "/uri/plugin_proxy_rewrite",
+						"headers": {
+							"X-Api-Version": "v2"
+						}
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -108,21 +108,21 @@ func TestRoute_With_Other_Plugin(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/test/*",
-                "plugins": {
-                    "proxy-rewrite": {
-                        "regex_uri": ["^/test/(.*)/(.*)/(.*)", "/$1_$2_$3"]
-                    }
-                },
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1981,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/test/*",
+				"plugins": {
+					"proxy-rewrite": {
+					"regex_uri": ["^/test/(.*)/(.*)/(.*)", "/$1_$2_$3"]
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -141,21 +141,21 @@ func TestRoute_With_Other_Plugin(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/hello",
-                "plugins": {
-                    "proxy-rewrite": {
-                        "uri": "/plugin_proxy_rewrite_args?name=api6"
-                    }
-                },
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1981,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/hello",
+				"plugins": {
+					"proxy-rewrite": {
+						"uri": "/plugin_proxy_rewrite_args?name=api6"
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
