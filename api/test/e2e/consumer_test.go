@@ -17,10 +17,8 @@
 package e2e
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"testing"
 	"time"
 
@@ -36,19 +34,19 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				 "uri": "/hello",
-				 "plugins": {
-					 "key-auth": {}
-				 },
-				 "upstream": {
-					 "type": "roundrobin",
-					 "nodes": [{
-						"host": "172.16.238.20",
-						"port": 1980,
-						"weight": 1
-					}]
-				 }
-			 }`,
+				  "uri": "/hello",
+				  "plugins": {
+					  "key-auth": {}
+				  },
+				  "upstream": {
+					  "type": "roundrobin",
+					  "nodes": [{
+						 "host": "172.16.238.20",
+						 "port": 1980,
+						 "weight": 1
+					 }]
+				  }
+			  }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -67,14 +65,14 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-				 "username": "jack",
-				 "plugins": {
-					 "key-auth": {
-						 "key": "auth-one"
-					 }
-				 },
-				 "desc": "test description"
-			 }`,
+				  "username": "jack",
+				  "plugins": {
+					  "key-auth": {
+						  "key": "auth-one"
+					  }
+				  },
+				  "desc": "test description"
+			  }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -147,14 +145,14 @@ func TestConsumer_with_notexist_plugin(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-				 "username": "jack",
-				 "plugins": {
-					 "key-authaa": {
-						 "key": "auth-one"
-					 }
-				 },
-				 "desc": "test description"
-			}`,
+				  "username": "jack",
+				  "plugins": {
+					  "key-authaa": {
+						  "key": "auth-one"
+					  }
+				  },
+				  "desc": "test description"
+			 }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   "scheme validate failed",
@@ -183,19 +181,19 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-				"username": "jack",
-				"labels": {
-					"build":"16",
-					"env":"production",
-					"version":"v2"
-				},
-				"plugins": {
-					"key-auth": {
-						"key": "auth-two"
-					}
-				},
-			    "desc": "test description"
-			}`,
+				 "username": "jack",
+				 "labels": {
+					 "build":"16",
+					 "env":"production",
+					 "version":"v2"
+				 },
+				 "plugins": {
+					 "key-auth": {
+						 "key": "auth-two"
+					 }
+				 },
+				 "desc": "test description"
+			 }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -215,19 +213,19 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				"uri": "/hello",
-				"plugins": {
-					"key-auth": {}
-				},
-				"upstream": {
-					"type": "roundrobin",
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1980,
-						"weight": 1
-					}]
-				}
-			}`,
+				 "uri": "/hello",
+				 "plugins": {
+					 "key-auth": {}
+				 },
+				 "upstream": {
+					 "type": "roundrobin",
+					 "nodes": [{
+						 "host": "172.16.238.20",
+						 "port": 1980,
+						 "weight": 1
+					 }]
+				 }
+			 }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -264,54 +262,63 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 }
 
 func TestConsumer_with_createtime_updatetime(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create the consumer",
+			Object:   MangerApiExpect(t),
+			Path:     "/apisix/admin/consumers",
+			Method:   http.MethodPut,
+			Body: `{
+				 "username":"jack",
+				 "desc": "new consumer"
+			 }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+
 	basepath := "http://127.0.0.1:8080/apisix/admin/consumers"
-
-	//create consumer
-	data := `{
-		"username":"jack",
-		"desc": "new consumer"
-    }`
-	request, _ := http.NewRequest("PUT", basepath, strings.NewReader(data))
-	request.Header.Add("Authorization", token)
-	resp, err := http.DefaultClient.Do(request)
-	respBody, _ := ioutil.ReadAll(resp.Body)
-	code := gjson.Get(string(respBody), "code")
-	assert.Equal(t, code.String(), "0")
-
-	time.Sleep(time.Duration(100) * time.Millisecond)
+	time.Sleep(time.Duration(1) * time.Second)
 
 	//get the consumer, save createtime and updatetime
-	request, _ = http.NewRequest("GET", basepath+"/jack", nil)
+	request, _ := http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
-	resp, err = http.DefaultClient.Do(request)
-	respBody, _ = ioutil.ReadAll(resp.Body)
+	resp, _ := http.DefaultClient.Do(request)
+	respBody, _ := ioutil.ReadAll(resp.Body)
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
+	
+	//wait 1 second so the update_time should be different
+	time.Sleep(time.Duration(1) * time.Second)
 
-	//wait one second for update time to be different
-	time.Sleep(time.Duration(1000) * time.Millisecond)
-
-	//update the consumer with new desc
-	data = `{
-		"username":"jack",
-		"desc": "updated consumer"
-    }`
-	request, err = http.NewRequest("PUT", basepath, strings.NewReader(data))
-	request.Header.Add("Authorization", token)
-	resp, err = http.DefaultClient.Do(request)
-	if err != nil {
-		return
+	tests = []HttpTestCase{
+		{
+			caseDesc: "update the consumer",
+			Object:   MangerApiExpect(t),
+			Path:     "/apisix/admin/consumers",
+			Method:   http.MethodPut,
+			Body: `{
+				 "username":"jack",
+				 "desc": "updated consumer"
+			 }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
 	}
-	respBody, _ = ioutil.ReadAll(resp.Body)
-	code = gjson.Get(string(respBody), "code")
-	assert.Equal(t, code.String(), "0")
 
-	time.Sleep(time.Duration(100) * time.Millisecond)
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
 
 	//get the consumer
-	request, err = http.NewRequest("GET", basepath+"/jack", nil)
+	request, _ = http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
-	resp, err = http.DefaultClient.Do(request)
+	resp, _ = http.DefaultClient.Do(request)
 	respBody, _ = ioutil.ReadAll(resp.Body)
 	createtime2 := gjson.Get(string(respBody), "data.create_time")
 	updatetime2 := gjson.Get(string(respBody), "data.update_time")
@@ -321,11 +328,18 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	assert.Equal(t, createtime.String(), createtime2.String())
 	assert.NotEqual(t, updatetime.String(), updatetime2.String())
 
-	//delete the consumer
-	request, _ = http.NewRequest("DELETE", basepath+"/jack", nil)
-	request.Header.Add("Authorization", token)
-	resp, _ = http.DefaultClient.Do(request)
-	defer resp.Body.Close()
-	respBody, _ = ioutil.ReadAll(resp.Body)
-	fmt.Println(string(respBody))
+	tests = []HttpTestCase{
+		{
+			caseDesc:     "delete the consumer",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
 }
