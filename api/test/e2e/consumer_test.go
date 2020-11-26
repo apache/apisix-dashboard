@@ -139,10 +139,10 @@ func TestConsumer_with_key_auth(t *testing.T) {
 	}
 }
 
-func TestConsumer_with_error_plugin(t *testing.T) {
+func TestConsumer_with_notexist_plugin(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create consumer with error key",
+			caseDesc: "create consumer with not exist plugin",
 			Object:   MangerApiExpect(t),
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
