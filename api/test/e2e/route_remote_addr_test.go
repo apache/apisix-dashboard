@@ -33,9 +33,11 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 					"remote_addr": "127.0.0.",
 					"upstream": {
 						"type": "roundrobin",
-						"nodes": {
-							"172.16.238.20:1980": 1
-						}
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
 					}
 				}`,
 			Headers:      map[string]string{"Authorization": token},
@@ -60,9 +62,11 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 					   "remote_addr": "127.0.0.aa",
 					   "upstream": {
 						   "type": "roundrobin",
-						   "nodes": {
-							   "172.16.238.20:1980": 1
-						   }
+						   "nodes": [{
+								"host": "172.16.238.20",
+								"port": 1980,
+								"weight": 1
+						    }]
 					   }
 				   }`,
 			Headers:      map[string]string{"Authorization": token},
@@ -87,9 +91,11 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 					   "remote_addrs": ["127.0.0.1","192.168.0."],
 					   "upstream": {
 						   "type": "roundrobin",
-						   "nodes": {
-							   "172.16.238.20:1980": 1
-						   }
+						   "nodes": [{
+								"host": "172.16.238.20",
+								"port": 1980,
+								"weight": 1
+						    }]
 					   }
 				   }`,
 			Headers:      map[string]string{"Authorization": token},
