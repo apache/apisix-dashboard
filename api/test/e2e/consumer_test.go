@@ -35,9 +35,11 @@ func TestConsumer_add_consumer_with_username(t *testing.T) {
 				 },
 				 "upstream": {
 					 "type": "roundrobin",
-					 "nodes": {
-						 "172.16.238.20:1980": 1
-					 }
+					 "nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
 				 }
 			 }`,
 			Headers:      map[string]string{"Authorization": token},
