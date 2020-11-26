@@ -122,6 +122,15 @@ func TestRoute_with_vaild_remote_addr(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
 		},
+		{
+			caseDesc:     "after delete route verify it again",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
 	}
 
 	for _, tc := range tests {
