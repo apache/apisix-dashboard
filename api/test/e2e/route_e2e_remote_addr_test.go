@@ -105,6 +105,11 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			ExpectStatus: http.StatusNotFound,
 			Sleep:        sleepTime,
 		},
+
+		// TODO it's a bug here, see: https://github.com/apache/apisix-dashboard/issues/872
+
+		// TODO it's a bug here, see: https://github.com/apache/apisix-dashboard/issues/873
+
 	}
 
 	for _, tc := range tests {
