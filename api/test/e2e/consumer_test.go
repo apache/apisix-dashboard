@@ -22,6 +22,7 @@ import (
 	"strings"
 	"testing"
 	"time"
+	"fmt"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
@@ -152,16 +153,16 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 }
 
 func TestConsumer_with_createtime_updatetime(t *testing.T) {
-	//create consumer
 	basepath := "http://127.0.0.1:8080/apisix/admin/consumers"
+
+	//create consumer
 	data := `{
 		"username":"jack",
 		"desc": "new consumer"
     }`
 	request, _ := http.NewRequest("PUT", basepath, strings.NewReader(data))
 	request.Header.Add("Authorization", token)
-	resp, _ := http.DefaultClient.Do(request)
-	defer resp.Body.Close()
+	resp, err := http.DefaultClient.Do(request)
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	code := gjson.Get(string(respBody), "code")
 	assert.Equal(t, code.String(), "0")
@@ -171,7 +172,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	//get the consumer, save createtime and updatetime
 	request, _ = http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
-	resp, _ = http.DefaultClient.Do(request)
+	resp, err = http.DefaultClient.Do(request)
 	respBody, _ = ioutil.ReadAll(resp.Body)
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
@@ -184,9 +185,12 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 		"username":"jack",
 		"desc": "updated consumer"
     }`
-	request, _ = http.NewRequest("PUT", basepath, strings.NewReader(data))
+	request, err = http.NewRequest("PUT", basepath, strings.NewReader(data))
 	request.Header.Add("Authorization", token)
-	resp, _ = http.DefaultClient.Do(request)
+	resp, err = http.DefaultClient.Do(request)
+	if err != nil {
+        return
+    }
 	respBody, _ = ioutil.ReadAll(resp.Body)
 	code = gjson.Get(string(respBody), "code")
 	assert.Equal(t, code.String(), "0")
@@ -194,9 +198,9 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	time.Sleep(time.Duration(100) * time.Millisecond)
 	
 	//get the consumer
-	request, _ = http.NewRequest("GET", basepath+"/jack", nil)
+	request, err = http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
-	resp, _ = http.DefaultClient.Do(request)
+	resp, err = http.DefaultClient.Do(request)
 	respBody, _ = ioutil.ReadAll(resp.Body)
 	createtime2 := gjson.Get(string(respBody), "data.create_time")
 	updatetime2 := gjson.Get(string(respBody), "data.update_time")
@@ -209,6 +213,8 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	//delete the consumer
 	request, _ = http.NewRequest("DELETE", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
-	_, err := http.DefaultClient.Do(request)
-	assert.Nil(t, err)
+	resp, _ = http.DefaultClient.Do(request)
+	defer resp.Body.Close()
+	respBody, _ = ioutil.ReadAll(resp.Body)
+	fmt.Println(string(respBody))
 }
