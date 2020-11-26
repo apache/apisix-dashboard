@@ -38,24 +38,24 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/hello",
-                "plugins": {
-                    "limit-count": {
-                        "count": 2,
-                        "time_window": 2,
-                        "rejected_code": 503,
-                        "key": "remote_addr"
-                    }
-                },
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1981,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/hello",
+				"plugins": {
+					"limit-count": {
+						"count": 2,
+						"time_window": 2,
+						"rejected_code": 503,
+						"key": "remote_addr"
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"code":0`,
@@ -134,25 +134,25 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/hello",
-                "plugins": {
-                    "key-auth": {},
-                    "limit-count": {
-                        "count": 2,
-                        "time_window": 2,
-                        "rejected_code": 503,
-                        "key": "consumer_name"
-                    }
-                },
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1981,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/hello",
+				"plugins": {
+					"key-auth": {},
+					"limit-count": {
+						"count": 2,
+						"time_window": 2,
+						"rejected_code": 503,
+						"key": "consumer_name"
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"code":0`,
