@@ -349,11 +349,12 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 //case 8: update consumer, check if updatetime is updated
 func TestConsumer_create_consumer_with_createtime_updatetime(t *testing.T) {
 	//create consumer, save the result_A ( create_time and update_time )
+	basepath := "http://127.0.0.1:8080/apisix/admin/consumers"
 	data := `{
 		"username":"case_8",
 		"desc": "new consumer"
    }`
-	request, _ := http.NewRequest("PUT", "http://127.0.0.1:8080/apisix/admin/consumers", strings.NewReader(data))
+	request, _ := http.NewRequest("PUT", basepath, strings.NewReader(data))
 	request.Header.Add("Authorization", token)
 	resp, _ := http.DefaultClient.Do(request)
 	defer resp.Body.Close()
@@ -363,7 +364,7 @@ func TestConsumer_create_consumer_with_createtime_updatetime(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 
-	request, _ = http.NewRequest("GET", "http://127.0.0.1:8080/apisix/admin/consumers/case_8", nil)
+	request, _ = http.NewRequest("GET", basepath + "/case_8", nil)
 	request.Header.Add("Authorization", token)
 	resp, _ = http.DefaultClient.Do(request)
 	defer resp.Body.Close()
@@ -376,7 +377,7 @@ func TestConsumer_create_consumer_with_createtime_updatetime(t *testing.T) {
 		"username":"case_8",
 		"desc": "new consumer haha"
    }`
-	request, _ = http.NewRequest("PUT", "http://127.0.0.1:8080/apisix/admin/consumers", strings.NewReader(data))
+	request, _ = http.NewRequest("PUT", basepath, strings.NewReader(data))
 	request.Header.Add("Authorization", token)
 	resp, _ = http.DefaultClient.Do(request)
 	defer resp.Body.Close()
@@ -386,7 +387,7 @@ func TestConsumer_create_consumer_with_createtime_updatetime(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 
-	request, _ = http.NewRequest("GET", "http://127.0.0.1:8080/apisix/admin/consumers/case_8", nil)
+	request, _ = http.NewRequest("GET", basepath + "/case_8", nil)
 	request.Header.Add("Authorization", token)
 	resp, _ = http.DefaultClient.Do(request)
 	defer resp.Body.Close()
@@ -398,19 +399,12 @@ func TestConsumer_create_consumer_with_createtime_updatetime(t *testing.T) {
 	assert.NotEqual(t, updatetime.String(), updatetime2.String())
 
 	//deletea consumer
-	request, _ = http.NewRequest("DELETE", "http://127.0.0.1:8080/apisix/admin/consumers/case_8", nil)
+	request, _ = http.NewRequest("DELETE", basepath + "/case_8", nil)
 	request.Header.Add("Authorization", token)
 	_, err := http.DefaultClient.Do(request)
 	assert.Nil(t, err)
 
 }
-
-// TODO it's a bug here, see: https://github.com/apache/apisix-dashboard/issues/852
-
-// TODO it's a bug here, see: https://github.com/apache/apisix-dashboard/issues/568
-
-// TODO it's a bug here, see: https://github.com/apache/apisix-dashboard/issues/870
-
 
 //Teardown
 func TestConsumer_teardown(t *testing.T) {
