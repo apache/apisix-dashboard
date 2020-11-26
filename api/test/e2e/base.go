@@ -62,6 +62,27 @@ func init() {
 	token = respond.Get("data.token").String()
 }
 
+func httpGet(url string) ([]byte, int, error) {
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return body, resp.StatusCode, nil
+}
+
 func MangerApiExpect(t *testing.T) *httpexpect.Expect {
 	return httpexpect.New(t, "http://127.0.0.1:8080")
 }
