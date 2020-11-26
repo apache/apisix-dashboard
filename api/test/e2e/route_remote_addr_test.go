@@ -29,7 +29,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-					"uri": "/test_uri",
+					"uri": "/hello",
 					"remote_addr": "127.0.0.",
 					"upstream": {
 						"type": "roundrobin",
@@ -47,7 +47,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			caseDesc:     "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/test_uri",
+			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
 			Sleep:        sleepTime,
@@ -58,7 +58,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-					   "uri": "/test_uri",
+					   "uri": "/hello",
 					   "remote_addr": "127.0.0.aa",
 					   "upstream": {
 						   "type": "roundrobin",
@@ -76,7 +76,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			caseDesc:     "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/test_uri",
+			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
 			Sleep:        sleepTime,
@@ -87,7 +87,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-					   "uri": "/test_uri",
+					   "uri": "/hello",
 					   "remote_addrs": ["127.0.0.1","192.168.0."],
 					   "upstream": {
 						   "type": "roundrobin",
@@ -105,12 +105,11 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			caseDesc:     "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/test_uri",
+			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
 			Sleep:        sleepTime,
 		},
-
 	}
 
 	for _, tc := range tests {
