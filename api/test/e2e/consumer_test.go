@@ -98,6 +98,16 @@ func TestConsumer_add_consumer_with_username(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
+			caseDesc:     "hit route (consumer deleted)",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"apikey": "auth-one"},
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   "Missing related consumer",
+			Sleep:        sleepTime,
+		},
+		{
 			caseDesc:     "delete route",
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
