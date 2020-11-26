@@ -291,7 +291,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
-	
+
 	//wait 1 second so the update_time should be different
 	time.Sleep(time.Duration(1) * time.Second)
 
@@ -336,6 +336,15 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "after delete consumer verify it again",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
 		},
 	}
 
