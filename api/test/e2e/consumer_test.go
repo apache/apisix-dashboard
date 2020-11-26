@@ -27,7 +27,6 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-//case 1: add consumer with username
 func TestConsumer_add_consumer_with_username(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -103,7 +102,6 @@ func TestConsumer_add_consumer_with_username(t *testing.T) {
 	}
 }
 
-//case 2: add consumer without username
 func TestConsumer_add_consumer_without_username(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -139,7 +137,6 @@ func TestConsumer_add_consumer_without_username(t *testing.T) {
 	}
 }
 
-//case 3: delete consumer
 func TestConsumer_delete_consumer(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -167,7 +164,6 @@ func TestConsumer_delete_consumer(t *testing.T) {
 	}
 }
 
-//case 4: delete consumer(id: not_found)
 func TestConsumer_delete_notexit_consumer(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -185,7 +181,6 @@ func TestConsumer_delete_notexit_consumer(t *testing.T) {
 	}
 }
 
-//case 5: create consumer with error key
 func TestConsumer_create_consumer_with_error_key(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -222,7 +217,6 @@ func TestConsumer_create_consumer_with_error_key(t *testing.T) {
 	}
 }
 
-//case 6: create consumer with no value
 func TestConsumer_create_consumer_with_no_value(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -267,7 +261,6 @@ func TestConsumer_create_consumer_with_no_value(t *testing.T) {
 	}
 }
 
-//case 7: create consumer with labels
 func TestConsumer_add_consumer_with_labels(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -346,7 +339,6 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 	}
 }
 
-//case 8: update consumer, check if updatetime is updated
 func TestConsumer_create_consumer_with_createtime_updatetime(t *testing.T) {
 	//create consumer, save the result_A ( create_time and update_time )
 	basepath := "http://127.0.0.1:8080/apisix/admin/consumers"
@@ -364,7 +356,7 @@ func TestConsumer_create_consumer_with_createtime_updatetime(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 
-	request, _ = http.NewRequest("GET", basepath + "/case_8", nil)
+	request, _ = http.NewRequest("GET", basepath+"/case_8", nil)
 	request.Header.Add("Authorization", token)
 	resp, _ = http.DefaultClient.Do(request)
 	defer resp.Body.Close()
@@ -387,7 +379,7 @@ func TestConsumer_create_consumer_with_createtime_updatetime(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 
-	request, _ = http.NewRequest("GET", basepath + "/case_8", nil)
+	request, _ = http.NewRequest("GET", basepath+"/case_8", nil)
 	request.Header.Add("Authorization", token)
 	resp, _ = http.DefaultClient.Do(request)
 	defer resp.Body.Close()
@@ -399,14 +391,13 @@ func TestConsumer_create_consumer_with_createtime_updatetime(t *testing.T) {
 	assert.NotEqual(t, updatetime.String(), updatetime2.String())
 
 	//deletea consumer
-	request, _ = http.NewRequest("DELETE", basepath + "/case_8", nil)
+	request, _ = http.NewRequest("DELETE", basepath+"/case_8", nil)
 	request.Header.Add("Authorization", token)
 	_, err := http.DefaultClient.Do(request)
 	assert.Nil(t, err)
 
 }
 
-//Teardown
 func TestConsumer_teardown(t *testing.T) {
 	tests := []HttpTestCase{
 		{
