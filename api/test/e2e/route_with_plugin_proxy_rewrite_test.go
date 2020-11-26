@@ -21,10 +21,10 @@ import (
 	"testing"
 )
 
-func TestRoute_With_Other_Plugin(t *testing.T) {
+func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			caseDesc:     "make sure the route is not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -66,7 +66,7 @@ func TestRoute_With_Other_Plugin(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create route that will rewrite headers",
+			caseDesc: "update route that will rewrite headers",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
@@ -103,7 +103,7 @@ func TestRoute_With_Other_Plugin(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create route that using regex_uri",
+			caseDesc: "update route using regex_uri",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
@@ -136,7 +136,7 @@ func TestRoute_With_Other_Plugin(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create route that will rewrite args",
+			caseDesc: "update route that will rewrite args",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
