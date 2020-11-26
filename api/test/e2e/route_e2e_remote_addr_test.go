@@ -43,6 +43,15 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
+			caseDesc:     "verify route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/test_uri",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
+		{
 			caseDesc: "config route with invalid remote_addr",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
@@ -61,6 +70,15 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
+			caseDesc:     "verify route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/test_uri",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
+		{
 			caseDesc: "config route with invalid remote_addrs",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
@@ -77,6 +95,15 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 				   }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			caseDesc:     "verify route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/test_uri",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
 		},
 	}
 
