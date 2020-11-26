@@ -21,7 +21,7 @@ import (
 	"testing"
 )
 
-func TestConsumer_add_consumer_with_username(t *testing.T) {
+func TestConsumer_with_key_auth(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create route",
