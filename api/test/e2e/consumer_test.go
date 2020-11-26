@@ -91,7 +91,7 @@ func TestConsumer_with_error_key(t *testing.T) {
 			ExpectBody:   "scheme validate failed",
 		},
 		{
-			caseDesc:     "verify consumer",
+			caseDesc:     "verify the consumer",
 			Object:       MangerApiExpect(t),
 			Path:         "/apisix/admin/consumers/jack",
 			Method:       http.MethodGet,
@@ -109,7 +109,7 @@ func TestConsumer_with_error_key(t *testing.T) {
 func TestConsumer_add_consumer_with_labels(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create consumer",
+			caseDesc: "create the consumer",
 			Object:   MangerApiExpect(t),
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
@@ -131,7 +131,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify consumer",
+			caseDesc:     "verify the consumer",
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
@@ -141,7 +141,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create route",
+			caseDesc: "create the route",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
@@ -163,7 +163,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
+			caseDesc:     "hit the route with correct apikey",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -172,7 +172,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete consumer",
+			caseDesc:     "delete the consumer",
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
@@ -180,7 +180,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete route",
+			caseDesc:     "delete the route",
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -218,10 +218,10 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
 
-	//create consumer again, compare create_time and update_time
+	//update the consumer with new desc
 	data = `{
 		"username":"jack",
-		"desc": "new consumer haha"
+		"desc": "updated consumer"
     }`
 	request, _ = http.NewRequest("PUT", basepath, strings.NewReader(data))
 	request.Header.Add("Authorization", token)
@@ -239,10 +239,12 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	createtime2 := gjson.Get(string(respBody), "data.create_time")
 	updatetime2 := gjson.Get(string(respBody), "data.update_time")
 
+	//verify the consumer and compare result
+	assert.Equal(t, "updated consumer",gjson.Get(string(respBody), "data.desc").String())
 	assert.Equal(t, createtime.String(), createtime2.String())
 	assert.NotEqual(t, updatetime.String(), updatetime2.String())
 
-	//deletea consumer
+	//delete the consumer
 	request, _ = http.NewRequest("DELETE", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
 	_, err := http.DefaultClient.Do(request)
