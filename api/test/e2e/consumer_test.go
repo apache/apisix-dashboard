@@ -42,9 +42,9 @@ func TestConsumer_add_consumer_with_username(t *testing.T) {
 					}]
 				 }
 			 }`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "test",
+			Headers: map[string]string{"Authorization": token},
+			//ExpectStatus: http.StatusOK,
+			ExpectBody: "test",
 		},
 		{
 			caseDesc:     "hit route without apikey",
