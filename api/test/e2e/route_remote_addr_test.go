@@ -21,7 +21,6 @@ import (
 	"testing"
 )
 
-//case 1: config route with invalid remote_addr
 func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 	tests := []HttpTestCase{
 		{
