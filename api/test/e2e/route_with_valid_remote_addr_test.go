@@ -30,7 +30,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
-					"remote_addr": "127.0.0.1",
+					"remote_addr": "172.16.238.1",
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
@@ -44,14 +44,14 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
+			caseDesc: "verify route",
+			Object:   APISIXExpect(t),
+			Method:   http.MethodGet,
+			Path:     "/hello",
+			Headers:  map[string]string{"Authorization": token},
+			//ExpectStatus: http.StatusOK,
+			ExpectBody: "hello world",
+			Sleep:      sleepTime,
 		},
 		{
 			caseDesc: "add route with valid remote_addr (CIDR)",
@@ -60,7 +60,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
-					"remote_addr": "127.0.0.1/24",
+					"remote_addr": "172.16.238.1/24",
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
@@ -74,14 +74,14 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
+			caseDesc: "verify route",
+			Object:   APISIXExpect(t),
+			Method:   http.MethodGet,
+			Path:     "/hello",
+			Headers:  map[string]string{"Authorization": token},
+			//ExpectStatus: http.StatusOK,
+			ExpectBody: "hello world",
+			Sleep:      sleepTime,
 		},
 		{
 			caseDesc: "add route with valid remote_addr",
@@ -90,7 +90,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
-					"remote_addrs": ["127.0.0.1","192.168.0.2/24"],
+					"remote_addrs": ["172.16.238.1","192.168.0.2/24"],
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
@@ -104,14 +104,14 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
+			caseDesc: "verify route",
+			Object:   APISIXExpect(t),
+			Method:   http.MethodGet,
+			Path:     "/hello",
+			Headers:  map[string]string{"Authorization": token},
+			//ExpectStatus: http.StatusOK,
+			ExpectBody: "hello world",
+			Sleep:      sleepTime,
 		},
 		{
 			caseDesc:     "delete route",
