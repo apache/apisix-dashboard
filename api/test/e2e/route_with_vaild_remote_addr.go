@@ -24,7 +24,7 @@ import (
 func TestRoute_with_vaild_remote_addr(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "add route with vaild remote_addr",
+			caseDesc: "add route with vaild remote_address",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
@@ -54,7 +54,7 @@ func TestRoute_with_vaild_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "add route with vaild remote_addr (CIDR)",
+			caseDesc: "add route with vaild remote_address (CIDR)",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
@@ -84,13 +84,13 @@ func TestRoute_with_vaild_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "add route with vaild remote_addrs",
+			caseDesc: "add route with vaild remote_address",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
-					"remote_addrs": ["127.0.0.1","127.0.0.1/24"],
+					"remote_addrs": ["127.0.0.1","192.168.0.2/24"],
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
