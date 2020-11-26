@@ -27,49 +27,6 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-func TestConsumer_without_username(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			caseDesc: "create consumer without username",
-			Object:   MangerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
-			Body: `{
-				 "plugins": {
-					 "key-auth": {
-						 "key": "auth-new"
-					 }
-				 },
-				 "desc": "test description"
-			 }`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "scheme validate fail",
-		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc)
-	}
-}
-
-func TestConsumer_delete_notexit_consumer(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			caseDesc:     "delete notexit consumer",
-			Object:       MangerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/consumers/notexit",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusNotFound,
-		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc)
-	}
-}
-
 func TestConsumer_with_error_key(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -85,7 +42,7 @@ func TestConsumer_with_error_key(t *testing.T) {
 					 }
 				 },
 				 "desc": "test description"
-			 }`,
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   "scheme validate failed",
@@ -209,14 +166,18 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	code := gjson.Get(string(respBody), "code")
 	assert.Equal(t, code.String(), "0")
 
-	time.Sleep(1 * time.Second)
-
+	time.Sleep(time.Duration(100) * time.Millisecond)
+	
+	//get the consumer, save createtime and updatetime
 	request, _ = http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
 	resp, _ = http.DefaultClient.Do(request)
 	respBody, _ = ioutil.ReadAll(resp.Body)
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
+
+	//Wait one second for update time to be different
+	time.Sleep(time.Duration(1000) * time.Millisecond)
 
 	//update the consumer with new desc
 	data = `{
@@ -230,8 +191,9 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	code = gjson.Get(string(respBody), "code")
 	assert.Equal(t, code.String(), "0")
 
-	time.Sleep(1 * time.Second)
-
+	time.Sleep(time.Duration(100) * time.Millisecond)
+	
+	//get the consumer
 	request, _ = http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
 	resp, _ = http.DefaultClient.Do(request)
