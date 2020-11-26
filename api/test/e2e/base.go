@@ -35,9 +35,9 @@ var token string
 func init() {
 	//login to get auth token
 	requestBody := []byte(`{
-		 "username": "admin",
-		 "password": "admin"
-	 }`)
+		"username": "admin",
+		"password": "admin"
+	}`)
 
 	url := "http://127.0.0.1:8080/apisix/admin/user/login"
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
@@ -107,7 +107,6 @@ type HttpTestCase struct {
 	ExpectCode    int
 	ExpectMessage string
 	ExpectBody    string
-	ExpectJSON    map[string]interface{}
 	ExpectHeaders map[string]string
 	Sleep         time.Duration //ms
 }
@@ -166,13 +165,6 @@ func testCaseCheck(tc HttpTestCase) {
 	//match body
 	if tc.ExpectBody != "" {
 		resp.Body().Contains(tc.ExpectBody)
-	}
-
-	//verify result by json
-	if tc.ExpectJSON != nil {
-		for key, val := range tc.ExpectJSON {
-			resp.Status(http.StatusOK).JSON().Object().ContainsKey(key).ValueEqual(key, val)
-		}
 	}
 
 }
