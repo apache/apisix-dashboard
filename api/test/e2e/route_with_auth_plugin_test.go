@@ -71,16 +71,16 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-                "username": "jack",
-                "plugins": {
-                    "jwt-auth": {
-                        "key": "user-key",
-                        "secret": "my-secret-key",
+				"username": "jack",
+				"plugins": {
+					"jwt-auth": {
+						"key": "user-key",
+						"secret": "my-secret-key",
 						"algorithm": "HS256"
-                    }
-                },
-                "desc": "test description"
-            }`,
+					}
+				},
+				"desc": "test description"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
