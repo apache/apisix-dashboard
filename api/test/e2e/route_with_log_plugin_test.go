@@ -42,17 +42,17 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			Body: `{
 				"uri": "/opentracing",
 				"plugins": {
-                    "http-logger": {
-                        "uri": "http://172.16.238.20:1982/hello",
-                        "batch_max_size": 1,
-                        "max_retry_count": 1,
-                        "retry_delay": 2,
-                        "buffer_duration": 2,
-                        "inactive_timeout": 2,
+					"http-logger": {
+						"uri": "http://172.16.238.20:1982/hello",
+						"batch_max_size": 1,
+						"max_retry_count": 1,
+						"retry_delay": 2,
+						"buffer_duration": 2,
+						"inactive_timeout": 2,
 						"name": "http logger",
 						"timeout": 3,
-                        "concat_method": "json"
-                    }
+						"concat_method": "json"
+					}
 				},
 				"upstream": {
 					"type": "roundrobin",
@@ -98,18 +98,18 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/opentracing",
-				"plugins": {
-                    "http-logger": {
-                        "uri": "https://127.0.0.1:8888/hello-world-http",
-                        "batch_max_size": 1,
-                        "max_retry_count": 1,
-                        "retry_delay": 2,
-                        "buffer_duration": 2,
-                        "inactive_timeout": 2,
+					"plugins": {
+					"http-logger": {
+						"uri": "https://127.0.0.1:8888/hello-world-http",
+						"batch_max_size": 1,
+						"max_retry_count": 1,
+						"retry_delay": 2,
+						"buffer_duration": 2,
+						"inactive_timeout": 2,
 						"name": "http logger",
 						"timeout": 3,
-                        "concat_method": "json"
-                    }
+						"concat_method": "json"
+					}
 				},
 				"upstream": {
 					"type": "roundrobin",
