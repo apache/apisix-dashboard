@@ -17,11 +17,12 @@
 package e2e
 
 import (
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRoute_With_Log_Plugin(t *testing.T) {
