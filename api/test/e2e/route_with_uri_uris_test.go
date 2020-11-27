@@ -94,6 +94,7 @@ func TestRoute_with_invalid_uri_uris(t *testing.T) {
 			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
 			Sleep:        sleepTime,
 		},
 		{
@@ -148,16 +149,15 @@ func TestRoute_with_invalid_uri_uris(t *testing.T) {
 	}
 }
 
-func TestRoute_with_uri_and_uris(t *testing.T) {
+func TestRoute_with_valid_uri_uris(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "add route with uri and uris at the same time",
+			caseDesc: "add route with valid uri",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-					"uri": "/hello_notexist",
-					"uris": ["/hello_notexist2","/hello"],
+					"uri": "/hello",
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
@@ -168,16 +168,7 @@ func TestRoute_with_uri_and_uris(t *testing.T) {
 					}
 				}`,
 			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusBadRequest,
-		},
-		{
-			caseDesc:     "verify not exist route",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello_notexist",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusNotFound,
-			Sleep:        sleepTime,
+			ExpectStatus: http.StatusOK,
 		},
 		{
 			caseDesc:     "verify route",
@@ -185,7 +176,8 @@ func TestRoute_with_uri_and_uris(t *testing.T) {
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusNotFound,
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
 			Sleep:        sleepTime,
 		},
 		{
@@ -194,7 +186,55 @@ func TestRoute_with_uri_and_uris(t *testing.T) {
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusNotFound,
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc: "add route with valid uris",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+					"uris": ["/hello","/status"],
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					}
+				}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "verify route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/status",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "ok",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "delete route",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
 		},
 	}
 
