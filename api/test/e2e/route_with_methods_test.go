@@ -21,7 +21,7 @@ import (
 	"testing"
 )
 
-func TestRoute_with_invalid_method(t *testing.T) {
+func TestRoute_with_methods(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "add route with invalid method",
@@ -257,7 +257,6 @@ func TestRoute_with_invalid_method(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
 		},
-
 	}
 
 	for _, tc := range tests {
