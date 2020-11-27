@@ -144,8 +144,8 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 	// verify http logger by checking log
 	bytes, err = ioutil.ReadFile("../docker/apisix_logs/error.log")
 	assert.Nil(t, err)
-	//logContent = string(bytes)
-	//assert.Contains(t, logContent, "failed to perform SSL with host[127.0.0.1] port[8888] handshake failed")
+	logContent = string(bytes)
+	assert.Contains(t, logContent, "failed to perform SSL with host[127.0.0.1] port[8888] handshake failed")
 
 	tests = []HttpTestCase{
 		{
@@ -157,13 +157,12 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just deleted",
+			caseDesc:     "make sure the route has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello1",
-			Headers:      map[string]string{"Host": "bar.com"},
+			Path:         "/opentracing",
 			ExpectStatus: http.StatusNotFound,
-			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        sleepTime,
 		},
 	}
