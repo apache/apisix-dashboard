@@ -111,7 +111,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 				"uri": "/test/*",
 				"plugins": {
 					"proxy-rewrite": {
-					"regex_uri": ["^/test/(.*)/(.*)/(.*)", "/$1_$2_$3"]
+						"regex_uri": ["^/test/(.*)/(.*)/(.*)", "/$1_$2_$3"]
 					}
 				},
 				"upstream": {
