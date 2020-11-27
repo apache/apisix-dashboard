@@ -177,12 +177,81 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
     </Form.List>
   );
 
+  const RemoteAddrList = () => (
+    <Form.List name="remote_addrs">
+      {(fields, { add, remove }) => {
+        return (
+          <div>
+            {fields.map((field, index) => (
+              <Form.Item
+                {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
+                label={index === 0 ? formatMessage({ id: 'page.route.remoteAddrs' }) : ''}
+                key={field.key}
+                extra={
+                  index === 0 ? (
+                    <div>
+                      {formatMessage({ id: 'page.route.form.itemExtraMessage1.remoteAddrs' })}
+                    </div>
+                  ) : null
+                }
+              >
+                <Form.Item
+                  {...field}
+                  validateTrigger={['onChange', 'onBlur']}
+                  rules={[
+                    {
+                      pattern: new RegExp(/^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/, 'g'),
+                      message: formatMessage({
+                        id: 'page.route.form.itemRulesPatternMessage.remoteAddrs',
+                      }),
+                    },
+                  ]}
+                  noStyle
+                >
+                  <Input
+                    placeholder={`${formatMessage({
+                      id: 'component.global.pleaseEnter',
+                    })} ${formatMessage({ id: 'page.route.remoteAddrs' })}`}
+                    style={{ width: '60%' }}
+                    disabled={disabled}
+                  />
+                </Form.Item>
+                {!disabled && fields.length > 1 && (
+                  <MinusCircleOutlined
+                    className="dynamic-delete-button"
+                    style={{ margin: '0 8px' }}
+                    onClick={() => {
+                      remove(field.name);
+                    }}
+                  />
+                )}
+              </Form.Item>
+            ))}
+            {!disabled && (
+              <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+                <Button
+                  type="dashed"
+                  onClick={() => {
+                    add();
+                  }}
+                >
+                  <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
+                </Button>
+              </Form.Item>
+            )}
+          </div>
+        );
+      }}
+    </Form.List>
+  );
+
   return (
     <PanelSection
       title={formatMessage({ id: 'page.route.panelSection.title.requestConfigBasicDefine' })}
     >
       <HostList />
       <UriList />
+      <RemoteAddrList />
       <Form.Item
         label={formatMessage({ id: 'page.route.form.itemLabel.httpMethod' })}
         name="methods"
