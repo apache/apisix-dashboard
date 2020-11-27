@@ -84,7 +84,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "add route with valid remote_addr",
+			caseDesc: "update route with valid remote_addr",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
@@ -123,7 +123,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "after delete route verify it again",
+			caseDesc:     "verify it again after deleting the route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
