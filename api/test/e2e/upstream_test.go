@@ -188,7 +188,60 @@ func TestRoute_Node_Host(t *testing.T) {
 	}
 }
 
-//TODO cHash
+func TestUpstream_cHash(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create cHash upstream",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/upstreams/1",
+			Body: `{
+                "nodes": [{
+                    "host": "172.16.238.20",
+                    "port": 1980,
+                    "weight": 1
+				},
+				{
+                    "host": "172.16.238.20",
+                    "port": 1981,
+                    "weight": 2
+                }],
+				"type": "chash",
+				"hash_on":"header",
+				"key": "remote_addr"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc: "create route using the upstream just created",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/1",
+			Body: `{
+				"uri": "/server_port",
+				"upstream_id": "1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "hit the route just created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "1981",
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
 //TODO websocket
 
 func TestRoute_Delete(t *testing.T) {
@@ -201,15 +254,7 @@ func TestRoute_Delete(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
 		},
-		// TODO it's a bug here, see: https://github.com/apache/apisix-dashboard/issues/728
-		//{
-		//	caseDesc:     "delete upstream - being used by route 1",
-		//	Object:       MangerApiExpect(t),
-		//	Method:       http.MethodDelete,
-		//	Path:         "/apisix/admin/upstreams/1",
-		//	Headers:      map[string]string{"Authorization": token},
-		//	ExpectStatus: http.StatusBadRequest,
-		//},
+		// TODO delete upstream - being used by route 1
 		{
 			caseDesc:     "delete route",
 			Object:       MangerApiExpect(t),
