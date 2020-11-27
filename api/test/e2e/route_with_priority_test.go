@@ -21,12 +21,6 @@ import (
 	"testing"
 )
 
-//  add test case for config route with wrong data type priority
-//  add test case for config route with correct priority
-//  add test case for config route with another correct priority
-//  add test case for config route without priority (default priority)
-//  verify the route just configured for priority
-
 func TestRoute_with_priority(t *testing.T) {
 	tests := []HttpTestCase{
 		{
