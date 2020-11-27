@@ -98,6 +98,7 @@ func TestRoute_With_Metric_Plugin(t *testing.T) {
 			Method:       http.MethodGet,
 			Path:         "/hello-not-exists",
 			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "verify the prometheus metric data (apisix_http_status 200)",
