@@ -114,7 +114,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update route with invalid remote_addr",
+			caseDesc: "update remote_addr to not be hit",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
@@ -143,7 +143,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update route with invalid remote_addrs",
+			caseDesc: "update remote_addrs to not be hit",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
