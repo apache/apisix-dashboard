@@ -29,6 +29,7 @@ export default {
   'page.route.rule': '规则',
   'page.route.domainName': '域名',
   'page.route.path': '路径',
+  'page.route.remoteAddrs': '客户端地址',
   'page.route.value': '参数值',
   'page.route.protocol': '协议',
   'page.route.httpHeaderName': 'HTTP 请求头名称',
@@ -60,6 +61,10 @@ export default {
     '1. 请求路径，如 /foo/index.html，支持请求路径前缀 /foo/* ；',
   'page.route.form.itemExtraMessage2.path': '2. /* 代表所有路径',
   'page.route.form.itemRulesPatternMessage.path': '以 / 开头，且 * 只能在最后',
+  'page.route.form.itemExtraMessage1.remoteAddrs':
+    '客户端 IP，例如：192.168.1.101，192.168.1.0/24，::1，fe80::1，fe80::1/64',
+  'page.route.form.itemRulesPatternMessage.remoteAddrs':
+    '请输入合法的 IP 地址，例如：192.168.1.101，192.168.1.0/24，::1，fe80::1，fe80::1/64',
 
   // select
   'page.route.select.option.enableHttps': '启用 HTTPS',
