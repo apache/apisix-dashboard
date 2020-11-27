@@ -30,7 +30,7 @@ import {
 const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
   form,
   disabled,
-  onChange = () => {},
+  onChange = () => { },
 }) => {
   const { formatMessage } = useIntl();
   const HostList = () => (
@@ -41,12 +41,10 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
             {fields.map((field, index) => (
               <Form.Item
                 {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-                label={index === 0 ? formatMessage({ id: 'page.route.domainName' }) : ''}
+                label={index === 0 && formatMessage({ id: 'page.route.domainName' })}
                 key={field.key}
                 extra={
-                  index === 0
-                    ? formatMessage({ id: 'page.route.form.itemExtraMessage.domain' })
-                    : ''
+                  index === 0 && formatMessage({ id: 'page.route.form.itemExtraMessage.domain' })
                 }
               >
                 <Form.Item
@@ -107,17 +105,17 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
             {fields.map((field, index) => (
               <Form.Item
                 {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-                label={index === 0 ? formatMessage({ id: 'page.route.path' }) : ''}
+                label={index === 0 && formatMessage({ id: 'page.route.path' })}
                 required
                 key={field.key}
                 extra={
-                  index === 0 ? (
+                  index === 0 && (
                     <div>
                       {formatMessage({ id: 'page.route.form.itemExtraMessage1.path' })}
                       <br />
                       {formatMessage({ id: 'page.route.form.itemExtraMessage2.path' })}
                     </div>
-                  ) : null
+                  )
                 }
               >
                 <Form.Item
@@ -185,14 +183,14 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
             {fields.map((field, index) => (
               <Form.Item
                 {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-                label={index === 0 ? formatMessage({ id: 'page.route.remoteAddrs' }) : ''}
+                label={index === 0 && formatMessage({ id: 'page.route.remoteAddrs' })}
                 key={field.key}
                 extra={
-                  index === 0 ? (
+                  index === 0 && (
                     <div>
                       {formatMessage({ id: 'page.route.form.itemExtraMessage1.remoteAddrs' })}
                     </div>
-                  ) : null
+                  )
                 }
               >
                 <Form.Item
