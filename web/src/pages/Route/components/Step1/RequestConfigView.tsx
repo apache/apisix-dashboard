@@ -200,7 +200,10 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                   validateTrigger={['onChange', 'onBlur']}
                   rules={[
                     {
-                      pattern: new RegExp(/^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/, 'g'),
+                      pattern: new RegExp(
+                        /^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$|^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}\/[0-9]{1,2}$|^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$|^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?\/[0-9]{1,3}$/,
+                        'g',
+                      ),
                       message: formatMessage({
                         id: 'page.route.form.itemRulesPatternMessage.remoteAddrs',
                       }),
