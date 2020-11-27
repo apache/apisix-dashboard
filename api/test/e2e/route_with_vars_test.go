@@ -190,7 +190,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc: "create route with multiple vars (args, cookie and header)",
+			caseDesc: "add route with multiple vars (args, cookie and header)",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
