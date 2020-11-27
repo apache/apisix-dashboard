@@ -92,13 +92,13 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "update route with wrong https endpoint",
+			caseDesc: "create route with wrong https endpoint",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Path:     "/apisix/admin/routes/r2",
 			Body: `{
-				"uri": "/opentracing",
-					"plugins": {
+				"uri": "/hello",
+				"plugins": {
 					"http-logger": {
 						"uri": "https://127.0.0.1:8888/hello-world-http",
 						"batch_max_size": 1,
@@ -115,7 +115,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 					"type": "roundrobin",
 					"nodes": [{
 						"host": "172.16.238.20",
-						"port": 1981,
+						"port": 1982,
 						"weight": 1
 					}]
 				}
@@ -127,9 +127,9 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			caseDesc:     "access route to trigger log",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/opentracing",
+			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "opentracing",
+			ExpectBody:   "hello world",
 			Sleep:        sleepTime,
 		},
 	}
@@ -145,7 +145,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 	bytes, err = ioutil.ReadFile("../docker/apisix_logs/error.log")
 	assert.Nil(t, err)
 	logContent = string(bytes)
-	assert.Contains(t, logContent, "failed to perform SSL with host[127.0.0.1] port[8888] handshake failed")
+	assert.Contains(t, logContent, "Batch Processor[http logger] failed to process entries: failed to connect to host[127.0.0.1] port[8888] connection refused")
 
 	tests = []HttpTestCase{
 		{
@@ -161,6 +161,23 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/opentracing",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "delete route 2",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "make sure the route 2 has been deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        sleepTime,
