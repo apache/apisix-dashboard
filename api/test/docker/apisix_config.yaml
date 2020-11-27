@@ -40,4 +40,4 @@ apisix:
       ssl_cert_key: "/usr/local/apisix/certs/apisix.key"
 
 nginx_config:
-  error_log_level: "info"
+  error_log_level: "debug"
