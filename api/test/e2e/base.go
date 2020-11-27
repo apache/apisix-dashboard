@@ -122,6 +122,7 @@ type HttpTestCase struct {
 	Object        *httpexpect.Expect
 	Method        string
 	Path          string
+	Query         string
 	Body          string
 	Headers       map[string]string
 	ExpectStatus  int
@@ -138,15 +139,15 @@ func testCaseCheck(tc HttpTestCase) {
 	var req *httpexpect.Request
 	switch tc.Method {
 	case http.MethodGet:
-		req = expectObj.GET(tc.Path)
+		req = expectObj.GET(tc.Path, tc.Query)
 	case http.MethodPut:
-		req = expectObj.PUT(tc.Path)
+		req = expectObj.PUT(tc.Path, tc.Query)
 	case http.MethodPost:
-		req = expectObj.POST(tc.Path)
+		req = expectObj.POST(tc.Path, tc.Query)
 	case http.MethodDelete:
-		req = expectObj.DELETE(tc.Path)
+		req = expectObj.DELETE(tc.Path, tc.Query)
 	case http.MethodPatch:
-		req = expectObj.PATCH(tc.Path)
+		req = expectObj.PATCH(tc.Path, tc.Query)
 	default:
 	}
 
