@@ -244,7 +244,7 @@ func TestUpstream_cHash(t *testing.T) {
 
 //TODO websocket
 
-func TestRoute_Delete(t *testing.T) {
+func TestUpstream_Delete(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "delete not exist upstream",
