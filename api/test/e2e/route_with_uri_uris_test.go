@@ -79,7 +79,7 @@ func TestRoute_with_invalid_uri_uris(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route (notexist uri)",
+			caseDesc:     "verify route (not exist uri)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_notexist",
@@ -117,7 +117,7 @@ func TestRoute_with_invalid_uri_uris(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route (notexist uri)",
+			caseDesc:     "verify route (not exist uri)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_notexist",
