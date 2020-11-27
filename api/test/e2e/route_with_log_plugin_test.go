@@ -31,7 +31,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			caseDesc:     "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello",
+			Path:         "/hello_",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
@@ -41,7 +41,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				"uri": "/opentracing",
+				"uri": "/hello_",
 				"plugins": {
 					"http-logger": {
 						"uri": "http://172.16.238.20:1982/hello",
@@ -71,9 +71,9 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			caseDesc:     "access route to trigger log",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/opentracing",
+			Path:         "/hello_",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "opentracing",
+			ExpectBody:   "hello world",
 			Sleep:        sleepTime,
 		},
 	}
@@ -86,6 +86,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 	time.Sleep(1500 * time.Millisecond)
 
 	// verify http logger by checking log
+	//todo: should use a fake upstream for confirming whether we got the log data.
 	bytes, err := ioutil.ReadFile("../docker/apisix_logs/error.log")
 	assert.Nil(t, err)
 	logContent := string(bytes)
@@ -143,6 +144,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 	time.Sleep(1500 * time.Millisecond)
 
 	// verify http logger by checking log
+	//todo: should use a fake upstream for confirming whether we got the log data.
 	bytes, err = ioutil.ReadFile("../docker/apisix_logs/error.log")
 	assert.Nil(t, err)
 	logContent = string(bytes)
@@ -161,7 +163,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			caseDesc:     "make sure the route has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/opentracing",
+			Path:         "/hello_",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        sleepTime,
