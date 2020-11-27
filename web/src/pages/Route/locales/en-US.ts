@@ -64,9 +64,9 @@ export default {
   'page.route.form.itemExtraMessage2.path': '2. /* represents all paths',
   'page.route.form.itemRulesPatternMessage.path': 'Begin with / , and * can only at the end',
   'page.route.form.itemRulesPatternMessage.remoteAddrs':
-    'Please enter a valid IP address, for examble: 192.168.1.101, 192.168.1.0/24, ::1, fe80::1, fe80::1/64',
+    'Please enter a valid IP address, for example: 192.168.1.101, 192.168.1.0/24, ::1, fe80::1, fe80::1/64',
   'page.route.form.itemExtraMessage1.remoteAddrs':
-    'Client IP, for examble: 192.168.1.101, 192.168.1.0/24, ::1, fe80::1, fe80::1/64',
+    'Client IP, for example: 192.168.1.101, 192.168.1.0/24, ::1, fe80::1, fe80::1/64',
 
   'page.route.httpAction': 'Action',
   'page.route.httpOverrideOrCreate': 'Override/Create',
