@@ -31,7 +31,6 @@ declare namespace PluginComponent {
     name: string;
     category: Category;
     hidden?: boolean;
-    noConfiguration?: boolean;
     // Note: Plugins are sorted by priority under the same category in the frontend, the smaller the number, the higher the priority. The default value is 9999.
     priority?: number;
     avatar?: React.ReactNode;

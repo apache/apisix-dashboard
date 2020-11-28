@@ -21,7 +21,6 @@ import { PanelSection } from '@api7-dashboard/ui';
 import { validate } from 'json-schema';
 
 import { fetchSchema, getList } from './service';
-import { PLUGIN_MAPPER_SOURCE } from './data';
 import CodeMirrorDrawer from './CodeMirrorDrawer';
 
 type Props = {
@@ -56,6 +55,24 @@ const PluginPage: React.FC<Props> = ({
   useEffect(() => {
     getList().then(setPlugin);
   }, []);
+
+  const validateData = (pluginName: string, value: PluginComponent.Data) => {
+    fetchSchema(pluginName, schemaType).then((schema) => {
+      const { valid, errors } = validate(value, schema);
+      if (valid) {
+        setName(NEVER_EXIST_PLUGIN_FLAG);
+        onChange({ ...initialData, [pluginName]: { ...value, disable: false } });
+        return;
+      }
+      errors?.forEach((item) => {
+        notification.error({
+          message: 'Invalid plugin data',
+          description: item.message,
+        });
+      });
+      setName(pluginName);
+    });
+  };
 
   return (
     <>
@@ -121,7 +138,6 @@ const PluginPage: React.FC<Props> = ({
                     extra={[
                       <Tooltip title="Setting" key={`plugin-card-${item.name}-extra-tooltip-2`}>
                         <Button
-                          disabled={PLUGIN_MAPPER_SOURCE[item.name]?.noConfiguration}
                           shape="circle"
                           icon={<SettingFilled />}
                           style={{ marginRight: 10, marginLeft: 10 }}
@@ -136,11 +152,7 @@ const PluginPage: React.FC<Props> = ({
                         disabled={readonly}
                         onChange={(isChecked) => {
                           if (isChecked) {
-                            setName(item.name);
-                            onChange({
-                              ...initialData,
-                              [item.name]: { ...initialData[item.name], disable: false },
-                            });
+                            validateData(item.name, initialData[item.name]);
                           } else {
                             onChange({
                               ...initialData,
@@ -166,20 +178,7 @@ const PluginPage: React.FC<Props> = ({
           setName(NEVER_EXIST_PLUGIN_FLAG);
         }}
         onSubmit={(value) => {
-          fetchSchema(name, schemaType).then((schema) => {
-            const { valid, errors } = validate(value, schema);
-            if (valid) {
-              onChange({ ...initialData, [name]: { ...value, disable: false } });
-              setName(NEVER_EXIST_PLUGIN_FLAG);
-              return;
-            }
-            errors?.forEach((item) => {
-              notification.error({
-                message: 'Invalid plugin data',
-                description: item.message,
-              });
-            });
-          });
+          validateData(name, value);
         }}
       />
     </>

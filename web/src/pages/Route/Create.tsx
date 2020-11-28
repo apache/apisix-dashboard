@@ -65,7 +65,7 @@ const Page: React.FC<Props> = (props) => {
   const [form2] = Form.useForm();
   const upstreamRef = useRef<any>();
 
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
   const [stepHeader, setStepHeader] = useState(STEP_HEADER_4);
   const [chart, setChart] = useState(INIT_CHART);
 

@@ -33,7 +33,6 @@ export const PLUGIN_MAPPER_SOURCE: Record<string, Omit<PluginComponent.Meta, 'na
   },
   prometheus: {
     category: 'Observability',
-    noConfiguration: true,
     priority: 1,
     avatar: <IconFont type="iconPrometheus_software_logo" />,
   },
@@ -60,7 +59,6 @@ export const PLUGIN_MAPPER_SOURCE: Record<string, Omit<PluginComponent.Meta, 'na
   },
   'node-status': {
     category: 'Other',
-    noConfiguration: true,
   },
   'jwt-auth': {
     category: 'Authentication',
@@ -146,7 +144,6 @@ export const PLUGIN_MAPPER_SOURCE: Record<string, Omit<PluginComponent.Meta, 'na
   },
   'batch-requests': {
     category: 'Other',
-    noConfiguration: true,
   },
   'http-logger': {
     category: 'Log',

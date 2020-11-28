@@ -19,7 +19,6 @@ import { Radio, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { isChrome } from 'react-device-detect';
 
-// import { PluginPage, PluginPageType } from '@api7-dashboard/plugin';
 import PluginOrchestration from '@api7-dashboard/pluginchart';
 import PluginPage from '@/components/Plugin';
 
