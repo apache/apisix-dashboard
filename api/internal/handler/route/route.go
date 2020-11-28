@@ -194,7 +194,7 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Route)
 	//check depend
-	if input.ServiceID != "" {
+	if input.ServiceID != nil {
 		serviceID := utils.InterfaceToString(input.ServiceID)
 		_, err := h.svcStore.Get(serviceID)
 		if err != nil {
@@ -205,7 +205,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
 	}
-	if input.UpstreamID != "" {
+	if input.UpstreamID != nil {
 		upstreamID := utils.InterfaceToString(input.UpstreamID)
 		_, err := h.upstreamStore.Get(upstreamID)
 		if err != nil {
@@ -260,7 +260,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	//check depend
-	if input.ServiceID != "" {
+	if input.ServiceID != nil {
 		serviceID := utils.InterfaceToString(input.ServiceID)
 		_, err := h.svcStore.Get(serviceID)
 		if err != nil {
@@ -271,7 +271,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
 	}
-	if input.UpstreamID != "" {
+	if input.UpstreamID != nil {
 		upstreamID := utils.InterfaceToString(input.UpstreamID)
 		_, err := h.upstreamStore.Get(upstreamID)
 		if err != nil {
