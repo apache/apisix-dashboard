@@ -141,7 +141,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 				"uri": 123456
 			}`,
 			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusInternalServerError,
+			ExpectStatus: http.StatusBadRequest,
 		},
 		{
 			caseDesc:     "hit the route just created - wildcard domain name",
