@@ -30,7 +30,7 @@ import {
 const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
   form,
   disabled,
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const HostList = () => (

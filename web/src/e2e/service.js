@@ -36,4 +36,4 @@ export const setupLogin = async (page) => {
   await page.click(domSelectors.buttonLogin);
   await page.waitForSelector(domSelectors.loginSuccessIcon);
   await page.waitForNavigation();
-}
+};
