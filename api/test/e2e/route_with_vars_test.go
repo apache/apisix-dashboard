@@ -299,6 +299,16 @@ func TestRoute_with_vars(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
 		},
+
+		{
+			caseDesc:     "delete the route with vars (args is digital)",
+			Object:       MangerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
 	}
 
 	for _, tc := range tests {
