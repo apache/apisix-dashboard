@@ -43,7 +43,7 @@ func TestRoute_with_valid_uri_uris(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
+			caseDesc:     "hit the route (r1)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -53,7 +53,7 @@ func TestRoute_with_valid_uri_uris(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			caseDesc:     "delete the route (r1)",
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -81,7 +81,7 @@ func TestRoute_with_valid_uri_uris(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
+			caseDesc:     "hit the route (/hello)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -91,7 +91,7 @@ func TestRoute_with_valid_uri_uris(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route",
+			caseDesc:     "hit the route (/status)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/status",
@@ -101,7 +101,7 @@ func TestRoute_with_valid_uri_uris(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			caseDesc:     "delete the route (r1)",
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
