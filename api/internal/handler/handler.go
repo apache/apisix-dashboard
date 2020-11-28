@@ -59,10 +59,10 @@ func (mw *ErrorTransformMiddleware) Handle(ctx droplet.Context) error {
 		if !ok {
 			return err
 		}
-		switch {
-		case bErr.Code == data.ErrCodeValidate:
+		switch bErr.Code {
+		case data.ErrCodeValidate, data.ErrCodeFormat:
 			ctx.SetOutput(&data.SpecCodeResponse{StatusCode: http.StatusBadRequest})
-		case bErr.Code == data.ErrCodeInternal:
+		case data.ErrCodeInternal:
 			ctx.SetOutput(&data.SpecCodeResponse{StatusCode: http.StatusInternalServerError})
 		}
 		return err
