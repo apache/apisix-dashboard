@@ -31,6 +31,7 @@ import (
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 func TestNewGenericStore(t *testing.T) {
@@ -580,11 +581,12 @@ func TestGenericStore_Create(t *testing.T) {
 			createCalled = true
 			assert.Equal(t, tc.wantKey, args[1], tc.caseDesc)
 			input := TestStruct{}
+			id := utils.InterfaceToString(input.ID)
 			err := json.Unmarshal([]byte(args[2].(string)), &input)
 			assert.Nil(t, err)
 			assert.Equal(t, tc.giveObj.Field1, input.Field1, tc.caseDesc)
 			assert.Equal(t, tc.giveObj.Field2, input.Field2, tc.caseDesc)
-			assert.NotEqual(t, 0, len(input.ID), tc.caseDesc)
+			assert.NotEqual(t, 0, len(id), tc.caseDesc)
 			assert.NotEqual(t, 0, input.CreateTime, tc.caseDesc)
 			assert.NotEqual(t, 0, input.UpdateTime, tc.caseDesc)
 		}).Return(tc.giveErr)

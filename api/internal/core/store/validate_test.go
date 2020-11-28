@@ -111,7 +111,7 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 
 	err = validator.Validate(consumer2)
 	assert.NotNil(t, err)
-	assert.EqualError(t, err, "scheme validate fail: id: Must validate at least one schema (anyOf)\nid: String length must be greater than or equal to 1\nid: Does not match pattern '^[a-zA-Z0-9-_.]+$'")
+	assert.EqualError(t, err, "scheme validate fail: id: Must validate at least one schema (anyOf)\nid: Invalid type. Expected: string, given: null")
 
 	//check nil obj
 	err = validator.Validate(nil)

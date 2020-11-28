@@ -17,10 +17,12 @@
 package utils
 
 import (
-	"github.com/sony/sonyflake"
+	"fmt"
 	"net"
 	"os"
 	"strconv"
+
+	"github.com/sony/sonyflake"
 )
 
 var _sf *sonyflake.Sonyflake
@@ -76,4 +78,9 @@ func GetFlakeUid() uint64 {
 
 func GetFlakeUidStr() string {
 	return strconv.FormatUint(GetFlakeUid(), 10)
+}
+
+func InterfaceToString(val interface{}) string {
+	str := fmt.Sprintf("%v", val)
+	return str
 }
