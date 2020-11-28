@@ -60,6 +60,7 @@
     "@api7-dashboard/ui": "^1.0.3",
     "@rjsf/antd": "2.2.0",
     "@rjsf/core": "2.2.0",
+    "@uiw/react-codemirror": "^3.0.1",
     "antd": "^4.4.0",
     "classnames": "^2.2.6",
     "dayjs": "1.8.28",

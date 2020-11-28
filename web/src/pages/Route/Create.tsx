@@ -65,7 +65,7 @@ const Page: React.FC<Props> = (props) => {
   const [form2] = Form.useForm();
   const upstreamRef = useRef<any>();
 
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
   const [stepHeader, setStepHeader] = useState(STEP_HEADER_4);
   const [chart, setChart] = useState(INIT_CHART);
 
@@ -252,10 +252,11 @@ const Page: React.FC<Props> = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={`${(props as any).match.params.rid
+        title={`${
+          (props as any).match.params.rid
             ? formatMessage({ id: 'component.global.edit' })
             : formatMessage({ id: 'component.global.create' })
-          } ${formatMessage({ id: 'menu.routes' })}`}
+        } ${formatMessage({ id: 'menu.routes' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>
