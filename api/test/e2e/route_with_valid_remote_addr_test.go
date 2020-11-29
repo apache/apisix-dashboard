@@ -149,7 +149,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
-					"remote_addrs": ["10.10.10.10","11.11.11.1/24"]
+					"remote_addrs": ["10.10.10.10","11.11.11.1/24"],
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
