@@ -43,8 +43,8 @@ func cleanAPISIXErrorLog(t *testing.T) {
 	pwd = strings.Replace(pwd, "\n", "", 1)
 	pwd = strings.Replace(pwd, "/e2e", "", 1)
 
-	content := []byte("")
-	err = ioutil.WriteFile(pwd+"/docker/apisix_logs/error.log", content, 0644)
+	cmd = exec.Command("sudo echo '' > " + pwd +"/docker/apisix_logs/error.log")
+	_, err = cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println(err.Error())
 	}
