@@ -17,6 +17,7 @@
 package e2e
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -35,6 +36,9 @@ func readAPISIXErrorLog(t *testing.T) string {
 func cleanAPISIXErrorLog(t *testing.T) {
 	content := []byte("")
 	err := ioutil.WriteFile("../docker/apisix_logs/error.log", content, 0644)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 	assert.Nil(t, err)
 }
 
