@@ -25,6 +25,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+
+func readAPISIXErrorLog(t *testing.T) string {
+	bytes, err := ioutil.ReadFile("../docker/apisix_logs/error.log")
+	assert.Nil(t, err)
+	logContent := string(bytes)
+	return logContent
+}
+
+func cleanAPISIXErrorLog(t *testing.T){
+	content := []byte("")
+	err := ioutil.WriteFile("../docker/apisix_logs/error.log", content, 0644)
+	assert.Nil(t, err)
+}
+
 func TestRoute_With_Log_Plugin(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -87,10 +101,11 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 
 	// verify http logger by checking log
 	//todo: should use a fake upstream for confirming whether we got the log data.
-	bytes, err := ioutil.ReadFile("../docker/apisix_logs/error.log")
-	assert.Nil(t, err)
-	logContent := string(bytes)
+	logContent := readAPISIXErrorLog(t)
 	assert.Contains(t, logContent, "Batch Processor[http logger] successfully processed the entries")
+
+	// clean log
+	cleanAPISIXErrorLog(t)
 
 	tests = []HttpTestCase{
 		{
@@ -145,10 +160,94 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 
 	// verify http logger by checking log
 	//todo: should use a fake upstream for confirming whether we got the log data.
-	bytes, err = ioutil.ReadFile("../docker/apisix_logs/error.log")
-	assert.Nil(t, err)
-	logContent = string(bytes)
+	logContent = readAPISIXErrorLog(t)
 	assert.Contains(t, logContent, "Batch Processor[http logger] failed to process entries: failed to connect to host[127.0.0.1] port[8888] connection refused")
+
+	tests = []HttpTestCase{
+		{
+			caseDesc: "disable http logger for route r1",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello_",
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1982,
+						"weight": 1
+					}]
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc: "disable http logger for route r2",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r2",
+			Body: `{
+				"uri": "/hello",
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1982,
+						"weight": 1
+					}]
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+
+	time.Sleep(sleepTime)
+
+	// clean log after disable http logger
+	cleanAPISIXErrorLog(t)
+
+	// try to trigger logger
+	tests = []HttpTestCase{
+		{
+			caseDesc:     "access route to trigger log",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+		},
+		{
+			caseDesc:     "access route to trigger log",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+
+
+	// sleep for process log
+	time.Sleep(1500 * time.Millisecond)
+
+	// verify http logger by checking log
+	//todo: should use a fake upstream for confirming whether we got the log data.
+	logContent = readAPISIXErrorLog(t)
+	assert.NotContains(t, logContent, "Batch Processor[http logger]")
+
+	// clean log
+	cleanAPISIXErrorLog(t)
 
 	tests = []HttpTestCase{
 		{
