@@ -17,11 +17,11 @@
 package e2e
 
 import (
-	"github.com/stretchr/testify/assert"
-	"io/ioutil"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRoute_With_Plugin_Skywalking(t *testing.T) {
@@ -59,14 +59,6 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "update metadata for skywalking",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/",
-			ExpectStatus: http.StatusNotFound,
-			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-		},
-		{
 			caseDesc:     "tiger skywalking",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
@@ -85,10 +77,11 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	time.Sleep(4 * time.Second)
 
 	// verify by checking log
-	bytes, err := ioutil.ReadFile("../docker/apisix_logs/error.log")
-	assert.Nil(t, err)
-	logContent := string(bytes)
+	logContent := readAPISIXErrorLog(t)
 	assert.Contains(t, logContent, "segments reported")
+
+	// clean log
+	cleanAPISIXErrorLog(t)
 
 	tests = []HttpTestCase{
 		{
@@ -134,10 +127,11 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	time.Sleep(4 * time.Second)
 
 	// verify by checking log
-	bytes, err = ioutil.ReadFile("../docker/apisix_logs/error.log")
-	assert.Nil(t, err)
-	logContent = string(bytes)
+	logContent = readAPISIXErrorLog(t)
 	assert.Contains(t, logContent, "miss sampling, ignore")
+
+	// clean log
+	cleanAPISIXErrorLog(t)
 
 	tests = []HttpTestCase{
 		{
