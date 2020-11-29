@@ -39,6 +39,9 @@ func cleanAPISIXErrorLog(t *testing.T) {
 }
 
 func TestRoute_With_Log_Plugin(t *testing.T) {
+	// clean log
+	cleanAPISIXErrorLog(t)
+
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "make sure the route is not created ",
