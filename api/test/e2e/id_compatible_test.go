@@ -189,7 +189,7 @@ func TestID_Crossing(t *testing.T) {
 			caseDesc: "create upstream by admin api",
 			Object:   APISIXExpect(t),
 			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/3",
+			Path:     "/apisix/admin/upstreams",
 			Body: `{
                 "id": 3,
                 "nodes": [{
@@ -200,7 +200,7 @@ func TestID_Crossing(t *testing.T) {
                 "type": "roundrobin"
 			}`,
 			Headers:      map[string]string{"X-API-KEY": "edd1c9f034335f136f87ad84b625c8f1"},
-			ExpectStatus: http.StatusOK,
+			ExpectStatus: http.StatusCreated,
 		},
 		{
 			caseDesc: "create route by admin api",
@@ -212,7 +212,7 @@ func TestID_Crossing(t *testing.T) {
 				"upstream_id": 3
 			}`,
 			Headers:      map[string]string{"X-API-KEY": "edd1c9f034335f136f87ad84b625c8f1"},
-			ExpectStatus: http.StatusOK,
+			ExpectStatus: http.StatusCreated,
 			Sleep:        sleepTime,
 		},
 		{
