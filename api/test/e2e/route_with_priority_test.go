@@ -45,7 +45,7 @@ func TestRoute_with_priority(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
+			caseDesc:     "access the route to determine whether it meets the priority (pnly -1)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
@@ -55,7 +55,7 @@ func TestRoute_with_priority(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "add route with no priority (default 0), upstream is different from the others",
+			caseDesc: "add another route with no priority (default 0), upstream is different from the others",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r2",
@@ -75,7 +75,7 @@ func TestRoute_with_priority(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
+			caseDesc:     "access the route to determine whether it meets the priority (compair -1 and default)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
@@ -106,7 +106,7 @@ func TestRoute_with_priority(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
+			caseDesc:     "access the route to determine whether it meets the priority (compair 1 and default)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
