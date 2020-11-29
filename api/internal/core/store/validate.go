@@ -17,10 +17,10 @@
 package store
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"regexp"
 
 	"github.com/xeipuuv/gojsonschema"
 	"go.uber.org/zap/buffer"
@@ -238,22 +238,37 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 		return err
 	}
 
+	pluginDisableSchema := map[string]map[string]interface{}{
+		"disable": {"type": "boolean"},
+	}
 	plugins, schemaType := getPlugins(obj)
-	//fix lua json.encode transform lua{properties={}} to json{"properties":[]}
-	reg := regexp.MustCompile(`\"properties\":\[\]`)
 	for pluginName, pluginConf := range plugins {
-		var schemaDef string
-		schemaDef = conf.Schema.Get("plugins." + pluginName + "." + schemaType).String()
-		if schemaDef == "" && schemaType == "consumer_schema" {
-			schemaDef = conf.Schema.Get("plugins." + pluginName + ".schema").String()
+		schemaValue := conf.Schema.Get("plugins." + pluginName + "." + schemaType).Value()
+		if schemaValue == nil && schemaType == "consumer_schema" {
+			schemaValue = conf.Schema.Get("plugins." + pluginName + ".schema").Value()
 		}
-		if schemaDef == "" {
-			log.Warnf("scheme validate failed: schema not found, path: %s", "plugins."+pluginName)
+		if schemaValue == nil {
+			fmt.Println("scheme validate failed: schema not found", "plugins."+pluginName, schemaType)
 			return fmt.Errorf("scheme validate failed: schema not found, path: %s", "plugins."+pluginName)
 		}
+		schemaMap := schemaValue.(map[string]interface{})
+		if schemaMap["type"] != nil && schemaMap["type"].(string) == "object" {
+			if properties, ok := schemaMap["properties"]; ok {
+				propertiesMap := properties.(map[string]interface{})
+				if len(propertiesMap) == 0 {
+					schemaMap["properties"] = pluginDisableSchema
+				}
+			} else {
+				schemaMap["properties"] = pluginDisableSchema
+			}
+		}
+		schemaByte, err := json.Marshal(schemaMap)
+		if err != nil {
+			log.Warnf("scheme validate failed: schema not found, path: %s, %w", "plugins."+pluginName, err)
+			return fmt.Errorf("scheme validate failed: schema not found, path: %s, %w", "plugins."+pluginName, err)
+		}
 
-		schemaDef = reg.ReplaceAllString(schemaDef, `"properties":{}`)
-		s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
+		s, err := gojsonschema.NewSchema(gojsonschema.NewBytesLoader(schemaByte))
 		if err != nil {
 			log.Warnf("init scheme validate failed: %w", err)
 			return fmt.Errorf("scheme validate failed: %w", err)

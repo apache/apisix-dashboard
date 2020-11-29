@@ -137,7 +137,6 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 	err = validator.Validate(consumer3)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "scheme validate failed: (root): count is required")
-
 }
 
 func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
@@ -247,5 +246,28 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	err = validator.Validate(route5)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "scheme validate failed: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$'")
+}
 
+func TestAPISIXJsonSchemaValidator_Plugin(t *testing.T) {
+	validator, err := NewAPISIXJsonSchemaValidator("main.route")
+	assert.Nil(t, err)
+
+	// plugin empty schema
+	route := &entity.Route{}
+	reqBody := `{
+		"id": "1",
+		"uri": "/hello",
+		"plugins": {
+			"cors": {
+				"disable": false
+			},
+			"key-auth": {
+				"disable": true
+			}
+		}
+	}`
+	err = json.Unmarshal([]byte(reqBody), route)
+	assert.Nil(t, err)
+	err = validator.Validate(route)
+	assert.Nil(t, err)
 }
