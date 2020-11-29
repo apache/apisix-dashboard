@@ -38,3 +38,6 @@ apisix:
       enable: true
       ssl_cert: "/usr/local/apisix/certs/apisix.crt"
       ssl_cert_key: "/usr/local/apisix/certs/apisix.key"
+
+nginx_config:
+  error_log_level: "debug"

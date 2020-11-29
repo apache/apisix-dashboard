@@ -135,7 +135,8 @@ services:
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
       - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
-      - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro      
+      - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
+      - ./apisix_logs:/usr/local/apisix/logs
     depends_on:
       - node1
       - node2
