@@ -125,7 +125,7 @@ func TestID_Using_String(t *testing.T) {
 			caseDesc: "create route using the upstream just created",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/1",
+			Path:     "/apisix/admin/routes/2",
 			Body: `{
 				"uri": "/hello",
 				"upstream_id": "2"
@@ -189,7 +189,7 @@ func TestID_Crossing(t *testing.T) {
 			caseDesc: "create upstream by admin api",
 			Object:   APISIXExpect(t),
 			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams",
+			Path:     "/apisix/admin/upstreams/3",
 			Body: `{
                 "id": 3,
                 "nodes": [{
