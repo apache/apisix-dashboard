@@ -21,7 +21,7 @@ import (
 	"testing"
 )
 
-func TestRoute_With_Metric_Plugin(t *testing.T) {
+func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "make sure the route is not created ",
@@ -71,7 +71,7 @@ func TestRoute_With_Metric_Plugin(t *testing.T) {
 			ExpectBody:   "hello world",
 		},
 		{
-			caseDesc: "create route that uri not not exists in upstream",
+			caseDesc: "create route that uri not exists in upstream",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
