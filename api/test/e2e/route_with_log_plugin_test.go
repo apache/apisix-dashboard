@@ -20,6 +20,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os/exec"
+	"strings"
 	"testing"
 	"time"
 
@@ -34,8 +36,15 @@ func readAPISIXErrorLog(t *testing.T) string {
 }
 
 func cleanAPISIXErrorLog(t *testing.T) {
+	cmd := exec.Command("pwd")
+	pwdByte, err := cmd.CombinedOutput()
+	pwd := string(pwdByte)
+
+	pwd = strings.Replace(pwd, "\n", "", 1)
+	pwd = strings.Replace(pwd, "/e2e", "", 1)
+
 	content := []byte("")
-	err := ioutil.WriteFile("../docker/apisix_logs/error.log", content, 0644)
+	err = ioutil.WriteFile(pwd+"/docker/apisix_logs/error.log", content, 0644)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
