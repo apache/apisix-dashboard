@@ -81,6 +81,9 @@ func GetFlakeUidStr() string {
 }
 
 func InterfaceToString(val interface{}) string {
+	if val == nil {
+		return ""
+	}
 	str := fmt.Sprintf("%v", val)
 	return str
 }
