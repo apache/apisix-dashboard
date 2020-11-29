@@ -248,7 +248,7 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 			schemaValue = conf.Schema.Get("plugins." + pluginName + ".schema").Value()
 		}
 		if schemaValue == nil {
-			fmt.Println("scheme validate failed: schema not found", "plugins."+pluginName, schemaType)
+			log.Warnf("scheme validate failed: schema not found: %s, %s", "plugins."+pluginName, schemaType)
 			return fmt.Errorf("scheme validate failed: schema not found, path: %s", "plugins."+pluginName)
 		}
 		schemaMap := schemaValue.(map[string]interface{})
