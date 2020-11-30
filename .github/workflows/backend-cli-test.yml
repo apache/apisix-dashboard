@@ -27,3 +27,16 @@ jobs:
       - name: run test
         working-directory: ./api
         run: sudo ./test/shell/cli_test.sh
+
+      - name: setup lua
+        run: |
+          sudo apt-get update
+          sudo apt-get install lua5.1
+
+      - name: test schema-sync
+        run: |
+          sudo api/build-tools/schema-sync.sh
+          if [[ `grep -c "main" api/conf/schema.json` -eq '0' ]]; then
+              echo "failed: failed to generate json schema"
+              exit 1
+          fi
