@@ -36,7 +36,7 @@ else
 
   unzip $version.zip
   mkdir -p ./api/build-tools/apisix/
-  cp -R ./apisix-$version/apisix/ ./api/build-tools/
+  cp -R ./apisix-$version/apisix/ ./api/build-tools/apisix/
   rm -rf ./apisix-$version
 fi
 
