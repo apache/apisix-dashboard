@@ -42,7 +42,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "remote_addr: Does not match pattern",
+			ExpectBody:   "asdas",
 		},
 		{
 			caseDesc:     "verify route",
@@ -72,7 +72,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 				   }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "remote_addr: Does not match pattern",
+			ExpectBody:   "dasda",
 		},
 		{
 			caseDesc:     "verify route",
@@ -102,7 +102,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 				   }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "remote_addrs.1: Does not match pattern",
+			ExpectBody:   "dasdsa",
 		},
 		{
 			caseDesc:     "verify route",
