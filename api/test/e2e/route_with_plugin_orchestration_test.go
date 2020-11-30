@@ -56,7 +56,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-            Sleep:        sleepTime,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "create route with correct dag cof",
@@ -75,7 +75,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 			Query:        "t=root.exe",
 			ExpectStatus: http.StatusForbidden,
 			ExpectBody:   `blocked`,
-            Sleep:        sleepTime,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "verify the route(should not be blocked)",
