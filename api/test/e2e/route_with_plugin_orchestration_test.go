@@ -28,6 +28,8 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 	bytes, err := ioutil.ReadFile("../testdata/dag-conf.json")
 	assert.Nil(t, err)
 	dagConf := string(bytes)
+
+	// invalid config that not specified root node
 	bytes, err = ioutil.ReadFile("../testdata/invalid-dag-conf.json")
 	assert.Nil(t, err)
 	invalidDagConf := string(bytes)
