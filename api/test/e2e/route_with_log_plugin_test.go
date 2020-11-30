@@ -66,7 +66,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 		},
 		{
 			caseDesc: "create route",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -125,7 +125,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 	tests = []HttpTestCase{
 		{
 			caseDesc: "create route with wrong https endpoint",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r2",
 			Body: `{
@@ -186,7 +186,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 	tests = []HttpTestCase{
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -203,7 +203,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route 2",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r2",
 			Headers:      map[string]string{"Authorization": token},
