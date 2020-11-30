@@ -30,6 +30,7 @@ import (
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/log"
 )
 
@@ -164,7 +165,9 @@ var defLessFunc = func(i, j interface{}) bool {
 	if iBase.UpdateTime != jBase.UpdateTime {
 		return iBase.UpdateTime < jBase.UpdateTime
 	}
-	return iBase.ID < jBase.ID
+	iID := utils.InterfaceToString(iBase.ID)
+	jID := utils.InterfaceToString(jBase.ID)
+	return iID < jID
 }
 
 func (s *GenericStore) List(input ListInput) (*ListOutput, error) {

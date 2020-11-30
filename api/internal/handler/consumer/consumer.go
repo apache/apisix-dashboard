@@ -31,6 +31,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
@@ -99,7 +100,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Consumer)
-	if input.ID != "" && input.ID != input.Username {
+	if input.ID != nil && utils.InterfaceToString(input.ID) != input.Username {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
 			fmt.Errorf("consumer's id and username must be a same value")
 	}
@@ -126,7 +127,7 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
-	if input.ID != "" && input.ID != input.Username {
+	if input.ID != nil && utils.InterfaceToString(input.ID) != input.Username {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
 			fmt.Errorf("consumer's id and username must be a same value")
 	}
