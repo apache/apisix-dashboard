@@ -50,7 +50,6 @@ plugins:                          # plugin list (sorted in alphabetical order)
   - consumer-restriction
   - cors
   - echo
-  #- example-plugin
   - fault-injection
   - grpc-transcode
   - hmac-auth
@@ -62,7 +61,6 @@ plugins:                          # plugin list (sorted in alphabetical order)
   - limit-conn
   - limit-count
   - limit-req
-  #- log-rotate
   - node-status
   - openid-connect
   - prometheus
