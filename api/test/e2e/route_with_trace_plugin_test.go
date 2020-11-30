@@ -36,7 +36,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 		},
 		{
 			caseDesc: "create route",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -86,7 +86,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	tests = []HttpTestCase{
 		{
 			caseDesc: "update route to change sample ratio",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -136,7 +136,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	tests = []HttpTestCase{
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},

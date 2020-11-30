@@ -25,7 +25,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create route",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -56,7 +56,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 		},
 		{
 			caseDesc: "create consumer",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
@@ -93,7 +93,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete consumer",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
@@ -101,7 +101,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete consumer (as delete not exist consumer)",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
@@ -119,7 +119,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
