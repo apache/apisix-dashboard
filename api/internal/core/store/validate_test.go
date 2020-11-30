@@ -111,12 +111,12 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 
 	err = validator.Validate(consumer2)
 	assert.NotNil(t, err)
-	assert.EqualError(t, err, "scheme validate fail: id: Must validate at least one schema (anyOf)\nid: Invalid type. Expected: string, given: null")
+	assert.EqualError(t, err, "schema validate failed: id: Must validate at least one schema (anyOf)\nid: Invalid type. Expected: string, given: null")
 
 	//check nil obj
 	err = validator.Validate(nil)
 	assert.NotNil(t, err)
-	assert.EqualError(t, err, "scheme validate fail: (root): Invalid type. Expected: object, given: null")
+	assert.EqualError(t, err, "schema validate failed: (root): Invalid type. Expected: object, given: null")
 
 	//plugin schema fail
 	consumer3 := &entity.Consumer{}
@@ -136,7 +136,7 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 	assert.Nil(t, err)
 	err = validator.Validate(consumer3)
 	assert.NotNil(t, err)
-	assert.EqualError(t, err, "scheme validate failed: (root): count is required")
+	assert.EqualError(t, err, "schema validate failed: (root): count is required")
 
 }
 
@@ -246,6 +246,6 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	assert.Nil(t, err)
 	err = validator.Validate(route5)
 	assert.NotNil(t, err)
-	assert.EqualError(t, err, "scheme validate failed: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$'")
+	assert.EqualError(t, err, "schema validate failed: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$'")
 
 }

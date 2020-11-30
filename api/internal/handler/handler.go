@@ -38,7 +38,7 @@ func SpecCodeResponse(err error) *data.SpecCodeResponse {
 		strings.Contains(errMsg, "conflicted") ||
 		strings.Contains(errMsg, "invalid") ||
 		strings.Contains(errMsg, "missing") ||
-		strings.Contains(errMsg, "scheme validate fail") {
+		strings.Contains(errMsg, "schema validate failed") {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}
 	}
 
