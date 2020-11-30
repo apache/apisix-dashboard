@@ -24,6 +24,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: setup lua
+        run: |
+          sudo apt-get update
+          sudo apt-get install lua5.1
+
       - name: run test
         working-directory: ./api
         run: sudo ./test/shell/cli_test.sh
