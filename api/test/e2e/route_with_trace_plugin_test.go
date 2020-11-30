@@ -42,9 +42,9 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
-                    "skywalking": {
-                        "sample_ratio": 1 
-                    }
+					"skywalking": {
+						"sample_ratio": 1 
+					}
 				},
 				"upstream": {
 					"type": "roundrobin",
@@ -92,9 +92,9 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
-                   "skywalking": {
-                       "sample_ratio": 0.00001
-                   }
+					"skywalking": {
+						"sample_ratio": 0.00001
+					}
 				},
 				"upstream": {
 					"type": "roundrobin",
