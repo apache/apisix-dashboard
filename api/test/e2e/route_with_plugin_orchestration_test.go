@@ -42,7 +42,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc:     "create route with invalid dag conf",
+			caseDesc:     "create route with invalid dag config",
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodPut,
 			Path:         "/apisix/admin/routes/r1",
@@ -60,7 +60,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "create route with correct dag cof",
+			caseDesc:     "create route with correct dag config",
 			Object:       MangerApiExpect(t),
 			Method:       http.MethodPut,
 			Path:         "/apisix/admin/routes/r1",
