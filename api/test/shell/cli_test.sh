@@ -99,6 +99,8 @@ fi
 cd .. 
 api/build-tools/schema-sync.sh
 cd api/
+
+cat ./conf/schema.json
  
 if [[ `grep -c "main" ./conf/schema.json` -eq '0' ]]; then
     echo "failed: failed to generate json schema"
