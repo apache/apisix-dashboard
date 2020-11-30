@@ -97,7 +97,7 @@ fi
 # build tool schema-sync test
 
 cd .. 
-api/build-tool/schema-sync.sh
+api/build-tools/schema-sync.sh
 cd api/
  
 if [[ `grep -c "main" ./conf/schema.json` -eq '0' ]]; then
