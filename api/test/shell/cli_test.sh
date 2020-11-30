@@ -93,14 +93,3 @@ if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     echo "failed: failed to write log on right level"
     exit 1
 fi
-
-# build tool schema-sync test
-
-cd .. 
-api/build-tools/schema-sync.sh
-cd api/
-
-if [[ `grep -c "main" ./conf/schema.json` -eq '0' ]]; then
-    echo "failed: failed to generate json schema"
-    exit 1
-fi
