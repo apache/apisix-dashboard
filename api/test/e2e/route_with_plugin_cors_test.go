@@ -72,16 +72,16 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				"uri": "/hello",
+			"uri": "/hello",
 				"plugins": {
-                    "cors": {
-                        "allow_origins": "http://sub.domain.com,http://sub2.domain.com",
-                        "allow_methods": "GET,POST",
-                        "allow_headers": "headr1,headr2",
-                        "expose_headers": "ex-headr1,ex-headr2",
-                        "max_age": 50,
-                        "allow_credential": true
-                    }
+					"cors": {
+						"allow_origins": "http://sub.domain.com,http://sub2.domain.com",
+						"allow_methods": "GET,POST",
+						"allow_headers": "headr1,headr2",
+						"expose_headers": "ex-headr1,ex-headr2",
+						"max_age": 50,
+						"allow_credential": true
+					}
 				},
 				"upstream": {
 					"type": "roundrobin",
@@ -142,12 +142,12 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
-                        "cors": {
-                            "allow_origins": "**",
-                            "allow_methods": "**",
-                            "allow_headers": "**",
-                            "expose_headers": "*"
-                        }
+					"cors": {
+						"allow_origins": "**",
+						"allow_methods": "**",
+						"allow_headers": "**",
+						"expose_headers": "*"
+					}
 				},
 				"upstream": {
 					"type": "roundrobin",
