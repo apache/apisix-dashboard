@@ -122,8 +122,10 @@ type HttpTestCase struct {
 	Object        *httpexpect.Expect
 	Method        string
 	Path          string
+	Query         string
 	Body          string
 	Headers       map[string]string
+	Headers_test  map[string]interface{}
 	ExpectStatus  int
 	ExpectCode    int
 	ExpectMessage string
@@ -156,6 +158,10 @@ func testCaseCheck(tc HttpTestCase) {
 
 	if tc.Sleep != 0 {
 		time.Sleep(tc.Sleep)
+	}
+
+	if tc.Query != "" {
+		req.WithQueryString(tc.Query)
 	}
 
 	//set header

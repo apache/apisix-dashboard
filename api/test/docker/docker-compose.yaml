@@ -135,7 +135,8 @@ services:
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
       - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
-      - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro      
+      - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
+      - ./apisix_logs:/usr/local/apisix/logs
     depends_on:
       - node1
       - node2
@@ -184,6 +185,17 @@ services:
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.40
+
+  skywalking:
+    image: apache/skywalking-oap-server
+    restart: always
+    ports:
+      - '1234:1234/tcp'
+      - '11800:11800/tcp'
+      - '12800:12800/tcp'
+    networks:
+      apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.50
 
 networks:
   apisix_dashboard_e2e:

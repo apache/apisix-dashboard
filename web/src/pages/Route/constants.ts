@@ -48,6 +48,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   websocket: false,
   hosts: [''],
   uris: ['/*'],
+  remote_addrs: [''],
   redirectOption: 'disabled',
   redirectURI: '',
   ret_code: 302,
