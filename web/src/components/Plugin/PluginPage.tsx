@@ -125,14 +125,7 @@ const PluginPage: React.FC<Props> = ({
                           }}
                         />
                       ),
-                      <a
-                        href={`https://github.com/apache/apisix/blob/master/doc/plugins/${item.name}.md`}
-                        style={{ color: 'inherit' }}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {item.name}
-                      </a>,
+                      <span>{item.name}</span>,
                     ]}
                     style={{ height: 66 }}
                     extra={[
@@ -171,6 +164,7 @@ const PluginPage: React.FC<Props> = ({
         </Content>
       </Layout>
       <CodeMirrorDrawer
+        name={name}
         visible={name !== NEVER_EXIST_PLUGIN_FLAG}
         data={initialData[name]}
         readonly={readonly}
