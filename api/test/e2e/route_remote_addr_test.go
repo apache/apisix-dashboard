@@ -42,7 +42,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "remote_addr: Does not match pattern",
+			ExpectBody:   "\"code\":10000,\"message\":\"scheme validate fail: remote_addr: Must validate at least one schema (anyOf)\\nremote_addr: Does not match pattern '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'\"",
 		},
 		{
 			caseDesc:     "verify route",
@@ -59,20 +59,20 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-					   "uri": "/hello",
-					   "remote_addr": "127.0.0.aa",
-					   "upstream": {
-						   "type": "roundrobin",
-						   "nodes": [{
-								"host": "172.16.238.20",
-								"port": 1980,
-								"weight": 1
-						    }]
-					   }
-				   }`,
+					"uri": "/hello",
+					"remote_addr": "127.0.0.aa",
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					}
+				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "remote_addr: Does not match pattern",
+			ExpectBody:   "\"code\":10000,\"message\":\"scheme validate fail: remote_addr: Must validate at least one schema (anyOf)\\nremote_addr: Does not match pattern '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'\"",
 		},
 		{
 			caseDesc:     "verify route",
@@ -89,20 +89,20 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-					   "uri": "/hello",
-					   "remote_addrs": ["127.0.0.1","192.168.0."],
-					   "upstream": {
-						   "type": "roundrobin",
-						   "nodes": [{
-								"host": "172.16.238.20",
-								"port": 1980,
-								"weight": 1
-						    }]
-					   }
-				   }`,
+					"uri": "/hello",
+					"remote_addrs": ["127.0.0.1","192.168.0."],
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					}
+				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "remote_addrs.1: Does not match pattern",
+			ExpectBody:   "\"code\":10000,\"message\":\"scheme validate fail: remote_addrs.1: Must validate at least one schema (anyOf)\\nremote_addrs.1: Does not match pattern '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'\"",
 		},
 		{
 			caseDesc:     "verify route",
