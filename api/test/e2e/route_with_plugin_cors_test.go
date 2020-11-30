@@ -32,7 +32,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route that will rewrite host and uri",
+			caseDesc: "create route with cors default setting",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
