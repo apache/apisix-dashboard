@@ -17,10 +17,11 @@
 package e2e
 
 import (
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRoute_With_Plugin_Orchestration(t *testing.T) {
