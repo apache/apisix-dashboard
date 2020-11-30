@@ -136,7 +136,7 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 	assert.Nil(t, err)
 	err = validator.Validate(consumer3)
 	assert.NotNil(t, err)
-	assert.EqualError(t, err, "schema validate faileded: (root): count is required")
+	assert.EqualError(t, err, "schema validate failed: (root): count is required")
 
 }
 
@@ -246,6 +246,6 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	assert.Nil(t, err)
 	err = validator.Validate(route5)
 	assert.NotNil(t, err)
-	assert.EqualError(t, err, "schema validate faileded: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$'")
+	assert.EqualError(t, err, "schema validate failed: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$'")
 
 }
