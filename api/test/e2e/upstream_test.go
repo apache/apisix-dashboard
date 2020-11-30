@@ -104,7 +104,7 @@ func TestUpstream_Update(t *testing.T) {
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "1981",
+			ExpectBody:   "hello world",
 			Sleep:        sleepTime,
 		},
 	}
