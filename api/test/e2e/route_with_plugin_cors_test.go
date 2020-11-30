@@ -39,7 +39,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
-                    "cors": {}
+					"cors": {}
 				},
 				"upstream": {
 					"type": "roundrobin",
