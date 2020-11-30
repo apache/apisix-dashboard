@@ -29,7 +29,7 @@ func TestUpstream_Create(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				"uri": "/hello_",
+				"uri": "/hello",
 				"upstream_id": "not-exists"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
@@ -41,12 +41,12 @@ func TestUpstream_Create(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-                "nodes": [{
-                    "host": "172.16.238.20",
-                    "port": 1980,
-                    "weight": 1
-                }],
-                "type": "roundrobin"
+				"nodes": [{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 1
+				}],
+				"type": "roundrobin"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -57,7 +57,7 @@ func TestUpstream_Create(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
-				"uri": "/server_port",
+				"uri": "/hello",
 				"upstream_id": "1"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
@@ -68,9 +68,9 @@ func TestUpstream_Create(t *testing.T) {
 			caseDesc:     "hit the route just created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/server_port",
+			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "1980",
+			ExpectBody:   "hello world",
 			Sleep:        sleepTime,
 		},
 	}
@@ -88,12 +88,12 @@ func TestUpstream_Update(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-               "nodes": [{
-                   "host": "172.16.238.20",
-                   "port": 1981,
-                   "weight": 1
-               }],
-               "type": "roundrobin"
+				"nodes": [{
+					"host": "172.16.238.20",
+					"port": 1981,
+					"weight": 1
+				}],
+				"type": "roundrobin"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -102,9 +102,9 @@ func TestUpstream_Update(t *testing.T) {
 			caseDesc:     "hit the route using upstream 1",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/server_port",
+			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "1981",
+			ExpectBody:   "hello world",
 			Sleep:        sleepTime,
 		},
 	}
@@ -122,12 +122,12 @@ func TestRoute_Node_Host(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-               "nodes": [{
-                   "host": "httpbin.org",
-                   "port": 80,
-                   "weight": 1
-               }],
-               "type": "roundrobin",
+				"nodes": [{
+					"host": "httpbin.org",
+					"port": 80,
+					"weight": 1
+				}],
+				"type": "roundrobin",
 				"pass_host": "node"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
@@ -160,12 +160,12 @@ func TestRoute_Node_Host(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-               "nodes": [{
-                   "host": "172.16.238.20",
-                   "port": 1980,
-                   "weight": 1
-               }],
-               "type": "roundrobin",
+				"nodes": [{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 1
+				}],
+				"type": "roundrobin",
 				"pass_host": "rewrite",
 				"upstream_host": "httpbin.org"  
 			}`,
