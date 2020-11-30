@@ -77,8 +77,8 @@ type APISIXJsonSchemaValidator struct {
 func NewAPISIXJsonSchemaValidator(jsonPath string) (Validator, error) {
 	schemaDef := conf.Schema.Get(jsonPath).String()
 	if schemaDef == "" {
-		log.Warnf("scheme validate failed: schema not found, path: %s", jsonPath)
-		return nil, fmt.Errorf("scheme validate failed: schema not found, path: %s", jsonPath)
+		log.Warnf("schema validate failed: schema not found, path: %s", jsonPath)
+		return nil, fmt.Errorf("schema validate failed: schema not found, path: %s", jsonPath)
 	}
 
 	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
@@ -123,25 +123,25 @@ func cHashKeySchemaCheck(upstream *entity.UpstreamDef) error {
 	if upstream.HashOn == "vars" {
 		schemaDef = conf.Schema.Get("main.upstream_hash_vars_schema").String()
 		if schemaDef == "" {
-			return fmt.Errorf("scheme validate failed: schema not found, patch: main.upstream_hash_vars_schema")
+			return fmt.Errorf("schema validate failed: schema not found, patch: main.upstream_hash_vars_schema")
 		}
 	}
 
 	if upstream.HashOn == "header" || upstream.HashOn == "cookie" {
 		schemaDef = conf.Schema.Get("main.upstream_hash_header_schema").String()
 		if schemaDef == "" {
-			return fmt.Errorf("scheme validate failed: schema not found, path: main.upstream_hash_header_schema")
+			return fmt.Errorf("schema validate failed: schema not found, path: main.upstream_hash_header_schema")
 		}
 	}
 
 	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
 	if err != nil {
-		return fmt.Errorf("scheme validate failed: %w", err)
+		return fmt.Errorf("schema validate failed: %w", err)
 	}
 
 	ret, err := s.Validate(gojsonschema.NewGoLoader(upstream.Key))
 	if err != nil {
-		return fmt.Errorf("scheme validate failed: %w", err)
+		return fmt.Errorf("schema validate failed: %w", err)
 	}
 
 	if !ret.Valid() {
@@ -152,7 +152,7 @@ func cHashKeySchemaCheck(upstream *entity.UpstreamDef) error {
 			}
 			errString.AppendString(vErr.String())
 		}
-		return fmt.Errorf("scheme validate failed: %s", errString.String())
+		return fmt.Errorf("schema validate failed: %s", errString.String())
 	}
 
 	return nil
@@ -218,8 +218,8 @@ func checkConf(reqBody interface{}) error {
 func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 	ret, err := v.schema.Validate(gojsonschema.NewGoLoader(obj))
 	if err != nil {
-		log.Warnf("scheme validate failed: %w", err)
-		return fmt.Errorf("scheme validate failed: %w", err)
+		log.Warnf("schema validate failed: %w", err)
+		return fmt.Errorf("schema validate failed: %w", err)
 	}
 
 	if !ret.Valid() {
@@ -230,7 +230,7 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 			}
 			errString.AppendString(vErr.String())
 		}
-		return fmt.Errorf("scheme validate fail: %s", errString.String())
+		return fmt.Errorf("schema validate failed: %s", errString.String())
 	}
 
 	//custom check
@@ -248,20 +248,20 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 			schemaDef = conf.Schema.Get("plugins." + pluginName + ".schema").String()
 		}
 		if schemaDef == "" {
-			log.Warnf("scheme validate failed: schema not found, path: %s", "plugins."+pluginName)
-			return fmt.Errorf("scheme validate failed: schema not found, path: %s", "plugins."+pluginName)
+			log.Warnf("schema validate failed: schema not found, path: %s", "plugins."+pluginName)
+			return fmt.Errorf("schema validate failed: schema not found, path: %s", "plugins."+pluginName)
 		}
 
 		schemaDef = reg.ReplaceAllString(schemaDef, `"properties":{}`)
 		s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
 		if err != nil {
-			log.Warnf("init scheme validate failed: %w", err)
-			return fmt.Errorf("scheme validate failed: %w", err)
+			log.Warnf("init schema validate failed: %w", err)
+			return fmt.Errorf("schema validate failed: %w", err)
 		}
 
 		ret, err := s.Validate(gojsonschema.NewGoLoader(pluginConf))
 		if err != nil {
-			return fmt.Errorf("scheme validate failed: %w", err)
+			return fmt.Errorf("schema validate failed: %w", err)
 		}
 
 		if !ret.Valid() {
@@ -272,7 +272,7 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 				}
 				errString.AppendString(vErr.String())
 			}
-			return fmt.Errorf("scheme validate failed: %s", errString.String())
+			return fmt.Errorf("schema validate failed: %s", errString.String())
 		}
 	}
 

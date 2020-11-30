@@ -133,6 +133,17 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
+			caseDesc: "create route with int uri",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": 123456
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
 			caseDesc:     "hit the route just created - wildcard domain name",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,

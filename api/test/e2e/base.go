@@ -125,6 +125,7 @@ type HttpTestCase struct {
 	Query         string
 	Body          string
 	Headers       map[string]string
+	Headers_test  map[string]interface{}
 	ExpectStatus  int
 	ExpectCode    int
 	ExpectMessage string
@@ -139,15 +140,15 @@ func testCaseCheck(tc HttpTestCase) {
 	var req *httpexpect.Request
 	switch tc.Method {
 	case http.MethodGet:
-		req = expectObj.GET(tc.Path, tc.Query)
+		req = expectObj.GET(tc.Path)
 	case http.MethodPut:
-		req = expectObj.PUT(tc.Path, tc.Query)
+		req = expectObj.PUT(tc.Path)
 	case http.MethodPost:
-		req = expectObj.POST(tc.Path, tc.Query)
+		req = expectObj.POST(tc.Path)
 	case http.MethodDelete:
-		req = expectObj.DELETE(tc.Path, tc.Query)
+		req = expectObj.DELETE(tc.Path)
 	case http.MethodPatch:
-		req = expectObj.PATCH(tc.Path, tc.Query)
+		req = expectObj.PATCH(tc.Path)
 	default:
 	}
 
@@ -157,6 +158,10 @@ func testCaseCheck(tc HttpTestCase) {
 
 	if tc.Sleep != 0 {
 		time.Sleep(tc.Sleep)
+	}
+
+	if tc.Query != "" {
+		req.WithQueryString(tc.Query)
 	}
 
 	//set header

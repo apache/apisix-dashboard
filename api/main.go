@@ -19,6 +19,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/apisix/manager-api/internal/handler"
+	"github.com/shiningrush/droplet"
 	"net/http"
 	"os"
 	"os/signal"
@@ -34,7 +36,14 @@ import (
 )
 
 func main() {
-
+	droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
+		var newMws []droplet.Middleware
+		// default middleware order: resp_reshape, auto_input, traffic_log
+		// We should put err_transform at second to catch all error
+		newMws = append(newMws, mws[0], &handler.ErrorTransformMiddleware{})
+		newMws = append(newMws, mws[1:]...)
+		return newMws
+	}
 	if err := storage.InitETCDClient(conf.ETCDEndpoints); err != nil {
 		log.Error("init etcd client fail: %w", err)
 		panic(err)

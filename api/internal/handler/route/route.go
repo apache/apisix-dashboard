@@ -158,7 +158,8 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	var route *entity.Route
 	for i, item := range ret.Rows {
 		route = item.(*entity.Route)
-		script, _ := h.scriptStore.Get(route.ID)
+		id := utils.InterfaceToString(route.ID)
+		script, _ := h.scriptStore.Get(id)
 		if script != nil {
 			route.Script = script.(*entity.Script).Script
 		}
@@ -193,8 +194,9 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Route)
 	//check depend
-	if input.ServiceID != "" {
-		_, err := h.svcStore.Get(input.ServiceID)
+	if input.ServiceID != nil {
+		serviceID := utils.InterfaceToString(input.ServiceID)
+		_, err := h.svcStore.Get(serviceID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -203,8 +205,9 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
 	}
-	if input.UpstreamID != "" {
-		_, err := h.upstreamStore.Get(input.UpstreamID)
+	if input.UpstreamID != nil {
+		upstreamID := utils.InterfaceToString(input.UpstreamID)
+		_, err := h.upstreamStore.Get(upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -219,7 +222,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 			input.ID = utils.GetFlakeUidStr()
 		}
 		script := &entity.Script{}
-		script.ID = input.ID
+		script.ID = utils.InterfaceToString(input.ID)
 		script.Script = input.Script
 		//to lua
 		var err error
@@ -257,8 +260,9 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	//check depend
-	if input.ServiceID != "" {
-		_, err := h.svcStore.Get(input.ServiceID)
+	if input.ServiceID != nil {
+		serviceID := utils.InterfaceToString(input.ServiceID)
+		_, err := h.svcStore.Get(serviceID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -267,8 +271,9 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
 	}
-	if input.UpstreamID != "" {
-		_, err := h.upstreamStore.Get(input.UpstreamID)
+	if input.UpstreamID != nil {
+		upstreamID := utils.InterfaceToString(input.UpstreamID)
+		_, err := h.upstreamStore.Get(upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -306,9 +311,10 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	} else {
 		//remove exists script
-		script, _ := h.scriptStore.Get(input.Route.ID)
+		id := utils.InterfaceToString(input.Route.ID)
+		script, _ := h.scriptStore.Get(id)
 		if script != nil {
-			if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.Route.ID, ",")); err != nil {
+			if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(id, ",")); err != nil {
 				log.Warnf("delete script %s failed", input.Route.ID)
 			}
 		}
