@@ -204,7 +204,6 @@ func TestRoute_with_name_desc(t *testing.T) {
 			ExpectBody:   "\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"",
 			Sleep:        sleepTime,
 		},
-
 		{
 			caseDesc:     "delete the route (r1)",
 			Object:       ManagerApiExpect(t),
@@ -212,6 +211,15 @@ func TestRoute_with_name_desc(t *testing.T) {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "access the route after delete it",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
 		},
 	}
 	for _, tc := range tests {
