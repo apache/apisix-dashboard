@@ -17,6 +17,8 @@
 package handler
 
 import (
+	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/middleware"
 	"net/http"
 	"strings"
 
@@ -36,7 +38,7 @@ func SpecCodeResponse(err error) *data.SpecCodeResponse {
 		strings.Contains(errMsg, "conflicted") ||
 		strings.Contains(errMsg, "invalid") ||
 		strings.Contains(errMsg, "missing") ||
-		strings.Contains(errMsg, "scheme validate fail") {
+		strings.Contains(errMsg, "schema validate failed") {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}
 	}
 
@@ -45,4 +47,25 @@ func SpecCodeResponse(err error) *data.SpecCodeResponse {
 	}
 
 	return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}
+}
+
+type ErrorTransformMiddleware struct {
+	middleware.BaseMiddleware
+}
+
+func (mw *ErrorTransformMiddleware) Handle(ctx droplet.Context) error {
+	if err := mw.BaseMiddleware.Handle(ctx); err != nil {
+		bErr, ok := err.(*data.BaseError)
+		if !ok {
+			return err
+		}
+		switch bErr.Code {
+		case data.ErrCodeValidate, data.ErrCodeFormat:
+			ctx.SetOutput(&data.SpecCodeResponse{StatusCode: http.StatusBadRequest})
+		case data.ErrCodeInternal:
+			ctx.SetOutput(&data.SpecCodeResponse{StatusCode: http.StatusInternalServerError})
+		}
+		return err
+	}
+	return nil
 }

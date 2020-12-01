@@ -107,7 +107,8 @@ package.loaded["apisix.core"] = {
     },
     table = {
         insert = empty_function
-    }
+    },
+    string = {}
 }
 
 
