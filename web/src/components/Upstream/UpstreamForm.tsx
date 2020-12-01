@@ -148,6 +148,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       rules={[
                         {
                           required: true,
+                          message: formatMessage({ id: 'upstream.step.input.domain.name.or.ip' }),
                         },
                         {
                           pattern: new RegExp(
@@ -167,6 +168,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       rules={[
                         {
                           required: true,
+                          message: formatMessage({ id: 'upstream.step.input.port' }),
                         },
                       ]}
                     >
@@ -180,6 +182,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       rules={[
                         {
                           required: true,
+                          message: formatMessage({ id: 'upstream.step.input.weight' }),
                         },
                       ]}
                     >
@@ -448,7 +451,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             rules={[
               {
                 required: true,
-                message: formatMessage({ id: 'upstream.step.input.receive.timeout' }),
+                message: formatMessage({ id: 'upstream.step.input.healthy.checks.successes' }),
               },
             ]}
           >
@@ -596,6 +599,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               rules={[
                 {
                   required: true,
+                  message: formatMessage({ id: `upstream.step.input.${name[1]}.timeout` }),
                 },
               ]}
             >

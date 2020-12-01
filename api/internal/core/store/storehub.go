@@ -89,7 +89,7 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.Route{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Route)
-			return r.ID
+			return utils.InterfaceToString(r.ID)
 		},
 	})
 	if err != nil {
@@ -101,7 +101,7 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.Service{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Service)
-			return r.ID
+			return utils.InterfaceToString(r.ID)
 		},
 	})
 	if err != nil {
@@ -113,7 +113,7 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.SSL{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.SSL)
-			return r.ID
+			return utils.InterfaceToString(r.ID)
 		},
 	})
 	if err != nil {
@@ -125,7 +125,7 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.Upstream{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Upstream)
-			return r.ID
+			return utils.InterfaceToString(r.ID)
 		},
 	})
 	if err != nil {

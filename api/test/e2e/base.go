@@ -62,7 +62,28 @@ func init() {
 	token = respond.Get("data.token").String()
 }
 
-func MangerApiExpect(t *testing.T) *httpexpect.Expect {
+func httpGet(url string) ([]byte, int, error) {
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return body, resp.StatusCode, nil
+}
+
+func ManagerApiExpect(t *testing.T) *httpexpect.Expect {
 	return httpexpect.New(t, "http://127.0.0.1:8080")
 }
 
@@ -101,8 +122,10 @@ type HttpTestCase struct {
 	Object        *httpexpect.Expect
 	Method        string
 	Path          string
+	Query         string
 	Body          string
 	Headers       map[string]string
+	Headers_test  map[string]interface{}
 	ExpectStatus  int
 	ExpectCode    int
 	ExpectMessage string
@@ -135,6 +158,10 @@ func testCaseCheck(tc HttpTestCase) {
 
 	if tc.Sleep != 0 {
 		time.Sleep(tc.Sleep)
+	}
+
+	if tc.Query != "" {
+		req.WithQueryString(tc.Query)
 	}
 
 	//set header
