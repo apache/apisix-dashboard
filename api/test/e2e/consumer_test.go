@@ -288,6 +288,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	request, _ := http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
 	resp, _ := http.DefaultClient.Do(request)
+	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
