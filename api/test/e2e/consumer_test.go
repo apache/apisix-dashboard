@@ -57,7 +57,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			Path:         "/hello",
 			ExpectStatus: http.StatusUnauthorized,
 			ExpectBody:   "Missing API key found in request",
-			Sleep:        sleepTime, //sleep x millisecond before verify route
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc: "create consumer",
@@ -284,7 +284,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	basepath := "http://127.0.0.1:8080/apisix/admin/consumers"
 	time.Sleep(time.Duration(1) * time.Second)
 
-	//get the consumer, save createtime and updatetime
+	// get the consumer, save createtime and updatetime
 	request, _ := http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
 	resp, _ := http.DefaultClient.Do(request)
@@ -292,7 +292,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
 
-	//wait 1 second so the update_time should be different
+	// wait 1 second so the update_time should be different
 	time.Sleep(time.Duration(1) * time.Second)
 
 	tests = []HttpTestCase{
@@ -315,7 +315,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 		testCaseCheck(tc)
 	}
 
-	//get the consumer
+	// get the consumer
 	request, _ = http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
 	resp, _ = http.DefaultClient.Do(request)
@@ -323,7 +323,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	createtime2 := gjson.Get(string(respBody), "data.create_time")
 	updatetime2 := gjson.Get(string(respBody), "data.update_time")
 
-	//verify the consumer and compare result
+	// verify the consumer and compare result
 	assert.Equal(t, "updated consumer", gjson.Get(string(respBody), "data.desc").String())
 	assert.Equal(t, createtime.String(), createtime2.String())
 	assert.NotEqual(t, updatetime.String(), updatetime2.String())
