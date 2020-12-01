@@ -30,7 +30,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "config route with name and desc (r1)",
-			Object:   ManagerApiExpect(t),
+			Object:   MangerApiExpect(t),
 			Path:     "/apisix/admin/routes/r1",
 			Method:   http.MethodPut,
 			Body: `{
@@ -61,7 +61,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 		},
 		{
 			caseDesc:     "verify the route's content (r1)",
-			Object:       ManagerApiExpect(t),
+			Object:       MangerApiExpect(t),
 			Path:         "/apisix/admin/routes/r1",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},
@@ -93,7 +93,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 	tests = []HttpTestCase{
 		{
 			caseDesc: "update the route (r1)",
-			Object:   ManagerApiExpect(t),
+			Object:   MangerApiExpect(t),
 			Path:     "/apisix/admin/routes/r1",
 			Method:   http.MethodPut,
 			Body: `{
@@ -147,7 +147,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 	tests = []HttpTestCase{
 		{
 			caseDesc:     "delete the route (r1)",
-			Object:       ManagerApiExpect(t),
+			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -162,7 +162,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 	tests = []HttpTestCase{
 		{
 			caseDesc: "config route with labels (r1)",
-			Object:   ManagerApiExpect(t),
+			Object:   MangerApiExpect(t),
 			Path:     "/apisix/admin/routes/r1",
 			Method:   http.MethodPut,
 			Body: `{
@@ -196,7 +196,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 		},
 		{
 			caseDesc:     "verify the route's detail (r1)",
-			Object:       ManagerApiExpect(t),
+			Object:       MangerApiExpect(t),
 			Path:         "/apisix/admin/routes/r1",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},
@@ -206,7 +206,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete the route (r1)",
-			Object:       ManagerApiExpect(t),
+			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},

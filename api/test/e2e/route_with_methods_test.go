@@ -24,6 +24,13 @@ import (
 func TestRoute_with_methods(t *testing.T) {
 	tests := []HttpTestCase{
 		{
+			caseDesc: "delete route to make sure there is no route (r1)",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodDelete,
+			Path:     "/apisix/admin/routes/r1",
+			Headers:  map[string]string{"Authorization": token},
+		},
+		{
 			caseDesc: "add route with invalid method",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
