@@ -19,6 +19,9 @@ package e2e
 import (
 	"net/http"
 	"testing"
+	"io/ioutil"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUpstream_Create(t *testing.T) {
@@ -191,7 +194,7 @@ func TestRoute_Node_Host(t *testing.T) {
 func TestUpstream_cHash(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create cHash upstream",
+			caseDesc: "create cHash upstream with key (remote_addr)",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
@@ -204,7 +207,12 @@ func TestUpstream_cHash(t *testing.T) {
 				{
                     "host": "172.16.238.20",
                     "port": 1981,
-                    "weight": 2
+                    "weight": 1
+				},
+				{
+                    "host": "172.16.238.20",
+                    "port": 1982,
+                    "weight": 1
                 }],
 				"type": "chash",
 				"hash_on":"header",
@@ -226,23 +234,32 @@ func TestUpstream_cHash(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
 		},
-		{
-			caseDesc:     "hit the route just created",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/server_port",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "1981",
-			Sleep:        sleepTime,
-		},
+		
 	}
 
 	for _, tc := range tests {
 		testCaseCheck(tc)
 	}
-}
 
-//TODO websocket
+	//hit routes
+	basepath := "http://127.0.0.1:9080/"
+	request, err := http.NewRequest("GET", basepath+"/server_port", nil)
+	request.Header.Add("Authorization", token)
+	var resp *http.Response
+	var respBody []byte
+	var count int
+	for i := 0; i <= 17; i++ {
+		resp, err = http.DefaultClient.Do(request)
+		assert.Nil(t, err)
+		respBody, err = ioutil.ReadAll(resp.Body)
+		if string(respBody) == "1982"{
+			count ++
+		}
+	}
+	assert.Equal(t, count, 18)
+	defer resp.Body.Close()
+
+}
 
 func TestUpstream_Delete(t *testing.T) {
 	tests := []HttpTestCase{
