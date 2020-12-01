@@ -17,9 +17,9 @@
 package e2e
 
 import (
+	"io/ioutil"
 	"net/http"
 	"testing"
-	"io/ioutil"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -28,7 +28,7 @@ func TestUpstream_Create(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "use upstream that not exist",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -40,7 +40,7 @@ func TestUpstream_Create(t *testing.T) {
 		},
 		{
 			caseDesc: "create upstream",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
@@ -56,7 +56,7 @@ func TestUpstream_Create(t *testing.T) {
 		},
 		{
 			caseDesc: "create route using the upstream just created",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
@@ -87,7 +87,7 @@ func TestUpstream_Update(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "update upstream with domain",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
@@ -121,7 +121,7 @@ func TestRoute_Node_Host(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "update upstream - pass host: node",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
@@ -138,7 +138,7 @@ func TestRoute_Node_Host(t *testing.T) {
 		},
 		{
 			caseDesc: "update path for route",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
@@ -159,7 +159,7 @@ func TestRoute_Node_Host(t *testing.T) {
 		},
 		{
 			caseDesc: "update upstream - pass host: rewrite",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
@@ -191,11 +191,11 @@ func TestRoute_Node_Host(t *testing.T) {
 	}
 }
 
-func TestUpstream_cHash(t *testing.T) {
+func TestUpstream_cHash_remote_addr(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create cHash upstream with key (remote_addr)",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
@@ -223,7 +223,7 @@ func TestUpstream_cHash(t *testing.T) {
 		},
 		{
 			caseDesc: "create route using the upstream just created",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
@@ -234,7 +234,6 @@ func TestUpstream_cHash(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
 		},
-		
 	}
 
 	for _, tc := range tests {
@@ -252,8 +251,8 @@ func TestUpstream_cHash(t *testing.T) {
 		resp, err = http.DefaultClient.Do(request)
 		assert.Nil(t, err)
 		respBody, err = ioutil.ReadAll(resp.Body)
-		if string(respBody) == "1982"{
-			count ++
+		if string(respBody) == "1982" {
+			count++
 		}
 	}
 	assert.Equal(t, 18, count)
@@ -261,8 +260,8 @@ func TestUpstream_cHash(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "create cHash upstream with key (remote_addr, weight=0)",
-			Object:   MangerApiExpect(t),
+			caseDesc: "create cHash upstream with key (remote_addr, weight equal 0 or 1)",
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
@@ -290,7 +289,7 @@ func TestUpstream_cHash(t *testing.T) {
 		},
 		{
 			caseDesc: "create route using the upstream just created",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
@@ -301,7 +300,6 @@ func TestUpstream_cHash(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
 		},
-		
 	}
 
 	for _, tc := range tests {
@@ -317,12 +315,64 @@ func TestUpstream_cHash(t *testing.T) {
 		resp, err = http.DefaultClient.Do(request)
 		assert.Nil(t, err)
 		respBody, err = ioutil.ReadAll(resp.Body)
-		if string(respBody) == "1980"{
-			count ++
+		if string(respBody) == "1980" {
+			count++
 		}
 	}
 	assert.Equal(t, 18, count)
 	defer resp.Body.Close()
+
+	tests = []HttpTestCase{
+		{
+			caseDesc: "create cHash upstream with key (remote_addr, all weight equal 0)",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/upstreams/1",
+			Body: `{
+                "nodes": [{
+                    "host": "172.16.238.20",
+                    "port": 1980,
+                    "weight": 0
+				},
+				{
+                    "host": "172.16.238.20",
+                    "port": 1981,
+                    "weight": 0
+				}],
+				"type": "chash",
+				"hash_on":"header",
+				"key": "remote_addr"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc: "create route using the upstream just created",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/1",
+			Body: `{
+				"uri": "/server_port",
+				"upstream_id": "1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "hit the route ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusBadGateway,
+			ExpectBody:   "<head><title>502 Bad Gateway</title></head>",
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
 
 }
 
@@ -330,7 +380,7 @@ func TestUpstream_Delete(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "delete not exist upstream",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/not-exist",
 			Headers:      map[string]string{"Authorization": token},
@@ -339,7 +389,7 @@ func TestUpstream_Delete(t *testing.T) {
 		// TODO delete upstream - being used by route 1
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/1",
 			Headers:      map[string]string{"Authorization": token},
@@ -347,7 +397,7 @@ func TestUpstream_Delete(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete upstream",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/1",
 			Headers:      map[string]string{"Authorization": token},
