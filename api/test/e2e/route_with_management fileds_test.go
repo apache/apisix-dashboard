@@ -148,8 +148,8 @@ func TestRoute_with_name_desc(t *testing.T) {
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
-	assert.Equal(t, time.Now().Unix(), createtime.String())
-	assert.Equal(t, time.Now().Unix(), updatetime.String())
+	assert.Equal(t, true, createtime.Int() >= time.Now().Unix()-2 && createtime.Int() <= time.Now().Unix()+2)
+	assert.Equal(t, true, updatetime.Int() >= time.Now().Unix()-2 && updatetime.Int() <= time.Now().Unix()+2)
 
 	tests = []HttpTestCase{
 		{
