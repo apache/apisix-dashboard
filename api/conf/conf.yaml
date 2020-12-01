@@ -18,7 +18,7 @@
 conf:
   listen:
     host: 127.0.0.1 # `manager api` listening ip or host name
-    port: 8080 # `manager api` listening port
+    port: 9000 # `manager api` listening port
   etcd:
     endpoints: # supports defining multiple etcd host addresses for an etcd cluster
       - 127.0.0.1:2379

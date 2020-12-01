@@ -21,16 +21,16 @@ import (
 	"testing"
 )
 
-func TestRoute_with_valid_remote_addr(t *testing.T) {
+func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "add route with valid remote_addr",
+			caseDesc: "config route with invalid remote_addr",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
-					"remote_addr": "172.16.238.1",
+					"remote_addr": "127.0.0.",
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
@@ -41,97 +41,8 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 					}
 				}`,
 			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc:     "verify route",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc: "update route with valid remote_addr (CIDR)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
-			Body: `{
-					"uri": "/hello",
-					"remote_addr": "172.16.238.1/24",
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "172.16.238.20",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc:     "verify route",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc: "update route with valid remote_addrs",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
-			Body: `{
-					"uri": "/hello",
-					"remote_addrs": ["172.16.238.1","192.168.0.2/24"],
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "172.16.238.20",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc:     "verify route",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc: "update remote_addr to not be hit",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
-			Body: `{
-					"uri": "/hello",
-					"remote_addr": "10.10.10.10",
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "172.16.238.20",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addr: Must validate at least one schema (anyOf)\\nremote_addr: Does not match pattern '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'\"",
 		},
 		{
 			caseDesc:     "verify route",
@@ -143,13 +54,13 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update remote_addrs to not be hit",
+			caseDesc: "config route with invalid remote_addr",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
-					"remote_addrs": ["10.10.10.10","11.11.11.1/24"],
+					"remote_addr": "127.0.0.aa",
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
@@ -160,7 +71,8 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 					}
 				}`,
 			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addr: Must validate at least one schema (anyOf)\\nremote_addr: Does not match pattern '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'\"",
 		},
 		{
 			caseDesc:     "verify route",
@@ -172,16 +84,28 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/r1",
+			caseDesc: "config route with invalid remote_addrs",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+					"uri": "/hello",
+					"remote_addrs": ["127.0.0.1","192.168.0."],
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					}
+				}`,
 			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addrs.1: Must validate at least one schema (anyOf)\\nremote_addrs.1: Does not match pattern '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'\"",
 		},
 		{
-			caseDesc:     "verify it again after deleting the route",
+			caseDesc:     "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
