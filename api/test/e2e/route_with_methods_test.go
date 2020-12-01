@@ -25,14 +25,14 @@ func TestRoute_with_methods(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "delete route to make sure there is no route (r1)",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodDelete,
 			Path:     "/apisix/admin/routes/r1",
 			Headers:  map[string]string{"Authorization": token},
 		},
 		{
 			caseDesc: "add route with invalid method",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -61,7 +61,7 @@ func TestRoute_with_methods(t *testing.T) {
 		},
 		{
 			caseDesc: "add route with valid method",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -91,7 +91,7 @@ func TestRoute_with_methods(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -99,7 +99,7 @@ func TestRoute_with_methods(t *testing.T) {
 		},
 		{
 			caseDesc: "add route with valid methods",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -172,7 +172,7 @@ func TestRoute_with_methods(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -180,7 +180,7 @@ func TestRoute_with_methods(t *testing.T) {
 		},
 		{
 			caseDesc: "add route with lower case methods",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -209,7 +209,7 @@ func TestRoute_with_methods(t *testing.T) {
 		},
 		{
 			caseDesc: "add route with methods GET",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -249,7 +249,7 @@ func TestRoute_with_methods(t *testing.T) {
 		},
 		{
 			caseDesc: "update route methods to POST",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -289,7 +289,7 @@ func TestRoute_with_methods(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
