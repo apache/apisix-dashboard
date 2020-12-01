@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -75,6 +76,7 @@ func TestUpstream_cHash_query_string(t *testing.T) {
 	}
 
 	//hit routes
+	time.Sleep(time.Duration(500) * time.Millisecond)
 	basepath := "http://127.0.0.1:9080"
 	var req *http.Request
 	var err error
@@ -151,6 +153,7 @@ func TestUpstream_cHash_arg_xxx(t *testing.T) {
 	}
 
 	//hit routes
+	time.Sleep(time.Duration(500) * time.Millisecond)
 	basepath := "http://127.0.0.1:9080"
 	var req *http.Request
 	var err error
