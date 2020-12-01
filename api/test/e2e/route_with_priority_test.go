@@ -25,21 +25,21 @@ func TestRoute_with_priority(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "add another route with no priority (default 0)",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-					  "uri": "/server_port",
-					  "methods": ["GET"],
-					  "upstream": {
-						  "type": "roundrobin",
-						  "nodes": [{
-							  "host": "172.16.238.20",
-							  "port": 1981,
-							  "weight": 1
-						  }]
-					  }
-				  }`,
+					"uri": "/server_port",
+					"methods": ["GET"],
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1981,
+							"weight": 1
+						}]
+					}
+				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -54,22 +54,22 @@ func TestRoute_with_priority(t *testing.T) {
 		},
 		{
 			caseDesc: "add another route with valid priority (1), upstream is different from the others",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r2",
 			Body: `{
-					 "uri": "/server_port",
-					 "methods": ["GET"],
-					 "priority": 1,
-					 "upstream": {
-						 "type": "roundrobin",
-						 "nodes": [{
-							 "host": "172.16.238.20",
-							 "port": 1982,
-							 "weight": 1
-						 }]
-					 }
-				 }`,
+					"uri": "/server_port",
+					"methods": ["GET"],
+					"priority": 1,
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1982,
+							"weight": 1
+						}]
+					}
+				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -84,7 +84,7 @@ func TestRoute_with_priority(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route (r1)",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -93,7 +93,7 @@ func TestRoute_with_priority(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route (r2)",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r2",
 			Headers:      map[string]string{"Authorization": token},
