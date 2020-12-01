@@ -155,7 +155,7 @@ func TestConsumer_with_notexist_plugin(t *testing.T) {
 			 }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "scheme validate failed",
+			ExpectBody:   "schema validate failed: schema not found, path: plugins.key-authaa",
 		},
 		{
 			caseDesc:     "verify the consumer",
