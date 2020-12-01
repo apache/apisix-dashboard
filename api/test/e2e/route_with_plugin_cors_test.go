@@ -33,7 +33,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 		},
 		{
 			caseDesc: "create route with cors default setting",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -68,7 +68,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 		},
 		{
 			caseDesc: "update route with specified setting",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -154,7 +154,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 		},
 		{
 			caseDesc: "update route with cors setting force wildcard",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -205,7 +205,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
