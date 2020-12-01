@@ -100,7 +100,7 @@ func TestUpstream_chash_hash_on_custom_header(t *testing.T) {
 func TestUpstream_chash_hash_on_cookie(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create cHash upstream with hash_on (cookie)",
+			caseDesc: "create chash upstream with hash_on (cookie)",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
@@ -190,7 +190,7 @@ func TestUpstream_chash_hash_on_cookie(t *testing.T) {
 func TestUpstream_key_contains_uppercase_letters_and_hyphen(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create cHash upstream with key contains uppercase letters and hyphen",
+			caseDesc: "create chash upstream with key contains uppercase letters and hyphen",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
