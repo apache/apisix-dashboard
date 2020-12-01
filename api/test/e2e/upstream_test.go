@@ -25,7 +25,7 @@ func TestUpstream_Create(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "use upstream that not exist",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -37,7 +37,7 @@ func TestUpstream_Create(t *testing.T) {
 		},
 		{
 			caseDesc: "create upstream",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
@@ -53,7 +53,7 @@ func TestUpstream_Create(t *testing.T) {
 		},
 		{
 			caseDesc: "create route using the upstream just created",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
@@ -84,7 +84,7 @@ func TestUpstream_Update(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "update upstream with domain",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
@@ -118,7 +118,7 @@ func TestRoute_Node_Host(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "update upstream - pass host: node",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
@@ -135,7 +135,7 @@ func TestRoute_Node_Host(t *testing.T) {
 		},
 		{
 			caseDesc: "update path for route",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
@@ -156,7 +156,7 @@ func TestRoute_Node_Host(t *testing.T) {
 		},
 		{
 			caseDesc: "update upstream - pass host: rewrite",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
@@ -195,7 +195,7 @@ func TestRoute_Delete(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "delete not exist upstream",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/not-exist",
 			Headers:      map[string]string{"Authorization": token},
@@ -204,7 +204,7 @@ func TestRoute_Delete(t *testing.T) {
 		// TODO it's a bug here, see: https://github.com/apache/apisix-dashboard/issues/728
 		//{
 		//	caseDesc:     "delete upstream - being used by route 1",
-		//	Object:       MangerApiExpect(t),
+		//	Object:       ManagerApiExpect(t),
 		//	Method:       http.MethodDelete,
 		//	Path:         "/apisix/admin/upstreams/1",
 		//	Headers:      map[string]string{"Authorization": token},
@@ -212,7 +212,7 @@ func TestRoute_Delete(t *testing.T) {
 		//},
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/1",
 			Headers:      map[string]string{"Authorization": token},
@@ -220,7 +220,7 @@ func TestRoute_Delete(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete upstream",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/1",
 			Headers:      map[string]string{"Authorization": token},

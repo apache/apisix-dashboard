@@ -83,7 +83,7 @@ func httpGet(url string) ([]byte, int, error) {
 	return body, resp.StatusCode, nil
 }
 
-func MangerApiExpect(t *testing.T) *httpexpect.Expect {
+func ManagerApiExpect(t *testing.T) *httpexpect.Expect {
 	return httpexpect.New(t, "http://127.0.0.1:8080")
 }
 
