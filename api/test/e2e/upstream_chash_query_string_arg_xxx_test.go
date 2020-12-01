@@ -26,10 +26,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUpstream_cHash_query_string(t *testing.T) {
+func TestUpstream_chash_query_string(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create cHash upstream with key (query_string)",
+			caseDesc: "create chash upstream with key (query_string)",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
@@ -100,10 +100,10 @@ func TestUpstream_cHash_query_string(t *testing.T) {
 	assert.Equal(t, 5, res["1982"])
 }
 
-func TestUpstream_cHash_arg_xxx(t *testing.T) {
+func TestUpstream_chash_arg_xxx(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create cHash upstream with key (arg_xxx)",
+			caseDesc: "create chash upstream with key (arg_xxx)",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
