@@ -21,20 +21,21 @@ import (
 	"testing"
 )
 
-func TestRoute_with_valid_uri_uris(t *testing.T) {
+func TestRoute_with_priority(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "add route with valid uri",
+			caseDesc: "add another route with no priority (default 0)",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-					"uri": "/hello",
+					"uri": "/server_port",
+					"methods": ["GET"],
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
 							"host": "172.16.238.20",
-							"port": 1980,
+							"port": 1981,
 							"weight": 1
 						}]
 					}
@@ -43,36 +44,28 @@ func TestRoute_with_valid_uri_uris(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route (r1)",
+			caseDesc:     "access the route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
+			Path:         "/server_port",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
+			ExpectBody:   "1981",
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete the route (r1)",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc: "add route with valid uris",
+			caseDesc: "add another route with valid priority (1), upstream is different from the others",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Path:     "/apisix/admin/routes/r2",
 			Body: `{
-					"uris": ["/hello","/status"],
+					"uri": "/server_port",
+					"methods": ["GET"],
+					"priority": 1,
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
 							"host": "172.16.238.20",
-							"port": 1980,
+							"port": 1982,
 							"weight": 1
 						}]
 					}
@@ -81,32 +74,31 @@ func TestRoute_with_valid_uri_uris(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route (/hello)",
+			caseDesc:     "access the route to determine whether it meets the priority (compair 1 and default)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
+			Path:         "/server_port",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
+			ExpectBody:   "1982",
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "hit the route (/status)",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/status",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "ok",
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc:     "delete the route (r1)",
+			caseDesc:     "delete route (r1)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "delete route (r2)",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 	}
 

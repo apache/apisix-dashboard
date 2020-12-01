@@ -39,7 +39,7 @@ func init() {
 		"password": "admin"
 	}`)
 
-	url := "http://127.0.0.1:8080/apisix/admin/user/login"
+	url := "http://127.0.0.1:9000/apisix/admin/user/login"
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		panic(err)
@@ -83,8 +83,8 @@ func httpGet(url string) ([]byte, int, error) {
 	return body, resp.StatusCode, nil
 }
 
-func MangerApiExpect(t *testing.T) *httpexpect.Expect {
-	return httpexpect.New(t, "http://127.0.0.1:8080")
+func ManagerApiExpect(t *testing.T) *httpexpect.Expect {
+	return httpexpect.New(t, "http://127.0.0.1:9000")
 }
 
 func APISIXExpect(t *testing.T) *httpexpect.Expect {

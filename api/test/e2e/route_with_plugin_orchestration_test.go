@@ -45,7 +45,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 		},
 		{
 			caseDesc:     "create route with invalid dag config",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPut,
 			Path:         "/apisix/admin/routes/r1",
 			Body:         invalidDagConf,
@@ -63,7 +63,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 		},
 		{
 			caseDesc:     "create route with correct dag config",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPut,
 			Path:         "/apisix/admin/routes/r1",
 			Body:         dagConf,
@@ -90,7 +90,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},

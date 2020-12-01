@@ -25,7 +25,7 @@ func TestRoute_with_vars(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "add route with vars (args)",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -77,7 +77,7 @@ func TestRoute_with_vars(t *testing.T) {
 
 		{
 			caseDesc: "update route with vars (header)",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -129,7 +129,7 @@ func TestRoute_with_vars(t *testing.T) {
 
 		{
 			caseDesc: "update route with vars (cookie)",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -181,7 +181,7 @@ func TestRoute_with_vars(t *testing.T) {
 
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -191,7 +191,7 @@ func TestRoute_with_vars(t *testing.T) {
 
 		{
 			caseDesc: "add route with multiple vars (args, cookie and header)",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -259,7 +259,7 @@ func TestRoute_with_vars(t *testing.T) {
 
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -269,7 +269,7 @@ func TestRoute_with_vars(t *testing.T) {
 
 		{
 			caseDesc: "add route with vars (args is digital)",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -302,7 +302,7 @@ func TestRoute_with_vars(t *testing.T) {
 
 		{
 			caseDesc:     "delete the route with vars (args is digital)",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},

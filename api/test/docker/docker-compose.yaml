@@ -181,7 +181,7 @@ services:
       - node2
       - node3
     ports:
-      - '8080:8080/tcp'
+      - '9000:9000/tcp'
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.40
