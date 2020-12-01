@@ -130,12 +130,13 @@ services:
       context: ../../
       dockerfile: test/docker/Dockerfile-apisix
       args:
-        - APISIX_VERSION=master
+        - APISIX_VERSION=2.1
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
       - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
-      - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro      
+      - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
+      - ./apisix_logs:/usr/local/apisix/logs
     depends_on:
       - node1
       - node2
@@ -152,7 +153,7 @@ services:
       context: ../../
       dockerfile: test/docker/Dockerfile-apisix
       args:
-        - APISIX_VERSION=master
+        - APISIX_VERSION=2.1
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
@@ -180,10 +181,21 @@ services:
       - node2
       - node3
     ports:
-      - '8080:8080/tcp'
+      - '9000:9000/tcp'
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.40
+
+  skywalking:
+    image: apache/skywalking-oap-server
+    restart: always
+    ports:
+      - '1234:1234/tcp'
+      - '11800:11800/tcp'
+      - '12800:12800/tcp'
+    networks:
+      apisix_dashboard_e2e:
+        ipv4_address: 172.16.238.50
 
 networks:
   apisix_dashboard_e2e:

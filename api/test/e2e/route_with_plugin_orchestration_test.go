@@ -17,96 +17,93 @@
 package e2e
 
 import (
+	"io/ioutil"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func TestRoute_with_valid_uri_uris(t *testing.T) {
+func TestRoute_With_Plugin_Orchestration(t *testing.T) {
+	bytes, err := ioutil.ReadFile("../testdata/dag-conf.json")
+	assert.Nil(t, err)
+	dagConf := string(bytes)
+
+	// invalid dag config that not specified root node
+	bytes, err = ioutil.ReadFile("../testdata/invalid-dag-conf.json")
+	assert.Nil(t, err)
+	invalidDagConf := string(bytes)
+
 	tests := []HttpTestCase{
 		{
-			caseDesc: "add route with valid uri",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
-			Body: `{
-					"uri": "/hello",
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "172.16.238.20",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc:     "hit the route (r1)",
+			caseDesc:     "make sure the route is not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+		},
+		{
+			caseDesc:     "create route with invalid dag config",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/routes/r1",
+			Body:         invalidDagConf,
 			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			caseDesc:     "make sure the route created failed",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete the route (r1)",
+			caseDesc:     "create route with correct dag config",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/routes/r1",
+			Body:         dagConf,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify the route(should be blocked)",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Query:        "t=root.exe",
+			ExpectStatus: http.StatusForbidden,
+			ExpectBody:   `blocked`,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "verify the route(should not be blocked)",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `hello world`,
+		},
+		{
+			caseDesc:     "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "add route with valid uris",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
-			Body: `{
-					"uris": ["/hello","/status"],
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "172.16.238.20",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc:     "hit the route (/hello)",
+			caseDesc:     "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        sleepTime,
-		},
-		{
-			caseDesc:     "hit the route (/status)",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/status",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "ok",
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc:     "delete the route (r1)",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
 		},
 	}
 

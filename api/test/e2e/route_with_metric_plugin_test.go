@@ -19,12 +19,9 @@ package e2e
 import (
 	"net/http"
 	"testing"
-	"time"
-
-	"github.com/stretchr/testify/assert"
 )
 
-func TestRoute_With_Auth_Plugin(t *testing.T) {
+func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "make sure the route is not created ",
@@ -40,114 +37,85 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				 "uri": "/hello",
-				 "plugins": {
-					 "jwt-auth": {}
-				 },
-				 "upstream": {
-					 "type": "roundrobin",
+				"uri": "/hello",
+				"plugins": {
+					"prometheus": {}
+				},
+				"upstream": {
+					"type": "roundrobin",
 					"nodes": [{
 						"host": "172.16.238.20",
 						"port": 1981,
 						"weight": 1
 					}]
-				 }
-			 }`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"code":0`,
-		},
-		{
-			caseDesc:     "make sure the consumer is not created",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/consumers/jack",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusNotFound,
-		},
-		{
-			caseDesc: "create consumer",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
-			Body: `{
-				"username": "jack",
-				"plugins": {
-					"jwt-auth": {
-						"key": "user-key",
-						"secret": "my-secret-key",
-						"algorithm": "HS256"
-					}
-				},
-				"desc": "test description"
+				}
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc)
-	}
-
-	time.Sleep(sleepTime)
-
-	// sign jwt token
-	body, status, err := httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key")
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, status)
-	jwtToken := string(body)
-
-	// sign jwt token with not exists key
-	body, status, err = httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=not-exist-key")
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusNotFound, status)
-
-	// verify token and clean test data
-	tests = []HttpTestCase{
 		{
-			caseDesc:     "verify route without jwt token",
+			caseDesc:     "fetch the prometheus metric data",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `{"message":"Missing JWT token in request"}`,
+			Path:         "/apisix/prometheus/metrics",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "apisix_etcd_reachable 1",
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route with correct jwt token",
+			caseDesc:     "request from client (200)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": jwtToken},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 		},
 		{
-			caseDesc:     "verify route with incorrect jwt token",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": "invalid-token"},
-			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `{"message":"invalid jwt string"}`,
-		},
-		{
-			caseDesc:     "delete consumer",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/consumers/jack",
+			caseDesc: "create route that uri not exists in upstream",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello-not-exists",
+				"plugins": {
+					"prometheus": {}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route with the jwt token from just deleted consumer",
+			caseDesc:     "request from client (404)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": jwtToken},
-			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `{"message":"Missing related consumer"}`,
+			Path:         "/hello-not-exists",
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "verify the prometheus metric data (apisix_http_status 200)",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/prometheus/metrics",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `apisix_http_status{code="200",route="r1",matched_uri="/hello",matched_host="",service="",consumer=""`,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "verify the prometheus metric data (apisix_http_status 404)",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/prometheus/metrics",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `apisix_http_status{code="404",route="r1",matched_uri="/hello-not-exists",matched_host="",service="",consumer=""`,
 			Sleep:        sleepTime,
 		},
 		{
@@ -159,7 +127,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify the deleted route ",
+			caseDesc:     "make sure the route has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -172,5 +140,4 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 	for _, tc := range tests {
 		testCaseCheck(tc)
 	}
-
 }

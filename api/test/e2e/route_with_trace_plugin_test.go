@@ -19,12 +19,15 @@ package e2e
 import (
 	"net/http"
 	"testing"
+	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
+func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created",
+			caseDesc:     "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -32,16 +35,15 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route that will rewrite host and uri",
+			caseDesc: "create route",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
-					"proxy-rewrite": {
-						"uri": "/plugin_proxy_rewrite",
-						"host": "test.com"
+					"skywalking": {
+						"sample_ratio": 1 
 					}
 				},
 				"upstream": {
@@ -57,27 +59,41 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route that rewrite host and uri",
+			caseDesc:     "tiger skywalking",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "uri: /plugin_proxy_rewrite\nhost: test.com",
+			ExpectBody:   "hello world",
 			Sleep:        sleepTime,
 		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+
+	// sleep for process log
+	time.Sleep(4 * time.Second)
+
+	// verify by checking log
+	logContent := readAPISIXErrorLog(t)
+	assert.Contains(t, logContent, "segments reported")
+
+	// clean log
+	cleanAPISIXErrorLog(t)
+
+	tests = []HttpTestCase{
 		{
-			caseDesc: "update route that will rewrite headers",
+			caseDesc: "update route to change sample ratio",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
-					"proxy-rewrite": {
-						"uri": "/uri/plugin_proxy_rewrite",
-						"headers": {
-							"X-Api-Version": "v2"
-						}
+					"skywalking": {
+						"sample_ratio": 0.00001
 					}
 				},
 				"upstream": {
@@ -93,82 +109,31 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route that rewrite headers",
+			caseDesc:     "access the route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"X-Api-Version": "v1"},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "x-api-version: v2",
+			ExpectBody:   "hello world",
 			Sleep:        sleepTime,
 		},
-		{
-			caseDesc: "update route using regex_uri",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
-			Body: `{
-				"uri": "/test/*",
-				"plugins": {
-					"proxy-rewrite": {
-						"regex_uri": ["^/test/(.*)/(.*)/(.*)", "/$1_$2_$3"]
-					}
-				},
-				"upstream": {
-					"type": "roundrobin",
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1981,
-						"weight": 1
-					}]
-				}
-			}`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc:     "verify route that using regex_uri",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         `/test/plugin/proxy/rewrite`,
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "uri: /plugin_proxy_rewrite",
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc: "update route that will rewrite args",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
-			Body: `{
-				"uri": "/hello",
-				"plugins": {
-					"proxy-rewrite": {
-						"uri": "/plugin_proxy_rewrite_args?name=api6"
-					}
-				},
-				"upstream": {
-					"type": "roundrobin",
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1981,
-						"weight": 1
-					}]
-				}
-			}`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc:     "verify route that rewrite args",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         `/hello`,
-			Query:        "name=api7",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "uri: /plugin_proxy_rewrite_args\nname: api6",
-			Sleep:        sleepTime,
-		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+
+	// sleep for process log
+	time.Sleep(4 * time.Second)
+
+	// verify by checking log
+	logContent = readAPISIXErrorLog(t)
+	assert.Contains(t, logContent, "miss sampling, ignore")
+
+	// clean log
+	cleanAPISIXErrorLog(t)
+
+	tests = []HttpTestCase{
 		{
 			caseDesc:     "delete route",
 			Object:       ManagerApiExpect(t),
@@ -178,10 +143,10 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route deleted",
+			caseDesc:     "make sure the route has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello",
+			Path:         "/hello_",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        sleepTime,
@@ -191,5 +156,4 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 	for _, tc := range tests {
 		testCaseCheck(tc)
 	}
-
 }

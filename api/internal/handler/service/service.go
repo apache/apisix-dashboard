@@ -32,6 +32,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
@@ -118,8 +119,9 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Service)
 
-	if input.UpstreamID != "" {
-		_, err := h.upstreamStore.Get(input.UpstreamID)
+	if input.UpstreamID != nil {
+		upstreamID := utils.InterfaceToString(input.UpstreamID)
+		_, err := h.upstreamStore.Get(upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -147,8 +149,9 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		input.Service.ID = input.ID
 	}
 
-	if input.UpstreamID != "" {
-		_, err := h.upstreamStore.Get(input.UpstreamID)
+	if input.UpstreamID != nil {
+		upstreamID := utils.InterfaceToString(input.UpstreamID)
+		_, err := h.upstreamStore.Get(upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
