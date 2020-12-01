@@ -151,7 +151,7 @@ func TestUpstream_cHash_hash_on_cookie(t *testing.T) {
 	var respBody []byte
 	res := map[string]int{}
 	for i := 0; i <= 3; i++ {
-		url = basepath + "/server_port?var=2&var2=" + strconv.Itoa(i)
+		url = basepath + "/server_port"
 		req, err = http.NewRequest("GET", url, nil)
 		req.Header.Add("Cookie", `custom-cookie=cuscookie`)
 		resp, err = http.DefaultClient.Do(req)
@@ -170,7 +170,7 @@ func TestUpstream_cHash_hash_on_cookie(t *testing.T) {
 	//hit routes with miss cookie
 	res = map[string]int{}
 	for i := 0; i <= 3; i++ {
-		url = basepath + "/server_port?var=2&var2=" + strconv.Itoa(i)
+		url = basepath + "/server_port"
 		req, err = http.NewRequest("GET", url, nil)
 		req.Header.Add("Cookie", `miss-custom-cookie=cuscookie`)
 		resp, err = http.DefaultClient.Do(req)
