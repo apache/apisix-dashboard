@@ -30,7 +30,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create route",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -61,7 +61,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 		},
 		{
 			caseDesc: "create consumer",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
@@ -98,7 +98,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete consumer",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
@@ -106,7 +106,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete consumer (as delete not exist consumer)",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
@@ -124,7 +124,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -141,7 +141,7 @@ func TestConsumer_with_notexist_plugin(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create consumer with not exist plugin",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
@@ -159,7 +159,7 @@ func TestConsumer_with_notexist_plugin(t *testing.T) {
 		},
 		{
 			caseDesc:     "verify the consumer",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/consumers/jack",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},
@@ -177,7 +177,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create the consumer",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
@@ -199,7 +199,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 		},
 		{
 			caseDesc:     "verify the consumer",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
@@ -209,7 +209,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 		},
 		{
 			caseDesc: "create the route",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -240,7 +240,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete the consumer",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
@@ -248,7 +248,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete the route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -265,7 +265,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create the consumer",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
@@ -298,7 +298,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	tests = []HttpTestCase{
 		{
 			caseDesc: "update the consumer",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
@@ -331,7 +331,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	tests = []HttpTestCase{
 		{
 			caseDesc:     "delete the consumer",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
@@ -339,7 +339,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 		},
 		{
 			caseDesc:     "after delete consumer verify it again",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
