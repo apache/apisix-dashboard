@@ -67,7 +67,7 @@ func TestSSL_Basic(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "create ssl fail - key and cert not match",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPost,
 			Path:         "/apisix/admin/ssl",
 			Body:         string(invalidBody),
@@ -76,7 +76,7 @@ func TestSSL_Basic(t *testing.T) {
 		},
 		{
 			caseDesc:     "create ssl successfully",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPost,
 			Path:         "/apisix/admin/ssl",
 			Body:         string(body),
@@ -85,7 +85,7 @@ func TestSSL_Basic(t *testing.T) {
 		},
 		{
 			caseDesc: "create route",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -113,7 +113,7 @@ func TestSSL_Basic(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete ssl",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/ssl/1",
 			Headers:      map[string]string{"Authorization": token},
@@ -135,7 +135,7 @@ func TestSSL_Basic(t *testing.T) {
 	// clean test data
 	delRoute := HttpTestCase{
 		caseDesc:     "delete route",
-		Object:       MangerApiExpect(t),
+		Object:       ManagerApiExpect(t),
 		Method:       http.MethodDelete,
 		Path:         "/apisix/admin/routes/r1",
 		Headers:      map[string]string{"Authorization": token},

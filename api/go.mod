@@ -21,7 +21,7 @@ require (
 	github.com/lestrrat-go/strftime v1.0.3 // indirect
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/satori/go.uuid v1.2.0
-	github.com/shiningrush/droplet v0.2.1
+	github.com/shiningrush/droplet v0.2.3
 	github.com/shiningrush/droplet/wrapper/gin v0.2.0
 	github.com/sirupsen/logrus v1.7.0
 	github.com/sony/sonyflake v1.0.0

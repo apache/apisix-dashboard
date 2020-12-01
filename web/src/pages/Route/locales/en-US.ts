@@ -63,6 +63,10 @@ export default {
     '1. Request path, for example: /foo/index.html, supports request path prefix /foo/* ;',
   'page.route.form.itemExtraMessage2.path': '2. /* represents all paths',
   'page.route.form.itemRulesPatternMessage.path': 'Begin with / , and * can only at the end',
+  'page.route.form.itemRulesPatternMessage.remoteAddrs':
+    'Please enter a valid IP address, for example: 192.168.1.101, 192.168.1.0/24, ::1, fe80::1, fe80::1/64',
+  'page.route.form.itemExtraMessage1.remoteAddrs':
+    'Client IP, for example: 192.168.1.101, 192.168.1.0/24, ::1, fe80::1, fe80::1/64',
 
   'page.route.httpAction': 'Action',
   'page.route.httpOverrideOrCreate': 'Override/Create',
@@ -97,4 +101,5 @@ export default {
 
   'page.route.domainName': 'Domain Name',
   'page.route.path': 'Path',
+  'page.route.remoteAddrs': 'Remote Addrs',
 };

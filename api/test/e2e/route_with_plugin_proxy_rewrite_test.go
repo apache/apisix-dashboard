@@ -19,15 +19,12 @@ package e2e
 import (
 	"net/http"
 	"testing"
-	"time"
-
-	"github.com/stretchr/testify/assert"
 )
 
-func TestRoute_With_Auth_Plugin(t *testing.T) {
+func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			caseDesc:     "make sure the route is not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -35,119 +32,141 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route",
+			caseDesc: "create route that will rewrite host and uri",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				 "uri": "/hello",
-				 "plugins": {
-					 "jwt-auth": {}
-				 },
-				 "upstream": {
-					 "type": "roundrobin",
+				"uri": "/hello",
+				"plugins": {
+					"proxy-rewrite": {
+						"uri": "/plugin_proxy_rewrite",
+						"host": "test.com"
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
 					"nodes": [{
 						"host": "172.16.238.20",
 						"port": 1981,
 						"weight": 1
 					}]
-				 }
-			 }`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"code":0`,
-		},
-		{
-			caseDesc:     "make sure the consumer is not created",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/consumers/jack",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusNotFound,
-		},
-		{
-			caseDesc: "create consumer",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
-			Body: `{
-				"username": "jack",
-				"plugins": {
-					"jwt-auth": {
-						"key": "user-key",
-						"secret": "my-secret-key",
-						"algorithm": "HS256"
-					}
-				},
-				"desc": "test description"
+				}
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc)
-	}
-
-	time.Sleep(sleepTime)
-
-	// sign jwt token
-	body, status, err := httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key")
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusOK, status)
-	jwtToken := string(body)
-
-	// sign jwt token with not exists key
-	body, status, err = httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=not-exist-key")
-	assert.Nil(t, err)
-	assert.Equal(t, http.StatusNotFound, status)
-
-	// verify token and clean test data
-	tests = []HttpTestCase{
 		{
-			caseDesc:     "verify route without jwt token",
+			caseDesc:     "verify route that rewrite host and uri",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `{"message":"Missing JWT token in request"}`,
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "uri: /plugin_proxy_rewrite\nhost: test.com",
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route with correct jwt token",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": jwtToken},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-		},
-		{
-			caseDesc:     "verify route with incorrect jwt token",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": "invalid-token"},
-			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `{"message":"invalid jwt string"}`,
-		},
-		{
-			caseDesc:     "delete consumer",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/consumers/jack",
+			caseDesc: "update route that will rewrite headers",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"plugins": {
+					"proxy-rewrite": {
+						"uri": "/uri/plugin_proxy_rewrite",
+						"headers": {
+							"X-Api-Version": "v2"
+						}
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route with the jwt token from just deleted consumer",
+			caseDesc:     "verify route that rewrite headers",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": jwtToken},
-			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `{"message":"Missing related consumer"}`,
+			Headers:      map[string]string{"X-Api-Version": "v1"},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "x-api-version: v2",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc: "update route using regex_uri",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/test/*",
+				"plugins": {
+					"proxy-rewrite": {
+						"regex_uri": ["^/test/(.*)/(.*)/(.*)", "/$1_$2_$3"]
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify route that using regex_uri",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         `/test/plugin/proxy/rewrite`,
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "uri: /plugin_proxy_rewrite",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc: "update route that will rewrite args",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"plugins": {
+					"proxy-rewrite": {
+						"uri": "/plugin_proxy_rewrite_args?name=api6"
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify route that rewrite args",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         `/hello`,
+			Query:        "name=api7",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "uri: /plugin_proxy_rewrite_args\nname: api6",
 			Sleep:        sleepTime,
 		},
 		{
@@ -159,7 +178,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify the deleted route ",
+			caseDesc:     "make sure the route deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
