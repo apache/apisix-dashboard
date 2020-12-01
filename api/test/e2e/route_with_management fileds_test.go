@@ -30,7 +30,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "config route with name and desc (r1)",
-			Object:   ManagerApiExpect(t),
+			Object:   MangerApiExpect(t),
 			Path:     "/apisix/admin/routes/r1",
 			Method:   http.MethodPut,
 			Body: `{
@@ -61,7 +61,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 		},
 		{
 			caseDesc:     "verify the route's content (r1)",
-			Object:       ManagerApiExpect(t),
+			Object:       MangerApiExpect(t),
 			Path:         "/apisix/admin/routes/r1",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},
@@ -70,71 +70,6 @@ func TestRoute_with_name_desc(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 	}
-	for _, tc := range tests {
-		testCaseCheck(tc)
-	}
-
-	tests = []HttpTestCase{
-		{
-			caseDesc:     "delete the route (r1)",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc)
-	}
-
-	tests = []HttpTestCase{
-		{
-			caseDesc: "config route with name, desc, create_time, update_time",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
-			Body: `{
-					"uri": "/hello",
-					"name": "jack",
-					"create_time": 1604046556,
-					"update_time": 1604046556,
-					"desc": "config route with name and desc",
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "172.16.238.20",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc:     "access the route's uri (r1)",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc:     "verify the route's detail (r1)",
-			Object:       ManagerApiExpect(t),
-			Path:         "/apisix/admin/routes/r1",
-			Method:       http.MethodGet,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"name\":\"jack\",\"desc\":\"config route with name and desc\"",
-			Sleep:        sleepTime,
-		},
-	}
-
 	for _, tc := range tests {
 		testCaseCheck(tc)
 	}
@@ -148,20 +83,18 @@ func TestRoute_with_name_desc(t *testing.T) {
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
-	assert.Equal(t, true, createtime.Int() >= time.Now().Unix()-2 && createtime.Int() <= time.Now().Unix()+2)
-	assert.Equal(t, true, updatetime.Int() >= time.Now().Unix()-2 && updatetime.Int() <= time.Now().Unix()+2)
+	assert.Equal(t, true, createtime.Int() >= time.Now().Unix()-1 && createtime.Int() <= time.Now().Unix()+1)
+	assert.Equal(t, true, updatetime.Int() >= time.Now().Unix()-1 && updatetime.Int() <= time.Now().Unix()+1)
 
 	tests = []HttpTestCase{
 		{
 			caseDesc: "update the route (r1)",
-			Object:   ManagerApiExpect(t),
+			Object:   MangerApiExpect(t),
 			Path:     "/apisix/admin/routes/r1",
 			Method:   http.MethodPut,
 			Body: `{
 					"uri": "/hello",
 					"name": "new jack",
-					"create_time": 1606726340,
-					"update_time": 1606726340,
 					"desc": "new desc",
 					"upstream": {
 						"type": "roundrobin",
@@ -209,7 +142,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 	tests = []HttpTestCase{
 		{
 			caseDesc:     "delete the route (r1)",
-			Object:       ManagerApiExpect(t),
+			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -224,7 +157,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 	tests = []HttpTestCase{
 		{
 			caseDesc: "config route with labels (r1)",
-			Object:   ManagerApiExpect(t),
+			Object:   MangerApiExpect(t),
 			Path:     "/apisix/admin/routes/r1",
 			Method:   http.MethodPut,
 			Body: `{
@@ -258,7 +191,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 		},
 		{
 			caseDesc:     "verify the route's detail (r1)",
-			Object:       ManagerApiExpect(t),
+			Object:       MangerApiExpect(t),
 			Path:         "/apisix/admin/routes/r1",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},
@@ -269,7 +202,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 
 		{
 			caseDesc:     "delete the route (r1)",
-			Object:       ManagerApiExpect(t),
+			Object:       MangerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
