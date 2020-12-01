@@ -25,7 +25,7 @@ func TestID_Using_Int(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create upstream",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams",
 			Body: `{
@@ -42,7 +42,7 @@ func TestID_Using_Int(t *testing.T) {
 		},
 		{
 			caseDesc: "create route using the upstream just created",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
@@ -64,7 +64,7 @@ func TestID_Using_Int(t *testing.T) {
 		},
 		{
 			caseDesc: "create service",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/services",
 			Body: `{
@@ -76,7 +76,7 @@ func TestID_Using_Int(t *testing.T) {
 		},
 		{
 			caseDesc: "update route to use the service just created",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
@@ -98,7 +98,7 @@ func TestID_Using_Int(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete the route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/1",
 			Headers:      map[string]string{"Authorization": token},
@@ -106,7 +106,7 @@ func TestID_Using_Int(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete the service",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/services/1",
 			Headers:      map[string]string{"Authorization": token},
@@ -115,7 +115,7 @@ func TestID_Using_Int(t *testing.T) {
 		},
 		{
 			caseDesc:     "make sure the service has been deleted",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/services/1",
 			Headers:      map[string]string{"Authorization": token},
@@ -124,7 +124,7 @@ func TestID_Using_Int(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete the upstream",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/1",
 			Headers:      map[string]string{"Authorization": token},
@@ -132,7 +132,7 @@ func TestID_Using_Int(t *testing.T) {
 		},
 		{
 			caseDesc:     "make sure the upstream has been deleted",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/upstreams/1",
 			Headers:      map[string]string{"Authorization": token},
@@ -158,7 +158,7 @@ func TestID_Using_String(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create upstream",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams",
 			Body: `{
@@ -175,7 +175,7 @@ func TestID_Using_String(t *testing.T) {
 		},
 		{
 			caseDesc: "create route using the upstream just created",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/2",
 			Body: `{
@@ -197,7 +197,7 @@ func TestID_Using_String(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete the route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/2",
 			Headers:      map[string]string{"Authorization": token},
@@ -205,7 +205,7 @@ func TestID_Using_String(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete the upstream",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/2",
 			Headers:      map[string]string{"Authorization": token},
@@ -213,7 +213,7 @@ func TestID_Using_String(t *testing.T) {
 		},
 		{
 			caseDesc:     "make sure the upstream has been deleted",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/upstreams/2",
 			Headers:      map[string]string{"Authorization": token},
@@ -269,7 +269,7 @@ func TestID_Crossing(t *testing.T) {
 		},
 		{
 			caseDesc:     "verify that the upstream is available for manager api",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/upstreams/3",
 			Headers:      map[string]string{"Authorization": token},
@@ -279,7 +279,7 @@ func TestID_Crossing(t *testing.T) {
 		},
 		{
 			caseDesc:     "verify that the route is available for manager api",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes/3",
 			Headers:      map[string]string{"Authorization": token},
@@ -298,7 +298,7 @@ func TestID_Crossing(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete the route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/3",
 			Headers:      map[string]string{"Authorization": token},
@@ -306,7 +306,7 @@ func TestID_Crossing(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete the upstream",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/3",
 			Headers:      map[string]string{"Authorization": token},
@@ -314,7 +314,7 @@ func TestID_Crossing(t *testing.T) {
 		},
 		{
 			caseDesc:     "make sure the upstream has been deleted",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/upstreams/3",
 			Headers:      map[string]string{"Authorization": token},

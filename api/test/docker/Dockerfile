@@ -58,7 +58,7 @@ COPY --from=build-env /usr/share/zoneinfo/Hongkong /etc/localtime
 
 RUN mkdir logs
 
-EXPOSE 8080
+EXPOSE 9000
 
 RUN chmod +x ./entry.sh
 

@@ -386,7 +386,6 @@ func TestUpstream_Delete(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
 		},
-		// TODO delete upstream - being used by route 1
 		{
 			caseDesc:     "delete route",
 			Object:       ManagerApiExpect(t),

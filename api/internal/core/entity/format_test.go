@@ -54,6 +54,27 @@ func TestNodesFormat(t *testing.T) {
 	assert.Contains(t, jsonStr, `"host":"127.0.0.1"`)
 }
 
+func TestNodesFormat_struct(t *testing.T) {
+	// route data saved in ETCD
+	var route Route
+	route.Uris = []string{"/*"}
+	route.Upstream = &UpstreamDef{}
+	route.Upstream.Type = "roundrobin"
+	var nodes = []*Node{{Host: "127.0.0.1", Port: 80, Weight: 0}}
+	route.Upstream.Nodes = nodes
+
+	// nodes format
+	formattedNodes := NodesFormat(route.Upstream.Nodes)
+
+	// json encode for client
+	res, err := json.Marshal(formattedNodes)
+	assert.Nil(t, err)
+	jsonStr := string(res)
+	assert.Contains(t, jsonStr, `"weight":0`)
+	assert.Contains(t, jsonStr, `"port":80`)
+	assert.Contains(t, jsonStr, `"host":"127.0.0.1"`)
+}
+
 func TestNodesFormat_Map(t *testing.T) {
 	// route data saved in ETCD
 	routeStr := `{

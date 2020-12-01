@@ -34,7 +34,7 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 		},
 		{
 			caseDesc: "create route",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -96,7 +96,7 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -130,7 +130,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 		},
 		{
 			caseDesc: "create route",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -159,7 +159,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 		},
 		{
 			caseDesc:     "make sure the consumer is not created",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
@@ -167,7 +167,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 		},
 		{
 			caseDesc: "create consumer",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
@@ -183,7 +183,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 		},
 		{
 			caseDesc: "create consumer 2",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
@@ -246,7 +246,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete consumer pony",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/pony",
 			Headers:      map[string]string{"Authorization": token},
@@ -254,7 +254,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete consumer jack",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
@@ -281,7 +281,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
