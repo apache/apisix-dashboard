@@ -26,10 +26,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUpstream_cHash_hash_on_custom_header(t *testing.T) {
+func TestUpstream_chash_hash_on_custom_header(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create cHash upstream with hash_on (custom_header)",
+			caseDesc: "create chash upstream with hash_on (custom_header)",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
@@ -97,7 +97,7 @@ func TestUpstream_cHash_hash_on_custom_header(t *testing.T) {
 	resp.Body.Close()
 }
 
-func TestUpstream_cHash_hash_on_cookie(t *testing.T) {
+func TestUpstream_chash_hash_on_cookie(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create cHash upstream with hash_on (cookie)",
@@ -258,7 +258,7 @@ func TestUpstream_key_contains_uppercase_letters_and_hyphen(t *testing.T) {
 	resp.Body.Close()
 }
 
-func TestUpstream_cHash_hash_on_consumer(t *testing.T) {
+func TestUpstream_chash_hash_on_consumer(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create consumer with key-auth",
@@ -283,7 +283,9 @@ func TestUpstream_cHash_hash_on_consumer(t *testing.T) {
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
 					"uri": "/server_port",
-					"plugin": {},
+					"plugins": {
+						"key-auth": {}
+					},
 					"upstream": {
 						"nodes": [{
 							"host": "172.16.238.20",
