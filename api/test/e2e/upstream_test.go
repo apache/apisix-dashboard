@@ -142,9 +142,9 @@ func TestRoute_Node_Host(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
-				"uri": "/*",
-				"upstream_id": "1"
-			}`,
+					"uri": "/*",
+					"upstream_id": "1"
+				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -191,29 +191,29 @@ func TestRoute_Node_Host(t *testing.T) {
 	}
 }
 
-func TestUpstream_cHash_remote_addr(t *testing.T) {
+func TestUpstream_chash_remote_addr(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create cHash upstream with key (remote_addr)",
+			caseDesc: "create chash upstream with key (remote_addr)",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-                "nodes": [{
-                    "host": "172.16.238.20",
-                    "port": 1980,
-                    "weight": 1
+				"nodes": [{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 1
 				},
 				{
-                    "host": "172.16.238.20",
-                    "port": 1981,
-                    "weight": 1
+					"host": "172.16.238.20",
+					"port": 1981,
+					"weight": 1
 				},
 				{
-                    "host": "172.16.238.20",
-                    "port": 1982,
-                    "weight": 1
-                }],
+					"host": "172.16.238.20",
+					"port": 1982,
+					"weight": 1
+				}],
 				"type": "chash",
 				"hash_on":"header",
 				"key": "remote_addr"
@@ -247,39 +247,44 @@ func TestUpstream_cHash_remote_addr(t *testing.T) {
 	var resp *http.Response
 	var respBody []byte
 	var count int
+	res := map[string]int{}
 	for i := 0; i <= 17; i++ {
 		resp, err = http.DefaultClient.Do(request)
 		assert.Nil(t, err)
 		respBody, err = ioutil.ReadAll(resp.Body)
-		if string(respBody) == "1982" {
-			count++
+		body := string(respBody)
+		if _, ok := res[body]; !ok {
+			res[body] = 1
+		} else {
+			res[body] += 1
 		}
+		resp.Body.Close()
 	}
-	assert.Equal(t, 18, count)
-	defer resp.Body.Close()
+	assert.Equal(t, 18, res["1980"]+res["1981"]+res["1982"])
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "create cHash upstream with key (remote_addr, weight equal 0 or 1)",
+			caseDesc: "create chash upstream with key (remote_addr, weight equal 0 or 1)",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-                "nodes": [{
-                    "host": "172.16.238.20",
-                    "port": 1980,
-                    "weight": 1
+				"nodes": [
+				{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 1
 				},
 				{
-                    "host": "172.16.238.20",
-                    "port": 1981,
-                    "weight": 0
+					"host": "172.16.238.20",
+					"port": 1981,
+					"weight": 0
 				},
 				{
-                    "host": "172.16.238.20",
-                    "port": 1982,
-                    "weight": 0
-                }],
+					"host": "172.16.238.20",
+					"port": 1982,
+					"weight": 0
+				}],
 				"type": "chash",
 				"hash_on":"header",
 				"key": "remote_addr"
@@ -324,20 +329,21 @@ func TestUpstream_cHash_remote_addr(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "create cHash upstream with key (remote_addr, all weight equal 0)",
+			caseDesc: "create chash upstream with key (remote_addr, all weight equal 0)",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-                "nodes": [{
-                    "host": "172.16.238.20",
-                    "port": 1980,
-                    "weight": 0
+				"nodes": [
+				{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 0
 				},
 				{
-                    "host": "172.16.238.20",
-                    "port": 1981,
-                    "weight": 0
+					"host": "172.16.238.20",
+					"port": 1981,
+					"weight": 0
 				}],
 				"type": "chash",
 				"hash_on":"header",
