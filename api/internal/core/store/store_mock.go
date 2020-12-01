@@ -31,8 +31,21 @@ func (m *MockInterface) Get(key string) (interface{}, error) {
 }
 
 func (m *MockInterface) List(input ListInput) (*ListOutput, error) {
-	ret := m.Mock.Called(input)
-	return ret.Get(0).(*ListOutput), ret.Error(1)
+	ret := m.Called(input)
+
+	var (
+		r0 *ListOutput
+		r1 error
+	)
+
+	if rf, ok := ret.Get(0).(func(ListInput) *ListOutput); ok {
+		r0 = rf(input)
+	} else {
+		r0 = ret.Get(0).(*ListOutput)
+	}
+	r1 = ret.Error(1)
+
+	return r0, r1
 }
 
 func (m *MockInterface) Create(ctx context.Context, obj interface{}) error {

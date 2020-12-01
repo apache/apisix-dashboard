@@ -18,19 +18,19 @@
 package consumer
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"net/http"
 	"testing"
 	"time"
 
-	"github.com/shiningrush/droplet"
-	"github.com/stretchr/testify/assert"
-
 	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
 )
 
@@ -81,6 +81,326 @@ func TestHandler_Get(t *testing.T) {
 	}
 }
 
+func TestHandler_List(t *testing.T) {
+	tests := []struct {
+		caseDesc  string
+		giveInput *ListInput
+		giveData  []*entity.Consumer
+		giveErr   error
+		wantErr   error
+		wantInput store.ListInput
+		wantRet   interface{}
+	}{
+		{
+			caseDesc: "normal",
+			giveInput: &ListInput{
+				Username: "testUser",
+				Pagination: store.Pagination{
+					PageSize:   10,
+					PageNumber: 10,
+				},
+			},
+			wantInput: store.ListInput{
+				PageSize:   10,
+				PageNumber: 10,
+			},
+			giveData: []*entity.Consumer{
+				{Username: "user1"},
+				{Username: "testUser"},
+				{Username: "iam-testUser"},
+				{Username: "testUser-is-me"},
+			},
+			wantRet: &store.ListOutput{
+				Rows: []interface{}{
+					&entity.Consumer{Username: "testUser"},
+					&entity.Consumer{Username: "iam-testUser"},
+					&entity.Consumer{Username: "testUser-is-me"},
+				},
+				TotalSize: 3,
+			},
+		},
+		{
+			caseDesc: "list failed",
+			giveInput: &ListInput{
+				Username: "testUser",
+				Pagination: store.Pagination{
+					PageSize:   10,
+					PageNumber: 10,
+				},
+			},
+			wantInput: store.ListInput{
+				PageSize:   10,
+				PageNumber: 10,
+			},
+			giveData: []*entity.Consumer{},
+			giveErr:  fmt.Errorf("list failed"),
+			wantErr:  fmt.Errorf("list failed"),
+		},
+	}
+
+	for _, tc := range tests {
+		getCalled := true
+		mStore := &store.MockInterface{}
+		mStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
+			getCalled = true
+			input := args.Get(0).(store.ListInput)
+			assert.Equal(t, tc.wantInput.PageSize, input.PageSize, tc.caseDesc)
+			assert.Equal(t, tc.wantInput.PageNumber, input.PageNumber, tc.caseDesc)
+		}).Return(func(input store.ListInput) *store.ListOutput {
+			var returnData []interface{}
+			for _, c := range tc.giveData {
+				if input.Predicate(c) {
+					returnData = append(returnData, c)
+				}
+			}
+			return &store.ListOutput{
+				Rows:      returnData,
+				TotalSize: len(returnData),
+			}
+		}, tc.giveErr)
+
+		h := Handler{consumerStore: mStore}
+		ctx := droplet.NewContext()
+		ctx.SetInput(tc.giveInput)
+		ret, err := h.List(ctx)
+		assert.True(t, getCalled, tc.caseDesc)
+		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
+		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
+	}
+}
+
+func TestHandler_Create(t *testing.T) {
+	tests := []struct {
+		caseDesc   string
+		giveInput  *entity.Consumer
+		giveCtx    context.Context
+		giveErr    error
+		wantErr    error
+		wantInput  *entity.Consumer
+		wantRet    interface{}
+		wantCalled bool
+	}{
+		{
+			caseDesc: "normal",
+			giveInput: &entity.Consumer{
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{},
+				},
+			},
+			giveCtx: context.WithValue(context.Background(), "test", "value"),
+			wantInput: &entity.Consumer{
+				BaseInfo: entity.BaseInfo{
+					ID: "name",
+				},
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 86400,
+					},
+				},
+			},
+			wantRet:    nil,
+			wantCalled: true,
+		},
+		{
+			caseDesc: "create failed",
+			giveInput: &entity.Consumer{
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 5000,
+					},
+				},
+			},
+			giveErr: fmt.Errorf("create failed"),
+			wantInput: &entity.Consumer{
+				BaseInfo: entity.BaseInfo{
+					ID: "name",
+				},
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 5000,
+					},
+				},
+			},
+			wantErr: fmt.Errorf("create failed"),
+			wantRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
+			},
+			wantCalled: true,
+		},
+	}
+
+	for _, tc := range tests {
+		methodCalled := true
+		mStore := &store.MockInterface{}
+		mStore.On("Create", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			methodCalled = true
+			assert.Equal(t, tc.giveCtx, args.Get(0), tc.caseDesc)
+			assert.Equal(t, tc.wantInput, args.Get(1), tc.caseDesc)
+		}).Return(tc.giveErr)
+
+		h := Handler{consumerStore: mStore}
+		ctx := droplet.NewContext()
+		ctx.SetInput(tc.giveInput)
+		ctx.SetContext(tc.giveCtx)
+		ret, err := h.Create(ctx)
+		assert.Equal(t, tc.wantCalled, methodCalled, tc.caseDesc)
+		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
+		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
+	}
+}
+
+func TestHandler_Update(t *testing.T) {
+	tests := []struct {
+		caseDesc   string
+		giveInput  *UpdateInput
+		giveCtx    context.Context
+		giveErr    error
+		wantErr    error
+		wantInput  *entity.Consumer
+		wantRet    interface{}
+		wantCalled bool
+	}{
+		{
+			caseDesc: "normal",
+			giveInput: &UpdateInput{
+				Username: "name",
+				Consumer: entity.Consumer{
+					Plugins: map[string]interface{}{
+						"jwt-auth": map[string]interface{}{
+							"exp": 500,
+						},
+					},
+				},
+			},
+			giveCtx: context.WithValue(context.Background(), "test", "value"),
+			wantInput: &entity.Consumer{
+				BaseInfo: entity.BaseInfo{
+					ID: "name",
+				},
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 500,
+					},
+				},
+			},
+			wantRet:    nil,
+			wantCalled: true,
+		},
+		{
+			caseDesc: "create failed",
+			giveInput: &UpdateInput{
+				Username: "name",
+				Consumer: entity.Consumer{
+					Plugins: map[string]interface{}{
+						"jwt-auth": map[string]interface{}{},
+					},
+				},
+			},
+			giveErr: fmt.Errorf("create failed"),
+			wantInput: &entity.Consumer{
+				BaseInfo: entity.BaseInfo{
+					ID: "name",
+				},
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 86400,
+					},
+				},
+			},
+			wantErr: fmt.Errorf("create failed"),
+			wantRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
+			},
+			wantCalled: true,
+		},
+	}
+
+	for _, tc := range tests {
+		methodCalled := true
+		mStore := &store.MockInterface{}
+		mStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			methodCalled = true
+			assert.Equal(t, tc.giveCtx, args.Get(0), tc.caseDesc)
+			assert.Equal(t, tc.wantInput, args.Get(1), tc.caseDesc)
+			assert.True(t, args.Bool(2), tc.caseDesc)
+		}).Return(tc.giveErr)
+
+		h := Handler{consumerStore: mStore}
+		ctx := droplet.NewContext()
+		ctx.SetInput(tc.giveInput)
+		ctx.SetContext(tc.giveCtx)
+		ret, err := h.Update(ctx)
+		assert.Equal(t, tc.wantCalled, methodCalled, tc.caseDesc)
+		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
+		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
+	}
+}
+
+func TestHandler_BatchDelete(t *testing.T) {
+	tests := []struct {
+		caseDesc  string
+		giveInput *BatchDeleteInput
+		giveCtx   context.Context
+		giveErr   error
+		wantErr   error
+		wantInput []string
+		wantRet   interface{}
+	}{
+		{
+			caseDesc: "normal",
+			giveInput: &BatchDeleteInput{
+				UserNames: "user1,user2",
+			},
+			giveCtx: context.WithValue(context.Background(), "test", "value"),
+			wantInput: []string{
+				"user1",
+				"user2",
+			},
+		},
+		{
+			caseDesc: "normal",
+			giveInput: &BatchDeleteInput{
+				UserNames: "user1,user2",
+			},
+			giveCtx: context.WithValue(context.Background(), "test", "value"),
+			giveErr: fmt.Errorf("delete failed"),
+			wantInput: []string{
+				"user1",
+				"user2",
+			},
+			wantErr: fmt.Errorf("delete failed"),
+			wantRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		methodCalled := true
+		mStore := &store.MockInterface{}
+		mStore.On("BatchDelete", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			methodCalled = true
+			assert.Equal(t, tc.giveCtx, args.Get(0), tc.caseDesc)
+			assert.Equal(t, tc.wantInput, args.Get(1), tc.caseDesc)
+		}).Return(tc.giveErr)
+
+		h := Handler{consumerStore: mStore}
+		ctx := droplet.NewContext()
+		ctx.SetInput(tc.giveInput)
+		ctx.SetContext(tc.giveCtx)
+		ret, err := h.BatchDelete(ctx)
+		assert.True(t, methodCalled, tc.caseDesc)
+		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
+		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
+	}
+}
+
 func TestConsumer(t *testing.T) {
 	// init
 	err := storage.InitETCDClient([]string{"127.0.0.1:2379"})
@@ -97,17 +417,17 @@ func TestConsumer(t *testing.T) {
 	ctx := droplet.NewContext()
 	consumer := &entity.Consumer{}
 	reqBody := `{
-      "username": "jack",
-      "plugins": {
-          "limit-count": {
-              "count": 2,
-              "time_window": 60,
-              "rejected_code": 503,
-              "key": "remote_addr"
-          }
-      },
-    "desc": "test description"
-  }`
+		 "username": "jack",
+		 "plugins": {
+			 "limit-count": {
+				 "count": 2,
+				 "time_window": 60,
+				 "rejected_code": 503,
+				 "key": "remote_addr"
+			 }
+		 },
+	   "desc": "test description"
+	 }`
 	err = json.Unmarshal([]byte(reqBody), consumer)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer)
@@ -230,7 +550,7 @@ func TestConsumer(t *testing.T) {
 	assert.Equal(t, len(dataPage.Rows), 0)
 
 	//delete consumer
-	inputDel := &BatchDelete{}
+	inputDel := &BatchDeleteInput{}
 	reqBody = `{"usernames": "jack"}`
 	err = json.Unmarshal([]byte(reqBody), inputDel)
 	assert.Nil(t, err)
@@ -248,16 +568,16 @@ func TestConsumer(t *testing.T) {
 	//create consumer fail
 	consumer_fail := &entity.Consumer{}
 	reqBody = `{
-      "plugins": {
-          "limit-count": {
-              "count": 2,
-              "time_window": 60,
-              "rejected_code": 503,
-              "key": "remote_addr"
-          }
-      },
-    "desc": "test description"
-  }`
+     "plugins": {
+         "limit-count": {
+             "count": 2,
+             "time_window": 60,
+             "rejected_code": 503,
+             "key": "remote_addr"
+         }
+     },
+   "desc": "test description"
+ }`
 	err = json.Unmarshal([]byte(reqBody), consumer_fail)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer_fail)
@@ -267,17 +587,17 @@ func TestConsumer(t *testing.T) {
 	//create consumer using Update
 	consumer6 := &UpdateInput{}
 	reqBody = `{
-      "username": "nnn",
-      "plugins": {
-          "limit-count": {
-              "count": 2,
-              "time_window": 60,
-              "rejected_code": 503,
-              "key": "remote_addr"
-          }
-      },
-    "desc": "test description"
-  }`
+     "username": "nnn",
+     "plugins": {
+         "limit-count": {
+             "count": 2,
+             "time_window": 60,
+             "rejected_code": 503,
+             "key": "remote_addr"
+         }
+     },
+   "desc": "test description"
+ }`
 	err = json.Unmarshal([]byte(reqBody), consumer6)
 	assert.Nil(t, err)
 	ctx.SetInput(consumer6)

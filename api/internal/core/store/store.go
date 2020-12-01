@@ -38,7 +38,7 @@ type Interface interface {
 	Get(key string) (interface{}, error)
 	List(input ListInput) (*ListOutput, error)
 	Create(ctx context.Context, obj interface{}) error
-	Update(ctx context.Context, obj interface{}, createOnFail bool) error
+	Update(ctx context.Context, obj interface{}, createIfNotExist bool) error
 	BatchDelete(ctx context.Context, keys []string) error
 }
 
