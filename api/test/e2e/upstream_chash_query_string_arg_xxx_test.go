@@ -78,16 +78,13 @@ func TestUpstream_cHash_query_string(t *testing.T) {
 	//hit routes
 	time.Sleep(time.Duration(500) * time.Millisecond)
 	basepath := "http://127.0.0.1:9080"
-	var req *http.Request
-	var err error
 	var url string
-	var resp *http.Response
 	var respBody []byte
 	res := map[string]int{}
 	for i := 0; i <= 17; i++ {
 		url = basepath + "/server_port?var=2&var2=" + strconv.Itoa(i)
-		req, err = http.NewRequest("GET", url, nil)
-		resp, err = http.DefaultClient.Do(req)
+		req, err := http.NewRequest("GET", url, nil)
+		resp, err := http.DefaultClient.Do(req)
 		assert.Nil(t, err)
 		respBody, err = ioutil.ReadAll(resp.Body)
 		body := string(respBody)
@@ -96,12 +93,12 @@ func TestUpstream_cHash_query_string(t *testing.T) {
 		} else {
 			res[body] += 1
 		}
+		resp.Body.Close()
 	}
 	fmt.Println(res)
 	assert.Equal(t, 4, res["1980"])
 	assert.Equal(t, 9, res["1981"])
 	assert.Equal(t, 5, res["1982"])
-	defer resp.Body.Close()
 }
 
 func TestUpstream_cHash_arg_xxx(t *testing.T) {
@@ -155,16 +152,13 @@ func TestUpstream_cHash_arg_xxx(t *testing.T) {
 	//hit routes
 	time.Sleep(time.Duration(500) * time.Millisecond)
 	basepath := "http://127.0.0.1:9080"
-	var req *http.Request
-	var err error
 	var url string
-	var resp *http.Response
 	var respBody []byte
 	res := map[string]int{}
 	for i := 0; i <= 17; i++ {
 		url = basepath + "/server_port?device_id=" + strconv.Itoa(i)
-		req, err = http.NewRequest("GET", url, nil)
-		resp, err = http.DefaultClient.Do(req)
+		req, err := http.NewRequest("GET", url, nil)
+		resp, err := http.DefaultClient.Do(req)
 		assert.Nil(t, err)
 		respBody, err = ioutil.ReadAll(resp.Body)
 		body := string(respBody)
@@ -173,12 +167,13 @@ func TestUpstream_cHash_arg_xxx(t *testing.T) {
 		} else {
 			res[body] += 1
 		}
+		resp.Body.Close()
 	}
 	fmt.Println(res)
 	assert.Equal(t, 7, res["1980"])
 	assert.Equal(t, 6, res["1981"])
 	assert.Equal(t, 5, res["1982"])
-	defer resp.Body.Close()
+	
 }
 
 func TestUpstream_Delete(t *testing.T) {
