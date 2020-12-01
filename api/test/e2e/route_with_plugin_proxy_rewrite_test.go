@@ -33,7 +33,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 		},
 		{
 			caseDesc: "create route that will rewrite host and uri",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -67,7 +67,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 		},
 		{
 			caseDesc: "update route that will rewrite headers",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -104,7 +104,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 		},
 		{
 			caseDesc: "update route using regex_uri",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -137,7 +137,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 		},
 		{
 			caseDesc: "update route that will rewrite args",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -171,7 +171,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
