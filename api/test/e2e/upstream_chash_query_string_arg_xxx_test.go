@@ -17,7 +17,6 @@
 package e2e
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -35,24 +34,24 @@ func TestUpstream_cHash_query_string(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-                "nodes": [{
-                    "host": "172.16.238.20",
-                    "port": 1980,
-                    "weight": 1
-				},
-				{
-                    "host": "172.16.238.20",
-                    "port": 1981,
-                    "weight": 1
-				},
-				{
-                    "host": "172.16.238.20",
-                    "port": 1982,
-                    "weight": 1
-                }],
-				"type": "chash",
-				"key": "query_string"
-			}`,
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					},
+					{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					},
+					{
+						"host": "172.16.238.20",
+						"port": 1982,
+						"weight": 1
+					}],
+					"type": "chash",
+					"key": "query_string"
+				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -95,7 +94,7 @@ func TestUpstream_cHash_query_string(t *testing.T) {
 		}
 		resp.Body.Close()
 	}
-	fmt.Println(res)
+	//the results will be distributed among the 3 upstream
 	assert.Equal(t, 4, res["1980"])
 	assert.Equal(t, 9, res["1981"])
 	assert.Equal(t, 5, res["1982"])
@@ -109,24 +108,24 @@ func TestUpstream_cHash_arg_xxx(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-                "nodes": [{
-                    "host": "172.16.238.20",
-                    "port": 1980,
-                    "weight": 1
-				},
-				{
-                    "host": "172.16.238.20",
-                    "port": 1981,
-                    "weight": 1
-				},
-				{
-                    "host": "172.16.238.20",
-                    "port": 1982,
-                    "weight": 1
-                }],
-				"type": "chash",
-				"key": "arg_device_id"
-			}`,
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					},
+					{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					},
+					{
+						"host": "172.16.238.20",
+						"port": 1982,
+						"weight": 1
+					}],
+					"type": "chash",
+					"key": "arg_device_id"
+				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -169,14 +168,14 @@ func TestUpstream_cHash_arg_xxx(t *testing.T) {
 		}
 		resp.Body.Close()
 	}
-	fmt.Println(res)
+	//the results will be distributed among the 3 upstream
 	assert.Equal(t, 7, res["1980"])
 	assert.Equal(t, 6, res["1981"])
 	assert.Equal(t, 5, res["1982"])
-	
+
 }
 
-func TestUpstream_Delete(t *testing.T) {
+func TestUpstream_Delete_chash(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "delete route",
