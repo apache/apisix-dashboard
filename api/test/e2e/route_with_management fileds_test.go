@@ -79,7 +79,10 @@ func TestRoute_with_name_desc(t *testing.T) {
 	basepath := "http://127.0.0.1:8080/apisix/admin/routes"
 	request, _ := http.NewRequest("GET", basepath+"/r1", nil)
 	request.Header.Add("Authorization", token)
-	resp, _ := http.DefaultClient.Do(request)
+	resp, err := http.DefaultClient.Do(request)
+	if err != nil {
+		return
+	}
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	createtime := gjson.Get(string(respBody), "data.create_time")
