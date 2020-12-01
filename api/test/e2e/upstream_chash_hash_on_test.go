@@ -22,7 +22,6 @@ import (
 	"strconv"
 	"testing"
 	"time"
-	"fmt"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -333,13 +332,20 @@ func TestUpstream_cHash_hash_on_consumer(t *testing.T) {
 			res[body] += 1
 		}
 	}
-	fmt.Println(res)
 	assert.Equal(t, true, res["1980"] == 4 || res["1981"] == 4)
 	resp.Body.Close()
 }
 
 func TestUpstream_Delete(t *testing.T) {
 	tests := []HttpTestCase{
+		{
+			caseDesc:     "delete consumer",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
 		{
 			caseDesc:     "delete route",
 			Object:       ManagerApiExpect(t),
