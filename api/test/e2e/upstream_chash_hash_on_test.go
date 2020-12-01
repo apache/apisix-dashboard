@@ -336,7 +336,7 @@ func TestUpstream_cHash_hash_on_consumer(t *testing.T) {
 	resp.Body.Close()
 }
 
-func TestUpstream_Delete(t *testing.T) {
+func TestUpstream_Delete_hash_on(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "delete consumer",
