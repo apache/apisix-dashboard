@@ -25,7 +25,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "config route with invalid remote_addr",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -55,7 +55,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 		},
 		{
 			caseDesc: "config route with invalid remote_addr",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -85,7 +85,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 		},
 		{
 			caseDesc: "config route with invalid remote_addrs",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
