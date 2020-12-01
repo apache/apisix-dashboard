@@ -135,6 +135,24 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			Sleep:      sleepTime,
 		},
 		{
+			caseDesc: "verify route with cors specified (method not match)",
+			Object:   APISIXExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/hello",
+			Headers: map[string]string{
+				"Origin": "http://sub2.domain.com",
+			},
+			ExpectStatus: http.StatusOK,
+			ExpectHeaders: map[string]string{
+				"Access-Control-Allow-Origin":   "",
+				"Access-Control-Allow-Methods":  "",
+				"Access-Control-Allow-Headers":  "",
+				"Access-Control-Expose-Headers": "",
+				"Access-Control-Max-Age":        "",
+			},
+			ExpectBody: "hello world",
+		},
+		{
 			caseDesc: "update route with cors setting force wildcard",
 			Object:   MangerApiExpect(t),
 			Method:   http.MethodPut,
