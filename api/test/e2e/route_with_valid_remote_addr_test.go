@@ -25,7 +25,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "add route with valid remote_addr",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -55,7 +55,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 		},
 		{
 			caseDesc: "update route with valid remote_addr (CIDR)",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -85,7 +85,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 		},
 		{
 			caseDesc: "update route with valid remote_addrs",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -115,7 +115,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 		},
 		{
 			caseDesc: "update remote_addr to not be hit",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -144,7 +144,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 		},
 		{
 			caseDesc: "update remote_addrs to not be hit",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -173,7 +173,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
