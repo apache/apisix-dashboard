@@ -19,7 +19,7 @@
 
 English | [简体中文](./README.zh-CN.md)
 
-# Apache APISIX Dashboard
+# Apache APISIX Dashboard (Currently considered experimental)
 
 ## What's Apache APISIX Dashboard
 

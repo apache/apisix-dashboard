@@ -79,6 +79,7 @@ declare namespace RouteModule {
     uris: string[];
     host?: string;
     hosts: string[];
+    remote_addrs: string[];
     vars: [string, Operator, string][];
     upstream: {
       type: 'roundrobin' | 'chash';
@@ -175,6 +176,7 @@ declare namespace RouteModule {
     websocket: boolean;
     hosts: string[];
     uris: string[];
+    remote_addrs: string[];
     methods: HttpMethod[];
     redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
     redirectURI?: string;

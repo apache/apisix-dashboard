@@ -97,6 +97,7 @@ export const transformStepData = ({
     'redirect',
     'vars',
     'plugins',
+    'remote_addrs',
     form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
   ]);
 };
@@ -130,13 +131,27 @@ export const transformUpstreamNodes = (
 };
 
 export const transformRouteData = (data: RouteModule.Body) => {
-  const { name, desc, methods, uris, uri, hosts, host, vars, status, upstream, upstream_id } = data;
+  const {
+    name,
+    desc,
+    methods,
+    uris,
+    uri,
+    hosts,
+    host,
+    remote_addrs,
+    vars,
+    status,
+    upstream,
+    upstream_id,
+  } = data;
   const form1Data: Partial<RouteModule.Form1Data> = {
     name,
     desc,
     status,
     hosts: hosts || (host && [host]) || [''],
     uris: uris || (uri && [uri]) || [],
+    remote_addrs: remote_addrs || [''],
     methods,
   };
 
