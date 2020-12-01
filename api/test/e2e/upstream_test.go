@@ -256,7 +256,72 @@ func TestUpstream_cHash(t *testing.T) {
 			count ++
 		}
 	}
-	assert.Equal(t, count, 18)
+	assert.Equal(t, 18, count)
+	defer resp.Body.Close()
+
+	tests = []HttpTestCase{
+		{
+			caseDesc: "create cHash upstream with key (remote_addr, weight=0)",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/upstreams/1",
+			Body: `{
+                "nodes": [{
+                    "host": "172.16.238.20",
+                    "port": 1980,
+                    "weight": 1
+				},
+				{
+                    "host": "172.16.238.20",
+                    "port": 1981,
+                    "weight": 0
+				},
+				{
+                    "host": "172.16.238.20",
+                    "port": 1982,
+                    "weight": 0
+                }],
+				"type": "chash",
+				"hash_on":"header",
+				"key": "remote_addr"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc: "create route using the upstream just created",
+			Object:   MangerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/1",
+			Body: `{
+				"uri": "/server_port",
+				"upstream_id": "1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+
+	//hit routes
+	basepath = "http://127.0.0.1:9080/"
+	request, err = http.NewRequest("GET", basepath+"/server_port", nil)
+	request.Header.Add("Authorization", token)
+	count = 0
+	for i := 0; i <= 17; i++ {
+		resp, err = http.DefaultClient.Do(request)
+		assert.Nil(t, err)
+		respBody, err = ioutil.ReadAll(resp.Body)
+		if string(respBody) == "1980"{
+			count ++
+		}
+	}
+	assert.Equal(t, 18, count)
 	defer resp.Body.Close()
 
 }
