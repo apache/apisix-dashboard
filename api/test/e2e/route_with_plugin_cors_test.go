@@ -137,7 +137,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 		{
 			caseDesc: "verify route with cors specified (method not match)",
 			Object:   APISIXExpect(t),
-			Method:   http.MethodPut,
+			Method:   http.MethodDelete,
 			Path:     "/hello",
 			Headers: map[string]string{
 				"Origin": "http://sub2.domain.com",
