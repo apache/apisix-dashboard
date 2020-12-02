@@ -63,7 +63,7 @@ export const transformStepData = ({
     }
 
     if (redirect.http_to_https) {
-      if (Object(data.plugins).length === 0) {
+      if (Object.keys(data.plugins!).length === 0) {
         data.plugins = {};
       }
       data.plugins!.redirect = redirect;
