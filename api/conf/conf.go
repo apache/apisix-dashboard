@@ -46,7 +46,6 @@ var (
 	ServerHost       = "127.0.0.1"
 	ServerPort       = 80
 	ETCDConfig       *Etcd
-	ETCDEndpoints    = []string{"127.0.0.1:2379"}
 	ErrorLogLevel    = "warn"
 	ErrorLogPath     = "logs/error.log"
 	UserList         = make(map[string]User, 2)
