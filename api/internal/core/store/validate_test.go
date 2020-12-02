@@ -95,17 +95,17 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 
 	consumer2 := &entity.Consumer{}
 	reqBody = `{
-      "username": "jack",
-      "plugins": {
-          "limit-count": {
-              "count": 2,
-              "time_window": 60,
-              "rejected_code": 503,
-              "key": "remote_addr"
-          }
-      },
-    "desc": "test description"
-  }`
+		"username": "jack",
+		"plugins": {
+			"limit-count": {
+				"count": 2,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
+		},
+		"desc": "test description"
+	}`
 	err = json.Unmarshal([]byte(reqBody), consumer2)
 	assert.Nil(t, err)
 
@@ -121,17 +121,17 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 	//plugin schema fail
 	consumer3 := &entity.Consumer{}
 	reqBody = `{
-      "id": "jack",
-      "username": "jack",
-      "plugins": {
-          "limit-count": {
-              "time_window": 60,
-              "rejected_code": 503,
-              "key": "remote_addr"
-          }
-      },
-    "desc": "test description"
-  }`
+		"id": "jack",
+		"username": "jack",
+		"plugins": {
+			"limit-count": {
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
+		},
+		"desc": "test description"
+	}`
 	err = json.Unmarshal([]byte(reqBody), consumer3)
 	assert.Nil(t, err)
 	err = validator.Validate(consumer3)
@@ -247,5 +247,147 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	err = validator.Validate(route5)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "schema validate failed: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$'")
+}
+
+
+func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
+
+	tests := []struct {
+		caseDesc  string
+		giveContent     string
+		wantNewErr      error
+		wantValidateErr []error
+	}{
+		{
+			caseDesc: "correct remote_addr",
+			giveContent: `{
+				"id": "1",
+				"uri": "/*",
+				"upstream": {
+					"nodes": [{
+						"host": "127.0.0.1",
+						"port": 8080,
+						"weight": 1
+					}],
+					"type": "roundrobin"
+				},
+				"remote_addr": "127.0.0.1"
+			}`,
+		},
+		{
+			caseDesc: "correct remote_addr (CIDR)",
+			giveContent: `{
+				"id": "1",
+				"uri": "/*",
+				"upstream": {
+					"nodes": [{
+						"host": "127.0.0.1",
+						"port": 8080,
+						"weight": 1
+					}],
+					"type": "roundrobin"
+				},
+				"remote_addr": "192.168.1.0/24"
+			}`,
+		},
+		{
+			caseDesc: "invalid remote_addr",
+			giveContent: `{
+				"id": "1",
+				"uri": "/*",
+				"upstream": {
+					"nodes": [{
+						"host": "127.0.0.1",
+						"port": 8080,
+						"weight": 1
+					}],
+					"type": "roundrobin"
+				},
+				"remote_addr": "127.0.0."
+			}`,
+			wantValidateErr: []error{
+				fmt.Errorf("schema validate failed: remote_addr: Must validate at least one schema (anyOf)\nremote_addr: Does not match format 'ipv4'"),
+			},
+		},
+		{
+			caseDesc: "correct remote_addrs",
+			giveContent: `{
+				"id": "1",
+				"uri": "/*",
+				"upstream": {
+					"nodes": [{
+						"host": "127.0.0.1",
+						"port": 8080,
+						"weight": 1
+					}],
+					"type": "roundrobin"
+				},
+				"remote_addrs": ["127.0.0.1", "192.0.0.0/8", "::1", "fe80::1/64"]
+			}`,
+		},
+		{
+			caseDesc: "invalid remote_addrs",
+			giveContent: `{
+				"id": "1",
+				"uri": "/*",
+				"upstream": {
+					"nodes": [{
+						"host": "127.0.0.1",
+						"port": 8080,
+						"weight": 1
+					}],
+					"type": "roundrobin"
+				},
+				"remote_addrs": ["127.0.0.", "192.0.0.0/128", "::1", "fe80::1/256"]
+			}`,
+			wantValidateErr: []error{
+				fmt.Errorf("schema validate failed: remote_addrs.0: Must validate at least one schema (anyOf)\nremote_addrs.0: Does not match format 'ipv4'\nremote_addrs.1: Must validate at least one schema (anyOf)\nremote_addrs.1: Does not match format 'ipv4'"),
+			},
+		},
+		{
+			caseDesc: "invalid remote_addrs (an empty string item)",
+			giveContent: `{
+				"id": "1",
+				"uri": "/*",
+				"upstream": {
+					"nodes": [{
+						"host": "127.0.0.1",
+						"port": 8080,
+						"weight": 1
+					}],
+					"type": "roundrobin"
+				},
+				"remote_addrs": [""]
+			}`,
+			wantValidateErr: []error{
+				fmt.Errorf("schema validate failed: remote_addrs.0: Must validate at least one schema (anyOf)\nremote_addrs.0: Does not match format 'ipv4'"),
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		validator, err := NewAPISIXJsonSchemaValidator("main.route")
+		if err != nil {
+			assert.Equal(t, tc.wantNewErr, err, tc.caseDesc)
+			continue
+		}
+		route := &entity.Route{}
+		err = json.Unmarshal([]byte(tc.giveContent), route)
+		assert.Nil(t, err, tc.caseDesc)
+
+		err = validator.Validate(route)
+		if tc.wantValidateErr == nil {
+			assert.Equal(t, nil, err, tc.caseDesc)
+			continue
+		}
+
+		ret := false
+		for _, wantErr := range tc.wantValidateErr {
+			if wantErr.Error() == err.Error() {
+				ret = true
+			}
+		}
+		assert.True(t, ret, tc.caseDesc)
+	}
 
 }

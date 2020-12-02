@@ -88,7 +88,7 @@
 			}]
 		},
 		"ip_def": [{
-			"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+			"format": "ipv4",
 			"title": "IPv4",
 			"type": "string"
 		}, {
@@ -96,11 +96,11 @@
 			"title": "IPv4/CIDR",
 			"type": "string"
 		}, {
-			"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+			"format": "ipv6",
 			"title": "IPv6",
 			"type": "string"
 		}, {
-			"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+			"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 			"title": "IPv6/CIDR",
 			"type": "string"
 		}],
@@ -250,7 +250,7 @@
 				},
 				"remote_addr": {
 					"anyOf": [{
-						"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+						"format": "ipv4",
 						"title": "IPv4",
 						"type": "string"
 					}, {
@@ -258,11 +258,11 @@
 						"title": "IPv4/CIDR",
 						"type": "string"
 					}, {
-						"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+						"format": "ipv6",
 						"title": "IPv6",
 						"type": "string"
 					}, {
-						"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+						"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 						"title": "IPv6/CIDR",
 						"type": "string"
 					}],
@@ -272,7 +272,7 @@
 				"remote_addrs": {
 					"items": {
 						"anyOf": [{
-							"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+							"format": "ipv4",
 							"title": "IPv4",
 							"type": "string"
 						}, {
@@ -280,11 +280,11 @@
 							"title": "IPv4/CIDR",
 							"type": "string"
 						}, {
-							"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+							"format": "ipv6",
 							"title": "IPv6",
 							"type": "string"
 						}, {
-							"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+							"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 							"title": "IPv6/CIDR",
 							"type": "string"
 						}],
@@ -1281,7 +1281,7 @@
 				},
 				"remote_addr": {
 					"anyOf": [{
-						"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+						"format": "ipv4",
 						"title": "IPv4",
 						"type": "string"
 					}, {
@@ -1289,11 +1289,11 @@
 						"title": "IPv4/CIDR",
 						"type": "string"
 					}, {
-						"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+						"format": "ipv6",
 						"title": "IPv6",
 						"type": "string"
 					}, {
-						"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+						"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 						"title": "IPv6/CIDR",
 						"type": "string"
 					}],
@@ -1302,7 +1302,7 @@
 				},
 				"server_addr": {
 					"anyOf": [{
-						"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+						"format": "ipv4",
 						"title": "IPv4",
 						"type": "string"
 					}, {
@@ -1310,11 +1310,11 @@
 						"title": "IPv4/CIDR",
 						"type": "string"
 					}, {
-						"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+						"format": "ipv6",
 						"title": "IPv6",
 						"type": "string"
 					}, {
-						"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+						"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 						"title": "IPv6/CIDR",
 						"type": "string"
 					}],
@@ -2620,7 +2620,7 @@
 						"whitelist": {
 							"items": {
 								"anyOf": [{
-									"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+									"format": "ipv4",
 									"title": "IPv4",
 									"type": "string"
 								}, {
@@ -2628,11 +2628,11 @@
 									"title": "IPv4/CIDR",
 									"type": "string"
 								}, {
-									"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+									"format": "ipv6",
 									"title": "IPv6",
 									"type": "string"
 								}, {
-									"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+									"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 									"title": "IPv6/CIDR",
 									"type": "string"
 								}]
@@ -2649,7 +2649,7 @@
 						"blacklist": {
 							"items": {
 								"anyOf": [{
-									"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+									"format": "ipv4",
 									"title": "IPv4",
 									"type": "string"
 								}, {
@@ -2657,11 +2657,11 @@
 									"title": "IPv4/CIDR",
 									"type": "string"
 								}, {
-									"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+									"format": "ipv6",
 									"title": "IPv6",
 									"type": "string"
 								}, {
-									"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+									"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 									"title": "IPv6/CIDR",
 									"type": "string"
 								}]
