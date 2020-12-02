@@ -321,6 +321,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	}
 
 	// get the consumer
+	time.Sleep(time.Duration(1) * time.Second)
 	request, _ = http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
 	resp, _ = http.DefaultClient.Do(request)
