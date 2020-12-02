@@ -248,7 +248,7 @@ func TestUpstream_chash_remote_addr(t *testing.T) {
 	var respBody []byte
 	var count int
 	res := map[string]int{}
-	for i := 0; i <= 17; i++ {
+	for i := 0; i < 18; i++ {
 		resp, err = http.DefaultClient.Do(request)
 		assert.Nil(t, err)
 		respBody, err = ioutil.ReadAll(resp.Body)
@@ -260,7 +260,7 @@ func TestUpstream_chash_remote_addr(t *testing.T) {
 		}
 		resp.Body.Close()
 	}
-	assert.Equal(t, 18, res["1980"]+res["1981"]+res["1982"])
+	assert.Equal(t, 18, res["1982"])
 
 	tests = []HttpTestCase{
 		{
