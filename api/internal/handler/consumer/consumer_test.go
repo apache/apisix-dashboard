@@ -90,7 +90,7 @@ func TestHandler_List(t *testing.T) {
 		wantRet   interface{}
 	}{
 		{
-			caseDesc: "normal",
+			caseDesc: "list all condition",
 			giveInput: &ListInput{
 				Username: "testUser",
 				Pagination: store.Pagination{
