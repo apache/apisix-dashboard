@@ -338,7 +338,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 					}],
 					"type": "roundrobin"
 				},
-				"remote_addrs": ["127.0.0.", "192.0.0.0/128", "::1", "fe80::1/256"]
+				"remote_addrs": ["127.0.0.", "192.0.0.0/128", "::1"]
 			}`,
 			wantValidateErr: []error{
 				fmt.Errorf("schema validate failed: remote_addrs.0: Must validate at least one schema (anyOf)\nremote_addrs.0: Does not match format 'ipv4'\nremote_addrs.1: Must validate at least one schema (anyOf)\nremote_addrs.1: Does not match format 'ipv4'"),
