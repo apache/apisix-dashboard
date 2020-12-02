@@ -76,7 +76,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 
 	//get the route
 	time.Sleep(time.Duration(100) * time.Millisecond)
-	basepath := "http://127.0.0.1:8080/apisix/admin/routes"
+	basepath := "http://127.0.0.1:9000/apisix/admin/routes"
 	request, _ := http.NewRequest("GET", basepath+"/r1", nil)
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
