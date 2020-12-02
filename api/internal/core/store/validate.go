@@ -210,6 +210,7 @@ func checkConf(reqBody interface{}) error {
 		if err := checkUpstream(route.Upstream); err != nil {
 			return err
 		}
+		// todo: this is a temporary method, we'll drop it later
 		if err := checkRemoteAddr(route.RemoteAddrs); err != nil {
 			return err
 		}
