@@ -187,10 +187,10 @@
     lodash "^4.17.15"
     resize-observer-polyfill "^1.5.0"
 
-"@api7-dashboard/plugin@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@api7-dashboard/plugin/-/plugin-1.0.10.tgz#9f554f62c7c1f9be9ee36f084cef2fb3d2296ae5"
-  integrity sha512-ewPU6o6WOehn3pnV0DRyNGSyf4OrKuh3mVe11EUPnp4rtzvikjlll91xi27Zu33r+Wm1Jvvm+T6OkwcgXFVdPg==
+"@api7-dashboard/plugin@^1.0.15":
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/@api7-dashboard/plugin/-/plugin-1.0.15.tgz#690ab5666125ef7e45c6841fa348e9f3870b890b"
+  integrity sha512-B7B0zmRxWQwNjdqm6GI91E5QLaJ3Dzs6VE3OP6zVz5Mlgx3KuyfYGwB8E0jr+ApeB59RvgHAGgRExN6YDMTzFA==
   dependencies:
     "@rjsf/antd" "^2.3.0"
     "@rjsf/core" "^2.3.0"
