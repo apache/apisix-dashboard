@@ -48,7 +48,7 @@ func TestHandler_Get(t *testing.T) {
 			wantRet:    "hello",
 		},
 		{
-			caseDesc:   "failed",
+			caseDesc:   "store get failed",
 			giveInput:  &GetInput{Username: "failed key"},
 			wantGetKey: "failed key",
 			giveErr:    fmt.Errorf("get failed"),
@@ -118,7 +118,7 @@ func TestHandler_List(t *testing.T) {
 			},
 		},
 		{
-			caseDesc: "list failed",
+			caseDesc: "store list failed",
 			giveInput: &ListInput{
 				Username: "testUser",
 				Pagination: store.Pagination{
@@ -204,7 +204,7 @@ func TestHandler_Create(t *testing.T) {
 			wantCalled: true,
 		},
 		{
-			caseDesc: "create failed",
+			caseDesc: "store create failed",
 			giveInput: &entity.Consumer{
 				Username: "name",
 				Plugins: map[string]interface{}{
@@ -294,7 +294,7 @@ func TestHandler_Update(t *testing.T) {
 			wantCalled: true,
 		},
 		{
-			caseDesc: "create failed",
+			caseDesc: "store update failed",
 			giveInput: &UpdateInput{
 				Username: "name",
 				Consumer: entity.Consumer{
@@ -368,7 +368,7 @@ func TestHandler_BatchDelete(t *testing.T) {
 			},
 		},
 		{
-			caseDesc: "normal",
+			caseDesc: "store delete failed",
 			giveInput: &BatchDeleteInput{
 				UserNames: "user1,user2",
 			},
