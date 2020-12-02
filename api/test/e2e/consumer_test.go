@@ -17,11 +17,11 @@
 package e2e
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"testing"
 	"time"
-	"fmt"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
@@ -282,7 +282,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 		testCaseCheck(tc)
 	}
 
-	basepath := "http://127.0.0.1:8080/apisix/admin/consumers"
+	basepath := "http://127.0.0.1:9000/apisix/admin/consumers"
 	time.Sleep(time.Duration(1) * time.Second)
 
 	// get the consumer, save createtime and updatetime
