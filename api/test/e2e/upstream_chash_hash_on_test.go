@@ -94,6 +94,7 @@ func TestUpstream_chash_hash_on_custom_header(t *testing.T) {
 			res[body] += 1
 		}
 	}
+	// it is possible to hit any one of upstreams, and only one will be hit
 	assert.Equal(t, true, res["1980"] == 4 || res["1981"] == 4)
 	resp.Body.Close()
 }
