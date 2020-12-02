@@ -19,10 +19,10 @@ package e2e
 import (
 	"io/ioutil"
 	"net/http"
+	"sort"
 	"strconv"
 	"testing"
 	"time"
-	"sort"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -100,7 +100,7 @@ func TestUpstream_chash_query_string(t *testing.T) {
 		counts = append(counts, value)
 	}
 	sort.Ints(counts)
-	assert.True(t, float64(counts[2]-counts[0]) / float64(counts[1]) < 0.4) // the result is unstable, fix it later
+	assert.True(t, float64(counts[2]-counts[0])/float64(counts[1]) < 0.4) // todo: the result is unstable, fix it later
 }
 
 func TestUpstream_chash_arg_xxx(t *testing.T) {
@@ -163,7 +163,7 @@ func TestUpstream_chash_arg_xxx(t *testing.T) {
 		counts = append(counts, value)
 	}
 	sort.Ints(counts)
-	assert.True(t, float64(counts[2]-counts[0]) / float64(counts[1]) < 0.4) // the result is unstable, fix it later
+	assert.True(t, float64(counts[2]-counts[0])/float64(counts[1]) < 0.4) // todo: the result is unstable, fix it later
 }
 
 func TestUpstream_Delete_chash(t *testing.T) {
