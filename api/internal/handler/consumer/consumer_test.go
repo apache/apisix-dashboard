@@ -60,20 +60,22 @@ func TestHandler_Get(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		getCalled := true
-		mStore := &store.MockInterface{}
-		mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
-			getCalled = true
-			assert.Equal(t, tc.wantGetKey, args.Get(0), tc.caseDesc)
-		}).Return(tc.giveRet, tc.giveErr)
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := true
+			mStore := &store.MockInterface{}
+			mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				assert.Equal(t, tc.wantGetKey, args.Get(0))
+			}).Return(tc.giveRet, tc.giveErr)
 
-		h := Handler{consumerStore: mStore}
-		ctx := droplet.NewContext()
-		ctx.SetInput(tc.giveInput)
-		ret, err := h.Get(ctx)
-		assert.True(t, getCalled, tc.caseDesc)
-		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
-		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
+			h := Handler{consumerStore: mStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.Get(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
 	}
 }
 
@@ -135,33 +137,35 @@ func TestHandler_List(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		getCalled := true
-		mStore := &store.MockInterface{}
-		mStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
-			getCalled = true
-			input := args.Get(0).(store.ListInput)
-			assert.Equal(t, tc.wantInput.PageSize, input.PageSize, tc.caseDesc)
-			assert.Equal(t, tc.wantInput.PageNumber, input.PageNumber, tc.caseDesc)
-		}).Return(func(input store.ListInput) *store.ListOutput {
-			var returnData []interface{}
-			for _, c := range tc.giveData {
-				if input.Predicate(c) {
-					returnData = append(returnData, c)
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := true
+			mStore := &store.MockInterface{}
+			mStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				input := args.Get(0).(store.ListInput)
+				assert.Equal(t, tc.wantInput.PageSize, input.PageSize)
+				assert.Equal(t, tc.wantInput.PageNumber, input.PageNumber)
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				var returnData []interface{}
+				for _, c := range tc.giveData {
+					if input.Predicate(c) {
+						returnData = append(returnData, c)
+					}
 				}
-			}
-			return &store.ListOutput{
-				Rows:      returnData,
-				TotalSize: len(returnData),
-			}
-		}, tc.giveErr)
+				return &store.ListOutput{
+					Rows:      returnData,
+					TotalSize: len(returnData),
+				}
+			}, tc.giveErr)
 
-		h := Handler{consumerStore: mStore}
-		ctx := droplet.NewContext()
-		ctx.SetInput(tc.giveInput)
-		ret, err := h.List(ctx)
-		assert.True(t, getCalled, tc.caseDesc)
-		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
-		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
+			h := Handler{consumerStore: mStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.List(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
 	}
 }
 
@@ -230,22 +234,24 @@ func TestHandler_Create(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		methodCalled := true
-		mStore := &store.MockInterface{}
-		mStore.On("Create", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
-			methodCalled = true
-			assert.Equal(t, tc.giveCtx, args.Get(0), tc.caseDesc)
-			assert.Equal(t, tc.wantInput, args.Get(1), tc.caseDesc)
-		}).Return(tc.giveErr)
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			methodCalled := true
+			mStore := &store.MockInterface{}
+			mStore.On("Create", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				methodCalled = true
+				assert.Equal(t, tc.giveCtx, args.Get(0))
+				assert.Equal(t, tc.wantInput, args.Get(1))
+			}).Return(tc.giveErr)
 
-		h := Handler{consumerStore: mStore}
-		ctx := droplet.NewContext()
-		ctx.SetInput(tc.giveInput)
-		ctx.SetContext(tc.giveCtx)
-		ret, err := h.Create(ctx)
-		assert.Equal(t, tc.wantCalled, methodCalled, tc.caseDesc)
-		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
-		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
+			h := Handler{consumerStore: mStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ctx.SetContext(tc.giveCtx)
+			ret, err := h.Create(ctx)
+			assert.Equal(t, tc.wantCalled, methodCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
 	}
 }
 
@@ -318,23 +324,25 @@ func TestHandler_Update(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		methodCalled := true
-		mStore := &store.MockInterface{}
-		mStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
-			methodCalled = true
-			assert.Equal(t, tc.giveCtx, args.Get(0), tc.caseDesc)
-			assert.Equal(t, tc.wantInput, args.Get(1), tc.caseDesc)
-			assert.True(t, args.Bool(2), tc.caseDesc)
-		}).Return(tc.giveErr)
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			methodCalled := true
+			mStore := &store.MockInterface{}
+			mStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				methodCalled = true
+				assert.Equal(t, tc.giveCtx, args.Get(0))
+				assert.Equal(t, tc.wantInput, args.Get(1))
+				assert.True(t, args.Bool(2))
+			}).Return(tc.giveErr)
 
-		h := Handler{consumerStore: mStore}
-		ctx := droplet.NewContext()
-		ctx.SetInput(tc.giveInput)
-		ctx.SetContext(tc.giveCtx)
-		ret, err := h.Update(ctx)
-		assert.Equal(t, tc.wantCalled, methodCalled, tc.caseDesc)
-		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
-		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
+			h := Handler{consumerStore: mStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ctx.SetContext(tc.giveCtx)
+			ret, err := h.Update(ctx)
+			assert.Equal(t, tc.wantCalled, methodCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
 	}
 }
 
@@ -378,21 +386,23 @@ func TestHandler_BatchDelete(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		methodCalled := true
-		mStore := &store.MockInterface{}
-		mStore.On("BatchDelete", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
-			methodCalled = true
-			assert.Equal(t, tc.giveCtx, args.Get(0), tc.caseDesc)
-			assert.Equal(t, tc.wantInput, args.Get(1), tc.caseDesc)
-		}).Return(tc.giveErr)
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			methodCalled := true
+			mStore := &store.MockInterface{}
+			mStore.On("BatchDelete", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				methodCalled = true
+				assert.Equal(t, tc.giveCtx, args.Get(0))
+				assert.Equal(t, tc.wantInput, args.Get(1))
+			}).Return(tc.giveErr)
 
-		h := Handler{consumerStore: mStore}
-		ctx := droplet.NewContext()
-		ctx.SetInput(tc.giveInput)
-		ctx.SetContext(tc.giveCtx)
-		ret, err := h.BatchDelete(ctx)
-		assert.True(t, methodCalled, tc.caseDesc)
-		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
-		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
+			h := Handler{consumerStore: mStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ctx.SetContext(tc.giveCtx)
+			ret, err := h.BatchDelete(ctx)
+			assert.True(t, methodCalled)
+			assert.Equal(t, tc.wantErr, err)
+			assert.Equal(t, tc.wantRet, ret)
+		})
 	}
 }
