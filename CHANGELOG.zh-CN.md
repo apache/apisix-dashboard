@@ -18,14 +18,35 @@
 -->
 
 # 目录
+- [2.1.1](#211)
 - [2.1.0](#210)
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
 
+
+# 2.1.1
+
+该版本主要增加了对 `manager api` 和 APISIX 间的 E2E 测试， 以及 bug 修复。
+
+### 测试
+
+为 route, upstream, consumer, SSL, 以及 plugins 增加 E2E 测试。
+
+## Bugfix
+ 
+- 修复通过 `admin api` 创建路由后，在 dashboard 上无法修改上游信息。#786
+- 修复创建路由并开启 jwt-auth 插件，提交时会报错。 #862
+- 修复创建路由时，`remote_addrs` 字段使用错误的数据格式，应该返回 400 而不是 200 #873
+- 修复 ID 字段不能同时兼容 int 类型和 string 类型的问题 #896
+- 修复在内网环境下不能启动 `manager api` 的问题 #938
+- 修复通过 dashboard 创建路由， 不填写客户端地址，APISIX 报错的问题 #940
+- 修复 dashboard 创建路由并开启强制跳转 HTTPS 功能，提交时浏览器报错 #956
+
+
 # 2.1.0
 
-该版本主要提升了 manager-api 的 E2E 测试。
+该版本主要提升了 `manager api` 的 E2E 测试。
 
 ### 核心
 
@@ -65,7 +86,7 @@
 ### 核心
 
 - 使用 Ant Design Pro 作为项目脚手架 [#263](https://github.com/apache/apisix-dashboard/pull/263)。
-- 增加了 manager-api 用于处理 APISIX 与 Dashboard 之间的逻辑。
+- 增加了 `manager api` 用于处理 APISIX 与 Dashboard 之间的逻辑。
 - 增加了监控、路由、证书、上游、Consumer 模块。
 
 ## 1.0.0
