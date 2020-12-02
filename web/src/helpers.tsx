@@ -22,9 +22,15 @@ import moment from 'moment';
 
 import { codeMessage } from './constants';
 import IconFont from './iconfont';
+import InfoCircleOutlined from '@ant-design/icons';
 
 export const getMenuData = (): MenuDataItem[] => {
   return [
+    {
+      name: 'info',
+      path: '/info/list',
+      icon: <InfoCircleOutlined />,
+    },
     {
       name: 'metrics',
       path: '/metrics',

@@ -24,6 +24,10 @@ const routes = [
     component: './Metrics',
   },
   {
+    path: '/info/list',
+    component: './Info/List',
+  },
+  {
     path: '/routes/list',
     component: './Route/List',
   },
