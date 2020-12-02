@@ -18,6 +18,7 @@ package utils
 
 import (
 	"fmt"
+	"math/rand"
 	"net"
 	"os"
 	"strconv"
@@ -37,10 +38,13 @@ func init() {
 		}
 		salt = uint16(i)
 	}
-
+	ips, err := getLocalIPs()
+	if err != nil {
+		panic(err)
+	}
 	_sf = sonyflake.NewSonyflake(sonyflake.Settings{
 		MachineID: func() (u uint16, e error) {
-			return sumIP(GetOutboundIP()) + salt, nil
+			return sumIP(randomIP(ips)) + salt, nil
 		},
 	})
 	if _sf == nil {
@@ -50,22 +54,34 @@ func init() {
 
 func sumIP(ip net.IP) uint16 {
 	total := 0
-	for i := range ip {
-		total += int(ip[i])
+	if ip != nil {
+		for i := range ip {
+			total += int(ip[i])
+		}
 	}
 	return uint16(total)
 }
 
-// Get preferred outbound ip of this machine
-func GetOutboundIP() net.IP {
-	conn, err := net.Dial("udp", "8.8.8.8:80")
+func getLocalIPs() ([]net.IP, error) {
+	var ips []net.IP
+	addrs, err := net.InterfaceAddrs()
 	if err != nil {
-		panic(err)
+		return ips, err
 	}
-	defer conn.Close()
+	for _, a := range addrs {
+		if ipNet, ok := a.(*net.IPNet); ok && !ipNet.IP.IsLoopback() && ipNet.IP.To4() != nil {
+			ips = append(ips, ipNet.IP)
+		}
+	}
+	return ips, nil
+}
 
-	localAddr := conn.LocalAddr().(*net.UDPAddr)
-	return localAddr.IP
+func randomIP(xs []net.IP) net.IP {
+	if xs != nil && len(xs) > 0 {
+		return xs[rand.Intn(len(xs))]
+	} else {
+		return nil
+	}
 }
 
 func GetFlakeUid() uint64 {
