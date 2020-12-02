@@ -158,8 +158,10 @@ func TestRoute_with_name_desc(t *testing.T) {
 	for _, tc := range tests {
 		testCaseCheck(tc)
 	}
+}
 
-	tests = []HttpTestCase{
+func TestRoute_with_lable(t *testing.T) {
+	tests := []HttpTestCase{
 		{
 			caseDesc: "config route with labels (r1)",
 			Object:   ManagerApiExpect(t),
