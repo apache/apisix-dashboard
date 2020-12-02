@@ -149,6 +149,8 @@ func testCaseCheck(tc HttpTestCase) {
 		req = expectObj.DELETE(tc.Path)
 	case http.MethodPatch:
 		req = expectObj.PATCH(tc.Path)
+	case http.MethodOptions:
+		req = expectObj.OPTIONS(tc.Path)
 	default:
 	}
 

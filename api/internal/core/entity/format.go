@@ -72,8 +72,9 @@ func NodesFormat(obj interface{}) interface{} {
 		return nodes
 	case []*Node:
 		log.Infof("nodes type: %v", objType)
-		return nodes
+		return obj
 	case []interface{}:
+		log.Infof("nodes type []interface{}: %v", objType)
 		list := obj.([]interface{})
 		for _, v := range list {
 			val := v.(map[string]interface{})

@@ -130,7 +130,7 @@ services:
       context: ../../
       dockerfile: test/docker/Dockerfile-apisix
       args:
-        - APISIX_VERSION=master
+        - APISIX_VERSION=2.1
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
@@ -153,7 +153,7 @@ services:
       context: ../../
       dockerfile: test/docker/Dockerfile-apisix
       args:
-        - APISIX_VERSION=master
+        - APISIX_VERSION=2.1
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
