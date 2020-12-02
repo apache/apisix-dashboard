@@ -42,11 +42,3 @@ func TestSumIPs_with_nil(t *testing.T) {
 	total := sumIPs(nil)
 	assert.Equal(t, uint16(0), total)
 }
-
-func TestRandomIP(t *testing.T) {
-	ips, err := getLocalIPs()
-	assert.Equal(t, nil, err)
-	ip := randomIP(ips)
-	t.Log(ip)
-	assert.Contains(t, ips, ip)
-}

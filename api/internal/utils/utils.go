@@ -18,7 +18,6 @@ package utils
 
 import (
 	"fmt"
-	"math/rand"
 	"net"
 	"os"
 	"strconv"
@@ -74,14 +73,6 @@ func getLocalIPs() ([]net.IP, error) {
 		}
 	}
 	return ips, nil
-}
-
-func randomIP(xs []net.IP) net.IP {
-	if xs != nil && len(xs) > 0 {
-		return xs[rand.Intn(len(xs))]
-	} else {
-		return nil
-	}
 }
 
 func GetFlakeUid() uint64 {
