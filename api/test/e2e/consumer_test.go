@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"testing"
 	"time"
+	"fmt"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
@@ -287,7 +288,10 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	// get the consumer, save createtime and updatetime
 	request, _ := http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
-	resp, _ := http.DefaultClient.Do(request)
+	resp, err := http.DefaultClient.Do(request)
+	if err != nil {
+		fmt.Printf("server not responding %s", err.Error())
+	}
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	createtime := gjson.Get(string(respBody), "data.create_time")
