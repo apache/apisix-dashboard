@@ -26,6 +26,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// todo: the code to access the route should be encapsulated as a function, like line 75-96, 134-154, 160-174, 212-233, 294-314
 func TestUpstream_chash_hash_on_custom_header(t *testing.T) {
 	tests := []HttpTestCase{
 		{
