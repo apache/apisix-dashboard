@@ -24,6 +24,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// todo: the code to access the route should be encapsulated as a function, like line 245-263, 316-327
 func TestUpstream_Create(t *testing.T) {
 	tests := []HttpTestCase{
 		{
