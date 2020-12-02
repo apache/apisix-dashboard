@@ -132,19 +132,6 @@ func TestUpstream_chash_arg_xxx(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
-		{
-			caseDesc: "create route using the upstream just created",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/1",
-			Body: `{
-				"uri": "/server_port",
-				"upstream_id": "1"
-			}`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
-		},
 	}
 
 	for _, tc := range tests {
