@@ -44,7 +44,7 @@ func init() {
 	}
 	_sf = sonyflake.NewSonyflake(sonyflake.Settings{
 		MachineID: func() (u uint16, e error) {
-			return sumIP(randomIP(ips)) + salt, nil
+			return sumIPs(ips) + salt, nil
 		},
 	})
 	if _sf == nil {
@@ -52,9 +52,9 @@ func init() {
 	}
 }
 
-func sumIP(ip net.IP) uint16 {
+func sumIPs(ips []net.IP) uint16 {
 	total := 0
-	if ip != nil {
+	for _, ip := range ips {
 		for i := range ip {
 			total += int(ip[i])
 		}

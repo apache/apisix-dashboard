@@ -38,8 +38,8 @@ func TestGetLocalIPs(t *testing.T) {
 	assert.Equal(t, nil, err)
 }
 
-func TestSumIP_with_nil(t *testing.T) {
-	total := sumIP(nil)
+func TestSumIPs_with_nil(t *testing.T) {
+	total := sumIPs(nil)
 	assert.Equal(t, uint16(0), total)
 }
 
