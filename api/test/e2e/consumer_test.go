@@ -35,19 +35,19 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				  "uri": "/hello",
-				  "plugins": {
-					  "key-auth": {}
-				  },
-				  "upstream": {
-					  "type": "roundrobin",
-					  "nodes": [{
-						 "host": "172.16.238.20",
-						 "port": 1980,
-						 "weight": 1
-					 }]
-				  }
-			  }`,
+				"uri": "/hello",
+				"plugins": {
+					"key-auth": {}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -66,14 +66,14 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-				  "username": "jack",
-				  "plugins": {
-					  "key-auth": {
-						  "key": "auth-one"
-					  }
-				  },
-				  "desc": "test description"
-			  }`,
+				"username": "jack",
+				"plugins": {
+					"key-auth": {
+						"key": "auth-one"
+					}
+				},
+				"desc": "test description"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -146,14 +146,14 @@ func TestConsumer_with_notexist_plugin(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-				  "username": "jack",
-				  "plugins": {
-					  "key-authaa": {
-						  "key": "auth-one"
-					  }
-				  },
-				  "desc": "test description"
-			 }`,
+				"username": "jack",
+				"plugins": {
+					"key-authaa": {
+						"key": "auth-one"
+					}
+				},
+				"desc": "test description"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   "schema validate failed: schema not found, path: plugins.key-authaa",
@@ -182,19 +182,19 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-				 "username": "jack",
-				 "labels": {
-					 "build":"16",
-					 "env":"production",
-					 "version":"v2"
-				 },
-				 "plugins": {
-					 "key-auth": {
-						 "key": "auth-two"
-					 }
-				 },
-				 "desc": "test description"
-			 }`,
+				"username": "jack",
+				"labels": {
+					"build":"16",
+					"env":"production",
+					"version":"v2"
+				},
+				"plugins": {
+					"key-auth": {
+						"key": "auth-two"
+					}
+				},
+				"desc": "test description"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -214,19 +214,19 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				 "uri": "/hello",
-				 "plugins": {
-					 "key-auth": {}
-				 },
-				 "upstream": {
-					 "type": "roundrobin",
-					 "nodes": [{
-						 "host": "172.16.238.20",
-						 "port": 1980,
-						 "weight": 1
-					 }]
-				 }
-			 }`,
+				"uri": "/hello",
+				"plugins": {
+					"key-auth": {}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -270,9 +270,9 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-				 "username":"jack",
-				 "desc": "new consumer"
-			 }`,
+				"username":"jack",
+				"desc": "new consumer"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -307,9 +307,9 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-				 "username":"jack",
-				 "desc": "updated consumer"
-			 }`,
+				"username":"jack",
+				"desc": "updated consumer"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
