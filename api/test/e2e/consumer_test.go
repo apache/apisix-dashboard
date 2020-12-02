@@ -58,7 +58,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			Path:         "/hello",
 			ExpectStatus: http.StatusUnauthorized,
 			ExpectBody:   "Missing API key found in request",
-			Sleep:        sleepTime,
+			Sleep:        sleepTime * 2,
 		},
 		{
 			caseDesc: "create consumer",
