@@ -38,6 +38,9 @@ $ docker build -t apisix-dashboard:$tag .
 
 # 对于中国大陆的用户，可启用 `ENABLE_PROXY` 参数加快模块下载速度。
 $ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
+
+# 如果需要使用最新代码构建，可启用 `APISIX_DASHBOARD_VERSION` 参数指定为 `master` ，此参数也可以指定为其他版本的分支名，如 `v2.0` 。
+$ docker build -t apisix-dashboard:$tag . --build-arg APISIX_DASHBOARD_VERSION=master
 ```
 
 ## 启动
