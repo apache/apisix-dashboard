@@ -34,20 +34,20 @@ func TestUpstream_chash_hash_on_custom_header(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1980,
-						"weight": 1
-					},
-					{
-						"host": "172.16.238.20",
-						"port": 1981,
-						"weight": 1
-					}],
-					"type": "chash",
-					"key": "custom_header",
-					"hash_on": "header"
-				}`,
+					 "nodes": [{
+						 "host": "172.16.238.20",
+						 "port": 1980,
+						 "weight": 1
+					 },
+					 {
+						 "host": "172.16.238.20",
+						 "port": 1981,
+						 "weight": 1
+					 }],
+					 "type": "chash",
+					 "key": "custom_header",
+					 "hash_on": "header"
+				 }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -57,9 +57,9 @@ func TestUpstream_chash_hash_on_custom_header(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
-					"uri": "/server_port",
-					"upstream_id": "1"
-				}`,
+					 "uri": "/server_port",
+					 "upstream_id": "1"
+				 }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -70,7 +70,7 @@ func TestUpstream_chash_hash_on_custom_header(t *testing.T) {
 		testCaseCheck(tc)
 	}
 
-	//hit routes
+	// hit routes
 	time.Sleep(time.Duration(100) * time.Millisecond)
 	basepath := "http://127.0.0.1:9080"
 	var req *http.Request
@@ -105,35 +105,22 @@ func TestUpstream_chash_hash_on_cookie(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1980,
-						"weight": 1
-					},
-					{
-						"host": "172.16.238.20",
-						"port": 1981,
-						"weight": 1
-					}],
-					"type": "chash",
-					"key": "custom-cookie",
-					"hash_on": "cookie"
-				}`,
+					 "nodes": [{
+						 "host": "172.16.238.20",
+						 "port": 1980,
+						 "weight": 1
+					 },
+					 {
+						 "host": "172.16.238.20",
+						 "port": 1981,
+						 "weight": 1
+					 }],
+					 "type": "chash",
+					 "key": "custom-cookie",
+					 "hash_on": "cookie"
+				 }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			caseDesc: "create route using the upstream just created",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/1",
-			Body: `{
-				"uri": "/server_port",
-				"upstream_id": "1"
-			}`,
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
 		},
 	}
 
@@ -141,7 +128,7 @@ func TestUpstream_chash_hash_on_cookie(t *testing.T) {
 		testCaseCheck(tc)
 	}
 
-	//hit routes
+	// hit routes
 	time.Sleep(time.Duration(100) * time.Millisecond)
 	basepath := "http://127.0.0.1:9080"
 	var req *http.Request
@@ -164,10 +151,11 @@ func TestUpstream_chash_hash_on_cookie(t *testing.T) {
 			res[body] += 1
 		}
 	}
+	// it is possible to hit any one of upstreams, and only one will be hit
 	assert.Equal(t, true, res["1980"] == 4 || res["1981"] == 4)
 	resp.Body.Close()
 
-	//hit routes with miss cookie
+	// hit routes with miss cookie
 	res = map[string]int{}
 	for i := 0; i <= 3; i++ {
 		url = basepath + "/server_port"
@@ -183,6 +171,7 @@ func TestUpstream_chash_hash_on_cookie(t *testing.T) {
 			res[body] += 1
 		}
 	}
+	// it is possible to hit any one of upstreams, and only one will be hit
 	assert.Equal(t, true, res["1980"] == 4 || res["1981"] == 4)
 	resp.Body.Close()
 }
@@ -195,20 +184,20 @@ func TestUpstream_key_contains_uppercase_letters_and_hyphen(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1980,
-						"weight": 1
-					},
-					{
-						"host": "172.16.238.20",
-						"port": 1981,
-						"weight": 1
-					}],
-					"type": "chash",
-					"key": "X-Sessionid",
-					"hash_on": "header"
-				}`,
+					 "nodes": [{
+						 "host": "172.16.238.20",
+						 "port": 1980,
+						 "weight": 1
+					 },
+					 {
+						 "host": "172.16.238.20",
+						 "port": 1981,
+						 "weight": 1
+					 }],
+					 "type": "chash",
+					 "key": "X-Sessionid",
+					 "hash_on": "header"
+				 }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -218,9 +207,9 @@ func TestUpstream_key_contains_uppercase_letters_and_hyphen(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
-				"uri": "/server_port",
-				"upstream_id": "1"
-			}`,
+				 "uri": "/server_port",
+				 "upstream_id": "1"
+			 }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -231,7 +220,7 @@ func TestUpstream_key_contains_uppercase_letters_and_hyphen(t *testing.T) {
 		testCaseCheck(tc)
 	}
 
-	//hit routes
+	// hit routes
 	time.Sleep(time.Duration(100) * time.Millisecond)
 	basepath := "http://127.0.0.1:9080"
 	var req *http.Request
@@ -254,6 +243,7 @@ func TestUpstream_key_contains_uppercase_letters_and_hyphen(t *testing.T) {
 			res[body] += 1
 		}
 	}
+	// the X-Sessionid of each request is different, the weight of upstreams are the same, so these requests will be sent to each upstream equally
 	assert.Equal(t, true, res["1980"] == 8 && res["1981"] == 8)
 	resp.Body.Close()
 }
@@ -266,13 +256,13 @@ func TestUpstream_chash_hash_on_consumer(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/consumers",
 			Body: `{
-					"username": "jack",
-					"plugins": {
-						"key-auth": {
-							"key": "auth-jack"
-						}
-					}
-				}`,
+					 "username": "jack",
+					 "plugins": {
+						 "key-auth": {
+							 "key": "auth-jack"
+						 }
+					 }
+				 }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -282,25 +272,25 @@ func TestUpstream_chash_hash_on_consumer(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
-					"uri": "/server_port",
-					"plugins": {
-						"key-auth": {}
-					},
-					"upstream": {
-						"nodes": [{
-							"host": "172.16.238.20",
-							"port": 1980,
-							"weight": 1
-						},
-						{
-							"host": "172.16.238.20",
-							"port": 1981,
-							"weight": 1
-						}],
-						"type": "chash",
-						"hash_on": "consumer"
-					}
-				}`,
+					 "uri": "/server_port",
+					 "plugins": {
+						 "key-auth": {}
+					 },
+					 "upstream": {
+						 "nodes": [{
+							 "host": "172.16.238.20",
+							 "port": 1980,
+							 "weight": 1
+						 },
+						 {
+							 "host": "172.16.238.20",
+							 "port": 1981,
+							 "weight": 1
+						 }],
+						 "type": "chash",
+						 "hash_on": "consumer"
+					 }
+				 }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -311,7 +301,7 @@ func TestUpstream_chash_hash_on_consumer(t *testing.T) {
 		testCaseCheck(tc)
 	}
 
-	//hit routes
+	// hit routes
 	time.Sleep(time.Duration(100) * time.Millisecond)
 	basepath := "http://127.0.0.1:9080"
 	var req *http.Request
@@ -334,6 +324,7 @@ func TestUpstream_chash_hash_on_consumer(t *testing.T) {
 			res[body] += 1
 		}
 	}
+	// it is possible to hit any one of upstreams, and only one will be hit
 	assert.Equal(t, true, res["1980"] == 4 || res["1981"] == 4)
 	resp.Body.Close()
 }
