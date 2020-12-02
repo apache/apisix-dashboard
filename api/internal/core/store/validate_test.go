@@ -357,6 +357,8 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 		},
 	}
 
+	// todo: add a test case for "remote_addr": ""
+
 	for _, tc := range tests {
 		validator, err := NewAPISIXJsonSchemaValidator("main.route")
 		if err != nil {
