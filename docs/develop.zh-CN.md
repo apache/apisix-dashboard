@@ -28,7 +28,7 @@ Dashboard 包含了 `manager-api` 与 `web` 两部分，因此需要分别启动
 ## 克隆项目
 
 ```sh
-$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+$ git clone -b v2.1.1 https://github.com/apache/apisix-dashboard.git
 ```
 
 ## 开始开发
