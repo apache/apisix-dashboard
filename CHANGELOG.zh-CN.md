@@ -31,7 +31,7 @@
 
 ### 核心
 
-**`manager api` 默认端口由 8080 变更为 9000**
+**`manager api` 默认端口由 8080 变更为 9000** [#931](https://github.com/apache/apisix-dashboard/pull/931)
 
 ### 测试
 
