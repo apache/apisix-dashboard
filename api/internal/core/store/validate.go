@@ -193,12 +193,25 @@ func checkUpstream(upstream *entity.UpstreamDef) error {
 	return nil
 }
 
+func checkRemoteAddr(remoteAddrs []string) error {
+	for _, remoteAddr := range remoteAddrs {
+		if remoteAddr == "" {
+			return fmt.Errorf("schema validate failed: invalid field remote_addrs")
+		}
+	}
+	return nil
+}
+
 func checkConf(reqBody interface{}) error {
 	switch bodyType := reqBody.(type) {
 	case *entity.Route:
 		route := reqBody.(*entity.Route)
 		log.Infof("type of reqBody: %#v", bodyType)
 		if err := checkUpstream(route.Upstream); err != nil {
+			return err
+		}
+		// todo: this is a temporary method, we'll drop it later
+		if err := checkRemoteAddr(route.RemoteAddrs); err != nil {
 			return err
 		}
 	case *entity.Service:

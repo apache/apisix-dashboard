@@ -25,7 +25,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "invalid host",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Path:     "/apisix/admin/routes/r1",
 			Method:   http.MethodPut,
 			Body: `{
@@ -43,7 +43,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 		},
 		{
 			caseDesc: "invalid hosts",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -61,7 +61,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 		},
 		{
 			caseDesc: "create route with host and hosts together at the same time",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -116,7 +116,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 		},
 		{
 			caseDesc: "create route",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -134,7 +134,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 		},
 		{
 			caseDesc: "create route with int uri",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -182,7 +182,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "update route",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -228,7 +228,7 @@ func TestRoute_Delete_Routes_With_Hosts(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -236,7 +236,7 @@ func TestRoute_Delete_Routes_With_Hosts(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete not exist route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/not-exist",
 			Headers:      map[string]string{"Authorization": token},
