@@ -17,10 +17,14 @@
 package e2e
 
 import (
+	"io/ioutil"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
+// todo: the code to access the route should be encapsulated as a function, like line 245-263, 316-327
 func TestUpstream_Create(t *testing.T) {
 	tests := []HttpTestCase{
 		{
@@ -139,9 +143,9 @@ func TestRoute_Node_Host(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
-				"uri": "/*",
-				"upstream_id": "1"
-			}`,
+					"uri": "/*",
+					"upstream_id": "1"
+				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -188,10 +192,198 @@ func TestRoute_Node_Host(t *testing.T) {
 	}
 }
 
-//TODO cHash
-//TODO websocket
+func TestUpstream_chash_remote_addr(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create chash upstream with key (remote_addr)",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/upstreams/1",
+			Body: `{
+				"nodes": [{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 1
+				},
+				{
+					"host": "172.16.238.20",
+					"port": 1981,
+					"weight": 1
+				},
+				{
+					"host": "172.16.238.20",
+					"port": 1982,
+					"weight": 1
+				}],
+				"type": "chash",
+				"hash_on":"header",
+				"key": "remote_addr"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc: "create route using the upstream just created",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/1",
+			Body: `{
+				"uri": "/server_port",
+				"upstream_id": "1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+	}
 
-func TestRoute_Delete(t *testing.T) {
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+
+	//hit routes
+	basepath := "http://127.0.0.1:9080/"
+	request, err := http.NewRequest("GET", basepath+"/server_port", nil)
+	request.Header.Add("Authorization", token)
+	var resp *http.Response
+	var respBody []byte
+	var count int
+	res := map[string]int{}
+	for i := 0; i < 18; i++ {
+		resp, err = http.DefaultClient.Do(request)
+		assert.Nil(t, err)
+		respBody, err = ioutil.ReadAll(resp.Body)
+		body := string(respBody)
+		if _, ok := res[body]; !ok {
+			res[body] = 1
+		} else {
+			res[body] += 1
+		}
+		resp.Body.Close()
+	}
+	assert.Equal(t, 18, res["1982"])
+
+	tests = []HttpTestCase{
+		{
+			caseDesc: "create chash upstream with key (remote_addr, weight equal 0 or 1)",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/upstreams/1",
+			Body: `{
+				"nodes": [
+				{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 1
+				},
+				{
+					"host": "172.16.238.20",
+					"port": 1981,
+					"weight": 0
+				},
+				{
+					"host": "172.16.238.20",
+					"port": 1982,
+					"weight": 0
+				}],
+				"type": "chash",
+				"hash_on":"header",
+				"key": "remote_addr"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc: "create route using the upstream just created",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/1",
+			Body: `{
+				"uri": "/server_port",
+				"upstream_id": "1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+
+	//hit routes
+	basepath = "http://127.0.0.1:9080/"
+	request, err = http.NewRequest("GET", basepath+"/server_port", nil)
+	request.Header.Add("Authorization", token)
+	count = 0
+	for i := 0; i <= 17; i++ {
+		resp, err = http.DefaultClient.Do(request)
+		assert.Nil(t, err)
+		respBody, err = ioutil.ReadAll(resp.Body)
+		if string(respBody) == "1980" {
+			count++
+		}
+	}
+	assert.Equal(t, 18, count)
+	defer resp.Body.Close()
+
+	tests = []HttpTestCase{
+		{
+			caseDesc: "create chash upstream with key (remote_addr, all weight equal 0)",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/upstreams/1",
+			Body: `{
+				"nodes": [
+				{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 0
+				},
+				{
+					"host": "172.16.238.20",
+					"port": 1981,
+					"weight": 0
+				}],
+				"type": "chash",
+				"hash_on":"header",
+				"key": "remote_addr"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc: "create route using the upstream just created",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/1",
+			Body: `{
+				"uri": "/server_port",
+				"upstream_id": "1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "hit the route ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusBadGateway,
+			ExpectBody:   "<head><title>502 Bad Gateway</title></head>",
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+
+}
+
+func TestUpstream_Delete(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "delete not exist upstream",
@@ -201,15 +393,6 @@ func TestRoute_Delete(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
 		},
-		// TODO it's a bug here, see: https://github.com/apache/apisix-dashboard/issues/728
-		//{
-		//	caseDesc:     "delete upstream - being used by route 1",
-		//	Object:       ManagerApiExpect(t),
-		//	Method:       http.MethodDelete,
-		//	Path:         "/apisix/admin/upstreams/1",
-		//	Headers:      map[string]string{"Authorization": token},
-		//	ExpectStatus: http.StatusBadRequest,
-		//},
 		{
 			caseDesc:     "delete route",
 			Object:       ManagerApiExpect(t),

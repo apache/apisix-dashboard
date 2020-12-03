@@ -63,7 +63,7 @@ export const transformStepData = ({
     }
 
     if (redirect.http_to_https) {
-      if (Object(data.plugins).length === 0) {
+      if (Object.keys(data.plugins!).length === 0) {
         data.plugins = {};
       }
       data.plugins!.redirect = redirect;
@@ -82,6 +82,7 @@ export const transformStepData = ({
       !Object.keys(step3DataCloned.script || {}).length ? 'script' : '',
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
+      data.remote_addrs?.filter(Boolean).length === 0 ? 'remote_addrs' : '',
     ]);
   }
 
@@ -97,8 +98,8 @@ export const transformStepData = ({
     'redirect',
     'vars',
     'plugins',
-    'remote_addrs',
     form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
+    data.remote_addrs?.filter(Boolean).length !== 0 ? 'remote_addrs' : '',
   ]);
 };
 
