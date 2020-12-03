@@ -275,8 +275,8 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 		}
 		schemaByte, err := json.Marshal(schemaMap)
 		if err != nil {
-			log.Warnf("schema validate failed: schema not found, path: %s, %w", "plugins."+pluginName, err)
-			return fmt.Errorf("schema validate failed: schema not found, path: %s, %w", "plugins."+pluginName, err)
+			log.Warnf("schema validate failed: schema json encode failed, path: %s, %w", "plugins."+pluginName, err)
+			return fmt.Errorf("schema validate failed: schema json encode failed, path: %s, %w", "plugins."+pluginName, err)
 		}
 
 		s, err := gojsonschema.NewSchema(gojsonschema.NewBytesLoader(schemaByte))
