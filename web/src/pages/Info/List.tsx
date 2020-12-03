@@ -14,74 +14,105 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Select } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useIntl } from 'umi';
 
+import styles from './info.less';
+
+const mydata = [
+  {
+    category: "system",
+    name: "version",
+    value: "2.0",
+    name2: "apisix_id",
+    value2: "2.1",
+  },
+  {
+    category: "categoryA",
+    name: "keyA",
+    value: "valueA",
+    name2: "customKeyA",
+    value2: "valueKeyA",
+  },
+  {
+    category: "categoryB",
+    name: "keyB",
+    value: "valueB",
+    name2: "customKeyB",
+    value2: "valueKeyB",
+  },
+  {
+    category: "categoryC",
+    name: "keyC",
+    value: "valueC",
+    name2: "customKeyC",
+    value2: "valueKeyC",
+  },
+];
+
+const data = [
+  {
+    key: "key1",
+    value: "value1",
+  },
+  {
+    key: "key2",
+    value: "value2",
+  },
+  {
+    key: "key3",
+    value: "value3",
+  },
+];
+
 const Info: React.FC = () => {
+  const [detail, setDetail] = useState([] as any);
+  const [nodeList, setNodeList] = useState([] as any);
   const { formatMessage } = useIntl();
   const { Option } = Select;
-  const mydata = [
-    {
-      "category": "system",
-      "name": "version",
-      "value": "2.0",
-      "name2": "apisix_id",
-      "value2": "2.1",
-    },
-    {
-      "category": "categoryA",
-      "name": "keyA",
-      "value": "valueA",
-      "name2": "customKeyA",
-      "value2": "valueKeyA",
-    },
-    {
-      "category": "categoryB",
-      "name": "keyB",
-      "value": "valueB",
-      "name2": "customKeyB",
-      "value2": "valueKeyB",
-    },
-    {
-      "category": "categoryC",
-      "name": "keyC",
-      "value": "valueC",
-      "name2": "customKeyC",
-      "value2": "valueKeyC",
-    },
-  ];
+
+  useEffect(() => {
+    setNodeList(data);
+    console.log(setNodeList(data));
+  });
 
   return (
     <PageContainer title={formatMessage({ id: 'page.info.pageContainer.title' })}>
-      <Select
-        showSearch
-        style={{ backgroundColor: "#fff", width: "100%", textAlign: "right", padding: "16px 24px", marginBottom: "15px" }}
-        onChange={(value) => { console.log(value) }}
-      >
-        {mydata.map(item => (
-          <Option value={item.category}>
-            {item.category}
-          </Option>
-        ))};
+      <div className={styles.select}>
+        <Select
+          showSearch
+          style={{ width: "130px" }}
+          placeholder="Please select"
+          onChange={(value) => {
+            console.log(value);
+            setDetail(mydata);
+          }}
+        >
+          {nodeList.map((item: any) => (
+            <Option value={item.key} lable={item.key}>
+              {item.key}
+            </Option>
+          ))};
       </Select>
-      <div className="InfoWrap">
-        {mydata.map((item) => {
+      </div>
+      <div className={styles.wrap}>
+        {detail.map((item: any) => {
           return (
-            <table className="InfoTable">
+            <table id={item.category} className={styles.table}>
               <thead>
-                <th>{item.category && <span>{item.category}</span>}</th>
+                <th>{item.category[0] && item.category}</th>
                 <th>&nbsp;</th>
               </thead>
               <tbody>
                 <tr>
-                  <td>{item.name && <span>{item.name}</span>}</td>
-                  <td style={{ textAlign: "right" }}>{item.value && <span>{item.value}</span>}</td>
+                  <td>{item.name}</td>
+                  <td style={{ textAlign: "right" }}>{item.value}</td>
                 </tr>
                 <tr>
-                  <td>{item.name2 && <span>{item.name2}</span>}</td>
-                  <td style={{ textAlign: "right" }}>{item.value2 && <span>{item.value2}</span>}</td>
+                  <td>{item.name2}</td>
+                  <td style={{ textAlign: "right" }}>{item.value2}</td>
                 </tr>
               </tbody>
             </table>
