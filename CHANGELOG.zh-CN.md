@@ -27,9 +27,9 @@
 
 # 2.1.1
 
-该版本主要增加了对 `Manager API` 和 APISIX 间的 E2E 测试， 以及 bug 修复。
+该版本主要增加了对 `Manager API` 和 APISIX 间的 E2E 测试，以及 bug 修复。
 
-`Manager API` 2.1.1 应该与 APISIX 2.1 配合使用，不推荐与其他 APISIX 版本使用。
+`Manager API` 2.1.1 应该与 APISIX 2.1 配合使用，不推荐与其它 APISIX 版本使用。
 
 ### 核心
 
