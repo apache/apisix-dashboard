@@ -30,18 +30,23 @@
 
 This release mainly adds test cases and bugfix for `manager api`.
 
+### Core
+
+**The default port of `manager api` is changed from 8080 to 9000.** [#931](https://github.com/apache/apisix-dashboard/pull/931)
+
 ### Test case
 
 Add e2e test cases for route, upstream, consumer, SSL, and plugins.
 
 ## Bugfix
  
-- Fix: when created route by `admin api`, upstream can not be modified by dashboard #786
-- Fix: create route with jwt-auth will display an error #862
-- Fix: create route with error format remote_addrs `manager api` will return 200, but should return 400 #873
-- Fix: make field ID compatible with both string and int #896
-- Fix: can't run `manager api` in intranet env #938
-- Fix: create a route through the dashboard, without filling in the client address, APISIX reports errors #940
+- Fix: when created route by `admin api`, upstream can not be modified by dashboard. [#847](https://github.com/apache/apisix-dashboard/pull/847)
+- Fix: create route with jwt-auth will display an error. [#878](https://github.com/apache/apisix-dashboard/pull/878)
+- Fix: create route with error format remote_addrs `manager api` will return 200, but should return 400. [#899](https://github.com/apache/apisix-dashboard/pull/899)
+- Fix: make field ID compatible with both string and int. [#902](https://github.com/apache/apisix-dashboard/pull/902)
+- Fix: can't run `manager api` in intranet env. [#947](https://github.com/apache/apisix-dashboard/pull/947)
+- Fix: create a route through the dashboard, without filling in the client address, APISIX reports errors. [#948](https://github.com/apache/apisix-dashboard/pull/948)
+- Fix: creates a route and enables redirect HTTPS on dashboard, and the browser reports an error when submitting. [#957](https://github.com/apache/apisix-dashboard/pull/957)
 
 For more changes, please refer to [Milestone](https://github.com/apache/apisix-dashboard/milestone/8).
 
