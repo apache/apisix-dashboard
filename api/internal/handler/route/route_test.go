@@ -985,6 +985,32 @@ func TestRoute(t *testing.T) {
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)
 
+	route7 := &entity.Route{}
+	reqBody = `{
+	  "id": "1",
+	  "methods": ["GET"],
+	  "upstream": {
+	      "nodes": {
+	          "httpbin.org:443": 1
+	      },
+	      "type": "roundrobin"
+	  },
+	  "desc": "new route",
+	  "uri": "/get"
+	}`
+	err = json.Unmarshal([]byte(reqBody), route7)
+	assert.Nil(t, err)
+	ctx.SetInput(route7)
+	ret, err = handler.Create(ctx)
+	assert.NotNil(t, err)
+	portTransmit := &ParamsInput{}
+	// FIXME
+	reqBody = `{"url":"http://127.0.0.1:9080/get","method":"GET"}`
+	err = json.Unmarshal([]byte(reqBody), portTransmit)
+	assert.Nil(t, err)
+	ctx.SetInput(portTransmit)
+	_, err = handler.DebugRequestForwarding(ctx)
+	assert.Nil(t, err)
 }
 
 func Test_Route_With_Script(t *testing.T) {

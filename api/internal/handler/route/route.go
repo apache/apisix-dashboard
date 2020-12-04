@@ -72,6 +72,9 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
 	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))
+
+	r.POST("/apisix/admin/debug-request-forwarding", wgin.Wraps(h.DebugRequestForwarding,
+		wrapper.InputType(reflect.TypeOf(ParamsInput{}))))
 }
 
 type GetInput struct {
@@ -396,4 +399,42 @@ func Exist(c *gin.Context) (interface{}, error) {
 	}
 
 	return nil, nil
+}
+
+type ParamsInput struct {
+	Url          string            `json:"url"`
+	BodyParams   map[string]string `json:"bodyParams"`
+	Method       string            `json:"method"`
+	HeaderParams map[string]string `json:"headerParams"`
+}
+
+func (h *Handler) DebugRequestForwarding(c droplet.Context) (interface{}, error) {
+	portTransmit := c.Input().(*ParamsInput)
+	bodyParams, _ := json.Marshal(portTransmit.BodyParams)
+	client := &http.Client{}
+
+	req, err := http.NewRequest(strings.ToUpper(portTransmit.Method), portTransmit.Url, strings.NewReader(string(bodyParams)))
+	if err != nil {
+		return nil, err
+	}
+	for k, v := range portTransmit.HeaderParams {
+		req.Header.Add(k, v)
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if resp != nil {
+			_ = resp.Body.Close()
+		}
+	}()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		// handle error
+		return nil, err
+	}
+	//fmt.Println(string(body))
+	return string(body), nil
 }
