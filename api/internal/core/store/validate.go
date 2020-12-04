@@ -266,11 +266,15 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 		}
 		schemaMap := schemaValue.(map[string]interface{})
 		if schemaMap["type"] != nil && schemaMap["type"].(string) == "object" {
-			if schemaMap["properties"] == nil {
+			switch dataType := schemaMap["properties"].(type) {
+			case nil:
 				schemaMap["properties"] = pluginDisableSchema
-			}
-			if len(schemaMap["properties"].(map[string]interface{})) == 0 {
-				schemaMap["properties"] = pluginDisableSchema
+			case map[string]interface{}:
+				if len(schemaMap["properties"].(map[string]interface{})) == 0 {
+					schemaMap["properties"] = pluginDisableSchema
+				}
+			default:
+				log.Infof("schemaMap[\"properties\"] type: %v", dataType)
 			}
 		}
 		schemaByte, err := json.Marshal(schemaMap)
