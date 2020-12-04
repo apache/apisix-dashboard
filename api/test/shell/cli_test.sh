@@ -116,12 +116,10 @@ sleep 3
 pkill -f manager-api
 
 # make sure it's wrong
-if [[ `grep -c "etcdserver: user name is empty" ./error.log` -eq '0']]; then
+if [[ `grep -c "etcdserver: user name is empty" ./error.log` -eq '0' ]]; then
     echo "failed: failed to validate etcd basic auth"
     exit 1
 fi
-
-clean_logfile
 
 # modify etcd auth config
 sed -i '1,$s/# username: "root" # ignore this argument if not enable auth/username: "root"/g' conf/conf.yaml
