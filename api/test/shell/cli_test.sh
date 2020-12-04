@@ -127,7 +127,7 @@ fi
 sed -i '1,$s/# username: "root" # ignore this argument if not enable auth/username: "root"/g' conf/conf.yaml
 sed -i '1,$s/# password: "123456" # ignore this argument if not enable auth/password: "apisix-dashboard"/g' conf/conf.yaml
 
-./manager-api &
+./manager-api > output.log 2>&1 &
 sleep 3
 
 # validate process is right by requesting login api
