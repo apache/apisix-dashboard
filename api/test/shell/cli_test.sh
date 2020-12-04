@@ -111,11 +111,31 @@ curl -L http://localhost:2379/v3/auth/user/grant \
 # enable auth
 curl -L http://localhost:2379/v3/auth/enable -X POST -d '{}'
 
+./manager-api &
+sleep 3
+pkill -f manager-api
+
+# make sure it's wrong
+if [[ `grep -c "etcdserver: user name is empty" ./error.log` -eq '0']]; then
+    echo "failed: failed to validate etcd basic auth"
+    exit 1
+fi
+
+clean_logfile
+
 # modify etcd auth config
 sed -i '1,$s/# username: "root" # ignore this argument if not enable auth/username: "root"/g' conf.yaml
 sed -i '1,$s/# password: "123456" # ignore this argument if not enable auth/password: "apisix-dashboard"/g' conf.yaml
 
 ./manager-api &
+
+# validate process is right by requesting login api
+resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -X POST -d '{"username":"admin", "password": "admin"}')
+token=$(echo "${resp}" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
+if [ -z "${token}" ]; then
+    echo "login failed"
+fi
+
 sleep 3
 pkill -f manager-api
 
