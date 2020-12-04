@@ -1005,7 +1005,7 @@ func TestRoute(t *testing.T) {
 	assert.NotNil(t, err)
 	portTransmit := &ParamsInput{}
 	// FIXME
-	reqBody = `{"url":"http://127.0.0.1:9080/get","method":"GET"}`
+	reqBody = `{"url":"https://httpbin.org/get","method":"GET"}`
 	err = json.Unmarshal([]byte(reqBody), portTransmit)
 	assert.Nil(t, err)
 	ctx.SetInput(portTransmit)
