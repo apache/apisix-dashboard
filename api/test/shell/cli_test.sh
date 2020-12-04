@@ -93,3 +93,30 @@ if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     echo "failed: failed to write log on right level"
     exit 1
 fi
+
+
+# etcd basic auth
+# add root user
+curl -L http://localhost:2379/v3/auth/user/add \
+  -X POST -d '{"name": "root", "password": "apisix-dashboard"}'
+
+# add root role
+curl -L http://localhost:2379/v3/auth/role/add \
+  -X POST -d '{"name": "root"}'
+
+# grant root role to root user
+curl -L http://localhost:2379/v3/auth/user/grant \
+  -X POST -d '{"user": "root", "role": "root"}'
+
+# enable auth
+curl -L http://localhost:2379/v3/auth/enable -X POST -d '{}'
+
+# modify etcd auth config
+sed -i '1,$s/# username: "root" # ignore this argument if not enable auth/username: "root"/g' conf.yaml
+sed -i '1,$s/# password: "123456" # ignore this argument if not enable auth/password: "apisix-dashboard"/g' conf.yaml
+
+./manager-api &
+sleep 3
+pkill -f manager-api
+
+check_logfile
