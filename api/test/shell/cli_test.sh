@@ -124,8 +124,8 @@ fi
 clean_logfile
 
 # modify etcd auth config
-sed -i '1,$s/# username: "root" # ignore this argument if not enable auth/username: "root"/g' conf.yaml
-sed -i '1,$s/# password: "123456" # ignore this argument if not enable auth/password: "apisix-dashboard"/g' conf.yaml
+sed -i '1,$s/# username: "root" # ignore this argument if not enable auth/username: "root"/g' conf/conf.yaml
+sed -i '1,$s/# password: "123456" # ignore this argument if not enable auth/password: "apisix-dashboard"/g' conf/conf.yaml
 
 ./manager-api &
 
