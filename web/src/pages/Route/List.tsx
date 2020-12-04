@@ -20,9 +20,9 @@ import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag, Space } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined, BugOutlined } from '@ant-design/icons';
+import { timestampToLocaleString } from '@/helpers';
 
 import { fetchList, remove } from './service';
-import { timestampToLocaleString } from '@/helpers';
 import { DebugDrawDebugDrawView }  from './components/DebugViews';
 
 const Page: React.FC = () => {

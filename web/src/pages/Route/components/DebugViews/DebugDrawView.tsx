@@ -38,6 +38,7 @@ const DebugDrawDebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => 
   const { formatMessage } = useIntl();
   const [httpMethod, setHttpMethod] = useState('GET');
   const [showBodyTab, setShowBodyTab] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [queryForm] = Form.useForm();
   const [bodyForm] = Form.useForm();
   const [authForm] = Form.useForm();
@@ -45,7 +46,7 @@ const DebugDrawDebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => 
   const [responseCode, setResponseCode] = useState(
     `${formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })}`,
   );
-  const [loading, setLoading] = useState(false);
+
   const methodWithoutBody = ['GET', 'HEAD'];
 
   useEffect(() => {
@@ -78,13 +79,11 @@ const DebugDrawDebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => 
           ...headerData,
           Authorization: `Basic ${Base64.encode(`${formData.username}:${formData.password}`)}`,
         };
-        break;
       case 'jwt-auth':
         return {
           ...headerData,
           Authorization: formData.Authorization,
         };
-        break;
       case 'key-auth':
         return {
           ...headerData,
@@ -93,6 +92,8 @@ const DebugDrawDebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => 
       default:
         break;
     }
+
+    return headerData;
   };
 
   const handleDebug = (url: string) => {
@@ -107,15 +108,10 @@ const DebugDrawDebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => 
       method: httpMethod,
       bodyParams: bodyFormData,
       headerParams: headerFormData,
-    })
-      .then((req) => {
-        setLoading(false);
-        setResponseCode(JSON.stringify(req, null, 2));
-      })
-      .catch((e) => {
-        setLoading(false);
-        console.log(e);
-      });
+    }).then((req) => {
+      setLoading(false);
+      setResponseCode(JSON.stringify(req, null, 2));
+    });
   };
   return (
     <Drawer

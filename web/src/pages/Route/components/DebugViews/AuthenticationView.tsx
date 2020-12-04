@@ -23,11 +23,6 @@ import styles from './index.less';
 const AuthenticationView: React.FC<RouteModule.DebugViewProps> = (props) => {
   const { formatMessage } = useIntl();
   const [authType, setAuthType] = useState('none');
-  const radioStyle = {
-    display: 'block',
-    height: '30px',
-    lineHeight: '30px',
-  };
 
   const getAuthFormItems = () => {
     switch (props.form.getFieldValue('authType')) {
@@ -109,19 +104,16 @@ const AuthenticationView: React.FC<RouteModule.DebugViewProps> = (props) => {
         <div className={styles.authForm}>
           <Form.Item name="authType">
             <Radio.Group
+              defaultValue={authType}
               onChange={(event) => {
                 const currentValue = event.target.value;
                 setAuthType(currentValue);
                 props.form.setFieldsValue({ autyType: currentValue });
-							}}
+              }}
             >
-              <Radio style={radioStyle} value="none">
-                none
-              </Radio>
+              <Radio value="none">none</Radio>
               {AUTH_LIST.map((type) => (
-                <Radio style={radioStyle} value={type}>
-                  {type}
-                </Radio>
+                <Radio value={type}>{type}</Radio>
               ))}
             </Radio.Group>
           </Form.Item>
