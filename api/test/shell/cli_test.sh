@@ -98,7 +98,7 @@ fi
 # etcd basic auth
 # add root user
 curl -L http://localhost:2379/v3/auth/user/add \
-  -X POST -d '{"name": "root", "password": "apisix-dashboard"}'
+  -X POST -d '{"name": "root", "password": "root"}'
 
 # add root role
 curl -L http://localhost:2379/v3/auth/role/add \
@@ -122,7 +122,7 @@ fi
 
 # modify etcd auth config
 sed -i '1,$s/# username: "root" # ignore this argument if not enable auth/username: "root"/g' conf/conf.yaml
-sed -i '1,$s/# password: "123456" # ignore this argument if not enable auth/password: "apisix-dashboard"/g' conf/conf.yaml
+sed -i '1,$s/# password: "123456" # ignore this argument if not enable auth/password: "root"/g' conf/conf.yaml
 
 ./manager-api &
 sleep 3
