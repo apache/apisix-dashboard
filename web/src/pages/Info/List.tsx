@@ -19,7 +19,7 @@ import { Select } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useIntl } from 'umi';
 
-import styles from './info.less';
+import styles from './Info.less';
 
 const mydata = [
   {
@@ -75,7 +75,6 @@ const Info: React.FC = () => {
 
   useEffect(() => {
     setNodeList(data);
-    console.log(setNodeList(data));
   });
 
   return (
