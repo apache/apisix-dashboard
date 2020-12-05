@@ -23,47 +23,47 @@ import styles from './Info.less';
 
 const detailData = [
   {
-    category: "system",
-    name: "version",
-    value: "2.0",
-    name2: "apisix_id",
-    value2: "2.1",
+    category: 'system',
+    name: 'version',
+    value: '2.0',
+    name2: 'apisix_id',
+    value2: '2.1',
   },
   {
-    category: "categoryA",
-    name: "keyA",
-    value: "valueA",
-    name2: "customKeyA",
-    value2: "valueKeyA",
+    category: 'categoryA',
+    name: 'keyA',
+    value: 'valueA',
+    name2: 'customKeyA',
+    value2: 'valueKeyA',
   },
   {
-    category: "categoryB",
-    name: "keyB",
-    value: "valueB",
-    name2: "customKeyB",
-    value2: "valueKeyB",
+    category: 'categoryB',
+    name: 'keyB',
+    value: 'valueB',
+    name2: 'customKeyB',
+    value2: 'valueKeyB',
   },
   {
-    category: "categoryC",
-    name: "keyC",
-    value: "valueC",
-    name2: "customKeyC",
-    value2: "valueKeyC",
+    category: 'categoryC',
+    name: 'keyC',
+    value: 'valueC',
+    name2: 'customKeyC',
+    value2: 'valueKeyC',
   },
 ];
 
 const nodeListData = [
   {
-    key: "key1",
-    value: "value1",
+    key: 'key1',
+    value: 'value1',
   },
   {
-    key: "key2",
-    value: "value2",
+    key: 'key2',
+    value: 'value2',
   },
   {
-    key: "key3",
-    value: "value3",
+    key: 'key3',
+    value: 'value3',
   },
 ];
 
@@ -82,10 +82,9 @@ const Info: React.FC = () => {
       <div className={styles.select}>
         <Select
           showSearch
-          style={{ width: "130px" }}
+          style={{ width: '130px' }}
           placeholder="Please select"
-          onChange={(value) => {
-            console.log(value);
+          onChange={() => {
             setDetail(detailData);
           }}
         >
@@ -93,8 +92,9 @@ const Info: React.FC = () => {
             <Option value={item.key} lable={item.key}>
               {item.key}
             </Option>
-          ))};
-      </Select>
+          ))}
+          ;
+        </Select>
       </div>
       <div className={styles.wrap}>
         {detail.map((item: any) => {
