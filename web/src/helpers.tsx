@@ -20,11 +20,17 @@ import { MenuDataItem } from '@ant-design/pro-layout';
 import { history } from 'umi';
 import moment from 'moment';
 
+import InfoCircleOutlined from '@ant-design/icons';
 import { codeMessage } from './constants';
 import IconFont from './iconfont';
 
 export const getMenuData = (): MenuDataItem[] => {
   return [
+    {
+      name: 'info',
+      path: '/info',
+      icon: <InfoCircleOutlined />,
+    },
     {
       name: 'metrics',
       path: '/metrics',
