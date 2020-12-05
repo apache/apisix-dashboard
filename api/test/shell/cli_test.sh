@@ -135,6 +135,14 @@ if [ -z "${token}" ]; then
     exit 1
 fi
 
+# more validation to make sure it's ok to access etcd
+resp=$(curl -ig http://127.0.0.1:9000/apisix/admin/consumers -X POST -i -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}')
+respCode=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
+respMessage=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "message" | sed 's/:/\n/g' | sed '1d')
+if [ "$respCode" != "0" ] || [ $respMessage != "\"\"" ]; then
+    echo "verify access etcd failed"
+    exit 1
+fi
 
 pkill -f manager-api
 
