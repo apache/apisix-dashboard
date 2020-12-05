@@ -21,7 +21,7 @@ import { useIntl } from 'umi';
 
 import styles from './Info.less';
 
-const mydata = [
+const detailData = [
   {
     category: "system",
     name: "version",
@@ -52,7 +52,7 @@ const mydata = [
   },
 ];
 
-const data = [
+const nodeListData = [
   {
     key: "key1",
     value: "value1",
@@ -74,7 +74,7 @@ const Info: React.FC = () => {
   const { Option } = Select;
 
   useEffect(() => {
-    setNodeList(data);
+    setNodeList(nodeListData);
   });
 
   return (
@@ -86,7 +86,7 @@ const Info: React.FC = () => {
           placeholder="Please select"
           onChange={(value) => {
             console.log(value);
-            setDetail(mydata);
+            setDetail(detailData);
           }}
         >
           {nodeList.map((item: any) => (
@@ -99,19 +99,19 @@ const Info: React.FC = () => {
       <div className={styles.wrap}>
         {detail.map((item: any) => {
           return (
-            <table id={item.category} className={styles.table}>
+            <table className={styles.table}>
               <thead>
-                <th>{item.category[0] && item.category}</th>
+                <th>{item.category}</th>
                 <th>&nbsp;</th>
               </thead>
               <tbody>
                 <tr>
                   <td>{item.name}</td>
-                  <td style={{ textAlign: "right" }}>{item.value}</td>
+                  <td>{item.value}</td>
                 </tr>
                 <tr>
                   <td>{item.name2}</td>
-                  <td style={{ textAlign: "right" }}>{item.value2}</td>
+                  <td>{item.value2}</td>
                 </tr>
               </tbody>
             </table>
