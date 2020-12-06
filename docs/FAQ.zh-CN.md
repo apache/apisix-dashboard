@@ -40,7 +40,7 @@
 2. 执行如下命令：
 
 ```sh
-# `$version` 为 `master` 或者 Apache APISIX 的版本号，如 2.1.1。
+# `$version` 为 `master` 或者 Apache APISIX 的版本号，如 2.1。
 $ api/build-tools/schema-sync.sh $version
 ```
 
