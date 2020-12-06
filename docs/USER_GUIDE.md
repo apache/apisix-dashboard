@@ -23,6 +23,8 @@ The following are parts of the modules' snapshot.
 
 ## Metrics
 
+> The Metrics page is to open Grafana in an iframe, and to open Grafana in an iframe, you need to configure [`allow_embedding=true`](https://grafana.com/docs/grafana/latest/administration/configuration/#allow_embedding) to support it. The configuration defaults to `false`, otherwise the browser will not be able to render the Grafana page normally
+
 ![metrics-en](./images/metrics-en.png)
 
 ## Route
