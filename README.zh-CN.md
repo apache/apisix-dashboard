@@ -21,13 +21,15 @@
 
 # Apache APISIX Dashboard
 
+当前最新版本为 2.1.1 ，应该与 APISIX 2.1 配合使用，不推荐与其它 APISIX 版本使用。
+
 ## 介绍
 
 Apache APISIX Dashboard 旨在通过前端界面，让用户尽可能更方便地操作 [Apache APISIX](https://github.com/apache/apisix)。
 
 Dashboard 为控制平面，完成所有参数的校验；Apache APISIX 混合了数据平面与控制平面，会逐渐演进为纯粹的数据平面。
 
-本项目包含了 `manager-api` 与前端界面，前者将逐渐替代 Apache APISIX 中的 `admin-api`，我们正在积极地迁移相关逻辑。
+本项目包含了 `Manager API` 与前端界面，前者将逐渐替代 Apache APISIX 中的 `Admin API`，我们正在积极地迁移相关逻辑。
 
 注意：目前 Dashboard 尚未完整覆盖 Apache APISIX 的功能，[访问此处](https://github.com/apache/apisix-dashboard/milestones)以查看里程碑。
 
@@ -53,7 +55,7 @@ Dashboard 为控制平面，完成所有参数的校验；Apache APISIX 混合�
 └── web
 ```
 
-1. `api` 目录用于存放 `manager-api` 源码，它用于管理 `etcd` 并为前端界面提供接口。
+1. `api` 目录用于存放 `Manager API` 源码，它用于管理 `etcd` 并为前端界面提供接口。
 2. `web` 目录用于存放前端源码。
 
 ## 构建并启动

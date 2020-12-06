@@ -27,7 +27,13 @@
 
 # 2.1.1
 
-该版本主要增加了对 `manager api` 和 APISIX 间的 E2E 测试， 以及 bug 修复。
+该版本主要增加了对 `Manager API` 和 APISIX 间的 E2E 测试，以及 bug 修复。
+
+`Manager API` 2.1.1 应该与 APISIX 2.1 配合使用，不推荐与其它 APISIX 版本使用。
+
+### 核心
+
+**`Manager API` 默认端口由 8080 变更为 9000** [#931](https://github.com/apache/apisix-dashboard/pull/931)
 
 ### 测试
 
@@ -35,18 +41,18 @@
 
 ## Bugfix
  
-- 修复通过 `admin api` 创建路由后，在 dashboard 上无法修改上游信息。#786
-- 修复创建路由并开启 jwt-auth 插件，提交时会报错。 #862
-- 修复创建路由时，`remote_addrs` 字段使用错误的数据格式，应该返回 400 而不是 200 #873
-- 修复 ID 字段不能同时兼容 int 类型和 string 类型的问题 #896
-- 修复在内网环境下不能启动 `manager api` 的问题 #938
-- 修复通过 dashboard 创建路由， 不填写客户端地址，APISIX 报错的问题 #940
-- 修复 dashboard 创建路由并开启强制跳转 HTTPS 功能，提交时浏览器报错 #956
+- 修复通过 `Admin API` 创建路由后，在 dashboard 上无法修改上游信息。[#847](https://github.com/apache/apisix-dashboard/pull/847)
+- 修复创建路由并开启 jwt-auth 插件，提交时会报错。[#878](https://github.com/apache/apisix-dashboard/pull/878)
+- 修复创建路由时，`remote_addrs` 字段使用错误的数据格式，应该返回 400 而不是 200 。[#899](https://github.com/apache/apisix-dashboard/pull/899)
+- 修复 ID 字段不能同时兼容 int 类型和 string 类型的问题。[#902](https://github.com/apache/apisix-dashboard/pull/902)
+- 修复在内网环境下不能启动 `Manager API` 的问题。[#947](https://github.com/apache/apisix-dashboard/pull/947)
+- 修复通过 dashboard 创建路由， 不填写客户端地址，APISIX 报错的问题。[#948](https://github.com/apache/apisix-dashboard/pull/948)
+- 修复 dashboard 创建路由并开启强制跳转 HTTPS 功能，提交时浏览器报错。 [#957](https://github.com/apache/apisix-dashboard/pull/957)
 
 
 # 2.1.0
 
-该版本主要提升了 `manager api` 的 E2E 测试。
+该版本主要提升了 `Manager API` 的 E2E 测试。
 
 ### 核心
 
@@ -86,7 +92,7 @@
 ### 核心
 
 - 使用 Ant Design Pro 作为项目脚手架 [#263](https://github.com/apache/apisix-dashboard/pull/263)。
-- 增加了 `manager api` 用于处理 APISIX 与 Dashboard 之间的逻辑。
+- 增加了 `Manager API` 用于处理 APISIX 与 Dashboard 之间的逻辑。
 - 增加了监控、路由、证书、上游、Consumer 模块。
 
 ## 1.0.0
