@@ -19,10 +19,10 @@ package e2e
 import (
 	"io/ioutil"
 	"net/http"
+	"sort"
 	"strconv"
 	"testing"
 	"time"
-	"sort"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -367,7 +367,7 @@ func TestUpstream_chash_hash_on_vars(t *testing.T) {
 			caseDesc: "create chash upstream hash_on (vars)",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/2",
+			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
 					"nodes": [{
 						"host": "172.16.238.20",
@@ -390,10 +390,10 @@ func TestUpstream_chash_hash_on_vars(t *testing.T) {
 			caseDesc:     "verify upstream",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/apisix/admin/upstreams/2",
+			Path:         "/apisix/admin/upstreams/1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody: "\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1},{\"host\":\"172.16.238.20\",\"port\":1981,\"weight\":1}],\"type\":\"chash\",\"hash_on\":\"vars\",\"key\":\"arg_device_id\"",
+			ExpectBody:   "\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1},{\"host\":\"172.16.238.20\",\"port\":1981,\"weight\":1}],\"type\":\"chash\",\"hash_on\":\"vars\",\"key\":\"arg_device_id\"",
 			Sleep:        sleepTime,
 		},
 		{
@@ -403,10 +403,20 @@ func TestUpstream_chash_hash_on_vars(t *testing.T) {
 			Path:     "/apisix/admin/routes/1",
 			Body: `{
 				"uri": "/server_port",
-				"upstream_id": "2"
+				"upstream_id": "1"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "verify route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/routes/1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"uri\":\"/server_port\",\"upstream_id\":\"1\"",
 			Sleep:        sleepTime,
 		},
 	}
@@ -440,7 +450,7 @@ func TestUpstream_chash_hash_on_vars(t *testing.T) {
 		counts = append(counts, value)
 	}
 	sort.Ints(counts)
-	assert.True(t, counts[0]/counts[1]==1)
+	assert.True(t, counts[0]/counts[1] == 1)
 }
 
 func TestUpstream_Delete_hash_on(t *testing.T) {
