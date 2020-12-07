@@ -118,8 +118,8 @@ if [[ `grep -c "etcdserver: user name is empty" ./error.log` -eq '0' ]]; then
 fi
 
 # modify etcd auth config
-sed -i '1,$s/# username: "root" # ignore this argument if not enable auth/username: "root"/g' conf/conf.yaml
-sed -i '1,$s/# password: "123456" # ignore this argument if not enable auth/password: "root"/g' conf/conf.yaml
+sed -i '1,$s/# username: "root"    # ignore etcd username if not enable etcd auth/username: "root"/g' conf/conf.yaml
+sed -i '1,$s/# password: "123456"  # ignore etcd password if not enable etcd auth/password: "root"/g' conf/conf.yaml
 
 ./manager-api &
 sleep 3
