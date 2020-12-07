@@ -16,4 +16,74 @@
  */
 package filter
 
-//for logging access log, will refactor it in a new pr.
+import (
+	"bytes"
+	"io/ioutil"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+
+	"github.com/apisix/manager-api/log"
+)
+
+var logger *zap.SugaredLogger
+
+func RequestLogHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start, host, remoteIP, path, method := time.Now(), c.Request.Host, c.ClientIP(), c.Request.URL.Path, c.Request.Method
+		var val interface{}
+		if method == "GET" {
+			val = c.Request.URL.Query()
+		} else {
+			val, _ = c.GetRawData()
+			// set RequestBody back
+			c.Request.Body = ioutil.NopCloser(bytes.NewReader(val.([]byte)))
+		}
+		c.Set("requestBody", val)
+		uuid := c.Writer.Header().Get("X-Request-Id")
+
+		param, _ := c.Get("requestBody")
+
+		switch paramType := param.(type) {
+		case []byte:
+			param = string(param.([]byte))
+			log.Infof("type of param: %#v", paramType)
+		default:
+		}
+
+		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
+		c.Writer = blw
+		c.Next()
+		latency := time.Since(start) / 1000000
+		statusCode := c.Writer.Status()
+		respBody := blw.body.String()
+
+		var errs []string
+		for _, err := range c.Errors {
+			errs = append(errs, err.Error())
+		}
+		log.Info("",
+			zap.String("requestId", uuid),
+			zap.Duration("latency", latency),
+			zap.String("remoteIP", remoteIP),
+			zap.String("method", method),
+			zap.String("path", path),
+			zap.Int("statusCode", statusCode),
+			zap.String("host", host),
+			//zap.String("param", param.(string)),
+			zap.String("respBody", respBody),
+			zap.Strings("errs", errs),
+		)
+	}
+}
+
+type bodyLogWriter struct {
+	gin.ResponseWriter
+	body *bytes.Buffer
+}
+
+func (w bodyLogWriter) Write(b []byte) (int, error) {
+	w.body.Write(b)
+	return w.ResponseWriter.Write(b)
+}

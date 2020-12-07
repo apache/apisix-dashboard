@@ -48,6 +48,7 @@ var (
 	ETCDEndpoints    = []string{"127.0.0.1:2379"}
 	ErrorLogLevel    = "warn"
 	ErrorLogPath     = "logs/error.log"
+	AccessLogPath    = "logs/access.log"
 	UserList         = make(map[string]User, 2)
 	AuthConf         Authentication
 	SSLDefaultStatus = 1 //enable ssl by default
@@ -67,8 +68,14 @@ type ErrorLog struct {
 	FilePath string `yaml:"file_path"`
 }
 
+type AccessLog struct {
+	Level    string
+	FilePath string `yaml:"file_path"`
+}
+
 type Log struct {
-	ErrorLog ErrorLog `yaml:"error_log"`
+	ErrorLog  ErrorLog  `yaml:"error_log"`
+	AccessLog AccessLog `yaml:"access_log"`
 }
 
 type Conf struct {
@@ -142,6 +149,17 @@ func setConf() {
 		}
 		if !filepath.IsAbs(ErrorLogPath) {
 			ErrorLogPath, err = filepath.Abs(WorkDir + "/" + ErrorLogPath)
+			if err != nil {
+				panic(err)
+			}
+		}
+
+		// access log
+		if config.Conf.Log.AccessLog.FilePath != "" {
+			AccessLogPath = config.Conf.Log.AccessLog.FilePath
+		}
+		if !filepath.IsAbs(AccessLogPath) {
+			AccessLogPath, err = filepath.Abs(WorkDir + "/" + AccessLogPath)
 			if err != nil {
 				panic(err)
 			}
