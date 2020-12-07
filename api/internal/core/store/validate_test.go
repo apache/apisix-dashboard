@@ -252,7 +252,7 @@ func TestAPISIXJsonSchemaValidator_Plugin(t *testing.T) {
 	validator, err := NewAPISIXJsonSchemaValidator("main.route")
 	assert.Nil(t, err)
 
-	// plugin empty schema
+	// validate plugin's schema which has no `properties` or empty `properties`
 	route := &entity.Route{}
 	reqBody := `{
 		"id": "1",
