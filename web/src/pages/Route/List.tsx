@@ -14,20 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag, Space } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined } from '@ant-design/icons';
-
+import { PlusOutlined, BugOutlined } from '@ant-design/icons';
 import { timestampToLocaleString } from '@/helpers';
 
 import { fetchList, remove } from './service';
+import { DebugDrawView } from './components/DebugViews';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
+  const [debugDrawVisible, setDebugDrawVisible] = useState(false);
 
   const columns: ProColumns<RouteModule.ResponseBody>[] = [
     {
@@ -126,7 +127,17 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
+          <Button type="primary" onClick={() => setDebugDrawVisible(true)}>
+            <BugOutlined />
+            {formatMessage({ id: 'page.route.onlineDebug' })}
+          </Button>,
         ]}
+      />
+      <DebugDrawView
+        visible={debugDrawVisible}
+        onClose={() => {
+          setDebugDrawVisible(false);
+        }}
       />
     </PageHeaderWrapper>
   );
