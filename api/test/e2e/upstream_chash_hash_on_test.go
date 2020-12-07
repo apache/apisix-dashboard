@@ -19,7 +19,6 @@ package e2e
 import (
 	"io/ioutil"
 	"net/http"
-	"sort"
 	"strconv"
 	"testing"
 	"time"
@@ -445,12 +444,7 @@ func TestUpstream_chash_hash_on_vars(t *testing.T) {
 		}
 		resp.Body.Close()
 	}
-	var counts []int
-	for _, value := range res {
-		counts = append(counts, value)
-	}
-	sort.Ints(counts)
-	assert.True(t, counts[0]/counts[1] == 1)
+	assert.True(t, res["1980"] == 9 && res["1981"] == 9)
 }
 
 func TestUpstream_Delete_hash_on(t *testing.T) {
