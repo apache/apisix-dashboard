@@ -33,7 +33,7 @@ func init() {
 	logLevel := getLogLevel()
 	core := zapcore.NewCore(encoder, writeSyncer, logLevel)
 
-	zapLogger := zap.New(core, zap.AddCaller())
+	zapLogger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(2))
 
 	logger = zapLogger.Sugar()
 }

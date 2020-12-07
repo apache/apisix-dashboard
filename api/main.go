@@ -45,11 +45,11 @@ func main() {
 		return newMws
 	}
 	if err := storage.InitETCDClient(conf.ETCDEndpoints); err != nil {
-		log.Error("init etcd client fail: %w", err)
+		log.Errorf("init etcd client fail: %s", err)
 		panic(err)
 	}
 	if err := store.InitStores(); err != nil {
-		log.Error("init stores fail: %w", err)
+		log.Errorf("init stores fail: %w", err)
 		panic(err)
 	}
 	// routes
@@ -62,7 +62,7 @@ func main() {
 		WriteTimeout: time.Duration(5000) * time.Millisecond,
 	}
 
-	log.Infof("The Manager API is listening on %s ", addr)
+	log.Infof("The Manager API is listening on %s", addr)
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
@@ -70,7 +70,7 @@ func main() {
 	go func() {
 		if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			utils.CloseAll()
-			log.Fatalf("listen and serv fail: %w", err)
+			log.Fatalf("listen and serv fail: %s", err)
 		}
 	}()
 
@@ -81,7 +81,7 @@ func main() {
 	defer cancel()
 
 	if err := s.Shutdown(ctx); err != nil {
-		log.Errorf("Shutting down server error: %w", err)
+		log.Errorf("Shutting down server error: %s", err)
 	}
 
 	log.Infof("The Manager API server exited")
