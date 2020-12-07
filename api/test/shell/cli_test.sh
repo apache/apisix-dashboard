@@ -93,3 +93,17 @@ if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     echo "failed: failed to write log on right level"
     exit 1
 fi
+
+# set a invalid etcd endpoint
+
+sed -i 's/127.0.0.1:2379/127.0.0.2:2379/' conf/conf.yaml
+
+./manager-api &
+sleep 3
+
+check_logfile
+
+if [[ `grep -c "api/main.go:" ${logfile}` -ne '1' ]]; then
+    echo "failed: failed to write the correct caller"
+    exit 1
+fi
