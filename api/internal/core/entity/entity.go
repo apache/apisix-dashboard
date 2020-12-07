@@ -230,6 +230,7 @@ type ServerInfo struct {
 	BaseInfo
 	LastReportTime int64  `json:"last_report_time,omitempty"`
 	UpTime         int64  `json:"up_time,omitempty"`
+	BootTime       int64  `json:"boot_time,omitempty"`
 	EtcdVersion    string `json:"etcd_version,omitempty"`
 	Hostname       string `json:"hostname,omitempty"`
 	Version        string `json:"version,omitempty"`
