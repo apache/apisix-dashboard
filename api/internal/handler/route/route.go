@@ -24,6 +24,7 @@ import (
 	"os/exec"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
@@ -72,6 +73,9 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
 	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))
+
+	r.POST("/apisix/admin/debug-request-forwarding", wgin.Wraps(h.DebugRequestForwarding,
+		wrapper.InputType(reflect.TypeOf(ParamsInput{}))))
 }
 
 type GetInput struct {
@@ -473,4 +477,62 @@ func Exist(c *gin.Context) (interface{}, error) {
 	}
 
 	return nil, nil
+}
+
+type ParamsInput struct {
+	URL          string              `json:"url,omitempty"`
+	BodyParams   map[string]string   `json:"bodyParams,omitempty"`
+	Method       string              `json:"method,omitempty"`
+	HeaderParams map[string][]string `json:"headerParams,omitempty"`
+}
+
+type Result struct {
+	Code    int         `json:"code,omitempty"`
+	Message string      `json:"message,omitempty"`
+	Data    interface{} `json:"data,omitempty"`
+}
+
+func (h *Handler) DebugRequestForwarding(c droplet.Context) (interface{}, error) {
+	paramsInput := c.Input().(*ParamsInput)
+	bodyParams, _ := json.Marshal(paramsInput.BodyParams)
+	client := &http.Client{}
+
+	client.Timeout = 5 * time.Second
+	req, err := http.NewRequest(strings.ToUpper(paramsInput.Method), paramsInput.URL, strings.NewReader(string(bodyParams)))
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+	}
+	for k, v := range paramsInput.HeaderParams {
+		for _, v1 := range v {
+			req.Header.Add(k, v1)
+		}
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+	}
+	defer func() {
+		if resp != nil {
+			_ = resp.Body.Close()
+		}
+	}()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+	}
+	returnData := make(map[string]interface{})
+	result := &Result{}
+	err = json.Unmarshal(body, &returnData)
+	if err != nil {
+		result.Code = resp.StatusCode
+		result.Message = resp.Status
+		result.Data = string(body)
+	} else {
+		result.Code = resp.StatusCode
+		result.Message = resp.Status
+		result.Data = returnData
+
+	}
+	return result, nil
 }
