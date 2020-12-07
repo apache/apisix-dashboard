@@ -483,7 +483,7 @@ func TestUpstream_Delete_hash_on(t *testing.T) {
 			caseDesc:     "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello1",
+			Path:         "/server_port",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        sleepTime,
