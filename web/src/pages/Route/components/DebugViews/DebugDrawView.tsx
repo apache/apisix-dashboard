@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Input, Select, Card, Tabs, Form, Drawer, Spin } from 'antd';
+import { Input, Select, Card, Tabs, Form, Drawer, Spin, notification } from 'antd';
 import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import { PanelSection } from '@api7-dashboard/ui';
@@ -116,6 +116,12 @@ const DebugDrawDebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => 
   };
 
   const handleDebug = (url: string) => {
+    if (url === '') {
+      notification.warning({
+        message: formatMessage({ id: 'page.route.input.placeholder.requestUrl' }),
+      });
+      return;
+    }
     const queryFormData = transformHeaderAndQueryParamsFormData(queryForm.getFieldsValue().params);
     const bodyFormData = transformBodyParamsFormData(bodyForm.getFieldsValue().params);
     const pureHeaderFormData = transformHeaderAndQueryParamsFormData(
@@ -130,10 +136,14 @@ const DebugDrawDebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => 
       method: httpMethod,
       bodyParams: bodyFormData,
       headerParams: headerFormData,
-    }).then((req) => {
-      setLoading(false);
-      setResponseCode(JSON.stringify(req.data.data, null, 2));
-    });
+    })
+      .then((req) => {
+        setLoading(false);
+        setResponseCode(JSON.stringify(req.data.data, null, 2));
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
   return (
     <Drawer
