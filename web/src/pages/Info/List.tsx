@@ -21,75 +21,84 @@ import { useIntl } from 'umi';
 
 import styles from './Info.less';
 
-const detailData = [
+const nodeData = [
   {
     category: 'system',
     name: 'version',
     value: '2.0',
-    name2: 'apisix_id',
-    value2: '2.1',
+  },
+  {
+    category: 'system',
+    name: 'apisix_id',
+    value: '2.1',
+  },
+  {
+    category: 'system',
+    name: 'apisix_id',
+    value: '2.2',
   },
   {
     category: 'categoryA',
     name: 'keyA',
     value: 'valueA',
-    name2: 'customKeyA',
-    value2: 'valueKeyA',
+  },
+  {
+    category: 'categoryA',
+    name: 'customKeyA',
+    value: 'valueA',
   },
   {
     category: 'categoryB',
-    name: 'keyB',
+    name: 'customKeyB',
     value: 'valueB',
-    name2: 'customKeyB',
-    value2: 'valueKeyB',
   },
   {
-    category: 'categoryC',
-    name: 'keyC',
+    category: 'categoryB',
+    name: 'customKeyC',
     value: 'valueC',
-    name2: 'customKeyC',
-    value2: 'valueKeyC',
   },
 ];
 
 const nodeListData = [
   {
-    key: 'key1',
+    key: 'system',
     value: 'value1',
   },
   {
-    key: 'key2',
+    key: 'categoryA',
     value: 'value2',
   },
   {
-    key: 'key3',
+    key: 'categoryB',
     value: 'value3',
   },
 ];
 
 const Info: React.FC = () => {
-  const [detail, setDetail] = useState([] as any);
-  const [nodeList, setNodeList] = useState([] as any);
+  const [data, setData] = useState<NodeData[]>([]);
+  const [nodeList, setNodeList] = useState<NodeListData[]>([]);
   const { formatMessage } = useIntl();
   const { Option } = Select;
 
   useEffect(() => {
     setNodeList(nodeListData);
-  });
+  }, []);
 
   return (
     <PageContainer title={formatMessage({ id: 'page.info.pageContainer.title' })}>
       <div className={styles.select}>
         <Select
-          showSearch
-          style={{ width: '130px' }}
-          placeholder="Please select"
-          onChange={() => {
-            setDetail(detailData);
+          style={{ width: '210px' }}
+          placeholder="Please select node name"
+          onChange={(value) => {
+            const arr = nodeData.filter((item) => {
+              return item.category === value;
+            });
+            setData(arr);
           }}
         >
-          {nodeList.map((item: any) => (
-            <Option value={item.key} lable={item.key}>
+          {nodeList.map((item) => (
+            <Option key={item.key} value={item.key}>
               {item.key}
             </Option>
           ))}
@@ -97,26 +106,23 @@ const Info: React.FC = () => {
         </Select>
       </div>
       <div className={styles.wrap}>
-        {detail.map((item: any) => {
-          return (
-            <table className={styles.table}>
-              <thead>
-                <th>{item.category}</th>
-                <th>&nbsp;</th>
-              </thead>
-              <tbody>
+        <table className={styles.table}>
+          {/* There are some problems here that the data is not obtained during the first load */}
+          {/* <thead>
+            <th>{data[0].category}</th>
+            <th>&nbsp;</th>
+          </thead> */}
+          <tbody>
+            {data.map((item) => {
+              return (
                 <tr>
                   <td>{item.name}</td>
                   <td>{item.value}</td>
                 </tr>
-                <tr>
-                  <td>{item.name2}</td>
-                  <td>{item.value2}</td>
-                </tr>
-              </tbody>
-            </table>
-          );
-        })}
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </PageContainer>
   );

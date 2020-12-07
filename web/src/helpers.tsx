@@ -19,8 +19,8 @@ import { notification } from 'antd';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { history } from 'umi';
 import moment from 'moment';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
-import InfoCircleOutlined from '@ant-design/icons';
 import { codeMessage } from './constants';
 import IconFont from './iconfont';
 
@@ -107,8 +107,8 @@ export const getUrlQuery: (key: string) => string | false = (key: string) => {
 export const timestampToLocaleString = (timestamp: number) => {
   if (!timestamp) {
     // TODO: i18n
-    return "None"
+    return 'None';
   }
 
-  return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss')
-}
+  return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
+};
