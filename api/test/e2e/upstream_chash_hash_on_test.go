@@ -22,6 +22,7 @@ import (
 	"strconv"
 	"testing"
 	"time"
+	"sort"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -316,6 +317,130 @@ func TestUpstream_chash_hash_on_consumer(t *testing.T) {
 	// it is possible to hit any one of upstreams, and only one will be hit
 	assert.Equal(t, true, res["1980"] == 4 || res["1981"] == 4)
 	resp.Body.Close()
+}
+
+func TestUpstream_chash_hash_on_wrong_key(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create chash upstream with wrong key",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/upstreams/2",
+			Body: `{
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					},
+					{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}],
+					"type": "chash",
+					"key": "not_support"
+				}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "schema validate failed: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)",
+		},
+		{
+			caseDesc:     "verify upstream with wrong key",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/routes/2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+
+}
+
+func TestUpstream_chash_hash_on_vars(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "create chash upstream hash_on (vars)",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/upstreams/2",
+			Body: `{
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					},
+					{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}],
+					"type": "chash",
+					"hash_on": "vars",
+					"key": "arg_device_id"
+				}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify upstream",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/upstreams/2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody: "\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1},{\"host\":\"172.16.238.20\",\"port\":1981,\"weight\":1}],\"type\":\"chash\",\"hash_on\":\"vars\",\"key\":\"arg_device_id\"",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc: "create route using the upstream just created",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/1",
+			Body: `{
+				"uri": "/server_port",
+				"upstream_id": "2"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+
+	// hit routes
+	time.Sleep(time.Duration(500) * time.Millisecond)
+	basepath := "http://127.0.0.1:9080"
+	var url string
+	var respBody []byte
+	res := map[string]int{}
+	for i := 0; i <= 17; i++ {
+		url = basepath + "/server_port?device_id=" + strconv.Itoa(i)
+		req, err := http.NewRequest("GET", url, nil)
+		resp, err := http.DefaultClient.Do(req)
+		assert.Nil(t, err)
+		respBody, err = ioutil.ReadAll(resp.Body)
+		body := string(respBody)
+		if _, ok := res[body]; !ok {
+			res[body] = 1
+		} else {
+			res[body] += 1
+		}
+		resp.Body.Close()
+	}
+	var counts []int
+	for _, value := range res {
+		counts = append(counts, value)
+	}
+	sort.Ints(counts)
+	assert.True(t, counts[0]/counts[1]==1)
 }
 
 func TestUpstream_Delete_hash_on(t *testing.T) {
