@@ -23,7 +23,7 @@
 
 ## 监控
 
-> Metrics 页面是以 iframe 方式打开 Grafana，以 iframe 的形式打开 Gragana 需要配置 [`allow_embedding=true`](https://grafana.com/docs/grafana/latest/administration/configuration/#allow_embedding)支持，该配置项默认为 `false` 否则浏览器将无法正常渲染 Grafana 页面
+> 我们通过 [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe) 引用的方式以支持监控页，访问 [Grafana](https://grafana.com/) 前请启用 [`allow_embedding=true`](https://grafana.com/docs/grafana/latest/administration/configuration/#allow_embedding)，该配置项默认为 `false`，这将导致浏览器因安全策略而无法正常渲染 Grafana 页面。
 
 ![metrics-en](./images/metrics-en.png)
 
