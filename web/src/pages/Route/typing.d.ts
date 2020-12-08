@@ -158,6 +158,10 @@ declare namespace RouteModule {
     key: string;
   }
 
+  type ResponseLabelList = Record<string, string>[];
+
+  type LabelList = Record<string, string[]>;
+
   type Step1PassProps = {
     form: FormInstance;
     advancedMatchingRules: MatchingRule[];
@@ -253,6 +257,7 @@ declare namespace RouteModule {
     remote_addrs: string[];
     script: any;
     desc?: string;
+    labels: Record<string, string>;
     upstream: {
       checks: UpstreamModule.HealthCheck;
       create_time: number;

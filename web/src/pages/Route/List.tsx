@@ -14,19 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Button, Popconfirm, notification, Tag, Space } from 'antd';
+import { Button, Popconfirm, notification, Tag, Space, Select } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 
-import { fetchList, remove } from './service';
 import { timestampToLocaleString } from '@/helpers';
+import { fetchList, remove, fetchLabelList } from './service';
+
+const { OptGroup, Option } = Select;
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
+
+  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
+
+  useEffect(() => {
+    fetchLabelList().then((item) => {
+      setLabelList(item as RouteModule.LabelList);
+    });
+  }, []);
 
   const columns: ProColumns<RouteModule.ResponseBody>[] = [
     {
@@ -62,6 +72,47 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'desc',
       hideInSearch: true,
+    },
+    {
+      title: formatMessage({ id: 'component.global.label' }),
+      dataIndex: 'labels',
+      render: (_, record) => {
+        return Object.keys(record.labels || {}).map((item) => (
+          <Tag>
+            {item}:{record.labels[item]}
+          </Tag>
+        ));
+      },
+      renderFormItem: (_, { type }) => {
+        if (type === 'form') {
+          return null;
+        }
+
+        return (
+          <Select
+            mode="tags"
+            style={{ width: '100%' }}
+            tagRender={(props) => {
+              const { value, closable, onClose } = props;
+              return (
+                <Tag closable={closable} onClose={onClose} style={{ marginRight: 3 }}>
+                  {value}
+                </Tag>
+              );
+            }}
+          >
+            {Object.keys(labelList).map((key) => {
+              return (
+                <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
+                  {labelList[key].map((value: string) => (
+                    <Option value={`${key}:${value}`}> {value} </Option>
+                  ))}
+                </OptGroup>
+              );
+            })}
+          </Select>
+        );
+      },
     },
     {
       title: formatMessage({ id: 'component.global.updateTime' }),

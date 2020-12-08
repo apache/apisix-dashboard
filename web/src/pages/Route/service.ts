@@ -17,7 +17,12 @@
 import { request } from 'umi';
 import { pickBy, identity } from 'lodash';
 
-import { transformStepData, transformRouteData, transformUpstreamNodes } from './transform';
+import {
+  transformStepData,
+  transformRouteData,
+  transformUpstreamNodes,
+  transformLabelList,
+} from './transform';
 
 export const create = (data: RouteModule.RequestData) =>
   request(`/routes`, {
@@ -35,16 +40,29 @@ export const fetchItem = (rid: number) =>
   request(`/routes/${rid}`).then((data) => transformRouteData(data.data));
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
+  const { labels } = res;
   return request<Res<ResListData<RouteModule.ResponseBody>>>('/routes', {
     params: {
       name: res.name,
       uri: res.uri,
+      label: (labels || []).join('&'),
       page: current,
       page_size: pageSize,
     },
   }).then(({ data }) => {
+    // ! line 49-57 just for development, omit it when api ready
+    const rows = data.rows.map((item) => {
+      return {
+        labels: {
+          build: '16',
+          env: 'production',
+          version: 'v2',
+        },
+        ...item,
+      };
+    });
     return {
-      data: data.rows,
+      data: rows,
       total: data.total_size,
     };
   });
@@ -85,3 +103,16 @@ export const checkHostWithSSL = (hosts: string[]) =>
     method: 'POST',
     data: hosts,
   });
+
+export const fetchLabelList = () => {
+  // ! omit it when api ready
+  return new Promise((resolve) => {
+    const mockData: RouteModule.ResponseLabelList = [
+      { build: '16' },
+      { env: 'production' },
+      { version: 'v2' },
+      { version: 'v1' },
+    ];
+    resolve(transformLabelList(mockData));
+  });
+};
