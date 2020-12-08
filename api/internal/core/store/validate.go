@@ -274,15 +274,26 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 			return fmt.Errorf("schema validate failed: %w", err)
 		}
 
+		// check property disable, if is bool, remove from json schema checking
 		conf := pluginConf.(map[string]interface{})
-		if disable, ok := conf["disable"]; ok {
+		var exchange bool
+		disable, ok := conf["disable"]
+		if ok {
 			if fmt.Sprintf("%T", disable) == "bool" {
 				delete(conf, "disable")
+				exchange = true
 			}
 		}
+
+		// check schema
 		ret, err := s.Validate(gojsonschema.NewGoLoader(conf))
 		if err != nil {
 			return fmt.Errorf("schema validate failed: %w", err)
+		}
+
+		// put the value back to the property disable
+		if exchange {
+			conf["disable"] = disable
 		}
 
 		if !ret.Valid() {
