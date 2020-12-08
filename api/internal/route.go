@@ -18,6 +18,7 @@ package internal
 
 import (
 	"fmt"
+	"github.com/apisix/manager-api/log"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -44,9 +45,10 @@ func SetUpRouter() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
+	logger := log.GetLogger("access")
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("session", store))
-	r.Use(filter.CORS(), filter.RequestLogHandler(), filter.Authentication(), filter.RequestId(), filter.RecoverHandler())
+	r.Use(filter.CORS(), filter.RequestLogHandler(logger), filter.Authentication(), filter.RequestId(), filter.RecoverHandler())
 	r.Use(static.Serve("/", static.LocalFile(conf.WebDir, false)))
 	r.NoRoute(func(c *gin.Context) {
 		c.File(fmt.Sprintf("%s/index.html", conf.WebDir))

@@ -41,7 +41,7 @@ trap clean_up EXIT
 export GO111MODULE=on
 go build -o ./manager-api .
 
-#default level: warn, path: logs/error.log
+# default level: warn, path: logs/error.log
 
 ./manager-api &
 sleep 3
@@ -79,7 +79,7 @@ fi
 
 clean_logfile
 
-#change path
+# change path
 
 sed -i 's/logs\/error.log/.\/error.log/' conf/conf.yaml
 

@@ -28,14 +28,22 @@ import (
 var logger *zap.SugaredLogger
 
 func init() {
-	writeSyncer := fileWriter()
+	logger = GetLogger("error")
+}
+
+func GetLogger (logType string) *zap.SugaredLogger{
+	writeSyncer := fileWriter(logType)
 	encoder := getEncoder()
 	logLevel := getLogLevel()
+	if logType == "access" {
+		logLevel = zapcore.InfoLevel
+	}
+
 	core := zapcore.NewCore(encoder, writeSyncer, logLevel)
 
 	zapLogger := zap.New(core, zap.AddCaller())
 
-	logger = zapLogger.Sugar()
+	return zapLogger.Sugar()
 }
 
 func getLogLevel() zapcore.LevelEnabler {
@@ -64,16 +72,21 @@ func getEncoder() zapcore.Encoder {
 	return zapcore.NewConsoleEncoder(encoderConfig)
 }
 
-func fileWriter() zapcore.WriteSyncer {
+
+func fileWriter(logType string) zapcore.WriteSyncer {
+	logPath := conf.ErrorLogPath
+	if logType == "access" {
+		logPath = conf.AccessLogPath
+	}
 	//standard output
-	if conf.ErrorLogPath == "/dev/stdout" {
+	if logPath == "/dev/stdout" {
 		return zapcore.Lock(os.Stdout)
 	}
-	if conf.ErrorLogPath == "/dev/stderr" {
+	if logPath == "/dev/stderr" {
 		return zapcore.Lock(os.Stderr)
 	}
 
-	writer, _, err := zap.Open(conf.ErrorLogPath)
+	writer, _, err := zap.Open(logPath)
 	if err != nil {
 		panic(err)
 	}

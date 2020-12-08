@@ -27,9 +27,8 @@ import (
 	"github.com/apisix/manager-api/log"
 )
 
-var logger *zap.SugaredLogger
 
-func RequestLogHandler() gin.HandlerFunc {
+func RequestLogHandler(logger *zap.SugaredLogger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start, host, remoteIP, path, method := time.Now(), c.Request.Host, c.ClientIP(), c.Request.URL.Path, c.Request.Method
 		var val interface{}
@@ -63,12 +62,11 @@ func RequestLogHandler() gin.HandlerFunc {
 		for _, err := range c.Errors {
 			errs = append(errs, err.Error())
 		}
-		log.Info("",
+		logger.Info(path,
 			zap.String("requestId", uuid),
 			zap.Duration("latency", latency),
 			zap.String("remoteIP", remoteIP),
 			zap.String("method", method),
-			zap.String("path", path),
 			zap.Int("statusCode", statusCode),
 			zap.String("host", host),
 			//zap.String("param", param.(string)),
