@@ -92,7 +92,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		}
 		resp.Body.Close()
 	}
-	assert.True(t, res["1982"]==res["1981"] && res["1981"]==res["1980"] && res["1980"]==6)
+	assert.True(t, res["1982"] == res["1981"] && res["1981"] == res["1980"] && res["1980"] == 6)
 
 	tests = []HttpTestCase{
 		{
@@ -141,7 +141,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		}
 		resp.Body.Close()
 	}
-	assert.True(t, res["1980"]==3 && res["1981"]==6 && res["1982"]==9)
+	assert.True(t, res["1980"] == 3 && res["1981"] == 6 && res["1982"] == 9)
 
 	tests = []HttpTestCase{
 		{
@@ -185,11 +185,11 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		}
 		resp.Body.Close()
 	}
-	assert.True(t, res["1980"]==18)
+	assert.True(t, res["1980"] == 18)
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "create upstream (roundrobin with weight 1 and 0) ",
+			caseDesc: "create upstream (roundrobin with weight only 1 ) ",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
@@ -224,7 +224,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		}
 		resp.Body.Close()
 	}
-	assert.True(t, res["1980"]==18)
+	assert.True(t, res["1980"] == 18)
 }
 
 func TestBalancer_Delete(t *testing.T) {
