@@ -23,7 +23,7 @@
 
 ## 监控
 
-> Metrics 页面是以 iframe 方式打开 Grafana，  以 iframe 的形式打开 Gragana 需要配置 [`allow_embedding=true`](https://grafana.com/docs/grafana/latest/administration/configuration/#allow_embedding)支持，该配置项默认为 `false`  否则浏览器将无法正常渲染 Grafana 页面
+> Metrics 页面是以 iframe 方式打开 Grafana，以 iframe 的形式打开 Gragana 需要配置 [`allow_embedding=true`](https://grafana.com/docs/grafana/latest/administration/configuration/#allow_embedding)支持，该配置项默认为 `false` 否则浏览器将无法正常渲染 Grafana 页面
 
 ![metrics-en](./images/metrics-en.png)
 
