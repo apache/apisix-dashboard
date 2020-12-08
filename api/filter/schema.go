@@ -17,7 +17,8 @@
 package filter
 
 import (
-	"fmt"
+	"bytes"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -48,10 +49,12 @@ func SchemaCheck() gin.HandlerFunc {
 		method := strings.ToUpper(c.Request.Method)
 
 		if method != "PUT" && method != "POST" {
+			c.Next()
 			return
 		}
 		schemaKey, ok := resources[resource]
 		if !ok {
+			c.Next()
 			return
 		}
 
@@ -62,6 +65,9 @@ func SchemaCheck() gin.HandlerFunc {
 			return
 		}
 
+		// other filter need it
+		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(reqBody))
+
 		validator, err := store.NewAPISIXSchemaValidator("main." + schemaKey)
 		if err != nil {
 			log.Errorf("init validator failed: %s", err)
@@ -70,7 +76,6 @@ func SchemaCheck() gin.HandlerFunc {
 		}
 
 		if err := validator.Validate(reqBody); err != nil {
-			fmt.Println("a:")
 			log.Warnf("data validate failed: %s", err)
 			c.AbortWithStatusJSON(http.StatusBadRequest, consts.ErrSchemaValidateFailed)
 			return

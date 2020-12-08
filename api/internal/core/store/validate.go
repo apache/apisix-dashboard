@@ -314,12 +314,7 @@ func NewAPISIXSchemaValidator(jsonPath string) (Validator, error) {
 }
 
 func (v *APISIXSchemaValidator) Validate(obj interface{}) error {
-	fmt.Println("b:")
 	ret, err := v.schema.Validate(gojsonschema.NewBytesLoader(obj.([]byte)))
-
-	fmt.Println("c:", string(obj.([]byte)))
-	log.Warnf("data validate: %s", string(obj.([]byte)))
-
 	if err != nil {
 		log.Warnf("schema validate failed: %w", err)
 		return fmt.Errorf("schema validate failed: %w", err)
