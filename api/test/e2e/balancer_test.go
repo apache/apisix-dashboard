@@ -72,7 +72,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		testCaseCheck(tc)
 	}
 
-	//hit routes
+	// hit routes
 	time.Sleep(200 * time.Millisecond)
 	basepath := "http://127.0.0.1:9080/"
 	request, err := http.NewRequest("GET", basepath+"/server_port", nil)
@@ -92,7 +92,9 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		}
 		resp.Body.Close()
 	}
-	assert.True(t, res["1982"] == res["1981"] && res["1981"] == res["1980"] && res["1980"] == 6)
+	assert.True(t, res["1982"] == 6)
+	assert.True(t, res["1981"] == 6)
+	assert.True(t, res["1980"] == 6)
 
 	tests = []HttpTestCase{
 		{
@@ -126,7 +128,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		testCaseCheck(tc)
 	}
 
-	//hit routes
+	// hit routes
 	time.Sleep(200 * time.Millisecond)
 	res = map[string]int{}
 	for i := 0; i < 18; i++ {
@@ -141,7 +143,9 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		}
 		resp.Body.Close()
 	}
-	assert.True(t, res["1980"] == 3 && res["1981"] == 6 && res["1982"] == 9)
+	assert.True(t, res["1980"] == 3)
+	assert.True(t, res["1981"] == 6)
+	assert.True(t, res["1982"] == 9)
 
 	tests = []HttpTestCase{
 		{
@@ -170,7 +174,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		testCaseCheck(tc)
 	}
 
-	//hit routes
+	// hit routes
 	time.Sleep(200 * time.Millisecond)
 	res = map[string]int{}
 	for i := 0; i < 18; i++ {
@@ -209,7 +213,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		testCaseCheck(tc)
 	}
 
-	//hit routes
+	// hit routes
 	time.Sleep(200 * time.Millisecond)
 	res = map[string]int{}
 	for i := 0; i < 18; i++ {
