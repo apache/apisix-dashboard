@@ -78,7 +78,7 @@ const Page: React.FC = () => {
       dataIndex: 'labels',
       render: (_, record) => {
         return Object.keys(record.labels || {}).map((item) => (
-          <Tag>
+          <Tag key={Math.random().toString(36).slice(2)}>
             {item}:{record.labels[item]}
           </Tag>
         ));
@@ -105,7 +105,7 @@ const Page: React.FC = () => {
               return (
                 <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
                   {labelList[key].map((value: string) => (
-                    <Option value={`${key}:${value}`}> {value} </Option>
+                    <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}> {value} </Option>
                   ))}
                 </OptGroup>
               );
