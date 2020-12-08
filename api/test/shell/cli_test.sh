@@ -96,10 +96,12 @@ fi
 
 # set a invalid etcd endpoint
 
+clean_up
+
 sed -i 's/127.0.0.1:2379/127.0.0.2:2379/' conf/conf.yaml
 
-./manager-api &
-sleep 3
+./manager-api > output.log 2>&1 &
+sleep 6
 
 check_logfile
 
