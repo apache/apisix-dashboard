@@ -98,7 +98,7 @@ fi
 
 clean_up
 
-sed -i 's/127.0.0.1:2379/127.0.0.2:2379/' conf/conf.yaml
+sed -i 's/127.0.0.1:2379/127.0.0.0:2379/' conf/conf.yaml
 
 ./manager-api > output.log 2>&1 &
 sleep 6
