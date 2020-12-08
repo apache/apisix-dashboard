@@ -103,7 +103,7 @@ sed -i 's/127.0.0.1:2379/127.0.0.2:2379/' conf/conf.yaml
 ./manager-api > output.log 2>&1 &
 sleep 6
 
-check_logfile
+cat ${logfile}
 
 if [[ `grep -c "api/main.go:" ${logfile}` -ne '1' ]]; then
     echo "failed: failed to write the correct caller"
