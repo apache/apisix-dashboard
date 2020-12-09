@@ -20,7 +20,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t dashboard:ci .
+          docker build -t dashboard:ci . --build-arg APISIX_DASHBOARD_VERSION=master
 
       - name: Modify ETCD IP
         run: |

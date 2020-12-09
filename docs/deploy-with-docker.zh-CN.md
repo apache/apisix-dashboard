@@ -38,6 +38,9 @@ $ docker build -t apisix-dashboard:$tag .
 
 # 对于中国大陆的用户，可启用 `ENABLE_PROXY` 参数加快模块下载速度。
 $ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
+
+# 如果需要使用最新代码构建，可启用 `APISIX_DASHBOARD_VERSION` 参数指定为 `master` ，此参数也可以指定为其他版本的分支名，如 `v2.0` 。
+$ docker build -t apisix-dashboard:$tag . --build-arg APISIX_DASHBOARD_VERSION=master
 ```
 
 ## 启动
@@ -55,7 +58,7 @@ $ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
 
 ```sh
 # /path/to/conf.yaml 需使用 绝对路径 指向上述提到的配置文件
-$ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:$tag
+$ docker run -d -p 9000:9000 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:$tag
 ```
 
 3. 检查容器是否启动成功
@@ -64,7 +67,7 @@ $ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/con
 $ docker ps -a
 ```
 
-若容器 `apisix-dashboard` 状态正常，访问 `http://127.0.0.1:8080` 以使用有前端界面的控制台，默认用户密码均为 `admin`。
+若容器 `apisix-dashboard` 状态正常，访问 `http://127.0.0.1:9000` 以使用有前端界面的控制台，默认用户密码均为 `admin`。
 
 4. 停止 Dashboard
 
