@@ -35,7 +35,7 @@ declare namespace RouteModule {
     desc: string;
     uris: string[];
     hosts: string[];
-    status: boolean;
+    status: number;
   };
 
   type Step3Data = {
@@ -70,7 +70,7 @@ declare namespace RouteModule {
   // Request Body or Response Data for API
   type Body = {
     id?: number;
-    status: boolean;
+    status: number;
     name: string;
     desc: string;
     priority?: number;
@@ -181,7 +181,7 @@ declare namespace RouteModule {
     redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
     redirectURI?: string;
     ret_code?: number;
-    status: boolean;
+    status: number;
   };
 
   type AdvancedMatchingRules = {
@@ -270,5 +270,8 @@ declare namespace RouteModule {
     hosts?: string[];
     create_time: number;
     update_time: number;
+    status: number;
   };
+
+  type RouteStatus = 'publish' | 'offline';
 }

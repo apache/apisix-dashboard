@@ -36,6 +36,9 @@ export default {
   'page.route.status': '状态',
   'page.route.groupName': '分组名称',
   'page.route.offline': '下线',
+  'page.route.publish': '发布',
+  'page.route.published': '已发布',
+  'page.route.unpublished': '未发布',
 
   // button
   'page.route.button.returnList': '返回路由列表',

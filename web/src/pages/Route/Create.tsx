@@ -156,6 +156,7 @@ const Page: React.FC<Props> = (props) => {
           form2={form2}
           upstreamRef={upstreamRef}
           step3Data={step3Data}
+          isEdit={props.route.path.indexOf('edit') > 0}
         />
       );
     }
