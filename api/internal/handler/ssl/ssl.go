@@ -106,9 +106,6 @@ type ListInput struct {
 // ---
 // produces:
 // - application/json
-// - application/xml
-// - text/xml
-// - text/html
 // parameters:
 // - name: page
 //   in: query
@@ -347,9 +344,6 @@ func ParseCert(crt, key string) (*entity.SSL, error) {
 // ---
 // produces:
 // - application/json
-// - application/xml
-// - text/xml
-// - text/html
 // parameters:
 // - name: cert
 //   in: body
@@ -434,9 +428,6 @@ func checkSniExists(rows []store.Row, sni string) bool {
 // ---
 // produces:
 // - application/json
-// - application/xml
-// - text/xml
-// - text/html
 // parameters:
 // - name: cert
 //   in: body

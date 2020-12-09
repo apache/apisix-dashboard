@@ -87,9 +87,6 @@ type GetInput struct {
 // ---
 // produces:
 // - application/json
-// - application/xml
-// - text/xml
-// - text/html
 // parameters:
 // - name: page
 //   in: query
@@ -416,9 +413,6 @@ func toRows(list *store.ListOutput) []store.Row {
 // ---
 // produces:
 // - application/json
-// - application/xml
-// - text/xml
-// - text/html
 // parameters:
 // - name: name
 //   in: query

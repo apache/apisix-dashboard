@@ -64,9 +64,6 @@ type LoginInput struct {
 // ---
 // produces:
 // - application/json
-// - application/xml
-// - text/xml
-// - text/html
 // parameters:
 // - name: username
 //   in: body
