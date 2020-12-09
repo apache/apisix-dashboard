@@ -87,4 +87,7 @@ export const checkHostWithSSL = (hosts: string[]) =>
   });
 
 export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) =>
-  request(`/routes/${rid}/${status}`, { method: 'PUT' });
+  request(`/routes/${rid}`, {
+    method: 'PATCH',
+    data: {status}
+  });

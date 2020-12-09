@@ -37,6 +37,17 @@ const Page: React.FC = () => {
     ref.current?.reload();
   };
 
+  const handlePublishOffline = (rid: string, status: RouteModule.RouteStatus) => {
+    updateRouteStatus(rid, status).then(() => {
+      const actionName = status? formatMessage({ id: 'page.route.publish' }) : formatMessage({ id: 'page.route.offline' })
+      handleTableActionSuccessResponse(
+        `${actionName}${formatMessage({
+          id: 'menu.routes',
+        })}${formatMessage({ id: 'component.status.success' })}`,
+      );
+    });
+  }
+
   const columns: ProColumns<RouteModule.ResponseBody>[] = [
     {
       title: formatMessage({ id: 'component.global.name' }),
@@ -108,13 +119,7 @@ const Page: React.FC = () => {
             <Button
               type="primary"
               onClick={() => {
-                updateRouteStatus(record.id, 'publish').then(() => {
-                  handleTableActionSuccessResponse(
-                    `${formatMessage({ id: 'page.route.publish' })}${formatMessage({
-                      id: 'menu.routes',
-                    })}${formatMessage({ id: 'component.status.success' })}`,
-                  );
-                });
+                handlePublishOffline(record.id, 1)
               }}
               style={{ marginRight: 10 }}
               disabled={Boolean(record.status)}
@@ -124,16 +129,11 @@ const Page: React.FC = () => {
             <Popconfirm
               title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
               onConfirm={() => {
-                updateRouteStatus(record.id!, 'offline').then(() => {
-                  handleTableActionSuccessResponse(
-                    `${formatMessage({ id: 'page.route.offline' })}${formatMessage({
-                      id: 'menu.routes',
-                    })}${formatMessage({ id: 'component.status.success' })}`,
-                  );
-                });
+                handlePublishOffline(record.id, 0)
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}
+              disabled={Boolean(!record.status)}
             >
               <Button type="primary" danger disabled={Boolean(!record.status)}>
                 {formatMessage({ id: 'page.route.offline' })}

@@ -273,5 +273,5 @@ declare namespace RouteModule {
     status: number;
   };
 
-  type RouteStatus = 'publish' | 'offline';
+  type RouteStatus = 0 | 1;
 }
