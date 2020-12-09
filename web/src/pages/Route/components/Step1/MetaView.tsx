@@ -29,23 +29,23 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, onChan
 
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>
-      {visible && <Form.Item shouldUpdate noStyle>
-        {() => {
-          if (form.getFieldValue('labels')) {
-            return (
-              <LabelsDrawer
-                labelsDataSource={form.getFieldValue('labels')}
-                disabled={disabled || false}
-                onChange={onChange}
-                onClose={() => {
-                  setVisible(false);
-                }}
-              />
-            );
-          }
-          return null;
-        }}
-      </Form.Item>}
+      {visible && (
+        <Form.Item shouldUpdate noStyle>
+          {() => {
+            if (form.getFieldValue('labels')) {
+              return (
+                <LabelsDrawer
+                  labelsDataSource={form.getFieldValue('labels')}
+                  disabled={disabled || false}
+                  onChange={onChange}
+                  onClose={() => setVisible(false)}
+                />
+              );
+            }
+            return null;
+          }}
+        </Form.Item>
+      )}
       <Form.Item
         label={formatMessage({ id: 'component.global.name' })}
         name="name"
@@ -89,7 +89,9 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, onChan
         />
       </Form.Item>
       <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-        <Button disabled={disabled} onClick={() => setVisible(true)}>编辑</Button>
+        <Button disabled={disabled} onClick={() => setVisible(true)}>
+          编辑
+        </Button>
       </Form.Item>
       <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
         <Input.TextArea

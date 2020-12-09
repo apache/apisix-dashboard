@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { AutoComplete, Button, Col, Drawer, Form, Row, } from 'antd';
+import { AutoComplete, Button, Col, Drawer, Form, Row } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { transformLableValueToKeyValue } from '../../transform';
 import { fetchLabelList } from '../../service';
@@ -24,10 +24,10 @@ interface Props extends Pick<RouteModule.Step1PassProps, 'onChange'> {
   labelsDataSource: any;
   disabled: boolean;
   onClose(): void;
-};
+}
 
 const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
-  const options = Object.keys(labelList || {}).map(item => ({ value: item }));
+  const keyOptions = Object.keys(labelList || {}).map((item) => ({ value: item }));
   return (
     <Form.List name="labels">
       {(fields, { add, remove }) => {
@@ -52,49 +52,38 @@ const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
                         },
                       ]}
                     >
-                      <AutoComplete
-                        options={options}
-                        style={{ width: 100 }}
-                      />
-
+                      <AutoComplete options={keyOptions} style={{ width: 100 }} />
                     </Form.Item>
                   </Col>
                   <Col>
                     <Form.Item shouldUpdate noStyle>
                       {({ getFieldValue }) => {
-                        const key = getFieldValue(["labels", field.name, "labelKey"]);;
+                        const key = getFieldValue(['labels', field.name, 'labelKey']);
                         let valueOptions = [{ value: '' }];
                         if (labelList) {
-                          valueOptions = (labelList[key] || []).map(item => ({ value: item }))
+                          valueOptions = (labelList[key] || []).map((item) => ({ value: item }));
                         }
 
                         return (
-                          (
-                            <Form.Item
-                              noStyle
-                              name={[field.name, "labelValue"]}
-                              fieldKey={[field.fieldKey, "labelValue"]}
-                              rules={[
-                                {
-                                  required: true,
-                                  message: "请输入 value"
-                                }
-                              ]}
-                            >
-                              <AutoComplete
-                                options={valueOptions}
-                                style={{ width: 100 }}
-                              />
-                            </Form.Item>
-                          )
+                          <Form.Item
+                            noStyle
+                            name={[field.name, 'labelValue']}
+                            fieldKey={[field.fieldKey, 'labelValue']}
+                            rules={[
+                              {
+                                required: true,
+                                message: '请输入 value',
+                              },
+                            ]}
+                          >
+                            <AutoComplete options={valueOptions} style={{ width: 100 }} />
+                          </Form.Item>
                         );
                       }}
                     </Form.Item>
                   </Col>
                   <Col>
-                    {!disabled && (
-                      <MinusCircleOutlined onClick={() => remove(field.name)} />
-                    )}
+                    {!disabled && <MinusCircleOutlined onClick={() => remove(field.name)} />}
                   </Col>
                 </Row>
               </Form.Item>
@@ -103,18 +92,23 @@ const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
               <Form.Item wrapperCol={{ offset: 3 }}>
                 <Button type="dashed" onClick={add}>
                   <PlusOutlined />
-                 增加
-              </Button>
+                  增加
+                </Button>
               </Form.Item>
             )}
           </>
-        )
+        );
       }}
     </Form.List>
-  )
+  );
 };
 
-const LabelsDrawer: React.FC<Props> = ({ disabled, labelsDataSource, onClose, onChange = () => { } }) => {
+const LabelsDrawer: React.FC<Props> = ({
+  disabled,
+  labelsDataSource,
+  onClose,
+  onChange = () => {},
+}) => {
   const transformLabel = transformLableValueToKeyValue(labelsDataSource);
 
   const [form] = Form.useForm();
@@ -122,10 +116,10 @@ const LabelsDrawer: React.FC<Props> = ({ disabled, labelsDataSource, onClose, on
   form.setFieldsValue({ labels: transformLabel });
 
   useEffect(() => {
-    fetchLabelList().then(item => {
-      setLabelList(item as RouteModule.LabelList)
-    })
-  }, [])
+    fetchLabelList().then((item) => {
+      setLabelList(item as RouteModule.LabelList);
+    });
+  }, []);
 
   return (
     <Drawer
@@ -136,29 +130,27 @@ const LabelsDrawer: React.FC<Props> = ({ disabled, labelsDataSource, onClose, on
       closable
       onClose={onClose}
       footer={
-        (
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button onClick={onClose}>取消</Button>
-            <Button
-              type="primary"
-              style={{ marginRight: 8, marginLeft: 8 }}
-              onClick={() => {
-                form.validateFields().then(({ labels }) => {
-                  onChange({
-                    action: 'labelsChange',
-                    data: labels.map((item: any) => (`${item.labelKey}:${item.labelValue}`))
-                  })
-                  onClose();
-                })
-              }}
-            >
-              确认
-            </Button>
-          </div>
-        )
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Button onClick={onClose}>取消</Button>
+          <Button
+            type="primary"
+            style={{ marginRight: 8, marginLeft: 8 }}
+            onClick={() => {
+              form.validateFields().then(({ labels }) => {
+                onChange({
+                  action: 'labelsChange',
+                  data: labels.map((item: any) => `${item.labelKey}:${item.labelValue}`),
+                });
+                onClose();
+              });
+            }}
+          >
+            确认
+          </Button>
+        </div>
       }
     >
-      <Form form={form} layout="horizontal" >
+      <Form form={form} layout="horizontal">
         {LabelList(disabled, labelList || {})}
       </Form>
     </Drawer>
