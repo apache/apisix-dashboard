@@ -78,6 +78,50 @@ type GetInput struct {
 	ID string `auto_read:"id,path" validate:"required"`
 }
 
+// swagger:operation GET /apisix/admin/routes getRouteList
+//
+// Returns route list
+//
+// Return the route list according to the specified page number and page size, and can search by name and uri
+//
+// ---
+// produces:
+// - application/json
+// - application/xml
+// - text/xml
+// - text/html
+// parameters:
+// - name: page
+//   in: query
+//   description: page number
+//   required: false
+//   type: integer
+// - name: page_size
+//   in: query
+//   description: page size
+//   required: false
+//   type: integer
+// - name: name
+//   in: query
+//   description: name of route
+//   required: false
+//   type: string
+// - name: uri
+//   in: query
+//   description: uri of route
+//   required: false
+//   type: string
+// responses:
+//   '0':
+//     description: list response
+//     schema:
+//       type: array
+//       items:
+//         "$ref": "#/definitions/route"
+//   default:
+//     description: unexpected error
+//     schema:
+//       "$ref": "#/definitions/errorModel"
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
@@ -363,6 +407,40 @@ func toRows(list *store.ListOutput) []store.Row {
 	return rows
 }
 
+// swagger:operation GET /apisix/admin/notexist/routes checkRouteExist
+//
+// Returns result of route exists checking
+//
+// Returns result of route exists checking by name and exclude id
+//
+// ---
+// produces:
+// - application/json
+// - application/xml
+// - text/xml
+// - text/html
+// parameters:
+// - name: name
+//   in: query
+//   description: name of route
+//   required: false
+//   type: string
+// - name: exclude
+//   in: query
+//   description: id of route that exclude checking
+//   required: false
+//   type: string
+// responses:
+//   '0':
+//     description: result response
+//     schema:
+//       type: array
+//       items:
+//         "$ref": "#/definitions/errorModel"
+//   default:
+//     description: unexpected error
+//     schema:
+//       "$ref": "#/definitions/errorModel"
 func Exist(c *gin.Context) (interface{}, error) {
 	//input := c.Input().(*ExistInput)
 

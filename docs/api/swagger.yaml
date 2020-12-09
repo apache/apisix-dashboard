@@ -1,0 +1,234 @@
+paths:
+  /apisix/admin/consumers:
+    get:
+      description: Return the consumer list according to the specified page number and page size, and can search by username
+      operationId: getConsumerList
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: username of consumer
+        in: query
+        name: username
+        type: string
+      produces:
+      - application/json
+      - application/xml
+      - text/xml
+      - text/html
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/consumer'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+      summary: Returns consumer list
+  /apisix/admin/notexist/routes:
+    get:
+      description: Returns result of route exists checking by name and exclude id
+      operationId: checkRouteExist
+      parameters:
+      - description: name of route
+        in: query
+        name: name
+        type: string
+      - description: id of route that exclude checking
+        in: query
+        name: exclude
+        type: string
+      produces:
+      - application/json
+      - application/xml
+      - text/xml
+      - text/html
+      responses:
+        "0":
+          description: result response
+          schema:
+            items:
+              $ref: '#/definitions/errorModel'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+      summary: Returns result of route exists checking
+  /apisix/admin/routes:
+    get:
+      description: Return the route list according to the specified page number and page size, and can search by name and uri
+      operationId: getRouteList
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: name of route
+        in: query
+        name: name
+        type: string
+      - description: uri of route
+        in: query
+        name: uri
+        type: string
+      produces:
+      - application/json
+      - application/xml
+      - text/xml
+      - text/html
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/route'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+      summary: Returns route list
+  /apisix/admin/services:
+    get:
+      description: Return the service list according to the specified page number and page size, and can search by name
+      operationId: getServiceList
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: name of service
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      - application/xml
+      - text/xml
+      - text/html
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/consumer'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+      summary: Returns service list
+  /apisix/admin/ssl:
+    get:
+      description: Return the SSL list according to the specified page number and page size, and can search by sni
+      operationId: getSSLList
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: sni of SSL
+        in: query
+        name: sni
+        type: string
+      produces:
+      - application/json
+      - application/xml
+      - text/xml
+      - text/html
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/ssl'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+      summary: Returns SSL list
+  /apisix/admin/upstreams:
+    get:
+      description: Return the upstream list according to the specified page number and page size, and can search by name
+      operationId: getSSLList
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: name of upstream
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      - application/xml
+      - text/xml
+      - text/html
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/upstream'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+      summary: Returns upstream list
+  /apisix/admin/user/login:
+    post:
+      description: user login
+      operationId: userLogin
+      parameters:
+      - $ref: '#/definitions/LoginInput'
+        description: user name
+        in: body
+        name: body
+        required: true
+        type: string
+      produces:
+      - application/json
+      - application/xml
+      - text/xml
+      - text/html
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/upstream'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+      summary: user login
+swagger: "2.0"

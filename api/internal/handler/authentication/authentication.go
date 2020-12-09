@@ -47,11 +47,46 @@ type UserSession struct {
 	Token string `json:"token"`
 }
 
+// swagger:model LoginInput
 type LoginInput struct {
+	// user name
 	Username string `json:"username" validate:"required"`
+	// password
 	Password string `json:"password" validate:"required"`
 }
 
+// swagger:operation POST /apisix/admin/user/login userLogin
+//
+// user login
+//
+// user login
+//
+// ---
+// produces:
+// - application/json
+// - application/xml
+// - text/xml
+// - text/html
+// parameters:
+// - name: username
+//   in: body
+//   description: user name
+//   required: true
+//   type: string
+// - name: password
+//   in: body
+//   description: password
+//   required: true
+//   type: string
+// responses:
+//   '0':
+//     description: login success
+//     schema:
+//       "$ref": "#/definitions/errorModel"
+//   default:
+//     description: unexpected error
+//     schema:
+//       "$ref": "#/definitions/errorModel"
 func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*LoginInput)
 	username := input.Username

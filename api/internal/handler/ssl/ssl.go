@@ -97,6 +97,45 @@ type ListInput struct {
 	store.Pagination
 }
 
+// swagger:operation GET /apisix/admin/ssl getSSLList
+//
+// Returns SSL list
+//
+// Return the SSL list according to the specified page number and page size, and can search by sni
+//
+// ---
+// produces:
+// - application/json
+// - application/xml
+// - text/xml
+// - text/html
+// parameters:
+// - name: page
+//   in: query
+//   description: page number
+//   required: false
+//   type: integer
+// - name: page_size
+//   in: query
+//   description: page size
+//   required: false
+//   type: integer
+// - name: sni
+//   in: query
+//   description: sni of SSL
+//   required: false
+//   type: string
+// responses:
+//   '0':
+//     description: list response
+//     schema:
+//       type: array
+//       items:
+//         "$ref": "#/definitions/ssl"
+//   default:
+//     description: unexpected error
+//     schema:
+//       "$ref": "#/definitions/errorModel"
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
@@ -299,6 +338,38 @@ func ParseCert(crt, key string) (*entity.SSL, error) {
 	return &ssl, nil
 }
 
+// swagger:operation POST /apisix/admin/check_ssl_cert checkSSL
+//
+// verify SSL cert and key
+//
+// verify SSL cert and key
+//
+// ---
+// produces:
+// - application/json
+// - application/xml
+// - text/xml
+// - text/html
+// parameters:
+// - name: cert
+//   in: body
+//   description: cert of SSL
+//   required: true
+//   type: string
+// - name: key
+//   in: body
+//   description: key of SSL
+//   required: true
+//   type: string
+// responses:
+//   '0':
+//     description: SSL verify passed
+//     schema:
+//       "$ref": "#/definitions/errorModel"
+//   default:
+//     description: unexpected error
+//     schema:
+//       "$ref": "#/definitions/errorModel"
 func (h *Handler) Validate(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.SSL)
 	ssl, err := ParseCert(input.Cert, input.Key)
@@ -354,6 +425,38 @@ func checkSniExists(rows []store.Row, sni string) bool {
 	return false
 }
 
+// swagger:operation POST /apisix/admin/check_ssl_exists checkSSLExist
+//
+// check SSL exists or not
+//
+// check SSL exists or not by sni
+//
+// ---
+// produces:
+// - application/json
+// - application/xml
+// - text/xml
+// - text/html
+// parameters:
+// - name: cert
+//   in: body
+//   description: cert of SSL
+//   required: true
+//   type: string
+// - name: key
+//   in: body
+//   description: key of SSL
+//   required: true
+//   type: string
+// responses:
+//   '0':
+//     description: SSL exists
+//     schema:
+//       "$ref": "#/definitions/errorModel"
+//   default:
+//     description: unexpected error
+//     schema:
+//       "$ref": "#/definitions/errorModel"
 func Exist(c *gin.Context) (interface{}, error) {
 	//input := c.Input().(*ExistInput)
 	//temporary
