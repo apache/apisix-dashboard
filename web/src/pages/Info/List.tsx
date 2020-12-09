@@ -21,61 +21,35 @@ import { useIntl } from 'umi';
 
 import styles from './Info.less';
 
-const nodeData = [
+const nodeDetail = [
   {
-    category: 'system',
-    name: 'version',
-    value: '2.0',
-  },
-  {
-    category: 'system',
-    name: 'apisix_id',
-    value: '2.1',
-  },
-  {
-    category: 'system',
-    name: 'apisix_id',
-    value: '2.2',
-  },
-  {
-    category: 'categoryA',
-    name: 'keyA',
-    value: 'valueA',
-  },
-  {
-    category: 'categoryA',
-    name: 'customKeyA',
-    value: 'valueA',
-  },
-  {
-    category: 'categoryB',
-    name: 'customKeyB',
-    value: 'valueB',
-  },
-  {
-    category: 'categoryB',
-    name: 'customKeyC',
-    value: 'valueC',
+    id: 'ddea4053-4ffd-4f09-b176-b8c5e919916b',
+    hostname: 'localhost.local',
+    version: '2.0',
+    etcd_version: '3.5.0',
+    uptime: 3600,
+    last_report_at: 1606121591,
+    boot_time: 1606121501,
   },
 ];
 
 const nodeListData = [
   {
-    key: 'system',
-    value: 'value1',
+    id: 'ddea4053-4ffd-4f09-b176-b8c5e919916b',
+    name: 'node1',
   },
   {
-    key: 'categoryA',
-    value: 'value2',
+    id: 'ddea4053-4ffd-4f09-b176-b8c5e919916c',
+    name: 'node2',
   },
   {
-    key: 'categoryB',
-    value: 'value3',
+    id: 'ddea4053-4ffd-4f09-b176-b8c5e919916a',
+    name: 'node3',
   },
 ];
 
 const Info: React.FC = () => {
-  const [data, setData] = useState<NodeData[]>([]);
+  const [data, setData] = useState<NodeDetail[]>([]);
   const [nodeList, setNodeList] = useState<NodeListData[]>([]);
   const { formatMessage } = useIntl();
   const { Option } = Select;
@@ -91,15 +65,15 @@ const Info: React.FC = () => {
           style={{ width: '210px' }}
           placeholder="Please select node name"
           onChange={(value) => {
-            const arr = nodeData.filter((item) => {
-              return item.category === value;
+            const arr = nodeDetail.filter((item) => {
+              return item.id === value;
             });
             setData(arr);
           }}
         >
           {nodeList.map((item) => (
-            <Option key={item.key} value={item.key}>
-              {item.key}
+            <Option key={item.name} value={item.id}>
+              {item.name}
             </Option>
           ))}
           ;
@@ -107,17 +81,12 @@ const Info: React.FC = () => {
       </div>
       <div className={styles.wrap}>
         <table className={styles.table}>
-          {/* There are some problems here that the data is not obtained during the first load */}
-          {/* <thead>
-            <th>{data[0].category}</th>
-            <th>&nbsp;</th>
-          </thead> */}
           <tbody>
-            {data.map((item) => {
+            {Object.entries(data[0] || {}).map((item) => {
               return (
                 <tr>
-                  <td>{item.name}</td>
-                  <td>{item.value}</td>
+                  <td>{item[0]}</td>
+                  <td>{item[1]}</td>
                 </tr>
               );
             })}

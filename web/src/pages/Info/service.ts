@@ -14,17 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-type NodeDetail = {
-  id: string;
-  hostname: string;
-  version: string;
-  etcd_version: string;
-  uptime: number;
-  last_report_at: number;
-  boot_time: number;
+import { request } from 'umi';
+
+// Waiting for api.
+export const fetchInfoList = () => {
+  return request<Res<ResListData<NodeListData>>>(
+    '/server_info?hostname={hostname}&page_size={page_size}&page={page}',
+  ).then(({ data }) => ({
+    data: data.rows,
+  }));
 };
 
-type NodeListData = {
-  id: string;
-  name: string;
+export const fetchInfoData = () => {
+  return request<Res<NodeDetail>>('/server_info').then(({ data }) => {
+    return { data };
+  });
 };
