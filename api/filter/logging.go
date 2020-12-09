@@ -18,59 +18,40 @@ package filter
 
 import (
 	"bytes"
-	"io/ioutil"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-
-	"github.com/apisix/manager-api/log"
 )
 
 
 func RequestLogHandler(logger *zap.SugaredLogger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start, host, remoteIP, path, method := time.Now(), c.Request.Host, c.ClientIP(), c.Request.URL.Path, c.Request.Method
-		var val interface{}
-		if method == "GET" {
-			val = c.Request.URL.Query()
-		} else {
-			val, _ = c.GetRawData()
-			// set RequestBody back
-			c.Request.Body = ioutil.NopCloser(bytes.NewReader(val.([]byte)))
-		}
-		c.Set("requestBody", val)
-		uuid := c.Writer.Header().Get("X-Request-Id")
-
-		param, _ := c.Get("requestBody")
-
-		switch paramType := param.(type) {
-		case []byte:
-			param = string(param.([]byte))
-			log.Infof("type of param: %#v", paramType)
-		default:
-		}
+		query := c.Request.URL.RawQuery
+		requestId := c.Writer.Header().Get("X-Request-Id")
 
 		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
 		c.Writer = blw
 		c.Next()
 		latency := time.Since(start) / 1000000
 		statusCode := c.Writer.Status()
-		respBody := blw.body.String()
+		//respBody := blw.body.String()
 
 		var errs []string
 		for _, err := range c.Errors {
 			errs = append(errs, err.Error())
 		}
+
 		logger.Info(path,
-			zap.String("requestId", uuid),
+			zap.String("requestId", requestId),
 			zap.Duration("latency", latency),
 			zap.String("remoteIP", remoteIP),
 			zap.String("method", method),
-			zap.Int("statusCode", statusCode),
+			zap.Int("status", statusCode),
 			zap.String("host", host),
-			//zap.String("param", param.(string)),
-			zap.String("respBody", respBody),
+			zap.String("query", query),
+			//zap.String("respBody", respBody),
 			zap.Strings("errs", errs),
 		)
 	}

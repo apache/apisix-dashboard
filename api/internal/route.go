@@ -18,7 +18,6 @@ package internal
 
 import (
 	"fmt"
-	"github.com/apisix/manager-api/log"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -36,6 +35,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler/service"
 	"github.com/apisix/manager-api/internal/handler/ssl"
 	"github.com/apisix/manager-api/internal/handler/upstream"
+	"github.com/apisix/manager-api/log"
 )
 
 func SetUpRouter() *gin.Engine {
@@ -45,7 +45,7 @@ func SetUpRouter() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
-	logger := log.GetLogger("access")
+	logger := log.GetLogger(log.AccessLog)
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("session", store))
 	r.Use(filter.CORS(), filter.RequestLogHandler(logger), filter.Authentication(), filter.RequestId(), filter.RecoverHandler())
