@@ -121,7 +121,7 @@ type GetInput struct {
 //   default:
 //     description: unexpected error
 //     schema:
-//       "$ref": "#/definitions/errorModel"
+//       "$ref": "#/definitions/ApiError"
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
@@ -432,15 +432,13 @@ func toRows(list *store.ListOutput) []store.Row {
 //   type: string
 // responses:
 //   '0':
-//     description: result response
+//     description: route not exists
 //     schema:
-//       type: array
-//       items:
-//         "$ref": "#/definitions/errorModel"
+//       "$ref": "#/definitions/ApiError"
 //   default:
 //     description: unexpected error
 //     schema:
-//       "$ref": "#/definitions/errorModel"
+//       "$ref": "#/definitions/ApiError"
 func Exist(c *gin.Context) (interface{}, error) {
 	//input := c.Input().(*ExistInput)
 

@@ -135,7 +135,7 @@ type ListInput struct {
 //   default:
 //     description: unexpected error
 //     schema:
-//       "$ref": "#/definitions/errorModel"
+//       "$ref": "#/definitions/ApiError"
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
@@ -365,11 +365,11 @@ func ParseCert(crt, key string) (*entity.SSL, error) {
 //   '0':
 //     description: SSL verify passed
 //     schema:
-//       "$ref": "#/definitions/errorModel"
+//       "$ref": "#/definitions/ApiError"
 //   default:
 //     description: unexpected error
 //     schema:
-//       "$ref": "#/definitions/errorModel"
+//       "$ref": "#/definitions/ApiError"
 func (h *Handler) Validate(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.SSL)
 	ssl, err := ParseCert(input.Cert, input.Key)
@@ -452,11 +452,11 @@ func checkSniExists(rows []store.Row, sni string) bool {
 //   '0':
 //     description: SSL exists
 //     schema:
-//       "$ref": "#/definitions/errorModel"
+//       "$ref": "#/definitions/ApiError"
 //   default:
 //     description: unexpected error
 //     schema:
-//       "$ref": "#/definitions/errorModel"
+//       "$ref": "#/definitions/ApiError"
 func Exist(c *gin.Context) (interface{}, error) {
 	//input := c.Input().(*ExistInput)
 	//temporary

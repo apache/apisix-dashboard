@@ -123,7 +123,7 @@ type ListInput struct {
 //   default:
 //     description: unexpected error
 //     schema:
-//       "$ref": "#/definitions/errorModel"
+//       "$ref": "#/definitions/ApiError"
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 

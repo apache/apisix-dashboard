@@ -82,11 +82,11 @@ type LoginInput struct {
 //   '0':
 //     description: login success
 //     schema:
-//       "$ref": "#/definitions/errorModel"
+//       "$ref": "#/definitions/ApiError"
 //   default:
 //     description: unexpected error
 //     schema:
-//       "$ref": "#/definitions/errorModel"
+//       "$ref": "#/definitions/ApiError"
 func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*LoginInput)
 	username := input.Username
