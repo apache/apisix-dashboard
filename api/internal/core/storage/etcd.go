@@ -23,6 +23,7 @@ import (
 
 	"go.etcd.io/etcd/clientv3"
 
+	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/log"
 )
@@ -34,10 +35,12 @@ var (
 type EtcdV3Storage struct {
 }
 
-func InitETCDClient(endpoints []string) error {
+func InitETCDClient(etcdConf *conf.Etcd) error {
 	cli, err := clientv3.New(clientv3.Config{
-		Endpoints:   endpoints,
+		Endpoints:   etcdConf.Endpoints,
 		DialTimeout: 5 * time.Second,
+		Username:    etcdConf.Username,
+		Password:    etcdConf.Password,
 	})
 	if err != nil {
 		log.Errorf("init etcd failed: %s", err)

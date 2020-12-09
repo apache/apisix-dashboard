@@ -19,13 +19,14 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/apisix/manager-api/internal/handler"
-	"github.com/shiningrush/droplet"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/apisix/manager-api/internal/handler"
+	"github.com/shiningrush/droplet"
 
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal"
@@ -44,8 +45,9 @@ func main() {
 		newMws = append(newMws, mws[1:]...)
 		return newMws
 	}
-	if err := storage.InitETCDClient(conf.ETCDEndpoints); err != nil {
-		log.Errorf("init etcd client fail: %s", err)
+
+	if err := storage.InitETCDClient(conf.ETCDConfig); err != nil {
+		log.Errorf("init etcd client fail: %w", err)
 		panic(err)
 	}
 	if err := store.InitStores(); err != nil {

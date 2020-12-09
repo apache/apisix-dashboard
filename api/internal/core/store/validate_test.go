@@ -137,7 +137,6 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 	err = validator.Validate(consumer3)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "schema validate failed: (root): count is required")
-
 }
 
 func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
@@ -247,6 +246,66 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	err = validator.Validate(route5)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "schema validate failed: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$'")
+}
+
+func TestAPISIXJsonSchemaValidator_Plugin(t *testing.T) {
+	validator, err := NewAPISIXJsonSchemaValidator("main.route")
+	assert.Nil(t, err)
+
+	// validate plugin's schema which has no `properties` or empty `properties`
+	route := &entity.Route{}
+	reqBody := `{
+		"id": "1",
+		"uri": "/hello",
+		"plugins": {
+			"prometheus": {
+				"disable": false
+			},
+			"key-auth": {
+				"disable": true
+			}
+		}
+	}`
+	err = json.Unmarshal([]byte(reqBody), route)
+	assert.Nil(t, err)
+	err = validator.Validate(route)
+	assert.Nil(t, err)
+
+	// validate plugin's schema which use `oneOf`
+	reqBody = `{
+		"id": "1",
+		"uri": "/hello",
+		"plugins": {
+                        "ip-restriction": {
+                            "blacklist": [
+                                "127.0.0.0/24"
+                            ],
+                            "disable": true
+                        }
+		}
+	}`
+	err = json.Unmarshal([]byte(reqBody), route)
+	assert.Nil(t, err)
+	err = validator.Validate(route)
+	assert.Nil(t, err)
+
+	// validate plugin's schema with invalid type for `disable`
+	reqBody = `{
+		"id": "1",
+		"uri": "/hello",
+		"plugins": {
+                        "ip-restriction": {
+                            "blacklist": [
+                                "127.0.0.0/24"
+                            ],
+                            "disable": 1
+                        }
+		}
+	}`
+	err = json.Unmarshal([]byte(reqBody), route)
+	assert.Nil(t, err)
+	err = validator.Validate(route)
+	assert.Equal(t, fmt.Errorf("schema validate failed: (root): Must validate one and only one schema (oneOf)\n(root): Additional property disable is not allowed"), err)
 }
 
 func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
