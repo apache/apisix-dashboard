@@ -209,8 +209,8 @@ export const transformLabelList = (data: RouteModule.ResponseLabelList): RouteMo
 export const transformLableValueToKeyValue = (data: string[]) => {
   return (data || []).map((item) => {
     const index = item.indexOf(':');
-    const key = item.substring(0, index);
-    const value = item.substring(index + 1);
-    return { key, value };
+    const labelKey = item.substring(0, index);
+    const labelValue = item.substring(index + 1);
+    return { labelKey, labelValue, key: Math.random().toString(36).slice(2) };
   });
 };

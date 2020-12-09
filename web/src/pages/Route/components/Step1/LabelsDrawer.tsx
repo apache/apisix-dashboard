@@ -24,17 +24,46 @@ interface Props extends Pick<RouteModule.Step1PassProps, 'onChange'> {
   onClose(): void;
 };
 
-const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = () => { } }) => {
-  const transFormData = transformLableValueToKeyValue(labelsDataSource);
-  const EditableContext = React.createContext();
-  const [dataSource, setDataSource] = useState(transFormData);
+type Item = {
+  key: string;
+  value: string;
+}
 
-  const handleRemove = (key: string, value: string) => {
-    const newDataScource = dataSource.filter((item) => !(item.key === key && item.value === value));
-    setDataSource(newDataScource);
+interface EditableCellProps {
+  title: React.ReactNode;
+  editable: boolean;
+  children: React.ReactNode;
+  dataIndex: string;
+  record: Item;
+  handleSave: (record: Item) => void;
+}
+
+type LabelTableProps = {
+  data: RouteModule.LabelTableProps[],
+  onChange?(data: RouteModule.LabelTableProps[]): void;
+}
+
+const LabelTable: React.FC<LabelTableProps> = ({ data, onChange = () => { } }) => {
+
+  const EditableContext = React.createContext<any>();
+
+  const handleRemove = (key: string) => {
+    const newDataScource = data.filter((item) => item.key !== key);
+    onChange(newDataScource);
   };
 
-  const EditableRow = ({ index, ...props }) => {
+  const handleSave = (row: RouteModule.LabelTableProps) => {
+    const newData = [...data];
+    const index = newData.findIndex(item => row.key === item.key);
+    const item = newData[index];
+    newData.splice(index, 1, {
+      ...item,
+      ...row,
+    });
+    onChange(newData)
+  };
+
+  const EditableRow = ({ index, ...props }: any) => {
     const [form] = Form.useForm();
     return (
       <Form form={form} component={false}>
@@ -45,28 +74,28 @@ const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = (
     );
   };
 
-  const columns = [
+  const columns: any = [
     {
       title: 'key',
-      dataIndex: 'key',
+      dataIndex: 'labelKey',
       width: '30%',
       editable: true,
     },
     {
       title: 'value',
-      dataIndex: 'value',
+      dataIndex: 'labelValue',
       width: '30%',
       editable: true,
     },
     {
       title: 'operation',
       dataIndex: 'operation',
-      render: (_, record) => {
-        return dataSource.length >= 1 ? (
+      render: (_, { key }: any) => {
+        return data.length >= 1 ? (
           <Popconfirm
             title="Sure to delete?"
             onConfirm={() => {
-              handleRemove(record.key, record.value);
+              handleRemove(key);
             }}
           >
             <a>Delete</a>
@@ -76,7 +105,23 @@ const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = (
     },
   ];
 
-  const EditableCell = ({
+  const newColumns = columns.map(col => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: record => ({
+        record,
+        editable: col.editable,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        handleSave,
+      }),
+    };
+  });
+
+  const EditableCell: React.FC<EditableCellProps> = ({
     title,
     editable,
     children,
@@ -151,6 +196,18 @@ const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = (
       cell: EditableCell,
     },
   };
+  return <Table
+    components={components}
+    rowClassName={() => 'editable-row'}
+    bordered
+    dataSource={data}
+    columns={newColumns}
+  />
+}
+
+const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = () => { } }) => {
+  const transFormData = transformLableValueToKeyValue(labelsDataSource);
+  const [dataSource, setDataSource] = useState(transFormData);
 
   return (
     <Drawer
@@ -170,7 +227,7 @@ const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = (
               onClick={() => {
                 onChange({
                   action: 'labelsChange',
-                  data: dataSource.map(item => (`${item.key}:${item.value}`))
+                  data: dataSource.map(item => (`${item.labelKey}:${item.labelValue}`))
                 })
                 onClose();
               }}
@@ -183,7 +240,7 @@ const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = (
     >
       <Button
         onClick={() => {
-          setDataSource([...dataSource, { key: '', value: '' }]);
+          setDataSource([...dataSource, { labelKey: ' ', labelValue: ' ', key: Math.random().toString(36).slice(2) }]);
         }}
         type="primary"
         style={{
@@ -192,13 +249,7 @@ const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = (
       >
         Add a row
       </Button>
-      <Table
-        components={components}
-        rowClassName={() => 'editable-row'}
-        bordered
-        dataSource={dataSource}
-        columns={columns}
-      />
+      <LabelTable data={dataSource} onChange={setDataSource} />
     </Drawer>
   );
 };

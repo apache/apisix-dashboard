@@ -163,6 +163,12 @@ declare namespace RouteModule {
 
   type LabelList = Record<string, string[]>;
 
+  type LabelTableProps = {
+    labelKey: string,
+    labelValue: string,
+    key: string
+  }
+
   type Step1PassProps = {
     form: FormInstance;
     advancedMatchingRules: MatchingRule[];
