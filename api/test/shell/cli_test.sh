@@ -110,6 +110,9 @@ if [[ `grep -c "api/main.go:" ${logfile}` -ne '1' ]]; then
     exit 1
 fi
 
+# clean config
+clean_up
+
 # etcd basic auth
 # add root user
 curl -L http://localhost:2379/v3/auth/user/add -d '{"name": "root", "password": "root"}'
