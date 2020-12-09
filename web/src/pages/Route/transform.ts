@@ -16,6 +16,15 @@
  */
 import { omit, pick, cloneDeep } from 'lodash';
 
+export const transformLableValueToKeyValue = (data: string[]) => {
+  return (data || []).map((item) => {
+    const index = item.indexOf(':');
+    const labelKey = item.substring(0, index);
+    const labelValue = item.substring(index + 1);
+    return { labelKey, labelValue, key: Math.random().toString(36).slice(2) };
+  });
+};
+
 export const transformStepData = ({
   form1Data,
   form2Data,
@@ -35,8 +44,14 @@ export const transformStepData = ({
     };
   }
 
+  const labels = {};
+  transformLableValueToKeyValue(form1Data.labels).forEach(item => {
+    labels[item.labelKey] = item.labelValue;
+  })
+
   const data: Partial<RouteModule.Body> = {
-    ...form1Data,
+    ...omit(form1Data, 'labels'),
+    labels,
     ...step3DataCloned,
     vars: advancedMatchingRules.map((rule) => {
       const { operator, position, name, value } = rule;
@@ -204,13 +219,4 @@ export const transformLabelList = (data: RouteModule.ResponseLabelList): RouteMo
     }
   });
   return transformData;
-};
-
-export const transformLableValueToKeyValue = (data: string[]) => {
-  return (data || []).map((item) => {
-    const index = item.indexOf(':');
-    const labelKey = item.substring(0, index);
-    const labelValue = item.substring(index + 1);
-    return { labelKey, labelValue, key: Math.random().toString(36).slice(2) };
-  });
 };

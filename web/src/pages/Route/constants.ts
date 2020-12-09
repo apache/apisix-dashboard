@@ -44,6 +44,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   name: '',
   desc: '',
   status: false,
+  labels:[],
   priority: 0,
   websocket: false,
   hosts: [''],
