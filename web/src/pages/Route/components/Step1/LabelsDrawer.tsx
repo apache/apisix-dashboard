@@ -157,7 +157,6 @@ const LabelTable: React.FC<LabelTableProps> = ({ data, onChange = () => { } }) =
     };
 
     let childNode = children;
-
     if (editable) {
       childNode = editing ? (
         <Form.Item
@@ -179,6 +178,7 @@ const LabelTable: React.FC<LabelTableProps> = ({ data, onChange = () => { } }) =
             className="editable-cell-value-wrap"
             style={{
               paddingRight: 24,
+              minHeight:'22px',
             }}
             onClick={toggleEdit}
           >
@@ -240,7 +240,7 @@ const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = (
     >
       <Button
         onClick={() => {
-          setDataSource([...dataSource, { labelKey: ' ', labelValue: ' ', key: Math.random().toString(36).slice(2) }]);
+          setDataSource([...dataSource, { labelKey: '', labelValue: '', key: Math.random().toString(36).slice(2) }]);
         }}
         type="primary"
         style={{
