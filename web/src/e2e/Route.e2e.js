@@ -75,10 +75,13 @@ describe('Route test', () => {
     // verify route if create success
     await page.waitForSelector(domSelectors.success_ico);
     await page.waitForSelector(domSelectors.button_return_routelist);
+    await page.click(domSelectors.button_return_routelist)
+    await page.content();
+    await page.waitForSelector(domSelectors.button_createroute)
     // todo: delete the route just created
 
     await page.close();
-  }, 80000);
+  }, 160000);
 
   afterAll(async () => {
     await browser.close();
