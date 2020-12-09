@@ -32,6 +32,10 @@ conf:
       file_path:
         logs/error.log  # supports relative path, absolute path, standard output
                         # such as: logs/error.log, /tmp/logs/error.log, /dev/stdout, /dev/stderr
+    access_log:
+      file_path:
+        logs/access.log  # supports relative path, absolute path, standard output
+                         # such as: logs/access.log, /tmp/logs/access.log, /dev/stdout, /dev/stderr
 authentication:
   secret:
     secret              # secret for jwt token generation.

@@ -95,6 +95,20 @@ if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
 fi
 
 
+# access log test
+./manager-api &
+sleep 3
+
+curl http://127.0.0.1:9000/apisix/admin/user/login -d '{"username":"admin", "password": "admin"}'
+
+pkill -f manager-api
+
+if [[ `grep -c "/apisix/admin/user/login" ./logs/access.log` -eq '0' ]]; then
+    echo "failed: failed to write access log"
+    exit 1
+fi
+
+
 # etcd basic auth
 # add root user
 curl -L http://localhost:2379/v3/auth/user/add -d '{"name": "root", "password": "root"}'
