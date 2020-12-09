@@ -45,7 +45,7 @@ var (
 	WorkDir          = "."
 	ServerHost       = "127.0.0.1"
 	ServerPort       = 80
-	ETCDEndpoints    = []string{"127.0.0.1:2379"}
+	ETCDConfig       *Etcd
 	ErrorLogLevel    = "warn"
 	ErrorLogPath     = "logs/error.log"
 	UserList         = make(map[string]User, 2)
@@ -55,6 +55,8 @@ var (
 
 type Etcd struct {
 	Endpoints []string
+	Username  string
+	Password  string
 }
 
 type Listen struct {
@@ -128,9 +130,9 @@ func setConf() {
 			ServerHost = config.Conf.Listen.Host
 		}
 
-		//etcd
+		// for etcd
 		if len(config.Conf.Etcd.Endpoints) > 0 {
-			ETCDEndpoints = config.Conf.Etcd.Endpoints
+			initEtcdConfig(config.Conf.Etcd)
 		}
 
 		//error log
@@ -178,5 +180,19 @@ func initSchema() {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
 	} else {
 		Schema = gjson.ParseBytes(schemaContent)
+	}
+}
+
+// initialize etcd config
+func initEtcdConfig(conf Etcd) {
+	var endpoints = []string{"127.0.0.1:2379"}
+	if len(conf.Endpoints) > 0 {
+		endpoints = conf.Endpoints
+	}
+
+	ETCDConfig = &Etcd{
+		Endpoints: endpoints,
+		Username:  conf.Username,
+		Password:  conf.Password,
 	}
 }
