@@ -23,19 +23,19 @@ import { PanelSection } from '@api7-dashboard/ui';
 import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 import LabelsDrawer from './LabelsDrawer';
 
-const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form }) => {
+const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, onChange }) => {
   const { formatMessage } = useIntl();
   const [visible, setVisible] = useState(false);
 
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>
-      <Form.Item shouldUpdate noStyle>
+      {visible && <Form.Item shouldUpdate noStyle>
         {() => {
           if (form.getFieldValue('labels')) {
             return (
               <LabelsDrawer
-                visible={visible}
                 labelsDataSource={form.getFieldValue('labels')}
+                onChange={onChange}
                 onClose={() => {
                   setVisible(false);
                 }}
@@ -44,7 +44,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form }) => {
           }
           return null;
         }}
-      </Form.Item>
+      </Form.Item>}
       <Form.Item
         label={formatMessage({ id: 'component.global.name' })}
         name="name"

@@ -169,7 +169,7 @@ declare namespace RouteModule {
     disabled?: boolean;
     isEdit?: boolean;
     onChange?(data: {
-      action: 'redirectOptionChange' | 'advancedMatchingRulesChange';
+      action: 'redirectOptionChange' | 'advancedMatchingRulesChange' | 'labelsChange';
       data: T;
     }): void;
   };

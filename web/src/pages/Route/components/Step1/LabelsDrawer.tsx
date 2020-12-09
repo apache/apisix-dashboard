@@ -19,13 +19,12 @@ import { Button, Drawer, Form, Input, Popconfirm, Table } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { transformLableValueToKeyValue } from '../../transform';
 
-type Props = {
-  visible: boolean;
+interface Props extends Pick<RouteModule.Step1PassProps, 'onChange'> {
   labelsDataSource: any;
   onClose(): void;
 };
 
-const LabelsDrawer: React.FC<Props> = ({ visible, labelsDataSource, onClose }) => {
+const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = () => { } }) => {
   const transFormData = transformLableValueToKeyValue(labelsDataSource);
   const EditableContext = React.createContext();
   const [dataSource, setDataSource] = useState(transFormData);
@@ -131,16 +130,16 @@ const LabelsDrawer: React.FC<Props> = ({ visible, labelsDataSource, onClose }) =
           <Input ref={inputRef} onPressEnter={save} onBlur={save} />
         </Form.Item>
       ) : (
-        <div
-          className="editable-cell-value-wrap"
-          style={{
-            paddingRight: 24,
-          }}
-          onClick={toggleEdit}
-        >
-          {children}
-        </div>
-      );
+          <div
+            className="editable-cell-value-wrap"
+            style={{
+              paddingRight: 24,
+            }}
+            onClick={toggleEdit}
+          >
+            {children}
+          </div>
+        );
     }
 
     return <td {...restProps}>{childNode}</td>;
@@ -158,9 +157,29 @@ const LabelsDrawer: React.FC<Props> = ({ visible, labelsDataSource, onClose }) =
       title="Edit labels"
       placement="right"
       width={512}
-      visible={visible}
+      visible
       closable
       onClose={onClose}
+      footer={
+        (
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button onClick={onClose}>取消</Button>
+            <Button
+              type="primary"
+              style={{ marginRight: 8, marginLeft: 8 }}
+              onClick={() => {
+                onChange({
+                  action: 'labelsChange',
+                  data: dataSource.map(item => (`${item.key}:${item.value}`))
+                })
+                onClose();
+              }}
+            >
+              确认
+            </Button>
+          </div>
+        )
+      }
     >
       <Button
         onClick={() => {
