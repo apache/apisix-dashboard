@@ -78,7 +78,7 @@ describe('Route test', () => {
     // todo: delete the route just created
 
     await page.close();
-  }, 70000);
+  }, 80000);
 
   afterAll(async () => {
     await browser.close();
