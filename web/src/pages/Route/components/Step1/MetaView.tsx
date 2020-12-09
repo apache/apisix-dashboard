@@ -74,6 +74,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, onChan
           mode="tags"
           style={{ width: '100%' }}
           placeholder="--"
+          disabled={disabled}
           open={false}
           bordered={false}
           tagRender={(props) => {
@@ -87,7 +88,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, onChan
         />
       </Form.Item>
       <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-        <Button onClick={() => setVisible(true)}>编辑</Button>
+        <Button disabled={disabled} onClick={() => setVisible(true)}>编辑</Button>
       </Form.Item>
       <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
         <Input.TextArea

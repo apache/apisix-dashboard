@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 import React, { useContext, useRef, useState, useEffect } from 'react';
-import { Button, Drawer, Form, Input, Popconfirm, Table } from 'antd';
+import { AutoComplete, Button, Drawer, Form, Input, Popconfirm, Select, Table } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { transformLableValueToKeyValue } from '../../transform';
+import { fetchLabelList } from '../../service';
 
 interface Props extends Pick<RouteModule.Step1PassProps, 'onChange'> {
   labelsDataSource: any;
@@ -26,7 +27,8 @@ interface Props extends Pick<RouteModule.Step1PassProps, 'onChange'> {
 
 type Item = {
   key: string;
-  value: string;
+  labelKey: string;
+  labelValue: string;
 }
 
 interface EditableCellProps {
@@ -44,8 +46,15 @@ type LabelTableProps = {
 }
 
 const LabelTable: React.FC<LabelTableProps> = ({ data, onChange = () => { } }) => {
-
   const EditableContext = React.createContext<any>();
+  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
+
+  useEffect(() => {
+    fetchLabelList().then((item) => {
+      setLabelList(item as RouteModule.LabelList);
+    });
+  }, [])
+
 
   const handleRemove = (key: string) => {
     const newDataScource = data.filter((item) => item.key !== key);
@@ -156,6 +165,17 @@ const LabelTable: React.FC<LabelTableProps> = ({ data, onChange = () => { } }) =
       }
     };
 
+    let options;
+    if (record) {
+      if (title === 'key') {
+        options = Object.keys(labelList).map(item => ({ value: item }))
+      }
+      if (title === 'value' && record.labelKey !== '') {
+        const key = record.labelKey;
+        options = labelList[key].map(item => ({ value: item }))
+      }
+    }
+
     let childNode = children;
     if (editable) {
       childNode = editing ? (
@@ -171,14 +191,21 @@ const LabelTable: React.FC<LabelTableProps> = ({ data, onChange = () => { } }) =
             },
           ]}
         >
-          <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+          <AutoComplete
+            ref={inputRef}
+            options={options}
+            onPressEnter={save}
+            onBlur={save}
+            style={{ width: 100 }}
+            placeholder="input here"
+          />
         </Form.Item>
       ) : (
           <div
             className="editable-cell-value-wrap"
             style={{
               paddingRight: 24,
-              minHeight:'22px',
+              minHeight: '22px',
             }}
             onClick={toggleEdit}
           >

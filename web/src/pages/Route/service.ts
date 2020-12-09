@@ -37,7 +37,7 @@ export const update = (rid: number, data: RouteModule.RequestData) =>
   });
 
 export const fetchItem = (rid: number) =>
-  request(`/routes/${rid}`).then((data) => transformRouteData(data.data));
+  request(`/routes/${rid}`).then((data) => (transformRouteData(data.data)));
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
   const { labels } = res;
@@ -50,19 +50,8 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
       page_size: pageSize,
     },
   }).then(({ data }) => {
-    // ! line 49-57 just for development, omit it when api ready
-    const rows = data.rows.map((item) => {
-      return {
-        labels: {
-          build: '16',
-          env: 'production',
-          version: 'v2',
-        },
-        ...item,
-      };
-    });
     return {
-      data: rows,
+      data: data.rows,
       total: data.total_size,
     };
   });
