@@ -14,227 +14,118 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useContext, useRef, useState, useEffect } from 'react';
-import { AutoComplete, Button, Drawer, Form, Input, Popconfirm, Select, Table } from 'antd';
-import type { FormInstance } from 'antd/es/form';
+import React, { useEffect, useState } from 'react';
+import { AutoComplete, Button, Col, Drawer, Form, Row, } from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { transformLableValueToKeyValue } from '../../transform';
 import { fetchLabelList } from '../../service';
 
 interface Props extends Pick<RouteModule.Step1PassProps, 'onChange'> {
   labelsDataSource: any;
+  disabled: boolean;
   onClose(): void;
 };
 
-type Item = {
-  key: string;
-  labelKey: string;
-  labelValue: string;
-}
+const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
+  const options = Object.keys(labelList || {}).map(item => ({ value: item }));
+  return (
+    <Form.List name="labels">
+      {(fields, { add, remove }) => {
+        return (
+          <>
+            {fields.map((field, index) => (
+              <Form.Item
+                key={field.key}
+                label={index === 0 && 'Label'}
+                labelCol={{ span: index === 0 ? 3 : 0 }}
+                wrapperCol={{ offset: index === 0 ? 0 : 3 }}
+              >
+                <Row style={{ marginBottom: 10 }} gutter={16}>
+                  <Col>
+                    <Form.Item
+                      style={{ marginBottom: 0 }}
+                      name={[field.name, 'labelKey']}
+                      rules={[
+                        {
+                          required: true,
+                          message: '请输入 key',
+                        },
+                      ]}
+                    >
+                      <AutoComplete
+                        options={options}
+                        style={{ width: 100 }}
+                      />
 
-interface EditableCellProps {
-  title: React.ReactNode;
-  editable: boolean;
-  children: React.ReactNode;
-  dataIndex: string;
-  record: Item;
-  handleSave: (record: Item) => void;
-}
+                    </Form.Item>
+                  </Col>
+                  <Col>
+                    <Form.Item shouldUpdate noStyle>
+                      {({ getFieldValue }) => {
+                        const key = getFieldValue(["labels", field.name, "labelKey"]);;
+                        let valueOptions = [{ value: '' }];
+                        if (labelList) {
+                          valueOptions = (labelList[key] || []).map(item => ({ value: item }))
+                        }
 
-type LabelTableProps = {
-  data: RouteModule.LabelTableProps[],
-  onChange?(data: RouteModule.LabelTableProps[]): void;
-}
+                        return (
+                          (
+                            <Form.Item
+                              noStyle
+                              name={[field.name, "labelValue"]}
+                              fieldKey={[field.fieldKey, "labelValue"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "请输入 value"
+                                }
+                              ]}
+                            >
+                              <AutoComplete
+                                options={valueOptions}
+                                style={{ width: 100 }}
+                              />
+                            </Form.Item>
+                          )
+                        );
+                      }}
+                    </Form.Item>
+                  </Col>
+                  <Col>
+                    {!disabled && (
+                      <MinusCircleOutlined onClick={() => remove(field.name)} />
+                    )}
+                  </Col>
+                </Row>
+              </Form.Item>
+            ))}
+            {!disabled && (
+              <Form.Item wrapperCol={{ offset: 3 }}>
+                <Button type="dashed" onClick={add}>
+                  <PlusOutlined />
+                 增加
+              </Button>
+              </Form.Item>
+            )}
+          </>
+        )
+      }}
+    </Form.List>
+  )
+};
 
-const LabelTable: React.FC<LabelTableProps> = ({ data, onChange = () => { } }) => {
-  const EditableContext = React.createContext<any>();
-  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
+const LabelsDrawer: React.FC<Props> = ({ disabled, labelsDataSource, onClose, onChange = () => { } }) => {
+  const transformLabel = transformLableValueToKeyValue(labelsDataSource);
+
+  const [form] = Form.useForm();
+  const [labelList, setLabelList] = useState<RouteModule.LabelList>();
+  form.setFieldsValue({ labels: transformLabel });
 
   useEffect(() => {
-    fetchLabelList().then((item) => {
-      setLabelList(item as RouteModule.LabelList);
-    });
+    fetchLabelList().then(item => {
+      setLabelList(item as RouteModule.LabelList)
+    })
   }, [])
-
-
-  const handleRemove = (key: string) => {
-    const newDataScource = data.filter((item) => item.key !== key);
-    onChange(newDataScource);
-  };
-
-  const handleSave = (row: RouteModule.LabelTableProps) => {
-    const newData = [...data];
-    const index = newData.findIndex(item => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, {
-      ...item,
-      ...row,
-    });
-    onChange(newData)
-  };
-
-  const EditableRow = ({ index, ...props }: any) => {
-    const [form] = Form.useForm();
-    return (
-      <Form form={form} component={false}>
-        <EditableContext.Provider value={form}>
-          <tr {...props} />
-        </EditableContext.Provider>
-      </Form>
-    );
-  };
-
-  const columns: any = [
-    {
-      title: 'key',
-      dataIndex: 'labelKey',
-      width: '30%',
-      editable: true,
-    },
-    {
-      title: 'value',
-      dataIndex: 'labelValue',
-      width: '30%',
-      editable: true,
-    },
-    {
-      title: 'operation',
-      dataIndex: 'operation',
-      render: (_, { key }: any) => {
-        return data.length >= 1 ? (
-          <Popconfirm
-            title="Sure to delete?"
-            onConfirm={() => {
-              handleRemove(key);
-            }}
-          >
-            <a>Delete</a>
-          </Popconfirm>
-        ) : null;
-      },
-    },
-  ];
-
-  const newColumns = columns.map(col => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: record => ({
-        record,
-        editable: col.editable,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        handleSave,
-      }),
-    };
-  });
-
-  const EditableCell: React.FC<EditableCellProps> = ({
-    title,
-    editable,
-    children,
-    dataIndex,
-    record,
-    handleSave,
-    ...restProps
-  }) => {
-    const [editing, setEditing] = useState(false);
-    const inputRef = useRef();
-    const form = useContext<FormInstance>(EditableContext);
-    useEffect(() => {
-      if (editing) {
-        inputRef.current.focus();
-      }
-    }, [editing]);
-
-    const toggleEdit = () => {
-      setEditing(!editing);
-      form.setFieldsValue({
-        [dataIndex]: record[dataIndex],
-      });
-    };
-
-    const save = async () => {
-      try {
-        const values = await form.validateFields();
-        toggleEdit();
-        handleSave({ ...record, ...values });
-      } catch (errInfo) {
-        console.log('Save failed:', errInfo);
-      }
-    };
-
-    let options;
-    if (record) {
-      if (title === 'key') {
-        options = Object.keys(labelList).map(item => ({ value: item }))
-      }
-      if (title === 'value' && record.labelKey !== '') {
-        const key = record.labelKey;
-        options = labelList[key].map(item => ({ value: item }))
-      }
-    }
-
-    let childNode = children;
-    if (editable) {
-      childNode = editing ? (
-        <Form.Item
-          style={{
-            margin: 0,
-          }}
-          name={dataIndex}
-          rules={[
-            {
-              required: true,
-              message: `${title} is required.`,
-            },
-          ]}
-        >
-          <AutoComplete
-            ref={inputRef}
-            options={options}
-            onPressEnter={save}
-            onBlur={save}
-            style={{ width: 100 }}
-            placeholder="input here"
-          />
-        </Form.Item>
-      ) : (
-          <div
-            className="editable-cell-value-wrap"
-            style={{
-              paddingRight: 24,
-              minHeight: '22px',
-            }}
-            onClick={toggleEdit}
-          >
-            {children}
-          </div>
-        );
-    }
-
-    return <td {...restProps}>{childNode}</td>;
-  };
-
-  const components = {
-    body: {
-      row: EditableRow,
-      cell: EditableCell,
-    },
-  };
-  return <Table
-    components={components}
-    rowClassName={() => 'editable-row'}
-    bordered
-    dataSource={data}
-    columns={newColumns}
-  />
-}
-
-const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = () => { } }) => {
-  const transFormData = transformLableValueToKeyValue(labelsDataSource);
-  const [dataSource, setDataSource] = useState(transFormData);
 
   return (
     <Drawer
@@ -252,11 +143,13 @@ const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = (
               type="primary"
               style={{ marginRight: 8, marginLeft: 8 }}
               onClick={() => {
-                onChange({
-                  action: 'labelsChange',
-                  data: dataSource.map(item => (`${item.labelKey}:${item.labelValue}`))
+                form.validateFields().then(({ labels }) => {
+                  onChange({
+                    action: 'labelsChange',
+                    data: labels.map((item: any) => (`${item.labelKey}:${item.labelValue}`))
+                  })
+                  onClose();
                 })
-                onClose();
               }}
             >
               确认
@@ -265,18 +158,9 @@ const LabelsDrawer: React.FC<Props> = ({ labelsDataSource, onClose, onChange = (
         )
       }
     >
-      <Button
-        onClick={() => {
-          setDataSource([...dataSource, { labelKey: '', labelValue: '', key: Math.random().toString(36).slice(2) }]);
-        }}
-        type="primary"
-        style={{
-          marginBottom: 16,
-        }}
-      >
-        Add a row
-      </Button>
-      <LabelTable data={dataSource} onChange={setDataSource} />
+      <Form form={form} layout="horizontal" >
+        {LabelList(disabled, labelList || {})}
+      </Form>
     </Drawer>
   );
 };

@@ -35,6 +35,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, onChan
             return (
               <LabelsDrawer
                 labelsDataSource={form.getFieldValue('labels')}
+                disabled={disabled || false}
                 onChange={onChange}
                 onClose={() => {
                   setVisible(false);
