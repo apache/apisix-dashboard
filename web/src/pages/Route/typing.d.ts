@@ -72,6 +72,7 @@ declare namespace RouteModule {
     id?: number;
     status: boolean;
     name: string;
+    labels: Record<string, string>;
     desc: string;
     priority?: number;
     methods: HttpMethod[];
@@ -176,6 +177,7 @@ declare namespace RouteModule {
   type Form1Data = {
     name: string;
     desc: string;
+    labels: string[];
     priority: number;
     websocket: boolean;
     hosts: string[];

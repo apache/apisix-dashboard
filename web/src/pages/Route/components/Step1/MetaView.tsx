@@ -14,17 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import Form from 'antd/es/form';
-import { Input } from 'antd';
+import { Input, Select, Button, Tag } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
-const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled }) => {
+import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
+import LabelsDrawer from './LabelsDrawer';
+
+const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form }) => {
   const { formatMessage } = useIntl();
+  const [visible, setVisible] = useState(false);
 
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>
+      <Form.Item shouldUpdate noStyle>
+        {() => {
+          if (form.getFieldValue('labels')) {
+            return (
+              <LabelsDrawer
+                visible={visible}
+                labelsDataSource={form.getFieldValue('labels')}
+                onClose={() => {
+                  setVisible(false);
+                }}
+              />
+            );
+          }
+          return null;
+        }}
+      </Form.Item>
       <Form.Item
         label={formatMessage({ id: 'component.global.name' })}
         name="name"
@@ -48,6 +68,26 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled }) => {
           })}`}
           disabled={disabled}
         />
+      </Form.Item>
+      <Form.Item label={formatMessage({ id: 'component.global.label' })} name="labels">
+        <Select
+          mode="tags"
+          style={{ width: '100%' }}
+          placeholder="--"
+          open={false}
+          bordered={false}
+          tagRender={(props) => {
+            const { value, closable, onClose } = props;
+            return (
+              <Tag closable={closable} onClose={onClose} style={{ marginRight: 3 }}>
+                {value}
+              </Tag>
+            );
+          }}
+        />
+      </Form.Item>
+      <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+        <Button onClick={() => setVisible(true)}>编辑</Button>
       </Form.Item>
       <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
         <Input.TextArea

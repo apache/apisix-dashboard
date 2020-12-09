@@ -136,6 +136,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     name,
     desc,
     methods,
+    labels,
     uris,
     uri,
     hosts,
@@ -154,6 +155,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     uris: uris || (uri && [uri]) || [],
     remote_addrs: remote_addrs || [''],
     methods,
+    labels: Object.keys(labels || []).map((item) => `${item}:${labels[item]}`),
   };
 
   const redirect = data.plugins?.redirect || {};
@@ -202,4 +204,13 @@ export const transformLabelList = (data: RouteModule.ResponseLabelList): RouteMo
     }
   });
   return transformData;
+};
+
+export const transformLableValueToKeyValue = (data: string[]) => {
+  return (data || []).map((item) => {
+    const index = item.indexOf(':');
+    const key = item.substring(0, index);
+    const value = item.substring(index + 1);
+    return { key, value };
+  });
 };
