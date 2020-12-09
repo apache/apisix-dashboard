@@ -17,10 +17,10 @@
 package store
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"regexp"
 
 	"github.com/xeipuuv/gojsonschema"
 	"go.uber.org/zap/buffer"
@@ -252,29 +252,48 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 	}
 
 	plugins, schemaType := getPlugins(obj)
-	//fix lua json.encode transform lua{properties={}} to json{"properties":[]}
-	reg := regexp.MustCompile(`\"properties\":\[\]`)
 	for pluginName, pluginConf := range plugins {
-		var schemaDef string
-		schemaDef = conf.Schema.Get("plugins." + pluginName + "." + schemaType).String()
-		if schemaDef == "" && schemaType == "consumer_schema" {
-			schemaDef = conf.Schema.Get("plugins." + pluginName + ".schema").String()
+		schemaValue := conf.Schema.Get("plugins." + pluginName + "." + schemaType).Value()
+		if schemaValue == nil && schemaType == "consumer_schema" {
+			schemaValue = conf.Schema.Get("plugins." + pluginName + ".schema").Value()
 		}
-		if schemaDef == "" {
-			log.Warnf("schema validate failed: schema not found, path: %s", "plugins."+pluginName)
+		if schemaValue == nil {
+			log.Warnf("schema validate failed: schema not found,  %s, %s", "plugins."+pluginName, schemaType)
 			return fmt.Errorf("schema validate failed: schema not found, path: %s", "plugins."+pluginName)
 		}
+		schemaMap := schemaValue.(map[string]interface{})
+		schemaByte, err := json.Marshal(schemaMap)
+		if err != nil {
+			log.Warnf("schema validate failed: schema json encode failed, path: %s, %w", "plugins."+pluginName, err)
+			return fmt.Errorf("schema validate failed: schema json encode failed, path: %s, %w", "plugins."+pluginName, err)
+		}
 
-		schemaDef = reg.ReplaceAllString(schemaDef, `"properties":{}`)
-		s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
+		s, err := gojsonschema.NewSchema(gojsonschema.NewBytesLoader(schemaByte))
 		if err != nil {
 			log.Warnf("init schema validate failed: %w", err)
 			return fmt.Errorf("schema validate failed: %w", err)
 		}
 
-		ret, err := s.Validate(gojsonschema.NewGoLoader(pluginConf))
+		// check property disable, if is bool, remove from json schema checking
+		conf := pluginConf.(map[string]interface{})
+		var exchange bool
+		disable, ok := conf["disable"]
+		if ok {
+			if fmt.Sprintf("%T", disable) == "bool" {
+				delete(conf, "disable")
+				exchange = true
+			}
+		}
+
+		// check schema
+		ret, err := s.Validate(gojsonschema.NewGoLoader(conf))
 		if err != nil {
 			return fmt.Errorf("schema validate failed: %w", err)
+		}
+
+		// put the value back to the property disable
+		if exchange {
+			conf["disable"] = disable
 		}
 
 		if !ret.Valid() {

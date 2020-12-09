@@ -93,3 +93,54 @@ if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     echo "failed: failed to write log on right level"
     exit 1
 fi
+
+
+# etcd basic auth
+# add root user
+curl -L http://localhost:2379/v3/auth/user/add -d '{"name": "root", "password": "root"}'
+
+# add root role
+curl -L http://localhost:2379/v3/auth/role/add -d '{"name": "root"}'
+
+# grant root role to root user
+curl -L http://localhost:2379/v3/auth/user/grant -d '{"user": "root", "role": "root"}'
+
+# enable auth
+curl -L http://localhost:2379/v3/auth/enable -d '{}'
+
+./manager-api &
+sleep 3
+
+# make sure it's wrong
+if [[ `grep -c "etcdserver: user name is empty" ./error.log` -eq '0' ]]; then
+    echo "failed: failed to validate etcd basic auth"
+    exit 1
+fi
+
+# modify etcd auth config
+sed -i '1,$s/# username: "root"    # ignore etcd username if not enable etcd auth/username: "root"/g' conf/conf.yaml
+sed -i '1,$s/# password: "123456"  # ignore etcd password if not enable etcd auth/password: "root"/g' conf/conf.yaml
+
+./manager-api &
+sleep 3
+
+# validate process is right by requesting login api
+resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -d '{"username":"admin", "password": "admin"}')
+token=$(echo "${resp}" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
+if [ -z "${token}" ]; then
+    echo "login failed"
+    exit 1
+fi
+
+# more validation to make sure it's ok to access etcd
+resp=$(curl -ig http://127.0.0.1:9000/apisix/admin/consumers -i -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}')
+respCode=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
+respMessage=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "message" | sed 's/:/\n/g' | sed '1d')
+if [ "$respCode" != "0" ] || [ $respMessage != "\"\"" ]; then
+    echo "verify access etcd failed"
+    exit 1
+fi
+
+pkill -f manager-api
+
+check_logfile
