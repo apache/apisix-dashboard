@@ -31,7 +31,7 @@ func init() {
 	logger = GetLogger(ErrorLog)
 }
 
-func GetLogger (logType Type) *zap.SugaredLogger{
+func GetLogger(logType Type) *zap.SugaredLogger {
 	writeSyncer := fileWriter(logType)
 	encoder := getEncoder()
 	logLevel := getLogLevel()
@@ -71,7 +71,6 @@ func getEncoder() zapcore.Encoder {
 	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
 	return zapcore.NewConsoleEncoder(encoderConfig)
 }
-
 
 func fileWriter(logType Type) zapcore.WriteSyncer {
 	logPath := conf.ErrorLogPath

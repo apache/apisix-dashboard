@@ -24,7 +24,7 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-	
+
 	"github.com/shiningrush/droplet"
 
 	"github.com/apisix/manager-api/conf"

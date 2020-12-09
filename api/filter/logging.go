@@ -24,7 +24,6 @@ import (
 	"go.uber.org/zap"
 )
 
-
 func RequestLogHandler(logger *zap.SugaredLogger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start, host, remoteIP, path, method := time.Now(), c.Request.Host, c.ClientIP(), c.Request.URL.Path, c.Request.Method
@@ -43,14 +42,15 @@ func RequestLogHandler(logger *zap.SugaredLogger) gin.HandlerFunc {
 			errs = append(errs, err.Error())
 		}
 
-		logger.Info(path,
+		logger.Desugar().Info(path,
+			//zap.String("path", path),
+			zap.Int("status", statusCode),
+			zap.String("host", host),
+			zap.String("query", query),
 			zap.String("requestId", requestId),
 			zap.Duration("latency", latency),
 			zap.String("remoteIP", remoteIP),
 			zap.String("method", method),
-			zap.Int("status", statusCode),
-			zap.String("host", host),
-			zap.String("query", query),
 			//zap.String("respBody", respBody),
 			zap.Strings("errs", errs),
 		)
