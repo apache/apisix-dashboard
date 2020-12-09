@@ -35,39 +35,42 @@ const loginFailedData = {
   password: '123456',
 };
 
-beforeAll(async () => {
-  browser = await puppeteer.launch({
-    headless: true,
-    slowMo: 100
-  });
-});
-
 describe('Login', () => {
+
+  beforeAll(async () => {
+    browser = await puppeteer.launch({
+      headless: true,
+      slowMo: 100
+    });
+  });
+
   test('Login failed with wrong password', async () => {
     const page = await browser.newPage();
     await page.goto(BASE_URL);
+    await page.content();
     await page.type(domSelectors.inputUsername, loginFailedData.username);
     await page.type(domSelectors.inputPassword, loginFailedData.password);
     await page.click(domSelectors.buttonLogin);
     await page.waitForSelector(domSelectors.loginFailedIcon);
     await page.close();
-  }, 10000);
+  }, 20000);
 
   test('Login failed with empty username password', async () => {
     const page = await browser.newPage();
     await page.goto(BASE_URL);
+    await page.content();
     await page.type(domSelectors.inputUsername, '');
     await page.type(domSelectors.inputPassword, '');
     await page.click(domSelectors.buttonLogin);
     await page.waitForSelector('.ant-form-item-explain');
     await page.close();
-  }, 10000);
+  }, 20000);
 
   test('Login success', async () => {
     const page = await browser.newPage();
     await setupLogin(page);
     await page.close();
-  }, 10000);
+  }, 20000);
 
   afterAll(async () => {
     await browser.close();
