@@ -80,8 +80,6 @@ type ListInput struct {
 
 // swagger:operation GET /apisix/admin/consumers getConsumerList
 //
-// Returns consumer list
-//
 // Return the consumer list according to the specified page number and page size, and can search by username
 //
 // ---

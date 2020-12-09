@@ -15,7 +15,6 @@
 # limitations under the License.
 #
 
-basePath: /v2
 consumes:
 - application/json
 - application/xml
@@ -391,12 +390,11 @@ definitions:
     x-go-package: github.com/apisix/manager-api/internal/core/entity
 host: 127.0.0.1
 info:
-  description: It's used to manage etcd and provide APIs to the frontend interface.
+  description: Manager API directly operates ETCD and provides data management for APISIX, provides APIs for Front-end or other clients.
   license:
     name: Apache License 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0
   title: API doc of Manager API.
-  version: "2.2"
 paths:
   /apisix/admin/check_ssl_cert:
     post:
@@ -415,9 +413,6 @@ paths:
         type: string
       produces:
       - application/json
-      - application/xml
-      - text/xml
-      - text/html
       responses:
         "0":
           description: SSL verify passed
@@ -427,7 +422,6 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
-      summary: verify SSL cert and key
   /apisix/admin/check_ssl_exists:
     post:
       description: check SSL exists or not by sni
@@ -445,9 +439,6 @@ paths:
         type: string
       produces:
       - application/json
-      - application/xml
-      - text/xml
-      - text/html
       responses:
         "0":
           description: SSL exists
@@ -457,7 +448,6 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
-      summary: check SSL exists or not
   /apisix/admin/consumers:
     get:
       description: Return the consumer list according to the specified page number and page size, and can search by username
@@ -477,9 +467,6 @@ paths:
         type: string
       produces:
       - application/json
-      - application/xml
-      - text/xml
-      - text/html
       responses:
         "0":
           description: list response
@@ -491,7 +478,6 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
-      summary: Returns consumer list
   /apisix/admin/notexist/routes:
     get:
       description: Returns result of route exists checking by name and exclude id
@@ -507,9 +493,6 @@ paths:
         type: string
       produces:
       - application/json
-      - application/xml
-      - text/xml
-      - text/html
       responses:
         "0":
           description: route not exists
@@ -519,7 +502,6 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
-      summary: Returns result of route exists checking
   /apisix/admin/routes:
     get:
       description: Return the route list according to the specified page number and page size, and can search by name and uri
@@ -543,9 +525,6 @@ paths:
         type: string
       produces:
       - application/json
-      - application/xml
-      - text/xml
-      - text/html
       responses:
         "0":
           description: list response
@@ -557,7 +536,6 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
-      summary: Returns route list
   /apisix/admin/services:
     get:
       description: Return the service list according to the specified page number and page size, and can search by name
@@ -577,9 +555,6 @@ paths:
         type: string
       produces:
       - application/json
-      - application/xml
-      - text/xml
-      - text/html
       responses:
         "0":
           description: list response
@@ -591,7 +566,6 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
-      summary: Returns service list
   /apisix/admin/ssl:
     get:
       description: Return the SSL list according to the specified page number and page size, and can search by sni
@@ -611,9 +585,6 @@ paths:
         type: string
       produces:
       - application/json
-      - application/xml
-      - text/xml
-      - text/html
       responses:
         "0":
           description: list response
@@ -625,7 +596,6 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
-      summary: Returns SSL list
   /apisix/admin/upstreams:
     get:
       description: Return the upstream list according to the specified page number and page size, and can search by name
@@ -645,9 +615,6 @@ paths:
         type: string
       produces:
       - application/json
-      - application/xml
-      - text/xml
-      - text/html
       responses:
         "0":
           description: list response
@@ -659,7 +626,6 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
-      summary: Returns upstream list
   /apisix/admin/user/login:
     post:
       description: user login
@@ -677,9 +643,6 @@ paths:
         type: string
       produces:
       - application/json
-      - application/xml
-      - text/xml
-      - text/html
       responses:
         "0":
           description: login success
@@ -689,7 +652,6 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
-      summary: user login
 produces:
 - application/json
 - application/xml

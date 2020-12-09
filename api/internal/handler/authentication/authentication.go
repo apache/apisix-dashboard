@@ -59,8 +59,6 @@ type LoginInput struct {
 //
 // user login
 //
-// user login
-//
 // ---
 // produces:
 // - application/json

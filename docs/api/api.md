@@ -18,19 +18,13 @@
 -->
 
 # API doc of Manager API.
-It's used to manage etcd and provide APIs to the frontend interface.
-
-## Version: 2.2
+Manager API directly operates ETCD and provides data management for APISIX, provides APIs for Front-end or other clients.
 
 **License:** [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 ### /apisix/admin/check_ssl_cert
 
 #### POST
-##### Summary:
-
-verify SSL cert and key
-
 ##### Description:
 
 verify SSL cert and key
@@ -52,10 +46,6 @@ verify SSL cert and key
 ### /apisix/admin/check_ssl_exists
 
 #### POST
-##### Summary:
-
-check SSL exists or not
-
 ##### Description:
 
 check SSL exists or not by sni
@@ -77,10 +67,6 @@ check SSL exists or not by sni
 ### /apisix/admin/consumers
 
 #### GET
-##### Summary:
-
-Returns consumer list
-
 ##### Description:
 
 Return the consumer list according to the specified page number and page size, and can search by username
@@ -103,10 +89,6 @@ Return the consumer list according to the specified page number and page size, a
 ### /apisix/admin/notexist/routes
 
 #### GET
-##### Summary:
-
-Returns result of route exists checking
-
 ##### Description:
 
 Returns result of route exists checking by name and exclude id
@@ -128,10 +110,6 @@ Returns result of route exists checking by name and exclude id
 ### /apisix/admin/routes
 
 #### GET
-##### Summary:
-
-Returns route list
-
 ##### Description:
 
 Return the route list according to the specified page number and page size, and can search by name and uri
@@ -155,10 +133,6 @@ Return the route list according to the specified page number and page size, and 
 ### /apisix/admin/services
 
 #### GET
-##### Summary:
-
-Returns service list
-
 ##### Description:
 
 Return the service list according to the specified page number and page size, and can search by name
@@ -181,10 +155,6 @@ Return the service list according to the specified page number and page size, an
 ### /apisix/admin/ssl
 
 #### GET
-##### Summary:
-
-Returns SSL list
-
 ##### Description:
 
 Return the SSL list according to the specified page number and page size, and can search by sni
@@ -207,10 +177,6 @@ Return the SSL list according to the specified page number and page size, and ca
 ### /apisix/admin/upstreams
 
 #### GET
-##### Summary:
-
-Returns upstream list
-
 ##### Description:
 
 Return the upstream list according to the specified page number and page size, and can search by name
@@ -233,10 +199,6 @@ Return the upstream list according to the specified page number and page size, a
 ### /apisix/admin/user/login
 
 #### POST
-##### Summary:
-
-user login
-
 ##### Description:
 
 user login

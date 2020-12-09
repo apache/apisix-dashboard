@@ -80,8 +80,6 @@ type GetInput struct {
 
 // swagger:operation GET /apisix/admin/routes getRouteList
 //
-// Returns route list
-//
 // Return the route list according to the specified page number and page size, and can search by name and uri
 //
 // ---
@@ -405,8 +403,6 @@ func toRows(list *store.ListOutput) []store.Row {
 }
 
 // swagger:operation GET /apisix/admin/notexist/routes checkRouteExist
-//
-// Returns result of route exists checking
 //
 // Returns result of route exists checking by name and exclude id
 //
