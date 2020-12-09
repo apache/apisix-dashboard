@@ -87,7 +87,7 @@ type ListInput struct {
 
 // swagger:operation GET /apisix/admin/upstreams getSSLList
 //
-// Return the upstream list according to the specified page number and page size, and can search by name
+// Return the upstream list according to the specified page number and page size, and can search upstreams by name.
 //
 // ---
 // produces:

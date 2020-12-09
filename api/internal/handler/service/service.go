@@ -91,7 +91,7 @@ type ListInput struct {
 
 // swagger:operation GET /apisix/admin/services getServiceList
 //
-// Return the service list according to the specified page number and page size, and can search by name
+// Return the service list according to the specified page number and page size, and can search services by name.
 //
 // ---
 // produces:

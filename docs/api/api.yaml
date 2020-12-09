@@ -398,7 +398,6 @@ info:
 paths:
   /apisix/admin/check_ssl_cert:
     post:
-      description: verify SSL cert and key
       operationId: checkSSL
       parameters:
       - description: cert of SSL
@@ -422,9 +421,9 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
+      summary: verify SSL cert and key.
   /apisix/admin/check_ssl_exists:
     post:
-      description: check SSL exists or not by sni
       operationId: checkSSLExist
       parameters:
       - description: cert of SSL
@@ -448,9 +447,9 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
+      summary: Check whether the SSL exists.
   /apisix/admin/consumers:
     get:
-      description: Return the consumer list according to the specified page number and page size, and can search by username
       operationId: getConsumerList
       parameters:
       - description: page number
@@ -478,9 +477,9 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
+      summary: Return the consumer list according to the specified page number and page size, and can search consumers by username.
   /apisix/admin/notexist/routes:
     get:
-      description: Returns result of route exists checking by name and exclude id
       operationId: checkRouteExist
       parameters:
       - description: name of route
@@ -502,9 +501,9 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
+      summary: Returns result of route exists checking by name and exclude id.
   /apisix/admin/routes:
     get:
-      description: Return the route list according to the specified page number and page size, and can search by name and uri
       operationId: getRouteList
       parameters:
       - description: page number
@@ -536,9 +535,9 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
+      summary: Return the route list according to the specified page number and page size, and can search routes by name and uri.
   /apisix/admin/services:
     get:
-      description: Return the service list according to the specified page number and page size, and can search by name
       operationId: getServiceList
       parameters:
       - description: page number
@@ -566,9 +565,9 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
+      summary: Return the service list according to the specified page number and page size, and can search services by name.
   /apisix/admin/ssl:
     get:
-      description: Return the SSL list according to the specified page number and page size, and can search by sni
       operationId: getSSLList
       parameters:
       - description: page number
@@ -596,9 +595,9 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
+      summary: Return the SSL list according to the specified page number and page size, and can SSLs search by sni.
   /apisix/admin/upstreams:
     get:
-      description: Return the upstream list according to the specified page number and page size, and can search by name
       operationId: getSSLList
       parameters:
       - description: page number
@@ -626,9 +625,9 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
+      summary: Return the upstream list according to the specified page number and page size, and can search upstreams by name.
   /apisix/admin/user/login:
     post:
-      description: user login
       operationId: userLogin
       parameters:
       - description: user name
@@ -652,6 +651,7 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
+      summary: user login.
 produces:
 - application/json
 - application/xml

@@ -99,7 +99,7 @@ type ListInput struct {
 
 // swagger:operation GET /apisix/admin/ssl getSSLList
 //
-// Return the SSL list according to the specified page number and page size, and can search by sni
+// Return the SSL list according to the specified page number and page size, and can SSLs search by sni.
 //
 // ---
 // produces:
@@ -335,7 +335,7 @@ func ParseCert(crt, key string) (*entity.SSL, error) {
 
 // swagger:operation POST /apisix/admin/check_ssl_cert checkSSL
 //
-// verify SSL cert and key
+// verify SSL cert and key.
 //
 // ---
 // produces:
@@ -417,7 +417,7 @@ func checkSniExists(rows []store.Row, sni string) bool {
 
 // swagger:operation POST /apisix/admin/check_ssl_exists checkSSLExist
 //
-// check SSL exists or not by sni
+// Check whether the SSL exists.
 //
 // ---
 // produces:

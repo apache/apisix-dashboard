@@ -57,7 +57,7 @@ type LoginInput struct {
 
 // swagger:operation POST /apisix/admin/user/login userLogin
 //
-// user login
+// user login.
 //
 // ---
 // produces:
