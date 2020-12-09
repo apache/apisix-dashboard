@@ -54,3 +54,21 @@ $ api/build-tools/schema-sync.sh /usr/local/apisix
 ```
 
 命令执行完成后，若您使用的是已经完成构建的二进制 `manager-api`，那么需要手动将 `api/conf/schema.json` 拷贝到 Dashboard **工作目录**下的 `conf` 目录中。其中，**工作目录**是指根据该[文档](./deploy.zh-CN.md)构建完成后，在根目录下生成的 `output` 目录或修改名称后的目录。
+
+### 5. 如何编写 api 接口文档
+
+我们使用 [go-swagger](https://github.com/go-swagger/go-swagger) 生成 Swagger 2.0 文档，然后转为 markdown 格式，以便可以直接在 github 仓库中查看。具体步骤如下：
+
+1. 按[规范](https://goswagger.io/use/spec.html)编写注释，具体可以参考本项目中已有例子 `api/internal/handler/route/route.go`。
+
+2. 使用 `go-swagger` 工具生成 Swagger 2.0 文档。
+
+```shell
+$ swagger generate spec -o ./docs/api/api.yaml --scan-models
+```
+
+3. 使用 `swagger-markdown` 工具把 Swagger 2.0 文档转为 markdown 文档。
+
+```shell
+$ swagger-markdown -i ./docs/api/api.yaml
+```
