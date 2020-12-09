@@ -94,7 +94,7 @@ if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     exit 1
 fi
 
-# set a invalid etcd endpoint
+# set an invalid etcd endpoint
 
 clean_up
 
@@ -130,7 +130,7 @@ curl -L http://localhost:2379/v3/auth/enable -d '{}'
 sleep 3
 
 # make sure it's wrong
-if [[ `grep -c "etcdserver: user name is empty" ./error.log` -eq '0' ]]; then
+if [[ `grep -c "etcdserver: user name is empty" ${logfile}` -eq '0' ]]; then
     echo "failed: failed to validate etcd basic auth"
     exit 1
 fi
