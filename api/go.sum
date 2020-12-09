@@ -118,6 +118,7 @@ github.com/shiningrush/droplet v0.2.1 h1:p2utttTbCfgiL+x0Zrb2jFeWspB7/o+v3e+R94G
 github.com/shiningrush/droplet v0.2.1/go.mod h1:akW2vIeamvMD6zj6wIBfzYn6StGXBxwlW3gA+hcHu5M=
 github.com/shiningrush/droplet v0.2.2 h1:jEqSGoJXlybt1yQdauu+waE+l7KYlguNs8VayMfQ96Q=
 github.com/shiningrush/droplet v0.2.2/go.mod h1:akW2vIeamvMD6zj6wIBfzYn6StGXBxwlW3gA+hcHu5M=
+github.com/shiningrush/droplet v0.2.3 h1:bzPDzkE0F54r94XsultGS8uAPeL3pZIRmjqM0zIlpeI=
 github.com/shiningrush/droplet v0.2.3/go.mod h1:akW2vIeamvMD6zj6wIBfzYn6StGXBxwlW3gA+hcHu5M=
 github.com/shiningrush/droplet/wrapper/gin v0.2.0 h1:LHkU+TbSkpePgXrTg3hJoSZlCMS03GeWMl0t+oLkd44=
 github.com/shiningrush/droplet/wrapper/gin v0.2.0/go.mod h1:ZJu+sCRrVXn5Pg618c1KK3Ob2UiXGuPM1ROx5uMM9YQ=
