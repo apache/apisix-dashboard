@@ -24,16 +24,16 @@ const {
 
 let browser;
 const domSelectors = {
-  input_routename: '#name',
-  input_routepath: '#uris_0',
-  input_node_host: '#nodes_0_host',
-  input_node_port: '#nodes_0_port',
-  input_node_weight: '#nodes_0_weight',
-  route_list: '.ant-layout-sider-children ul li:nth-child(2)',
-  button_createroute: '.ant-pro-table-toolbar-option button',
-  button_next: '.ant-row-end .ant-col:nth-child(2)',
-  success_ico: '.ant-result-success .anticon-check-circle',
-  button_return_routelist: '.ant-result-extra .ant-btn-primary'
+  inputRoutename: '#name',
+  inputRoutepath: '#uris_0',
+  inputNodehost: '#nodes_0_host',
+  inputNodeport: '#nodes_0_port',
+  inputNodeweight: '#nodes_0_weight',
+  routeList: '.ant-layout-sider-children ul li:nth-child(2)',
+  buttonCreateroute: '.ant-pro-table-toolbar-option button',
+  buttonNext: '.ant-row-end .ant-col:nth-child(2)',
+  successIco: '.ant-result-success .anticon-check-circle',
+  buttonReturnRoutelist: '.ant-result-extra .ant-btn-primary'
 };
 
 describe('Route test', () => {
@@ -49,35 +49,35 @@ describe('Route test', () => {
     const page = await browser.newPage();
     await setupLogin(page);
     // access route list page
-    await page.waitForSelector(domSelectors.route_list)
-    await page.click(domSelectors.route_list)
+    await page.waitForSelector(domSelectors.routeList)
+    await page.click(domSelectors.routeList)
     await page.content();
     // create route
-    await page.waitForSelector(domSelectors.button_createroute)
-    await page.click(domSelectors.button_createroute)
+    await page.waitForSelector(domSelectors.buttonCreateroute)
+    await page.click(domSelectors.buttonCreateroute)
     await page.content();
     // input the route detail
-    await page.waitForSelector(domSelectors.input_routename);
-    await page.type(domSelectors.input_routename, "test_route_by_ui_autotest");
-    await page.focus(domSelectors.input_routepath);
+    await page.waitForSelector(domSelectors.inputRoutename);
+    await page.type(domSelectors.inputRoutename, "test_route_by_ui_autotest");
+    await page.focus(domSelectors.inputRoutepath);
     await page.keyboard.press( 'Backspace' );
     await page.keyboard.press( 'Backspace' );
-    await page.type(domSelectors.input_routepath, "/testpath_by_ui_autotest");
-    await page.click(domSelectors.button_next);
+    await page.type(domSelectors.inputRoutepath, "/testpath_by_ui_autotest");
+    await page.click(domSelectors.buttonNext);
     // input the upstream detail and finish steps
-    await page.waitForSelector(domSelectors.input_node_host);
-    await page.type(domSelectors.input_node_host, "127.0.0.1");
-    await page.type(domSelectors.input_node_port, "1980");
-    await page.type(domSelectors.input_node_weight, "2");
-    await page.click(domSelectors.button_next);
-    await page.click(domSelectors.button_next);
-    await page.click(domSelectors.button_next);
+    await page.waitForSelector(domSelectors.inputNodehost);
+    await page.type(domSelectors.inputNodehost, "127.0.0.1");
+    await page.type(domSelectors.inputNodeport, "1980");
+    await page.type(domSelectors.inputNodeweight, "2");
+    await page.click(domSelectors.buttonNext);
+    await page.click(domSelectors.buttonNext);
+    await page.click(domSelectors.buttonNext);
     // verify route if create success
-    await page.waitForSelector(domSelectors.success_ico);
-    await page.waitForSelector(domSelectors.button_return_routelist);
-    await page.click(domSelectors.button_return_routelist)
+    await page.waitForSelector(domSelectors.successIco);
+    await page.waitForSelector(domSelectors.buttonReturnRoutelist);
+    await page.click(domSelectors.buttonReturnRoutelist)
     await page.content();
-    await page.waitForSelector(domSelectors.button_createroute)
+    await page.waitForSelector(domSelectors.buttonCreateroute)
     // todo: delete the route just created
 
     await page.close();
