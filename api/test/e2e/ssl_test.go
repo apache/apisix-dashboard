@@ -138,13 +138,11 @@ func TestSSL_Basic(t *testing.T) {
 	// enable SSL again
 	tests = []HttpTestCase{
 		{
-			caseDesc: "enable SSL",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPatch,
-			Path:     "/apisix/admin/ssl/1",
-			Body: `{
-				"status": 1
-			}`,
+			caseDesc:     "enable SSL",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPatch,
+			Path:         "/apisix/admin/ssl/1/status",
+			Body:         `1`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -191,5 +189,4 @@ func TestSSL_Basic(t *testing.T) {
 		ExpectStatus: http.StatusOK,
 	}
 	testCaseCheck(delRoute)
-
 }

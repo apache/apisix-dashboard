@@ -68,6 +68,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(entity.SSL{}))))
 
 	r.PATCH("/apisix/admin/ssl/:id", consts.ErrorWrapper(Patch))
+	r.PATCH("/apisix/admin/ssl/:id/*path", consts.ErrorWrapper(Patch))
 
 	r.POST("/apisix/admin/check_ssl_exists", consts.ErrorWrapper(Exist))
 }
@@ -185,13 +186,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 func Patch(c *gin.Context) (interface{}, error) {
 	reqBody, _ := c.GetRawData()
 	ID := c.Param("id")
-
-	arr := strings.Split(ID, "/")
-	var subPath string
-	if len(arr) > 1 {
-		ID = arr[0]
-		subPath = arr[1]
-	}
+	subPath := c.Param("path")
 
 	sslStore := store.GetStore(store.HubKeySsl)
 	stored, err := sslStore.Get(ID)
@@ -199,19 +194,7 @@ func Patch(c *gin.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	var res []byte
-	jsonBytes, err := json.Marshal(stored)
-	if err != nil {
-		return handler.SpecCodeResponse(err), err
-	}
-	if subPath != "" {
-		res, err = utils.PatchJson(jsonBytes, subPath, string(reqBody))
-	} else {
-		res, err = utils.MergeJson(jsonBytes, reqBody)
-	}
-	if err != nil {
-		return handler.SpecCodeResponse(err), err
-	}
+	res, err := utils.MakePatch(stored, subPath, reqBody)
 
 	var ssl entity.SSL
 	err = json.Unmarshal(res, &ssl)

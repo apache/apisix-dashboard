@@ -16,7 +16,10 @@
  */
 package utils
 
-import jsonpatch "github.com/evanphx/json-patch/v5"
+import (
+	"encoding/json"
+	jsonpatch "github.com/evanphx/json-patch/v5"
+)
 
 func MergeJson(doc, patch []byte) ([]byte, error) {
 	out, err := jsonpatch.MergePatch(doc, patch)
@@ -50,4 +53,23 @@ func PatchJson(doc []byte, path, val string) ([]byte, error) {
 	}
 
 	return out, nil
+}
+
+func MakePatch(obj interface{}, subPath string, reqBody []byte) ([]byte, error) {
+	var res []byte
+	jsonBytes, err := json.Marshal(obj)
+	if err != nil {
+		return res, err
+	}
+
+	if subPath != "" {
+		res, err = PatchJson(jsonBytes, subPath, string(reqBody))
+	} else {
+		res, err = MergeJson(jsonBytes, reqBody)
+	}
+
+	if err != nil {
+		return res, err
+	}
+	return res, nil
 }
