@@ -17,9 +17,20 @@
 #
 -->
 
-English | [简体中文](./README.zh-CN.md)
+# Apache APISIX Dashboard (Experimental)
 
-# Apache APISIX Dashboard (Currently considered experimental)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/apisix-dashboard/blob/master/LICENSE)
+
+<p align="center">
+  <a href="https://github.com/apache/apisix-dashboard">English</a> •
+  <a href="https://github.com/apache/apisix-dashboard/blob/master/README.zh-CN.md">中文</a>
+</p>
+
+<p align="center">
+  <a href="https://apisix.apache.org/">Website</a> •
+  <a href="https://github.com/apache/apisix/tree/master/doc">Docs</a> •
+  <a href="https://twitter.com/apacheapisix">Twitter</a>
+</p>
 
 ## What's Apache APISIX Dashboard
 
