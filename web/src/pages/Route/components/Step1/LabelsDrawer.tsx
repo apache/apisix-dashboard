@@ -135,7 +135,8 @@ const LabelsDrawer: React.FC<Props> = ({
           <Button
             type="primary"
             style={{ marginRight: 8, marginLeft: 8 }}
-            onClick={() => {
+            onClick={(e) => {
+              e.persist();
               form.validateFields().then(({ labels }) => {
                 onChange({
                   action: 'labelsChange',
