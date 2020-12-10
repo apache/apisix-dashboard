@@ -404,7 +404,7 @@ func toRows(list *store.ListOutput) []store.Row {
 
 // swagger:operation GET /apisix/admin/notexist/routes checkRouteExist
 //
-// Returns result of route exists checking by name and exclude id.
+// Return result of route exists checking by name and exclude id.
 //
 // ---
 // produces:

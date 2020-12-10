@@ -501,7 +501,7 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ApiError'
-      summary: Returns result of route exists checking by name and exclude id.
+      summary: Return result of route exists checking by name and exclude id.
   /apisix/admin/routes:
     get:
       operationId: getRouteList

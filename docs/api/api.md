@@ -91,7 +91,7 @@ Return the consumer list according to the specified page number and page size, a
 #### GET
 ##### Summary:
 
-Returns result of route exists checking by name and exclude id.
+Return result of route exists checking by name and exclude id.
 
 ##### Parameters
 
