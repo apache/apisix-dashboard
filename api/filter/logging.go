@@ -30,7 +30,7 @@ func RequestLogHandler(logger *zap.SugaredLogger) gin.HandlerFunc {
 		query := c.Request.URL.RawQuery
 		requestId := c.Writer.Header().Get("X-Request-Id")
 
-		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
+		blw := &bodyLogWriter{body: bytes.NewBuffer(nil), ResponseWriter: c.Writer}
 		c.Writer = blw
 		c.Next()
 		latency := time.Since(start) / 1000000

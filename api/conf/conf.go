@@ -71,7 +71,6 @@ type ErrorLog struct {
 }
 
 type AccessLog struct {
-	Level    string
 	FilePath string `yaml:"file_path"`
 }
 
@@ -150,7 +149,7 @@ func setConf() {
 			ErrorLogPath = config.Conf.Log.ErrorLog.FilePath
 		}
 		if !filepath.IsAbs(ErrorLogPath) {
-			ErrorLogPath, err = filepath.Abs(WorkDir + "/" + ErrorLogPath)
+			ErrorLogPath, err = filepath.Abs(filepath.Join(WorkDir, ErrorLogPath))
 			if err != nil {
 				panic(err)
 			}
@@ -161,7 +160,7 @@ func setConf() {
 			AccessLogPath = config.Conf.Log.AccessLog.FilePath
 		}
 		if !filepath.IsAbs(AccessLogPath) {
-			AccessLogPath, err = filepath.Abs(WorkDir + "/" + AccessLogPath)
+			AccessLogPath, err = filepath.Abs(filepath.Join(WorkDir, AccessLogPath))
 			if err != nil {
 				panic(err)
 			}

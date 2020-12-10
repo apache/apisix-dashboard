@@ -33,7 +33,7 @@ func init() {
 
 func GetLogger(logType Type) *zap.SugaredLogger {
 	writeSyncer := fileWriter(logType)
-	encoder := getEncoder()
+	encoder := getEncoder(logType)
 	logLevel := getLogLevel()
 	if logType == AccessLog {
 		logLevel = zapcore.InfoLevel
@@ -65,10 +65,15 @@ func getLogLevel() zapcore.LevelEnabler {
 	return level
 }
 
-func getEncoder() zapcore.Encoder {
+func getEncoder(logType Type) zapcore.Encoder {
 	encoderConfig := zap.NewProductionEncoderConfig()
 	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
+
+	if logType == AccessLog {
+		encoderConfig.LevelKey = zapcore.OmitKey
+	}
+
 	return zapcore.NewConsoleEncoder(encoderConfig)
 }
 
