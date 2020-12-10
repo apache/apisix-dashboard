@@ -192,6 +192,6 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

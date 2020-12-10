@@ -119,7 +119,7 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -178,7 +178,7 @@ func TestRoute_Create_Service(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// sleep for etcd sync
@@ -219,7 +219,7 @@ func TestRoute_Delete_Service(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -276,7 +276,7 @@ func TestRoute_Create_Upstream(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// sleep for etcd sync
@@ -317,6 +317,6 @@ func TestRoute_Delete_Upstream(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

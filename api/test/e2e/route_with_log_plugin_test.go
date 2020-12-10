@@ -108,7 +108,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// sleep for process log
@@ -167,7 +167,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// sleep for process log
@@ -221,6 +221,6 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

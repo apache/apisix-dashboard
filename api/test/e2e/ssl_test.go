@@ -122,7 +122,7 @@ func TestSSL_Basic(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// try again after deleting SSL, make a HTTPS request
@@ -141,6 +141,5 @@ func TestSSL_Basic(t *testing.T) {
 		Headers:      map[string]string{"Authorization": token},
 		ExpectStatus: http.StatusOK,
 	}
-	testCaseCheck(delRoute)
-
+	testCaseCheck(delRoute, t)
 }

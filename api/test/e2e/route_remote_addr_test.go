@@ -116,6 +116,6 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

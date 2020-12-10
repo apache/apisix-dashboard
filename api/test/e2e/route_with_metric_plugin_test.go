@@ -138,6 +138,6 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

@@ -87,7 +87,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	time.Sleep(sleepTime)
@@ -170,7 +170,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 }

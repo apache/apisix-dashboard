@@ -135,11 +135,11 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			Sleep:      sleepTime,
 		},
 		{
-			caseDesc:     "verify route with options method",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodOptions,
+			caseDesc: "verify route with options method",
+			Object:   APISIXExpect(t),
+			Method:   http.MethodOptions,
 			Headers: map[string]string{
-				"Origin":    "http://sub2.domain.com",
+				"Origin": "http://sub2.domain.com",
 			},
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
@@ -223,7 +223,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 }

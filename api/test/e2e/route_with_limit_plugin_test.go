@@ -114,7 +114,7 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -299,7 +299,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -450,6 +450,6 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

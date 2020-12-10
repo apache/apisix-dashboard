@@ -134,7 +134,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -170,7 +170,7 @@ func TestConsumer_with_notexist_plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -258,7 +258,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -279,7 +279,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	basepath := "http://127.0.0.1:9000/apisix/admin/consumers"
@@ -317,7 +317,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// get the consumer
@@ -355,6 +355,6 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

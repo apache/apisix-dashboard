@@ -68,7 +68,7 @@ func TestUpstream_chash_hash_on_custom_header(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -127,7 +127,7 @@ func TestUpstream_chash_hash_on_cookie(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -206,7 +206,7 @@ func TestUpstream_key_contains_uppercase_letters_and_hyphen(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -287,7 +287,7 @@ func TestUpstream_chash_hash_on_consumer(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -355,7 +355,7 @@ func TestUpstream_chash_hash_on_wrong_key(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 }
@@ -421,7 +421,7 @@ func TestUpstream_chash_hash_on_vars(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -485,6 +485,6 @@ func TestUpstream_Delete_hash_on(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

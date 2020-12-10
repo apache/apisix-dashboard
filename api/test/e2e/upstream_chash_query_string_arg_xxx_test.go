@@ -72,7 +72,7 @@ func TestUpstream_chash_query_string(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -135,7 +135,7 @@ func TestUpstream_chash_arg_xxx(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -196,6 +196,6 @@ func TestUpstream_Delete_chash(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

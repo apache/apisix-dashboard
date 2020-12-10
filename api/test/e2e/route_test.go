@@ -99,7 +99,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -174,7 +174,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -220,7 +220,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -255,6 +255,6 @@ func TestRoute_Delete_Routes_With_Hosts(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

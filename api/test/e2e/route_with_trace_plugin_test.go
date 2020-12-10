@@ -70,7 +70,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// sleep for process log
@@ -120,7 +120,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// sleep for process log
@@ -154,6 +154,6 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

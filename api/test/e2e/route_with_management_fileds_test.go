@@ -71,7 +71,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	//get the route
@@ -127,7 +127,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	//get the route (updated)
@@ -156,7 +156,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -225,6 +225,6 @@ func TestRoute_with_lable(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

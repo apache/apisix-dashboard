@@ -108,6 +108,6 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
