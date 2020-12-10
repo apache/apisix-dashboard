@@ -126,6 +126,14 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 func TestRoute_Create_Service(t *testing.T) {
 	tests := []HttpTestCase{
 		{
+			caseDesc:     "make sure the route has not created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
+		{
 			caseDesc: "create service",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
@@ -159,7 +167,7 @@ func TestRoute_Create_Service(t *testing.T) {
 			caseDesc: "create route using the service just created",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r2",
+			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/server_port",
 				"service_id": "200"
@@ -190,7 +198,7 @@ func TestRoute_Delete_Service(t *testing.T) {
 			caseDesc:     "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/r2",
+			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -244,6 +252,14 @@ func TestRoute_Create_Upstream(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "make sure the route has not created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc: "create route using the upstream just created",

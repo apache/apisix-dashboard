@@ -92,7 +92,7 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        2 * time.Second,
+			Sleep:        3 * time.Second,
 		},
 		{
 			caseDesc:     "delete route",
