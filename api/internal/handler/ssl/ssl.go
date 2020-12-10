@@ -27,7 +27,6 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/api7/go-jsonpatch"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
@@ -38,6 +37,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
@@ -62,12 +62,12 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PUT("/apisix/admin/ssl/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
-	r.PATCH("/apisix/admin/ssl/:id", wgin.Wraps(h.Patch,
-		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.DELETE("/apisix/admin/ssl/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 	r.POST("/apisix/admin/check_ssl_cert", wgin.Wraps(h.Validate,
 		wrapper.InputType(reflect.TypeOf(entity.SSL{}))))
+
+	r.PATCH("/apisix/admin/ssl/:id", consts.ErrorWrapper(Patch))
 
 	r.POST("/apisix/admin/check_ssl_exists", consts.ErrorWrapper(Exist))
 }
@@ -182,40 +182,44 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	return nil, nil
 }
 
-func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*UpdateInput)
-	arr := strings.Split(input.ID, "/")
+func Patch(c *gin.Context) (interface{}, error) {
+	reqBody, _ := c.GetRawData()
+	ID := c.Param("id")
+
+	arr := strings.Split(ID, "/")
 	var subPath string
 	if len(arr) > 1 {
-		input.ID = arr[0]
+		ID = arr[0]
 		subPath = arr[1]
 	}
 
-	stored, err := h.sslStore.Get(input.ID)
+	sslStore := store.GetStore(store.HubKeySsl)
+	stored, err := sslStore.Get(ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	var patch jsonpatch.Patch
+	var res []byte
+	jsonBytes, err := json.Marshal(stored)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
 	if subPath != "" {
-		patch = jsonpatch.Patch{
-			Operations: []jsonpatch.PatchOperation{
-				{Op: jsonpatch.Replace, Path: subPath, Value: c.Input()},
-			},
-		}
+		res, err = utils.PatchJson(jsonBytes, subPath, string(reqBody))
 	} else {
-		patch, err = jsonpatch.MakePatch(stored, input.SSL)
-		if err != nil {
-			return handler.SpecCodeResponse(err), err
-		}
+		res, err = utils.MergeJson(jsonBytes, reqBody)
 	}
-
-	err = patch.Apply(&stored)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := h.sslStore.Update(c.Context(), &stored, false); err != nil {
+	var ssl entity.SSL
+	err = json.Unmarshal(res, &ssl)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	if err := sslStore.Update(c, &ssl, false); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
