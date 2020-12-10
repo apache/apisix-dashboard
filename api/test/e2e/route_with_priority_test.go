@@ -74,7 +74,7 @@ func TestRoute_with_priority(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "access the route to determine whether it meets the priority (compair 1 and default)",
+			caseDesc:     "access the route to determine whether it meets the priority (compare 1 and default)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",

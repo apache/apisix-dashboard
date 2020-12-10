@@ -19,17 +19,17 @@ import { Radio, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { isChrome } from 'react-device-detect';
 
-import { PluginPage, PluginPageType } from '@api7-dashboard/plugin';
 import PluginOrchestration from '@api7-dashboard/pluginchart';
+import PluginPage from '@/components/Plugin';
 
 type Props = {
   data: {
-    plugins: PluginPageType.FinalData;
+    plugins: PluginComponent.Data;
     script: Record<string, any>;
   };
-  onChange(data: { plugins: PluginPageType.FinalData; script: any }): void;
+  onChange(data: { plugins: PluginComponent.Data; script: any }): void;
   readonly?: boolean;
-  isForceHttps: boolean
+  isForceHttps: boolean;
 };
 
 type Mode = 'NORMAL' | 'DRAW';
@@ -61,42 +61,40 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
         </Radio.Group>
         {Boolean(disableDraw) && (
           <div style={{ marginLeft: '10px' }}>
-            <Tooltip placement="right" title={() => {
-              // NOTE: forceHttps do not support DRAW mode
-              // TODO: i18n
-              const titleArr: string[] = [];
-              if (!isChrome) {
-                titleArr.push('插件编排仅支持 Chrome 浏览器。');
-              }
-              if (isForceHttps) {
-                titleArr.push('当步骤一中 重定向 选择为 启用 HTTPS 时，不可使用插件编排模式。');
-              }
-              return (
-                titleArr.map((item, index) => `${index + 1}.${item}`).join("")
-              )
-            }}>
+            <Tooltip
+              placement="right"
+              title={() => {
+                // NOTE: forceHttps do not support DRAW mode
+                // TODO: i18n
+                const titleArr: string[] = [];
+                if (!isChrome) {
+                  titleArr.push('插件编排仅支持 Chrome 浏览器。');
+                }
+                if (isForceHttps) {
+                  titleArr.push('当步骤一中 重定向 选择为 启用 HTTPS 时，不可使用插件编排模式。');
+                }
+                return titleArr.map((item, index) => `${index + 1}.${item}`).join('');
+              }}
+            >
               <QuestionCircleOutlined />
             </Tooltip>
           </div>
         )}
       </div>
-      {
-        Boolean(mode === 'NORMAL') && (
-          <PluginPage
-            initialData={plugins}
-            onChange={(pluginsData) => onChange({ plugins: pluginsData, script: {} })}
-          />
-        )
-      }
-      {
-        Boolean(mode === 'DRAW') && (
-          <PluginOrchestration
-            data={script?.chart}
-            onChange={(scriptData) => onChange({ plugins: {}, script: scriptData })}
-            readonly={readonly}
-          />
-        )
-      }
+      {Boolean(mode === 'NORMAL') && (
+        <PluginPage
+          initialData={plugins}
+          schemaType="route"
+          onChange={(pluginsData) => onChange({ plugins: pluginsData, script: {} })}
+        />
+      )}
+      {Boolean(mode === 'DRAW') && (
+        <PluginOrchestration
+          data={script?.chart}
+          onChange={(scriptData) => onChange({ plugins: {}, script: scriptData })}
+          readonly={readonly}
+        />
+      )}
     </>
   );
 };

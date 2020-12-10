@@ -21,39 +21,39 @@ import { history } from 'umi';
 import moment from 'moment';
 
 import { codeMessage } from './constants';
-import IconFont from './iconfont';
+import IconFont from './components/IconFont';
 
 export const getMenuData = (): MenuDataItem[] => {
   return [
     {
       name: 'metrics',
       path: '/metrics',
-      icon: <IconFont type="icondashboard" />,
+      icon: <IconFont name="icondashboard" />,
     },
     {
       name: 'routes',
       path: '/routes/list',
-      icon: <IconFont type="iconroute" />,
+      icon: <IconFont name="iconroute" />,
     },
     {
       name: 'ssl',
       path: '/ssl/list',
-      icon: <IconFont type="iconSSLshuzizhengshu" />,
+      icon: <IconFont name="iconssl" />,
     },
     {
       name: 'upstream',
       path: '/upstream/list',
-      icon: <IconFont type="iconupstream" />,
+      icon: <IconFont name="iconserver" />,
     },
     {
       name: 'consumer',
       path: '/consumer/list',
-      icon: <IconFont type="iconfuwuliebiao" />,
+      icon: <IconFont name="iconconsumer" />,
     },
     {
       name: 'setting',
       path: '/settings',
-      icon: <IconFont type="iconsetting" />,
+      icon: <IconFont name="iconsetting" />,
     },
   ];
 };
@@ -101,8 +101,8 @@ export const getUrlQuery: (key: string) => string | false = (key: string) => {
 export const timestampToLocaleString = (timestamp: number) => {
   if (!timestamp) {
     // TODO: i18n
-    return "None"
+    return 'None';
   }
 
-  return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss')
-}
+  return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
+};

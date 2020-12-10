@@ -18,9 +18,9 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Steps, notification, Form } from 'antd';
 import { history, useIntl } from 'umi';
-import { PluginPage, PluginPageType, PLUGIN_MAPPER_SOURCE } from '@api7-dashboard/plugin';
 
 import ActionBar from '@/components/ActionBar';
+import PluginPage, { PLUGIN_MAPPER_SOURCE } from '@/components/Plugin';
 
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
@@ -28,7 +28,7 @@ import { fetchItem, create, update } from './service';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
-  const [plugins, setPlugins] = useState<PluginPageType.FinalData>({});
+  const [plugins, setPlugins] = useState<PluginComponent.Data>({});
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
 
@@ -70,14 +70,15 @@ const Page: React.FC = (props) => {
         setStep(nextStep);
       });
     } else if (nextStep === 3) {
-      const authPluginNames = Object.keys(PLUGIN_MAPPER_SOURCE).filter(
-        (pluginName) => PLUGIN_MAPPER_SOURCE[pluginName].category === 'Authentication',
-      );
-      const currentAuthPlugin = Object.keys(plugins).filter((plugin) =>
-        authPluginNames.includes(plugin),
-      );
-      const currentAuthPluginLen = currentAuthPlugin.length;
-      if (currentAuthPluginLen > 1 || currentAuthPluginLen === 0) {
+      // TRICK: waiting for https://github.com/apache/apisix-dashboard/issues/532
+      if (
+        !Object.keys(plugins).filter(
+          (name) =>
+            (name.indexOf('auth') !== -1 ||
+              PLUGIN_MAPPER_SOURCE[name]?.category === 'Authentication') &&
+            !plugins[name].disable,
+        ).length
+      ) {
         notification.warning({
           message: formatMessage({
             id: 'page.consumer.notification.warning.enableAuthenticationPlugin',
