@@ -47,8 +47,8 @@ jobs:
           go-version: '1.13'
 
       - name: Start manager-api
-        working-directory: ./
-        run: cd ./api && go run . &
+        working-directory: ./api
+        run: nohup go run . &
           
       - name: Start frontend
         working-directory: ./web
