@@ -56,7 +56,7 @@ describe('Route test', () => {
     await page.waitForSelector(domSelectors.button_createroute)
     await page.click(domSelectors.button_createroute)
     await page.content();
-
+    // input the route detail
     await page.waitForSelector(domSelectors.input_routename);
     await page.type(domSelectors.input_routename, "test_route_by_ui_autotest");
     await page.focus(domSelectors.input_routepath);
@@ -64,7 +64,7 @@ describe('Route test', () => {
     await page.keyboard.press( 'Backspace' );
     await page.type(domSelectors.input_routepath, "/testpath_by_ui_autotest");
     await page.click(domSelectors.button_next);
-
+    // input the upstream detail and finish steps
     await page.waitForSelector(domSelectors.input_node_host);
     await page.type(domSelectors.input_node_host, "127.0.0.1");
     await page.type(domSelectors.input_node_port, "1980");
