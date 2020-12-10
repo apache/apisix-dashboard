@@ -52,7 +52,7 @@
 - 支持日志保存到本地文件。
 - 优化部署流程。
 - 前端增加 E2E 测试例子。[#619](https://github.com/apache/apisix-dashboard/pull/619)
-- 修复 Promethues 插件在更新路由时更新错误值的问题。[#666](https://github.com/apache/apisix-dashboard/pull/666)
+- 修复 Prometheus 插件在更新路由时更新错误值的问题。[#666](https://github.com/apache/apisix-dashboard/pull/666)
 - 修复在路由页面中重定向选项选择为 启用HTTPS 时页面显示异常的问题。[#692](https://github.com/apache/apisix-dashboard/pull/692)
 
 
