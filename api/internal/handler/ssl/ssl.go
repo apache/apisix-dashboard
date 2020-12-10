@@ -195,6 +195,9 @@ func Patch(c *gin.Context) (interface{}, error) {
 	}
 
 	res, err := utils.MakePatch(stored, subPath, reqBody)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
 
 	var ssl entity.SSL
 	err = json.Unmarshal(res, &ssl)
