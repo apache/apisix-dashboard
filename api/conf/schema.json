@@ -2307,7 +2307,7 @@
 				"properties": {
 					"allow_credential": {
 						"default": false,
-						"description": "allow client append crendential. according to CORS specification,if you set this option to 'true', you can not use '*' for other options.",
+						"description": "allow client append credential. according to CORS specification, if you set this option to 'true', you can not use '*' for other options.",
 						"type": "boolean"
 					},
 					"allow_headers": {
