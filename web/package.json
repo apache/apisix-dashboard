@@ -34,7 +34,7 @@
   "license": "Apache-2.0",
   "husky": {
     "hooks": {
-      "commit-msg": "unset GIT_DIR && node scripts/verifyCommit.js",
+      "commit-msg": "node scripts/verifyCommit.js",
       "pre-commit": "yarn run lint-staged"
     }
   },
