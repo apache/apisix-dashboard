@@ -46,6 +46,7 @@ export default {
   'page.route.panelSection.title.requestConfigBasicDefine': 'Request Basic Define',
   'page.route.protocol': 'Protocol',
   'page.route.form.itemLabel.httpMethod': 'HTTP Method',
+  'page.route.form.itemLabel.priority': 'Priority',
   'page.route.form.itemLabel.redirect': 'Redirect',
   'page.route.select.option.enableHttps': 'Enable HTTPS',
   'page.route.select.option.configCustom': 'Custom',
