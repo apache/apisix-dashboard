@@ -51,7 +51,7 @@ export default {
   'page.route.select.option.configCustom': 'Custom',
   'page.route.select.option.forbidden': 'Forbidden',
   'page.route.form.itemLabel.redirectCustom': 'Custom Redirect',
-  'page.route.input.placeholder.redirectCustom': 'For examle: /foo/index.html',
+  'page.route.input.placeholder.redirectCustom': 'For example: /foo/index.html',
   'page.route.select.option.redirect301': '301(Permanent Redirect)',
   'page.route.select.option.redirect302': '302(Temporary Redirect)',
 
