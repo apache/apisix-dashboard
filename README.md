@@ -22,11 +22,6 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/apisix-dashboard/blob/master/LICENSE)
 
 <p align="center">
-  <a href="https://github.com/apache/apisix-dashboard">English</a> •
-  <a href="https://github.com/apache/apisix-dashboard/blob/master/README.zh-CN.md">中文</a>
-</p>
-
-<p align="center">
   <a href="https://apisix.apache.org/">Website</a> •
   <a href="https://github.com/apache/apisix/tree/master/doc">Docs</a> •
   <a href="https://twitter.com/apacheapisix">Twitter</a>
@@ -49,7 +44,6 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 ```
 .
 ├── CHANGELOG.md
-├── CHANGELOG.zh-CN.md
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
 ├── Dockerfile
@@ -57,7 +51,6 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 ├── Makefile
 ├── NOTICE
 ├── README.md
-├── README.zh-CN.md
 ├── api
 ├── docs
 ├── licenses
