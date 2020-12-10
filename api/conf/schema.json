@@ -3217,21 +3217,21 @@
 				"minProperties": 1,
 				"properties": {
 					"body": {
-						"description": "new body for repsonse",
+						"description": "new body for response",
 						"type": "string"
 					},
 					"body_base64": {
 						"default": false,
-						"description": "whether new body for repsonse need base64 decode before return",
+						"description": "whether new body for response need base64 decode before return",
 						"type": "boolean"
 					},
 					"headers": {
-						"description": "new headers for repsonse",
+						"description": "new headers for response",
 						"minProperties": 1,
 						"type": "object"
 					},
 					"status_code": {
-						"description": "new status code for repsonse",
+						"description": "new status code for response",
 						"maximum": 598,
 						"minimum": 200,
 						"type": "integer"
@@ -3582,7 +3582,7 @@
 						"type": "number"
 					},
 					"server_addr": {
-						"description": "default is $server_addr, you can speific your external ip address",
+						"description": "default is $server_addr, you can specify your external ip address",
 						"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
 						"type": "string"
 					},

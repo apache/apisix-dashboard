@@ -73,7 +73,7 @@ Please refer to the [User Guide](./docs/USER_GUIDE.md).
 
 ## Contributing
 
-Please refer to the [Contribution Guide](./CONTRIBUTING.md) for a more detailed infomation.
+Please refer to the [Contribution Guide](./CONTRIBUTING.md) for a more detailed information.
 
 ## FAQ
 
