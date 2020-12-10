@@ -50,11 +50,11 @@ jobs:
         working-directory: ./api
         run: nohup go run . &
           
-      - name: Start frontend
+      - name: Install front-end dependencies
         working-directory: ./web
         if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
-        run: yarn install &
+        run: yarn install
 
-      - name: Run test
+      - name: Start frontend then test
         working-directory: ./web/src/e2e
         run: yarn test:e2e
