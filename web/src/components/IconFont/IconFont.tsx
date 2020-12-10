@@ -14,11 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFromIconfontCN } from '@ant-design/icons';
+import React from 'react';
 
-// NOTE: Icons from AliCDN https://www.iconfont.cn/manage/index
-const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_2088089_a3klmsocd15.js',
-});
+type Props = {
+  name: string;
+};
+
+/**
+ * Icon Font
+ * https://www.iconfont.cn/help/detail?helptype=code
+ */
+const IconFont: React.FC<Props> = ({ name }) => (
+  <svg className="icon" aria-hidden="true">
+    <use xlinkHref={`#${name}`} />
+  </svg>
+);
 
 export default IconFont;

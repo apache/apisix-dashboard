@@ -16,7 +16,7 @@
  */
 import React from 'react';
 
-import IconFont from './IconFont';
+import IconFont from '../IconFont';
 
 export const PLUGIN_MAPPER_SOURCE: Record<string, Omit<PluginComponent.Meta, 'name'>> = {
   'limit-req': {
@@ -34,12 +34,12 @@ export const PLUGIN_MAPPER_SOURCE: Record<string, Omit<PluginComponent.Meta, 'na
   prometheus: {
     category: 'Observability',
     priority: 1,
-    avatar: <IconFont type="iconPrometheus_software_logo" />,
+    avatar: <IconFont name="iconPrometheus_software_logo" />,
   },
   skywalking: {
     category: 'Observability',
     priority: 2,
-    avatar: <IconFont type="iconskywalking" />,
+    avatar: <IconFont name="iconskywalking" />,
   },
   zipkin: {
     category: 'Observability',
@@ -63,12 +63,12 @@ export const PLUGIN_MAPPER_SOURCE: Record<string, Omit<PluginComponent.Meta, 'na
   'jwt-auth': {
     category: 'Authentication',
     priority: 2,
-    avatar: <IconFont type="iconjwt-3" />,
+    avatar: <IconFont name="iconjwt-3" />,
   },
   'authz-keycloak': {
     category: 'Authentication',
     priority: 5,
-    avatar: <IconFont type="iconkeycloak_icon_32px" />,
+    avatar: <IconFont name="iconkeycloak_icon_32px" />,
   },
   'ip-restriction': {
     category: 'Security',
@@ -86,7 +86,7 @@ export const PLUGIN_MAPPER_SOURCE: Record<string, Omit<PluginComponent.Meta, 'na
   'openid-connect': {
     category: 'Authentication',
     priority: 4,
-    avatar: <IconFont type="iconicons8-openid" />,
+    avatar: <IconFont name="iconicons8-openid" />,
   },
   'proxy-rewrite': {
     category: 'Other',
@@ -124,7 +124,7 @@ export const PLUGIN_MAPPER_SOURCE: Record<string, Omit<PluginComponent.Meta, 'na
   'kafka-logger': {
     category: 'Log',
     priority: 1,
-    avatar: <IconFont type="iconApache_kafka" />,
+    avatar: <IconFont name="iconApache_kafka" />,
   },
   cors: {
     category: 'Security',

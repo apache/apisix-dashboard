@@ -49,11 +49,13 @@ ol {
   .ant-table {
     width: 100%;
     overflow-x: auto;
+
     &-thead > tr,
     &-tbody > tr {
       > th,
       > td {
         white-space: pre;
+
         > span {
           display: block;
         }
@@ -87,4 +89,14 @@ ol {
 .ant-layout.ant-layout-has-sider > .ant-layout,
 .ant-layout.ant-layout-has-sider > .ant-layout-content {
   overflow-x: unset;
+}
+
+// NOTE: compatible with IconFont
+.icon {
+  width: 1.2em;
+  height: 1.2em;
+  margin-right: 1em;
+  overflow: hidden;
+  vertical-align: -0.15em;
+  fill: currentColor;
 }
