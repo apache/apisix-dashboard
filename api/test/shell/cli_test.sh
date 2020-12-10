@@ -94,6 +94,24 @@ if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     exit 1
 fi
 
+# set an invalid etcd endpoint
+
+clean_up
+
+sed -i 's/127.0.0.1:2379/127.0.0.0:2379/' conf/conf.yaml
+
+./manager-api > output.log 2>&1 &
+sleep 6
+
+cat ${logfile}
+
+if [[ `grep -c "api/main.go:" ${logfile}` -ne '1' ]]; then
+    echo "failed: failed to write the correct caller"
+    exit 1
+fi
+
+# clean config
+clean_up
 
 # etcd basic auth
 # add root user
@@ -112,7 +130,7 @@ curl -L http://localhost:2379/v3/auth/enable -d '{}'
 sleep 3
 
 # make sure it's wrong
-if [[ `grep -c "etcdserver: user name is empty" ./error.log` -eq '0' ]]; then
+if [[ `grep -c "etcdserver: user name is empty" ${logfile}` -eq '0' ]]; then
     echo "failed: failed to validate etcd basic auth"
     exit 1
 fi

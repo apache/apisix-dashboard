@@ -40,11 +40,11 @@ type JsonSchemaValidator struct {
 func NewJsonSchemaValidator(jsonPath string) (Validator, error) {
 	bs, err := ioutil.ReadFile(jsonPath)
 	if err != nil {
-		return nil, fmt.Errorf("get abs path failed: %w", err)
+		return nil, fmt.Errorf("get abs path failed: %s", err)
 	}
 	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(string(bs)))
 	if err != nil {
-		return nil, fmt.Errorf("new schema failed: %w", err)
+		return nil, fmt.Errorf("new schema failed: %s", err)
 	}
 	return &JsonSchemaValidator{
 		schema: s,
@@ -54,7 +54,7 @@ func NewJsonSchemaValidator(jsonPath string) (Validator, error) {
 func (v *JsonSchemaValidator) Validate(obj interface{}) error {
 	ret, err := v.schema.Validate(gojsonschema.NewGoLoader(obj))
 	if err != nil {
-		return fmt.Errorf("validate failed: %w", err)
+		return fmt.Errorf("validate failed: %s", err)
 	}
 
 	if !ret.Valid() {
@@ -77,14 +77,14 @@ type APISIXJsonSchemaValidator struct {
 func NewAPISIXJsonSchemaValidator(jsonPath string) (Validator, error) {
 	schemaDef := conf.Schema.Get(jsonPath).String()
 	if schemaDef == "" {
-		log.Warnf("schema validate failed: schema not found, path: %s", jsonPath)
+		log.Errorf("schema validate failed: schema not found, path: %s", jsonPath)
 		return nil, fmt.Errorf("schema validate failed: schema not found, path: %s", jsonPath)
 	}
 
 	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
 	if err != nil {
-		log.Warnf("new schema failed: %w", err)
-		return nil, fmt.Errorf("new schema failed: %w", err)
+		log.Errorf("new schema failed: %s", err)
+		return nil, fmt.Errorf("new schema failed: %s", err)
 	}
 	return &APISIXJsonSchemaValidator{
 		schema: s,
@@ -136,12 +136,12 @@ func cHashKeySchemaCheck(upstream *entity.UpstreamDef) error {
 
 	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
 	if err != nil {
-		return fmt.Errorf("schema validate failed: %w", err)
+		return fmt.Errorf("schema validate failed: %s", err)
 	}
 
 	ret, err := s.Validate(gojsonschema.NewGoLoader(upstream.Key))
 	if err != nil {
-		return fmt.Errorf("schema validate failed: %w", err)
+		return fmt.Errorf("schema validate failed: %s", err)
 	}
 
 	if !ret.Valid() {
@@ -231,8 +231,8 @@ func checkConf(reqBody interface{}) error {
 func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 	ret, err := v.schema.Validate(gojsonschema.NewGoLoader(obj))
 	if err != nil {
-		log.Warnf("schema validate failed: %w", err)
-		return fmt.Errorf("schema validate failed: %w", err)
+		log.Errorf("schema validate failed: %s", err)
+		return fmt.Errorf("schema validate failed: %s", err)
 	}
 
 	if !ret.Valid() {
@@ -257,8 +257,9 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 		if schemaValue == nil && schemaType == "consumer_schema" {
 			schemaValue = conf.Schema.Get("plugins." + pluginName + ".schema").Value()
 		}
+
 		if schemaValue == nil {
-			log.Warnf("schema validate failed: schema not found,  %s, %s", "plugins."+pluginName, schemaType)
+			log.Errorf("schema validate failed: schema not found,  %s, %s", "plugins."+pluginName, schemaType)
 			return fmt.Errorf("schema validate failed: schema not found, path: %s", "plugins."+pluginName)
 		}
 		schemaMap := schemaValue.(map[string]interface{})
@@ -270,8 +271,8 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 
 		s, err := gojsonschema.NewSchema(gojsonschema.NewBytesLoader(schemaByte))
 		if err != nil {
-			log.Warnf("init schema validate failed: %w", err)
-			return fmt.Errorf("schema validate failed: %w", err)
+			log.Errorf("init schema validate failed: %s", err)
+			return fmt.Errorf("schema validate failed: %s", err)
 		}
 
 		// check property disable, if is bool, remove from json schema checking
@@ -288,7 +289,8 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 		// check schema
 		ret, err := s.Validate(gojsonschema.NewGoLoader(conf))
 		if err != nil {
-			return fmt.Errorf("schema validate failed: %w", err)
+			log.Errorf("schema validate failed: %s", err)
+			return fmt.Errorf("schema validate failed: %s", err)
 		}
 
 		// put the value back to the property disable
