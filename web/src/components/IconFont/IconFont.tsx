@@ -14,26 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import React from 'react';
 
-export const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
-
-const loginSuccessData = {
-  username: 'admin',
-  password: 'admin',
+type Props = {
+  name: string;
 };
 
-const domSelectors = {
-  inputUsername: '#control-ref_username',
-  inputPassword: '#control-ref_password',
-  buttonLogin: '.ant-btn-lg',
-  loginSuccessIcon: '.ant-notification-notice-icon-success',
-};
+/**
+ * Icon Font
+ * https://www.iconfont.cn/help/detail?helptype=code
+ */
+const IconFont: React.FC<Props> = ({ name }) => (
+  <svg className="icon" aria-hidden="true">
+    <use xlinkHref={`#${name}`} />
+  </svg>
+);
 
-export const setupLogin = async (page) => {
-  await page.goto(BASE_URL);
-  await page.type(domSelectors.inputUsername, loginSuccessData.username);
-  await page.type(domSelectors.inputPassword, loginSuccessData.password);
-  await page.click(domSelectors.buttonLogin);
-  await page.waitForSelector(domSelectors.loginSuccessIcon);
-  await page.waitForNavigation();
-};
+export default IconFont;

@@ -14,11 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFromIconfontCN } from '@ant-design/icons';
+declare namespace PluginComponent {
+  type Data = object;
 
-// NOTE: 增加新图标时，请访问 https://www.iconfont.cn/manage/index 进行图标管理
-const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_1918158_alfpv3n06l6.js',
-});
+  type Schema = '' | 'route' | 'consumer';
 
-export default IconFont;
+  type Category =
+    | 'Security'
+    | 'Limit traffic'
+    | 'Log'
+    | 'Observability'
+    | 'Other'
+    | 'Authentication';
+
+  type Meta = {
+    name: string;
+    category: Category;
+    hidden?: boolean;
+    // Note: Plugins are sorted by priority under the same category in the frontend, the smaller the number, the higher the priority. The default value is 9999.
+    priority?: number;
+    avatar?: React.ReactNode;
+  };
+}
