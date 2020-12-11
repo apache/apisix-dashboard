@@ -495,7 +495,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
                 "url": "http://172.16.238.30:9080/hello",
                 "method": "GET",
                 "headerParams": {
-                    "Authorization":[` + jwtToken + `],
+                    "Authorization":[` + jwtToken + `]
                 }
             }`,
 			Headers:      map[string]string{"Authorization": token},
@@ -518,7 +518,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	realBody := gjson.Get(string(respBody), "data")
-	assert.Equal(t, `{"code":401,"message":"401 Unauthorized","data":{"message":"Missing authorization in request"}}`, realBody.String())
+	assert.Equal(t, `{"code":401,"message":"401 Unauthorized","data":{"message":"Missing JWT token in request"}}`, realBody.String())
 
 	// clear test data
 	tests = []HttpTestCase{
@@ -631,7 +631,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
                 "uri": "http://172.16.238.30:9080/hello",
                 "method": "GET",
                 "headerParams": {
-                    "apikey": ["user-key"],
+                    "apikey": ["user-key"]
                 }
             }`,
 			Headers:      map[string]string{"Authorization": token},
@@ -654,7 +654,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	realBody := gjson.Get(string(respBody), "data")
-	assert.Equal(t, `{"code":401,"message":"401 Unauthorized","data":{"message":"Missing authorization in request"}}`, realBody.String())
+	assert.Equal(t, `{"code":401,"message":"401 Unauthorized","data":{"message":"Missing API key found in request"}}`, realBody.String())
 
 	// clear test data
 	tests = []HttpTestCase{
@@ -770,7 +770,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
                 "uri": "http://172.16.238.30:9080/hello?name=aaa",
                 "method": "GET",
                 "headerParams": {
-                    "apikey": ["user-key"],
+                    "apikey": ["user-key"]
                 }
             }`,
 			Headers:      map[string]string{"Authorization": token},
@@ -793,7 +793,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	realBody := gjson.Get(string(respBody), "data")
-	assert.Equal(t, `{"code":401,"message":"401 Unauthorized","data":{"message":"Missing authorization in request"}}`, realBody.String())
+	assert.Equal(t, `{"code":401,"message":"401 Unauthorized","data":{"message":"Missing API key found in request"}}`, realBody.String())
 
 	// clear test data
 	tests = []HttpTestCase{
