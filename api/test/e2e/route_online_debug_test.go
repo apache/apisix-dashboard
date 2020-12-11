@@ -813,7 +813,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			caseDesc:     "verify route with the jwt token from just deleted consumer",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello",
+			Path:         "/hello?name=aaa",
 			Headers:      map[string]string{"apikey": "user-key"},
 			ExpectStatus: http.StatusUnauthorized,
 			ExpectBody:   `{"message":"Missing related consumer"}`,
