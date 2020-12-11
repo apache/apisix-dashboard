@@ -18,7 +18,12 @@ package filter
 
 import (
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
+	"encoding/pem"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -38,6 +43,94 @@ var resources = map[string]string{
 	"ssl":       "ssl",
 }
 
+func parseCert(crt, key string) ([]string, error) {
+	if crt == "" || key == "" {
+		return nil, errors.New("invalid certificate")
+	}
+
+	certDERBlock, _ := pem.Decode([]byte(crt))
+	if certDERBlock == nil {
+		return nil, errors.New("Certificate resolution failed")
+	}
+	// match
+	_, err := tls.X509KeyPair([]byte(crt), []byte(key))
+	if err != nil {
+		return nil, errors.New("key and cert don't match")
+	}
+
+	x509Cert, err := x509.ParseCertificate(certDERBlock.Bytes)
+
+	if err != nil {
+		return nil, errors.New("Certificate resolution failed")
+	}
+
+	//domain
+	snis := []string{}
+	if x509Cert.DNSNames != nil && len(x509Cert.DNSNames) > 0 {
+		snis = x509Cert.DNSNames
+	} else if x509Cert.IPAddresses != nil && len(x509Cert.IPAddresses) > 0 {
+		for _, ip := range x509Cert.IPAddresses {
+			snis = append(snis, ip.String())
+		}
+	} else {
+		if x509Cert.Subject.Names != nil && len(x509Cert.Subject.Names) > 1 {
+			var attributeTypeNames = map[string]string{
+				"2.5.4.6":  "C",
+				"2.5.4.10": "O",
+				"2.5.4.11": "OU",
+				"2.5.4.3":  "CN",
+				"2.5.4.5":  "SERIALNUMBER",
+				"2.5.4.7":  "L",
+				"2.5.4.8":  "ST",
+				"2.5.4.9":  "STREET",
+				"2.5.4.17": "POSTALCODE",
+			}
+			for _, tv := range x509Cert.Subject.Names {
+				oidString := tv.Type.String()
+				typeName, ok := attributeTypeNames[oidString]
+				if ok && typeName == "CN" {
+					valueString := fmt.Sprint(tv.Value)
+					snis = append(snis, valueString)
+				}
+			}
+		}
+	}
+
+	return snis, nil
+}
+
+func handleSpecialField(resource string, reqBody []byte) ([]byte, error){
+	// remove script, because it's a map, and need to be parsed into lua code
+	if resource == "routes" {
+		var route map[string]interface{}
+		err := json.Unmarshal(reqBody, &route)
+		if err != nil {
+			return nil, fmt.Errorf("read request body failed: %s", err)
+		}
+		if _, ok := route["script"]; ok {
+			delete(route, "script")
+			reqBody, err = json.Marshal(route)
+			if err != nil {
+				return nil, fmt.Errorf("read request body failed: %s", err)
+			}
+		}
+	}
+
+	// SSL does not need to pass sni, we need to parse the SSL to get sni
+	if resource == "ssl" {
+		var ssl map[string]interface{}
+		err := json.Unmarshal(reqBody, &ssl)
+		if err != nil {
+			return nil, fmt.Errorf("read request body failed: %s", err)
+		}
+		ssl["snis"], err = parseCert(ssl["cert"].(string), ssl["key"].(string))
+		if err != nil {
+			return nil, fmt.Errorf("SSL parse failed: %s", err)
+		}
+	}
+
+	return reqBody, nil
+}
 
 func SchemaCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -78,19 +171,12 @@ func SchemaCheck() gin.HandlerFunc {
 			return
 		}
 
-		// remove script, because it's a map, and need to be parsed into lua code
-		if resource == "routes" {
-			var route map[string]interface{}
-			err := json.Unmarshal(reqBody, &route)
-			if err != nil {
-				log.Errorf("read request body failed: %s", err)
-				c.AbortWithStatusJSON(http.StatusBadRequest, consts.ErrInvalidRequest)
-				return
-			}
-			if _, ok := route["script"]; ok {
-				delete(route, "script")
-				reqBody, _ = json.Marshal(route)
-			}
+		reqBody, err = handleSpecialField(resource, reqBody)
+		if err != nil {
+			errMsg := err.Error()
+			c.AbortWithStatusJSON(http.StatusBadRequest, consts.InvalidParam(errMsg))
+			log.Error(errMsg)
+			return
 		}
 
 		if err := validator.Validate(reqBody); err != nil {
