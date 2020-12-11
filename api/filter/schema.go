@@ -73,7 +73,7 @@ func parseCert(crt, key string) ([]string, error) {
 			snis = append(snis, ip.String())
 		}
 	} else {
-		if x509Cert.Subject.Names != nil && len(x509Cert.Subject.Names) > 1 {
+		if x509Cert.Subject.Names != nil && len(x509Cert.Subject.Names) > 0 {
 			var attributeTypeNames = map[string]string{
 				"2.5.4.6":  "C",
 				"2.5.4.10": "O",
