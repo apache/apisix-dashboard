@@ -89,7 +89,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
 		},
-		{
+		/* {
 			caseDesc: "online debug route with query params",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPost,
@@ -100,14 +100,14 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-		},
+		}, */
 	}
 
 	for _, tc := range tests {
 		testCaseCheck(tc)
 	}
 
-	/* basepath := "http://127.0.0.1:9000/apisix/admin/debug-request-forwarding"
+	basepath := "http://127.0.0.1:9000/apisix/admin/debug-request-forwarding"
 	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://127.0.0.1:9080/hello?name=aaa","method": "GET"}`))
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
@@ -117,7 +117,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	realBody := gjson.Get(string(respBody), "data")
-	assert.Equal(t, `null`, realBody.String()) */
+	assert.Equal(t, `null`, realBody.String())
 }
 
 /* func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
