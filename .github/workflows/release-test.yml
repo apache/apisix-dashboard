@@ -32,14 +32,32 @@ jobs:
       - name: release and build
         run: |
           VERSION=$(cat ./api/VERSION)
-          make release-src VERSION=$VERSION
+          mkdir release
+          git clean -Xdf
+          tar -zcvf apache-apisix-dashboard-${VERSION}-src.tgz \
+          --exclude .github \
+          --exclude .git \
+          --exclude .gitattributes \
+          --exclude .idea \
+          --exclude .vscode \
+          --exclude .gitignore \
+          --exclude .DS_Store \
+          --exclude docs \
+          --exclude release \
+          --exclude api/internal/core/store/validate_mock.go \
+          --exclude api/internal/core/storage/storage_mock.go \
+          .
+
+          mv apache-apisix-dashboard-${VERSION}-src.tgz release/apache-apisix-dashboard-${VERSION}-src.tgz
+
           cd release
           tar -zxvf apache-apisix-dashboard-${VERSION}-src.tgz
-          cd apache-apisix-dashboard-${VERSION}-src
+          ls -l
           export GO111MOUDULE=on
           api/build.sh
+          mkdir -p ./output/logs
+          cd output
           ./manager-api > ./api.log 2>&1 &
-
 
       - name: run test
         run: |
