@@ -14,19 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const serveUrlMap = {
-  dev: 'http://40.73.92.163:8080',
-  test: 'http://localhost:9000',
-};
+package filter
 
-const { SERVE_ENV = 'dev' } = process.env;
+import (
+        "net/http"
+        "net/http/httptest"
+        "testing"
 
-export default {
-  dev: {
-    '/apisix/admin': {
-      // NOTE: This is the manager-api pre-deployed in Azure just for preview, please refer to https://www.yuque.com/umijs/umi/proxy for more info.
-      target: serveUrlMap[SERVE_ENV],
-      changeOrigin: true,
-    },
-  },
-};
+        "github.com/gin-gonic/gin"
+        "github.com/stretchr/testify/assert"
+
+        "github.com/apisix/manager-api/log"
+)
+
+func performRequest(r http.Handler, method, path string) *httptest.ResponseRecorder {
+        req := httptest.NewRequest(method, path, nil)
+        w := httptest.NewRecorder()
+        r.ServeHTTP(w, req)
+        return w
+}
+
+func TestRequestLogHandler(t *testing.T) {
+        r := gin.New()
+        logger := log.GetLogger(log.AccessLog)
+        r.Use(RequestLogHandler(logger))
+        r.GET("/", func(c *gin.Context) {
+        })
+
+        w := performRequest(r, "GET", "/")
+        assert.Equal(t, 200, w.Code)
+}

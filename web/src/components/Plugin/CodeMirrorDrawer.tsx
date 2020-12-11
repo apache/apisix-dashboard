@@ -113,10 +113,11 @@ const CodeMirrorDrawer: React.FC<Props> = ({
               onClick={() => {
                 window.open(`https://github.com/apache/apisix/blob/master/doc/plugins/${name}.md`);
               }}
+              key={1}
             >
               Document
             </Button>,
-            <Button type="primary" onClick={formatCodes}>
+            <Button type="primary" onClick={formatCodes} key={2}>
               Format
             </Button>,
           ]}

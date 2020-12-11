@@ -69,7 +69,7 @@ export const getList = async () => {
 };
 
 /**
- * cache pulgin schema by schemaType
+ * cache plugin schema by schemaType
  * default schema is route for plugins in route
  * support schema: consumer for plugins in consumer
  */

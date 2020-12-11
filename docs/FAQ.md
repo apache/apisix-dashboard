@@ -40,7 +40,7 @@ Since the Dashboard caches the jsonschema data of the plugins in Apache APISIX, 
 2. Execute the following commands.
 
 ```sh
-# `$version` is the version number of Apache APISIX, e.g. master or 2.0.
+# `$version` is the version number of Apache APISIX, e.g. master or 2.1.
 $ api/build-tools/schema-sync.sh $version
 ```
 
