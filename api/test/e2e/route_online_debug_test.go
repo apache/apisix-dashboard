@@ -151,7 +151,7 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-				"url": "http://127.0.0.1:9080/hello",
+				"url": "http://172.16.238.30:9080/hello",
 				"method": "GET",
 				"headerParams": {
 					"version": ["v2"]
@@ -205,7 +205,7 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-				"url": "http://127.0.0.1:9080/hello",
+				"url": "http://172.16.238.30:9080/hello",
 				"method": "GET",
 				"bodyParams": {
 					"name": "test",
@@ -293,7 +293,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 				"url": "http://127.0.0.1:9080/hello",
 				"method": "GET",
 				"headerParams": {
-					"Authorization": ["Basic amFjazoxMjM0NTYKIA=="],
+					"Authorization": ["Basic amFjazoxMjM0NTYKIA=="]
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": token},
