@@ -44,7 +44,7 @@ func TestMergeJson(t *testing.T) {
 		doc, patch, result, desc string
 	}{
 		{
-			desc: `simple merge`,
+			desc: "simple merge",
 			doc: `{
                                 "id": "1",
                                 "status": 1,
