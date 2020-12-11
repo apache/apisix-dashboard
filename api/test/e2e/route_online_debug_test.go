@@ -110,7 +110,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 	}
 }
 
-/* func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
+func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "make sure the route is not created ",
@@ -119,6 +119,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc: "create route with header params",
@@ -142,6 +143,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc: "online debug route with header params",
@@ -152,7 +154,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 				"url": "http://127.0.0.1:9080/hello",
 				"method": "GET",
 				"headerParams": {
-					"version": "v2"
+					"version": ["v2"]
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": token},
@@ -174,6 +176,7 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc: "create route with method POST",
@@ -194,6 +197,7 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc: "online debug route with body params",
@@ -227,6 +231,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc: "create route enable basic-auth plugin",
@@ -250,6 +255,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "make sure the consumer is not created",
@@ -276,6 +282,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc: "online debug route with username and password",
@@ -286,7 +293,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 				"url": "http://127.0.0.1:9080/hello",
 				"method": "GET",
 				"headerParams": {
-					"Authorization": "Basic amFjazoxMjM0NTYKIA==",
+					"Authorization": ["Basic amFjazoxMjM0NTYKIA=="],
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": token},
@@ -310,7 +317,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	realBody := gjson.Get(string(respBody), "data")
 	assert.Equal(t, `{"code":401,"message":"404 Not Found","data":{"message":"Missing authorization in request"}}`, realBody.String())
-} */
+}
 
 /*func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
     tests := []HttpTestCase{
