@@ -81,7 +81,7 @@ func SchemaCheck() gin.HandlerFunc {
 		// remove script, because it's a map, and need to be parsed into lua code
 		if resource == "routes" {
 			var route map[string]interface{}
-			err := json.Unmarshal(reqBody, route)
+			err := json.Unmarshal(reqBody, &route)
 			if err != nil {
 				log.Errorf("read request body failed: %s", err)
 				c.AbortWithStatusJSON(http.StatusBadRequest, consts.ErrInvalidRequest)
