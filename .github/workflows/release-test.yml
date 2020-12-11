@@ -46,10 +46,10 @@ jobs:
           --exclude release \
           --exclude api/internal/core/store/validate_mock.go \
           --exclude api/internal/core/storage/storage_mock.go \
+          --warning=no-file-changed \
           .
 
           mv apache-apisix-dashboard-${VERSION}-src.tgz release/apache-apisix-dashboard-${VERSION}-src.tgz
-
           cd release
           tar -zxvf apache-apisix-dashboard-${VERSION}-src.tgz
           ls -l
