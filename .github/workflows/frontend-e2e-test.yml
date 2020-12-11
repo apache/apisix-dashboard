@@ -15,6 +15,16 @@ jobs:
   web-e2e:
     name: Frontend e2e test
     runs-on: ubuntu-latest
+
+    services:
+      etcd:
+        image: bitnami/etcd:3.4.13
+        ports:
+          - 2379:2379
+          - 2380:2380
+        env:
+          ALLOW_NONE_AUTHENTICATION: yes
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -31,9 +41,20 @@ jobs:
         with:
           node-version: 14.x
 
-      - name: Install dependencies
+      - name: Setup golang environment
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.13'
+
+      - name: Start manager-api
+        working-directory: ./api
+        run: nohup go run . &
+          
+      - name: Install front-end dependencies
+        working-directory: ./web
         if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
         run: yarn install
 
       - name: Start frontend then test
+        working-directory: ./web/src/e2e
         run: yarn test:e2e

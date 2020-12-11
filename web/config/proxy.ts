@@ -14,11 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+const serveUrlMap = {
+  dev: 'http://40.73.92.163:8080',
+  test: 'http://localhost:9000',
+};
+
+const { SERVE_ENV = 'dev' } = process.env;
+
 export default {
   dev: {
     '/apisix/admin': {
       // NOTE: This is the manager-api pre-deployed in Azure just for preview, please refer to https://www.yuque.com/umijs/umi/proxy for more info.
-      target: 'http://40.73.92.163:8080',
+      target: serveUrlMap[SERVE_ENV],
       changeOrigin: true,
     },
   },

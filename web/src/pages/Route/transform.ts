@@ -145,6 +145,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     status,
     upstream,
     upstream_id,
+    priority = 0,
   } = data;
   const form1Data: Partial<RouteModule.Form1Data> = {
     name,
@@ -154,6 +155,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     uris: uris || (uri && [uri]) || [],
     remote_addrs: remote_addrs || [''],
     methods,
+    priority,
   };
 
   const redirect = data.plugins?.redirect || {};

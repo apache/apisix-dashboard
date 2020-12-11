@@ -32,6 +32,11 @@ conf:
       file_path:
         logs/error.log  # supports relative path, absolute path, standard output
                         # such as: logs/error.log, /tmp/logs/error.log, /dev/stdout, /dev/stderr
+    access_log:
+      file_path:
+        logs/access.log  # supports relative path, absolute path, standard output
+                         # such as: logs/access.log, /tmp/logs/access.log, /dev/stdout, /dev/stderr
+                         # log example: 2020-12-09T16:38:09.039+0800	INFO	filter/logging.go:46	/apisix/admin/routes/r1	{"status": 401, "host": "127.0.0.1:9000", "query": "asdfsafd=adf&a=a", "requestId": "3d50ecb8-758c-46d1-af5b-cd9d1c820156", "latency": 0, "remoteIP": "127.0.0.1", "method": "PUT", "errs": []}
 authentication:
   secret:
     secret              # secret for jwt token generation.
