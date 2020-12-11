@@ -32,17 +32,18 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
             <>
               {fields.map((field, index) => (
                 <Row gutter={16}>
-                  <Col span={1}>
+                  <Col span={1} key={`col_${field.name}_${index}`}> 
                     <Form.Item
                       name={[field.name, 'check']}
                       style={{ textAlign: 'right' }}
                       valuePropName="checked"
+                      key={`formitem_${field.name}_${index}`}
                     >
                       {fields.length > 1 && index !== fields.length - 1 && <Checkbox />}
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
-                    <Form.Item name={[field.name, 'key']}>
+                  <Col span={8} key={`col_${field.name}_${index}`}>
+                    <Form.Item name={[field.name, 'key']} key={`formitem_${field.name}_${index}`}>
                       <Input
                         placeholder={formatMessage({ id: 'page.route.input.placeholder.paramKey' })}
                         onChange={() => {
@@ -58,8 +59,8 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
-                    <Form.Item name={[field.name, 'value']}>
+                  <Col span={8} key={`col_${field.name}_${index}`}>
+                    <Form.Item name={[field.name, 'value']} key={`formitem_${field.name}_${index}`}>
                       <Input
                         placeholder={formatMessage({
                           id: 'page.route.input.placeholder.paramValue',
@@ -67,7 +68,7 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col>
+                  <Col key={`col_${field.name}_${index}`}>
                     {fields.length > 1 && index !== fields.length - 1 && (
                       <MinusCircleOutlined onClick={() => remove(field.name)} />
                     )}

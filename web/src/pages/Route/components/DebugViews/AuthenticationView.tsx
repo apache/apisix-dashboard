@@ -111,9 +111,9 @@ const AuthenticationView: React.FC<RouteModule.DebugViewProps> = (props) => {
                 props.form.setFieldsValue({ autyType: currentValue });
               }}
             >
-              <Radio value="none">none</Radio>
-              {AUTH_LIST.map((type) => (
-                <Radio value={type}>{type}</Radio>
+              <Radio value="none">None</Radio>
+              {AUTH_LIST.map((type,index) => (
+                <Radio key={`${type}_${index}`} value={type}>{type}</Radio>
               ))}
             </Radio.Group>
           </Form.Item>

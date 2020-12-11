@@ -169,8 +169,8 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             }}
             size="large"
           >
-            {HTTP_METHOD_OPTION_LIST.map((method) => {
-              return <Option value={method}>{method}</Option>;
+            {HTTP_METHOD_OPTION_LIST.map((method, index) => {
+              return <Option key={`${method}_${index}`} value={method}>{method}</Option>;
             })}
           </Select>
           <Search
