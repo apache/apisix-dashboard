@@ -290,7 +290,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-				"url": "http://127.0.0.1:9080/hello",
+				"url": "http://172.16.238.30:9080/hello",
 				"method": "GET",
 				"headerParams": {
 					"Authorization": ["Basic amFjazoxMjM0NTYKIA=="]
@@ -307,7 +307,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 
 	// online debug without auth
 	basepath := "http://127.0.0.1:9000/apisix/admin/debug-request-forwarding"
-	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://127.0.0.1:9080/hello","method": "GET"}`))
+	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://172.16.238.30:9080/hello","method": "GET"}`))
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
