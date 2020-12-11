@@ -50,6 +50,7 @@ export default {
   'page.route.form.itemRulesPatternMessage.apiNameRule':
     '最大长度100，仅支持字母、数字、- 和 _，且只能以字母开头',
   'page.route.form.itemLabel.httpMethod': 'HTTP 方法',
+  'page.route.form.itemLabel.priority': '优先级',
   'page.route.form.itemLabel.redirect': '重定向',
   'page.route.form.itemLabel.redirectCustom': '自定义重定向',
   'page.route.form.itemLabel.rewriteType': '请求路径',

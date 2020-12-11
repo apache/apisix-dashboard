@@ -17,9 +17,15 @@
 #
 -->
 
-English | [简体中文](./README.zh-CN.md)
+# Apache APISIX Dashboard (Experimental)
 
-# Apache APISIX Dashboard (Currently considered experimental)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/apisix-dashboard/blob/master/LICENSE)
+
+<p align="center">
+  <a href="https://apisix.apache.org/">Website</a> •
+  <a href="https://github.com/apache/apisix/tree/master/doc">Docs</a> •
+  <a href="https://twitter.com/apacheapisix">Twitter</a>
+</p>
 
 The latest version is 2.1.1 and should be used with APISIX 2.1. It is not recommended to use with other APISIX versions.
 
@@ -40,7 +46,6 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 ```
 .
 ├── CHANGELOG.md
-├── CHANGELOG.zh-CN.md
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
 ├── Dockerfile
@@ -48,7 +53,6 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 ├── Makefile
 ├── NOTICE
 ├── README.md
-├── README.zh-CN.md
 ├── api
 ├── docs
 ├── licenses
@@ -75,7 +79,7 @@ Please refer to the [User Guide](./docs/USER_GUIDE.md).
 
 ## Contributing
 
-Please refer to the [Contribution Guide](./CONTRIBUTING.md) for a more detailed infomation.
+Please refer to the [Contribution Guide](./CONTRIBUTING.md) for a more detailed information.
 
 ## FAQ
 

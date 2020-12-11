@@ -45,9 +45,10 @@ var (
 	WorkDir          = "."
 	ServerHost       = "127.0.0.1"
 	ServerPort       = 80
-	ETCDEndpoints    = []string{"127.0.0.1:2379"}
+	ETCDConfig       *Etcd
 	ErrorLogLevel    = "warn"
 	ErrorLogPath     = "logs/error.log"
+	AccessLogPath    = "logs/access.log"
 	UserList         = make(map[string]User, 2)
 	AuthConf         Authentication
 	SSLDefaultStatus = 1 //enable ssl by default
@@ -55,6 +56,8 @@ var (
 
 type Etcd struct {
 	Endpoints []string
+	Username  string
+	Password  string
 }
 
 type Listen struct {
@@ -67,8 +70,13 @@ type ErrorLog struct {
 	FilePath string `yaml:"file_path"`
 }
 
+type AccessLog struct {
+	FilePath string `yaml:"file_path"`
+}
+
 type Log struct {
-	ErrorLog ErrorLog `yaml:"error_log"`
+	ErrorLog  ErrorLog  `yaml:"error_log"`
+	AccessLog AccessLog `yaml:"access_log"`
 }
 
 type Conf struct {
@@ -128,9 +136,9 @@ func setConf() {
 			ServerHost = config.Conf.Listen.Host
 		}
 
-		//etcd
+		// for etcd
 		if len(config.Conf.Etcd.Endpoints) > 0 {
-			ETCDEndpoints = config.Conf.Etcd.Endpoints
+			initEtcdConfig(config.Conf.Etcd)
 		}
 
 		//error log
@@ -141,7 +149,18 @@ func setConf() {
 			ErrorLogPath = config.Conf.Log.ErrorLog.FilePath
 		}
 		if !filepath.IsAbs(ErrorLogPath) {
-			ErrorLogPath, err = filepath.Abs(WorkDir + "/" + ErrorLogPath)
+			ErrorLogPath, err = filepath.Abs(filepath.Join(WorkDir, ErrorLogPath))
+			if err != nil {
+				panic(err)
+			}
+		}
+
+		// access log
+		if config.Conf.Log.AccessLog.FilePath != "" {
+			AccessLogPath = config.Conf.Log.AccessLog.FilePath
+		}
+		if !filepath.IsAbs(AccessLogPath) {
+			AccessLogPath, err = filepath.Abs(filepath.Join(WorkDir, AccessLogPath))
 			if err != nil {
 				panic(err)
 			}
@@ -178,5 +197,19 @@ func initSchema() {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
 	} else {
 		Schema = gjson.ParseBytes(schemaContent)
+	}
+}
+
+// initialize etcd config
+func initEtcdConfig(conf Etcd) {
+	var endpoints = []string{"127.0.0.1:2379"}
+	if len(conf.Endpoints) > 0 {
+		endpoints = conf.Endpoints
+	}
+
+	ETCDConfig = &Etcd{
+		Endpoints: endpoints,
+		Username:  conf.Username,
+		Password:  conf.Password,
 	}
 }
