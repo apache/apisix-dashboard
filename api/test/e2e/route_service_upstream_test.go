@@ -60,10 +60,10 @@ func batchTestServerPort(t *testing.T, times int) map[string]int {
 func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "use service that not exist - dashboard",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "use service that not exist - dashboard",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello_",
 				"service_id": "not-exists"
@@ -72,17 +72,17 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:   "hit invalid route on data plane",
+			Desc:       "hit invalid route on data plane",
 			Object:     APISIXExpect(t),
 			Method:     http.MethodGet,
 			Path:       "/hello_",
 			ExpectCode: http.StatusNotFound,
 		},
 		{
-			caseDesc: "use upstream that not exist",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "use upstream that not exist",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello_",
 				"upstream_id": "not-exists"
@@ -91,17 +91,17 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:   "hit invalid route on data plane",
+			Desc:       "hit invalid route on data plane",
 			Object:     APISIXExpect(t),
 			Method:     http.MethodGet,
 			Path:       "/hello_",
 			ExpectCode: http.StatusNotFound,
 		},
 		{
-			caseDesc: "create service and upstream together at the same time",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create service and upstream together at the same time",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello_",
 				"service_id": "not-exists-service",
@@ -111,7 +111,7 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:   "hit invalid route on data plane",
+			Desc:       "hit invalid route on data plane",
 			Object:     APISIXExpect(t),
 			Method:     http.MethodGet,
 			Path:       "/hello_",
@@ -126,7 +126,7 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 func TestRoute_Create_Service(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route has not created",
+			Desc:         "make sure the route has not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
@@ -134,10 +134,10 @@ func TestRoute_Create_Service(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create service",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/services/200",
+			Desc:   "create service",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/services/200",
 			Body: `{
 					"upstream": {
 					"type": "roundrobin",
@@ -164,10 +164,10 @@ func TestRoute_Create_Service(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "create route using the service just created",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route using the service just created",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/server_port",
 				"service_id": "200"
@@ -195,7 +195,7 @@ func TestRoute_Create_Service(t *testing.T) {
 func TestRoute_Delete_Service(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -203,7 +203,7 @@ func TestRoute_Delete_Service(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "remove service",
+			Desc:         "remove service",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/services/200",
@@ -211,7 +211,7 @@ func TestRoute_Delete_Service(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit deleted route",
+			Desc:         "hit deleted route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
@@ -226,10 +226,10 @@ func TestRoute_Delete_Service(t *testing.T) {
 func TestRoute_Create_Upstream(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create upstream",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create upstream",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [
 					{
@@ -254,7 +254,7 @@ func TestRoute_Create_Upstream(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route has not created",
+			Desc:         "make sure the route has not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
@@ -262,10 +262,10 @@ func TestRoute_Create_Upstream(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create route using the upstream just created",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route using the upstream just created",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/server_port",
 				"upstream_id": "1"
@@ -293,7 +293,7 @@ func TestRoute_Create_Upstream(t *testing.T) {
 func TestRoute_Delete_Upstream(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -301,7 +301,7 @@ func TestRoute_Delete_Upstream(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "remove upstream",
+			Desc:         "remove upstream",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/1",
@@ -309,7 +309,7 @@ func TestRoute_Delete_Upstream(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit deleted route",
+			Desc:         "hit deleted route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",

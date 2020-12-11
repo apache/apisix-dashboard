@@ -66,7 +66,7 @@ func TestSSL_Basic(t *testing.T) {
 	// main test cases
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "create ssl fail - key and cert not match",
+			Desc:         "create ssl fail - key and cert not match",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPost,
 			Path:         "/apisix/admin/ssl",
@@ -75,7 +75,7 @@ func TestSSL_Basic(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:     "create ssl successfully",
+			Desc:         "create ssl successfully",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPost,
 			Path:         "/apisix/admin/ssl",
@@ -84,10 +84,10 @@ func TestSSL_Basic(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello_",
 				"hosts": ["test2.com", "*.test2.com"],
@@ -102,7 +102,7 @@ func TestSSL_Basic(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just created using HTTPS",
+			Desc:         "hit the route just created using HTTPS",
 			Object:       APISIXHTTPSExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -112,7 +112,7 @@ func TestSSL_Basic(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete ssl",
+			Desc:         "delete ssl",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/ssl/1",
@@ -134,7 +134,7 @@ func TestSSL_Basic(t *testing.T) {
 
 	// clean test data
 	delRoute := HttpTestCase{
-		caseDesc:     "delete route",
+		Desc:         "delete route",
 		Object:       ManagerApiExpect(t),
 		Method:       http.MethodDelete,
 		Path:         "/apisix/admin/routes/r1",

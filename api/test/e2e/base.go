@@ -118,7 +118,7 @@ func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
 var sleepTime = time.Duration(300) * time.Millisecond
 
 type HttpTestCase struct {
-	caseDesc      string
+	Desc          string
 	Object        *httpexpect.Expect
 	Method        string
 	Path          string
@@ -135,7 +135,7 @@ type HttpTestCase struct {
 }
 
 func testCaseCheck(tc HttpTestCase, t *testing.T) {
-	t.Run(tc.caseDesc, func(t *testing.T) {
+	t.Run(tc.Desc, func(t *testing.T) {
 		//init
 		expectObj := tc.Object
 		var req *httpexpect.Request
