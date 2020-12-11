@@ -17,7 +17,6 @@
 package e2e
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -34,7 +33,6 @@ func TestRoute_Online_Debug_Route_Not_Exist(t *testing.T) {
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
-			Headers:      map[string]string{"Host": "foo.com"},
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
@@ -51,7 +49,6 @@ func TestRoute_Online_Debug_Route_Not_Exist(t *testing.T) {
 	}
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println(string(respBody))
 	realBody := gjson.Get(string(respBody), "data")
 	assert.Equal(t, `{"code":404,"message":"404 Not Found","data":{"error_msg":"404 Route Not Found"}}`, realBody.String())
 }
@@ -63,7 +60,6 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
-			Headers:      map[string]string{"Host": "foo.com"},
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
@@ -73,20 +69,20 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				"uri": "/hello",
-				"methods": ["GET"],
-				"vars": [
-					["arg_name","==","aaa"]
-				],
-				"upstream": {
-					"type": "roundrobin",
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1980,
-						"weight": 1
-					}]
-				}
-			}`,
+                "uri": "/hello",
+                "methods": ["GET"],
+                "vars": [
+                    ["arg_name","==","aaa"]
+                ],
+                "upstream": {
+                    "type": "roundrobin",
+                    "nodes": [{
+                        "host": "172.16.238.20",
+                        "port": 1980,
+                        "weight": 1
+                    }]
+                }
+            }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -97,9 +93,9 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-				"url": "http://172.16.238.30:9080/hello?name=aaa",
-				"method": "GET"
-			}`,
+                "url": "http://172.16.238.30:9080/hello?name=aaa",
+                "method": "GET"
+            }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -127,20 +123,20 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				"uri": "/hello",
-				"methods": ["GET"],
-				"vars": [
-					["http_version","==","v2"]
-				],
-				"upstream": {
-					"type": "roundrobin",
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1980,
-						"weight": 1
-					}]
-				}
-			}`,
+                "uri": "/hello",
+                "methods": ["GET"],
+                "vars": [
+                    ["http_version","==","v2"]
+                ],
+                "upstream": {
+                    "type": "roundrobin",
+                    "nodes": [{
+                        "host": "172.16.238.20",
+                        "port": 1980,
+                        "weight": 1
+                    }]
+                }
+            }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -151,12 +147,12 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-				"url": "http://172.16.238.30:9080/hello",
-				"method": "GET",
-				"headerParams": {
-					"version": ["v2"]
-				}
-			}`,
+                "url": "http://172.16.238.30:9080/hello",
+                "method": "GET",
+                "headerParams": {
+                    "version": ["v2"]
+                }
+            }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -184,17 +180,17 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				"uri": "/hello",
-				"methods": ["POST"],
-				"upstream": {
-					"type": "roundrobin",
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1980,
-						"weight": 1
-					}]
-				}
-			}`,
+                "uri": "/hello",
+                "methods": ["POST"],
+                "upstream": {
+                    "type": "roundrobin",
+                    "nodes": [{
+                        "host": "172.16.238.20",
+                        "port": 1980,
+                        "weight": 1
+                    }]
+                }
+            }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -205,13 +201,13 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-				"url": "http://172.16.238.30:9080/hello",
-				"method": "GET",
-				"bodyParams": {
-					"name": "test",
-					"desc": "online debug route with body params"
-				}
-			}`,
+                "url": "http://172.16.238.30:9080/hello",
+                "method": "POST",
+                "bodyParams": {
+                    "name": "test",
+                    "desc": "online debug route with body params"
+                }
+            }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -239,20 +235,20 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-				"uri": "/hello",
-				"methods": ["GET"],
-				"plugins": {
-					"basic-auth": {}
-				},
-				"upstream": {
-					"type": "roundrobin",
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1980,
-						"weight": 1
-					}]
-				}
-			}`,
+                "uri": "/hello",
+                "methods": ["GET"],
+                "plugins": {
+                    "basic-auth": {}
+                },
+                "upstream": {
+                    "type": "roundrobin",
+                    "nodes": [{
+                        "host": "172.16.238.20",
+                        "port": 1980,
+                        "weight": 1
+                    }]
+                }
+            }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -269,17 +265,18 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			caseDesc: "create consumer",
 			Object:   ManagerApiExpect(t),
 			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Method:   http.MethodPost,
 			Body: `{
-				"username": "jack",
-				"plugins": {
-					"basic-auth": {
-						"username": "jack",
-						"password": "123456",
-					}
-				},
-				"desc": "test description"
-			}`,
+                "username": "jack",
+                "plugins": {
+                    "basic-auth": {
+                        "disable": false,
+                        "username": "jack",
+                        "password": "123456",
+                    }
+                },
+                "desc": "test description"
+            }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -290,12 +287,12 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-				"url": "http://172.16.238.30:9080/hello",
-				"method": "GET",
-				"headerParams": {
-					"Authorization": ["Basic amFjazoxMjM0NTYKIA=="]
-				}
-			}`,
+                "url": "http://172.16.238.30:9080/hello",
+                "method": "GET",
+                "headerParams": {
+                    "Authorization": ["Basic amFjazoxMjM0NTYKIA=="]
+                }
+            }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -316,7 +313,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	realBody := gjson.Get(string(respBody), "data")
-	assert.Equal(t, `{"code":401,"message":"404 Not Found","data":{"message":"Missing authorization in request"}}`, realBody.String())
+	assert.Equal(t, `{"code":401,"message":"401 Unauthorized","data":{"message":"Missing authorization in request"}}`, realBody.String())
 }
 
 /*func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
