@@ -19,14 +19,42 @@
 
 # Table of Contents
 
+- [2.1.1](#211)
 - [2.1.0](#210)
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
 
+
+# 2.1.1
+
+This release mainly adds test cases and bugfix for `Manager API`.
+
+`Manager API` 2.1.1 should be used with APISIX 2.1. It is not recommended to use with other APISIX versions.
+
+### Core
+
+**The default port of `Manager API` is changed from 8080 to 9000.** [#931](https://github.com/apache/apisix-dashboard/pull/931)
+
+### Test case
+
+Add e2e test cases for route, upstream, consumer, SSL, and plugins.
+
+## Bugfix
+ 
+- Fix: when created route by `Admin API`, upstream can not be modified by dashboard. [#847](https://github.com/apache/apisix-dashboard/pull/847)
+- Fix: create route with jwt-auth will display an error. [#878](https://github.com/apache/apisix-dashboard/pull/878)
+- Fix: create route with error format remote_addrs `Manager API` will return 200, but should return 400. [#899](https://github.com/apache/apisix-dashboard/pull/899)
+- Fix: make field ID compatible with both string and int. [#902](https://github.com/apache/apisix-dashboard/pull/902)
+- Fix: can't run `Manager API` in intranet env. [#947](https://github.com/apache/apisix-dashboard/pull/947)
+- Fix: create a route through the dashboard, without filling in the client address, APISIX reports errors. [#948](https://github.com/apache/apisix-dashboard/pull/948)
+- Fix: creates a route and enables redirect HTTPS on dashboard, and the browser reports an error when submitting. [#957](https://github.com/apache/apisix-dashboard/pull/957)
+
+For more changes, please refer to [Milestone](https://github.com/apache/apisix-dashboard/milestone/8).
+
 # 2.1.0
 
-This release mainly adds test cases for manager-api.
+This release mainly adds test cases for `Manager API`.
 
 ### Core
 
@@ -41,8 +69,8 @@ This release mainly refactors the dashboard, omitting MySQL, improve test cases.
 
 ### Core
 
-- Refactor frontend with Admin-API.
-- Manager-API removes dependency on MySQL.
+- Refactor frontend with `Admin API`.
+- `Manager API` removes dependency on MySQL.
 - Support plugin orchestration.
 - Setting standards for frontend internationalization.
 - New deployment pattern.
@@ -65,7 +93,7 @@ This release mainly refactors the dashboard.
 ### Core
 
 - Integrate with Ant Design Pro. [#263](https://github.com/apache/apisix-dashboard/pull/263)
-- Added Manager API support to process logics between APISIX and Dashboard.
+- Added `Manager API` support to process logics between APISIX and Dashboard.
 - Added Metrics/Route/SSL/Upstream/Consumer module.
 
 ## 1.0.0

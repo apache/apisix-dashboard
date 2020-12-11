@@ -27,13 +27,15 @@
   <a href="https://twitter.com/apacheapisix">Twitter</a>
 </p>
 
+The latest version is 2.1.1 and should be used with APISIX 2.1. It is not recommended to use with other APISIX versions.
+
 ## What's Apache APISIX Dashboard
 
 The Apache APISIX Dashboard is designed to make it as easy as possible for users to operate [Apache APISIX](https://github.com/apache/apisix) through a frontend interface.
 
 The Dashboard is the control plane and performs all parameter checks; Apache APISIX mixes data and control planes and will evolve to a pure data plane.
 
-This project includes `manager-api`, which will gradually replace `admin-api` in Apache APISIX.
+This project includes `Manager API`, which will gradually replace `Admin API` in Apache APISIX.
 
 Note: Currently the Dashboard does not have complete coverage of Apache APISIX features, [visit here](https://github.com/apache/apisix-dashboard/milestones) to view the milestones.
 
@@ -57,7 +59,7 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 └── web
 ```
 
-1. The `api` directory is used to store the `manager-api` source codes, which is used to manage `etcd` and provide APIs to the frontend interface.
+1. The `api` directory is used to store the `Manager API` source codes, which is used to manage `etcd` and provide APIs to the frontend interface.
 2. The `web` directory is used to store the frontend source codes.
 
 ## Build then launch
