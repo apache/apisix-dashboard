@@ -272,7 +272,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
                     "basic-auth": {
                         "disable": false,
                         "username": "jack",
-                        "password": "123456",
+                        "password": "123456"
                     }
                 },
                 "desc": "test description"
