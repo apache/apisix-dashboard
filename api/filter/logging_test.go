@@ -14,11 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFromIconfontCN } from '@ant-design/icons';
+package filter
 
-// NOTE: 增加新图标时，请访问 https://www.iconfont.cn/manage/index 进行图标管理
-const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_1918158_alfpv3n06l6.js',
-});
+import (
+        "net/http"
+        "net/http/httptest"
+        "testing"
 
-export default IconFont;
+        "github.com/gin-gonic/gin"
+        "github.com/stretchr/testify/assert"
+
+        "github.com/apisix/manager-api/log"
+)
+
+func performRequest(r http.Handler, method, path string) *httptest.ResponseRecorder {
+        req := httptest.NewRequest(method, path, nil)
+        w := httptest.NewRecorder()
+        r.ServeHTTP(w, req)
+        return w
+}
+
+func TestRequestLogHandler(t *testing.T) {
+        r := gin.New()
+        logger := log.GetLogger(log.AccessLog)
+        r.Use(RequestLogHandler(logger))
+        r.GET("/", func(c *gin.Context) {
+        })
+
+        w := performRequest(r, "GET", "/")
+        assert.Equal(t, 200, w.Code)
+}

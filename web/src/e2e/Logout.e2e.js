@@ -18,24 +18,21 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const puppeteer = require('puppeteer');
 
-const {
-  setupLogin
-} = require('./service')
+const { setupLogin } = require('./service');
 
 let browser;
 const domSelectors = {
   userProfile: '.ant-space-horizontal div:nth-child(2)',
   dropdownMenuItem: '.ant-dropdown-menu-item',
-  buttonLogin: ".ant-btn-lg",
+  buttonLogin: '.ant-btn-lg',
   logoutButton: '.ant-dropdown > ul > li:nth-child(3)',
 };
 
 describe('Logout', () => {
-
   beforeAll(async () => {
     browser = await puppeteer.launch({
       headless: true,
-      slowMo: 100
+      slowMo: 100,
     });
   });
 

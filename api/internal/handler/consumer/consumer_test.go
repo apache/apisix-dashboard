@@ -19,12 +19,14 @@ package consumer
 
 import (
 	"encoding/json"
+
 	"testing"
 	"time"
 
 	"github.com/shiningrush/droplet"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
@@ -32,7 +34,7 @@ import (
 
 func TestConsumer(t *testing.T) {
 	// init
-	err := storage.InitETCDClient([]string{"127.0.0.1:2379"})
+	err := storage.InitETCDClient(conf.ETCDConfig)
 	assert.Nil(t, err)
 	err = store.InitStores()
 	assert.Nil(t, err)
