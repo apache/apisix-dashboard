@@ -17,6 +17,7 @@
 package e2e
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -50,6 +51,7 @@ func TestRoute_Online_Debug_Route_Not_Exist(t *testing.T) {
 	}
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println(string(respBody))
 	realBody := gjson.Get(string(respBody), "data")
 	assert.Equal(t, `{"code":404,"message":"404 Not Found","data":{"error_msg":"404 Route Not Found"}}`, realBody.String())
 }
