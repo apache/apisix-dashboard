@@ -21,8 +21,9 @@ import { Button, Popconfirm, notification, Tag, Space } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 
-import { fetchList, remove } from './service';
 import { timestampToLocaleString } from '@/helpers';
+
+import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();

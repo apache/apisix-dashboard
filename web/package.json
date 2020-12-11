@@ -1,6 +1,6 @@
 {
   "name": "apisix-dashboard",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "private": true,
   "description": "Dashboard for Apache APISIX",
   "scripts": {
@@ -9,7 +9,7 @@
     "dev": "yarn run start:dev",
     "fetch:blocks": "pro fetch-blocks --branch antd@4 && yarn run prettier",
     "i18n-remove": "pro i18n-remove --locale=zh-CN --write",
-    "postinstall": "umi g tmp",
+    "postinstall": "umi g tmp && cd .. && husky install ./web",
     "lint": "umi g tmp && yarn run lint:js && yarn run lint:style && yarn run lint:prettier",
     "lint-staged": "lint-staged",
     "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx ",
@@ -111,9 +111,10 @@
     "eslint": "^7.1.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "express": "^4.17.1",
-    "husky": "^4.0.7",
+    "husky": "^5.0.4",
     "lint-staged": "^10.0.0",
     "mockjs": "^1.0.1-beta3",
+    "pinst": "^2.1.1",
     "prettier": "^2.0.1",
     "pro-download": "1.0.1",
     "puppeteer": "^5.4.1",
