@@ -447,31 +447,31 @@ func TestAPISIXSchemaValidator_Validate(t *testing.T) {
 		"id": "jack",
 		"username": "jack",
 		"plugins": {
-		  "limit-count": {
-		      "count": 2,
-		      "time_window": 60,
-		      "rejected_code": 503,
-		      "key": "remote_addr"
-		  }
+			"limit-count": {
+				"count": 2,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
 		},
 		"desc": "test description"
 	}`
 	err = validator.Validate([]byte(reqBody))
 	assert.Nil(t, err)
 
-	// config with not exists field, should be failed.
+	// config with non existent field, should be failed.
 	reqBody = `{
-	      "username": "jack",
-              "not-exist": "val",
-	      "plugins": {
-	          "limit-count": {
-	              "count": 2,
-	              "time_window": 60,
-	              "rejected_code": 503,
-	              "key": "remote_addr"
-	          }
-	      },
-	    "desc": "test description"
+		"username": "jack",
+		"not-exist": "val",
+		"plugins": {
+			"limit-count": {
+				"count": 2,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
+		},
+		"desc": "test description"
 	}`
 	err = validator.Validate([]byte(reqBody))
 	assert.NotNil(t, err)

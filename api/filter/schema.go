@@ -99,7 +99,7 @@ func parseCert(crt, key string) ([]string, error) {
 	return snis, nil
 }
 
-func handleSpecialField(resource string, reqBody []byte) ([]byte, error){
+func handleSpecialField(resource string, reqBody []byte) ([]byte, error) {
 	// remove script, because it's a map, and need to be parsed into lua code
 	if resource == "routes" {
 		var route map[string]interface{}
@@ -139,7 +139,7 @@ func handleSpecialField(resource string, reqBody []byte) ([]byte, error){
 func SchemaCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		pathPrefix := "/apisix/admin/"
-		resource := strings.Replace(c.Request.URL.Path, pathPrefix, "", 1)
+		resource := strings.TrimPrefix(c.Request.URL.Path, pathPrefix)
 
 		idx := strings.LastIndex(resource, "/")
 		if idx > 1 {
