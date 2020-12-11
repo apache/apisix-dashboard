@@ -34,7 +34,7 @@ jobs:
           VERSION=$(cat ./api/VERSION)
           mkdir release
           git clean -Xdf
-          tar -zcvf apache-apisix-dashboard-${VERSION}-src.tgz \
+          tar -zcvf release/apache-apisix-dashboard-${VERSION}-src.tgz \
           --exclude .github \
           --exclude .git \
           --exclude .gitattributes \
@@ -46,10 +46,8 @@ jobs:
           --exclude release \
           --exclude api/internal/core/store/validate_mock.go \
           --exclude api/internal/core/storage/storage_mock.go \
-          --exclude apache-apisix-dashboard-${VERSION}-src.tgz \
           .
 
-          mv apache-apisix-dashboard-${VERSION}-src.tgz release/apache-apisix-dashboard-${VERSION}-src.tgz
           cd release
           tar -zxvf apache-apisix-dashboard-${VERSION}-src.tgz
           ls -l
