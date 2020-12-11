@@ -55,7 +55,7 @@ func PatchJson(doc []byte, path, val string) ([]byte, error) {
 	return out, nil
 }
 
-func MakePatch(obj interface{}, subPath string, reqBody []byte) ([]byte, error) {
+func MergePatch(obj interface{}, subPath string, reqBody []byte) ([]byte, error) {
 	var res []byte
 	jsonBytes, err := json.Marshal(obj)
 	if err != nil {

@@ -194,7 +194,7 @@ func Patch(c *gin.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	res, err := utils.MakePatch(stored, subPath, reqBody)
+	res, err := utils.MergePatch(stored, subPath, reqBody)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
