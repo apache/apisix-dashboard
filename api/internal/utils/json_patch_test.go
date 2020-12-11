@@ -40,7 +40,7 @@ func formatJSON(j string) string {
 }
 
 func TestMergeJson(t *testing.T) {
-	Cases := []struct {
+	cases := []struct {
 		doc, patch, result, desc string
 	}{
 		{
@@ -111,7 +111,7 @@ func TestMergeJson(t *testing.T) {
                         }`,
 		},
 	}
-	for _, c := range Cases {
+	for _, c := range cases {
 		out, err := MergeJson([]byte(c.doc), []byte(c.patch))
 
 		if err != nil {
@@ -126,7 +126,7 @@ func TestMergeJson(t *testing.T) {
 }
 
 func TestPatchJson(t *testing.T) {
-	Cases := []struct {
+	cases := []struct {
 		doc, path, value, result, desc string
 	}{
 		{
@@ -169,7 +169,7 @@ func TestPatchJson(t *testing.T) {
                         }`,
 		},
 		{
-			desc: "patch field that not exists",
+			desc: "patch field that non existent",
 			doc: `{
                                 "uri": "/index.html",
                                 "upstream": {
@@ -197,7 +197,7 @@ func TestPatchJson(t *testing.T) {
                         }`,
 		},
 	}
-	for _, c := range Cases {
+	for _, c := range cases {
 		out, err := PatchJson([]byte(c.doc), c.path, c.value)
 		if err != nil {
 			t.Errorf("Unable to patch: %s", err)
