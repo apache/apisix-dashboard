@@ -42,6 +42,7 @@ func TestSchema_not_exist_field(t *testing.T) {
                         }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
+			ExpectBody: `{"code":10000,"message":"schema validate failed: (root): Additional property nonexistent is not allowed"}`,
 		},
 		{
 			caseDesc:     "make sure the route create failed",
