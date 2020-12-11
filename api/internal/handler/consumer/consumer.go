@@ -45,10 +45,12 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
 	r.GET("/apisix/admin/consumers", wgin.Wraps(h.List,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
-	r.PUT("/apisix/admin/consumers/:username", wgin.Wraps(h.Set,
-		wrapper.InputType(reflect.TypeOf(SetInput{}))))
-	r.PUT("/apisix/admin/consumers", wgin.Wraps(h.Set,
-		wrapper.InputType(reflect.TypeOf(SetInput{}))))
+	r.POST("/apisix/admin/consumers", wgin.Wraps(h.Create,
+		wrapper.InputType(reflect.TypeOf(entity.Consumer{}))))
+	r.PUT("/apisix/admin/consumers/:username", wgin.Wraps(h.Update,
+		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
+	r.PUT("/apisix/admin/consumers", wgin.Wraps(h.Update,
+		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.DELETE("/apisix/admin/consumers/:usernames", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDeleteInput{}))))
 }
@@ -72,6 +74,40 @@ type ListInput struct {
 	store.Pagination
 }
 
+// swagger:operation GET /apisix/admin/consumers getConsumerList
+//
+// Return the consumer list according to the specified page number and page size, and can search consumers by username.
+//
+// ---
+// produces:
+// - application/json
+// parameters:
+// - name: page
+//   in: query
+//   description: page number
+//   required: false
+//   type: integer
+// - name: page_size
+//   in: query
+//   description: page size
+//   required: false
+//   type: integer
+// - name: username
+//   in: query
+//   description: username of consumer
+//   required: false
+//   type: string
+// responses:
+//   '0':
+//     description: list response
+//     schema:
+//       type: array
+//       items:
+//         "$ref": "#/definitions/consumer"
+//   default:
+//     description: unexpected error
+//     schema:
+//       "$ref": "#/definitions/ApiError"
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
@@ -92,13 +128,25 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	return ret, nil
 }
 
-type SetInput struct {
-	entity.Consumer
-	Username string `auto_read:"username,path"`
+func (h *Handler) Create(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*entity.Consumer)
+	input.ID = input.Username
+
+	ensurePluginsDefValue(input.Plugins)
+	if err := h.consumerStore.Create(c.Context(), input); err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	return nil, nil
 }
 
-func (h *Handler) Set(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*SetInput)
+type UpdateInput struct {
+	Username string `auto_read:"username,path"`
+	entity.Consumer
+}
+
+func (h *Handler) Update(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*UpdateInput)
 	if input.Username != "" {
 		input.Consumer.Username = input.Username
 	}
