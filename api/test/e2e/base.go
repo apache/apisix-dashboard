@@ -115,7 +115,7 @@ func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
 	return e
 }
 
-var sleepTime = time.Duration(100) * time.Millisecond
+var sleepTime = time.Duration(300) * time.Millisecond
 
 type HttpTestCase struct {
 	caseDesc      string

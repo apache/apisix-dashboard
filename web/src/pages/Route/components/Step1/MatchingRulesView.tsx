@@ -149,7 +149,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
             </Space>
           ),
         },
-  ].filter(item => Object.keys(item).length)
+  ].filter((item) => Object.keys(item).length);
 
   const renderModal = () => (
     <Modal
