@@ -61,15 +61,15 @@ type GenericStoreOption struct {
 
 func NewGenericStore(opt GenericStoreOption) (*GenericStore, error) {
 	if opt.BasePath == "" {
-		log.Warn("base path empty")
+		log.Error("base path empty")
 		return nil, fmt.Errorf("base path can not be empty")
 	}
 	if opt.ObjType == nil {
-		log.Warn("object type is nil")
+		log.Errorf("object type is nil")
 		return nil, fmt.Errorf("object type can not be nil")
 	}
 	if opt.KeyFunc == nil {
-		log.Warn("key func is nil")
+		log.Error("key func is nil")
 		return nil, fmt.Errorf("key func can not be nil")
 	}
 
@@ -77,7 +77,7 @@ func NewGenericStore(opt GenericStoreOption) (*GenericStore, error) {
 		opt.ObjType = opt.ObjType.Elem()
 	}
 	if opt.ObjType.Kind() != reflect.Struct {
-		log.Warn("obj type is invalid")
+		log.Error("obj type is invalid")
 		return nil, fmt.Errorf("obj type is invalid")
 	}
 	s := &GenericStore{
@@ -111,7 +111,7 @@ func (s *GenericStore) Init() error {
 	go func() {
 		for event := range ch {
 			if event.Canceled {
-				log.Warnf("watch failed: %w", event.Error)
+				log.Warnf("watch failed: %s", event.Error)
 			}
 
 			for i := range event.Events {
@@ -119,7 +119,7 @@ func (s *GenericStore) Init() error {
 				case storage.EventTypePut:
 					objPtr, err := s.StringToObjPtr(event.Events[i].Value)
 					if err != nil {
-						log.Warnf("value convert to obj failed: %w", err)
+						log.Warnf("value convert to obj failed: %s", err)
 						continue
 					}
 					s.cache.Store(event.Events[i].Key[len(s.opt.BasePath)+1:], objPtr)
@@ -221,7 +221,7 @@ func (s *GenericStore) List(input ListInput) (*ListOutput, error) {
 func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 	if s.opt.Validator != nil {
 		if err := s.opt.Validator.Validate(obj); err != nil {
-			log.Infof("data validate fail: %w", err)
+			log.Errorf("data validate failed: %s", err)
 			return err
 		}
 	}
@@ -259,7 +259,7 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 
 	bs, err := json.Marshal(obj)
 	if err != nil {
-		log.Warnf("json marshal failed: %s", err)
+		log.Errorf("json marshal failed: %s", err)
 		return fmt.Errorf("json marshal failed: %s", err)
 	}
 	if err := s.Stg.Create(ctx, s.GetObjStorageKey(obj), string(bs)); err != nil {
@@ -296,7 +296,7 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotE
 
 	bs, err := json.Marshal(obj)
 	if err != nil {
-		log.Warnf("json marshal failed: %s", err)
+		log.Errorf("json marshal failed: %s", err)
 		return fmt.Errorf("json marshal failed: %s", err)
 	}
 	if err := s.Stg.Update(ctx, s.GetObjStorageKey(obj), string(bs)); err != nil {
@@ -324,8 +324,8 @@ func (s *GenericStore) StringToObjPtr(str string) (interface{}, error) {
 	objPtr := reflect.New(s.opt.ObjType)
 	err := json.Unmarshal([]byte(str), objPtr.Interface())
 	if err != nil {
-		log.Warnf("json marshal failed: %s", err)
-		return nil, fmt.Errorf("json unmarshal failed: %w", err)
+		log.Errorf("json marshal failed: %s", err)
+		return nil, fmt.Errorf("json unmarshal failed: %s", err)
 	}
 
 	return objPtr.Interface(), nil
