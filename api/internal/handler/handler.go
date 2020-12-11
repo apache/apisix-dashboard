@@ -16,7 +16,7 @@
  */
 // API doc of Manager API.
 //
-// Manager API directly operates ETCD and provides data management for APISIX, provides APIs for Front-end or other clients.
+// Manager API directly operates ETCD and provides data management for Apache APISIX, provides APIs for Front-end or other clients.
 //
 // Terms Of Service:
 //     Schemes: http, https
