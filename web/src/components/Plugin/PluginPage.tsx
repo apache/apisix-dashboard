@@ -118,6 +118,7 @@ const PluginPage: React.FC<Props> = ({
                     title={[
                       item.avatar && (
                         <Avatar
+                          key={1}
                           icon={item.avatar}
                           className="plugin-avatar"
                           style={{
@@ -125,7 +126,7 @@ const PluginPage: React.FC<Props> = ({
                           }}
                         />
                       ),
-                      <span>{item.name}</span>,
+                      <span key={2}>{item.name}</span>,
                     ]}
                     style={{ height: 66 }}
                     extra={[
