@@ -18,6 +18,7 @@ package filter
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -70,14 +71,16 @@ func SchemaCheck() gin.HandlerFunc {
 
 		validator, err := store.NewAPISIXSchemaValidator("main." + schemaKey)
 		if err != nil {
-			log.Errorf("init validator failed: %s", err)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, consts.ErrSchemaValidateFailed)
+			errMsg := fmt.Sprintf("init validator failed: %s", err)
+			c.AbortWithStatusJSON(http.StatusBadRequest, consts.InvalidParam(errMsg))
+			log.Errorf(errMsg)
 			return
 		}
 
 		if err := validator.Validate(reqBody); err != nil {
-			log.Warnf("data validate failed: %s", err)
-			c.AbortWithStatusJSON(http.StatusBadRequest, consts.ErrSchemaValidateFailed)
+			errMsg := fmt.Sprintf("schema validate failed: %s", err)
+			c.AbortWithStatusJSON(http.StatusBadRequest, consts.InvalidParam(errMsg))
+			log.Warn(errMsg)
 			return
 		}
 
