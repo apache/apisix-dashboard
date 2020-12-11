@@ -78,7 +78,7 @@ func SchemaCheck() gin.HandlerFunc {
 			return
 		}
 
-		// remove script, because it need to be parsed into
+		// remove script, because it's a map, and need to be parsed into lua code
 		if resource == "routes" {
 			var route map[string]interface{}
 			err := json.Unmarshal(reqBody, route)
