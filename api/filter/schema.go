@@ -127,6 +127,10 @@ func handleSpecialField(resource string, reqBody []byte) ([]byte, error){
 		if err != nil {
 			return nil, fmt.Errorf("SSL parse failed: %s", err)
 		}
+		reqBody, err = json.Marshal(ssl)
+		if err != nil {
+			return nil, fmt.Errorf("read request body failed: %s", err)
+		}
 	}
 
 	return reqBody, nil
