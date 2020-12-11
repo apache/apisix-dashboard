@@ -17,30 +17,30 @@
 package filter
 
 import (
-        "net/http"
-        "net/http/httptest"
-        "testing"
+	"net/http"
+	"net/http/httptest"
+	"testing"
 
-        "github.com/gin-gonic/gin"
-        "github.com/stretchr/testify/assert"
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 
-        "github.com/apisix/manager-api/log"
+	"github.com/apisix/manager-api/log"
 )
 
 func performRequest(r http.Handler, method, path string) *httptest.ResponseRecorder {
-        req := httptest.NewRequest(method, path, nil)
-        w := httptest.NewRecorder()
-        r.ServeHTTP(w, req)
-        return w
+	req := httptest.NewRequest(method, path, nil)
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+	return w
 }
 
 func TestRequestLogHandler(t *testing.T) {
-        r := gin.New()
-        logger := log.GetLogger(log.AccessLog)
-        r.Use(RequestLogHandler(logger))
-        r.GET("/", func(c *gin.Context) {
-        })
+	r := gin.New()
+	logger := log.GetLogger(log.AccessLog)
+	r.Use(RequestLogHandler(logger))
+	r.GET("/", func(c *gin.Context) {
+	})
 
-        w := performRequest(r, "GET", "/")
-        assert.Equal(t, 200, w.Code)
+	w := performRequest(r, "GET", "/")
+	assert.Equal(t, 200, w.Code)
 }

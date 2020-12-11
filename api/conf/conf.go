@@ -101,7 +101,11 @@ type Config struct {
 	Authentication Authentication
 }
 
+// TODO: it is just for integration tests, we should call "InitLog" explicitly when remove all handler's integration tests
 func init() {
+	InitConf()
+}
+func InitConf() {
 	//go test
 	if workDir := os.Getenv("APISIX_API_WORKDIR"); workDir != "" {
 		WorkDir = workDir

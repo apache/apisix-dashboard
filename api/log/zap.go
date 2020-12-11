@@ -27,10 +27,13 @@ import (
 
 var logger *zap.SugaredLogger
 
+// TODO: it is just for integration tests, we should call "InitLog" explicitly when remove all handler's integration tests
 func init() {
+	InitLogger()
+}
+func InitLogger() {
 	logger = GetLogger(ErrorLog)
 }
-
 func GetLogger(logType Type) *zap.SugaredLogger {
 	writeSyncer := fileWriter(logType)
 	encoder := getEncoder(logType)

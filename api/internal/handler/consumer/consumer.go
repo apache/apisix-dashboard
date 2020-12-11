@@ -17,21 +17,17 @@
 package consumer
 
 import (
-	"fmt"
-	"net/http"
 	"reflect"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
-	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
@@ -56,7 +52,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.PUT("/apisix/admin/consumers", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.DELETE("/apisix/admin/consumers/:usernames", wgin.Wraps(h.BatchDelete,
-		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
+		wrapper.InputType(reflect.TypeOf(BatchDeleteInput{}))))
 }
 
 type GetInput struct {
@@ -134,19 +130,9 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Consumer)
-	if input.ID != nil && utils.InterfaceToString(input.ID) != input.Username {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			fmt.Errorf("consumer's id and username must be a same value")
-	}
 	input.ID = input.Username
 
-	if _, ok := input.Plugins["jwt-auth"]; ok {
-		jwt := input.Plugins["jwt-auth"].(map[string]interface{})
-		jwt["exp"] = 86400
-
-		input.Plugins["jwt-auth"] = jwt
-	}
-
+	ensurePluginsDefValue(input.Plugins)
 	if err := h.consumerStore.Create(c.Context(), input); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -161,42 +147,34 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
-	if input.ID != nil && utils.InterfaceToString(input.ID) != input.Username {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			fmt.Errorf("consumer's id and username must be a same value")
-	}
 	if input.Username != "" {
 		input.Consumer.Username = input.Username
 	}
 	input.Consumer.ID = input.Consumer.Username
-
-	if _, ok := input.Consumer.Plugins["jwt-auth"]; ok {
-		jwt := input.Consumer.Plugins["jwt-auth"].(map[string]interface{})
-		jwt["exp"] = 86400
-
-		input.Consumer.Plugins["jwt-auth"] = jwt
-	}
+	ensurePluginsDefValue(input.Plugins)
 
 	if err := h.consumerStore.Update(c.Context(), &input.Consumer, true); err != nil {
-		//if not exists, create
-		if err.Error() == fmt.Sprintf("key: %s is not found", input.Username) {
-			if err := h.consumerStore.Create(c.Context(), &input.Consumer); err != nil {
-				return handler.SpecCodeResponse(err), err
-			}
-		} else {
-			return handler.SpecCodeResponse(err), err
-		}
+		return handler.SpecCodeResponse(err), err
 	}
 
 	return nil, nil
 }
 
-type BatchDelete struct {
+func ensurePluginsDefValue(plugins map[string]interface{}) {
+	if plugins["jwt-auth"] != nil {
+		jwtAuth, ok := plugins["jwt-auth"].(map[string]interface{})
+		if ok && jwtAuth["exp"] == nil {
+			jwtAuth["exp"] = 86400
+		}
+	}
+}
+
+type BatchDeleteInput struct {
 	UserNames string `auto_read:"usernames,path"`
 }
 
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*BatchDelete)
+	input := c.Input().(*BatchDeleteInput)
 
 	if err := h.consumerStore.BatchDelete(c.Context(), strings.Split(input.UserNames, ",")); err != nil {
 		return handler.SpecCodeResponse(err), err
