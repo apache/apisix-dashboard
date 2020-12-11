@@ -420,6 +420,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc: "create route enable jwt-auth plugin",
@@ -443,6 +444,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
             }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "make sure the consumer is not created",
@@ -451,6 +453,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			Path:         "/apisix/admin/consumers/jack",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc: "create consumer",
@@ -470,6 +473,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
             }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 	}
 
@@ -495,7 +499,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
                 "url": "http://172.16.238.30:9080/hello",
                 "method": "GET",
                 "headerParams": {
-                    "Authorization":[` + jwtToken + `]
+                    "Authorization": ["` + jwtToken + `"]
                 }
             }`,
 			Headers:      map[string]string{"Authorization": token},
@@ -535,7 +539,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": "Basic amFjazoxMjM0NTYKIA=="},
+			Headers:      map[string]string{"Authorization": jwtToken},
 			ExpectStatus: http.StatusUnauthorized,
 			ExpectBody:   `{"message":"Missing related consumer"}`,
 			Sleep:        sleepTime,
@@ -628,7 +632,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-                "uri": "http://172.16.238.30:9080/hello",
+                "url": "http://172.16.238.30:9080/hello",
                 "method": "GET",
                 "headerParams": {
                     "apikey": ["user-key"]
@@ -671,7 +675,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": "Basic amFjazoxMjM0NTYKIA=="},
+			Headers:      map[string]string{"apikey": "user-key"},
 			ExpectStatus: http.StatusUnauthorized,
 			ExpectBody:   `{"message":"Missing related consumer"}`,
 			Sleep:        sleepTime,
@@ -767,7 +771,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-                "uri": "http://172.16.238.30:9080/hello?name=aaa",
+                "url": "http://172.16.238.30:9080/hello?name=aaa",
                 "method": "GET",
                 "headerParams": {
                     "apikey": ["user-key"]
@@ -810,7 +814,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": "Basic amFjazoxMjM0NTYKIA=="},
+			Headers:      map[string]string{"apikey": "user-key"},
 			ExpectStatus: http.StatusUnauthorized,
 			ExpectBody:   `{"message":"Missing related consumer"}`,
 			Sleep:        sleepTime,
