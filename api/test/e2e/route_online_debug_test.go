@@ -60,7 +60,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			caseDesc:     "hit route that not exist",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello_",
+			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
@@ -99,6 +99,23 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
             }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify the deleted route ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
 		},
 	}
 
@@ -157,6 +174,23 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
+		{
+			caseDesc:     "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify the deleted route ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
+		},
 	}
 
 	for _, tc := range tests {
@@ -211,6 +245,23 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
             }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify the deleted route ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
 		},
 	}
 
@@ -315,6 +366,49 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	realBody := gjson.Get(string(respBody), "data")
 	assert.Equal(t, `{"code":401,"message":"401 Unauthorized","data":{"message":"Missing authorization in request"}}`, realBody.String())
+
+	// clear test data
+	tests = []HttpTestCase{
+		{
+			caseDesc:     "delete consumer",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify route with the jwt token from just deleted consumer",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": "Basic amFjazoxMjM0NTYKIA=="},
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   `{"message":"Missing related consumer"}`,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify the deleted route ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
 }
 
 func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
@@ -328,7 +422,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route enable basic-auth plugin",
+			caseDesc: "create route enable jwt-auth plugin",
 			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
@@ -379,19 +473,18 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 		},
 	}
 
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+
 	// sign jwt token
 	body, status, err := httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key")
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, status)
 	jwtToken := string(body)
 
-	for _, tc := range tests {
-		testCaseCheck(tc)
-	}
-
 	time.Sleep(sleepTime)
 
-	// verify token and clean test data
 	tests = []HttpTestCase{
 		{
 			caseDesc: "online debug route with jwt token",
@@ -426,6 +519,49 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	realBody := gjson.Get(string(respBody), "data")
 	assert.Equal(t, `{"code":401,"message":"401 Unauthorized","data":{"message":"Missing authorization in request"}}`, realBody.String())
+
+	// clear test data
+	tests = []HttpTestCase{
+		{
+			caseDesc:     "delete consumer",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify route with the jwt token from just deleted consumer",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": "Basic amFjazoxMjM0NTYKIA=="},
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   `{"message":"Missing related consumer"}`,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify the deleted route ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
 }
 
 func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
@@ -519,6 +655,49 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	realBody := gjson.Get(string(respBody), "data")
 	assert.Equal(t, `{"code":401,"message":"401 Unauthorized","data":{"message":"Missing authorization in request"}}`, realBody.String())
+
+	// clear test data
+	tests = []HttpTestCase{
+		{
+			caseDesc:     "delete consumer",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify route with the jwt token from just deleted consumer",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": "Basic amFjazoxMjM0NTYKIA=="},
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   `{"message":"Missing related consumer"}`,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify the deleted route ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
 }
 
 func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
@@ -615,4 +794,47 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	realBody := gjson.Get(string(respBody), "data")
 	assert.Equal(t, `{"code":401,"message":"401 Unauthorized","data":{"message":"Missing authorization in request"}}`, realBody.String())
+
+	// clear test data
+	tests = []HttpTestCase{
+		{
+			caseDesc:     "delete consumer",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify route with the jwt token from just deleted consumer",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": "Basic amFjazoxMjM0NTYKIA=="},
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   `{"message":"Missing related consumer"}`,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify the deleted route ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
 }
