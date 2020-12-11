@@ -18,6 +18,7 @@ package filter
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -75,6 +76,21 @@ func SchemaCheck() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusBadRequest, consts.InvalidParam(errMsg))
 			log.Errorf(errMsg)
 			return
+		}
+
+		// remove script, because it need to be parsed into
+		if resource == "routes" {
+			var route map[string]interface{}
+			err := json.Unmarshal(reqBody, route)
+			if err != nil {
+				log.Errorf("read request body failed: %s", err)
+				c.AbortWithStatusJSON(http.StatusBadRequest, consts.ErrInvalidRequest)
+				return
+			}
+			if _, ok := route["script"]; ok {
+				delete(route, "script")
+				reqBody, _ = json.Marshal(route)
+			}
 		}
 
 		if err := validator.Validate(reqBody); err != nil {
