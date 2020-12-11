@@ -35,9 +35,12 @@ func ErrorWrapper(handle WrapperHandle) gin.HandlerFunc {
 	}
 }
 
+// swagger:model ApiError
 type ApiError struct {
-	Status  int    `json:"-"`
-	Code    int    `json:"code"`
+	Status int `json:"-"`
+	// response code
+	Code int `json:"code"`
+	// response message
 	Message string `json:"message"`
 }
 

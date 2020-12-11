@@ -14,6 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// API doc of Manager API.
+//
+// Manager API directly operates ETCD and provides data management for Apache APISIX, provides APIs for Front-end or other clients.
+//
+// Terms Of Service:
+//     Schemes: http, https
+//     Host: 127.0.0.1
+//     License: Apache License 2.0 http://www.apache.org/licenses/LICENSE-2.0
+//
+//     Consumes:
+//     - application/json
+//     - application/xml
+//
+//     Produces:
+//     - application/json
+//     - application/xml
+//
+// swagger:meta
 package handler
 
 import (

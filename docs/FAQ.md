@@ -54,3 +54,21 @@ $ api/build-tools/schema-sync.sh /usr/local/apisix
 ```
 
 After the command finishes executing, if you are using a binary `manager-api` that has already been built, you will need to manually copy `api/conf/schema.json` to the `conf` directory under the Dashboard **working directory**. where **working directory** refers to the `conf` directory under this [document](./deploy.md) is the `output` directory, or the directory with the modified name, that is generated in the root directory after the build is complete.
+
+### 5. How to write API documentation
+
+We use [go-swagger](https://github.com/go-swagger/go-swagger) to generate Swagger 2.0 documents, and then convert them to markdown format so that they can be viewed directly in the github repository. Specific steps are as follows:
+
+1. Write comments according to [Specification](https://goswagger.io/use/spec.html). For details, please refer to the existing example `api/internal/handler/route/route.go` in this project.
+
+2. Use the `go-swagger` tool to generate Swagger 2.0 documents.
+
+```shell
+$ swagger generate spec -o ./docs/api/api.yaml --scan-models
+```
+
+3. Use the `swagger-markdown` tool to convert Swagger 2.0 documents into markdown documents.
+
+```shell
+$ swagger-markdown -i ./docs/api/api.yaml
+```
