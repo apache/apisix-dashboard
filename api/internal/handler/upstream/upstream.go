@@ -85,7 +85,7 @@ type ListInput struct {
 	store.Pagination
 }
 
-// swagger:operation GET /apisix/admin/upstreams getSSLList
+// swagger:operation GET /apisix/admin/upstreams getUpstreamList
 //
 // Return the upstream list according to the specified page number and page size, and can search upstreams by name.
 //
