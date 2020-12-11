@@ -19,7 +19,6 @@ package filter
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -38,6 +37,7 @@ var resources = map[string]string{
 	"consumers": "consumer",
 	"ssl":       "ssl",
 }
+
 
 func SchemaCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -72,9 +72,9 @@ func SchemaCheck() gin.HandlerFunc {
 
 		validator, err := store.NewAPISIXSchemaValidator("main." + schemaKey)
 		if err != nil {
-			errMsg := fmt.Sprintf("init validator failed: %s", err)
+			errMsg := err.Error()
 			c.AbortWithStatusJSON(http.StatusBadRequest, consts.InvalidParam(errMsg))
-			log.Errorf(errMsg)
+			log.Error(errMsg)
 			return
 		}
 
@@ -94,7 +94,7 @@ func SchemaCheck() gin.HandlerFunc {
 		}
 
 		if err := validator.Validate(reqBody); err != nil {
-			errMsg := fmt.Sprintf("schema validate failed: %s", err)
+			errMsg := err.Error()
 			c.AbortWithStatusJSON(http.StatusBadRequest, consts.InvalidParam(errMsg))
 			log.Warn(errMsg)
 			return
