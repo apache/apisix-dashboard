@@ -70,20 +70,20 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/hello",
-                "methods": ["GET"],
-                "vars": [
-                    ["arg_name","==","aaa"]
-                ],
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1980,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/hello",
+				"methods": ["GET"],
+				"vars": [
+					["arg_name","==","aaa"]
+				],
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -94,9 +94,9 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-                "url": "http://172.16.238.30:9080/hello?name=aaa",
-                "method": "GET"
-            }`,
+				"url": "http://172.16.238.30:9080/hello?name=aaa",
+				"method": "GET"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -141,20 +141,20 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/hello",
-                "methods": ["GET"],
-                "vars": [
-                    ["http_version","==","v2"]
-                ],
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1980,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/hello",
+				"methods": ["GET"],
+				"vars": [
+					["http_version","==","v2"]
+				],
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -165,12 +165,12 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-                "url": "http://172.16.238.30:9080/hello",
-                "method": "GET",
-                "headerParams": {
-                    "version": ["v2"]
-                }
-            }`,
+				"url": "http://172.16.238.30:9080/hello",
+				"method": "GET",
+				"headerParams": {
+					"version": ["v2"]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -215,17 +215,17 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/hello",
-                "methods": ["POST"],
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1980,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/hello",
+				"methods": ["POST"],
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -236,13 +236,13 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-                "url": "http://172.16.238.30:9080/hello",
-                "method": "POST",
-                "bodyParams": {
-                    "name": "test",
-                    "desc": "online debug route with body params"
-                }
-            }`,
+				"url": "http://172.16.238.30:9080/hello",
+				"method": "POST",
+				"bodyParams": {
+					"name": "test",
+					"desc": "online debug route with body params"
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -287,20 +287,20 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/hello",
-                "methods": ["GET"],
-                "plugins": {
-                    "basic-auth": {}
-                },
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1980,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/hello",
+				"methods": ["GET"],
+				"plugins": {
+					"basic-auth": {}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -319,16 +319,16 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPost,
 			Body: `{
-                "username": "jack",
-                "plugins": {
-                    "basic-auth": {
-                        "disable": false,
-                        "username": "jack",
-                        "password": "123456"
-                    }
-                },
-                "desc": "test description"
-            }`,
+				"username": "jack",
+				"plugins": {
+					"basic-auth": {
+						"disable": false,
+						"username": "jack",
+						"password": "123456"
+					}
+				},
+				"desc": "test description"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -339,12 +339,12 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-                "url": "http://172.16.238.30:9080/hello",
-                "method": "GET",
-                "headerParams": {
-                    "Authorization": ["Basic amFjazoxMjM0NTYKIA=="]
-                }
-            }`,
+				"url": "http://172.16.238.30:9080/hello",
+				"method": "GET",
+				"headerParams": {
+					"Authorization": ["Basic amFjazoxMjM0NTYKIA=="]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -428,20 +428,20 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/hello",
-                "methods": ["GET"],
-                "plugins": {
-                    "jwt-auth": {}
-                },
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1980,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/hello",
+				"methods": ["GET"],
+				"plugins": {
+					"jwt-auth": {}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -461,16 +461,16 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-                "username": "jack",
-                "plugins": {
-                    "jwt-auth": {
-                        "key": "user-key",
-                        "secret": "my-secret-key",
-                        "algorithm": "HS256"
-                    }
-                },
-                "desc": "test description"
-            }`,
+				"username": "jack",
+				"plugins": {
+					"jwt-auth": {
+						"key": "user-key",
+						"secret": "my-secret-key",
+						"algorithm": "HS256"
+					}
+				},
+				"desc": "test description"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -496,12 +496,12 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-                "url": "http://172.16.238.30:9080/hello",
-                "method": "GET",
-                "headerParams": {
-                    "Authorization": ["` + jwtToken + `"]
-                }
-            }`,
+				"url": "http://172.16.238.30:9080/hello",
+				"method": "GET",
+				"headerParams": {
+					"Authorization": ["` + jwtToken + `"]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -584,20 +584,20 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/hello",
-                "methods": ["GET"],
-                "plugins": {
-                    "key-auth": {}
-                },
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1980,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/hello",
+				"methods": ["GET"],
+				"plugins": {
+					"key-auth": {}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -615,14 +615,14 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-                "username": "jack",
-                "plugins": {
-                    "key-auth": {
-                        "key": "user-key"
-                    }
-                },
-                "desc": "test description"
-            }`,
+				"username": "jack",
+				"plugins": {
+					"key-auth": {
+						"key": "user-key"
+					}
+				},
+				"desc": "test description"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -632,12 +632,12 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-                "url": "http://172.16.238.30:9080/hello",
-                "method": "GET",
-                "headerParams": {
-                    "apikey": ["user-key"]
-                }
-            }`,
+				"url": "http://172.16.238.30:9080/hello",
+				"method": "GET",
+				"headerParams": {
+					"apikey": ["user-key"]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -720,23 +720,23 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
-                "uri": "/hello",
-                "methods": ["GET"],
-                "vars": [
-                    ["arg_name","==","aaa"]
-                ],
-                "plugins": {
-                    "key-auth": {}
-                },
-                "upstream": {
-                    "type": "roundrobin",
-                    "nodes": [{
-                        "host": "172.16.238.20",
-                        "port": 1980,
-                        "weight": 1
-                    }]
-                }
-            }`,
+				"uri": "/hello",
+				"methods": ["GET"],
+				"vars": [
+					["arg_name","==","aaa"]
+				],
+				"plugins": {
+					"key-auth": {}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -754,14 +754,14 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			Path:     "/apisix/admin/consumers",
 			Method:   http.MethodPut,
 			Body: `{
-                "username": "jack",
-                "plugins": {
-                    "key-auth": {
-                        "key": "user-key"
-                    }
-                },
-                "desc": "test description"
-            }`,
+				"username": "jack",
+				"plugins": {
+					"key-auth": {
+						"key": "user-key"
+					}
+				},
+				"desc": "test description"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -771,12 +771,12 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			Method:   http.MethodPost,
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
-                "url": "http://172.16.238.30:9080/hello?name=aaa",
-                "method": "GET",
-                "headerParams": {
-                    "apikey": ["user-key"]
-                }
-            }`,
+				"url": "http://172.16.238.30:9080/hello?name=aaa",
+				"method": "GET",
+				"headerParams": {
+					"apikey": ["user-key"]
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
