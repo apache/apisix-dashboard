@@ -18,10 +18,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const puppeteer = require('puppeteer');
 
-const {
-  setupLogin,
-  BASE_URL
-} = require('./service')
+const { setupLogin, BASE_URL } = require('./service');
 
 let browser;
 const domSelectors = {
@@ -38,7 +35,7 @@ const loginFailedData = {
 beforeAll(async () => {
   browser = await puppeteer.launch({
     headless: true,
-    slowMo: 100
+    slowMo: 100,
   });
 });
 

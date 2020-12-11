@@ -21,9 +21,11 @@ import (
 	"fmt"
 	"time"
 
+	"go.etcd.io/etcd/clientv3"
+
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal/utils"
-	"go.etcd.io/etcd/clientv3"
+	"github.com/apisix/manager-api/log"
 )
 
 var (
@@ -41,7 +43,8 @@ func InitETCDClient(etcdConf *conf.Etcd) error {
 		Password:    etcdConf.Password,
 	})
 	if err != nil {
-		return fmt.Errorf("init etcd failed: %w", err)
+		log.Errorf("init etcd failed: %s", err)
+		return fmt.Errorf("init etcd failed: %s", err)
 	}
 	Client = cli
 	utils.AppendToClosers(Close)
@@ -50,6 +53,7 @@ func InitETCDClient(etcdConf *conf.Etcd) error {
 
 func Close() error {
 	if err := Client.Close(); err != nil {
+		log.Errorf("etcd client close failed: %s", err)
 		return err
 	}
 	return nil
@@ -58,9 +62,11 @@ func Close() error {
 func (s *EtcdV3Storage) Get(ctx context.Context, key string) (string, error) {
 	resp, err := Client.Get(ctx, key)
 	if err != nil {
-		return "", fmt.Errorf("etcd get failed: %w", err)
+		log.Errorf("etcd get failed: %s", err)
+		return "", fmt.Errorf("etcd get failed: %s", err)
 	}
 	if resp.Count == 0 {
+		log.Warnf("key: %s is not found", key)
 		return "", fmt.Errorf("key: %s is not found", key)
 	}
 
@@ -70,7 +76,8 @@ func (s *EtcdV3Storage) Get(ctx context.Context, key string) (string, error) {
 func (s *EtcdV3Storage) List(ctx context.Context, key string) ([]string, error) {
 	resp, err := Client.Get(ctx, key, clientv3.WithPrefix())
 	if err != nil {
-		return nil, fmt.Errorf("etcd get failed: %w", err)
+		log.Errorf("etcd get failed: %s", err)
+		return nil, fmt.Errorf("etcd get failed: %s", err)
 	}
 	var ret []string
 	for i := range resp.Kvs {
@@ -83,7 +90,8 @@ func (s *EtcdV3Storage) List(ctx context.Context, key string) ([]string, error) 
 func (s *EtcdV3Storage) Create(ctx context.Context, key, val string) error {
 	_, err := Client.Put(ctx, key, val)
 	if err != nil {
-		return fmt.Errorf("etcd put failed: %w", err)
+		log.Errorf("etcd put failed: %s", err)
+		return fmt.Errorf("etcd put failed: %s", err)
 	}
 	return nil
 }
@@ -91,7 +99,8 @@ func (s *EtcdV3Storage) Create(ctx context.Context, key, val string) error {
 func (s *EtcdV3Storage) Update(ctx context.Context, key, val string) error {
 	_, err := Client.Put(ctx, key, val)
 	if err != nil {
-		return fmt.Errorf("etcd put failed: %w", err)
+		log.Errorf("etcd put failed: %s", err)
+		return fmt.Errorf("etcd put failed: %s", err)
 	}
 	return nil
 }
@@ -100,9 +109,11 @@ func (s *EtcdV3Storage) BatchDelete(ctx context.Context, keys []string) error {
 	for i := range keys {
 		resp, err := Client.Delete(ctx, keys[i])
 		if err != nil {
-			return fmt.Errorf("delete etcd key[%s] failed: %w", keys[i], err)
+			log.Errorf("delete etcd key[%s] failed: %s", keys[i], err)
+			return fmt.Errorf("delete etcd key[%s] failed: %s", keys[i], err)
 		}
 		if resp.Deleted == 0 {
+			log.Warnf("key: %s is not found", keys[i])
 			return fmt.Errorf("key: %s is not found", keys[i])
 		}
 	}
@@ -132,6 +143,7 @@ func (s *EtcdV3Storage) Watch(ctx context.Context, key string) <-chan WatchRespo
 				output.Events = append(output.Events, e)
 			}
 			if output.Canceled {
+				log.Error("channel canceled")
 				output.Error = fmt.Errorf("channel canceled")
 			}
 			ch <- output

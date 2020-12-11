@@ -184,7 +184,7 @@ declare namespace RouteModule {
     status: boolean;
   };
 
-  type AvancedMatchingRules = {
+  type AdvancedMatchingRules = {
     advancedMatchingRules: MatchingRule[];
   };
 

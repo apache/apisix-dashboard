@@ -14,26 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+declare namespace PluginComponent {
+  type Data = object;
 
-export const BASE_URL = `http://localhost:${process.env.PORT || 8000}`;
+  type Schema = '' | 'route' | 'consumer';
 
-const loginSuccessData = {
-  username: 'admin',
-  password: 'admin',
-};
+  type Category =
+    | 'Security'
+    | 'Limit traffic'
+    | 'Log'
+    | 'Observability'
+    | 'Other'
+    | 'Authentication';
 
-const domSelectors = {
-  inputUsername: '#control-ref_username',
-  inputPassword: '#control-ref_password',
-  buttonLogin: '.ant-btn-lg',
-  loginSuccessIcon: '.ant-notification-notice-icon-success',
-};
-
-export const setupLogin = async (page) => {
-  await page.goto(BASE_URL);
-  await page.type(domSelectors.inputUsername, loginSuccessData.username);
-  await page.type(domSelectors.inputPassword, loginSuccessData.password);
-  await page.click(domSelectors.buttonLogin);
-  await page.waitForSelector(domSelectors.loginSuccessIcon);
-  await page.waitForNavigation();
-};
+  type Meta = {
+    name: string;
+    category: Category;
+    hidden?: boolean;
+    // Note: Plugins are sorted by priority under the same category in the frontend, the smaller the number, the higher the priority. The default value is 9999.
+    priority?: number;
+    avatar?: React.ReactNode;
+  };
+}
