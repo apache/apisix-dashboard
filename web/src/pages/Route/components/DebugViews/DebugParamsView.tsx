@@ -18,6 +18,7 @@ import React from 'react';
 import { Form, Input, Row, Col, Checkbox } from 'antd';
 import { useIntl } from 'umi';
 import { MinusCircleOutlined } from '@ant-design/icons';
+
 import styles from './index.less';
 
 const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {

@@ -16,4 +16,4 @@
  */
 export { default as DebugParamsView } from './DebugParamsView';
 export { default as AuthenticationView } from './AuthenticationView';
-export { default as DebugDrawDebugDrawView } from './DebugDrawView';
+export { default as DebugDrawView } from './DebugDrawView';

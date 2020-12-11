@@ -21,6 +21,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import { PanelSection } from '@api7-dashboard/ui';
 import queryString from 'query-string';
 import Base64 from 'base-64';
+
 import {
   HTTP_METHOD_OPTION_LIST,
   DEFAULT_DEBUG_PARAM_FORM_DATA,
@@ -34,7 +35,7 @@ const { Option } = Select;
 const { Search } = Input;
 const { TabPane } = Tabs;
 
-const DebugDrawDebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
+const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const { formatMessage } = useIntl();
   const [httpMethod, setHttpMethod] = useState('GET');
   const [showBodyTab, setShowBodyTab] = useState(false);
@@ -166,6 +167,7 @@ const DebugDrawDebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => 
               setHttpMethod(value);
               setShowBodyTab(!(methodWithoutBody.indexOf(value) > -1));
             }}
+            size="large"
           >
             {HTTP_METHOD_OPTION_LIST.map((method) => {
               return <Option value={method}>{method}</Option>;
@@ -233,4 +235,4 @@ const DebugDrawDebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => 
   );
 };
 
-export default DebugDrawDebugDrawView;
+export default DebugDrawView;
