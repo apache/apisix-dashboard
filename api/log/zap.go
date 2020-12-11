@@ -28,14 +28,22 @@ import (
 var logger *zap.SugaredLogger
 
 func init() {
-	writeSyncer := fileWriter()
-	encoder := getEncoder()
+	logger = GetLogger(ErrorLog)
+}
+
+func GetLogger(logType Type) *zap.SugaredLogger {
+	writeSyncer := fileWriter(logType)
+	encoder := getEncoder(logType)
 	logLevel := getLogLevel()
+	if logType == AccessLog {
+		logLevel = zapcore.InfoLevel
+	}
+
 	core := zapcore.NewCore(encoder, writeSyncer, logLevel)
 
 	zapLogger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(2))
 
-	logger = zapLogger.Sugar()
+	return zapLogger.Sugar()
 }
 
 func getLogLevel() zapcore.LevelEnabler {
@@ -57,23 +65,32 @@ func getLogLevel() zapcore.LevelEnabler {
 	return level
 }
 
-func getEncoder() zapcore.Encoder {
+func getEncoder(logType Type) zapcore.Encoder {
 	encoderConfig := zap.NewProductionEncoderConfig()
 	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
 	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
+
+	if logType == AccessLog {
+		encoderConfig.LevelKey = zapcore.OmitKey
+	}
+
 	return zapcore.NewConsoleEncoder(encoderConfig)
 }
 
-func fileWriter() zapcore.WriteSyncer {
+func fileWriter(logType Type) zapcore.WriteSyncer {
+	logPath := conf.ErrorLogPath
+	if logType == AccessLog {
+		logPath = conf.AccessLogPath
+	}
 	//standard output
-	if conf.ErrorLogPath == "/dev/stdout" {
+	if logPath == "/dev/stdout" {
 		return zapcore.Lock(os.Stdout)
 	}
-	if conf.ErrorLogPath == "/dev/stderr" {
+	if logPath == "/dev/stderr" {
 		return zapcore.Lock(os.Stderr)
 	}
 
-	writer, _, err := zap.Open(conf.ErrorLogPath)
+	writer, _, err := zap.Open(logPath)
 	if err != nil {
 		panic(err)
 	}

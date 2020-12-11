@@ -25,13 +25,13 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/apisix/manager-api/internal/handler"
 	"github.com/shiningrush/droplet"
 
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/log"
 )
