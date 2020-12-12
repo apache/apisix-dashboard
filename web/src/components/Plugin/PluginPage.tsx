@@ -63,6 +63,7 @@ const PluginPage: React.FC<Props> = ({
         // eslint-disable-next-line
         schema.properties = {}
       }
+      // eslint-disable-next-line
       ;(schema.properties as any).disable = {
         type: "boolean"
       }
