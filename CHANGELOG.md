@@ -31,7 +31,7 @@
 
 This release mainly improve basic features, bugfix and adds test cases.
 
-`Manager API` v2.2 should be used with [Apache APISIX 2.1](https://github.com/apache/apisix/releases/tag/2.1). It is not recommended to use with other Apache APISIX versions.
+`Manager API` 2.2 should be used with [Apache APISIX 2.1](https://github.com/apache/apisix/releases/tag/2.1). It is not recommended to use with other Apache APISIX versions.
 
 ### Core
 
