@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 const serveUrlMap = {
-  dev: 'http://40.73.92.163:8080',
+  dev: 'http://139.217.190.60',
   test: 'http://localhost:9000',
 };
 
