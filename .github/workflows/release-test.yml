@@ -53,11 +53,13 @@ jobs:
           ls -l
           export GO111MOUDULE=on
           api/build.sh
-          echo "a"
           mkdir -p ./output/logs
           cd output
           ./manager-api > ./api.log 2>&1 &
-          echo "b"
+          sleep 3
+          cat ./api.log
+          cat ./logs/error.log
+          cat conf/conf.yaml
 
       - name: run test
         run: |
