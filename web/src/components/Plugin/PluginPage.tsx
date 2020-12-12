@@ -58,6 +58,14 @@ const PluginPage: React.FC<Props> = ({
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
     fetchSchema(pluginName, schemaType).then((schema) => {
+      // NOTE: The frontend will inject the disable property into schema just like the manager-api does
+      if (!schema.properties) {
+        schema.properties = {}
+      }
+      ;(schema.properties as any).disable = {
+        type: "boolean"
+      }
+
       const { valid, errors } = validate(value, schema);
       if (valid) {
         setName(NEVER_EXIST_PLUGIN_FLAG);
