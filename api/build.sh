@@ -20,7 +20,6 @@ export ENV=local
 pwd=`pwd`
 
 VERSION=$(cat ./api/VERSION)
-GIT_VERSION=$(git log -1 --pretty=format:%h)
 
 rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua
 
@@ -32,7 +31,7 @@ if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
 fi
 
 # build
-cd ./api && go build -o ../output/manager-api -ldflags "-X main.Version=${VERSION}(${GIT_VERSION})" . && cd ..
+cd ./api && go build -o ../output/manager-api -ldflags "-X main.Version=${VERSION}" . && cd ..
 
 cp ./api/conf/schema.json ./output/conf/schema.json
 cp ./api/conf/conf.yaml ./output/conf/conf.yaml
