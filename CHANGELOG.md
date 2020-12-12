@@ -52,7 +52,7 @@ This release mainly improve basic features, bugfix and adds test cases.
 - fix PATCH method bug. [#1005](https://github.com/apache/apisix-dashboard/pull/1005)
 - remove husky to resolve Docker Deploy failed. [#1018](https://github.com/apache/apisix-dashboard/pull/1018)
 
-For more changes, please refer to [Milestone](https://github.com/apache/apisix-dashboard/milestone/8).
+For more changes, please refer to [Milestone](https://github.com/apache/apisix-dashboard/milestone/5).
 
 # 2.1.1
 
