@@ -31,16 +31,15 @@
 
 This release mainly improve basic features, bugfix and adds test cases.
 
-`Manager API` 2.2 should be used with Apache APISIX 2.1. It is not recommended to use with other Apache APISIX versions.
+`Manager API` v2.2 should be used with [Apache APISIX 2.1](https://github.com/apache/apisix/releases/tag/2.1). It is not recommended to use with other Apache APISIX versions.
 
 ### Core
 
-- Support basic auth to connect with ETCD. [#971](https://github.com/apache/apisix-dashboard/pull/971)
 - Support access log for Manager API. [#994](https://github.com/apache/apisix-dashboard/pull/994)
 - Enhance error log for Manager API. [#977](https://github.com/apache/apisix-dashboard/pull/977)
 - Integrate with code-mirror to have a fallback to plugins's render issue. [#898](https://github.com/apache/apisix-dashboard/pull/898)
 - Support priority field in Route module. [#1006](https://github.com/apache/apisix-dashboard/pull/1006)
-- Add version info into manager-api. [#951](https://github.com/apache/apisix-dashboard/pull/951)
+- Add etcd basic auth support [#951](https://github.com/apache/apisix-dashboard/pull/951)
 
 ### Test case
 
