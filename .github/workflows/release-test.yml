@@ -56,6 +56,10 @@ jobs:
           mkdir -p ./output/logs
           cd output
           ./manager-api > ./api.log 2>&1 &
+          sleep 3
+          cat ./api.log
+          cat ./logs/error.log
+          cat conf/conf.yaml
 
       - name: run test
         run: |
