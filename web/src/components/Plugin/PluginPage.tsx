@@ -60,6 +60,7 @@ const PluginPage: React.FC<Props> = ({
     fetchSchema(pluginName, schemaType).then((schema) => {
       // NOTE: The frontend will inject the disable property into schema just like the manager-api does
       if (!schema.properties) {
+        // eslint-disable-next-line
         schema.properties = {}
       }
       ;(schema.properties as any).disable = {
