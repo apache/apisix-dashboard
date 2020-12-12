@@ -61,7 +61,7 @@ const PluginPage: React.FC<Props> = ({
       const { valid, errors } = validate(value, schema);
       if (valid) {
         setName(NEVER_EXIST_PLUGIN_FLAG);
-        onChange({ ...initialData, [pluginName]: { ...value, disable: false } });
+        onChange({ ...initialData, [pluginName]: value });
         return;
       }
       errors?.forEach((item) => {
@@ -146,7 +146,10 @@ const PluginPage: React.FC<Props> = ({
                         disabled={readonly}
                         onChange={(isChecked) => {
                           if (isChecked) {
-                            validateData(item.name, initialData[item.name]);
+                            validateData(item.name, {
+                              ...initialData[item.name],
+                              disable: false
+                            });
                           } else {
                             onChange({
                               ...initialData,
