@@ -230,8 +230,10 @@ declare namespace RouteModule {
     update_time: number;
   };
 
+  //TODO： grpc and websocket
   type debugRequest = {
     url: string;
+    protocol: 'http' | 'grpc' | 'websocket';
     method: string;
     queryParams?: any;
     bodyParams?: any;
