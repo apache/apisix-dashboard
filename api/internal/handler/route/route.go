@@ -481,7 +481,7 @@ func Exist(c *gin.Context) (interface{}, error) {
 
 type ParamsInput struct {
 	URL             string              `json:"url,omitempty"`
-	RequestProtocol string              `json:"request_protocol,omitempty`
+	RequestProtocol string              `json:"request_protocol,omitempty"`
 	BodyParams      map[string]string   `json:"body_params,omitempty"`
 	Method          string              `json:"method,omitempty"`
 	HeaderParams    map[string][]string `json:"header_params,omitempty"`
