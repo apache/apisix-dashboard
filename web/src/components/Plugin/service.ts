@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { JSONSchema7 } from 'json-schema';
 import { omit } from 'lodash';
 import { request } from 'umi';
+
 import { PLUGIN_MAPPER_SOURCE } from './data';
 
 enum Category {
@@ -80,7 +80,7 @@ const cachedPluginSchema: Record<string, object> = {
 export const fetchSchema = async (
   name: string,
   schemaType: PluginComponent.Schema,
-): Promise<JSONSchema7> => {
+): Promise<any> => {
   if (!cachedPluginSchema[schemaType][name]) {
     const queryString = schemaType !== 'route' ? `?schema_type=${schemaType}` : '';
     cachedPluginSchema[schemaType][name] = (
