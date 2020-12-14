@@ -480,11 +480,11 @@ func Exist(c *gin.Context) (interface{}, error) {
 }
 
 type ParamsInput struct {
-	URL          string              `json:"url,omitempty"`
-	Protocol     string              `json:"protocol,omitempty`
-	BodyParams   map[string]string   `json:"bodyParams,omitempty"`
-	Method       string              `json:"method,omitempty"`
-	HeaderParams map[string][]string `json:"headerParams,omitempty"`
+	URL             string              `json:"url,omitempty"`
+	RequestProtocol string              `json:"request_protocol,omitempty`
+	BodyParams      map[string]string   `json:"body_params,omitempty"`
+	Method          string              `json:"method,omitempty"`
+	HeaderParams    map[string][]string `json:"header_params,omitempty"`
 }
 
 type Result struct {
@@ -496,7 +496,7 @@ type Result struct {
 func (h *Handler) DebugRequestForwarding(c droplet.Context) (interface{}, error) {
 	//TODO: other Protocols, e.g: grpc, websocket
 	paramsInput := c.Input().(*ParamsInput)
-	requestProtocol := paramsInput.Protocol
+	requestProtocol := paramsInput.RequestProtocol
 	if requestProtocol == "" {
 		requestProtocol = "http"
 	}
@@ -505,7 +505,7 @@ func (h *Handler) DebugRequestForwarding(c droplet.Context) (interface{}, error)
 	case "http":
 		return h.HttpRequestForwarding(c)
 	default:
-		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, fmt.Errorf("protocol unspported %s", paramsInput.Protocol)
+		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, fmt.Errorf("protocol unspported %s", paramsInput.RequestProtocol)
 	}
 }
 
