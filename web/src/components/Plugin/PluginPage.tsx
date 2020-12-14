@@ -49,7 +49,7 @@ const PluginPage: React.FC<Props> = ({
   readonly = false,
   initialData = {},
   schemaType = '',
-  onChange = () => {},
+  onChange = () => { },
 }) => {
   const [pluginList, setPlugin] = useState<PluginComponent.Meta[][]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
@@ -88,33 +88,34 @@ const PluginPage: React.FC<Props> = ({
         setName(NEVER_EXIST_PLUGIN_FLAG);
         onChange({ ...initialData, [pluginName]: value });
         return;
-      } else {
-        for (const err of validate.errors as DefinedError[]) {
-          let description = '';
-          switch (err.keyword) {
-            case 'enum':
-              description = `${err.dataPath} ${err.message}: ${err.params.allowedValues.join(
-                ', ',
-              )}`;
-              break;
-            case 'minItems':
-            case 'type':
-              description = `${err.dataPath} ${err.message}`;
-              break;
-            case 'oneOf':
-            case 'required':
-              description = err.message || '';
-              break;
-            default:
-              description = `${err.schemaPath} ${err.message}`;
-          }
-          notification.error({
-            message: 'Invalid plugin data',
-            description,
-          });
-        }
-        setName(pluginName);
       }
+
+      // eslint-disable-next-line
+      for (const err of validate.errors as DefinedError[]) {
+        let description = '';
+        switch (err.keyword) {
+          case 'enum':
+            description = `${err.dataPath} ${err.message}: ${err.params.allowedValues.join(
+              ', ',
+            )}`;
+            break;
+          case 'minItems':
+          case 'type':
+            description = `${err.dataPath} ${err.message}`;
+            break;
+          case 'oneOf':
+          case 'required':
+            description = err.message || '';
+            break;
+          default:
+            description = `${err.schemaPath} ${err.message}`;
+        }
+        notification.error({
+          message: 'Invalid plugin data',
+          description,
+        });
+      }
+      setName(pluginName);
     });
   };
 
