@@ -18,7 +18,7 @@ import React, { useEffect, useState } from 'react';
 import { Anchor, Layout, Switch, Card, Tooltip, Button, notification, Avatar } from 'antd';
 import { SettingFilled } from '@ant-design/icons';
 import { PanelSection } from '@api7-dashboard/ui';
-import Ajv, { JSONSchemaType, DefinedError } from "ajv"
+import Ajv, { DefinedError } from 'ajv';
 
 import { fetchSchema, getList } from './service';
 import CodeMirrorDrawer from './CodeMirrorDrawer';
@@ -43,13 +43,13 @@ const { Sider, Content } = Layout;
 // NOTE: use this flag as plugin's name to hide drawer
 const NEVER_EXIST_PLUGIN_FLAG = 'NEVER_EXIST_PLUGIN_FLAG';
 
-const ajv = new Ajv()
+const ajv = new Ajv();
 
 const PluginPage: React.FC<Props> = ({
   readonly = false,
   initialData = {},
   schemaType = '',
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const [pluginList, setPlugin] = useState<PluginComponent.Meta[][]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
@@ -63,49 +63,51 @@ const PluginPage: React.FC<Props> = ({
     // NOTE: The frontend will inject the disable property into schema just like the manager-api does
     if (!schema.properties) {
       // eslint-disable-next-line
-      schema.properties = {}
+      schema.properties = {};
     }
     // eslint-disable-next-line
-    ; (schema.properties as any).disable = {
-      type: "boolean"
-    }
-    return schema
-  }
+    (schema.properties as any).disable = {
+      type: 'boolean',
+    };
+    return schema;
+  };
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
     fetchSchema(pluginName, schemaType).then((schema) => {
       if (schema.oneOf) {
         (schema.oneOf || []).forEach((item: any) => {
-          injectDisableProperty(item)
-        })
+          injectDisableProperty(item);
+        });
       } else {
-        injectDisableProperty(schema)
+        injectDisableProperty(schema);
       }
 
-      const validate = ajv.compile(schema)
+      const validate = ajv.compile(schema);
 
       if (validate(value)) {
         setName(NEVER_EXIST_PLUGIN_FLAG);
         onChange({ ...initialData, [pluginName]: value });
         return;
       } else {
-        console.log(validate.errors)
+        console.log(validate.errors);
         for (const err of validate.errors as DefinedError[]) {
-          let description = ""
+          let description = '';
           switch (err.keyword) {
-            case "enum":
-              description = `${err.dataPath} ${err.message}: ${err.params.allowedValues.join(", ")}`
-              break
-            case "minItems":
-            case "type":
-              description = `${err.dataPath} ${err.message}`
-              break
-            case "oneOf":
-            case "required":
-              description = err.message || ""
-              break
+            case 'enum':
+              description = `${err.dataPath} ${err.message}: ${err.params.allowedValues.join(
+                ', ',
+              )}`;
+              break;
+            case 'minItems':
+            case 'type':
+              description = `${err.dataPath} ${err.message}`;
+              break;
+            case 'oneOf':
+            case 'required':
+              description = err.message || '';
+              break;
             default:
-              description = `${err.schemaPath} ${err.message}`
+              description = `${err.schemaPath} ${err.message}`;
           }
           notification.error({
             message: 'Invalid plugin data',
@@ -191,7 +193,7 @@ const PluginPage: React.FC<Props> = ({
                           if (isChecked) {
                             validateData(item.name, {
                               ...initialData[item.name],
-                              disable: false
+                              disable: false,
                             });
                           } else {
                             onChange({
