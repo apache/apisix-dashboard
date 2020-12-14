@@ -58,10 +58,20 @@ const PluginPage: React.FC<Props> = ({
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
     fetchSchema(pluginName, schemaType).then((schema) => {
+      // NOTE: The frontend will inject the disable property into schema just like the manager-api does
+      if (!schema.properties) {
+        // eslint-disable-next-line
+        schema.properties = {}
+      }
+      // eslint-disable-next-line
+      ;(schema.properties as any).disable = {
+        type: "boolean"
+      }
+
       const { valid, errors } = validate(value, schema);
       if (valid) {
         setName(NEVER_EXIST_PLUGIN_FLAG);
-        onChange({ ...initialData, [pluginName]: { ...value, disable: false } });
+        onChange({ ...initialData, [pluginName]: value });
         return;
       }
       errors?.forEach((item) => {
@@ -146,7 +156,10 @@ const PluginPage: React.FC<Props> = ({
                         disabled={readonly}
                         onChange={(isChecked) => {
                           if (isChecked) {
-                            validateData(item.name, initialData[item.name]);
+                            validateData(item.name, {
+                              ...initialData[item.name],
+                              disable: false
+                            });
                           } else {
                             onChange({
                               ...initialData,

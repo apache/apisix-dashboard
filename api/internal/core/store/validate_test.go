@@ -437,3 +437,44 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 		assert.Equal(t, tc.wantValidateErr, err, tc.caseDesc)
 	}
 }
+
+func TestAPISIXSchemaValidator_Validate(t *testing.T) {
+	validator, err := NewAPISIXSchemaValidator("main.consumer")
+	assert.Nil(t, err)
+
+	// normal config, should pass
+	reqBody := `{
+		"id": "jack",
+		"username": "jack",
+		"plugins": {
+			"limit-count": {
+				"count": 2,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
+		},
+		"desc": "test description"
+	}`
+	err = validator.Validate([]byte(reqBody))
+	assert.Nil(t, err)
+
+	// config with non existent field, should be failed.
+	reqBody = `{
+		"username": "jack",
+		"not-exist": "val",
+		"plugins": {
+			"limit-count": {
+				"count": 2,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
+		},
+		"desc": "test description"
+	}`
+	err = validator.Validate([]byte(reqBody))
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "schema validate failed: (root): Additional property not-exist is not allowed")
+
+}

@@ -49,7 +49,7 @@ func (err ApiError) Error() string {
 }
 
 func InvalidParam(message string) *ApiError {
-	return &ApiError{400, 400, message}
+	return &ApiError{400, 10000, message}
 }
 
 func SystemError(message string) *ApiError {
