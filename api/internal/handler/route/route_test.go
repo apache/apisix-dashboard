@@ -415,6 +415,10 @@ func TestRoute(t *testing.T) {
 	  "hosts": ["foo.com", "*.bar.com"],
 	  "remote_addrs": ["127.0.0.0/8"],
 	  "methods": ["PUT", "GET"],
+	  "labels": {
+	      "l1": "v1",
+	      "l2": "v2"
+      },
 	  "upstream": {
 	      "type": "roundrobin",
 	      "nodes": [{
@@ -797,6 +801,39 @@ func TestRoute(t *testing.T) {
 	dataPage = retPage.(*store.ListOutput)
 	assert.Equal(t, len(dataPage.Rows), 0)
 
+	//list search label not match
+	listInput5 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "label":"l3"}`
+	err = json.Unmarshal([]byte(reqBody), listInput5)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput5)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 0)
+
+	//list search label match
+	listInput6 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "label":"l1"}`
+	err = json.Unmarshal([]byte(reqBody), listInput6)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput6)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
+	//list search label match
+	listInput7 := &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "label":"l1:v1"}`
+	err = json.Unmarshal([]byte(reqBody), listInput7)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput7)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
 	//create route using uris
 	route3 := &entity.Route{}
 	reqBody = `{
@@ -821,11 +858,11 @@ func TestRoute(t *testing.T) {
 	time.Sleep(time.Duration(100) * time.Millisecond)
 
 	//list search match uris
-	listInput5 := &ListInput{}
+	listInput8 := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "bbb", "uri": "bb"}`
-	err = json.Unmarshal([]byte(reqBody), listInput5)
+	err = json.Unmarshal([]byte(reqBody), listInput8)
 	assert.Nil(t, err)
-	ctx.SetInput(listInput5)
+	ctx.SetInput(listInput8)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
 	dataPage = retPage.(*store.ListOutput)

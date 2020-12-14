@@ -21,6 +21,7 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/sony/sonyflake"
 )
@@ -93,4 +94,39 @@ func InterfaceToString(val interface{}) string {
 	}
 	str := fmt.Sprintf("%v", val)
 	return str
+}
+
+func GenLabelMap(label string) map[string]string {
+	mp := make(map[string]string)
+
+	if label == "" {
+		return mp
+	}
+
+	labels := strings.Split(label, ",")
+	for _, l := range labels {
+		kv := strings.Split(l, ":")
+		if len(kv) == 2 {
+			mp[kv[0]] = kv[1]
+		} else if len(kv) == 1 {
+			mp[kv[0]] = ""
+		}
+	}
+
+	return mp
+}
+
+func LabelContains(labels, reqLabels map[string]string) bool {
+	if len(reqLabels) == 0 {
+		return true
+	}
+
+	for k, v := range labels {
+		l, exist := reqLabels[k]
+		if exist && ((l == "") || v == l) {
+			return true
+		}
+	}
+
+	return false
 }

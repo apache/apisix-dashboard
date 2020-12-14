@@ -106,6 +106,11 @@ type GetInput struct {
 //   description: uri of route
 //   required: false
 //   type: string
+// - name: label
+//   in: query
+//   description: label of route
+//   required: false
+//   type: string
 // responses:
 //   '0':
 //     description: list response
@@ -141,8 +146,9 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 }
 
 type ListInput struct {
-	Name string `auto_read:"name,query"`
-	URI  string `auto_read:"uri,query"`
+	Name  string `auto_read:"name,query"`
+	URI   string `auto_read:"uri,query"`
+	Label string `auto_read:"label,query"`
 	store.Pagination
 }
 
@@ -161,6 +167,7 @@ func uriContains(obj *entity.Route, uri string) bool {
 
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
+	labelMap := utils.GenLabelMap(input.Label)
 
 	ret, err := h.routeStore.List(store.ListInput{
 		Predicate: func(obj interface{}) bool {
@@ -176,6 +183,10 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 			if input.URI != "" {
 				return uriContains(obj.(*entity.Route), input.URI)
 			}
+			if input.Label != "" {
+				return utils.LabelContains(obj.(*entity.Route).Labels, labelMap)
+			}
+
 			return true
 		},
 		Format: func(obj interface{}) interface{} {
