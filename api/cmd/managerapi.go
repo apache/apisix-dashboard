@@ -38,7 +38,7 @@ func NewManagerAPICommand() *cobra.Command {
 		Use:   "manager-api [flags]",
 		Short: "APISIX Manager API",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			conf.Init()
+			conf.InitConf()
 			droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
 				var newMws []droplet.Middleware
 				// default middleware order: resp_reshape, auto_input, traffic_log
