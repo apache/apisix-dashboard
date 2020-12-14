@@ -224,6 +224,48 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 	}
 }
 
+func TestRoute_Patch(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc:     "route patch",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPatch,
+			Path:         "/apisix/admin/routes/r1",
+			Body:         `{"status":1}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		}, {
+			caseDesc:     "route patch",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPatch,
+			Path:         "/apisix/admin/routes/r1",
+			Body:         `{"status":0}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		}, {
+			caseDesc:     "route patch",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPatch,
+			Path:         "/apisix/admin/routes/r1",
+			Body:         `{"name":"r1_route"}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		}, {
+			caseDesc:     "route patch with path",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPatch,
+			Path:         "/apisix/admin/routes/r1/status",
+			Body:         `1`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
 func TestRoute_Delete_Routes_With_Hosts(t *testing.T) {
 	tests := []HttpTestCase{
 		{
