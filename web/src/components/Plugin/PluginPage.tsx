@@ -75,7 +75,7 @@ const PluginPage: React.FC<Props> = ({
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
     fetchSchema(pluginName, schemaType).then((schema) => {
       if (schema.oneOf) {
-        (schema.oneOf || []).forEach((item: any) => {
+        ;(schema.oneOf || []).forEach((item: any) => {
           injectDisableProperty(item);
         });
       } else {
@@ -89,7 +89,6 @@ const PluginPage: React.FC<Props> = ({
         onChange({ ...initialData, [pluginName]: value });
         return;
       } else {
-        console.log(validate.errors);
         for (const err of validate.errors as DefinedError[]) {
           let description = '';
           switch (err.keyword) {
