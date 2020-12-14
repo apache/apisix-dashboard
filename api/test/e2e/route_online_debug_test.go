@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
@@ -485,7 +486,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 	}
 
 	// sign jwt token
-	/* body, status, err := httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key")
+	body, status, err := httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key")
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, status)
 	jwtToken := string(body)
@@ -569,7 +570,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 
 	for _, tc := range tests {
 		testCaseCheck(tc)
-	} */
+	}
 }
 
 func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
