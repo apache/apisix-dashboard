@@ -18,7 +18,7 @@ jobs:
       with:
         fetch-depth: '1'
     - name: wget
-      uses: wei/wget@v1
+      uses: wei/wget@v1.1.1
       with:
         args: -O .gitleaks.toml https://raw.githubusercontent.com/ycjcl868/gitleaks/master/.gitleaks.toml
     - name: gitleaks-action
