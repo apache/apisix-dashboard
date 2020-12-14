@@ -42,7 +42,7 @@ func TestRoute_Online_Debug_Route_Not_Exist(t *testing.T) {
 		testCaseCheck(tc)
 	}
 	basepath := "http://127.0.0.1:9000/apisix/admin/debug-request-forwarding"
-	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://172.16.238.30:9080/hello_","method": "GET"}`))
+	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://172.16.238.30:9080/hello_","method": "GET","protocol": "http"}`))
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
@@ -95,6 +95,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "http://172.16.238.30:9080/hello?name=aaa",
+				"protocol": "http",
 				"method": "GET"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
@@ -166,6 +167,7 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "http://172.16.238.30:9080/hello",
+				"protocol": "http",
 				"method": "GET",
 				"headerParams": {
 					"version": ["v2"]
@@ -237,6 +239,7 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "http://172.16.238.30:9080/hello",
+				"protocol": "http",
 				"method": "POST",
 				"bodyParams": {
 					"name": "test",
@@ -340,6 +343,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "http://172.16.238.30:9080/hello",
+				"protocol": "http",
 				"method": "GET",
 				"headerParams": {
 					"Authorization": ["Basic amFjazoxMjM0NTYKIA=="]
@@ -356,7 +360,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 
 	// online debug without basic-auth
 	basepath := "http://127.0.0.1:9000/apisix/admin/debug-request-forwarding"
-	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://172.16.238.30:9080/hello","method": "GET"}`))
+	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://172.16.238.30:9080/hello","method": "GET","protocol":"http"}`))
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
@@ -497,6 +501,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "http://172.16.238.30:9080/hello",
+				"protocol": "http",
 				"method": "GET",
 				"headerParams": {
 					"Authorization": ["` + jwtToken + `"]
@@ -513,7 +518,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 
 	// online debug without jwt-auth
 	basepath := "http://127.0.0.1:9000/apisix/admin/debug-request-forwarding"
-	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://172.16.238.30:9080/hello","method": "GET"}`))
+	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://172.16.238.30:9080/hello","method": "GET","protocol":"http"}`))
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
@@ -633,6 +638,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "http://172.16.238.30:9080/hello",
+				"protocol": "http",
 				"method": "GET",
 				"headerParams": {
 					"apikey": ["user-key"]
@@ -649,7 +655,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 
 	// online debug without key-auth
 	basepath := "http://127.0.0.1:9000/apisix/admin/debug-request-forwarding"
-	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://172.16.238.30:9080/hello","method": "GET"}`))
+	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://172.16.238.30:9080/hello","method": "GET","protocol": "http"}`))
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
@@ -772,6 +778,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			Path:     "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "http://172.16.238.30:9080/hello?name=aaa",
+				"protocol": "http",
 				"method": "GET",
 				"headerParams": {
 					"apikey": ["user-key"]
@@ -788,7 +795,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 
 	// online debug without key-auth
 	basepath := "http://127.0.0.1:9000/apisix/admin/debug-request-forwarding"
-	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://172.16.238.30:9080/hello?name=aaa","method": "GET"}`))
+	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "http://172.16.238.30:9080/hello?name=aaa","method": "GET","protocol": "http"}`))
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {

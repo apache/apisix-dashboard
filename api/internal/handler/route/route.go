@@ -481,6 +481,7 @@ func Exist(c *gin.Context) (interface{}, error) {
 
 type ParamsInput struct {
 	URL          string              `json:"url,omitempty"`
+	Protocol     string              `json:"protocol,omitempty`
 	BodyParams   map[string]string   `json:"bodyParams,omitempty"`
 	Method       string              `json:"method,omitempty"`
 	HeaderParams map[string][]string `json:"headerParams,omitempty"`
@@ -493,6 +494,22 @@ type Result struct {
 }
 
 func (h *Handler) DebugRequestForwarding(c droplet.Context) (interface{}, error) {
+	//TODO: other Protocols, e.g: grpc, websocket
+	paramsInput := c.Input().(*ParamsInput)
+	requestProtocol := paramsInput.Protocol
+	if requestProtocol == "" {
+		requestProtocol = "http"
+	}
+	switch requestProtocol {
+	//TODO: could add case like "websocket" and "grpc"
+	case "http":
+		return h.HttpRequestForwarding(c)
+	default:
+		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, fmt.Errorf("protocol unspported %s", paramsInput.Protocol)
+	}
+}
+
+func (h *Handler) HttpRequestForwarding(c droplet.Context) (interface{}, error) {
 	paramsInput := c.Input().(*ParamsInput)
 	bodyParams, _ := json.Marshal(paramsInput.BodyParams)
 	client := &http.Client{}
