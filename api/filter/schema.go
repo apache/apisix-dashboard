@@ -41,6 +41,7 @@ var resources = map[string]string{
 	"services":  "service",
 	"consumers": "consumer",
 	"ssl":       "ssl",
+	"global_rules": "global_rule",
 }
 
 func parseCert(crt, key string) ([]string, error) {

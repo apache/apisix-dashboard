@@ -34,7 +34,7 @@ const (
 	HubKeySsl        HubKey = "ssl"
 	HubKeyUpstream   HubKey = "upstream"
 	HubKeyScript     HubKey = "script"
-	HubKeyGlobalRule HubKey = "global_rules"
+	HubKeyGlobalRule HubKey = "global_rule"
 )
 
 var (
@@ -42,8 +42,8 @@ var (
 )
 
 func InitStore(key HubKey, opt GenericStoreOption) error {
-	if key == HubKeyConsumer || key == HubKeyRoute ||
-		key == HubKeyService || key == HubKeySsl || key == HubKeyUpstream {
+	if key == HubKeyConsumer || key == HubKeyRoute || key == HubKeySsl ||
+		key == HubKeyService || key == HubKeyUpstream || key == HubKeyGlobalRule {
 		validator, err := NewAPISIXJsonSchemaValidator("main." + string(key))
 		if err != nil {
 			return err
@@ -139,6 +139,18 @@ func InitStores() error {
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Script)
 			return r.ID
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeyGlobalRule, GenericStoreOption{
+		BasePath: "/apisix/global_rules",
+		ObjType:  reflect.TypeOf(entity.GlobalPlugins{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.GlobalPlugins)
+			return utils.InterfaceToString(r.ID)
 		},
 	})
 	if err != nil {
