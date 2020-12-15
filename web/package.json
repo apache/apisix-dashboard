@@ -110,7 +110,6 @@
     "pinst": "^2.1.1",
     "prettier": "^2.0.1",
     "pro-download": "1.0.1",
-    "puppeteer": "^5.4.1",
     "puppeteer-core": "^4.0.1",
     "stylelint": "^13.0.0"
   },
