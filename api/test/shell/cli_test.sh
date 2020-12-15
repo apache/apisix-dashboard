@@ -95,6 +95,26 @@ if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     exit 1
 fi
 
+# run on a different path 
+workDir=$(pwd)
+rm -rf html
+mkdir html
+cd html
+echo "hi~" >> index.html
+APISIX_API_WORKDIR=$workDir $workDir/manager-api &
+sleep 5
+
+res=$(curl http://127.0.0.1:9000)
+pkill -f manager-api
+
+if [[ $res == "404 page not found" ]]; then
+    echo "failed: manager-api cant run on a different path"
+    exit 1
+fi
+
+cd -
+rm -rf html
+clean_up
 
 # test start info
 
