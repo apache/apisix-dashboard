@@ -18,6 +18,7 @@ package internal
 
 import (
 	"fmt"
+
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -29,6 +30,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/handler/authentication"
 	"github.com/apisix/manager-api/internal/handler/consumer"
+	"github.com/apisix/manager-api/internal/handler/global_rule"
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/plugin"
 	"github.com/apisix/manager-api/internal/handler/route"
@@ -63,6 +65,7 @@ func SetUpRouter() *gin.Engine {
 		plugin.NewHandler,
 		healthz.NewHandler,
 		authentication.NewHandler,
+		global_rule.NewHandler,
 	}
 
 	for i := range factories {
