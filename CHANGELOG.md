@@ -41,7 +41,7 @@ This release mainly adds test cases and bugfix for `Manager API`.
 Add e2e test cases for route, upstream, consumer, SSL, and plugins.
 
 ## Bugfix
- 
+
 - Fix: when created route by `Admin API`, upstream can not be modified by dashboard. [#847](https://github.com/apache/apisix-dashboard/pull/847)
 - Fix: create route with jwt-auth will display an error. [#878](https://github.com/apache/apisix-dashboard/pull/878)
 - Fix: create route with error format remote_addrs `Manager API` will return 200, but should return 400. [#899](https://github.com/apache/apisix-dashboard/pull/899)

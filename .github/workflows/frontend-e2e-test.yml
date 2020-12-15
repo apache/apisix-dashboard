@@ -49,7 +49,7 @@ jobs:
       - name: Start manager-api
         working-directory: ./api
         run: nohup go run . &
-          
+
       - name: Install front-end dependencies
         working-directory: ./web
         if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
