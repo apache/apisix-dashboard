@@ -14,8 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// Import commands.js using ES2015 syntax:
+/* eslint-disable no-undef */
 import './commands'
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+Cypress.on('uncaught:exception', () => {
+  // returning false here prevents Cypress from
+  // failing the test
+  return false
+})
