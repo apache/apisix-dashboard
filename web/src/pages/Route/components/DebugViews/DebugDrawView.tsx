@@ -135,10 +135,10 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     //TODO: grpc and websocket
     debugRoute({
       url: `${url}${urlQueryString && `?${urlQueryString}`}`,
-      protocol: 'http',
+      request_protocol: 'http',
       method: httpMethod,
-      bodyParams: bodyFormData,
-      headerParams: headerFormData,
+      body_params: bodyFormData,
+      header_params: headerFormData,
     })
       .then((req) => {
         setLoading(false);
@@ -172,7 +172,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             size="large"
           >
             {HTTP_METHOD_OPTION_LIST.map((method, index) => {
-              return <Option key={`${method}_${index}`} value={method}>{method}</Option>;
+              return <Option key={index.toString()} value={method}>{method}</Option>;
             })}
           </Select>
           <Search

@@ -233,11 +233,10 @@ declare namespace RouteModule {
   //TODO： grpc and websocket
   type debugRequest = {
     url: string;
-    protocol: 'http' | 'grpc' | 'websocket';
+    request_protocol: 'http' | 'grpc' | 'websocket';
     method: string;
-    queryParams?: any;
-    bodyParams?: any;
-    headerParams?: any;
+    body_params?: any;
+    header_params?: any;
   };
   type authData = {
     authType: string;

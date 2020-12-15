@@ -31,19 +31,18 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
           return (
             <>
               {fields.map((field, index) => (
-                <Row gutter={16}>
-                  <Col span={1} key={`col_${field.name}_${index}`}> 
+                <Row gutter={16} key={index.toString()}>
+                  <Col span={1}>
                     <Form.Item
                       name={[field.name, 'check']}
                       style={{ textAlign: 'right' }}
                       valuePropName="checked"
-                      key={`formitem_${field.name}_${index}`}
                     >
-                      {fields.length > 1 && index !== fields.length - 1 && <Checkbox />}
+                      {fields.length > 1 && index !== fields.length - 1 && <Checkbox key={`checkbox_${field.name}_${index}_1`}/>}
                     </Form.Item>
                   </Col>
-                  <Col span={8} key={`col_${field.name}_${index}`}>
-                    <Form.Item name={[field.name, 'key']} key={`formitem_${field.name}_${index}`}>
+                  <Col span={8} key={`col_${field.name}_${index}_2`}>
+                    <Form.Item name={[field.name, 'key']} key={`formitem_${field.name}_${index}_2`}>
                       <Input
                         placeholder={formatMessage({ id: 'page.route.input.placeholder.paramKey' })}
                         onChange={() => {
@@ -56,21 +55,23 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                             props.form.setFieldsValue(prevData);
                           }
                         }}
+                        key={`input_${field.name}_${index}_2`}
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={8} key={`col_${field.name}_${index}`}>
-                    <Form.Item name={[field.name, 'value']} key={`formitem_${field.name}_${index}`}>
+                  <Col span={8} key={`col_${field.name}_${index}_3`}>
+                    <Form.Item name={[field.name, 'value']} key={`formitem_${field.name}_${index}_3`}>
                       <Input
                         placeholder={formatMessage({
                           id: 'page.route.input.placeholder.paramValue',
                         })}
+                        key={`input_${field.name}_${index}_3`}
                       />
                     </Form.Item>
                   </Col>
-                  <Col key={`col_${field.name}_${index}`}>
+                  <Col key={`col_${field.name}_${index}_4`}>
                     {fields.length > 1 && index !== fields.length - 1 && (
-                      <MinusCircleOutlined onClick={() => remove(field.name)} />
+                      <MinusCircleOutlined onClick={() => remove(field.name)} key={`minus_${field.name}_${index}_4`}/>
                     )}
                   </Col>
                 </Row>
