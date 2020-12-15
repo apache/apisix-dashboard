@@ -30,7 +30,9 @@
     "test": "umi test",
     "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "license": "Apache-2.0",
   "lint-staged": {
@@ -100,6 +102,7 @@
     "carlo": "^0.9.46",
     "cross-env": "^7.0.0",
     "cross-port-killer": "^1.1.1",
+    "cypress": "^6.1.0",
     "detect-installer": "^1.0.1",
     "enzyme": "^3.11.0",
     "eslint": "^7.1.0",
