@@ -91,7 +91,7 @@ func TestSSL_Basic(t *testing.T) {
 		{
 			caseDesc:     "check ssl labels",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
+			Method:       http.MethodGet,
 			Path:         "/apisix/admin/ssl/1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
