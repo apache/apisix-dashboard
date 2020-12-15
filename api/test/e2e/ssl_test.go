@@ -87,6 +87,7 @@ func TestSSL_Basic(t *testing.T) {
 			Body:         string(body),
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "check ssl labels",
