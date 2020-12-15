@@ -69,7 +69,7 @@ func TestID_Using_Int(t *testing.T) {
 			Path:     "/apisix/admin/services",
 			Body: `{
 				"id": 1,
-				"upstream_id": 1 
+				"upstream_id": 1
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
