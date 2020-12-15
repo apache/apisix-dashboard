@@ -246,7 +246,7 @@ func TestLabel(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete upstream",
-			Object:       Mant agerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": token},
