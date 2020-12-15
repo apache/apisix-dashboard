@@ -17,27 +17,27 @@
 package e2e
 
 import (
-        "net/http"
-        "testing"
-        "time"
+	"net/http"
+	"testing"
+	"time"
 )
 
 func TestGlobalRule(t *testing.T) {
-        tests := []HttpTestCase{
-                {
-                        caseDesc:     "make sure the route is not created ",
-                        Object:       APISIXExpect(t),
-                        Method:       http.MethodGet,
-                        Path:         "/hello",
-                        ExpectStatus: http.StatusNotFound,
-                        ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-                },
-                {
-                        caseDesc: "create route",
-                        Object:   ManagerApiExpect(t),
-                        Method:   http.MethodPut,
-                        Path:     "/apisix/admin/routes/r1",
-                        Body: `{
+	tests := []HttpTestCase{
+		{
+			caseDesc:     "make sure the route is not created ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+		},
+		{
+			caseDesc: "create route",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
 				 "uri": "/hello",
 				 "upstream": {
 					 "type": "roundrobin",
@@ -48,15 +48,15 @@ func TestGlobalRule(t *testing.T) {
 					}]
 				 }
 			 }`,
-                        Headers:      map[string]string{"Authorization": token},
-                        ExpectStatus: http.StatusOK,
-                },
-                {
-                        caseDesc: "create global rule",
-                        Object:   ManagerApiExpect(t),
-                        Path:     "/apisix/admin/global_rules/1",
-                        Method:   http.MethodPut,
-                        Body: `{
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc: "create global rule",
+			Object:   ManagerApiExpect(t),
+			Path:     "/apisix/admin/global_rules/1",
+			Method:   http.MethodPut,
+			Body: `{
                                 "id": "1",
                                 "plugins": {
                                         "limit-count": {
@@ -67,81 +67,81 @@ func TestGlobalRule(t *testing.T) {
                                         }
                                 }
                         }`,
-                        Headers:      map[string]string{"Authorization": token},
-                        ExpectStatus: http.StatusOK,
-                },
-                {
-                        caseDesc:     "verify route that should not be limited",
-                        Object:       APISIXExpect(t),
-                        Method:       http.MethodGet,
-                        Path:         "/hello",
-                        ExpectStatus: http.StatusOK,
-                        ExpectBody:   "hello world",
-                        Sleep:        sleepTime,
-                },
-                {
-                        caseDesc:     "verify route that should not be limited 2",
-                        Object:       APISIXExpect(t),
-                        Method:       http.MethodGet,
-                        Path:         "/hello",
-                        ExpectStatus: http.StatusOK,
-                        ExpectBody:   "hello world",
-                },
-                {
-                        caseDesc:     "verify route that should be limited",
-                        Object:       APISIXExpect(t),
-                        Method:       http.MethodGet,
-                        Path:         "/hello",
-                        ExpectStatus: http.StatusServiceUnavailable,
-                        ExpectBody:   "503 Service Temporarily Unavailable",
-                },
-                {
-                        caseDesc:     "verify route that should not be limited since time window pass",
-                        Object:       APISIXExpect(t),
-                        Method:       http.MethodGet,
-                        Path:         "/hello",
-                        ExpectStatus: http.StatusOK,
-                        ExpectBody:   "hello world",
-                        Sleep:        3 * time.Second,
-                },
-                {
-                        caseDesc:     "delete global rule",
-                        Object:       ManagerApiExpect(t),
-                        Method:       http.MethodDelete,
-                        Path:         "/apisix/admin/global_rules/1",
-                        Headers:      map[string]string{"Authorization": token},
-                        ExpectStatus: http.StatusOK,
-                },
-                {
-                        caseDesc:     "make sure the global rule has been deleted",
-                        Object:       ManagerApiExpect(t),
-                        Method:       http.MethodGet,
-                        Path:         "/apisix/admin/global_rules/1",
-                        Headers:      map[string]string{"Authorization": token},
-                        ExpectStatus: http.StatusNotFound,
-                        ExpectBody:   `{"code":10001,"message":"data not found"`,
-                        Sleep:        sleepTime,
-                },
-                {
-                        caseDesc:     "delete route",
-                        Object:       ManagerApiExpect(t),
-                        Method:       http.MethodDelete,
-                        Path:         "/apisix/admin/routes/r1",
-                        Headers:      map[string]string{"Authorization": token},
-                        ExpectStatus: http.StatusOK,
-                },
-                {
-                        caseDesc:     "make sure the route has been deleted",
-                        Object:       APISIXExpect(t),
-                        Method:       http.MethodGet,
-                        Path:         "/hello",
-                        ExpectStatus: http.StatusNotFound,
-                        ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-                        Sleep:        sleepTime,
-                },
-        }
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "verify route that should not be limited",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "verify route that should not be limited 2",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+		},
+		{
+			caseDesc:     "verify route that should be limited",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusServiceUnavailable,
+			ExpectBody:   "503 Service Temporarily Unavailable",
+		},
+		{
+			caseDesc:     "verify route that should not be limited since time window pass",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        3 * time.Second,
+		},
+		{
+			caseDesc:     "delete global rule",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/global_rules/1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "make sure the global rule has been deleted",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/global_rules/1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"code":10001,"message":"data not found"`,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "make sure the route has been deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
+		},
+	}
 
-        for _, tc := range tests {
-                testCaseCheck(tc)
-        }
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
 }
