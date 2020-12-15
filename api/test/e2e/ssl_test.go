@@ -96,7 +96,7 @@ func TestSSL_Basic(t *testing.T) {
 			Path:         "/apisix/admin/ssl/1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"",
+			ExpectBody:   "\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v3\"",
 		},
 		{
 			caseDesc: "create route",
