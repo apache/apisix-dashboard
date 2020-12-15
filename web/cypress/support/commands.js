@@ -14,3 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/* eslint-disable no-undef */
+Cypress.Commands.add('login', () => {
+    cy.request('POST', 'http://localhost:9000/apisix/admin/user/login', {
+        "username": "user",
+        "password": "user"
+    })
+    .then(res => {
+        expect(res.body.code).to.equal(0);
+        localStorage.setItem(
+            'token', res.body.data.token
+        )
+    })
+})
