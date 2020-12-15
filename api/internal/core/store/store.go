@@ -54,7 +54,7 @@ type GenericStore struct {
 type GenericStoreOption struct {
 	BasePath   string
 	ObjType    reflect.Type
-	KeyFunc    func(obj interface{}) string
+	KeyFunc    func(obj interface{}, key string) string
 	StockCheck func(obj interface{}, stockObj interface{}) error
 	Validator  Validator
 }
@@ -96,14 +96,16 @@ func (s *GenericStore) Init() error {
 		return err
 	}
 	for i := range ret {
-		if ret[i] == "init_dir" {
+		if ret[i].Value == "init_dir" {
 			continue
 		}
-		objPtr, err := s.StringToObjPtr(ret[i])
+		objPtr, err := s.StringToObjPtr(ret[i].Value)
 		if err != nil {
 			return err
 		}
-		s.cache.Store(s.opt.KeyFunc(objPtr), objPtr)
+
+		key := ret[i].Key[len(s.opt.BasePath)+1:]
+		s.cache.Store(s.opt.KeyFunc(objPtr, key), objPtr)
 	}
 
 	c, cancel := context.WithCancel(context.TODO())
@@ -122,7 +124,8 @@ func (s *GenericStore) Init() error {
 						log.Warnf("value convert to obj failed: %s", err)
 						continue
 					}
-					s.cache.Store(event.Events[i].Key[len(s.opt.BasePath)+1:], objPtr)
+					key := event.Events[i].Key[len(s.opt.BasePath)+1:]
+					s.cache.Store(s.opt.KeyFunc(objPtr, key), objPtr)
 				case storage.EventTypeDelete:
 					s.cache.Delete(event.Events[i].Key[len(s.opt.BasePath)+1:])
 				}
@@ -247,7 +250,7 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 		return err
 	}
 
-	key := s.opt.KeyFunc(obj)
+	key := s.opt.KeyFunc(obj, "")
 	if key == "" {
 		return fmt.Errorf("key is required")
 	}
@@ -274,7 +277,7 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotE
 		return err
 	}
 
-	key := s.opt.KeyFunc(obj)
+	key := s.opt.KeyFunc(obj, "")
 	if key == "" {
 		return fmt.Errorf("key is required")
 	}
@@ -332,7 +335,7 @@ func (s *GenericStore) StringToObjPtr(str string) (interface{}, error) {
 }
 
 func (s *GenericStore) GetObjStorageKey(obj interface{}) string {
-	return s.GetStorageKey(s.opt.KeyFunc(obj))
+	return s.GetStorageKey(s.opt.KeyFunc(obj, ""))
 }
 
 func (s *GenericStore) GetStorageKey(key string) string {

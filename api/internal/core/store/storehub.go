@@ -75,7 +75,7 @@ func InitStores() error {
 	err := InitStore(HubKeyConsumer, GenericStoreOption{
 		BasePath: "/apisix/consumers",
 		ObjType:  reflect.TypeOf(entity.Consumer{}),
-		KeyFunc: func(obj interface{}) string {
+		KeyFunc: func(obj interface{}, key string) string {
 			r := obj.(*entity.Consumer)
 			return r.Username
 		},
@@ -87,8 +87,11 @@ func InitStores() error {
 	err = InitStore(HubKeyRoute, GenericStoreOption{
 		BasePath: "/apisix/routes",
 		ObjType:  reflect.TypeOf(entity.Route{}),
-		KeyFunc: func(obj interface{}) string {
+		KeyFunc: func(obj interface{}, key string) string {
 			r := obj.(*entity.Route)
+			if r.ID == nil && key != "" {
+				r.ID = key
+			}
 			return utils.InterfaceToString(r.ID)
 		},
 	})
@@ -99,8 +102,11 @@ func InitStores() error {
 	err = InitStore(HubKeyService, GenericStoreOption{
 		BasePath: "/apisix/services",
 		ObjType:  reflect.TypeOf(entity.Service{}),
-		KeyFunc: func(obj interface{}) string {
+		KeyFunc: func(obj interface{}, key string) string {
 			r := obj.(*entity.Service)
+			if r.ID == nil && key != "" {
+				r.ID = key
+			}
 			return utils.InterfaceToString(r.ID)
 		},
 	})
@@ -111,8 +117,11 @@ func InitStores() error {
 	err = InitStore(HubKeySsl, GenericStoreOption{
 		BasePath: "/apisix/ssl",
 		ObjType:  reflect.TypeOf(entity.SSL{}),
-		KeyFunc: func(obj interface{}) string {
+		KeyFunc: func(obj interface{}, key string) string {
 			r := obj.(*entity.SSL)
+			if r.ID == nil && key != "" {
+				r.ID = key
+			}
 			return utils.InterfaceToString(r.ID)
 		},
 	})
@@ -123,8 +132,11 @@ func InitStores() error {
 	err = InitStore(HubKeyUpstream, GenericStoreOption{
 		BasePath: "/apisix/upstreams",
 		ObjType:  reflect.TypeOf(entity.Upstream{}),
-		KeyFunc: func(obj interface{}) string {
+		KeyFunc: func(obj interface{}, key string) string {
 			r := obj.(*entity.Upstream)
+			if r.ID == nil && key != "" {
+				r.ID = key
+			}
 			return utils.InterfaceToString(r.ID)
 		},
 	})
@@ -135,8 +147,11 @@ func InitStores() error {
 	err = InitStore(HubKeyScript, GenericStoreOption{
 		BasePath: "/apisix/scripts",
 		ObjType:  reflect.TypeOf(entity.Script{}),
-		KeyFunc: func(obj interface{}) string {
+		KeyFunc: func(obj interface{}, key string) string {
 			r := obj.(*entity.Script)
+			if r.ID == "" && key != "" {
+				r.ID = key
+			}
 			return r.ID
 		},
 	})
