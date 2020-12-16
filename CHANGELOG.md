@@ -19,6 +19,7 @@
 
 # Table of Contents
 
+- [2.2.0](#220)
 - [2.1.1](#211)
 - [2.1.0](#210)
 - [2.0.0](#200)
@@ -26,11 +27,38 @@
 - [1.0.0](#100)
 
 
+# 2.2.0
+
+This release mainly improve basic features, bugfix and adds test cases.
+
+`Manager API` 2.2 should be used with [Apache APISIX 2.1](https://github.com/apache/apisix/releases/tag/2.1). It is not recommended to use with other Apache APISIX versions.
+
+### Core
+
+- Support access log for Manager API. [#994](https://github.com/apache/apisix-dashboard/pull/994)
+- Enhance error log for Manager API. [#977](https://github.com/apache/apisix-dashboard/pull/977)
+- Integrate with code-mirror to have a fallback to plugins's render issue. [#898](https://github.com/apache/apisix-dashboard/pull/898)
+- Support priority field in Route module. [#1006](https://github.com/apache/apisix-dashboard/pull/1006)
+- Add etcd basic auth support [#951](https://github.com/apache/apisix-dashboard/pull/951)
+
+### Test case
+
+- Enhance e2e test cases for upstream. [#971](https://github.com/apache/apisix-dashboard/pull/971) [#972](https://github.com/apache/apisix-dashboard/pull/972)
+- Refactor unit test for consumer handler. [#840](https://github.com/apache/apisix-dashboard/pull/840)
+
+## Bugfix
+
+- JSON schema verification should be performed on the original data submitted by the user. [#986](https://github.com/apache/apisix-dashboard/pull/986)
+- fix PATCH method bug. [#1005](https://github.com/apache/apisix-dashboard/pull/1005)
+- remove husky to resolve Docker Deploy failed. [#1018](https://github.com/apache/apisix-dashboard/pull/1018)
+
+For more changes, please refer to [Milestone](https://github.com/apache/apisix-dashboard/milestone/5).
+
 # 2.1.1
 
 This release mainly adds test cases and bugfix for `Manager API`.
 
-`Manager API` 2.1.1 should be used with APISIX 2.1. It is not recommended to use with other APISIX versions.
+`Manager API` 2.1.1 should be used with Apache APISIX 2.1. It is not recommended to use with other Apache APISIX versions.
 
 ### Core
 

@@ -27,7 +27,7 @@
   <a href="https://twitter.com/apacheapisix">Twitter</a>
 </p>
 
-The latest version is 2.1.1 and should be used with APISIX 2.1. It is not recommended to use with other APISIX versions.
+The latest version is 2.2 and should be used with Apache APISIX 2.1. It is not recommended to use with other Apache APISIX versions.
 
 ## What's Apache APISIX Dashboard
 
