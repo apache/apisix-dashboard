@@ -44,9 +44,7 @@ jobs:
         run: nohup go run . &
 
       - name: Install front-end dependencies
-        working-directory: ./web
         run: yarn install
 
       - name: Start frontend then test
-        working-directory: ./web/src/e2e
         run: yarn test:e2e
