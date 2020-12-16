@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 /* eslint-disable no-undef */
+
 context('Login Test', () => {
   it('login failed with empty username and password', () => {
     cy.visit('/user/Login');

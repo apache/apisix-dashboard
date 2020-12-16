@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 /* eslint-disable no-undef */
+
 context('Logout Test', () => {
   beforeEach(() => {
     cy.login();

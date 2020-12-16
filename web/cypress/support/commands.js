@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /* eslint-disable no-undef */
+
 Cypress.Commands.add('login', () => {
   const serveUrlMap = {
     dev: 'http://139.217.190.60',
@@ -27,7 +27,6 @@ Cypress.Commands.add('login', () => {
   } = Cypress.env();
   
   cy.request('POST', `${serveUrlMap[SERVE_ENV]}/apisix/admin/user/login`, {
-      
       "username": "user",
       "password": "user"
     })
@@ -35,6 +34,6 @@ Cypress.Commands.add('login', () => {
       expect(res.body.code).to.equal(0);
       localStorage.setItem(
         'token', res.body.data.token
-      )
+      );
     })
 })

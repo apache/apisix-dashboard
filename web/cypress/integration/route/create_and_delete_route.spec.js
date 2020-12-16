@@ -15,10 +15,9 @@
  * limitations under the License.
  */
 /* eslint-disable no-undef */
-/// <reference types="cypress" />
 
 context('Create and Delete Route', () => {
-  const root_name = `root_${new Date().valueOf()}`
+  const root_name = `root_${new Date().valueOf()}`;
 
   beforeEach(() => {
     // init login 
@@ -44,7 +43,7 @@ context('Create and Delete Route', () => {
     cy.get('#remote_addrs_1').type('10.10.10.10');
     cy.contains('Advanced Routing Matching Conditions').parent().siblings().contains('Create').click();
 
-    // create rule 
+    // create Advanced Routing Matching Conditions 
     cy.get('#position').click();
     cy.contains('Cookie').click();
     cy.get('.ant-modal').within(() => {
@@ -57,7 +56,7 @@ context('Create and Delete Route', () => {
 
     // go to step2
     cy.contains('Next').click();
-    cy.wait(400)
+    cy.wait(400);
     cy.get('#nodes_0_host').type('12.12.12.12', {
       timeout: 4000
     });
@@ -67,8 +66,7 @@ context('Create and Delete Route', () => {
 
     // config prometheus plugin
     cy.contains('.ant-card', 'prometheus').get('button').first().click();
-    cy.contains('button','Cancel').click();
-    cy.debug();
+    cy.contains('button', 'Cancel').click();
 
     // go to step4
     cy.contains('Next').click();
@@ -81,9 +79,9 @@ context('Create and Delete Route', () => {
   });
 
   it('delete the route', () => {
-    cy.visit('/routes/list')
+    cy.visit('/routes/list');
     cy.contains(root_name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully')
+    cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');
   })
 })
