@@ -32,6 +32,7 @@
     "test:component": "umi test ./src/components",
     "tsc": "tsc",
     "cypress:open": "CYPRESS_SERVE_ENV=test cypress open",
+    "cypress:open-dev": "CYPRESS_SERVE_ENV=dev cypress open",
     "cypress:run-ci": "CYPRESS_SERVE_ENV=test cypress run"
   },
   "license": "Apache-2.0",
