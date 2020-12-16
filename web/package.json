@@ -31,8 +31,8 @@
     "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
     "tsc": "tsc",
-    "cypress:open": "CYPRESS_SERVE_DEV=test cypress open",
-    "cypress:run-ci": "CYPRESS_SERVE_DEV=test cypress run"
+    "cypress:open": "CYPRESS_SERVE_ENV=test cypress open",
+    "cypress:run-ci": "cypress run --env CYPRESS_SERVE_ENV=test"
   },
   "license": "Apache-2.0",
   "lint-staged": {
