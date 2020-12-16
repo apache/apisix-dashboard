@@ -29,13 +29,13 @@ func TestID_Using_Int(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams",
 			Body: `{
-                "id": 1,
-                "nodes": [{
-                    "host": "172.16.238.20",
-                    "port": 1980,
-                    "weight": 1
-                }],
-                "type": "roundrobin"
+				"id": 1,
+				"nodes": [{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 1
+				}],
+				"type": "roundrobin"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -162,13 +162,13 @@ func TestID_Using_String(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams",
 			Body: `{
-                "id": "2",
-                "nodes": [{
-                    "host": "172.16.238.20",
-                    "port": 1980,
-                    "weight": 1
-                }],
-                "type": "roundrobin"
+				"id": "2",
+				"nodes": [{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 1
+				}],
+				"type": "roundrobin"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -243,13 +243,13 @@ func TestID_Crossing(t *testing.T) {
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams",
 			Body: `{
-                "id": 3,
-                "nodes": [{
-                    "host": "172.16.238.20",
-                    "port": 1980,
-                    "weight": 1
-                }],
-                "type": "roundrobin"
+				"id": 3,
+				"nodes": [{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 1
+				}],
+				"type": "roundrobin"
 			}`,
 			Headers:      map[string]string{"X-API-KEY": "edd1c9f034335f136f87ad84b625c8f1"},
 			ExpectStatus: http.StatusCreated,
@@ -320,6 +320,76 @@ func TestID_Crossing(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
 			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "hit deleted route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+func TestID_Not_In_Body(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc:     "make sure the route is not created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc: "create route that has no ID in request body by admin api",
+			Object:   APISIXExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": {
+						"172.16.238.20:1980": 1
+					}
+				}
+			}`,
+			Headers:      map[string]string{"X-API-KEY": "edd1c9f034335f136f87ad84b625c8f1"},
+			ExpectStatus: http.StatusCreated,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "verify that the route is available for manager api",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"id":"r1"`,
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "hit the route just created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "delete the route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
 		},
 		{
 			caseDesc:     "hit deleted route",
