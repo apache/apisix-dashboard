@@ -32,7 +32,7 @@
     "test:component": "umi test ./src/components",
     "tsc": "tsc",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "SERVE_DEV=test cypress run"
   },
   "license": "Apache-2.0",
   "lint-staged": {

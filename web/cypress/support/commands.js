@@ -17,14 +17,24 @@
 
 /* eslint-disable no-undef */
 Cypress.Commands.add('login', () => {
-    cy.request('POST', 'http://localhost:9000/apisix/admin/user/login', {
-        "username": "user",
-        "password": "user"
+  const serveUrlMap = {
+    dev: 'http://139.217.190.60',
+    test: 'http://localhost:9000',
+  };
+
+  const {
+    SERVE_ENV = 'dev'
+  } = Cypress.env();
+  
+  cy.request('POST', `${serveUrlMap[SERVE_ENV]}/apisix/admin/user/login`, {
+      
+      "username": "user",
+      "password": "user"
     })
     .then(res => {
-        expect(res.body.code).to.equal(0);
-        localStorage.setItem(
-            'token', res.body.data.token
-        )
+      expect(res.body.code).to.equal(0);
+      localStorage.setItem(
+        'token', res.body.data.token
+      )
     })
 })
