@@ -20,7 +20,7 @@
     "prettier": "prettier -c --write \"**/*\"",
     "site": "yarn run fetch:blocks && yarn run build",
     "start": "umi dev",
-    "test:e2e": "start-server-and-test 'cross-env SERVE_ENV='test' yarn start' http://localhost:8000 'yarn test'",
+    "test:e2e": "start-server-and-test 'cross-env SERVE_DEV=test yarn start' http-get://localhost:8000 cypress:run-ci",
     "start:dev": "cross-env REACT_APP_ENV=dev MOCK=none umi dev",
     "start:no-mock": "cross-env MOCK=none umi dev",
     "start:no-ui": "cross-env UMI_UI=none umi dev",
@@ -31,8 +31,8 @@
     "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
     "tsc": "tsc",
-    "cypress:open": "cypress open",
-    "cypress:run": "SERVE_DEV=test cypress run"
+    "cypress:open": "CYPRESS_SERVE_DEV=test cypress open",
+    "cypress:run-ci": "CYPRESS_SERVE_DEV=test cypress run"
   },
   "license": "Apache-2.0",
   "lint-staged": {

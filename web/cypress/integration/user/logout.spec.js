@@ -12,6 +12,6 @@ context('Logout Test', () => {
       force: true
     });
     cy.contains('退出').click();
-    cy.url().should('contains', 'http://localhost:9000/user/login');
+    cy.url().should('contains', '/user/login');
   });
 })
