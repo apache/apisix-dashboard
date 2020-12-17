@@ -43,10 +43,9 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const [bodyForm] = Form.useForm();
   const [authForm] = Form.useForm();
   const [headerForm] = Form.useForm();
-  const [responseCode, setResponseCode] = useState(
-    `${formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })}`,
-  );
+  const [responseCode, setResponseCode] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const [codeMirrorHeight, setCodeMirrorHeight] = useState<number | string>(50);
   const methodWithoutBody = ['GET', 'HEAD'];
 
   const resetForms = () => {
@@ -54,6 +53,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     bodyForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     headerForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     authForm.setFieldsValue(DEFAULT_DEBUG_AUTH_FORM_DATA);
+    setResponseCode(`${formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })}`);
   };
 
   useEffect(() => {
@@ -143,6 +143,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
       .then((req) => {
         setLoading(false);
         setResponseCode(JSON.stringify(req.data.data, null, 2));
+        setCodeMirrorHeight('auto');
       })
       .catch(() => {
         setLoading(false);
@@ -192,6 +193,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             onChange={(e) => {
               if (e.currentTarget.value === '') {
                 resetForms();
+                setCodeMirrorHeight(50);
               }
             }}
           />
@@ -222,7 +224,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
               <Spin tip="Loading..." spinning={loading}>
                 <CodeMirror
                   value={responseCode}
-                  height="auto"
+                  height={codeMirrorHeight}
                   options={{
                     mode: 'json-ld',
                     readOnly: 'nocursor',
@@ -230,6 +232,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                     lineNumbers: true,
                     showCursorWhenSelecting: true,
                     autofocus: true,
+                    scrollbarStyle: null,
                   }}
                 />
               </Spin>
