@@ -107,8 +107,16 @@ func GenLabelMap(label string) map[string]string {
 	for _, l := range labels {
 		kv := strings.Split(l, ":")
 		if len(kv) == 2 {
+			if kv[0] == "" || kv[1] == "" {
+				continue
+			}
+
 			mp[kv[0]] = kv[1]
 		} else if len(kv) == 1 {
+			if kv[0] == "" {
+				continue
+			}
+
 			mp[kv[0]] = ""
 		}
 	}

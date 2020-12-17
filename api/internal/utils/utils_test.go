@@ -48,10 +48,14 @@ func TestGenLabelMap(t *testing.T) {
 	assert.Equal(t, mp["l1"], "")
 
 	mp = GenLabelMap("l1,l2:v2")
-
 	assert.Equal(t, mp["l1"], "")
 	assert.Equal(t, mp["l2"], "v2")
 
+	mp = GenLabelMap(",")
+	assert.Equal(t, 0, len(mp))
+
+	mp = GenLabelMap(",l2:,")
+	assert.Equal(t, 0, len(mp))
 }
 
 func TestLabelContains(t *testing.T) {
