@@ -17,6 +17,11 @@
 /* eslint-disable no-undef */
 
 context('Login Test', () => {
+  beforeEach(() => {
+    // set default language
+    localStorage.setItem('umi_locale', "en-US");
+  });
+
   it('login failed with empty username and password', () => {
     cy.visit('/user/Login');
     cy.contains('Login').click();

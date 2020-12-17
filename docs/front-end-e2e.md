@@ -19,7 +19,7 @@
 
 This project uses [Cypress](https://www.cypress.io/) as the front-end E2E test framework.
 
-1. To start the front-end project locally, please refer to [develop](./develop.md/) web section.
+1. To start the front-end project locally, please refer to [develop](./develop.md) web section.
    
 2. Open Cypress test-runner. For the use of test-runner, please refer to [test-runner](https://docs.cypress.io/guides/core-concepts/test-runner.html#) Overview.
    ```sh

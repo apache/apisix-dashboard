@@ -73,4 +73,4 @@ $ yarn install
 $ yarn start
 ```
 
-1. If writing an E2E test, refer to the [E2E Writing Guide](./front-end-e2e.md)
+4. If writing an E2E test, refer to the [E2E Writing Guide](./front-end-e2e.md)
