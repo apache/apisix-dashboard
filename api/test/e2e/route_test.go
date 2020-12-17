@@ -227,38 +227,86 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 func TestRoute_Patch(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "route patch",
+			caseDesc:     "hit route that not exist",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/patch",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+		},
+		{
+			caseDesc: "create route",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r2",
+			Body: `{
+				"uri": "/patch",
+				"hosts": ["foo.com", "*.bar.com"],
+				"upstream": {
+					"nodes": {
+						"172.16.238.20:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "route patch for update status(route publish)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPatch,
-			Path:         "/apisix/admin/routes/r1",
+			Path:         "/apisix/admin/routes/r2",
 			Body:         `{"status":1}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-		}, {
-			caseDesc:     "route patch",
+		},
+		{
+			caseDesc:     "route patch for update status (route offline)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPatch,
-			Path:         "/apisix/admin/routes/r1",
+			Path:         "/apisix/admin/routes/r2",
 			Body:         `{"status":0}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-		}, {
-			caseDesc:     "route patch",
+		},
+		{
+			caseDesc:     "route patch update name",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPatch,
-			Path:         "/apisix/admin/routes/r1",
+			Path:         "/apisix/admin/routes/r2",
 			Body:         `{"name":"r1_route"}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
-		}, {
+		},
+		{
 			caseDesc:     "route patch with path",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPatch,
-			Path:         "/apisix/admin/routes/r1/status",
+			Path:         "/apisix/admin/routes/r2/status",
 			Body:         `1`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "hit the route just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/patch",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
 		},
 	}
 	for _, tc := range tests {
