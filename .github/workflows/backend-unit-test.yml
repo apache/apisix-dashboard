@@ -32,7 +32,7 @@ jobs:
           sudo mv ./dag-to-lua-1.1/lib/* ./api/dag-to-lua/
 
       - name: setup go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2.1.3
         with:
           go-version: '1.13'
 
