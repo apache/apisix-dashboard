@@ -18,26 +18,26 @@
 # in this file. For example if you want to specify the etcd address:
 #
 etcd:
-    host:
-      - "http://172.16.238.10:2379"
-      - "http://172.16.238.11:2379"
-      - "http://172.16.238.12:2379"
+  host:
+    - "http://172.16.238.10:2379"
+    - "http://172.16.238.11:2379"
+    - "http://172.16.238.12:2379"
 
 apisix:
   admin_key:
     -
-      name: "admin"
-      key: edd1c9f034335f136f87ad84b625c8f1 # using fixed API token has security risk, please
-                                            # update it when you deploy to production environment
-      role: admin
+      name: "admin"                          # yamllint disable rule:comments-indentation
+      key: edd1c9f034335f136f87ad84b625c8f1  # using fixed API token has security risk, please
+                                             # update it when you deploy to production environment
+      role: admin                            # yamllint enable rule:comments-indentation
 
-  allow_admin:                  # http://nginx.org/en/docs/http/ngx_http_access_module.html#allow
+  allow_admin:               # http://nginx.org/en/docs/http/ngx_http_access_module.html#allow
     - 0.0.0.0/0              # If we don't set any IP list, then any IP access is allowed by default.
 
   ssl:
-      enable: true
-      ssl_cert: "/usr/local/apisix/certs/apisix.crt"
-      ssl_cert_key: "/usr/local/apisix/certs/apisix.key"
+    enable: true
+    ssl_cert: "/usr/local/apisix/certs/apisix.crt"
+    ssl_cert_key: "/usr/local/apisix/certs/apisix.key"
 
 nginx_config:
   error_log_level: "debug"
