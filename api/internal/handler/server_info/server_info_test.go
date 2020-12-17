@@ -18,138 +18,205 @@
 package server_info
 
 import (
-	"strings"
+	"errors"
 	"testing"
-	"time"
 
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 
 	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
 )
 
-const (
-	SleepTime = 100 * time.Millisecond
-)
-
-var serverInfoHandler *Handler
-
-func init() {
-	err := storage.InitETCDClient([]string{"127.0.0.1:2379"})
-
-	if err != nil {
-		panic(err)
-	}
-	err = store.InitStores()
-	if err != nil {
-		panic(err)
-	}
-
-	serverInfoHandler = &Handler{
-		serverInfoStore: store.GetStore(store.HubKeyServerInfo),
-	}
-}
-
-func create(t *testing.T, ctx droplet.Context, info *entity.ServerInfo) {
-	err := serverInfoHandler.serverInfoStore.Create(ctx.Context(), info)
-	assert.Nil(t, err)
-}
-
-func delete(t *testing.T, ctx droplet.Context, ids []string) {
-	err := serverInfoHandler.serverInfoStore.BatchDelete(ctx.Context(), ids)
-	assert.Nil(t, err)
-}
-
-func testGet(t *testing.T, ctx droplet.Context, id string) {
-	input := &GetInput{ID: id}
-
-	ctx.SetInput(input)
-	res, err := serverInfoHandler.Get(ctx)
-	assert.Nil(t, err)
-
-	stored := res.(*entity.ServerInfo)
-	assert.Equal(t, stored.ID, input.ID)
-}
-
-func testList(t *testing.T, ctx droplet.Context, ids []string, hostname string) {
-	input := &ListInput{Hostname: hostname, Pagination: store.Pagination{PageSize: 10, PageNumber: 1}}
-
-	ctx.SetInput(input)
-	res, err := serverInfoHandler.List(ctx)
-	assert.Nil(t, err)
-
-	data := res.(*store.ListOutput)
-	assert.Equal(t, len(data.Rows), len(ids))
-
-	var find bool
-	for _, id := range ids {
-		find = false
-		for _, row := range data.Rows {
-			si := row.(*entity.ServerInfo)
-			if si.ID == id {
-				if hostname == "" {
-					find = true
-					break
-				}
-
-				if strings.Contains(si.Hostname, hostname) {
-					find = true
-					break
-				}
-			}
+func TestHandler_Get(t *testing.T) {
+	var (
+		tests = []struct {
+			caseDesc   string
+			giveInput  *GetInput
+			giveErr    error
+			giveRet    interface{}
+			wantErr    error
+			wantGetKey string
+			wantRet    interface{}
+		}{
+			{
+				caseDesc:  "get server_info",
+				giveInput: &GetInput{ID: "server_1"},
+				giveRet: &entity.ServerInfo{
+					BaseInfo:       entity.BaseInfo{ID: "server_1"},
+					UpTime:         10,
+					LastReportTime: 1608195454,
+					BootTime:       1608195454,
+					Hostname:       "gentoo",
+					Version:        "v3",
+				},
+				wantGetKey: "server_1",
+				wantRet: &entity.ServerInfo{
+					BaseInfo:       entity.BaseInfo{ID: "server_1"},
+					UpTime:         10,
+					LastReportTime: 1608195454,
+					BootTime:       1608195454,
+					Hostname:       "gentoo",
+					Version:        "v3",
+				},
+			},
+			{
+				caseDesc:   "get server_info not exist",
+				giveInput:  &GetInput{ID: "server_3"},
+				giveRet:    &data.SpecCodeResponse{Response: data.Response{Code: 0}, StatusCode: 404},
+				giveErr:    errors.New("not found"),
+				wantGetKey: "server_3",
+				wantRet:    &data.SpecCodeResponse{Response: data.Response{Code: 0}, StatusCode: 404},
+				wantErr:    errors.New("not found"),
+			},
 		}
+	)
 
-		assert.Equal(t, find, true)
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := true
+			mStore := &store.MockInterface{}
+			mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				assert.Equal(t, tc.wantGetKey, args.Get(0))
+			}).Return(tc.giveRet, tc.giveErr)
+
+			h := Handler{serverInfoStore: mStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.Get(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantErr, err)
+			assert.Equal(t, tc.wantRet, ret)
+		})
 	}
 }
 
-func TestServerInfo(t *testing.T) {
-	ctx := droplet.NewContext()
+func TestHandler_List(t *testing.T) {
+	var (
+		tests = []struct {
+			caseDesc   string
+			giveInput  *ListInput
+			giveData   []interface{}
+			giveErr    error
+			wantErr    error
+			wantGetKey *ListInput
+			wantRet    interface{}
+		}{
+			{
+				caseDesc:  "list server_info",
+				giveInput: &ListInput{Hostname: ""},
+				giveData: []interface{}{
+					&entity.ServerInfo{
+						BaseInfo:       entity.BaseInfo{ID: "server_1"},
+						UpTime:         10,
+						LastReportTime: 1608195454,
+						BootTime:       1608195454,
+						Hostname:       "gentoo",
+						Version:        "v3",
+					},
+					&entity.ServerInfo{
+						BaseInfo:       entity.BaseInfo{ID: "server_2"},
+						UpTime:         10,
+						LastReportTime: 1608195454,
+						BootTime:       1608195454,
+						Hostname:       "ubuntu",
+						Version:        "v2",
+					},
+				},
+				wantRet: &store.ListOutput{
+					Rows: []interface{}{
+						&entity.ServerInfo{
+							BaseInfo:       entity.BaseInfo{ID: "server_1"},
+							UpTime:         10,
+							LastReportTime: 1608195454,
+							BootTime:       1608195454,
+							Hostname:       "gentoo",
+							Version:        "v3",
+						},
+						&entity.ServerInfo{
+							BaseInfo:       entity.BaseInfo{ID: "server_2"},
+							UpTime:         10,
+							LastReportTime: 1608195454,
+							BootTime:       1608195454,
+							Hostname:       "ubuntu",
+							Version:        "v2",
+						},
+					},
+					TotalSize: 2,
+				},
+			},
+			{
+				caseDesc:  "list server_info with hostname",
+				giveInput: &ListInput{Hostname: "ubuntu"},
+				giveData: []interface{}{
+					&entity.ServerInfo{
+						BaseInfo:       entity.BaseInfo{ID: "server_1"},
+						UpTime:         10,
+						LastReportTime: 1608195454,
+						BootTime:       1608195454,
+						Hostname:       "gentoo",
+						Version:        "v3",
+					},
+					&entity.ServerInfo{
+						BaseInfo:       entity.BaseInfo{ID: "server_2"},
+						UpTime:         10,
+						LastReportTime: 1608195454,
+						BootTime:       1608195454,
+						Hostname:       "ubuntu",
+						Version:        "v2",
+					},
+				},
+				wantRet: &store.ListOutput{
+					Rows: []interface{}{
+						&entity.ServerInfo{
+							BaseInfo:       entity.BaseInfo{ID: "server_2"},
+							UpTime:         10,
+							LastReportTime: 1608195454,
+							BootTime:       1608195454,
+							Hostname:       "ubuntu",
+							Version:        "v2",
+						},
+					},
+					TotalSize: 1,
+				},
+			},
+		}
+	)
 
-	serverInfo := &entity.ServerInfo{
-		BaseInfo:       entity.BaseInfo{ID: "1"},
-		UpTime:         10,
-		LastReportTime: 1606892686,
-		EtcdVersion:    "3.5.0",
-		Hostname:       "gentoo",
-		Version:        "2.0",
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := true
+			mStore := &store.MockInterface{}
+			mStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				var res []interface{}
+				for _, c := range tc.giveData {
+					if input.Predicate(c) {
+						if input.Format != nil {
+							res = append(res, input.Format(c))
+						} else {
+							res = append(res, c)
+						}
+					}
+				}
+
+				return &store.ListOutput{
+					Rows:      res,
+					TotalSize: len(res),
+				}
+			}, tc.giveErr)
+
+			h := Handler{serverInfoStore: mStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.List(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantErr, err)
+			assert.Equal(t, tc.wantRet, ret)
+		})
 	}
-
-	create(t, ctx, serverInfo)
-	time.Sleep(SleepTime)
-
-	testGet(t, ctx, "1")
-	testList(t, ctx, []string{"1"}, "")
-	delete(t, ctx, []string{"1"})
-}
-
-func TestServerInfo_Pass_Host(t *testing.T) {
-	ctx := droplet.NewContext()
-
-	serverInfo := &entity.ServerInfo{
-		BaseInfo:       entity.BaseInfo{ID: "4"},
-		UpTime:         10,
-		LastReportTime: 1606892686,
-		EtcdVersion:    "3.5.0",
-		Hostname:       "gentoo",
-		Version:        "2.0",
-	}
-
-	create(t, ctx, serverInfo)
-
-	serverInfo.ID = "5"
-	serverInfo.Hostname = "gentoo2"
-
-	create(t, ctx, serverInfo)
-
-	serverInfo.ID = "6"
-	serverInfo.Hostname = "ubuntu"
-
-	create(t, ctx, serverInfo)
-	time.Sleep(SleepTime)
-
-	testList(t, ctx, []string{"4", "5"}, "gentoo")
-	delete(t, ctx, []string{"4", "5", "6"})
 }

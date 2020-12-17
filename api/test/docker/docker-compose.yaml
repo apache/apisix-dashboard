@@ -126,6 +126,7 @@ services:
         ipv4_address: 172.16.238.20
 
   apisix:
+    hostname: apisix_server1
     build:
       context: ../../
       dockerfile: test/docker/Dockerfile-apisix
@@ -149,6 +150,7 @@ services:
         ipv4_address: 172.16.238.30
 
   apisix2:
+    hostname: apisix_server2
     build:
       context: ../../
       dockerfile: test/docker/Dockerfile-apisix
@@ -156,7 +158,7 @@ services:
         - APISIX_VERSION=2.1
     restart: always
     volumes:
-      - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
+      - ./apisix_config2.yaml:/usr/local/apisix/conf/config.yaml:ro
       - ../certs/apisix.crt:/usr/local/apisix/certs/apisix.crt:ro
       - ../certs/apisix.key:/usr/local/apisix/certs/apisix.key:ro
     depends_on:
