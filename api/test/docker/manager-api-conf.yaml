@@ -26,7 +26,7 @@ conf:
       - 172.16.238.11:2379
       - 172.16.238.12:2379
   log:
-    error_log:
+    error_log:                     # yamllint disable rule:comments-indentation
       level: warn                  # supports levels, lower to higher: debug, info, warn, error, panic, fatal
       file_path: logs/error.log    # supports relative path, absolute path, standard output
                                    # such as: logs/error.log, /tmp/logs/error.log, /dev/stdout, /dev/stderr
@@ -35,9 +35,8 @@ authentication:
                              # *NOTE*: Highly recommended to modify this value to protect `manager api`.
                              # if it's default value, when `manager api` start , it will generate a random string to replace it.
   expire_time: 3600          # jwt token expire time, in second
-  users:
+  users:                     # yamllint enable rule:comments-indentation
     - username: admin        # username and password for login `manager api`
       password: admin
     - username: user
       password: user
-
