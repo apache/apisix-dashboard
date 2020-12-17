@@ -42,3 +42,21 @@ func TestSumIPs_with_nil(t *testing.T) {
 	total := sumIPs(nil)
 	assert.Equal(t, uint16(0), total)
 }
+
+func TestObjectClone(t *testing.T) {
+	type test struct {
+		Str string
+		Num int
+	}
+
+	origin := &test{Str: "a", Num: 1}
+	copy := &test{}
+	ObjectClone(origin, copy)
+
+	assert.Equal(t, origin, copy)
+
+	// change value of the copy, should not change value of origin
+	copy.Num = 2
+	assert.NotEqual(t, copy.Num, origin.Num)
+	assert.Equal(t, 1, origin.Num)
+}

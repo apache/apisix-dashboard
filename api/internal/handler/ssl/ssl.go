@@ -86,7 +86,8 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	}
 
 	//format respond
-	ssl := ret.(*entity.SSL)
+	ssl := &entity.SSL{}
+	utils.ObjectClone(ret, ssl)
 	ssl.Key = ""
 	ssl.Keys = nil
 
@@ -160,9 +161,9 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 
 	//format respond
 	var list []interface{}
-	var ssl *entity.SSL
 	for _, item := range ret.Rows {
-		ssl = item.(*entity.SSL)
+		ssl := &entity.SSL{}
+		utils.ObjectClone(item, ssl)
 		ssl.Key = ""
 		ssl.Keys = nil
 		list = append(list, ssl)

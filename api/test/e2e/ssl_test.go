@@ -102,6 +102,14 @@ func TestSSL_Basic(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
+			caseDesc: "get the route just created to trigger removing `key`",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodGet,
+			Path:     "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
 			caseDesc:     "hit the route just created using HTTPS",
 			Object:       APISIXHTTPSExpect(t),
 			Method:       http.MethodGet,

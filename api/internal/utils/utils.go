@@ -17,6 +17,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
 	"net"
 	"os"
@@ -93,4 +94,9 @@ func InterfaceToString(val interface{}) string {
 	}
 	str := fmt.Sprintf("%v", val)
 	return str
+}
+
+func ObjectClone(origin, copy interface{}) {
+	byt, _ := json.Marshal(origin)
+	json.Unmarshal(byt, copy)
 }
