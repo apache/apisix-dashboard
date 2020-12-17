@@ -36,10 +36,10 @@ context('Create and Delete Route', () => {
 
     // input Request Basic Define
     cy.get('#hosts_0').type('11.11.11.11');
-    cy.contains('Domain Name').parent().parent().parent().contains(' Create').click();
+    cy.get('[data-cy=addHost]').click();
     cy.get('#hosts_1').type('12.12.12.12');
     cy.get('#remote_addrs_0').type('12.12.12.12');
-    cy.contains('Remote Addrs').parent().parent().parent().contains(' Create').click();
+    cy.get('[data-cy=addRemoteAddr]').click();
     cy.get('#remote_addrs_1').type('10.10.10.10');
     cy.contains('Advanced Routing Matching Conditions').parent().siblings().contains('Create').click();
 

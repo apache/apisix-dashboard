@@ -28,7 +28,7 @@ context('Logout Test', () => {
     }).click({
       force: true
     });
-    cy.contains('退出').click();
+    cy.get('[aria-label=logout]').click();
     cy.url().should('contains', '/user/login');
   });
 })
