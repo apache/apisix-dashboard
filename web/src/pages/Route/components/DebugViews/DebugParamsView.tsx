@@ -38,7 +38,7 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                       style={{ textAlign: 'right' }}
                       valuePropName="checked"
                     >
-                      {fields.length > 1 && index !== fields.length - 1 && <Checkbox/>}
+                      {fields.length > 1 && index !== fields.length - 1 && <Checkbox />}
                     </Form.Item>
                   </Col>
                   <Col span={8}>
@@ -69,7 +69,7 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                   </Col>
                   <Col>
                     {fields.length > 1 && index !== fields.length - 1 && (
-                      <MinusCircleOutlined onClick={() => remove(field.name)}/>
+                      <MinusCircleOutlined onClick={() => remove(field.name)} />
                     )}
                   </Col>
                 </Row>
