@@ -23,7 +23,7 @@ import { PlusOutlined } from '@ant-design/icons';
 
 import { timestampToLocaleString } from '@/helpers';
 
-import { fetchList, remove } from './service';
+import { fetchList, remove, updateRouteStatus } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
