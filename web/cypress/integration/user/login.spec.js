@@ -24,11 +24,19 @@ context('Login Test', () => {
     cy.get('.ant-form-item-explain').should('contain', 'Please input password');
   });
 
+  it('login with invalid credentials', () => {
+    cy.visit('/user/Login');
+    cy.get('#control-ref_username').type('user');
+    cy.get('#control-ref_password').type('invalidPassword');
+    cy.contains('Login').click();
+    cy.get('.ant-notification-notice-message').should('contain', 'Request Error Code: 10000');
+  });
 
   it('login success', () => {
     cy.visit('/user/Login');
     cy.get('#control-ref_username').type('user');
     cy.get('#control-ref_password').type('user');
     cy.contains('Login').click();
+    cy.get('.ant-notification-notice-message').should('contain', 'Successfully');
   });
 })
