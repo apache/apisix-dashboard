@@ -106,14 +106,13 @@ sleep 5
 
 res=$(curl http://127.0.0.1:9000)
 pkill -f manager-api
+cd -
+rm -rf html
 
-if [[ $res == "404 page not found" ]]; then
+if [[ $res != "hi~" ]]; then
     echo "failed: manager-api cant run on a different path"
     exit 1
 fi
-
-cd -
-rm -rf html
 clean_up
 
 # test start info
