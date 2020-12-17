@@ -132,7 +132,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     const urlQueryString = queryString.stringify(queryFormData);
 
     setLoading(true);
-    //TODO: grpc and websocket
+    // TODO: grpc and websocket
     debugRoute({
       url: `${url}${urlQueryString && `?${urlQueryString}`}`,
       request_protocol: 'http',
