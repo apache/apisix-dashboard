@@ -31,18 +31,18 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
           return (
             <>
               {fields.map((field, index) => (
-                <Row gutter={16} key={index.toString()}>
+                <Row gutter={16} key={field.name}>
                   <Col span={1}>
                     <Form.Item
                       name={[field.name, 'check']}
                       style={{ textAlign: 'right' }}
                       valuePropName="checked"
                     >
-                      {fields.length > 1 && index !== fields.length - 1 && <Checkbox key={`checkbox_${field.name}_${index}_1`}/>}
+                      {fields.length > 1 && index !== fields.length - 1 && <Checkbox/>}
                     </Form.Item>
                   </Col>
-                  <Col span={8} key={`col_${field.name}_${index}_2`}>
-                    <Form.Item name={[field.name, 'key']} key={`formitem_${field.name}_${index}_2`}>
+                  <Col span={8}>
+                    <Form.Item name={[field.name, 'key']}>
                       <Input
                         placeholder={formatMessage({ id: 'page.route.input.placeholder.paramKey' })}
                         onChange={() => {
@@ -55,23 +55,21 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                             props.form.setFieldsValue(prevData);
                           }
                         }}
-                        key={`input_${field.name}_${index}_2`}
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={8} key={`col_${field.name}_${index}_3`}>
-                    <Form.Item name={[field.name, 'value']} key={`formitem_${field.name}_${index}_3`}>
+                  <Col span={8}>
+                    <Form.Item name={[field.name, 'value']}>
                       <Input
                         placeholder={formatMessage({
                           id: 'page.route.input.placeholder.paramValue',
                         })}
-                        key={`input_${field.name}_${index}_3`}
                       />
                     </Form.Item>
                   </Col>
-                  <Col key={`col_${field.name}_${index}_4`}>
+                  <Col>
                     {fields.length > 1 && index !== fields.length - 1 && (
-                      <MinusCircleOutlined onClick={() => remove(field.name)} key={`minus_${field.name}_${index}_4`}/>
+                      <MinusCircleOutlined onClick={() => remove(field.name)}/>
                     )}
                   </Col>
                 </Row>
