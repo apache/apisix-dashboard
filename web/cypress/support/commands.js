@@ -25,7 +25,7 @@ Cypress.Commands.add('login', () => {
   const {
     SERVE_ENV = 'dev'
   } = Cypress.env();
-  
+
   cy.request('POST', `${serveUrlMap[SERVE_ENV]}/apisix/admin/user/login`, {
       "username": "user",
       "password": "user"
@@ -35,5 +35,7 @@ Cypress.Commands.add('login', () => {
       localStorage.setItem(
         'token', res.body.data.token
       );
+      // set default language
+      localStorage.setItem('umi_locale', "en-US");
     })
 })
