@@ -83,6 +83,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
+                  data-cy="addHost"
                   onClick={() => {
                     add();
                   }}
@@ -161,6 +162,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
+                  data-cy="addUri"
                   onClick={() => {
                     add();
                   }}
@@ -232,6 +234,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
+                  data-cy="addRemoteAddr"
                   onClick={() => {
                     add();
                   }}

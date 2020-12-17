@@ -29,13 +29,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Cache or restore node_modules
-        id: node_modules_cache_id
-        uses: actions/cache@v2
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
-
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.4
         with:
@@ -51,10 +44,7 @@ jobs:
         run: nohup go run . &
 
       - name: Install front-end dependencies
-        working-directory: ./web
-        if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
         run: yarn install
 
       - name: Start frontend then test
-        working-directory: ./web/src/e2e
         run: yarn test:e2e
