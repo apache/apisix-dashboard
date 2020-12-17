@@ -57,6 +57,17 @@ func NewHandler() (handler.RouteRegister, error) {
 	}, nil
 }
 
+type ProtocolSupport interface {
+	RequestForwarding(c droplet.Context) (interface{}, error)
+}
+
+var protocolMap map[string]ProtocolSupport
+
+func init() {
+	protocolMap = make(map[string]ProtocolSupport)
+	protocolMap["http"] = &HTTPProtocolSupport{}
+}
+
 func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.GET("/apisix/admin/routes/:id", wgin.Wraps(h.Get,
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
@@ -500,16 +511,17 @@ func (h *Handler) DebugRequestForwarding(c droplet.Context) (interface{}, error)
 	if requestProtocol == "" {
 		requestProtocol = "http"
 	}
-	switch requestProtocol {
-	//TODO: could add case like "websocket" and "grpc"
-	case "http":
-		return h.HttpRequestForwarding(c)
-	default:
-		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, fmt.Errorf("protocol unspported %s", paramsInput.RequestProtocol)
+	if v, ok := protocolMap[requestProtocol]; ok {
+		return v.RequestForwarding(c)
+	} else {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("protocol unspported %s", paramsInput.RequestProtocol)
 	}
 }
 
-func (h *Handler) HttpRequestForwarding(c droplet.Context) (interface{}, error) {
+type HTTPProtocolSupport struct {
+}
+
+func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{}, error) {
 	paramsInput := c.Input().(*ParamsInput)
 	bodyParams, _ := json.Marshal(paramsInput.BodyParams)
 	client := &http.Client{}
@@ -528,11 +540,7 @@ func (h *Handler) HttpRequestForwarding(c droplet.Context) (interface{}, error) 
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}
-	defer func() {
-		if resp != nil {
-			_ = resp.Body.Close()
-		}
-	}()
+	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
