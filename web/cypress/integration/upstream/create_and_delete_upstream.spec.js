@@ -63,7 +63,7 @@ context('Create and Delete Upstream', () => {
           cy.get('#name').type('autotest_'+root_name);
           cy.get('#desc').type('desc_by_autotest');
       
-          // change type, todo: optimize the search method
+          // change upstream type to chash, todo: optimize the search method
           cy.get('.ant-select-selection-item').click();
           cy.wait(100)
           cy.get('.ant-select-item:nth-child(2)').click();
