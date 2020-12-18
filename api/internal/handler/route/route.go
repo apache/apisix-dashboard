@@ -348,6 +348,13 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
+	
+	// check if id on path is == to id on body
+    if input.ID != "" && input.Route.ID != nil && input.ID != input.Route.ID {
+        return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+            fmt.Errorf("ID on path (%s) doesn't match ID on body (%s)", input.ID, input.Route.ID)
+    }
+
 	if input.ID != "" {
 		input.Route.ID = input.ID
 	}
