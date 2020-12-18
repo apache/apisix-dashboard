@@ -171,7 +171,7 @@ func TestRoute_Node_Host(t *testing.T) {
 				}],
 				"type": "roundrobin",
 				"pass_host": "rewrite",
-				"upstream_host": "httpbin.org"  
+				"upstream_host": "httpbin.org"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,

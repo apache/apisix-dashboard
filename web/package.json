@@ -20,17 +20,17 @@
     "prettier": "prettier -c --write \"**/*\"",
     "site": "yarn run fetch:blocks && yarn run build",
     "start": "umi dev",
-    "test:e2e": "start-server-and-test 'cross-env SERVE_ENV='test' yarn start' http://localhost:8000 'yarn test'",
+    "test:e2e": "start-server-and-test 'cross-env SERVE_ENV=test yarn start' http-get://localhost:8000 cypress:run-ci",
     "start:dev": "cross-env REACT_APP_ENV=dev MOCK=none umi dev",
     "start:no-mock": "cross-env MOCK=none umi dev",
     "start:no-ui": "cross-env UMI_UI=none umi dev",
     "start:pre": "cross-env REACT_APP_ENV=pre umi dev",
     "start:test": "cross-env REACT_APP_ENV=test MOCK=none umi dev",
-    "pretest": "node ./tests/beforeTest",
-    "test": "umi test",
-    "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "cypress:open": "CYPRESS_SERVE_ENV=test cypress open",
+    "cypress:open-dev": "CYPRESS_SERVE_ENV=dev cypress open",
+    "cypress:run-ci": "CYPRESS_SERVE_ENV=test cypress run"
   },
   "license": "Apache-2.0",
   "lint-staged": {
@@ -100,6 +100,7 @@
     "carlo": "^0.9.46",
     "cross-env": "^7.0.0",
     "cross-port-killer": "^1.1.1",
+    "cypress": "^6.1.0",
     "detect-installer": "^1.0.1",
     "enzyme": "^3.11.0",
     "eslint": "^7.1.0",
@@ -110,7 +111,6 @@
     "pinst": "^2.1.1",
     "prettier": "^2.0.1",
     "pro-download": "1.0.1",
-    "puppeteer": "^5.4.1",
     "puppeteer-core": "^4.0.1",
     "stylelint": "^13.0.0"
   },
