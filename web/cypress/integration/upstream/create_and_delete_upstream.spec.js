@@ -74,7 +74,7 @@ context('Create and Delete Upstream', () => {
           cy.wait(100)
           cy.get('div:nth-child(8) .ant-select-item:nth-child(1) > .ant-select-item-option-content:nth-child(1)').click();
 
-          // input information
+          // input chash upstream's information
           // add first upstream node
           cy.get('#nodes_0_host').type('127.0.0.1');
           cy.get('#nodes_0_port').clear().type('7000');
