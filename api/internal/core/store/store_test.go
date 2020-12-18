@@ -35,7 +35,7 @@ import (
 )
 
 func TestNewGenericStore(t *testing.T) {
-	dfFunc := func(obj interface{}) string { return "" }
+	dfFunc := func(obj interface{}, key string) string { return "" }
 	tests := []struct {
 		giveOpt   GenericStoreOption
 		giveCache map[string]interface{}
@@ -115,7 +115,7 @@ func TestGenericStore_Init(t *testing.T) {
 		caseDesc        string
 		giveStore       *GenericStore
 		giveListErr     error
-		giveListRet     []string
+		giveListRet     []storage.Data
 		giveWatchCh     chan storage.WatchResponse
 		giveResp        storage.WatchResponse
 		wantErr         error
@@ -129,14 +129,20 @@ func TestGenericStore_Init(t *testing.T) {
 				opt: GenericStoreOption{
 					BasePath: "test",
 					ObjType:  reflect.TypeOf(TestStruct{}),
-					KeyFunc: func(obj interface{}) string {
+					KeyFunc: func(obj interface{}, key string) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
 			},
-			giveListRet: []string{
-				`{"Field1":"demo1-f1", "Field2":"demo1-f2"}`,
-				`{"Field1":"demo2-f1", "Field2":"demo2-f2"}`,
+			giveListRet: []storage.Data{
+				{
+					Key:   "test/demo1-f1",
+					Value: `{"Field1":"demo1-f1", "Field2":"demo1-f2"}`,
+				},
+				{
+					Key:   "test/demo2-f1",
+					Value: `{"Field1":"demo2-f1", "Field2":"demo2-f2"}`,
+				},
 			},
 			giveWatchCh: make(chan storage.WatchResponse),
 			giveResp: storage.WatchResponse{
@@ -178,14 +184,20 @@ func TestGenericStore_Init(t *testing.T) {
 				opt: GenericStoreOption{
 					BasePath: "test",
 					ObjType:  reflect.TypeOf(TestStruct{}),
-					KeyFunc: func(obj interface{}) string {
+					KeyFunc: func(obj interface{}, key string) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
 			},
-			giveListRet: []string{
-				`{"Field1","demo1-f1", "Field2":"demo1-f2"}`,
-				`{"Field1":"demo2-f1", "Field2":"demo2-f2"}`,
+			giveListRet: []storage.Data{
+				{
+					Key:   "test/demo1-f1",
+					Value: `{"Field1","demo1-f1", "Field2":"demo1-f2"}`,
+				},
+				{
+					Key:   "test/demo2-f1",
+					Value: `{"Field1":"demo2-f1", "Field2":"demo2-f2"}`,
+				},
 			},
 			wantErr:        fmt.Errorf("json unmarshal failed: invalid character ',' after object key"),
 			wantListCalled: true,
@@ -509,7 +521,7 @@ func TestGenericStore_Create(t *testing.T) {
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
 					BasePath: "test/path",
-					KeyFunc: func(obj interface{}) string {
+					KeyFunc: func(obj interface{}, key string) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -525,7 +537,7 @@ func TestGenericStore_Create(t *testing.T) {
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
 					BasePath: "test/path",
-					KeyFunc: func(obj interface{}) string {
+					KeyFunc: func(obj interface{}, key string) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -546,7 +558,7 @@ func TestGenericStore_Create(t *testing.T) {
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
 					BasePath: "test/path",
-					KeyFunc: func(obj interface{}) string {
+					KeyFunc: func(obj interface{}, key string) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -632,7 +644,7 @@ func TestGenericStore_Update(t *testing.T) {
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
 					BasePath: "test/path",
-					KeyFunc: func(obj interface{}) string {
+					KeyFunc: func(obj interface{}, key string) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -651,7 +663,7 @@ func TestGenericStore_Update(t *testing.T) {
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
 					BasePath: "test/path",
-					KeyFunc: func(obj interface{}) string {
+					KeyFunc: func(obj interface{}, key string) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -672,7 +684,7 @@ func TestGenericStore_Update(t *testing.T) {
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
 					BasePath: "test/path",
-					KeyFunc: func(obj interface{}) string {
+					KeyFunc: func(obj interface{}, key string) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
