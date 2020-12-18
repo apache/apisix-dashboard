@@ -92,5 +92,5 @@ plugin_attr:
     endpoint_addr: http://172.16.238.50:12800
 
   server-info:
-    report_interval: 10
+    report_interval: 60
     report_ttl: 3600
