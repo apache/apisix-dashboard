@@ -869,7 +869,7 @@ func TestRoute(t *testing.T) {
 
 	//list search with uri,name and label
 	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "name": "a", uri": "index", "label":"l1:v1"}`
+	reqBody = `{"page_size": 1, "page": 1, "name": "a", "uri": "index", "label":"l1:v1"}`
 	err = json.Unmarshal([]byte(reqBody), listInput)
 	assert.Nil(t, err)
 	ctx.SetInput(listInput)
