@@ -3923,6 +3923,16 @@ ajv@^6.12.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
+ajv@^7.0.0-rc.2:
+  version "7.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-7.0.0-rc.2.tgz#9c237b95072c1ee8c38e2df76422f37bacc9ae5e"
+  integrity sha512-D2iqHvbT3lszv5KSsTvJL9PSPf/2/s45i68vLXJmT124cxK/JOoOFyo/QnrgMKa2FHlVaMIsp1ZN1P4EH3bCKw==
+  dependencies:
+    fast-deep-equal "^3.1.1"
+    json-schema-traverse "^1.0.0"
+    require-from-string "^2.0.2"
+    uri-js "^4.2.2"
+
 alphanum-sort@^1.0.0:
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/alphanum-sort/download/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
@@ -10654,12 +10664,17 @@ json-schema-traverse@^0.4.1:
   resolved "https://registry.npm.taobao.org/json-schema-traverse/download/json-schema-traverse-0.4.1.tgz#69f6a87d9513ab8bb8fe63bdb0979c448e684660"
   integrity sha1-afaofZUTq4u4/mO9sJecRI5oRmA=
 
+json-schema-traverse@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz#ae7bcb3656ab77a73ba5c49bf654f38e6b6860e2"
+  integrity sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==
+
 json-schema@0.2.3:
   version "0.2.3"
   resolved "https://registry.npm.taobao.org/json-schema/download/json-schema-0.2.3.tgz#b480c892e59a2f05954ce727bd3f2a4e882f9e13"
   integrity sha1-tIDIkuWaLwWVTOcnvT8qTogvnhM=
 
-json-schema@0.2.5, json-schema@^0.2.5:
+json-schema@^0.2.5:
   version "0.2.5"
   resolved "https://registry.npm.taobao.org/json-schema/download/json-schema-0.2.5.tgz#97997f50972dd0500214e208c407efa4b5d7063b"
   integrity sha1-l5l/UJct0FACFOIIxAfvpLXXBjs=
@@ -15484,6 +15499,11 @@ require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.npm.taobao.org/require-directory/download/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
   integrity sha1-jGStX9MNqxyXbiNE/+f3kqam30I=
+
+require-from-string@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.2.tgz#89a7fdd938261267318eafe14f9c32e598c36909"
+  integrity sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==
 
 require-main-filename@^2.0.0:
   version "2.0.0"
