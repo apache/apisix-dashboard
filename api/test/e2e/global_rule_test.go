@@ -25,7 +25,7 @@ import (
 func TestGlobalRule(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			caseDesc:     "make sure the route doesn't exist",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
