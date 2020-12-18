@@ -24,7 +24,7 @@ etcd:
     - "http://172.16.238.12:2379"
 
 apisix:
-  id: "apisix-server1"
+  id: "apisix-server2"
   admin_key:
     -
       name: "admin"                          # yamllint disable rule:comments-indentation
