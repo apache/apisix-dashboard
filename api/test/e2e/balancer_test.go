@@ -17,7 +17,6 @@
 package e2e
 
 import (
-	"io/ioutil"
 	"net/http"
 	"testing"
 	"time"
@@ -73,25 +72,10 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 	}
 
 	// hit routes
-	time.Sleep(200 * time.Millisecond)
-	basepath := "http://127.0.0.1:9080/"
-	request, err := http.NewRequest("GET", basepath+"/server_port", nil)
-	request.Header.Add("Authorization", token)
-	var resp *http.Response
-	var respBody []byte
-	res := map[string]int{}
-	for i := 0; i < 18; i++ {
-		resp, err = http.DefaultClient.Do(request)
-		assert.Nil(t, err)
-		respBody, err = ioutil.ReadAll(resp.Body)
-		body := string(respBody)
-		if _, ok := res[body]; !ok {
-			res[body] = 1
-		} else {
-			res[body] += 1
-		}
-		resp.Body.Close()
-	}
+	time.Sleep(sleepTime)
+	// batch test /server_port api
+	res := BatchTestServerPort(t, 18)
+	// BatchTestServerPort
 	assert.True(t, res["1982"] == 6)
 	assert.True(t, res["1981"] == 6)
 	assert.True(t, res["1980"] == 6)
@@ -129,20 +113,10 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 	}
 
 	// hit routes
-	time.Sleep(200 * time.Millisecond)
-	res = map[string]int{}
-	for i := 0; i < 18; i++ {
-		resp, err = http.DefaultClient.Do(request)
-		assert.Nil(t, err)
-		respBody, err = ioutil.ReadAll(resp.Body)
-		body := string(respBody)
-		if _, ok := res[body]; !ok {
-			res[body] = 1
-		} else {
-			res[body] += 1
-		}
-		resp.Body.Close()
-	}
+	time.Sleep(sleepTime)
+	// batch test /server_port api
+	res = BatchTestServerPort(t, 18)
+
 	assert.True(t, res["1980"] == 3)
 	assert.True(t, res["1981"] == 6)
 	assert.True(t, res["1982"] == 9)
@@ -176,19 +150,9 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 
 	// hit routes
 	time.Sleep(200 * time.Millisecond)
-	res = map[string]int{}
-	for i := 0; i < 18; i++ {
-		resp, err = http.DefaultClient.Do(request)
-		assert.Nil(t, err)
-		respBody, err = ioutil.ReadAll(resp.Body)
-		body := string(respBody)
-		if _, ok := res[body]; !ok {
-			res[body] = 1
-		} else {
-			res[body] += 1
-		}
-		resp.Body.Close()
-	}
+	// batch test /server_port api
+	res = BatchTestServerPort(t, 18)
+
 	assert.True(t, res["1980"] == 18)
 
 	tests = []HttpTestCase{
@@ -214,20 +178,10 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 	}
 
 	// hit routes
-	time.Sleep(200 * time.Millisecond)
-	res = map[string]int{}
-	for i := 0; i < 18; i++ {
-		resp, err = http.DefaultClient.Do(request)
-		assert.Nil(t, err)
-		respBody, err = ioutil.ReadAll(resp.Body)
-		body := string(respBody)
-		if _, ok := res[body]; !ok {
-			res[body] = 1
-		} else {
-			res[body] += 1
-		}
-		resp.Body.Close()
-	}
+	time.Sleep(sleepTime)
+	// batch test /server_port api
+	res = BatchTestServerPort(t, 18)
+
 	assert.True(t, res["1980"] == 18)
 }
 
