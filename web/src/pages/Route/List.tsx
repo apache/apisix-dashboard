@@ -28,6 +28,10 @@ import { fetchList, remove, updateRouteStatus } from './service';
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
+  enum RouteStatus {
+    Offline = 0,
+    Publish,
+}
 
   const handleTableActionSuccessResponse = (msgTip: string) => {
     notification.success({
@@ -39,7 +43,7 @@ const Page: React.FC = () => {
 
   const handlePublishOffline = (rid: string, status: RouteModule.RouteStatus) => {
     updateRouteStatus(rid, status).then(() => {
-      const actionName = status? formatMessage({ id: 'page.route.publish' }) : formatMessage({ id: 'page.route.offline' })
+      const actionName = status ? formatMessage({ id: 'page.route.publish' }) : formatMessage({ id: 'page.route.offline' })
       handleTableActionSuccessResponse(
         `${actionName}${formatMessage({
           id: 'menu.routes',
@@ -119,7 +123,7 @@ const Page: React.FC = () => {
             <Button
               type="primary"
               onClick={() => {
-                handlePublishOffline(record.id, 1)
+                handlePublishOffline(record.id, RouteStatus.Publish)
               }}
               style={{ marginRight: 10 }}
               disabled={Boolean(record.status)}
@@ -129,7 +133,7 @@ const Page: React.FC = () => {
             <Popconfirm
               title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
               onConfirm={() => {
-                handlePublishOffline(record.id, 0)
+                handlePublishOffline(record.id, RouteStatus.Offline)
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}
