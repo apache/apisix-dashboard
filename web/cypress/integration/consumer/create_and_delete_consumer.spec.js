@@ -45,7 +45,7 @@ context('Create and Delete Consumer', () => {
           cy.get('.CodeMirror')
             .first()
             .then((editor) => {
-              editor[0].CodeMirror.setValue('{"key":"test","disable": false}');
+              editor[0].CodeMirror.setValue('{"key":"test"}');
               cy.contains('button', 'Submit').click();
           });
           cy.contains('button', 'Next').click();
@@ -57,5 +57,32 @@ context('Create and Delete Consumer', () => {
           cy.contains(root_name).siblings().contains('Delete').click();
           cy.contains('button', 'Confirm').click();
           cy.get('.ant-notification-notice-message').should('contain', 'Delete Consumer Successfully');
+        });
+
+        it('create consumer with wrong json', () => {
+          // go to consumer create page
+          cy.visit('/consumer/create');
+          cy.contains('Consumer').click();
+          cy.wait(500);
+          cy.contains('Create').click();
+
+          // Basic Information
+          cy.get('#username').type('autotest_'+root_name);
+          cy.get('#desc').type('desc_by_autotest');
+          cy.contains('Next').click();
+          cy.wait(300);
+
+          // Plugin Config
+          cy.contains('.ant-card', 'key-auth').within(($form) => {
+            cy.get('button').first().click();
+          })
+          // edit CodeMirror
+          cy.get('.CodeMirror')
+            .first()
+            .then((editor) => {
+              editor[0].CodeMirror.setValue('{"key_not_exst":"test"}');
+              cy.contains('button', 'Submit').click();
+          });
+          cy.get('.ant-notification-notice-message').should('contain', 'Invalid plugin data');
         });
       })
