@@ -96,7 +96,12 @@ func InterfaceToString(val interface{}) string {
 	return str
 }
 
-func ObjectClone(origin, copy interface{}) {
-	byt, _ := json.Marshal(origin)
-	json.Unmarshal(byt, copy)
+func ObjectClone(origin, copy interface{}) error {
+	byt, err := json.Marshal(origin)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(byt, copy)
+	return err
 }

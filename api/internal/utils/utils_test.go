@@ -51,8 +51,8 @@ func TestObjectClone(t *testing.T) {
 
 	origin := &test{Str: "a", Num: 1}
 	copy := &test{}
-	ObjectClone(origin, copy)
-
+	err := ObjectClone(origin, copy)
+	assert.Nil(t, err)
 	assert.Equal(t, origin, copy)
 
 	// change value of the copy, should not change value of origin
