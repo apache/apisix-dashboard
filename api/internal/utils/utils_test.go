@@ -17,6 +17,7 @@
 package utils
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -44,22 +45,27 @@ func TestSumIPs_with_nil(t *testing.T) {
 }
 
 func TestGenLabelMap(t *testing.T) {
-	mp := GenLabelMap("l1")
+	expectedErr := errors.New("malformed label")
+	mp, err := GenLabelMap("l1")
+	assert.Nil(t, err)
 	assert.Equal(t, mp["l1"], "")
 
-	mp = GenLabelMap("l1,l2:v2")
+	mp, err = GenLabelMap("l1,l2:v2")
+	assert.Nil(t, err)
 	assert.Equal(t, mp["l1"], "")
 	assert.Equal(t, mp["l2"], "v2")
 
-	mp = GenLabelMap(",")
-	assert.Equal(t, 0, len(mp))
+	mp, err = GenLabelMap(",")
+	assert.Equal(t, expectedErr, err)
+	assert.Nil(t, mp)
 
-	mp = GenLabelMap(",l2:,")
-	assert.Equal(t, 0, len(mp))
+	mp, err = GenLabelMap(",l2:,")
+	assert.Equal(t, expectedErr, err)
+	assert.Nil(t, mp)
 }
 
 func TestLabelContains(t *testing.T) {
-	mp1 := GenLabelMap("l1,l2:v2")
+	mp1, _ := GenLabelMap("l1,l2:v2")
 	mp2 := map[string]string{
 		"l1": "v1",
 	}

@@ -17,6 +17,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"net"
 	"os"
@@ -96,11 +97,12 @@ func InterfaceToString(val interface{}) string {
 	return str
 }
 
-func GenLabelMap(label string) map[string]string {
+func GenLabelMap(label string) (map[string]string, error) {
+	var err = errors.New("malformed label")
 	mp := make(map[string]string)
 
 	if label == "" {
-		return mp
+		return mp, nil
 	}
 
 	labels := strings.Split(label, ",")
@@ -108,20 +110,22 @@ func GenLabelMap(label string) map[string]string {
 		kv := strings.Split(l, ":")
 		if len(kv) == 2 {
 			if kv[0] == "" || kv[1] == "" {
-				continue
+				return nil, err
 			}
 
 			mp[kv[0]] = kv[1]
 		} else if len(kv) == 1 {
 			if kv[0] == "" {
-				continue
+				return nil, err
 			}
 
 			mp[kv[0]] = ""
+		} else {
+			return nil, err
 		}
 	}
 
-	return mp
+	return mp, nil
 }
 
 func LabelContains(labels, reqLabels map[string]string) bool {
