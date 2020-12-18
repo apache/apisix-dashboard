@@ -65,13 +65,13 @@ func (err ApiError) Error() string {
 }
 
 func InvalidParam(message string) *ApiError {
-	return &ApiError{400, 400, message}
+	return &ApiError{10000, 400, message}
 }
 
 func SystemError(message string) *ApiError {
-	return &ApiError{500, 500, message}
+	return &ApiError{10001, 500, message}
 }
 
 func NotFound(message string) *ApiError {
-	return &ApiError{404, 404, message}
+	return &ApiError{10002, 404, message}
 }
