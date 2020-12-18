@@ -72,7 +72,6 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
 	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))
-
 }
 
 type GetInput struct {
