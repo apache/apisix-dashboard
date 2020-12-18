@@ -43,7 +43,6 @@ context('Create and Delete Upstream', () => {
           cy.contains('Create upstream successfully');
           cy.wait(1000)
           cy.url().should('contains', 'upstream/list');
-
         });
       
         it('delete the upstream', () => {
@@ -54,13 +53,13 @@ context('Create and Delete Upstream', () => {
         });
 
         it('create chash upstream', () => {
-          //  go to upstream create page
+          // go to upstream create page
           cy.visit('/upstream/create');
           cy.contains('Upstream').click();
           cy.wait(500)
           cy.contains('Create').click();
-      
-          // input Name And Description
+
+          // input `Name And Description`
           cy.get('#name').type('autotest_'+root_name);
           cy.get('#desc').type('desc_by_autotest');
       
@@ -76,10 +75,10 @@ context('Create and Delete Upstream', () => {
           cy.get('div:nth-child(8) .ant-select-item:nth-child(1) > .ant-select-item-option-content:nth-child(1)').click();
 
           // input information
-          // add 1 node
+          // add first upstream node
           cy.get('#nodes_0_host').type('127.0.0.1');
           cy.get('#nodes_0_port').clear().type('7000');
-          // add 2 node
+          // add second upstream node
           cy.get('.ant-btn-dashed').click();
           cy.get('#nodes_1_host').type('127.0.0.1');
           cy.get('#nodes_1_port').clear().type('7001');
