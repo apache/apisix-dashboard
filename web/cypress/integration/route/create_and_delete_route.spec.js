@@ -65,7 +65,9 @@ context('Create and Delete Route', () => {
     cy.contains('Next').click();
 
     // config prometheus plugin
-    cy.contains('.ant-card', 'prometheus').get('button').first().click();
+    cy.contains('.ant-card', 'prometheus').within(($form) => {
+      cy.get('button').first().click();
+    })
     cy.contains('button', 'Cancel').click();
 
     // go to step4
