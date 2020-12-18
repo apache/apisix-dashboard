@@ -19,9 +19,12 @@ package e2e
 import (
 	"net/http"
 	"testing"
+	"time"
 )
 
 func TestServerInfo_Get(t *testing.T) {
+	// wait for apisix report
+	time.Sleep(2 * time.Second)
 	testCases := []HttpTestCase{
 		{
 			caseDesc:     "get server info",
