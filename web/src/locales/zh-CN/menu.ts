@@ -70,4 +70,5 @@ export default {
   'menu.upstream': '上游',
   'menu.consumer': 'Consumer',
   'menu.setting': '设置',
+  'menu.serverinfo': '服务端信息',
 };
