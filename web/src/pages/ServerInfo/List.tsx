@@ -22,28 +22,40 @@ import { useIntl } from 'umi';
 import { fetchInfoList } from './service';
 import styles from './style.less';
 
-const Info: React.FC = () => {
-  const [data, setData] = useState<NodeDetail[]>([]);
-  const [nodeList, setNodeList] = useState<NodeListData[]>([]);
+const ServerInfo: React.FC = () => {
+  const [data, setData] = useState<ServerInfoModule.Node>();
+  const [nodeList, setNodeList] = useState<ServerInfoModule.Node[]>([]);
   const { formatMessage } = useIntl();
   const { Option } = Select;
 
+  const [form] = Form.useForm();
+
   useEffect(() => {
-    fetchInfoList().then(setNodeList);
+    fetchInfoList().then((list) => {
+      setNodeList(list);
+      if (list.length) {
+        form.setFieldsValue({
+          nodeId: list[0].id,
+        });
+
+        setData(list[0]);
+      }
+    });
   }, []);
 
   return (
     <PageContainer title={formatMessage({ id: 'page.serverinfo.pageContainer.title' })}>
       <div className={styles.select}>
-        <Form>
-          <Form.Item wrapperCol={{ span: 5 }} style={{ marginBottom: 0 }}>
+        <Form form={form}>
+          <Form.Item wrapperCol={{ span: 5 }} style={{ marginBottom: 0 }} name="nodeId">
             <Select
               placeholder={formatMessage({ id: 'page.serverinfo.select.placeholder' })}
               onChange={(value) => {
-                const arr = nodeList.filter((item) => {
-                  return item.id === value;
-                });
-                setData(arr);
+                setData(
+                  nodeList.find((item) => {
+                    return item.id === value;
+                  }),
+                );
               }}
             >
               {nodeList.map((item) => (
@@ -66,18 +78,16 @@ const Info: React.FC = () => {
         </Form>
       </div>
       <div className={styles.wrap}>
-        {data.length === 0 && <Empty />}
-        {data.length > 0 && (
+        {nodeList.length === 0 && <Empty />}
+        {nodeList.length > 0 && (
           <table className={styles.table}>
             <tbody>
-              {Object.entries(data[0] || {}).map((item) => {
-                return (
-                  <tr>
-                    <td>{item[0]}</td>
-                    <td>{item[1]}</td>
-                  </tr>
-                );
-              })}
+              {Object.entries(data || {}).map((item) => (
+                <tr>
+                  <td>{item[0]}</td>
+                  <td>{item[1]}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         )}
@@ -86,4 +96,4 @@ const Info: React.FC = () => {
   );
 };
 
-export default Info;
+export default ServerInfo;

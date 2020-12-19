@@ -25,7 +25,7 @@ const routes = [
   },
   {
     path: '/serverinfo',
-    component: './Info',
+    component: './ServerInfo',
   },
   {
     path: '/routes/list',

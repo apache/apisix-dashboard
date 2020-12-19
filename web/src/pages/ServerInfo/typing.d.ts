@@ -14,17 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { request } from 'umi';
-
-// Waiting for api.
-export const fetchInfoList = () => {
-  return request<Res<ResListData<NodeListData>>>(
-    `/server_info`,
-  ).then(({ data }) => data.rows);
-};
-
-export const fetchInfoData = () => {
-  return request<Res<NodeDetail>>(`/server_info`).then(({ data }) => {
-    return { data };
-  });
-};
+declare namespace ServerInfoModule {
+  type Node = {
+    id: number;
+    last_report_time: number;
+    up_time: number;
+    boot_time: number;
+    etcd_version: string;
+    hostname: string;
+    version: string;
+  };
+}

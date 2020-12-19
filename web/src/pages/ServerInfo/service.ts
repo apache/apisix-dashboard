@@ -14,9 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-  'page.serverinfo.pageContainer.title': 'Server info',
-  'page.serverinfo.select.placeholder': 'Please select node',
-  'page.serverinfo.desc': 'The relevant plug-ins need to be enabled to obtain information.',
-  'page.serverinfo.link': 'How to enable?',
+import { request } from 'umi';
+
+// Waiting for api.
+export const fetchInfoList = () => {
+  return request<Res<ResListData<ServerInfoModule.Node>>>(
+    '/server_info',
+  ).then(({ data }) => data.rows);
 };

@@ -14,36 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-.select {
-  margin-bottom: 15px;
-  padding: 12px 24px;
-  background-color: #fff;
-}
-
-.wrap {
-  width: 100%;
-  margin: 0 auto;
-  padding: 16px 24px;
-  background-color: #fff;
-}
-
-.table {
-  width: 100%;
-  color: rgba(0, 0, 0, 0.45);
-  border-bottom: 1px solid grey;
-  border-collapse: collapse;
-
-  th,
-  td {
-    padding: 12px 8px;
-  }
-
-  td:nth-child(2) {
-    text-align: right;
-  }
-
-  tr:nth-child(odd) {
-    background-color: #f3f4f5;
-  }
-}
+export default {
+  'page.serverinfo.pageContainer.title': 'Server Info',
+  'page.serverinfo.select.placeholder': 'Please select node',
+  'page.serverinfo.desc': 'The relevant plugin need to be enabled to report server info.',
+  'page.serverinfo.link': ' How to enable?',
+};
