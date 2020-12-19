@@ -250,11 +250,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           <Form.Item
             name={['checks', 'active', 'port']}
             noStyle
-            rules={[
-              {
-                message: formatMessage({ id: 'upstream.step.input.healthy.checks.active.port' }),
-              },
-            ]}
           >
             <InputNumber
               placeholder={formatMessage({ id: 'upstream.step.input.healthy.checks.active.port' })}
