@@ -19,7 +19,6 @@ package label
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/shiningrush/droplet/data"
 	"net/http"
 	"reflect"
 	"sort"
@@ -27,6 +26,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -72,12 +72,12 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 }
 
 type ListInput struct {
+	store.Pagination
 	Type  string `auto_read:"type,path" validate:"required"`
 	Label string `auto_read:"label,query"`
-	store.Pagination
 }
 
-func getMatch(reqLabels, labels map[string]string) map[string]string {
+func subsetOf(reqLabels, labels map[string]string) map[string]string {
 	if len(reqLabels) == 0 {
 		return labels
 	}
@@ -184,7 +184,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 		}
 
 		ls := l.Interface().(map[string]string)
-		return getMatch(reqLabels, ls)
+		return subsetOf(reqLabels, ls)
 	}
 
 	var totalRet = new(store.ListOutput)
