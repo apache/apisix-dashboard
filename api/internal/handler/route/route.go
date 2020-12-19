@@ -19,9 +19,8 @@ package route
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"os/exec"
+	"os"
 	"reflect"
 	"strings"
 
@@ -30,6 +29,7 @@ import (
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
+	"github.com/yuin/gopher-lua"
 
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
@@ -225,20 +225,26 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 		return "", err
 	}
 
-	cmd := exec.Command("sh", "-c",
-		"cd "+conf.WorkDir+"/dag-to-lua && lua cli.lua "+
-			"'"+string(scriptString)+"'")
+	libDir := conf.WorkDir + "/" + "dag-to-lua"
+	if err := os.Chdir(libDir); err != nil {
+		panic(err)
+	}
+	defer os.Chdir(conf.WorkDir)
 
-	stdout, _ := cmd.StdoutPipe()
-	defer stdout.Close()
-	if err := cmd.Start(); err != nil {
+	L := lua.NewState()
+	defer L.Close()
+
+	if err := L.DoString(`
+	        local dag_to_lua = require 'dag-to-lua'
+		local conf = '` + string(scriptString) + `'
+	        code = dag_to_lua.generate(conf)
+        `); err != nil {
 		return "", err
 	}
 
-	result, _ := ioutil.ReadAll(stdout)
-	resData := string(result)
+	code := L.GetGlobal("code")
 
-	return resData, nil
+	return code.String(), nil
 }
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
