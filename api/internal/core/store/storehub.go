@@ -28,12 +28,13 @@ import (
 type HubKey string
 
 const (
-	HubKeyConsumer HubKey = "consumer"
-	HubKeyRoute    HubKey = "route"
-	HubKeyService  HubKey = "service"
-	HubKeySsl      HubKey = "ssl"
-	HubKeyUpstream HubKey = "upstream"
-	HubKeyScript   HubKey = "script"
+	HubKeyConsumer   HubKey = "consumer"
+	HubKeyRoute      HubKey = "route"
+	HubKeyService    HubKey = "service"
+	HubKeySsl        HubKey = "ssl"
+	HubKeyUpstream   HubKey = "upstream"
+	HubKeyScript     HubKey = "script"
+	HubKeyServerInfo HubKey = `server_info`
 )
 
 var (
@@ -51,11 +52,11 @@ func InitStore(key HubKey, opt GenericStoreOption) error {
 	}
 	s, err := NewGenericStore(opt)
 	if err != nil {
-		log.Warnf("NewGenericStore error: %w", err)
+		log.Errorf("NewGenericStore error: %s", err)
 		return err
 	}
 	if err := s.Init(); err != nil {
-		log.Warnf("GenericStore init error: %w", err)
+		log.Errorf("GenericStore init error: %s", err)
 		return err
 	}
 
@@ -89,7 +90,7 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.Route{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Route)
-			return r.ID
+			return utils.InterfaceToString(r.ID)
 		},
 	})
 	if err != nil {
@@ -101,7 +102,7 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.Service{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Service)
-			return r.ID
+			return utils.InterfaceToString(r.ID)
 		},
 	})
 	if err != nil {
@@ -113,7 +114,7 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.SSL{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.SSL)
-			return r.ID
+			return utils.InterfaceToString(r.ID)
 		},
 	})
 	if err != nil {
@@ -125,7 +126,7 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.Upstream{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Upstream)
-			return r.ID
+			return utils.InterfaceToString(r.ID)
 		},
 	})
 	if err != nil {
@@ -138,6 +139,18 @@ func InitStores() error {
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Script)
 			return r.ID
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeyServerInfo, GenericStoreOption{
+		BasePath: "/apisix/data_plane/server_info",
+		ObjType:  reflect.TypeOf(entity.ServerInfo{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.ServerInfo)
+			return utils.InterfaceToString(r.ID)
 		},
 	})
 	if err != nil {

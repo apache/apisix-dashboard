@@ -25,7 +25,7 @@ func TestRoute_with_valid_uri_uris(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "add route with valid uri",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -54,7 +54,7 @@ func TestRoute_with_valid_uri_uris(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete the route (r1)",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -63,7 +63,7 @@ func TestRoute_with_valid_uri_uris(t *testing.T) {
 		},
 		{
 			caseDesc: "add route with valid uris",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -102,7 +102,7 @@ func TestRoute_with_valid_uri_uris(t *testing.T) {
 		},
 		{
 			caseDesc:     "delete the route (r1)",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},

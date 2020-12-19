@@ -55,7 +55,7 @@ ifeq ("$(wildcard $(GO_EXEC))", "")
 endif
 
 
-### api-test:		Run the tests of manager-api 
+### api-test:		Run the tests of manager-api
 .PHONY: api-test
 api-test: api-default
 	cd api/ && APISIX_API_WORKDIR=$$PWD go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...

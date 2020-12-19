@@ -20,9 +20,9 @@ import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Popconfirm, Button, notification } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
+import { timestampToLocaleString } from '@/helpers';
 
 import { fetchList, remove } from './service';
-import { timestampToLocaleString } from '@/helpers';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();

@@ -17,15 +17,16 @@
 package entity
 
 import (
+	"reflect"
 	"time"
 
 	"github.com/apisix/manager-api/internal/utils"
 )
 
 type BaseInfo struct {
-	ID         string `json:"id"`
-	CreateTime int64  `json:"create_time"`
-	UpdateTime int64  `json:"update_time"`
+	ID         interface{} `json:"id"`
+	CreateTime int64       `json:"create_time"`
+	UpdateTime int64       `json:"update_time"`
 }
 
 func (info *BaseInfo) GetBaseInfo() *BaseInfo {
@@ -33,8 +34,13 @@ func (info *BaseInfo) GetBaseInfo() *BaseInfo {
 }
 
 func (info *BaseInfo) Creating() {
-	if info.ID == "" {
+	if info.ID == nil {
 		info.ID = utils.GetFlakeUidStr()
+	} else {
+		// convert to string if it's not
+		if reflect.TypeOf(info.ID).String() != "string" {
+			info.ID = utils.InterfaceToString(info.ID)
+		}
 	}
 	info.CreateTime = time.Now().Unix()
 	info.UpdateTime = time.Now().Unix()
@@ -54,6 +60,7 @@ type BaseInfoGetter interface {
 	GetBaseInfo() *BaseInfo
 }
 
+// swagger:model Route
 type Route struct {
 	BaseInfo
 	URI             string                 `json:"uri,omitempty"`
@@ -71,8 +78,8 @@ type Route struct {
 	Script          interface{}            `json:"script,omitempty"`
 	Plugins         map[string]interface{} `json:"plugins,omitempty"`
 	Upstream        *UpstreamDef           `json:"upstream,omitempty"`
-	ServiceID       string                 `json:"service_id,omitempty"`
-	UpstreamID      string                 `json:"upstream_id,omitempty"`
+	ServiceID       interface{}            `json:"service_id,omitempty"`
+	UpstreamID      interface{}            `json:"upstream_id,omitempty"`
 	ServiceProtocol string                 `json:"service_protocol,omitempty"`
 	Labels          map[string]string      `json:"labels,omitempty"`
 	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
@@ -155,14 +162,15 @@ type UpstreamDef struct {
 	Labels       map[string]string `json:"labels,omitempty"`
 }
 
+// swagger:model Upstream
 type Upstream struct {
 	BaseInfo
 	UpstreamDef
 }
 
 type UpstreamNameResponse struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID   interface{} `json:"id"`
+	Name string      `json:"name"`
 }
 
 func (upstream *Upstream) Parse2NameResponse() (*UpstreamNameResponse, error) {
@@ -175,6 +183,7 @@ func (upstream *Upstream) Parse2NameResponse() (*UpstreamNameResponse, error) {
 
 // --- structures for upstream end  ---
 
+// swagger:model Consumer
 type Consumer struct {
 	BaseInfo
 	Username string                 `json:"username"`
@@ -183,6 +192,7 @@ type Consumer struct {
 	Labels   map[string]string      `json:"labels,omitempty"`
 }
 
+// swagger:model SSL
 type SSL struct {
 	BaseInfo
 	Cert          string            `json:"cert,omitempty"`
@@ -198,12 +208,13 @@ type SSL struct {
 	Labels        map[string]string `json:"labels,omitempty"`
 }
 
+// swagger:model Service
 type Service struct {
 	BaseInfo
 	Name            string                 `json:"name,omitempty"`
 	Desc            string                 `json:"desc,omitempty"`
 	Upstream        *UpstreamDef           `json:"upstream,omitempty"`
-	UpstreamID      string                 `json:"upstream_id,omitempty"`
+	UpstreamID      interface{}            `json:"upstream_id,omitempty"`
 	Plugins         map[string]interface{} `json:"plugins,omitempty"`
 	Script          string                 `json:"script,omitempty"`
 	Labels          map[string]string      `json:"labels,omitempty"`
@@ -213,4 +224,14 @@ type Service struct {
 type Script struct {
 	ID     string      `json:"id"`
 	Script interface{} `json:"script,omitempty"`
+}
+
+type ServerInfo struct {
+	BaseInfo
+	LastReportTime int64  `json:"last_report_time,omitempty"`
+	UpTime         int64  `json:"up_time,omitempty"`
+	BootTime       int64  `json:"boot_time,omitempty"`
+	EtcdVersion    string `json:"etcd_version,omitempty"`
+	Hostname       string `json:"hostname,omitempty"`
+	Version        string `json:"version,omitempty"`
 }

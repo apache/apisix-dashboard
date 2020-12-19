@@ -17,10 +17,14 @@
 package utils
 
 import (
-	"github.com/sony/sonyflake"
+	"errors"
+	"fmt"
 	"net"
 	"os"
 	"strconv"
+	"strings"
+
+	"github.com/sony/sonyflake"
 )
 
 var _sf *sonyflake.Sonyflake
@@ -35,10 +39,13 @@ func init() {
 		}
 		salt = uint16(i)
 	}
-
+	ips, err := getLocalIPs()
+	if err != nil {
+		panic(err)
+	}
 	_sf = sonyflake.NewSonyflake(sonyflake.Settings{
 		MachineID: func() (u uint16, e error) {
-			return sumIP(GetOutboundIP()) + salt, nil
+			return sumIPs(ips) + salt, nil
 		},
 	})
 	if _sf == nil {
@@ -46,24 +53,28 @@ func init() {
 	}
 }
 
-func sumIP(ip net.IP) uint16 {
+func sumIPs(ips []net.IP) uint16 {
 	total := 0
-	for i := range ip {
-		total += int(ip[i])
+	for _, ip := range ips {
+		for i := range ip {
+			total += int(ip[i])
+		}
 	}
 	return uint16(total)
 }
 
-// Get preferred outbound ip of this machine
-func GetOutboundIP() net.IP {
-	conn, err := net.Dial("udp", "8.8.8.8:80")
+func getLocalIPs() ([]net.IP, error) {
+	var ips []net.IP
+	addrs, err := net.InterfaceAddrs()
 	if err != nil {
-		panic(err)
+		return ips, err
 	}
-	defer conn.Close()
-
-	localAddr := conn.LocalAddr().(*net.UDPAddr)
-	return localAddr.IP
+	for _, a := range addrs {
+		if ipNet, ok := a.(*net.IPNet); ok && !ipNet.IP.IsLoopback() && ipNet.IP.To4() != nil {
+			ips = append(ips, ipNet.IP)
+		}
+	}
+	return ips, nil
 }
 
 func GetFlakeUid() uint64 {
@@ -76,4 +87,58 @@ func GetFlakeUid() uint64 {
 
 func GetFlakeUidStr() string {
 	return strconv.FormatUint(GetFlakeUid(), 10)
+}
+
+func InterfaceToString(val interface{}) string {
+	if val == nil {
+		return ""
+	}
+	str := fmt.Sprintf("%v", val)
+	return str
+}
+
+func GenLabelMap(label string) (map[string]string, error) {
+	var err = errors.New("malformed label")
+	mp := make(map[string]string)
+
+	if label == "" {
+		return mp, nil
+	}
+
+	labels := strings.Split(label, ",")
+	for _, l := range labels {
+		kv := strings.Split(l, ":")
+		if len(kv) == 2 {
+			if kv[0] == "" || kv[1] == "" {
+				return nil, err
+			}
+
+			mp[kv[0]] = kv[1]
+		} else if len(kv) == 1 {
+			if kv[0] == "" {
+				return nil, err
+			}
+
+			mp[kv[0]] = ""
+		} else {
+			return nil, err
+		}
+	}
+
+	return mp, nil
+}
+
+func LabelContains(labels, reqLabels map[string]string) bool {
+	if len(reqLabels) == 0 {
+		return true
+	}
+
+	for k, v := range labels {
+		l, exist := reqLabels[k]
+		if exist && ((l == "") || v == l) {
+			return true
+		}
+	}
+
+	return false
 }

@@ -17,7 +17,11 @@
 
 package entity
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/apisix/manager-api/internal/utils"
+)
 
 type PropertyName string
 
@@ -97,7 +101,8 @@ func (comparing ComparingInt) Contains(compared ComparableValue) bool {
 func (info BaseInfo) GetProperty(name PropertyName) ComparableValue {
 	switch name {
 	case IdProperty:
-		return ComparingString(info.ID)
+		id := utils.InterfaceToString(info.ID)
+		return ComparingString(id)
 	case CreateTimeProperty:
 		return ComparingInt(info.CreateTime)
 	case UpdateTimeProperty:

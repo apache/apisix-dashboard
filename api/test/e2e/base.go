@@ -31,6 +31,7 @@ import (
 )
 
 var token string
+var APISIXInternalUrl = "http://172.16.238.30:9080"
 
 func init() {
 	//login to get auth token
@@ -39,7 +40,7 @@ func init() {
 		"password": "admin"
 	}`)
 
-	url := "http://127.0.0.1:8080/apisix/admin/user/login"
+	url := "http://127.0.0.1:9000/apisix/admin/user/login"
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		panic(err)
@@ -83,8 +84,8 @@ func httpGet(url string) ([]byte, int, error) {
 	return body, resp.StatusCode, nil
 }
 
-func MangerApiExpect(t *testing.T) *httpexpect.Expect {
-	return httpexpect.New(t, "http://127.0.0.1:8080")
+func ManagerApiExpect(t *testing.T) *httpexpect.Expect {
+	return httpexpect.New(t, "http://127.0.0.1:9000")
 }
 
 func APISIXExpect(t *testing.T) *httpexpect.Expect {
@@ -115,7 +116,7 @@ func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
 	return e
 }
 
-var sleepTime = time.Duration(100) * time.Millisecond
+var sleepTime = time.Duration(300) * time.Millisecond
 
 type HttpTestCase struct {
 	caseDesc      string
@@ -125,6 +126,7 @@ type HttpTestCase struct {
 	Query         string
 	Body          string
 	Headers       map[string]string
+	Headers_test  map[string]interface{}
 	ExpectStatus  int
 	ExpectCode    int
 	ExpectMessage string
@@ -139,15 +141,17 @@ func testCaseCheck(tc HttpTestCase) {
 	var req *httpexpect.Request
 	switch tc.Method {
 	case http.MethodGet:
-		req = expectObj.GET(tc.Path, tc.Query)
+		req = expectObj.GET(tc.Path)
 	case http.MethodPut:
-		req = expectObj.PUT(tc.Path, tc.Query)
+		req = expectObj.PUT(tc.Path)
 	case http.MethodPost:
-		req = expectObj.POST(tc.Path, tc.Query)
+		req = expectObj.POST(tc.Path)
 	case http.MethodDelete:
-		req = expectObj.DELETE(tc.Path, tc.Query)
+		req = expectObj.DELETE(tc.Path)
 	case http.MethodPatch:
-		req = expectObj.PATCH(tc.Path, tc.Query)
+		req = expectObj.PATCH(tc.Path)
+	case http.MethodOptions:
+		req = expectObj.OPTIONS(tc.Path)
 	default:
 	}
 
@@ -157,6 +161,10 @@ func testCaseCheck(tc HttpTestCase) {
 
 	if tc.Sleep != 0 {
 		time.Sleep(tc.Sleep)
+	}
+
+	if tc.Query != "" {
+		req.WithQueryString(tc.Query)
 	}
 
 	//set header

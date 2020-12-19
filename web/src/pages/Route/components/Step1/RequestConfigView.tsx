@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import Form from 'antd/es/form';
-import { Checkbox, Button, Input, Select, Row, Col } from 'antd';
+import { Checkbox, Button, Input, Select, Row, Col, InputNumber } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
@@ -30,7 +30,7 @@ import {
 const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
   form,
   disabled,
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const HostList = () => (
@@ -83,6 +83,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
+                  data-cy="addHost"
                   onClick={() => {
                     add();
                   }}
@@ -161,6 +162,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
+                  data-cy="addUri"
                   onClick={() => {
                     add();
                   }}
@@ -232,6 +234,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
+                  data-cy="addRemoteAddr"
                   onClick={() => {
                     add();
                   }}
@@ -266,6 +269,18 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
         ]}
       >
         <Checkbox.Group options={HTTP_METHOD_OPTION_LIST} disabled={disabled} />
+      </Form.Item>
+      <Form.Item
+        label={formatMessage({ id: 'page.route.form.itemLabel.priority' })}
+        name="priority"
+      >
+        <InputNumber
+          placeholder={`Please input ${formatMessage({
+            id: 'page.route.form.itemLabel.priority',
+          })}`}
+          style={{ width: '60%' }}
+          disabled={disabled}
+        />
       </Form.Item>
       <Form.Item
         label={formatMessage({ id: 'page.route.form.itemLabel.redirect' })}
