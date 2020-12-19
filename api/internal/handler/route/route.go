@@ -78,6 +78,50 @@ type GetInput struct {
 	ID string `auto_read:"id,path" validate:"required"`
 }
 
+// swagger:operation GET /apisix/admin/routes getRouteList
+//
+// Return the route list according to the specified page number and page size, and can search routes by name and uri.
+//
+// ---
+// produces:
+// - application/json
+// parameters:
+// - name: page
+//   in: query
+//   description: page number
+//   required: false
+//   type: integer
+// - name: page_size
+//   in: query
+//   description: page size
+//   required: false
+//   type: integer
+// - name: name
+//   in: query
+//   description: name of route
+//   required: false
+//   type: string
+// - name: uri
+//   in: query
+//   description: uri of route
+//   required: false
+//   type: string
+// - name: label
+//   in: query
+//   description: label of route
+//   required: false
+//   type: string
+// responses:
+//   '0':
+//     description: list response
+//     schema:
+//       type: array
+//       items:
+//         "$ref": "#/definitions/route"
+//   default:
+//     description: unexpected error
+//     schema:
+//       "$ref": "#/definitions/ApiError"
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
@@ -102,8 +146,9 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 }
 
 type ListInput struct {
-	Name string `auto_read:"name,query"`
-	URI  string `auto_read:"uri,query"`
+	Name  string `auto_read:"name,query"`
+	URI   string `auto_read:"uri,query"`
+	Label string `auto_read:"label,query"`
 	store.Pagination
 }
 
@@ -122,21 +167,26 @@ func uriContains(obj *entity.Route, uri string) bool {
 
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
+	labelMap, err := utils.GenLabelMap(input.Label)
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("%s: \"%s\"", err.Error(), input.Label)
+	}
 
 	ret, err := h.routeStore.List(store.ListInput{
 		Predicate: func(obj interface{}) bool {
-			if input.Name != "" && input.URI != "" {
-				if strings.Contains(obj.(*entity.Route).Name, input.Name) {
-					return uriContains(obj.(*entity.Route), input.URI)
-				}
+			if input.Name != "" && !strings.Contains(obj.(*entity.Route).Name, input.Name) {
 				return false
 			}
-			if input.Name != "" {
-				return strings.Contains(obj.(*entity.Route).Name, input.Name)
+
+			if input.URI != "" && !uriContains(obj.(*entity.Route), input.URI) {
+				return false
 			}
-			if input.URI != "" {
-				return uriContains(obj.(*entity.Route), input.URI)
+
+			if input.Label != "" && !utils.LabelContains(obj.(*entity.Route).Labels, labelMap) {
+				return false
 			}
+
 			return true
 		},
 		Format: func(obj interface{}) interface{} {
@@ -158,7 +208,8 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	var route *entity.Route
 	for i, item := range ret.Rows {
 		route = item.(*entity.Route)
-		script, _ := h.scriptStore.Get(route.ID)
+		id := utils.InterfaceToString(route.ID)
+		script, _ := h.scriptStore.Get(id)
 		if script != nil {
 			route.Script = script.(*entity.Script).Script
 		}
@@ -193,8 +244,9 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Route)
 	//check depend
-	if input.ServiceID != "" {
-		_, err := h.svcStore.Get(input.ServiceID)
+	if input.ServiceID != nil {
+		serviceID := utils.InterfaceToString(input.ServiceID)
+		_, err := h.svcStore.Get(serviceID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -203,8 +255,9 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
 	}
-	if input.UpstreamID != "" {
-		_, err := h.upstreamStore.Get(input.UpstreamID)
+	if input.UpstreamID != nil {
+		upstreamID := utils.InterfaceToString(input.UpstreamID)
+		_, err := h.upstreamStore.Get(upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -219,7 +272,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 			input.ID = utils.GetFlakeUidStr()
 		}
 		script := &entity.Script{}
-		script.ID = input.ID
+		script.ID = utils.InterfaceToString(input.ID)
 		script.Script = input.Script
 		//to lua
 		var err error
@@ -257,8 +310,9 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	//check depend
-	if input.ServiceID != "" {
-		_, err := h.svcStore.Get(input.ServiceID)
+	if input.ServiceID != nil {
+		serviceID := utils.InterfaceToString(input.ServiceID)
+		_, err := h.svcStore.Get(serviceID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -267,8 +321,9 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
 	}
-	if input.UpstreamID != "" {
-		_, err := h.upstreamStore.Get(input.UpstreamID)
+	if input.UpstreamID != nil {
+		upstreamID := utils.InterfaceToString(input.UpstreamID)
+		_, err := h.upstreamStore.Get(upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -306,9 +361,10 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	} else {
 		//remove exists script
-		script, _ := h.scriptStore.Get(input.Route.ID)
+		id := utils.InterfaceToString(input.Route.ID)
+		script, _ := h.scriptStore.Get(id)
 		if script != nil {
-			if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(input.Route.ID, ",")); err != nil {
+			if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(id, ",")); err != nil {
 				log.Warnf("delete script %s failed", input.Route.ID)
 			}
 		}
@@ -357,6 +413,33 @@ func toRows(list *store.ListOutput) []store.Row {
 	return rows
 }
 
+// swagger:operation GET /apisix/admin/notexist/routes checkRouteExist
+//
+// Return result of route exists checking by name and exclude id.
+//
+// ---
+// produces:
+// - application/json
+// parameters:
+// - name: name
+//   in: query
+//   description: name of route
+//   required: false
+//   type: string
+// - name: exclude
+//   in: query
+//   description: id of route that exclude checking
+//   required: false
+//   type: string
+// responses:
+//   '0':
+//     description: route not exists
+//     schema:
+//       "$ref": "#/definitions/ApiError"
+//   default:
+//     description: unexpected error
+//     schema:
+//       "$ref": "#/definitions/ApiError"
 func Exist(c *gin.Context) (interface{}, error) {
 	//input := c.Input().(*ExistInput)
 

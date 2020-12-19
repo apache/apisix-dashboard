@@ -17,8 +17,10 @@
 package utils
 
 import (
-	"github.com/stretchr/testify/assert"
+	"errors"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetFlakeUid(t *testing.T) {
@@ -29,4 +31,54 @@ func TestGetFlakeUid(t *testing.T) {
 func TestGetFlakeUidStr(t *testing.T) {
 	id := GetFlakeUidStr()
 	assert.NotEqual(t, "", id)
+	assert.Equal(t, 18, len(id))
+}
+
+func TestGetLocalIPs(t *testing.T) {
+	_, err := getLocalIPs()
+	assert.Equal(t, nil, err)
+}
+
+func TestSumIPs_with_nil(t *testing.T) {
+	total := sumIPs(nil)
+	assert.Equal(t, uint16(0), total)
+}
+
+func TestGenLabelMap(t *testing.T) {
+	expectedErr := errors.New("malformed label")
+	mp, err := GenLabelMap("l1")
+	assert.Nil(t, err)
+	assert.Equal(t, mp["l1"], "")
+
+	mp, err = GenLabelMap("l1,l2:v2")
+	assert.Nil(t, err)
+	assert.Equal(t, mp["l1"], "")
+	assert.Equal(t, mp["l2"], "v2")
+
+	mp, err = GenLabelMap(",")
+	assert.Equal(t, expectedErr, err)
+	assert.Nil(t, mp)
+
+	mp, err = GenLabelMap(",l2:,")
+	assert.Equal(t, expectedErr, err)
+	assert.Nil(t, mp)
+}
+
+func TestLabelContains(t *testing.T) {
+	mp1, _ := GenLabelMap("l1,l2:v2")
+	mp2 := map[string]string{
+		"l1": "v1",
+	}
+	assert.True(t, LabelContains(mp2, mp1))
+
+	mp3 := map[string]string{
+		"l1": "v1",
+		"l2": "v3",
+	}
+	assert.True(t, LabelContains(mp3, mp1))
+
+	mp4 := map[string]string{
+		"l2": "v3",
+	}
+	assert.False(t, LabelContains(mp4, mp1))
 }

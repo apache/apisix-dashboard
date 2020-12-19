@@ -23,6 +23,8 @@ The following are parts of the modules' snapshot.
 
 ## Metrics
 
+We support the monitor page by referencing it in [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe). Before accessing [Grafana](https://grafana.com/), please Enable [`allow_embedding=true`](https://grafana.com/docs/grafana/latest/administration/configuration/#allow_embedding), which defaults to `false`. This causes the browser to fail to render Grafana pages properly due to security policies.
+
 ![metrics-en](./images/metrics-en.png)
 
 ## Route

@@ -22,7 +22,7 @@ import moment from 'moment';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
 import { codeMessage } from './constants';
-import IconFont from './iconfont';
+import IconFont from './components/IconFont';
 
 export const getMenuData = (): MenuDataItem[] => {
   return [
@@ -34,32 +34,32 @@ export const getMenuData = (): MenuDataItem[] => {
     {
       name: 'metrics',
       path: '/metrics',
-      icon: <IconFont type="icondashboard" />,
+      icon: <IconFont name="icondashboard" />,
     },
     {
       name: 'routes',
       path: '/routes/list',
-      icon: <IconFont type="iconroute" />,
+      icon: <IconFont name="iconroute" />,
     },
     {
       name: 'ssl',
       path: '/ssl/list',
-      icon: <IconFont type="iconSSLshuzizhengshu" />,
+      icon: <IconFont name="iconssl" />,
     },
     {
       name: 'upstream',
       path: '/upstream/list',
-      icon: <IconFont type="iconupstream" />,
+      icon: <IconFont name="iconserver" />,
     },
     {
       name: 'consumer',
       path: '/consumer/list',
-      icon: <IconFont type="iconfuwuliebiao" />,
+      icon: <IconFont name="iconconsumer" />,
     },
     {
       name: 'setting',
       path: '/settings',
-      icon: <IconFont type="iconsetting" />,
+      icon: <IconFont name="iconsetting" />,
     },
   ];
 };

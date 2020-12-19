@@ -38,6 +38,10 @@ $ docker build -t apisix-dashboard:$tag .
 
 # For users in mainland China, the `ENABLE_PROXY` parameter can be provided to speed up module downloads.
 $ docker build -t apisix-dashboard:$tag . --build-arg ENABLE_PROXY=true
+
+# If you want to use the latest codes to build, you can specify the `APISIX_DASHBOARD_VERSION` parameter to `master`.
+# This parameter can also be specified as branch name of a specific version, such as `v2.1.1`.
+$ docker build -t apisix-dashboard:$tag . --build-arg APISIX_DASHBOARD_VERSION=master
 ```
 
 ## Launch
@@ -55,7 +59,7 @@ Kindly note:
 
 ```sh
 # /path/to/conf.yaml Requires an absolute path pointing to the configuration file mentioned above.
-$ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:$tag
+$ docker run -d -p 9000:9000 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml --name apisix-dashboard apisix-dashboard:$tag
 ```
 
 3. Check if the container started successfully
@@ -64,7 +68,7 @@ $ docker run -d -p 80:8080 -v /path/to/conf.yaml:/usr/local/apisix-dashboard/con
 $ docker ps -a
 ```
 
-If the container `apisix-dashboard` is ok, visit `http://127.0.0.1:8080` to use the dashboard with GUI, where the default username and password are `admin`.
+If the container `apisix-dashboard` is ok, visit `http://127.0.0.1:9000` to use the dashboard with GUI, where the default username and password are `admin`.
 
 4. Stop the Dashboard
 

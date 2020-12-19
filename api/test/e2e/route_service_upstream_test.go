@@ -61,7 +61,7 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "use service that not exist - dashboard",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -80,7 +80,7 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 		},
 		{
 			caseDesc: "use upstream that not exist",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -99,7 +99,7 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 		},
 		{
 			caseDesc: "create service and upstream together at the same time",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -126,8 +126,16 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 func TestRoute_Create_Service(t *testing.T) {
 	tests := []HttpTestCase{
 		{
+			caseDesc:     "make sure the route has not created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
+		{
 			caseDesc: "create service",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/services/200",
 			Body: `{
@@ -157,9 +165,9 @@ func TestRoute_Create_Service(t *testing.T) {
 		},
 		{
 			caseDesc: "create route using the service just created",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r2",
+			Path:     "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/server_port",
 				"service_id": "200"
@@ -188,15 +196,15 @@ func TestRoute_Delete_Service(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/r2",
+			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
 		{
 			caseDesc:     "remove service",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/services/200",
 			Headers:      map[string]string{"Authorization": token},
@@ -219,7 +227,7 @@ func TestRoute_Create_Upstream(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "create upstream",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/upstreams/1",
 			Body: `{
@@ -246,8 +254,16 @@ func TestRoute_Create_Upstream(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
+			caseDesc:     "make sure the route has not created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
+		{
 			caseDesc: "create route using the upstream just created",
-			Object:   MangerApiExpect(t),
+			Object:   ManagerApiExpect(t),
 			Method:   http.MethodPut,
 			Path:     "/apisix/admin/routes/r1",
 			Body: `{
@@ -278,7 +294,7 @@ func TestRoute_Delete_Upstream(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc:     "delete route",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
@@ -286,7 +302,7 @@ func TestRoute_Delete_Upstream(t *testing.T) {
 		},
 		{
 			caseDesc:     "remove upstream",
-			Object:       MangerApiExpect(t),
+			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/1",
 			Headers:      map[string]string{"Authorization": token},

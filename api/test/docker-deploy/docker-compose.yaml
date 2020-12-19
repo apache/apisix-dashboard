@@ -44,14 +44,14 @@ services:
       - http://0.0.0.0:2379
 
   managerapi:
-    image: dashboard:ci   
+    image: dashboard:ci
     restart: always
     volumes:
       - ../../conf/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml:ro
     depends_on:
       - etcd
     ports:
-      - '8080:8080/tcp'
+      - '9000:9000/tcp'
     networks:
       apisix_dashboard_e2e:
         ipv4_address: 172.16.238.40
@@ -62,5 +62,5 @@ networks:
     ipam:
       driver: default
       config:
-      -
-        subnet: 172.16.238.0/24
+        -
+          subnet: 172.16.238.0/24

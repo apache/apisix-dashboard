@@ -45,7 +45,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 ## Clone the project
 
 ```sh
-$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+$ git clone -b v2.2 https://github.com/apache/apisix-dashboard.git
 ```
 
 ## Build
@@ -78,7 +78,7 @@ $ ./manager-api
 $ nohup ./manager-api &
 ```
 
-4. Without changing the configuration, visit `http://127.0.0.1:8080` to use the dashboard with GUI, where the default username and password are `admin`.
+4. Without changing the configuration, visit `http://127.0.0.1:9000` to use the dashboard with GUI, where the default username and password are `admin`.
 
 5. Stop the Dashboard
 
