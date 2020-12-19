@@ -67,11 +67,11 @@ const ServerInfo: React.FC = () => {
             </Select>
           </Form.Item>
           <Form.Item style={{ marginBottom: 0, fontSize: '12px', color: '#00000073' }}>
-            {formatMessage({ id: 'page.serverinfo.desc' })}
+            {formatMessage({ id: 'page.serverinfo.desc' })}&nbsp;
             <a
               href="https://github.com/apache/apisix/blob/master/doc/plugins/server-info.md"
               target="_blank"
-              rel="noreferrer" 
+              rel="noreferrer"
             >
               {formatMessage({ id: 'page.serverinfo.link' })}
             </a>

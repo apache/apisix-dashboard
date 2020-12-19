@@ -18,5 +18,5 @@ export default {
   'page.serverinfo.pageContainer.title': 'Server Info',
   'page.serverinfo.select.placeholder': 'Please select node',
   'page.serverinfo.desc': 'The relevant plugin need to be enabled to report server info.',
-  'page.serverinfo.link': ' How to enable?',
+  'page.serverinfo.link': 'How to enable?',
 };
