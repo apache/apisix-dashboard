@@ -15,38 +15,12 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Select } from 'antd';
+import { Select, Empty, Form } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useIntl } from 'umi';
 
+import { fetchInfoList } from './service';
 import styles from './Info.less';
-
-const nodeDetail = [
-  {
-    id: 'ddea4053-4ffd-4f09-b176-b8c5e919916b',
-    hostname: 'localhost.local',
-    version: '2.0',
-    etcd_version: '3.5.0',
-    uptime: 3600,
-    last_report_at: 1606121591,
-    boot_time: 1606121501,
-  },
-];
-
-const nodeListData = [
-  {
-    id: 'ddea4053-4ffd-4f09-b176-b8c5e919916b',
-    name: 'node1',
-  },
-  {
-    id: 'ddea4053-4ffd-4f09-b176-b8c5e919916c',
-    name: 'node2',
-  },
-  {
-    id: 'ddea4053-4ffd-4f09-b176-b8c5e919916a',
-    name: 'node3',
-  },
-];
 
 const Info: React.FC = () => {
   const [data, setData] = useState<NodeDetail[]>([]);
@@ -55,43 +29,51 @@ const Info: React.FC = () => {
   const { Option } = Select;
 
   useEffect(() => {
-    setNodeList(nodeListData);
+    fetchInfoList().then(({data}) => {
+      setNodeList(data);
+    });
   }, []);
 
   return (
     <PageContainer title={formatMessage({ id: 'page.info.pageContainer.title' })}>
       <div className={styles.select}>
-        <Select
-          style={{ width: '210px' }}
-          placeholder="Please select node name"
-          onChange={(value) => {
-            const arr = nodeDetail.filter((item) => {
-              return item.id === value;
-            });
-            setData(arr);
-          }}
-        >
-          {nodeList.map((item) => (
-            <Option key={item.name} value={item.id}>
-              {item.name}
-            </Option>
-          ))}
-          ;
-        </Select>
+        <Form>
+          <Form.Item label="Node:" wrapperCol={{ span: 3 }}>
+            <Select
+              placeholder="Please select node"
+              onChange={(value) => {
+                const arr = nodeList.filter((item) => {
+                  return item.id === value;
+                });
+                setData(arr);
+              }}
+            >
+              {nodeList.map((item) => (
+                <Option key={item.hostname} value={item.id}>
+                  {item.hostname}
+                </Option>
+              ))}
+              ;
+            </Select>
+          </Form.Item>
+        </Form>
       </div>
       <div className={styles.wrap}>
-        <table className={styles.table}>
-          <tbody>
-            {Object.entries(data[0] || {}).map((item) => {
-              return (
-                <tr>
-                  <td>{item[0]}</td>
-                  <td>{item[1]}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        {data.length === 0 && <Empty />}
+        {data.length > 0 && (
+          <table className={styles.table}>
+            <tbody>
+              {Object.entries(data[0] || {}).map((item) => {
+                return (
+                  <tr>
+                    <td>{item[0]}</td>
+                    <td>{item[1]}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </PageContainer>
   );

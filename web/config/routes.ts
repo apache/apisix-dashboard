@@ -24,7 +24,7 @@ const routes = [
     component: './Metrics',
   },
   {
-    path: '/info',
+    path: '/serverinfo',
     component: './Info',
   },
   {

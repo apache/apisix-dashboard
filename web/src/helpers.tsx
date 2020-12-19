@@ -27,11 +27,6 @@ import IconFont from './components/IconFont';
 export const getMenuData = (): MenuDataItem[] => {
   return [
     {
-      name: 'info',
-      path: '/info',
-      icon: <InfoCircleOutlined />,
-    },
-    {
       name: 'metrics',
       path: '/metrics',
       icon: <IconFont name="icondashboard" />,
@@ -60,6 +55,11 @@ export const getMenuData = (): MenuDataItem[] => {
       name: 'setting',
       path: '/settings',
       icon: <IconFont name="iconsetting" />,
+    },
+    {
+      name: 'info',
+      path: '/serverinfo',
+      icon: <InfoCircleOutlined />,
     },
   ];
 };

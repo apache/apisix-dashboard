@@ -15,16 +15,21 @@
  * limitations under the License.
  */
 type NodeDetail = {
-  id: string;
+  id: number;
+  last_report_time: number;
+  up_time: number;
+  boot_time: number;
+  etcd_version: string;
   hostname: string;
   version: string;
-  etcd_version: string;
-  uptime: number;
-  last_report_at: number;
-  boot_time: number;
 };
 
 type NodeListData = {
-  id: string;
-  name: string;
+  id: number;
+  last_report_time: number;
+  up_time: number;
+  boot_time: number;
+  etcd_version: string;
+  hostname: string;
+  version: string;
 };

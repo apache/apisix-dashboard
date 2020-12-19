@@ -15,5 +15,5 @@
  * limitations under the License.
  */
 export default {
-  'page.info.pageContainer.title': '关于 Apache APISIX',
+  'page.info.pageContainer.title': '服务端信息',
 };

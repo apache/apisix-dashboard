@@ -19,14 +19,14 @@ import { request } from 'umi';
 // Waiting for api.
 export const fetchInfoList = () => {
   return request<Res<ResListData<NodeListData>>>(
-    '/server_info?hostname={hostname}&page_size={page_size}&page={page}',
+    `/server_info`,
   ).then(({ data }) => ({
-    data: data.rows,
+    data: data.rows
   }));
 };
 
 export const fetchInfoData = () => {
-  return request<Res<NodeDetail>>('/server_info').then(({ data }) => {
+  return request<Res<NodeDetail>>(`/server_info`).then(({ data }) => {
     return { data };
   });
 };

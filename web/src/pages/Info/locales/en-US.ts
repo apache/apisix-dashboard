@@ -15,5 +15,5 @@
  * limitations under the License.
  */
 export default {
-  'page.info.pageContainer.title': 'About Apache APISIX',
+  'page.info.pageContainer.title': 'Server info',
 };
