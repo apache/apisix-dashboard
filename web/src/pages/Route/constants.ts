@@ -83,3 +83,19 @@ export const HASH_KEY_LIST = [
 ];
 
 export const HASH_ON_LIST = ['vars', 'header', 'cookie', 'consumer'];
+
+export const AUTH_LIST = ['basic-auth', 'jwt-auth', 'key-auth'];
+
+export const DEFAULT_DEBUG_PARAM_FORM_DATA = {
+  params: [
+    {
+      check: false,
+      key: '',
+      value: '',
+    },
+  ],
+};
+
+export const DEFAULT_DEBUG_AUTH_FORM_DATA = {
+  authType: 'none',
+};

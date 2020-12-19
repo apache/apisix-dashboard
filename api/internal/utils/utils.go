@@ -17,10 +17,12 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"net"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/sony/sonyflake"
 )
@@ -93,4 +95,50 @@ func InterfaceToString(val interface{}) string {
 	}
 	str := fmt.Sprintf("%v", val)
 	return str
+}
+
+func GenLabelMap(label string) (map[string]string, error) {
+	var err = errors.New("malformed label")
+	mp := make(map[string]string)
+
+	if label == "" {
+		return mp, nil
+	}
+
+	labels := strings.Split(label, ",")
+	for _, l := range labels {
+		kv := strings.Split(l, ":")
+		if len(kv) == 2 {
+			if kv[0] == "" || kv[1] == "" {
+				return nil, err
+			}
+
+			mp[kv[0]] = kv[1]
+		} else if len(kv) == 1 {
+			if kv[0] == "" {
+				return nil, err
+			}
+
+			mp[kv[0]] = ""
+		} else {
+			return nil, err
+		}
+	}
+
+	return mp, nil
+}
+
+func LabelContains(labels, reqLabels map[string]string) bool {
+	if len(reqLabels) == 0 {
+		return true
+	}
+
+	for k, v := range labels {
+		l, exist := reqLabels[k]
+		if exist && ((l == "") || v == l) {
+			return true
+		}
+	}
+
+	return false
 }
