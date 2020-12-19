@@ -29,9 +29,7 @@ const Info: React.FC = () => {
   const { Option } = Select;
 
   useEffect(() => {
-    fetchInfoList().then(({data}) => {
-      setNodeList(data);
-    });
+    fetchInfoList().then(setNodeList);
   }, []);
 
   return (

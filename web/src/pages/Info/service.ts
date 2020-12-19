@@ -20,9 +20,7 @@ import { request } from 'umi';
 export const fetchInfoList = () => {
   return request<Res<ResListData<NodeListData>>>(
     `/server_info`,
-  ).then(({ data }) => ({
-    data: data.rows
-  }));
+  ).then(({ data }) => data.rows);
 };
 
 export const fetchInfoData = () => {
