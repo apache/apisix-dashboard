@@ -33,7 +33,7 @@ const Info: React.FC = () => {
   }, []);
 
   return (
-    <PageContainer title={formatMessage({ id: 'page.info.pageContainer.title' })}>
+    <PageContainer title={formatMessage({ id: 'page.serverinfo.pageContainer.title' })}>
       <div className={styles.select}>
         <Form>
           <Form.Item label="Node:" wrapperCol={{ span: 3 }}>

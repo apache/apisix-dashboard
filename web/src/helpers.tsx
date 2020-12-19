@@ -57,7 +57,7 @@ export const getMenuData = (): MenuDataItem[] => {
       icon: <IconFont name="iconsetting" />,
     },
     {
-      name: 'info',
+      name: 'serverinfo',
       path: '/serverinfo',
       icon: <InfoCircleOutlined />,
     },

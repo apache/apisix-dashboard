@@ -15,5 +15,5 @@
  * limitations under the License.
  */
 export default {
-  'page.info.pageContainer.title': '服务端信息',
+  'page.serverinfo.pageContainer.title': '服务端信息',
 };
