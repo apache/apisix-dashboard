@@ -20,7 +20,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { useIntl } from 'umi';
 
 import { fetchInfoList } from './service';
-import styles from './Info.less';
+import styles from './style.less';
 
 const Info: React.FC = () => {
   const [data, setData] = useState<NodeDetail[]>([]);
@@ -36,9 +36,9 @@ const Info: React.FC = () => {
     <PageContainer title={formatMessage({ id: 'page.serverinfo.pageContainer.title' })}>
       <div className={styles.select}>
         <Form>
-          <Form.Item label="Node:" wrapperCol={{ span: 3 }}>
+          <Form.Item wrapperCol={{ span: 5 }} style={{ marginBottom: 0 }}>
             <Select
-              placeholder="Please select node"
+              placeholder={formatMessage({ id: 'page.serverinfo.select.placeholder' })}
               onChange={(value) => {
                 const arr = nodeList.filter((item) => {
                   return item.id === value;
@@ -53,6 +53,15 @@ const Info: React.FC = () => {
               ))}
               ;
             </Select>
+          </Form.Item>
+          <Form.Item style={{ marginBottom: 0, fontSize: '12px', color: '#00000073' }}>
+            {formatMessage({ id: 'page.serverinfo.desc' })}
+            <a
+              href="https://github.com/apache/apisix/blob/master/doc/plugins/server-info.md"
+              target="_blank"
+            >
+              {formatMessage({ id: 'page.serverinfo.link' })}
+            </a>
           </Form.Item>
         </Form>
       </div>

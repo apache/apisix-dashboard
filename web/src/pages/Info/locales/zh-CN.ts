@@ -16,4 +16,7 @@
  */
 export default {
   'page.serverinfo.pageContainer.title': '服务端信息',
+  'page.serverinfo.select.placeholder': '请选择节点',
+  'page.serverinfo.desc': '需启用相关插件，才能获取信息。',
+  'page.serverinfo.link': '如何启用？',
 };

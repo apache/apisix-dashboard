@@ -16,4 +16,7 @@
  */
 export default {
   'page.serverinfo.pageContainer.title': 'Server info',
+  'page.serverinfo.select.placeholder': 'Please select node',
+  'page.serverinfo.desc': 'The relevant plug-ins need to be enabled to obtain information.',
+  'page.serverinfo.link': 'How to enable?',
 };
