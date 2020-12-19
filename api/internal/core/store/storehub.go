@@ -35,6 +35,7 @@ const (
 	HubKeyUpstream   HubKey = "upstream"
 	HubKeyScript     HubKey = "script"
 	HubKeyGlobalRule HubKey = "global_rule"
+	HubKeyServerInfo HubKey = `server_info`
 )
 
 var (
@@ -152,11 +153,20 @@ func InitStores() error {
 		return err
 	}
 
-	err = InitStore(HubKeyGlobalRule, GenericStoreOption{
+  err = InitStore(HubKeyGlobalRule, GenericStoreOption{
 		BasePath: "/apisix/global_rules",
 		ObjType:  reflect.TypeOf(entity.GlobalPlugins{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.GlobalPlugins)
+      return utils.InterfaceToString(r.ID)
+    },
+  })
+
+	err = InitStore(HubKeyServerInfo, GenericStoreOption{
+		BasePath: "/apisix/data_plane/server_info",
+		ObjType:  reflect.TypeOf(entity.ServerInfo{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.ServerInfo)
 			return utils.InterfaceToString(r.ID)
 		},
 	})

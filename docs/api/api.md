@@ -122,6 +122,7 @@ Return the route list according to the specified page number and page size, and 
 | page_size | query | page size | No | integer |
 | name | query | name of route | No | string |
 | uri | query | uri of route | No | string |
+| label | query | label of route | No | string |
 
 ##### Responses
 

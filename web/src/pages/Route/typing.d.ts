@@ -107,48 +107,6 @@ declare namespace RouteModule {
     url?: string;
   };
 
-  type RouteParamSchema = {
-    type: string | integer | boolean | object | array;
-  };
-
-  type RouteParam = {
-    name: string;
-    in: 'query' | 'header' | 'path' | 'cookie';
-    description: string;
-    required: boolean;
-    style?: 'form' | 'simple';
-    explode?: boolean;
-    schema?: RouteParamSchema;
-  };
-
-  type PathSchema = {
-    tags: string;
-    summary: string;
-    description: string;
-    operationId: string;
-    requestBody?: object;
-    parameters?: RouteParam[];
-    responses: ResponseScheme;
-  };
-
-  type ResponseSchema = {
-    [code: string]: {
-      description: string;
-      content: ResponseItemContent;
-    };
-  };
-
-  type ResponseItemContent = {
-    'application/xml'?: {};
-    'application/json'?: {};
-  };
-
-  type TagSchema = {
-    name: string;
-    description: string;
-    externalDocs?: object;
-  };
-
   // step1
   interface MatchingRule {
     position: VarPosition;
@@ -270,5 +228,33 @@ declare namespace RouteModule {
     hosts?: string[];
     create_time: number;
     update_time: number;
+  };
+
+  // TODO： grpc and websocket
+  type debugRequest = {
+    url: string;
+    request_protocol: 'http' | 'grpc' | 'websocket';
+    method: string;
+    body_params?: any;
+    header_params?: any;
+  };
+  type authData = {
+    authType: string;
+    username?: string;
+    password?: string;
+    Authorization?: string;
+    apikey?: string;
+  };
+  type debugRequestParamsFormData = {
+    check: boolean;
+    key: string;
+    value: string;
+  };
+  type DebugViewProps = {
+    form: FormInstance;
+  };
+  type DebugDrawProps = {
+    visible: boolean;
+    onClose(): void;
   };
 }

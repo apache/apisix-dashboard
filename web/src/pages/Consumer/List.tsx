@@ -22,7 +22,6 @@ import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 
 import { timestampToLocaleString } from '@/helpers';
-
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
