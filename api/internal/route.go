@@ -34,6 +34,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/plugin"
 	"github.com/apisix/manager-api/internal/handler/route"
+	"github.com/apisix/manager-api/internal/handler/route_online_debug"
 	"github.com/apisix/manager-api/internal/handler/server_info"
 	"github.com/apisix/manager-api/internal/handler/service"
 	"github.com/apisix/manager-api/internal/handler/ssl"
@@ -66,6 +67,7 @@ func SetUpRouter() *gin.Engine {
 		plugin.NewHandler,
 		healthz.NewHandler,
 		authentication.NewHandler,
+		route_online_debug.NewHandler,
 		server_info.NewHandler,
 	}
 

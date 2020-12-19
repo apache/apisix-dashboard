@@ -36,14 +36,19 @@ export default {
   'page.route.status': '状态',
   'page.route.groupName': '分组名称',
   'page.route.offline': '下线',
+  'page.route.onlineDebug': '在线调试',
 
   // button
   'page.route.button.returnList': '返回路由列表',
+  'page.route.button.send': '发送请求',
 
   // input
   'page.route.input.placeholder.parameterNameHttpHeader': '请求头键名，例如：HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': '参数名称，例如：id',
   'page.route.input.placeholder.redirectCustom': '例如：/foo/index.html',
+  'page.route.input.placeholder.requestUrl': '请输入请求地址',
+  'page.route.input.placeholder.paramKey': '参数名称',
+  'page.route.input.placeholder.paramValue': '参数值',
   // form
   'page.route.form.itemRulesRequiredMessage.parameterName': '仅支持字母和数字，且只能以字母开头',
   'page.route.form.itemLabel.apiName': 'API 名称',
@@ -66,6 +71,10 @@ export default {
     '客户端 IP，例如：192.168.1.101，192.168.1.0/24，::1，fe80::1，fe80::1/64',
   'page.route.form.itemRulesPatternMessage.remoteAddrs':
     '请输入合法的 IP 地址，例如：192.168.1.101，192.168.1.0/24，::1，fe80::1，fe80::1/64',
+  'page.route.form.itemLabel.username': '用户名',
+  'page.route.form.itemLabel.password': '密 码',
+  'page.route.form.itemLabel.token': 'Token',
+  'page.route.form.itemLabel.apikey': 'Apikey',
 
   // select
   'page.route.select.option.enableHttps': '启用 HTTPS',
@@ -85,6 +94,8 @@ export default {
   'page.route.panelSection.title.requestOverride': '请求改写',
   'page.route.panelSection.title.requestConfigBasicDefine': '请求基础定义',
   'page.route.panelSection.title.advancedMatchRule': '高级路由匹配条件',
+  'page.route.PanelSection.title.defineRequestParams': '请求参数定义',
+  'page.route.PanelSection.title.responseResult': '请求响应结果',
 
   'page.route.httpAction': '行为',
   'page.route.httpOverrideOrCreate': '重写/创建',
@@ -103,4 +114,11 @@ export default {
   'page.route.input.placeholder.newPath': '例如：/foo/bar/index.html',
   'page.route.form.itemLabel.newPath': '新地址',
   'page.route.popconfirm.title.offline': '确定下线该路由吗？',
+  'page.route.debug.showResultAfterSendRequest': '发送请求后在此查看响应结果',
+  'page.route.TabPane.queryParams': '查询参数',
+  'page.route.TabPane.bodyParams': '请求体参数',
+  'page.route.TabPane.headerParams': '请求头参数',
+  'page.route.TabPane.authentication': '认证',
+  'page.route.TabPane.response': '响应结果',
+  'page.route.debugWithoutAuth': '当前请求不启用任何认证方式。',
 };

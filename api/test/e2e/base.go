@@ -32,6 +32,7 @@ import (
 )
 
 var token string
+var APISIXInternalUrl = "http://172.16.238.30:9080"
 
 func init() {
 	//login to get auth token
