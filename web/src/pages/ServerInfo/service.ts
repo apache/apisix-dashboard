@@ -16,7 +16,6 @@
  */
 import { request } from 'umi';
 
-// Waiting for api.
 export const fetchInfoList = () => {
   return request<Res<ResListData<ServerInfoModule.Node>>>(
     '/server_info',
