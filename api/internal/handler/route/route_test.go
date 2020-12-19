@@ -763,7 +763,6 @@ func TestRoute(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), errRoute)
 	assert.Nil(t, err)
 	ctx.SetInput(errRoute)
-	
 	ret, err = handler.Update(ctx)
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "ID on path (2) doesn't match ID on body (1)")
