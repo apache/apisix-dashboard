@@ -17,7 +17,7 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Route', () => {
-  const root_name = `root_${new Date().valueOf()}`;
+  const name = `routeName${new Date().valueOf()}`;
 
   beforeEach(() => {
     // init login 
@@ -26,12 +26,12 @@ context('Create and Delete Route', () => {
 
   it('create route', () => {
     //  go to route create page
-    cy.visit('/routes/create');
+    cy.visit('/');
     cy.contains('Route').click();
     cy.contains('Create').click();
 
     // input Name And Description
-    cy.get('#name').type(root_name);
+    cy.get('#name').type(name);
     cy.get('#desc').type('desc');
 
     // input Request Basic Define
@@ -48,7 +48,7 @@ context('Create and Delete Route', () => {
     cy.contains('Cookie').click();
     cy.get('.ant-modal').within(() => {
       cy.get('#name').type('modalName');
-    })
+    });
     cy.get('#operator').click();
     cy.contains('Equal').click();
     cy.get('#value').type('value');
@@ -65,9 +65,9 @@ context('Create and Delete Route', () => {
     cy.contains('Next').click();
 
     // config prometheus plugin
-    cy.contains('.ant-card', 'prometheus').within(($form) => {
+    cy.contains('.ant-card', 'prometheus').within(() => {
       cy.get('button').first().click();
-    })
+    });
     cy.contains('button', 'Cancel').click();
 
     // go to step4
@@ -82,9 +82,9 @@ context('Create and Delete Route', () => {
 
   it('delete the route', () => {
     cy.visit('/routes/list');
-    cy.get('[title=Name]').type(root_name);
+    cy.get('[title=Name]').type(name);
     cy.contains('查 询').click();
-    cy.contains(root_name).siblings().contains('Delete').click();
+    cy.contains(name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');
   })
