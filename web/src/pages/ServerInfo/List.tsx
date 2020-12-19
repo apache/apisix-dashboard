@@ -71,6 +71,7 @@ const ServerInfo: React.FC = () => {
             <a
               href="https://github.com/apache/apisix/blob/master/doc/plugins/server-info.md"
               target="_blank"
+              rel="noreferrer" 
             >
               {formatMessage({ id: 'page.serverinfo.link' })}
             </a>
