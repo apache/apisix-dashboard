@@ -17,6 +17,7 @@
 package utils
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -43,6 +44,7 @@ func TestSumIPs_with_nil(t *testing.T) {
 	assert.Equal(t, uint16(0), total)
 }
 
+
 func TestObjectClone(t *testing.T) {
 	type test struct {
 		Str string
@@ -59,4 +61,43 @@ func TestObjectClone(t *testing.T) {
 	copy.Num = 2
 	assert.NotEqual(t, copy.Num, origin.Num)
 	assert.Equal(t, 1, origin.Num)
+}
+
+func TestGenLabelMap(t *testing.T) {
+	expectedErr := errors.New("malformed label")
+	mp, err := GenLabelMap("l1")
+	assert.Nil(t, err)
+	assert.Equal(t, mp["l1"], "")
+
+	mp, err = GenLabelMap("l1,l2:v2")
+	assert.Nil(t, err)
+	assert.Equal(t, mp["l1"], "")
+	assert.Equal(t, mp["l2"], "v2")
+
+	mp, err = GenLabelMap(",")
+	assert.Equal(t, expectedErr, err)
+	assert.Nil(t, mp)
+
+	mp, err = GenLabelMap(",l2:,")
+	assert.Equal(t, expectedErr, err)
+	assert.Nil(t, mp)
+}
+
+func TestLabelContains(t *testing.T) {
+	mp1, _ := GenLabelMap("l1,l2:v2")
+	mp2 := map[string]string{
+		"l1": "v1",
+	}
+	assert.True(t, LabelContains(mp2, mp1))
+
+	mp3 := map[string]string{
+		"l1": "v1",
+		"l2": "v3",
+	}
+	assert.True(t, LabelContains(mp3, mp1))
+
+	mp4 := map[string]string{
+		"l2": "v3",
+	}
+	assert.False(t, LabelContains(mp4, mp1))
 }

@@ -160,7 +160,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 	}
 }
 
-func TestRoute_with_lable(t *testing.T) {
+func TestRoute_with_label(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			caseDesc: "config route with labels (r1)",
@@ -211,6 +211,141 @@ func TestRoute_with_lable(t *testing.T) {
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "access the route after delete it",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc)
+	}
+}
+
+func TestRoute_search_by_label(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			caseDesc: "config route with labels (r1)",
+			Object:   ManagerApiExpect(t),
+			Path:     "/apisix/admin/routes/r1",
+			Method:   http.MethodPut,
+			Body: `{
+					"uri": "/hello",
+					"labels": {
+						"build":"16",
+						"env":"production",
+						"version":"v2"
+					},
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					}
+				}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc: "config route with labels (r2)",
+			Object:   ManagerApiExpect(t),
+			Path:     "/apisix/admin/routes/r2",
+			Method:   http.MethodPut,
+			Body: `{
+					"uri": "/hello2",
+					"labels": {
+						"build":"17",
+						"env":"dev",
+						"version":"v2",
+						"extra": "test"
+					},
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					}
+				}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "access the route's uri (r1)",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "verify the route's detail (r1)",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/routes/r1",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "search the route by label",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/routes",
+			Query:        "label=build:16",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "search the route by label (only key)",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/routes",
+			Query:        "label=extra",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"labels\":{\"build\":\"17\",\"env\":\"dev\",\"extra\":\"test\",\"version\":\"v2\"",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "search the route by label (combination)",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/routes",
+			Query:        "label=extra,build:16",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"total_size\":2",
+			Sleep:        sleepTime,
+		},
+		{
+			caseDesc:     "delete the route (r1)",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			caseDesc:     "delete the route (r2)",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r2",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
