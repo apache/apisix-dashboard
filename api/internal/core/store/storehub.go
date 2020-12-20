@@ -153,14 +153,17 @@ func InitStores() error {
 		return err
 	}
 
-  err = InitStore(HubKeyGlobalRule, GenericStoreOption{
+	err = InitStore(HubKeyGlobalRule, GenericStoreOption{
 		BasePath: "/apisix/global_rules",
 		ObjType:  reflect.TypeOf(entity.GlobalPlugins{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.GlobalPlugins)
-      return utils.InterfaceToString(r.ID)
-    },
-  })
+			return utils.InterfaceToString(r.ID)
+		},
+	})
+	if err != nil {
+		return err
+	}
 
 	err = InitStore(HubKeyServerInfo, GenericStoreOption{
 		BasePath: "/apisix/data_plane/server_info",
