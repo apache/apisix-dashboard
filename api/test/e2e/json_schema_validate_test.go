@@ -55,6 +55,6 @@ func TestSchema_not_exist_field(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
