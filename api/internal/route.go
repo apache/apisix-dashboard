@@ -18,6 +18,8 @@ package internal
 
 import (
 	"fmt"
+	"path/filepath"
+
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -32,6 +34,8 @@ import (
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/plugin"
 	"github.com/apisix/manager-api/internal/handler/route"
+	"github.com/apisix/manager-api/internal/handler/route_online_debug"
+	"github.com/apisix/manager-api/internal/handler/server_info"
 	"github.com/apisix/manager-api/internal/handler/service"
 	"github.com/apisix/manager-api/internal/handler/ssl"
 	"github.com/apisix/manager-api/internal/handler/upstream"
@@ -49,9 +53,9 @@ func SetUpRouter() *gin.Engine {
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("session", store))
 	r.Use(filter.CORS(), filter.RequestId(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.Authentication(), filter.RecoverHandler())
-	r.Use(static.Serve("/", static.LocalFile(conf.WebDir, false)))
+	r.Use(static.Serve("/", static.LocalFile(filepath.Join(conf.WorkDir, conf.WebDir), false)))
 	r.NoRoute(func(c *gin.Context) {
-		c.File(fmt.Sprintf("%s/index.html", conf.WebDir))
+		c.File(fmt.Sprintf("%s/index.html", filepath.Join(conf.WorkDir, conf.WebDir)))
 	})
 
 	factories := []handler.RegisterFactory{
@@ -63,6 +67,8 @@ func SetUpRouter() *gin.Engine {
 		plugin.NewHandler,
 		healthz.NewHandler,
 		authentication.NewHandler,
+		route_online_debug.NewHandler,
+		server_info.NewHandler,
 	}
 
 	for i := range factories {
