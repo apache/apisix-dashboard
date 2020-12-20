@@ -362,7 +362,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 				},
 				"remote_addr": "127.0.0."
 			}`,
-			wantValidateErr: fmt.Errorf("schema validate failed: remote_addr: Must validate at least one schema (anyOf)\nremote_addr: Does not match pattern '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'"),
+			wantValidateErr: fmt.Errorf("schema validate failed: remote_addr: Must validate at least one schema (anyOf)\nremote_addr: Does not match format 'ipv4'"),
 		},
 		{
 			caseDesc: "correct remote_addrs",
@@ -395,7 +395,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 				},
 				"remote_addrs": ["127.0.0.", "192.0.0.0/128", "::1"]
 			}`,
-			wantValidateErr: fmt.Errorf("schema validate failed: remote_addrs.0: Must validate at least one schema (anyOf)\nremote_addrs.0: Does not match pattern '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'\nremote_addrs.1: Must validate at least one schema (anyOf)\nremote_addrs.1: Does not match pattern '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'"),
+			wantValidateErr: fmt.Errorf("schema validate failed: remote_addrs.0: Must validate at least one schema (anyOf)\nremote_addrs.0: Does not match format 'ipv4'\nremote_addrs.1: Must validate at least one schema (anyOf)\nremote_addrs.1: Does not match format 'ipv4'"),
 		},
 		{
 			caseDesc: "invalid remote_addrs (an empty string item)",
@@ -412,7 +412,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 				},
 				"remote_addrs": [""]
 			}`,
-			wantValidateErr: fmt.Errorf("schema validate failed: invalid field remote_addrs"),
+			wantValidateErr: fmt.Errorf("schema validate failed: remote_addrs.0: Must validate at least one schema (anyOf)\nremote_addrs.0: Does not match format 'ipv4'"),
 		},
 	}
 
@@ -436,4 +436,45 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 
 		assert.Equal(t, tc.wantValidateErr, err, tc.caseDesc)
 	}
+}
+
+func TestAPISIXSchemaValidator_Validate(t *testing.T) {
+	validator, err := NewAPISIXSchemaValidator("main.consumer")
+	assert.Nil(t, err)
+
+	// normal config, should pass
+	reqBody := `{
+		"id": "jack",
+		"username": "jack",
+		"plugins": {
+			"limit-count": {
+				"count": 2,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
+		},
+		"desc": "test description"
+	}`
+	err = validator.Validate([]byte(reqBody))
+	assert.Nil(t, err)
+
+	// config with non existent field, should be failed.
+	reqBody = `{
+		"username": "jack",
+		"not-exist": "val",
+		"plugins": {
+			"limit-count": {
+				"count": 2,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
+		},
+		"desc": "test description"
+	}`
+	err = validator.Validate([]byte(reqBody))
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "schema validate failed: (root): Additional property not-exist is not allowed")
+
 }

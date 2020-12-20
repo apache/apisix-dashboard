@@ -312,3 +312,45 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 
 	return nil
 }
+
+type APISIXSchemaValidator struct {
+	schema *gojsonschema.Schema
+}
+
+func NewAPISIXSchemaValidator(jsonPath string) (Validator, error) {
+	schemaDef := conf.Schema.Get(jsonPath).String()
+	if schemaDef == "" {
+		log.Warnf("schema validate failed: schema not found, path: %s", jsonPath)
+		return nil, fmt.Errorf("schema validate failed: schema not found, path: %s", jsonPath)
+	}
+
+	s, err := gojsonschema.NewSchema(gojsonschema.NewStringLoader(schemaDef))
+	if err != nil {
+		log.Warnf("new schema failed: %w", err)
+		return nil, fmt.Errorf("new schema failed: %w", err)
+	}
+	return &APISIXSchemaValidator{
+		schema: s,
+	}, nil
+}
+
+func (v *APISIXSchemaValidator) Validate(obj interface{}) error {
+	ret, err := v.schema.Validate(gojsonschema.NewBytesLoader(obj.([]byte)))
+	if err != nil {
+		log.Warnf("schema validate failed: %w", err)
+		return fmt.Errorf("schema validate failed: %w", err)
+	}
+
+	if !ret.Valid() {
+		errString := buffer.Buffer{}
+		for i, vErr := range ret.Errors() {
+			if i != 0 {
+				errString.AppendString("\n")
+			}
+			errString.AppendString(vErr.String())
+		}
+		return fmt.Errorf("schema validate failed: %s", errString.String())
+	}
+
+	return nil
+}

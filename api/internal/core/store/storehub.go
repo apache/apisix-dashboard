@@ -28,12 +28,13 @@ import (
 type HubKey string
 
 const (
-	HubKeyConsumer HubKey = "consumer"
-	HubKeyRoute    HubKey = "route"
-	HubKeyService  HubKey = "service"
-	HubKeySsl      HubKey = "ssl"
-	HubKeyUpstream HubKey = "upstream"
-	HubKeyScript   HubKey = "script"
+	HubKeyConsumer   HubKey = "consumer"
+	HubKeyRoute      HubKey = "route"
+	HubKeyService    HubKey = "service"
+	HubKeySsl        HubKey = "ssl"
+	HubKeyUpstream   HubKey = "upstream"
+	HubKeyScript     HubKey = "script"
+	HubKeyServerInfo HubKey = `server_info`
 )
 
 var (
@@ -138,6 +139,18 @@ func InitStores() error {
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.Script)
 			return r.ID
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeyServerInfo, GenericStoreOption{
+		BasePath: "/apisix/data_plane/server_info",
+		ObjType:  reflect.TypeOf(entity.ServerInfo{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.ServerInfo)
+			return utils.InterfaceToString(r.ID)
 		},
 	})
 	if err != nil {

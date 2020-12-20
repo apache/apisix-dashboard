@@ -60,6 +60,7 @@ type BaseInfoGetter interface {
 	GetBaseInfo() *BaseInfo
 }
 
+// swagger:model Route
 type Route struct {
 	BaseInfo
 	URI             string                 `json:"uri,omitempty"`
@@ -161,6 +162,7 @@ type UpstreamDef struct {
 	Labels       map[string]string `json:"labels,omitempty"`
 }
 
+// swagger:model Upstream
 type Upstream struct {
 	BaseInfo
 	UpstreamDef
@@ -181,6 +183,7 @@ func (upstream *Upstream) Parse2NameResponse() (*UpstreamNameResponse, error) {
 
 // --- structures for upstream end  ---
 
+// swagger:model Consumer
 type Consumer struct {
 	BaseInfo
 	Username string                 `json:"username"`
@@ -189,6 +192,7 @@ type Consumer struct {
 	Labels   map[string]string      `json:"labels,omitempty"`
 }
 
+// swagger:model SSL
 type SSL struct {
 	BaseInfo
 	Cert          string            `json:"cert,omitempty"`
@@ -204,6 +208,7 @@ type SSL struct {
 	Labels        map[string]string `json:"labels,omitempty"`
 }
 
+// swagger:model Service
 type Service struct {
 	BaseInfo
 	Name            string                 `json:"name,omitempty"`
@@ -219,4 +224,14 @@ type Service struct {
 type Script struct {
 	ID     string      `json:"id"`
 	Script interface{} `json:"script,omitempty"`
+}
+
+type ServerInfo struct {
+	BaseInfo
+	LastReportTime int64  `json:"last_report_time,omitempty"`
+	UpTime         int64  `json:"up_time,omitempty"`
+	BootTime       int64  `json:"boot_time,omitempty"`
+	EtcdVersion    string `json:"etcd_version,omitempty"`
+	Hostname       string `json:"hostname,omitempty"`
+	Version        string `json:"version,omitempty"`
 }

@@ -18,6 +18,7 @@
 #
 
 set -ex
+VERSION=$(cat ./VERSION)
 
 clean_up() {
     git checkout conf/conf.yaml
@@ -39,9 +40,9 @@ clean_logfile() {
 trap clean_up EXIT
 
 export GO111MODULE=on
-go build -o ./manager-api .
+go build -o ./manager-api -ldflags "-X main.Version=${VERSION}" .
 
-#default level: warn, path: logs/error.log
+# default level: warn, path: logs/error.log
 
 ./manager-api &
 sleep 3
@@ -79,7 +80,7 @@ fi
 
 clean_logfile
 
-#change path
+# change path
 
 sed -i 's/logs\/error.log/.\/error.log/' conf/conf.yaml
 
@@ -91,6 +92,55 @@ check_logfile
 
 if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     echo "failed: failed to write log on right level"
+    exit 1
+fi
+
+# run on a different path 
+workDir=$(pwd)
+rm -rf html
+mkdir html
+cd html
+echo "hi~" >> index.html
+APISIX_API_WORKDIR=$workDir $workDir/manager-api &
+sleep 5
+
+res=$(curl http://127.0.0.1:9000)
+pkill -f manager-api
+cd -
+rm -rf html
+
+if [[ $res != "hi~" ]]; then
+    echo "failed: manager-api cant run on a different path"
+    exit 1
+fi
+clean_up
+
+# test start info
+
+LOGLEVEL=$(cat conf/conf.yaml | awk '$1=="level:"{print $2}')
+HOST=$(cat conf/conf.yaml | awk '$1=="host:"{print $2}')
+PORT=$(cat conf/conf.yaml | awk '$1=="port:"{print $2}')
+STDOUT=/tmp/manager-api
+./manager-api &>/tmp/manager-api &
+sleep 3
+
+if [[ `grep -c "The manager-api is running successfully\!" ${STDOUT}` -ne '1' ]]; then
+    echo "failed: the manager server didn't show started info"
+    exit 1
+fi
+
+if [[ `grep -c "${VERSION}" ${STDOUT}` -ne '1' ]]; then
+    echo "failed: the manager server didn't show started info"
+    exit 1
+fi
+
+if [[ `grep -c "${LOGLEVEL}" ${STDOUT}` -ne '1' ]]; then
+    echo "failed: the manager server didn't show started info"
+    exit 1
+fi
+
+if [[ `grep -c "${HOST}:${PORT}" ${STDOUT}` -ne '1' ]]; then
+    echo "failed: the manager server didn't show started info"
     exit 1
 fi
 
@@ -112,6 +162,20 @@ fi
 
 # clean config
 clean_up
+
+# access log test
+./manager-api &
+sleep 3
+
+curl http://127.0.0.1:9000/apisix/admin/user/login -d '{"username":"admin", "password": "admin"}'
+
+pkill -f manager-api
+
+if [[ `grep -c "/apisix/admin/user/login" ./logs/access.log` -eq '0' ]]; then
+    echo "failed: failed to write access log"
+    exit 1
+fi
+
 
 # etcd basic auth
 # add root user

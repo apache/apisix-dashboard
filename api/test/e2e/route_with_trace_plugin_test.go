@@ -43,7 +43,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 				"uri": "/hello",
 				"plugins": {
 					"skywalking": {
-						"sample_ratio": 1 
+						"sample_ratio": 1
 					}
 				},
 				"upstream": {

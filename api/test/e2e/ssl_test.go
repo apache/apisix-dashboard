@@ -112,10 +112,13 @@ func TestSSL_Basic(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			Desc:         "delete ssl",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/ssl/1",
+			Desc: "disable SSL",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPatch,
+			Path:     "/apisix/admin/ssl/1",
+			Body: `{
+				"status": 0
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -124,6 +127,50 @@ func TestSSL_Basic(t *testing.T) {
 	for _, tc := range tests {
 		testCaseCheck(tc, t)
 	}
+
+	// try again after disable SSL, make a HTTPS request
+	// If use the test framework, errors will cause failure, so we need to make a separate https request for testing.
+	time.Sleep(sleepTime)
+	_, err = http.Get("https://www.test2.com:9443")
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")
+
+	// enable SSL again
+	tests = []HttpTestCase{
+		{
+			Desc:     "enable SSL",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPatch,
+			Path:         "/apisix/admin/ssl/1/status",
+			Body:         `1`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:     "hit the route using HTTPS, make sure enable successful",
+			Object:       APISIXHTTPSExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			Headers:      map[string]string{"Host": "www.test2.com"},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world\n",
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	// delete SSL
+	delSSL := HttpTestCase{
+		Desc:     "delete SSL",
+		Object:       ManagerApiExpect(t),
+		Method:       http.MethodDelete,
+		Path:         "/apisix/admin/ssl/1",
+		Headers:      map[string]string{"Authorization": token},
+		ExpectStatus: http.StatusOK,
+	}
+	testCaseCheck(delSSL, t)
 
 	// try again after deleting SSL, make a HTTPS request
 	// If use the test framework, errors will cause failure, so we need to make a separate https request for testing.
