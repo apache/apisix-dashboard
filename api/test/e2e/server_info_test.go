@@ -47,7 +47,7 @@ func TestServerInfo_Get(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -85,6 +85,6 @@ func TestServerInfo_List(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

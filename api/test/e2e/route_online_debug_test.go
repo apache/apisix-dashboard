@@ -39,7 +39,7 @@ func TestRoute_Online_Debug_Route_Not_Exist(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 	basepath := "http://127.0.0.1:9000/apisix/admin/debug-request-forwarding"
 	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "`+APISIXInternalUrl+`/hello_","method": "GET","request_protocol": "http"}`))
@@ -121,7 +121,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -196,7 +196,7 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -269,7 +269,7 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -355,7 +355,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// online debug without basic-auth
@@ -411,7 +411,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -482,7 +482,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// sign jwt token
@@ -513,7 +513,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// online debug without jwt-auth
@@ -569,7 +569,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -650,7 +650,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// online debug without key-auth
@@ -706,7 +706,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
@@ -790,7 +790,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// online debug without key-auth
@@ -847,6 +847,6 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
