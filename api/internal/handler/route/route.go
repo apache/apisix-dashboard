@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 
@@ -224,12 +225,15 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	libDir := conf.WorkDir + "/" + "dag-to-lua"
+	workDir, err := filepath.Abs(conf.WorkDir)
+	if err != nil {
+		return "", err
+	}
+	libDir := filepath.Join(workDir, "dag-to-lua/")
 	if err := os.Chdir(libDir); err != nil {
 		panic(err)
 	}
-	defer os.Chdir(conf.WorkDir)
+	defer os.Chdir(workDir)
 
 	L := lua.NewState()
 	defer L.Close()
