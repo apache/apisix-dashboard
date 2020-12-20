@@ -163,7 +163,7 @@ func InitStores() error {
 	err = InitStore(HubKeyServerInfo, GenericStoreOption{
 		BasePath: "/apisix/data_plane/server_info",
 		ObjType:  reflect.TypeOf(entity.ServerInfo{}),
-		KeyFunc: func(obj interface{}) string {
+		KeyFunc: func(obj interface{}, key string) string {
 			r := obj.(*entity.ServerInfo)
 			return utils.InterfaceToString(r.ID)
 		},
