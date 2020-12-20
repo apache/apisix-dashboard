@@ -266,7 +266,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
           optionLabelProp="label"
           disabled={disabled}
           onChange={(value) => {
-            if ((value as any).includes('ALL')) {
+            if ((value as string[]).includes('ALL')) {
               form.setFieldsValue({
                 methods: ['ALL'],
               });
