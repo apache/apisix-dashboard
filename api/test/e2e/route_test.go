@@ -227,6 +227,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "hit the route just create",
