@@ -227,7 +227,6 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "hit the route just create",
@@ -236,6 +235,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			Path:         "/hello",
 			Headers:      map[string]string{"Host": "foo.com"},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc: "update route with host bar.com",
@@ -271,6 +271,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			Headers:      map[string]string{"Host": "bar.com"},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world\n",
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "delete route",
