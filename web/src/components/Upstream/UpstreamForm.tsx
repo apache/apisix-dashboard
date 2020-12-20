@@ -246,6 +246,18 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           </Form.Item>
         </Form.Item>
 
+        <Form.Item label={formatMessage({ id: 'upstream.step.healthy.checks.active.port' })}>
+          <Form.Item
+            name={['checks', 'active', 'port']}
+            noStyle
+          >
+            <InputNumber
+              placeholder={formatMessage({ id: 'upstream.step.input.healthy.checks.active.port' })}
+              disabled={readonly}
+            />
+          </Form.Item>
+        </Form.Item>
+
         <Form.Item
           label={formatMessage({ id: 'upstream.step.healthy.checks.active.http_path' })}
           required
