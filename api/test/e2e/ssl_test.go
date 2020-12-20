@@ -112,10 +112,10 @@ func TestSSL_Basic(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			Desc: "disable SSL",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPatch,
-			Path:     "/apisix/admin/ssl/1",
+			Desc:   "disable SSL",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPatch,
+			Path:   "/apisix/admin/ssl/1",
 			Body: `{
 				"status": 0
 			}`,
@@ -138,7 +138,7 @@ func TestSSL_Basic(t *testing.T) {
 	// enable SSL again
 	tests = []HttpTestCase{
 		{
-			Desc:     "enable SSL",
+			Desc:         "enable SSL",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPatch,
 			Path:         "/apisix/admin/ssl/1/status",
@@ -147,7 +147,7 @@ func TestSSL_Basic(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			Desc:     "hit the route using HTTPS, make sure enable successful",
+			Desc:         "hit the route using HTTPS, make sure enable successful",
 			Object:       APISIXHTTPSExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -163,7 +163,7 @@ func TestSSL_Basic(t *testing.T) {
 
 	// delete SSL
 	delSSL := HttpTestCase{
-		Desc:     "delete SSL",
+		Desc:         "delete SSL",
 		Object:       ManagerApiExpect(t),
 		Method:       http.MethodDelete,
 		Path:         "/apisix/admin/ssl/1",

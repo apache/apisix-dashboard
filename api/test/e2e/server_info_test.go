@@ -27,7 +27,7 @@ func TestServerInfo_Get(t *testing.T) {
 	time.Sleep(2 * time.Second)
 	testCases := []HttpTestCase{
 		{
-			caseDesc:     "get server info",
+			Desc:         "get server info",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/server_info/apisix-server1",
 			Method:       http.MethodGet,
@@ -36,7 +36,7 @@ func TestServerInfo_Get(t *testing.T) {
 			ExpectBody:   "\"hostname\":\"apisix_server1\"",
 		},
 		{
-			caseDesc:     "get server info",
+			Desc:         "get server info",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/server_info/apisix-server2",
 			Method:       http.MethodGet,
@@ -54,7 +54,7 @@ func TestServerInfo_Get(t *testing.T) {
 func TestServerInfo_List(t *testing.T) {
 	testCases := []HttpTestCase{
 		{
-			caseDesc:     "list all server info",
+			Desc:         "list all server info",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/server_info",
 			Method:       http.MethodGet,
@@ -63,7 +63,7 @@ func TestServerInfo_List(t *testing.T) {
 			ExpectBody:   "\"total_size\":2",
 		},
 		{
-			caseDesc:     "list server info with hostname",
+			Desc:         "list server info with hostname",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/server_info",
 			Query:        "hostname=apisix_",
@@ -73,7 +73,7 @@ func TestServerInfo_List(t *testing.T) {
 			ExpectBody:   "\"total_size\":2",
 		},
 		{
-			caseDesc:     "list server info with hostname",
+			Desc:         "list server info with hostname",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/server_info",
 			Query:        "hostname=apisix_server2",
