@@ -19,7 +19,6 @@ package e2e
 import (
 	"net/http"
 	"testing"
-	"time"
 )
 
 func TestGlobalRule(t *testing.T) {
@@ -59,50 +58,82 @@ func TestGlobalRule(t *testing.T) {
 			Body: `{
                                 "id": "1",
                                 "plugins": {
-                                        "limit-count": {
-                                                "count": 2,
-                                                "time_window": 2,
-                                                "rejected_code": 503,
-                                                "key": "remote_addr"
-                                        }
+		                        "response-rewrite": {
+		                            "headers": {
+		                                "X-VERSION":"1.0"
+		                            }
+		                        },
+					"uri-blocker": {
+						"block_rules": ["select.+(from|limit)", "(?:(union(.*?)select))"]
+					}
                                 }
                         }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route that should not be limited",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
+			caseDesc:      "verify route with header",
+			Object:        APISIXExpect(t),
+			Method:        http.MethodGet,
+			Path:          "/hello",
+			ExpectStatus:  http.StatusOK,
+			ExpectBody:    "hello world",
+			ExpectHeaders: map[string]string{"X-VERSION": "1.0"},
+			Sleep:         sleepTime,
 		},
 		{
-			caseDesc:     "verify route that should not be limited 2",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
+			caseDesc:      "verify route that should be blocked",
+			Object:        APISIXExpect(t),
+			Method:        http.MethodGet,
+			Path:          "/hello",
+			Query:         "name=;select%20from%20sys",
+			ExpectStatus:  http.StatusForbidden,
+			ExpectHeaders: map[string]string{"X-VERSION": "1.0"},
 		},
 		{
-			caseDesc:     "verify route that should be limited",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusServiceUnavailable,
-			ExpectBody:   "503 Service Temporarily Unavailable",
+			caseDesc: "update route with same plugin response-rewrite",
+			Object:   ManagerApiExpect(t),
+			Method:   http.MethodPut,
+			Path:     "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"plugins": {
+					"response-rewrite": {
+						"headers": {
+							"X-VERSION":"2.0"
+						}
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			 }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route that should not be limited since time window pass",
+			caseDesc:      "verify route that header should be the same as the route config",
+			Object:        APISIXExpect(t),
+			Method:        http.MethodGet,
+			Path:          "/hello",
+			ExpectStatus:  http.StatusOK,
+			ExpectBody:    "hello world",
+			ExpectHeaders: map[string]string{"X-VERSION": "2.0"},
+			Sleep:         sleepTime,
+		},
+		{
+			caseDesc:     "the uncovered global plugin should works",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        3 * time.Second,
+			Query:        "name=;select%20from%20sys",
+			ExpectStatus: http.StatusForbidden,
+			//ExpectHeaders: map[string]string{"X-VERSION":"2.0"},
 		},
 		{
 			caseDesc:     "delete global rule",
@@ -123,29 +154,13 @@ func TestGlobalRule(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route that should not be limited",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			caseDesc:     "verify route that should not be limited 2",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-		},
-		{
-			caseDesc:     "verify route that should not be limited 3 (no plugin is enabled)",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
+			caseDesc:      "verify route that should not be blocked",
+			Object:        APISIXExpect(t),
+			Method:        http.MethodGet,
+			Path:          "/hello",
+			Query:         "name=;select%20from%20sys",
+			ExpectStatus:  http.StatusOK,
+			ExpectHeaders: map[string]string{"X-VERSION": "2.0"},
 		},
 		{
 			caseDesc:     "delete route",
