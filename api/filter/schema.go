@@ -43,8 +43,7 @@ var resources = map[string]string{
 	"ssl":       "ssl",
 }
 
-
-type Status int
+type Status uint8
 
 const (
 	StatusDisable Status = iota
