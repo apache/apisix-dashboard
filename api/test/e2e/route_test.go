@@ -262,6 +262,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			Path:         "/hello",
 			Headers:      map[string]string{"Host": "foo.com"},
 			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "hit the route just updated",
@@ -271,7 +272,6 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			Headers:      map[string]string{"Host": "bar.com"},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world\n",
-			Sleep:        sleepTime,
 		},
 		{
 			caseDesc:     "delete route",
@@ -285,7 +285,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			caseDesc:     "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello1",
+			Path:         "/hello",
 			Headers:      map[string]string{"Host": "bar.com"},
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
