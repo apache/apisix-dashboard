@@ -362,7 +362,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 				},
 				"remote_addr": "127.0.0."
 			}`,
-			wantValidateErr: fmt.Errorf("schema validate failed: remote_addr: Must validate at least one schema (anyOf)\nremote_addr: Does not match pattern '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'"),
+			wantValidateErr: fmt.Errorf("schema validate failed: remote_addr: Must validate at least one schema (anyOf)\nremote_addr: Does not match format 'ipv4'"),
 		},
 		{
 			caseDesc: "correct remote_addrs",
@@ -395,7 +395,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 				},
 				"remote_addrs": ["127.0.0.", "192.0.0.0/128", "::1"]
 			}`,
-			wantValidateErr: fmt.Errorf("schema validate failed: remote_addrs.0: Must validate at least one schema (anyOf)\nremote_addrs.0: Does not match pattern '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'\nremote_addrs.1: Must validate at least one schema (anyOf)\nremote_addrs.1: Does not match pattern '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'"),
+			wantValidateErr: fmt.Errorf("schema validate failed: remote_addrs.0: Must validate at least one schema (anyOf)\nremote_addrs.0: Does not match format 'ipv4'\nremote_addrs.1: Must validate at least one schema (anyOf)\nremote_addrs.1: Does not match format 'ipv4'"),
 		},
 		{
 			caseDesc: "invalid remote_addrs (an empty string item)",
@@ -412,7 +412,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 				},
 				"remote_addrs": [""]
 			}`,
-			wantValidateErr: fmt.Errorf("schema validate failed: invalid field remote_addrs"),
+			wantValidateErr: fmt.Errorf("schema validate failed: remote_addrs.0: Must validate at least one schema (anyOf)\nremote_addrs.0: Does not match format 'ipv4'"),
 		},
 	}
 
