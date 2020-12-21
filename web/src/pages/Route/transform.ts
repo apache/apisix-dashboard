@@ -148,6 +148,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     upstream,
     upstream_id,
     priority = 0,
+    enable_websocket
   } = data;
   const form1Data: Partial<RouteModule.Form1Data> = {
     name,
@@ -159,6 +160,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     // @ts-ignore
     methods: methods.length ? methods : ["ALL"],
     priority,
+    enable_websocket
   };
 
   const redirect = data.plugins?.redirect || {};
