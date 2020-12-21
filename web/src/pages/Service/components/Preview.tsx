@@ -14,3 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import React from 'react';
+import { FormInstance } from 'antd/lib/form';
+
+import PluginPage from '@/components/Plugin';
+import Step1 from './Step1';
+
+type Props = {
+  form: FormInstance;
+  plugins: PluginComponent.Data;
+};
+
+const Page: React.FC<Props> = ({ form, plugins }) => {
+  return (
+    <>
+      <Step1 form={form} disabled />
+      <PluginPage initialData={plugins} readonly />
+    </>
+  );
+};
+
+export default Page;

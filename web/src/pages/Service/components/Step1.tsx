@@ -47,13 +47,13 @@ const Step1: React.FC<ServiceModule.Step1PassProps> = ({
                 name="name"
                 label={formatMessage({ id: 'component.global.name' })}
             >
-                <Input />
+                <Input disabled={disabled} />
             </Form.Item>
             <Form.Item
                 name="desc"
                 label={formatMessage({ id: 'component.global.description' })}
             >
-                <Input.TextArea />
+                <Input.TextArea disabled={disabled} />
             </Form.Item>
         </Form>
         <UpstreamForm

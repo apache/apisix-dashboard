@@ -20,7 +20,9 @@ import { useIntl } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import ActionBar from '@/components/ActionBar';
+import PluginPage from '@/components/Plugin';
 import { Card, Steps, Form } from 'antd';
+import Preview from './components/Preview';
 import Step1 from "./components/Step1";
 import styles from './Create.less';
 
@@ -29,6 +31,7 @@ const Page: React.FC = (props) => {
     const { formatMessage } = useIntl();
     const [form] = Form.useForm();
     const upstreamRef = useRef<any>();
+    const [plugins, setPlugins] = useState<PluginComponent.Data>({});
 
     const STEP_HEADER = [
         formatMessage({ id: 'page.service.steps.stepTitle.basicInformation' }),
@@ -40,7 +43,6 @@ const Page: React.FC = (props) => {
     const [step, setStep] = useState(1);
 
     const onStepChange = (nextStep: number) => {
-        console.log('nextStep: ', nextStep);
         setStep(nextStep);
     }
 
@@ -57,10 +59,14 @@ const Page: React.FC = (props) => {
                         <Step title={item} key={item} />
                     ))}
                 </Steps>
-                <Step1
+                {step === 1 && <Step1
                     form={form}
                     upstreamRef={upstreamRef}
-                />
+                />}
+                {step === 2 && (
+                    <PluginPage initialData={plugins} onChange={setPlugins} schemaType="route" />
+                )}
+                {step === 3 && <Preview form={form} plugins={plugins} />}
             </Card>
         </PageHeaderWrapper>
         <ActionBar step={step} lastStep={3} onChange={onStepChange} withResultView />
