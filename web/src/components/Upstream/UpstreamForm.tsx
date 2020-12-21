@@ -606,11 +606,21 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
         <NodeList />
 
-        <Form.Item label="传递域名" name="pass_host" extra="当选择节点时，只能有一条节点域名。">
+        <Form.Item
+          label={formatMessage({ id: 'upstream.step.pass-host' })}
+          name="pass_host"
+          extra={formatMessage({ id: 'upstream.step.pass-host.tips' })}
+        >
           <Select disabled={readonly}>
-            <Select.Option value="pass">透传</Select.Option>
-            <Select.Option value="node">节点</Select.Option>
-            <Select.Option value="rewrite">重写</Select.Option>
+            <Select.Option value="pass">
+              {formatMessage({ id: 'upstream.step.pass-host.pass' })}
+            </Select.Option>
+            <Select.Option value="node">
+              {formatMessage({ id: 'upstream.step.pass-host.node' })}
+            </Select.Option>
+            <Select.Option value="rewrite">
+              {formatMessage({ id: 'upstream.step.pass-host.rewrite' })}
+            </Select.Option>
           </Select>
         </Form.Item>
         <Form.Item
@@ -622,7 +632,10 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           {() => {
             if (form.getFieldValue('pass_host') === 'rewrite') {
               return (
-                <Form.Item label="上游域名" name="upstream_host">
+                <Form.Item
+                  label={formatMessage({ id: 'upstream.step.pass-host.upstream_host' })}
+                  name="upstream_host"
+                >
                   <Input disabled={readonly} />
                 </Form.Item>
               );
