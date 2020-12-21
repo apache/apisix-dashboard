@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import Form from 'antd/es/form';
-import { Checkbox, Button, Input, Select, Row, Col, InputNumber } from 'antd';
+import { Button, Input, Select, Row, Col, InputNumber } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
@@ -259,16 +259,28 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
       <Form.Item
         label={formatMessage({ id: 'page.route.form.itemLabel.httpMethod' })}
         name="methods"
-        rules={[
-          {
-            required: true,
-            message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
-              id: 'page.route.form.itemLabel.httpMethod',
-            })}`,
-          },
-        ]}
       >
-        <Checkbox.Group options={HTTP_METHOD_OPTION_LIST} disabled={disabled} />
+        <Select
+          mode="multiple"
+          style={{ width: '100%' }}
+          optionLabelProp="label"
+          disabled={disabled}
+          onChange={(value) => {
+            if ((value as string[]).includes('ALL')) {
+              form.setFieldsValue({
+                methods: ['ALL'],
+              });
+            }
+          }}
+        >
+          {['ALL'].concat(HTTP_METHOD_OPTION_LIST).map((item) => {
+            return (
+              <Select.Option key={item} value={item}>
+                {item}
+              </Select.Option>
+            );
+          })}
+        </Select>
       </Form.Item>
       <Form.Item
         label={formatMessage({ id: 'page.route.form.itemLabel.priority' })}
