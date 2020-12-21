@@ -79,7 +79,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   ) => {
     let transformData = {};
     (formData || [])
-      .filter((data) => data.check)
+      .filter((data) => data && data.check)
       .forEach((data) => {
         transformData = {
           ...transformData,
