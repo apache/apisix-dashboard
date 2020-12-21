@@ -758,6 +758,8 @@ func TestRoute(t *testing.T) {
 	time.Sleep(time.Duration(100) * time.Millisecond)
 	
 	// check ID discrepancy on Update
+
+	// test the string body id value != string route id value
 	errRoute := &UpdateInput{}
 	errRoute.ID = "2"
 	err = json.Unmarshal([]byte(reqBody), errRoute)
@@ -768,7 +770,7 @@ func TestRoute(t *testing.T) {
 	assert.EqualError(t, err, "ID on path (2) doesn't match ID on body (1)")
 	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 	
-	// tests that float body id can be supported
+	// tests the float body id value != string route id value
 	reqBodyErr := `{
 		"id": 1,
 		"uri": "/index.html",
@@ -791,7 +793,7 @@ func TestRoute(t *testing.T) {
 	assert.EqualError(t, err, "ID on path (2) doesn't match ID on body (1)")
 	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 	
-	// tests the float body id value
+	// tests the float body id value is == string route id value
 	errRoute = &UpdateInput{}
 	errRoute.ID = "1"
 	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
