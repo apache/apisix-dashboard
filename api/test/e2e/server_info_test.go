@@ -29,7 +29,7 @@ func TestServerInfo_Get(t *testing.T) {
 		{
 			caseDesc:     "get server info",
 			Object:       ManagerApiExpect(t),
-			Path:         "/apisix/server_info/apisix-server1",
+			Path:         "/apisix/admin/server_info/apisix-server1",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -38,7 +38,7 @@ func TestServerInfo_Get(t *testing.T) {
 		{
 			caseDesc:     "get server info",
 			Object:       ManagerApiExpect(t),
-			Path:         "/apisix/server_info/apisix-server2",
+			Path:         "/apisix/admin/server_info/apisix-server2",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -56,7 +56,7 @@ func TestServerInfo_List(t *testing.T) {
 		{
 			caseDesc:     "list all server info",
 			Object:       ManagerApiExpect(t),
-			Path:         "/apisix/server_info",
+			Path:         "/apisix/admin/server_info",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -65,7 +65,7 @@ func TestServerInfo_List(t *testing.T) {
 		{
 			caseDesc:     "list server info with hostname",
 			Object:       ManagerApiExpect(t),
-			Path:         "/apisix/server_info",
+			Path:         "/apisix/admin/server_info",
 			Query:        "hostname=apisix_",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},
@@ -75,7 +75,7 @@ func TestServerInfo_List(t *testing.T) {
 		{
 			caseDesc:     "list server info with hostname",
 			Object:       ManagerApiExpect(t),
-			Path:         "/apisix/server_info",
+			Path:         "/apisix/admin/server_info",
 			Query:        "hostname=apisix_server2",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": token},

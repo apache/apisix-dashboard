@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
+	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -114,6 +115,40 @@ func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
 	})
 
 	return e
+}
+
+var singleWorkerAPISIXHost = "http://127.0.0.1:9081"
+
+func BatchTestServerPort(t *testing.T, times int) map[string]int {
+	url := singleWorkerAPISIXHost + "/server_port"
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	assert.Nil(t, err)
+
+	res := map[string]int{}
+	var resp *http.Response
+	var client *http.Client
+	var body string
+	var bodyByte []byte
+
+	for i := 0; i < times; i++ {
+		client = &http.Client{}
+		resp, err = client.Do(req)
+		assert.Nil(t, err)
+
+		bodyByte, err = ioutil.ReadAll(resp.Body)
+		assert.Nil(t, err)
+		body = string(bodyByte)
+
+		if _, ok := res[body]; !ok {
+			res[body] = 1
+		} else {
+			res[body] += 1
+		}
+	}
+
+	defer resp.Body.Close()
+
+	return res
 }
 
 var sleepTime = time.Duration(300) * time.Millisecond
