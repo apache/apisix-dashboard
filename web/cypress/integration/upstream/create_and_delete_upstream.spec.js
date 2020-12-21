@@ -94,7 +94,6 @@ context('Create and Delete Upstream', () => {
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(domSelectors.notification).should('contain', 'Create upstream successfully');
-    cy.contains('Create upstream successfully');
     cy.wait(sleepTime*5);
     cy.url().should('contains', 'upstream/list');
   });
