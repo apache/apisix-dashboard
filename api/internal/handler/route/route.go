@@ -240,7 +240,7 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 
 	if err := L.DoString(`
 	        local dag_to_lua = require 'dag-to-lua'
-		local conf = '` + string(scriptString) + `'
+		local conf = [==[` + string(scriptString) + `]==]
 	        code = dag_to_lua.generate(conf)
         `); err != nil {
 		return "", err
