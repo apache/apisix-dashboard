@@ -30,6 +30,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/utils/consts"
 	"github.com/apisix/manager-api/log"
@@ -43,10 +44,8 @@ var resources = map[string]string{
 	"ssl":       "ssl",
 }
 
-type Status uint8
-
 const (
-	StatusDisable Status = iota
+	StatusDisable entity.Status = iota
 	StatusEnable
 )
 
