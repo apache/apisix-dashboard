@@ -349,8 +349,15 @@ type UpdateInput struct {
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
 	
+	// checks if body id is float (body id must support both float + string for legacy purposes)
+	// and converts to string
+	_, isFloat := input.Route.ID.(float64)
+	if isFloat {
+		input.Route.ID = fmt.Sprintf("%g", input.Route.ID)
+	}
+
 	// check if id on path is == to id on body
-    if input.ID != "" && input.Route.ID != nil && input.ID != input.Route.ID {
+    if input.ID != "" && input.Route.ID != "" && input.ID != input.Route.ID {
         return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
             fmt.Errorf("ID on path (%s) doesn't match ID on body (%s)", input.ID, input.Route.ID)
     }
