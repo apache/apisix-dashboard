@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useIntl, history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { omit, pick } from 'lodash';
@@ -25,7 +25,7 @@ import { Card, Steps, Form, notification } from 'antd';
 import Preview from './components/Preview';
 import Step1 from "./components/Step1";
 import styles from './Create.less';
-import { create, update } from './service';
+import { create, update, fetchItem } from './service';
 
 const { Step } = Steps;
 const Page: React.FC = (props) => {
@@ -42,6 +42,16 @@ const Page: React.FC = (props) => {
 
     const [stepHeader] = useState(STEP_HEADER);
     const [step, setStep] = useState(1);
+
+    useEffect(() => {
+        const { serviceId } = (props as any).match.params;
+        if (serviceId) {
+            fetchItem(serviceId).then(({ data }) => {
+                form.setFieldsValue(data);
+                setPlugins(data.plugins);
+            });
+        }
+    }, []);
 
     const onSubmit = () => {
         let data: ServiceModule.Entity;
