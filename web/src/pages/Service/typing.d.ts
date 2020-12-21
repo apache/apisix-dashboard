@@ -14,3 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+declare namespace ServiceModule {
+    type ResponseBody = {
+        id: string,
+        plugins: Record<string, any>,
+        upstream_id: string,
+        upstream: Record<string, any>,
+        name: string,
+        desc: string,
+        enable_websocket: boolean,
+    }
+}

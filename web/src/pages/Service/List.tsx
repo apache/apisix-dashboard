@@ -14,19 +14,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import { useIntl } from 'umi';
+import React, { useRef } from 'react';
+import { history, useIntl } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
+import { fetchList } from './service';
 
 const Page: React.FC = () => {
+  const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
+
+  const columns: ProColumns<ServiceModule.ResponseBody>[] = [
+    {
+      title: formatMessage({ id: 'component.global.name' }),
+      dataIndex: 'name',
+    },
+    {
+      title: formatMessage({ id: 'page.route.service.desc' }),
+    }
+  ];
 
   return (<PageHeaderWrapper
     title={`${formatMessage({ id: 'menu.service' })} ${formatMessage({
       id: 'component.global.list',
     })}`}
-  />)
+  >
+    <ProTable<ServiceModule.ResponseBody>
+      actionRef={ref}
+      rowKey="id"
+      columns={columns}
+      request={fetchList}
+      toolBarRender={() => [
+        <Button type="primary" onClick={() => history.push(`/service/create`)}>
+          <PlusOutlined />
+          {formatMessage({ id: 'component.global.create' })}
+        </Button>,
+      ]} />
+  </PageHeaderWrapper>)
 }
 
 export default Page;

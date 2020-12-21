@@ -14,3 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { request } from 'umi';
+
+export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
+  request('/services', {
+    params: {
+      name: res.name,
+      page: current,
+      page_size: pageSize,
+    },
+  }).then(({ data }) => ({
+    data: data.rows,
+    total: data.total_size,
+  }));
