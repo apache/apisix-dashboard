@@ -247,10 +247,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Form.Item>
 
         <Form.Item label={formatMessage({ id: 'upstream.step.healthy.checks.active.port' })}>
-          <Form.Item
-            name={['checks', 'active', 'port']}
-            noStyle
-          >
+          <Form.Item name={['checks', 'active', 'port']} noStyle>
             <InputNumber
               placeholder={formatMessage({ id: 'upstream.step.input.healthy.checks.active.port' })}
               disabled={readonly}
@@ -557,7 +554,13 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     );
 
     return (
-      <Form form={form} labelCol={{ span: 3 }}>
+      <Form
+        form={form}
+        labelCol={{ span: 3 }}
+        initialValues={{
+          pass_host: 'pass',
+        }}
+      >
         {showSelector && (
           <Form.Item label="选择上游" name="upstream_id">
             <Select
@@ -602,6 +605,31 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Form.Item>
 
         <NodeList />
+
+        <Form.Item label="传递域名" name="pass_host" extra="当选择节点时，只能有一条节点域名。">
+          <Select disabled={readonly}>
+            <Select.Option value="pass">透传</Select.Option>
+            <Select.Option value="node">节点</Select.Option>
+            <Select.Option value="rewrite">重写</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          noStyle
+          shouldUpdate={(prev, next) => {
+            return prev.pass_host !== next.pass_host;
+          }}
+        >
+          {() => {
+            if (form.getFieldValue('pass_host') === 'rewrite') {
+              return (
+                <Form.Item label="上游域名" name="upstream_host">
+                  <Input disabled={readonly} />
+                </Form.Item>
+              );
+            }
+            return null;
+          }}
+        </Form.Item>
 
         {timeoutFields.map(({ label, name }) => (
           <Form.Item label={label} required key={label}>
