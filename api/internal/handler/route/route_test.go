@@ -418,7 +418,7 @@ func TestRoute(t *testing.T) {
 	  "labels": {
 	      "l1": "v1",
 	      "l2": "v2"
-	},
+      },
 	  "upstream": {
 	      "type": "roundrobin",
 	      "nodes": [{
