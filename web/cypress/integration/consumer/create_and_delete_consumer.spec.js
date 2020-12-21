@@ -93,7 +93,7 @@ context('Create and Delete Consumer', () => {
           key_not_exst: "test"
         }));
         cy.contains('button', 'Submit').click();
-    });
+      });
     cy.get(domSelectors.notification).should('contain', 'Invalid plugin data');
   });
 })
