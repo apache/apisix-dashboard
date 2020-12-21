@@ -50,6 +50,11 @@ func TestPair_MarshalJSON(t *testing.T) {
 	assert.Nil(t, err, nil)
 	assert.Equal(t, expect, content)
 
+	mp := make(map[string]string)
+	err = json.Unmarshal(content, &mp)
+	assert.Nil(t, err)
+	assert.Equal(t, mp["test_key"], "test_val")
+
 	// Because the quote in json key is not allowed.
 	// So we only test the quote in json value.
 	temp = tempStruct{Val: "test_val\""}
@@ -60,6 +65,11 @@ func TestPair_MarshalJSON(t *testing.T) {
 	content, err = json.Marshal(p)
 	assert.Nil(t, err, nil)
 	assert.Equal(t, expect, content)
+
+	mp = make(map[string]string)
+	err = json.Unmarshal(content, &mp)
+	assert.Nil(t, err)
+	assert.Equal(t, mp["test_key"], "test_val\"")
 }
 
 func genMockStore(t *testing.T, giveData []interface{}) *store.MockInterface {

@@ -68,7 +68,7 @@ func NewHandler() (handler.RouteRegister, error) {
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.GET("/api/labels/:type", wgin.Wraps(h.List,
+	r.GET("/apisix/admin/labels/:type", wgin.Wraps(h.List,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 }
 
