@@ -14,10 +14,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Form, Input } from 'antd';
+import { useIntl } from 'umi';
 
-const Step1: React.FC = () => {
-    return <>service create step1</>
+import UpstreamForm from '@/components/Upstream';
+import { fetchUpstreamList } from '../service';
+
+const FORM_LAYOUT = {
+    labelCol: {
+        span: 3,
+    },
+    wrapperCol: {
+        span: 8,
+    },
+};
+
+const Step1: React.FC<ServiceModule.Step1PassProps> = ({
+    form,
+    upstreamRef,
+    disabled,
+}) => {
+    const { formatMessage } = useIntl();
+    const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
+    useEffect(() => {
+        fetchUpstreamList().then(({ data }) => setList(data));
+    }, []);
+
+    return <>
+        <Form {...FORM_LAYOUT}>
+            <Form.Item
+                name="name"
+                label={formatMessage({ id: 'component.global.name' })}
+            >
+                <Input />
+            </Form.Item>
+            <Form.Item
+                name="desc"
+                label={formatMessage({ id: 'component.global.description' })}
+            >
+                <Input.TextArea />
+            </Form.Item>
+        </Form>
+        <UpstreamForm
+            ref={upstreamRef}
+            form={form}
+            disabled={disabled}
+            list={list}
+            showSelector
+            key={1}
+        />
+    </>
 }
 
 export default Step1;

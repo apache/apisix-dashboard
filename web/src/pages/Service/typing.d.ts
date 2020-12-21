@@ -24,4 +24,10 @@ declare namespace ServiceModule {
         desc: string,
         enable_websocket: boolean,
     }
+
+    type Step1PassProps = {
+        form: FormInstance;
+        disabled?: boolean;
+        upstreamRef: any;
+      };
 }

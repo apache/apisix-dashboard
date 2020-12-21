@@ -15,18 +15,20 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useIntl } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import ActionBar from '@/components/ActionBar';
-import { Card, Steps } from 'antd';
+import { Card, Steps, Form } from 'antd';
 import Step1 from "./components/Step1";
 import styles from './Create.less';
 
 const { Step } = Steps;
 const Page: React.FC = (props) => {
     const { formatMessage } = useIntl();
+    const [form] = Form.useForm();
+    const upstreamRef = useRef<any>();
 
     const STEP_HEADER = [
         formatMessage({ id: 'page.service.steps.stepTitle.basicInformation' }),
@@ -39,6 +41,7 @@ const Page: React.FC = (props) => {
 
     const onStepChange = (nextStep: number) => {
         console.log('nextStep: ', nextStep);
+        setStep(nextStep);
     }
 
     return (<>
@@ -54,7 +57,10 @@ const Page: React.FC = (props) => {
                         <Step title={item} key={item} />
                     ))}
                 </Steps>
-                <Step1 />
+                <Step1
+                    form={form}
+                    upstreamRef={upstreamRef}
+                />
             </Card>
         </PageHeaderWrapper>
         <ActionBar step={step} lastStep={3} onChange={onStepChange} withResultView />
