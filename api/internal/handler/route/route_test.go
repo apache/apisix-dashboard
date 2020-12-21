@@ -418,7 +418,7 @@ func TestRoute(t *testing.T) {
 	  "labels": {
 	      "l1": "v1",
 	      "l2": "v2"
-	  },
+	},
 	  "upstream": {
 	      "type": "roundrobin",
 	      "nodes": [{
@@ -457,7 +457,7 @@ func TestRoute(t *testing.T) {
 	              "conf":{
 	                  "batch_max_size":1000,
 	                  "broker_list":{
-
+	
 	                  },
 	                  "buffer_duration":60,
 	                  "inactive_timeout":5,
@@ -485,7 +485,7 @@ func TestRoute(t *testing.T) {
 	      },
 	      "chart":{
 	          "hovered":{
-
+	
 	          },
 	          "links":{
 	              "3a110c30-d6f3-40b1-a8ac-b828cfaa2489":{
@@ -660,7 +660,7 @@ func TestRoute(t *testing.T) {
 	                          "data":{
 	                              "batch_max_size":1000,
 	                              "broker_list":{
-
+	
 	                              },
 	                              "buffer_duration":60,
 	                              "inactive_timeout":5,
