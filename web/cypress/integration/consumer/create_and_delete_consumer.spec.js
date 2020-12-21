@@ -51,7 +51,7 @@ context('Create and Delete Consumer', () => {
       .first()
       .then((editor) => {
         editor[0].CodeMirror.setValue(JSON.stringify({
-          key: "test"
+          "key": "test"
         }));
         cy.contains('button', 'Submit').click();
       });
@@ -82,7 +82,7 @@ context('Create and Delete Consumer', () => {
     cy.wait(sleepTime*3);
 
     // Plugin Config
-    cy.contains(domSelectors.pluginsCard, 'key-auth').within(($form) => {
+    cy.contains(domSelectors.pluginsCard, 'key-auth').within(() => {
       cy.get('button').first().click();
     })
     // edit CodeMirror
@@ -90,7 +90,7 @@ context('Create and Delete Consumer', () => {
       .first()
       .then((editor) => {
         editor[0].CodeMirror.setValue(JSON.stringify({
-          key_not_exst: "test"
+          "key_not_exst": "test"
         }));
         cy.contains('button', 'Submit').click();
       });
