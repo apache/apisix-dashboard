@@ -231,9 +231,15 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 	}
 	libDir := filepath.Join(workDir, "dag-to-lua/")
 	if err := os.Chdir(libDir); err != nil {
-		panic(err)
+		log.Errorf("Chdir to libDir failed: %s", err)
+		return "", err
 	}
-	defer os.Chdir(workDir)
+
+	defer func() {
+		if err := os.Chdir(workDir); err != nil {
+			log.Errorf("Chdir to workDir failed: %s", err)
+		}
+	}()
 
 	L := lua.NewState()
 	defer L.Close()
