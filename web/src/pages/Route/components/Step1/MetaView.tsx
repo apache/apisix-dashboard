@@ -16,11 +16,11 @@
  */
 import React from 'react';
 import Form from 'antd/es/form';
-import { Input } from 'antd';
+import { Input, Switch } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
-const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled }) => {
+const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, isEdit }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -54,6 +54,13 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled }) => {
           placeholder={formatMessage({ id: 'component.global.input.placeholder.description' })}
           disabled={disabled}
         />
+      </Form.Item>
+      <Form.Item
+        label={formatMessage({ id: 'page.route.publish' })}
+        name="status"
+        valuePropName="checked"
+      >
+        <Switch disabled={isEdit} />
       </Form.Item>
     </PanelSection>
   );

@@ -70,6 +70,9 @@ export const transformStepData = ({
       }
       data.plugins!.redirect = redirect;
     }
+    if (data.status !== undefined) {
+      data.status = Number(data.status);
+    }
 
     // Remove some of the frontend custom variables
     return omit(data, [
