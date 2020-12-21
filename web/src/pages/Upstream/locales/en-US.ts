@@ -46,6 +46,8 @@ export default {
   'upstream.step.input.healthy.checks.active.timeout': 'Please input timeout',
   'upstream.step.healthy.checks.active.http_path': 'HttpPath',
   'upstream.step.input.healthy.checks.active.http_path': 'HttpPath',
+  'upstream.step.healthy.checks.active.port': "Port",
+  'upstream.step.input.healthy.checks.active.port': 'Please input port',
   'upstream.step.healthy.checks.active.host': 'Host',
   'upstream.step.input.healthy.checks.active.host': 'Please input Host',
   'upstream.step.healthy.checks.active.interval': 'Interval',
