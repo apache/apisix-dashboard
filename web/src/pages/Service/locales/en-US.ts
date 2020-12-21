@@ -15,5 +15,9 @@
  * limitations under the License.
  */
 export default {
-    'page.route.service.desc': 'Desc'
+    'page.route.service.desc': 'Desc',
+
+    'page.service.steps.stepTitle.basicInformation': 'Basic Information',
+    'page.service.steps.stepTitle.pluginConfig': 'Plugin Config',
+    'page.service.steps.stepTitle.preview': 'Preview',
 }
