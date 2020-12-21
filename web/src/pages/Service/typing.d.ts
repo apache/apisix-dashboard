@@ -15,6 +15,19 @@
  * limitations under the License.
  */
 declare namespace ServiceModule {
+
+    type Entity = {
+        name: string;
+        desc: string;
+        upstream: any;
+        upstream_id: string;
+        labels: string;
+        enable_websocket: boolean;
+        plugins: {
+            [name: string]: any;
+        };
+    };
+
     type ResponseBody = {
         id: string,
         plugins: Record<string, any>,
@@ -29,5 +42,5 @@ declare namespace ServiceModule {
         form: FormInstance;
         disabled?: boolean;
         upstreamRef: any;
-      };
+    };
 }

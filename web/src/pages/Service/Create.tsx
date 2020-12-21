@@ -15,15 +15,17 @@
  * limitations under the License.
  */
 import React, { useState, useRef } from 'react'
-import { useIntl } from 'umi';
+import { useIntl, history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { omit, pick } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/Plugin';
-import { Card, Steps, Form } from 'antd';
+import { Card, Steps, Form, notification } from 'antd';
 import Preview from './components/Preview';
 import Step1 from "./components/Step1";
 import styles from './Create.less';
+import { create, update } from './service';
 
 const { Step } = Steps;
 const Page: React.FC = (props) => {
@@ -41,7 +43,52 @@ const Page: React.FC = (props) => {
     const [stepHeader] = useState(STEP_HEADER);
     const [step, setStep] = useState(1);
 
+    const onSubmit = () => {
+        let data: ServiceModule.Entity;
+        const formData = form.getFieldsValue();
+        if (formData.upstream_id === '') {
+            data = {
+                plugins,
+                name: formData.name,
+                desc: formData.desc,
+                upstream: omit(formData, ['name', 'desc', 'upstream_id'])
+            } as ServiceModule.Entity
+        } else {
+            data = {
+                plugins,
+                ...pick(formData, ['name', 'desc', 'upstream_id'])
+            } as ServiceModule.Entity
+        }
+
+        const { serviceId } = (props as any).match.params;
+        (serviceId ? update(serviceId, data) : create(data))
+            .then(() => {
+                notification.success({
+                    message: `${serviceId
+                        ? formatMessage({ id: 'component.global.edit' })
+                        : formatMessage({ id: 'component.global.create' })
+                        } ${formatMessage({ id: 'menu.service' })} ${formatMessage({
+                            id: 'component.status.success',
+                        })}`,
+                });
+                history.push('/service/list');
+            })
+            .catch(() => {
+                setStep(3);
+            });
+    };
+
     const onStepChange = (nextStep: number) => {
+        if (nextStep === 2) {
+            form.validateFields().then(() => {
+                setStep(nextStep);
+            })
+            return;
+        }
+        if (nextStep === 4) {
+            onSubmit();
+            return;
+        };
         setStep(nextStep);
     }
 

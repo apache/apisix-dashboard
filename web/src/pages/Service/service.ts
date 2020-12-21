@@ -34,3 +34,15 @@ export const fetchUpstreamList = () => {
     total: data.total_size,
   }));
 };
+
+export const create = (data: ServiceModule.Entity) =>
+  request('/services', {
+    method: 'POST',
+    data,
+  });
+
+export const update = (serviceId: string, data: ServiceModule.Entity) =>
+  request(`/services/${serviceId}`, {
+    method: 'PUT',
+    data,
+  });

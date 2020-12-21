@@ -42,7 +42,7 @@ const Step1: React.FC<ServiceModule.Step1PassProps> = ({
     }, []);
 
     return <>
-        <Form {...FORM_LAYOUT}>
+        <Form {...FORM_LAYOUT} form={form}>
             <Form.Item
                 name="name"
                 label={formatMessage({ id: 'component.global.name' })}
