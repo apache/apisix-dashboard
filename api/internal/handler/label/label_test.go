@@ -18,6 +18,7 @@
 package label
 
 import (
+	"encoding/json"
 	"math/rand"
 	"testing"
 
@@ -33,6 +34,18 @@ type testCase struct {
 	giveInput *ListInput
 	giveData  []interface{}
 	wantRet   interface{}
+}
+
+func TestPair_MarshalJSON(t *testing.T) {
+	p := Pair{Key: "test_key", Val: `test_val`}
+	content, err := json.Marshal(p)
+	assert.Nil(t, err, nil)
+	assert.Equal(t, `{"test_key":"test_val"}`, string(content))
+
+	p = Pair{Key: "test_key", Val: `test_val"`}
+	content, err = json.Marshal(p)
+	assert.Nil(t, err, nil)
+	assert.Equal(t, `{"test_key":"test_val\""}`, string(content))
 }
 
 func genMockStore(t *testing.T, giveData []interface{}) *store.MockInterface {

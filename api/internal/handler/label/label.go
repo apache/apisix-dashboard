@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"reflect"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -52,7 +53,7 @@ type Pair struct {
 }
 
 func (p Pair) MarshalJSON() ([]byte, error) {
-	res := fmt.Sprintf("{\"%s\":\"%s\"}", p.Key, p.Val)
+	res := fmt.Sprintf("{%s:%s}", strconv.Quote(p.Key), strconv.Quote(p.Val))
 	return []byte(res), nil
 }
 
