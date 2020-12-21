@@ -46,9 +46,9 @@ const Page: React.FC = () => {
     updateRouteStatus(rid, status).then(() => {
       const actionName = status ? formatMessage({ id: 'page.route.publish' }) : formatMessage({ id: 'page.route.offline' })
       handleTableActionSuccessResponse(
-        `${actionName}${formatMessage({
+        `${actionName} ${formatMessage({
           id: 'menu.routes',
-        })}${formatMessage({ id: 'component.status.success' })}`,
+        })} ${formatMessage({ id: 'component.status.success' })}`,
       );
     });
   }
@@ -151,9 +151,9 @@ const Page: React.FC = () => {
               onConfirm={() => {
                 remove(record.id!).then(() => {
                   handleTableActionSuccessResponse(
-                    `${formatMessage({ id: 'component.global.delete' })}${formatMessage({
+                    `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
                       id: 'menu.routes',
-                    })}${formatMessage({ id: 'component.status.success' })}`,
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
                   );
                 });
               }}
