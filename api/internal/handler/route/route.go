@@ -72,7 +72,39 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.DELETE("/apisix/admin/routes/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
+	r.PATCH("/apisix/admin/routes/:id", consts.ErrorWrapper(Patch))
+	r.PATCH("/apisix/admin/routes/:id/*path", consts.ErrorWrapper(Patch))
+
 	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))
+}
+
+func Patch(c *gin.Context) (interface{}, error) {
+	reqBody, _ := c.GetRawData()
+	ID := c.Param("id")
+	subPath := c.Param("path")
+
+	routeStore := store.GetStore(store.HubKeyRoute)
+	stored, err := routeStore.Get(ID)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	res, err := utils.MergePatch(stored, subPath, reqBody)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	var route entity.Route
+	err = json.Unmarshal(res, &route)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	if err := routeStore.Update(c, &route, false); err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	return nil, nil
 }
 
 type GetInput struct {
