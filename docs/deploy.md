@@ -35,8 +35,6 @@ Before using source codes to build, make sure that the following dependencies ar
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-2. [Lua](https://www.lua.org/download.html) 5.1+: This dependency needs to be installed only when using the **Plugin Orchestration** feature. In subsequent versions, this section will be optimized to remove the dependency.
-
 ### web
 
 1. [Node.js](https://nodejs.org/en/download/) 10.23.0+

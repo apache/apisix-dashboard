@@ -70,4 +70,5 @@ export default {
   'menu.upstream': 'Upstream',
   'menu.consumer': 'Consumer',
   'menu.setting': 'Settings',
+  'menu.serverinfo': 'Server Info',
 };

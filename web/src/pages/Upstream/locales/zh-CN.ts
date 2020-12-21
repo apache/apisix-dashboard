@@ -46,6 +46,8 @@ export default {
   'upstream.step.input.healthy.checks.active.timeout': '请输入超时时间',
   'upstream.step.healthy.checks.active.http_path': '路径',
   'upstream.step.input.healthy.checks.active.http_path': '请输入路径',
+  'upstream.step.healthy.checks.active.port': "端口",
+  'upstream.step.input.healthy.checks.active.port': '请输入端口',
   'upstream.step.healthy.checks.active.host': '域名',
   'upstream.step.input.healthy.checks.active.host': '请输入域名',
   'upstream.step.healthy.checks.active.interval': '间隔',
