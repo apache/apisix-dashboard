@@ -19,9 +19,9 @@ import { history, useIntl } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { Button, notification, Popconfirm, Space } from 'antd';
 
-import { fetchList } from './service';
+import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
@@ -29,12 +29,56 @@ const Page: React.FC = () => {
 
   const columns: ProColumns<ServiceModule.ResponseBody>[] = [
     {
+      title: 'ID',
+      dataIndex: 'id',
+      hideInSearch: true
+    },
+    {
       title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
     },
     {
       title: formatMessage({ id: 'page.route.service.desc' }),
-    }
+      dataIndex: 'desc',
+    },
+    {
+      title: formatMessage({ id: 'component.global.operation' }),
+      valueType: 'option',
+      hideInSearch: true,
+      render: (_, record) => (
+        <>
+          <Space align="baseline">
+            <Button
+              type="primary"
+              onClick={() => history.push(`/service/${record.id}/edit`)}
+              style={{ marginRight: 10 }}
+            >
+              {formatMessage({ id: 'component.global.edit' })}
+            </Button>
+            <Popconfirm
+              title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
+              onConfirm={() => {
+                remove(record.id!).then(() => {
+                  notification.success({
+                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                      id: 'menu.service',
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
+                  });
+                  /* eslint-disable no-unused-expressions */
+                  ref.current?.reload();
+                });
+              }}
+              okText={formatMessage({ id: 'component.global.confirm' })}
+              cancelText={formatMessage({ id: 'component.global.cancel' })}
+            >
+              <Button type="primary" danger>
+                {formatMessage({ id: 'component.global.delete' })}
+              </Button>
+            </Popconfirm>
+          </Space>
+        </>
+      ),
+    },
   ];
 
   return (<PageHeaderWrapper

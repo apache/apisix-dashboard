@@ -46,3 +46,5 @@ export const update = (serviceId: string, data: ServiceModule.Entity) =>
     method: 'PUT',
     data,
   });
+
+export const remove = (serviceId: string) => request(`/services/${serviceId}`, { method: 'DELETE' });
