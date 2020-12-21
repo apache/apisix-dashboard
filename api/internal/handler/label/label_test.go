@@ -37,15 +37,29 @@ type testCase struct {
 }
 
 func TestPair_MarshalJSON(t *testing.T) {
+	type tempStruct struct {
+		Val string `json:"test_key"`
+	}
+
+	temp := tempStruct{Val: "test_val"}
+	expect, err := json.Marshal(temp)
+	assert.Nil(t, err)
+
 	p := Pair{Key: "test_key", Val: `test_val`}
 	content, err := json.Marshal(p)
 	assert.Nil(t, err, nil)
-	assert.Equal(t, `{"test_key":"test_val"}`, string(content))
+	assert.Equal(t, expect, content)
+
+	// Because the quote in json key is not allowed.
+	// So we only test the quote in json value.
+	temp = tempStruct{Val: "test_val\""}
+	expect, err = json.Marshal(temp)
+	assert.Nil(t, err)
 
 	p = Pair{Key: "test_key", Val: `test_val"`}
 	content, err = json.Marshal(p)
 	assert.Nil(t, err, nil)
-	assert.Equal(t, `{"test_key":"test_val\""}`, string(content))
+	assert.Equal(t, expect, content)
 }
 
 func genMockStore(t *testing.T, giveData []interface{}) *store.MockInterface {
