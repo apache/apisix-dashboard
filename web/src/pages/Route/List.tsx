@@ -23,6 +23,7 @@ import { PlusOutlined } from '@ant-design/icons';
 
 import { timestampToLocaleString } from '@/helpers';
 import { fetchList, remove, fetchLabelList } from './service';
+import { transformLabelList } from './transform';
 
 const { OptGroup, Option } = Select;
 
@@ -33,8 +34,8 @@ const Page: React.FC = () => {
   const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
 
   useEffect(() => {
-    fetchLabelList().then((item) => {
-      setLabelList(item as RouteModule.LabelList);
+    fetchLabelList().then((data) => {
+      setLabelList(transformLabelList(data.data) as RouteModule.LabelList);
     });
   }, []);
 
@@ -104,7 +105,7 @@ const Page: React.FC = () => {
             {Object.keys(labelList).map((key) => {
               return (
                 <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
-                  {labelList[key].map((value: string) => (
+                  {(labelList[key] || []).map((value: string) => (
                     <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}> {value} </Option>
                   ))}
                 </OptGroup>

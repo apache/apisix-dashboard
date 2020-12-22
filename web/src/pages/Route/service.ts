@@ -45,7 +45,7 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
     params: {
       name: res.name,
       uri: res.uri,
-      label: (labels || []).join('&'),
+      label: (labels || []).join(','),
       page: current,
       page_size: pageSize,
     },
@@ -94,14 +94,7 @@ export const checkHostWithSSL = (hosts: string[]) =>
   });
 
 export const fetchLabelList = () => {
-  // ! omit it when api ready
-  return new Promise((resolve) => {
-    const mockData: RouteModule.ResponseLabelList = [
-      { build: '16' },
-      { env: 'production' },
-      { version: 'v2' },
-      { version: 'v1' },
-    ];
-    resolve(transformLabelList(mockData));
-  });
+  return request('/labels/route').then(({ data }) => ({
+    data: data.rows,
+  }));
 };
