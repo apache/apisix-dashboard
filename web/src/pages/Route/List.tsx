@@ -20,14 +20,14 @@ import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag, Space, Select } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined, BugOutlined } from '@ant-design/icons';
+
 import { timestampToLocaleString } from '@/helpers';
-import { fetchList, remove, fetchLabelList } from './service';
 import { transformLabelList } from './transform';
+import { fetchList, remove, fetchLabelList, updateRouteStatus } from './service';
+import { DebugDrawView } from './components/DebugViews';
+
 
 const { OptGroup, Option } = Select;
-
-import { fetchList, remove, updateRouteStatus } from './service';
-import { DebugDrawView } from './components/DebugViews';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
@@ -140,8 +140,9 @@ const Page: React.FC = () => {
             })}
           </Select>
         );
-      },
-      {
+      }
+    },
+    {
       title: formatMessage({ id: 'page.route.status' }),
       dataIndex: 'status',
       render: (_, record) => (
