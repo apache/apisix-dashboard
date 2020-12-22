@@ -38,7 +38,7 @@ const Page: React.FC = () => {
       dataIndex: 'name',
     },
     {
-      title: formatMessage({ id: 'page.route.service.desc' }),
+      title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'desc',
     },
     {

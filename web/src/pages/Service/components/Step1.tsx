@@ -22,50 +22,50 @@ import UpstreamForm from '@/components/Upstream';
 import { fetchUpstreamList } from '../service';
 
 const FORM_LAYOUT = {
-    labelCol: {
-        span: 3,
-    },
-    wrapperCol: {
-        span: 8,
-    },
+  labelCol: {
+    span: 3,
+  },
+  wrapperCol: {
+    span: 8,
+  },
 };
 
 const Step1: React.FC<ServiceModule.Step1PassProps> = ({
-    form,
-    upstreamForm,
-    upstreamRef,
-    disabled,
+  form,
+  upstreamForm,
+  upstreamRef,
+  disabled,
 }) => {
-    const { formatMessage } = useIntl();
-    const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
-    useEffect(() => {
-        fetchUpstreamList().then(({ data }) => setList(data));
-    }, []);
+  const { formatMessage } = useIntl();
+  const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
+  useEffect(() => {
+    fetchUpstreamList().then(({ data }) => setList(data));
+  }, []);
 
-    return <>
-        <Form {...FORM_LAYOUT} form={form}>
-            <Form.Item
-                name="name"
-                label={formatMessage({ id: 'component.global.name' })}
-            >
-                <Input disabled={disabled} />
-            </Form.Item>
-            <Form.Item
-                name="desc"
-                label={formatMessage({ id: 'component.global.description' })}
-            >
-                <Input.TextArea disabled={disabled} />
-            </Form.Item>
-        </Form>
-        <UpstreamForm
-            ref={upstreamRef}
-            form={upstreamForm}
-            disabled={disabled}
-            list={list}
-            showSelector
-            key={1}
-        />
-    </>
+  return <>
+    <Form {...FORM_LAYOUT} form={form}>
+      <Form.Item
+        name="name"
+        label={formatMessage({ id: 'component.global.name' })}
+      >
+        <Input disabled={disabled} />
+      </Form.Item>
+      <Form.Item
+        name="desc"
+        label={formatMessage({ id: 'component.global.description' })}
+      >
+        <Input.TextArea disabled={disabled} />
+      </Form.Item>
+    </Form>
+    <UpstreamForm
+      ref={upstreamRef}
+      form={upstreamForm}
+      disabled={disabled}
+      list={list}
+      showSelector
+      key={1}
+    />
+  </>
 }
 
 export default Step1;
