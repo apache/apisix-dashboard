@@ -35,7 +35,7 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     fetchLabelList().then((data) => {
-      setLabelList(transformLabelList(data.data) as RouteModule.LabelList);
+      setLabelList(transformLabelList(data));
     });
   }, []);
 

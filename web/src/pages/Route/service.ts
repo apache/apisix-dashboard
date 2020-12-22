@@ -21,7 +21,6 @@ import {
   transformStepData,
   transformRouteData,
   transformUpstreamNodes,
-  transformLabelList,
 } from './transform';
 
 export const create = (data: RouteModule.RequestData) =>
@@ -93,8 +92,5 @@ export const checkHostWithSSL = (hosts: string[]) =>
     data: hosts,
   });
 
-export const fetchLabelList = () => {
-  return request('/labels/route').then(({ data }) => ({
-    data: data.rows,
-  }));
-};
+export const fetchLabelList = () =>
+  request('/labels/route').then(({ data }) => ((data.rows) as RouteModule.ResponseLabelList));

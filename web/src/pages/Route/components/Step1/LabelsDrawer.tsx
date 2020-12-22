@@ -23,7 +23,7 @@ import { transformLabelList, transformLableValueToKeyValue } from '../../transfo
 import { fetchLabelList } from '../../service';
 
 interface Props extends Pick<RouteModule.Step1PassProps, 'onChange'> {
-  labelsDataSource: any;
+  labelsDataSource: string[];
   disabled: boolean;
   onClose(): void;
 }
@@ -122,7 +122,7 @@ const LabelsDrawer: React.FC<Props> = ({
 
   useEffect(() => {
     fetchLabelList().then((data) => {
-      setLabelList(transformLabelList(data.data) as RouteModule.LabelList);
+      setLabelList(transformLabelList(data) as RouteModule.LabelList);
     });
   }, []);
 

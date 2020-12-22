@@ -203,7 +203,10 @@ export const transformRouteData = (data: RouteModule.Body) => {
   };
 };
 
-export const transformLabelList = (data: RouteModule.ResponseLabelList): RouteModule.LabelList => {
+export const transformLabelList = (data: RouteModule.ResponseLabelList)=> {
+  if (!data) {
+    return {};
+  }
   const transformData = {};
   data.forEach((item) => {
     const key = Object.keys(item)[0];
