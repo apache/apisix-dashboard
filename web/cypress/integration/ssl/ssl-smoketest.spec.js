@@ -18,7 +18,8 @@
 
 context('ssl smoke test', () => {
   const domSelectors = {
-    notifi: '.ant-notification-notice-description'
+    notificationDesc: '.ant-notification-notice-description',
+    notificationMsg: '.ant-notification-notice-message'
   };
 
   beforeEach(() => {
@@ -30,6 +31,7 @@ context('ssl smoke test', () => {
     // go to ssl create page
     cy.visit('/');
     cy.contains('SSL').click();
+    cy.wait(500);
     cy.contains('Create').click();
 
     cy.get('#cert').type(`-----BEGIN CERTIFICATE-----
@@ -87,23 +89,24 @@ gaY1BQkhja1FqA7OcEylRUUWFgO3bWvHchOagVZUyipnYaq5KSwNhvA=
 
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.wait(300);
+    cy.wait(500);
     cy.url().should('contains', 'ssl/list');
   });
 
   it('teardown', () => {
     cy.visit('/');
     cy.contains('SSL').click();
-    cy.wait(300);
+    cy.wait(500);
     cy.contains('2022-11-06 17:47:48').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get('.ant-notification-notice-message').should('contain', 'Remove target SSL successfully');
+    cy.get(domSelectors.notificationMsg).should('contain', 'Remove target SSL successfully');
   });
 
   it('set unmatch certificate and key by input', () => {
     // go to ssl create page
     cy.visit('/');
     cy.contains('SSL').click();
+    cy.wait(500);
     cy.contains('Create').click();
 
     cy.get('#cert').type(`-----BEGIN CERTIFICATE-----
@@ -117,6 +120,6 @@ WMKzjmzauaMYXUDPfQ8yc7leR6Gj9Ow5A0sUwlSdH1P0viM1gnQj0kLxeb59vQaW
 
     cy.contains('Next').click();
     cy.wait(100);
-    cy.get(domSelectors.notifi).should('contain', "key and cert don't match");
+    cy.get(domSelectors.notificationDesc).should('contain', "key and cert don't match");
   });
 })
