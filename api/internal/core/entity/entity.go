@@ -60,6 +60,8 @@ type BaseInfoGetter interface {
 	GetBaseInfo() *BaseInfo
 }
 
+type Status uint8
+
 // swagger:model Route
 type Route struct {
 	BaseInfo
@@ -83,6 +85,7 @@ type Route struct {
 	ServiceProtocol string                 `json:"service_protocol,omitempty"`
 	Labels          map[string]string      `json:"labels,omitempty"`
 	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
+	Status          Status                 `json:"status"`
 }
 
 // --- structures for upstream start  ---

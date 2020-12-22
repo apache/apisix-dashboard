@@ -53,6 +53,8 @@ export const transformStepData = ({
       }
       return [key, operator, value];
     }),
+    // @ts-ignore
+    methods: form1Data.methods.includes("ALL") ? [] : form1Data.methods
   };
 
   if (Object.keys(redirect).length === 0 || redirect.http_to_https) {
@@ -67,6 +69,9 @@ export const transformStepData = ({
         data.plugins = {};
       }
       data.plugins!.redirect = redirect;
+    }
+    if (data.status !== undefined) {
+      data.status = Number(data.status);
     }
 
     // Remove some of the frontend custom variables
@@ -135,7 +140,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
   const {
     name,
     desc,
-    methods,
+    methods = [],
     uris,
     uri,
     hosts,
@@ -146,6 +151,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     upstream,
     upstream_id,
     priority = 0,
+    enable_websocket
   } = data;
   const form1Data: Partial<RouteModule.Form1Data> = {
     name,
@@ -154,8 +160,10 @@ export const transformRouteData = (data: RouteModule.Body) => {
     hosts: hosts || (host && [host]) || [''],
     uris: uris || (uri && [uri]) || [],
     remote_addrs: remote_addrs || [''],
-    methods,
+    // @ts-ignore
+    methods: methods.length ? methods : ["ALL"],
     priority,
+    enable_websocket
   };
 
   const redirect = data.plugins?.redirect || {};
