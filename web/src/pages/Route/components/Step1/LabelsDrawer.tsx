@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { AutoComplete, Button, Col, Drawer, Form, Row } from 'antd';
+import { AutoComplete, Button, Col, Drawer, Form, notification, Row } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { transformLableValueToKeyValue } from '../../transform';
+import { useIntl } from 'umi';
+
+import { transformLabelList, transformLableValueToKeyValue } from '../../transform';
 import { fetchLabelList } from '../../service';
 
 interface Props extends Pick<RouteModule.Step1PassProps, 'onChange'> {
@@ -27,6 +29,8 @@ interface Props extends Pick<RouteModule.Step1PassProps, 'onChange'> {
 }
 
 const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
+  const { formatMessage } = useIntl();
+
   const keyOptions = Object.keys(labelList || {}).map((item) => ({ value: item }));
   return (
     <Form.List name="labels">
@@ -48,7 +52,7 @@ const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
                       rules={[
                         {
                           required: true,
-                          message: '请输入 key',
+                          message: 'Please input key',
                         },
                       ]}
                     >
@@ -72,7 +76,7 @@ const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
                             rules={[
                               {
                                 required: true,
-                                message: '请输入 value',
+                                message: 'Please input value',
                               },
                             ]}
                           >
@@ -92,7 +96,7 @@ const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
               <Form.Item wrapperCol={{ offset: 3 }}>
                 <Button type="dashed" onClick={add}>
                   <PlusOutlined />
-                  增加
+                  {formatMessage({ id: 'component.global.add' })}
                 </Button>
               </Form.Item>
             )}
@@ -107,17 +111,18 @@ const LabelsDrawer: React.FC<Props> = ({
   disabled,
   labelsDataSource,
   onClose,
-  onChange = () => {},
+  onChange = () => { },
 }) => {
   const transformLabel = transformLableValueToKeyValue(labelsDataSource);
 
+  const { formatMessage } = useIntl();
   const [form] = Form.useForm();
   const [labelList, setLabelList] = useState<RouteModule.LabelList>();
   form.setFieldsValue({ labels: transformLabel });
 
   useEffect(() => {
-    fetchLabelList().then((item) => {
-      setLabelList(item as RouteModule.LabelList);
+    fetchLabelList().then((data) => {
+      setLabelList(transformLabelList(data.data) as RouteModule.LabelList);
     });
   }, []);
 
@@ -131,30 +136,40 @@ const LabelsDrawer: React.FC<Props> = ({
       onClose={onClose}
       footer={
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button onClick={onClose}>取消</Button>
+          <Button onClick={onClose}>{formatMessage({ id: 'component.global.cancel' })}</Button>
           <Button
             type="primary"
             style={{ marginRight: 8, marginLeft: 8 }}
             onClick={(e) => {
               e.persist();
               form.validateFields().then(({ labels }) => {
+                const data = labels.map((item: any) => `${item.labelKey}:${item.labelValue}`)
+                // check for duplicates
+                if (new Set(data).size !== data.length) {
+                  notification.warning({
+                    message: `Config Error`,
+                    description: 'Please do not enter duplicate labels',
+                  });
+                  return;
+                }
+
                 onChange({
                   action: 'labelsChange',
-                  data: labels.map((item: any) => `${item.labelKey}:${item.labelValue}`),
+                  data,
                 });
                 onClose();
               });
             }}
           >
-            确认
+            {formatMessage({ id: 'component.global.confirm' })}
           </Button>
-        </div>
+        </div >
       }
     >
       <Form form={form} layout="horizontal">
         {LabelList(disabled, labelList || {})}
       </Form>
-    </Drawer>
+    </Drawer >
   );
 };
 

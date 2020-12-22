@@ -81,7 +81,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, onChan
           tagRender={(props) => {
             const { value, closable, onClose } = props;
             return (
-              <Tag closable={closable} onClose={onClose} style={{ marginRight: 3 }}>
+              <Tag closable={closable && !disabled} onClose={onClose} style={{ marginRight: 3 }}>
                 {value}
               </Tag>
             );
@@ -90,7 +90,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, onChan
       </Form.Item>
       <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
         <Button disabled={disabled} onClick={() => setVisible(true)}>
-          编辑
+          {formatMessage({ id: 'component.global.edit' })}
         </Button>
       </Form.Item>
       <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
