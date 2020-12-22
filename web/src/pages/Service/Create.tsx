@@ -31,6 +31,7 @@ const { Step } = Steps;
 const Page: React.FC = (props) => {
     const { formatMessage } = useIntl();
     const [form] = Form.useForm();
+    const [upstreamForm] = Form.useForm();
     const upstreamRef = useRef<any>();
     const [plugins, setPlugins] = useState<PluginComponent.Data>({});
 
@@ -47,27 +48,29 @@ const Page: React.FC = (props) => {
         const { serviceId } = (props as any).match.params;
         if (serviceId) {
             fetchItem(serviceId).then(({ data }) => {
-                form.setFieldsValue(data);
-                setPlugins(data.plugins);
+                if (data.upstream_id && data.upstream_id !== '') {
+                    upstreamForm.setFieldsValue({ upstream_id: data.upstream_id });
+                }
+                if (data.upstream) {
+                    upstreamForm.setFieldsValue(data.upstream);
+                }
+                form.setFieldsValue(omit(data, ['upstream_id', 'upstream']));
+                setPlugins(data.plugins || {});
             });
         }
     }, []);
 
     const onSubmit = () => {
-        let data: ServiceModule.Entity;
-        const formData = form.getFieldsValue();
-        if (formData.upstream_id === '') {
-            data = {
-                plugins,
-                name: formData.name,
-                desc: formData.desc,
-                upstream: omit(formData, ['name', 'desc', 'upstream_id'])
-            } as ServiceModule.Entity
+        const data = {
+            ...form.getFieldsValue(),
+            plugins,
+        };
+
+        const upstreamFormData = upstreamForm.getFieldsValue();
+        if (upstreamFormData.upstream_id === '') {
+            data.upstream = omit(upstreamFormData, ['upstream_id']);
         } else {
-            data = {
-                plugins,
-                ...pick(formData, ['name', 'desc', 'upstream_id'])
-            } as ServiceModule.Entity
+            data.upstream_id = upstreamFormData.upstream_id;
         }
 
         const { serviceId } = (props as any).match.params;
@@ -117,12 +120,13 @@ const Page: React.FC = (props) => {
                 </Steps>
                 {step === 1 && <Step1
                     form={form}
+                    upstreamForm={upstreamForm}
                     upstreamRef={upstreamRef}
                 />}
                 {step === 2 && (
                     <PluginPage initialData={plugins} onChange={setPlugins} schemaType="route" />
                 )}
-                {step === 3 && <Preview form={form} plugins={plugins} />}
+                {step === 3 && <Preview upstreamForm={upstreamForm} form={form} plugins={plugins} />}
             </Card>
         </PageHeaderWrapper>
         <ActionBar step={step} lastStep={3} onChange={onStepChange} withResultView />

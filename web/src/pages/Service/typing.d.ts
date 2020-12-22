@@ -40,6 +40,7 @@ declare namespace ServiceModule {
 
     type Step1PassProps = {
         form: FormInstance;
+        upstreamForm: FormInstance;
         disabled?: boolean;
         upstreamRef: any;
     };

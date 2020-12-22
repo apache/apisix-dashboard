@@ -32,6 +32,7 @@ const FORM_LAYOUT = {
 
 const Step1: React.FC<ServiceModule.Step1PassProps> = ({
     form,
+    upstreamForm,
     upstreamRef,
     disabled,
 }) => {
@@ -58,7 +59,7 @@ const Step1: React.FC<ServiceModule.Step1PassProps> = ({
         </Form>
         <UpstreamForm
             ref={upstreamRef}
-            form={form}
+            form={upstreamForm}
             disabled={disabled}
             list={list}
             showSelector
