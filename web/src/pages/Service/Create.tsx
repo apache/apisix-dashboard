@@ -17,14 +17,13 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useIntl, history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { omit, pick } from 'lodash';
+import { omit } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/Plugin';
 import { Card, Steps, Form, notification } from 'antd';
 import Preview from './components/Preview';
 import Step1 from "./components/Step1";
-import styles from './Create.less';
 import { create, update, fetchItem } from './service';
 
 const { Step } = Steps;
@@ -113,7 +112,7 @@ const Page: React.FC = (props) => {
                 } ${formatMessage({ id: 'menu.service' })}`}
         >
             <Card bordered={false}>
-                <Steps current={step - 1} className={styles.steps}>
+                <Steps current={step - 1} style={{ marginBottom: "25px" }}>
                     {stepHeader.map((item) => (
                         <Step title={item} key={item} />
                     ))}
