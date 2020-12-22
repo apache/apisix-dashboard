@@ -93,11 +93,11 @@ gaY1BQkhja1FqA7OcEylRUUWFgO3bWvHchOagVZUyipnYaq5KSwNhvA=
     cy.url().should('contains', 'ssl/list');
   });
 
-  it('teardown', () => {
+  it('delete the ssl record just created', () => {
     cy.visit('/');
     cy.contains('SSL').click();
     cy.wait(500);
-    cy.contains('2022-11-06 17:47:48').siblings().contains('Delete').click();
+    cy.contains('*.www.testhj.com').parents().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(domSelectors.notificationMsg).should('contain', 'Remove target SSL successfully');
   });
