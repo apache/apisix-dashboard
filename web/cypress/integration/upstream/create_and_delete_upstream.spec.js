@@ -29,10 +29,10 @@ context('Create and Delete Upstream', () => {
   })
 
   it('create roundrobin upstream', () => {
-    //  go to upstream create page
+    // go to upstream create page
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(sleepTime*5);
+    cy.wait(sleepTime * 5);
     cy.contains('Create').click();
 
     // input Name And Description
@@ -46,14 +46,14 @@ context('Create and Delete Upstream', () => {
     cy.contains('Submit').click();
     cy.get(domSelectors.notification).should('contain', 'Create upstream successfully');
     cy.contains('Create upstream successfully');
-    cy.wait(sleepTime*5);
+    cy.wait(sleepTime * 5);
     cy.url().should('contains', 'upstream/list');
   });
 
   it('delete the upstream', () => {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(sleepTime*5)
+    cy.wait(sleepTime * 5)
     cy.contains(name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(domSelectors.notification).should('contain', 'Delete successfully');
@@ -63,7 +63,7 @@ context('Create and Delete Upstream', () => {
     // go to upstream create page
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(sleepTime*5);
+    cy.wait(sleepTime * 5);
     cy.contains('Create').click();
 
     // input `Name And Description`
@@ -71,7 +71,8 @@ context('Create and Delete Upstream', () => {
     cy.get('#desc').type('desc_by_autotest');
 
     // change upstream type to chash, todo: optimize the search method
-    cy.get('.ant-select-selection-item').click();
+    // cy.get('.ant-select-selection-item').click();
+    cy.get('[title=roundrobin]').click();
     cy.wait(sleepTime);
     cy.get('.ant-select-item:nth-child(2)').click();
     cy.get('#hash_on').click();
@@ -94,14 +95,14 @@ context('Create and Delete Upstream', () => {
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(domSelectors.notification).should('contain', 'Create upstream successfully');
-    cy.wait(sleepTime*5);
+    cy.wait(sleepTime * 5);
     cy.url().should('contains', 'upstream/list');
   });
 
   it('delete the upstream', () => {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(sleepTime*5);
+    cy.wait(sleepTime * 5);
     cy.contains(name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(domSelectors.notification).should('contain', 'Delete successfully');
