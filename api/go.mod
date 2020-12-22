@@ -29,6 +29,7 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/tidwall/gjson v1.6.1
 	github.com/xeipuuv/gojsonschema v1.2.0
+	github.com/yuin/gopher-lua v0.0.0-20200816102855-ee81675732da
 	go.etcd.io/etcd v3.3.25+incompatible
 	go.uber.org/zap v1.16.0
 	gopkg.in/yaml.v2 v2.3.0

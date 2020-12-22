@@ -88,7 +88,7 @@
 			}]
 		},
 		"ip_def": [{
-			"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+			"format": "ipv4",
 			"title": "IPv4",
 			"type": "string"
 		}, {
@@ -96,11 +96,11 @@
 			"title": "IPv4/CIDR",
 			"type": "string"
 		}, {
-			"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+			"format": "ipv6",
 			"title": "IPv6",
 			"type": "string"
 		}, {
-			"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+			"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 			"title": "IPv6/CIDR",
 			"type": "string"
 		}],
@@ -147,6 +147,41 @@
 		},
 		"route": {
 			"additionalProperties": false,
+			"allOf": [{
+				"oneOf": [{
+					"required": ["uri"]
+				}, {
+					"required": ["uris"]
+				}]
+			}, {
+				"oneOf": [{
+					"not": {
+						"anyOf": [{
+							"required": ["host"]
+						}, {
+							"required": ["hosts"]
+						}]
+					}
+				}, {
+					"required": ["host"]
+				}, {
+					"required": ["hosts"]
+				}]
+			}, {
+				"oneOf": [{
+					"not": {
+						"anyOf": [{
+							"required": ["remote_addr"]
+						}, {
+							"required": ["remote_addrs"]
+						}]
+					}
+				}, {
+					"required": ["remote_addr"]
+				}, {
+					"required": ["remote_addrs"]
+				}]
+			}],
 			"anyOf": [{
 				"required": ["plugins", "uri"]
 			}, {
@@ -199,6 +234,7 @@
 						"pattern": "^\\*?[0-9a-zA-Z-.]+$",
 						"type": "string"
 					},
+					"minItems": 1,
 					"type": "array",
 					"uniqueItems": true
 				},
@@ -250,7 +286,7 @@
 				},
 				"remote_addr": {
 					"anyOf": [{
-						"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+						"format": "ipv4",
 						"title": "IPv4",
 						"type": "string"
 					}, {
@@ -258,11 +294,11 @@
 						"title": "IPv4/CIDR",
 						"type": "string"
 					}, {
-						"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+						"format": "ipv6",
 						"title": "IPv6",
 						"type": "string"
 					}, {
-						"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+						"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 						"title": "IPv6/CIDR",
 						"type": "string"
 					}],
@@ -272,7 +308,7 @@
 				"remote_addrs": {
 					"items": {
 						"anyOf": [{
-							"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+							"format": "ipv4",
 							"title": "IPv4",
 							"type": "string"
 						}, {
@@ -280,17 +316,18 @@
 							"title": "IPv4/CIDR",
 							"type": "string"
 						}, {
-							"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+							"format": "ipv6",
 							"title": "IPv6",
 							"type": "string"
 						}, {
-							"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+							"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 							"title": "IPv6/CIDR",
 							"type": "string"
 						}],
 						"description": "client IP",
 						"type": "string"
 					},
+					"minItems": 1,
 					"type": "array",
 					"uniqueItems": true
 				},
@@ -312,6 +349,12 @@
 				},
 				"service_protocol": {
 					"enum": ["grpc", "http"]
+				},
+				"status": {
+					"default": 1,
+					"description": "route status, 1 to enable, 0 to disable",
+					"enum": [0, 1],
+					"type": "integer"
 				},
 				"update_time": {
 					"type": "integer"
@@ -707,6 +750,7 @@
 						"description": "HTTP uri",
 						"type": "string"
 					},
+					"minItems": 1,
 					"type": "array",
 					"uniqueItems": true
 				},
@@ -1281,7 +1325,7 @@
 				},
 				"remote_addr": {
 					"anyOf": [{
-						"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+						"format": "ipv4",
 						"title": "IPv4",
 						"type": "string"
 					}, {
@@ -1289,11 +1333,11 @@
 						"title": "IPv4/CIDR",
 						"type": "string"
 					}, {
-						"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+						"format": "ipv6",
 						"title": "IPv6",
 						"type": "string"
 					}, {
-						"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+						"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 						"title": "IPv6/CIDR",
 						"type": "string"
 					}],
@@ -1302,7 +1346,7 @@
 				},
 				"server_addr": {
 					"anyOf": [{
-						"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+						"format": "ipv4",
 						"title": "IPv4",
 						"type": "string"
 					}, {
@@ -1310,11 +1354,11 @@
 						"title": "IPv4/CIDR",
 						"type": "string"
 					}, {
-						"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+						"format": "ipv6",
 						"title": "IPv6",
 						"type": "string"
 					}, {
-						"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+						"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 						"title": "IPv6/CIDR",
 						"type": "string"
 					}],
@@ -2307,7 +2351,7 @@
 				"properties": {
 					"allow_credential": {
 						"default": false,
-						"description": "allow client append credential. according to CORS specification, if you set this option to 'true', you can not use '*' for other options.",
+						"description": "allow client append credential. according to CORS specification,if you set this option to 'true', you can not use '*' for other options.",
 						"type": "boolean"
 					},
 					"allow_headers": {
@@ -2406,7 +2450,6 @@
 				"minProperties": 1,
 				"properties": {
 					"abort": {
-						"minProperties": 1,
 						"properties": {
 							"body": {
 								"minLength": 0,
@@ -2422,10 +2465,10 @@
 								"type": "integer"
 							}
 						},
+						"required": ["http_status"],
 						"type": "object"
 					},
 					"delay": {
-						"minProperties": 1,
 						"properties": {
 							"duration": {
 								"minimum": 0,
@@ -2437,6 +2480,7 @@
 								"type": "integer"
 							}
 						},
+						"required": ["duration"],
 						"type": "object"
 					}
 				},
@@ -2620,7 +2664,7 @@
 						"whitelist": {
 							"items": {
 								"anyOf": [{
-									"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+									"format": "ipv4",
 									"title": "IPv4",
 									"type": "string"
 								}, {
@@ -2628,11 +2672,11 @@
 									"title": "IPv4/CIDR",
 									"type": "string"
 								}, {
-									"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+									"format": "ipv6",
 									"title": "IPv6",
 									"type": "string"
 								}, {
-									"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+									"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 									"title": "IPv6/CIDR",
 									"type": "string"
 								}]
@@ -2649,7 +2693,7 @@
 						"blacklist": {
 							"items": {
 								"anyOf": [{
-									"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$",
+									"format": "ipv4",
 									"title": "IPv4",
 									"type": "string"
 								}, {
@@ -2657,11 +2701,11 @@
 									"title": "IPv4/CIDR",
 									"type": "string"
 								}, {
-									"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?$",
+									"format": "ipv6",
 									"title": "IPv6",
 									"type": "string"
 								}, {
-									"pattern": "^([a-fA-F0-9]{0,4}:){0,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
+									"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
 									"title": "IPv6/CIDR",
 									"type": "string"
 								}]
@@ -2891,6 +2935,7 @@
 						"type": "integer"
 					},
 					"key": {
+						"default": "remote_addr",
 						"enum": ["consumer_name", "http_x_forwarded_for", "http_x_real_ip", "remote_addr", "server_addr", "service_id"],
 						"type": "string"
 					},
@@ -2910,7 +2955,7 @@
 						"type": "integer"
 					}
 				},
-				"required": ["count", "key", "time_window"],
+				"required": ["count", "time_window"],
 				"type": "object"
 			}
 		},
@@ -3237,6 +3282,12 @@
 						"type": "integer"
 					}
 				},
+				"type": "object"
+			}
+		},
+		"server-info": {
+			"schema": {
+				"additionalProperties": false,
 				"type": "object"
 			}
 		},
