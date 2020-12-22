@@ -30,25 +30,34 @@ func TestPlugin(t *testing.T) {
 	handler := &Handler{}
 	assert.NotNil(t, handler)
 
-	//plugin list
+	// plugin list(old api, return name only)
+	listInput := &ListInput{}
 	ctx := droplet.NewContext()
+	ctx.SetInput(listInput)
 	list, err := handler.Plugins(ctx)
 	assert.Nil(t, err)
 	assert.Contains(t, list.([]string), "limit-count")
 
-	//schema
-	input := &GetInput{}
-	reqBody := `{
-	  "name": "limit-count"
-	}`
-	err = json.Unmarshal([]byte(reqBody), input)
+	// plugin list(return all fields of plugin)
+	listInput = &ListInput{
+		All: true,
+	}
+	ctx = droplet.NewContext()
+	ctx.SetInput(listInput)
+	list, err = handler.Plugins(ctx)
 	assert.Nil(t, err)
+	assert.Contains(t, list.(map[string]interface{}), "limit-count")
+
+	// schema
+	input := &GetInput{
+		Name: "limit-count",
+	}
 	ctx.SetInput(input)
 	val, _ := handler.Schema(ctx)
 	assert.NotNil(t, val)
 
-	//not exists
-	reqBody = `{
+	// not exists
+	reqBody := `{
 	  "name": "not-exists"
 	}`
 	err = json.Unmarshal([]byte(reqBody), input)
@@ -79,7 +88,7 @@ func TestPlugin(t *testing.T) {
 	reqBody = `{
 		"name": "limit-count",
 		"schema_type": "consumer"
-    }`
+	}`
 	json.Unmarshal([]byte(reqBody), input)
 	ctx.SetInput(input)
 	val, _ = handler.Schema(ctx)
