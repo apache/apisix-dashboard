@@ -30,6 +30,7 @@ type Props = {
   step3Data: RouteModule.Step3Data;
   advancedMatchingRules: RouteModule.MatchingRule[];
   upstreamRef: any;
+  isEdit?: boolean;
 };
 
 const style = {
@@ -43,7 +44,7 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, upstreamRef, ...
   return (
     <>
       <h2>{formatMessage({ id: 'page.route.steps.stepTitle.defineApiRequest' })}</h2>
-      <Step1 {...rest} form={form1} disabled />
+      <Step1 {...rest} form={form1} disabled isEdit />
       {!redirect && (
         <>
           <h2 style={style}>

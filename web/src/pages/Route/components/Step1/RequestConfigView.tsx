@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import Form from 'antd/es/form';
-import { Button, Input, Select, Row, Col, InputNumber } from 'antd';
+import { Button, Input, Select, Row, Col, InputNumber, Switch } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
@@ -293,6 +293,9 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
           style={{ width: '60%' }}
           disabled={disabled}
         />
+      </Form.Item>
+      <Form.Item label="Websocket" valuePropName="checked" name="enable_websocket">
+        <Switch disabled={disabled} />
       </Form.Item>
       <Form.Item
         label={formatMessage({ id: 'page.route.form.itemLabel.redirect' })}
