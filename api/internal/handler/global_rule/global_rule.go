@@ -18,7 +18,6 @@ package global_rule
 
 import (
 	"reflect"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
@@ -50,7 +49,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(entity.GlobalPlugins{}))))
 	r.PUT("/apisix/admin/global_rules", wgin.Wraps(h.Set,
 		wrapper.InputType(reflect.TypeOf(entity.GlobalPlugins{}))))
-	r.DELETE("/apisix/admin/global_rules/:ids", wgin.Wraps(h.BatchDelete,
+	r.DELETE("/apisix/admin/global_rules/:id", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDeleteInput{}))))
 }
 
@@ -126,13 +125,13 @@ func (h *Handler) Set(c droplet.Context) (interface{}, error) {
 }
 
 type BatchDeleteInput struct {
-	IDs string `auto_read:"ids,path"`
+	ID string `auto_read:"id,path"`
 }
 
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDeleteInput)
 
-	if err := h.globalRuleStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
+	if err := h.globalRuleStore.BatchDelete(c.Context(), []string{input.ID}); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
