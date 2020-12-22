@@ -92,10 +92,10 @@ gaY1BQkhja1FqA7OcEylRUUWFgO3bWvHchOagVZUyipnYaq5KSwNhvA=
   });
 
   it('teardown', () => {
-    cy.visit('/ssl/list');
-    cy.get('.ant-table-tbody').within(() => {
-      cy.contains('2022-11-06 17:47:48').siblings().contains('Delete').click();
-    });
+    cy.visit('/');
+    cy.contains('SSL').click();
+    cy.wait(300);
+    cy.contains('2022-11-06 17:47:48').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get('.ant-notification-notice-message').should('contain', 'Remove target SSL successfully');
   });
