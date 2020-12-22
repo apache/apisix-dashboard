@@ -29,18 +29,18 @@ context('Create and Delete Consumer', () => {
     cy.login();
   })
 
-  it('create consumer with key-auth', () => {
+  it('creates consumer with key-auth', () => {
     // go to consumer create page
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.wait(sleepTime*5);
+    cy.wait(sleepTime * 5);
     cy.contains('Create').click();
 
     // Basic Information
     cy.get('#username').type(name);
     cy.get('#desc').type('desc_by_autotest');
     cy.contains('Next').click();
-    cy.wait(sleepTime*3);
+    cy.wait(sleepTime * 3);
 
     // Plugin Config
     cy.contains(domSelectors.pluginsCard, 'key-auth').within(() => {
@@ -62,24 +62,24 @@ context('Create and Delete Consumer', () => {
   it('delete the consumer', () => {
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.wait(sleepTime*5)
+    cy.wait(sleepTime * 5)
     cy.contains(name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(domSelectors.notification).should('contain', 'Delete Consumer Successfully');
   });
 
-  it('create consumer with wrong json', () => {
+  it('creates consumer with wrong json', () => {
     // go to consumer create page
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.wait(sleepTime*5);
+    cy.wait(sleepTime * 5);
     cy.contains('Create').click();
 
     // Basic Information
     cy.get('#username').type(name);
     cy.get('#desc').type('desc_by_autotest');
     cy.contains('Next').click();
-    cy.wait(sleepTime*3);
+    cy.wait(sleepTime * 3);
 
     // Plugin Config
     cy.contains(domSelectors.pluginsCard, 'key-auth').within(() => {
