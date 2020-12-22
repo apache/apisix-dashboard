@@ -35,7 +35,7 @@ context('Create and Delete Upstream', () => {
     cy.wait(sleepTime * 5);
     cy.contains('Create').click();
 
-    // input Name And Description
+    // input name and description
     cy.get('#name').type(name);
     cy.get('#desc').type('desc_by_autotest');
 
@@ -66,12 +66,11 @@ context('Create and Delete Upstream', () => {
     cy.wait(sleepTime * 5);
     cy.contains('Create').click();
 
-    // input `Name And Description`
+    // input name and description
     cy.get('#name').type(name);
     cy.get('#desc').type('desc_by_autotest');
 
     // change upstream type to chash, todo: optimize the search method
-    // cy.get('.ant-select-selection-item').click();
     cy.get('[title=roundrobin]').click();
     cy.wait(sleepTime);
     cy.get('.ant-select-item:nth-child(2)').click();
@@ -82,7 +81,6 @@ context('Create and Delete Upstream', () => {
     cy.wait(sleepTime);
     cy.get('div:nth-child(8) .ant-select-item:nth-child(1) > .ant-select-item-option-content:nth-child(1)').click();
 
-    // input chash upstream's information
     // add first upstream node
     cy.get('#nodes_0_host').type('127.0.0.1');
     cy.get('#nodes_0_port').clear().type('7000');
