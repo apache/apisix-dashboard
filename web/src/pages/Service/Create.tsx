@@ -16,17 +16,18 @@
  */
 import React, { useState, useRef, useEffect } from 'react'
 import { useIntl, history } from 'umi';
+import { Card, Steps, Form, notification } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { omit } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/Plugin';
-import { Card, Steps, Form, notification } from 'antd';
 import Preview from './components/Preview';
 import Step1 from "./components/Step1";
 import { create, update, fetchItem } from './service';
 
 const { Step } = Steps;
+
 const Page: React.FC = (props) => {
     const { formatMessage } = useIntl();
     const [form] = Form.useForm();
