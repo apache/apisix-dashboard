@@ -289,23 +289,21 @@ func TestHandler_BatchDelete(t *testing.T) {
 		{
 			caseDesc: "normal",
 			giveInput: &BatchDeleteInput{
-				IDs: "user1,user2",
+				ID: "user1",
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
 			wantInput: []string{
 				"user1",
-				"user2",
 			},
 		},
 		{
 			caseDesc: "store delete failed",
 			giveInput: &BatchDeleteInput{
-				IDs: "user1,user2",
+				ID: "user2",
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
 			giveErr: fmt.Errorf("delete failed"),
 			wantInput: []string{
-				"user1",
 				"user2",
 			},
 			wantErr: fmt.Errorf("delete failed"),
