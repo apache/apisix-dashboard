@@ -70,6 +70,9 @@ export const transformStepData = ({
       }
       data.plugins!.redirect = redirect;
     }
+    if (data.status !== undefined) {
+      data.status = Number(data.status);
+    }
 
     // Remove some of the frontend custom variables
     return omit(data, [
@@ -148,6 +151,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     upstream,
     upstream_id,
     priority = 0,
+    enable_websocket
   } = data;
   const form1Data: Partial<RouteModule.Form1Data> = {
     name,
@@ -159,6 +163,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     // @ts-ignore
     methods: methods.length ? methods : ["ALL"],
     priority,
+    enable_websocket
   };
 
   const redirect = data.plugins?.redirect || {};
