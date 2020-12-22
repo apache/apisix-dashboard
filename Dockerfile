@@ -69,8 +69,6 @@ ARG ENABLE_PROXY=false
 
 RUN if [ "$ENABLE_PROXY" = "true" ] ; then sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories ; fi
 
-RUN apk add lua5.1
-
 WORKDIR /usr/local/apisix-dashboard
 
 COPY --from=api-builder /usr/local/apisix-dashboard/output/ ./

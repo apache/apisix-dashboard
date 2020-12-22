@@ -19,9 +19,9 @@ package route
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"os/exec"
+	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 
@@ -30,6 +30,7 @@ import (
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
+	"github.com/yuin/gopher-lua"
 
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
@@ -71,7 +72,39 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.DELETE("/apisix/admin/routes/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
+	r.PATCH("/apisix/admin/routes/:id", consts.ErrorWrapper(Patch))
+	r.PATCH("/apisix/admin/routes/:id/*path", consts.ErrorWrapper(Patch))
+
 	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))
+}
+
+func Patch(c *gin.Context) (interface{}, error) {
+	reqBody, _ := c.GetRawData()
+	ID := c.Param("id")
+	subPath := c.Param("path")
+
+	routeStore := store.GetStore(store.HubKeyRoute)
+	stored, err := routeStore.Get(ID)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	res, err := utils.MergePatch(stored, subPath, reqBody)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	var route entity.Route
+	err = json.Unmarshal(res, &route)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	if err := routeStore.Update(c, &route, false); err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	return nil, nil
 }
 
 type GetInput struct {
@@ -224,21 +257,36 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	cmd := exec.Command("sh", "-c",
-		"cd "+conf.WorkDir+"/dag-to-lua && lua cli.lua "+
-			"'"+string(scriptString)+"'")
-
-	stdout, _ := cmd.StdoutPipe()
-	defer stdout.Close()
-	if err := cmd.Start(); err != nil {
+	workDir, err := filepath.Abs(conf.WorkDir)
+	if err != nil {
+		return "", err
+	}
+	libDir := filepath.Join(workDir, "dag-to-lua/")
+	if err := os.Chdir(libDir); err != nil {
+		log.Errorf("Chdir to libDir failed: %s", err)
 		return "", err
 	}
 
-	result, _ := ioutil.ReadAll(stdout)
-	resData := string(result)
+	defer func() {
+		if err := os.Chdir(workDir); err != nil {
+			log.Errorf("Chdir to workDir failed: %s", err)
+		}
+	}()
 
-	return resData, nil
+	L := lua.NewState()
+	defer L.Close()
+
+	if err := L.DoString(`
+	        local dag_to_lua = require 'dag-to-lua'
+		local conf = [==[` + string(scriptString) + `]==]
+	        code = dag_to_lua.generate(conf)
+        `); err != nil {
+		return "", err
+	}
+
+	code := L.GetGlobal("code")
+
+	return code.String(), nil
 }
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {

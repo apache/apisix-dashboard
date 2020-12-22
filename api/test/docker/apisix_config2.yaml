@@ -42,6 +42,7 @@ apisix:
 
 nginx_config:
   error_log_level: "debug"
+  worker_processes: "1"
 
 plugins:                          # plugin list (sorted in alphabetical order)
   - api-breaker

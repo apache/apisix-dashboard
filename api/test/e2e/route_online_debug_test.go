@@ -477,7 +477,6 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
 		},
 	}
 
@@ -485,13 +484,13 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 		testCaseCheck(tc)
 	}
 
+	time.Sleep(sleepTime)
+
 	// sign jwt token
 	body, status, err := httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key")
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, status)
 	jwtToken := string(body)
-
-	time.Sleep(sleepTime)
 
 	tests = []HttpTestCase{
 		{
