@@ -94,7 +94,9 @@ const Page: React.FC = (props) => {
     const onStepChange = (nextStep: number) => {
         if (nextStep === 2) {
             form.validateFields().then(() => {
-                setStep(nextStep);
+                upstreamForm.validateFields().then(() => {
+                    setStep(nextStep);
+                })
             })
             return;
         }
