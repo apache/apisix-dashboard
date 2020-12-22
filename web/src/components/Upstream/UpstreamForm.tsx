@@ -97,7 +97,10 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     useEffect(() => {
       const id = form.getFieldValue('upstream_id');
       if (id) {
-        form.setFieldsValue(list.find((item) => item.id === id));
+        setReadonly(true);
+        requestAnimationFrame(() => {
+          form.setFieldsValue(list.find((item) => item.id === id));
+        })
       }
     }, [list]);
 
