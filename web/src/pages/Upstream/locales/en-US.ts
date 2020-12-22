@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 export default {
+  'upstream.step.select.upstream': 'Select Upstream',
+  'upstream.step.select.upstream.select.option': 'Manual fill',
+  'upstream.step.node.domain.or.ip': 'Node Domain/IP',
   'upstream.step.backend.server.domain.or.ip': 'Backend Server Domain Name/IP',
   'upstream.step.domain.name.default.analysis':
     'When using domain name, it will analysis local: /etc/resolv.conf by default, if weight is 0, then fusing this node',
@@ -32,6 +35,7 @@ export default {
   'upstream.step.description': 'Description',
   'upstream.step.input.description': 'Please input description',
   'upstream.step.type': 'Type',
+  'upstream.step.create.node': 'Create Node',
   'upstream.step.pass-host': 'Pass Host',
   'upstream.step.pass-host.tips': 'When selecting node, there can only be ONE node in node list.',
   'upstream.step.pass-host.pass': 'pass',
@@ -44,9 +48,12 @@ export default {
   'upstream.step.input.send.timeout': 'Please input send timeout',
   'upstream.step.read.timeout': 'Read Timeout',
   'upstream.step.input.read.timeout': 'Please input read timeout',
+  'upstream.step.healthy.checks.healthy.check': 'Health Check',
   'upstream.step.healthy.check': 'Upstream Healthy Check',
   'upstream.step.healthy.checks.healthy': 'Healthy',
   'upstream.step.healthy.checks.unhealthy': 'Unhealthy',
+  'upstream.step.healthy.checks.healthy.status': 'Healthy Status',
+  'upstream.step.healthy.checks.unhealthy.status': 'Unhealthy Status',
   'upstream.step.healthy.checks.active': 'Upstream Healthy Check Active',
   'upstream.step.healthy.checks.active.timeout': 'Timeout',
   'upstream.step.input.healthy.checks.active.timeout': 'Please input timeout',
@@ -61,10 +68,12 @@ export default {
   'upstream.step.healthy.checks.successes': 'Successes',
   'upstream.step.input.healthy.checks.successes': 'Please input successes',
   'upstream.step.healthy.checks.http_failures': 'HttpFailures',
+  'upstream.step.healthy.checks.active.create.req_headers': 'Creat req_headers',
   'upstream.step.input.healthy.checks.http_failures': 'Please input httpFailures',
   'upstream.step.healthy.checks.active.req_headers': 'req_headers',
   'upstream.step.input.healthy.checks.active.req_headers': 'Please input req_headers',
   'upstream.step.healthy.checks.passive': 'Passive',
+  'upstream.step.healthy.checks.passive.create.http_statuses': 'Creat http_statuses',
   'upstream.step.healthy.checks.passive.http_statuses': 'http_statuses',
   'upstream.step.input.healthy.checks.passive.http_statuses': 'Please input http_statuses',
   'upstream.step.healthy.checks.passive.tcp_failures': 'tcp_failures',

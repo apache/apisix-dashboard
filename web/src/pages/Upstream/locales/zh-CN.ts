@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 export default {
+  'upstream.step.select.upstream': '选择上游',
+  'upstream.step.select.upstream.select.option': '手动填写',
+  'upstream.step.node.domain.or.ip': '节点域名/IP',
   'upstream.step.backend.server.domain.or.ip': '后端服务域名/IP',
   'upstream.step.domain.name.default.analysis':
     '使用域名时，默认解析本地 /etc/resolv.conf；权重为0则熔断该节点',
@@ -32,6 +35,7 @@ export default {
   'upstream.step.description': '描述',
   'upstream.step.input.description': '请输入描述',
   'upstream.step.type': '类型',
+  'upstream.step.create.node': '创建节点',
   'upstream.step.pass-host': '传递域名',
   'upstream.step.pass-host.tips': '当选择节点时，节点域名只能有一条数据。',
   'upstream.step.pass-host.pass': '透传',
@@ -44,9 +48,12 @@ export default {
   'upstream.step.input.send.timeout': '请输入发送超时时间',
   'upstream.step.read.timeout': '接收超时',
   'upstream.step.input.read.timeout': '请输入接收超时时间',
+  'upstream.step.healthy.checks.healthy.check': '健康检查',
   'upstream.step.healthy.check': '上游健康检查',
   'upstream.step.healthy.checks.healthy': '健康',
   'upstream.step.healthy.checks.unhealthy': '不健康',
+  'upstream.step.healthy.checks.healthy.status': '健康状态',
+  'upstream.step.healthy.checks.unhealthy.status': '不健康状态',
   'upstream.step.healthy.checks.active': '探活健康检查',
   'upstream.step.healthy.checks.active.timeout': '超时时间',
   'upstream.step.input.healthy.checks.active.timeout': '请输入超时时间',
@@ -61,10 +68,12 @@ export default {
   'upstream.step.healthy.checks.successes': '成功次数',
   'upstream.step.input.healthy.checks.successes': '请输入成功次数',
   'upstream.step.healthy.checks.http_failures': '失败次数',
+  'upstream.step.healthy.checks.active.create.req_headers': '创建请求头',
   'upstream.step.input.healthy.checks.http_failures': '请输入失败次数',
   'upstream.step.healthy.checks.active.req_headers': '请求头',
   'upstream.step.input.healthy.checks.active.req_headers': '请输入请求头',
   'upstream.step.healthy.checks.passive': '被动健康检查',
+  'upstream.step.healthy.checks.passive.create.http_statuses': '创建状态码',
   'upstream.step.healthy.checks.passive.http_statuses': '状态码',
   'upstream.step.input.healthy.checks.passive.http_statuses': '请输入状态码',
   'upstream.step.healthy.checks.passive.tcp_failures': 'tcp失败次数',

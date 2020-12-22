@@ -62,21 +62,6 @@ type Props = {
   ref?: any;
 };
 
-const timeoutFields = [
-  {
-    label: '连接超时',
-    name: ['timeout', 'connect'],
-  },
-  {
-    label: '发送超时',
-    name: ['timeout', 'send'],
-  },
-  {
-    label: '接收超时',
-    name: ['timeout', 'read'],
-  },
-];
-
 const removeBtnStyle = {
   marginLeft: -10,
   display: 'flex',
@@ -89,6 +74,21 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     const [readonly, setReadonly] = useState(
       Boolean(form.getFieldValue('upstream_id')) || disabled,
     );
+
+    const timeoutFields = [
+      {
+        label: formatMessage({ id: 'upstream.step.connect.timeout' }),
+        name: ['timeout', 'connect'],
+      },
+      {
+        label: formatMessage({ id: 'upstream.step.send.timeout' }),
+        name: ['timeout', 'send'],
+      },
+      {
+        label: formatMessage({ id: 'upstream.step.read.timeout' }),
+        name: ['timeout', 'read'],
+      },
+    ];
 
     useImperativeHandle(ref, () => ({
       getData: () => transformRequest(form.getFieldsValue()),
@@ -133,9 +133,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               <Form.Item
                 required
                 key={field.key}
-                label={index === 0 && '节点域名/IP'}
+                label={index === 0 && formatMessage({ id: 'upstream.step.node.domain.or.ip' })}
                 extra={
-                  index === 0 && '使用域名时，默认解析本地 /etc/resolv.conf；权重为0则熔断该节点'
+                  index === 0 && formatMessage({ id: 'upstream.step.domain.name.default.analysis' })
                 }
                 labelCol={{ span: index === 0 ? 3 : 0 }}
                 wrapperCol={{ offset: index === 0 ? 0 : 3 }}
@@ -158,7 +158,10 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                         },
                       ]}
                     >
-                      <Input placeholder="域名/IP" disabled={readonly} />
+                      <Input
+                        placeholder={formatMessage({ id: 'upstream.step.domain.name.or.ip' })}
+                        disabled={readonly}
+                      />
                     </Form.Item>
                   </Col>
                   <Col span={2}>
@@ -172,7 +175,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                         },
                       ]}
                     >
-                      <InputNumber placeholder="端口号" disabled={readonly} min={1} max={65535} />
+                      <InputNumber
+                        placeholder={formatMessage({ id: 'upstream.step.port' })}
+                        disabled={readonly}
+                        min={1}
+                        max={65535}
+                      />
                     </Form.Item>
                   </Col>
                   <Col span={2}>
@@ -186,7 +194,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                         },
                       ]}
                     >
-                      <InputNumber placeholder="权重" disabled={readonly} min={0} max={1000} />
+                      <InputNumber
+                        placeholder={formatMessage({ id: 'upstream.step.weight' })}
+                        disabled={readonly}
+                        min={0}
+                        max={1000}
+                      />
                     </Form.Item>
                   </Col>
                   <Col style={removeBtnStyle}>
@@ -201,7 +214,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               <Form.Item wrapperCol={{ offset: 3 }}>
                 <Button type="dashed" onClick={add}>
                   <PlusOutlined />
-                  创建节点
+                  {formatMessage({ id: 'upstream.step.create.node' })}
                 </Button>
               </Form.Item>
             )}
@@ -212,7 +225,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
     const ActiveHealthCheck = () => (
       <>
-        <Form.Item label="超时时间">
+        <Form.Item label={formatMessage({ id: 'upstream.step.healthy.checks.active.timeout' })}>
           <Form.Item name={['checks', 'active', 'timeout']} noStyle>
             <InputNumber disabled={readonly} />
           </Form.Item>
@@ -281,7 +294,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Form.Item>
 
         <Divider orientation="left" plain>
-          健康状态
+          {formatMessage({ id: 'upstream.step.healthy.checks.healthy.status' })}
         </Divider>
         <Form.Item
           label={formatMessage({ id: 'upstream.step.healthy.checks.active.interval' })}
@@ -318,7 +331,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Form.Item>
 
         <Divider orientation="left" plain>
-          不健康状态
+          {formatMessage({ id: 'upstream.step.healthy.checks.unhealthy.status' })}
         </Divider>
         <Form.Item
           label={formatMessage({ id: 'upstream.step.healthy.checks.active.interval' })}
@@ -396,7 +409,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 <Form.Item wrapperCol={{ offset: 3 }}>
                   <Button type="dashed" onClick={() => add()}>
                     <PlusOutlined />
-                    创建请求头
+                    {formatMessage({
+                      id: 'upstream.step.healthy.checks.active.create.req_headers',
+                    })}
                   </Button>
                 </Form.Item>
               )}
@@ -408,7 +423,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     const InActiveHealthCheck = () => (
       <>
         <Divider orientation="left" plain>
-          健康状态
+          {formatMessage({ id: 'upstream.step.healthy.checks.healthy.status' })}
         </Divider>
         <Form.List name={['checks', 'passive', 'healthy', 'http_statuses']}>
           {(fields, { add, remove }) => (
@@ -446,7 +461,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 <Form.Item wrapperCol={{ offset: 3 }}>
                   <Button type="dashed" onClick={() => add()}>
                     <PlusOutlined />
-                    创建状态码
+                    {formatMessage({
+                      id: 'upstream.step.healthy.checks.passive.create.http_statuses',
+                    })}
                   </Button>
                 </Form.Item>
               )}
@@ -469,7 +486,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Form.Item>
 
         <Divider orientation="left" plain>
-          不健康状态
+          {formatMessage({ id: 'upstream.step.healthy.checks.unhealthy.status' })}
         </Divider>
         <Form.List name={['checks', 'passive', 'unhealthy', 'http_statuses']}>
           {(fields, { add, remove }) => (
@@ -507,7 +524,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 <Form.Item wrapperCol={{ offset: 3 }}>
                   <Button type="dashed" onClick={() => add()}>
                     <PlusOutlined />
-                    创建状态码
+                    {formatMessage({
+                      id: 'upstream.step.healthy.checks.passive.create.http_statuses',
+                    })}
                   </Button>
                 </Form.Item>
               )}
@@ -562,7 +581,10 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         }}
       >
         {showSelector && (
-          <Form.Item label="选择上游" name="upstream_id">
+          <Form.Item
+            label={formatMessage({ id: 'upstream.step.select.upstream' })}
+            name="upstream_id"
+          >
             <Select
               disabled={disabled}
               onChange={(id) => {
@@ -575,7 +597,13 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 }
               }}
             >
-              {[{ name: '手动填写', id: '' }, ...list].map((item) => (
+              {[
+                {
+                  name: formatMessage({ id: 'upstream.step.select.upstream.select.option' }),
+                  id: '',
+                },
+                ...list,
+              ].map((item) => (
                 <Select.Option value={item.id!} key={item.id}>
                   {item.name}
                 </Select.Option>
@@ -584,7 +612,11 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           </Form.Item>
         )}
 
-        <Form.Item label="类型" name="type" rules={[{ required: true }]}>
+        <Form.Item
+          label={formatMessage({ id: 'upstream.step.type' })}
+          name="type"
+          rules={[{ required: true }]}
+        >
           <Select disabled={readonly}>
             {Object.entries(Type).map(([label, value]) => {
               return (
@@ -662,15 +694,15 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           </Form.Item>
         ))}
 
-        <PanelSection title="健康检查">
+        <PanelSection title={formatMessage({ id: 'upstream.step.healthy.checks.healthy.check' })}>
           {[
             {
-              label: '探活健康检查',
+              label: formatMessage({ id: 'upstream.step.healthy.checks.active' }),
               name: ['checks', 'active'],
               component: <ActiveHealthCheck />,
             },
             {
-              label: '被动健康检查',
+              label: formatMessage({ id: 'upstream.step.healthy.checks.passive' }),
               name: ['checks', 'passive'],
               component: <InActiveHealthCheck />,
             },
