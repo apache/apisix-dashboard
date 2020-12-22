@@ -18,7 +18,7 @@
 
 context('Create and Delete Route', () => {
   const name = `routeName${new Date().valueOf()}`;
-  const newname = `newName${new Date().valueOf()}`;
+  const newName = `newName${new Date().valueOf()}`;
 
   beforeEach(() => {
     // init login 
@@ -86,7 +86,7 @@ context('Create and Delete Route', () => {
     cy.contains('Route').click();
     cy.contains('Edit').click();
     // input new name and newdescription
-    cy.get('#name').clear().type(newname);
+    cy.get('#name').clear().type(newName);
     cy.get('#desc').clear().type('new desc');
     cy.contains('Next').click();
     cy.contains('Next').click();
@@ -95,14 +95,14 @@ context('Create and Delete Route', () => {
     cy.contains('SubmitSuccessfully');
     cy.contains('Return Route List').click();
     cy.url().should('contains', 'routes/list');
-    cy.contains(newname).siblings().should('contain', 'new desc')
+    cy.contains(newName).siblings().should('contain', 'new desc')
   });
 
   it('delete the route', () => {
     cy.visit('/routes/list');
-    cy.get('[title=Name]').type(newname);
+    cy.get('[title=Name]').type(newName);
     cy.contains('查 询').click();
-    cy.contains(newname).siblings().contains('Delete').click();
+    cy.contains(newName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');
   })
