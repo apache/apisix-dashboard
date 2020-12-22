@@ -86,6 +86,8 @@ export const HASH_ON_LIST = ['vars', 'header', 'cookie', 'consumer'];
 
 export const AUTH_LIST = ['basic-auth', 'jwt-auth', 'key-auth'];
 
+export const PROTOCOL_SUPPORTED = ['http', 'https'];
+
 export const DEFAULT_DEBUG_PARAM_FORM_DATA = {
   params: [
     {

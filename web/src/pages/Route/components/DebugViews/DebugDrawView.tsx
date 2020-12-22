@@ -26,6 +26,7 @@ import {
   HTTP_METHOD_OPTION_LIST,
   DEFAULT_DEBUG_PARAM_FORM_DATA,
   DEFAULT_DEBUG_AUTH_FORM_DATA,
+  PROTOCOL_SUPPORTED,
 } from '../../constants';
 import { DebugParamsView, AuthenticationView } from '.';
 import { debugRoute } from '../../service';
@@ -37,7 +38,8 @@ const { TabPane } = Tabs;
 
 const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const { formatMessage } = useIntl();
-  const [httpMethod, setHttpMethod] = useState('GET');
+  const [httpMethod, setHttpMethod] = useState(HTTP_METHOD_OPTION_LIST[0]);
+  const [requestProtocol, setRequestProtocol] = useState(PROTOCOL_SUPPORTED[0])
   const [showBodyTab, setShowBodyTab] = useState(false);
   const [queryForm] = Form.useForm();
   const [bodyForm] = Form.useForm();
@@ -79,7 +81,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   ) => {
     let transformData = {};
     (formData || [])
-      .filter((data) => data.check)
+      .filter((data) => data && data.check)
       .forEach((data) => {
         transformData = {
           ...transformData,
@@ -134,8 +136,8 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     setLoading(true);
     // TODO: grpc and websocket
     debugRoute({
-      url: `${url}${urlQueryString && `?${urlQueryString}`}`,
-      request_protocol: 'http',
+      url: `${requestProtocol}://${url}${urlQueryString && `?${urlQueryString}`}`,
+      request_protocol: requestProtocol,
       method: httpMethod,
       body_params: bodyFormData,
       header_params: headerFormData,
@@ -155,7 +157,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
       mask={false}
       maskClosable={false}
       visible={props.visible}
-      width={600}
+      width={650}
       onClose={() => {
         props.onClose();
       }}
@@ -180,12 +182,28 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
               );
             })}
           </Select>
+          <Select
+            defaultValue={requestProtocol}
+            style={{ width: '18%' }}
+            onChange={(value) => {
+              setRequestProtocol(value);
+            }}
+            size="large"
+          >
+            {PROTOCOL_SUPPORTED.map((protocol) => {
+              return (
+                <Option key={protocol} value={protocol}>
+                  {`${protocol}://`}
+                </Option>
+              );
+            })}
+          </Select>
           <Search
             placeholder={formatMessage({ id: 'page.route.input.placeholder.requestUrl' })}
             allowClear
             enterButton={formatMessage({ id: 'page.route.button.send' })}
             size="large"
-            style={{ width: '80%' }}
+            style={{ width: '62%' }}
             onSearch={handleDebug}
             onPressEnter={(e) => {
               handleDebug(e.currentTarget.value);
