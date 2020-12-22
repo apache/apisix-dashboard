@@ -27,6 +27,7 @@ import (
 	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
@@ -34,7 +35,7 @@ import (
 
 func TestRoute(t *testing.T) {
 	// init
-	err := storage.InitETCDClient([]string{"127.0.0.1:2379"})
+	err := storage.InitETCDClient(conf.ETCDConfig)
 	assert.Nil(t, err)
 	err = store.InitStores()
 	assert.Nil(t, err)
@@ -414,6 +415,10 @@ func TestRoute(t *testing.T) {
 	  "hosts": ["foo.com", "*.bar.com"],
 	  "remote_addrs": ["127.0.0.0/8"],
 	  "methods": ["PUT", "GET"],
+	  "labels": {
+	      "l1": "v1",
+	      "l2": "v2"
+      },
 	  "upstream": {
 	      "type": "roundrobin",
 	      "nodes": [{
@@ -764,37 +769,114 @@ func TestRoute(t *testing.T) {
 	assert.Equal(t, len(dataPage.Rows), 1)
 
 	//list search match
-	listInput2 := &ListInput{}
+	listInput = &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "a", "uri": "index"}`
-	err = json.Unmarshal([]byte(reqBody), listInput2)
+	err = json.Unmarshal([]byte(reqBody), listInput)
 	assert.Nil(t, err)
-	ctx.SetInput(listInput2)
+	ctx.SetInput(listInput)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
 	dataPage = retPage.(*store.ListOutput)
 	assert.Equal(t, len(dataPage.Rows), 1)
 
 	//list search name not match
-	listInput3 := &ListInput{}
+	listInput = &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "not-exists", "uri": "index"}`
-	err = json.Unmarshal([]byte(reqBody), listInput3)
+	err = json.Unmarshal([]byte(reqBody), listInput)
 	assert.Nil(t, err)
-	ctx.SetInput(listInput3)
+	ctx.SetInput(listInput)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
 	dataPage = retPage.(*store.ListOutput)
 	assert.Equal(t, len(dataPage.Rows), 0)
 
 	//list search uri not match
-	listInput4 := &ListInput{}
+	listInput = &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "a", "uri": "not-exists"}`
-	err = json.Unmarshal([]byte(reqBody), listInput4)
+	err = json.Unmarshal([]byte(reqBody), listInput)
 	assert.Nil(t, err)
-	ctx.SetInput(listInput4)
+	ctx.SetInput(listInput)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
 	dataPage = retPage.(*store.ListOutput)
 	assert.Equal(t, len(dataPage.Rows), 0)
+
+	//list search label not match
+	listInput = &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "label":"l3"}`
+	err = json.Unmarshal([]byte(reqBody), listInput)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 0)
+
+	//list search label match
+	listInput = &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "label":"l1"}`
+	err = json.Unmarshal([]byte(reqBody), listInput)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
+	//list search label match
+	listInput = &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "label":"l1:v1"}`
+	err = json.Unmarshal([]byte(reqBody), listInput)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
+	//list search and label not match
+	listInput = &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "label":"l1:v2"}`
+	err = json.Unmarshal([]byte(reqBody), listInput)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 0)
+
+	//list search with name and label
+	listInput = &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "name": "a", "label":"l1:v1"}`
+	err = json.Unmarshal([]byte(reqBody), listInput)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
+	//list search with uri and label
+	listInput = &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "uri": "index", "label":"l1:v1"}`
+	err = json.Unmarshal([]byte(reqBody), listInput)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
+	//list search with uri,name and label
+	listInput = &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "name": "a", "uri": "index", "label":"l1:v1"}`
+	err = json.Unmarshal([]byte(reqBody), listInput)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
 
 	//create route using uris
 	route3 := &entity.Route{}
@@ -820,11 +902,11 @@ func TestRoute(t *testing.T) {
 	time.Sleep(time.Duration(100) * time.Millisecond)
 
 	//list search match uris
-	listInput5 := &ListInput{}
+	listInput = &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "bbb", "uri": "bb"}`
-	err = json.Unmarshal([]byte(reqBody), listInput5)
+	err = json.Unmarshal([]byte(reqBody), listInput)
 	assert.Nil(t, err)
-	ctx.SetInput(listInput5)
+	ctx.SetInput(listInput)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
 	dataPage = retPage.(*store.ListOutput)
@@ -958,20 +1040,20 @@ func TestRoute(t *testing.T) {
 	assert.Equal(t, "11", stored.ID)
 
 	//list
-	listInput11 := &ListInput{}
+	listInput = &ListInput{}
 	reqBody = `{"page_size": 10, "page": 1}`
-	err = json.Unmarshal([]byte(reqBody), listInput11)
+	err = json.Unmarshal([]byte(reqBody), listInput)
 	assert.Nil(t, err)
-	ctx.SetInput(listInput11)
+	ctx.SetInput(listInput)
 	_, err = handler.List(ctx)
 	assert.Nil(t, err)
 
 	//list search match
-	listInput12 := &ListInput{}
+	listInput = &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1,  "uri": "r11"}`
-	err = json.Unmarshal([]byte(reqBody), listInput12)
+	err = json.Unmarshal([]byte(reqBody), listInput)
 	assert.Nil(t, err)
-	ctx.SetInput(listInput12)
+	ctx.SetInput(listInput)
 	retPage, err = handler.List(ctx)
 	assert.Nil(t, err)
 	dataPage = retPage.(*store.ListOutput)
@@ -989,7 +1071,7 @@ func TestRoute(t *testing.T) {
 
 func Test_Route_With_Script(t *testing.T) {
 	// init
-	err := storage.InitETCDClient([]string{"127.0.0.1:2379"})
+	err := storage.InitETCDClient(conf.ETCDConfig)
 	assert.Nil(t, err)
 	err = store.InitStores()
 	assert.Nil(t, err)

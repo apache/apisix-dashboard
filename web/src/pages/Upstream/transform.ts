@@ -30,7 +30,13 @@ export const transformRequest = (
     upstream_host,
     upstream_id,
   } = data;
-  data.checks = pickBy(data.checks, identity);
+  data.checks = pickBy(data.checks || {}, identity);
+  if (data.checks.active) {
+    data.checks.active = pickBy(
+      data.checks.active,
+      identity,
+    ) as UpstreamModule.HealthCheck['active'];
+  }
 
   if (upstream_id) {
     return { upstream_id };

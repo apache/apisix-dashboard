@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import Form from 'antd/es/form';
-import { Checkbox, Button, Input, Select, Row, Col } from 'antd';
+import { Button, Input, Select, Row, Col, InputNumber, Switch } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
@@ -30,7 +30,7 @@ import {
 const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
   form,
   disabled,
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const HostList = () => (
@@ -83,6 +83,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
+                  data-cy="addHost"
                   onClick={() => {
                     add();
                   }}
@@ -161,6 +162,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
+                  data-cy="addUri"
                   onClick={() => {
                     add();
                   }}
@@ -232,6 +234,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                 <Button
                   type="dashed"
+                  data-cy="addRemoteAddr"
                   onClick={() => {
                     add();
                   }}
@@ -256,16 +259,43 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
       <Form.Item
         label={formatMessage({ id: 'page.route.form.itemLabel.httpMethod' })}
         name="methods"
-        rules={[
-          {
-            required: true,
-            message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
-              id: 'page.route.form.itemLabel.httpMethod',
-            })}`,
-          },
-        ]}
       >
-        <Checkbox.Group options={HTTP_METHOD_OPTION_LIST} disabled={disabled} />
+        <Select
+          mode="multiple"
+          style={{ width: '100%' }}
+          optionLabelProp="label"
+          disabled={disabled}
+          onChange={(value) => {
+            if ((value as string[]).includes('ALL')) {
+              form.setFieldsValue({
+                methods: ['ALL'],
+              });
+            }
+          }}
+        >
+          {['ALL'].concat(HTTP_METHOD_OPTION_LIST).map((item) => {
+            return (
+              <Select.Option key={item} value={item}>
+                {item}
+              </Select.Option>
+            );
+          })}
+        </Select>
+      </Form.Item>
+      <Form.Item
+        label={formatMessage({ id: 'page.route.form.itemLabel.priority' })}
+        name="priority"
+      >
+        <InputNumber
+          placeholder={`Please input ${formatMessage({
+            id: 'page.route.form.itemLabel.priority',
+          })}`}
+          style={{ width: '60%' }}
+          disabled={disabled}
+        />
+      </Form.Item>
+      <Form.Item label="Websocket" valuePropName="checked" name="enable_websocket">
+        <Switch disabled={disabled} />
       </Form.Item>
       <Form.Item
         label={formatMessage({ id: 'page.route.form.itemLabel.redirect' })}

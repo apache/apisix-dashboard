@@ -16,14 +16,14 @@
  */
 import React, { useState } from 'react';
 import Form from 'antd/es/form';
-import { Input, Select, Button, Tag } from 'antd';
+import { Input, Switch, Select, Button, Tag } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
 import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 import LabelsDrawer from './LabelsDrawer';
 
-const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, onChange }) => {
+const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit, onChange, }) => {
   const { formatMessage } = useIntl();
   const [visible, setVisible] = useState(false);
 
@@ -98,6 +98,13 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, onChan
           placeholder={formatMessage({ id: 'component.global.input.placeholder.description' })}
           disabled={disabled}
         />
+      </Form.Item>
+      <Form.Item
+        label={formatMessage({ id: 'page.route.publish' })}
+        name="status"
+        valuePropName="checked"
+      >
+        <Switch disabled={isEdit} />
       </Form.Item>
     </PanelSection>
   );

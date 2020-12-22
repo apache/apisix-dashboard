@@ -43,8 +43,8 @@ export const FORM_ITEM_WITHOUT_LABEL = {
 export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   name: '',
   desc: '',
-  status: false,
   labels:[],
+  status: 1,
   priority: 0,
   websocket: false,
   hosts: [''],
@@ -84,3 +84,21 @@ export const HASH_KEY_LIST = [
 ];
 
 export const HASH_ON_LIST = ['vars', 'header', 'cookie', 'consumer'];
+
+export const AUTH_LIST = ['basic-auth', 'jwt-auth', 'key-auth'];
+
+export const PROTOCOL_SUPPORTED = ['http', 'https'];
+
+export const DEFAULT_DEBUG_PARAM_FORM_DATA = {
+  params: [
+    {
+      check: false,
+      key: '',
+      value: '',
+    },
+  ],
+};
+
+export const DEFAULT_DEBUG_AUTH_FORM_DATA = {
+  authType: 'none',
+};

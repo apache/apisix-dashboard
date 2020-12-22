@@ -19,9 +19,9 @@ package route
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"os/exec"
+	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 
@@ -30,6 +30,7 @@ import (
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
+	"github.com/yuin/gopher-lua"
 
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
@@ -71,13 +72,89 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.DELETE("/apisix/admin/routes/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
+	r.PATCH("/apisix/admin/routes/:id", consts.ErrorWrapper(Patch))
+	r.PATCH("/apisix/admin/routes/:id/*path", consts.ErrorWrapper(Patch))
+
 	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))
+}
+
+func Patch(c *gin.Context) (interface{}, error) {
+	reqBody, _ := c.GetRawData()
+	ID := c.Param("id")
+	subPath := c.Param("path")
+
+	routeStore := store.GetStore(store.HubKeyRoute)
+	stored, err := routeStore.Get(ID)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	res, err := utils.MergePatch(stored, subPath, reqBody)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	var route entity.Route
+	err = json.Unmarshal(res, &route)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	if err := routeStore.Update(c, &route, false); err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	return nil, nil
 }
 
 type GetInput struct {
 	ID string `auto_read:"id,path" validate:"required"`
 }
 
+// swagger:operation GET /apisix/admin/routes getRouteList
+//
+// Return the route list according to the specified page number and page size, and can search routes by name and uri.
+//
+// ---
+// produces:
+// - application/json
+// parameters:
+// - name: page
+//   in: query
+//   description: page number
+//   required: false
+//   type: integer
+// - name: page_size
+//   in: query
+//   description: page size
+//   required: false
+//   type: integer
+// - name: name
+//   in: query
+//   description: name of route
+//   required: false
+//   type: string
+// - name: uri
+//   in: query
+//   description: uri of route
+//   required: false
+//   type: string
+// - name: label
+//   in: query
+//   description: label of route
+//   required: false
+//   type: string
+// responses:
+//   '0':
+//     description: list response
+//     schema:
+//       type: array
+//       items:
+//         "$ref": "#/definitions/route"
+//   default:
+//     description: unexpected error
+//     schema:
+//       "$ref": "#/definitions/ApiError"
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
@@ -102,8 +179,9 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 }
 
 type ListInput struct {
-	Name string `auto_read:"name,query"`
-	URI  string `auto_read:"uri,query"`
+	Name  string `auto_read:"name,query"`
+	URI   string `auto_read:"uri,query"`
+	Label string `auto_read:"label,query"`
 	store.Pagination
 }
 
@@ -122,21 +200,26 @@ func uriContains(obj *entity.Route, uri string) bool {
 
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
+	labelMap, err := utils.GenLabelMap(input.Label)
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("%s: \"%s\"", err.Error(), input.Label)
+	}
 
 	ret, err := h.routeStore.List(store.ListInput{
 		Predicate: func(obj interface{}) bool {
-			if input.Name != "" && input.URI != "" {
-				if strings.Contains(obj.(*entity.Route).Name, input.Name) {
-					return uriContains(obj.(*entity.Route), input.URI)
-				}
+			if input.Name != "" && !strings.Contains(obj.(*entity.Route).Name, input.Name) {
 				return false
 			}
-			if input.Name != "" {
-				return strings.Contains(obj.(*entity.Route).Name, input.Name)
+
+			if input.URI != "" && !uriContains(obj.(*entity.Route), input.URI) {
+				return false
 			}
-			if input.URI != "" {
-				return uriContains(obj.(*entity.Route), input.URI)
+
+			if input.Label != "" && !utils.LabelContains(obj.(*entity.Route).Labels, labelMap) {
+				return false
 			}
+
 			return true
 		},
 		Format: func(obj interface{}) interface{} {
@@ -174,21 +257,36 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	cmd := exec.Command("sh", "-c",
-		"cd "+conf.WorkDir+"/dag-to-lua && lua cli.lua "+
-			"'"+string(scriptString)+"'")
-
-	stdout, _ := cmd.StdoutPipe()
-	defer stdout.Close()
-	if err := cmd.Start(); err != nil {
+	workDir, err := filepath.Abs(conf.WorkDir)
+	if err != nil {
+		return "", err
+	}
+	libDir := filepath.Join(workDir, "dag-to-lua/")
+	if err := os.Chdir(libDir); err != nil {
+		log.Errorf("Chdir to libDir failed: %s", err)
 		return "", err
 	}
 
-	result, _ := ioutil.ReadAll(stdout)
-	resData := string(result)
+	defer func() {
+		if err := os.Chdir(workDir); err != nil {
+			log.Errorf("Chdir to workDir failed: %s", err)
+		}
+	}()
 
-	return resData, nil
+	L := lua.NewState()
+	defer L.Close()
+
+	if err := L.DoString(`
+	        local dag_to_lua = require 'dag-to-lua'
+		local conf = [==[` + string(scriptString) + `]==]
+	        code = dag_to_lua.generate(conf)
+        `); err != nil {
+		return "", err
+	}
+
+	code := L.GetGlobal("code")
+
+	return code.String(), nil
 }
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
@@ -363,6 +461,33 @@ func toRows(list *store.ListOutput) []store.Row {
 	return rows
 }
 
+// swagger:operation GET /apisix/admin/notexist/routes checkRouteExist
+//
+// Return result of route exists checking by name and exclude id.
+//
+// ---
+// produces:
+// - application/json
+// parameters:
+// - name: name
+//   in: query
+//   description: name of route
+//   required: false
+//   type: string
+// - name: exclude
+//   in: query
+//   description: id of route that exclude checking
+//   required: false
+//   type: string
+// responses:
+//   '0':
+//     description: route not exists
+//     schema:
+//       "$ref": "#/definitions/ApiError"
+//   default:
+//     description: unexpected error
+//     schema:
+//       "$ref": "#/definitions/ApiError"
 func Exist(c *gin.Context) (interface{}, error) {
 	//input := c.Input().(*ExistInput)
 

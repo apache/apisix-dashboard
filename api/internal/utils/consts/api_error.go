@@ -35,9 +35,12 @@ func ErrorWrapper(handle WrapperHandle) gin.HandlerFunc {
 	}
 }
 
+// swagger:model ApiError
 type ApiError struct {
-	Status  int    `json:"-"`
-	Code    int    `json:"code"`
+	Status int `json:"-"`
+	// response code
+	Code int `json:"code"`
+	// response message
 	Message string `json:"message"`
 }
 
@@ -46,7 +49,7 @@ func (err ApiError) Error() string {
 }
 
 func InvalidParam(message string) *ApiError {
-	return &ApiError{400, 400, message}
+	return &ApiError{400, 10000, message}
 }
 
 func SystemError(message string) *ApiError {

@@ -17,9 +17,20 @@
 #
 -->
 
-English | [简体中文](./README.zh-CN.md)
+# Apache APISIX Dashboard (Experimental)
 
-# Apache APISIX Dashboard (Currently considered experimental)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/apisix-dashboard/blob/master/LICENSE)
+
+<p align="center">
+  <a href="https://apisix.apache.org/">Website</a> •
+  <a href="https://github.com/apache/apisix/tree/master/doc">Docs</a> •
+  <a href="https://twitter.com/apacheapisix">Twitter</a>
+</p>
+
+- The master version should be used with Apache APISIX master version.
+
+- The latest released version is 2.2 and should be used with Apache APISIX 2.1. It is not recommended to use with other Apache APISIX versions.
+
 
 ## What's Apache APISIX Dashboard
 
@@ -27,7 +38,7 @@ The Apache APISIX Dashboard is designed to make it as easy as possible for users
 
 The Dashboard is the control plane and performs all parameter checks; Apache APISIX mixes data and control planes and will evolve to a pure data plane.
 
-This project includes `manager-api`, which will gradually replace `admin-api` in Apache APISIX.
+This project includes `Manager API`, which will gradually replace `Admin API` in Apache APISIX.
 
 Note: Currently the Dashboard does not have complete coverage of Apache APISIX features, [visit here](https://github.com/apache/apisix-dashboard/milestones) to view the milestones.
 
@@ -38,7 +49,6 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 ```
 .
 ├── CHANGELOG.md
-├── CHANGELOG.zh-CN.md
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
 ├── Dockerfile
@@ -46,14 +56,13 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 ├── Makefile
 ├── NOTICE
 ├── README.md
-├── README.zh-CN.md
 ├── api
 ├── docs
 ├── licenses
 └── web
 ```
 
-1. The `api` directory is used to store the `manager-api` source codes, which is used to manage `etcd` and provide APIs to the frontend interface.
+1. The `api` directory is used to store the `Manager API` source codes, which is used to manage `etcd` and provide APIs to the frontend interface.
 2. The `web` directory is used to store the frontend source codes.
 
 ## Build then launch
@@ -73,7 +82,7 @@ Please refer to the [User Guide](./docs/USER_GUIDE.md).
 
 ## Contributing
 
-Please refer to the [Contribution Guide](./CONTRIBUTING.md) for a more detailed infomation.
+Please refer to the [Contribution Guide](./CONTRIBUTING.md) for a more detailed information.
 
 ## FAQ
 

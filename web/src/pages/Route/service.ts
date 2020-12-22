@@ -94,3 +94,16 @@ export const checkHostWithSSL = (hosts: string[]) =>
 
 export const fetchLabelList = () =>
   request('/labels/route').then(({ data }) => ((data.rows) as RouteModule.ResponseLabelList));
+
+export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) =>
+  request(`/routes/${rid}`, {
+    method: 'PATCH',
+    data: {status}
+  });
+
+export const debugRoute = (data: RouteModule.debugRequest) => {
+  return request('/debug-request-forwarding', {
+    method: 'post',
+    data,
+  });
+};

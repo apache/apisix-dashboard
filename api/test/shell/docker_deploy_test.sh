@@ -20,7 +20,7 @@
 set -ex
 
 # web page
-curl http://127.0.0.1:9000 
+curl http://127.0.0.1:9000
 code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} http://127.0.0.1:9000)
 if [ ! $code -eq 200 ]; then
     echo "failed: failed to custom port"
