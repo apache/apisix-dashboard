@@ -85,7 +85,7 @@ func TestHandler_List(t *testing.T) {
 	tests := []struct {
 		caseDesc  string
 		giveInput *ListInput
-		giveData  []*SetInput
+		giveData  []*entity.Consumer
 		giveErr   error
 		wantErr   error
 		wantInput store.ListInput
@@ -104,7 +104,7 @@ func TestHandler_List(t *testing.T) {
 				PageSize:   10,
 				PageNumber: 10,
 			},
-			giveData: []*SetInput{
+			giveData: []*entity.Consumer{
 				{Username: "user1"},
 				{Username: "testUser"},
 				{Username: "iam-testUser"},
@@ -112,9 +112,9 @@ func TestHandler_List(t *testing.T) {
 			},
 			wantRet: &store.ListOutput{
 				Rows: []interface{}{
-					&SetInput{Username: "testUser"},
-					&SetInput{Username: "iam-testUser"},
-					&SetInput{Username: "testUser-is-me"},
+					&entity.Consumer{Username: "testUser"},
+					&entity.Consumer{Username: "iam-testUser"},
+					&entity.Consumer{Username: "testUser-is-me"},
 				},
 				TotalSize: 3,
 			},
@@ -247,10 +247,11 @@ func TestHandler_Create(t *testing.T) {
 		t.Run(tc.caseDesc, func(t *testing.T) {
 			methodCalled := true
 			mStore := &store.MockInterface{}
-			mStore.On("Create", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			mStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				methodCalled = true
 				assert.Equal(t, tc.giveCtx, args.Get(0))
-				assert.Equal(t, tc.wantInput, args.Get(1))
+				assert.Equal(t, &tc.wantInput.Consumer, args.Get(1))
+				assert.True(t, args.Bool(2))
 			}).Return(tc.giveErr)
 
 			h := Handler{consumerStore: mStore}
