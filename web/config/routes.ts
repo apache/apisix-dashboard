@@ -76,6 +76,10 @@ const routes = [
     component: './Consumer/Create',
   },
   {
+    path: '/plugin/list',
+    component: './Plugin/List',
+  },
+  {
     path: '/settings',
     component: './Setting',
   },
