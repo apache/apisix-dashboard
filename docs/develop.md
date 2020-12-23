@@ -28,7 +28,7 @@ Before development, refer to this [guide](./deploy.md) to install dependencies.
 ## Clone the project
 
 ```sh
-$ git clone -b v2.0 https://github.com/apache/apisix-dashboard.git
+$ git clone -b v2.2 https://github.com/apache/apisix-dashboard.git
 ```
 
 ## Start developing
@@ -73,4 +73,4 @@ $ yarn install
 $ yarn start
 ```
 
-4. If writing an E2E test, refer to the [E2E Writing Guide](../web/src/e2e/README.md)
+4. If writing an E2E test, refer to the [E2E Writing Guide](./front-end-e2e.md)

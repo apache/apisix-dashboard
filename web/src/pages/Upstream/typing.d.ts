@@ -34,6 +34,7 @@ declare namespace UpstreamModule {
         http_failures: number;
       };
       req_headers?: string[];
+      port?: number;
     };
     passive?: {
       healthy: {

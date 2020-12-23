@@ -23,6 +23,8 @@ The following are parts of the modules' snapshot.
 
 ## Metrics
 
+We support the monitor page by referencing it in [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe). Before accessing [Grafana](https://grafana.com/), please Enable [`allow_embedding=true`](https://grafana.com/docs/grafana/latest/administration/configuration/#allow_embedding), which defaults to `false`. This causes the browser to fail to render Grafana pages properly due to security policies.
+
 ![metrics-en](./images/metrics-en.png)
 
 ## Route
@@ -44,6 +46,34 @@ The Route module aims to control routes by UI instead of calling APIs.
 ![route-create-step4-en](./images/route-create-step4-en.png)
 
 ![route-create-done-list-en](./images/route-create-done-list-en.png)
+
+### Online debug
+
+We can debug a route both published or offline with the online debug function, which is located in the routes list page.
+
+1. Debug a published route
+
+![route-debug-published](./images/route-debug-published.png)
+
+2. Debug a offline route
+
+![route-debug-offline](./images/route-debug-offline.png)
+
+3. Debug a published route with query params
+
+![route-debug-query-params](./images/route-debug-query-params.png)
+
+4. Debug a published route with header params
+
+![route-debug-header-params](./images/route-debug-header-params.png)
+
+5. Debug a published route with body params
+
+![route-debug-body-params](./images/route-debug-body-params.png)
+
+6. Debug a published route with basic auth
+
+![route-debug-basic-auth](./images/route-debug-basic-auth.png)
 
 ## Setting
 

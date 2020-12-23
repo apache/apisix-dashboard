@@ -156,6 +156,7 @@ const Page: React.FC<Props> = (props) => {
           form2={form2}
           upstreamRef={upstreamRef}
           step3Data={step3Data}
+          isEdit={props.route.path.indexOf('edit') > 0}
         />
       );
     }
@@ -252,10 +253,11 @@ const Page: React.FC<Props> = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={`${(props as any).match.params.rid
+        title={`${
+          (props as any).match.params.rid
             ? formatMessage({ id: 'component.global.edit' })
             : formatMessage({ id: 'component.global.create' })
-          } ${formatMessage({ id: 'menu.routes' })}`}
+        } ${formatMessage({ id: 'menu.routes' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>

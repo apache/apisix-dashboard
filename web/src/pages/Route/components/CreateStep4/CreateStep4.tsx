@@ -17,9 +17,9 @@
 import React from 'react';
 import { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
-import { PluginPage } from '@api7-dashboard/plugin';
 import PluginOrchestration from '@api7-dashboard/pluginchart';
 
+import PluginPage from '@/components/Plugin';
 import Step1 from '../Step1';
 import Step2 from '../Step2';
 
@@ -30,6 +30,7 @@ type Props = {
   step3Data: RouteModule.Step3Data;
   advancedMatchingRules: RouteModule.MatchingRule[];
   upstreamRef: any;
+  isEdit?: boolean;
 };
 
 const style = {
@@ -43,7 +44,7 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, upstreamRef, ...
   return (
     <>
       <h2>{formatMessage({ id: 'page.route.steps.stepTitle.defineApiRequest' })}</h2>
-      <Step1 {...rest} form={form1} disabled />
+      <Step1 {...rest} form={form1} disabled isEdit />
       {!redirect && (
         <>
           <h2 style={style}>

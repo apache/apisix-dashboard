@@ -85,3 +85,17 @@ export const checkHostWithSSL = (hosts: string[]) =>
     method: 'POST',
     data: hosts,
   });
+
+
+export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) =>
+  request(`/routes/${rid}`, {
+    method: 'PATCH',
+    data: {status}
+  });
+
+export const debugRoute = (data: RouteModule.debugRequest) => {
+  return request('/debug-request-forwarding', {
+    method: 'post',
+    data,
+  });
+};

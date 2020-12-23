@@ -26,6 +26,8 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { queryCurrent } from '@/services/user';
 import { getMenuData, errorHandler } from '@/helpers';
+
+import './libs/iconfont';
 import defaultSettings from '../config/defaultSettings';
 
 export async function getInitialState(): Promise<{

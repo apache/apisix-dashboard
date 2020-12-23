@@ -14,19 +14,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag, Space } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined } from '@ant-design/icons';
-
-import { fetchList, remove } from './service';
+import { PlusOutlined, BugOutlined } from '@ant-design/icons';
 import { timestampToLocaleString } from '@/helpers';
+
+import { fetchList, remove, updateRouteStatus } from './service';
+import { DebugDrawView } from './components/DebugViews';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
+
+  enum RouteStatus {
+    Offline = 0,
+    Publish,
+  }
+
+  const handleTableActionSuccessResponse = (msgTip: string) => {
+    notification.success({
+      message: msgTip,
+    });
+
+    ref.current?.reload();
+  };
+
+  const handlePublishOffline = (rid: string, status: RouteModule.RouteStatus) => {
+    updateRouteStatus(rid, status).then(() => {
+      const actionName = status ? formatMessage({ id: 'page.route.publish' }) : formatMessage({ id: 'page.route.offline' })
+      handleTableActionSuccessResponse(
+        `${actionName} ${formatMessage({
+          id: 'menu.routes',
+        })} ${formatMessage({ id: 'component.status.success' })}`,
+      );
+    });
+  }
+
+  const [debugDrawVisible, setDebugDrawVisible] = useState(false);
 
   const columns: ProColumns<RouteModule.ResponseBody>[] = [
     {
@@ -64,6 +91,19 @@ const Page: React.FC = () => {
       hideInSearch: true,
     },
     {
+      title: formatMessage({ id: 'page.route.status' }),
+      dataIndex: 'status',
+      render: (_, record) => (
+        <>
+          {record.status ? (
+            <Tag color="green">{formatMessage({ id: 'page.route.published' })}</Tag>
+          ) : (
+            <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
+          )}
+        </>
+      ),
+    },
+    {
       title: formatMessage({ id: 'component.global.updateTime' }),
       dataIndex: 'update_time',
       hideInSearch: true,
@@ -83,17 +123,38 @@ const Page: React.FC = () => {
             >
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                handlePublishOffline(record.id, RouteStatus.Publish)
+              }}
+              style={{ marginRight: 10 }}
+              disabled={Boolean(record.status)}
+            >
+              {formatMessage({ id: 'page.route.publish' })}
+            </Button>
+            <Popconfirm
+              title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
+              onConfirm={() => {
+                handlePublishOffline(record.id, RouteStatus.Offline)
+              }}
+              okText={formatMessage({ id: 'component.global.confirm' })}
+              cancelText={formatMessage({ id: 'component.global.cancel' })}
+              disabled={Boolean(!record.status)}
+            >
+              <Button type="primary" danger disabled={Boolean(!record.status)}>
+                {formatMessage({ id: 'page.route.offline' })}
+              </Button>
+            </Popconfirm>
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
                 remove(record.id!).then(() => {
-                  notification.success({
-                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                  handleTableActionSuccessResponse(
+                    `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
                       id: 'menu.routes',
                     })} ${formatMessage({ id: 'component.status.success' })}`,
-                  });
-                  /* eslint-disable no-unused-expressions */
-                  ref.current?.reload();
+                  );
                 });
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
@@ -125,7 +186,17 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
+          <Button type="primary" onClick={() => setDebugDrawVisible(true)}>
+            <BugOutlined />
+            {formatMessage({ id: 'page.route.onlineDebug' })}
+          </Button>,
         ]}
+      />
+      <DebugDrawView
+        visible={debugDrawVisible}
+        onClose={() => {
+          setDebugDrawVisible(false);
+        }}
       />
     </PageHeaderWrapper>
   );

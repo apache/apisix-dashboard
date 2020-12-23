@@ -35,7 +35,7 @@ declare namespace RouteModule {
     desc: string;
     uris: string[];
     hosts: string[];
-    status: boolean;
+    status: number;
   };
 
   type Step3Data = {
@@ -70,7 +70,7 @@ declare namespace RouteModule {
   // Request Body or Response Data for API
   type Body = {
     id?: number;
-    status: boolean;
+    status: number;
     name: string;
     desc: string;
     priority?: number;
@@ -105,48 +105,7 @@ declare namespace RouteModule {
     };
     script: Record<string, any>;
     url?: string;
-  };
-
-  type RouteParamSchema = {
-    type: string | integer | boolean | object | array;
-  };
-
-  type RouteParam = {
-    name: string;
-    in: 'query' | 'header' | 'path' | 'cookie';
-    description: string;
-    required: boolean;
-    style?: 'form' | 'simple';
-    explode?: boolean;
-    schema?: RouteParamSchema;
-  };
-
-  type PathSchema = {
-    tags: string;
-    summary: string;
-    description: string;
-    operationId: string;
-    requestBody?: object;
-    parameters?: RouteParam[];
-    responses: ResponseScheme;
-  };
-
-  type ResponseSchema = {
-    [code: string]: {
-      description: string;
-      content: ResponseItemContent;
-    };
-  };
-
-  type ResponseItemContent = {
-    'application/xml'?: {};
-    'application/json'?: {};
-  };
-
-  type TagSchema = {
-    name: string;
-    description: string;
-    externalDocs?: object;
+    enable_websocket?: boolean;
   };
 
   // step1
@@ -181,10 +140,11 @@ declare namespace RouteModule {
     redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
     redirectURI?: string;
     ret_code?: number;
-    status: boolean;
+    status: number;
+    enable_websocket?: boolean;
   };
 
-  type AvancedMatchingRules = {
+  type AdvancedMatchingRules = {
     advancedMatchingRules: MatchingRule[];
   };
 
@@ -270,5 +230,36 @@ declare namespace RouteModule {
     hosts?: string[];
     create_time: number;
     update_time: number;
+    status: number;
+  };
+
+  type RouteStatus = 0 | 1;
+
+  // TODO： grpc and websocket
+  type debugRequest = {
+    url: string;
+    request_protocol: 'http' | 'grpc' | 'websocket';
+    method: string;
+    body_params?: any;
+    header_params?: any;
+  };
+  type authData = {
+    authType: string;
+    username?: string;
+    password?: string;
+    Authorization?: string;
+    apikey?: string;
+  };
+  type debugRequestParamsFormData = {
+    check: boolean;
+    key: string;
+    value: string;
+  };
+  type DebugViewProps = {
+    form: FormInstance;
+  };
+  type DebugDrawProps = {
+    visible: boolean;
+    onClose(): void;
   };
 }
