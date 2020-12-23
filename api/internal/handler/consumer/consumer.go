@@ -17,17 +17,21 @@
 package consumer
 
 import (
+	"fmt"
+	"net/http"
 	"reflect"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
@@ -126,39 +130,17 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	return ret, nil
 }
 
-<<<<<<< HEAD
-func (h *Handler) Create(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*entity.Consumer)
-	input.ID = input.Username
-
-	ensurePluginsDefValue(input.Plugins)
-	if err := h.consumerStore.Create(c.Context(), input); err != nil {
-		return handler.SpecCodeResponse(err), err
-	}
-
-	return nil, nil
-}
-
-type UpdateInput struct {
-	Username string `auto_read:"username,path"`
-=======
 type SetInput struct {
->>>>>>> fix: delete POST method in /apisix/admin/consumer (#852)
 	entity.Consumer
 	Username string `auto_read:"username,path"`
 }
 
-<<<<<<< HEAD
-func (h *Handler) Update(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*UpdateInput)
-=======
 func (h *Handler) Set(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*SetInput)
 	if input.ID != nil && utils.InterfaceToString(input.ID) != input.Username {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
 			fmt.Errorf("consumer's id and username must be a same value")
 	}
->>>>>>> fix: delete POST method in /apisix/admin/consumer (#852)
 	if input.Username != "" {
 		input.Consumer.Username = input.Username
 	}
