@@ -18,7 +18,7 @@
 
 context('metrics page smoke test', () => {
   const domSelectors = {
-    metricsPage: '.ant-pro-page-container'
+    pageContent: '.ant-pro-page-container'
   };
 
   beforeEach(() => {
@@ -32,7 +32,7 @@ context('metrics page smoke test', () => {
     cy.contains('Metrics').click();
     cy.wait(500);
     cy.url().should('contains', '/metrics');
-    cy.get(domSelectors.metricsPage)
+    cy.get(domSelectors.pageContent)
       .children()
       .should('contain', 'Metrics')
       .and('contain', 'You have not configured Grafana')
