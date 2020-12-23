@@ -17,13 +17,17 @@
 package route
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os/exec"
 	"reflect"
+	"regexp"
 	"strings"
+
+	"github.com/getkin/kin-openapi/openapi3"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
@@ -72,6 +76,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
 	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))
+
+	r.POST("/apisix/admin/routes/import", consts.ErrorWrapper(ImportRoutes))
 }
 
 type GetInput struct {
@@ -396,4 +402,280 @@ func Exist(c *gin.Context) (interface{}, error) {
 	}
 
 	return nil, nil
+}
+
+func ImportRoutes(c *gin.Context) (interface{}, error) {
+	limit := 8 << 20
+	file, err := c.FormFile("file")
+	if err != nil {
+		return nil, err
+	}
+	fileType := file.Filename[strings.LastIndex(file.Filename, ".")+1:]
+	if fileType != "json" {
+		return nil, fmt.Errorf("the file type error: need json,given %s", fileType)
+	}
+	if file.Size > int64(limit) {
+		return nil, fmt.Errorf("the file size exceeds the limit; limit 8M")
+	}
+	open, err := file.Open()
+	if err != nil {
+		return nil, err
+	}
+	defer open.Close()
+	reader := bufio.NewReader(open)
+	// set []byte volume is 8 M
+	bytes := make([]byte, file.Size)
+	_, _ = reader.Read(bytes)
+	swagger := &openapi3.Swagger{}
+	_ = json.Unmarshal(bytes, swagger)
+	routes := TransformOpenToRoute(swagger)
+	routeStore := store.GetStore(store.HubKeyRoute)
+	upstreamStore := store.GetStore(store.HubKeyUpstream)
+	scriptStore := store.GetStore(store.HubKeyScript)
+	//upstreamStr := `{"type":"roundrobin","timeout":{"connect":6000,"send":6000,"read":6000},"nodes":[{"host":"127.0.0.1","port":80,"weight":1}]}`
+	for _, route := range routes {
+		//upstream := &entity.Upstream{}
+		//_ = json.Unmarshal([]byte(upstreamStr), upstream)
+		//route.Upstream = &upstream.UpstreamDef
+		// check route name
+		_, err := checkRouteName(route.Name)
+		if err != nil {
+			continue
+		}
+		if route.ServiceID != "" {
+			_, err := routeStore.Get(utils.InterfaceToString(route.ServiceID))
+			if err != nil {
+				if err == data.ErrNotFound {
+					return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+						fmt.Errorf("service id: %s not found", route.ServiceID)
+				}
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+			}
+		}
+		if route.UpstreamID != "" {
+			_, err := upstreamStore.Get(utils.InterfaceToString(route.UpstreamID))
+			if err != nil {
+				if err == data.ErrNotFound {
+					return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+						fmt.Errorf("upstream id: %s not found", route.UpstreamID)
+				}
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+			}
+		}
+		if route.Script != nil {
+			if route.ID == "" {
+				route.ID = utils.GetFlakeUidStr()
+			}
+			script := &entity.Script{}
+			script.ID = utils.InterfaceToString(route.ID)
+			script.Script = route.Script
+			//to lua
+			var err error
+			route.Script, err = generateLuaCode(route.Script.(map[string]interface{}))
+			if err != nil {
+				return nil, err
+			}
+			//save original conf
+			if err = scriptStore.Create(c, script); err != nil {
+				return nil, err
+			}
+		}
+		if err := routeStore.Create(c, route); err != nil {
+			println(err.Error())
+			return handler.SpecCodeResponse(err), err
+		}
+	}
+	return nil, nil
+}
+
+func checkRouteName(name string) (bool, error) {
+	routeStore := store.GetStore(store.HubKeyRoute)
+	ret, err := routeStore.List(store.ListInput{
+		Predicate:  nil,
+		PageSize:   0,
+		PageNumber: 0,
+	})
+	if err != nil {
+		return false, err
+	}
+	sort := store.NewSort(nil)
+	filter := store.NewFilter([]string{"name", name})
+	pagination := store.NewPagination(0, 0)
+	query := store.NewQuery(sort, filter, pagination)
+	rows := store.NewFilterSelector(toRows(ret), query)
+	if len(rows) > 0 {
+		return false, consts.InvalidParam("Route name is reduplicate")
+	}
+	return true, nil
+}
+
+func TransformOpenToRoute(swagger *openapi3.Swagger) []*entity.Route {
+	var routes []*entity.Route
+	swagger.Extensions = nil
+	paths := swagger.Paths
+	for k, v := range paths {
+		if v.Get != nil {
+			routes = append(routes, getRouteFromPaths("GET", k, v.Get, swagger))
+		}
+		if v.Post != nil {
+			routes = append(routes, getRouteFromPaths("POST", k, v.Post, swagger))
+		}
+		if v.Head != nil {
+			routes = append(routes, getRouteFromPaths("HEAD", k, v.Head, swagger))
+		}
+		if v.Put != nil {
+			routes = append(routes, getRouteFromPaths("PUT", k, v.Put, swagger))
+		}
+		if v.Patch != nil {
+			routes = append(routes, getRouteFromPaths("PATCH", k, v.Patch, swagger))
+		}
+		if v.Delete != nil {
+			routes = append(routes, getRouteFromPaths("DELETE", k, v.Delete, swagger))
+		}
+	}
+	return routes
+}
+
+func getRouteFromPaths(method, key string, value *openapi3.Operation, swagger *openapi3.Swagger) *entity.Route {
+	reg := regexp.MustCompile(`{[\w.]*\}`)
+	findString := reg.FindString(key)
+	if findString != "" {
+		key = strings.Split(key, findString)[0] + "*"
+	}
+	r := &entity.Route{
+		URI:     key,
+		Name:    value.OperationID,
+		Desc:    value.Summary,
+		Methods: []string{method},
+	}
+	var parameters *openapi3.Parameters
+	plugins := make(map[string]interface{})
+	requestValidation := make(map[string]*entity.RequestValidation)
+	if value.Parameters != nil {
+		parameters = &value.Parameters
+	}
+	if parameters != nil {
+		for _, v := range *parameters {
+			if v.Value.Schema != nil {
+				v.Value.Schema.Value.Extensions = nil
+				v.Value.Schema.Value.Format = ""
+				v.Value.Schema.Value.XML = nil
+			}
+			props := make(map[string]interface{})
+			switch v.Value.In {
+			case "header":
+				props[v.Value.Name] = v.Value.Schema.Value
+				var required []string
+				if v.Value.Required {
+					required = append(required, v.Value.Name)
+				}
+				requestValidation["header_schema"] = &entity.RequestValidation{
+					Type:       "object",
+					Required:   required,
+					Properties: props,
+				}
+				plugins["request-validation"] = requestValidation
+			}
+		}
+	}
+
+	if value.RequestBody != nil {
+		vars := make([]interface{}, 0)
+		schema := value.RequestBody.Value.Content
+		for k, v := range schema {
+			item := []string{"http_Content-type", "==", ""}
+			item[2] = k
+			vars = append(vars, item)
+			if v.Schema.Ref != "" {
+				s := getParameters(v.Schema.Ref, &swagger.Components).Value
+				requestValidation["body_schema"] = &entity.RequestValidation{
+					Type:       s.Type,
+					Required:   s.Required,
+					Properties: s.Properties,
+				}
+				plugins["request-validation"] = requestValidation
+			} else if v.Schema.Value != nil {
+				if v.Schema.Value.Properties != nil {
+					for k1, v1 := range v.Schema.Value.Properties {
+						if v1.Ref != "" {
+							s := getParameters(v1.Ref, &swagger.Components)
+							v.Schema.Value.Properties[k1] = s
+						}
+						v1.Value.Extensions = nil
+						v1.Value.Format = ""
+					}
+					requestValidation["body_schema"] = &entity.RequestValidation{
+						Type:       v.Schema.Value.Type,
+						Required:   v.Schema.Value.Required,
+						Properties: v.Schema.Value.Properties,
+					}
+					plugins["request-validation"] = requestValidation
+				} else if v.Schema.Value.Items != nil {
+					if v.Schema.Value.Items.Ref != "" {
+						s := getParameters(v.Schema.Value.Items.Ref, &swagger.Components).Value
+						requestValidation["body_schema"] = &entity.RequestValidation{
+							Type:       s.Type,
+							Required:   s.Required,
+							Properties: s.Properties,
+						}
+						plugins["request-validation"] = requestValidation
+					}
+				} else {
+					requestValidation["body_schema"] = &entity.RequestValidation{
+						Type:       "object",
+						Required:   []string{},
+						Properties: v.Schema.Value.Properties,
+					}
+				}
+			}
+			plugins["request-validation"] = requestValidation
+		}
+		r.Vars = vars
+	}
+
+	if value.Security != nil {
+		p := &entity.SecurityPlugin{}
+		for _, v := range *value.Security {
+			for v1 := range v {
+				switch v1 {
+				case "api_key":
+					plugins["key-auth"] = p
+				case "basicAuth":
+					plugins["basic-auth"] = p
+				case "bearerAuth":
+					plugins["jwt-auth"] = p
+				}
+			}
+		}
+	}
+	r.Plugins = plugins
+	return r
+}
+
+func getParameters(ref string, components *openapi3.Components) *openapi3.SchemaRef {
+	schemaRef := &openapi3.SchemaRef{}
+	arr := strings.Split(ref, "/")
+	if arr[0] == "#" && arr[1] == "components" && arr[2] == "schemas" {
+		schemaRef = components.Schemas[arr[3]]
+		schemaRef.Value.XML = nil
+		schemaRef.Value.Extensions = nil
+		// traverse properties to find another ref
+		for k, v := range schemaRef.Value.Properties {
+			if v.Value != nil {
+				v.Value.XML = nil
+				v.Value.Format = ""
+				v.Value.Extensions = nil
+			}
+			if v.Ref != "" {
+				schemaRef.Value.Properties[k] = getParameters(v.Ref, components)
+			} else if v.Value.Items != nil && v.Value.Items.Ref != "" {
+				v.Value.Items = getParameters(v.Value.Items.Ref, components)
+			} else if v.Value.Items != nil && v.Value.Items.Value != nil {
+				v.Value.Items.Value.XML = nil
+				v.Value.Items.Value.Extensions = nil
+				v.Value.Items.Value.Format = ""
+			}
+		}
+	}
+	return schemaRef
 }

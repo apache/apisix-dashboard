@@ -220,3 +220,12 @@ type Script struct {
 	ID     string      `json:"id"`
 	Script interface{} `json:"script,omitempty"`
 }
+
+type SecurityPlugin struct {
+}
+
+type RequestValidation struct {
+	Type       string      `json:"type,omitempty"`
+	Required   []string    `json:"required,omitempty"`
+	Properties interface{} `json:"properties,omitempty"`
+}
