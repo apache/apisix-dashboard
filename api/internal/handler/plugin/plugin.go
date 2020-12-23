@@ -71,7 +71,17 @@ func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
 
 	plugins := conf.Schema.Get("plugins")
 	if input.All {
-		return plugins.Value(), nil
+		var res []map[string]interface{}
+		list := plugins.Value().(map[string]interface{})
+		for name, conf := range list {
+			plugin := conf.(map[string]interface{})
+			plugin["name"] = name
+			if _, ok := plugin["type"]; !ok {
+				plugin["type"] = "other"
+			}
+			res = append(res, plugin)
+		}
+		return res, nil
 	}
 
 	var ret []string

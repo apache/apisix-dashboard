@@ -46,7 +46,23 @@ func TestPlugin(t *testing.T) {
 	ctx.SetInput(listInput)
 	list, err = handler.Plugins(ctx)
 	assert.Nil(t, err)
-	assert.Contains(t, list.(map[string]interface{}), "limit-count")
+	plugins := list.([]map[string]interface{})
+	var authPlugins []string
+	var basicAuthConsumerSchema string
+	for _, plugin := range plugins {
+		if plugin["type"] == "auth" {
+			authPlugins = append(authPlugins, plugin["name"].(string))
+		}
+		if plugin["name"] == "basic-auth" {
+			consumerSchemaByte, err := json.Marshal(plugin["consumer_schema"])
+			basicAuthConsumerSchema = string(consumerSchemaByte)
+			assert.Nil(t, err)
+		}
+	}
+	// plugin type
+	assert.ElementsMatch(t, []string{"basic-auth", "jwt-auth", "hmac-auth", "key-auth", "wolf-rbac"}, authPlugins)
+	// consumer schema
+	assert.Equal(t, `{"additionalProperties":false,"properties":{"password":{"type":"string"},"username":{"type":"string"}},"required":["password","username"],"title":"work with consumer object","type":"object"}`, basicAuthConsumerSchema)
 
 	// schema
 	input := &GetInput{
