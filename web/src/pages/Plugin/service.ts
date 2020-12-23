@@ -14,3 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export const fetchList = () => {
+    return new Promise((resolve) => {
+        resolve({
+            "code": 0,
+            "message": "",
+            "data": {
+                "rows": [
+                    {
+                        "id": 1,
+                        "plugins": {
+                            "limit-count": {
+                                "time_window": 60,
+                                "policy": "local",
+                                "count": 2,
+                                "key": "remote_addr",
+                                "rejected_code": 503
+                            }
+                        }
+                    }
+                ]
+            }
+        })
+    }).then(data => {
+        const pluginData = data.data.rows[0];
+        const listData = Object.keys(pluginData.plugins).map(item => ({ id: pluginData.id, name: item }))
+        return {
+            data: listData,
+            total: listData.length
+        };
+    })
+};

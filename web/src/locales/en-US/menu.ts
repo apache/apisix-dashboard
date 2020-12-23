@@ -69,6 +69,7 @@ export default {
   'menu.ssl': 'SSL',
   'menu.upstream': 'Upstream',
   'menu.consumer': 'Consumer',
+  'menu.plugin': 'Plugin',
   'menu.setting': 'Settings',
   'menu.serverinfo': 'Server Info',
 };
