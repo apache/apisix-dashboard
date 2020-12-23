@@ -107,7 +107,7 @@ const Page: React.FC = () => {
         actionRef={tableRef}
         request={fetchList}
         search={{
-          searchText: formatMessage({ id: 'component.global.query' }),
+          searchText: formatMessage({ id: 'component.global.search' }),
           resetText: formatMessage({ id: 'component.global.reset' }),
         }}
         toolBarRender={() => [
