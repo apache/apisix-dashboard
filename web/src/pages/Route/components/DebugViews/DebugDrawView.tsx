@@ -238,7 +238,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         </PanelSection>
         <PanelSection title={formatMessage({ id: 'page.route.PanelSection.title.responseResult' })}>
           <Tabs>
-            <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="reponse">
+            <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="response">
               <Spin tip="Loading..." spinning={loading}>
                 <CodeMirror
                   value={responseCode}
