@@ -761,31 +761,8 @@ func TestRoute(t *testing.T) {
 
 	// Fail: test the string body id value != string route id value
 	errRoute := &UpdateInput{}
-	// errRoute.ID = "2"
-	// err = json.Unmarshal([]byte(reqBody), errRoute)
-	// assert.Nil(t, err)
-	// ctx.SetInput(errRoute)
-	// ret, err = handler.Update(ctx)
-	// assert.NotNil(t, err)
-	// assert.EqualError(t, err, "ID on path (2) doesn't match ID on body (1)")
-	// assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
-	
-	// Fail: tests the float body id value != string route id value
-	reqBodyErr := `{
-		"id": 1,
-		"uri": "/index.html",
-		"upstream": {
-			"type": "roundrobin",
-			"nodes": [{
-				"host": "www.a.com",
-				"port": 80,
-				"weight": 1
-			}]
-		}
-	}`
-	errRoute = &UpdateInput{}
 	errRoute.ID = "2"
-	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
+	err = json.Unmarshal([]byte(reqBody), errRoute)
 	assert.Nil(t, err)
 	ctx.SetInput(errRoute)
 	ret, err = handler.Update(ctx)
@@ -793,34 +770,57 @@ func TestRoute(t *testing.T) {
 	assert.EqualError(t, err, "ID on path (2) doesn't match ID on body (1)")
 	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 	
-	// Success: tests the float body id value is == string route id value
-	errRoute = &UpdateInput{}
-	errRoute.ID = "1"
-	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
-	assert.Nil(t, err)
-	ctx.SetInput(errRoute)
-	ret, err = handler.Update(ctx)
-	assert.Nil(t, err)
+	// Fail: tests the float body id value != string route id value
+	// reqBodyErr := `{
+	// 	"id": 1,
+	// 	"uri": "/index.html",
+	// 	"upstream": {
+	// 		"type": "roundrobin",
+	// 		"nodes": [{
+	// 			"host": "www.a.com",
+	// 			"port": 80,
+	// 			"weight": 1
+	// 		}]
+	// 	}
+	// }`
+	// errRoute = &UpdateInput{}
+	// errRoute.ID = "2"
+	// err = json.Unmarshal([]byte(reqBodyErr), errRoute)
+	// assert.Nil(t, err)
+	// ctx.SetInput(errRoute)
+	// ret, err = handler.Update(ctx)
+	// assert.NotNil(t, err)
+	// assert.EqualError(t, err, "ID on path (2) doesn't match ID on body (1)")
+	// assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
+	
+	// // Success: tests the float body id value is == string route id value
+	// errRoute = &UpdateInput{}
+	// errRoute.ID = "1"
+	// err = json.Unmarshal([]byte(reqBodyErr), errRoute)
+	// assert.Nil(t, err)
+	// ctx.SetInput(errRoute)
+	// ret, err = handler.Update(ctx)
+	// assert.Nil(t, err)
 
-	// Success: tests the Body ID can be nil
-	reqBodyErr = `{
-		"uri": "/index.html",
-		"upstream": {
-			"type": "roundrobin",
-			"nodes": [{
-				"host": "www.a.com",
-				"port": 80,
-				"weight": 1
-			}]
-		}
-	}`
-	errRoute = &UpdateInput{}
-	errRoute.ID = "r1"
-	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
-	assert.Nil(t, err)
-	ctx.SetInput(errRoute)
-	ret, err = handler.Update(ctx)
-	assert.Nil(t, err)
+	// // Success: tests the Body ID can be nil
+	// reqBodyErr = `{
+	// 	"uri": "/index.html",
+	// 	"upstream": {
+	// 		"type": "roundrobin",
+	// 		"nodes": [{
+	// 			"host": "www.a.com",
+	// 			"port": 80,
+	// 			"weight": 1
+	// 		}]
+	// 	}
+	// }`
+	// errRoute = &UpdateInput{}
+	// errRoute.ID = "r1"
+	// err = json.Unmarshal([]byte(reqBodyErr), errRoute)
+	// assert.Nil(t, err)
+	// ctx.SetInput(errRoute)
+	// ret, err = handler.Update(ctx)
+	// assert.Nil(t, err)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
