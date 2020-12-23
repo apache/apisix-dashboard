@@ -143,13 +143,16 @@ const PluginDetail: React.FC<Props> = ({
           <Button onClick={onClose}>取消</Button>,
           <Button key="1" type="primary" onClick={() => {
             try {
+              if (!form.getFieldsValue().disable) {
+                onClose();
+                return;
+              }
               const editorData = JSON.parse(ref.current?.editor.getValue());
-              validateData(name, editorData).then(value=>{
+              validateData(name, editorData).then(value => {
                 onChange({ formData: form.getFieldsValue(), codemirrorData: value });
                 onClose();
               });
             } catch (error) {
-              console.log('error: ', error);
               notification.error({
                 message: 'Invalid JSON data',
               });
