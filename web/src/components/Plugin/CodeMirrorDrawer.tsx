@@ -15,29 +15,44 @@
  * limitations under the License.
  */
 import React, { useRef } from 'react';
-import { Drawer, Button, notification, PageHeader } from 'antd';
+import { Drawer, Button, notification, PageHeader, Switch, Form, Select } from 'antd';
 import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
 import { LinkOutlined } from '@ant-design/icons';
 
 type Props = {
   name: string;
+  type: 'global' | 'scoped',
   visible?: boolean;
-  data?: object;
+  initialData: object,
   readonly?: boolean;
   onClose?: () => void;
+  onChange?: (data: PluginComponent.Data) => void;
   onSubmit?: (data: object) => void;
+};
+
+const FORM_ITEM_LAYOUT = {
+  labelCol: {
+    span: 3,
+  },
+  wrapperCol: {
+    span: 16,
+  },
 };
 
 const CodeMirrorDrawer: React.FC<Props> = ({
   name,
+  type = 'scoped',
   visible = false,
   readonly = false,
-  data = {},
+  initialData = {},
   onClose,
   onSubmit,
+  onChange = () => { },
 }) => {
   const ref = useRef<any>(null);
+
+  const data = initialData[name];
 
   const formatCodes = () => {
     try {
@@ -71,9 +86,9 @@ const CodeMirrorDrawer: React.FC<Props> = ({
       `}
       </style>
       <Drawer
-        title="Plugin Data Editor"
+        title={`Edit plugin: ${name}`}
         visible={visible}
-        width={500}
+        width={800}
         maskClosable={false}
         destroyOnClose
         onClose={onClose}
@@ -102,6 +117,27 @@ const CodeMirrorDrawer: React.FC<Props> = ({
           )
         }
       >
+        <Form {...FORM_ITEM_LAYOUT}>
+          <Form.Item label="Enable">
+            <Switch
+              defaultChecked={initialData[name] && !initialData[name].disable}
+              disabled={readonly}
+              onChange={(isChecked) => {
+                if (!isChecked) {
+                  onChange({
+                    ...initialData,
+                    [name]: { ...initialData[name], disable: true },
+                  });
+                }
+              }} />
+          </Form.Item>
+          {type === 'global' && <Form.Item label="Scope">
+            <Select>
+              <Select.Option value="global">global</Select.Option>
+              <Select.Option value="scoped">scoped</Select.Option>
+            </Select>
+          </Form.Item>}
+        </Form>
         <PageHeader
           title=""
           subTitle={`Current Plugin: ${name}`}

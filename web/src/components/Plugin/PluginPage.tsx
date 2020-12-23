@@ -15,8 +15,7 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Anchor, Layout, Switch, Card, Tooltip, Button, notification, Avatar } from 'antd';
-import { SettingFilled } from '@ant-design/icons';
+import { Anchor, Layout, Card, Button, notification } from 'antd';
 import { PanelSection } from '@api7-dashboard/ui';
 import Ajv, { DefinedError } from 'ajv';
 
@@ -32,7 +31,7 @@ type Props = {
 
 const PanelSectionStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(3, 33.333333%)',
+  gridTemplateColumns: 'repeat(5, 20%)',
   gridRowGap: 15,
   gridColumnGap: 10,
   width: 'calc(100% - 20px)',
@@ -122,14 +121,8 @@ const PluginPage: React.FC<Props> = ({
   return (
     <>
       <style>{`
-        .ant-avatar > img {
-          object-fit: contain;
-        }
         .ant-avatar {
           background-color: transparent;
-        }
-        .ant-avatar.ant-avatar-icon {
-          font-size: 32px;
         }
       `}</style>
       <Layout>
@@ -160,52 +153,32 @@ const PluginPage: React.FC<Props> = ({
                 {plugins.map((item) => (
                   <Card
                     key={item.name}
+                    actions={[
+                      <Button type={(initialData[item.name] && !initialData[item.name].disable) ? 'primary' : 'default'} onClick={() => {
+                        setName(item.name);
+                      }}>Enable</Button>
+
+                    ]}
+                    bodyStyle={{ height: 151, display: 'flex', justifyContent: 'center', textAlign: 'center' }}
                     title={[
-                      item.avatar && (
-                        <Avatar
-                          key={1}
-                          icon={item.avatar}
-                          className="plugin-avatar"
-                          style={{
-                            marginRight: 5,
-                          }}
-                        />
-                      ),
-                      <span key={2}>{item.name}</span>,
+                      <div style={{ width: '100%', textAlign: 'center' }}><span key={2}>{item.name}</span></div>
                     ]}
-                    style={{ height: 66 }}
-                    extra={[
-                      <Tooltip title="Setting" key={`plugin-card-${item.name}-extra-tooltip-2`}>
-                        <Button
-                          shape="circle"
-                          icon={<SettingFilled />}
-                          style={{ marginRight: 10, marginLeft: 10 }}
-                          size="middle"
-                          onClick={() => {
-                            setName(item.name);
-                          }}
-                        />
-                      </Tooltip>,
-                      <Switch
-                        defaultChecked={initialData[item.name] && !initialData[item.name].disable}
-                        disabled={readonly}
-                        onChange={(isChecked) => {
-                          if (isChecked) {
-                            validateData(item.name, {
-                              ...initialData[item.name],
-                              disable: false,
-                            });
-                          } else {
-                            onChange({
-                              ...initialData,
-                              [item.name]: { ...initialData[item.name], disable: true },
-                            });
-                          }
+                    style={{ height: 258, width: 200 }}
+                  >
+                    {/* {item.avatar && (
+                      <Avatar
+                        key={1}
+                        icon={item.avatar}
+                        size={150}
+                        shape='square'
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center'
                         }}
-                        key={Math.random().toString(36).substring(7)}
-                      />,
-                    ]}
-                  />
+                      />
+                    )} */}
+                  </Card>
                 ))}
               </PanelSection>
             );
@@ -215,7 +188,8 @@ const PluginPage: React.FC<Props> = ({
       <CodeMirrorDrawer
         name={name}
         visible={name !== NEVER_EXIST_PLUGIN_FLAG}
-        data={initialData[name]}
+        initialData={initialData}
+        onChange={onChange}
         readonly={readonly}
         onClose={() => {
           setName(NEVER_EXIST_PLUGIN_FLAG);
