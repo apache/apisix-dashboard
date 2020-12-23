@@ -320,7 +320,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Desc:   "create consumer",
 			Object: ManagerApiExpect(t),
 			Path:   "/apisix/admin/consumers",
-			Method: http.MethodPost,
+			Method: http.MethodPut,
 			Body: `{
 				"username": "jack",
 				"plugins": {
