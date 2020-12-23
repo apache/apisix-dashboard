@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('ssl smoke test', () => {
+context('metrics page smoke test', () => {
   const domSelectors = {
     metricsPage: '.ant-pro-page-container'
   };
