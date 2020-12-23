@@ -144,6 +144,7 @@ const PluginDetail: React.FC<Props> = ({
           <Button key="1" type="primary" onClick={() => {
             try {
               if (!form.getFieldsValue().disable) {
+                onChange({ formData: form.getFieldsValue(), codemirrorData: {} });
                 onClose();
                 return;
               }
