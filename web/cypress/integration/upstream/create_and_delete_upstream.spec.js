@@ -84,11 +84,13 @@ context('Create and Delete Upstream', () => {
     // add first upstream node
     cy.get('#nodes_0_host').type('127.0.0.1');
     cy.get('#nodes_0_port').clear().type('7000');
+
     // add second upstream node
     cy.get('.ant-btn-dashed').click();
     cy.get('#nodes_1_host').type('127.0.0.1');
     cy.get('#nodes_1_port').clear().type('7001');
     cy.get('#nodes_1_weight').clear().type('2');
+
     // next to finish
     cy.contains('Next').click();
     cy.contains('Submit').click();
