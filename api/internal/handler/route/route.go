@@ -352,13 +352,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	// checks if body id is float (body id must support both float + string for legacy purposes)
 	// and converts to string
 	_, isFloat := input.Route.ID.(float64)
-	stringifiedID := input.Route.ID 
+	stringifiedID := input.Route.ID
 	if isFloat {
 		stringifiedID = fmt.Sprintf("%v", input.Route.ID)
 	}
-
-	// check if id on path is == to id on body
-	if input.ID != "" && stringifiedID != "" && input.ID != stringifiedID {
+	// check if id on path is == to id on body ONLY if both ids are valid
+	if input.ID != "" && input.Route.ID != nil && stringifiedID != "" && input.ID != stringifiedID {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
 				fmt.Errorf("ID on path (%s) doesn't match ID on body (%s)", input.ID, stringifiedID)
 	}
