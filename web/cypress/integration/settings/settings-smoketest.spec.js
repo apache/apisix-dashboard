@@ -61,6 +61,5 @@ context('ssl smoke test', () => {
     cy.get(domSelectors.pageContent)
       .children()
       .should('contain', 'Metrics')
-      .should('contain', 'https://www.baidu.com/')
   });
 })
