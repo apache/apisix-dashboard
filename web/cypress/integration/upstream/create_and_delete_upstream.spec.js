@@ -18,7 +18,7 @@
 
 context('Create and Delete Upstream', () => {
   const name = `upstreamName${new Date().valueOf()}`;
-  const sleepTime = 100;
+  const sleepTime = 100; // the unit is milliseconds
   const domSelectors = {
     notification: '.ant-notification-notice-message'
   };
