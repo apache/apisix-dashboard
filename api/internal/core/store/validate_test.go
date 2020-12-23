@@ -305,7 +305,7 @@ func TestAPISIXJsonSchemaValidator_Plugin(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), route)
 	assert.Nil(t, err)
 	err = validator.Validate(route)
-	assert.Equal(t, fmt.Errorf("schema validate failed: (root): Must validate one and only one schema (oneOf)\n(root): Additional property disable is not allowed"), err)
+	assert.Equal(t, fmt.Errorf("schema validate failed: (root): Must validate one and only one schema (oneOf)\n(root): Additional property disable is not allowed\ndisable: Invalid type. Expected: boolean, given: integer"), err)
 }
 
 func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {

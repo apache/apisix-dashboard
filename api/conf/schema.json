@@ -2074,7 +2074,15 @@
 				}
 			},
 			"type": "object"
-		}
+		},
+		"upstream_hash_header_schema": {	
+			"pattern": "^[a-zA-Z0-9-_]+$",	
+			"type": "string"	
+		},	
+		"upstream_hash_vars_schema": {	
+			"pattern": "^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$",	
+			"type": "string"	
+		}		
 	},
 	"plugins": {
 		"api-breaker": {
