@@ -28,7 +28,7 @@ context('Create and Delete Upstream', () => {
     cy.login();
   })
 
-  it('create roundrobin upstream', () => {
+  it('create upstream with default type (roundrobin)', () => {
     // go to upstream create page
     cy.visit('/');
     cy.contains('Upstream').click();
