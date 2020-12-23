@@ -15,12 +15,11 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Anchor, Layout, Card, Button, notification } from 'antd';
+import { Anchor, Layout, Card, Button } from 'antd';
 import { PanelSection } from '@api7-dashboard/ui';
-import Ajv, { DefinedError } from 'ajv';
 
-import { fetchSchema, getList } from './service';
-import CodeMirrorDrawer from './CodeMirrorDrawer';
+import { getList } from './service';
+import PluginDetail from './PluginDetail';
 
 type Props = {
   readonly?: boolean;
@@ -42,12 +41,9 @@ const { Sider, Content } = Layout;
 // NOTE: use this flag as plugin's name to hide drawer
 const NEVER_EXIST_PLUGIN_FLAG = 'NEVER_EXIST_PLUGIN_FLAG';
 
-const ajv = new Ajv();
-
 const PluginPage: React.FC<Props> = ({
   readonly = false,
   initialData = {},
-  schemaType = '',
   onChange = () => { },
 }) => {
   const [pluginList, setPlugin] = useState<PluginComponent.Meta[][]>([]);
@@ -57,115 +53,47 @@ const PluginPage: React.FC<Props> = ({
     getList().then(setPlugin);
   }, []);
 
-  // NOTE: This function has side effect because it mutates the original schema data
-  const injectDisableProperty = (schema: Record<string, any>) => {
-    // NOTE: The frontend will inject the disable property into schema just like the manager-api does
-    if (!schema.properties) {
-      // eslint-disable-next-line
-      schema.properties = {};
-    }
-    // eslint-disable-next-line
-    (schema.properties as any).disable = {
-      type: 'boolean',
-    };
-    return schema;
-  };
+  const PluginList = () => (<>
+    <Sider theme="light">
+      <Anchor offsetTop={150}>
+        {pluginList.map((plugins) => {
+          const { category } = plugins[0];
+          return (
+            <Anchor.Link
+              href={`#plugin-category-${category}`}
+              title={category}
+              key={category}
+            />
+          );
+        })}
+      </Anchor>
+    </Sider>
+    <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
+      {pluginList.map((plugins) => {
+        const { category } = plugins[0];
+        return (
+          <PanelSection
+            title={category}
+            key={category}
+            style={PanelSectionStyle}
+            id={`plugin-category-${category}`}
+          >
+            {plugins.map((item) => (
+              <Card
+                key={item.name}
+                actions={[
+                  <Button type={(initialData[item.name] && !initialData[item.name].disable) ? 'primary' : 'default'} onClick={() => {
+                    setName(item.name);
+                  }}>Enable</Button>
 
-  const validateData = (pluginName: string, value: PluginComponent.Data) => {
-    fetchSchema(pluginName, schemaType).then((schema) => {
-      if (schema.oneOf) {
-        (schema.oneOf || []).forEach((item: any) => {
-          injectDisableProperty(item);
-        });
-      } else {
-        injectDisableProperty(schema);
-      }
-
-      const validate = ajv.compile(schema);
-
-      if (validate(value)) {
-        setName(NEVER_EXIST_PLUGIN_FLAG);
-        onChange({ ...initialData, [pluginName]: value });
-        return;
-      }
-
-      // eslint-disable-next-line
-      for (const err of validate.errors as DefinedError[]) {
-        let description = '';
-        switch (err.keyword) {
-          case 'enum':
-            description = `${err.dataPath} ${err.message}: ${err.params.allowedValues.join(
-              ', ',
-            )}`;
-            break;
-          case 'minItems':
-          case 'type':
-            description = `${err.dataPath} ${err.message}`;
-            break;
-          case 'oneOf':
-          case 'required':
-            description = err.message || '';
-            break;
-          default:
-            description = `${err.schemaPath} ${err.message}`;
-        }
-        notification.error({
-          message: 'Invalid plugin data',
-          description,
-        });
-      }
-      setName(pluginName);
-    });
-  };
-
-  return (
-    <>
-      <style>{`
-        .ant-avatar {
-          background-color: transparent;
-        }
-      `}</style>
-      <Layout>
-        <Sider theme="light">
-          <Anchor offsetTop={150}>
-            {pluginList.map((plugins) => {
-              const { category } = plugins[0];
-              return (
-                <Anchor.Link
-                  href={`#plugin-category-${category}`}
-                  title={category}
-                  key={category}
-                />
-              );
-            })}
-          </Anchor>
-        </Sider>
-        <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
-          {pluginList.map((plugins) => {
-            const { category } = plugins[0];
-            return (
-              <PanelSection
-                title={category}
-                key={category}
-                style={PanelSectionStyle}
-                id={`plugin-category-${category}`}
+                ]}
+                bodyStyle={{ height: 151, display: 'flex', justifyContent: 'center', textAlign: 'center' }}
+                title={[
+                  <div style={{ width: '100%', textAlign: 'center' }}><span key={2}>{item.name}</span></div>
+                ]}
+                style={{ height: 258, width: 200 }}
               >
-                {plugins.map((item) => (
-                  <Card
-                    key={item.name}
-                    actions={[
-                      <Button type={(initialData[item.name] && !initialData[item.name].disable) ? 'primary' : 'default'} onClick={() => {
-                        setName(item.name);
-                      }}>Enable</Button>
-
-                    ]}
-                    bodyStyle={{ height: 151, display: 'flex', justifyContent: 'center', textAlign: 'center' }}
-                    title={[
-                      <div style={{ width: '100%', textAlign: 'center' }}><span key={2}>{item.name}</span></div>
-                    ]}
-                    style={{ height: 258, width: 200 }}
-                  >
-                    {/* {item.avatar && (
+                {/* {item.avatar && (
                       <Avatar
                         key={1}
                         icon={item.avatar}
@@ -178,26 +106,42 @@ const PluginPage: React.FC<Props> = ({
                         }}
                       />
                     )} */}
-                  </Card>
-                ))}
-              </PanelSection>
-            );
-          })}
-        </Content>
+              </Card>
+            ))}
+          </PanelSection>
+        );
+      })}
+    </Content></>)
+
+  const Plugin = () => <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
+    <PluginDetail
+      name={name}
+      readonly={readonly}
+      initialData={initialData}
+      onClose={() => {
+        setName(NEVER_EXIST_PLUGIN_FLAG);
+      }}
+      onChange={(data) => {
+        onChange({
+          ...initialData,
+          [name]: { ...initialData[name], disable: !data.formData.disable },
+        });
+      }}
+    />
+  </Content>
+
+  return (
+    <>
+      <style>{`
+        .ant-avatar {
+          background-color: transparent;
+        }
+      `}</style>
+      <Layout>
+        {name === NEVER_EXIST_PLUGIN_FLAG && <PluginList />}
+        {name !== NEVER_EXIST_PLUGIN_FLAG && <Plugin />}
       </Layout>
-      <CodeMirrorDrawer
-        name={name}
-        visible={name !== NEVER_EXIST_PLUGIN_FLAG}
-        initialData={initialData}
-        onChange={onChange}
-        readonly={readonly}
-        onClose={() => {
-          setName(NEVER_EXIST_PLUGIN_FLAG);
-        }}
-        onSubmit={(value) => {
-          validateData(name, value);
-        }}
-      />
+
     </>
   );
 };
