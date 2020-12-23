@@ -760,7 +760,7 @@ func TestRoute(t *testing.T) {
 	// check ID discrepancy on Update
 
 	// Fail: test the string body id value != string route id value
-	// errRoute := &UpdateInput{}
+	errRoute := &UpdateInput{}
 	// errRoute.ID = "2"
 	// err = json.Unmarshal([]byte(reqBody), errRoute)
 	// assert.Nil(t, err)
