@@ -106,6 +106,18 @@ func parseCert(crt, key string) ([]string, error) {
 }
 
 func handleSpecialField(resource string, reqBody []byte) ([]byte, error) {
+	var bodyMap map[string]interface{}
+	err := json.Unmarshal(reqBody, &bodyMap)
+	if err != nil {
+		return reqBody, fmt.Errorf("read request body failed: %s", err)
+	}
+	if _, ok := bodyMap["create_time"]; ok {
+		return reqBody, fmt.Errorf("not support specifying create_time")
+	}
+	if _, ok := bodyMap["update_time"]; ok {
+		return reqBody, fmt.Errorf("not support specifying update_time")
+	}
+
 	// remove script, because it's a map, and need to be parsed into lua code
 	if resource == "routes" {
 		var route map[string]interface{}
