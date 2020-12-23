@@ -45,12 +45,10 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
 	r.GET("/apisix/admin/consumers", wgin.Wraps(h.List,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
-	r.POST("/apisix/admin/consumers", wgin.Wraps(h.Create,
-		wrapper.InputType(reflect.TypeOf(entity.Consumer{}))))
-	r.PUT("/apisix/admin/consumers/:username", wgin.Wraps(h.Update,
-		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
-	r.PUT("/apisix/admin/consumers", wgin.Wraps(h.Update,
-		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
+	r.PUT("/apisix/admin/consumers/:username", wgin.Wraps(h.Set,
+		wrapper.InputType(reflect.TypeOf(SetInput{}))))
+	r.PUT("/apisix/admin/consumers", wgin.Wraps(h.Set,
+		wrapper.InputType(reflect.TypeOf(SetInput{}))))
 	r.DELETE("/apisix/admin/consumers/:usernames", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDeleteInput{}))))
 }
@@ -128,6 +126,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	return ret, nil
 }
 
+<<<<<<< HEAD
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Consumer)
 	input.ID = input.Username
@@ -142,11 +141,24 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 
 type UpdateInput struct {
 	Username string `auto_read:"username,path"`
+=======
+type SetInput struct {
+>>>>>>> fix: delete POST method in /apisix/admin/consumer (#852)
 	entity.Consumer
+	Username string `auto_read:"username,path"`
 }
 
+<<<<<<< HEAD
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
+=======
+func (h *Handler) Set(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*SetInput)
+	if input.ID != nil && utils.InterfaceToString(input.ID) != input.Username {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("consumer's id and username must be a same value")
+	}
+>>>>>>> fix: delete POST method in /apisix/admin/consumer (#852)
 	if input.Username != "" {
 		input.Consumer.Username = input.Username
 	}
