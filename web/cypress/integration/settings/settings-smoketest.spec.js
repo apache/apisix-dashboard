@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('ssl smoke test', () => {
+context('settings psge smoke test', () => {
   const domSelectors = {
     pageContent: '.ant-pro-page-container',
     notificationMsg: '.ant-notification-notice-message'
@@ -54,7 +54,7 @@ context('ssl smoke test', () => {
     cy.contains('Settings').click();
     cy.wait(500);
     cy.url().should('contains', '/settings');
-    cy.get('#grafanaURL').clear().type('https://www.baidu.com/');
+    cy.get('#grafanaURL').clear().type('https://www.apiseven.com/');
     cy.contains('Submit').click();
     cy.get(domSelectors.notificationMsg).should('contain', 'Update Configuration Successfully');
     cy.wait(1000);
