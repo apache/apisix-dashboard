@@ -36,17 +36,17 @@ context('Create and Delete Consumer', () => {
     cy.wait(sleepTime * 5);
     cy.contains('Create').click();
 
-    // Basic Information
+    // basic information
     cy.get('#username').type(name);
     cy.get('#desc').type('desc_by_autotest');
     cy.contains('Next').click();
     cy.wait(sleepTime * 3);
 
-    // Plugin Config
+    // plugin config
     cy.contains(domSelectors.pluginsCard, 'key-auth').within(() => {
       cy.get('button').first().click();
     })
-    // edit CodeMirror
+    // edit codemirror
     cy.get('.CodeMirror')
       .first()
       .then((editor) => {
@@ -77,17 +77,17 @@ context('Create and Delete Consumer', () => {
     cy.wait(sleepTime * 5);
     cy.contains('Create').click();
 
-    // Basic Information
+    // basic information
     cy.get('#username').type(name);
     cy.get('#desc').type('desc_by_autotest');
     cy.contains('Next').click();
     cy.wait(sleepTime * 3);
 
-    // Plugin Config
+    // plugin config
     cy.contains(domSelectors.pluginsCard, 'key-auth').within(() => {
       cy.get('button').first().click();
     })
-    // edit CodeMirror
+    // edit codeMirror
     cy.get('.CodeMirror')
       .first()
       .then((editor) => {
