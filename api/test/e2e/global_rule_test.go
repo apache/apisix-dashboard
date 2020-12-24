@@ -24,7 +24,7 @@ import (
 func TestGlobalRule(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route doesn't exist",
+			Desc:         "make sure the route doesn't exist",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -32,10 +32,10 @@ func TestGlobalRule(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				 "uri": "/hello",
 				 "upstream": {
@@ -51,10 +51,10 @@ func TestGlobalRule(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "create global rule",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/global_rules/1",
-			Method:   http.MethodPut,
+			Desc:   "create global rule",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/global_rules/1",
+			Method: http.MethodPut,
 			Body: `{
                                 "id": "1",
                                 "plugins": {
@@ -72,7 +72,7 @@ func TestGlobalRule(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:      "verify route with header",
+			Desc:          "verify route with header",
 			Object:        APISIXExpect(t),
 			Method:        http.MethodGet,
 			Path:          "/hello",
@@ -82,7 +82,7 @@ func TestGlobalRule(t *testing.T) {
 			Sleep:         sleepTime,
 		},
 		{
-			caseDesc:      "verify route that should be blocked",
+			Desc:          "verify route that should be blocked",
 			Object:        APISIXExpect(t),
 			Method:        http.MethodGet,
 			Path:          "/hello",
@@ -91,10 +91,10 @@ func TestGlobalRule(t *testing.T) {
 			ExpectHeaders: map[string]string{"X-VERSION": "1.0"},
 		},
 		{
-			caseDesc: "update route with same plugin response-rewrite",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route with same plugin response-rewrite",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -117,7 +117,7 @@ func TestGlobalRule(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:      "verify route that header should be the same as the route config",
+			Desc:          "verify route that header should be the same as the route config",
 			Object:        APISIXExpect(t),
 			Method:        http.MethodGet,
 			Path:          "/hello",
@@ -127,7 +127,7 @@ func TestGlobalRule(t *testing.T) {
 			Sleep:         sleepTime,
 		},
 		{
-			caseDesc:     "the uncovered global plugin should works",
+			Desc:         "the uncovered global plugin should works",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -136,7 +136,7 @@ func TestGlobalRule(t *testing.T) {
 			//ExpectHeaders: map[string]string{"X-VERSION":"2.0"},
 		},
 		{
-			caseDesc:     "delete global rule",
+			Desc:         "delete global rule",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/global_rules/1",
@@ -144,7 +144,7 @@ func TestGlobalRule(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the global rule has been deleted",
+			Desc:         "make sure the global rule has been deleted",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/global_rules/1",
@@ -154,7 +154,7 @@ func TestGlobalRule(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:      "verify route that should not be blocked",
+			Desc:          "verify route that should not be blocked",
 			Object:        APISIXExpect(t),
 			Method:        http.MethodGet,
 			Path:          "/hello",
@@ -163,7 +163,7 @@ func TestGlobalRule(t *testing.T) {
 			ExpectHeaders: map[string]string{"X-VERSION": "2.0"},
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -171,7 +171,7 @@ func TestGlobalRule(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route has been deleted",
+			Desc:         "make sure the route has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -182,6 +182,6 @@ func TestGlobalRule(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
