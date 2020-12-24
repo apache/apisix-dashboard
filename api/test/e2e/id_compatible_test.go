@@ -210,6 +210,7 @@ func TestID_Using_String(t *testing.T) {
 			Path:         "/apisix/admin/upstreams/2",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "make sure the upstream has been deleted",
@@ -311,6 +312,7 @@ func TestID_Crossing(t *testing.T) {
 			Path:         "/apisix/admin/upstreams/3",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "make sure the upstream has been deleted",
