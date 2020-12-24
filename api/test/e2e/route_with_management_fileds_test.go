@@ -367,10 +367,10 @@ func TestRoute_search_by_label(t *testing.T) {
 func TestRoute_With_Create_Time(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create route with create_time",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "create route with create_time",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 				"uri": "/hello",
 				"create_time": 1608792721,
@@ -385,10 +385,10 @@ func TestRoute_With_Create_Time(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc: "create route with update_time",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "create route with update_time",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 				"uri": "/hello",
 				"update_time": 1608792721,
@@ -403,10 +403,10 @@ func TestRoute_With_Create_Time(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc: "create route with create_time and update_time",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "create route with create_time and update_time",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 				"uri": "/hello",
 				"create_time": 1608792721,
@@ -422,7 +422,7 @@ func TestRoute_With_Create_Time(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:     "make sure the route not created",
+			Desc:         "make sure the route not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -432,6 +432,6 @@ func TestRoute_With_Create_Time(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
