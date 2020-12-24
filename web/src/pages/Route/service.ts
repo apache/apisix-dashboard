@@ -105,4 +105,3 @@ export const fetchServiceList = () =>
     data: data.rows,
     total: data.total_size,
   }));
-  

@@ -388,8 +388,8 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
         name='service_id'
       >
         <Select disabled={disabled}>
-          {/* NOTE value = '' mean no service_id select, need to find a better way */}
-          <Select.Option value='' key={Math.random().toString(36).substring(7)} >{null}</Select.Option >
+          {/* TODO: value === '' means  no service_id select, need to find a better way */}
+          <Select.Option value='' key={Math.random().toString(36).substring(7)}>{null}</Select.Option>
           {serviceList.map(item => {
             return <Select.Option value={item.id} key={item.id}>
               {item.name}
@@ -397,7 +397,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
           })}
         </Select>
       </Form.Item>
-    </PanelSection >
+    </PanelSection>
   );
 };
 
