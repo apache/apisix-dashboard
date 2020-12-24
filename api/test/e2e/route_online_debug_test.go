@@ -30,7 +30,7 @@ import (
 func TestRoute_Online_Debug_Route_Not_Exist(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "hit route that not exist",
+			Desc:         "hit route that not exist",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -39,7 +39,7 @@ func TestRoute_Online_Debug_Route_Not_Exist(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 	basepath := "http://127.0.0.1:9000/apisix/admin/debug-request-forwarding"
 	request, _ := http.NewRequest("POST", basepath, strings.NewReader(`{"url": "`+APISIXInternalUrl+`/hello_","method": "GET","request_protocol": "http"}`))
@@ -57,7 +57,7 @@ func TestRoute_Online_Debug_Route_Not_Exist(t *testing.T) {
 func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "hit route that not exist",
+			Desc:         "hit route that not exist",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -65,10 +65,10 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 		{
-			caseDesc: "create route with query params",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route with query params",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"methods": ["GET"],
@@ -89,10 +89,10 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "online debug route with query params",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPost,
-			Path:     "/apisix/admin/debug-request-forwarding",
+			Desc:   "online debug route with query params",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "` + APISIXInternalUrl + `/hello?name=aaa",
 				"request_protocol": "http",
@@ -102,7 +102,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -110,7 +110,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify the deleted route ",
+			Desc:         "verify the deleted route ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -121,14 +121,14 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -137,10 +137,10 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create route with header params",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route with header params",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"methods": ["GET"],
@@ -161,10 +161,10 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "online debug route with header params",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPost,
-			Path:     "/apisix/admin/debug-request-forwarding",
+			Desc:   "online debug route with header params",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "` + APISIXInternalUrl + `/hello",
 				"request_protocol": "http",
@@ -177,7 +177,7 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -185,7 +185,7 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify the deleted route ",
+			Desc:         "verify the deleted route ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -196,14 +196,14 @@ func TestRoute_Online_Debug_Route_With_Header_Params(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -212,10 +212,10 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create route with method POST",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route with method POST",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"methods": ["POST"],
@@ -233,10 +233,10 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "online debug route with body params",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPost,
-			Path:     "/apisix/admin/debug-request-forwarding",
+			Desc:   "online debug route with body params",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "` + APISIXInternalUrl + `/hello",
 				"request_protocol": "http",
@@ -250,7 +250,7 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -258,7 +258,7 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify the deleted route ",
+			Desc:         "verify the deleted route ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -269,14 +269,14 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -285,10 +285,10 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create route enable basic-auth plugin",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route enable basic-auth plugin",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"methods": ["GET"],
@@ -309,7 +309,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "make sure the consumer is not created",
+			Desc:         "make sure the consumer is not created",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
@@ -317,10 +317,10 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			ExpectStatus: http.StatusNotFound,
 		},
 		{
-			caseDesc: "create consumer",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPost,
+			Desc:   "create consumer",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPost,
 			Body: `{
 				"username": "jack",
 				"plugins": {
@@ -337,10 +337,10 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "online debug route with username and password",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPost,
-			Path:     "/apisix/admin/debug-request-forwarding",
+			Desc:   "online debug route with username and password",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "` + APISIXInternalUrl + `/hello",
 				"request_protocol": "http",
@@ -355,7 +355,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// online debug without basic-auth
@@ -374,7 +374,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 	// clear test data
 	tests = []HttpTestCase{
 		{
-			caseDesc:     "delete consumer",
+			Desc:         "delete consumer",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
@@ -382,7 +382,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route with the jwt token from just deleted consumer",
+			Desc:         "verify route with the jwt token from just deleted consumer",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -392,7 +392,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -400,7 +400,7 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify the deleted route ",
+			Desc:         "verify the deleted route ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -411,14 +411,14 @@ func TestRoute_Online_Debug_Route_With_Basic_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -427,10 +427,10 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create route enable jwt-auth plugin",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route enable jwt-auth plugin",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"methods": ["GET"],
@@ -451,7 +451,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "make sure the consumer is not created",
+			Desc:         "make sure the consumer is not created",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
@@ -460,10 +460,10 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create consumer",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create consumer",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username": "jack",
 				"plugins": {
@@ -481,7 +481,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	time.Sleep(sleepTime)
@@ -494,10 +494,10 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "online debug route with jwt token",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPost,
-			Path:     "/apisix/admin/debug-request-forwarding",
+			Desc:   "online debug route with jwt token",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "` + APISIXInternalUrl + `/hello",
 				"request_protocol": "http",
@@ -512,7 +512,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// online debug without jwt-auth
@@ -531,7 +531,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 	// clear test data
 	tests = []HttpTestCase{
 		{
-			caseDesc:     "delete consumer",
+			Desc:         "delete consumer",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
@@ -539,7 +539,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route with the jwt token from just deleted consumer",
+			Desc:         "verify route with the jwt token from just deleted consumer",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -549,7 +549,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -557,7 +557,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify the deleted route ",
+			Desc:         "verify the deleted route ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -568,14 +568,14 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -583,10 +583,10 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route enable key-auth plugin",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route enable key-auth plugin",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"methods": ["GET"],
@@ -606,7 +606,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the consumer is not created",
+			Desc:         "make sure the consumer is not created",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
@@ -614,10 +614,10 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			ExpectStatus: http.StatusNotFound,
 		},
 		{
-			caseDesc: "create consumer",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create consumer",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username": "jack",
 				"plugins": {
@@ -631,10 +631,10 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "online debug route with apikey",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPost,
-			Path:     "/apisix/admin/debug-request-forwarding",
+			Desc:   "online debug route with apikey",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "` + APISIXInternalUrl + `/hello",
 				"request_protocol": "http",
@@ -649,7 +649,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// online debug without key-auth
@@ -668,7 +668,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 	// clear test data
 	tests = []HttpTestCase{
 		{
-			caseDesc:     "delete consumer",
+			Desc:         "delete consumer",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
@@ -676,7 +676,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route with the jwt token from just deleted consumer",
+			Desc:         "verify route with the jwt token from just deleted consumer",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -686,7 +686,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -694,7 +694,7 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify the deleted route ",
+			Desc:         "verify the deleted route ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -705,14 +705,14 @@ func TestRoute_Online_Debug_Route_With_Key_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -720,10 +720,10 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route enable key-auth plugin",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route enable key-auth plugin",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"methods": ["GET"],
@@ -746,7 +746,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the consumer is not created",
+			Desc:         "make sure the consumer is not created",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
@@ -754,10 +754,10 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			ExpectStatus: http.StatusNotFound,
 		},
 		{
-			caseDesc: "create consumer",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create consumer",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username": "jack",
 				"plugins": {
@@ -771,10 +771,10 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "online debug route with apikey",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPost,
-			Path:     "/apisix/admin/debug-request-forwarding",
+			Desc:   "online debug route with apikey",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/debug-request-forwarding",
 			Body: `{
 				"url": "` + APISIXInternalUrl + `/hello?name=aaa",
 				"request_protocol": "http",
@@ -789,7 +789,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// online debug without key-auth
@@ -808,7 +808,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 	// clear test data
 	tests = []HttpTestCase{
 		{
-			caseDesc:     "delete consumer",
+			Desc:         "delete consumer",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
@@ -816,7 +816,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route with the jwt token from just deleted consumer",
+			Desc:         "verify route with the jwt token from just deleted consumer",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         `/hello`,
@@ -827,7 +827,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -835,7 +835,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify the deleted route ",
+			Desc:         "verify the deleted route ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -846,6 +846,6 @@ func TestRoute_Online_Debug_Route_With_Query_Params_Key_Auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

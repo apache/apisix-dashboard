@@ -30,10 +30,10 @@ import (
 func TestConsumer_with_key_auth(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -52,7 +52,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit route without apikey",
+			Desc:         "hit route without apikey",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -61,10 +61,10 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			Sleep:        sleepTime * 2,
 		},
 		{
-			caseDesc: "create consumer",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create consumer",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username": "jack",
 				"plugins": {
@@ -78,7 +78,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit route with correct apikey",
+			Desc:         "hit route with correct apikey",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -88,7 +88,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "hit route with incorrect apikey",
+			Desc:         "hit route with incorrect apikey",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -98,7 +98,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete consumer",
+			Desc:         "delete consumer",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
@@ -106,7 +106,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete consumer (as delete not exist consumer)",
+			Desc:         "delete consumer (as delete not exist consumer)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
@@ -114,7 +114,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			ExpectStatus: http.StatusNotFound,
 		},
 		{
-			caseDesc:     "hit route (consumer deleted)",
+			Desc:         "hit route (consumer deleted)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -124,7 +124,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -134,17 +134,17 @@ func TestConsumer_with_key_auth(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestConsumer_with_notexist_plugin(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create consumer with not exist plugin",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create consumer with not exist plugin",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username": "jack",
 				"plugins": {
@@ -159,7 +159,7 @@ func TestConsumer_with_notexist_plugin(t *testing.T) {
 			ExpectBody:   "schema validate failed: schema not found, path: plugins.key-authaa",
 		},
 		{
-			caseDesc:     "verify the consumer",
+			Desc:         "verify the consumer",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/consumers/jack",
 			Method:       http.MethodGet,
@@ -170,17 +170,17 @@ func TestConsumer_with_notexist_plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestConsumer_add_consumer_with_labels(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create the consumer",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create the consumer",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username": "jack",
 				"labels": {
@@ -199,7 +199,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify the consumer",
+			Desc:         "verify the consumer",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
@@ -209,10 +209,10 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create the route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create the route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -231,7 +231,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route with correct apikey",
+			Desc:         "hit the route with correct apikey",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -240,7 +240,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete the consumer",
+			Desc:         "delete the consumer",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
@@ -248,7 +248,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete the route",
+			Desc:         "delete the route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -258,17 +258,17 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create the consumer",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create the consumer",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username":"jack",
 				"desc": "new consumer"
@@ -279,7 +279,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	basepath := "http://127.0.0.1:9000/apisix/admin/consumers"
@@ -302,10 +302,10 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "update the consumer",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "update the consumer",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username":"jack",
 				"desc": "updated consumer"
@@ -317,7 +317,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// get the consumer
@@ -336,7 +336,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc:     "delete the consumer",
+			Desc:         "delete the consumer",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
@@ -344,7 +344,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "after delete consumer verify it again",
+			Desc:         "after delete consumer verify it again",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
@@ -355,6 +355,6 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
