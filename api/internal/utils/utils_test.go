@@ -44,7 +44,6 @@ func TestSumIPs_with_nil(t *testing.T) {
 	assert.Equal(t, uint16(0), total)
 }
 
-
 func TestObjectClone(t *testing.T) {
 	type test struct {
 		Str string

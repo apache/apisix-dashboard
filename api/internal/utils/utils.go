@@ -98,6 +98,7 @@ func InterfaceToString(val interface{}) string {
 	return str
 }
 
+// Note: json.Marshal and json.Unmarshal may cause the precision loss
 func ObjectClone(origin, copy interface{}) error {
 	byt, err := json.Marshal(origin)
 	if err != nil {
