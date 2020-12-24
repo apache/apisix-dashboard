@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from 'antd/es/form';
 import { Button, Input, Select, Row, Col, InputNumber, Switch } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
@@ -26,13 +26,20 @@ import {
   FORM_ITEM_LAYOUT,
   FORM_ITEM_WITHOUT_LABEL,
 } from '@/pages/Route/constants';
+import { fetchServiceList } from '../../service';
 
 const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
   form,
   disabled,
-  onChange = () => {},
+  onChange = () => { },
 }) => {
   const { formatMessage } = useIntl();
+  const [serviceList, setServiceList] = useState<ServiceModule.ResponseBody[]>([]);
+
+  useEffect(() => {
+    fetchServiceList().then(({ data }) => setServiceList(data));
+  }, []);
+
   const HostList = () => (
     <Form.List name="hosts">
       {(fields, { add, remove }) => {
@@ -375,6 +382,19 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
           }
           return null;
         }}
+      </Form.Item>
+      <Form.Item
+        label={formatMessage({ id: 'page.route.service' })}
+        name='service_id'
+      >
+        <Select disabled={disabled}>
+          <Select.Option value=''>{}</Select.Option>
+          {serviceList.map(item => {
+            return <Select.Option value={item.id}>
+              {item.name}
+            </Select.Option>
+          })}
+        </Select>
       </Form.Item>
     </PanelSection>
   );
