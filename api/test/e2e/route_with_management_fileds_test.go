@@ -373,7 +373,7 @@ func TestRoute_With_Create_Time(t *testing.T) {
 			Method:   http.MethodPut,
 			Body: `{
 				"uri": "/hello",
-				"create_time": 1,
+				"create_time": 1608792721,
 				"upstream": {
 					"nodes": {
 						"172.16.238.20:1980": 1
@@ -391,7 +391,7 @@ func TestRoute_With_Create_Time(t *testing.T) {
 			Method:   http.MethodPut,
 			Body: `{
 				"uri": "/hello",
-				"update_time": 1,
+				"update_time": 1608792721,
 				"upstream": {
 					"nodes": {
 						"172.16.238.20:1980": 1
@@ -409,8 +409,8 @@ func TestRoute_With_Create_Time(t *testing.T) {
 			Method:   http.MethodPut,
 			Body: `{
 				"uri": "/hello",
-				"create_time": 1,
-				"update_time": 1,
+				"create_time": 1608792721,
+				"update_time": 1608792721,
 				"upstream": {
 					"nodes": {
 						"172.16.238.20:1980": 1
