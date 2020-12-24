@@ -16,7 +16,7 @@
  */
 import React, { useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { useIntl } from 'umi';
+import { history, useIntl } from 'umi';
 
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, Popconfirm, Space } from 'antd';
@@ -76,7 +76,7 @@ const Page: React.FC = () => {
         columns={columns}
         request={fetchList}
         toolBarRender={() => [
-          <Button type="primary" onClick={() => { console.log('add new rule') }}>
+          <Button type="primary" onClick={() => history.push('/plugin/config')}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>
