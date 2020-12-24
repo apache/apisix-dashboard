@@ -339,7 +339,7 @@ func TestID_Crossing(t *testing.T) {
 func TestID_Not_In_Body(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created",
+			Desc:         "make sure the route is not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -347,10 +347,10 @@ func TestID_Not_In_Body(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create route that has no ID in request body by admin api",
-			Object:   APISIXExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route that has no ID in request body by admin api",
+			Object: APISIXExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"upstream": {
@@ -365,7 +365,7 @@ func TestID_Not_In_Body(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify that the route is available for manager api",
+			Desc:         "verify that the route is available for manager api",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes/r1",
@@ -375,7 +375,7 @@ func TestID_Not_In_Body(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "hit the route just created",
+			Desc:         "hit the route just created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -384,7 +384,7 @@ func TestID_Not_In_Body(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete the route",
+			Desc:         "delete the route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -392,7 +392,7 @@ func TestID_Not_In_Body(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit deleted route",
+			Desc:         "hit deleted route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -402,6 +402,6 @@ func TestID_Not_In_Body(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
