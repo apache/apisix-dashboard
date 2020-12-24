@@ -24,7 +24,7 @@ import (
 func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -32,10 +32,10 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -54,7 +54,7 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "fetch the prometheus metric data",
+			Desc:         "fetch the prometheus metric data",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/prometheus/metrics",
@@ -63,7 +63,7 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "request from client (200)",
+			Desc:         "request from client (200)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -71,10 +71,10 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 			ExpectBody:   "hello world",
 		},
 		{
-			caseDesc: "create route that uri not exists in upstream",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route that uri not exists in upstream",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello-not-exists",
 				"plugins": {
@@ -93,7 +93,7 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "request from client (404)",
+			Desc:         "request from client (404)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello-not-exists",
@@ -101,7 +101,7 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify the prometheus metric data (apisix_http_status 200)",
+			Desc:         "verify the prometheus metric data (apisix_http_status 200)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/prometheus/metrics",
@@ -110,7 +110,7 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify the prometheus metric data (apisix_http_status 404)",
+			Desc:         "verify the prometheus metric data (apisix_http_status 404)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/prometheus/metrics",
@@ -119,7 +119,7 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -127,7 +127,7 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route has been deleted",
+			Desc:         "make sure the route has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -138,6 +138,6 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
