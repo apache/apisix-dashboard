@@ -40,7 +40,7 @@ clean_logfile() {
 trap clean_up EXIT
 
 export GO111MODULE=on
-go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version=${VERSION}" .
+go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version=${VERSION}" ./cmd/manager
 
 # default level: warn, path: logs/error.log
 
