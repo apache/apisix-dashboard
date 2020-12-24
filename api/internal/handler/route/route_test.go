@@ -795,7 +795,7 @@ func TestRoute(t *testing.T) {
 	
 	// Success: tests the float body id value is == string route id value
 	errRoute = &UpdateInput{}
-	errRoute.ID = "1"
+	errRoute.ID = "r1"
 	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
 	assert.Nil(t, err)
 	ctx.SetInput(errRoute)
@@ -803,7 +803,7 @@ func TestRoute(t *testing.T) {
 	assert.Nil(t, err)
 
 	// Success: tests the Body ID can be nil
-	reqBodyErr2 := `{
+	reqBodyErr = `{
 		"uri": "/index.html",
 		"upstream": {
 			"type": "roundrobin",
@@ -816,7 +816,7 @@ func TestRoute(t *testing.T) {
 	}`
 	errRoute = &UpdateInput{}
 	errRoute.ID = "r1"
-	err = json.Unmarshal([]byte(reqBodyErr2), errRoute)
+	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
 	assert.Nil(t, err)
 	ctx.SetInput(errRoute)
 	ret, err = handler.Update(ctx)
