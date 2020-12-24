@@ -398,10 +398,10 @@ func TestRoute_Patch(t *testing.T) {
 func TestRoute_With_Empty_Array(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create route with empty hosts and host",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "create route with empty hosts and host",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 				"uri": "/hello",
 				"hosts": [],
@@ -418,7 +418,7 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 			ExpectBody:   `{"code":10000,"message":"schema validate failed: (root): Must validate one and only one schema (oneOf)\n(root): Must validate all the schemas (allOf)\nhosts: Array must have at least 1 items"}`,
 		},
 		{
-			caseDesc:     "make sure the route not created",
+			Desc:         "make sure the route not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -427,10 +427,10 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route with empty hosts",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "create route with empty hosts",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 				"uri": "/hello",
 				"hosts": [],
@@ -446,7 +446,7 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 			ExpectBody:   `{"code":10000,"message":"schema validate failed: hosts: Array must have at least 1 items"}`,
 		},
 		{
-			caseDesc:     "make sure the route not created",
+			Desc:         "make sure the route not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -454,10 +454,10 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route with empty uris and uri",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "create route with empty uris and uri",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 				"uri": "/hello",
 				"uris": [],
@@ -473,10 +473,10 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 			ExpectBody:   `{"code":10000,"message":"schema validate failed: (root): Must validate one and only one schema (oneOf)\n(root): Must validate all the schemas (allOf)\nuris: Array must have at least 1 items"}`,
 		},
 		{
-			caseDesc: "create route with empty remote_addrs and remote_addr",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "create route with empty remote_addrs and remote_addr",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 				"uri": "/hello",
 				"remote_addrs": [],
@@ -493,7 +493,7 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 			ExpectBody:   `{"code":10000,"message":"schema validate failed: (root): Must validate one and only one schema (oneOf)\n(root): Must validate all the schemas (allOf)\nremote_addrs: Array must have at least 1 items"}`,
 		},
 		{
-			caseDesc:     "make sure the route not created",
+			Desc:         "make sure the route not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -503,6 +503,6 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
