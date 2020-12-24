@@ -84,6 +84,9 @@ export default {
   'page.route.status': 'Status',
   'page.route.groupName': 'GroupName',
   'page.route.offline': 'Offline',
+  'page.route.publish': 'Publish',
+  'page.route.published': 'Published',
+  'page.route.unpublished': 'UnPublished',
 
   'page.route.select.option.inputManually': 'Input Manually',
   'page.route.form.itemLabel.domainNameOrIp': 'Domain Name/IP',

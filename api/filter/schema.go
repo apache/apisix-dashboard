@@ -30,6 +30,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/utils/consts"
 	"github.com/apisix/manager-api/log"
@@ -42,6 +43,11 @@ var resources = map[string]string{
 	"consumers": "consumer",
 	"ssl":       "ssl",
 }
+
+const (
+	StatusDisable entity.Status = iota
+	StatusEnable
+)
 
 func parseCert(crt, key string) ([]string, error) {
 	if crt == "" || key == "" {
@@ -136,6 +142,25 @@ func handleSpecialField(resource string, reqBody []byte) ([]byte, error) {
 	return reqBody, nil
 }
 
+func handleDefaultValue(resource string, reqBody []byte) ([]byte, error) {
+	// go jsonschema lib doesn't support setting default values, so we need to set for some fields necessary
+	if resource == "routes" {
+		var route map[string]interface{}
+		err := json.Unmarshal(reqBody, &route)
+		if err != nil {
+			return reqBody, fmt.Errorf("read request body failed: %s", err)
+		}
+		if _, ok := route["status"]; !ok {
+			route["status"] = StatusEnable
+			reqBody, err = json.Marshal(route)
+			if err != nil {
+				return nil, fmt.Errorf("read request body failed: %s", err)
+			}
+		}
+	}
+	return reqBody, nil
+}
+
 func SchemaCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		pathPrefix := "/apisix/admin/"
@@ -161,6 +186,15 @@ func SchemaCheck() gin.HandlerFunc {
 		if err != nil {
 			log.Errorf("read request body failed: %s", err)
 			c.AbortWithStatusJSON(http.StatusBadRequest, consts.ErrInvalidRequest)
+			return
+		}
+
+		// set default value
+		reqBody, err = handleDefaultValue(resource, reqBody)
+		if err != nil {
+			errMsg := err.Error()
+			c.AbortWithStatusJSON(http.StatusBadRequest, consts.InvalidParam(errMsg))
+			log.Error(errMsg)
 			return
 		}
 
