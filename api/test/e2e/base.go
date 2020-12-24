@@ -154,7 +154,7 @@ func BatchTestServerPort(t *testing.T, times int) map[string]int {
 var sleepTime = time.Duration(300) * time.Millisecond
 
 type HttpTestCase struct {
-	caseDesc      string
+	Desc          string
 	Object        *httpexpect.Expect
 	Method        string
 	Path          string
@@ -170,66 +170,68 @@ type HttpTestCase struct {
 	Sleep         time.Duration //ms
 }
 
-func testCaseCheck(tc HttpTestCase) {
-	//init
-	expectObj := tc.Object
-	var req *httpexpect.Request
-	switch tc.Method {
-	case http.MethodGet:
-		req = expectObj.GET(tc.Path)
-	case http.MethodPut:
-		req = expectObj.PUT(tc.Path)
-	case http.MethodPost:
-		req = expectObj.POST(tc.Path)
-	case http.MethodDelete:
-		req = expectObj.DELETE(tc.Path)
-	case http.MethodPatch:
-		req = expectObj.PATCH(tc.Path)
-	case http.MethodOptions:
-		req = expectObj.OPTIONS(tc.Path)
-	default:
-	}
-
-	if req == nil {
-		panic("fail to init request")
-	}
-
-	if tc.Sleep != 0 {
-		time.Sleep(tc.Sleep)
-	}
-
-	if tc.Query != "" {
-		req.WithQueryString(tc.Query)
-	}
-
-	//set header
-	for key, val := range tc.Headers {
-		req.WithHeader(key, val)
-	}
-
-	//set body
-	if tc.Body != "" {
-		req.WithText(tc.Body)
-	}
-
-	//respond check
-	resp := req.Expect()
-
-	//match http status
-	if tc.ExpectStatus != 0 {
-		resp.Status(tc.ExpectStatus)
-	}
-
-	//match headers
-	if tc.ExpectHeaders != nil {
-		for key, val := range tc.ExpectHeaders {
-			resp.Header(key).Equal(val)
+func testCaseCheck(tc HttpTestCase, t *testing.T) {
+	t.Run(tc.Desc, func(t *testing.T) {
+		//init
+		expectObj := tc.Object
+		var req *httpexpect.Request
+		switch tc.Method {
+		case http.MethodGet:
+			req = expectObj.GET(tc.Path)
+		case http.MethodPut:
+			req = expectObj.PUT(tc.Path)
+		case http.MethodPost:
+			req = expectObj.POST(tc.Path)
+		case http.MethodDelete:
+			req = expectObj.DELETE(tc.Path)
+		case http.MethodPatch:
+			req = expectObj.PATCH(tc.Path)
+		case http.MethodOptions:
+			req = expectObj.OPTIONS(tc.Path)
+		default:
 		}
-	}
 
-	//match body
-	if tc.ExpectBody != "" {
-		resp.Body().Contains(tc.ExpectBody)
-	}
+		if req == nil {
+			panic("fail to init request")
+		}
+
+		if tc.Sleep != 0 {
+			time.Sleep(tc.Sleep)
+		}
+
+		if tc.Query != "" {
+			req.WithQueryString(tc.Query)
+		}
+
+		//set header
+		for key, val := range tc.Headers {
+			req.WithHeader(key, val)
+		}
+
+		//set body
+		if tc.Body != "" {
+			req.WithText(tc.Body)
+		}
+
+		//respond check
+		resp := req.Expect()
+
+		//match http status
+		if tc.ExpectStatus != 0 {
+			resp.Status(tc.ExpectStatus)
+		}
+
+		//match headers
+		if tc.ExpectHeaders != nil {
+			for key, val := range tc.ExpectHeaders {
+				resp.Header(key).Equal(val)
+			}
+		}
+
+		//match body
+		if tc.ExpectBody != "" {
+			resp.Body().Contains(tc.ExpectBody)
+		}
+	})
 
 }

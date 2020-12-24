@@ -24,10 +24,10 @@ import (
 func TestRoute_Invalid_Host(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "invalid host",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "invalid host",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 				"uri": "/hello_",
 				"host": "$%$foo.com",
@@ -42,10 +42,10 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc: "invalid hosts",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "invalid hosts",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello_",
 				"hosts": ["$%$foo.com", "*.bar.com"],
@@ -60,10 +60,10 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc: "create route with host and hosts together at the same time",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route with host and hosts together at the same time",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello_",
 				"host": "github.com",
@@ -79,7 +79,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:     "hit route not created",
+			Desc:         "hit route not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -88,7 +88,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 		{
-			caseDesc:     "hit route not created",
+			Desc:         "hit route not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -99,14 +99,14 @@ func TestRoute_Invalid_Host(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_Create_With_Hosts(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "hit route that not exist",
+			Desc:         "hit route that not exist",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -115,10 +115,10 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello_",
 				"hosts": ["foo.com", "*.bar.com"],
@@ -133,10 +133,10 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "create route with int uri",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route with int uri",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": 123456
 			}`,
@@ -144,7 +144,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:     "hit the route just created - wildcard domain name",
+			Desc:         "hit the route just created - wildcard domain name",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -154,7 +154,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "hit the route just created",
+			Desc:         "hit the route just created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -163,7 +163,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			ExpectBody:   "hello world\n",
 		},
 		{
-			caseDesc:     "hit the route not exists",
+			Desc:         "hit the route not exists",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_111",
@@ -172,7 +172,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 		{
-			caseDesc:     "delete the route just created",
+			Desc:         "delete the route just created",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -180,7 +180,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just deleted",
+			Desc:         "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -192,14 +192,14 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "hit route that not exist",
+			Desc:         "hit route that not exist",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -208,10 +208,10 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 		{
-			caseDesc: "create route with host foo.com",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route with host foo.com",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"methods": ["GET"],
@@ -229,7 +229,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just create",
+			Desc:         "hit the route just create",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -238,10 +238,10 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update route with host bar.com",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route with host bar.com",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"hosts": ["bar.com"],
@@ -256,7 +256,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route with host foo.com",
+			Desc:         "hit the route with host foo.com",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -265,7 +265,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "hit the route just updated",
+			Desc:         "hit the route just updated",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -274,7 +274,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			ExpectBody:   "hello world\n",
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -282,7 +282,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just deleted",
+			Desc:         "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -294,14 +294,15 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_Patch(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route not exists",
+
+			Desc:         "make sure the route not exists",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -309,10 +310,10 @@ func TestRoute_Patch(t *testing.T) {
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"upstream": {
@@ -326,7 +327,7 @@ func TestRoute_Patch(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just created ",
+			Desc:         "hit the route just created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -335,7 +336,7 @@ func TestRoute_Patch(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "route patch for update status(route offline)",
+			Desc:         "route patch for update status(route offline)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPatch,
 			Path:         "/apisix/admin/routes/r1",
@@ -344,7 +345,7 @@ func TestRoute_Patch(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route has been offline",
+			Desc:         "make sure the route has been offline",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -353,7 +354,7 @@ func TestRoute_Patch(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "route patch for update status (route online)",
+			Desc:         "route patch for update status (route online)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPatch,
 			Path:         "/apisix/admin/routes/r1/status",
@@ -362,7 +363,7 @@ func TestRoute_Patch(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route has been online",
+			Desc:         "make sure the route has been online",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -371,7 +372,7 @@ func TestRoute_Patch(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -379,7 +380,7 @@ func TestRoute_Patch(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just deleted",
+			Desc:         "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -389,6 +390,6 @@ func TestRoute_Patch(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

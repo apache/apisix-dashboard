@@ -24,10 +24,10 @@ import (
 func TestRoute_with_valid_remote_addr(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "add route with valid remote_addr",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "add route with valid remote_addr",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"remote_addr": "172.16.238.1",
@@ -44,7 +44,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -54,10 +54,10 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update route with valid remote_addr (CIDR)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route with valid remote_addr (CIDR)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"remote_addr": "172.16.238.1/24",
@@ -74,7 +74,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -84,10 +84,10 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update route with valid remote_addrs",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route with valid remote_addrs",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"remote_addrs": ["172.16.238.1","192.168.0.2/24"],
@@ -104,7 +104,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -114,10 +114,10 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update remote_addr to not be hit",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update remote_addr to not be hit",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"remote_addr": "10.10.10.10",
@@ -134,7 +134,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -143,10 +143,10 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update remote_addrs to not be hit",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update remote_addrs to not be hit",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"remote_addrs": ["10.10.10.10","11.11.11.1/24"],
@@ -163,7 +163,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -172,7 +172,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -181,7 +181,7 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify it again after deleting the route",
+			Desc:         "verify it again after deleting the route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -192,6 +192,6 @@ func TestRoute_with_valid_remote_addr(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
