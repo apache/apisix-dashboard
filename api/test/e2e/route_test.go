@@ -491,25 +491,6 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   `{"code":10000,"message":"schema validate failed: (root): Must validate one and only one schema (oneOf)\n(root): Must validate all the schemas (allOf)\nremote_addrs: Array must have at least 1 items"}`,
 		},
-		//{
-		//	caseDesc: "create route with empty remote_addrs and remote_addr",
-		//	Object:   ManagerApiExpect(t),
-		//	Path:     "/apisix/admin/routes/r1",
-		//	Method:   http.MethodPut,
-		//	Body: `{
-		//		"uri": "/hello",
-		//		"methods": [],
-		//		"upstream": {
-		//			"nodes": {
-		//				"172.16.238.20:1980": 1
-		//			},
-		//			"type": "roundrobin"
-		//		}
-		//	}`,
-		//	Headers:      map[string]string{"Authorization": token},
-		//	ExpectStatus: http.StatusBadRequest,
-		//	ExpectBody:   `{"code":10000,"message":"schema validate failed: (root): Must validate one and only one schema (oneOf)\n(root): Must validate all the schemas (allOf)\nmethods: Array must have at least 1 items"}`,
-		//},
 		{
 			caseDesc:     "make sure the route not created",
 			Object:       APISIXExpect(t),
