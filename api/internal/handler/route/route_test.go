@@ -794,13 +794,13 @@ func TestRoute(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 	
 	// Success: tests the float body id value is == string route id value
-	// errRoute = &UpdateInput{}
-	// errRoute.ID = "1"
-	// err = json.Unmarshal([]byte(reqBodyErr), errRoute)
-	// assert.Nil(t, err)
-	// ctx.SetInput(errRoute)
-	// ret, err = handler.Update(ctx)
-	// assert.Nil(t, err)
+	errRoute = &UpdateInput{}
+	errRoute.ID = "1"
+	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
+	assert.Nil(t, err)
+	ctx.SetInput(errRoute)
+	ret, err = handler.Update(ctx)
+	assert.Nil(t, err)
 
 	// Success: tests the Body ID can be nil
 	reqBodyErr = `{
