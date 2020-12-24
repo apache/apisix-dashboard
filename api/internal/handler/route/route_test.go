@@ -794,8 +794,20 @@ func TestRoute(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 	
 	// Success: tests the float body id value is == string route id value
+	reqBodyErr = `{
+		"id": 10,
+		"uri": "/index.html",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "www.a.com",
+				"port": 80,
+				"weight": 1
+			}]
+		}
+	}`
 	errRoute = &UpdateInput{}
-	errRoute.ID = "r1"
+	errRoute.ID = "10"
 	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
 	assert.Nil(t, err)
 	ctx.SetInput(errRoute)
