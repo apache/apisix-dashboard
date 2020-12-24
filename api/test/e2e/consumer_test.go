@@ -30,7 +30,7 @@ import (
 func TestConsumer_Create_And_Get(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "check consumer is not exist",
+			Desc:         "check consumer is not exist",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/consumers/consumer_1",
 			Method:       http.MethodGet,
@@ -39,7 +39,7 @@ func TestConsumer_Create_And_Get(t *testing.T) {
 			ExpectBody:   "data not found",
 		},
 		{
-			caseDesc:     "check consumer is not exist",
+			Desc:         "check consumer is not exist",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/consumers/consumer_2",
 			Method:       http.MethodGet,
@@ -48,10 +48,10 @@ func TestConsumer_Create_And_Get(t *testing.T) {
 			ExpectBody:   "data not found",
 		},
 		{
-			caseDesc: "create consumer by POST method",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPost,
+			Desc:   "create consumer by POST method",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPost,
 			Body: `{
 				"username": "consumer_1",
 				"plugins": {
@@ -69,10 +69,10 @@ func TestConsumer_Create_And_Get(t *testing.T) {
 			ExpectBody:   "404 page not found",
 		},
 		{
-			caseDesc: "create consumer by PUT method",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create consumer by PUT method",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username": "consumer_2",
 				"plugins": {
@@ -91,7 +91,7 @@ func TestConsumer_Create_And_Get(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "get consumer",
+			Desc:         "get consumer",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/consumers/consumer_2",
 			Method:       http.MethodGet,
@@ -100,10 +100,10 @@ func TestConsumer_Create_And_Get(t *testing.T) {
 			ExpectBody:   "\"username\":\"consumer_2\"",
 		},
 		{
-			caseDesc: "create consumer without username",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create consumer without username",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"plugins": {
 					"limit-count": {
@@ -120,7 +120,7 @@ func TestConsumer_Create_And_Get(t *testing.T) {
 			ExpectBody:   "\"code\":10000",
 		},
 		{
-			caseDesc:     "delete consumer",
+			Desc:         "delete consumer",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/consumers/consumer_2",
 			Method:       http.MethodDelete,
@@ -131,17 +131,17 @@ func TestConsumer_Create_And_Get(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestConsumer_Update_And_Get(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create consumer by PUT",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create consumer by PUT",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username": "consumer_3",
 				"plugins": {
@@ -160,10 +160,10 @@ func TestConsumer_Update_And_Get(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update consumer by PUT",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers/consumer_3",
-			Method:   http.MethodPut,
+			Desc:   "update consumer by PUT",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers/consumer_3",
+			Method: http.MethodPut,
 			Body: `{
 				"username": "consumer_3",
 				"plugins": {
@@ -182,7 +182,7 @@ func TestConsumer_Update_And_Get(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "get consumer",
+			Desc:         "get consumer",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/consumers/consumer_3",
 			Method:       http.MethodGet,
@@ -191,7 +191,7 @@ func TestConsumer_Update_And_Get(t *testing.T) {
 			ExpectBody:   "\"rejected_code\":504",
 		},
 		{
-			caseDesc:     "delete consumer",
+			Desc:         "delete consumer",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/consumers/consumer_3",
 			Method:       http.MethodDelete,
@@ -202,7 +202,7 @@ func TestConsumer_Update_And_Get(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
