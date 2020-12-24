@@ -112,10 +112,10 @@ func handleSpecialField(resource string, reqBody []byte) ([]byte, error) {
 		return reqBody, fmt.Errorf("read request body failed: %s", err)
 	}
 	if _, ok := bodyMap["create_time"]; ok {
-		return reqBody, fmt.Errorf("not support specifying create_time")
+		return reqBody, fmt.Errorf("we don't accept create_time from client")
 	}
 	if _, ok := bodyMap["update_time"]; ok {
-		return reqBody, fmt.Errorf("not support specifying update_time")
+		return reqBody, fmt.Errorf("we don't accept update_time from client")
 	}
 
 	// remove script, because it's a map, and need to be parsed into lua code
