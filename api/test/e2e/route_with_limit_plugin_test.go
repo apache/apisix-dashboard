@@ -25,7 +25,7 @@ import (
 func TestRoute_With_Limit_Plugin(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -33,10 +33,10 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -61,7 +61,7 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 			ExpectBody:   `"code":0`,
 		},
 		{
-			caseDesc:     "verify route that should not be limited",
+			Desc:         "verify route that should not be limited",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -70,7 +70,7 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route that should not be limited 2",
+			Desc:         "verify route that should not be limited 2",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -78,7 +78,7 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 			ExpectBody:   "hello world",
 		},
 		{
-			caseDesc:     "verify route that should be limited",
+			Desc:         "verify route that should be limited",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -86,7 +86,7 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 			ExpectBody:   "503 Service Temporarily Unavailable",
 		},
 		{
-			caseDesc:     "verify route that should not be limited since time window pass",
+			Desc:         "verify route that should not be limited since time window pass",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -95,7 +95,7 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 			Sleep:        3 * time.Second,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -103,7 +103,7 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route has been deleted",
+			Desc:         "make sure the route has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -114,14 +114,14 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -129,10 +129,10 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -158,7 +158,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			ExpectBody:   `"code":0`,
 		},
 		{
-			caseDesc:     "make sure the consumer is not created",
+			Desc:         "make sure the consumer is not created",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
@@ -166,10 +166,10 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			ExpectStatus: http.StatusNotFound,
 		},
 		{
-			caseDesc: "create consumer",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create consumer",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username": "jack",
 				"plugins": {
@@ -182,10 +182,10 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "create consumer 2",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create consumer 2",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username": "pony",
 				"plugins": {
@@ -198,7 +198,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route that should not be limited",
+			Desc:         "verify route that should not be limited",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -208,7 +208,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route that should not be limited 2",
+			Desc:         "verify route that should not be limited 2",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -217,7 +217,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			ExpectBody:   "hello world",
 		},
 		{
-			caseDesc:     "verify route that should be limited",
+			Desc:         "verify route that should be limited",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -226,7 +226,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			ExpectBody:   "503 Service Temporarily Unavailable",
 		},
 		{
-			caseDesc:     "verify route that should not be limited (other consumer)",
+			Desc:         "verify route that should not be limited (other consumer)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -235,7 +235,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			ExpectBody:   "hello world",
 		},
 		{
-			caseDesc:     "verify route that should not be limited since time window pass",
+			Desc:         "verify route that should not be limited since time window pass",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -245,7 +245,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			Sleep:        2 * time.Second,
 		},
 		{
-			caseDesc:     "delete consumer pony",
+			Desc:         "delete consumer pony",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/pony",
@@ -253,7 +253,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete consumer jack",
+			Desc:         "delete consumer jack",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
@@ -261,7 +261,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure pony has been deleted",
+			Desc:         "make sure pony has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -271,7 +271,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "make sure jack has been deleted",
+			Desc:         "make sure jack has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -280,7 +280,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			ExpectBody:   `{"message":"Missing related consumer"}`,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -288,7 +288,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route has been deleted",
+			Desc:         "make sure the route has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -299,14 +299,14 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -314,10 +314,10 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -343,7 +343,7 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			ExpectBody:   `"code":0`,
 		},
 		{
-			caseDesc:     "verify route that should not be limited",
+			Desc:         "verify route that should not be limited",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -352,7 +352,7 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route that should not be limited 2",
+			Desc:         "verify route that should not be limited 2",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -360,7 +360,7 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			ExpectBody:   "hello world",
 		},
 		{
-			caseDesc:     "verify route that should be limited",
+			Desc:         "verify route that should be limited",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -368,7 +368,7 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			ExpectBody:   "503 Service Temporarily Unavailable",
 		},
 		{
-			caseDesc:     "verify route that should not be limited since time window pass",
+			Desc:         "verify route that should not be limited since time window pass",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -377,10 +377,10 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			Sleep:        2 * time.Second,
 		},
 		{
-			caseDesc: "update route to disable plugin limit-count",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route to disable plugin limit-count",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -406,7 +406,7 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			ExpectBody:   `"code":0`,
 		},
 		{
-			caseDesc:     "verify route that should not be limited",
+			Desc:         "verify route that should not be limited",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -415,7 +415,7 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route that should not be limited (exceed config count)",
+			Desc:         "verify route that should not be limited (exceed config count)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -423,7 +423,7 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			ExpectBody:   "hello world",
 		},
 		{
-			caseDesc:     "verify route that should not be limited (exceed config count again)",
+			Desc:         "verify route that should not be limited (exceed config count again)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -431,7 +431,7 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			ExpectBody:   "hello world",
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -439,7 +439,7 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route has been deleted",
+			Desc:         "make sure the route has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -450,6 +450,6 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
