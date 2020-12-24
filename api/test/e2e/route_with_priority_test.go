@@ -24,10 +24,10 @@ import (
 func TestRoute_with_priority(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "add another route with no priority (default 0)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "add another route with no priority (default 0)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/server_port",
 					"methods": ["GET"],
@@ -44,7 +44,7 @@ func TestRoute_with_priority(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "access the route",
+			Desc:         "access the route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
@@ -53,10 +53,10 @@ func TestRoute_with_priority(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "add another route with valid priority (1), upstream is different from the others",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r2",
+			Desc:   "add another route with valid priority (1), upstream is different from the others",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r2",
 			Body: `{
 					"uri": "/server_port",
 					"methods": ["GET"],
@@ -74,7 +74,7 @@ func TestRoute_with_priority(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "access the route to determine whether it meets the priority (compare 1 and default)",
+			Desc:         "access the route to determine whether it meets the priority (compare 1 and default)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
@@ -83,7 +83,7 @@ func TestRoute_with_priority(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route (r1)",
+			Desc:         "delete route (r1)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -92,7 +92,7 @@ func TestRoute_with_priority(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route (r2)",
+			Desc:         "delete route (r2)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r2",
@@ -103,6 +103,6 @@ func TestRoute_with_priority(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
