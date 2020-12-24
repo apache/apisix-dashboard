@@ -152,7 +152,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     status,
     upstream,
     upstream_id,
-    service_id,
+    service_id = '',
     priority = 0,
     enable_websocket
   } = data;
