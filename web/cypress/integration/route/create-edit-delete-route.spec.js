@@ -25,7 +25,7 @@ context('Create and Delete Route', () => {
     cy.login();
   })
 
-  it('create route', () => {
+  it('should create route', () => {
     //  go to route create page
     cy.visit('/');
     cy.contains('Route').click();
@@ -81,7 +81,7 @@ context('Create and Delete Route', () => {
     cy.url().should('contains', 'routes/list');
   });
 
-  it('edit the route', () => {
+  it('should edit the route', () => {
     cy.visit('/');
     cy.contains('Route').click();
     cy.contains('Edit').click();
@@ -98,7 +98,7 @@ context('Create and Delete Route', () => {
     cy.contains(newName).siblings().should('contain', 'new desc')
   });
 
-  it('delete the route', () => {
+  it('should delete the route', () => {
     cy.visit('/routes/list');
     cy.get('[title=Name]').type(newName);
     cy.contains('查 询').click();
