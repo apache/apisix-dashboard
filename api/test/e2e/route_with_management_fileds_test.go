@@ -29,10 +29,10 @@ import (
 func TestRoute_with_name_desc(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "config route with name and desc (r1)",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "config route with name and desc (r1)",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 					"uri": "/hello",
 					"name": "jack",
@@ -50,7 +50,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "access the route's uri (r1)",
+			Desc:         "access the route's uri (r1)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -60,7 +60,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify the route's content (r1)",
+			Desc:         "verify the route's content (r1)",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/routes/r1",
 			Method:       http.MethodGet,
@@ -71,7 +71,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	//get the route
@@ -92,10 +92,10 @@ func TestRoute_with_name_desc(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "update the route (r1)",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "update the route (r1)",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 					"uri": "/hello",
 					"name": "new jack",
@@ -115,7 +115,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "access the route's uri (r1)",
+			Desc:         "access the route's uri (r1)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -127,7 +127,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	//get the route (updated)
@@ -146,7 +146,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc:     "delete the route (r1)",
+			Desc:         "delete the route (r1)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -156,17 +156,17 @@ func TestRoute_with_name_desc(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_with_label(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "config route with labels (r1)",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "config route with labels (r1)",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 					"uri": "/hello",
 					"labels": {
@@ -187,7 +187,7 @@ func TestRoute_with_label(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "access the route's uri (r1)",
+			Desc:         "access the route's uri (r1)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -197,7 +197,7 @@ func TestRoute_with_label(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify the route's detail (r1)",
+			Desc:         "verify the route's detail (r1)",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/routes/r1",
 			Method:       http.MethodGet,
@@ -207,7 +207,7 @@ func TestRoute_with_label(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete the route (r1)",
+			Desc:         "delete the route (r1)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -215,7 +215,7 @@ func TestRoute_with_label(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "access the route after delete it",
+			Desc:         "access the route after delete it",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -225,17 +225,17 @@ func TestRoute_with_label(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_search_by_label(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "config route with labels (r1)",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "config route with labels (r1)",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 					"uri": "/hello",
 					"labels": {
@@ -256,10 +256,10 @@ func TestRoute_search_by_label(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "config route with labels (r2)",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r2",
-			Method:   http.MethodPut,
+			Desc:   "config route with labels (r2)",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r2",
+			Method: http.MethodPut,
 			Body: `{
 					"uri": "/hello2",
 					"labels": {
@@ -281,7 +281,7 @@ func TestRoute_search_by_label(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "access the route's uri (r1)",
+			Desc:         "access the route's uri (r1)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -291,7 +291,7 @@ func TestRoute_search_by_label(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify the route's detail (r1)",
+			Desc:         "verify the route's detail (r1)",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/routes/r1",
 			Method:       http.MethodGet,
@@ -301,7 +301,7 @@ func TestRoute_search_by_label(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "search the route by label",
+			Desc:         "search the route by label",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/routes",
 			Query:        "label=build:16",
@@ -312,7 +312,7 @@ func TestRoute_search_by_label(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "search the route by label (only key)",
+			Desc:         "search the route by label (only key)",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/routes",
 			Query:        "label=extra",
@@ -323,7 +323,7 @@ func TestRoute_search_by_label(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "search the route by label (combination)",
+			Desc:         "search the route by label (combination)",
 			Object:       ManagerApiExpect(t),
 			Path:         "/apisix/admin/routes",
 			Query:        "label=extra,build:16",
@@ -334,7 +334,7 @@ func TestRoute_search_by_label(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete the route (r1)",
+			Desc:         "delete the route (r1)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -342,7 +342,7 @@ func TestRoute_search_by_label(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete the route (r2)",
+			Desc:         "delete the route (r2)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r2",
@@ -350,7 +350,7 @@ func TestRoute_search_by_label(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "access the route after delete it",
+			Desc:         "access the route after delete it",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -360,6 +360,6 @@ func TestRoute_search_by_label(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

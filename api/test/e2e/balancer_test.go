@@ -27,10 +27,10 @@ import (
 func TestBalancer_roundrobin_with_weight(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create upstream (roundrobin with same weight)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create upstream (roundrobin with same weight)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [{
 					"host": "172.16.238.20",
@@ -53,10 +53,10 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "create route using the upstream just created",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/1",
+			Desc:   "create route using the upstream just created",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/1",
 			Body: `{
 				"uri": "/server_port",
 				"upstream_id": "1"
@@ -68,7 +68,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -82,10 +82,10 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "create upstream (roundrobin with different weight)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create upstream (roundrobin with different weight)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [{
 					"host": "172.16.238.20",
@@ -109,7 +109,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -123,10 +123,10 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "create upstream (roundrobin with weight 1 and 0) ",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create upstream (roundrobin with weight 1 and 0) ",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [{
 					"host": "172.16.238.20",
@@ -145,7 +145,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -157,10 +157,10 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "create upstream (roundrobin with weight only 1 ) ",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create upstream (roundrobin with weight only 1 ) ",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [{
 					"host": "172.16.238.20",
@@ -174,7 +174,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -188,7 +188,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 func TestBalancer_Delete(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/1",
@@ -196,7 +196,7 @@ func TestBalancer_Delete(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete upstream",
+			Desc:         "delete upstream",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/1",
@@ -204,7 +204,7 @@ func TestBalancer_Delete(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just deleted",
+			Desc:         "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
@@ -215,6 +215,6 @@ func TestBalancer_Delete(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

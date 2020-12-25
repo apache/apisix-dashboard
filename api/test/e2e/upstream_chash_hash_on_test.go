@@ -30,10 +30,10 @@ import (
 func TestUpstream_chash_hash_on_custom_header(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create chash upstream with hash_on (custom_header)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create chash upstream with hash_on (custom_header)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 					 "nodes": [{
 						 "host": "172.16.238.20",
@@ -53,10 +53,10 @@ func TestUpstream_chash_hash_on_custom_header(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "create route using the upstream just created",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/1",
+			Desc:   "create route using the upstream just created",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/1",
 			Body: `{
 					 "uri": "/server_port",
 					 "upstream_id": "1"
@@ -68,7 +68,7 @@ func TestUpstream_chash_hash_on_custom_header(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -102,10 +102,10 @@ func TestUpstream_chash_hash_on_custom_header(t *testing.T) {
 func TestUpstream_chash_hash_on_cookie(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create chash upstream with hash_on (cookie)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create chash upstream with hash_on (cookie)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 					 "nodes": [{
 						 "host": "172.16.238.20",
@@ -127,7 +127,7 @@ func TestUpstream_chash_hash_on_cookie(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -181,10 +181,10 @@ func TestUpstream_chash_hash_on_cookie(t *testing.T) {
 func TestUpstream_key_contains_uppercase_letters_and_hyphen(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create chash upstream with key contains uppercase letters and hyphen",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create chash upstream with key contains uppercase letters and hyphen",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 					 "nodes": [{
 						 "host": "172.16.238.20",
@@ -206,7 +206,7 @@ func TestUpstream_key_contains_uppercase_letters_and_hyphen(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -240,10 +240,10 @@ func TestUpstream_key_contains_uppercase_letters_and_hyphen(t *testing.T) {
 func TestUpstream_chash_hash_on_consumer(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create consumer with key-auth",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/consumers",
+			Desc:   "create consumer with key-auth",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/consumers",
 			Body: `{
 					 "username": "jack",
 					 "plugins": {
@@ -256,10 +256,10 @@ func TestUpstream_chash_hash_on_consumer(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "create route with key-auth",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/1",
+			Desc:   "create route with key-auth",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/1",
 			Body: `{
 					 "uri": "/server_port",
 					 "plugins": {
@@ -287,7 +287,7 @@ func TestUpstream_chash_hash_on_consumer(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -321,10 +321,10 @@ func TestUpstream_chash_hash_on_consumer(t *testing.T) {
 func TestUpstream_chash_hash_on_wrong_key(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create chash upstream with wrong key",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/2",
+			Desc:   "create chash upstream with wrong key",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/2",
 			Body: `{
 					"nodes": [{
 						"host": "172.16.238.20",
@@ -344,7 +344,7 @@ func TestUpstream_chash_hash_on_wrong_key(t *testing.T) {
 			ExpectBody:   "schema validate failed: (root): Does not match pattern '^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)",
 		},
 		{
-			caseDesc:     "verify upstream with wrong key",
+			Desc:         "verify upstream with wrong key",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes/2",
@@ -355,7 +355,7 @@ func TestUpstream_chash_hash_on_wrong_key(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 }
@@ -363,10 +363,10 @@ func TestUpstream_chash_hash_on_wrong_key(t *testing.T) {
 func TestUpstream_chash_hash_on_vars(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create chash upstream hash_on (vars)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create chash upstream hash_on (vars)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 					"nodes": [{
 						"host": "172.16.238.20",
@@ -386,7 +386,7 @@ func TestUpstream_chash_hash_on_vars(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify upstream",
+			Desc:         "verify upstream",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/upstreams/1",
@@ -396,10 +396,10 @@ func TestUpstream_chash_hash_on_vars(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "create route using the upstream just created",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/1",
+			Desc:   "create route using the upstream just created",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/1",
 			Body: `{
 				"uri": "/server_port",
 				"upstream_id": "1"
@@ -409,7 +409,7 @@ func TestUpstream_chash_hash_on_vars(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes/1",
@@ -421,7 +421,7 @@ func TestUpstream_chash_hash_on_vars(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -450,7 +450,7 @@ func TestUpstream_chash_hash_on_vars(t *testing.T) {
 func TestUpstream_Delete_hash_on(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "delete consumer",
+			Desc:         "delete consumer",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
@@ -458,7 +458,7 @@ func TestUpstream_Delete_hash_on(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/1",
@@ -466,7 +466,7 @@ func TestUpstream_Delete_hash_on(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete upstream",
+			Desc:         "delete upstream",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/1",
@@ -474,7 +474,7 @@ func TestUpstream_Delete_hash_on(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just deleted",
+			Desc:         "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
@@ -485,6 +485,6 @@ func TestUpstream_Delete_hash_on(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
