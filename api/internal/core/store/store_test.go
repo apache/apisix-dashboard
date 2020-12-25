@@ -115,7 +115,7 @@ func TestGenericStore_Init(t *testing.T) {
 		caseDesc        string
 		giveStore       *GenericStore
 		giveListErr     error
-		giveListRet     []storage.Data
+		giveListRet     []storage.Keypair
 		giveWatchCh     chan storage.WatchResponse
 		giveResp        storage.WatchResponse
 		wantErr         error
@@ -134,7 +134,7 @@ func TestGenericStore_Init(t *testing.T) {
 					},
 				},
 			},
-			giveListRet: []storage.Data{
+			giveListRet: []storage.Keypair{
 				{
 					Key:   "test/demo1-f1",
 					Value: `{"Field1":"demo1-f1", "Field2":"demo1-f2"}`,
@@ -189,7 +189,7 @@ func TestGenericStore_Init(t *testing.T) {
 					},
 				},
 			},
-			giveListRet: []storage.Data{
+			giveListRet: []storage.Keypair{
 				{
 					Key:   "test/demo1-f1",
 					Value: `{"Field1","demo1-f1", "Field2":"demo1-f2"}`,
