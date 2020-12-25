@@ -36,7 +36,8 @@ func NewHandler() (handler.RouteRegister, error) {
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.GET("/apisix/admin/plugins", wgin.Wraps(h.Plugins))
+	r.GET("/apisix/admin/plugins", wgin.Wraps(h.Plugins,
+		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 	r.GET("/apisix/admin/schema/plugins/:name", wgin.Wraps(h.Schema,
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
 }
@@ -61,10 +62,30 @@ func (h *Handler) Schema(c droplet.Context) (interface{}, error) {
 	return ret, nil
 }
 
+type ListInput struct {
+	All bool `auto_read:"all,query"`
+}
+
 func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
-	list := conf.Schema.Get("plugins").Map()
+	input := c.Input().(*ListInput)
+
+	plugins := conf.Schema.Get("plugins")
+	if input.All {
+		var res []map[string]interface{}
+		list := plugins.Value().(map[string]interface{})
+		for name, conf := range list {
+			plugin := conf.(map[string]interface{})
+			plugin["name"] = name
+			if _, ok := plugin["type"]; !ok {
+				plugin["type"] = "other"
+			}
+			res = append(res, plugin)
+		}
+		return res, nil
+	}
 
 	var ret []string
+	list := plugins.Map()
 	for pluginName := range list {
 		if pluginName != "serverless-post-function" && pluginName != "serverless-pre-function" {
 			ret = append(ret, pluginName)

@@ -30,10 +30,10 @@ import (
 func TestUpstream_chash_query_string(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create chash upstream with key (query_string)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create chash upstream with key (query_string)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 					"nodes": [{
 						"host": "172.16.238.20",
@@ -57,10 +57,10 @@ func TestUpstream_chash_query_string(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "create route using the upstream just created",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/1",
+			Desc:   "create route using the upstream just created",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/1",
 			Body: `{
 				"uri": "/server_port",
 				"upstream_id": "1"
@@ -72,7 +72,7 @@ func TestUpstream_chash_query_string(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -106,10 +106,10 @@ func TestUpstream_chash_query_string(t *testing.T) {
 func TestUpstream_chash_arg_xxx(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create chash upstream with key (arg_xxx)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create chash upstream with key (arg_xxx)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 					"nodes": [{
 						"host": "172.16.238.20",
@@ -135,7 +135,7 @@ func TestUpstream_chash_arg_xxx(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
@@ -169,7 +169,7 @@ func TestUpstream_chash_arg_xxx(t *testing.T) {
 func TestUpstream_Delete_chash(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/1",
@@ -177,7 +177,7 @@ func TestUpstream_Delete_chash(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete upstream",
+			Desc:         "delete upstream",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/1",
@@ -185,7 +185,7 @@ func TestUpstream_Delete_chash(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just deleted",
+			Desc:         "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello1",
@@ -196,6 +196,6 @@ func TestUpstream_Delete_chash(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

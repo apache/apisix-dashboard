@@ -24,7 +24,7 @@ import (
 func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created",
+			Desc:         "make sure the route is not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -32,10 +32,10 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route that will rewrite host and uri",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route that will rewrite host and uri",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -57,7 +57,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route that rewrite host and uri",
+			Desc:         "verify route that rewrite host and uri",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -66,10 +66,10 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update route that will rewrite headers",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route that will rewrite headers",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -93,7 +93,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route that rewrite headers",
+			Desc:         "verify route that rewrite headers",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -103,10 +103,10 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update route using regex_uri",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route using regex_uri",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/test/*",
 				"plugins": {
@@ -127,7 +127,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route that using regex_uri",
+			Desc:         "verify route that using regex_uri",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         `/test/plugin/proxy/rewrite`,
@@ -136,10 +136,10 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update route that will rewrite args",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route that will rewrite args",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -160,7 +160,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route that rewrite args",
+			Desc:         "verify route that rewrite args",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         `/hello`,
@@ -170,7 +170,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -178,7 +178,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route deleted",
+			Desc:         "make sure the route deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -189,7 +189,7 @@ func TestRoute_With_Plugin_Proxy_Rewrite(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 }
