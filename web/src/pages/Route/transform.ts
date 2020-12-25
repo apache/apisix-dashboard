@@ -35,6 +35,8 @@ export const transformStepData = ({
     };
   }
 
+  const { service_id = '' } = form1Data;
+
   const data: Partial<RouteModule.Body> = {
     ...form1Data,
     ...step3DataCloned,
@@ -83,6 +85,7 @@ export const transformStepData = ({
       'redirectURI',
       'ret_code',
       'redirectOption',
+      service_id.length === 0 ? 'service_id' : '',
       !Object.keys(step3DataCloned.plugins || {}).length ? 'plugins' : '',
       !Object.keys(step3DataCloned.script || {}).length ? 'script' : '',
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
@@ -103,6 +106,7 @@ export const transformStepData = ({
     'redirect',
     'vars',
     'plugins',
+    service_id.length !== 0 ? 'service_id' : '',
     form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
     data.remote_addrs?.filter(Boolean).length !== 0 ? 'remote_addrs' : '',
   ]);
@@ -150,6 +154,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     status,
     upstream,
     upstream_id,
+    service_id = '',
     priority = 0,
     enable_websocket
   } = data;
@@ -163,7 +168,8 @@ export const transformRouteData = (data: RouteModule.Body) => {
     // @ts-ignore
     methods: methods.length ? methods : ["ALL"],
     priority,
-    enable_websocket
+    enable_websocket,
+    service_id
   };
 
   const redirect = data.plugins?.redirect || {};

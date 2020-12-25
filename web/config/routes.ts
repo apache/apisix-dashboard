@@ -76,6 +76,18 @@ const routes = [
     component: './Consumer/Create',
   },
   {
+    path: '/service/list',
+    component: './Service/List',
+  },
+  {
+    path: '/service/create',
+    component: './Service/Create',
+  },
+  {
+    path: '/service/:serviceId/edit',
+    component: './Service/Create',
+  },
+  {
     path: '/settings',
     component: './Setting',
   },
