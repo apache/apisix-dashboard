@@ -25,7 +25,7 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 	"go.uber.org/zap/buffer"
 
-	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/log"
 )

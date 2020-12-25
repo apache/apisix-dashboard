@@ -23,7 +23,7 @@ import (
 
 	"go.etcd.io/etcd/clientv3"
 
-	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
 )
