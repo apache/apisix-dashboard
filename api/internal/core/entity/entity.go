@@ -52,6 +52,12 @@ func (info *BaseInfo) Updating(storedInfo *BaseInfo) {
 	info.UpdateTime = time.Now().Unix()
 }
 
+func (info *BaseInfo) KeyCompat(key string) {
+	if info.ID == nil && key != "" {
+		info.ID = key
+	}
+}
+
 type BaseInfoSetter interface {
 	GetBaseInfo() *BaseInfo
 }

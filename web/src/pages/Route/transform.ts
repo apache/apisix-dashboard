@@ -16,6 +16,15 @@
  */
 import { omit, pick, cloneDeep } from 'lodash';
 
+export const transformLableValueToKeyValue = (data: string[]) => {
+  return (data || []).map((item) => {
+    const index = item.indexOf(':');
+    const labelKey = item.substring(0, index);
+    const labelValue = item.substring(index + 1);
+    return { labelKey, labelValue, key: Math.random().toString(36).slice(2) };
+  });
+};
+
 export const transformStepData = ({
   form1Data,
   form2Data,
@@ -35,10 +44,15 @@ export const transformStepData = ({
     };
   }
 
+  const labels = {};
+  transformLableValueToKeyValue(form1Data.labels).forEach(item => {
+    labels[item.labelKey] = item.labelValue;
+  })
   const { service_id = '' } = form1Data;
 
   const data: Partial<RouteModule.Body> = {
-    ...form1Data,
+    ...omit(form1Data, 'labels'),
+    labels,
     ...step3DataCloned,
     vars: advancedMatchingRules.map((rule) => {
       const { operator, position, name, value } = rule;
@@ -144,6 +158,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
   const {
     name,
     desc,
+    labels,
     methods = [],
     uris,
     uri,
@@ -165,6 +180,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     hosts: hosts || (host && [host]) || [''],
     uris: uris || (uri && [uri]) || [],
     remote_addrs: remote_addrs || [''],
+    labels: Object.keys(labels || []).map((item) => `${item}:${labels[item]}`),
     // @ts-ignore
     methods: methods.length ? methods : ["ALL"],
     priority,
@@ -200,4 +216,25 @@ export const transformRouteData = (data: RouteModule.Body) => {
     step3Data,
     advancedMatchingRules,
   };
+};
+
+export const transformLabelList = (data: RouteModule.ResponseLabelList) => {
+  if (!data) {
+    return {};
+  }
+  const transformData = {};
+  data.forEach((item) => {
+    const key = Object.keys(item)[0];
+    const value = item[key];
+    if (!transformData[key]) {
+      transformData[key] = [];
+      transformData[key].push(value);
+      return;
+    }
+
+    if (transformData[key] && !transformData[key][value]) {
+      transformData[key].push(value);
+    }
+  });
+  return transformData;
 };

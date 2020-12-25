@@ -20,7 +20,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
-	"github.com/stretchr/testify/assert"
+
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -28,11 +28,16 @@ import (
 	"time"
 
 	"github.com/gavv/httpexpect/v2"
+	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
 )
 
 var token string
+
+var APISIXHost = "http://127.0.0.1:9080"
 var APISIXInternalUrl = "http://172.16.238.30:9080"
+var APISIXSingleWorkerHost = "http://127.0.0.1:9081"
+var ManagerAPIHost = "http://127.0.0.1:9000"
 
 func init() {
 	//login to get auth token
@@ -41,7 +46,7 @@ func init() {
 		"password": "admin"
 	}`)
 
-	url := "http://127.0.0.1:9000/apisix/admin/user/login"
+	url := ManagerAPIHost + "/apisix/admin/user/login"
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		panic(err)
@@ -86,11 +91,11 @@ func httpGet(url string) ([]byte, int, error) {
 }
 
 func ManagerApiExpect(t *testing.T) *httpexpect.Expect {
-	return httpexpect.New(t, "http://127.0.0.1:9000")
+	return httpexpect.New(t, ManagerAPIHost)
 }
 
 func APISIXExpect(t *testing.T) *httpexpect.Expect {
-	return httpexpect.New(t, "http://127.0.0.1:9080")
+	return httpexpect.New(t, APISIXHost)
 }
 
 func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
@@ -117,10 +122,8 @@ func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
 	return e
 }
 
-var singleWorkerAPISIXHost = "http://127.0.0.1:9081"
-
 func BatchTestServerPort(t *testing.T, times int) map[string]int {
-	url := singleWorkerAPISIXHost + "/server_port"
+	url := APISIXSingleWorkerHost + "/server_port"
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	assert.Nil(t, err)
 
@@ -197,6 +200,8 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 
 		if tc.Sleep != 0 {
 			time.Sleep(tc.Sleep)
+		} else {
+			time.Sleep(time.Duration(50) * time.Millisecond)
 		}
 
 		if tc.Query != "" {
