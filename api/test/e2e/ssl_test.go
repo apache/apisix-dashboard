@@ -108,6 +108,7 @@ func TestSSL_Basic(t *testing.T) {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "hit the route just created using HTTPS",

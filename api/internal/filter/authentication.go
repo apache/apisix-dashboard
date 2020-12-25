@@ -22,9 +22,8 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-
-	"github.com/apisix/manager-api/conf"
-	"github.com/apisix/manager-api/log"
+	"github.com/apisix/manager-api/internal/conf"
+	"github.com/apisix/manager-api/internal/log"
 )
 
 func Authentication() gin.HandlerFunc {
