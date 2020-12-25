@@ -88,7 +88,6 @@ func TestConsumer_Create_And_Get(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"code\":0",
-			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "get consumer",
@@ -98,6 +97,7 @@ func TestConsumer_Create_And_Get(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"username\":\"consumer_2\"",
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:   "create consumer without username",
@@ -179,7 +179,6 @@ func TestConsumer_Update_And_Get(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"code\":0",
-			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "get consumer",
@@ -189,6 +188,7 @@ func TestConsumer_Update_And_Get(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"rejected_code\":504",
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "delete consumer",
