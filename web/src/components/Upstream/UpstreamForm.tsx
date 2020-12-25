@@ -580,6 +580,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           }}>
             <Select
               disabled={disabled}
+              onChange={(id) => {
+                form.setFieldsValue(list.find((item) => item.id === id));
+              }}
             >
               {[{ name: '手动填写', id: '' }, ...list].map((item) => (
                 <Select.Option value={item.id!} key={item.id}>
