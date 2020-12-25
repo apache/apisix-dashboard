@@ -22,7 +22,7 @@ context('Create and Search Route', () => {
     cy.login();
   })
 
-  it('create route test1, test2, test3', () => {
+  it('should create route test1, test2, test3', () => {
     //  go to route create page
     cy.visit('/');
     cy.contains('Route').click();
@@ -47,7 +47,7 @@ context('Create and Search Route', () => {
 
   });
 
-  it('search the route', () => {
+  it('should search the route', () => {
     cy.visit('/');
     cy.contains('Route').click();
     // full match
@@ -73,7 +73,7 @@ context('Create and Search Route', () => {
 
   });
 
-  it('delete the route', () => {
+  it('should delete the route', () => {
     cy.visit('/routes/list');
     for (let i = 0; i < 3; i++) {
       cy.contains('test' + i).siblings().contains('Delete').click();
