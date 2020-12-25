@@ -17,9 +17,9 @@
 export default {
   'upstream.step.select.upstream': 'Select Upstream',
   'upstream.step.select.upstream.select.option': 'Manual fill',
-  'upstream.step.node.domain.or.ip': 'Node Domain/IP',
+  'upstream.form.item-label.node.domain.or.ip': 'Node Domain/IP',
   'upstream.step.backend.server.domain.or.ip': 'Backend Server Domain Name/IP',
-  'upstream.step.domain.name.default.analysis':
+  'upstream.form.item.extra-message.node.domain.or.ip':
     'When using domain name, it will analysis local: /etc/resolv.conf by default, if weight is 0, then fusing this node',
   'upstream.step.input.domain.name.or.ip': 'Please input domain name/IP',
   'upstream.step.domain.name.or.ip.rule': 'Only letters, numbers and . are supported',
@@ -68,12 +68,12 @@ export default {
   'upstream.step.healthy.checks.successes': 'Successes',
   'upstream.step.input.healthy.checks.successes': 'Please input successes',
   'upstream.step.healthy.checks.http_failures': 'HttpFailures',
-  'upstream.step.healthy.checks.active.create.req_headers': 'Creat req_headers',
+  'upstream.step.healthy.checks.active.create.req_headers': 'Create req_headers',
   'upstream.step.input.healthy.checks.http_failures': 'Please input httpFailures',
   'upstream.step.healthy.checks.active.req_headers': 'req_headers',
   'upstream.step.input.healthy.checks.active.req_headers': 'Please input req_headers',
   'upstream.step.healthy.checks.passive': 'Passive',
-  'upstream.step.healthy.checks.passive.create.http_statuses': 'Creat http_statuses',
+  'upstream.step.healthy.checks.passive.create.http_statuses': 'Create http_statuses',
   'upstream.step.healthy.checks.passive.http_statuses': 'http_statuses',
   'upstream.step.input.healthy.checks.passive.http_statuses': 'Please input http_statuses',
   'upstream.step.healthy.checks.passive.tcp_failures': 'tcp_failures',

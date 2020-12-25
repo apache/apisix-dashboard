@@ -17,9 +17,9 @@
 export default {
   'upstream.step.select.upstream': '选择上游',
   'upstream.step.select.upstream.select.option': '手动填写',
-  'upstream.step.node.domain.or.ip': '节点域名/IP',
+  'upstream.form.item-label.node.domain.or.ip': '节点域名/IP',
   'upstream.step.backend.server.domain.or.ip': '后端服务域名/IP',
-  'upstream.step.domain.name.default.analysis':
+  'upstream.form.item.extra-message.node.domain.or.ip':
     '使用域名时，默认解析本地 /etc/resolv.conf；权重为0则熔断该节点',
   'upstream.step.input.domain.name.or.ip': '请输入域名/IP',
   'upstream.step.domain.name.or.ip.rule': '仅支持字母、数字和 . ',

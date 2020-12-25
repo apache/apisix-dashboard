@@ -133,9 +133,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               <Form.Item
                 required
                 key={field.key}
-                label={index === 0 && formatMessage({ id: 'upstream.step.node.domain.or.ip' })}
+                label={index === 0 && formatMessage({ id: 'upstream.form.item-label.node.domain.or.ip' })}
                 extra={
-                  index === 0 && formatMessage({ id: 'upstream.step.domain.name.default.analysis' })
+                  index === 0 && formatMessage({ id: 'upstream.form.item.extra-message.node.domain.or.ip' })
                 }
                 labelCol={{ span: index === 0 ? 3 : 0 }}
                 wrapperCol={{ offset: index === 0 ? 0 : 3 }}
