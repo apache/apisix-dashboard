@@ -363,3 +363,75 @@ func TestRoute_search_by_label(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 }
+
+func TestRoute_With_Create_Time(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			Desc:   "create route with create_time",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
+			Body: `{
+				"uri": "/hello",
+				"create_time": 1608792721,
+				"upstream": {
+					"nodes": {
+						"172.16.238.20:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			Desc:   "create route with update_time",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
+			Body: `{
+				"uri": "/hello",
+				"update_time": 1608792721,
+				"upstream": {
+					"nodes": {
+						"172.16.238.20:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			Desc:   "create route with create_time and update_time",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
+			Body: `{
+				"uri": "/hello",
+				"create_time": 1608792721,
+				"update_time": 1608792721,
+				"upstream": {
+					"nodes": {
+						"172.16.238.20:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			Desc:         "make sure the route not created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+}
