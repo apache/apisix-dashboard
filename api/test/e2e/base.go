@@ -201,7 +201,7 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 		if tc.Sleep != 0 {
 			time.Sleep(tc.Sleep)
 		} else {
-			time.Sleep(time.Duration(20) * time.Millisecond)
+			time.Sleep(time.Duration(50) * time.Millisecond)
 		}
 
 		if tc.Query != "" {
