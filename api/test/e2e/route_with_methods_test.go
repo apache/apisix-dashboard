@@ -24,10 +24,10 @@ import (
 func TestRoute_with_methods(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "add route with invalid method",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "add route with invalid method",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					 "uri": "/hello",
 					 "methods": ["TEST"],
@@ -44,7 +44,7 @@ func TestRoute_with_methods(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -53,10 +53,10 @@ func TestRoute_with_methods(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "add route with valid method",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "add route with valid method",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					 "uri": "/hello",
 					 "methods": ["GET"],
@@ -73,7 +73,7 @@ func TestRoute_with_methods(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -83,7 +83,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -91,10 +91,10 @@ func TestRoute_with_methods(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "add route with valid methods",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "add route with valid methods",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					 "uri": "/hello",
 					 "methods": ["GET", "POST", "PUT", "DELETE", "PATCH"],
@@ -111,7 +111,7 @@ func TestRoute_with_methods(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route by post",
+			Desc:         "verify route by post",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodPost,
 			Path:         "/hello",
@@ -122,7 +122,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route by put",
+			Desc:         "verify route by put",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodPut,
 			Path:         "/hello",
@@ -133,7 +133,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route by get",
+			Desc:         "verify route by get",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -143,7 +143,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route by delete",
+			Desc:         "verify route by delete",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/hello",
@@ -153,7 +153,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route by patch",
+			Desc:         "verify route by patch",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodPatch,
 			Path:         "/hello",
@@ -164,7 +164,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -172,10 +172,10 @@ func TestRoute_with_methods(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "add route with lower case methods",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "add route with lower case methods",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					 "uri": "/hello",
 					 "methods": ["GET", "post"],
@@ -192,7 +192,7 @@ func TestRoute_with_methods(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -201,10 +201,10 @@ func TestRoute_with_methods(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "add route with methods GET",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "add route with methods GET",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					 "uri": "/hello",
 					 "methods": ["GET"],
@@ -221,7 +221,7 @@ func TestRoute_with_methods(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route by get",
+			Desc:         "verify route by get",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -231,7 +231,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route by post",
+			Desc:         "verify route by post",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodPost,
 			Path:         "/hello",
@@ -241,10 +241,10 @@ func TestRoute_with_methods(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "update route methods to POST",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route methods to POST",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					 "uri": "/hello",
 					 "methods": ["POST"],
@@ -261,7 +261,7 @@ func TestRoute_with_methods(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route by get",
+			Desc:         "verify route by get",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -270,7 +270,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route by post",
+			Desc:         "verify route by post",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodPost,
 			Path:         "/hello",
@@ -281,7 +281,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -292,6 +292,6 @@ func TestRoute_with_methods(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

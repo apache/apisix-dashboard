@@ -36,7 +36,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created",
+			Desc:         "make sure the route is not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -44,7 +44,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc:     "create route with invalid dag config",
+			Desc:         "create route with invalid dag config",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPut,
 			Path:         "/apisix/admin/routes/r1",
@@ -53,7 +53,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:     "make sure the route created failed",
+			Desc:         "make sure the route created failed",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -62,7 +62,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "create route with correct dag config",
+			Desc:         "create route with correct dag config",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPut,
 			Path:         "/apisix/admin/routes/r1",
@@ -71,7 +71,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify the route(should be blocked)",
+			Desc:         "verify the route(should be blocked)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -81,7 +81,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify the route(should not be blocked)",
+			Desc:         "verify the route(should not be blocked)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -89,7 +89,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 			ExpectBody:   `hello world`,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -97,7 +97,7 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just deleted",
+			Desc:         "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -108,6 +108,6 @@ func TestRoute_With_Plugin_Orchestration(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
