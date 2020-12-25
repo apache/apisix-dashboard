@@ -55,17 +55,18 @@ const PluginPage: React.FC<Props> = ({
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
   const [typeList, setTypeList] = useState<string[]>([]);
 
+  const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join("")
   useEffect(() => {
     fetchList(schemaType).then((data) => {
       setPlugin(data);
-      
+
       const categoryList: string[] = [];
       data.forEach(item => {
-        if (!categoryList.includes(item.type)) {
-          categoryList.push(item.type)
+        if (!categoryList.includes(firstUpperCase(item.type))) {
+          categoryList.push(firstUpperCase(item.type));
         }
       });
-      setTypeList(categoryList);
+      setTypeList(categoryList.sort());
     });
   }, []);
 
