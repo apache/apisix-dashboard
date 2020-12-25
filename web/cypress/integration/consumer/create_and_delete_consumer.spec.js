@@ -57,7 +57,7 @@ context('Create and Delete Consumer', () => {
       });
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
-    cy.wait(sleepTime)
+    cy.wait(sleepTime);
     cy.get(domSelectors.notification).should('contain', 'Create Consumer Successfully');
   });
 
