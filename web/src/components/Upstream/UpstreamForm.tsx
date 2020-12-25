@@ -77,15 +77,15 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
     const timeoutFields = [
       {
-        label: formatMessage({ id: 'upstream.step.connect.timeout' }),
+        label: formatMessage({ id: 'page.upstream.step.connect.timeout' }),
         name: ['timeout', 'connect'],
       },
       {
-        label: formatMessage({ id: 'upstream.step.send.timeout' }),
+        label: formatMessage({ id: 'page.upstream.step.send.timeout' }),
         name: ['timeout', 'send'],
       },
       {
-        label: formatMessage({ id: 'upstream.step.read.timeout' }),
+        label: formatMessage({ id: 'page.upstream.step.read.timeout' }),
         name: ['timeout', 'read'],
       },
     ];
@@ -133,9 +133,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               <Form.Item
                 required
                 key={field.key}
-                label={index === 0 && formatMessage({ id: 'upstream.form.item-label.node.domain.or.ip' })}
+                label={index === 0 && formatMessage({ id: 'page.upstream.form.item-label.node.domain.or.ip' })}
                 extra={
-                  index === 0 && formatMessage({ id: 'upstream.form.item.extra-message.node.domain.or.ip' })
+                  index === 0 && formatMessage({ id: 'page.upstream.form.item.extra-message.node.domain.or.ip' })
                 }
                 labelCol={{ span: index === 0 ? 3 : 0 }}
                 wrapperCol={{ offset: index === 0 ? 0 : 3 }}
@@ -148,7 +148,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       rules={[
                         {
                           required: true,
-                          message: formatMessage({ id: 'upstream.step.input.domain.name.or.ip' }),
+                          message: formatMessage({ id: 'page.upstream.step.input.domain.name.or.ip' }),
                         },
                         {
                           pattern: new RegExp(
@@ -159,7 +159,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       ]}
                     >
                       <Input
-                        placeholder={formatMessage({ id: 'upstream.step.domain.name.or.ip' })}
+                        placeholder={formatMessage({ id: 'page.upstream.step.domain.name.or.ip' })}
                         disabled={readonly}
                       />
                     </Form.Item>
@@ -171,12 +171,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       rules={[
                         {
                           required: true,
-                          message: formatMessage({ id: 'upstream.step.input.port' }),
+                          message: formatMessage({ id: 'page.upstream.step.input.port' }),
                         },
                       ]}
                     >
                       <InputNumber
-                        placeholder={formatMessage({ id: 'upstream.step.port' })}
+                        placeholder={formatMessage({ id: 'page.upstream.step.port' })}
                         disabled={readonly}
                         min={1}
                         max={65535}
@@ -190,12 +190,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       rules={[
                         {
                           required: true,
-                          message: formatMessage({ id: 'upstream.step.input.weight' }),
+                          message: formatMessage({ id: 'page.upstream.step.input.weight' }),
                         },
                       ]}
                     >
                       <InputNumber
-                        placeholder={formatMessage({ id: 'upstream.step.weight' })}
+                        placeholder={formatMessage({ id: 'page.upstream.step.weight' })}
                         disabled={readonly}
                         min={0}
                         max={1000}
@@ -214,7 +214,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               <Form.Item wrapperCol={{ offset: 3 }}>
                 <Button type="dashed" onClick={add}>
                   <PlusOutlined />
-                  {formatMessage({ id: 'upstream.step.create.node' })}
+                  {formatMessage({ id: 'page.upstream.step.create.node' })}
                 </Button>
               </Form.Item>
             )}
@@ -225,14 +225,14 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
     const ActiveHealthCheck = () => (
       <>
-        <Form.Item label={formatMessage({ id: 'upstream.step.healthy.checks.active.timeout' })}>
+        <Form.Item label={formatMessage({ id: 'page.upstream.step.healthy.checks.active.timeout' })}>
           <Form.Item name={['checks', 'active', 'timeout']} noStyle>
             <InputNumber disabled={readonly} />
           </Form.Item>
           <span style={{ margin: '0 8px' }}>s</span>
         </Form.Item>
         <Form.Item
-          label={formatMessage({ id: 'upstream.step.healthy.checks.active.host' })}
+          label={formatMessage({ id: 'page.upstream.step.healthy.checks.active.host' })}
           required
         >
           <Form.Item
@@ -241,35 +241,35 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             rules={[
               {
                 required: true,
-                message: formatMessage({ id: 'upstream.step.input.healthy.checks.active.host' }),
+                message: formatMessage({ id: 'page.upstream.step.input.healthy.checks.active.host' }),
               },
               {
                 pattern: new RegExp(
                   /(^([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.(25[0-5]|1\d{2}|2[0-4]\d|[1-9]?\d)){3}$|^(?![0-9.]+$)([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+){0,}$)/,
                   'g',
                 ),
-                message: formatMessage({ id: 'upstream.step.domain.name.or.ip.rule' }),
+                message: formatMessage({ id: 'page.upstream.step.domain.name.or.ip.rule' }),
               },
             ]}
           >
             <Input
-              placeholder={formatMessage({ id: 'upstream.step.input.healthy.checks.active.host' })}
+              placeholder={formatMessage({ id: 'page.upstream.step.input.healthy.checks.active.host' })}
               disabled={readonly}
             />
           </Form.Item>
         </Form.Item>
 
-        <Form.Item label={formatMessage({ id: 'upstream.step.healthy.checks.active.port' })}>
+        <Form.Item label={formatMessage({ id: 'page.upstream.step.healthy.checks.active.port' })}>
           <Form.Item name={['checks', 'active', 'port']} noStyle>
             <InputNumber
-              placeholder={formatMessage({ id: 'upstream.step.input.healthy.checks.active.port' })}
+              placeholder={formatMessage({ id: 'page.upstream.step.input.healthy.checks.active.port' })}
               disabled={readonly}
             />
           </Form.Item>
         </Form.Item>
 
         <Form.Item
-          label={formatMessage({ id: 'upstream.step.healthy.checks.active.http_path' })}
+          label={formatMessage({ id: 'page.upstream.step.healthy.checks.active.http_path' })}
           required
         >
           <Form.Item
@@ -279,7 +279,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               {
                 required: true,
                 message: formatMessage({
-                  id: 'upstream.step.input.healthy.checks.active.http_path',
+                  id: 'page.upstream.step.input.healthy.checks.active.http_path',
                 }),
               },
             ]}
@@ -287,17 +287,17 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             <Input
               disabled={readonly}
               placeholder={formatMessage({
-                id: 'upstream.step.input.healthy.checks.active.http_path',
+                id: 'page.upstream.step.input.healthy.checks.active.http_path',
               })}
             />
           </Form.Item>
         </Form.Item>
 
         <Divider orientation="left" plain>
-          {formatMessage({ id: 'upstream.step.healthy.checks.healthy.status' })}
+          {formatMessage({ id: 'page.upstream.step.healthy.checks.healthy.status' })}
         </Divider>
         <Form.Item
-          label={formatMessage({ id: 'upstream.step.healthy.checks.active.interval' })}
+          label={formatMessage({ id: 'page.upstream.step.healthy.checks.active.interval' })}
           required
         >
           <Form.Item
@@ -307,7 +307,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               {
                 required: true,
                 message: formatMessage({
-                  id: 'upstream.step.input.healthy.checks.active.interval',
+                  id: 'page.upstream.step.input.healthy.checks.active.interval',
                 }),
               },
             ]}
@@ -315,14 +315,14 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             <InputNumber disabled={readonly} min={1} />
           </Form.Item>
         </Form.Item>
-        <Form.Item label={formatMessage({ id: 'upstream.step.healthy.checks.successes' })} required>
+        <Form.Item label={formatMessage({ id: 'page.upstream.step.healthy.checks.successes' })} required>
           <Form.Item
             name={['checks', 'active', 'healthy', 'successes']}
             noStyle
             rules={[
               {
                 required: true,
-                message: formatMessage({ id: 'upstream.step.input.healthy.checks.successes' }),
+                message: formatMessage({ id: 'page.upstream.step.input.healthy.checks.successes' }),
               },
             ]}
           >
@@ -331,10 +331,10 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Form.Item>
 
         <Divider orientation="left" plain>
-          {formatMessage({ id: 'upstream.step.healthy.checks.unhealthy.status' })}
+          {formatMessage({ id: 'page.upstream.step.healthy.checks.unhealthy.status' })}
         </Divider>
         <Form.Item
-          label={formatMessage({ id: 'upstream.step.healthy.checks.active.interval' })}
+          label={formatMessage({ id: 'page.upstream.step.healthy.checks.active.interval' })}
           required
         >
           <Form.Item
@@ -344,7 +344,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               {
                 required: true,
                 message: formatMessage({
-                  id: 'upstream.step.input.healthy.checks.active.interval',
+                  id: 'page.upstream.step.input.healthy.checks.active.interval',
                 }),
               },
             ]}
@@ -353,7 +353,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           </Form.Item>
         </Form.Item>
         <Form.Item
-          label={formatMessage({ id: 'upstream.step.healthy.checks.http_failures' })}
+          label={formatMessage({ id: 'page.upstream.step.healthy.checks.http_failures' })}
           required
         >
           <Form.Item
@@ -362,7 +362,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             rules={[
               {
                 required: true,
-                message: formatMessage({ id: 'upstream.step.input.healthy.checks.http_failures' }),
+                message: formatMessage({ id: 'page.upstream.step.input.healthy.checks.http_failures' }),
               },
             ]}
           >
@@ -377,7 +377,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   key={field.key}
                   label={
                     index === 0 &&
-                    formatMessage({ id: 'upstream.step.healthy.checks.active.req_headers' })
+                    formatMessage({ id: 'page.upstream.step.healthy.checks.active.req_headers' })
                   }
                   wrapperCol={{ offset: index === 0 ? 0 : 3 }}
                 >
@@ -386,7 +386,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
                         <Input
                           placeholder={formatMessage({
-                            id: 'upstream.step.input.healthy.checks.active.req_headers',
+                            id: 'page.upstream.step.input.healthy.checks.active.req_headers',
                           })}
                           disabled={readonly}
                         />
@@ -410,7 +410,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   <Button type="dashed" onClick={() => add()}>
                     <PlusOutlined />
                     {formatMessage({
-                      id: 'upstream.step.healthy.checks.active.create.req_headers',
+                      id: 'page.upstream.step.healthy.checks.active.create.req_headers',
                     })}
                   </Button>
                 </Form.Item>
@@ -423,7 +423,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     const InActiveHealthCheck = () => (
       <>
         <Divider orientation="left" plain>
-          {formatMessage({ id: 'upstream.step.healthy.checks.healthy.status' })}
+          {formatMessage({ id: 'page.upstream.step.healthy.checks.healthy.status' })}
         </Divider>
         <Form.List name={['checks', 'passive', 'healthy', 'http_statuses']}>
           {(fields, { add, remove }) => (
@@ -434,7 +434,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   key={field.key}
                   label={
                     index === 0 &&
-                    formatMessage({ id: 'upstream.step.healthy.checks.passive.http_statuses' })
+                    formatMessage({ id: 'page.upstream.step.healthy.checks.passive.http_statuses' })
                   }
                   labelCol={{ span: index === 0 ? 3 : 0 }}
                   wrapperCol={{ offset: index === 0 ? 0 : 3 }}
@@ -462,7 +462,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   <Button type="dashed" onClick={() => add()}>
                     <PlusOutlined />
                     {formatMessage({
-                      id: 'upstream.step.healthy.checks.passive.create.http_statuses',
+                      id: 'page.upstream.step.healthy.checks.passive.create.http_statuses',
                     })}
                   </Button>
                 </Form.Item>
@@ -470,14 +470,14 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             </>
           )}
         </Form.List>
-        <Form.Item label={formatMessage({ id: 'upstream.step.healthy.checks.successes' })} required>
+        <Form.Item label={formatMessage({ id: 'page.upstream.step.healthy.checks.successes' })} required>
           <Form.Item
             name={['checks', 'passive', 'healthy', 'successes']}
             noStyle
             rules={[
               {
                 required: true,
-                message: formatMessage({ id: 'upstream.step.input.healthy.checks.successes' }),
+                message: formatMessage({ id: 'page.upstream.step.input.healthy.checks.successes' }),
               },
             ]}
           >
@@ -486,7 +486,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Form.Item>
 
         <Divider orientation="left" plain>
-          {formatMessage({ id: 'upstream.step.healthy.checks.unhealthy.status' })}
+          {formatMessage({ id: 'page.upstream.step.healthy.checks.unhealthy.status' })}
         </Divider>
         <Form.List name={['checks', 'passive', 'unhealthy', 'http_statuses']}>
           {(fields, { add, remove }) => (
@@ -497,7 +497,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   key={field.key}
                   label={
                     index === 0 &&
-                    formatMessage({ id: 'upstream.step.healthy.checks.passive.http_statuses' })
+                    formatMessage({ id: 'page.upstream.step.healthy.checks.passive.http_statuses' })
                   }
                   labelCol={{ span: index === 0 ? 3 : 0 }}
                   wrapperCol={{ offset: index === 0 ? 0 : 3 }}
@@ -525,7 +525,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   <Button type="dashed" onClick={() => add()}>
                     <PlusOutlined />
                     {formatMessage({
-                      id: 'upstream.step.healthy.checks.passive.create.http_statuses',
+                      id: 'page.upstream.step.healthy.checks.passive.create.http_statuses',
                     })}
                   </Button>
                 </Form.Item>
@@ -534,7 +534,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           )}
         </Form.List>
         <Form.Item
-          label={formatMessage({ id: 'upstream.step.healthy.checks.http_failures' })}
+          label={formatMessage({ id: 'page.upstream.step.healthy.checks.http_failures' })}
           required
         >
           <Form.Item
@@ -543,7 +543,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             rules={[
               {
                 required: true,
-                message: formatMessage({ id: 'upstream.step.input.healthy.checks.http_failures' }),
+                message: formatMessage({ id: 'page.upstream.step.input.healthy.checks.http_failures' }),
               },
             ]}
           >
@@ -551,7 +551,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           </Form.Item>
         </Form.Item>
         <Form.Item
-          label={formatMessage({ id: 'upstream.step.healthy.checks.passive.tcp_failures' })}
+          label={formatMessage({ id: 'page.upstream.step.healthy.checks.passive.tcp_failures' })}
           required
         >
           <Form.Item
@@ -561,7 +561,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               {
                 required: true,
                 message: formatMessage({
-                  id: 'upstream.step.input.healthy.checks.passive.tcp_failures',
+                  id: 'page.upstream.step.input.healthy.checks.passive.tcp_failures',
                 }),
               },
             ]}
@@ -582,7 +582,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       >
         {showSelector && (
           <Form.Item
-            label={formatMessage({ id: 'upstream.step.select.upstream' })}
+            label={formatMessage({ id: 'page.upstream.step.select.upstream' })}
             name="upstream_id"
           >
             <Select
@@ -599,7 +599,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             >
               {[
                 {
-                  name: formatMessage({ id: 'upstream.step.select.upstream.select.option' }),
+                  name: formatMessage({ id: 'page.upstream.step.select.upstream.select.option' }),
                   id: '',
                 },
                 ...list,
@@ -613,7 +613,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         )}
 
         <Form.Item
-          label={formatMessage({ id: 'upstream.step.type' })}
+          label={formatMessage({ id: 'page.upstream.step.type' })}
           name="type"
           rules={[{ required: true }]}
         >
@@ -639,19 +639,19 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <NodeList />
 
         <Form.Item
-          label={formatMessage({ id: 'upstream.step.pass-host' })}
+          label={formatMessage({ id: 'page.upstream.step.pass-host' })}
           name="pass_host"
-          extra={formatMessage({ id: 'upstream.step.pass-host.tips' })}
+          extra={formatMessage({ id: 'page.upstream.step.pass-host.tips' })}
         >
           <Select disabled={readonly}>
             <Select.Option value="pass">
-              {formatMessage({ id: 'upstream.step.pass-host.pass' })}
+              {formatMessage({ id: 'page.upstream.step.pass-host.pass' })}
             </Select.Option>
             <Select.Option value="node">
-              {formatMessage({ id: 'upstream.step.pass-host.node' })}
+              {formatMessage({ id: 'page.upstream.step.pass-host.node' })}
             </Select.Option>
             <Select.Option value="rewrite">
-              {formatMessage({ id: 'upstream.step.pass-host.rewrite' })}
+              {formatMessage({ id: 'page.upstream.step.pass-host.rewrite' })}
             </Select.Option>
           </Select>
         </Form.Item>
@@ -665,7 +665,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             if (form.getFieldValue('pass_host') === 'rewrite') {
               return (
                 <Form.Item
-                  label={formatMessage({ id: 'upstream.step.pass-host.upstream_host' })}
+                  label={formatMessage({ id: 'page.upstream.step.pass-host.upstream_host' })}
                   name="upstream_host"
                 >
                   <Input disabled={readonly} />
@@ -684,7 +684,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               rules={[
                 {
                   required: true,
-                  message: formatMessage({ id: `upstream.step.input.${name[1]}.timeout` }),
+                  message: formatMessage({ id: `page.upstream.step.input.${name[1]}.timeout` }),
                 },
               ]}
             >
@@ -694,15 +694,15 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           </Form.Item>
         ))}
 
-        <PanelSection title={formatMessage({ id: 'upstream.step.healthy.checks.healthy.check' })}>
+        <PanelSection title={formatMessage({ id: 'page.upstream.step.healthy.checks.healthy.check' })}>
           {[
             {
-              label: formatMessage({ id: 'upstream.step.healthy.checks.active' }),
+              label: formatMessage({ id: 'page.upstream.step.healthy.checks.active' }),
               name: ['checks', 'active'],
               component: <ActiveHealthCheck />,
             },
             {
-              label: formatMessage({ id: 'upstream.step.healthy.checks.passive' }),
+              label: formatMessage({ id: 'page.upstream.step.healthy.checks.passive' }),
               name: ['checks', 'passive'],
               component: <InActiveHealthCheck />,
             },
