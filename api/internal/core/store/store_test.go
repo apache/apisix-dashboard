@@ -160,12 +160,14 @@ func TestGenericStore_Init(t *testing.T) {
 			},
 			wantCache: map[string]interface{}{
 				"demo2-f1": &TestStruct{
-					Field1: "demo2-f1",
-					Field2: "demo2-f2",
+					BaseInfo: entity.BaseInfo{ID: "demo2-f1"},
+					Field1:   "demo2-f1",
+					Field2:   "demo2-f2",
 				},
 				"demo3-f1": &TestStruct{
-					Field1: "demo3-f1",
-					Field2: "demo3-f2",
+					BaseInfo: entity.BaseInfo{ID: "demo3-f1"},
+					Field1:   "demo3-f1",
+					Field2:   "demo3-f2",
 				},
 			},
 			wantListCalled:  true,
