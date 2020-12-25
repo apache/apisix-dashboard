@@ -31,7 +31,7 @@ if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
 fi
 
 # build
-cd ./api && go build -o ../output/manager-api -ldflags "-X main.Version=${VERSION}" . && cd ..
+cd ./api && go build -o ../output/manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version=${VERSION}" . && cd ..
 
 cp ./api/conf/schema.json ./output/conf/schema.json
 cp ./api/conf/conf.yaml ./output/conf/conf.yaml

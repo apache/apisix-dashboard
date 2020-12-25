@@ -17,6 +17,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
@@ -95,6 +96,17 @@ func InterfaceToString(val interface{}) string {
 	}
 	str := fmt.Sprintf("%v", val)
 	return str
+}
+
+// Note: json.Marshal and json.Unmarshal may cause the precision loss
+func ObjectClone(origin, copy interface{}) error {
+	byt, err := json.Marshal(origin)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(byt, copy)
+	return err
 }
 
 func GenLabelMap(label string) (map[string]string, error) {

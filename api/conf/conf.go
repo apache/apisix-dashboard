@@ -17,7 +17,6 @@
 package conf
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -105,13 +104,11 @@ type Config struct {
 func init() {
 	InitConf()
 }
+
 func InitConf() {
 	//go test
 	if workDir := os.Getenv("APISIX_API_WORKDIR"); workDir != "" {
 		WorkDir = workDir
-	} else {
-		flag.StringVar(&WorkDir, "p", ".", "current work dir")
-		flag.Parse()
 	}
 
 	setConf()
