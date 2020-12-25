@@ -95,7 +95,7 @@ if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     exit 1
 fi
 
-# run on a different path 
+# run on a different path
 workDir=$(pwd)
 rm -rf html
 mkdir html
@@ -215,7 +215,7 @@ if [ -z "${token}" ]; then
 fi
 
 # more validation to make sure it's ok to access etcd
-resp=$(curl -ig http://127.0.0.1:9000/apisix/admin/consumers -i -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}')
+resp=$(curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/consumers -i -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}')
 respCode=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
 respMessage=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "message" | sed 's/:/\n/g' | sed '1d')
 if [ "$respCode" != "0" ] || [ $respMessage != "\"\"" ]; then
