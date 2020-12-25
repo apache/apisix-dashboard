@@ -14,25 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare namespace PluginComponent {
-  type Data = object;
+declare namespace ServiceModule {
 
-  type Schema = '' | 'route' | 'consumer' | 'service';
+    type Entity = {
+        name: string;
+        desc: string;
+        upstream: any;
+        upstream_id: string;
+        labels: string;
+        enable_websocket: boolean;
+        plugins: {
+            [name: string]: any;
+        };
+    };
 
-  type Category =
-    | 'Security'
-    | 'Limit traffic'
-    | 'Log'
-    | 'Observability'
-    | 'Other'
-    | 'Authentication';
+    type ResponseBody = {
+        id: string,
+        plugins: Record<string, any>,
+        upstream_id: string,
+        upstream: Record<string, any>,
+        name: string,
+        desc: string,
+        enable_websocket: boolean,
+    }
 
-  type Meta = {
-    name: string;
-    category: Category;
-    hidden?: boolean;
-    // Note: Plugins are sorted by priority under the same category in the frontend, the smaller the number, the higher the priority. The default value is 9999.
-    priority?: number;
-    avatar?: React.ReactNode;
-  };
+    type Step1PassProps = {
+        form: FormInstance;
+        upstreamForm: FormInstance;
+        disabled?: boolean;
+        upstreamRef: any;
+    };
 }

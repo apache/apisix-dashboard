@@ -108,3 +108,9 @@ export const debugRoute = (data: RouteModule.debugRequest) => {
     data,
   });
 };
+
+export const fetchServiceList = () =>
+  request('/services').then(({ data }) => ({
+    data: data.rows,
+    total: data.total_size,
+  }));
