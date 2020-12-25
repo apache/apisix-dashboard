@@ -57,7 +57,7 @@ const PluginPage: React.FC<Props> = ({
 
   const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join("")
   useEffect(() => {
-    fetchList(schemaType).then((data) => {
+    fetchList().then((data) => {
       setPlugin(data);
 
       const categoryList: string[] = [];
@@ -88,7 +88,7 @@ const PluginPage: React.FC<Props> = ({
     const plugin = pluginList.find(item => item.name === pluginName);
     let schema: any = {};
 
-    if (schemaType === 'consumer') {
+    if (schemaType === 'consumer' && plugin?.consumer_schema) {
       schema = plugin?.consumer_schema
     } else {
       schema = plugin?.schema
@@ -173,7 +173,7 @@ const PluginPage: React.FC<Props> = ({
               style={PanelSectionStyle}
               id={`plugin-category-${type}`}
             >
-              {pluginList.filter(item => item.type === type).map((item) => (
+              {pluginList.filter(item => item.type === type.toLowerCase()).map((item) => (
                 <Card
                   key={item.name}
                   title={[
