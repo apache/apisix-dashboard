@@ -37,7 +37,7 @@ var token string
 var APISIXHost = "http://127.0.0.1:9080"
 var APISIXInternalUrl = "http://172.16.238.30:9080"
 var APISIXSingleWorkerHost = "http://127.0.0.1:9081"
-var ManagerAPIHost = "http://127.0.0.1:9001"
+var ManagerAPIHost = "http://127.0.0.1:9000"
 
 func init() {
 	//login to get auth token
