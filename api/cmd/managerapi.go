@@ -25,9 +25,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/shiningrush/droplet"
-	"github.com/spf13/cobra"
-
 	"github.com/apisix/manager-api/internal"
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/storage"
@@ -35,6 +32,8 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
+	"github.com/shiningrush/droplet"
+	"github.com/spf13/cobra"
 )
 
 var Version string
