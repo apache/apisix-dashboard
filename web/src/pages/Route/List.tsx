@@ -99,7 +99,7 @@ const Page: React.FC = () => {
       hideInSearch: true,
     },
     {
-      title: formatMessage({ id: 'component.global.label' }),
+      title: formatMessage({ id: 'component.global.labels' }),
       dataIndex: 'labels',
       render: (_, record) => {
         return Object.keys(record.labels || {}).map((item) => (

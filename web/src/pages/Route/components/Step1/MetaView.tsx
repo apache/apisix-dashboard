@@ -70,7 +70,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
           disabled={disabled}
         />
       </Form.Item>
-      <Form.Item label={formatMessage({ id: 'component.global.label' })} name="labels">
+      <Form.Item label={formatMessage({ id: 'component.global.labels' })} name="labels">
         <Select
           mode="tags"
           style={{ width: '100%' }}
