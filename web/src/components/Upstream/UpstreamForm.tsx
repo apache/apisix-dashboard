@@ -609,9 +609,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             return null;
           }}
         </Form.Item>
-
-        <NodeList />
-
+        {NodeList()}
         <Form.Item
           label={formatMessage({ id: 'upstream.step.pass-host' })}
           name="pass_host"
