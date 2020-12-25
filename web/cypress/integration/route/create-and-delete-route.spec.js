@@ -58,7 +58,7 @@ context('Create and Delete Route', () => {
     cy.contains('Next').click();
     cy.wait(400);
     cy.get('#nodes_0_host').type('12.12.12.12', {
-      timeout: 4000
+      timeout: 5000
     });
 
     // go to step3

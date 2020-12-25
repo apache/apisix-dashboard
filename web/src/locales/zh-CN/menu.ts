@@ -70,6 +70,7 @@ export default {
   'menu.ssl': '证书',
   'menu.upstream': '上游',
   'menu.consumer': 'Consumer',
+  'menu.service': '服务',
   'menu.setting': '设置',
   'menu.serverinfo': '服务端信息',
 };

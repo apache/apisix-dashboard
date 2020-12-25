@@ -97,7 +97,10 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     useEffect(() => {
       const id = form.getFieldValue('upstream_id');
       if (id) {
-        form.setFieldsValue(list.find((item) => item.id === id));
+        setReadonly(true);
+        requestAnimationFrame(() => {
+          form.setFieldsValue(list.find((item) => item.id === id));
+        })
       }
     }, [list]);
 
@@ -581,21 +584,21 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         }}
       >
         {showSelector && (
-          <Form.Item
-            label={formatMessage({ id: 'page.upstream.step.select.upstream' })}
-            name="upstream_id"
-          >
+          <Form.Item label={formatMessage({ id: 'page.upstream.step.select.upstream' })} name="upstream_id" shouldUpdate={(prev, next) => {
+            if (prev.upstream_id !== next.upstream_id) {
+              const id = next.upstream_id;
+              setReadonly(Boolean(id));
+              if (id) {
+                form.setFieldsValue(list.find((item) => item.id === id));
+                form.setFieldsValue({
+                  upstream_id: id,
+                });
+              }
+            }
+            return prev.upstream_id !== next.upstream_id;
+          }}>
             <Select
               disabled={disabled}
-              onChange={(id) => {
-                setReadonly(Boolean(id));
-                if (id) {
-                  form.setFieldsValue(list.find((item) => item.id === id));
-                  form.setFieldsValue({
-                    upstream_id: id,
-                  });
-                }
-              }}
             >
               {[
                 {
