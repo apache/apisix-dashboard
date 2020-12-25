@@ -17,9 +17,9 @@
 import { request } from 'umi';
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
-  request('/consumers', {
+  request('/services', {
     params: {
-      username: res.username,
+      name: res.name,
       page: current,
       page_size: pageSize,
     },
@@ -28,19 +28,26 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
     total: data.total_size,
   }));
 
-export const fetchItem = (username: string) =>
-  request<{ data: ConsumerModule.ResEntity }>(`/consumers/${username}`);
+export const fetchUpstreamList = () => {
+  return request<Res<ResListData<UpstreamModule.RequestBody>>>('/upstreams').then(({ data }) => ({
+    data: data.rows,
+    total: data.total_size,
+  }));
+};
 
-export const create = (data: ConsumerModule.Entity) =>
-  request('/consumers', {
+export const create = (data: ServiceModule.Entity) =>
+  request('/services', {
+    method: 'POST',
+    data,
+  });
+
+export const update = (serviceId: string, data: ServiceModule.Entity) =>
+  request(`/services/${serviceId}`, {
     method: 'PUT',
     data,
   });
 
-export const update = (username: string, data: ConsumerModule.Entity) =>
-  request(`/consumers/${username}`, {
-    method: 'PUT',
-    data,
-  });
+export const remove = (serviceId: string) => request(`/services/${serviceId}`, { method: 'DELETE' });
 
-export const remove = (username: string) => request(`/consumers/${username}`, { method: 'DELETE' });
+export const fetchItem = (serviceId: number) =>
+  request(`/services/${serviceId}`).then((data) => (data));

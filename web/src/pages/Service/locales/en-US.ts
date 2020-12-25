@@ -14,25 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare namespace PluginComponent {
-  type Data = object;
-
-  type Schema = '' | 'route' | 'consumer' | 'service';
-
-  type Category =
-    | 'Security'
-    | 'Limit traffic'
-    | 'Log'
-    | 'Observability'
-    | 'Other'
-    | 'Authentication';
-
-  type Meta = {
-    name: string;
-    category: Category;
-    hidden?: boolean;
-    // Note: Plugins are sorted by priority under the same category in the frontend, the smaller the number, the higher the priority. The default value is 9999.
-    priority?: number;
-    avatar?: React.ReactNode;
-  };
+export default {
+    'page.service.steps.stepTitle.basicInformation': 'Basic Information',
+    'page.service.steps.stepTitle.pluginConfig': 'Plugin Config',
+    'page.service.steps.stepTitle.preview': 'Preview',
 }
