@@ -14,21 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Button, Popconfirm, notification, Tag, Space } from 'antd';
+import { Button, Popconfirm, notification, Tag, Space, Select } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined, BugOutlined } from '@ant-design/icons';
-import { timestampToLocaleString } from '@/helpers';
 
-import { fetchList, remove, updateRouteStatus } from './service';
+import { timestampToLocaleString } from '@/helpers';
+import { fetchList, remove, fetchLabelList, updateRouteStatus } from './service';
 import { DebugDrawView } from './components/DebugViews';
+
+
+const { OptGroup, Option } = Select;
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
 
+  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
+
+  useEffect(() => {
+    fetchLabelList().then(setLabelList);
+  }, []);
   enum RouteStatus {
     Offline = 0,
     Publish,
@@ -91,6 +99,47 @@ const Page: React.FC = () => {
       hideInSearch: true,
     },
     {
+      title: formatMessage({ id: 'component.global.labels' }),
+      dataIndex: 'labels',
+      render: (_, record) => {
+        return Object.keys(record.labels || {}).map((item) => (
+          <Tag key={Math.random().toString(36).slice(2)}>
+            {item}:{record.labels[item]}
+          </Tag>
+        ));
+      },
+      renderFormItem: (_, { type }) => {
+        if (type === 'form') {
+          return null;
+        }
+
+        return (
+          <Select
+            mode="tags"
+            style={{ width: '100%' }}
+            tagRender={(props) => {
+              const { value, closable, onClose } = props;
+              return (
+                <Tag closable={closable} onClose={onClose} style={{ marginRight: 3 }}>
+                  {value}
+                </Tag>
+              );
+            }}
+          >
+            {Object.keys(labelList).map((key) => {
+              return (
+                <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
+                  {(labelList[key] || []).map((value: string) => (
+                    <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}> {value} </Option>
+                  ))}
+                </OptGroup>
+              );
+            })}
+          </Select>
+        );
+      }
+    },
+    {
       title: formatMessage({ id: 'page.route.status' }),
       dataIndex: 'status',
       render: (_, record) => (
@@ -98,8 +147,8 @@ const Page: React.FC = () => {
           {record.status ? (
             <Tag color="green">{formatMessage({ id: 'page.route.published' })}</Tag>
           ) : (
-            <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
-          )}
+              <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
+            )}
         </>
       ),
     },

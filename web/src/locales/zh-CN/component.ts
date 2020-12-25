@@ -32,6 +32,7 @@ export default {
   'component.global.loading': '加载中',
   'component.global.list': '列表',
   'component.global.description': '描述',
+  'component.global.labels': '标签',
   'component.global.operation': '操作',
   'component.status.success': '成功',
   'component.status.fail': '失败',
