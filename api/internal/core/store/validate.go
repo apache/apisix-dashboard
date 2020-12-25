@@ -123,7 +123,7 @@ func cHashKeySchemaCheck(upstream *entity.UpstreamDef) error {
 	if upstream.HashOn == "vars" {
 		schemaDef = conf.Schema.Get("main.upstream_hash_vars_schema").String()
 		if schemaDef == "" {
-			return fmt.Errorf("schema validate failed: schema not found, patch: main.upstream_hash_vars_schema")
+			return fmt.Errorf("schema validate failed: schema not found, path: main.upstream_hash_vars_schema")
 		}
 	}
 

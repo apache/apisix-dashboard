@@ -33,7 +33,7 @@ export const fetchItem = (username: string) =>
 
 export const create = (data: ConsumerModule.Entity) =>
   request('/consumers', {
-    method: 'POST',
+    method: 'PUT',
     data,
   });
 
