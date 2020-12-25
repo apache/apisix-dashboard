@@ -195,10 +195,6 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 			panic("fail to init request")
 		}
 
-		if tc.Sleep != 0 {
-			time.Sleep(tc.Sleep)
-		}
-
 		if tc.Query != "" {
 			req.WithQueryString(tc.Query)
 		}
@@ -231,6 +227,10 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 		//match body
 		if tc.ExpectBody != "" {
 			resp.Body().Contains(tc.ExpectBody)
+		}
+
+		if tc.Sleep != 0 {
+			time.Sleep(tc.Sleep)
 		}
 	})
 
