@@ -565,18 +565,21 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         }}
       >
         {showSelector && (
-          <Form.Item label="选择上游" name="upstream_id">
+          <Form.Item label="选择上游" name="upstream_id" shouldUpdate={(prev, next) => {
+            if (prev.upstream_id !== next.upstream_id) {
+              const id = next.upstream_id;
+              setReadonly(Boolean(id));
+              if (id) {
+                form.setFieldsValue(list.find((item) => item.id === id));
+                form.setFieldsValue({
+                  upstream_id: id,
+                });
+              }
+            }
+            return prev.upstream_id !== next.upstream_id;
+          }}>
             <Select
               disabled={disabled}
-              onChange={(id) => {
-                setReadonly(Boolean(id));
-                if (id) {
-                  form.setFieldsValue(list.find((item) => item.id === id));
-                  form.setFieldsValue({
-                    upstream_id: id,
-                  });
-                }
-              }}
             >
               {[{ name: '手动填写', id: '' }, ...list].map((item) => (
                 <Select.Option value={item.id!} key={item.id}>
