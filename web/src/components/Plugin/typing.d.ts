@@ -17,7 +17,7 @@
 declare namespace PluginComponent {
   type Data = object;
 
-  type Schema = '' | 'route' | 'consumer';
+  type Schema = '' | 'route' | 'consumer' | 'service';
 
   type Category =
     | 'Security'

@@ -73,15 +73,19 @@ func (s *EtcdV3Storage) Get(ctx context.Context, key string) (string, error) {
 	return string(resp.Kvs[0].Value), nil
 }
 
-func (s *EtcdV3Storage) List(ctx context.Context, key string) ([]string, error) {
+func (s *EtcdV3Storage) List(ctx context.Context, key string) ([]Keypair, error) {
 	resp, err := Client.Get(ctx, key, clientv3.WithPrefix())
 	if err != nil {
 		log.Errorf("etcd get failed: %s", err)
 		return nil, fmt.Errorf("etcd get failed: %s", err)
 	}
-	var ret []string
+	var ret []Keypair
 	for i := range resp.Kvs {
-		ret = append(ret, string(resp.Kvs[i].Value))
+		data := Keypair{
+			Key:   string(resp.Kvs[i].Key),
+			Value: string(resp.Kvs[i].Value),
+		}
+		ret = append(ret, data)
 	}
 
 	return ret, nil

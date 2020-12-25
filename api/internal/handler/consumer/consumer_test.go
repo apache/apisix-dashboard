@@ -20,14 +20,16 @@ package consumer
 import (
 	"context"
 	"fmt"
-	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/internal/core/store"
+	"net/http"
+	"testing"
+
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"net/http"
-	"testing"
+
+	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/internal/core/store"
 )
 
 func TestHandler_Get(t *testing.T) {
@@ -172,31 +174,35 @@ func TestHandler_List(t *testing.T) {
 func TestHandler_Create(t *testing.T) {
 	tests := []struct {
 		caseDesc   string
-		giveInput  *entity.Consumer
+		giveInput  *SetInput
 		giveCtx    context.Context
 		giveErr    error
 		wantErr    error
-		wantInput  *entity.Consumer
+		wantInput  *SetInput
 		wantRet    interface{}
 		wantCalled bool
 	}{
 		{
 			caseDesc: "normal",
-			giveInput: &entity.Consumer{
-				Username: "name",
-				Plugins: map[string]interface{}{
-					"jwt-auth": map[string]interface{}{},
+			giveInput: &SetInput{
+				Consumer: entity.Consumer{
+					Username: "name",
+					Plugins: map[string]interface{}{
+						"jwt-auth": map[string]interface{}{},
+					},
 				},
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
-			wantInput: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
-				Username: "name",
-				Plugins: map[string]interface{}{
-					"jwt-auth": map[string]interface{}{
-						"exp": 86400,
+			wantInput: &SetInput{
+				Consumer: entity.Consumer{
+					BaseInfo: entity.BaseInfo{
+						ID: "name",
+					},
+					Username: "name",
+					Plugins: map[string]interface{}{
+						"jwt-auth": map[string]interface{}{
+							"exp": 86400,
+						},
 					},
 				},
 			},
@@ -205,23 +211,27 @@ func TestHandler_Create(t *testing.T) {
 		},
 		{
 			caseDesc: "store create failed",
-			giveInput: &entity.Consumer{
-				Username: "name",
-				Plugins: map[string]interface{}{
-					"jwt-auth": map[string]interface{}{
-						"exp": 5000,
+			giveInput: &SetInput{
+				Consumer: entity.Consumer{
+					Username: "name",
+					Plugins: map[string]interface{}{
+						"jwt-auth": map[string]interface{}{
+							"exp": 5000,
+						},
 					},
 				},
 			},
 			giveErr: fmt.Errorf("create failed"),
-			wantInput: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
-				Username: "name",
-				Plugins: map[string]interface{}{
-					"jwt-auth": map[string]interface{}{
-						"exp": 5000,
+			wantInput: &SetInput{
+				Consumer: entity.Consumer{
+					BaseInfo: entity.BaseInfo{
+						ID: "name",
+					},
+					Username: "name",
+					Plugins: map[string]interface{}{
+						"jwt-auth": map[string]interface{}{
+							"exp": 5000,
+						},
 					},
 				},
 			},
@@ -237,17 +247,18 @@ func TestHandler_Create(t *testing.T) {
 		t.Run(tc.caseDesc, func(t *testing.T) {
 			methodCalled := true
 			mStore := &store.MockInterface{}
-			mStore.On("Create", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			mStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				methodCalled = true
 				assert.Equal(t, tc.giveCtx, args.Get(0))
-				assert.Equal(t, tc.wantInput, args.Get(1))
+				assert.Equal(t, &tc.wantInput.Consumer, args.Get(1))
+				assert.True(t, args.Bool(2))
 			}).Return(tc.giveErr)
 
 			h := Handler{consumerStore: mStore}
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 			ctx.SetContext(tc.giveCtx)
-			ret, err := h.Create(ctx)
+			ret, err := h.Set(ctx)
 			assert.Equal(t, tc.wantCalled, methodCalled)
 			assert.Equal(t, tc.wantRet, ret)
 			assert.Equal(t, tc.wantErr, err)
@@ -258,7 +269,7 @@ func TestHandler_Create(t *testing.T) {
 func TestHandler_Update(t *testing.T) {
 	tests := []struct {
 		caseDesc   string
-		giveInput  *UpdateInput
+		giveInput  *SetInput
 		giveCtx    context.Context
 		giveErr    error
 		wantErr    error
@@ -268,7 +279,7 @@ func TestHandler_Update(t *testing.T) {
 	}{
 		{
 			caseDesc: "normal",
-			giveInput: &UpdateInput{
+			giveInput: &SetInput{
 				Username: "name",
 				Consumer: entity.Consumer{
 					Plugins: map[string]interface{}{
@@ -295,7 +306,7 @@ func TestHandler_Update(t *testing.T) {
 		},
 		{
 			caseDesc: "store update failed",
-			giveInput: &UpdateInput{
+			giveInput: &SetInput{
 				Username: "name",
 				Consumer: entity.Consumer{
 					Plugins: map[string]interface{}{
@@ -338,7 +349,7 @@ func TestHandler_Update(t *testing.T) {
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 			ctx.SetContext(tc.giveCtx)
-			ret, err := h.Update(ctx)
+			ret, err := h.Set(ctx)
 			assert.Equal(t, tc.wantCalled, methodCalled)
 			assert.Equal(t, tc.wantRet, ret)
 			assert.Equal(t, tc.wantErr, err)
