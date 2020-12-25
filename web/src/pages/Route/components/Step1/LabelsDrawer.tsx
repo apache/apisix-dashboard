@@ -19,7 +19,7 @@ import { AutoComplete, Button, Col, Drawer, Form, notification, Row } from 'antd
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
-import { transformLabelList, transformLableValueToKeyValue } from '../../transform';
+import { transformLableValueToKeyValue } from '../../transform';
 import { fetchLabelList } from '../../service';
 
 interface Props extends Pick<RouteModule.Step1PassProps, 'onChange'> {
@@ -117,13 +117,11 @@ const LabelsDrawer: React.FC<Props> = ({
 
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
-  const [labelList, setLabelList] = useState<RouteModule.LabelList>();
+  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
   form.setFieldsValue({ labels: transformLabel });
 
   useEffect(() => {
-    fetchLabelList().then((data) => {
-      setLabelList(transformLabelList(data) as RouteModule.LabelList);
-    });
+    fetchLabelList().then(setLabelList);
   }, []);
 
   return (

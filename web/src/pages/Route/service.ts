@@ -21,6 +21,7 @@ import {
   transformStepData,
   transformRouteData,
   transformUpstreamNodes,
+  transformLabelList
 } from './transform';
 
 export const create = (data: RouteModule.RequestData) =>
@@ -93,12 +94,12 @@ export const checkHostWithSSL = (hosts: string[]) =>
   });
 
 export const fetchLabelList = () =>
-  request('/labels/route').then(({ data }) => ((data.rows) as RouteModule.ResponseLabelList));
+  request('/labels/route').then(({ data }) => ((transformLabelList(data.rows)) as RouteModule.LabelList));
 
 export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) =>
   request(`/routes/${rid}`, {
     method: 'PATCH',
-    data: {status}
+    data: { status }
   });
 
 export const debugRoute = (data: RouteModule.debugRequest) => {

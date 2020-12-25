@@ -22,7 +22,6 @@ import { history, useIntl } from 'umi';
 import { PlusOutlined, BugOutlined } from '@ant-design/icons';
 
 import { timestampToLocaleString } from '@/helpers';
-import { transformLabelList } from './transform';
 import { fetchList, remove, fetchLabelList, updateRouteStatus } from './service';
 import { DebugDrawView } from './components/DebugViews';
 
@@ -36,9 +35,7 @@ const Page: React.FC = () => {
   const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
 
   useEffect(() => {
-    fetchLabelList().then((data) => {
-      setLabelList(transformLabelList(data));
-    });
+    fetchLabelList().then(setLabelList);
   }, []);
   enum RouteStatus {
     Offline = 0,
