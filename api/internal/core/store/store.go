@@ -125,7 +125,7 @@ func (s *GenericStore) Init() error {
 						log.Warnf("value convert to obj failed: %s", err)
 						continue
 					}
-					s.cache.Store(s.opt.KeyFunc(objPtr), objPtr)
+					s.cache.Store(key, objPtr)
 				case storage.EventTypeDelete:
 					s.cache.Delete(event.Events[i].Key[len(s.opt.BasePath)+1:])
 				}
