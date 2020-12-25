@@ -19,20 +19,12 @@ declare namespace PluginComponent {
 
   type Schema = '' | 'route' | 'consumer' | 'service';
 
-  type Category =
-    | 'Security'
-    | 'Limit traffic'
-    | 'Log'
-    | 'Observability'
-    | 'Other'
-    | 'Authentication';
-
   type Meta = {
     name: string;
-    category: Category;
-    hidden?: boolean;
-    // Note: Plugins are sorted by priority under the same category in the frontend, the smaller the number, the higher the priority. The default value is 9999.
-    priority?: number;
-    avatar?: React.ReactNode;
+    priority: number;
+    schema: object;
+    type: string;
+    version: number;
+    consumer_schema?: object;
   };
 }

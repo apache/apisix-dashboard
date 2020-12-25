@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Anchor, Layout, Switch, Card, Tooltip, Button, notification, Avatar } from 'antd';
+import { Anchor, Layout, Switch, Card, Tooltip, Button, notification } from 'antd';
 import { SettingFilled } from '@ant-design/icons';
 import { PanelSection } from '@api7-dashboard/ui';
 import Ajv, { DefinedError } from 'ajv';
 
-import { fetchSchema, getList } from './service';
+import { fetchList } from './service';
 import CodeMirrorDrawer from './CodeMirrorDrawer';
 
 type Props = {
@@ -51,11 +51,22 @@ const PluginPage: React.FC<Props> = ({
   schemaType = '',
   onChange = () => { },
 }) => {
-  const [pluginList, setPlugin] = useState<PluginComponent.Meta[][]>([]);
+  const [pluginList, setPlugin] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
+  const [typeList, setTypeList] = useState<string[]>([]);
 
   useEffect(() => {
-    getList().then(setPlugin);
+    fetchList(schemaType).then((data) => {
+      setPlugin(data);
+      
+      const categoryList: string[] = [];
+      data.forEach(item => {
+        if (!categoryList.includes(item.type)) {
+          categoryList.push(item.type)
+        }
+      });
+      setTypeList(categoryList);
+    });
   }, []);
 
   // NOTE: This function has side effect because it mutates the original schema data
@@ -73,50 +84,57 @@ const PluginPage: React.FC<Props> = ({
   };
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
-    fetchSchema(pluginName, schemaType).then((schema) => {
-      if (schema.oneOf) {
-        (schema.oneOf || []).forEach((item: any) => {
-          injectDisableProperty(item);
-        });
-      } else {
-        injectDisableProperty(schema);
-      }
+    const plugin = pluginList.find(item => item.name === pluginName);
+    let schema: any = {};
 
-      const validate = ajv.compile(schema);
+    if (schemaType === 'consumer') {
+      schema = plugin?.consumer_schema
+    } else {
+      schema = plugin?.schema
+    }
 
-      if (validate(value)) {
-        setName(NEVER_EXIST_PLUGIN_FLAG);
-        onChange({ ...initialData, [pluginName]: value });
-        return;
-      }
+    if (schema.oneOf) {
+      (schema.oneOf || []).forEach((item: any) => {
+        injectDisableProperty(item);
+      });
+    } else {
+      injectDisableProperty(schema);
+    }
 
-      // eslint-disable-next-line
-      for (const err of validate.errors as DefinedError[]) {
-        let description = '';
-        switch (err.keyword) {
-          case 'enum':
-            description = `${err.dataPath} ${err.message}: ${err.params.allowedValues.join(
-              ', ',
-            )}`;
-            break;
-          case 'minItems':
-          case 'type':
-            description = `${err.dataPath} ${err.message}`;
-            break;
-          case 'oneOf':
-          case 'required':
-            description = err.message || '';
-            break;
-          default:
-            description = `${err.schemaPath} ${err.message}`;
-        }
-        notification.error({
-          message: 'Invalid plugin data',
-          description,
-        });
+    const validate = ajv.compile(schema);
+
+    if (validate(value)) {
+      setName(NEVER_EXIST_PLUGIN_FLAG);
+      onChange({ ...initialData, [pluginName]: value });
+      return;
+    }
+
+    // eslint-disable-next-line
+    for (const err of validate.errors as DefinedError[]) {
+      let description = '';
+      switch (err.keyword) {
+        case 'enum':
+          description = `${err.dataPath} ${err.message}: ${err.params.allowedValues.join(
+            ', ',
+          )}`;
+          break;
+        case 'minItems':
+        case 'type':
+          description = `${err.dataPath} ${err.message}`;
+          break;
+        case 'oneOf':
+        case 'required':
+          description = err.message || '';
+          break;
+        default:
+          description = `${err.schemaPath} ${err.message}`;
       }
-      setName(pluginName);
-    });
+      notification.error({
+        message: 'Invalid plugin data',
+        description,
+      });
+    }
+    setName(pluginName);
   };
 
   return (
@@ -135,80 +153,67 @@ const PluginPage: React.FC<Props> = ({
       <Layout>
         <Sider theme="light">
           <Anchor offsetTop={150}>
-            {pluginList.map((plugins) => {
-              const { category } = plugins[0];
+            {typeList.map((type) => {
               return (
                 <Anchor.Link
-                  href={`#plugin-category-${category}`}
-                  title={category}
-                  key={category}
+                  href={`#plugin-category-${type}`}
+                  title={type}
+                  key={type}
                 />
               );
             })}
           </Anchor>
         </Sider>
         <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
-          {pluginList.map((plugins) => {
-            const { category } = plugins[0];
-            return (
-              <PanelSection
-                title={category}
-                key={category}
-                style={PanelSectionStyle}
-                id={`plugin-category-${category}`}
-              >
-                {plugins.map((item) => (
-                  <Card
-                    key={item.name}
-                    title={[
-                      item.avatar && (
-                        <Avatar
-                          key={1}
-                          icon={item.avatar}
-                          className="plugin-avatar"
-                          style={{
-                            marginRight: 5,
-                          }}
-                        />
-                      ),
-                      <span key={2}>{item.name}</span>,
-                    ]}
-                    style={{ height: 66 }}
-                    extra={[
-                      <Tooltip title="Setting" key={`plugin-card-${item.name}-extra-tooltip-2`}>
-                        <Button
-                          shape="circle"
-                          icon={<SettingFilled />}
-                          style={{ marginRight: 10, marginLeft: 10 }}
-                          size="middle"
-                          onClick={() => {
-                            setName(item.name);
-                          }}
-                        />
-                      </Tooltip>,
-                      <Switch
-                        defaultChecked={initialData[item.name] && !initialData[item.name].disable}
-                        disabled={readonly}
-                        onChange={(isChecked) => {
-                          if (isChecked) {
-                            validateData(item.name, {
-                              ...initialData[item.name],
-                              disable: false,
-                            });
-                          } else {
-                            onChange({
-                              ...initialData,
-                              [item.name]: { ...initialData[item.name], disable: true },
-                            });
-                          }
+          {typeList.map(type => {
+            return <PanelSection
+              title={type}
+              key={type}
+              style={PanelSectionStyle}
+              id={`plugin-category-${type}`}
+            >
+              {pluginList.filter(item => item.type === type).map((item) => (
+                <Card
+                  key={item.name}
+                  title={[
+
+                    <span key={2}>{item.name}</span>,
+                  ]}
+                  style={{ height: 66 }}
+                  extra={[
+                    <Tooltip title="Setting" key={`plugin-card-${item.name}-extra-tooltip-2`}>
+                      <Button
+                        shape="circle"
+                        icon={<SettingFilled />}
+                        style={{ marginRight: 10, marginLeft: 10 }}
+                        size="middle"
+                        onClick={() => {
+                          setName(item.name);
                         }}
-                        key={Math.random().toString(36).substring(7)}
-                      />,
-                    ]}
-                  />
-                ))}
-              </PanelSection>
-            );
+                      />
+                    </Tooltip>,
+                    <Switch
+                      defaultChecked={initialData[item.name] && !initialData[item.name].disable}
+                      disabled={readonly}
+                      onChange={(isChecked) => {
+                        if (isChecked) {
+                          validateData(item.name, {
+                            ...initialData[item.name],
+                            disable: false,
+                          });
+                        } else {
+                          onChange({
+                            ...initialData,
+                            [item.name]: { ...initialData[item.name], disable: true },
+                          });
+                        }
+                      }}
+                      key={Math.random().toString(36).substring(7)}
+                    />,
+                  ]}
+                />
+              ))}
+            </PanelSection>
           })}
         </Content>
       </Layout>
