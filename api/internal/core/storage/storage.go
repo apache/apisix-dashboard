@@ -20,7 +20,7 @@ import "context"
 
 type Interface interface {
 	Get(ctx context.Context, key string) (string, error)
-	List(ctx context.Context, key string) ([]Data, error)
+	List(ctx context.Context, key string) ([]Keypair, error)
 	Create(ctx context.Context, key, val string) error
 	Update(ctx context.Context, key, val string) error
 	BatchDelete(ctx context.Context, keys []string) error
@@ -33,7 +33,7 @@ type WatchResponse struct {
 	Canceled bool
 }
 
-type Data struct {
+type Keypair struct {
 	Key   string
 	Value string
 }

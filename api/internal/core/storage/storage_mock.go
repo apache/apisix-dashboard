@@ -77,15 +77,15 @@ func (_m *MockInterface) Get(ctx context.Context, key string) (string, error) {
 }
 
 // List provides a mock function with given fields: ctx, key
-func (_m *MockInterface) List(ctx context.Context, key string) ([]Data, error) {
+func (_m *MockInterface) List(ctx context.Context, key string) ([]Keypair, error) {
 	ret := _m.Called(ctx, key)
 
-	var r0 []Data
-	if rf, ok := ret.Get(0).(func(context.Context, string) []Data); ok {
+	var r0 []Keypair
+	if rf, ok := ret.Get(0).(func(context.Context, string) []Keypair); ok {
 		r0 = rf(ctx, key)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]Data)
+			r0 = ret.Get(0).([]Keypair)
 		}
 	}
 
