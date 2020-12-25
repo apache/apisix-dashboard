@@ -178,7 +178,6 @@ func TestConsumer_Update_And_Get(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"code\":0",
-			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "get consumer",

@@ -17,7 +17,12 @@
 import { request } from 'umi';
 import { pickBy, identity } from 'lodash';
 
-import { transformStepData, transformRouteData, transformUpstreamNodes } from './transform';
+import {
+  transformStepData,
+  transformRouteData,
+  transformUpstreamNodes,
+  transformLabelList
+} from './transform';
 
 export const create = (data: RouteModule.RequestData) =>
   request(`/routes`, {
@@ -32,13 +37,15 @@ export const update = (rid: number, data: RouteModule.RequestData) =>
   });
 
 export const fetchItem = (rid: number) =>
-  request(`/routes/${rid}`).then((data) => transformRouteData(data.data));
+  request(`/routes/${rid}`).then((data) => (transformRouteData(data.data)));
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
+  const { labels } = res;
   return request<Res<ResListData<RouteModule.ResponseBody>>>('/routes', {
     params: {
       name: res.name,
       uri: res.uri,
+      label: (labels || []).join(','),
       page: current,
       page_size: pageSize,
     },
@@ -86,6 +93,8 @@ export const checkHostWithSSL = (hosts: string[]) =>
     data: hosts,
   });
 
+export const fetchLabelList = () =>
+  request('/labels/route').then(({ data }) => ((transformLabelList(data.rows)) as RouteModule.LabelList));
 
 export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) =>
   request(`/routes/${rid}`, {

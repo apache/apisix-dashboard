@@ -96,13 +96,15 @@ func (s *GenericStore) Init() error {
 		return err
 	}
 	for i := range ret {
-		if ret[i] == "init_dir" {
+		if ret[i].Value == "init_dir" {
 			continue
 		}
-		objPtr, err := s.StringToObjPtr(ret[i])
+		key := ret[i].Key[len(s.opt.BasePath)+1:]
+		objPtr, err := s.StringToObjPtr(ret[i].Value, key)
 		if err != nil {
 			return err
 		}
+
 		s.cache.Store(s.opt.KeyFunc(objPtr), objPtr)
 	}
 
@@ -117,12 +119,13 @@ func (s *GenericStore) Init() error {
 			for i := range event.Events {
 				switch event.Events[i].Type {
 				case storage.EventTypePut:
-					objPtr, err := s.StringToObjPtr(event.Events[i].Value)
+					key := event.Events[i].Key[len(s.opt.BasePath)+1:]
+					objPtr, err := s.StringToObjPtr(event.Events[i].Value, key)
 					if err != nil {
 						log.Warnf("value convert to obj failed: %s", err)
 						continue
 					}
-					s.cache.Store(event.Events[i].Key[len(s.opt.BasePath)+1:], objPtr)
+					s.cache.Store(key, objPtr)
 				case storage.EventTypeDelete:
 					s.cache.Delete(event.Events[i].Key[len(s.opt.BasePath)+1:])
 				}
@@ -320,15 +323,22 @@ func (s *GenericStore) Close() error {
 	return nil
 }
 
-func (s *GenericStore) StringToObjPtr(str string) (interface{}, error) {
+func (s *GenericStore) StringToObjPtr(str, key string) (interface{}, error) {
 	objPtr := reflect.New(s.opt.ObjType)
-	err := json.Unmarshal([]byte(str), objPtr.Interface())
+	ret := objPtr.Interface()
+	err := json.Unmarshal([]byte(str), ret)
+	fmt.Println("ret:", ret, "s.opt.ObjType", s.opt.ObjType)
 	if err != nil {
 		log.Errorf("json marshal failed: %s", err)
 		return nil, fmt.Errorf("json unmarshal failed: %s", err)
 	}
 
-	return objPtr.Interface(), nil
+	if setter, ok := ret.(entity.BaseInfoSetter); ok {
+		info := setter.GetBaseInfo()
+		info.KeyCompat(key)
+	}
+
+	return ret, nil
 }
 
 func (s *GenericStore) GetObjStorageKey(obj interface{}) string {

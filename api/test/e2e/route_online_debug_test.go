@@ -87,7 +87,6 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
 		},
 		{
 			Desc:   "online debug route with query params",
@@ -101,6 +100,7 @@ func TestRoute_Online_Debug_Route_With_Query_Params(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "delete route",
