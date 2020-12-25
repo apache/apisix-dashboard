@@ -49,7 +49,7 @@ context('settings page smoke test', () => {
     cy.get('.ant-form-item-explain').should('contain', 'Address is illegality');
   });
 
-  it('set a accessible url', () => {
+  it('should set a accessible url', () => {
     cy.visit('/');
     cy.contains('Settings').click();
     cy.wait(500);
