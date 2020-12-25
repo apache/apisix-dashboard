@@ -30,15 +30,15 @@ import (
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
-	"github.com/yuin/gopher-lua"
 
 	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
-	"github.com/apisix/manager-api/log"
+	lua "github.com/yuin/gopher-lua"
 )
 
 type Handler struct {
