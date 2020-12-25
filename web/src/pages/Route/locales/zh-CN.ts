@@ -40,6 +40,7 @@ export default {
   'page.route.published': '已发布',
   'page.route.unpublished': '未发布',
   'page.route.onlineDebug': '在线调试',
+  'page.route.service': '服务',
 
   // button
   'page.route.button.returnList': '返回路由列表',
