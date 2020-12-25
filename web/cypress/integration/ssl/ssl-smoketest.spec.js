@@ -35,10 +35,10 @@ context('ssl smoke test', () => {
     cy.wait(500);
     cy.contains('Create').click();
 
-    const matchCert = this.certificate.matchCert;
-    const matchKey = this.certificate.matchKey;
-    cy.get('#cert').type(matchCert);
-    cy.get('#key').type(matchKey);
+    const validCert = this.certificate.valid.cert;
+    const validKey = this.certificate.valid.key;
+    cy.get('#cert').type(validCert);
+    cy.get('#key').type(validKey);
 
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -46,11 +46,12 @@ context('ssl smoke test', () => {
     cy.url().should('contains', 'ssl/list');
   });
 
-  it('should delete the ssl record just created', () => {
+  it('should delete the ssl record just created', function () {
     cy.visit('/');
     cy.contains('SSL').click();
     cy.wait(500);
-    cy.contains('*.www.testhj.com').parents().contains('Delete').click();
+    const sni = this.certificate.valid.sni;
+    cy.contains(sni).parents().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(domSelectors.notificationMsg).should('contain', 'Remove target SSL successfully');
   });
@@ -62,10 +63,10 @@ context('ssl smoke test', () => {
     cy.wait(500);
     cy.contains('Create').click();
 
-    const unmatchCert = this.certificate.unmatchCert;
-    const unmatchKey = this.certificate.unmatchKey;
-    cy.get('#cert').type(unmatchCert);
-    cy.get('#key').type(unmatchKey);
+    const invalidCert = this.certificate.invalid.cert;
+    const invalidKey = this.certificate.invalid.key;
+    cy.get('#cert').type(invalidCert);
+    cy.get('#key').type(invalidKey);
 
     cy.contains('Next').click();
     cy.wait(100);
