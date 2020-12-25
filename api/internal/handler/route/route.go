@@ -29,8 +29,8 @@ import (
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
+	"github.com/yuin/gopher-lua"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
-
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
@@ -38,7 +38,7 @@ import (
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
-	lua "github.com/yuin/gopher-lua"
+
 )
 
 type Handler struct {

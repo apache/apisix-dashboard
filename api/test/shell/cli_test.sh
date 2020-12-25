@@ -160,6 +160,11 @@ if [[ `grep -c "manager/main.go:" ${logfile}` -ne '1' ]]; then
     exit 1
 fi
 
+if [[ `grep -c "cmd/managerapi.go" ${logfile}` -ne '1' ]]; then
+    echo "failed: failed to write the correct caller"
+    exit 1
+fi
+
 # clean config
 clean_up
 

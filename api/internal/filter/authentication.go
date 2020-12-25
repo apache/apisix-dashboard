@@ -20,11 +20,10 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/log"
-	jwt "github.com/dgrijalva/jwt-go"
 )
 
 func Authentication() gin.HandlerFunc {
