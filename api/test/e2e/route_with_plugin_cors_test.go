@@ -24,7 +24,7 @@ import (
 func TestRoute_With_Plugin_Cors(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created",
+			Desc:         "make sure the route is not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -32,10 +32,10 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route with cors default setting",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route with cors default setting",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -54,7 +54,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route with cors default setting",
+			Desc:         "verify route with cors default setting",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -67,10 +67,10 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			Sleep:      sleepTime,
 		},
 		{
-			caseDesc: "update route with specified setting",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route with specified setting",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 			"uri": "/hello",
 				"plugins": {
@@ -96,10 +96,10 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "verify route with cors specified setting",
-			Object:   APISIXExpect(t),
-			Method:   http.MethodGet,
-			Path:     "/hello",
+			Desc:   "verify route with cors specified setting",
+			Object: APISIXExpect(t),
+			Method: http.MethodGet,
+			Path:   "/hello",
 			Headers: map[string]string{
 				"Origin":    "http://sub2.domain.com",
 				"resp-vary": "Via",
@@ -116,10 +116,10 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			Sleep:      sleepTime,
 		},
 		{
-			caseDesc: "verify route with cors specified no match origin",
-			Object:   APISIXExpect(t),
-			Method:   http.MethodGet,
-			Path:     "/hello",
+			Desc:   "verify route with cors specified no match origin",
+			Object: APISIXExpect(t),
+			Method: http.MethodGet,
+			Path:   "/hello",
 			Headers: map[string]string{
 				"Origin": "http://sub3.domain.com",
 			},
@@ -135,11 +135,11 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			Sleep:      sleepTime,
 		},
 		{
-			caseDesc:     "verify route with options method",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodOptions,
+			Desc:   "verify route with options method",
+			Object: APISIXExpect(t),
+			Method: http.MethodOptions,
 			Headers: map[string]string{
-				"Origin":    "http://sub2.domain.com",
+				"Origin": "http://sub2.domain.com",
 			},
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
@@ -153,10 +153,10 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			ExpectBody: "",
 		},
 		{
-			caseDesc: "update route with cors setting force wildcard",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route with cors setting force wildcard",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -180,10 +180,10 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "verify route with cors setting force wildcard",
-			Object:   APISIXExpect(t),
-			Method:   http.MethodGet,
-			Path:     "/hello",
+			Desc:   "verify route with cors setting force wildcard",
+			Object: APISIXExpect(t),
+			Method: http.MethodGet,
+			Path:   "/hello",
 			Headers: map[string]string{
 				"Origin":                         "https://sub.domain.com",
 				"ExternalHeader1":                "val",
@@ -204,7 +204,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			Sleep:      sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -212,7 +212,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route deleted",
+			Desc:         "make sure the route deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -223,7 +223,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 }

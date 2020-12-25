@@ -24,10 +24,10 @@ import (
 func TestSchema_not_exist_field(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "config route with non-existent fields",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "config route with non-existent fields",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
                                 "uri": "/hello",
                                 "nonexistent": "test non-existent",
@@ -42,10 +42,10 @@ func TestSchema_not_exist_field(t *testing.T) {
                         }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody: `{"code":10000,"message":"schema validate failed: (root): Additional property nonexistent is not allowed"}`,
+			ExpectBody:   `{"code":10000,"message":"schema validate failed: (root): Additional property nonexistent is not allowed"}`,
 		},
 		{
-			caseDesc:     "make sure the route create failed",
+			Desc:         "make sure the route create failed",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -55,6 +55,6 @@ func TestSchema_not_exist_field(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
