@@ -35,7 +35,7 @@ import (
 )
 
 func TestNewGenericStore(t *testing.T) {
-	dfFunc := func(obj interface{}, key string) string { return "" }
+	dfFunc := func(obj interface{}) string { return "" }
 	tests := []struct {
 		giveOpt   GenericStoreOption
 		giveCache map[string]interface{}
@@ -129,7 +129,7 @@ func TestGenericStore_Init(t *testing.T) {
 				opt: GenericStoreOption{
 					BasePath: "test",
 					ObjType:  reflect.TypeOf(TestStruct{}),
-					KeyFunc: func(obj interface{}, key string) string {
+					KeyFunc: func(obj interface{}) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -184,7 +184,7 @@ func TestGenericStore_Init(t *testing.T) {
 				opt: GenericStoreOption{
 					BasePath: "test",
 					ObjType:  reflect.TypeOf(TestStruct{}),
-					KeyFunc: func(obj interface{}, key string) string {
+					KeyFunc: func(obj interface{}) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -521,7 +521,7 @@ func TestGenericStore_Create(t *testing.T) {
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
 					BasePath: "test/path",
-					KeyFunc: func(obj interface{}, key string) string {
+					KeyFunc: func(obj interface{}) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -537,7 +537,7 @@ func TestGenericStore_Create(t *testing.T) {
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
 					BasePath: "test/path",
-					KeyFunc: func(obj interface{}, key string) string {
+					KeyFunc: func(obj interface{}) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -558,7 +558,7 @@ func TestGenericStore_Create(t *testing.T) {
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
 					BasePath: "test/path",
-					KeyFunc: func(obj interface{}, key string) string {
+					KeyFunc: func(obj interface{}) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -644,7 +644,7 @@ func TestGenericStore_Update(t *testing.T) {
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
 					BasePath: "test/path",
-					KeyFunc: func(obj interface{}, key string) string {
+					KeyFunc: func(obj interface{}) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -663,7 +663,7 @@ func TestGenericStore_Update(t *testing.T) {
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
 					BasePath: "test/path",
-					KeyFunc: func(obj interface{}, key string) string {
+					KeyFunc: func(obj interface{}) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -684,7 +684,7 @@ func TestGenericStore_Update(t *testing.T) {
 			giveStore: &GenericStore{
 				opt: GenericStoreOption{
 					BasePath: "test/path",
-					KeyFunc: func(obj interface{}, key string) string {
+					KeyFunc: func(obj interface{}) string {
 						return obj.(*TestStruct).Field1
 					},
 				},
@@ -776,4 +776,21 @@ func TestGenericStore_Delete(t *testing.T) {
 		assert.True(t, createCalled, tc.caseDesc)
 		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
 	}
+}
+
+func TestGenericStore_StringToObjPtr(t *testing.T) {
+	s, err := NewGenericStore(GenericStoreOption{
+		BasePath: "test",
+		ObjType:  reflect.TypeOf(entity.SSL{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.Route)
+			return utils.InterfaceToString(r.ID)
+		},
+	})
+	assert.Nil(t, err)
+	id := "1"
+	sslStr := `{"key":"test_key", "cert":"test_cert"}`
+	sslInterface, err := s.StringToObjPtr(sslStr, id)
+	ssl := sslInterface.(*entity.SSL)
+	assert.Equal(t, id, ssl.ID)
 }

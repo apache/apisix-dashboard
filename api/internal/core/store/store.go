@@ -54,7 +54,7 @@ type GenericStore struct {
 type GenericStoreOption struct {
 	BasePath   string
 	ObjType    reflect.Type
-	KeyFunc    func(obj interface{}, key string) string
+	KeyFunc    func(obj interface{}) string
 	StockCheck func(obj interface{}, stockObj interface{}) error
 	Validator  Validator
 }
@@ -99,13 +99,13 @@ func (s *GenericStore) Init() error {
 		if ret[i].Value == "init_dir" {
 			continue
 		}
-		objPtr, err := s.StringToObjPtr(ret[i].Value)
+		key := ret[i].Key[len(s.opt.BasePath)+1:]
+		objPtr, err := s.StringToObjPtr(ret[i].Value, key)
 		if err != nil {
 			return err
 		}
 
-		key := ret[i].Key[len(s.opt.BasePath)+1:]
-		s.cache.Store(s.opt.KeyFunc(objPtr, key), objPtr)
+		s.cache.Store(s.opt.KeyFunc(objPtr), objPtr)
 	}
 
 	c, cancel := context.WithCancel(context.TODO())
@@ -119,13 +119,13 @@ func (s *GenericStore) Init() error {
 			for i := range event.Events {
 				switch event.Events[i].Type {
 				case storage.EventTypePut:
-					objPtr, err := s.StringToObjPtr(event.Events[i].Value)
+					key := event.Events[i].Key[len(s.opt.BasePath)+1:]
+					objPtr, err := s.StringToObjPtr(event.Events[i].Value, key)
 					if err != nil {
 						log.Warnf("value convert to obj failed: %s", err)
 						continue
 					}
-					key := event.Events[i].Key[len(s.opt.BasePath)+1:]
-					s.cache.Store(s.opt.KeyFunc(objPtr, key), objPtr)
+					s.cache.Store(s.opt.KeyFunc(objPtr), objPtr)
 				case storage.EventTypeDelete:
 					s.cache.Delete(event.Events[i].Key[len(s.opt.BasePath)+1:])
 				}
@@ -250,7 +250,7 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 		return err
 	}
 
-	key := s.opt.KeyFunc(obj, "")
+	key := s.opt.KeyFunc(obj)
 	if key == "" {
 		return fmt.Errorf("key is required")
 	}
@@ -277,7 +277,7 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotE
 		return err
 	}
 
-	key := s.opt.KeyFunc(obj, "")
+	key := s.opt.KeyFunc(obj)
 	if key == "" {
 		return fmt.Errorf("key is required")
 	}
@@ -323,19 +323,26 @@ func (s *GenericStore) Close() error {
 	return nil
 }
 
-func (s *GenericStore) StringToObjPtr(str string) (interface{}, error) {
+func (s *GenericStore) StringToObjPtr(str, key string) (interface{}, error) {
 	objPtr := reflect.New(s.opt.ObjType)
-	err := json.Unmarshal([]byte(str), objPtr.Interface())
+	ret := objPtr.Interface()
+	err := json.Unmarshal([]byte(str), ret)
+	fmt.Println("ret:", ret, "s.opt.ObjType", s.opt.ObjType)
 	if err != nil {
 		log.Errorf("json marshal failed: %s", err)
 		return nil, fmt.Errorf("json unmarshal failed: %s", err)
 	}
 
-	return objPtr.Interface(), nil
+	if setter, ok := ret.(entity.BaseInfoSetter); ok {
+		info := setter.GetBaseInfo()
+		info.KeyCompat(key)
+	}
+
+	return ret, nil
 }
 
 func (s *GenericStore) GetObjStorageKey(obj interface{}) string {
-	return s.GetStorageKey(s.opt.KeyFunc(obj, ""))
+	return s.GetStorageKey(s.opt.KeyFunc(obj))
 }
 
 func (s *GenericStore) GetStorageKey(key string) string {
