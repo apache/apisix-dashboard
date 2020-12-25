@@ -38,7 +38,6 @@ import (
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
-
 )
 
 type Handler struct {
