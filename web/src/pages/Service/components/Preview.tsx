@@ -14,25 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare namespace PluginComponent {
-  type Data = object;
+import React from 'react';
+import { FormInstance } from 'antd/lib/form';
 
-  type Schema = '' | 'route' | 'consumer' | 'service';
+import PluginPage from '@/components/Plugin';
+import Step1 from './Step1';
 
-  type Category =
-    | 'Security'
-    | 'Limit traffic'
-    | 'Log'
-    | 'Observability'
-    | 'Other'
-    | 'Authentication';
+type Props = {
+  form: FormInstance;
+  upstreamForm: FormInstance;
+  plugins: PluginComponent.Data;
+};
 
-  type Meta = {
-    name: string;
-    category: Category;
-    hidden?: boolean;
-    // Note: Plugins are sorted by priority under the same category in the frontend, the smaller the number, the higher the priority. The default value is 9999.
-    priority?: number;
-    avatar?: React.ReactNode;
-  };
-}
+const Page: React.FC<Props> = ({ form, plugins, upstreamForm }) => {
+  return (
+    <>
+      <Step1 form={form} upstreamForm={upstreamForm} disabled />
+      <PluginPage initialData={plugins} readonly />
+    </>
+  );
+};
+
+export default Page;

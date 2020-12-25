@@ -106,6 +106,7 @@ declare namespace RouteModule {
     script: Record<string, any>;
     url?: string;
     enable_websocket?: boolean;
+    service_id?: string;
   };
 
   // step1
@@ -142,6 +143,7 @@ declare namespace RouteModule {
     ret_code?: number;
     status: number;
     enable_websocket?: boolean;
+    service_id: string;
   };
 
   type AdvancedMatchingRules = {

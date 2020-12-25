@@ -90,7 +90,7 @@ export const checkHostWithSSL = (hosts: string[]) =>
 export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) =>
   request(`/routes/${rid}`, {
     method: 'PATCH',
-    data: {status}
+    data: { status }
   });
 
 export const debugRoute = (data: RouteModule.debugRequest) => {
@@ -99,3 +99,9 @@ export const debugRoute = (data: RouteModule.debugRequest) => {
     data,
   });
 };
+
+export const fetchServiceList = () =>
+  request('/services').then(({ data }) => ({
+    data: data.rows,
+    total: data.total_size,
+  }));
