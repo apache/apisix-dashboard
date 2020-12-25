@@ -28,7 +28,7 @@ context('Create and Delete Upstream', () => {
     cy.login();
   })
 
-  it('create upstream with default type (roundrobin)', () => {
+  it('should create upstream with default type (roundrobin)', () => {
     // go to upstream create page
     cy.visit('/');
     cy.contains('Upstream').click();
@@ -50,7 +50,7 @@ context('Create and Delete Upstream', () => {
     cy.url().should('contains', 'upstream/list');
   });
 
-  it('delete the upstream', () => {
+  it('should delete the upstream', () => {
     cy.visit('/');
     cy.contains('Upstream').click();
     cy.wait(sleepTime * 5)
@@ -59,7 +59,7 @@ context('Create and Delete Upstream', () => {
     cy.get(domSelectors.notification).should('contain', 'Delete successfully');
   });
 
-  it('create chash upstream', () => {
+  it('should create chash upstream', () => {
     // go to upstream create page
     cy.visit('/');
     cy.contains('Upstream').click();
@@ -99,7 +99,7 @@ context('Create and Delete Upstream', () => {
     cy.url().should('contains', 'upstream/list');
   });
 
-  it('delete the upstream', () => {
+  it('should delete the upstream', () => {
     cy.visit('/');
     cy.contains('Upstream').click();
     cy.wait(sleepTime * 5);
