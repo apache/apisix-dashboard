@@ -17,6 +17,7 @@
 package global_rule
 
 import (
+	"encoding/json"
 	"reflect"
 
 	"github.com/gin-gonic/gin"
@@ -27,6 +28,8 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -49,6 +52,10 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(entity.GlobalPlugins{}))))
 	r.PUT("/apisix/admin/global_rules", wgin.Wraps(h.Set,
 		wrapper.InputType(reflect.TypeOf(entity.GlobalPlugins{}))))
+
+	r.PATCH("/apisix/admin/global_rules/:id", consts.ErrorWrapper(Patch))
+	r.PATCH("/apisix/admin/global_rules/:id/*path", consts.ErrorWrapper(Patch))
+
 	r.DELETE("/apisix/admin/global_rules/:id", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDeleteInput{}))))
 }
@@ -118,6 +125,35 @@ func (h *Handler) Set(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.GlobalPlugins)
 
 	if err := h.globalRuleStore.Create(c.Context(), input); err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	return nil, nil
+}
+
+func Patch(c *gin.Context) (interface{}, error) {
+	reqBody, _ := c.GetRawData()
+	ID := c.Param("id")
+	subPath := c.Param("path")
+
+	routeStore := store.GetStore(store.HubKeyGlobalRule)
+	stored, err := routeStore.Get(ID)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	res, err := utils.MergePatch(stored, subPath, reqBody)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	var globalRule entity.GlobalPlugins
+	err = json.Unmarshal(res, &globalRule)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	if err := routeStore.Update(c, &globalRule, false); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 

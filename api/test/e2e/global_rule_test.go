@@ -136,6 +136,53 @@ func TestGlobalRule(t *testing.T) {
 			//ExpectHeaders: map[string]string{"X-VERSION":"2.0"},
 		},
 		{
+			Desc:   "route patch to enable key-auth",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPatch,
+			Path:   "/apisix/admin/global_rules/1/plugins",
+			Body: `{
+	                        "response-rewrite": {
+	                            "headers": {
+	                                "X-VERSION":"1.0"
+	                            }
+	                        },
+				"key-auth": {}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "make sure that patch succeeded",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusUnauthorized,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:   "route patch to disable key-auth",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPatch,
+			Path:   "/apisix/admin/global_rules/1",
+			Body: `{
+				"plugins": {
+					"key-auth": null
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:          "make sure that patch succeeded",
+			Object:        APISIXExpect(t),
+			Method:        http.MethodGet,
+			Path:          "/hello",
+			ExpectStatus:  http.StatusOK,
+			ExpectBody:    "hello world",
+			ExpectHeaders: map[string]string{"X-VERSION": "2.0"},
+			Sleep:         sleepTime,
+		},
+		{
 			Desc:         "delete global rule",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
