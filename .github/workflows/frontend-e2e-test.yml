@@ -41,7 +41,7 @@ jobs:
 
       - name: Start manager-api
         working-directory: ./api
-        run: nohup go run . &
+        run: nohup go run ./cmd/manager &
 
       - name: Install front-end dependencies
         run: yarn install
