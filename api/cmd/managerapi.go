@@ -47,7 +47,6 @@ func printInfo() {
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n\n", "Logfile", conf.ErrorLogPath)
 }
 
-
 // NewManagerAPICommand creates the manager-api command.
 func NewManagerAPICommand() *cobra.Command {
 	cmd := &cobra.Command{

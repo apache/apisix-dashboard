@@ -348,27 +348,15 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
-	
-	// checks if body id is float (body id must support both float + string for legacy purposes)
-	// and converts to string
-	_, isFloat := input.Route.ID.(float64)
-	stringifiedID := input.Route.ID
-	if isFloat {
-		stringifiedID = fmt.Sprintf("%v", input.Route.ID)
-	}
-	// check if id on path is == to id on body ONLY if both ids are valid
-	if input.ID != "" && input.Route.ID != nil && stringifiedID != "" && input.ID != stringifiedID {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-				fmt.Errorf("ID on path (%s) doesn't match ID on body (%s)", input.ID, stringifiedID)
+
+	// check if ID in body is equal ID in path
+	if err := handler.IDCompare(input.ID, input.Route.ID); err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
+	// if has id in path, use it
 	if input.ID != "" {
 		input.Route.ID = input.ID
-	}
-
-	if input.Route.Host != "" && len(input.Route.Hosts) > 0 {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			fmt.Errorf("only one of host or hosts is allowed")
 	}
 
 	//check depend

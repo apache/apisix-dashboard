@@ -327,7 +327,6 @@ func (s *GenericStore) StringToObjPtr(str, key string) (interface{}, error) {
 	objPtr := reflect.New(s.opt.ObjType)
 	ret := objPtr.Interface()
 	err := json.Unmarshal([]byte(str), ret)
-	fmt.Println("ret:", ret, "s.opt.ObjType", s.opt.ObjType)
 	if err != nil {
 		log.Errorf("json marshal failed: %s", err)
 		return nil, fmt.Errorf("json unmarshal failed: %s", err)
