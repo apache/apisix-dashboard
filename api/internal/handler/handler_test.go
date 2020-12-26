@@ -2,10 +2,26 @@ package handler
 
 import (
 	"errors"
+	"net/http"
 	"testing"
 
 	"github.com/go-playground/assert/v2"
+	"github.com/shiningrush/droplet/data"
 )
+
+func TestSpecCodeResponse(t *testing.T) {
+	err := errors.New("schema validate failed: remote_addr: Must validate at least one schema (anyOf)")
+	resp := SpecCodeResponse(err)
+	assert.Equal(t, &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, resp)
+
+	err = errors.New("data not found")
+	resp = SpecCodeResponse(err)
+	assert.Equal(t, &data.SpecCodeResponse{StatusCode: http.StatusNotFound}, resp)
+
+	err = errors.New("system error")
+	resp = SpecCodeResponse(err)
+	assert.Equal(t, &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, resp)
+}
 
 func TestIDCompare(t *testing.T) {
 	// init
