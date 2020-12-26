@@ -30,8 +30,8 @@ import (
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
-	"github.com/apisix/manager-api/log"
 )
 
 type Interface interface {

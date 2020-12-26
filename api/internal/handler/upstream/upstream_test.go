@@ -25,7 +25,7 @@ import (
 	"github.com/shiningrush/droplet"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"

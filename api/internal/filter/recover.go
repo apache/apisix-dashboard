@@ -24,8 +24,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/apisix/manager-api/log"
 	"github.com/gin-gonic/gin"
+	"github.com/apisix/manager-api/internal/log"
 )
 
 var (
