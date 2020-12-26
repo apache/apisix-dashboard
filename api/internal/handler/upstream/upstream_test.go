@@ -115,7 +115,7 @@ func TestUpstream(t *testing.T) {
 	upstream2 := &UpdateInput{}
 	upstream2.ID = "1"
 	reqBody = `{
-		"id": "aaa",
+		"id": "1",
 		"name": "upstream3",
 		"description": "upstream upstream",
 		"type": "roundrobin",
