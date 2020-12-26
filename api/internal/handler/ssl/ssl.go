@@ -203,6 +203,12 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
+
+	// check if ID in body is equal ID in path
+	if err := handler.IDCompare(input.ID, input.SSL.ID); err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+	}
+
 	ssl, err := ParseCert(input.Cert, input.Key)
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
