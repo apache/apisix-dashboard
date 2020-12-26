@@ -14,11 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export declare namespace PluginChartPage {
-  type Response = {
-    code: number;
-    data: string[];
-    message: string;
-    request_id: string;
+export declare namespace PluginOrchestrationModule {
+  type Meta = {
+    name: string;
+    priority: number;
+    schema: object;
+    type: string;
+    version: number;
+    consumer_schema?: object;
   };
 }

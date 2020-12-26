@@ -18,19 +18,19 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { cloneDeep } from 'lodash';
 import { FlowChart, IFlowChartCallbacks } from '@mrblenny/react-flow-chart';
 import * as actions from '@mrblenny/react-flow-chart/src/container/actions';
-import { Form, Input, Button, Collapse, Divider, Card, Select } from 'antd';
+import { Form, Input, Button, Divider, Card, Select } from 'antd';
 import { withTheme } from '@rjsf/core';
-import { PLUGIN_MAPPER_SOURCE, PluginPageType, PluginPage } from '@api7-dashboard/plugin';
 
 // @ts-ignore
 import { Theme as AntDTheme } from '@rjsf/antd';
 import { JSONSchema7 } from 'json-schema';
 
 import { Page, SidebarItem } from './components';
-import { INIT_CHART, PLUGINS_PORTS, CONDITION_PORTS, CATEGOTY_OPTIONS } from './constants';
+import { INIT_CHART, PLUGINS_PORTS, CONDITION_PORTS } from './constants';
 import { SMessage, SContent, SSidebar } from './DrawPluginStyle';
 import { PortCustom, NodeInnerCustom } from './customConfig';
-import { fetchPluginList, fetchPluginSchema } from './service';
+import { fetchList } from './service';
+import { PluginOrchestrationModule } from './typing';
 
 export * from './transform';
 
@@ -42,11 +42,9 @@ export enum PanelType {
 
 type Props = {
   data: any;
-  onChange(data: PluginPageType.DrawData): void;
+  onChange(data: object): void;
   readonly: boolean;
 };
-
-const { Panel } = Collapse;
 
 const PluginForm = withTheme(AntDTheme);
 
@@ -63,9 +61,10 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
   const [chart, setChart] = useState(cloneDeep(Object.keys(data).length ? data : INIT_CHART));
   const [schema, setSchema] = useState<JSONSchema7>();
   const [selectedType, setSelectedType] = useState<PanelType>(PanelType.Default);
-  const [pluginCategoryList, setPluginCategoryList] = useState({});
+  const [pluginList, setPluginList] = useState<PluginOrchestrationModule.Meta[]>([]);
   const [pluginCategory, setPluginCategory] = useState('All');
   const [showList, setShowList] = useState<string[]>();
+  const [typeList, setTypeList] = useState<string[]>([])
 
   const getCustomDataById = (id = chart.selected.id) => {
     if (!id || !chart.nodes[id].properties) {
@@ -98,7 +97,10 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
         const { type, name } = getCustomDataById(args.nodeId);
         setSelectedType(type);
         if (type === PanelType.Plugin && name) {
-          fetchPluginSchema(name).then(({ data }) => setSchema(data));
+          const plugin = pluginList.find(item => item.name === name);
+          if (plugin) {
+            setSchema(plugin.schema);
+          }
         }
       }
       onChange(newChart);
@@ -107,34 +109,19 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
     return clonedObj;
   }, {}) as IFlowChartCallbacks;
 
+  const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join("")
   useEffect(() => {
-    fetchPluginList().then((r) => {
-      const data: Record<string, PluginPageType.PluginMapperItem[]> = {};
-      const list = {
-        All: r.data,
-      };
-      r.data.forEach((name) => {
-        const plugin = PLUGIN_MAPPER_SOURCE[name] || {};
-        const { category = 'Other', hidden = false } = plugin;
-        if (!data[category]) {
-          data[category] = [];
-        }
-        if (!hidden) {
-          data[category] = data[category].concat({
-            ...plugin,
-            name,
-          });
+    // eslint-disable-next-line no-shadow
+    fetchList().then((data) => {
+      const categoryList: string[] = [];
+      data.forEach(item => {
+        if (!categoryList.includes(firstUpperCase(item.type))) {
+          categoryList.push(firstUpperCase(item.type));
         }
       });
-      Object.keys(data).map((category) => {
-        list[category] = data[category]
-          .sort((a, b) => {
-            return (a.priority || 9999) - (b.priority || 9999);
-          })
-          .map((item) => item.name);
-      });
-      setShowList(r.data.sort());
-      setPluginCategoryList(list);
+      setTypeList(['All', ...categoryList.sort()]);
+      setPluginList(data);
+      setShowList(data.map(item => item.name));
     });
   }, []);
 
@@ -172,15 +159,6 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
       );
     }
     if (selectedType === PanelType.Plugin && schema) {
-      const { name } = getCustomDataById();
-      if (PLUGIN_MAPPER_SOURCE[name]?.noConfiguration) {
-        return (
-          <div style={{ width: '100%', marginTop: '150px', textAlign: 'center' }}>
-            插件 {name} 不需要配置
-          </div>
-        );
-      }
-
       return (
         <SMessage style={{ overflow: 'scroll' }}>
           <PluginForm
@@ -226,15 +204,19 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
           placeholder="插件分类"
           optionFilterProp="children"
           defaultValue={pluginCategory}
-          onChange={(values) => {
-            setPluginCategory(values);
-            setShowList(pluginCategoryList[values]);
+          onChange={(value) => {
+            setPluginCategory(value);
+            if (value === 'All') {
+              setShowList(pluginList.map(item => item.name));
+              return;
+            }
+            setShowList(pluginList.filter(item => item.type === value.toLowerCase()).map(item => item.name));
           }}
           filterOption={(input, option) =>
             option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
           }
         >
-          {CATEGOTY_OPTIONS.map((item) => (
+          {typeList.map((item) => (
             <Select.Option value={item}>{item}</Select.Option>
           ))}
         </Select>

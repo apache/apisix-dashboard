@@ -60,13 +60,3 @@ export const CONDITION_PORTS = {
     },
   },
 };
-
-export const CATEGOTY_OPTIONS = [
-  'All',
-  'Observability',
-  'Security',
-  'Other',
-  'Authentication',
-  'Limit traffic',
-  'Log',
-];

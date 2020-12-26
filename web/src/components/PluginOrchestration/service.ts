@@ -14,13 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { JSONSchema7 } from 'json-schema';
-import request from './request';
+import { request } from 'umi';
+import { PluginOrchestrationModule } from './typing';
 
-import { PluginChartPage } from './typing';
-
-export const fetchPluginList = () => request<PluginChartPage.Response>('/plugins');
-
-const cachedPluginSchema: Record<string, object> = {};
-export const fetchPluginSchema = (name: string): Promise<{ data: JSONSchema7 }> =>
-  request(`/schema/plugins/${name}`);
+export const fetchList = () => {
+  return request<Res<PluginOrchestrationModule.Meta[]>>('/plugins?all=true').then(data => {
+    return data.data;
+  })
+};
