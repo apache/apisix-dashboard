@@ -111,7 +111,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
       <Menu.Item key="settings">
         <SettingFilled />
-        {formatMessage({ id: 'menu.account.modify-settings' })}
+        {formatMessage({ id: 'menu.account.settings' })}
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout">
