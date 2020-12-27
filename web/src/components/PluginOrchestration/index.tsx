@@ -23,7 +23,8 @@ import { withTheme } from '@rjsf/core';
 
 // @ts-ignore
 import { Theme as AntDTheme } from '@rjsf/antd';
-import { JSONSchema7 } from 'json-schema';
+// import { JSONSchema7 } from 'json-schema';
+
 
 import { Page, SidebarItem } from './components';
 import { INIT_CHART, PLUGINS_PORTS, CONDITION_PORTS } from './constants';
@@ -59,7 +60,7 @@ const tailLayout = {
 const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = false }) => {
   const [form] = Form.useForm();
   const [chart, setChart] = useState(cloneDeep(Object.keys(data).length ? data : INIT_CHART));
-  const [schema, setSchema] = useState<JSONSchema7>();
+  const [schema, setSchema] = useState<any>();
   const [selectedType, setSelectedType] = useState<PanelType>(PanelType.Default);
   const [pluginList, setPluginList] = useState<PluginOrchestrationModule.Meta[]>([]);
   const [pluginCategory, setPluginCategory] = useState('All');
