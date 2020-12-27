@@ -32,6 +32,7 @@ export default {
   'component.global.loading': 'Loading',
   'component.global.list': 'List',
   'component.global.description': 'Description',
+  'component.global.labels': 'Labels',
   'component.global.operation': 'Operation',
   'component.status.success': 'Successfully',
   'component.status.fail': 'Failed',

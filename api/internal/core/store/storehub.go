@@ -21,8 +21,8 @@ import (
 	"reflect"
 
 	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
-	"github.com/apisix/manager-api/log"
 )
 
 type HubKey string
