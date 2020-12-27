@@ -585,9 +585,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       >
         {showSelector && (
           <Form.Item label={formatMessage({ id: 'page.upstream.step.select.upstream' })} name="upstream_id" shouldUpdate={(prev, next) => {
+            setReadonly(Boolean(next.upstream_id));
             if (prev.upstream_id !== next.upstream_id) {
               const id = next.upstream_id;
-              setReadonly(Boolean(id));
               if (id) {
                 form.setFieldsValue(list.find((item) => item.id === id));
                 form.setFieldsValue({
@@ -599,6 +599,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           }}>
             <Select
               disabled={disabled}
+              onChange={(id) => {
+                form.setFieldsValue(list.find((item) => item.id === id));
+              }}
             >
               {[
                 {
@@ -638,9 +641,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             return null;
           }}
         </Form.Item>
-
-        <NodeList />
-
+        {NodeList()}
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.pass-host' })}
           name="pass_host"

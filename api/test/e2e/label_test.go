@@ -132,6 +132,7 @@ func TestLabel(t *testing.T) {
 			Path:         "/apisix/admin/labels/route",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "{\"build\":\"16\"},{\"env\":\"production\"},{\"version\":\"v2\"}",
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "get consumer label",
