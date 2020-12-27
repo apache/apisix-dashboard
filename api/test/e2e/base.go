@@ -173,14 +173,8 @@ type HttpTestCase struct {
 	Sleep         time.Duration //ms
 }
 
+
 func testCaseCheck(tc HttpTestCase, t *testing.T) {
-
-	if tc.Sleep != 0 {
-		time.Sleep(tc.Sleep)
-	} else {
-		time.Sleep(time.Duration(50) * time.Millisecond)
-	}
-
 	t.Run(tc.Desc, func(t *testing.T) {
 		//init
 		expectObj := tc.Object
@@ -203,6 +197,12 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 
 		if req == nil {
 			panic("fail to init request")
+		}
+
+		if tc.Sleep != 0 {
+			time.Sleep(tc.Sleep)
+		} else {
+			time.Sleep(time.Duration(50) * time.Millisecond)
 		}
 
 		if tc.Query != "" {
@@ -239,5 +239,4 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 			resp.Body().Contains(tc.ExpectBody)
 		}
 	})
-
 }
