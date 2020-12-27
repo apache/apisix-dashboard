@@ -26,6 +26,7 @@ import type { FormInstance } from 'antd/es/form';
 enum Type {
   roundrobin = 'roundrobin',
   chash = 'chash',
+  ewma = 'ewma',
 }
 
 enum HashOn {
