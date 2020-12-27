@@ -17,7 +17,6 @@
 package e2e
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -458,7 +457,6 @@ func TestID_Not_In_Body(t *testing.T) {
 	assert.Nil(t, err)
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println("string(respBody)", string(respBody))
 	list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
 	for _, item := range list {
 		route := item.(map[string]interface{})

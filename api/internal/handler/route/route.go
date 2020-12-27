@@ -29,16 +29,15 @@ import (
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
-	wgin "github.com/shiningrush/droplet/wrapper/gin"
 	"github.com/yuin/gopher-lua"
-
-	"github.com/apisix/manager-api/conf"
+	wgin "github.com/shiningrush/droplet/wrapper/gin"
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
-	"github.com/apisix/manager-api/log"
 )
 
 type Handler struct {
@@ -348,13 +347,15 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
-	if input.ID != "" {
-		input.Route.ID = input.ID
+
+	// check if ID in body is equal ID in path
+	if err := handler.IDCompare(input.ID, input.Route.ID); err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
-	if input.Route.Host != "" && len(input.Route.Hosts) > 0 {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			fmt.Errorf("only one of host or hosts is allowed")
+	// if has id in path, use it
+	if input.ID != "" {
+		input.Route.ID = input.ID
 	}
 
 	//check depend
