@@ -176,7 +176,7 @@ declare namespace RouteModule {
   };
 
   type Form2Data = {
-    type: 'roundrobin' | 'chash';
+    type: 'roundrobin' | 'chash' | 'ewma';
     hash_on?: string;
     key?: string;
     upstreamPath?: string;
