@@ -238,5 +238,4 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 			resp.Body().Contains(tc.ExpectBody)
 		}
 	})
-
 }

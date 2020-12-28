@@ -31,6 +31,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/handler/authentication"
 	"github.com/apisix/manager-api/internal/handler/consumer"
+	"github.com/apisix/manager-api/internal/handler/global_rule"
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/label"
 	"github.com/apisix/manager-api/internal/handler/plugin"
@@ -68,6 +69,7 @@ func SetUpRouter() *gin.Engine {
 		plugin.NewHandler,
 		healthz.NewHandler,
 		authentication.NewHandler,
+		global_rule.NewHandler,
 		route_online_debug.NewHandler,
 		server_info.NewHandler,
 		label.NewHandler,
