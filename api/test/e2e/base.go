@@ -154,7 +154,7 @@ func BatchTestServerPort(t *testing.T, times int) map[string]int {
 	return res
 }
 
-var sleepTime = time.Duration(300) * time.Millisecond
+var sleepTime = time.Duration(500) * time.Millisecond
 
 type HttpTestCase struct {
 	Desc          string
@@ -237,3 +237,4 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 		resp.Body().Contains(tc.ExpectBody)
 	}
 }
+
