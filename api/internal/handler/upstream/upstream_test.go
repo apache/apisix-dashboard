@@ -25,7 +25,7 @@ import (
 	"github.com/shiningrush/droplet"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
@@ -115,7 +115,7 @@ func TestUpstream(t *testing.T) {
 	upstream2 := &UpdateInput{}
 	upstream2.ID = "1"
 	reqBody = `{
-		"id": "aaa",
+		"id": "1",
 		"name": "upstream3",
 		"description": "upstream upstream",
 		"type": "roundrobin",

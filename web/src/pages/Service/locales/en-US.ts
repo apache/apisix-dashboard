@@ -14,33 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package filter
-
-import (
-	"net/http"
-	"net/http/httptest"
-	"testing"
-
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
-
-	"github.com/apisix/manager-api/log"
-)
-
-func performRequest(r http.Handler, method, path string) *httptest.ResponseRecorder {
-	req := httptest.NewRequest(method, path, nil)
-	w := httptest.NewRecorder()
-	r.ServeHTTP(w, req)
-	return w
-}
-
-func TestRequestLogHandler(t *testing.T) {
-	r := gin.New()
-	logger := log.GetLogger(log.AccessLog)
-	r.Use(RequestLogHandler(logger))
-	r.GET("/", func(c *gin.Context) {
-	})
-
-	w := performRequest(r, "GET", "/")
-	assert.Equal(t, 200, w.Code)
+export default {
+    'page.service.steps.stepTitle.basicInformation': 'Basic Information',
+    'page.service.steps.stepTitle.pluginConfig': 'Plugin Config',
+    'page.service.steps.stepTitle.preview': 'Preview',
 }

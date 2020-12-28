@@ -32,8 +32,8 @@ import (
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils/consts"
-	"github.com/apisix/manager-api/log"
 )
 
 var resources = map[string]string{
@@ -106,6 +106,18 @@ func parseCert(crt, key string) ([]string, error) {
 }
 
 func handleSpecialField(resource string, reqBody []byte) ([]byte, error) {
+	var bodyMap map[string]interface{}
+	err := json.Unmarshal(reqBody, &bodyMap)
+	if err != nil {
+		return reqBody, fmt.Errorf("read request body failed: %s", err)
+	}
+	if _, ok := bodyMap["create_time"]; ok {
+		return reqBody, errors.New("we don't accept create_time from client")
+	}
+	if _, ok := bodyMap["update_time"]; ok {
+		return reqBody, errors.New("we don't accept update_time from client")
+	}
+
 	// remove script, because it's a map, and need to be parsed into lua code
 	if resource == "routes" {
 		var route map[string]interface{}

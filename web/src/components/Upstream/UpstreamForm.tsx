@@ -26,6 +26,7 @@ import type { FormInstance } from 'antd/es/form';
 enum Type {
   roundrobin = 'roundrobin',
   chash = 'chash',
+  ewma = 'ewma',
 }
 
 enum HashOn {
@@ -97,7 +98,10 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     useEffect(() => {
       const id = form.getFieldValue('upstream_id');
       if (id) {
-        form.setFieldsValue(list.find((item) => item.id === id));
+        setReadonly(true);
+        requestAnimationFrame(() => {
+          form.setFieldsValue(list.find((item) => item.id === id));
+        })
       }
     }, [list]);
 
@@ -562,17 +566,23 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         }}
       >
         {showSelector && (
-          <Form.Item label="选择上游" name="upstream_id">
+          <Form.Item label="选择上游" name="upstream_id" shouldUpdate={(prev, next) => {
+            setReadonly(Boolean(next.upstream_id));
+            if (prev.upstream_id !== next.upstream_id) {
+              const id = next.upstream_id;
+              if (id) {
+                form.setFieldsValue(list.find((item) => item.id === id));
+                form.setFieldsValue({
+                  upstream_id: id,
+                });
+              }
+            }
+            return prev.upstream_id !== next.upstream_id;
+          }}>
             <Select
               disabled={disabled}
               onChange={(id) => {
-                setReadonly(Boolean(id));
-                if (id) {
-                  form.setFieldsValue(list.find((item) => item.id === id));
-                  form.setFieldsValue({
-                    upstream_id: id,
-                  });
-                }
+                form.setFieldsValue(list.find((item) => item.id === id));
               }}
             >
               {[{ name: '手动填写', id: '' }, ...list].map((item) => (
@@ -603,9 +613,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             return null;
           }}
         </Form.Item>
-
-        <NodeList />
-
+        {NodeList()}
         <Form.Item
           label={formatMessage({ id: 'upstream.step.pass-host' })}
           name="pass_host"

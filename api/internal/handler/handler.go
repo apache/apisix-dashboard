@@ -35,13 +35,16 @@
 package handler
 
 import (
-	"github.com/shiningrush/droplet"
-	"github.com/shiningrush/droplet/middleware"
+	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
+	"github.com/shiningrush/droplet/middleware"
+
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 type RegisterFactory func() (RouteRegister, error)
@@ -85,5 +88,19 @@ func (mw *ErrorTransformMiddleware) Handle(ctx droplet.Context) error {
 		}
 		return err
 	}
+	return nil
+}
+
+func IDCompare(idOnPath string, idOnBody interface{}) error {
+	idOnBodyStr, ok := idOnBody.(string)
+	if !ok {
+		idOnBodyStr = utils.InterfaceToString(idOnBody)
+	}
+
+	// check if id on path is == to id on body ONLY if both ids are valid
+	if idOnPath != "" && idOnBodyStr != "" && idOnBodyStr != idOnPath {
+		return fmt.Errorf("ID on path (%s) doesn't match ID on body (%s)", idOnPath, idOnBodyStr)
+	}
+
 	return nil
 }

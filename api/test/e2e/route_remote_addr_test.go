@@ -24,10 +24,10 @@ import (
 func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "config route with invalid remote_addr",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "config route with invalid remote_addr",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"remote_addr": "127.0.0.",
@@ -45,7 +45,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addr: Must validate at least one schema (anyOf)\\nremote_addr: Does not match format 'ipv4'\"",
 		},
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -54,10 +54,10 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "config route with invalid remote_addr",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "config route with invalid remote_addr",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"remote_addr": "127.0.0.aa",
@@ -75,7 +75,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addr: Must validate at least one schema (anyOf)\\nremote_addr: Does not match format 'ipv4'\"",
 		},
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -84,10 +84,10 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc: "config route with invalid remote_addrs",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "config route with invalid remote_addrs",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"remote_addrs": ["127.0.0.1","192.168.0."],
@@ -105,7 +105,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addrs.1: Must validate at least one schema (anyOf)\\nremote_addrs.1: Does not match format 'ipv4'\"",
 		},
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -116,6 +116,6 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
