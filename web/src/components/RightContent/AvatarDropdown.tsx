@@ -104,14 +104,14 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       {menu && (
         <Menu.Item key="settings">
           <SettingOutlined />
-          {formatMessage({ id: 'menu.account.settings' })}
+          {formatMessage({ id: 'menu.setting' })}
         </Menu.Item>
       )}
       {menu && <Menu.Divider />}
 
       <Menu.Item key="settings">
         <SettingFilled />
-        {formatMessage({ id: 'menu.account.settings' })}
+        {formatMessage({ id: 'menu.setting' })}
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout">

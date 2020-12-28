@@ -25,7 +25,6 @@ import { timestampToLocaleString } from '@/helpers';
 import { fetchList, remove, fetchLabelList, updateRouteStatus } from './service';
 import { DebugDrawView } from './components/DebugViews';
 
-
 const { OptGroup, Option } = Select;
 
 const Page: React.FC = () => {
@@ -132,14 +131,17 @@ const Page: React.FC = () => {
               return (
                 <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
                   {(labelList[key] || []).map((value: string) => (
-                    <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}> {value} </Option>
+                    <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
+                      {' '}
+                      {value}{' '}
+                    </Option>
                   ))}
                 </OptGroup>
               );
             })}
           </Select>
         );
-      }
+      },
     },
     {
       title: formatMessage({ id: 'page.route.status' }),
@@ -149,8 +151,8 @@ const Page: React.FC = () => {
           {record.status ? (
             <Tag color="green">{formatMessage({ id: 'page.route.published' })}</Tag>
           ) : (
-              <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
-            )}
+            <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
+          )}
         </>
       ),
     },

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 export default {
-    'page.service.steps.stepTitle.basicInformation': '基本信息',
-    'page.service.steps.stepTitle.pluginConfig': '插件配置',
-    'page.service.steps.stepTitle.preview': '预览',
-}
+  'page.service.steps.stepTitle.basicInformation': '基本信息',
+  'page.service.steps.stepTitle.pluginConfig': '插件配置',
+  'page.service.steps.stepTitle.preview': '预览',
+};

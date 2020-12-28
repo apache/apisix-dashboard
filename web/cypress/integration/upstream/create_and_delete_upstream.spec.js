@@ -20,13 +20,13 @@ context('Create and Delete Upstream', () => {
   const name = `upstreamName${new Date().valueOf()}`;
   const sleepTime = 100; // the unit is milliseconds
   const domSelectors = {
-    notification: '.ant-notification-notice-message'
+    notification: '.ant-notification-notice-message',
   };
 
   beforeEach(() => {
-    // init login 
+    // init login
     cy.login();
-  })
+  });
 
   it('should create upstream with default type (roundrobin)', () => {
     // go to upstream create page
@@ -53,7 +53,7 @@ context('Create and Delete Upstream', () => {
   it('should delete the upstream', () => {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(sleepTime * 5)
+    cy.wait(sleepTime * 5);
     cy.contains(name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(domSelectors.notification).should('contain', 'Delete successfully');
@@ -79,7 +79,9 @@ context('Create and Delete Upstream', () => {
     cy.get('.ant-select-item-option-active:nth-child(1) > .ant-select-item-option-content').click();
     cy.get('#key').click();
     cy.wait(sleepTime);
-    cy.get('div:nth-child(8) .ant-select-item:nth-child(1) > .ant-select-item-option-content:nth-child(1)').click();
+    cy.get(
+      'div:nth-child(8) .ant-select-item:nth-child(1) > .ant-select-item-option-content:nth-child(1)',
+    ).click();
 
     // add first upstream node
     cy.get('#nodes_0_host').type('127.0.0.1');
@@ -107,4 +109,4 @@ context('Create and Delete Upstream', () => {
     cy.contains('button', 'Confirm').click();
     cy.get(domSelectors.notification).should('contain', 'Delete successfully');
   });
-})
+});

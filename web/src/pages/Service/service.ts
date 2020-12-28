@@ -47,7 +47,8 @@ export const update = (serviceId: string, data: ServiceModule.Entity) =>
     data,
   });
 
-export const remove = (serviceId: string) => request(`/services/${serviceId}`, { method: 'DELETE' });
+export const remove = (serviceId: string) =>
+  request(`/services/${serviceId}`, { method: 'DELETE' });
 
 export const fetchItem = (serviceId: number) =>
-  request(`/services/${serviceId}`).then((data) => (data));
+  request(`/services/${serviceId}`).then((data) => data);
