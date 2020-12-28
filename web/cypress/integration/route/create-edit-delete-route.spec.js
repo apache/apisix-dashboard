@@ -19,6 +19,7 @@
 context('Create and Delete Route', () => {
   const name = `routeName${new Date().valueOf()}`;
   const newName = `newName${new Date().valueOf()}`;
+  const sleepTime = 100;
 
   beforeEach(() => {
     // init login 
@@ -57,6 +58,7 @@ context('Create and Delete Route', () => {
 
     // go to step2
     cy.contains('Next').click();
+    cy.wait(sleepTime * 3);
     cy.get('#nodes_0_host').type('12.12.12.12')
 
     // go to step3
