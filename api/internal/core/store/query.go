@@ -16,7 +16,7 @@ package store
 
 import (
 	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/log"
+	"github.com/apisix/manager-api/internal/log"
 )
 
 type Query struct {
