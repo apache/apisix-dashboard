@@ -19,7 +19,7 @@
 context('Login Test', () => {
   beforeEach(() => {
     // set default language
-    localStorage.setItem('umi_locale', "en-US");
+    localStorage.setItem('umi_locale', 'en-US');
   });
 
   it('login failed with empty username and password', () => {
@@ -44,4 +44,4 @@ context('Login Test', () => {
     cy.contains('Login').click();
     cy.get('.ant-notification-notice-message').should('contain', 'Successfully');
   });
-})
+});

@@ -24,11 +24,11 @@ context('Logout Test', () => {
   it('logout', () => {
     cy.visit('/');
     cy.contains('.anticon', 'APISIX User', {
-      matchCase: false
+      matchCase: false,
     }).click({
-      force: true
+      force: true,
     });
     cy.get('[aria-label=logout]').click();
     cy.url().should('contains', '/user/login');
   });
-})
+});

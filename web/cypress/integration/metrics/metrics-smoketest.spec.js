@@ -18,13 +18,13 @@
 
 context('metrics page smoke test', () => {
   const domSelectors = {
-    pageContent: '.ant-pro-page-container'
+    pageContent: '.ant-pro-page-container',
   };
 
   beforeEach(() => {
-    // init login 
+    // init login
     cy.login();
-  })
+  });
 
   it('visit metrics page', () => {
     // go to metrics page
@@ -36,6 +36,6 @@ context('metrics page smoke test', () => {
       .children()
       .should('contain', 'Metrics')
       .and('contain', 'You have not configured Grafana')
-      .and('contain', 'Configure Now')
+      .and('contain', 'Configure Now');
   });
-})
+});

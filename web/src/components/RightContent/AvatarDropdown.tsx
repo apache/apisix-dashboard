@@ -24,7 +24,7 @@
 import React, { useCallback } from 'react';
 import { SettingOutlined, UserOutlined, SettingFilled, LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
-import { history, useModel } from 'umi';
+import { history, useModel, useIntl } from 'umi';
 
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
@@ -47,6 +47,7 @@ const settings = async () => {
 };
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
+  const { formatMessage } = useIntl();
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const onMenuClick = useCallback((event) => {
@@ -97,25 +98,25 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       {menu && (
         <Menu.Item key="center">
           <UserOutlined />
-          个人中心
+          {formatMessage({ id: 'menu.account.center' })}
         </Menu.Item>
       )}
       {menu && (
         <Menu.Item key="settings">
           <SettingOutlined />
-          个人设置
+          {formatMessage({ id: 'menu.setting' })}
         </Menu.Item>
       )}
       {menu && <Menu.Divider />}
 
       <Menu.Item key="settings">
         <SettingFilled />
-        修改设置
+        {formatMessage({ id: 'menu.setting' })}
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout">
         <LogoutOutlined />
-        退出
+        {formatMessage({ id: 'menu.account.logout' })}
       </Menu.Item>
     </Menu>
   );

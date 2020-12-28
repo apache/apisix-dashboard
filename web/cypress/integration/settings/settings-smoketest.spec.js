@@ -19,13 +19,13 @@
 context('settings page smoke test', () => {
   const domSelectors = {
     pageContent: '.ant-pro-page-container',
-    notificationMsg: '.ant-notification-notice-message'
+    notificationMsg: '.ant-notification-notice-message',
   };
 
   beforeEach(() => {
-    // init login 
+    // init login
     cy.login();
-  })
+  });
 
   it('should visit settings page', () => {
     // go to settings page
@@ -37,7 +37,7 @@ context('settings page smoke test', () => {
       .children()
       .should('contain', 'Setting')
       .and('contain', 'Grafana Address')
-      .and('contain', 'Grafana address should begin with HTTP or HTTPS')
+      .and('contain', 'Grafana address should begin with HTTP or HTTPS');
   });
 
   it('should set a invaild url', () => {
@@ -58,8 +58,6 @@ context('settings page smoke test', () => {
     cy.contains('Submit').click();
     cy.get(domSelectors.notificationMsg).should('contain', 'Update Configuration Successfully');
     cy.wait(1000);
-    cy.get(domSelectors.pageContent)
-      .children()
-      .should('contain', 'Metrics')
+    cy.get(domSelectors.pageContent).children().should('contain', 'Metrics');
   });
-})
+});

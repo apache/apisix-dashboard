@@ -18,6 +18,8 @@ export default {
   'component.tagSelect.expand': '展开',
   'component.tagSelect.collapse': '收起',
   'component.tagSelect.all': '全部',
+  'component.global.search': '查询',
+  'component.global.reset': '重置',
   'component.global.confirm': '确认',
   'component.global.delete': '删除',
   'component.global.cancel': '取消',
