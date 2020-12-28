@@ -53,7 +53,6 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const onMenuClick = useCallback((event) => {
     const { key } = event;
     if (key === 'settings') {
-      setInitialState({ ...initialState, currentUser: undefined });
       settings();
       return;
     }
