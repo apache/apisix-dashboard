@@ -45,9 +45,9 @@ export const transformStepData = ({
   }
 
   const labels = {};
-  transformLableValueToKeyValue(form1Data.labels).forEach(item => {
+  transformLableValueToKeyValue(form1Data.labels).forEach((item) => {
     labels[item.labelKey] = item.labelValue;
-  })
+  });
   const { service_id = '' } = form1Data;
 
   const data: Partial<RouteModule.Body> = {
@@ -70,7 +70,7 @@ export const transformStepData = ({
       return [key, operator, value];
     }),
     // @ts-ignore
-    methods: form1Data.methods.includes("ALL") ? [] : form1Data.methods
+    methods: form1Data.methods.includes('ALL') ? [] : form1Data.methods,
   };
 
   if (Object.keys(redirect).length === 0 || redirect.http_to_https) {
@@ -171,7 +171,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     upstream_id,
     service_id = '',
     priority = 0,
-    enable_websocket
+    enable_websocket,
   } = data;
   const form1Data: Partial<RouteModule.Form1Data> = {
     name,
@@ -182,10 +182,10 @@ export const transformRouteData = (data: RouteModule.Body) => {
     remote_addrs: remote_addrs || [''],
     labels: Object.keys(labels || []).map((item) => `${item}:${labels[item]}`),
     // @ts-ignore
-    methods: methods.length ? methods : ["ALL"],
+    methods: methods.length ? methods : ['ALL'],
     priority,
     enable_websocket,
-    service_id
+    service_id,
   };
 
   const redirect = data.plugins?.redirect || {};

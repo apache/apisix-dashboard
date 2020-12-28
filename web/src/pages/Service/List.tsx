@@ -31,7 +31,7 @@ const Page: React.FC = () => {
     {
       title: 'ID',
       dataIndex: 'id',
-      hideInSearch: true
+      hideInSearch: true,
     },
     {
       title: formatMessage({ id: 'component.global.name' }),
@@ -81,23 +81,26 @@ const Page: React.FC = () => {
     },
   ];
 
-  return (<PageHeaderWrapper
-    title={`${formatMessage({ id: 'menu.service' })} ${formatMessage({
-      id: 'component.global.list',
-    })}`}
-  >
-    <ProTable<ServiceModule.ResponseBody>
-      actionRef={ref}
-      rowKey="id"
-      columns={columns}
-      request={fetchList}
-      toolBarRender={() => [
-        <Button type="primary" onClick={() => history.push(`/service/create`)}>
-          <PlusOutlined />
-          {formatMessage({ id: 'component.global.create' })}
-        </Button>,
-      ]} />
-  </PageHeaderWrapper>)
-}
+  return (
+    <PageHeaderWrapper
+      title={`${formatMessage({ id: 'menu.service' })} ${formatMessage({
+        id: 'component.global.list',
+      })}`}
+    >
+      <ProTable<ServiceModule.ResponseBody>
+        actionRef={ref}
+        rowKey="id"
+        columns={columns}
+        request={fetchList}
+        toolBarRender={() => [
+          <Button type="primary" onClick={() => history.push(`/service/create`)}>
+            <PlusOutlined />
+            {formatMessage({ id: 'component.global.create' })}
+          </Button>,
+        ]}
+      />
+    </PageHeaderWrapper>
+  );
+};
 
 export default Page;

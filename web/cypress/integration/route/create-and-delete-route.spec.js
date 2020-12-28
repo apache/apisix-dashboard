@@ -20,9 +20,9 @@ context('Create and Delete Route', () => {
   const name = `routeName${new Date().valueOf()}`;
 
   beforeEach(() => {
-    // init login 
+    // init login
     cy.login();
-  })
+  });
 
   it('create route', () => {
     //  go to route create page
@@ -41,9 +41,13 @@ context('Create and Delete Route', () => {
     cy.get('#remote_addrs_0').type('12.12.12.12');
     cy.get('[data-cy=addRemoteAddr]').click();
     cy.get('#remote_addrs_1').type('10.10.10.10');
-    cy.contains('Advanced Routing Matching Conditions').parent().siblings().contains('Create').click();
+    cy.contains('Advanced Routing Matching Conditions')
+      .parent()
+      .siblings()
+      .contains('Create')
+      .click();
 
-    // create Advanced Routing Matching Conditions 
+    // create Advanced Routing Matching Conditions
     cy.get('#position').click();
     cy.contains('Cookie').click();
     cy.get('.ant-modal').within(() => {
@@ -56,7 +60,7 @@ context('Create and Delete Route', () => {
 
     // go to step2
     cy.contains('Next').click();
-    cy.get('#nodes_0_host').type('12.12.12.12')
+    cy.get('#nodes_0_host').type('12.12.12.12');
 
     // go to step3
     cy.contains('Next').click();
@@ -80,9 +84,9 @@ context('Create and Delete Route', () => {
   it('delete the route', () => {
     cy.visit('/routes/list');
     cy.get('[title=Name]').type(name);
-    cy.contains('查 询').click();
+    cy.contains('Search').click();
     cy.contains(name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');
-  })
-})
+  });
+});
