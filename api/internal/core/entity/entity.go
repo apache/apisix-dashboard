@@ -52,6 +52,12 @@ func (info *BaseInfo) Updating(storedInfo *BaseInfo) {
 	info.UpdateTime = time.Now().Unix()
 }
 
+func (info *BaseInfo) KeyCompat(key string) {
+	if info.ID == nil && key != "" {
+		info.ID = key
+	}
+}
+
 type BaseInfoSetter interface {
 	GetBaseInfo() *BaseInfo
 }
@@ -227,6 +233,12 @@ type Service struct {
 type Script struct {
 	ID     string      `json:"id"`
 	Script interface{} `json:"script,omitempty"`
+}
+
+// swagger:model GlobalPlugins
+type GlobalPlugins struct {
+	ID      interface{}            `json:"id"`
+	Plugins map[string]interface{} `json:"plugins,omitempty"`
 }
 
 type ServerInfo struct {

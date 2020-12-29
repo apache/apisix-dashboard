@@ -31,27 +31,27 @@ const Page: React.FC = () => {
 
   const columns: ProColumns<UpstreamModule.ResponseBody>[] = [
     {
-      title: formatMessage({ id: 'upstream.list.name' }),
+      title: formatMessage({ id: 'page.upstream.list.name' }),
       dataIndex: 'name',
     },
     {
-      title: formatMessage({ id: 'upstream.list.type' }),
+      title: formatMessage({ id: 'page.upstream.list.type' }),
       dataIndex: 'type',
       hideInSearch: true,
     },
     {
-      title: formatMessage({ id: 'upstream.list.description' }),
+      title: formatMessage({ id: 'page.upstream.list.description' }),
       dataIndex: 'desc',
       hideInSearch: true,
     },
     {
-      title: formatMessage({ id: 'upstream.list.edit.time' }),
+      title: formatMessage({ id: 'page.upstream.list.edit.time' }),
       dataIndex: 'update_time',
       hideInSearch: true,
       render: (text) => timestampToLocaleString(text as number),
     },
     {
-      title: formatMessage({ id: 'upstream.list.operation' }),
+      title: formatMessage({ id: 'page.upstream.list.operation' }),
       valueType: 'option',
       hideInSearch: true,
       render: (_, record) => (
@@ -61,16 +61,16 @@ const Page: React.FC = () => {
             style={{ marginRight: 10 }}
             onClick={() => history.push(`/upstream/${record.id}/edit`)}
           >
-            {formatMessage({ id: 'upstream.list.edit' })}
+            {formatMessage({ id: 'page.upstream.list.edit' })}
           </Button>
           <Popconfirm
-            title={formatMessage({ id: 'upstream.list.confirm.delete' })}
-            okText={formatMessage({ id: 'upstream.list.confirm' })}
-            cancelText={formatMessage({ id: 'upstream.list.cancel' })}
+            title={formatMessage({ id: 'page.upstream.list.confirm.delete' })}
+            okText={formatMessage({ id: 'page.upstream.list.confirm' })}
+            cancelText={formatMessage({ id: 'page.upstream.list.cancel' })}
             onConfirm={() => {
               remove(record.id!).then(() => {
                 notification.success({
-                  message: formatMessage({ id: 'upstream.list.delete.successfully' }),
+                  message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
                 });
                 /* eslint-disable no-unused-expressions */
                 ref.current?.reload();
@@ -78,7 +78,7 @@ const Page: React.FC = () => {
             }}
           >
             <Button type="primary" danger>
-              {formatMessage({ id: 'upstream.list.delete' })}
+              {formatMessage({ id: 'page.upstream.list.delete' })}
             </Button>
           </Popconfirm>
         </>
@@ -87,12 +87,16 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageContainer title={formatMessage({ id: 'upstream.list' })}>
+    <PageContainer title={formatMessage({ id: 'page.upstream.list' })}>
       <ProTable<UpstreamModule.ResponseBody>
         actionRef={ref}
         columns={columns}
         rowKey="id"
         request={fetchList}
+        search={{
+          searchText: formatMessage({ id: 'component.global.search' }),
+          resetText: formatMessage({ id: 'component.global.reset' }),
+        }}
         toolBarRender={() => [
           <Button type="primary" onClick={() => history.push(`/upstream/create`)}>
             <PlusOutlined />

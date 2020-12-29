@@ -112,6 +112,9 @@ const Page: React.FC<Props> = (props) => {
             if (action === 'advancedMatchingRulesChange') {
               setAdvancedMatchingRules(data);
             }
+            if (action === 'labelsChange') {
+              form1.setFieldsValue({ ...form1.getFieldsValue(), labels: data });
+            }
           }}
           isEdit={props.route.path.indexOf('edit') > 0}
         />

@@ -25,16 +25,15 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/shiningrush/droplet"
-	"github.com/spf13/cobra"
-
-	"github.com/apisix/manager-api/conf"
 	"github.com/apisix/manager-api/internal"
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
-	"github.com/apisix/manager-api/log"
+	"github.com/shiningrush/droplet"
+	"github.com/spf13/cobra"
 )
 
 var Version string
@@ -46,7 +45,6 @@ func printInfo() {
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Loglevel", conf.ErrorLogLevel)
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n\n", "Logfile", conf.ErrorLogPath)
 }
-
 
 // NewManagerAPICommand creates the manager-api command.
 func NewManagerAPICommand() *cobra.Command {

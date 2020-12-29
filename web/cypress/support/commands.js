@@ -22,20 +22,15 @@ Cypress.Commands.add('login', () => {
     test: 'http://localhost:9000',
   };
 
-  const {
-    SERVE_ENV = 'dev'
-  } = Cypress.env();
+  const { SERVE_ENV = 'dev' } = Cypress.env();
 
   cy.request('POST', `${serveUrlMap[SERVE_ENV]}/apisix/admin/user/login`, {
-      "username": "user",
-      "password": "user"
-    })
-    .then(res => {
-      expect(res.body.code).to.equal(0);
-      localStorage.setItem(
-        'token', res.body.data.token
-      );
-      // set default language
-      localStorage.setItem('umi_locale', "en-US");
-    })
-})
+    username: 'user',
+    password: 'user',
+  }).then((res) => {
+    expect(res.body.code).to.equal(0);
+    localStorage.setItem('token', res.body.data.token);
+    // set default language
+    localStorage.setItem('umi_locale', 'en-US');
+  });
+});

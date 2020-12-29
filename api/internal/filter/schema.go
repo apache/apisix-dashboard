@@ -32,16 +32,17 @@ import (
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils/consts"
-	"github.com/apisix/manager-api/log"
 )
 
 var resources = map[string]string{
-	"routes":    "route",
-	"upstreams": "upstream",
-	"services":  "service",
-	"consumers": "consumer",
-	"ssl":       "ssl",
+	"routes":       "route",
+	"upstreams":    "upstream",
+	"services":     "service",
+	"consumers":    "consumer",
+	"ssl":          "ssl",
+	"global_rules": "global_rule",
 }
 
 const (
