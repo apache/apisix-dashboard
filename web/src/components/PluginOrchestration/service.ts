@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { request } from 'umi';
+
 import { PluginOrchestrationModule } from './typing';
 
 export const fetchList = () => {

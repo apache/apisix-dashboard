@@ -89,9 +89,9 @@ const PluginPage: React.FC<Props> = ({
     let schema: any = {};
 
     if (schemaType === 'consumer' && plugin?.consumer_schema) {
-      schema = plugin?.consumer_schema
+      schema = plugin?.consumer_schema;
     } else {
-      schema = plugin?.schema
+      schema = plugin?.schema;
     }
 
     if (schema.oneOf) {
@@ -177,7 +177,6 @@ const PluginPage: React.FC<Props> = ({
                 <Card
                   key={item.name}
                   title={[
-
                     <span key={2}>{item.name}</span>,
                   ]}
                   style={{ height: 66 }}

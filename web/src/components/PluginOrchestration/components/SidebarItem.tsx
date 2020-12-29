@@ -16,7 +16,8 @@
  */
 import * as React from 'react';
 import { INode, REACT_FLOW_CHART } from '@mrblenny/react-flow-chart';
-import Button from 'antd/es/button';
+import { Button } from 'antd';
+
 import { SOuter } from '../DrawPluginStyle';
 
 export interface ISidebarItemProps {

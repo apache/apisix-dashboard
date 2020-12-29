@@ -48,11 +48,11 @@ type Props = {
 
 const PluginForm = withTheme(AntDTheme);
 
-const layout = {
+const LAYOUT = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
-const tailLayout = {
+const TAIL_LAYOUT = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
@@ -133,7 +133,7 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
       return (
         <SMessage>
           <Form
-            {...layout}
+            {...LAYOUT}
             name="basic"
             form={form}
             onFinish={(values) => {
@@ -151,7 +151,7 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
             >
               <Input />
             </Form.Item>
-            <Form.Item {...tailLayout}>
+            <Form.Item {...TAIL_LAYOUT}>
               <Button type="primary" htmlType="submit">
                 {formatMessage({ id: "page.siderBar.button.submit" })}
               </Button>
@@ -176,7 +176,7 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
               setSelectedType(PanelType.Default);
             }}
           >
-            {/* NOTE: 留空，用于隐藏 Submit 按钮 */}
+            {/* NOTE: Leave blank to hide the Submit button */}
             <Fragment />
 
             <Button type="primary" htmlType="submit">
