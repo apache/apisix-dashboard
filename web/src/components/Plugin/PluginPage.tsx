@@ -49,19 +49,19 @@ const PluginPage: React.FC<Props> = ({
   readonly = false,
   initialData = {},
   schemaType = '',
-  onChange = () => { },
+  onChange = () => {},
 }) => {
-  const [pluginList, setPlugin] = useState<PluginComponent.Meta[]>([]);
+  const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
   const [typeList, setTypeList] = useState<string[]>([]);
 
-  const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join("")
+  const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join('');
   useEffect(() => {
     fetchList().then((data) => {
-      setPlugin(data);
+      setPluginList(data);
 
       const categoryList: string[] = [];
-      data.forEach(item => {
+      data.forEach((item) => {
         if (!categoryList.includes(firstUpperCase(item.type))) {
           categoryList.push(firstUpperCase(item.type));
         }
@@ -85,13 +85,13 @@ const PluginPage: React.FC<Props> = ({
   };
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
-    const plugin = pluginList.find(item => item.name === pluginName);
+    const plugin = pluginList.find((item) => item.name === pluginName);
     let schema: any = {};
 
     if (schemaType === 'consumer' && plugin?.consumer_schema) {
-      schema = plugin?.consumer_schema;
-    } else {
-      schema = plugin?.schema;
+      schema = plugin.consumer_schema;
+    } else if (plugin?.schema) {
+      schema = plugin.schema;
     }
 
     if (schema.oneOf) {
@@ -115,9 +115,7 @@ const PluginPage: React.FC<Props> = ({
       let description = '';
       switch (err.keyword) {
         case 'enum':
-          description = `${err.dataPath} ${err.message}: ${err.params.allowedValues.join(
-            ', ',
-          )}`;
+          description = `${err.dataPath} ${err.message}: ${err.params.allowedValues.join(', ')}`;
           break;
         case 'minItems':
         case 'type':
@@ -155,65 +153,61 @@ const PluginPage: React.FC<Props> = ({
         <Sider theme="light">
           <Anchor offsetTop={150}>
             {typeList.map((type) => {
-              return (
-                <Anchor.Link
-                  href={`#plugin-category-${type}`}
-                  title={type}
-                  key={type}
-                />
-              );
+              return <Anchor.Link href={`#plugin-category-${type}`} title={type} key={type} />;
             })}
           </Anchor>
         </Sider>
         <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
-          {typeList.map(type => {
-            return <PanelSection
-              title={type}
-              key={type}
-              style={PanelSectionStyle}
-              id={`plugin-category-${type}`}
-            >
-              {pluginList.filter(item => item.type === type.toLowerCase()).map((item) => (
-                <Card
-                  key={item.name}
-                  title={[
-                    <span key={2}>{item.name}</span>,
-                  ]}
-                  style={{ height: 66 }}
-                  extra={[
-                    <Tooltip title="Setting" key={`plugin-card-${item.name}-extra-tooltip-2`}>
-                      <Button
-                        shape="circle"
-                        icon={<SettingFilled />}
-                        style={{ marginRight: 10, marginLeft: 10 }}
-                        size="middle"
-                        onClick={() => {
-                          setName(item.name);
-                        }}
-                      />
-                    </Tooltip>,
-                    <Switch
-                      defaultChecked={initialData[item.name] && !initialData[item.name].disable}
-                      disabled={readonly}
-                      onChange={(isChecked) => {
-                        if (isChecked) {
-                          validateData(item.name, {
-                            ...initialData[item.name],
-                            disable: false,
-                          });
-                        } else {
-                          onChange({
-                            ...initialData,
-                            [item.name]: { ...initialData[item.name], disable: true },
-                          });
-                        }
-                      }}
-                      key={Math.random().toString(36).substring(7)}
-                    />,
-                  ]}
-                />
-              ))}
-            </PanelSection>
+          {typeList.map((type) => {
+            return (
+              <PanelSection
+                title={type}
+                key={type}
+                style={PanelSectionStyle}
+                id={`plugin-category-${type}`}
+              >
+                {pluginList
+                  .filter((item) => item.type === type.toLowerCase())
+                  .map((item) => (
+                    <Card
+                      key={item.name}
+                      title={[<span key={2}>{item.name}</span>]}
+                      style={{ height: 66 }}
+                      extra={[
+                        <Tooltip title="Setting" key={`plugin-card-${item.name}-extra-tooltip-2`}>
+                          <Button
+                            shape="circle"
+                            icon={<SettingFilled />}
+                            style={{ marginRight: 10, marginLeft: 10 }}
+                            size="middle"
+                            onClick={() => {
+                              setName(item.name);
+                            }}
+                          />
+                        </Tooltip>,
+                        <Switch
+                          defaultChecked={initialData[item.name] && !initialData[item.name].disable}
+                          disabled={readonly}
+                          onChange={(isChecked) => {
+                            if (isChecked) {
+                              validateData(item.name, {
+                                ...initialData[item.name],
+                                disable: false,
+                              });
+                            } else {
+                              onChange({
+                                ...initialData,
+                                [item.name]: { ...initialData[item.name], disable: true },
+                              });
+                            }
+                          }}
+                          key={Math.random().toString(36).substring(7)}
+                        />,
+                      ]}
+                    />
+                  ))}
+              </PanelSection>
+            );
           })}
         </Content>
       </Layout>
