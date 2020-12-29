@@ -15,17 +15,19 @@
  * limitations under the License.
  */
 import React from 'react';
+import { useIntl } from 'umi';
 import { INodeInnerDefaultProps, IPortDefaultProps } from '@mrblenny/react-flow-chart';
 
 import { SOuter, SPortDefaultOuter } from './DrawPluginStyle';
 import { PanelType } from './index';
 
 export const NodeInnerCustom = ({ node }: INodeInnerDefaultProps) => {
+  const { formatMessage } = useIntl();
   const { customData } = node.properties;
   if (customData.type === PanelType.Condition) {
     return (
       <SOuter>
-        <p>判断条件：{customData.name || '(点击配置判断条件)'}</p>
+        <p>{formatMessage({ id: "page.panel.condition.name" })}：{customData.name || `(${formatMessage({ id: 'page.panel.condition.tips' })})`}</p>
       </SOuter>
     );
   }
@@ -33,7 +35,7 @@ export const NodeInnerCustom = ({ node }: INodeInnerDefaultProps) => {
   if (customData.type === PanelType.Plugin) {
     return (
       <SOuter>
-        <p>插件名称：{customData.name || '(点击配置插件)'}</p>
+        <p>{formatMessage({ id: "page.panel.plugin.name" })}: {customData.name || `(${formatMessage({ id: 'page.panel.plugin.tips' })})`}</p>
       </SOuter>
     );
   }

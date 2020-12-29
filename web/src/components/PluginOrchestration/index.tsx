@@ -20,11 +20,10 @@ import { FlowChart, IFlowChartCallbacks } from '@mrblenny/react-flow-chart';
 import * as actions from '@mrblenny/react-flow-chart/src/container/actions';
 import { Form, Input, Button, Divider, Card, Select } from 'antd';
 import { withTheme } from '@rjsf/core';
+import { useIntl } from 'umi'
 
 // @ts-ignore
 import { Theme as AntDTheme } from '@rjsf/antd';
-// import { JSONSchema7 } from 'json-schema';
-
 
 import { Page, SidebarItem } from './components';
 import { INIT_CHART, PLUGINS_PORTS, CONDITION_PORTS } from './constants';
@@ -65,7 +64,9 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
   const [pluginList, setPluginList] = useState<PluginOrchestrationModule.Meta[]>([]);
   const [pluginCategory, setPluginCategory] = useState('All');
   const [showList, setShowList] = useState<string[]>();
-  const [typeList, setTypeList] = useState<string[]>([])
+  const [typeList, setTypeList] = useState<string[]>([]);
+
+  const { formatMessage } = useIntl();
 
   const getCustomDataById = (id = chart.selected.id) => {
     if (!id || !chart.nodes[id].properties) {
@@ -110,7 +111,7 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
     return clonedObj;
   }, {}) as IFlowChartCallbacks;
 
-  const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join("")
+  const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join("");
   useEffect(() => {
     // eslint-disable-next-line no-shadow
     fetchList().then((data) => {
@@ -144,15 +145,15 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
             }}
           >
             <Form.Item
-              label="判断条件"
+              label={formatMessage({ id: 'page.siderBar.form.label.panelType.condition' })}
               name="condition"
-              rules={[{ required: true, message: '请输入判断条件!' }]}
+              rules={[{ required: true, message: formatMessage({ id: 'page.siderBar.form.rule.panelType.condition' }) }]}
             >
               <Input />
             </Form.Item>
             <Form.Item {...tailLayout}>
               <Button type="primary" htmlType="submit">
-                保存
+                {formatMessage({ id: "page.siderBar.button.submit" })}
               </Button>
             </Form.Item>
           </Form>
@@ -179,7 +180,7 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
             <Fragment />
 
             <Button type="primary" htmlType="submit">
-              保存
+              {formatMessage({ id: "page.siderBar.button.submit" })}
             </Button>
           </PluginForm>
         </SMessage>
@@ -188,10 +189,10 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
 
     return (
       <SSidebar>
-        <SMessage style={{ fontSize: '16px', fontWeight: 'bold' }}>拖动所需组件至面板</SMessage>
+        <SMessage style={{ fontSize: '16px', fontWeight: 'bold' }}>{formatMessage({ id: 'page.siderBar.tips' })}</SMessage>
         <Divider style={{ margin: '0px' }} />
         <SidebarItem
-          type="判断条件"
+          type={formatMessage({ id: 'page.siderBar.form.label.panelType.condition' })}
           ports={CONDITION_PORTS}
           properties={{
             customData: {
@@ -199,10 +200,10 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
             },
           }}
         />
-        <Divider orientation="left">插件</Divider>
+        <Divider orientation="left">{formatMessage({ id: 'page.siderBar.plugin' })}</Divider>
         <Select
           showSearch
-          placeholder="插件分类"
+          placeholder={formatMessage({ id: "page.siderBar.form.label.panelType.plugin" })}
           optionFilterProp="children"
           defaultValue={pluginCategory}
           onChange={(value) => {
