@@ -104,7 +104,7 @@ context('Create and Delete Route', () => {
   it('should delete the route', () => {
     cy.visit('/routes/list');
     cy.get('[title=Name]').type(newName);
-    cy.contains('Query').click();
+    cy.contains('Search').click();
     cy.contains(newName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');

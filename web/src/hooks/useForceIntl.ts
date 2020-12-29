@@ -35,7 +35,7 @@ const useForceIntl = () => {
 
     // NOTE: i18n in https://procomponents.ant.design/components/table/ is not working
     const i18nMapper = [
-      ['//span[text()="查 询"]', 'Query'],
+      ['//span[text()="查 询"]', 'Search'],
       ['//span[text()="重 置"]', 'Reset'],
     ];
 
