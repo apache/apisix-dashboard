@@ -44,7 +44,8 @@ const NEVER_EXIST_PLUGIN_FLAG = 'NEVER_EXIST_PLUGIN_FLAG';
 const PluginPage: React.FC<Props> = ({
   readonly = false,
   initialData = {},
-  onChange = () => {},
+  schemaType = 'route',
+  onChange = () => { },
 }) => {
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
@@ -102,21 +103,7 @@ const PluginPage: React.FC<Props> = ({
                   <div style={{ width: '100%', textAlign: 'center' }}><span key={2}>{item.name}</span></div>
                 ]}
                 style={{ height: 258, width: 200 }}
-              >
-                {/* {item.avatar && (
-                      <Avatar
-                        key={1}
-                        icon={item.avatar}
-                        size={150}
-                        shape='square'
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}
-                      />
-                    )} */}
-              </Card>
+              />
             ))}
           </PanelSection>
         );
@@ -127,6 +114,7 @@ const PluginPage: React.FC<Props> = ({
     <PluginDetail
       name={name}
       readonly={readonly}
+      schemaType={schemaType}
       initialData={initialData}
       onClose={() => {
         setName(NEVER_EXIST_PLUGIN_FLAG);
@@ -154,9 +142,9 @@ const PluginPage: React.FC<Props> = ({
         }
       `}</style>
       <Layout>
-      {name === NEVER_EXIST_PLUGIN_FLAG && <PluginList />}
-      {name !== NEVER_EXIST_PLUGIN_FLAG && <Plugin />}
-    </Layout>
+        {name === NEVER_EXIST_PLUGIN_FLAG && <PluginList />}
+        {name !== NEVER_EXIST_PLUGIN_FLAG && <Plugin />}
+      </Layout>
     </>
   );
 };

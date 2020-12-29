@@ -26,6 +26,7 @@ import { fetchSchema } from './service';
 type Props = {
   name: string;
   type?: 'global' | 'scoped',
+  schemaType: PluginComponent.Schema,
   initialData: object,
   readonly?: boolean;
   onClose?: () => void;
@@ -61,6 +62,7 @@ const injectDisableProperty = (schema: Record<string, any>) => {
 const PluginDetail: React.FC<Props> = ({
   name,
   type = 'scoped',
+  schemaType = 'route',
   readonly = false,
   initialData = {},
   onClose = () => { },
@@ -71,7 +73,7 @@ const PluginDetail: React.FC<Props> = ({
   const data = initialData[name];
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
-    return fetchSchema(pluginName, 'route').then((schema) => {
+    return fetchSchema(pluginName, schemaType).then((schema) => {
       return new Promise((resolve) => {
         if (schema.oneOf) {
           (schema.oneOf || []).forEach((item: any) => {
