@@ -72,6 +72,7 @@ declare namespace RouteModule {
     id?: number;
     status: number;
     name: string;
+    labels: Record<string, string>;
     desc: string;
     priority?: number;
     methods: HttpMethod[];
@@ -106,6 +107,7 @@ declare namespace RouteModule {
     script: Record<string, any>;
     url?: string;
     enable_websocket?: boolean;
+    service_id?: string;
   };
 
   // step1
@@ -117,13 +119,23 @@ declare namespace RouteModule {
     key: string;
   }
 
+  type ResponseLabelList = Record<string, string>[];
+
+  type LabelList = Record<string, string[]>;
+
+  type LabelTableProps = {
+    labelKey: string;
+    labelValue: string;
+    key: string;
+  };
+
   type Step1PassProps = {
     form: FormInstance;
     advancedMatchingRules: MatchingRule[];
     disabled?: boolean;
     isEdit?: boolean;
     onChange?(data: {
-      action: 'redirectOptionChange' | 'advancedMatchingRulesChange';
+      action: 'redirectOptionChange' | 'advancedMatchingRulesChange' | 'labelsChange';
       data: T;
     }): void;
   };
@@ -131,6 +143,7 @@ declare namespace RouteModule {
   type Form1Data = {
     name: string;
     desc: string;
+    labels: string[];
     priority: number;
     websocket: boolean;
     hosts: string[];
@@ -142,6 +155,7 @@ declare namespace RouteModule {
     ret_code?: number;
     status: number;
     enable_websocket?: boolean;
+    service_id: string;
   };
 
   type AdvancedMatchingRules = {
@@ -162,7 +176,7 @@ declare namespace RouteModule {
   };
 
   type Form2Data = {
-    type: 'roundrobin' | 'chash';
+    type: 'roundrobin' | 'chash' | 'ewma';
     hash_on?: string;
     key?: string;
     upstreamPath?: string;
@@ -213,6 +227,7 @@ declare namespace RouteModule {
     remote_addrs: string[];
     script: any;
     desc?: string;
+    labels: Record<string, string>;
     upstream: {
       checks: UpstreamModule.HealthCheck;
       create_time: number;
@@ -238,7 +253,7 @@ declare namespace RouteModule {
   // TODO： grpc and websocket
   type debugRequest = {
     url: string;
-    request_protocol: 'http' | 'grpc' | 'websocket';
+    request_protocol: 'http' | 'https' | 'grpc' | 'websocket';
     method: string;
     body_params?: any;
     header_params?: any;

@@ -22,9 +22,13 @@ import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 
 import { timestampToLocaleString } from '@/helpers';
+import useForceIntl from '@/hooks/useForceIntl';
+
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
+  useForceIntl();
+
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
 
@@ -93,6 +97,10 @@ const Page: React.FC = () => {
         columns={columns}
         rowKey="id"
         request={fetchList}
+        search={{
+          searchText: formatMessage({ id: 'component.global.search' }),
+          resetText: formatMessage({ id: 'component.global.reset' }),
+        }}
         toolBarRender={() => [
           <Button type="primary" onClick={() => history.push(`/consumer/create`)}>
             <PlusOutlined />

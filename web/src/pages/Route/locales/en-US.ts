@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 export default {
-  'page.route.button.returnList': 'Return Route List',
+  'page.route.button.returnList': 'Goto List',
   'page.route.button.send': 'Send',
   'page.route.onlineDebug': 'Online Debug',
 
@@ -31,6 +31,7 @@ export default {
   'page.route.regexMatch': 'Regex Match',
   'page.route.rule': 'Rule',
   'page.route.httpHeaderName': 'HTTP Request Header Name',
+  'page.route.service': 'Service',
 
   'page.route.input.placeholder.parameterNameHttpHeader': 'Request header name, for example: HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': 'Parameter name, for example: id',

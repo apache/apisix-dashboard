@@ -32,14 +32,14 @@ export const getMenuData = (): MenuDataItem[] => {
       icon: <IconFont name="icondashboard" />,
     },
     {
+      name: 'service',
+      path: '/service/list',
+      icon: <IconFont name="iconconsumer" />,
+    },
+    {
       name: 'routes',
       path: '/routes/list',
       icon: <IconFont name="iconroute" />,
-    },
-    {
-      name: 'ssl',
-      path: '/ssl/list',
-      icon: <IconFont name="iconssl" />,
     },
     {
       name: 'upstream',
@@ -50,6 +50,11 @@ export const getMenuData = (): MenuDataItem[] => {
       name: 'consumer',
       path: '/consumer/list',
       icon: <IconFont name="iconconsumer" />,
+    },
+    {
+      name: 'ssl',
+      path: '/ssl/list',
+      icon: <IconFont name="iconssl" />,
     },
     {
       name: 'setting',

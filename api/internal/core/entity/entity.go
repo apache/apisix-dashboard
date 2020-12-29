@@ -52,6 +52,12 @@ func (info *BaseInfo) Updating(storedInfo *BaseInfo) {
 	info.UpdateTime = time.Now().Unix()
 }
 
+func (info *BaseInfo) KeyCompat(key string) {
+	if info.ID == nil && key != "" {
+		info.ID = key
+	}
+}
+
 type BaseInfoSetter interface {
 	GetBaseInfo() *BaseInfo
 }
@@ -229,7 +235,6 @@ type Script struct {
 	Script interface{} `json:"script,omitempty"`
 }
 
-
 type SecurityPlugin struct {
 }
 
@@ -237,6 +242,12 @@ type RequestValidation struct {
 	Type       string      `json:"type,omitempty"`
 	Required   []string    `json:"required,omitempty"`
 	Properties interface{} `json:"properties,omitempty"`
+}
+
+// swagger:model GlobalPlugins
+type GlobalPlugins struct {
+	ID      interface{}            `json:"id"`
+	Plugins map[string]interface{} `json:"plugins,omitempty"`
 }
 
 type ServerInfo struct {

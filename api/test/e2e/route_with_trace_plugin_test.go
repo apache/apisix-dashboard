@@ -27,7 +27,7 @@ import (
 func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -35,10 +35,10 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -59,7 +59,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "tiger skywalking",
+			Desc:         "tiger skywalking",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -70,7 +70,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// sleep for process log
@@ -85,10 +85,10 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "update route to change sample ratio",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route to change sample ratio",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -109,7 +109,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "access the route",
+			Desc:         "access the route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -120,7 +120,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// sleep for process log
@@ -135,7 +135,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -143,7 +143,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route has been deleted",
+			Desc:         "make sure the route has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -154,6 +154,6 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
