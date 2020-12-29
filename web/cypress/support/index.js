@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 /* eslint-disable no-undef */
-import './commands'
+import './commands';
 
 Cypress.on('uncaught:exception', () => {
   // returning false here prevents Cypress from
   // failing the test
-  return false
-})
+  return false;
+});

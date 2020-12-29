@@ -111,7 +111,7 @@ const LabelsDrawer: React.FC<Props> = ({
   disabled,
   labelsDataSource,
   onClose,
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const transformLabel = transformLableValueToKeyValue(labelsDataSource);
 
@@ -141,7 +141,7 @@ const LabelsDrawer: React.FC<Props> = ({
             onClick={(e) => {
               e.persist();
               form.validateFields().then(({ labels }) => {
-                const data = labels.map((item: any) => `${item.labelKey}:${item.labelValue}`)
+                const data = labels.map((item: any) => `${item.labelKey}:${item.labelValue}`);
                 // check for duplicates
                 if (new Set(data).size !== data.length) {
                   notification.warning({
@@ -161,13 +161,13 @@ const LabelsDrawer: React.FC<Props> = ({
           >
             {formatMessage({ id: 'component.global.confirm' })}
           </Button>
-        </div >
+        </div>
       }
     >
       <Form form={form} layout="horizontal">
         {LabelList(disabled, labelList || {})}
       </Form>
-    </Drawer >
+    </Drawer>
   );
 };
 

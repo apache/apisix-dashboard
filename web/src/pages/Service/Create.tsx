@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react';
 import { useIntl, history } from 'umi';
 import { Card, Steps, Form, notification } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -24,7 +24,7 @@ import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/Plugin';
 import { DEFAULT_UPSTREAM } from '@/components/Upstream';
 import Preview from './components/Preview';
-import Step1 from "./components/Step1";
+import Step1 from './components/Step1';
 import { create, update, fetchItem } from './service';
 
 const { Step } = Steps;
@@ -40,13 +40,12 @@ const Page: React.FC = (props) => {
     formatMessage({ id: 'page.service.steps.stepTitle.basicInformation' }),
     formatMessage({ id: 'page.service.steps.stepTitle.pluginConfig' }),
     formatMessage({ id: 'component.global.steps.stepTitle.preview' }),
-  ]
+  ];
 
   const [stepHeader] = useState(STEP_HEADER);
   const [step, setStep] = useState(1);
 
   useEffect(() => {
-
     // init upstream default value
     upstreamForm.setFieldsValue(DEFAULT_UPSTREAM);
 
@@ -82,12 +81,13 @@ const Page: React.FC = (props) => {
     (serviceId ? update(serviceId, data) : create(data))
       .then(() => {
         notification.success({
-          message: `${serviceId
-            ? formatMessage({ id: 'component.global.edit' })
-            : formatMessage({ id: 'component.global.create' })
-            } ${formatMessage({ id: 'menu.service' })} ${formatMessage({
-              id: 'component.status.success',
-            })}`,
+          message: `${
+            serviceId
+              ? formatMessage({ id: 'component.global.edit' })
+              : formatMessage({ id: 'component.global.create' })
+          } ${formatMessage({ id: 'menu.service' })} ${formatMessage({
+            id: 'component.status.success',
+          })}`,
         });
         history.push('/service/list');
       })
@@ -101,43 +101,44 @@ const Page: React.FC = (props) => {
       form.validateFields().then(() => {
         upstreamForm.validateFields().then(() => {
           setStep(nextStep);
-        })
-      })
+        });
+      });
       return;
     }
     if (nextStep === 4) {
       onSubmit();
       return;
-    };
+    }
     setStep(nextStep);
-  }
+  };
 
-  return (<>
-    <PageHeaderWrapper
-      title={`${(props as any).match.params.rid
-        ? formatMessage({ id: 'component.global.edit' })
-        : formatMessage({ id: 'component.global.create' })
+  return (
+    <>
+      <PageHeaderWrapper
+        title={`${
+          (props as any).match.params.rid
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
         } ${formatMessage({ id: 'menu.service' })}`}
-    >
-      <Card bordered={false}>
-        <Steps current={step - 1} style={{ marginBottom: "25px" }}>
-          {stepHeader.map((item) => (
-            <Step title={item} key={item} />
-          ))}
-        </Steps>
-        {step === 1 && <Step1
-          form={form}
-          upstreamForm={upstreamForm}
-          upstreamRef={upstreamRef}
-        />}
-        {step === 2 && (
-          <PluginPage initialData={plugins} onChange={setPlugins} schemaType="route" />
-        )}
-        {step === 3 && <Preview upstreamForm={upstreamForm} form={form} plugins={plugins} />}
-      </Card>
-    </PageHeaderWrapper>
-    <ActionBar step={step} lastStep={3} onChange={onStepChange} withResultView />
-  </>)
-}
+      >
+        <Card bordered={false}>
+          <Steps current={step - 1} style={{ marginBottom: '25px' }}>
+            {stepHeader.map((item) => (
+              <Step title={item} key={item} />
+            ))}
+          </Steps>
+          {step === 1 && (
+            <Step1 form={form} upstreamForm={upstreamForm} upstreamRef={upstreamRef} />
+          )}
+          {step === 2 && (
+            <PluginPage initialData={plugins} onChange={setPlugins} schemaType="route" />
+          )}
+          {step === 3 && <Preview upstreamForm={upstreamForm} form={form} plugins={plugins} />}
+        </Card>
+      </PageHeaderWrapper>
+      <ActionBar step={step} lastStep={3} onChange={onStepChange} withResultView />
+    </>
+  );
+};
 
 export default Page;

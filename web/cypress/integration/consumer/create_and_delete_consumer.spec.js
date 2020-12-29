@@ -21,13 +21,13 @@ context('Create and Delete Consumer', () => {
   const sleepTime = 100;
   const domSelectors = {
     notification: '.ant-notification-notice-message',
-    pluginsCard: '.ant-card'
+    pluginsCard: '.ant-card',
   };
 
   beforeEach(() => {
-    // init login 
+    // init login
     cy.login();
-  })
+  });
 
   it('creates consumer with key-auth', () => {
     // go to consumer create page
@@ -45,14 +45,16 @@ context('Create and Delete Consumer', () => {
     // plugin config
     cy.contains(domSelectors.pluginsCard, 'key-auth').within(() => {
       cy.get('button').first().click();
-    })
+    });
     // edit codemirror
     cy.get('.CodeMirror')
       .first()
       .then((editor) => {
-        editor[0].CodeMirror.setValue(JSON.stringify({
-          "key": "test"
-        }));
+        editor[0].CodeMirror.setValue(
+          JSON.stringify({
+            key: 'test',
+          }),
+        );
         cy.contains('button', 'Submit').click();
       });
     cy.contains('button', 'Next').click();
@@ -64,7 +66,7 @@ context('Create and Delete Consumer', () => {
   it('delete the consumer', () => {
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.wait(sleepTime * 5)
+    cy.wait(sleepTime * 5);
     cy.contains(name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(domSelectors.notification).should('contain', 'Delete Consumer Successfully');
@@ -86,16 +88,18 @@ context('Create and Delete Consumer', () => {
     // plugin config
     cy.contains(domSelectors.pluginsCard, 'key-auth').within(() => {
       cy.get('button').first().click();
-    })
+    });
     // edit codeMirror
     cy.get('.CodeMirror')
       .first()
       .then((editor) => {
-        editor[0].CodeMirror.setValue(JSON.stringify({
-          "key_not_exst": "test"
-        }));
+        editor[0].CodeMirror.setValue(
+          JSON.stringify({
+            key_not_exst: 'test',
+          }),
+        );
         cy.contains('button', 'Submit').click();
       });
     cy.get(domSelectors.notification).should('contain', 'Invalid plugin data');
   });
-})
+});

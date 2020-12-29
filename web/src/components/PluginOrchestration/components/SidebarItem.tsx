@@ -14,28 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ActionBarEnUS } from '@/components/ActionBar';
+import * as React from 'react';
+import { INode, REACT_FLOW_CHART } from '@mrblenny/react-flow-chart';
+import { Button } from 'antd';
 
-import component from './en-US/component';
-import globalHeader from './en-US/globalHeader';
-import menu from './en-US/menu';
-import pwa from './en-US/pwa';
-import settingDrawer from './en-US/settingDrawer';
-import settings from './en-US/setting';
-import PluginOrchestration from '../components/PluginOrchestration/locales/en-US';
+import { SOuter } from '../DrawPluginStyle';
 
-export default {
-  'navBar.lang': 'Languages',
-  'layout.user.link.help': 'Help',
-  'layout.user.link.privacy': 'Privacy',
-  'layout.user.link.terms': 'Terms',
-  'app.preview.down.block': 'Download this page to your local project',
-  ...globalHeader,
-  ...menu,
-  ...settingDrawer,
-  ...settings,
-  ...pwa,
-  ...component,
-  ...ActionBarEnUS,
-  ...PluginOrchestration
+export interface ISidebarItemProps {
+  type: string;
+  ports: INode['ports'];
+  properties?: any;
+}
+
+export const SidebarItem: React.FC<ISidebarItemProps> = ({ type, ports, properties }) => {
+  return (
+    <SOuter
+      draggable
+      onDragStart={(event: any) => {
+        event.dataTransfer.setData(REACT_FLOW_CHART, JSON.stringify({ type, ports, properties }));
+      }}
+      style={{ padding: '5px' }}
+    >
+      <Button type="dashed">{type}</Button>
+    </SOuter>
+  );
 };

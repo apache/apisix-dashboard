@@ -14,28 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ActionBarEnUS } from '@/components/ActionBar';
+import { request } from 'umi';
 
-import component from './en-US/component';
-import globalHeader from './en-US/globalHeader';
-import menu from './en-US/menu';
-import pwa from './en-US/pwa';
-import settingDrawer from './en-US/settingDrawer';
-import settings from './en-US/setting';
-import PluginOrchestration from '../components/PluginOrchestration/locales/en-US';
+import { PluginOrchestrationModule } from './typing';
 
-export default {
-  'navBar.lang': 'Languages',
-  'layout.user.link.help': 'Help',
-  'layout.user.link.privacy': 'Privacy',
-  'layout.user.link.terms': 'Terms',
-  'app.preview.down.block': 'Download this page to your local project',
-  ...globalHeader,
-  ...menu,
-  ...settingDrawer,
-  ...settings,
-  ...pwa,
-  ...component,
-  ...ActionBarEnUS,
-  ...PluginOrchestration
+export const fetchList = () => {
+  return request<Res<PluginOrchestrationModule.Meta[]>>('/plugins?all=true').then(data => {
+    return data.data;
+  })
 };

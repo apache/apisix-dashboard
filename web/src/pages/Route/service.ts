@@ -21,7 +21,7 @@ import {
   transformStepData,
   transformRouteData,
   transformUpstreamNodes,
-  transformLabelList
+  transformLabelList,
 } from './transform';
 
 export const create = (data: RouteModule.RequestData) =>
@@ -37,7 +37,7 @@ export const update = (rid: number, data: RouteModule.RequestData) =>
   });
 
 export const fetchItem = (rid: number) =>
-  request(`/routes/${rid}`).then((data) => (transformRouteData(data.data)));
+  request(`/routes/${rid}`).then((data) => transformRouteData(data.data));
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
   const { labels } = res;
@@ -94,12 +94,14 @@ export const checkHostWithSSL = (hosts: string[]) =>
   });
 
 export const fetchLabelList = () =>
-  request('/labels/route').then(({ data }) => ((transformLabelList(data.rows)) as RouteModule.LabelList));
+  request('/labels/route').then(
+    ({ data }) => transformLabelList(data.rows) as RouteModule.LabelList,
+  );
 
 export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) =>
   request(`/routes/${rid}`, {
     method: 'PATCH',
-    data: { status }
+    data: { status },
   });
 
 export const debugRoute = (data: RouteModule.debugRequest) => {

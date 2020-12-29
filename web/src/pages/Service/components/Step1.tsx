@@ -42,30 +42,26 @@ const Step1: React.FC<ServiceModule.Step1PassProps> = ({
     fetchUpstreamList().then(({ data }) => setList(data));
   }, []);
 
-  return <>
-    <Form {...FORM_LAYOUT} form={form}>
-      <Form.Item
-        name="name"
-        label={formatMessage({ id: 'component.global.name' })}
-      >
-        <Input disabled={disabled} />
-      </Form.Item>
-      <Form.Item
-        name="desc"
-        label={formatMessage({ id: 'component.global.description' })}
-      >
-        <Input.TextArea disabled={disabled} />
-      </Form.Item>
-    </Form>
-    <UpstreamForm
-      ref={upstreamRef}
-      form={upstreamForm}
-      disabled={disabled}
-      list={list}
-      showSelector
-      key={1}
-    />
-  </>
-}
+  return (
+    <>
+      <Form {...FORM_LAYOUT} form={form}>
+        <Form.Item name="name" label={formatMessage({ id: 'component.global.name' })}>
+          <Input disabled={disabled} />
+        </Form.Item>
+        <Form.Item name="desc" label={formatMessage({ id: 'component.global.description' })}>
+          <Input.TextArea disabled={disabled} />
+        </Form.Item>
+      </Form>
+      <UpstreamForm
+        ref={upstreamRef}
+        form={upstreamForm}
+        disabled={disabled}
+        list={list}
+        showSelector
+        key={1}
+      />
+    </>
+  );
+};
 
 export default Step1;
