@@ -23,8 +23,10 @@ import { PlusOutlined } from '@ant-design/icons';
 
 import { fetchList, remove as removeSSL } from '@/pages/SSL/service';
 import { timestampToLocaleString } from '@/helpers';
+import useForceIntl from '@/hooks/useForceIntl';
 
 const Page: React.FC = () => {
+  useForceIntl();
   const tableRef = useRef<ActionType>();
   const { formatMessage } = useIntl();
 
