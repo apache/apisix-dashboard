@@ -57,7 +57,6 @@ export default {
   'menu.exception.trigger': 'Trigger',
   'menu.account': 'Account',
   'menu.account.center': 'Account Center',
-  'menu.account.settings': 'Account Settings',
   'menu.account.trigger': 'Trigger Error',
   'menu.account.logout': 'Logout',
   'menu.editor': 'Graphic Editor',
@@ -70,6 +69,7 @@ export default {
   'menu.upstream': 'Upstream',
   'menu.consumer': 'Consumer',
   'menu.plugin': 'Plugin',
+  'menu.service': 'Service',
   'menu.setting': 'Settings',
   'menu.serverinfo': 'Server Info',
 };

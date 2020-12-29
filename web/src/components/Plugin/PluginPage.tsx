@@ -18,8 +18,8 @@ import React, { useEffect, useState } from 'react';
 import { Anchor, Layout, Card, Button } from 'antd';
 import { PanelSection } from '@api7-dashboard/ui';
 
-import { getList } from './service';
 import PluginDetail from './PluginDetail';
+import { fetchList } from './service';
 
 type Props = {
   readonly?: boolean;
@@ -44,41 +44,51 @@ const NEVER_EXIST_PLUGIN_FLAG = 'NEVER_EXIST_PLUGIN_FLAG';
 const PluginPage: React.FC<Props> = ({
   readonly = false,
   initialData = {},
-  onChange = () => { },
+  onChange = () => {},
 }) => {
-  const [pluginList, setPlugin] = useState<PluginComponent.Meta[][]>([]);
+  const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
+  const [typeList, setTypeList] = useState<string[]>([]);
 
+  const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join('');
   useEffect(() => {
-    getList().then(setPlugin);
+    fetchList().then((data) => {
+      setPluginList(data);
+
+      const categoryList: string[] = [];
+      data.forEach((item) => {
+        if (!categoryList.includes(firstUpperCase(item.type))) {
+          categoryList.push(firstUpperCase(item.type));
+        }
+      });
+      setTypeList(categoryList.sort());
+    });
   }, []);
 
   const PluginList = () => (<>
     <Sider theme="light">
       <Anchor offsetTop={150}>
-        {pluginList.map((plugins) => {
-          const { category } = plugins[0];
+        {typeList.map((type) => {
           return (
             <Anchor.Link
-              href={`#plugin-category-${category}`}
-              title={category}
-              key={category}
+              href={`#plugin-category-${type}`}
+              title={type}
+              key={type}
             />
           );
         })}
       </Anchor>
     </Sider>
     <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
-      {pluginList.map((plugins) => {
-        const { category } = plugins[0];
+      {typeList.map((type) => {
         return (
           <PanelSection
-            title={category}
-            key={category}
+            title={type}
+            key={type}
             style={PanelSectionStyle}
-            id={`plugin-category-${category}`}
+            id={`plugin-category-${type}`}
           >
-            {plugins.map((item) => (
+            {pluginList.filter((item) => item.type === type.toLowerCase()).map((item) => (
               <Card
                 key={item.name}
                 actions={[
@@ -136,7 +146,6 @@ const PluginPage: React.FC<Props> = ({
       }}
     />
   </Content>
-
   return (
     <>
       <style>{`
@@ -145,10 +154,9 @@ const PluginPage: React.FC<Props> = ({
         }
       `}</style>
       <Layout>
-        {name === NEVER_EXIST_PLUGIN_FLAG && <PluginList />}
-        {name !== NEVER_EXIST_PLUGIN_FLAG && <Plugin />}
-      </Layout>
-
+      {name === NEVER_EXIST_PLUGIN_FLAG && <PluginList />}
+      {name !== NEVER_EXIST_PLUGIN_FLAG && <Plugin />}
+    </Layout>
     </>
   );
 };

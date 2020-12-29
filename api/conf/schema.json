@@ -72,50 +72,6 @@
 			"required": ["plugins"],
 			"type": "object"
 		},
-		"host_def": {
-			"pattern": "^\\*?[0-9a-zA-Z-.]+$",
-			"type": "string"
-		},
-		"id_schema": {
-			"anyOf": [{
-				"maxLength": 64,
-				"minLength": 1,
-				"pattern": "^[a-zA-Z0-9-_.]+$",
-				"type": "string"
-			}, {
-				"minimum": 1,
-				"type": "integer"
-			}]
-		},
-		"ip_def": [{
-			"format": "ipv4",
-			"title": "IPv4",
-			"type": "string"
-		}, {
-			"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
-			"title": "IPv4/CIDR",
-			"type": "string"
-		}, {
-			"format": "ipv6",
-			"title": "IPv6",
-			"type": "string"
-		}, {
-			"pattern": "^([a-fA-F0-9]{0,4}:){1,8}(:[a-fA-F0-9]{0,4}){0,8}([a-fA-F0-9]{0,4})?/[0-9]{1,3}$",
-			"title": "IPv6/CIDR",
-			"type": "string"
-		}],
-		"label_value_def": {
-			"description": "value of label",
-			"maxLength": 64,
-			"minLength": 1,
-			"pattern": "^[a-zA-Z0-9-_.]+$",
-			"type": "string"
-		},
-		"plugin_disable_schema": {
-			"disable": {
-				"type": "boolean"
-			}
-		},
 		"plugins": {
 			"items": {
 				"properties": {
@@ -290,7 +246,7 @@
 						"title": "IPv4",
 						"type": "string"
 					}, {
-						"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+						"pattern": "^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])/([12]?[0-9]|3[0-2])$",
 						"title": "IPv4/CIDR",
 						"type": "string"
 					}, {
@@ -312,7 +268,7 @@
 							"title": "IPv4",
 							"type": "string"
 						}, {
-							"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+							"pattern": "^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])/([12]?[0-9]|3[0-2])$",
 							"title": "IPv4/CIDR",
 							"type": "string"
 						}, {
@@ -677,7 +633,6 @@
 									"required": ["host", "port", "weight"],
 									"type": "object"
 								},
-								"minItems": 1,
 								"type": "array"
 							}]
 						},
@@ -1146,7 +1101,6 @@
 									"required": ["host", "port", "weight"],
 									"type": "object"
 								},
-								"minItems": 1,
 								"type": "array"
 							}]
 						},
@@ -1329,7 +1283,7 @@
 						"title": "IPv4",
 						"type": "string"
 					}, {
-						"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+						"pattern": "^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])/([12]?[0-9]|3[0-2])$",
 						"title": "IPv4/CIDR",
 						"type": "string"
 					}, {
@@ -1350,7 +1304,7 @@
 						"title": "IPv4",
 						"type": "string"
 					}, {
-						"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+						"pattern": "^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])/([12]?[0-9]|3[0-2])$",
 						"title": "IPv4/CIDR",
 						"type": "string"
 					}, {
@@ -1687,7 +1641,6 @@
 									"required": ["host", "port", "weight"],
 									"type": "object"
 								},
-								"minItems": 1,
 								"type": "array"
 							}]
 						},
@@ -2071,7 +2024,6 @@
 							"required": ["host", "port", "weight"],
 							"type": "object"
 						},
-						"minItems": 1,
 						"type": "array"
 					}]
 				},
@@ -2123,22 +2075,18 @@
 			},
 			"type": "object"
 		},
-		"upstream_hash_header_schema": {
-			"pattern": "^[a-zA-Z0-9-_]+$",
-			"type": "string"
-		},
-		"upstream_hash_vars_schema": {
-			"pattern": "^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$",
-			"type": "string"
-		},
-		"uri_def": {
-			"pattern": "^[^\\/]+:\\/\\/([\\da-zA-Z.-]+|\\[[\\da-fA-F:]+\\])(:\\d+)?",
-			"type": "string"
-		},
-		"version": 0.5
+		"upstream_hash_header_schema": {	
+			"pattern": "^[a-zA-Z0-9-_]+$",	
+			"type": "string"	
+		},	
+		"upstream_hash_vars_schema": {	
+			"pattern": "^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$",	
+			"type": "string"	
+		}		
 	},
 	"plugins": {
 		"api-breaker": {
+			"priority": 1005,
 			"schema": {
 				"properties": {
 					"break_response_code": {
@@ -2204,9 +2152,11 @@
 				},
 				"required": ["break_response_code"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"authz-keycloak": {
+			"priority": 2000,
 			"schema": {
 				"properties": {
 					"audience": {
@@ -2266,7 +2216,8 @@
 				},
 				"required": ["token_endpoint"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"basic-auth": {
 			"consumer_schema": {
@@ -2283,20 +2234,47 @@
 				"title": "work with consumer object",
 				"type": "object"
 			},
+			"priority": 2520,
 			"schema": {
 				"additionalProperties": false,
-				"properties": {},
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"title": "work with route or service object",
 				"type": "object"
-			}
+			},
+			"type": "auth",
+			"version": 0.1
 		},
 		"batch-requests": {
+			"metadata_schema": {
+				"additionalProperties": false,
+				"properties": {
+					"max_body_size": {
+						"default": 1048576,
+						"description": "max pipeline body size in bytes",
+						"exclusiveMinimum": 0,
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 4010,
 			"schema": {
 				"additionalProperties": false,
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"consumer-restriction": {
+			"priority": 2400,
 			"schema": {
 				"oneOf": [{
 					"properties": {
@@ -2343,10 +2321,17 @@
 					"required": ["whitelist"],
 					"title": "whitelist"
 				}],
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"cors": {
+			"priority": 4000,
 			"schema": {
 				"properties": {
 					"allow_credential": {
@@ -2381,9 +2366,11 @@
 					}
 				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"echo": {
+			"priority": 412,
 			"schema": {
 				"additionalProperties": false,
 				"anyOf": [{
@@ -2418,34 +2405,80 @@
 					}
 				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
-		"example-plugin": {
-			"schema": {
+		"error-log-logger": {
+			"metadata_schema": {
 				"properties": {
-					"i": {
+					"batch_max_size": {
+						"default": 1000,
 						"minimum": 0,
-						"type": "number"
+						"type": "integer"
 					},
-					"ip": {
+					"buffer_duration": {
+						"default": 60,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"host": {
+						"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+						"type": "string"
+					},
+					"inactive_timeout": {
+						"default": 3,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"keepalive": {
+						"default": 30,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"level": {
+						"default": "WARN",
+						"enum": ["ALERT", "CRIT", "DEBUG", "EMERG", "ERR", "ERROR", "INFO", "NOTICE", "STDERR", "WARN"],
+						"type": "string"
+					},
+					"max_retry_count": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"name": {
+						"default": "error-log-logger",
 						"type": "string"
 					},
 					"port": {
+						"minimum": 0,
 						"type": "integer"
 					},
-					"s": {
-						"type": "string"
+					"retry_delay": {
+						"default": 1,
+						"minimum": 0,
+						"type": "integer"
 					},
-					"t": {
-						"minItems": 1,
-						"type": "array"
+					"timeout": {
+						"default": 3,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"tls": {
+						"default": false,
+						"type": "boolean"
+					},
+					"tls_server_name": {
+						"type": "string"
 					}
 				},
-				"required": ["i"],
+				"required": ["host", "port"],
 				"type": "object"
-			}
+			},
+			"priority": 1091,
+			"version": 0.1
 		},
 		"fault-injection": {
+			"priority": 11000,
 			"schema": {
 				"minProperties": 1,
 				"properties": {
@@ -2485,9 +2518,11 @@
 					}
 				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"grpc-transcode": {
+			"priority": 506,
 			"schema": {
 				"additionalProperties": true,
 				"properties": {
@@ -2542,7 +2577,8 @@
 				},
 				"required": ["method", "proto_id", "service"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"hmac-auth": {
 			"consumer_schema": {
@@ -2590,14 +2626,36 @@
 				"title": "work with consumer object",
 				"type": "object"
 			},
+			"priority": 2530,
 			"schema": {
 				"additionalProperties": false,
-				"properties": {},
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"title": "work with route or service object",
 				"type": "object"
-			}
+			},
+			"type": "auth",
+			"version": 0.1
 		},
 		"http-logger": {
+			"metadata_schema": {
+				"additionalProperties": false,
+				"properties": {
+					"log_format": {
+						"default": {
+							"@timestamp": "$time_iso8601",
+							"client_ip": "$remote_addr",
+							"host": "$host"
+						},
+						"type": "object"
+					}
+				},
+				"type": "object"
+			},
+			"priority": 410,
 			"schema": {
 				"properties": {
 					"auth_header": {
@@ -2654,9 +2712,11 @@
 				},
 				"required": ["uri"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"ip-restriction": {
+			"priority": 3000,
 			"schema": {
 				"oneOf": [{
 					"additionalProperties": false,
@@ -2668,7 +2728,7 @@
 									"title": "IPv4",
 									"type": "string"
 								}, {
-									"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+									"pattern": "^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])/([12]?[0-9]|3[0-2])$",
 									"title": "IPv4/CIDR",
 									"type": "string"
 								}, {
@@ -2697,7 +2757,7 @@
 									"title": "IPv4",
 									"type": "string"
 								}, {
-									"pattern": "^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}$",
+									"pattern": "^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])/([12]?[0-9]|3[0-2])$",
 									"title": "IPv4/CIDR",
 									"type": "string"
 								}, {
@@ -2717,12 +2777,42 @@
 					"required": ["blacklist"],
 					"title": "blacklist"
 				}],
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"jwt-auth": {
 			"consumer_schema": {
-				"additionalProperties": false,
+				"dependencies": {
+					"algorithm": {
+						"oneOf": [{
+							"properties": {
+								"algorithm": {
+									"default": "HS256",
+									"enum": ["HS256", "HS512"]
+								}
+							}
+						}, {
+							"properties": {
+								"algorithm": {
+									"enum": ["RS256"]
+								},
+								"private_key": {
+									"type": "string"
+								},
+								"public_key": {
+									"type": "string"
+								}
+							},
+							"required": ["private_key", "public_key"]
+						}]
+					}
+				},
 				"properties": {
 					"algorithm": {
 						"default": "HS256",
@@ -2741,12 +2831,6 @@
 					"key": {
 						"type": "string"
 					},
-					"private_key": {
-						"type": "string"
-					},
-					"public_key": {
-						"type": "string"
-					},
 					"secret": {
 						"type": "string"
 					}
@@ -2754,13 +2838,21 @@
 				"required": ["key"],
 				"type": "object"
 			},
+			"priority": 2510,
 			"schema": {
 				"additionalProperties": false,
-				"properties": {},
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"type": "object"
-			}
+			},
+			"type": "auth",
+			"version": 0.1
 		},
 		"kafka-logger": {
+			"priority": 403,
 			"schema": {
 				"properties": {
 					"batch_max_size": {
@@ -2818,7 +2910,8 @@
 				},
 				"required": ["broker_list", "kafka_topic"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"key-auth": {
 			"consumer_schema": {
@@ -2831,13 +2924,21 @@
 				"required": ["key"],
 				"type": "object"
 			},
+			"priority": 2500,
 			"schema": {
 				"additionalProperties": false,
-				"properties": {},
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"type": "object"
-			}
+			},
+			"type": "auth",
+			"version": 0.1
 		},
 		"limit-conn": {
+			"priority": 1003,
 			"schema": {
 				"properties": {
 					"burst": {
@@ -2864,9 +2965,11 @@
 				},
 				"required": ["burst", "conn", "default_conn_delay", "key"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"limit-count": {
+			"priority": 1002,
 			"schema": {
 				"dependencies": {
 					"policy": {
@@ -2957,9 +3060,11 @@
 				},
 				"required": ["count", "time_window"],
 				"type": "object"
-			}
+			},
+			"version": 0.4
 		},
 		"limit-req": {
+			"priority": 1001,
 			"schema": {
 				"properties": {
 					"burst": {
@@ -2982,25 +3087,68 @@
 				},
 				"required": ["burst", "key", "rate"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"log-rotate": {
+			"priority": 100,
 			"schema": {
 				"additionalProperties": false,
-				"properties": {},
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
+		},
+		"mqtt-proxy": {
+			"priority": 1000,
+			"schema": {
+				"properties": {
+					"protocol_level": {
+						"type": "integer"
+					},
+					"protocol_name": {
+						"type": "string"
+					},
+					"upstream": {
+						"properties": {
+							"ip": {
+								"type": "string"
+							},
+							"port": {
+								"type": "number"
+							}
+						},
+						"type": "object"
+					}
+				},
+				"required": ["protocol_level", "protocol_name", "upstream"],
+				"type": "object"
+			},
+			"version": 0.1
 		},
 		"node-status": {
+			"priority": 1000,
 			"schema": {
 				"additionalProperties": false,
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"openid-connect": {
+			"priority": 2599,
 			"schema": {
 				"properties": {
 					"bearer_only": {
+						"default": false,
 						"type": "boolean"
 					},
 					"client_id": {
@@ -3016,27 +3164,35 @@
 						"type": "string"
 					},
 					"introspection_endpoint_auth_method": {
+						"default": "client_secret_basic",
 						"type": "string"
 					},
 					"logout_path": {
+						"default": "/logout",
 						"type": "string"
 					},
 					"public_key": {
 						"type": "string"
 					},
 					"realm": {
+						"default": "apisix",
 						"type": "string"
 					},
 					"redirect_uri": {
+						"description": "use ngx.var.request_uri if not configured",
 						"type": "string"
 					},
 					"scope": {
+						"default": "openid",
 						"type": "string"
 					},
 					"ssl_verify": {
+						"default": false,
 						"type": "boolean"
 					},
 					"timeout": {
+						"default": 3,
+						"description": "timeout in seconds",
 						"minimum": 1,
 						"type": "integer"
 					},
@@ -3046,15 +3202,24 @@
 				},
 				"required": ["client_id", "client_secret", "discovery"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"prometheus": {
+			"priority": 500,
 			"schema": {
 				"additionalProperties": false,
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"type": "object"
-			}
+			},
+			"version": 0.2
 		},
 		"proxy-cache": {
+			"priority": 1009,
 			"schema": {
 				"properties": {
 					"cache_bypass": {
@@ -3118,9 +3283,11 @@
 					}
 				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"proxy-mirror": {
+			"priority": 1010,
 			"schema": {
 				"minProperties": 1,
 				"properties": {
@@ -3131,9 +3298,11 @@
 				},
 				"required": ["host"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"proxy-rewrite": {
+			"priority": 1008,
 			"schema": {
 				"additionalProperties": false,
 				"minProperties": 1,
@@ -3172,9 +3341,11 @@
 					}
 				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"redirect": {
+			"priority": 900,
 			"schema": {
 				"oneOf": [{
 					"required": ["uri"]
@@ -3192,13 +3363,16 @@
 					},
 					"uri": {
 						"minLength": 2,
+						"pattern": "(\\\\\\$[0-9a-zA-Z_]+)|\\$\\{([0-9a-zA-Z_]+)\\}|\\$([0-9a-zA-Z_]+)|(\\$|[^$\\\\]+)",
 						"type": "string"
 					}
 				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"referer-restriction": {
+			"priority": 2990,
 			"schema": {
 				"additionalProperties": false,
 				"properties": {
@@ -3217,9 +3391,11 @@
 				},
 				"required": ["whitelist"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"request-id": {
+			"priority": 11010,
 			"schema": {
 				"properties": {
 					"header_name": {
@@ -3232,9 +3408,11 @@
 					}
 				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"request-validation": {
+			"priority": 2800,
 			"schema": {
 				"anyOf": [{
 					"properties": {
@@ -3253,10 +3431,18 @@
 					"required": ["header_schema"],
 					"title": "Header schema"
 				}],
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"type": "object"
-			}
+			},
+			"type": "validation",
+			"version": 0.1
 		},
 		"response-rewrite": {
+			"priority": 899,
 			"schema": {
 				"additionalProperties": false,
 				"minProperties": 1,
@@ -3283,15 +3469,24 @@
 					}
 				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"server-info": {
+			"priority": 990,
 			"schema": {
 				"additionalProperties": false,
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"serverless-post-function": {
+			"priority": -2000,
 			"schema": {
 				"properties": {
 					"functions": {
@@ -3302,15 +3497,18 @@
 						"type": "array"
 					},
 					"phase": {
+						"default": "access",
 						"enum": ["access", "balancer", "body_filter", "header_filter", "log", "rewrite"],
 						"type": "string"
 					}
 				},
 				"required": ["functions"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"serverless-pre-function": {
+			"priority": 10000,
 			"schema": {
 				"properties": {
 					"functions": {
@@ -3321,15 +3519,38 @@
 						"type": "array"
 					},
 					"phase": {
+						"default": "access",
 						"enum": ["access", "balancer", "body_filter", "header_filter", "log", "rewrite"],
 						"type": "string"
 					}
 				},
 				"required": ["functions"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"skywalking": {
+			"metadata_schema": {
+				"additionalProperties": false,
+				"properties": {
+					"endpoint_addr": {
+						"default": "http://127.0.0.1:12800",
+						"type": "string"
+					},
+					"service_instance_name": {
+						"default": "APISIX Instance Name",
+						"description": "User Service Instance Name",
+						"type": "string"
+					},
+					"service_name": {
+						"default": "APISIX",
+						"description": "service name for skywalking",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"priority": -1100,
 			"schema": {
 				"additionalProperties": false,
 				"properties": {
@@ -3341,9 +3562,11 @@
 					}
 				},
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"sls-logger": {
+			"priority": 406,
 			"schema": {
 				"properties": {
 					"access_key_id": {
@@ -3405,9 +3628,11 @@
 				},
 				"required": ["access_key_id", "access_key_secret", "host", "logstore", "port", "project"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"syslog": {
+			"priority": 401,
 			"schema": {
 				"properties": {
 					"batch_max_size": {
@@ -3475,9 +3700,11 @@
 				},
 				"required": ["host", "port"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"tcp-logger": {
+			"priority": 405,
 			"schema": {
 				"properties": {
 					"batch_max_size": {
@@ -3535,9 +3762,11 @@
 				},
 				"required": ["host", "port"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"udp-logger": {
+			"priority": 400,
 			"schema": {
 				"properties": {
 					"batch_max_size": {
@@ -3578,9 +3807,11 @@
 				},
 				"required": ["host", "port"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"uri-blocker": {
+			"priority": 2900,
 			"schema": {
 				"properties": {
 					"block_rules": {
@@ -3600,9 +3831,11 @@
 				},
 				"required": ["block_rules"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		},
 		"wolf-rbac": {
+			"priority": 2555,
 			"schema": {
 				"properties": {
 					"appid": {
@@ -3619,9 +3852,12 @@
 					}
 				},
 				"type": "object"
-			}
+			},
+			"type": "auth",
+			"version": 0.1
 		},
 		"zipkin": {
+			"priority": 11011,
 			"schema": {
 				"properties": {
 					"endpoint": {
@@ -3645,7 +3881,8 @@
 				},
 				"required": ["endpoint", "sample_ratio"],
 				"type": "object"
-			}
+			},
+			"version": 0.1
 		}
 	}
 }

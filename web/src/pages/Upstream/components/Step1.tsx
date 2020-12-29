@@ -40,19 +40,19 @@ const Step1: React.FC<Props> = ({ form, disabled, upstreamRef }) => {
     <>
       <Form labelCol={{ span: 3 }} form={form} initialValues={DEFAULT_UPSTREAM}>
         <Form.Item
-          label={formatMessage({ id: 'upstream.step.name' })}
+          label={formatMessage({ id: 'page.upstream.step.name' })}
           name="name"
           rules={[{ required: true }]}
-          extra={formatMessage({ id: 'upstream.step.name.should.unique' })}
+          extra={formatMessage({ id: 'page.upstream.step.name.should.unique' })}
         >
           <Input
-            placeholder={formatMessage({ id: 'upstream.step.input.upstream.name' })}
+            placeholder={formatMessage({ id: 'page.upstream.step.input.upstream.name' })}
             disabled={disabled}
           />
         </Form.Item>
-        <Form.Item label={formatMessage({ id: 'upstream.step.description' })} name="desc">
+        <Form.Item label={formatMessage({ id: 'page.upstream.step.description' })} name="desc">
           <Input.TextArea
-            placeholder={formatMessage({ id: 'upstream.step.input.description' })}
+            placeholder={formatMessage({ id: 'page.upstream.step.input.description' })}
             disabled={disabled}
           />
         </Form.Item>

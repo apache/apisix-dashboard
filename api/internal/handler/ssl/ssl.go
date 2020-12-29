@@ -33,7 +33,7 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
-	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
@@ -86,7 +86,11 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	}
 
 	//format respond
-	ssl := ret.(*entity.SSL)
+	ssl := &entity.SSL{}
+	err = utils.ObjectClone(ret, ssl)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
 	ssl.Key = ""
 	ssl.Keys = nil
 
@@ -160,9 +164,9 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 
 	//format respond
 	var list []interface{}
-	var ssl *entity.SSL
 	for _, item := range ret.Rows {
-		ssl = item.(*entity.SSL)
+		ssl := &entity.SSL{}
+		_ = utils.ObjectClone(item, ssl)
 		ssl.Key = ""
 		ssl.Keys = nil
 		list = append(list, ssl)
@@ -199,6 +203,12 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
+
+	// check if ID in body is equal ID in path
+	if err := handler.IDCompare(input.ID, input.SSL.ID); err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+	}
+
 	ssl, err := ParseCert(input.Cert, input.Key)
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err

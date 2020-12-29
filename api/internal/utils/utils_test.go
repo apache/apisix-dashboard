@@ -44,6 +44,24 @@ func TestSumIPs_with_nil(t *testing.T) {
 	assert.Equal(t, uint16(0), total)
 }
 
+func TestObjectClone(t *testing.T) {
+	type test struct {
+		Str string
+		Num int
+	}
+
+	origin := &test{Str: "a", Num: 1}
+	copy := &test{}
+	err := ObjectClone(origin, copy)
+	assert.Nil(t, err)
+	assert.Equal(t, origin, copy)
+
+	// change value of the copy, should not change value of origin
+	copy.Num = 2
+	assert.NotEqual(t, copy.Num, origin.Num)
+	assert.Equal(t, 1, origin.Num)
+}
+
 func TestGenLabelMap(t *testing.T) {
 	expectedErr := errors.New("malformed label")
 	mp, err := GenLabelMap("l1")
