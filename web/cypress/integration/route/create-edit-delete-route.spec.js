@@ -73,10 +73,10 @@ context('Create and Delete Route', () => {
     // go to step4
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.contains('SubmitSuccessfully');
+    cy.contains('Submit Successfully');
 
     // back to route list page
-    cy.contains('Return Route List').click();
+    cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
   });
 
@@ -91,8 +91,8 @@ context('Create and Delete Route', () => {
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.contains('SubmitSuccessfully');
-    cy.contains('Return Route List').click();
+    cy.contains('Submit Successfully');
+    cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
     cy.contains(newName).siblings().should('contain', 'new desc')
   });
@@ -100,7 +100,7 @@ context('Create and Delete Route', () => {
   it('should delete the route', () => {
     cy.visit('/routes/list');
     cy.get('[title=Name]').type(newName);
-    cy.contains('查 询').click();
+    cy.contains('Query').click();
     cy.contains(newName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');

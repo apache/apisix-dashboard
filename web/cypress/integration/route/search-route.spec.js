@@ -39,9 +39,9 @@ context('Create and Search Route', () => {
       cy.contains('Next').click();
       cy.contains('Next').click();
       cy.contains('Submit').click();
-      cy.contains('SubmitSuccessfully');
+      cy.contains('Submit Successfully');
       // back to route list page
-      cy.contains('Return Route List').click();
+      cy.contains('Goto List').click();
       cy.url().should('contains', 'routes/list');
     }
 
@@ -52,21 +52,21 @@ context('Create and Search Route', () => {
     cy.contains('Route').click();
     // full match
     cy.get('[title=Name]').type('test1');
-    cy.contains('查 询').click();
+    cy.contains('Query').click();
     cy.contains('test1').siblings().should('contain', 'desc1')
     cy.contains('test0').should('not.exist');
     cy.contains('test2').should('not.exist');
     // partial match
     cy.reload()
     cy.get('[title=Name]').type('test');
-    cy.contains('查 询').click();
+    cy.contains('Query').click();
     cy.contains('test0').siblings().should('contain', 'desc0')
     cy.contains('test1').siblings().should('contain', 'desc1')
     cy.contains('test2').siblings().should('contain', 'desc2')
     // no match
     cy.reload()
     cy.get('[title=Name]').type('testx');
-    cy.contains('查 询').click();
+    cy.contains('Query').click();
     cy.contains('test0').should('not.exist');
     cy.contains('test1').should('not.exist');
     cy.contains('test2').should('not.exist');
