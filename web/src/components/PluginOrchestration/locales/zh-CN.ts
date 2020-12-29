@@ -14,28 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ActionBarEnUS } from '@/components/ActionBar';
-
-import component from './en-US/component';
-import globalHeader from './en-US/globalHeader';
-import menu from './en-US/menu';
-import pwa from './en-US/pwa';
-import settingDrawer from './en-US/settingDrawer';
-import settings from './en-US/setting';
-import PluginOrchestration from '../components/PluginOrchestration/locales/en-US';
-
 export default {
-  'navBar.lang': 'Languages',
-  'layout.user.link.help': 'Help',
-  'layout.user.link.privacy': 'Privacy',
-  'layout.user.link.terms': 'Terms',
-  'app.preview.down.block': 'Download this page to your local project',
-  ...globalHeader,
-  ...menu,
-  ...settingDrawer,
-  ...settings,
-  ...pwa,
-  ...component,
-  ...ActionBarEnUS,
-  ...PluginOrchestration
+  'page.siderBar.form.label.panelType.condition': '判断条件',
+  'page.siderBar.form.rule.panelType.condition': '请输入判断条件',
+  'page.siderBar.form.label.panelType.plugin': '插件分类',
+
+  'page.siderBar.button.submit': '保存',
+  'page.siderBar.plugin': '插件',
+  'page.siderBar.tips': '拖动所需组件至面板',
+
+  'page.panel.condition.tips': '点击配置判断条件',
+  'page.panel.condition.name': '判断条件',
+  'page.panel.plugin.tips': '点击配置插件',
+  'page.panel.plugin.name': '插件名称',
 };
