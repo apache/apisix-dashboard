@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 export default {
-  'page.route.button.returnList': 'Return Route List',
+  'page.route.button.returnList': 'Goto List',
   'page.route.button.send': 'Send',
   'page.route.onlineDebug': 'Online Debug',
 
