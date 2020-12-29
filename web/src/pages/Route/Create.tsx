@@ -18,11 +18,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
-import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
 
 import ActionBar from '@/components/ActionBar';
 import { DEFAULT_UPSTREAM } from '@/components/Upstream';
 
+import { transformer as chartTransformer } from '@/components/PluginOrchestration';
 import { create, fetchItem, update, checkUniqueName, checkHostWithSSL } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
@@ -256,11 +256,10 @@ const Page: React.FC<Props> = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={`${
-          (props as any).match.params.rid
+        title={`${(props as any).match.params.rid
             ? formatMessage({ id: 'component.global.edit' })
             : formatMessage({ id: 'component.global.create' })
-        } ${formatMessage({ id: 'menu.routes' })}`}
+          } ${formatMessage({ id: 'menu.routes' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>

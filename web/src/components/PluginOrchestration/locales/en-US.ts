@@ -14,28 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ActionBarEnUS } from '@/components/ActionBar';
-
-import component from './en-US/component';
-import globalHeader from './en-US/globalHeader';
-import menu from './en-US/menu';
-import pwa from './en-US/pwa';
-import settingDrawer from './en-US/settingDrawer';
-import settings from './en-US/setting';
-import PluginOrchestration from '../components/PluginOrchestration/locales/en-US';
-
 export default {
-  'navBar.lang': 'Languages',
-  'layout.user.link.help': 'Help',
-  'layout.user.link.privacy': 'Privacy',
-  'layout.user.link.terms': 'Terms',
-  'app.preview.down.block': 'Download this page to your local project',
-  ...globalHeader,
-  ...menu,
-  ...settingDrawer,
-  ...settings,
-  ...pwa,
-  ...component,
-  ...ActionBarEnUS,
-  ...PluginOrchestration
+  'page.siderBar.form.label.panelType.condition': 'Condition',
+  'page.siderBar.form.rule.panelType.condition': 'Please enter the condition of judgment',
+  'page.siderBar.form.label.panelType.plugin': 'Plugin Category',
+
+  'page.siderBar.button.submit': 'Save',
+  'page.siderBar.plugin': 'Plugin',
+  'page.siderBar.tips': 'Drag the required components to the panel',
+
+  'page.panel.condition.tips': 'Click here to configure',
+  'page.panel.condition.name': 'Condition',
+  'page.panel.plugin.tips': 'Click to configure the plugin',
+  'page.panel.plugin.name': 'Plugin Name',
 };
