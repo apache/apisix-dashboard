@@ -123,7 +123,7 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
       });
       setTypeList(['All', ...categoryList.sort()]);
       setPluginList(data);
-      setShowList(data.map(item => item.name));
+      setShowList(data.map(item => item.name).sort());
     });
   }, []);
 
@@ -209,10 +209,10 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
           onChange={(value) => {
             setPluginCategory(value);
             if (value === 'All') {
-              setShowList(pluginList.map(item => item.name));
+              setShowList(pluginList.map(item => item.name).sort());
               return;
             }
-            setShowList(pluginList.filter(item => item.type === value.toLowerCase()).map(item => item.name));
+            setShowList(pluginList.filter(item => item.type === value.toLowerCase()).map(item => item.name).sort());
           }}
           filterOption={(input, option) =>
             option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
