@@ -22,6 +22,7 @@ import { history, useIntl } from 'umi';
 import { PlusOutlined, BugOutlined } from '@ant-design/icons';
 
 import { timestampToLocaleString } from '@/helpers';
+import useForceIntl from '@/hooks/useForceIntl';
 import { fetchList, remove, fetchLabelList, updateRouteStatus } from './service';
 import { DebugDrawView } from './components/DebugViews';
 
@@ -29,6 +30,8 @@ import { DebugDrawView } from './components/DebugViews';
 const { OptGroup, Option } = Select;
 
 const Page: React.FC = () => {
+  useForceIntl()
+
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
 
