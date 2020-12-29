@@ -114,6 +114,7 @@ const PluginPage: React.FC<Props> = ({
     <PluginDetail
       name={name}
       readonly={readonly}
+      visible={name !== NEVER_EXIST_PLUGIN_FLAG}
       schemaType={schemaType}
       initialData={initialData}
       onClose={() => {
@@ -142,8 +143,8 @@ const PluginPage: React.FC<Props> = ({
         }
       `}</style>
       <Layout>
-        {name === NEVER_EXIST_PLUGIN_FLAG && <PluginList />}
-        {name !== NEVER_EXIST_PLUGIN_FLAG && <Plugin />}
+        <PluginList />
+        <Plugin />
       </Layout>
     </>
   );

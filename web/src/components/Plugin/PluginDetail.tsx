@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 import React, { useRef } from 'react';
-import { Button, notification, PageHeader, Switch, Form, Select, Divider } from 'antd';
+import { Button, notification, PageHeader, Switch, Form, Select, Divider, Drawer } from 'antd';
+import { useIntl } from 'umi'
 import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
 import { LinkOutlined } from '@ant-design/icons';
@@ -29,6 +30,7 @@ type Props = {
   schemaType: PluginComponent.Schema,
   initialData: object,
   readonly?: boolean;
+  visible: boolean;
   onClose?: () => void;
   onChange?: (data: any) => void;
 };
@@ -37,7 +39,7 @@ const ajv = new Ajv();
 
 const FORM_ITEM_LAYOUT = {
   labelCol: {
-    span: 1,
+    span: 3,
   },
   wrapperCol: {
     span: 16,
@@ -63,11 +65,13 @@ const PluginDetail: React.FC<Props> = ({
   name,
   type = 'scoped',
   schemaType = 'route',
+  visible,
   readonly = false,
   initialData = {},
   onClose = () => { },
   onChange = () => { },
 }) => {
+  const { formatMessage } = useIntl();
   const [form] = Form.useForm();
   const ref = useRef<any>(null);
   const data = initialData[name];
@@ -137,12 +141,14 @@ const PluginDetail: React.FC<Props> = ({
 
   return (
     <>
-      <PageHeader
-        className="site-page-header"
-        onBack={onClose}
+      <Drawer
         title={`Plugin: ${name}`}
-        extra={[
-          <Button onClick={onClose}>取消</Button>,
+        visible={visible}
+        placement="right"
+        closable={false}
+        onClose={onClose}
+        width={600}
+        footer={<div style={{ display: 'flex', justifyContent: 'space-between' }}> <Button onClick={onClose}>{formatMessage({ id: 'component.global.cancel' })}</Button>
           <Button key="1" type="primary" onClick={() => {
             try {
               if (!form.getFieldsValue().disable) {
@@ -161,54 +167,53 @@ const PluginDetail: React.FC<Props> = ({
               });
             }
           }}>
-            确定
-          </Button>,
-        ]}
-      />
-      <style>
-        {`
+            {formatMessage({ id: 'component.global.confirm' })}
+          </Button></div>}
+      >
+        <style>
+          {`
         .site-page-header {
           border: 1px solid rgb(235, 237, 240);
           margin-top:10px;
         }
       `}
-      </style>
+        </style>
 
-      <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
-        <Form.Item label="Enable" name='disable'>
-          <Switch
-            defaultChecked={initialData[name] && !initialData[name].disable}
-            disabled={readonly}
-          />
-        </Form.Item>
-        {type === 'global' && <Form.Item label="Scope">
-          <Select>
-            <Select.Option value="global">global</Select.Option>
-            <Select.Option value="scoped">scoped</Select.Option>
-          </Select>
-        </Form.Item>}
-      </Form>
-      <Divider orientation="left">Data Editor</Divider>
-      <PageHeader
-        title=""
-        subTitle={`Current Plugin: ${name}`}
-        ghost={false}
-        extra={[
-          <Button
-            type="default"
-            icon={<LinkOutlined />}
-            onClick={() => {
-              window.open(`https://github.com/apache/apisix/blob/master/doc/plugins/${name}.md`);
-            }}
-            key={1}
-          >
-            Document
+        <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
+          <Form.Item label="Enable" name='disable'>
+            <Switch
+              defaultChecked={initialData[name] && !initialData[name].disable}
+              disabled={readonly}
+            />
+          </Form.Item>
+          {type === 'global' && <Form.Item label="Scope">
+            <Select>
+              <Select.Option value="global">global</Select.Option>
+              <Select.Option value="scoped">scoped</Select.Option>
+            </Select>
+          </Form.Item>}
+        </Form>
+        <Divider orientation="left">Data Editor</Divider>
+        <PageHeader
+          title=""
+          subTitle={`Current Plugin: ${name}`}
+          ghost={false}
+          extra={[
+            <Button
+              type="default"
+              icon={<LinkOutlined />}
+              onClick={() => {
+                window.open(`https://github.com/apache/apisix/blob/master/doc/plugins/${name}.md`);
+              }}
+              key={1}
+            >
+              Document
             </Button>,
-          <Button type="primary" onClick={formatCodes} key={2}>
-            Format
+            <Button type="primary" onClick={formatCodes} key={2}>
+              Format
             </Button>,
-        ]}
-      >
+          ]}
+        />
         <CodeMirror
           ref={ref}
           value={JSON.stringify(data, null, 2)}
@@ -221,7 +226,7 @@ const PluginDetail: React.FC<Props> = ({
             autofocus: true,
           }}
         />
-      </PageHeader>
+      </Drawer>
     </>
   );
 };
