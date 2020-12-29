@@ -17,7 +17,7 @@
 import { request } from 'umi';
 
 export const fetchInfoList = () => {
-  return request<Res<ResListData<ServerInfoModule.Node>>>(
-    '/server_info',
-  ).then(({ data }) => data.rows);
+  return request<Res<ResListData<ServerInfoModule.Node>>>('/server_info').then(
+    ({ data }) => data.rows,
+  );
 };

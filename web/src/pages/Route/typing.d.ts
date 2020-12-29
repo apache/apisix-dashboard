@@ -124,10 +124,10 @@ declare namespace RouteModule {
   type LabelList = Record<string, string[]>;
 
   type LabelTableProps = {
-    labelKey: string,
-    labelValue: string,
-    key: string
-  }
+    labelKey: string;
+    labelValue: string;
+    key: string;
+  };
 
   type Step1PassProps = {
     form: FormInstance;
@@ -253,7 +253,7 @@ declare namespace RouteModule {
   // TODO： grpc and websocket
   type debugRequest = {
     url: string;
-    request_protocol: 'http' | 'grpc' | 'websocket';
+    request_protocol: 'http' | 'https' | 'grpc' | 'websocket';
     method: string;
     body_params?: any;
     header_params?: any;

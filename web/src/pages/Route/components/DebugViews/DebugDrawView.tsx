@@ -39,7 +39,7 @@ const { TabPane } = Tabs;
 const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const { formatMessage } = useIntl();
   const [httpMethod, setHttpMethod] = useState(HTTP_METHOD_OPTION_LIST[0]);
-  const [requestProtocol, setRequestProtocol] = useState(PROTOCOL_SUPPORTED[0])
+  const [requestProtocol, setRequestProtocol] = useState(PROTOCOL_SUPPORTED[0]);
   const [showBodyTab, setShowBodyTab] = useState(false);
   const [queryForm] = Form.useForm();
   const [bodyForm] = Form.useForm();

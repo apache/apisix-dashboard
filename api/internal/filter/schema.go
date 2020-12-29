@@ -37,11 +37,12 @@ import (
 )
 
 var resources = map[string]string{
-	"routes":    "route",
-	"upstreams": "upstream",
-	"services":  "service",
-	"consumers": "consumer",
-	"ssl":       "ssl",
+	"routes":       "route",
+	"upstreams":    "upstream",
+	"services":     "service",
+	"consumers":    "consumer",
+	"ssl":          "ssl",
+	"global_rules": "global_rule",
 }
 
 const (

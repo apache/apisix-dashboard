@@ -22,9 +22,9 @@ context('Create and Delete Route', () => {
   const sleepTime = 100;
 
   beforeEach(() => {
-    // init login 
+    // init login
     cy.login();
-  })
+  });
 
   it('should create route', () => {
     //  go to route create page
@@ -43,7 +43,11 @@ context('Create and Delete Route', () => {
     cy.get('#remote_addrs_0').type('12.12.12.12');
     cy.get('[data-cy=addRemoteAddr]').click();
     cy.get('#remote_addrs_1').type('10.10.10.10');
-    cy.contains('Advanced Routing Matching Conditions').parent().siblings().contains('Create').click();
+    cy.contains('Advanced Routing Matching Conditions')
+      .parent()
+      .siblings()
+      .contains('Create')
+      .click();
 
     // create advanced routing matching conditions 
     cy.get('#position').click();
@@ -104,5 +108,5 @@ context('Create and Delete Route', () => {
     cy.contains(newName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');
-  })
-})
+  });
+});

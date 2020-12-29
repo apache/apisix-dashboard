@@ -26,7 +26,6 @@ import useForceIntl from '@/hooks/useForceIntl';
 import { fetchList, remove, fetchLabelList, updateRouteStatus } from './service';
 import { DebugDrawView } from './components/DebugViews';
 
-
 const { OptGroup, Option } = Select;
 
 const Page: React.FC = () => {
@@ -55,14 +54,16 @@ const Page: React.FC = () => {
 
   const handlePublishOffline = (rid: string, status: RouteModule.RouteStatus) => {
     updateRouteStatus(rid, status).then(() => {
-      const actionName = status ? formatMessage({ id: 'page.route.publish' }) : formatMessage({ id: 'page.route.offline' })
+      const actionName = status
+        ? formatMessage({ id: 'page.route.publish' })
+        : formatMessage({ id: 'page.route.offline' });
       handleTableActionSuccessResponse(
         `${actionName} ${formatMessage({
           id: 'menu.routes',
         })} ${formatMessage({ id: 'component.status.success' })}`,
       );
     });
-  }
+  };
 
   const [debugDrawVisible, setDebugDrawVisible] = useState(false);
 
@@ -133,14 +134,17 @@ const Page: React.FC = () => {
               return (
                 <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
                   {(labelList[key] || []).map((value: string) => (
-                    <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}> {value} </Option>
+                    <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
+                      {' '}
+                      {value}{' '}
+                    </Option>
                   ))}
                 </OptGroup>
               );
             })}
           </Select>
         );
-      }
+      },
     },
     {
       title: formatMessage({ id: 'page.route.status' }),
@@ -150,8 +154,8 @@ const Page: React.FC = () => {
           {record.status ? (
             <Tag color="green">{formatMessage({ id: 'page.route.published' })}</Tag>
           ) : (
-              <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
-            )}
+            <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
+          )}
         </>
       ),
     },
@@ -178,7 +182,7 @@ const Page: React.FC = () => {
             <Button
               type="primary"
               onClick={() => {
-                handlePublishOffline(record.id, RouteStatus.Publish)
+                handlePublishOffline(record.id, RouteStatus.Publish);
               }}
               style={{ marginRight: 10 }}
               disabled={Boolean(record.status)}
@@ -188,7 +192,7 @@ const Page: React.FC = () => {
             <Popconfirm
               title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
               onConfirm={() => {
-                handlePublishOffline(record.id, RouteStatus.Offline)
+                handlePublishOffline(record.id, RouteStatus.Offline);
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}
@@ -233,6 +237,10 @@ const Page: React.FC = () => {
         rowKey="id"
         columns={columns}
         request={fetchList}
+        search={{
+          searchText: formatMessage({ id: 'component.global.search' }),
+          resetText: formatMessage({ id: 'component.global.reset' }),
+        }}
         toolBarRender={() => [
           <Button type="primary" onClick={() => history.push(`/routes/create`)}>
             <PlusOutlined />

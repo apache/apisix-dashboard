@@ -23,7 +23,7 @@ import { PanelSection } from '@api7-dashboard/ui';
 import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 import LabelsDrawer from './LabelsDrawer';
 
-const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit, onChange, }) => {
+const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit, onChange }) => {
   const { formatMessage } = useIntl();
   const [visible, setVisible] = useState(false);
 

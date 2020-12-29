@@ -19,16 +19,17 @@
 context('ssl smoke test', () => {
   const domSelectors = {
     notificationDesc: '.ant-notification-notice-description',
-    notificationMsg: '.ant-notification-notice-message'
+    notificationMsg: '.ant-notification-notice-message',
   };
 
   beforeEach(() => {
-    // init login 
+    // init login
     cy.login();
     cy.fixture('certificate.json').as('certificate');
-  })
+  });
 
-  it('should set match certificate and key by input', function () { // use `function () if used `fixture` above` 
+  it('should set match certificate and key by input', function () {
+    // use `function () if used `fixture` above`
     // go to ssl create page
     cy.visit('/');
     cy.contains('SSL').click();
@@ -72,4 +73,4 @@ context('ssl smoke test', () => {
     cy.wait(100);
     cy.get(domSelectors.notificationDesc).should('contain', "key and cert don't match");
   });
-})
+});
