@@ -26,7 +26,7 @@ import { timestampToLocaleString } from '@/helpers';
 import useForceIntl from '@/hooks/useForceIntl';
 
 const Page: React.FC = () => {
-  useForceIntl()
+  useForceIntl();
   const tableRef = useRef<ActionType>();
   const { formatMessage } = useIntl();
 

@@ -19,7 +19,7 @@ import { getIntl } from 'umi';
 
 /**
  * Force convert some texts with i18n
-*/
+ */
 const useForceIntl = () => {
   useEffect(() => {
     const hasProTable = Boolean(document.querySelector('.ant-pro-table-search'));

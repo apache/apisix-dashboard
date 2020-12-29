@@ -29,7 +29,7 @@ import { DebugDrawView } from './components/DebugViews';
 const { OptGroup, Option } = Select;
 
 const Page: React.FC = () => {
-  useForceIntl()
+  useForceIntl();
 
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();

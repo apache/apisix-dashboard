@@ -18,9 +18,9 @@
 
 context('Create and Search Route', () => {
   beforeEach(() => {
-    // init login 
+    // init login
     cy.login();
-  })
+  });
 
   it('should create route test1, test2, test3', () => {
     //  go to route create page
@@ -34,7 +34,7 @@ context('Create and Search Route', () => {
       cy.contains('Next').click();
       cy.wait(400);
       cy.get('#nodes_0_host').type('12.12.12.12', {
-        timeout: 500
+        timeout: 500,
       });
       cy.contains('Next').click();
       cy.contains('Next').click();
@@ -44,7 +44,6 @@ context('Create and Search Route', () => {
       cy.contains('Goto List').click();
       cy.url().should('contains', 'routes/list');
     }
-
   });
 
   it('should search the route', () => {
@@ -53,33 +52,35 @@ context('Create and Search Route', () => {
     // full match
     cy.get('[title=Name]').type('test1');
     cy.contains('Search').click();
-    cy.contains('test1').siblings().should('contain', 'desc1')
+    cy.contains('test1').siblings().should('contain', 'desc1');
     cy.contains('test0').should('not.exist');
     cy.contains('test2').should('not.exist');
     // partial match
-    cy.reload()
+    cy.reload();
     cy.get('[title=Name]').type('test');
     cy.contains('Search').click();
-    cy.contains('test0').siblings().should('contain', 'desc0')
-    cy.contains('test1').siblings().should('contain', 'desc1')
-    cy.contains('test2').siblings().should('contain', 'desc2')
+    cy.contains('test0').siblings().should('contain', 'desc0');
+    cy.contains('test1').siblings().should('contain', 'desc1');
+    cy.contains('test2').siblings().should('contain', 'desc2');
     // no match
-    cy.reload()
+    cy.reload();
     cy.get('[title=Name]').type('testx');
     cy.contains('Search').click();
     cy.contains('test0').should('not.exist');
     cy.contains('test1').should('not.exist');
     cy.contains('test2').should('not.exist');
-
   });
 
   it('should delete the route', () => {
     cy.visit('/routes/list');
     for (let i = 0; i < 3; i++) {
-      cy.contains('test' + i).siblings().contains('Delete').click();
+      cy.contains('test' + i)
+        .siblings()
+        .contains('Delete')
+        .click();
       cy.contains('button', 'Confirm').click();
       cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');
       cy.wait(300);
     }
-  })
-})
+  });
+});

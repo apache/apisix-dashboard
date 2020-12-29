@@ -27,7 +27,7 @@ import useForceIntl from '@/hooks/useForceIntl';
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
-  useForceIntl()
+  useForceIntl();
 
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();

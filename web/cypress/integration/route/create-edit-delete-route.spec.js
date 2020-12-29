@@ -49,7 +49,7 @@ context('Create and Delete Route', () => {
       .contains('Create')
       .click();
 
-    // create advanced routing matching conditions 
+    // create advanced routing matching conditions
     cy.get('#position').click();
     cy.contains('Cookie').click();
     cy.get('.ant-modal').within(() => {
@@ -63,7 +63,7 @@ context('Create and Delete Route', () => {
     // go to step2
     cy.contains('Next').click();
     cy.wait(sleepTime * 3);
-    cy.get('#nodes_0_host').type('12.12.12.12')
+    cy.get('#nodes_0_host').type('12.12.12.12');
 
     // go to step3
     cy.contains('Next').click();
@@ -87,18 +87,23 @@ context('Create and Delete Route', () => {
   it('should edit the route', () => {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.contains('Edit').click();
-    // input new name and newdescription
+
+    cy.get('[title=Name]').type(name);
+    cy.contains('Search').click();
+    cy.wait(1000);
+    cy.contains(name).siblings().contains('Edit').click();
+
     cy.get('#name').clear().type(newName);
     cy.get('#desc').clear().type('new desc');
     cy.contains('Next').click();
+    cy.wait(1000);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.contains('Submit Successfully');
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
-    cy.contains(newName).siblings().should('contain', 'new desc')
+    cy.contains(newName).siblings().should('contain', 'new desc');
   });
 
   it('should delete the route', () => {
