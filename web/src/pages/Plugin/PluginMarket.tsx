@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
+import { Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import PluginPage from '@/components/Plugin';
@@ -35,22 +36,24 @@ const PluginMarket: React.FC = () => {
 
   return (
     <PageHeaderWrapper title="Config Plugin">
-      <PluginPage
-        initialData={initialData}
-        type="global"
-        schemaType="route"
-        onChange={(pluginsData) => {
-          createOrUpdate({
-            plugins: {
-              ...initialData,
-              ...pluginsData,
-            },
-          }).then(() => {
-            // TODO: 
-            window.location.reload();
-          })
-        }}
-      />
+      <Card bordered={false}>
+        <PluginPage
+          initialData={initialData}
+          type="global"
+          schemaType="route"
+          onChange={(pluginsData) => {
+            createOrUpdate({
+              plugins: {
+                ...initialData,
+                ...pluginsData,
+              },
+            }).then(() => {
+              // TODO: 
+              window.location.reload();
+            })
+          }}
+        />
+      </Card>
     </PageHeaderWrapper>
   );
 };
