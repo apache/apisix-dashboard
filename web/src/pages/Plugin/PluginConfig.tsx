@@ -30,26 +30,28 @@ const Page: React.FC = () => {
         plugins[name] = value;
       });
       setInitialData(plugins);
-    })
+    });
   }, []);
 
-  return <PageHeaderWrapper title="Config Plugin">
-    <PluginPage
-      initialData={initialData}
-      type="global"
-      schemaType="route"
-      onChange={(pluginsData) => {
-        createOrUpdate({
-          plugins: {
-            ...initialData,
-            ...pluginsData
-          }
-        }).then(() => {
-          window.location.reload();
-        })
-      }}
-    />
-  </PageHeaderWrapper>
-}
+  return (
+    <PageHeaderWrapper title="Config Plugin">
+      <PluginPage
+        initialData={initialData}
+        type="global"
+        schemaType="route"
+        onChange={(pluginsData) => {
+          createOrUpdate({
+            plugins: {
+              ...initialData,
+              ...pluginsData,
+            },
+          }).then(() => {
+            window.location.reload();
+          });
+        }}
+      />
+    </PageHeaderWrapper>
+  );
+};
 
 export default Page;

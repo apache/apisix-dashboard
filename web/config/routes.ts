@@ -82,7 +82,8 @@ const routes = [
   {
     path: '/plugin/config',
     component: './Plugin/PluginConfig',
-  }, {
+  },
+  {
     path: '/service/list',
     component: './Service/List',
   },

@@ -16,10 +16,9 @@
  */
 
 declare namespace PluginModule {
-
-    type TansformResponse = {
-        name: string,
-        id: string,
-        value: object
-    }[]
+  type TansformResponse = {
+    name: string;
+    id: string;
+    value: object;
+  }[];
 }

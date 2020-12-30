@@ -39,8 +39,8 @@ const Page: React.FC = () => {
         plugins[name] = value;
       });
       setInintData(plugins);
-    })
-  }, [visible])
+    });
+  }, [visible]);
 
   const columns: ProColumns<PluginModule.TansformResponse>[] = [
     {
@@ -51,7 +51,6 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
       render: (_, record) => (
-
         <>
           <Space align="baseline">
             <Button
@@ -69,10 +68,10 @@ const Page: React.FC = () => {
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
-                const plugins = omit(inintData, [`${record.name}`])
+                const plugins = omit(inintData, [`${record.name}`]);
                 createOrUpdate({ plugins }).then(() => {
                   ref.current?.reload();
-                })
+                });
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}
@@ -85,33 +84,36 @@ const Page: React.FC = () => {
         </>
       ),
     },
-  ]
+  ];
 
-  const PluginDrawer = () => <PluginDetail
-    name={name}
-    readonly={false}
-    visible={visible}
-    type='global'
-    schemaType="route"
-    initialData={inintData}
-    onClose={() => {
-      setVisible(false);
-    }}
-    onChange={({ formData, codemirrorData }) => {
-      createOrUpdate({
-        plugins: {
-          ...inintData,
-          [name]: { ...codemirrorData, ...formData }
-        }
-      })
-    }}
-  />
+  const PluginDrawer = () => (
+    <PluginDetail
+      name={name}
+      readonly={false}
+      visible={visible}
+      type="global"
+      schemaType="route"
+      initialData={inintData}
+      onClose={() => {
+        setVisible(false);
+      }}
+      onChange={({ formData, codemirrorData }) => {
+        createOrUpdate({
+          plugins: {
+            ...inintData,
+            [name]: { ...codemirrorData, ...formData },
+          },
+        });
+      }}
+    />
+  );
 
   return (
     <PageHeaderWrapper
       title={`${formatMessage({ id: 'menu.plugin' })} ${formatMessage({
         id: 'component.global.list',
-      })}`}>
+      })}`}
+    >
       <ProTable<PluginModule.TansformResponse>
         actionRef={ref}
         rowKey="id"
@@ -122,11 +124,12 @@ const Page: React.FC = () => {
           <Button type="primary" onClick={() => history.push('/plugin/config')}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
-          </Button>
+          </Button>,
         ]}
       />
       <PluginDrawer />
-    </PageHeaderWrapper>)
-}
+    </PageHeaderWrapper>
+  );
+};
 
 export default Page;

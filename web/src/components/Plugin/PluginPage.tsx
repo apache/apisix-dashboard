@@ -48,7 +48,7 @@ const PluginPage: React.FC<Props> = ({
   initialData = {},
   schemaType = 'route',
   type = 'scoped',
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
@@ -69,76 +69,94 @@ const PluginPage: React.FC<Props> = ({
     });
   }, []);
 
-  const PluginList = () => (<>
-    <Sider theme="light">
-      <Anchor offsetTop={150}>
+  const PluginList = () => (
+    <>
+      <Sider theme="light">
+        <Anchor offsetTop={150}>
+          {typeList.map((type) => {
+            return <Anchor.Link href={`#plugin-category-${type}`} title={type} key={type} />;
+          })}
+        </Anchor>
+      </Sider>
+      <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
         {typeList.map((type) => {
           return (
-            <Anchor.Link
-              href={`#plugin-category-${type}`}
+            <PanelSection
               title={type}
               key={type}
-            />
+              style={PanelSectionStyle}
+              id={`plugin-category-${type}`}
+            >
+              {orderBy(
+                pluginList.filter((item) => item.type === type.toLowerCase()),
+                'name',
+                'asc',
+              ).map((item) => (
+                <Card
+                  key={item.name}
+                  actions={[
+                    <Button
+                      type={
+                        initialData[item.name] && !initialData[item.name].disable
+                          ? 'primary'
+                          : 'default'
+                      }
+                      onClick={() => {
+                        setName(item.name);
+                      }}
+                    >
+                      Enable
+                    </Button>,
+                  ]}
+                  bodyStyle={{
+                    height: 151,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                  }}
+                  title={[
+                    <div style={{ width: '100%', textAlign: 'center' }}>
+                      <span key={2}>{item.name}</span>
+                    </div>,
+                  ]}
+                  style={{ height: 258, width: 200 }}
+                />
+              ))}
+            </PanelSection>
           );
         })}
-      </Anchor>
-    </Sider>
+      </Content>
+    </>
+  );
+
+  const Plugin = () => (
     <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
-      {typeList.map((type) => {
-        return (
-          <PanelSection
-            title={type}
-            key={type}
-            style={PanelSectionStyle}
-            id={`plugin-category-${type}`}
-          >
-            {orderBy((pluginList.filter((item) => item.type === type.toLowerCase())), 'name', 'asc').map((item) => (
-              <Card
-                key={item.name}
-                actions={[
-                  <Button type={(initialData[item.name] && !initialData[item.name].disable) ? 'primary' : 'default'} onClick={() => {
-                    setName(item.name);
-                  }}>Enable</Button>
-
-                ]}
-                bodyStyle={{ height: 151, display: 'flex', justifyContent: 'center', textAlign: 'center' }}
-                title={[
-                  <div style={{ width: '100%', textAlign: 'center' }}><span key={2}>{item.name}</span></div>
-                ]}
-                style={{ height: 258, width: 200 }}
-              />
-            ))}
-          </PanelSection>
-        );
-      })}
-    </Content></>)
-
-  const Plugin = () => (<Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
-    <PluginDetail
-      name={name}
-      readonly={readonly}
-      type={type}
-      visible={name !== NEVER_EXIST_PLUGIN_FLAG}
-      schemaType={schemaType}
-      initialData={initialData}
-      onClose={() => {
-        setName(NEVER_EXIST_PLUGIN_FLAG);
-      }}
-      onChange={(data) => {
-        if (!data.formData.disable) {
+      <PluginDetail
+        name={name}
+        readonly={readonly}
+        type={type}
+        visible={name !== NEVER_EXIST_PLUGIN_FLAG}
+        schemaType={schemaType}
+        initialData={initialData}
+        onClose={() => {
+          setName(NEVER_EXIST_PLUGIN_FLAG);
+        }}
+        onChange={(data) => {
+          if (!data.formData.disable) {
+            onChange({
+              ...initialData,
+              [name]: { disable: !data.formData.disable },
+            });
+            return;
+          }
           onChange({
             ...initialData,
-            [name]: { disable: !data.formData.disable },
+            [name]: { ...initialData[name], disable: !data.formData.disable },
           });
-          return;
-        }
-        onChange({
-          ...initialData,
-          [name]: { ...initialData[name], disable: !data.formData.disable },
-        });
-      }}
-    />
-  </Content>)
+        }}
+      />
+    </Content>
+  );
   return (
     <>
       <style>{`

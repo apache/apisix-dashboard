@@ -19,11 +19,12 @@ import { request } from 'umi';
 export const fetchList = () =>
   request(`/global_rules/1`).then(({ data }) => {
     const pluginData = data.plugins || {};
-    const listData = Object.entries(pluginData).map(([name, value]) => ({ id: name, name, value }))
+    const listData = Object.entries(pluginData).map(([name, value]) => ({ id: name, name, value }));
     return {
       data: listData,
-      total: listData.length
+      total: listData.length,
     };
   });
 
-export const createOrUpdate = (plugins: any) => request(`/global_rules/1`, { method: 'PUT', data: { id: '1', ...plugins } })
+export const createOrUpdate = (plugins: any) =>
+  request(`/global_rules/1`, { method: 'PUT', data: { id: '1', ...plugins } });

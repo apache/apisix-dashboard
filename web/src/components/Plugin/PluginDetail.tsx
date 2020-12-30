@@ -16,7 +16,7 @@
  */
 import React, { useEffect, useRef } from 'react';
 import { Button, notification, PageHeader, Switch, Form, Select, Divider, Drawer } from 'antd';
-import { useIntl } from 'umi'
+import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
 import { LinkOutlined } from '@ant-design/icons';
@@ -26,9 +26,9 @@ import { fetchSchema } from './service';
 
 type Props = {
   name: string;
-  type?: 'global' | 'scoped',
-  schemaType: PluginComponent.Schema,
-  initialData: object,
+  type?: 'global' | 'scoped';
+  schemaType: PluginComponent.Schema;
+  initialData: object;
   readonly?: boolean;
   visible: boolean;
   onClose?: () => void;
@@ -60,7 +60,6 @@ const injectDisableProperty = (schema: Record<string, any>) => {
   return schema;
 };
 
-
 const PluginDetail: React.FC<Props> = ({
   name,
   type = 'scoped',
@@ -68,8 +67,8 @@ const PluginDetail: React.FC<Props> = ({
   visible,
   readonly = false,
   initialData = {},
-  onClose = () => { },
-  onChange = () => { },
+  onClose = () => {},
+  onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
@@ -77,7 +76,7 @@ const PluginDetail: React.FC<Props> = ({
   const data = initialData[name];
 
   useEffect(() => {
-    form.setFieldsValue({ disable: initialData[name] && !initialData[name].disable })
+    form.setFieldsValue({ disable: initialData[name] && !initialData[name].disable });
   }, []);
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
@@ -94,7 +93,7 @@ const PluginDetail: React.FC<Props> = ({
         const validate = ajv.compile(schema);
 
         if (validate(value)) {
-          resolve(value)
+          resolve(value);
           return;
         }
 
@@ -123,7 +122,7 @@ const PluginDetail: React.FC<Props> = ({
             description,
           });
         }
-      })
+      });
     });
   };
 
@@ -152,27 +151,36 @@ const PluginDetail: React.FC<Props> = ({
         closable={false}
         onClose={onClose}
         width={600}
-        footer={<div style={{ display: 'flex', justifyContent: 'space-between' }}> <Button onClick={onClose}>{formatMessage({ id: 'component.global.cancel' })}</Button>
-          <Button key="1" type="primary" onClick={() => {
-            try {
-              if (!form.getFieldsValue().disable) {
-                onChange({ formData: form.getFieldsValue(), codemirrorData: {} });
-                onClose();
-                return;
-              }
-              const editorData = JSON.parse(ref.current?.editor.getValue());
-              validateData(name, editorData).then(value => {
-                onChange({ formData: form.getFieldsValue(), codemirrorData: value });
-                onClose();
-              });
-            } catch (error) {
-              notification.error({
-                message: 'Invalid JSON data',
-              });
-            }
-          }}>
-            {formatMessage({ id: 'component.global.confirm' })}
-          </Button></div>}
+        footer={
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            {' '}
+            <Button onClick={onClose}>{formatMessage({ id: 'component.global.cancel' })}</Button>
+            <Button
+              key="1"
+              type="primary"
+              onClick={() => {
+                try {
+                  if (!form.getFieldsValue().disable) {
+                    onChange({ formData: form.getFieldsValue(), codemirrorData: {} });
+                    onClose();
+                    return;
+                  }
+                  const editorData = JSON.parse(ref.current?.editor.getValue());
+                  validateData(name, editorData).then((value) => {
+                    onChange({ formData: form.getFieldsValue(), codemirrorData: value });
+                    onClose();
+                  });
+                } catch (error) {
+                  notification.error({
+                    message: 'Invalid JSON data',
+                  });
+                }
+              }}
+            >
+              {formatMessage({ id: 'component.global.confirm' })}
+            </Button>
+          </div>
+        }
       >
         <style>
           {`
@@ -184,19 +192,19 @@ const PluginDetail: React.FC<Props> = ({
         </style>
 
         <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
-          <Form.Item label="Enable" name='disable'>
+          <Form.Item label="Enable" name="disable">
             <Switch
               defaultChecked={initialData[name] && !initialData[name].disable}
               disabled={readonly}
             />
           </Form.Item>
-          {type === 'global' && <Form.Item label="Scope" name='scope'>
-            <Select disabled defaultValue="Global">
-              <Select.Option value="Global">
-                Global
-              </Select.Option>
-            </Select>
-          </Form.Item>}
+          {type === 'global' && (
+            <Form.Item label="Scope" name="scope">
+              <Select disabled defaultValue="Global">
+                <Select.Option value="Global">Global</Select.Option>
+              </Select>
+            </Form.Item>
+          )}
         </Form>
         <Divider orientation="left">Data Editor</Divider>
         <PageHeader
