@@ -22,4 +22,4 @@ declare namespace PluginModule {
         id: string,
         value: object
     }[]
-} 
+}

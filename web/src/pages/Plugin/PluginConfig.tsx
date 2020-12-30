@@ -51,4 +51,4 @@ const Page: React.FC = () => {
   </PageHeaderWrapper>
 }
 
-export default Page
+export default Page;
