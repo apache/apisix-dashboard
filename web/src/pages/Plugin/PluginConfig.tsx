@@ -36,6 +36,7 @@ const Page: React.FC = () => {
   return <PageHeaderWrapper title="Config Plugin">
     <PluginPage
       initialData={initialData}
+      type="global"
       schemaType="route"
       onChange={(pluginsData) => {
         createOrUpdate({

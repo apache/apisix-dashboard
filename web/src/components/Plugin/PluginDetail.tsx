@@ -190,10 +190,11 @@ const PluginDetail: React.FC<Props> = ({
               disabled={readonly}
             />
           </Form.Item>
-          {type === 'global' && <Form.Item label="Scope">
-            <Select>
-              <Select.Option value="global">global</Select.Option>
-              <Select.Option value="scoped">scoped</Select.Option>
+          {type === 'global' && <Form.Item label="Scope" name='scope'>
+            <Select disabled defaultValue="Global">
+              <Select.Option value="Global">
+                Global
+              </Select.Option>
             </Select>
           </Form.Item>}
         </Form>

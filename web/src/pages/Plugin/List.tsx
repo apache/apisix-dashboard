@@ -91,6 +91,7 @@ const Page: React.FC = () => {
     name={name}
     readonly={false}
     visible={visible}
+    type='global'
     schemaType="route"
     initialData={inintData}
     onClose={() => {

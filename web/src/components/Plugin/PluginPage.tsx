@@ -24,6 +24,7 @@ import { fetchList } from './service';
 
 type Props = {
   readonly?: boolean;
+  type?: 'global' | 'scoped';
   initialData?: PluginComponent.Data;
   schemaType?: PluginComponent.Schema;
   onChange?: (data: PluginComponent.Data) => void;
@@ -46,6 +47,7 @@ const PluginPage: React.FC<Props> = ({
   readonly = false,
   initialData = {},
   schemaType = 'route',
+  type = 'scoped',
   onChange = () => { },
 }) => {
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
@@ -111,10 +113,11 @@ const PluginPage: React.FC<Props> = ({
       })}
     </Content></>)
 
-  const Plugin = () => <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
+  const Plugin = () => (<Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
     <PluginDetail
       name={name}
       readonly={readonly}
+      type={type}
       visible={name !== NEVER_EXIST_PLUGIN_FLAG}
       schemaType={schemaType}
       initialData={initialData}
@@ -135,7 +138,7 @@ const PluginPage: React.FC<Props> = ({
         });
       }}
     />
-  </Content>
+  </Content>)
   return (
     <>
       <style>{`
