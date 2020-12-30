@@ -109,9 +109,9 @@ func ObjectClone(origin, copy interface{}) error {
 	return err
 }
 
-func GenLabelMap(label string) (map[string]string, error) {
+func GenLabelMap(label string) (map[string]struct{}, error) {
 	var err = errors.New("malformed label")
-	mp := make(map[string]string)
+	mp := make(map[string]struct{})
 
 	if label == "" {
 		return mp, nil
@@ -125,13 +125,15 @@ func GenLabelMap(label string) (map[string]string, error) {
 				return nil, err
 			}
 
-			mp[kv[0]] = kv[1]
+			// Because the labels may contain the same key, like this: label=version:v1,version:v2
+			// we need to combine them as a map's key
+			mp[l] = struct{}{}
 		} else if len(kv) == 1 {
 			if kv[0] == "" {
 				return nil, err
 			}
 
-			mp[kv[0]] = ""
+			mp[kv[0]] = struct{}{}
 		} else {
 			return nil, err
 		}
@@ -140,14 +142,19 @@ func GenLabelMap(label string) (map[string]string, error) {
 	return mp, nil
 }
 
-func LabelContains(labels, reqLabels map[string]string) bool {
+func LabelContains(labels map[string]string, reqLabels map[string]struct{}) bool {
 	if len(reqLabels) == 0 {
 		return true
 	}
 
 	for k, v := range labels {
-		l, exist := reqLabels[k]
-		if exist && ((l == "") || v == l) {
+		// first check the key
+		if _, exist := reqLabels[k]; exist {
+			return true
+		}
+
+		// second check the key:value
+		if _, exist := reqLabels[k+":"+v]; exist {
 			return true
 		}
 	}
