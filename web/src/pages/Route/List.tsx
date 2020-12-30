@@ -188,6 +188,9 @@ const Page: React.FC = () => {
                 onConfirm={() => {
                   handlePublishOffline(record.id, RouteStatus.Offline);
                 }}
+                okButtonProps={{
+                  danger: true
+                }}
                 okText={formatMessage({ id: 'component.global.confirm' })}
                 cancelText={formatMessage({ id: 'component.global.cancel' })}
               >
