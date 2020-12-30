@@ -20,6 +20,7 @@ export ENV=local
 pwd=`pwd`
 
 VERSION=$(cat ./api/VERSION)
+GITHASH=$(git log --pretty=format:"%h" -1)
 
 rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua
 
@@ -31,7 +32,7 @@ if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
 fi
 
 # build
-cd ./api && go build -o ../output/manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version=${VERSION}" ./cmd/manager && cd ..
+cd ./api && go build -o ../output/manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version=${VERSION} -X github.com/apisix/manager-api/cmd.GitHash=${GITHASH}" ./cmd/manager && cd ..
 
 cp ./api/conf/schema.json ./output/conf/schema.json
 cp ./api/conf/conf.yaml ./output/conf/conf.yaml
