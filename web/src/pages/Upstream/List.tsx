@@ -21,12 +21,12 @@ import { Popconfirm, Button, notification } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 import { timestampToLocaleString } from '@/helpers';
-import useForceIntl from '@/hooks/useForceIntl';
+// import useForceIntl from '@/hooks/useForceIntl';
 
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
-  useForceIntl();
+  // useForceIntl();
 
   const ref = useRef<ActionType>();
 
@@ -97,8 +97,8 @@ const Page: React.FC = () => {
         rowKey="id"
         request={fetchList}
         search={{
-          searchText: formatMessage({ id: 'component.global.search' }),
-          resetText: formatMessage({ id: 'component.global.reset' }),
+          searchText: `${formatMessage({ id: 'component.global.search' })}`,
+          resetText: `${formatMessage({ id: 'component.global.reset' })}`,
         }}
         toolBarRender={() => [
           <Button type="primary" onClick={() => history.push(`/upstream/create`)}>

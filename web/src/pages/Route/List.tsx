@@ -22,14 +22,14 @@ import { history, useIntl } from 'umi';
 import { PlusOutlined, BugOutlined } from '@ant-design/icons';
 
 import { timestampToLocaleString } from '@/helpers';
-import useForceIntl from '@/hooks/useForceIntl';
+// import useForceIntl from '@/hooks/useForceIntl';
 import { fetchList, remove, fetchLabelList, updateRouteStatus } from './service';
 import { DebugDrawView } from './components/DebugViews';
 
 const { OptGroup, Option } = Select;
 
 const Page: React.FC = () => {
-  useForceIntl();
+  // useForceIntl();
 
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
@@ -238,8 +238,8 @@ const Page: React.FC = () => {
         columns={columns}
         request={fetchList}
         search={{
-          searchText: formatMessage({ id: 'component.global.search' }),
-          resetText: formatMessage({ id: 'component.global.reset' }),
+          searchText: `${formatMessage({ id: 'component.global.search' })}`,
+          resetText: `${formatMessage({ id: 'component.global.reset' })}`,
         }}
         toolBarRender={() => [
           <Button type="primary" onClick={() => history.push(`/routes/create`)}>
