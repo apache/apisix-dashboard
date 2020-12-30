@@ -14,19 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
-
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+
 import { Button, Popconfirm, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { fetchList } from './service';
-
+import PluginDetail from '@/components/Plugin/PluginDetail';
+import { omit } from 'lodash';
+import { fetchList, createOrUpdate } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
+  const [visible, setVisible] = useState(false);
+  const [inintData, setInintData] = useState({});
+  const [name, setName] = useState('');
+
+  useEffect(() => {
+    fetchList().then(({ data }) => {
+      const plugins: any = {};
+      data.forEach(({ name, value }) => {
+        plugins[name] = value;
+      });
+      setInintData(plugins);
+    })
+
+  }, [])
 
   const columns: ProColumns<PluginModule.TansformResponse>[] = [
     {
@@ -37,11 +52,16 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
       render: (_, record) => (
+
         <>
           <Space align="baseline">
             <Button
               type="primary"
-              onClick={() => { console.log('edit rule'); }}
+              onClick={() => {
+                setInintData(inintData);
+                setName(record.name);
+                setVisible(true);
+              }}
               style={{ marginRight: 10 }}
             >
               {formatMessage({ id: 'component.global.edit' })}
@@ -50,6 +70,10 @@ const Page: React.FC = () => {
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
+                const plugins = omit(inintData, [`${record.name}`])
+                createOrUpdate({ plugins }).then(() => {
+                  ref.current?.reload();
+                })
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}
@@ -63,6 +87,27 @@ const Page: React.FC = () => {
       ),
     },
   ]
+
+  const PluginDrawer = () => <PluginDetail
+    name={name}
+    readonly={false}
+    visible={visible}
+    schemaType="route"
+    initialData={inintData}
+    onClose={() => {
+      setVisible(false)
+    }}
+    onChange={({ formData, codemirrorData }) => {
+      createOrUpdate({
+        plugins: {
+          ...inintData,
+          [name]: { ...codemirrorData, ...formData }
+        }
+      }).then(() => {
+        ref.current?.reload();
+      })
+    }}
+  />
 
   return (
     <PageHeaderWrapper
@@ -82,6 +127,7 @@ const Page: React.FC = () => {
           </Button>
         ]}
       />
+      <PluginDrawer />
     </PageHeaderWrapper>)
 }
 

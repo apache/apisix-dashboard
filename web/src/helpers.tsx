@@ -81,6 +81,21 @@ export const isLoginPage = () => window.location.pathname.indexOf('/user/login')
 export const errorHandler = (error: { response: Response; data: any }): Promise<Response> => {
   const { response } = error;
   if (error && response && response.status) {
+
+    // handle global rules
+    if ([404].includes(response.status) && response.url.includes('/global_rules/')) {
+      const responseCloned = { ...response } as any;
+      responseCloned.status = 200;
+      responseCloned.data = {
+        "code": 0,
+        "message": "",
+        "data": {
+          "plugins": {}
+        }
+      };
+      return Promise.resolve(responseCloned);
+    }
+
     if ([401].includes(response.status) && !isLoginPage()) {
       history.replace(`/user/logout?redirect=${encodeURIComponent(window.location.pathname)}`);
       return Promise.reject(response);

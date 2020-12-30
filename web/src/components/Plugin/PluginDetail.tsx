@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Button, notification, PageHeader, Switch, Form, Select, Divider, Drawer } from 'antd';
 import { useIntl } from 'umi'
 import CodeMirror from '@uiw/react-codemirror';
@@ -75,6 +75,10 @@ const PluginDetail: React.FC<Props> = ({
   const [form] = Form.useForm();
   const ref = useRef<any>(null);
   const data = initialData[name];
+
+  useEffect(() => {
+    form.setFieldsValue({ disable: initialData[name] && !initialData[name].disable })
+  }, []);
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
     return fetchSchema(pluginName, schemaType).then((schema) => {

@@ -14,16 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import PluginPage from '@/components/Plugin';
+import { fetchList, createOrUpdate } from './service';
 
 const Page: React.FC = () => {
-    return <PluginPage
-        initialData={{}}
-        schemaType="route"
-        onChange={(pluginsData) => { console.log('pluginsData: ', pluginsData); }}
+  const [initialData, setInitialData] = useState({});
+
+  useEffect(() => {
+    fetchList().then(({ data }) => {
+      const plugins: any = {};
+      data.forEach(({ name, value }) => {
+        plugins[name] = value;
+      });
+      setInitialData(plugins);
+    })
+  }, []);
+
+  return <PageHeaderWrapper title="Config Plugin">
+    <PluginPage
+      initialData={initialData}
+      schemaType="route"
+      onChange={(pluginsData) => {
+        createOrUpdate({
+          plugins: {
+            ...initialData,
+            ...pluginsData
+          }
+        }).then(() => {
+          window.location.reload();
+        })
+      }}
     />
+  </PageHeaderWrapper>
 }
 
 export default Page

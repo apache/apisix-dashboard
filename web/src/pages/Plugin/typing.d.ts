@@ -18,6 +18,8 @@
 declare namespace PluginModule {
 
     type TansformResponse = {
-        name: string
+        name: string,
+        id: string,
+        value: object
     }[]
 } 
