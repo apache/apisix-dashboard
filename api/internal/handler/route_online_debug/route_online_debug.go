@@ -49,6 +49,7 @@ var protocolMap map[string]ProtocolSupport
 func init() {
 	protocolMap = make(map[string]ProtocolSupport)
 	protocolMap["http"] = &HTTPProtocolSupport{}
+	protocolMap["https"] = &HTTPProtocolSupport{}
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
@@ -80,7 +81,8 @@ func DebugRequestForwarding(c droplet.Context) (interface{}, error) {
 	if v, ok := protocolMap[requestProtocol]; ok {
 		return v.RequestForwarding(c)
 	} else {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("protocol unspported %s", paramsInput.RequestProtocol)
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("protocol unspported %s, need http or https. but given %s", paramsInput.RequestProtocol, paramsInput.RequestProtocol)
 	}
 }
 
