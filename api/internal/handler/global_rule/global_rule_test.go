@@ -209,7 +209,7 @@ func TestHandler_List(t *testing.T) {
 func TestHandler_Set(t *testing.T) {
 	tests := []struct {
 		caseDesc   string
-		giveInput  *entity.GlobalPlugins
+		giveInput  *SetInput
 		giveCtx    context.Context
 		giveErr    error
 		wantErr    error
@@ -219,10 +219,12 @@ func TestHandler_Set(t *testing.T) {
 	}{
 		{
 			caseDesc: "normal",
-			giveInput: &entity.GlobalPlugins{
+			giveInput: &SetInput{
 				ID: "name",
-				Plugins: map[string]interface{}{
-					"jwt-auth": map[string]interface{}{},
+				GlobalPlugins: entity.GlobalPlugins{
+					Plugins: map[string]interface{}{
+						"jwt-auth": map[string]interface{}{},
+					},
 				},
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
@@ -237,9 +239,9 @@ func TestHandler_Set(t *testing.T) {
 		},
 		{
 			caseDesc: "store create failed",
-			giveInput: &entity.GlobalPlugins{
-				ID:      "name",
-				Plugins: nil,
+			giveInput: &SetInput{
+				ID:            "name",
+				GlobalPlugins: entity.GlobalPlugins{},
 			},
 			giveErr: fmt.Errorf("create failed"),
 			wantInput: &entity.GlobalPlugins{
@@ -258,10 +260,11 @@ func TestHandler_Set(t *testing.T) {
 		t.Run(tc.caseDesc, func(t *testing.T) {
 			methodCalled := true
 			mStore := &store.MockInterface{}
-			mStore.On("Create", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			mStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				methodCalled = true
 				assert.Equal(t, tc.giveCtx, args.Get(0))
 				assert.Equal(t, tc.wantInput, args.Get(1))
+				assert.True(t, args.Bool(2))
 			}).Return(tc.giveErr)
 
 			h := Handler{globalRuleStore: mStore}
