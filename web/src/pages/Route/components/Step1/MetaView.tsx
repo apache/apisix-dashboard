@@ -92,7 +92,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
           name="custom_version_label"
         >
           <AutoComplete
-            options={(labelList['API_VERSION'] || []).map((item) => ({ value: item }))}
+            options={(labelList.API_VERSION || []).map((item) => ({ value: item }))}
             disabled={disabled}
           />
         </Form.Item>

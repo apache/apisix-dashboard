@@ -47,12 +47,12 @@ export const transformStepData = ({
     };
   }
 
-  const labels = {};
+  const labels: Record<string, string> = {};
   transformLableValueToKeyValue(custom_normal_labels).forEach(({ labelKey, labelValue }) => {
     labels[labelKey] = labelValue;
   });
   if (custom_version_label) {
-    labels['API_VERSION'] = custom_version_label;
+    labels.API_VERSION = custom_version_label;
   }
 
   const data: Partial<RouteModule.Body> = {
@@ -191,7 +191,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     uris: uris || (uri && [uri]) || [],
     remote_addrs: remote_addrs || [''],
     // NOTE: API_VERSION is a system label
-    custom_version_label: labels['API_VERSION'] || '',
+    custom_version_label: labels.API_VERSION || '',
     custom_normal_labels: Object.keys(labels)
       .filter((item) => item !== 'API_VERSION')
       .map((key) => `${key}:${labels[key]}`),
