@@ -20,7 +20,7 @@ export ENV=local
 pwd=`pwd`
 
 VERSION=$(cat ./api/VERSION)
-GITHASH=$(git log --pretty=format:"%h" -1)
+GITHASH=$(cat ./.githash 2> /dev/null || git log --pretty=format:"%h" -1)
 
 rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua
 
