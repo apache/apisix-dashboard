@@ -199,7 +199,6 @@ const Page: React.FC = () => {
             <Button
               type="primary"
               onClick={() => history.push(`/routes/${record.id}/edit`)}
-              style={{ marginRight: 10 }}
             >
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
