@@ -151,7 +151,7 @@ const Page: React.FC = () => {
       },
     },
     {
-      title: 'Version',
+      title: formatMessage({ id: 'component.global.version' }),
       dataIndex: 'API_VERSION',
       render: (_, record) => {
         return Object.keys(record.labels || {})

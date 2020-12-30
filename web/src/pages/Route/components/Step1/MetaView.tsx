@@ -87,7 +87,10 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
   const VersionLabelComponent = () => {
     return (
       <React.Fragment>
-        <Form.Item label="版本" name="custom_version_selected_label">
+        <Form.Item
+          label={formatMessage({ id: 'component.global.version' })}
+          name="custom_version_label"
+        >
           <AutoComplete
             options={(labelList['API_VERSION'] || []).map((item) => ({ value: item }))}
             disabled={disabled}

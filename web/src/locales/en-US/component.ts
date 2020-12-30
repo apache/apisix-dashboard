@@ -36,6 +36,7 @@ export default {
   'component.global.list': 'List',
   'component.global.description': 'Description',
   'component.global.labels': 'Labels',
+  'component.global.version': 'Version',
   'component.global.operation': 'Operation',
   'component.status.success': 'Successfully',
   'component.status.fail': 'Failed',

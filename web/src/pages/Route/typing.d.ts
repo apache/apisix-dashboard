@@ -140,7 +140,7 @@ declare namespace RouteModule {
   type Form1Data = {
     name: string;
     desc: string;
-    custom_version_selected_label: string;
+    custom_version_label: string;
     custom_normal_labels: string[];
     priority: number;
     websocket: boolean;

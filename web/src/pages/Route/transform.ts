@@ -32,7 +32,7 @@ export const transformStepData = ({
   advancedMatchingRules,
   step3Data,
 }: RouteModule.RequestData) => {
-  const { custom_normal_labels, custom_version_selected_label, service_id = '' } = form1Data;
+  const { custom_normal_labels, custom_version_label, service_id = '' } = form1Data;
 
   let redirect: RouteModule.Redirect = {};
   const step3DataCloned = cloneDeep(step3Data);
@@ -51,8 +51,8 @@ export const transformStepData = ({
   transformLableValueToKeyValue(custom_normal_labels).forEach(({ labelKey, labelValue }) => {
     labels[labelKey] = labelValue;
   });
-  if (custom_version_selected_label) {
-    labels['API_VERSION'] = custom_version_selected_label;
+  if (custom_version_label) {
+    labels['API_VERSION'] = custom_version_label;
   }
 
   const data: Partial<RouteModule.Body> = {
@@ -97,7 +97,7 @@ export const transformStepData = ({
 
     // Remove some of the frontend custom variables
     return omit(data, [
-      'custom_version_selected_label',
+      'custom_version_label',
       'custom_normal_labels',
       'advancedMatchingRules',
       'upstreamHostList',
@@ -130,7 +130,7 @@ export const transformStepData = ({
     service_id.length !== 0 ? 'service_id' : '',
     form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
     data.remote_addrs?.filter(Boolean).length !== 0 ? 'remote_addrs' : '',
-    form1Data.custom_version_selected_label.length !== 0 ? 'labels' : '',
+    form1Data.custom_version_label.length !== 0 ? 'labels' : '',
   ]);
 };
 
@@ -191,7 +191,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     uris: uris || (uri && [uri]) || [],
     remote_addrs: remote_addrs || [''],
     // NOTE: API_VERSION is a system label
-    custom_version_selected_label: labels['API_VERSION'] || '',
+    custom_version_label: labels['API_VERSION'] || '',
     custom_normal_labels: Object.keys(labels)
       .filter((item) => item !== 'API_VERSION')
       .map((key) => `${key}:${labels[key]}`),

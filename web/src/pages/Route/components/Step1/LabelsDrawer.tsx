@@ -24,7 +24,6 @@ import { fetchLabelList } from '../../service';
 
 type Props = {
   title?: string;
-  labelPrefix?: string;
   actionName: string;
   dataSource: string[];
   disabled: boolean;
