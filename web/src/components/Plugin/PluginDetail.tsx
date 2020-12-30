@@ -91,7 +91,6 @@ const PluginDetail: React.FC<Props> = ({
         }
 
         const validate = ajv.compile(schema);
-        console.log(schema, value)
         if (validate(value)) {
           resolve(value);
           return;

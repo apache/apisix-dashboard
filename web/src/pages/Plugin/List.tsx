@@ -36,6 +36,7 @@ const Page: React.FC = () => {
   useEffect(() => {
     fetchList().then(({ data }) => {
       const plugins: any = {};
+      // eslint-disable-next-line no-shadow
       data.forEach(({ name, value }) => {
         plugins[name] = value;
       });

@@ -73,12 +73,14 @@ const PluginPage: React.FC<Props> = ({
     <>
       <Sider theme="light">
         <Anchor offsetTop={150}>
+          {/* eslint-disable-next-line no-shadow */}
           {typeList.map((type) => {
             return <Anchor.Link href={`#plugin-category-${type}`} title={type} key={type} />;
           })}
         </Anchor>
       </Sider>
       <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
+        {/* eslint-disable-next-line no-shadow */}
         {typeList.map((type) => {
           return (
             <PanelSection
