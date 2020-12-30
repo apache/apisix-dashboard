@@ -14,28 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ActionBarZhCN } from '@/components/ActionBar';
 
-import component from './zh-CN/component';
-import globalHeader from './zh-CN/globalHeader';
-import menu from './zh-CN/menu';
-import pwa from './zh-CN/pwa';
-import settingDrawer from './zh-CN/settingDrawer';
-import settings from './zh-CN/setting';
-import PluginOrchestration from '../components/PluginOrchestration/locales/zh-CN';
+declare namespace PluginModule {
+  type TransformedPlugin = {
+    id: string;
+    name: string;
+    value: object;
+  };
 
-export default {
-  'navBar.lang': '语言',
-  'layout.user.link.help': '帮助',
-  'layout.user.link.privacy': '隐私',
-  'layout.user.link.terms': '条款',
-  'app.preview.down.block': '下载此页面到本地项目',
-  ...globalHeader,
-  ...menu,
-  ...settingDrawer,
-  ...settings,
-  ...pwa,
-  ...component,
-  ...ActionBarZhCN,
-  ...PluginOrchestration,
-};
+  type GlobalRule = {
+    id: string;
+    plugins: Record<string, object>;
+  }
+}
