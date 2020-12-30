@@ -20,7 +20,7 @@ import { FlowChart, IFlowChartCallbacks } from '@mrblenny/react-flow-chart';
 import * as actions from '@mrblenny/react-flow-chart/src/container/actions';
 import { Form, Input, Button, Divider, Card, Select } from 'antd';
 import { withTheme } from '@rjsf/core';
-import { useIntl } from 'umi'
+import { useIntl } from 'umi';
 
 // @ts-ignore
 import { Theme as AntDTheme } from '@rjsf/antd';
@@ -99,7 +99,7 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
         const { type, name } = getCustomDataById(args.nodeId);
         setSelectedType(type);
         if (type === PanelType.Plugin && name) {
-          const plugin = pluginList.find(item => item.name === name);
+          const plugin = pluginList.find((item) => item.name === name);
           if (plugin) {
             setSchema(plugin.schema);
           }
@@ -111,19 +111,19 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
     return clonedObj;
   }, {}) as IFlowChartCallbacks;
 
-  const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join("");
+  const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join('');
   useEffect(() => {
     // eslint-disable-next-line no-shadow
     fetchList().then((data) => {
       const categoryList: string[] = [];
-      data.forEach(item => {
+      data.forEach((item) => {
         if (!categoryList.includes(firstUpperCase(item.type))) {
           categoryList.push(firstUpperCase(item.type));
         }
       });
       setTypeList(['All', ...categoryList.sort()]);
       setPluginList(data);
-      setShowList(data.map(item => item.name).sort());
+      setShowList(data.map((item) => item.name).sort());
     });
   }, []);
 
@@ -147,13 +147,18 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
             <Form.Item
               label={formatMessage({ id: 'page.siderBar.form.label.panelType.condition' })}
               name="condition"
-              rules={[{ required: true, message: formatMessage({ id: 'page.siderBar.form.rule.panelType.condition' }) }]}
+              rules={[
+                {
+                  required: true,
+                  message: formatMessage({ id: 'page.siderBar.form.rule.panelType.condition' }),
+                },
+              ]}
             >
               <Input />
             </Form.Item>
             <Form.Item {...TAIL_LAYOUT}>
               <Button type="primary" htmlType="submit">
-                {formatMessage({ id: "page.siderBar.button.submit" })}
+                {formatMessage({ id: 'page.siderBar.button.submit' })}
               </Button>
             </Form.Item>
           </Form>
@@ -180,7 +185,7 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
             <Fragment />
 
             <Button type="primary" htmlType="submit">
-              {formatMessage({ id: "page.siderBar.button.submit" })}
+              {formatMessage({ id: 'page.siderBar.button.submit' })}
             </Button>
           </PluginForm>
         </SMessage>
@@ -189,7 +194,9 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
 
     return (
       <SSidebar>
-        <SMessage style={{ fontSize: '16px', fontWeight: 'bold' }}>{formatMessage({ id: 'page.siderBar.tips' })}</SMessage>
+        <SMessage style={{ fontSize: '16px', fontWeight: 'bold' }}>
+          {formatMessage({ id: 'page.siderBar.tips' })}
+        </SMessage>
         <Divider style={{ margin: '0px' }} />
         <SidebarItem
           type={formatMessage({ id: 'page.siderBar.form.label.panelType.condition' })}
@@ -203,16 +210,21 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
         <Divider orientation="left">{formatMessage({ id: 'page.siderBar.plugin' })}</Divider>
         <Select
           showSearch
-          placeholder={formatMessage({ id: "page.siderBar.form.label.panelType.plugin" })}
+          placeholder={formatMessage({ id: 'page.siderBar.form.label.panelType.plugin' })}
           optionFilterProp="children"
           defaultValue={pluginCategory}
           onChange={(value) => {
             setPluginCategory(value);
             if (value === 'All') {
-              setShowList(pluginList.map(item => item.name).sort());
+              setShowList(pluginList.map((item) => item.name).sort());
               return;
             }
-            setShowList(pluginList.filter(item => item.type === value.toLowerCase()).map(item => item.name).sort());
+            setShowList(
+              pluginList
+                .filter((item) => item.type === value.toLowerCase())
+                .map((item) => item.name)
+                .sort(),
+            );
           }}
           filterOption={(input, option) =>
             option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
