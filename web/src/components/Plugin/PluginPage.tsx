@@ -17,6 +17,7 @@
 import React, { useEffect, useState } from 'react';
 import { Anchor, Layout, Card, Button } from 'antd';
 import { PanelSection } from '@api7-dashboard/ui';
+import { orderBy } from 'lodash';
 
 import PluginDetail from './PluginDetail';
 import { fetchList } from './service';
@@ -89,7 +90,7 @@ const PluginPage: React.FC<Props> = ({
             style={PanelSectionStyle}
             id={`plugin-category-${type}`}
           >
-            {pluginList.filter((item) => item.type === type.toLowerCase()).map((item) => (
+            {orderBy((pluginList.filter((item) => item.type === type.toLowerCase())), 'name', 'asc').map((item) => (
               <Card
                 key={item.name}
                 actions={[

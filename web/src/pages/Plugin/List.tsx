@@ -40,8 +40,7 @@ const Page: React.FC = () => {
       });
       setInintData(plugins);
     })
-
-  }, [])
+  }, [visible])
 
   const columns: ProColumns<PluginModule.TansformResponse>[] = [
     {
@@ -95,7 +94,7 @@ const Page: React.FC = () => {
     schemaType="route"
     initialData={inintData}
     onClose={() => {
-      setVisible(false)
+      setVisible(false);
     }}
     onChange={({ formData, codemirrorData }) => {
       createOrUpdate({
@@ -103,8 +102,6 @@ const Page: React.FC = () => {
           ...inintData,
           [name]: { ...codemirrorData, ...formData }
         }
-      }).then(() => {
-        ref.current?.reload();
       })
     }}
   />
