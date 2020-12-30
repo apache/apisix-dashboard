@@ -20,15 +20,16 @@ import { Card, Steps, notification, Form } from 'antd';
 import { history, useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
-import PluginPage, { PLUGIN_MAPPER_SOURCE } from '@/components/Plugin';
+import PluginPage from '@/components/Plugin';
 
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
-import { fetchItem, create, update } from './service';
+import { fetchItem, create, update, fetchPlugList } from './service';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
   const [plugins, setPlugins] = useState<PluginComponent.Data>({});
+  const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([])
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
 
@@ -41,6 +42,8 @@ const Page: React.FC = (props) => {
         setPlugins(rest.plugins);
       });
     }
+
+    fetchPlugList().then(setPluginList);
   }, []);
 
   const onSubmit = () => {
@@ -49,13 +52,12 @@ const Page: React.FC = (props) => {
     (username ? update(username, data) : create(data))
       .then(() => {
         notification.success({
-          message: `${
-            username
-              ? formatMessage({ id: 'component.global.edit' })
-              : formatMessage({ id: 'component.global.create' })
-          } ${formatMessage({ id: 'menu.consumer' })} ${formatMessage({
-            id: 'component.status.success',
-          })}`,
+          message: `${username
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
+            } ${formatMessage({ id: 'menu.consumer' })} ${formatMessage({
+              id: 'component.status.success',
+            })}`,
         });
         history.push('/consumer/list');
       })
@@ -74,8 +76,7 @@ const Page: React.FC = (props) => {
       if (
         !Object.keys(plugins).filter(
           (name) =>
-            (name.indexOf('auth') !== -1 ||
-              PLUGIN_MAPPER_SOURCE[name]?.category === 'Authentication') &&
+            (pluginList.find(item => item.name === name)!.type === 'auth') &&
             !plugins[name].disable,
         ).length
       ) {
@@ -97,11 +98,10 @@ const Page: React.FC = (props) => {
   return (
     <>
       <PageContainer
-        title={`${
-          (props as any).match.params.id
-            ? formatMessage({ id: 'component.global.edit' })
-            : formatMessage({ id: 'component.global.create' })
-        } ${formatMessage({ id: 'menu.consumer' })}`}
+        title={`${(props as any).match.params.id
+          ? formatMessage({ id: 'component.global.edit' })
+          : formatMessage({ id: 'component.global.create' })
+          } ${formatMessage({ id: 'menu.consumer' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
