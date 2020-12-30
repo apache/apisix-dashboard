@@ -106,11 +106,13 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'component.global.labels' }),
       dataIndex: 'labels',
       render: (_, record) => {
-        return Object.keys(record.labels || {}).map((item) => (
-          <Tag key={Math.random().toString(36).slice(2)}>
-            {item}:{record.labels[item]}
-          </Tag>
-        ));
+        return Object.keys(record.labels || {})
+          .filter((item) => item !== 'API_VERSION')
+          .map((item) => (
+            <Tag key={Math.random().toString(36).slice(2)}>
+              {item}:{record.labels[item]}
+            </Tag>
+          ));
       },
       renderFormItem: (_, { type }) => {
         if (type === 'form') {
@@ -130,18 +132,53 @@ const Page: React.FC = () => {
               );
             }}
           >
-            {Object.keys(labelList).map((key) => {
-              return (
-                <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
-                  {(labelList[key] || []).map((value: string) => (
-                    <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
-                      {' '}
-                      {value}{' '}
-                    </Option>
-                  ))}
-                </OptGroup>
-              );
-            })}
+            {Object.keys(labelList)
+              .filter((item) => item !== 'API_VERSION')
+              .map((key) => {
+                return (
+                  <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
+                    {(labelList[key] || []).map((value: string) => (
+                      <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
+                        {' '}
+                        {value}{' '}
+                      </Option>
+                    ))}
+                  </OptGroup>
+                );
+              })}
+          </Select>
+        );
+      },
+    },
+    {
+      title: 'Version',
+      dataIndex: 'API_VERSION',
+      render: (_, record) => {
+        return Object.keys(record.labels || {})
+          .filter((item) => item === 'API_VERSION')
+          .map((item) => record.labels[item]);
+      },
+      renderFormItem: (_, { type }) => {
+        if (type === 'form') {
+          return null;
+        }
+
+        return (
+          <Select style={{ width: '100%' }}>
+            {Object.keys(labelList)
+              .filter((item) => item === 'API_VERSION')
+              .map((key) => {
+                return (
+                  <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
+                    {(labelList[key] || []).map((value: string) => (
+                      <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
+                        {' '}
+                        {value}{' '}
+                      </Option>
+                    ))}
+                  </OptGroup>
+                );
+              })}
           </Select>
         );
       },

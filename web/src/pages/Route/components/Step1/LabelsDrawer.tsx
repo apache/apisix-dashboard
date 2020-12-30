@@ -34,7 +34,9 @@ type Props = {
 const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
   const { formatMessage } = useIntl();
 
-  const keyOptions = Object.keys(labelList || {}).map((item) => ({ value: item }));
+  const keyOptions = Object.keys(labelList || {})
+    .filter((item) => item !== 'API_VERSION')
+    .map((item) => ({ value: item }));
   return (
     <Form.List name="labels">
       {(fields, { add, remove }) => {
