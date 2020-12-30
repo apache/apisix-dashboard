@@ -119,7 +119,8 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   };
 
   const handleDebug = (url: string) => {
-    if (url === '') {
+    const urlReg = /^(?=^.{3,255}$)(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/\w+\.\w+)*([\?&]\w+=\w*)*$/;
+    if (!urlReg.test(url)) {
       notification.warning({
         message: formatMessage({ id: 'page.route.input.placeholder.requestUrl' }),
       });
