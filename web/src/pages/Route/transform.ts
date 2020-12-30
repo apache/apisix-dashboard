@@ -51,7 +51,9 @@ export const transformStepData = ({
   transformLableValueToKeyValue(custom_normal_labels).forEach(({ labelKey, labelValue }) => {
     labels[labelKey] = labelValue;
   });
-  labels['API_VERSION'] = custom_version_selected_label;
+  if (custom_version_selected_label) {
+    labels['API_VERSION'] = custom_version_selected_label;
+  }
 
   const data: Partial<RouteModule.Body> = {
     ...form1Data,
@@ -84,7 +86,7 @@ export const transformStepData = ({
     }
 
     if (redirect.http_to_https) {
-      if (Object.keys(data.plugins!).length === 0) {
+      if (Object.keys(data.plugins || {}).length === 0) {
         data.plugins = {};
       }
       data.plugins!.redirect = redirect;
@@ -105,8 +107,8 @@ export const transformStepData = ({
       'ret_code',
       'redirectOption',
       service_id.length === 0 ? 'service_id' : '',
-      !Object.keys(step3DataCloned.plugins || {}).length ? 'plugins' : '',
-      !Object.keys(step3DataCloned.script || {}).length ? 'script' : '',
+      !Object.keys(data.plugins || {}).length ? 'plugins' : '',
+      !Object.keys(data.script || {}).length ? 'script' : '',
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
       data.remote_addrs?.filter(Boolean).length === 0 ? 'remote_addrs' : '',
