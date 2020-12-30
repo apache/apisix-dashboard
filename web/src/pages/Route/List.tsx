@@ -235,8 +235,8 @@ const Page: React.FC = () => {
         columns={columns}
         request={fetchList}
         search={{
-          searchText: `${formatMessage({ id: 'component.global.search' })}`,
-          resetText: `${formatMessage({ id: 'component.global.reset' })}`,
+          searchText: formatMessage({ id: 'component.global.search' }),
+          resetText: formatMessage({ id: 'component.global.reset' }),
         }}
         toolBarRender={() => [
           <Button type="primary" onClick={() => history.push(`/routes/create`)}>
