@@ -58,7 +58,7 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, upstreamRef, ...
             <PluginPage initialData={rest.step3Data.plugins} readonly />
           )}
           {Boolean(Object.keys(script).length !== 0) && (
-            <PluginOrchestration data={rest.step3Data.script.chart} readonly onChange={() => { }} />
+            <PluginOrchestration data={rest.step3Data.script.chart} readonly onChange={() => {}} />
           )}
         </>
       )}
