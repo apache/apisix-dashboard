@@ -67,8 +67,8 @@ const PluginDetail: React.FC<Props> = ({
   visible,
   readonly = false,
   initialData = {},
-  onClose = () => {},
-  onChange = () => {},
+  onClose = () => { },
+  onChange = () => { },
 }) => {
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
@@ -173,7 +173,7 @@ const PluginDetail: React.FC<Props> = ({
                 }
               }}
             >
-              {formatMessage({ id: 'component.global.confirm' })}
+              {formatMessage({ id: 'component.global.submit' })}
             </Button>
           </div>
         }
