@@ -134,6 +134,7 @@ const LabelsDrawer: React.FC<Props> = ({
       visible
       closable
       onClose={onClose}
+      maskClosable={false}
       footer={
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Button onClick={onClose}>{formatMessage({ id: 'component.global.cancel' })}</Button>

@@ -28,6 +28,7 @@ export default {
   'component.global.add': 'Add',
   'component.global.save': 'Save',
   'component.global.edit': 'Edit',
+  'component.global.manage': 'Manage',
   'component.global.update': 'Update',
   'component.global.get': 'Get',
   'component.global.edit.plugin': 'Edit plugin',
