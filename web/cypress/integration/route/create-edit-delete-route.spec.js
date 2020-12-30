@@ -18,23 +18,25 @@
 
 context('Create and Delete Route', () => {
   const name = `routeName${new Date().valueOf()}`;
+  const newName = `newName${new Date().valueOf()}`;
+  const sleepTime = 100;
 
   beforeEach(() => {
     // init login
     cy.login();
   });
 
-  it('create route', () => {
+  it('should create route', () => {
     //  go to route create page
     cy.visit('/');
     cy.contains('Route').click();
     cy.contains('Create').click();
 
-    // input Name And Description
+    // input name and description
     cy.get('#name').type(name);
     cy.get('#desc').type('desc');
 
-    // input Request Basic Define
+    // input request basic define
     cy.get('#hosts_0').type('11.11.11.11');
     cy.get('[data-cy=addHost]').click();
     cy.get('#hosts_1').type('12.12.12.12');
@@ -47,7 +49,7 @@ context('Create and Delete Route', () => {
       .contains('Create')
       .click();
 
-    // create Advanced Routing Matching Conditions
+    // create advanced routing matching conditions
     cy.get('#position').click();
     cy.contains('Cookie').click();
     cy.get('.ant-modal').within(() => {
@@ -60,6 +62,7 @@ context('Create and Delete Route', () => {
 
     // go to step2
     cy.contains('Next').click();
+    cy.wait(sleepTime * 3);
     cy.get('#nodes_0_host').type('12.12.12.12');
 
     // go to step3
@@ -74,18 +77,40 @@ context('Create and Delete Route', () => {
     // go to step4
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.contains('SubmitSuccessfully');
+    cy.contains('Submit Successfully');
 
     // back to route list page
-    cy.contains('Return Route List').click();
+    cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
   });
 
-  it('delete the route', () => {
-    cy.visit('/routes/list');
+  it('should edit the route', () => {
+    cy.visit('/');
+    cy.contains('Route').click();
+
     cy.get('[title=Name]').type(name);
     cy.contains('Search').click();
-    cy.contains(name).siblings().contains('Delete').click();
+    cy.wait(1000);
+    cy.contains(name).siblings().contains('Edit').click();
+
+    cy.get('#name').clear().type(newName);
+    cy.get('#desc').clear().type('new desc');
+    cy.contains('Next').click();
+    cy.wait(1000);
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+    cy.contains('Submit').click();
+    cy.contains('Submit Successfully');
+    cy.contains('Goto List').click();
+    cy.url().should('contains', 'routes/list');
+    cy.contains(newName).siblings().should('contain', 'new desc');
+  });
+
+  it('should delete the route', () => {
+    cy.visit('/routes/list');
+    cy.get('[title=Name]').type(newName);
+    cy.contains('Search').click();
+    cy.contains(newName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');
   });
