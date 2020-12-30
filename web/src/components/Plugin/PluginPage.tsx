@@ -142,17 +142,11 @@ const PluginPage: React.FC<Props> = ({
           setName(NEVER_EXIST_PLUGIN_FLAG);
         }}
         onChange={(data) => {
-          if (!data.formData.disable) {
-            onChange({
-              ...initialData,
-              [name]: { disable: !data.formData.disable },
-            });
-            return;
-          }
           onChange({
             ...initialData,
             [name]: { ...initialData[name], disable: !data.formData.disable },
           });
+          setName(NEVER_EXIST_PLUGIN_FLAG);
         }}
       />
     </Content>

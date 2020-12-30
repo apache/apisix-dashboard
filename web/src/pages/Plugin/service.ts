@@ -16,15 +16,31 @@
  */
 import { request } from 'umi';
 
-export const fetchList = () =>
-  request(`/global_rules/1`).then(({ data }) => {
-    const pluginData = data.plugins || {};
-    const listData = Object.entries(pluginData).map(([name, value]) => ({ id: name, name, value }));
+import { DEFAULT_GLOBAL_RULE_ID } from '@/constants';
+
+export const fetchList = (): Promise<{
+  data: PluginModule.TransformedPlugin[];
+  total: number;
+}> =>
+  request<{
+    data: {
+      plugins: Record<string, object>;
+    };
+  }>(`/global_rules/${DEFAULT_GLOBAL_RULE_ID}`).then(({ data }) => {
+    const plugins = Object.entries(data.plugins || {}).map(([name, value]) => ({
+      id: name,
+      name,
+      value,
+    }));
+
     return {
-      data: listData,
-      total: listData.length,
+      data: plugins,
+      total: plugins.length,
     };
   });
 
-export const createOrUpdate = (plugins: any) =>
-  request(`/global_rules/1`, { method: 'PUT', data: { id: '1', ...plugins } });
+export const createOrUpdate = (data: Partial<Omit<PluginModule.GlobalRule, 'id'>>) =>
+  request(`/global_rules/${DEFAULT_GLOBAL_RULE_ID}`, {
+    method: 'PUT',
+    data: { id: DEFAULT_GLOBAL_RULE_ID, ...data },
+  });

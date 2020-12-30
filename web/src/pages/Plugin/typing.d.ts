@@ -16,9 +16,14 @@
  */
 
 declare namespace PluginModule {
-  type TansformResponse = {
-    name: string;
+  type TransformedPlugin = {
     id: string;
+    name: string;
     value: object;
-  }[];
+  };
+
+  type GlobalRule = {
+    id: string;
+    plugins: Record<string, object>;
+  }
 }

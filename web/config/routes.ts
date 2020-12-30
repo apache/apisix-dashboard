@@ -80,8 +80,8 @@ const routes = [
     component: './Plugin/List',
   },
   {
-    path: '/plugin/config',
-    component: './Plugin/PluginConfig',
+    path: '/plugin/market',
+    component: './Plugin/PluginMarket',
   },
   {
     path: '/service/list',

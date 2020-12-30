@@ -20,7 +20,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import PluginPage from '@/components/Plugin';
 import { fetchList, createOrUpdate } from './service';
 
-const Page: React.FC = () => {
+const PluginMarket: React.FC = () => {
   const [initialData, setInitialData] = useState({});
 
   useEffect(() => {
@@ -46,12 +46,13 @@ const Page: React.FC = () => {
               ...pluginsData,
             },
           }).then(() => {
+            // TODO: 
             window.location.reload();
-          });
+          })
         }}
       />
     </PageHeaderWrapper>
   );
 };
 
-export default Page;
+export default PluginMarket;

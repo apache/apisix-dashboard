@@ -91,7 +91,7 @@ const PluginDetail: React.FC<Props> = ({
         }
 
         const validate = ajv.compile(schema);
-
+        console.log(schema, value)
         if (validate(value)) {
           resolve(value);
           return;
@@ -154,21 +154,17 @@ const PluginDetail: React.FC<Props> = ({
         footer={
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             {' '}
-            <Button onClick={onClose}>{formatMessage({ id: 'component.global.cancel' })}</Button>
+            <Button onClick={onClose} key={1}>
+              {formatMessage({ id: 'component.global.cancel' })}
+            </Button>
             <Button
-              key="1"
+              key={2}
               type="primary"
               onClick={() => {
                 try {
-                  if (!form.getFieldsValue().disable) {
-                    onChange({ formData: form.getFieldsValue(), codemirrorData: {} });
-                    onClose();
-                    return;
-                  }
                   const editorData = JSON.parse(ref.current?.editor.getValue());
                   validateData(name, editorData).then((value) => {
                     onChange({ formData: form.getFieldsValue(), codemirrorData: value });
-                    onClose();
                   });
                 } catch (error) {
                   notification.error({
@@ -192,7 +188,7 @@ const PluginDetail: React.FC<Props> = ({
         </style>
 
         <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
-          <Form.Item label="Enable" name="disable">
+          <Form.Item label="Enable" valuePropName="checked" name="disable">
             <Switch
               defaultChecked={initialData[name] && !initialData[name].disable}
               disabled={readonly}

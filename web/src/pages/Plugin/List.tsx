@@ -18,18 +18,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-
 import { Button, Popconfirm, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import PluginDetail from '@/components/Plugin/PluginDetail';
 import { omit } from 'lodash';
+
+import PluginDetail from '@/components/Plugin/PluginDetail';
+
 import { fetchList, createOrUpdate } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
   const [visible, setVisible] = useState(false);
-  const [inintData, setInintData] = useState({});
+  const [initialData, setInitialData] = useState({});
   const [name, setName] = useState('');
 
   useEffect(() => {
@@ -38,11 +39,11 @@ const Page: React.FC = () => {
       data.forEach(({ name, value }) => {
         plugins[name] = value;
       });
-      setInintData(plugins);
+      setInitialData(plugins);
     });
-  }, [visible]);
+  }, []);
 
-  const columns: ProColumns<PluginModule.TansformResponse>[] = [
+  const columns: ProColumns<PluginModule.TransformedPlugin>[] = [
     {
       title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
@@ -56,7 +57,6 @@ const Page: React.FC = () => {
             <Button
               type="primary"
               onClick={() => {
-                setInintData(inintData);
                 setName(record.name);
                 setVisible(true);
               }}
@@ -68,7 +68,7 @@ const Page: React.FC = () => {
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
-                const plugins = omit(inintData, [`${record.name}`]);
+                const plugins = omit(initialData, [`${record.name}`]);
                 createOrUpdate({ plugins }).then(() => {
                   ref.current?.reload();
                 });
@@ -93,16 +93,18 @@ const Page: React.FC = () => {
       visible={visible}
       type="global"
       schemaType="route"
-      initialData={inintData}
+      initialData={initialData}
       onClose={() => {
         setVisible(false);
       }}
       onChange={({ formData, codemirrorData }) => {
         createOrUpdate({
           plugins: {
-            ...inintData,
+            ...initialData,
             [name]: { ...codemirrorData, ...formData },
           },
+        }).then(() => {
+          setVisible(false);
         });
       }}
     />
@@ -114,14 +116,14 @@ const Page: React.FC = () => {
         id: 'component.global.list',
       })}`}
     >
-      <ProTable<PluginModule.TansformResponse>
+      <ProTable<PluginModule.TransformedPlugin>
         actionRef={ref}
         rowKey="id"
         search={false}
         columns={columns}
         request={fetchList}
         toolBarRender={() => [
-          <Button type="primary" onClick={() => history.push('/plugin/config')}>
+          <Button type="primary" onClick={() => history.push('/plugin/market')}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
