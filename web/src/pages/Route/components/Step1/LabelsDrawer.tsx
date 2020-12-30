@@ -109,7 +109,7 @@ const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
 };
 
 const LabelsDrawer: React.FC<Props> = ({
-  title = "Label Manager",
+  title = 'Label Manager',
   disabled,
   dataSource = [],
   onClose,

@@ -123,8 +123,8 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
         <Form.Item shouldUpdate noStyle>
           {() => {
             const labels: string[] = (form.getFieldValue('labels') || []).filter((label: string) =>
-            label.startsWith(DEFAULT_VERSION_LABEL_PREFIX),
-          );
+              label.startsWith(DEFAULT_VERSION_LABEL_PREFIX),
+            );
             return (
               <LabelsDrawer
                 title="Version Manager"

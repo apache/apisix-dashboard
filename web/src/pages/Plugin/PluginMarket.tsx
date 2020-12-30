@@ -48,9 +48,9 @@ const PluginMarket: React.FC = () => {
                 ...pluginsData,
               },
             }).then(() => {
-              // TODO: 
+              // TODO:
               window.location.reload();
-            })
+            });
           }}
         />
       </Card>

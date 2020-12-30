@@ -179,7 +179,7 @@ const Page: React.FC = () => {
             >
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
-            {!Boolean(record.status) && (
+            {!record.status && (
               <Button
                 type="primary"
                 onClick={() => {
@@ -190,7 +190,7 @@ const Page: React.FC = () => {
                 {formatMessage({ id: 'page.route.publish' })}
               </Button>
             )}
-            {Boolean(record.status) && (
+            {record.status && (
               <Popconfirm
                 title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
                 onConfirm={() => {
@@ -216,7 +216,7 @@ const Page: React.FC = () => {
                 });
               }}
               okButtonProps={{
-                danger: true
+                danger: true,
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}

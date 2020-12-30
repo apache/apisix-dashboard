@@ -67,8 +67,8 @@ const PluginDetail: React.FC<Props> = ({
   visible,
   readonly = false,
   initialData = {},
-  onClose = () => { },
-  onChange = () => { },
+  onClose = () => {},
+  onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();

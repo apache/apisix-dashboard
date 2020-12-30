@@ -48,7 +48,7 @@ const PluginPage: React.FC<Props> = ({
   initialData = {},
   schemaType = 'route',
   type = 'scoped',
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
