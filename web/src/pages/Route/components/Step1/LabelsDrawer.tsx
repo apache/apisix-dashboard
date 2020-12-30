@@ -22,11 +22,12 @@ import { useIntl } from 'umi';
 import { transformLableValueToKeyValue } from '../../transform';
 import { fetchLabelList } from '../../service';
 
-interface Props extends Pick<RouteModule.Step1PassProps, 'onChange'> {
-  labelsDataSource: string[];
+type Props = {
+  title?: string;
+  dataSource: string[];
   disabled: boolean;
   onClose(): void;
-}
+} & Pick<RouteModule.Step1PassProps, 'onChange'>;
 
 const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
   const { formatMessage } = useIntl();
@@ -108,12 +109,13 @@ const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
 };
 
 const LabelsDrawer: React.FC<Props> = ({
+  title = "Label Manager",
   disabled,
-  labelsDataSource,
+  dataSource = [],
   onClose,
   onChange = () => {},
 }) => {
-  const transformLabel = transformLableValueToKeyValue(labelsDataSource);
+  const transformLabel = transformLableValueToKeyValue(dataSource);
 
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
@@ -126,7 +128,7 @@ const LabelsDrawer: React.FC<Props> = ({
 
   return (
     <Drawer
-      title="Edit labels"
+      title={title}
       placement="right"
       width={512}
       visible

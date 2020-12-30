@@ -35,7 +35,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
             if (form.getFieldValue('labels')) {
               return (
                 <LabelsDrawer
-                  labelsDataSource={form.getFieldValue('labels')}
+                  dataSource={form.getFieldValue('labels')}
                   disabled={disabled || false}
                   onChange={onChange}
                   onClose={() => setVisible(false)}
@@ -46,6 +46,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
           }}
         </Form.Item>
       )}
+
       <Form.Item
         label={formatMessage({ id: 'component.global.name' })}
         name="name"

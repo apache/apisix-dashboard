@@ -179,29 +179,31 @@ const Page: React.FC = () => {
             >
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
-            <Button
-              type="primary"
-              onClick={() => {
-                handlePublishOffline(record.id, RouteStatus.Publish);
-              }}
-              style={{ marginRight: 10 }}
-              disabled={Boolean(record.status)}
-            >
-              {formatMessage({ id: 'page.route.publish' })}
-            </Button>
-            <Popconfirm
-              title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
-              onConfirm={() => {
-                handlePublishOffline(record.id, RouteStatus.Offline);
-              }}
-              okText={formatMessage({ id: 'component.global.confirm' })}
-              cancelText={formatMessage({ id: 'component.global.cancel' })}
-              disabled={Boolean(!record.status)}
-            >
-              <Button type="primary" danger disabled={Boolean(!record.status)}>
-                {formatMessage({ id: 'page.route.offline' })}
+            {!Boolean(record.status) && (
+              <Button
+                type="primary"
+                onClick={() => {
+                  handlePublishOffline(record.id, RouteStatus.Publish);
+                }}
+                style={{ marginRight: 10 }}
+              >
+                {formatMessage({ id: 'page.route.publish' })}
               </Button>
-            </Popconfirm>
+            )}
+            {Boolean(record.status) && (
+              <Popconfirm
+                title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
+                onConfirm={() => {
+                  handlePublishOffline(record.id, RouteStatus.Offline);
+                }}
+                okText={formatMessage({ id: 'component.global.confirm' })}
+                cancelText={formatMessage({ id: 'component.global.cancel' })}
+              >
+                <Button type="primary" danger disabled={Boolean(!record.status)}>
+                  {formatMessage({ id: 'page.route.offline' })}
+                </Button>
+              </Popconfirm>
+            )}
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
@@ -212,6 +214,9 @@ const Page: React.FC = () => {
                     })} ${formatMessage({ id: 'component.status.success' })}`,
                   );
                 });
+              }}
+              okButtonProps={{
+                danger: true
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}
