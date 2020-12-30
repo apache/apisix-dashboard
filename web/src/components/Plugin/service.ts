@@ -18,9 +18,9 @@ import { omit } from 'lodash';
 import { request } from 'umi';
 
 export const fetchList = () => {
-  return request<Res<PluginComponent.Meta[]>>('/plugins?all=true').then(data => {
+  return request<Res<PluginComponent.Meta[]>>('/plugins?all=true').then((data) => {
     return data.data;
-  })
+  });
 };
 
 /**

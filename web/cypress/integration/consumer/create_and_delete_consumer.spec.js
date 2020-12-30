@@ -46,6 +46,8 @@ context('Create and Delete Consumer', () => {
     cy.contains(domSelectors.pluginsCard, 'key-auth').within(() => {
       cy.get('button').first().click();
     });
+
+    cy.get('#disable').click();
     // edit codemirror
     cy.get('.CodeMirror')
       .first()
