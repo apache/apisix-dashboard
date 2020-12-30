@@ -82,7 +82,7 @@ func DebugRequestForwarding(c droplet.Context) (interface{}, error) {
 		return v.RequestForwarding(c)
 	} else {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			fmt.Errorf("protocol unspported %s, need http or https. but given %s", paramsInput.RequestProtocol, paramsInput.RequestProtocol)
+			fmt.Errorf("Protocol unsupported %s, only http or https is allowed, but given %s", paramsInput.RequestProtocol, paramsInput.RequestProtocol)
 	}
 }
 
