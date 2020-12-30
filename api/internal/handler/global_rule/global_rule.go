@@ -124,8 +124,8 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 }
 
 type SetInput struct {
-	ID string `auto_read:"id,path"`
 	entity.GlobalPlugins
+	ID string `auto_read:"id,path"`
 }
 
 func (h *Handler) Set(c droplet.Context) (interface{}, error) {
