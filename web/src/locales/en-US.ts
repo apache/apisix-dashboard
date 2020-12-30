@@ -37,5 +37,5 @@ export default {
   ...pwa,
   ...component,
   ...ActionBarEnUS,
-  ...PluginOrchestration
+  ...PluginOrchestration,
 };

@@ -27,7 +27,10 @@ export const NodeInnerCustom = ({ node }: INodeInnerDefaultProps) => {
   if (customData.type === PanelType.Condition) {
     return (
       <SOuter>
-        <p>{formatMessage({ id: "page.panel.condition.name" })}：{customData.name || `(${formatMessage({ id: 'page.panel.condition.tips' })})`}</p>
+        <p>
+          {formatMessage({ id: 'page.panel.condition.name' })}：
+          {customData.name || `(${formatMessage({ id: 'page.panel.condition.tips' })})`}
+        </p>
       </SOuter>
     );
   }
@@ -35,7 +38,10 @@ export const NodeInnerCustom = ({ node }: INodeInnerDefaultProps) => {
   if (customData.type === PanelType.Plugin) {
     return (
       <SOuter>
-        <p>{formatMessage({ id: "page.panel.plugin.name" })}: {customData.name || `(${formatMessage({ id: 'page.panel.plugin.tips' })})`}</p>
+        <p>
+          {formatMessage({ id: 'page.panel.plugin.name' })}:{' '}
+          {customData.name || `(${formatMessage({ id: 'page.panel.plugin.tips' })})`}
+        </p>
       </SOuter>
     );
   }
