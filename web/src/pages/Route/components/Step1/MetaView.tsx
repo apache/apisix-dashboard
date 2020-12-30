@@ -14,21 +14,88 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from 'antd/es/form';
-import { Input, Switch, Select, Button, Tag } from 'antd';
+import { Input, Switch, Select, Button, Tag, AutoComplete } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
 import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 import LabelsDrawer from './LabelsDrawer';
-
-const DEFAULT_VERSION_LABEL_PREFIX = 'version:';
+import { fetchLabelList } from '../../service';
 
 const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit, onChange }) => {
   const { formatMessage } = useIntl();
   const [visible, setVisible] = useState(false);
-  const [showVersionManager, setShowVersionManager] = useState(false);
+  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
+
+  useEffect(() => {
+    // TODO: use a better state name
+    fetchLabelList().then(setLabelList);
+  }, []);
+
+  const NormalLabelComponent = () => {
+    const field = 'custom_normal_labels';
+    const title = 'Label Manager';
+
+    return (
+      <React.Fragment>
+        <Form.Item label={formatMessage({ id: 'component.global.labels' })} name={field}>
+          <Select
+            mode="tags"
+            style={{ width: '100%' }}
+            placeholder="--"
+            disabled={disabled}
+            open={false}
+            bordered={false}
+            tagRender={(props) => {
+              const { value, closable, onClose } = props;
+              return (
+                <Tag closable={closable && !disabled} onClose={onClose} style={{ marginRight: 3 }}>
+                  {value}
+                </Tag>
+              );
+            }}
+          />
+        </Form.Item>
+        <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+          <Button type="dashed" disabled={disabled} onClick={() => setVisible(true)}>
+            {formatMessage({ id: 'component.global.manage' })}
+          </Button>
+        </Form.Item>
+        {visible && (
+          <Form.Item shouldUpdate noStyle>
+            {() => {
+              const labels = form.getFieldValue(field) || [];
+              return (
+                <LabelsDrawer
+                  title={title}
+                  actionName={field}
+                  dataSource={labels}
+                  disabled={disabled || false}
+                  onChange={onChange}
+                  onClose={() => setVisible(false)}
+                />
+              );
+            }}
+          </Form.Item>
+        )}
+      </React.Fragment>
+    );
+  };
+
+  const VersionLabelComponent = () => {
+    return (
+      <React.Fragment>
+        <Form.Item label="版本" name="custom_version_selected_label">
+          <AutoComplete
+            options={(labelList['API_VERSION'] || []).map((item) => ({ value: item }))}
+            disabled={disabled}
+          />
+        </Form.Item>
+      </React.Fragment>
+    );
+  };
 
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>
@@ -57,86 +124,8 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
         />
       </Form.Item>
 
-      {/* TODO: Filter Normal Labels */}
-      <Form.Item label={formatMessage({ id: 'component.global.labels' })} name="labels">
-        <Select
-          mode="tags"
-          style={{ width: '100%' }}
-          placeholder="--"
-          disabled={disabled}
-          open={false}
-          bordered={false}
-          tagRender={(props) => {
-            const { value, closable, onClose } = props;
-            return (
-              <Tag closable={closable && !disabled} onClose={onClose} style={{ marginRight: 3 }}>
-                {value}
-              </Tag>
-            );
-          }}
-        />
-      </Form.Item>
-      <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-        <Button type="dashed" disabled={disabled} onClick={() => setVisible(true)}>
-          {formatMessage({ id: 'component.global.manage' })}
-        </Button>
-      </Form.Item>
-      {visible && (
-        <Form.Item shouldUpdate noStyle>
-          {() => {
-            const labels = (form.getFieldValue('labels') || []).filter(
-              (label: string) => !label.startsWith(DEFAULT_VERSION_LABEL_PREFIX),
-            );
-            return (
-              <LabelsDrawer
-                title="Label Manager"
-                dataSource={labels}
-                disabled={disabled || false}
-                onChange={onChange}
-                onClose={() => setVisible(false)}
-              />
-            );
-          }}
-        </Form.Item>
-      )}
-
-      <Form.Item label="版本" name="labels">
-        <Select style={{ width: '100%' }} placeholder="--" disabled={disabled}>
-          {(() => {
-            const labels: string[] = (form.getFieldValue('labels') || []).filter((label: string) =>
-              label.startsWith(DEFAULT_VERSION_LABEL_PREFIX),
-            );
-            return labels.map((label) => (
-              <Select.Option value={label} key={label}>
-                {label}
-              </Select.Option>
-            ));
-          })()}
-        </Select>
-      </Form.Item>
-      <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-        <Button type="dashed" disabled={disabled} onClick={() => setShowVersionManager(true)}>
-          {formatMessage({ id: 'component.global.manage' })}
-        </Button>
-      </Form.Item>
-      {showVersionManager && (
-        <Form.Item shouldUpdate noStyle>
-          {() => {
-            const labels: string[] = (form.getFieldValue('labels') || []).filter((label: string) =>
-              label.startsWith(DEFAULT_VERSION_LABEL_PREFIX),
-            );
-            return (
-              <LabelsDrawer
-                title="Version Manager"
-                dataSource={labels}
-                disabled={disabled || false}
-                onChange={onChange}
-                onClose={() => setShowVersionManager(false)}
-              />
-            );
-          }}
-        </Form.Item>
-      )}
+      <NormalLabelComponent />
+      <VersionLabelComponent />
 
       <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
         <Input.TextArea

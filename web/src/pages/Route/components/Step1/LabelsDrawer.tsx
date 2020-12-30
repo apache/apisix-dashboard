@@ -24,6 +24,8 @@ import { fetchLabelList } from '../../service';
 
 type Props = {
   title?: string;
+  labelPrefix?: string;
+  actionName: string;
   dataSource: string[];
   disabled: boolean;
   onClose(): void;
@@ -110,7 +112,8 @@ const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
 
 const LabelsDrawer: React.FC<Props> = ({
   title = 'Label Manager',
-  disabled,
+  actionName = '',
+  disabled = false,
   dataSource = [],
   onClose,
   onChange = () => {},
@@ -155,7 +158,7 @@ const LabelsDrawer: React.FC<Props> = ({
                 }
 
                 onChange({
-                  action: 'labelsChange',
+                  action: actionName,
                   data,
                 });
                 onClose();

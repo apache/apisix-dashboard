@@ -189,7 +189,7 @@ const Page: React.FC = () => {
                   handlePublishOffline(record.id, RouteStatus.Offline);
                 }}
                 okButtonProps={{
-                  danger: true
+                  danger: true,
                 }}
                 okText={formatMessage({ id: 'component.global.confirm' })}
                 cancelText={formatMessage({ id: 'component.global.cancel' })}
@@ -199,10 +199,7 @@ const Page: React.FC = () => {
                 </Button>
               </Popconfirm>
             ) : null}
-            <Button
-              type="primary"
-              onClick={() => history.push(`/routes/${record.id}/edit`)}
-            >
+            <Button type="primary" onClick={() => history.push(`/routes/${record.id}/edit`)}>
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
             <Popconfirm
