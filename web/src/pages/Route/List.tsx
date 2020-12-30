@@ -172,25 +172,17 @@ const Page: React.FC = () => {
       render: (_, record) => (
         <>
           <Space align="baseline">
-            <Button
-              type="primary"
-              onClick={() => history.push(`/routes/${record.id}/edit`)}
-              style={{ marginRight: 10 }}
-            >
-              {formatMessage({ id: 'component.global.edit' })}
-            </Button>
-            {!record.status && (
+            {!record.status ? (
               <Button
                 type="primary"
                 onClick={() => {
                   handlePublishOffline(record.id, RouteStatus.Publish);
                 }}
-                style={{ marginRight: 10 }}
               >
                 {formatMessage({ id: 'page.route.publish' })}
               </Button>
-            )}
-            {record.status && (
+            ) : null}
+            {record.status ? (
               <Popconfirm
                 title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
                 onConfirm={() => {
@@ -203,7 +195,14 @@ const Page: React.FC = () => {
                   {formatMessage({ id: 'page.route.offline' })}
                 </Button>
               </Popconfirm>
-            )}
+            ) : null}
+            <Button
+              type="primary"
+              onClick={() => history.push(`/routes/${record.id}/edit`)}
+              style={{ marginRight: 10 }}
+            >
+              {formatMessage({ id: 'component.global.edit' })}
+            </Button>
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
