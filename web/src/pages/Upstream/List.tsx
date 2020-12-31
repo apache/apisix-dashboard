@@ -21,13 +21,10 @@ import { Popconfirm, Button, notification } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 import { timestampToLocaleString } from '@/helpers';
-import useForceIntl from '@/hooks/useForceIntl';
 
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
-  useForceIntl();
-
   const ref = useRef<ActionType>();
 
   const { formatMessage } = useIntl();

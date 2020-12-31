@@ -32,4 +32,4 @@ export const codeMessage = {
   504: '网关超时。',
 };
 
-export const DEFAULT_GLOBAL_RULE_ID = "1"
+export const DEFAULT_GLOBAL_RULE_ID = '1';

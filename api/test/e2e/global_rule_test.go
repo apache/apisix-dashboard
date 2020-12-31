@@ -56,7 +56,6 @@ func TestGlobalRule(t *testing.T) {
 			Path:   "/apisix/admin/global_rules/1",
 			Method: http.MethodPut,
 			Body: `{
-                                "id": "1",
                                 "plugins": {
 		                        "response-rewrite": {
 		                            "headers": {
@@ -181,6 +180,36 @@ func TestGlobalRule(t *testing.T) {
 			ExpectBody:    "hello world",
 			ExpectHeaders: map[string]string{"X-VERSION": "2.0"},
 			Sleep:         sleepTime,
+		},
+		{
+			Desc:   "update global rule",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/global_rules/1",
+			Method: http.MethodPut,
+			Body: `{
+                                "id": "1",
+                                "plugins": {
+		                        "response-rewrite": {
+		                            "headers": {
+		                                "X-VERSION":"1.0"
+		                            }
+		                        },
+					"uri-blocker": {
+						"block_rules": ["root.exe", "root.m+"]
+					}
+                                }
+                        }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "make sure that update succeeded",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Query:        "file=root.exe",
+			ExpectStatus: http.StatusForbidden,
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "delete global rule",

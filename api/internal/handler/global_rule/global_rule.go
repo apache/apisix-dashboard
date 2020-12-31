@@ -18,10 +18,12 @@ package global_rule
 
 import (
 	"encoding/json"
+	"net/http"
 	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -49,9 +51,9 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.GET("/apisix/admin/global_rules", wgin.Wraps(h.List,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 	r.PUT("/apisix/admin/global_rules/:id", wgin.Wraps(h.Set,
-		wrapper.InputType(reflect.TypeOf(entity.GlobalPlugins{}))))
+		wrapper.InputType(reflect.TypeOf(SetInput{}))))
 	r.PUT("/apisix/admin/global_rules", wgin.Wraps(h.Set,
-		wrapper.InputType(reflect.TypeOf(entity.GlobalPlugins{}))))
+		wrapper.InputType(reflect.TypeOf(SetInput{}))))
 
 	r.PATCH("/apisix/admin/global_rules/:id", consts.ErrorWrapper(Patch))
 	r.PATCH("/apisix/admin/global_rules/:id/*path", consts.ErrorWrapper(Patch))
@@ -121,10 +123,25 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	return ret, nil
 }
 
-func (h *Handler) Set(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*entity.GlobalPlugins)
+type SetInput struct {
+	entity.GlobalPlugins
+	ID string `auto_read:"id,path"`
+}
 
-	if err := h.globalRuleStore.Create(c.Context(), input); err != nil {
+func (h *Handler) Set(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*SetInput)
+
+	// check if ID in body is equal ID in path
+	if err := handler.IDCompare(input.ID, input.GlobalPlugins.ID); err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+	}
+
+	// if has id in path, use it
+	if input.ID != "" {
+		input.GlobalPlugins.ID = input.ID
+	}
+
+	if err := h.globalRuleStore.Update(c.Context(), &input.GlobalPlugins, true); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
