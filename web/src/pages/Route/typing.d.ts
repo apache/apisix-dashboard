@@ -83,7 +83,7 @@ declare namespace RouteModule {
     remote_addrs: string[];
     vars: [string, Operator, string][];
     upstream: {
-      type: 'roundrobin' | 'chash';
+      type: 'roundrobin' | 'chash' | 'ewma';
       hash_on?: string;
       key?: string;
       nodes: {
@@ -134,16 +134,14 @@ declare namespace RouteModule {
     advancedMatchingRules: MatchingRule[];
     disabled?: boolean;
     isEdit?: boolean;
-    onChange?(data: {
-      action: 'redirectOptionChange' | 'advancedMatchingRulesChange' | 'labelsChange';
-      data: T;
-    }): void;
+    onChange?(data: { action: string; data: T }): void;
   };
 
   type Form1Data = {
     name: string;
     desc: string;
-    labels: string[];
+    custom_version_label: string;
+    custom_normal_labels: string[];
     priority: number;
     websocket: boolean;
     hosts: string[];

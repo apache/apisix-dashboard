@@ -103,11 +103,13 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'component.global.labels' }),
       dataIndex: 'labels',
       render: (_, record) => {
-        return Object.keys(record.labels || {}).map((item) => (
-          <Tag key={Math.random().toString(36).slice(2)}>
-            {item}:{record.labels[item]}
-          </Tag>
-        ));
+        return Object.keys(record.labels || {})
+          .filter((item) => item !== 'API_VERSION')
+          .map((item) => (
+            <Tag key={Math.random().toString(36).slice(2)}>
+              {item}:{record.labels[item]}
+            </Tag>
+          ));
       },
       renderFormItem: (_, { type }) => {
         if (type === 'form') {
@@ -127,18 +129,53 @@ const Page: React.FC = () => {
               );
             }}
           >
-            {Object.keys(labelList).map((key) => {
-              return (
-                <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
-                  {(labelList[key] || []).map((value: string) => (
-                    <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
-                      {' '}
-                      {value}{' '}
-                    </Option>
-                  ))}
-                </OptGroup>
-              );
-            })}
+            {Object.keys(labelList)
+              .filter((item) => item !== 'API_VERSION')
+              .map((key) => {
+                return (
+                  <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
+                    {(labelList[key] || []).map((value: string) => (
+                      <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
+                        {' '}
+                        {value}{' '}
+                      </Option>
+                    ))}
+                  </OptGroup>
+                );
+              })}
+          </Select>
+        );
+      },
+    },
+    {
+      title: formatMessage({ id: 'component.global.version' }),
+      dataIndex: 'API_VERSION',
+      render: (_, record) => {
+        return Object.keys(record.labels || {})
+          .filter((item) => item === 'API_VERSION')
+          .map((item) => record.labels[item]);
+      },
+      renderFormItem: (_, { type }) => {
+        if (type === 'form') {
+          return null;
+        }
+
+        return (
+          <Select style={{ width: '100%' }}>
+            {Object.keys(labelList)
+              .filter((item) => item === 'API_VERSION')
+              .map((key) => {
+                return (
+                  <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
+                    {(labelList[key] || []).map((value: string) => (
+                      <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
+                        {' '}
+                        {value}{' '}
+                      </Option>
+                    ))}
+                  </OptGroup>
+                );
+              })}
           </Select>
         );
       },
@@ -169,36 +206,36 @@ const Page: React.FC = () => {
       render: (_, record) => (
         <>
           <Space align="baseline">
-            <Button
-              type="primary"
-              onClick={() => history.push(`/routes/${record.id}/edit`)}
-              style={{ marginRight: 10 }}
-            >
+            {!record.status ? (
+              <Button
+                type="primary"
+                onClick={() => {
+                  handlePublishOffline(record.id, RouteStatus.Publish);
+                }}
+              >
+                {formatMessage({ id: 'page.route.publish' })}
+              </Button>
+            ) : null}
+            {record.status ? (
+              <Popconfirm
+                title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
+                onConfirm={() => {
+                  handlePublishOffline(record.id, RouteStatus.Offline);
+                }}
+                okButtonProps={{
+                  danger: true,
+                }}
+                okText={formatMessage({ id: 'component.global.confirm' })}
+                cancelText={formatMessage({ id: 'component.global.cancel' })}
+              >
+                <Button type="primary" danger disabled={Boolean(!record.status)}>
+                  {formatMessage({ id: 'page.route.offline' })}
+                </Button>
+              </Popconfirm>
+            ) : null}
+            <Button type="primary" onClick={() => history.push(`/routes/${record.id}/edit`)}>
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
-            <Button
-              type="primary"
-              onClick={() => {
-                handlePublishOffline(record.id, RouteStatus.Publish);
-              }}
-              style={{ marginRight: 10 }}
-              disabled={Boolean(record.status)}
-            >
-              {formatMessage({ id: 'page.route.publish' })}
-            </Button>
-            <Popconfirm
-              title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
-              onConfirm={() => {
-                handlePublishOffline(record.id, RouteStatus.Offline);
-              }}
-              okText={formatMessage({ id: 'component.global.confirm' })}
-              cancelText={formatMessage({ id: 'component.global.cancel' })}
-              disabled={Boolean(!record.status)}
-            >
-              <Button type="primary" danger disabled={Boolean(!record.status)}>
-                {formatMessage({ id: 'page.route.offline' })}
-              </Button>
-            </Popconfirm>
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
@@ -209,6 +246,9 @@ const Page: React.FC = () => {
                     })} ${formatMessage({ id: 'component.status.success' })}`,
                   );
                 });
+              }}
+              okButtonProps={{
+                danger: true,
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}

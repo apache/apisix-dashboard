@@ -25,5 +25,5 @@ declare namespace PluginModule {
   type GlobalRule = {
     id: string;
     plugins: Record<string, object>;
-  }
+  };
 }

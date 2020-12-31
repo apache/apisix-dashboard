@@ -29,7 +29,7 @@ const useForceIntl = () => {
     }
 
     const { locale } = getIntl();
-    if (locale === 'zh-cn') {
+    if (locale === 'zh-CN') {
       return;
     }
 
