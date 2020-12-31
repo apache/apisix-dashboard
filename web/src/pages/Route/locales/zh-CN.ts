@@ -50,7 +50,7 @@ export default {
   'page.route.input.placeholder.parameterNameHttpHeader': '请求头键名，例如：HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': '参数名称，例如：id',
   'page.route.input.placeholder.redirectCustom': '例如：/foo/index.html',
-  'page.route.input.placeholder.requestUrl': '请输入请求地址',
+  'page.route.input.placeholder.requestUrl': '请输入合法的请求地址',
   'page.route.input.placeholder.paramKey': '参数名称',
   'page.route.input.placeholder.paramValue': '参数值',
   // form

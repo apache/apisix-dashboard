@@ -334,6 +334,17 @@ func TestRoute_search_by_label(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
+			Desc:         "search the route by label (combination)",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/routes",
+			Query:        "label=build:16,build:17",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"total_size\":2",
+			Sleep:        sleepTime,
+		},
+		{
 			Desc:         "delete the route (r1)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
