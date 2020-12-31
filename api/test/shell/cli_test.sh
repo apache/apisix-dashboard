@@ -19,7 +19,17 @@
 
 set -ex
 VERSION=$(cat ./VERSION)
-GITHASH=$(cat ./.githash 2> /dev/null || git log --pretty=format:"%h" -1)
+
+# test content in .githash
+if [[ -f ../.githash ]]; then
+    GITHASH=$(cat ../.githash)
+    if [[ ! $GITHASH =~ ^[a-z0-9]{7}$ ]]; then
+        echo "failed: verify .githash content failed"
+        exit 1
+    fi
+else
+    GITHASH=$(git log --pretty=format:"%h" -1)
+fi
 
 clean_up() {
     git checkout conf/conf.yaml
