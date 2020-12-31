@@ -31,7 +31,7 @@ import { fetchServiceList } from '../../service';
 const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
   form,
   disabled,
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const [serviceList, setServiceList] = useState<ServiceModule.ResponseBody[]>([]);
@@ -383,17 +383,18 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
           return null;
         }}
       </Form.Item>
-      <Form.Item
-        label={formatMessage({ id: 'page.route.service' })}
-        name='service_id'
-      >
+      <Form.Item label={formatMessage({ id: 'page.route.service' })} name="service_id">
         <Select disabled={disabled}>
           {/* TODO: value === '' means  no service_id select, need to find a better way */}
-          <Select.Option value='' key={Math.random().toString(36).substring(7)}>None</Select.Option>
-          {serviceList.map(item => {
-            return <Select.Option value={item.id} key={item.id}>
-              {item.name}
-            </Select.Option>
+          <Select.Option value="" key={Math.random().toString(36).substring(7)}>
+            None
+          </Select.Option>
+          {serviceList.map((item) => {
+            return (
+              <Select.Option value={item.id} key={item.id}>
+                {item.name}
+              </Select.Option>
+            );
           })}
         </Select>
       </Form.Item>

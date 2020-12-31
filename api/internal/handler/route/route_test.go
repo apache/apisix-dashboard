@@ -757,6 +757,86 @@ func TestRoute(t *testing.T) {
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
 
+	// check ID discrepancy on Update
+
+	// Fail: test the string body id value != string route id value
+	errRoute := &UpdateInput{}
+	errRoute.ID = "2"
+	err = json.Unmarshal([]byte(reqBody), errRoute)
+	assert.Nil(t, err)
+	ctx.SetInput(errRoute)
+	ret, err = handler.Update(ctx)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "ID on path (2) doesn't match ID on body (1)")
+	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
+
+	// Fail: tests the float body id value != string route id value
+	reqBodyErr := `{
+		"id": 1,
+		"uri": "/index.html",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "www.a.com",
+				"port": 80,
+				"weight": 1
+			}]
+		}
+	}`
+	errRoute = &UpdateInput{}
+	errRoute.ID = "2"
+	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
+	assert.Nil(t, err)
+	ctx.SetInput(errRoute)
+	ret, err = handler.Update(ctx)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "ID on path (2) doesn't match ID on body (1)")
+	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
+
+	// Success: tests the float body id value is == string route id value
+	reqBodyErr = `{
+		"id": 10,
+		"uri": "/index.html",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "www.a.com",
+				"port": 80,
+				"weight": 1
+			}]
+		}
+	}`
+	errRoute = &UpdateInput{}
+	errRoute.ID = "10"
+	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
+	assert.Nil(t, err)
+	ctx.SetInput(errRoute)
+	ret, err = handler.Update(ctx)
+	assert.Nil(t, err)
+
+	// Success: tests the Body ID can be nil
+	reqBodyErr = `{
+		"uri": "/index.html",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "www.a.com",
+				"port": 80,
+				"weight": 1
+			}]
+		}
+	}`
+	errRoute = &UpdateInput{}
+	errRoute.ID = "r1"
+	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
+	assert.Nil(t, err)
+	ctx.SetInput(errRoute)
+	ret, err = handler.Update(ctx)
+	assert.Nil(t, err)
+
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
 	//list
 	listInput := &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1}`
@@ -1066,7 +1146,6 @@ func TestRoute(t *testing.T) {
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)
-
 }
 
 func Test_Route_With_Script(t *testing.T) {
@@ -1211,4 +1290,13 @@ func Test_Route_With_Script(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, stored.ID, route.ID)
 	assert.Nil(t, stored.Script)
+
+	//delete test data
+	inputDel := &BatchDelete{}
+	reqBody = `{"ids": "1"}`
+	err = json.Unmarshal([]byte(reqBody), inputDel)
+	assert.Nil(t, err)
+	ctx.SetInput(inputDel)
+	_, err = handler.BatchDelete(ctx)
+	assert.Nil(t, err)
 }

@@ -39,7 +39,7 @@ const { TabPane } = Tabs;
 const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const { formatMessage } = useIntl();
   const [httpMethod, setHttpMethod] = useState(HTTP_METHOD_OPTION_LIST[0]);
-  const [requestProtocol, setRequestProtocol] = useState(PROTOCOL_SUPPORTED[0])
+  const [requestProtocol, setRequestProtocol] = useState(PROTOCOL_SUPPORTED[0]);
   const [showBodyTab, setShowBodyTab] = useState(false);
   const [queryForm] = Form.useForm();
   const [bodyForm] = Form.useForm();
@@ -119,7 +119,9 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   };
 
   const handleDebug = (url: string) => {
-    if (url === '') {
+    /* eslint-disable no-useless-escape */
+    const urlReg = /^(?=^.{3,255}$)(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/\w*)*(\.\w+)*([\?&]\w+=\w*)*$/;
+    if (!urlReg.test(url)) {
       notification.warning({
         message: formatMessage({ id: 'page.route.input.placeholder.requestUrl' }),
       });

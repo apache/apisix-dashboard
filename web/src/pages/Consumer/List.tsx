@@ -22,6 +22,7 @@ import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 
 import { timestampToLocaleString } from '@/helpers';
+
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
@@ -93,6 +94,10 @@ const Page: React.FC = () => {
         columns={columns}
         rowKey="id"
         request={fetchList}
+        search={{
+          searchText: formatMessage({ id: 'component.global.search' }),
+          resetText: formatMessage({ id: 'component.global.reset' }),
+        }}
         toolBarRender={() => [
           <Button type="primary" onClick={() => history.push(`/consumer/create`)}>
             <PlusOutlined />

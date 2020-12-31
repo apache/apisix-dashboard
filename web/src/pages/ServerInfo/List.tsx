@@ -54,7 +54,7 @@ const ServerInfo: React.FC = () => {
                 setData(
                   nodeList.find((item) => {
                     return item.id === value;
-                  })
+                  }),
                 );
               }}
             >

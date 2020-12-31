@@ -18,6 +18,8 @@ export default {
   'component.tagSelect.expand': 'Expand',
   'component.tagSelect.collapse': 'Collapse',
   'component.tagSelect.all': 'All',
+  'component.global.search': 'Search',
+  'component.global.reset': 'Reset',
   'component.global.confirm': 'Confirm',
   'component.global.delete': 'Delete',
   'component.global.cancel': 'Cancel',

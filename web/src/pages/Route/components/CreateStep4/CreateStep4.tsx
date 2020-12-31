@@ -17,8 +17,8 @@
 import React from 'react';
 import { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
-import PluginOrchestration from '@api7-dashboard/pluginchart';
 
+import PluginOrchestration from '@/components/PluginOrchestration';
 import PluginPage from '@/components/Plugin';
 import Step1 from '../Step1';
 import Step2 from '../Step2';

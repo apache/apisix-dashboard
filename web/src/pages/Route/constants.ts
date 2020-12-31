@@ -43,7 +43,7 @@ export const FORM_ITEM_WITHOUT_LABEL = {
 export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   name: '',
   desc: '',
-  labels:[],
+  labels: [],
   status: 1,
   priority: 0,
   websocket: false,
@@ -54,6 +54,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   redirectURI: '',
   ret_code: 302,
   methods: HTTP_METHOD_OPTION_LIST,
+  service_id: '',
 };
 
 export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
@@ -87,7 +88,7 @@ export const HASH_ON_LIST = ['vars', 'header', 'cookie', 'consumer'];
 
 export const AUTH_LIST = ['basic-auth', 'jwt-auth', 'key-auth'];
 
-export const PROTOCOL_SUPPORTED = ['http', 'https'];
+export const PROTOCOL_SUPPORTED: RouteModule.debugRequest['request_protocol'][] = ['http', 'https'];
 
 export const DEFAULT_DEBUG_PARAM_FORM_DATA = {
   params: [

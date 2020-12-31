@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 export default {
-    'page.service.steps.stepTitle.basicInformation': 'Basic Information',
-    'page.service.steps.stepTitle.pluginConfig': 'Plugin Config',
-    'page.service.steps.stepTitle.preview': 'Preview',
-}
+  'page.service.steps.stepTitle.basicInformation': 'Basic Information',
+  'page.service.steps.stepTitle.pluginConfig': 'Plugin Config',
+  'page.service.steps.stepTitle.preview': 'Preview',
+};
