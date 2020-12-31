@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 export const DEFAULT_UPSTREAM = {
+  upstream_id: '',
   nodes: [{ host: '', port: 80, weight: 1 }],
   type: 'roundrobin',
   timeout: {

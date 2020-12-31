@@ -25,9 +25,9 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 	"go.uber.org/zap/buffer"
 
-	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/log"
+	"github.com/apisix/manager-api/internal/log"
 )
 
 type Validator interface {
@@ -123,7 +123,7 @@ func cHashKeySchemaCheck(upstream *entity.UpstreamDef) error {
 	if upstream.HashOn == "vars" {
 		schemaDef = conf.Schema.Get("main.upstream_hash_vars_schema").String()
 		if schemaDef == "" {
-			return fmt.Errorf("schema validate failed: schema not found, patch: main.upstream_hash_vars_schema")
+			return fmt.Errorf("schema validate failed: schema not found, path: main.upstream_hash_vars_schema")
 		}
 	}
 

@@ -18,11 +18,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
-import { transformer as chartTransformer } from '@api7-dashboard/pluginchart';
 
 import ActionBar from '@/components/ActionBar';
 import { DEFAULT_UPSTREAM } from '@/components/Upstream';
 
+import { transformer as chartTransformer } from '@/components/PluginOrchestration';
 import { create, fetchItem, update, checkUniqueName, checkHostWithSSL } from './service';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
@@ -112,6 +112,9 @@ const Page: React.FC<Props> = (props) => {
             if (action === 'advancedMatchingRulesChange') {
               setAdvancedMatchingRules(data);
             }
+            if (action === 'labelsChange') {
+              form1.setFieldsValue({ ...form1.getFieldsValue(), labels: data });
+            }
           }}
           isEdit={props.route.path.indexOf('edit') > 0}
         />
@@ -156,6 +159,7 @@ const Page: React.FC<Props> = (props) => {
           form2={form2}
           upstreamRef={upstreamRef}
           step3Data={step3Data}
+          isEdit={props.route.path.indexOf('edit') > 0}
         />
       );
     }

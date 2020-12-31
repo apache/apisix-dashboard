@@ -17,7 +17,6 @@
 package e2e
 
 import (
-	"io/ioutil"
 	"net/http"
 	"testing"
 	"time"
@@ -28,10 +27,10 @@ import (
 func TestBalancer_roundrobin_with_weight(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "create upstream (roundrobin with same weight)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create upstream (roundrobin with same weight)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [{
 					"host": "172.16.238.20",
@@ -54,10 +53,10 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "create route using the upstream just created",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/1",
+			Desc:   "create route using the upstream just created",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/1",
 			Body: `{
 				"uri": "/server_port",
 				"upstream_id": "1"
@@ -69,39 +68,24 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
-	time.Sleep(200 * time.Millisecond)
-	basepath := "http://127.0.0.1:9080/"
-	request, err := http.NewRequest("GET", basepath+"/server_port", nil)
-	request.Header.Add("Authorization", token)
-	var resp *http.Response
-	var respBody []byte
-	res := map[string]int{}
-	for i := 0; i < 18; i++ {
-		resp, err = http.DefaultClient.Do(request)
-		assert.Nil(t, err)
-		respBody, err = ioutil.ReadAll(resp.Body)
-		body := string(respBody)
-		if _, ok := res[body]; !ok {
-			res[body] = 1
-		} else {
-			res[body] += 1
-		}
-		resp.Body.Close()
-	}
+	time.Sleep(sleepTime)
+	// batch test /server_port api
+	res := BatchTestServerPort(t, 18)
+	// BatchTestServerPort
 	assert.True(t, res["1982"] == 6)
 	assert.True(t, res["1981"] == 6)
 	assert.True(t, res["1980"] == 6)
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "create upstream (roundrobin with different weight)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create upstream (roundrobin with different weight)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [{
 					"host": "172.16.238.20",
@@ -125,34 +109,24 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
-	time.Sleep(200 * time.Millisecond)
-	res = map[string]int{}
-	for i := 0; i < 18; i++ {
-		resp, err = http.DefaultClient.Do(request)
-		assert.Nil(t, err)
-		respBody, err = ioutil.ReadAll(resp.Body)
-		body := string(respBody)
-		if _, ok := res[body]; !ok {
-			res[body] = 1
-		} else {
-			res[body] += 1
-		}
-		resp.Body.Close()
-	}
+	time.Sleep(sleepTime)
+	// batch test /server_port api
+	res = BatchTestServerPort(t, 18)
+
 	assert.True(t, res["1980"] == 3)
 	assert.True(t, res["1981"] == 6)
 	assert.True(t, res["1982"] == 9)
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "create upstream (roundrobin with weight 1 and 0) ",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create upstream (roundrobin with weight 1 and 0) ",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [{
 					"host": "172.16.238.20",
@@ -171,32 +145,22 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
 	time.Sleep(200 * time.Millisecond)
-	res = map[string]int{}
-	for i := 0; i < 18; i++ {
-		resp, err = http.DefaultClient.Do(request)
-		assert.Nil(t, err)
-		respBody, err = ioutil.ReadAll(resp.Body)
-		body := string(respBody)
-		if _, ok := res[body]; !ok {
-			res[body] = 1
-		} else {
-			res[body] += 1
-		}
-		resp.Body.Close()
-	}
+	// batch test /server_port api
+	res = BatchTestServerPort(t, 18)
+
 	assert.True(t, res["1980"] == 18)
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "create upstream (roundrobin with weight only 1 ) ",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/upstreams/1",
+			Desc:   "create upstream (roundrobin with weight only 1 ) ",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [{
 					"host": "172.16.238.20",
@@ -210,31 +174,21 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 		},
 	}
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// hit routes
-	time.Sleep(200 * time.Millisecond)
-	res = map[string]int{}
-	for i := 0; i < 18; i++ {
-		resp, err = http.DefaultClient.Do(request)
-		assert.Nil(t, err)
-		respBody, err = ioutil.ReadAll(resp.Body)
-		body := string(respBody)
-		if _, ok := res[body]; !ok {
-			res[body] = 1
-		} else {
-			res[body] += 1
-		}
-		resp.Body.Close()
-	}
+	time.Sleep(sleepTime)
+	// batch test /server_port api
+	res = BatchTestServerPort(t, 18)
+
 	assert.True(t, res["1980"] == 18)
 }
 
 func TestBalancer_Delete(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/1",
@@ -242,7 +196,7 @@ func TestBalancer_Delete(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete upstream",
+			Desc:         "delete upstream",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/1",
@@ -250,7 +204,7 @@ func TestBalancer_Delete(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just deleted",
+			Desc:         "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
@@ -261,6 +215,6 @@ func TestBalancer_Delete(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

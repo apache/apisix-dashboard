@@ -14,58 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { JSONSchema7 } from 'json-schema';
 import { omit } from 'lodash';
 import { request } from 'umi';
-import { PLUGIN_MAPPER_SOURCE } from './data';
 
-enum Category {
-  'Limit traffic',
-  'Observability',
-  'Security',
-  'Authentication',
-  'Log',
-  'Other',
-}
-
-export const fetchList = () => request<Res<string[]>>('/plugins');
-
-let cachedPluginNameList: string[] = [];
-export const getList = async () => {
-  if (!cachedPluginNameList.length) {
-    cachedPluginNameList = (await fetchList()).data;
-  }
-  const names = cachedPluginNameList;
-  const data: Record<string, PluginComponent.Meta[]> = {};
-
-  names.forEach((name) => {
-    const plugin = PLUGIN_MAPPER_SOURCE[name] || {};
-    const { category = 'Other', hidden = false } = plugin;
-
-    // NOTE: assign it to Authentication plugin
-    if (name.includes('auth')) {
-      plugin.category = 'Authentication';
-    }
-
-    if (!data[category]) {
-      data[category] = [];
-    }
-
-    if (!hidden) {
-      data[category] = data[category].concat({
-        ...plugin,
-        name,
-      });
-    }
+export const fetchList = () => {
+  return request<Res<PluginComponent.Meta[]>>('/plugins?all=true').then((data) => {
+    return data.data;
   });
-
-  return Object.keys(data)
-    .sort((a, b) => Category[a] - Category[b])
-    .map((category) => {
-      return data[category].sort((a, b) => {
-        return (a.priority || 9999) - (b.priority || 9999);
-      });
-    });
 };
 
 /**
@@ -80,7 +35,7 @@ const cachedPluginSchema: Record<string, object> = {
 export const fetchSchema = async (
   name: string,
   schemaType: PluginComponent.Schema,
-): Promise<JSONSchema7> => {
+): Promise<any> => {
   if (!cachedPluginSchema[schemaType][name]) {
     const queryString = schemaType !== 'route' ? `?schema_type=${schemaType}` : '';
     cachedPluginSchema[schemaType][name] = (

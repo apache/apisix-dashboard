@@ -27,7 +27,7 @@ import (
 func TestRoute_With_Auth_Plugin(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -35,10 +35,10 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				 "uri": "/hello",
 				 "plugins": {
@@ -58,7 +58,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			ExpectBody:   `"code":0`,
 		},
 		{
-			caseDesc:     "make sure the consumer is not created",
+			Desc:         "make sure the consumer is not created",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/consumers/jack",
@@ -66,10 +66,10 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			ExpectStatus: http.StatusNotFound,
 		},
 		{
-			caseDesc: "create consumer",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/consumers",
-			Method:   http.MethodPut,
+			Desc:   "create consumer",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
 			Body: `{
 				"username": "jack",
 				"plugins": {
@@ -87,7 +87,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	time.Sleep(sleepTime)
@@ -106,7 +106,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 	// verify token and clean test data
 	tests = []HttpTestCase{
 		{
-			caseDesc:     "verify route without jwt token",
+			Desc:         "verify route without jwt token",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -115,7 +115,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "verify route with correct jwt token",
+			Desc:         "verify route with correct jwt token",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -124,7 +124,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			ExpectBody:   "hello world",
 		},
 		{
-			caseDesc:     "verify route with incorrect jwt token",
+			Desc:         "verify route with incorrect jwt token",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -133,7 +133,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			ExpectBody:   `{"message":"invalid jwt string"}`,
 		},
 		{
-			caseDesc:     "delete consumer",
+			Desc:         "delete consumer",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/consumers/jack",
@@ -141,7 +141,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify route with the jwt token from just deleted consumer",
+			Desc:         "verify route with the jwt token from just deleted consumer",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -151,7 +151,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -159,7 +159,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "verify the deleted route ",
+			Desc:         "verify the deleted route ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -170,7 +170,7 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 }

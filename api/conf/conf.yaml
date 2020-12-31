@@ -22,8 +22,8 @@ conf:
   etcd:
     endpoints:          # supports defining multiple etcd host addresses for an etcd cluster
       - 127.0.0.1:2379
-
-                        # etcd basic auth info
+                          # yamllint disable rule:comments-indentation
+                          # etcd basic auth info
     # username: "root"    # ignore etcd username if not enable etcd auth
     # password: "123456"  # ignore etcd password if not enable etcd auth
   log:
@@ -43,7 +43,7 @@ authentication:
                         # NOTE: Highly recommended to modify this value to protect `manager api`.
                         # if it's default value, when `manager api` start , it will generate a random string to replace it.
   expire_time: 3600     # jwt token expire time, in second
-  users:
+  users:                # yamllint enable rule:comments-indentation
     - username: admin   # username and password for login `manager api`
       password: admin
     - username: user

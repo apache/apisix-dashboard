@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
+
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -27,10 +28,16 @@ import (
 	"time"
 
 	"github.com/gavv/httpexpect/v2"
+	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
 )
 
 var token string
+
+var APISIXHost = "http://127.0.0.1:9080"
+var APISIXInternalUrl = "http://172.16.238.30:9080"
+var APISIXSingleWorkerHost = "http://127.0.0.1:9081"
+var ManagerAPIHost = "http://127.0.0.1:9000"
 
 func init() {
 	//login to get auth token
@@ -39,7 +46,7 @@ func init() {
 		"password": "admin"
 	}`)
 
-	url := "http://127.0.0.1:9000/apisix/admin/user/login"
+	url := ManagerAPIHost + "/apisix/admin/user/login"
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		panic(err)
@@ -84,11 +91,11 @@ func httpGet(url string) ([]byte, int, error) {
 }
 
 func ManagerApiExpect(t *testing.T) *httpexpect.Expect {
-	return httpexpect.New(t, "http://127.0.0.1:9000")
+	return httpexpect.New(t, ManagerAPIHost)
 }
 
 func APISIXExpect(t *testing.T) *httpexpect.Expect {
-	return httpexpect.New(t, "http://127.0.0.1:9080")
+	return httpexpect.New(t, APISIXHost)
 }
 
 func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
@@ -115,10 +122,42 @@ func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
 	return e
 }
 
+func BatchTestServerPort(t *testing.T, times int) map[string]int {
+	url := APISIXSingleWorkerHost + "/server_port"
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	assert.Nil(t, err)
+
+	res := map[string]int{}
+	var resp *http.Response
+	var client *http.Client
+	var body string
+	var bodyByte []byte
+
+	for i := 0; i < times; i++ {
+		client = &http.Client{}
+		resp, err = client.Do(req)
+		assert.Nil(t, err)
+
+		bodyByte, err = ioutil.ReadAll(resp.Body)
+		assert.Nil(t, err)
+		body = string(bodyByte)
+
+		if _, ok := res[body]; !ok {
+			res[body] = 1
+		} else {
+			res[body] += 1
+		}
+	}
+
+	defer resp.Body.Close()
+
+	return res
+}
+
 var sleepTime = time.Duration(300) * time.Millisecond
 
 type HttpTestCase struct {
-	caseDesc      string
+	Desc          string
 	Object        *httpexpect.Expect
 	Method        string
 	Path          string
@@ -134,66 +173,69 @@ type HttpTestCase struct {
 	Sleep         time.Duration //ms
 }
 
-func testCaseCheck(tc HttpTestCase) {
-	//init
-	expectObj := tc.Object
-	var req *httpexpect.Request
-	switch tc.Method {
-	case http.MethodGet:
-		req = expectObj.GET(tc.Path)
-	case http.MethodPut:
-		req = expectObj.PUT(tc.Path)
-	case http.MethodPost:
-		req = expectObj.POST(tc.Path)
-	case http.MethodDelete:
-		req = expectObj.DELETE(tc.Path)
-	case http.MethodPatch:
-		req = expectObj.PATCH(tc.Path)
-	case http.MethodOptions:
-		req = expectObj.OPTIONS(tc.Path)
-	default:
-	}
-
-	if req == nil {
-		panic("fail to init request")
-	}
-
-	if tc.Sleep != 0 {
-		time.Sleep(tc.Sleep)
-	}
-
-	if tc.Query != "" {
-		req.WithQueryString(tc.Query)
-	}
-
-	//set header
-	for key, val := range tc.Headers {
-		req.WithHeader(key, val)
-	}
-
-	//set body
-	if tc.Body != "" {
-		req.WithText(tc.Body)
-	}
-
-	//respond check
-	resp := req.Expect()
-
-	//match http status
-	if tc.ExpectStatus != 0 {
-		resp.Status(tc.ExpectStatus)
-	}
-
-	//match headers
-	if tc.ExpectHeaders != nil {
-		for key, val := range tc.ExpectHeaders {
-			resp.Header(key).Equal(val)
+func testCaseCheck(tc HttpTestCase, t *testing.T) {
+	t.Run(tc.Desc, func(t *testing.T) {
+		//init
+		expectObj := tc.Object
+		var req *httpexpect.Request
+		switch tc.Method {
+		case http.MethodGet:
+			req = expectObj.GET(tc.Path)
+		case http.MethodPut:
+			req = expectObj.PUT(tc.Path)
+		case http.MethodPost:
+			req = expectObj.POST(tc.Path)
+		case http.MethodDelete:
+			req = expectObj.DELETE(tc.Path)
+		case http.MethodPatch:
+			req = expectObj.PATCH(tc.Path)
+		case http.MethodOptions:
+			req = expectObj.OPTIONS(tc.Path)
+		default:
 		}
-	}
 
-	//match body
-	if tc.ExpectBody != "" {
-		resp.Body().Contains(tc.ExpectBody)
-	}
+		if req == nil {
+			panic("fail to init request")
+		}
 
+		if tc.Sleep != 0 {
+			time.Sleep(tc.Sleep)
+		} else {
+			time.Sleep(time.Duration(50) * time.Millisecond)
+		}
+
+		if tc.Query != "" {
+			req.WithQueryString(tc.Query)
+		}
+
+		//set header
+		for key, val := range tc.Headers {
+			req.WithHeader(key, val)
+		}
+
+		//set body
+		if tc.Body != "" {
+			req.WithText(tc.Body)
+		}
+
+		//respond check
+		resp := req.Expect()
+
+		//match http status
+		if tc.ExpectStatus != 0 {
+			resp.Status(tc.ExpectStatus)
+		}
+
+		//match headers
+		if tc.ExpectHeaders != nil {
+			for key, val := range tc.ExpectHeaders {
+				resp.Header(key).Equal(val)
+			}
+		}
+
+		//match body
+		if tc.ExpectBody != "" {
+			resp.Body().Contains(tc.ExpectBody)
+		}
+	})
 }

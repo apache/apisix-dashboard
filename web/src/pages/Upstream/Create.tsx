@@ -54,9 +54,9 @@ const Page: React.FC = (props) => {
         notification.success({
           message: `${
             id
-              ? formatMessage({ id: 'upstream.create.edit' })
-              : formatMessage({ id: 'upstream.create.create' })
-          } ${formatMessage({ id: 'upstream.create.upstream.successfully' })}`,
+              ? formatMessage({ id: 'page.upstream.create.edit' })
+              : formatMessage({ id: 'page.upstream.create.create' })
+          } ${formatMessage({ id: 'page.upstream.create.upstream.successfully' })}`,
         });
         history.replace('/upstream/list');
       });
@@ -77,11 +77,11 @@ const Page: React.FC = (props) => {
 
   return (
     <>
-      <PageContainer title={formatMessage({ id: 'upstream.create.create' })}>
+      <PageContainer title={formatMessage({ id: 'page.upstream.create.create' })}>
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
-            <Steps.Step title={formatMessage({ id: 'upstream.create.basic.info' })} />
-            <Steps.Step title={formatMessage({ id: 'upstream.create.preview' })} />
+            <Steps.Step title={formatMessage({ id: 'page.upstream.create.basic.info' })} />
+            <Steps.Step title={formatMessage({ id: 'page.upstream.create.preview' })} />
           </Steps>
 
           {step === 1 && <Step1 form={form1} upstreamRef={upstreamRef} />}
