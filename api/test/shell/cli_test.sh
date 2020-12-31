@@ -19,6 +19,7 @@
 
 set -ex
 VERSION=$(cat ./VERSION)
+GITHASH=$(cat ./.githash 2> /dev/null || git log --pretty=format:"%h" -1)
 
 clean_up() {
     git checkout conf/conf.yaml
@@ -40,7 +41,7 @@ clean_logfile() {
 trap clean_up EXIT
 
 export GO111MODULE=on
-go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version=${VERSION}" ./cmd/manager
+go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version=${VERSION} -X github.com/apisix/manager-api/cmd.GitHash=${GITHASH}" ./cmd/manager
 
 # default level: warn, path: logs/error.log
 
@@ -130,6 +131,11 @@ if [[ `grep -c "The manager-api is running successfully\!" ${STDOUT}` -ne '1' ]]
 fi
 
 if [[ `grep -c "${VERSION}" ${STDOUT}` -ne '1' ]]; then
+    echo "failed: the manager server didn't show started info"
+    exit 1
+fi
+
+if [[ `grep -c "${GITHASH}" ${STDOUT}` -ne '1' ]]; then
     echo "failed: the manager server didn't show started info"
     exit 1
 fi
