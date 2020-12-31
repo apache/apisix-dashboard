@@ -14,28 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ActionBarZhCN } from '@/components/ActionBar';
+import { request } from 'umi';
 
-import component from './zh-CN/component';
-import globalHeader from './zh-CN/globalHeader';
-import menu from './zh-CN/menu';
-import pwa from './zh-CN/pwa';
-import settingDrawer from './zh-CN/settingDrawer';
-import settings from './zh-CN/setting';
-import PluginOrchestration from '../components/PluginOrchestration/locales/zh-CN';
+import { DEFAULT_GLOBAL_RULE_ID } from '@/constants';
 
-export default {
-  'navBar.lang': '语言',
-  'layout.user.link.help': '帮助',
-  'layout.user.link.privacy': '隐私',
-  'layout.user.link.terms': '条款',
-  'app.preview.down.block': '下载此页面到本地项目',
-  ...globalHeader,
-  ...menu,
-  ...settingDrawer,
-  ...settings,
-  ...pwa,
-  ...component,
-  ...ActionBarZhCN,
-  ...PluginOrchestration,
-};
+export const fetchList = (): Promise<{
+  data: PluginModule.TransformedPlugin[];
+  total: number;
+}> =>
+  request<{
+    data: {
+      plugins: Record<string, object>;
+    };
+  }>(`/global_rules/${DEFAULT_GLOBAL_RULE_ID}`).then(({ data }) => {
+    const plugins = Object.entries(data.plugins || {}).map(([name, value]) => ({
+      id: name,
+      name,
+      value,
+    }));
+
+    return {
+      data: plugins,
+      total: plugins.length,
+    };
+  });
+
+export const createOrUpdate = (data: Partial<Omit<PluginModule.GlobalRule, 'id'>>) =>
+  request(`/global_rules/${DEFAULT_GLOBAL_RULE_ID}`, {
+    method: 'PUT',
+    data: { id: DEFAULT_GLOBAL_RULE_ID, ...data },
+  });

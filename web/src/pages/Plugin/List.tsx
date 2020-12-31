@@ -14,57 +14,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef } from 'react';
-import { history, useIntl } from 'umi';
+import React, { useEffect, useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { history, useIntl } from 'umi';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import { Button, Popconfirm, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, notification, Popconfirm, Space } from 'antd';
+import { omit } from 'lodash';
 
-import { fetchList, remove } from './service';
+import PluginDetail from '@/components/Plugin/PluginDetail';
+
+import { fetchList, createOrUpdate } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
+  const [visible, setVisible] = useState(false);
+  const [initialData, setInitialData] = useState({});
+  const [name, setName] = useState('');
 
-  const columns: ProColumns<ServiceModule.ResponseBody>[] = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      hideInSearch: true,
-    },
+  useEffect(() => {
+    fetchList().then(({ data }) => {
+      const plugins: any = {};
+      // eslint-disable-next-line no-shadow
+      data.forEach(({ name, value }) => {
+        plugins[name] = value;
+      });
+      setInitialData(plugins);
+    });
+  }, []);
+
+  const columns: ProColumns<PluginModule.TransformedPlugin>[] = [
     {
       title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
     },
     {
-      title: formatMessage({ id: 'component.global.description' }),
-      dataIndex: 'desc',
-    },
-    {
       title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
-      hideInSearch: true,
       render: (_, record) => (
         <>
           <Space align="baseline">
             <Button
               type="primary"
-              onClick={() => history.push(`/service/${record.id}/edit`)}
+              onClick={() => {
+                setName(record.name);
+                setVisible(true);
+              }}
               style={{ marginRight: 10 }}
             >
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
+
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
-                remove(record.id!).then(() => {
-                  notification.success({
-                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                      id: 'menu.service',
-                    })} ${formatMessage({ id: 'component.status.success' })}`,
-                  });
-                  /* eslint-disable no-unused-expressions */
+                const plugins = omit(initialData, [`${record.name}`]);
+                createOrUpdate({ plugins }).then(() => {
                   ref.current?.reload();
                 });
               }}
@@ -81,28 +87,50 @@ const Page: React.FC = () => {
     },
   ];
 
+  const PluginDrawer = () => (
+    <PluginDetail
+      name={name}
+      readonly={false}
+      visible={visible}
+      type="global"
+      schemaType="route"
+      initialData={initialData}
+      onClose={() => {
+        setVisible(false);
+      }}
+      onChange={({ formData, codemirrorData }) => {
+        createOrUpdate({
+          plugins: {
+            ...initialData,
+            [name]: { ...codemirrorData, ...formData },
+          },
+        }).then(() => {
+          setVisible(false);
+        });
+      }}
+    />
+  );
+
   return (
     <PageHeaderWrapper
-      title={`${formatMessage({ id: 'menu.service' })} ${formatMessage({
+      title={`${formatMessage({ id: 'menu.plugin' })} ${formatMessage({
         id: 'component.global.list',
       })}`}
     >
-      <ProTable<ServiceModule.ResponseBody>
+      <ProTable<PluginModule.TransformedPlugin>
         actionRef={ref}
         rowKey="id"
+        search={false}
         columns={columns}
         request={fetchList}
-        search={{
-          searchText: formatMessage({ id: 'component.global.search' }),
-          resetText: formatMessage({ id: 'component.global.reset' }),
-        }}
         toolBarRender={() => [
-          <Button type="primary" onClick={() => history.push(`/service/create`)}>
+          <Button type="primary" onClick={() => history.push('/plugin/market')}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
         ]}
       />
+      <PluginDrawer />
     </PageHeaderWrapper>
   );
 };
