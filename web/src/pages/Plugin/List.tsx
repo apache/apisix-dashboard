@@ -102,14 +102,16 @@ const Page: React.FC = () => {
         setVisible(false);
       }}
       onChange={({ formData, codemirrorData }) => {
+        const disable = !formData.disable;
         createOrUpdate({
           plugins: {
             ...initialData,
-            [name]: { ...codemirrorData, ...formData },
+            [name]: { ...codemirrorData, disable },
           },
         }).then(() => {
           setVisible(false);
           setName('');
+          ref.current?.reload();
         });
       }}
     />
