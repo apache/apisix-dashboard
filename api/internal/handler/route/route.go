@@ -29,8 +29,9 @@ import (
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
-	"github.com/yuin/gopher-lua"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
+	"github.com/yuin/gopher-lua"
+
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
