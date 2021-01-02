@@ -28,7 +28,7 @@ if [[ -f ../.githash ]]; then
         exit 1
     fi
 else
-    GITHASH=$(git log --pretty=format:"%h" -1)
+    GITHASH=$(HASH="ref: HEAD"; while [[ $HASH == ref\:* ]]; do HASH="$(cat "../.git/$(echo $HASH | cut -d \  -f 2)")"; done; echo ${HASH:0:7})
 fi
 
 clean_up() {

@@ -20,7 +20,7 @@ export ENV=local
 pwd=`pwd`
 
 VERSION=$(cat ./api/VERSION)
-GITHASH=$(cat ./.githash 2> /dev/null || git log --pretty=format:"%h" -1)
+GITHASH=$(cat ./.githash 2> /dev/null || HASH="ref: HEAD"; while [[ $HASH == ref\:* ]]; do HASH="$(cat ".git/$(echo $HASH | cut -d \  -f 2)")"; done; echo ${HASH:0:7})
 
 rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua
 
