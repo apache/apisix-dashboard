@@ -34,6 +34,7 @@ const (
 	EnvBETA  = "beta"
 	EnvDEV   = "dev"
 	EnvLOCAL = "local"
+	EnvTEST  = "test"
 
 	WebDir = "html/"
 )
@@ -98,6 +99,13 @@ type Authentication struct {
 type Config struct {
 	Conf           Conf
 	Authentication Authentication
+}
+
+// ENV=test is for integration tests only, other ENV should call "InitConf" explicitly
+func init() {
+	if env := os.Getenv("ENV"); env == EnvTEST {
+		InitConf()
+	}
 }
 
 func InitConf() {

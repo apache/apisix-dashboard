@@ -27,9 +27,17 @@ import (
 
 var logger *zap.SugaredLogger
 
+// ENV=test is for integration tests only, other ENV should call "InitLogger" explicitly
+func init() {
+	if env := os.Getenv("ENV"); env == conf.EnvTEST {
+		InitLogger()
+	}
+}
+
 func InitLogger() {
 	logger = GetLogger(ErrorLog)
 }
+
 func GetLogger(logType Type) *zap.SugaredLogger {
 	writeSyncer := fileWriter(logType)
 	encoder := getEncoder(logType)

@@ -58,7 +58,7 @@ endif
 ### api-test:		Run the tests of manager-api
 .PHONY: api-test
 api-test: api-default
-	cd api/ && APISIX_API_WORKDIR=$$PWD go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
+	cd api/ && APISIX_API_WORKDIR=$$PWD ENV=test go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
 
 
 ### api-run:		Run the manager-api
