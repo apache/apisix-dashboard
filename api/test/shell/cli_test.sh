@@ -126,6 +126,27 @@ if [[ $res != "hi~" ]]; then
 fi
 clean_up
 
+# run with -p flag out of the default directory
+workDir=$(pwd)
+distDir=/tmp/manager-api
+cp -r $workDir $distDir
+cd $distDir
+rm -fr bin && mkdir bin && mv ./manager-api ./bin/
+rm -rf html && mkdir html && echo "hi~" >> html/index.html
+cd bin && ./manager-api -p $distDir &
+sleep 5
+
+res=$(curl http://127.0.0.1:9000)
+pkill -f manager-api
+rm -fr $distDir
+
+if [[ $res != "hi~" ]]; then
+    echo "failed: manager-api can't run with -p flag out of the default directory"
+    exit 1
+fi
+cd $workDir
+clean_up
+
 # test start info
 
 LOGLEVEL=$(cat conf/conf.yaml | awk '$1=="level:"{print $2}')
