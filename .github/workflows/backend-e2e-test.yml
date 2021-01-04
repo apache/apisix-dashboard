@@ -39,13 +39,13 @@ jobs:
       - name: stop docker compose
         working-directory: ./api/test/docker
         run: |
-          docker-compose down -d
+          docker-compose down
           sleep 10
 
       - name: re-run docker compose
         working-directory: ./api/test/docker
         run: |
-          docker-compose down -d --build
+          docker-compose up -d --build
           sleep 5
           docker logs docker_managerapi_1
 
