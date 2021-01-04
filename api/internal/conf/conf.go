@@ -101,6 +101,7 @@ type Config struct {
 	Authentication Authentication
 }
 
+// TODO: we should no longer use init() function after remove all handler's integration tests
 // ENV=test is for integration tests only, other ENV should call "InitConf" explicitly
 func init() {
 	if env := os.Getenv("ENV"); env == EnvTEST {
