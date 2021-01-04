@@ -128,24 +128,23 @@ clean_up
 
 # run with -p flag out of the default directory
 workDir=$(pwd)
-rm -fr bin && mkdir bin
-cp ./manager-api ./bin/
-rm -rf html && mkdir html
-cd html
-echo "hi~" >> index.html
-$workDir/bin/manager-api -p $workDir &
+distDir=/tmp/manager-api
+cp -r $workDir $distDir
+cd $distDir
+rm -fr bin && mkdir bin && mv ./manager-api ./bin/
+rm -rf html && mkdir html && echo "hi~" >> html/index.html
+cd bin && ./manager-api -p $distDir &
 sleep 5
 
 res=$(curl http://127.0.0.1:9000)
 pkill -f manager-api
-cd $workDir
-rm -rf bin
-rm -rf html
+rm -fr $distDir
 
 if [[ $res != "hi~" ]]; then
     echo "failed: manager-api can't run with -p flag out of the default directory"
     exit 1
 fi
+cd $workDir
 clean_up
 
 # test start info
