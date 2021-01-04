@@ -72,7 +72,9 @@ const Page: React.FC = (props) => {
 
     const upstreamFormData = upstreamForm.getFieldsValue();
     if (upstreamFormData.upstream_id === '') {
-      data.upstream = omit(upstreamFormData, ['upstream_id']);
+      data.upstream = omit(upstreamFormData, ['upstream_id',
+        Object.keys(upstreamFormData.checks || {}).length === 0 ? 'checks' : ''
+      ]);
     } else {
       data.upstream_id = upstreamFormData.upstream_id;
     }
