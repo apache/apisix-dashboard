@@ -2277,75 +2277,6 @@
 			},
 			"version": 0.1
 		},
-		"error-log-logger": {
-			"metadata_schema": {
-				"properties": {
-					"batch_max_size": {
-						"default": 1000,
-						"minimum": 0,
-						"type": "integer"
-					},
-					"buffer_duration": {
-						"default": 60,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"host": {
-						"pattern": "^\\*?[0-9a-zA-Z-._]+$",
-						"type": "string"
-					},
-					"inactive_timeout": {
-						"default": 3,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"keepalive": {
-						"default": 30,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"level": {
-						"default": "WARN",
-						"enum": ["ALERT", "CRIT", "DEBUG", "EMERG", "ERR", "ERROR", "INFO", "NOTICE", "STDERR", "WARN"],
-						"type": "string"
-					},
-					"max_retry_count": {
-						"default": 0,
-						"minimum": 0,
-						"type": "integer"
-					},
-					"name": {
-						"default": "error-log-logger",
-						"type": "string"
-					},
-					"port": {
-						"minimum": 0,
-						"type": "integer"
-					},
-					"retry_delay": {
-						"default": 1,
-						"minimum": 0,
-						"type": "integer"
-					},
-					"timeout": {
-						"default": 3,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"tls": {
-						"default": false,
-						"type": "boolean"
-					},
-					"tls_server_name": {
-						"type": "string"
-					}
-				},
-				"required": ["host", "port"],
-				"type": "object"
-			},
-			"priority": 1091,
-			"version": 0.1
-		},
 		"fault-injection": {
 			"priority": 11000,
 			"schema": {
@@ -2959,19 +2890,6 @@
 			},
 			"version": 0.1
 		},
-		"log-rotate": {
-			"priority": 100,
-			"schema": {
-				"additionalProperties": false,
-				"properties": {
-					"disable": {
-						"type": "boolean"
-					}
-				},
-				"type": "object"
-			},
-			"version": 0.1
-		},
 		"mqtt-proxy": {
 			"priority": 1000,
 			"schema": {
@@ -2995,19 +2913,6 @@
 					}
 				},
 				"required": ["protocol_level", "protocol_name", "upstream"],
-				"type": "object"
-			},
-			"version": 0.1
-		},
-		"node-status": {
-			"priority": 1000,
-			"schema": {
-				"additionalProperties": false,
-				"properties": {
-					"disable": {
-						"type": "boolean"
-					}
-				},
 				"type": "object"
 			},
 			"version": 0.1
@@ -3341,19 +3246,6 @@
 			},
 			"version": 0.1
 		},
-		"server-info": {
-			"priority": 990,
-			"schema": {
-				"additionalProperties": false,
-				"properties": {
-					"disable": {
-						"type": "boolean"
-					}
-				},
-				"type": "object"
-			},
-			"version": 0.1
-		},
 		"serverless-post-function": {
 			"priority": -2000,
 			"schema": {
@@ -3394,42 +3286,6 @@
 					}
 				},
 				"required": ["functions"],
-				"type": "object"
-			},
-			"version": 0.1
-		},
-		"skywalking": {
-			"metadata_schema": {
-				"additionalProperties": false,
-				"properties": {
-					"endpoint_addr": {
-						"default": "http://127.0.0.1:12800",
-						"type": "string"
-					},
-					"service_instance_name": {
-						"default": "APISIX Instance Name",
-						"description": "User Service Instance Name",
-						"type": "string"
-					},
-					"service_name": {
-						"default": "APISIX",
-						"description": "service name for skywalking",
-						"type": "string"
-					}
-				},
-				"type": "object"
-			},
-			"priority": -1100,
-			"schema": {
-				"additionalProperties": false,
-				"properties": {
-					"sample_ratio": {
-						"default": 1,
-						"maximum": 1,
-						"minimum": 0.00001,
-						"type": "number"
-					}
-				},
 				"type": "object"
 			},
 			"version": 0.1
