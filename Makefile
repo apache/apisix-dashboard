@@ -64,7 +64,8 @@ api-test: api-default
 ### api-run:		Run the manager-api
 .PHONY: api-run
 api-run: api-default
-	cd api/ && go run ./cmd/manager
+	api/build.sh --dry-run
+
 
 ### api-stop:		Stop the manager-api
 api-stop:
