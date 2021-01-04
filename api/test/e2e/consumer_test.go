@@ -536,3 +536,69 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 }
+
+func TestConsumer_with_jwt(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			Desc:         "check consumer is not exist",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/consumers/consumer_1",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "data not found",
+		},
+		{
+			Desc:   "create consumer by PUT method",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
+			Body: `{
+				"username":"consumer_1",
+				"desc": "test description",
+				"plugins":{
+					"jwt-auth":{
+						"exp":86400,
+						"key":"user-key",
+						"secret":"my-secret-key"
+					}
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"code\":0",
+		},
+		{
+			Desc:         "get the consumer",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/consumers/consumer_1",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"username\":\"consumer_1\"",
+			Sleep:        sleepTime,
+		},
+
+		{
+			Desc:         "get the token of jwt ",
+			Object:       APISIXExpect(t),
+			Path:         "/apisix/plugin/jwt/sign",
+			Query:        "key=user-key",
+			Method:       http.MethodGet,
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "delete consumer",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/consumers/consumer_1",
+			Method:       http.MethodDelete,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"code\":0",
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+}
