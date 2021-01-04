@@ -251,9 +251,16 @@ func RunTestCases(tc HttpTestCase, t *testing.T) {
 }
 
 func ReadAPISIXErrorLog(t *testing.T) string {
-	bytes, err := ioutil.ReadFile("../docker/apisix_logs/error.log")
+	cmd := exec.Command("pwd")
+	pwdByte, err := cmd.CombinedOutput()
+	pwd := string(pwdByte)
+	pwd = strings.Replace(pwd, "\n", "", 1)
+	pwd = strings.Replace(pwd, "/e2e", "", 1)
+	bytes, err := ioutil.ReadFile(pwd + "/docker/apisix_logs/error.log")
+
 	assert.Nil(t, err)
 	logContent := string(bytes)
+
 	return logContent
 }
 
