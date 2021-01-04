@@ -586,6 +586,7 @@ func TestConsumer_with_jwt(t *testing.T) {
 			Query:        "key=user-key",
 			Method:       http.MethodGet,
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "delete consumer",
