@@ -255,9 +255,8 @@ func ReadAPISIXErrorLog(t *testing.T) string {
 	pwdByte, err := cmd.CombinedOutput()
 	pwd := string(pwdByte)
 	pwd = strings.Replace(pwd, "\n", "", 1)
-	pwd = strings.Replace(pwd, "/e2e", "", 1)
+	pwd = pwd[:strings.Index(pwd, "/e2e")]
 	bytes, err := ioutil.ReadFile(pwd + "/docker/apisix_logs/error.log")
-
 	assert.Nil(t, err)
 	logContent := string(bytes)
 
@@ -268,11 +267,9 @@ func CleanAPISIXErrorLog(t *testing.T) {
 	cmd := exec.Command("pwd")
 	pwdByte, err := cmd.CombinedOutput()
 	pwd := string(pwdByte)
-
 	pwd = strings.Replace(pwd, "\n", "", 1)
-	pwd = strings.Replace(pwd, "/e2e", "", 1)
-
-	cmd = exec.Command("sudo", "echo", " > ", pwd+"/docker/apisix_logs/error.log")
+	pwd = pwd[:strings.Index(pwd, "/e2e")]
+	cmd = exec.Command("sudo", "echo", " > ", pwd + "/docker/apisix_logs/error.log")
 	_, err = cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("cmd error:", err.Error())
