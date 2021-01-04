@@ -20,6 +20,7 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
   request('/services', {
     params: {
       name: res.name,
+      desc: res.desc,
       page: current,
       page_size: pageSize,
     },
