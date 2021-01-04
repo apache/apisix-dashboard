@@ -42,9 +42,9 @@ apisix:
     ssl_cert_key: "/usr/local/apisix/certs/apisix.key"
 
   enable_control: true
-    control:
-      ip: "0.0.0.0"
-      port: 9090
+  control:
+    ip: "0.0.0.0"
+    port: 9090
 
 nginx_config:
   error_log_level: "debug"
