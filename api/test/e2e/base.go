@@ -157,20 +157,21 @@ func BatchTestServerPort(t *testing.T, times int) map[string]int {
 var sleepTime = time.Duration(300) * time.Millisecond
 
 type HttpTestCase struct {
-	Desc          string
-	Object        *httpexpect.Expect
-	Method        string
-	Path          string
-	Query         string
-	Body          string
-	Headers       map[string]string
-	Headers_test  map[string]interface{}
-	ExpectStatus  int
-	ExpectCode    int
-	ExpectMessage string
-	ExpectBody    string
-	ExpectHeaders map[string]string
-	Sleep         time.Duration //ms
+	Desc           string
+	Object         *httpexpect.Expect
+	Method         string
+	Path           string
+	Query          string
+	Body           string
+	Headers        map[string]string
+	Headers_test   map[string]interface{}
+	ExpectStatus   int
+	ExpectCode     int
+	ExpectMessage  string
+	ExpectBody     string
+	UnexpectedBody string
+	ExpectHeaders  map[string]string
+	Sleep          time.Duration //ms
 }
 
 func testCaseCheck(tc HttpTestCase, t *testing.T) {
@@ -208,34 +209,40 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 			req.WithQueryString(tc.Query)
 		}
 
-		//set header
+		// set header
 		for key, val := range tc.Headers {
 			req.WithHeader(key, val)
 		}
 
-		//set body
+		// set body
 		if tc.Body != "" {
 			req.WithText(tc.Body)
 		}
 
-		//respond check
+		// respond check
 		resp := req.Expect()
 
-		//match http status
+		// match http status
 		if tc.ExpectStatus != 0 {
 			resp.Status(tc.ExpectStatus)
 		}
 
-		//match headers
+		// match headers
 		if tc.ExpectHeaders != nil {
 			for key, val := range tc.ExpectHeaders {
 				resp.Header(key).Equal(val)
 			}
 		}
 
-		//match body
+		// match body
 		if tc.ExpectBody != "" {
 			resp.Body().Contains(tc.ExpectBody)
 		}
+
+		// match UnexpectedBody
+		if tc.UnexpectedBody != "" {
+			resp.Body().NotContains(tc.UnexpectedBody)
+		}
+
 	})
 }
