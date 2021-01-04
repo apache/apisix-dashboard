@@ -36,11 +36,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Version string
+var (
+	Version string
+	GitHash string
+)
 
 func printInfo() {
 	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Version", Version)
+	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "GitHash", GitHash)
 	fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "Listen", conf.ServerHost, conf.ServerPort)
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Loglevel", conf.ErrorLogLevel)
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n\n", "Logfile", conf.ErrorLogPath)

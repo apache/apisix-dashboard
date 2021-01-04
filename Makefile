@@ -95,6 +95,7 @@ endif
 .PHONY: release-src
 release-src:
 	git clean -Xdf
+	rm -f ./.githash && git log --pretty=format:"%h" -1 > ./.githash
 	tar -zcvf $(RELEASE_SRC).tgz \
 	--exclude .github \
 	--exclude .git \
