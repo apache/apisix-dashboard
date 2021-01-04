@@ -45,7 +45,7 @@ func TestHandler_Get(t *testing.T) {
 				caseDesc:  "get server_info",
 				giveInput: &GetInput{ID: "server_1"},
 				giveRet: &entity.ServerInfo{
-					BaseInfo:       entity.BaseInfo{ID: "server_1"},
+					ID:             "server_1",
 					UpTime:         10,
 					LastReportTime: 1608195454,
 					BootTime:       1608195454,
@@ -54,7 +54,7 @@ func TestHandler_Get(t *testing.T) {
 				},
 				wantGetKey: "server_1",
 				wantRet: &entity.ServerInfo{
-					BaseInfo:       entity.BaseInfo{ID: "server_1"},
+					ID:             "server_1",
 					UpTime:         10,
 					LastReportTime: 1608195454,
 					BootTime:       1608195454,
@@ -110,7 +110,7 @@ func TestHandler_List(t *testing.T) {
 				giveInput: &ListInput{Hostname: ""},
 				giveData: []interface{}{
 					&entity.ServerInfo{
-						BaseInfo:       entity.BaseInfo{ID: "server_1"},
+						ID:             "server_1",
 						UpTime:         10,
 						LastReportTime: 1608195454,
 						BootTime:       1608195454,
@@ -118,7 +118,7 @@ func TestHandler_List(t *testing.T) {
 						Version:        "v3",
 					},
 					&entity.ServerInfo{
-						BaseInfo:       entity.BaseInfo{ID: "server_2"},
+						ID:             "server_2",
 						UpTime:         10,
 						LastReportTime: 1608195454,
 						BootTime:       1608195454,
@@ -129,7 +129,7 @@ func TestHandler_List(t *testing.T) {
 				wantRet: &store.ListOutput{
 					Rows: []interface{}{
 						&entity.ServerInfo{
-							BaseInfo:       entity.BaseInfo{ID: "server_1"},
+							ID:             "server_1",
 							UpTime:         10,
 							LastReportTime: 1608195454,
 							BootTime:       1608195454,
@@ -137,7 +137,7 @@ func TestHandler_List(t *testing.T) {
 							Version:        "v3",
 						},
 						&entity.ServerInfo{
-							BaseInfo:       entity.BaseInfo{ID: "server_2"},
+							ID:             "server_2",
 							UpTime:         10,
 							LastReportTime: 1608195454,
 							BootTime:       1608195454,
@@ -153,7 +153,7 @@ func TestHandler_List(t *testing.T) {
 				giveInput: &ListInput{Hostname: "ubuntu"},
 				giveData: []interface{}{
 					&entity.ServerInfo{
-						BaseInfo:       entity.BaseInfo{ID: "server_1"},
+						ID:             "server_1",
 						UpTime:         10,
 						LastReportTime: 1608195454,
 						BootTime:       1608195454,
@@ -161,7 +161,7 @@ func TestHandler_List(t *testing.T) {
 						Version:        "v3",
 					},
 					&entity.ServerInfo{
-						BaseInfo:       entity.BaseInfo{ID: "server_2"},
+						ID:             "server_2",
 						UpTime:         10,
 						LastReportTime: 1608195454,
 						BootTime:       1608195454,
@@ -172,7 +172,7 @@ func TestHandler_List(t *testing.T) {
 				wantRet: &store.ListOutput{
 					Rows: []interface{}{
 						&entity.ServerInfo{
-							BaseInfo:       entity.BaseInfo{ID: "server_2"},
+							ID:             "server_2",
 							UpTime:         10,
 							LastReportTime: 1608195454,
 							BootTime:       1608195454,
