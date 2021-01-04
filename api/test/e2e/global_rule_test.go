@@ -212,6 +212,27 @@ func TestGlobalRule(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
+			Desc:   "update global rule to disable all plugins",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/global_rules/1",
+			Method: http.MethodPut,
+			Body: `{
+                                "id": "1",
+                                "plugins": {}
+                        }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:          "verify route that should not be blocked",
+			Object:        APISIXExpect(t),
+			Method:        http.MethodGet,
+			Path:          "/hello",
+			Query:         "file=root.exe",
+			ExpectStatus:  http.StatusOK,
+			ExpectHeaders: map[string]string{"X-VERSION": "2.0"},
+		},
+		{
 			Desc:         "delete global rule",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
@@ -234,7 +255,7 @@ func TestGlobalRule(t *testing.T) {
 			Object:        APISIXExpect(t),
 			Method:        http.MethodGet,
 			Path:          "/hello",
-			Query:         "name=;select%20from%20sys",
+			Query:         "file=root.exe",
 			ExpectStatus:  http.StatusOK,
 			ExpectHeaders: map[string]string{"X-VERSION": "2.0"},
 		},
