@@ -98,8 +98,11 @@ export const DEFAULT_DEBUG_PARAM_FORM_DATA = {
       value: '',
     },
   ],
+  type: 'json',
 };
 
 export const DEFAULT_DEBUG_AUTH_FORM_DATA = {
   authType: 'none',
 };
+
+export const DEBUG_BODY_TYPE_SUPPORTED: RouteModule.DebugBodyType[]= ['x-www-form-urlencoded','json','raw input'];

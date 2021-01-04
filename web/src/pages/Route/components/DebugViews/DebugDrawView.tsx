@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
-import { Input, Select, Card, Tabs, Form, Drawer, Spin, notification } from 'antd';
+import React, { useEffect, useState, useRef } from 'react';
+import { Input, Select, Card, Tabs, Form, Drawer, Spin, notification, Radio } from 'antd';
 import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import { PanelSection } from '@api7-dashboard/ui';
@@ -27,6 +27,7 @@ import {
   DEFAULT_DEBUG_PARAM_FORM_DATA,
   DEFAULT_DEBUG_AUTH_FORM_DATA,
   PROTOCOL_SUPPORTED,
+  DEBUG_BODY_TYPE_SUPPORTED,
 } from '../../constants';
 import { DebugParamsView, AuthenticationView } from '.';
 import { debugRoute } from '../../service';
@@ -48,6 +49,8 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const [responseCode, setResponseCode] = useState<string>();
   const [loading, setLoading] = useState(false);
   const [codeMirrorHeight, setCodeMirrorHeight] = useState<number | string>(50);
+  const bodyCodeMirrorRef = useRef<any>(null);
+  const [bodyType, setBodyType] = useState('none');
   const methodWithoutBody = ['GET', 'HEAD'];
 
   const resetForms = () => {
@@ -56,24 +59,44 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     headerForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     authForm.setFieldsValue(DEFAULT_DEBUG_AUTH_FORM_DATA);
     setResponseCode(`${formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })}`);
+    setBodyType('none');
   };
 
   useEffect(() => {
     resetForms();
   }, []);
 
-  const transformBodyParamsFormData = (formData: RouteModule.debugRequestParamsFormData[]) => {
-    let transformData = {};
-    (formData || [])
-      .filter((data) => data.check)
-      .forEach((data) => {
-        transformData = {
-          ...transformData,
-          [data.key]: data.value,
-        };
-      });
+  const transformBodyParamsFormData = () => {
+    let transformDataForm: string[];
+    let transformDataJson: object;
+    const formData: RouteModule.debugRequestParamsFormData[] = bodyForm.getFieldsValue().params;
+    switch (bodyType) {
+      case 'x-www-form-urlencoded':
+        transformDataForm = (formData || [])
+          .filter((data) => data.check)
+          .map((data) => {
+            return `${data.key}=${data.value}`
+          });
 
-    return transformData;
+        return transformDataForm.join('&');
+      case 'json':
+        transformDataJson = {};
+        (formData || [])
+          .filter((data) => data.check)
+          .forEach((data) => {
+            transformDataJson = {
+              ...transformDataJson,
+              [data.key]: data.value,
+            };
+          });
+
+        return JSON.stringify(transformDataJson);
+      case 'raw input':
+        return bodyCodeMirrorRef.current.editor.getValue();
+      case 'none':
+      default:
+        return undefined;
+    }
   };
 
   const transformHeaderAndQueryParamsFormData = (
@@ -128,7 +151,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
       return;
     }
     const queryFormData = transformHeaderAndQueryParamsFormData(queryForm.getFieldsValue().params);
-    const bodyFormData = transformBodyParamsFormData(bodyForm.getFieldsValue().params);
+    const bodyFormData = transformBodyParamsFormData();
     const pureHeaderFormData = transformHeaderAndQueryParamsFormData(
       headerForm.getFieldsValue().params,
     );
@@ -233,7 +256,41 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             </TabPane>
             {showBodyTab && (
               <TabPane tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })} key="body">
-                <DebugParamsView form={bodyForm} />
+                <Radio.Group onChange={(e) => {setBodyType(e.target.value)}} value={bodyType}>
+                  <Radio value="none">None</Radio>
+                  {
+                    DEBUG_BODY_TYPE_SUPPORTED.map((type) => (
+                      <Radio value={type} key={type}>{type}</Radio>
+                    ))
+                  }
+                </Radio.Group>
+                <div style={{marginTop: 16}}>
+                  {
+                    (bodyType === 'x-www-form-urlencoded' || bodyType === 'json') &&
+                    <DebugParamsView form={bodyForm} />
+                  }
+
+                  {
+                    (bodyType === 'raw input') &&
+                    <Form>
+                      <Form.Item>
+                          <CodeMirror
+                          ref={bodyCodeMirrorRef}
+                          height={250}
+                          options={{
+                            mode: 'json-ld',
+                            readOnly: '',
+                            lineWrapping: true,
+                            lineNumbers: true,
+                            showCursorWhenSelecting: true,
+                            autofocus: true,
+                            scrollbarStyle: null,
+                          }}
+                        />
+                      </Form.Item>
+                    </Form>
+                  }
+                </div>
               </TabPane>
             )}
           </Tabs>
