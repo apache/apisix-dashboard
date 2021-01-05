@@ -37,7 +37,7 @@ context('Create and Search Route', () => {
       cy.contains('Manage').click();
 
       // eslint-disable-next-line no-loop-func
-      cy.get(this.domSelector.antDrawerWrapperBody).within(() => {
+      cy.get(this.domSelector.drawerBody).within(() => {
         cy.contains('Add').click();
         cy.get('#labels_0_labelKey').type(`label${i}`);
         cy.get('#labels_0_labelValue').type(`value${i}`);
@@ -91,7 +91,7 @@ context('Create and Search Route', () => {
     // search one label
     cy.get('[title=Labels]').click();
     cy.wait(500);
-    cy.get(this.domSelector.rcVirtualList).within(() => {
+    cy.get(this.domSelector.dropdown).within(() => {
       cy.contains('value0').click();
     });
     cy.contains('Search').click();
