@@ -28,9 +28,21 @@ context('Create and Search Route', () => {
     cy.contains('Route').click();
     for (let i = 0; i < 3; i++) {
       cy.contains('Create').click();
-      cy.get('#name').type('test' + i);
-      cy.get('#desc').type('desc' + i);
+      cy.get('#name').type(`test${  i}`);
+      cy.get('#desc').type(`desc${  i}`);
       cy.get('#hosts_0').type('11.11.11.11');
+
+      // config label
+      cy.contains('Manage').click();
+
+      // eslint-disable-next-line no-loop-func
+      cy.get('.ant-drawer-wrapper-body').within(() => {
+        cy.contains('Add').click();
+        cy.get('#labels_0_labelKey').type(`label${i}`);
+        cy.get('#labels_0_labelValue').type(`value${i}`);
+        cy.contains('Confirm').click();
+      });
+
       cy.contains('Next').click();
       cy.wait(400);
       cy.get('#nodes_0_host').type('12.12.12.12', {
@@ -46,7 +58,7 @@ context('Create and Search Route', () => {
     }
   });
 
-  it('should search the route', () => {
+  it('should search the route with name', () => {
     cy.visit('/');
     cy.contains('Route').click();
     // full match
@@ -71,10 +83,25 @@ context('Create and Search Route', () => {
     cy.contains('test2').should('not.exist');
   });
 
+  it('should search the route with labels', () => {
+    cy.visit('/');
+    cy.contains('Route').click();
+
+    // search one label
+    cy.get('[title=Labels]').click();
+    cy.wait(500);
+    cy.get('.rc-virtual-list').within(() => {
+      cy.contains('value0').click();
+    })
+    cy.contains('Search').click();
+
+    cy.get('tr').should('contain', 'label0:value0');
+  });
+
   it('should delete the route', () => {
     cy.visit('/routes/list');
     for (let i = 0; i < 3; i++) {
-      cy.contains('test' + i)
+      cy.contains(`test${  i}`)
         .siblings()
         .contains('Delete')
         .click();
@@ -83,4 +110,5 @@ context('Create and Search Route', () => {
       cy.wait(300);
     }
   });
+
 });
