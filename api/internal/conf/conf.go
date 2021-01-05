@@ -34,6 +34,7 @@ const (
 	EnvBETA  = "beta"
 	EnvDEV   = "dev"
 	EnvLOCAL = "local"
+	EnvTEST  = "test"
 
 	WebDir = "html/"
 )
@@ -100,9 +101,12 @@ type Config struct {
 	Authentication Authentication
 }
 
-// TODO: it is just for integration tests, we should call "InitLog" explicitly when remove all handler's integration tests
+// TODO: we should no longer use init() function after remove all handler's integration tests
+// ENV=test is for integration tests only, other ENV should call "InitConf" explicitly
 func init() {
-	InitConf()
+	if env := os.Getenv("ENV"); env == EnvTEST {
+		InitConf()
+	}
 }
 
 func InitConf() {
