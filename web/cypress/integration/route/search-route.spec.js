@@ -20,16 +20,17 @@ context('Create and Search Route', () => {
   beforeEach(() => {
     // init login
     cy.login();
+    cy.fixture('selector.json').as('DomSelector');
   });
 
   it('should create route test1, test2, test3', () => {
     //  go to route create page
     cy.visit('/');
     cy.contains('Route').click();
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i += 1) {
       cy.contains('Create').click();
-      cy.get('#name').type(`test${  i}`);
-      cy.get('#desc').type(`desc${  i}`);
+      cy.get('#name').type(`test${i}`);
+      cy.get('#desc').type(`desc${i}`);
       cy.get('#hosts_0').type('11.11.11.11');
 
       // config label
@@ -83,30 +84,32 @@ context('Create and Search Route', () => {
     cy.contains('test2').should('not.exist');
   });
 
-  it('should search the route with labels', () => {
+  it('should search the route with labels', function () {
     cy.visit('/');
     cy.contains('Route').click();
 
     // search one label
     cy.get('[title=Labels]').click();
     cy.wait(500);
-    cy.get('.rc-virtual-list').within(() => {
+    cy.get(this.DomSelector.rcVirtualList).within(() => {
       cy.contains('value0').click();
-    })
+    });
     cy.contains('Search').click();
 
-    cy.get('tr').should('contain', 'label0:value0');
+    cy.contains('test0').siblings().should('contain', 'label0:value0');
+    cy.contains('test1').should('not.exist');
+    cy.contains('test2').should('not.exist');
   });
 
-  it('should delete the route', () => {
+  it('should delete the route', function () {
     cy.visit('/routes/list');
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i += 1) {
       cy.contains(`test${  i}`)
         .siblings()
         .contains('Delete')
         .click();
       cy.contains('button', 'Confirm').click();
-      cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');
+      cy.get(this.DomSelector.notification).should('contain', 'Delete Route Successfully');
       cy.wait(300);
     }
   });
