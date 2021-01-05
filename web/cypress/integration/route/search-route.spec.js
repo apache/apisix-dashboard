@@ -20,17 +20,30 @@ context('Create and Search Route', () => {
   beforeEach(() => {
     // init login
     cy.login();
+    cy.fixture('selector.json').as('domSelector');
   });
 
-  it('should create route test1, test2, test3', () => {
+  it('should create route test1, test2, test3', function () {
     //  go to route create page
     cy.visit('/');
     cy.contains('Route').click();
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i += 1) {
       cy.contains('Create').click();
-      cy.get('#name').type('test' + i);
-      cy.get('#desc').type('desc' + i);
+      cy.get('#name').type(`test${i}`);
+      cy.get('#desc').type(`desc${i}`);
       cy.get('#hosts_0').type('11.11.11.11');
+
+      // config label
+      cy.contains('Manage').click();
+
+      // eslint-disable-next-line no-loop-func
+      cy.get(this.domSelector.drawerBody).within(() => {
+        cy.contains('Add').click();
+        cy.get('#labels_0_labelKey').type(`label${i}`);
+        cy.get('#labels_0_labelValue').type(`value${i}`);
+        cy.contains('Confirm').click();
+      });
+
       cy.contains('Next').click();
       cy.wait(400);
       cy.get('#nodes_0_host').type('12.12.12.12', {
@@ -46,7 +59,7 @@ context('Create and Search Route', () => {
     }
   });
 
-  it('should search the route', () => {
+  it('should search the route with name', () => {
     cy.visit('/');
     cy.contains('Route').click();
     // full match
@@ -71,15 +84,32 @@ context('Create and Search Route', () => {
     cy.contains('test2').should('not.exist');
   });
 
-  it('should delete the route', () => {
+  it('should search the route with labels', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+
+    // search one label
+    cy.get('[title=Labels]').click();
+    cy.wait(500);
+    cy.get(this.domSelector.dropdown).within(() => {
+      cy.contains('value0').click();
+    });
+    cy.contains('Search').click();
+
+    cy.contains('test0').siblings().should('contain', 'label0:value0');
+    cy.contains('test1').should('not.exist');
+    cy.contains('test2').should('not.exist');
+  });
+
+  it('should delete the route', function () {
     cy.visit('/routes/list');
-    for (let i = 0; i < 3; i++) {
-      cy.contains('test' + i)
+    for (let i = 0; i < 3; i += 1) {
+      cy.contains(`test${i}`)
         .siblings()
         .contains('Delete')
         .click();
       cy.contains('button', 'Confirm').click();
-      cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');
+      cy.get(this.domSelector.notification).should('contain', 'Delete Route Successfully');
       cy.wait(300);
     }
   });

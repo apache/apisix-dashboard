@@ -24,7 +24,7 @@ import { fetchList, createOrUpdate } from './service';
 const PluginMarket: React.FC = () => {
   const [initialData, setInitialData] = useState({});
 
-  useEffect(() => {
+  const initPageData = () => {
     fetchList().then(({ data }) => {
       const plugins: any = {};
       data.forEach(({ name, value }) => {
@@ -32,6 +32,10 @@ const PluginMarket: React.FC = () => {
       });
       setInitialData(plugins);
     });
+  }
+
+  useEffect(() => {
+    initPageData();
   }, []);
 
   return (
@@ -48,8 +52,7 @@ const PluginMarket: React.FC = () => {
                 ...pluginsData,
               },
             }).then(() => {
-              // TODO:
-              window.location.reload();
+              initPageData();
             });
           }}
         />
