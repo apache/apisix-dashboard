@@ -25,12 +25,6 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/gin-gonic/gin"
-	"github.com/shiningrush/droplet"
-	"github.com/shiningrush/droplet/data"
-	"github.com/shiningrush/droplet/wrapper"
-	"github.com/yuin/gopher-lua"
-	wgin "github.com/shiningrush/droplet/wrapper/gin"
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
@@ -38,6 +32,12 @@ import (
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
+	"github.com/gin-gonic/gin"
+	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
+	"github.com/shiningrush/droplet/wrapper"
+	wgin "github.com/shiningrush/droplet/wrapper/gin"
+	lua "github.com/yuin/gopher-lua"
 )
 
 type Handler struct {
@@ -178,9 +178,10 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 }
 
 type ListInput struct {
-	Name  string `auto_read:"name,query"`
-	URI   string `auto_read:"uri,query"`
-	Label string `auto_read:"label,query"`
+	Name   string `auto_read:"name,query"`
+	URI    string `auto_read:"uri,query"`
+	Label  string `auto_read:"label,query"`
+	Status string `auto_read:"status,query"`
 	store.Pagination
 }
 
@@ -216,6 +217,10 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 			}
 
 			if input.Label != "" && !utils.LabelContains(obj.(*entity.Route).Labels, labelMap) {
+				return false
+			}
+
+			if input.Status != "" && fmt.Sprintf("%d", obj.(*entity.Route).Status) != input.Status {
 				return false
 			}
 
