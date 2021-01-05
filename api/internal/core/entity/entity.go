@@ -25,8 +25,8 @@ import (
 
 type BaseInfo struct {
 	ID         interface{} `json:"id"`
-	CreateTime int64       `json:"create_time"`
-	UpdateTime int64       `json:"update_time"`
+	CreateTime int64       `json:"create_time,omitempty"`
+	UpdateTime int64       `json:"update_time,omitempty"`
 }
 
 func (info *BaseInfo) GetBaseInfo() *BaseInfo {

@@ -70,7 +70,7 @@ const Page: React.FC = (props) => {
       plugins,
     };
 
-    const upstreamFormData = upstreamForm.getFieldsValue();
+    const upstreamFormData = upstreamRef.current?.getData();
     if (upstreamFormData.upstream_id === '') {
       data.upstream = omit(upstreamFormData, ['upstream_id']);
     } else {
@@ -133,7 +133,7 @@ const Page: React.FC = (props) => {
           {step === 2 && (
             <PluginPage initialData={plugins} onChange={setPlugins} schemaType="route" />
           )}
-          {step === 3 && <Preview upstreamForm={upstreamForm} form={form} plugins={plugins} />}
+          {step === 3 && <Preview upstreamForm={upstreamForm} upstreamRef={upstreamRef} form={form} plugins={plugins} />}
         </Card>
       </PageHeaderWrapper>
       <ActionBar step={step} lastStep={3} onChange={onStepChange} withResultView />
