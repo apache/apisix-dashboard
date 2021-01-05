@@ -43,7 +43,7 @@ func Authentication() gin.HandlerFunc {
 			}
 
 			if err != nil || token == nil || !token.Valid {
-				log.Warnf("token validate failed: %s, %v", err, false)
+				log.Warnf("token validate failed: %s", err)
 				c.AbortWithStatusJSON(http.StatusUnauthorized, errResp)
 				return
 			}
