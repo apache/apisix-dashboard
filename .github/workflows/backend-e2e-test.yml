@@ -30,3 +30,25 @@ jobs:
       - name: run test
         working-directory: ./api/test/e2e
         run: go test -v
+
+      - name: re-generate json schema
+        working-directory: ./api/
+        run: |
+          curl 127.0.0.1:9090/v1/schema > ./conf/schema.json
+
+      - name: stop docker compose
+        working-directory: ./api/test/docker
+        run: |
+          docker-compose down
+          sleep 10
+
+      - name: re-run docker compose
+        working-directory: ./api/test/docker
+        run: |
+          docker-compose up -d --build
+          sleep 5
+          docker logs docker_managerapi_1
+
+      - name: run test for plugin skywalking
+        working-directory: ./api/test/e2e/skywalking
+        run: go test -v
