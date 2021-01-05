@@ -41,7 +41,6 @@ export const fetchItem = (rid: number) =>
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
   const { labels, API_VERSION, status } = res;
-  console.log(res);
   return request<Res<ResListData<RouteModule.ResponseBody>>>('/routes', {
     params: {
       name: res.name,
