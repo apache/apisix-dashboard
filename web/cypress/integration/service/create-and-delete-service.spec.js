@@ -21,7 +21,6 @@ context('create and delete service ', () => {
   beforeEach(() => {
     // init login
     cy.login();
-    cy.fixture('selector.json').as('DomSelector');
   });
 
   it('should create service', () => {
@@ -50,7 +49,7 @@ context('create and delete service ', () => {
     
     cy.contains('service').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.fixture('selector').then(({
+    cy.fixture('selector.json').then(({
       notification
     }) => {
       cy.get(notification).should('contain', 'Delete Service Successfully');
