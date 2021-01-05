@@ -71,7 +71,7 @@ func (v *JsonSchemaValidator) Validate(obj interface{}) error {
 }
 
 type APISIXJsonSchemaValidator struct {
-	schema *gojsonschema.Schema
+	schema    *gojsonschema.Schema
 	schemaDef string
 }
 
@@ -88,7 +88,7 @@ func NewAPISIXJsonSchemaValidator(jsonPath string) (Validator, error) {
 		return nil, fmt.Errorf("new schema failed: %s", err)
 	}
 	return &APISIXJsonSchemaValidator{
-		schema: s,
+		schema:    s,
 		schemaDef: schemaDef,
 	}, nil
 }

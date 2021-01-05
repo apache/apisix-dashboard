@@ -524,4 +524,3 @@ func Exist(c *gin.Context) (interface{}, error) {
 
 	return nil, nil
 }
-

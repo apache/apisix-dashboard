@@ -276,7 +276,7 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 	}
 
 	bytes, err := s.CreateCheck(obj)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 

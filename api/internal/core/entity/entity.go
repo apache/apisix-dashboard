@@ -95,7 +95,7 @@ type Route struct {
 }
 
 type RouteImport struct {
-	Plugins         map[string]interface{} `json:"plugins"`
+	Plugins map[string]interface{} `json:"plugins"`
 	Route
 }
 
