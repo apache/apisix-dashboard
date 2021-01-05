@@ -1,5 +1,5 @@
 {
-  "rcVirtualList": ".rc-virtual-list",
+  "dropdown": ".rc-virtual-list",
   "notification": ".ant-notification-notice-message",
-  "antDrawerWrapperBody": ".ant-drawer-wrapper-body"
+  "drawerBody": ".ant-drawer-wrapper-body"
 }
