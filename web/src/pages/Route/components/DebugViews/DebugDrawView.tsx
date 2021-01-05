@@ -28,6 +28,7 @@ import {
   DEFAULT_DEBUG_AUTH_FORM_DATA,
   PROTOCOL_SUPPORTED,
   DEBUG_BODY_TYPE_SUPPORTED,
+  DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED,
 } from '../../constants';
 import { DebugParamsView, AuthenticationView } from '.';
 import { debugRoute } from '../../service';
@@ -52,6 +53,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const bodyCodeMirrorRef = useRef<any>(null);
   const [bodyType, setBodyType] = useState('none');
   const methodWithoutBody = ['GET', 'HEAD'];
+  const [bodyCodeMirrorMode, setBodyCodeMirrorMode] = useState(DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode)
 
   const resetForms = () => {
     queryForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
@@ -264,6 +266,19 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                     ))
                   }
                 </Radio.Group>
+                {bodyType === 'raw input' && <Select
+                  size="small"
+                  onChange={(value) => {
+                    setBodyCodeMirrorMode(value)
+                  }}
+                  style={{ width: 100 }}
+                  defaultValue={bodyCodeMirrorMode}>
+                  {
+                    DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED.map((modeObj) =>(
+                    <Select.Option key={modeObj.name} value={modeObj.mode}>{modeObj.name}</Select.Option>
+                    ))
+                  }
+                </Select>}
                 <div style={{marginTop: 16}}>
                   {
                     (bodyType === 'x-www-form-urlencoded' || bodyType === 'json') &&
@@ -278,7 +293,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                           ref={bodyCodeMirrorRef}
                           height={250}
                           options={{
-                            mode: 'json-ld',
+                            mode: bodyCodeMirrorMode,
                             readOnly: '',
                             lineWrapping: true,
                             lineNumbers: true,
