@@ -20,10 +20,10 @@ context('Create and Search Route', () => {
   beforeEach(() => {
     // init login
     cy.login();
-    cy.fixture('selector.json').as('DomSelector');
+    cy.fixture('selector.json').as('domSelector');
   });
 
-  it('should create route test1, test2, test3', () => {
+  it('should create route test1, test2, test3', function () {
     //  go to route create page
     cy.visit('/');
     cy.contains('Route').click();
@@ -37,7 +37,7 @@ context('Create and Search Route', () => {
       cy.contains('Manage').click();
 
       // eslint-disable-next-line no-loop-func
-      cy.get('.ant-drawer-wrapper-body').within(() => {
+      cy.get(this.domSelector.antDrawerWrapperBody).within(() => {
         cy.contains('Add').click();
         cy.get('#labels_0_labelKey').type(`label${i}`);
         cy.get('#labels_0_labelValue').type(`value${i}`);
@@ -91,7 +91,7 @@ context('Create and Search Route', () => {
     // search one label
     cy.get('[title=Labels]').click();
     cy.wait(500);
-    cy.get(this.DomSelector.rcVirtualList).within(() => {
+    cy.get(this.domSelector.rcVirtualList).within(() => {
       cy.contains('value0').click();
     });
     cy.contains('Search').click();
@@ -104,14 +104,13 @@ context('Create and Search Route', () => {
   it('should delete the route', function () {
     cy.visit('/routes/list');
     for (let i = 0; i < 3; i += 1) {
-      cy.contains(`test${  i}`)
+      cy.contains(`test${i}`)
         .siblings()
         .contains('Delete')
         .click();
       cy.contains('button', 'Confirm').click();
-      cy.get(this.DomSelector.notification).should('contain', 'Delete Route Successfully');
+      cy.get(this.domSelector.notification).should('contain', 'Delete Route Successfully');
       cy.wait(300);
     }
   });
-
 });
