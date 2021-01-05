@@ -22,6 +22,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/log"
 )
@@ -41,8 +42,8 @@ func Authentication() gin.HandlerFunc {
 				"message": "Request Unauthorized",
 			}
 
-			if err != nil || !token.Valid {
-				log.Warnf("token validate failed: %s, %v", err, token.Valid)
+			if err != nil || token == nil || !token.Valid {
+				log.Warnf("token validate failed: %s", err)
 				c.AbortWithStatusJSON(http.StatusUnauthorized, errResp)
 				return
 			}
