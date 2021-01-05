@@ -192,6 +192,18 @@ const Page: React.FC = () => {
           )}
         </>
       ),
+      renderFormItem: (_, { type }) => {
+        if (type === 'form') {
+          return null;
+        }
+
+        return (
+          <Select style={{ width: '100%' }}>
+            <option key={RouteStatus.Offline} value={RouteStatus.Offline}>{formatMessage({ id: 'page.route.unpublished' })}</option>
+            <option key={RouteStatus.Publish} value={RouteStatus.Publish}>{formatMessage({ id: 'page.route.published' })}</option>
+          </Select>
+        );
+      },
     },
     {
       title: formatMessage({ id: 'component.global.updateTime' }),
