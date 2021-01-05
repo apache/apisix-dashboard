@@ -223,7 +223,13 @@ const PluginDetail: React.FC<Props> = ({
           ]}
         />
         <CodeMirror
-          ref={ref}
+          ref={(codemirror) => {
+            ref.current = codemirror;
+            if (codemirror) {
+              // NOTE: for debug & test
+              window.codemirror = codemirror.editor;
+            }
+          }}
           value={JSON.stringify(data, null, 2)}
           options={{
             mode: 'json-ld',

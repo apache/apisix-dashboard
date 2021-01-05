@@ -1,0 +1,10 @@
+{
+  "basic-auth": {},
+  "hmac-auth": {},
+  "jwt-auth": {},
+  "key-auth": {},
+  "wolf-rbac": {},
+  "api-breaker": {
+    "break_response_code": 403
+  }
+}
