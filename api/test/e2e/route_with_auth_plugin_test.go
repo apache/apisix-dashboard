@@ -177,7 +177,7 @@ func TestRoute_With_Jwt_Plugin(t *testing.T) {
 
 	tests = []HttpTestCase{
 		{
-			Desc:   "create consumer with jwt but without algorithm",
+			Desc:   "create consumer with jwt (no algorithm)",
 			Object: ManagerApiExpect(t),
 			Path:   "/apisix/admin/consumers",
 			Method: http.MethodPut,
