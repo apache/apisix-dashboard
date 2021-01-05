@@ -1,5 +1,5 @@
 {
-    "rcVirtualList": ".rc-virtual-list",
-    "notification": ".ant-notification-notice-message",
-    "antDrawerWrapperBody": ".ant-drawer-wrapper-body"
+  "rcVirtualList": ".rc-virtual-list",
+  "notification": ".ant-notification-notice-message",
+  "antDrawerWrapperBody": ".ant-drawer-wrapper-body"
 }

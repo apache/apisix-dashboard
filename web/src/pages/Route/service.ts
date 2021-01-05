@@ -40,7 +40,8 @@ export const fetchItem = (rid: number) =>
   request(`/routes/${rid}`).then((data) => transformRouteData(data.data));
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
-  const { labels = [], API_VERSION = [] } = res;
+  const { labels = [], API_VERSION = [], status } = res;
+
   return request<Res<ResListData<RouteModule.ResponseBody>>>('/routes', {
     params: {
       name: res.name,
@@ -48,6 +49,7 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
       label: labels.concat(API_VERSION).join(','),
       page: current,
       page_size: pageSize,
+      status
     },
   }).then(({ data }) => {
     return {

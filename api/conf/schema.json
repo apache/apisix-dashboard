@@ -182,12 +182,12 @@
 					"type": "string"
 				},
 				"host": {
-					"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+					"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 					"type": "string"
 				},
 				"hosts": {
 					"items": {
-						"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+						"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 						"type": "string"
 					},
 					"minItems": 1,
@@ -292,6 +292,17 @@
 					"minLength": 10,
 					"type": "string"
 				},
+				"script_id": {
+					"anyOf": [{
+						"maxLength": 64,
+						"minLength": 1,
+						"pattern": "^[a-zA-Z0-9-_.]+$",
+						"type": "string"
+					}, {
+						"minimum": 1,
+						"type": "integer"
+					}]
+				},
 				"service_id": {
 					"anyOf": [{
 						"maxLength": 64,
@@ -319,8 +330,6 @@
 					"additionalProperties": false,
 					"anyOf": [{
 						"required": ["nodes", "type"]
-					}, {
-						"required": ["k8s_deployment_info", "type"]
 					}, {
 						"required": ["service_name", "type"]
 					}],
@@ -367,7 +376,7 @@
 											"type": "object"
 										},
 										"host": {
-											"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+											"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 											"type": "string"
 										},
 										"http_path": {
@@ -542,38 +551,6 @@
 								"type": "integer"
 							}]
 						},
-						"k8s_deployment_info": {
-							"anyOf": [{
-								"required": ["deploy_name", "namespace", "port"]
-							}, {
-								"required": ["namespace", "port", "service_name"]
-							}],
-							"properties": {
-								"backend_type": {
-									"default": "pod",
-									"description": "k8s service name",
-									"enum": ["pod", "svc"],
-									"type": "string"
-								},
-								"deploy_name": {
-									"description": "k8s deployment name",
-									"type": "string"
-								},
-								"namespace": {
-									"description": "k8s namespace",
-									"type": "string"
-								},
-								"port": {
-									"minimum": 0,
-									"type": "number"
-								},
-								"service_name": {
-									"description": "k8s service name",
-									"type": "string"
-								}
-							},
-							"type": "object"
-						},
 						"key": {
 							"description": "the key of chash for dynamic load balancing",
 							"type": "string"
@@ -612,7 +589,7 @@
 								"items": {
 									"properties": {
 										"host": {
-											"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+											"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 											"type": "string"
 										},
 										"metadata": {
@@ -678,7 +655,7 @@
 							"type": "integer"
 						},
 						"upstream_host": {
-							"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+							"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 							"type": "string"
 						}
 					},
@@ -712,15 +689,8 @@
 				"vars": {
 					"items": {
 						"description": "Nginx builtin variable name and value",
-						"items": {
-							"anyOf": [{
-								"type": "string"
-							}, {
-								"type": "number"
-							}],
-							"maxItems": 3,
-							"minItems": 2
-						},
+						"maxItems": 4,
+						"minItems": 2,
 						"type": "array"
 					},
 					"type": "array"
@@ -788,8 +758,6 @@
 					"anyOf": [{
 						"required": ["nodes", "type"]
 					}, {
-						"required": ["k8s_deployment_info", "type"]
-					}, {
 						"required": ["service_name", "type"]
 					}],
 					"properties": {
@@ -835,7 +803,7 @@
 											"type": "object"
 										},
 										"host": {
-											"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+											"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 											"type": "string"
 										},
 										"http_path": {
@@ -1010,38 +978,6 @@
 								"type": "integer"
 							}]
 						},
-						"k8s_deployment_info": {
-							"anyOf": [{
-								"required": ["deploy_name", "namespace", "port"]
-							}, {
-								"required": ["namespace", "port", "service_name"]
-							}],
-							"properties": {
-								"backend_type": {
-									"default": "pod",
-									"description": "k8s service name",
-									"enum": ["pod", "svc"],
-									"type": "string"
-								},
-								"deploy_name": {
-									"description": "k8s deployment name",
-									"type": "string"
-								},
-								"namespace": {
-									"description": "k8s namespace",
-									"type": "string"
-								},
-								"port": {
-									"minimum": 0,
-									"type": "number"
-								},
-								"service_name": {
-									"description": "k8s service name",
-									"type": "string"
-								}
-							},
-							"type": "object"
-						},
 						"key": {
 							"description": "the key of chash for dynamic load balancing",
 							"type": "string"
@@ -1080,7 +1016,7 @@
 								"items": {
 									"properties": {
 										"host": {
-											"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+											"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 											"type": "string"
 										},
 										"metadata": {
@@ -1146,7 +1082,7 @@
 							"type": "integer"
 						},
 						"upstream_host": {
-							"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+							"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 							"type": "string"
 						}
 					},
@@ -1241,6 +1177,7 @@
 						"pattern": "^\\*?[0-9a-zA-Z-.]+$",
 						"type": "string"
 					},
+					"minItems": 1,
 					"type": "array"
 				},
 				"status": {
@@ -1328,8 +1265,6 @@
 					"anyOf": [{
 						"required": ["nodes", "type"]
 					}, {
-						"required": ["k8s_deployment_info", "type"]
-					}, {
 						"required": ["service_name", "type"]
 					}],
 					"properties": {
@@ -1375,7 +1310,7 @@
 											"type": "object"
 										},
 										"host": {
-											"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+											"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 											"type": "string"
 										},
 										"http_path": {
@@ -1550,38 +1485,6 @@
 								"type": "integer"
 							}]
 						},
-						"k8s_deployment_info": {
-							"anyOf": [{
-								"required": ["deploy_name", "namespace", "port"]
-							}, {
-								"required": ["namespace", "port", "service_name"]
-							}],
-							"properties": {
-								"backend_type": {
-									"default": "pod",
-									"description": "k8s service name",
-									"enum": ["pod", "svc"],
-									"type": "string"
-								},
-								"deploy_name": {
-									"description": "k8s deployment name",
-									"type": "string"
-								},
-								"namespace": {
-									"description": "k8s namespace",
-									"type": "string"
-								},
-								"port": {
-									"minimum": 0,
-									"type": "number"
-								},
-								"service_name": {
-									"description": "k8s service name",
-									"type": "string"
-								}
-							},
-							"type": "object"
-						},
 						"key": {
 							"description": "the key of chash for dynamic load balancing",
 							"type": "string"
@@ -1620,7 +1523,7 @@
 								"items": {
 									"properties": {
 										"host": {
-											"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+											"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 											"type": "string"
 										},
 										"metadata": {
@@ -1686,7 +1589,7 @@
 							"type": "integer"
 						},
 						"upstream_host": {
-							"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+							"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 							"type": "string"
 						}
 					},
@@ -1710,8 +1613,6 @@
 			"additionalProperties": false,
 			"anyOf": [{
 				"required": ["nodes", "type"]
-			}, {
-				"required": ["k8s_deployment_info", "type"]
 			}, {
 				"required": ["service_name", "type"]
 			}],
@@ -1758,7 +1659,7 @@
 									"type": "object"
 								},
 								"host": {
-									"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+									"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 									"type": "string"
 								},
 								"http_path": {
@@ -1933,38 +1834,6 @@
 						"type": "integer"
 					}]
 				},
-				"k8s_deployment_info": {
-					"anyOf": [{
-						"required": ["deploy_name", "namespace", "port"]
-					}, {
-						"required": ["namespace", "port", "service_name"]
-					}],
-					"properties": {
-						"backend_type": {
-							"default": "pod",
-							"description": "k8s service name",
-							"enum": ["pod", "svc"],
-							"type": "string"
-						},
-						"deploy_name": {
-							"description": "k8s deployment name",
-							"type": "string"
-						},
-						"namespace": {
-							"description": "k8s namespace",
-							"type": "string"
-						},
-						"port": {
-							"minimum": 0,
-							"type": "number"
-						},
-						"service_name": {
-							"description": "k8s service name",
-							"type": "string"
-						}
-					},
-					"type": "object"
-				},
 				"key": {
 					"description": "the key of chash for dynamic load balancing",
 					"type": "string"
@@ -2003,7 +1872,7 @@
 						"items": {
 							"properties": {
 								"host": {
-									"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+									"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 									"type": "string"
 								},
 								"metadata": {
@@ -2069,20 +1938,20 @@
 					"type": "integer"
 				},
 				"upstream_host": {
-					"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+					"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 					"type": "string"
 				}
 			},
 			"type": "object"
 		},
-		"upstream_hash_header_schema": {	
-			"pattern": "^[a-zA-Z0-9-_]+$",	
-			"type": "string"	
-		},	
-		"upstream_hash_vars_schema": {	
-			"pattern": "^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$",	
-			"type": "string"	
-		}		
+		"upstream_hash_header_schema": {
+			"pattern": "^[a-zA-Z0-9-_]+$",
+			"type": "string"
+		},
+		"upstream_hash_vars_schema": {
+			"pattern": "^((uri|server_name|server_addr|request_uri|remote_port|remote_addr|query_string|host|hostname)|arg_[0-9a-zA-z_-]+)$",
+			"type": "string"
+		}
 	},
 	"plugins": {
 		"api-breaker": {
@@ -2406,75 +2275,6 @@
 				},
 				"type": "object"
 			},
-			"version": 0.1
-		},
-		"error-log-logger": {
-			"metadata_schema": {
-				"properties": {
-					"batch_max_size": {
-						"default": 1000,
-						"minimum": 0,
-						"type": "integer"
-					},
-					"buffer_duration": {
-						"default": 60,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"host": {
-						"pattern": "^\\*?[0-9a-zA-Z-.]+$",
-						"type": "string"
-					},
-					"inactive_timeout": {
-						"default": 3,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"keepalive": {
-						"default": 30,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"level": {
-						"default": "WARN",
-						"enum": ["ALERT", "CRIT", "DEBUG", "EMERG", "ERR", "ERROR", "INFO", "NOTICE", "STDERR", "WARN"],
-						"type": "string"
-					},
-					"max_retry_count": {
-						"default": 0,
-						"minimum": 0,
-						"type": "integer"
-					},
-					"name": {
-						"default": "error-log-logger",
-						"type": "string"
-					},
-					"port": {
-						"minimum": 0,
-						"type": "integer"
-					},
-					"retry_delay": {
-						"default": 1,
-						"minimum": 0,
-						"type": "integer"
-					},
-					"timeout": {
-						"default": 3,
-						"minimum": 1,
-						"type": "integer"
-					},
-					"tls": {
-						"default": false,
-						"type": "boolean"
-					},
-					"tls_server_name": {
-						"type": "string"
-					}
-				},
-				"required": ["host", "port"],
-				"type": "object"
-			},
-			"priority": 1091,
 			"version": 0.1
 		},
 		"fault-injection": {
@@ -3090,19 +2890,6 @@
 			},
 			"version": 0.1
 		},
-		"log-rotate": {
-			"priority": 100,
-			"schema": {
-				"additionalProperties": false,
-				"properties": {
-					"disable": {
-						"type": "boolean"
-					}
-				},
-				"type": "object"
-			},
-			"version": 0.1
-		},
 		"mqtt-proxy": {
 			"priority": 1000,
 			"schema": {
@@ -3126,19 +2913,6 @@
 					}
 				},
 				"required": ["protocol_level", "protocol_name", "upstream"],
-				"type": "object"
-			},
-			"version": 0.1
-		},
-		"node-status": {
-			"priority": 1000,
-			"schema": {
-				"additionalProperties": false,
-				"properties": {
-					"disable": {
-						"type": "boolean"
-					}
-				},
 				"type": "object"
 			},
 			"version": 0.1
@@ -3382,7 +3156,7 @@
 					},
 					"whitelist": {
 						"items": {
-							"pattern": "^\\*?[0-9a-zA-Z-.]+$",
+							"pattern": "^\\*?[0-9a-zA-Z-._]+$",
 							"type": "string"
 						},
 						"minItems": 1,
@@ -3472,19 +3246,6 @@
 			},
 			"version": 0.1
 		},
-		"server-info": {
-			"priority": 990,
-			"schema": {
-				"additionalProperties": false,
-				"properties": {
-					"disable": {
-						"type": "boolean"
-					}
-				},
-				"type": "object"
-			},
-			"version": 0.1
-		},
 		"serverless-post-function": {
 			"priority": -2000,
 			"schema": {
@@ -3525,42 +3286,6 @@
 					}
 				},
 				"required": ["functions"],
-				"type": "object"
-			},
-			"version": 0.1
-		},
-		"skywalking": {
-			"metadata_schema": {
-				"additionalProperties": false,
-				"properties": {
-					"endpoint_addr": {
-						"default": "http://127.0.0.1:12800",
-						"type": "string"
-					},
-					"service_instance_name": {
-						"default": "APISIX Instance Name",
-						"description": "User Service Instance Name",
-						"type": "string"
-					},
-					"service_name": {
-						"default": "APISIX",
-						"description": "service name for skywalking",
-						"type": "string"
-					}
-				},
-				"type": "object"
-			},
-			"priority": -1100,
-			"schema": {
-				"additionalProperties": false,
-				"properties": {
-					"sample_ratio": {
-						"default": 1,
-						"maximum": 1,
-						"minimum": 0.00001,
-						"type": "number"
-					}
-				},
 				"type": "object"
 			},
 			"version": 0.1
@@ -3761,6 +3486,441 @@
 					}
 				},
 				"required": ["host", "port"],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"traffic-split": {
+			"priority": 966,
+			"schema": {
+				"properties": {
+					"rules": {
+						"items": {
+							"properties": {
+								"match": {
+									"default": [{
+										"vars": [
+											[0, ">", "server_port"]
+										]
+									}],
+									"items": {
+										"properties": {
+											"vars": {
+												"items": {
+													"additionalItems": {
+														"anyOf": [{
+															"type": "string"
+														}, {
+															"type": "number"
+														}, {
+															"type": "boolean"
+														}, {
+															"items": {
+																"anyOf": [{
+																	"maxLength": 100,
+																	"minLength": 1,
+																	"type": "string"
+																}, {
+																	"type": "number"
+																}, {
+																	"type": "boolean"
+																}]
+															},
+															"type": "array",
+															"uniqueItems": true
+														}]
+													},
+													"items": [{
+														"maxLength": 100,
+														"minLength": 1,
+														"type": "string"
+													}, {
+														"maxLength": 2,
+														"minLength": 1,
+														"type": "string"
+													}],
+													"maxItems": 10,
+													"minItems": 0,
+													"type": "array"
+												},
+												"type": "array"
+											}
+										},
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"weighted_upstreams": {
+									"default": [{
+										"weight": 1
+									}],
+									"items": {
+										"properties": {
+											"upstream": {
+												"additionalProperties": false,
+												"anyOf": [{
+													"required": ["nodes", "type"]
+												}, {
+													"required": ["service_name", "type"]
+												}],
+												"properties": {
+													"checks": {
+														"additionalProperties": false,
+														"anyOf": [{
+															"required": ["active"]
+														}, {
+															"required": ["active", "passive"]
+														}],
+														"properties": {
+															"active": {
+																"properties": {
+																	"concurrency": {
+																		"default": 10,
+																		"type": "integer"
+																	},
+																	"healthy": {
+																		"properties": {
+																			"http_statuses": {
+																				"default": [200, 302],
+																				"items": {
+																					"maximum": 599,
+																					"minimum": 200,
+																					"type": "integer"
+																				},
+																				"minItems": 1,
+																				"type": "array",
+																				"uniqueItems": true
+																			},
+																			"interval": {
+																				"default": 0,
+																				"minimum": 1,
+																				"type": "integer"
+																			},
+																			"successes": {
+																				"default": 2,
+																				"maximum": 254,
+																				"minimum": 1,
+																				"type": "integer"
+																			}
+																		},
+																		"type": "object"
+																	},
+																	"host": {
+																		"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+																		"type": "string"
+																	},
+																	"http_path": {
+																		"default": "/",
+																		"type": "string"
+																	},
+																	"https_verify_certificate": {
+																		"default": true,
+																		"type": "boolean"
+																	},
+																	"port": {
+																		"maximum": 65535,
+																		"minimum": 1,
+																		"type": "integer"
+																	},
+																	"req_headers": {
+																		"items": {
+																			"type": "string",
+																			"uniqueItems": true
+																		},
+																		"minItems": 1,
+																		"type": "array"
+																	},
+																	"timeout": {
+																		"default": 1,
+																		"type": "number"
+																	},
+																	"type": {
+																		"default": "http",
+																		"enum": ["http", "https", "tcp"],
+																		"type": "string"
+																	},
+																	"unhealthy": {
+																		"properties": {
+																			"http_failures": {
+																				"default": 5,
+																				"maximum": 254,
+																				"minimum": 1,
+																				"type": "integer"
+																			},
+																			"http_statuses": {
+																				"default": [404, 429, 500, 501, 502, 503, 504, 505],
+																				"items": {
+																					"maximum": 599,
+																					"minimum": 200,
+																					"type": "integer"
+																				},
+																				"minItems": 1,
+																				"type": "array",
+																				"uniqueItems": true
+																			},
+																			"interval": {
+																				"default": 0,
+																				"minimum": 1,
+																				"type": "integer"
+																			},
+																			"tcp_failures": {
+																				"default": 2,
+																				"maximum": 254,
+																				"minimum": 1,
+																				"type": "integer"
+																			},
+																			"timeouts": {
+																				"default": 3,
+																				"maximum": 254,
+																				"minimum": 1,
+																				"type": "integer"
+																			}
+																		},
+																		"type": "object"
+																	}
+																},
+																"type": "object"
+															},
+															"passive": {
+																"properties": {
+																	"healthy": {
+																		"properties": {
+																			"http_statuses": {
+																				"default": [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308],
+																				"items": {
+																					"maximum": 599,
+																					"minimum": 200,
+																					"type": "integer"
+																				},
+																				"minItems": 1,
+																				"type": "array",
+																				"uniqueItems": true
+																			},
+																			"successes": {
+																				"default": 5,
+																				"maximum": 254,
+																				"minimum": 1,
+																				"type": "integer"
+																			}
+																		},
+																		"type": "object"
+																	},
+																	"type": {
+																		"default": "http",
+																		"enum": ["http", "https", "tcp"],
+																		"type": "string"
+																	},
+																	"unhealthy": {
+																		"properties": {
+																			"http_failures": {
+																				"default": 5,
+																				"maximum": 254,
+																				"minimum": 1,
+																				"type": "integer"
+																			},
+																			"http_statuses": {
+																				"default": [429, 500, 503],
+																				"items": {
+																					"maximum": 599,
+																					"minimum": 200,
+																					"type": "integer"
+																				},
+																				"minItems": 1,
+																				"type": "array",
+																				"uniqueItems": true
+																			},
+																			"tcp_failures": {
+																				"default": 2,
+																				"maximum": 254,
+																				"minimum": 1,
+																				"type": "integer"
+																			},
+																			"timeouts": {
+																				"default": 7,
+																				"maximum": 254,
+																				"minimum": 1,
+																				"type": "integer"
+																			}
+																		},
+																		"type": "object"
+																	}
+																},
+																"type": "object"
+															}
+														},
+														"type": "object"
+													},
+													"create_time": {
+														"type": "integer"
+													},
+													"desc": {
+														"maxLength": 256,
+														"type": "string"
+													},
+													"discovery_type": {
+														"description": "discovery type",
+														"type": "string"
+													},
+													"enable_websocket": {
+														"description": "enable websocket for request",
+														"type": "boolean"
+													},
+													"hash_on": {
+														"default": "vars",
+														"enum": ["consumer", "cookie", "header", "vars"],
+														"type": "string"
+													},
+													"id": {
+														"anyOf": [{
+															"maxLength": 64,
+															"minLength": 1,
+															"pattern": "^[a-zA-Z0-9-_.]+$",
+															"type": "string"
+														}, {
+															"minimum": 1,
+															"type": "integer"
+														}]
+													},
+													"key": {
+														"description": "the key of chash for dynamic load balancing",
+														"type": "string"
+													},
+													"labels": {
+														"description": "key/value pairs to specify attributes",
+														"maxProperties": 16,
+														"patternProperties": {
+															".*": {
+																"description": "value of label",
+																"maxLength": 64,
+																"minLength": 1,
+																"pattern": "^[a-zA-Z0-9-_.]+$",
+																"type": "string"
+															}
+														},
+														"type": "object"
+													},
+													"name": {
+														"maxLength": 100,
+														"minLength": 1,
+														"type": "string"
+													},
+													"nodes": {
+														"anyOf": [{
+															"minProperties": 1,
+															"patternProperties": {
+																".*": {
+																	"description": "weight of node",
+																	"minimum": 0,
+																	"type": "integer"
+																}
+															},
+															"type": "object"
+														}, {
+															"items": {
+																"properties": {
+																	"host": {
+																		"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+																		"type": "string"
+																	},
+																	"metadata": {
+																		"description": "metadata of node",
+																		"type": "object"
+																	},
+																	"port": {
+																		"description": "port of node",
+																		"minimum": 1,
+																		"type": "integer"
+																	},
+																	"weight": {
+																		"description": "weight of node",
+																		"minimum": 0,
+																		"type": "integer"
+																	}
+																},
+																"required": ["host", "port", "weight"],
+																"type": "object"
+															},
+															"type": "array"
+														}]
+													},
+													"pass_host": {
+														"default": "pass",
+														"description": "mod of host passing",
+														"enum": ["node", "pass", "rewrite"],
+														"type": "string"
+													},
+													"retries": {
+														"minimum": 0,
+														"type": "integer"
+													},
+													"service_name": {
+														"maxLength": 100,
+														"minLength": 1,
+														"type": "string"
+													},
+													"timeout": {
+														"properties": {
+															"connect": {
+																"minimum": 0,
+																"type": "number"
+															},
+															"read": {
+																"minimum": 0,
+																"type": "number"
+															},
+															"send": {
+																"minimum": 0,
+																"type": "number"
+															}
+														},
+														"required": ["connect", "read", "send"],
+														"type": "object"
+													},
+													"type": {
+														"description": "algorithms of load balancing",
+														"enum": ["chash", "ewma", "roundrobin"],
+														"type": "string"
+													},
+													"update_time": {
+														"type": "integer"
+													},
+													"upstream_host": {
+														"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+														"type": "string"
+													}
+												},
+												"type": "object"
+											},
+											"upstream_id": {
+												"anyOf": [{
+													"maxLength": 64,
+													"minLength": 1,
+													"pattern": "^[a-zA-Z0-9-_.]+$",
+													"type": "string"
+												}, {
+													"minimum": 1,
+													"type": "integer"
+												}]
+											},
+											"weight": {
+												"default": 1,
+												"description": "used to split traffic between differentupstreams for plugin configuration",
+												"minimum": 0,
+												"type": "integer"
+											}
+										},
+										"type": "object"
+									},
+									"maxItems": 20,
+									"minItems": 1,
+									"type": "array"
+								}
+							},
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
 				"type": "object"
 			},
 			"version": 0.1
