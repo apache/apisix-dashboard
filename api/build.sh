@@ -15,12 +15,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-set -ex
-export ENV=local
-pwd=`pwd`
+set -e
 
 VERSION=$(cat ./api/VERSION)
 GITHASH=$(cat ./.githash 2> /dev/null || HASH="ref: HEAD"; while [[ $HASH == ref\:* ]]; do HASH="$(cat ".git/$(echo $HASH | cut -d \  -f 2)")"; done; echo ${HASH:0:7})
+GOLDFLAGS="-X github.com/apisix/manager-api/cmd.Version=${VERSION} -X github.com/apisix/manager-api/cmd.GitHash=${GITHASH}"
+
+# Enter dry-run mode
+if [ "$1" == "--dry-run" ]; then
+    cd ./api && go run -ldflags "${GOLDFLAGS}" ./cmd/manager
+    exit 0
+fi
+
+set -x
+export ENV=local
+pwd=`pwd`
 
 rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua
 
@@ -32,7 +41,7 @@ if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
 fi
 
 # build
-cd ./api && go build -o ../output/manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version=${VERSION} -X github.com/apisix/manager-api/cmd.GitHash=${GITHASH}" ./cmd/manager && cd ..
+cd ./api && go build -o ../output/manager-api -ldflags "${GOLDFLAGS}" ./cmd/manager && cd ..
 
 cp ./api/conf/schema.json ./output/conf/schema.json
 cp ./api/conf/conf.yaml ./output/conf/conf.yaml

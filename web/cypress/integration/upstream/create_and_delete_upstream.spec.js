@@ -21,6 +21,7 @@ context('Create and Delete Upstream', () => {
   const sleepTime = 100; // the unit is milliseconds
   const domSelectors = {
     notification: '.ant-notification-notice-message',
+    selectItem: '.ant-select-item-option-content'
   };
 
   beforeEach(() => {
@@ -73,15 +74,19 @@ context('Create and Delete Upstream', () => {
     // change upstream type to chash, todo: optimize the search method
     cy.get('[title=roundrobin]').click();
     cy.wait(sleepTime);
-    cy.get('.ant-select-item:nth-child(2)').click();
+    cy.get(domSelectors.selectItem).within(() => {
+      cy.contains('chash').click();
+    });
     cy.get('#hash_on').click();
     cy.wait(sleepTime);
-    cy.get('.ant-select-item-option-active:nth-child(1) > .ant-select-item-option-content').click();
+    cy.get(domSelectors.selectItem).within(() => {
+      cy.contains('vars').click();
+    });
     cy.get('#key').click();
     cy.wait(sleepTime);
-    cy.get(
-      'div:nth-child(8) .ant-select-item:nth-child(1) > .ant-select-item-option-content:nth-child(1)',
-    ).click();
+    cy.get(domSelectors.selectItem).within(() => {
+      cy.contains('remote_addr').click();
+    });
 
     // add first upstream node
     cy.get('#nodes_0_host').type('127.0.0.1');
