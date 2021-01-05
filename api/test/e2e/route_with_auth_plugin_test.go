@@ -17,6 +17,8 @@
 package e2e
 
 import (
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"testing"
 	"time"
@@ -24,7 +26,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRoute_With_Auth_Plugin(t *testing.T) {
+func TestRoute_With_Jwt_Plugin(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			Desc:         "make sure the route is not created ",
@@ -166,6 +168,120 @@ func TestRoute_With_Auth_Plugin(t *testing.T) {
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	tests = []HttpTestCase{
+		{
+			Desc:   "create consumer with jwt but without algorithm",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
+			Body: `{
+				"username":"consumer_1",
+				"desc": "test description",
+				"plugins":{
+					"jwt-auth":{
+						"exp":86400,
+						"key":"user-key",
+						"secret":"my-secret-key"
+					}
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"code\":0",
+		},
+		{
+			Desc:         "get the consumer",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/consumers/consumer_1",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"username\":\"consumer_1\"",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:   "create the route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"plugins": {
+					"jwt-auth": {}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	// get the token of jwt
+	basepath := "http://127.0.0.1:9080"
+	request, _ := http.NewRequest("GET", basepath+"/apisix/plugin/jwt/sign?key=user-key", nil)
+	request.Header.Add("Authorization", token)
+	resp, err := http.DefaultClient.Do(request)
+	if err != nil {
+		fmt.Printf("server not responding %s", err.Error())
+	}
+	defer resp.Body.Close()
+	assert.Equal(t, 200, resp.StatusCode)
+	respBody, _ := ioutil.ReadAll(resp.Body)
+
+	tests = []HttpTestCase{
+		{
+			Desc:         "hit route with jwt token",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": string(respBody)},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "delete consumer",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/consumers/consumer_1",
+			Method:       http.MethodDelete,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"code\":0",
+		},
+		{
+			Desc:         "after delete consumer verify it again",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "delete the route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
 		},
 	}
 
