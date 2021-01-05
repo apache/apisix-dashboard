@@ -93,7 +93,7 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	client := &http.Client{}
 
 	client.Timeout = 5 * time.Second
-	req, err := http.NewRequest(strings.ToUpper(paramsInput.Method), paramsInput.URL, strings.NewReader(string(bodyParams)))
+	req, err := http.NewRequest(strings.ToUpper(paramsInput.Method), paramsInput.URL, strings.NewReader(bodyParams))
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}

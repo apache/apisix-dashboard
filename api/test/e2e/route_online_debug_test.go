@@ -243,8 +243,8 @@ func TestRoute_Online_Debug_Route_With_Body_Params(t *testing.T) {
 				"request_protocol": "http",
 				"method": "POST",
 				"body_params": "{
-					"name": "test",
-					"desc": "online debug route with body params"
+					\"name\": \"test\",
+					\"desc\": \"online debug route with body params\"
 				}"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
