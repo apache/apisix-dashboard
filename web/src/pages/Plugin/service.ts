@@ -24,10 +24,10 @@ export const fetchList = (): Promise<{
 }> =>
   request<{
     data: {
-      plugins: Record<string, object>;
+      plugins: Record<string, any>;
     };
   }>(`/global_rules/${DEFAULT_GLOBAL_RULE_ID}`).then(({ data }) => {
-    const plugins = Object.entries(data.plugins || {}).map(([name, value]) => ({
+    const plugins = Object.entries(data.plugins || {}).filter(([, value]) => !value.disable).map(([name, value]) => ({
       id: name,
       name,
       value,

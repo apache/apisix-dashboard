@@ -40,6 +40,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'desc',
+      hideInSearch: true
     },
     {
       title: formatMessage({ id: 'component.global.operation' }),
