@@ -1,0 +1,741 @@
+consumes:
+- application/json
+- application/xml
+definitions:
+  ApiError:
+    properties:
+      code:
+        description: response code
+        format: int64
+        type: integer
+        x-go-name: Code
+      message:
+        description: response message
+        type: string
+        x-go-name: Message
+    type: object
+    x-go-package: github.com/apisix/manager-api/internal/utils/consts
+  BaseInfo:
+    properties:
+      create_time:
+        format: int64
+        type: integer
+        x-go-name: CreateTime
+      id:
+        type: object
+        x-go-name: ID
+      update_time:
+        format: int64
+        type: integer
+        x-go-name: UpdateTime
+    type: object
+    x-go-package: github.com/apisix/manager-api/internal/core/entity
+  Consumer:
+    properties:
+      create_time:
+        format: int64
+        type: integer
+        x-go-name: CreateTime
+      desc:
+        type: string
+        x-go-name: Desc
+      id:
+        type: object
+        x-go-name: ID
+      labels:
+        additionalProperties:
+          type: string
+        type: object
+        x-go-name: Labels
+      plugins:
+        additionalProperties:
+          type: object
+        type: object
+        x-go-name: Plugins
+      update_time:
+        format: int64
+        type: integer
+        x-go-name: UpdateTime
+      username:
+        type: string
+        x-go-name: Username
+    type: object
+    x-go-package: github.com/apisix/manager-api/internal/core/entity
+  GlobalPlugins:
+    properties:
+      id:
+        type: object
+        x-go-name: ID
+      plugins:
+        additionalProperties:
+          type: object
+        type: object
+        x-go-name: Plugins
+    type: object
+    x-go-package: github.com/apisix/manager-api/internal/core/entity
+  LoginInput:
+    properties:
+      password:
+        description: password
+        type: string
+        x-go-name: Password
+      username:
+        description: user name
+        type: string
+        x-go-name: Username
+    type: object
+    x-go-package: github.com/apisix/manager-api/internal/handler/authentication
+  Route:
+    properties:
+      create_time:
+        format: int64
+        type: integer
+        x-go-name: CreateTime
+      desc:
+        type: string
+        x-go-name: Desc
+      enable_websocket:
+        type: boolean
+        x-go-name: EnableWebsocket
+      filter_func:
+        type: string
+        x-go-name: FilterFunc
+      host:
+        type: string
+        x-go-name: Host
+      hosts:
+        items:
+          type: string
+        type: array
+        x-go-name: Hosts
+      id:
+        type: object
+        x-go-name: ID
+      labels:
+        additionalProperties:
+          type: string
+        type: object
+        x-go-name: Labels
+      methods:
+        items:
+          type: string
+        type: array
+        x-go-name: Methods
+      name:
+        type: string
+        x-go-name: Name
+      plugins:
+        additionalProperties:
+          type: object
+        type: object
+        x-go-name: Plugins
+      priority:
+        format: int64
+        type: integer
+        x-go-name: Priority
+      remote_addr:
+        type: string
+        x-go-name: RemoteAddr
+      remote_addrs:
+        items:
+          type: string
+        type: array
+        x-go-name: RemoteAddrs
+      script:
+        type: object
+        x-go-name: Script
+      service_id:
+        type: object
+        x-go-name: ServiceID
+      service_protocol:
+        type: string
+        x-go-name: ServiceProtocol
+      status:
+        $ref: '#/definitions/Status'
+      update_time:
+        format: int64
+        type: integer
+        x-go-name: UpdateTime
+      upstream:
+        $ref: '#/definitions/UpstreamDef'
+      upstream_id:
+        type: object
+        x-go-name: UpstreamID
+      uri:
+        type: string
+        x-go-name: URI
+      uris:
+        items:
+          type: string
+        type: array
+        x-go-name: Uris
+      vars:
+        type: object
+        x-go-name: Vars
+    type: object
+    x-go-package: github.com/apisix/manager-api/internal/core/entity
+  SSL:
+    properties:
+      cert:
+        type: string
+        x-go-name: Cert
+      certs:
+        items:
+          type: string
+        type: array
+        x-go-name: Certs
+      create_time:
+        format: int64
+        type: integer
+        x-go-name: CreateTime
+      exptime:
+        format: int64
+        type: integer
+        x-go-name: ExpTime
+      id:
+        type: object
+        x-go-name: ID
+      key:
+        type: string
+        x-go-name: Key
+      keys:
+        items:
+          type: string
+        type: array
+        x-go-name: Keys
+      labels:
+        additionalProperties:
+          type: string
+        type: object
+        x-go-name: Labels
+      sni:
+        type: string
+        x-go-name: Sni
+      snis:
+        items:
+          type: string
+        type: array
+        x-go-name: Snis
+      status:
+        format: int64
+        type: integer
+        x-go-name: Status
+      update_time:
+        format: int64
+        type: integer
+        x-go-name: UpdateTime
+      validity_end:
+        format: int64
+        type: integer
+        x-go-name: ValidityEnd
+      validity_start:
+        format: int64
+        type: integer
+        x-go-name: ValidityStart
+    type: object
+    x-go-package: github.com/apisix/manager-api/internal/core/entity
+  Service:
+    properties:
+      create_time:
+        format: int64
+        type: integer
+        x-go-name: CreateTime
+      desc:
+        type: string
+        x-go-name: Desc
+      enable_websocket:
+        type: boolean
+        x-go-name: EnableWebsocket
+      id:
+        type: object
+        x-go-name: ID
+      labels:
+        additionalProperties:
+          type: string
+        type: object
+        x-go-name: Labels
+      name:
+        type: string
+        x-go-name: Name
+      plugins:
+        additionalProperties:
+          type: object
+        type: object
+        x-go-name: Plugins
+      script:
+        type: string
+        x-go-name: Script
+      update_time:
+        format: int64
+        type: integer
+        x-go-name: UpdateTime
+      upstream:
+        $ref: '#/definitions/UpstreamDef'
+      upstream_id:
+        type: object
+        x-go-name: UpstreamID
+    type: object
+    x-go-package: github.com/apisix/manager-api/internal/core/entity
+  Status:
+    format: uint8
+    type: integer
+    x-go-package: github.com/apisix/manager-api/internal/core/entity
+  Upstream:
+    properties:
+      checks:
+        type: object
+        x-go-name: Checks
+      create_time:
+        format: int64
+        type: integer
+        x-go-name: CreateTime
+      desc:
+        type: string
+        x-go-name: Desc
+      hash_on:
+        type: string
+        x-go-name: HashOn
+      id:
+        type: object
+        x-go-name: ID
+      k8s_deployment_info:
+        type: object
+        x-go-name: K8sInfo
+      key:
+        type: string
+        x-go-name: Key
+      labels:
+        additionalProperties:
+          type: string
+        type: object
+        x-go-name: Labels
+      name:
+        type: string
+        x-go-name: Name
+      nodes:
+        type: object
+        x-go-name: Nodes
+      pass_host:
+        type: string
+        x-go-name: PassHost
+      retries:
+        format: int64
+        type: integer
+        x-go-name: Retries
+      service_name:
+        type: string
+        x-go-name: ServiceName
+      timeout:
+        type: object
+        x-go-name: Timeout
+      type:
+        type: string
+        x-go-name: Type
+      update_time:
+        format: int64
+        type: integer
+        x-go-name: UpdateTime
+      upstream_host:
+        type: string
+        x-go-name: UpstreamHost
+    type: object
+    x-go-package: github.com/apisix/manager-api/internal/core/entity
+  UpstreamDef:
+    properties:
+      checks:
+        type: object
+        x-go-name: Checks
+      desc:
+        type: string
+        x-go-name: Desc
+      hash_on:
+        type: string
+        x-go-name: HashOn
+      k8s_deployment_info:
+        type: object
+        x-go-name: K8sInfo
+      key:
+        type: string
+        x-go-name: Key
+      labels:
+        additionalProperties:
+          type: string
+        type: object
+        x-go-name: Labels
+      name:
+        type: string
+        x-go-name: Name
+      nodes:
+        type: object
+        x-go-name: Nodes
+      pass_host:
+        type: string
+        x-go-name: PassHost
+      retries:
+        format: int64
+        type: integer
+        x-go-name: Retries
+      service_name:
+        type: string
+        x-go-name: ServiceName
+      timeout:
+        type: object
+        x-go-name: Timeout
+      type:
+        type: string
+        x-go-name: Type
+      upstream_host:
+        type: string
+        x-go-name: UpstreamHost
+    type: object
+    x-go-package: github.com/apisix/manager-api/internal/core/entity
+host: 127.0.0.1
+info:
+  description: |-
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    API doc of Manager API.
+
+    Manager API directly operates ETCD and provides data management for Apache APISIX, provides APIs for Front-end or other clients.
+  license:
+    name: Apache License 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  title: |-
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+paths:
+  /api/labels:
+    get:
+      description: |-
+        Return the labels list among `route,ssl,consumer,upstream,service`
+        according to the specified page number and page size, and can search labels by label.
+      operationId: getLabelsList
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: label filter of labels
+        in: query
+        name: label
+        type: string
+      produces:
+      - application/json
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/service'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /apisix/admin/check_ssl_cert:
+    post:
+      operationId: checkSSL
+      parameters:
+      - description: cert of SSL
+        in: body
+        name: cert
+        required: true
+        type: string
+      - description: key of SSL
+        in: body
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "0":
+          description: SSL verify passed
+          schema:
+            $ref: '#/definitions/ApiError'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ApiError'
+      summary: verify SSL cert and key.
+  /apisix/admin/check_ssl_exists:
+    post:
+      operationId: checkSSLExist
+      parameters:
+      - description: cert of SSL
+        in: body
+        name: cert
+        required: true
+        type: string
+      - description: key of SSL
+        in: body
+        name: key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "0":
+          description: SSL exists
+          schema:
+            $ref: '#/definitions/ApiError'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ApiError'
+      summary: Check whether the SSL exists.
+  /apisix/admin/consumers:
+    get:
+      operationId: getConsumerList
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: username of consumer
+        in: query
+        name: username
+        type: string
+      produces:
+      - application/json
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/consumer'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ApiError'
+      summary: Return the consumer list according to the specified page number and page size, and can search consumers by username.
+  /apisix/admin/global_rules:
+    get:
+      operationId: getGlobalRuleList
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/GlobalPlugins'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ApiError'
+      summary: Return the global rule list according to the specified page number and page size.
+  /apisix/admin/notexist/routes:
+    get:
+      operationId: checkRouteExist
+      parameters:
+      - description: name of route
+        in: query
+        name: name
+        type: string
+      - description: id of route that exclude checking
+        in: query
+        name: exclude
+        type: string
+      produces:
+      - application/json
+      responses:
+        "0":
+          description: route not exists
+          schema:
+            $ref: '#/definitions/ApiError'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ApiError'
+      summary: Return result of route exists checking by name and exclude id.
+  /apisix/admin/routes:
+    get:
+      operationId: getRouteList
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: name of route
+        in: query
+        name: name
+        type: string
+      - description: uri of route
+        in: query
+        name: uri
+        type: string
+      - description: label of route
+        in: query
+        name: label
+        type: string
+      produces:
+      - application/json
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/route'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ApiError'
+      summary: Return the route list according to the specified page number and page size, and can search routes by name and uri.
+  /apisix/admin/services:
+    get:
+      operationId: getServiceList
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: name of service
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/service'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ApiError'
+      summary: Return the service list according to the specified page number and page size, and can search services by name.
+  /apisix/admin/ssl:
+    get:
+      operationId: getSSLList
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: sni of SSL
+        in: query
+        name: sni
+        type: string
+      produces:
+      - application/json
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/ssl'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ApiError'
+      summary: Return the SSL list according to the specified page number and page size, and can SSLs search by sni.
+  /apisix/admin/upstreams:
+    get:
+      operationId: getUpstreamList
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: name of upstream
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "0":
+          description: list response
+          schema:
+            items:
+              $ref: '#/definitions/upstream'
+            type: array
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ApiError'
+      summary: Return the upstream list according to the specified page number and page size, and can search upstreams by name.
+  /apisix/admin/user/login:
+    post:
+      operationId: userLogin
+      parameters:
+      - description: user name
+        in: body
+        name: username
+        required: true
+        type: string
+      - description: password
+        in: body
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "0":
+          description: login success
+          schema:
+            $ref: '#/definitions/ApiError'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ApiError'
+      summary: user login.
+produces:
+- application/json
+- application/xml
+schemes:
+- http
+- https
+swagger: "2.0"

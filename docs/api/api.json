@@ -1,0 +1,1031 @@
+{
+  "consumes": [
+    "application/json",
+    "application/xml"
+  ],
+  "produces": [
+    "application/json",
+    "application/xml"
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\nAPI doc of Manager API.\n\nManager API directly operates ETCD and provides data management for Apache APISIX, provides APIs for Front-end or other clients.",
+    "title": "Licensed to the Apache Software Foundation (ASF) under one or more\ncontributor license agreements.  See the NOTICE file distributed with\nthis work for additional information regarding copyright ownership.\nThe ASF licenses this file to You under the Apache License, Version 2.0\n(the \"License\"); you may not use this file except in compliance with\nthe License.  You may obtain a copy of the License at",
+    "license": {
+      "name": "Apache License 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "host": "127.0.0.1",
+  "paths": {
+    "/api/labels": {
+      "get": {
+        "description": "Return the labels list among `route,ssl,consumer,upstream,service`\naccording to the specified page number and page size, and can search labels by label.",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "getLabelsList",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "page size",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "label filter of labels",
+            "name": "label",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "0": {
+            "description": "list response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/service"
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/apisix/admin/check_ssl_cert": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "summary": "verify SSL cert and key.",
+        "operationId": "checkSSL",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "cert of SSL",
+            "name": "cert",
+            "in": "body",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "key of SSL",
+            "name": "key",
+            "in": "body",
+            "required": true
+          }
+        ],
+        "responses": {
+          "0": {
+            "description": "SSL verify passed",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/apisix/admin/check_ssl_exists": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Check whether the SSL exists.",
+        "operationId": "checkSSLExist",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "cert of SSL",
+            "name": "cert",
+            "in": "body",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "key of SSL",
+            "name": "key",
+            "in": "body",
+            "required": true
+          }
+        ],
+        "responses": {
+          "0": {
+            "description": "SSL exists",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/apisix/admin/consumers": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Return the consumer list according to the specified page number and page size, and can search consumers by username.",
+        "operationId": "getConsumerList",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "page size",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "username of consumer",
+            "name": "username",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "0": {
+            "description": "list response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/consumer"
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/apisix/admin/global_rules": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Return the global rule list according to the specified page number and page size.",
+        "operationId": "getGlobalRuleList",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "page size",
+            "name": "page_size",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "0": {
+            "description": "list response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GlobalPlugins"
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/apisix/admin/notexist/routes": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Return result of route exists checking by name and exclude id.",
+        "operationId": "checkRouteExist",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "name of route",
+            "name": "name",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "id of route that exclude checking",
+            "name": "exclude",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "0": {
+            "description": "route not exists",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/apisix/admin/routes": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Return the route list according to the specified page number and page size, and can search routes by name and uri.",
+        "operationId": "getRouteList",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "page size",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "name of route",
+            "name": "name",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "uri of route",
+            "name": "uri",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "label of route",
+            "name": "label",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "0": {
+            "description": "list response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/route"
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/apisix/admin/services": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Return the service list according to the specified page number and page size, and can search services by name.",
+        "operationId": "getServiceList",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "page size",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "name of service",
+            "name": "name",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "0": {
+            "description": "list response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/service"
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/apisix/admin/ssl": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Return the SSL list according to the specified page number and page size, and can SSLs search by sni.",
+        "operationId": "getSSLList",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "page size",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "sni of SSL",
+            "name": "sni",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "0": {
+            "description": "list response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ssl"
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/apisix/admin/upstreams": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Return the upstream list according to the specified page number and page size, and can search upstreams by name.",
+        "operationId": "getUpstreamList",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "page number",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "page size",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "name of upstream",
+            "name": "name",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "0": {
+            "description": "list response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/upstream"
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/apisix/admin/user/login": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "summary": "user login.",
+        "operationId": "userLogin",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "user name",
+            "name": "username",
+            "in": "body",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "password",
+            "name": "password",
+            "in": "body",
+            "required": true
+          }
+        ],
+        "responses": {
+          "0": {
+            "description": "login success",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ApiError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "response code",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Code"
+        },
+        "message": {
+          "description": "response message",
+          "type": "string",
+          "x-go-name": "Message"
+        }
+      },
+      "x-go-package": "github.com/apisix/manager-api/internal/utils/consts"
+    },
+    "BaseInfo": {
+      "type": "object",
+      "properties": {
+        "create_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "CreateTime"
+        },
+        "id": {
+          "type": "object",
+          "x-go-name": "ID"
+        },
+        "update_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "UpdateTime"
+        }
+      },
+      "x-go-package": "github.com/apisix/manager-api/internal/core/entity"
+    },
+    "Consumer": {
+      "type": "object",
+      "properties": {
+        "create_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "CreateTime"
+        },
+        "desc": {
+          "type": "string",
+          "x-go-name": "Desc"
+        },
+        "id": {
+          "type": "object",
+          "x-go-name": "ID"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "Labels"
+        },
+        "plugins": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          },
+          "x-go-name": "Plugins"
+        },
+        "update_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "UpdateTime"
+        },
+        "username": {
+          "type": "string",
+          "x-go-name": "Username"
+        }
+      },
+      "x-go-package": "github.com/apisix/manager-api/internal/core/entity"
+    },
+    "GlobalPlugins": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "x-go-name": "ID"
+        },
+        "plugins": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          },
+          "x-go-name": "Plugins"
+        }
+      },
+      "x-go-package": "github.com/apisix/manager-api/internal/core/entity"
+    },
+    "LoginInput": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "description": "password",
+          "type": "string",
+          "x-go-name": "Password"
+        },
+        "username": {
+          "description": "user name",
+          "type": "string",
+          "x-go-name": "Username"
+        }
+      },
+      "x-go-package": "github.com/apisix/manager-api/internal/handler/authentication"
+    },
+    "Route": {
+      "type": "object",
+      "properties": {
+        "create_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "CreateTime"
+        },
+        "desc": {
+          "type": "string",
+          "x-go-name": "Desc"
+        },
+        "enable_websocket": {
+          "type": "boolean",
+          "x-go-name": "EnableWebsocket"
+        },
+        "filter_func": {
+          "type": "string",
+          "x-go-name": "FilterFunc"
+        },
+        "host": {
+          "type": "string",
+          "x-go-name": "Host"
+        },
+        "hosts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "Hosts"
+        },
+        "id": {
+          "type": "object",
+          "x-go-name": "ID"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "Labels"
+        },
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "Methods"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "plugins": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          },
+          "x-go-name": "Plugins"
+        },
+        "priority": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Priority"
+        },
+        "remote_addr": {
+          "type": "string",
+          "x-go-name": "RemoteAddr"
+        },
+        "remote_addrs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "RemoteAddrs"
+        },
+        "script": {
+          "type": "object",
+          "x-go-name": "Script"
+        },
+        "service_id": {
+          "type": "object",
+          "x-go-name": "ServiceID"
+        },
+        "service_protocol": {
+          "type": "string",
+          "x-go-name": "ServiceProtocol"
+        },
+        "status": {
+          "$ref": "#/definitions/Status"
+        },
+        "update_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "UpdateTime"
+        },
+        "upstream": {
+          "$ref": "#/definitions/UpstreamDef"
+        },
+        "upstream_id": {
+          "type": "object",
+          "x-go-name": "UpstreamID"
+        },
+        "uri": {
+          "type": "string",
+          "x-go-name": "URI"
+        },
+        "uris": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "Uris"
+        },
+        "vars": {
+          "type": "object",
+          "x-go-name": "Vars"
+        }
+      },
+      "x-go-package": "github.com/apisix/manager-api/internal/core/entity"
+    },
+    "SSL": {
+      "type": "object",
+      "properties": {
+        "cert": {
+          "type": "string",
+          "x-go-name": "Cert"
+        },
+        "certs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "Certs"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "CreateTime"
+        },
+        "exptime": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ExpTime"
+        },
+        "id": {
+          "type": "object",
+          "x-go-name": "ID"
+        },
+        "key": {
+          "type": "string",
+          "x-go-name": "Key"
+        },
+        "keys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "Keys"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "Labels"
+        },
+        "sni": {
+          "type": "string",
+          "x-go-name": "Sni"
+        },
+        "snis": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "Snis"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Status"
+        },
+        "update_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "UpdateTime"
+        },
+        "validity_end": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ValidityEnd"
+        },
+        "validity_start": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ValidityStart"
+        }
+      },
+      "x-go-package": "github.com/apisix/manager-api/internal/core/entity"
+    },
+    "Service": {
+      "type": "object",
+      "properties": {
+        "create_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "CreateTime"
+        },
+        "desc": {
+          "type": "string",
+          "x-go-name": "Desc"
+        },
+        "enable_websocket": {
+          "type": "boolean",
+          "x-go-name": "EnableWebsocket"
+        },
+        "id": {
+          "type": "object",
+          "x-go-name": "ID"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "Labels"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "plugins": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          },
+          "x-go-name": "Plugins"
+        },
+        "script": {
+          "type": "string",
+          "x-go-name": "Script"
+        },
+        "update_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "UpdateTime"
+        },
+        "upstream": {
+          "$ref": "#/definitions/UpstreamDef"
+        },
+        "upstream_id": {
+          "type": "object",
+          "x-go-name": "UpstreamID"
+        }
+      },
+      "x-go-package": "github.com/apisix/manager-api/internal/core/entity"
+    },
+    "Status": {
+      "type": "integer",
+      "format": "uint8",
+      "x-go-package": "github.com/apisix/manager-api/internal/core/entity"
+    },
+    "Upstream": {
+      "type": "object",
+      "properties": {
+        "checks": {
+          "type": "object",
+          "x-go-name": "Checks"
+        },
+        "create_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "CreateTime"
+        },
+        "desc": {
+          "type": "string",
+          "x-go-name": "Desc"
+        },
+        "hash_on": {
+          "type": "string",
+          "x-go-name": "HashOn"
+        },
+        "id": {
+          "type": "object",
+          "x-go-name": "ID"
+        },
+        "k8s_deployment_info": {
+          "type": "object",
+          "x-go-name": "K8sInfo"
+        },
+        "key": {
+          "type": "string",
+          "x-go-name": "Key"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "Labels"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "nodes": {
+          "type": "object",
+          "x-go-name": "Nodes"
+        },
+        "pass_host": {
+          "type": "string",
+          "x-go-name": "PassHost"
+        },
+        "retries": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Retries"
+        },
+        "service_name": {
+          "type": "string",
+          "x-go-name": "ServiceName"
+        },
+        "timeout": {
+          "type": "object",
+          "x-go-name": "Timeout"
+        },
+        "type": {
+          "type": "string",
+          "x-go-name": "Type"
+        },
+        "update_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "UpdateTime"
+        },
+        "upstream_host": {
+          "type": "string",
+          "x-go-name": "UpstreamHost"
+        }
+      },
+      "x-go-package": "github.com/apisix/manager-api/internal/core/entity"
+    },
+    "UpstreamDef": {
+      "type": "object",
+      "properties": {
+        "checks": {
+          "type": "object",
+          "x-go-name": "Checks"
+        },
+        "desc": {
+          "type": "string",
+          "x-go-name": "Desc"
+        },
+        "hash_on": {
+          "type": "string",
+          "x-go-name": "HashOn"
+        },
+        "k8s_deployment_info": {
+          "type": "object",
+          "x-go-name": "K8sInfo"
+        },
+        "key": {
+          "type": "string",
+          "x-go-name": "Key"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "x-go-name": "Labels"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "nodes": {
+          "type": "object",
+          "x-go-name": "Nodes"
+        },
+        "pass_host": {
+          "type": "string",
+          "x-go-name": "PassHost"
+        },
+        "retries": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Retries"
+        },
+        "service_name": {
+          "type": "string",
+          "x-go-name": "ServiceName"
+        },
+        "timeout": {
+          "type": "object",
+          "x-go-name": "Timeout"
+        },
+        "type": {
+          "type": "string",
+          "x-go-name": "Type"
+        },
+        "upstream_host": {
+          "type": "string",
+          "x-go-name": "UpstreamHost"
+        }
+      },
+      "x-go-package": "github.com/apisix/manager-api/internal/core/entity"
+    }
+  }
+}

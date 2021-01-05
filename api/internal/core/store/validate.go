@@ -72,6 +72,7 @@ func (v *JsonSchemaValidator) Validate(obj interface{}) error {
 
 type APISIXJsonSchemaValidator struct {
 	schema *gojsonschema.Schema
+	schemaDef string
 }
 
 func NewAPISIXJsonSchemaValidator(jsonPath string) (Validator, error) {
@@ -88,6 +89,7 @@ func NewAPISIXJsonSchemaValidator(jsonPath string) (Validator, error) {
 	}
 	return &APISIXJsonSchemaValidator{
 		schema: s,
+		schemaDef: schemaDef,
 	}, nil
 }
 
@@ -231,7 +233,7 @@ func checkConf(reqBody interface{}) error {
 func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 	ret, err := v.schema.Validate(gojsonschema.NewGoLoader(obj))
 	if err != nil {
-		log.Errorf("schema validate failed: %s", err)
+		log.Errorf("schema validate failed: %s, s: %v, obj: %v", err, v.schema, obj)
 		return fmt.Errorf("schema validate failed: %s", err)
 	}
 
@@ -243,6 +245,8 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 			}
 			errString.AppendString(vErr.String())
 		}
+		j, _ := json.Marshal(obj)
+		log.Errorf("schema validate failed:s: %v, obj: %s", v.schemaDef, string(j))
 		return fmt.Errorf("schema validate failed: %s", errString.String())
 	}
 

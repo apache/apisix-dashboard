@@ -18,6 +18,7 @@ package internal
 
 import (
 	"fmt"
+	"github.com/apisix/manager-api/internal/handler/data_loader"
 	"path/filepath"
 
 	"github.com/gin-contrib/pprof"
@@ -73,6 +74,7 @@ func SetUpRouter() *gin.Engine {
 		route_online_debug.NewHandler,
 		server_info.NewHandler,
 		label.NewHandler,
+		data_loader.NewHandler,
 	}
 
 	for i := range factories {
