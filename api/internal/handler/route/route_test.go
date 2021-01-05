@@ -938,9 +938,12 @@ func TestRoute(t *testing.T) {
 	dataPage = retPage.(*store.ListOutput)
 	assert.Equal(t, len(dataPage.Rows), 1)
 
+        //sleep
+        time.Sleep(time.Duration(100) * time.Millisecond)
+
 	// list search and status not match
 	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "status": "0"}`
+	reqBody = `{"page_size": 1, "page": 1, "name": "a", "status": "0"}`
 	err = json.Unmarshal([]byte(reqBody), listInput)
 	assert.Nil(t, err)
 	ctx.SetInput(listInput)
