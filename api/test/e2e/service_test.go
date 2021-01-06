@@ -17,6 +17,7 @@
 package e2e
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -26,7 +27,6 @@ import (
 
 func TestService(t *testing.T) {
 	tests := []HttpTestCase{
-
 		{
 			Desc:    "create service without plugin",
 			Object:  ManagerApiExpect(t),
@@ -90,6 +90,75 @@ func TestService(t *testing.T) {
 	assert.True(t, res["1980"] == 3)
 	assert.True(t, res["1981"] == 6)
 	assert.True(t, res["1982"] == 9)
+
+	tests = []HttpTestCase{
+		{
+			Desc:    "create service with plugin",
+			Object:  ManagerApiExpect(t),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/services/s1",
+			Headers: map[string]string{"Authorization": token},
+			Body: `{
+				"name": "testservice",
+				"plugins": { 
+					"limit-count": { 
+						"count": 100, 
+						"time_window": 60, 
+						"rejected_code": 503, 
+						"key": "remote_addr" 
+					} 
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:       "get the service s1",
+			Object:     ManagerApiExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/apisix/admin/services/s1",
+			Headers:    map[string]string{"Authorization": token},
+			ExpectCode: http.StatusOK,
+			ExpectBody: "\"upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}}",
+		},
+		{
+			Desc:   "create route using the service just created",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/server_port",
+				"service_id": "s1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	// hit routes and check the response header
+	time.Sleep(sleepTime)
+	basepath := "http://127.0.0.1:9080"
+	request, _ := http.NewRequest("GET", basepath+"/server_port", nil)
+	request.Header.Add("Authorization", token)
+	resp, err := http.DefaultClient.Do(request)
+	if err != nil {
+		fmt.Printf("server not responding %s", err.Error())
+	}
+	defer resp.Body.Close()
+	assert.Equal(t, 200, resp.StatusCode)
+	assert.Equal(t, "100", resp.Header["X-Ratelimit-Limit"][0])
+	assert.Equal(t, "99",  resp.Header["X-Ratelimit-Remaining"][0])
 }
 
 func TestService_Teardown(t *testing.T) {
