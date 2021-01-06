@@ -23,6 +23,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -220,7 +221,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 				return false
 			}
 
-			if input.Status != "" && fmt.Sprintf("%d", obj.(*entity.Route).Status) != input.Status {
+			if input.Status != "" && strconv.Itoa(int(obj.(*entity.Route).Status)) != input.Status {
 				return false
 			}
 
