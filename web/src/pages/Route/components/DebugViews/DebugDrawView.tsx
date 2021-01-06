@@ -61,8 +61,15 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     headerForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     authForm.setFieldsValue(DEFAULT_DEBUG_AUTH_FORM_DATA);
     setResponseCode(`${formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })}`);
-    setBodyType('none');
+    setBodyType(DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.None]);
   };
+
+  enum DebugBodyType {
+    None = 0,
+    FormUrlencoded,
+    Json,
+    RawInput,
+  }
 
   useEffect(() => {
     resetForms();
@@ -259,14 +266,13 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             {showBodyTab && (
               <TabPane tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })} key="body">
                 <Radio.Group onChange={(e) => {setBodyType(e.target.value)}} value={bodyType}>
-                  <Radio value="none">None</Radio>
                   {
                     DEBUG_BODY_TYPE_SUPPORTED.map((type) => (
                       <Radio value={type} key={type}>{type}</Radio>
                     ))
                   }
                 </Radio.Group>
-                {bodyType === 'raw input' && <Select
+                {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput] && <Select
                   size="small"
                   onChange={(value) => {
                     setBodyCodeMirrorMode(value)
@@ -281,12 +287,12 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                 </Select>}
                 <div style={{marginTop: 16}}>
                   {
-                    (bodyType === 'x-www-form-urlencoded' || bodyType === 'json') &&
+                    (bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded] || bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.Json]) &&
                     <DebugParamsView form={bodyForm} />
                   }
 
                   {
-                    (bodyType === 'raw input') &&
+                    (bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput]) &&
                     <Form>
                       <Form.Item>
                           <CodeMirror
