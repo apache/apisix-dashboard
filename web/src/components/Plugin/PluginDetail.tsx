@@ -30,7 +30,7 @@ import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
 import { LinkOutlined } from '@ant-design/icons';
-import Ajv, { DefinedError, ValidateFunction } from 'ajv';
+import Ajv, { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
 
 import { fetchSchema } from './service';
