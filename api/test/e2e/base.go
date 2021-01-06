@@ -20,10 +20,12 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
-
+	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
+	"os/exec"
+	"strings"
 	"testing"
 	"time"
 
@@ -32,12 +34,15 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-var token string
+var (
+	token string
+	Token string
 
-var APISIXHost = "http://127.0.0.1:9080"
-var APISIXInternalUrl = "http://172.16.238.30:9080"
-var APISIXSingleWorkerHost = "http://127.0.0.1:9081"
-var ManagerAPIHost = "http://127.0.0.1:9000"
+	APISIXHost             = "http://127.0.0.1:9080"
+	APISIXInternalUrl      = "http://172.16.238.30:9080"
+	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
+	ManagerAPIHost         = "http://127.0.0.1:9000"
+)
 
 func init() {
 	//login to get auth token
@@ -67,6 +72,7 @@ func init() {
 
 	respond := gjson.ParseBytes(body)
 	token = respond.Get("data.token").String()
+	Token = token
 }
 
 func httpGet(url string) ([]byte, int, error) {
@@ -157,20 +163,21 @@ func BatchTestServerPort(t *testing.T, times int) map[string]int {
 var sleepTime = time.Duration(300) * time.Millisecond
 
 type HttpTestCase struct {
-	Desc          string
-	Object        *httpexpect.Expect
-	Method        string
-	Path          string
-	Query         string
-	Body          string
-	Headers       map[string]string
-	Headers_test  map[string]interface{}
-	ExpectStatus  int
-	ExpectCode    int
-	ExpectMessage string
-	ExpectBody    string
-	ExpectHeaders map[string]string
-	Sleep         time.Duration //ms
+	Desc           string
+	Object         *httpexpect.Expect
+	Method         string
+	Path           string
+	Query          string
+	Body           string
+	Headers        map[string]string
+	Headers_test   map[string]interface{}
+	ExpectStatus   int
+	ExpectCode     int
+	ExpectMessage  string
+	ExpectBody     string
+	UnexpectedBody string
+	ExpectHeaders  map[string]string
+	Sleep          time.Duration //ms
 }
 
 func testCaseCheck(tc HttpTestCase, t *testing.T) {
@@ -208,34 +215,71 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 			req.WithQueryString(tc.Query)
 		}
 
-		//set header
+		// set header
 		for key, val := range tc.Headers {
 			req.WithHeader(key, val)
 		}
 
-		//set body
+		// set body
 		if tc.Body != "" {
 			req.WithText(tc.Body)
 		}
 
-		//respond check
+		// respond check
 		resp := req.Expect()
 
-		//match http status
+		// match http status
 		if tc.ExpectStatus != 0 {
 			resp.Status(tc.ExpectStatus)
 		}
 
-		//match headers
+		// match headers
 		if tc.ExpectHeaders != nil {
 			for key, val := range tc.ExpectHeaders {
 				resp.Header(key).Equal(val)
 			}
 		}
 
-		//match body
+		// match body
 		if tc.ExpectBody != "" {
 			resp.Body().Contains(tc.ExpectBody)
 		}
+
+		// match UnexpectedBody
+		if tc.UnexpectedBody != "" {
+			resp.Body().NotContains(tc.UnexpectedBody)
+		}
+
 	})
+}
+
+func RunTestCases(tc HttpTestCase, t *testing.T) {
+	testCaseCheck(tc, t)
+}
+
+func ReadAPISIXErrorLog(t *testing.T) string {
+	cmd := exec.Command("pwd")
+	pwdByte, err := cmd.CombinedOutput()
+	pwd := string(pwdByte)
+	pwd = strings.Replace(pwd, "\n", "", 1)
+	pwd = pwd[:strings.Index(pwd, "/e2e")]
+	bytes, err := ioutil.ReadFile(pwd + "/docker/apisix_logs/error.log")
+	assert.Nil(t, err)
+	logContent := string(bytes)
+
+	return logContent
+}
+
+func CleanAPISIXErrorLog(t *testing.T) {
+	cmd := exec.Command("pwd")
+	pwdByte, err := cmd.CombinedOutput()
+	pwd := string(pwdByte)
+	pwd = strings.Replace(pwd, "\n", "", 1)
+	pwd = pwd[:strings.Index(pwd, "/e2e")]
+	cmd = exec.Command("sudo", "echo", " > ", pwd + "/docker/apisix_logs/error.log")
+	_, err = cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("cmd error:", err.Error())
+	}
+	assert.Nil(t, err)
 }
