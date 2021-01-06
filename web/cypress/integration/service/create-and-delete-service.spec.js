@@ -36,7 +36,7 @@ context('create and delete service ', () => {
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-  });
+  })
 
   it('should delete the service', () => {
     cy.visit('/');
@@ -44,10 +44,12 @@ context('create and delete service ', () => {
 
     cy.get('[title=Name]').type('service');
     cy.contains('Search').click();
-
+    
     cy.contains('service').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.fixture('selector.json').then(({ notification }) => {
+    cy.fixture('selector.json').then(({
+      notification
+    }) => {
       cy.get(notification).should('contain', 'Delete Service Successfully');
     });
   });

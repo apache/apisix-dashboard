@@ -27,13 +27,11 @@ export const fetchList = (): Promise<{
       plugins: Record<string, any>;
     };
   }>(`/global_rules/${DEFAULT_GLOBAL_RULE_ID}`).then(({ data }) => {
-    const plugins = Object.entries(data.plugins || {})
-      .filter(([, value]) => !value.disable)
-      .map(([name, value]) => ({
-        id: name,
-        name,
-        value,
-      }));
+    const plugins = Object.entries(data.plugins || {}).filter(([, value]) => !value.disable).map(([name, value]) => ({
+      id: name,
+      name,
+      value,
+    }));
 
     return {
       data: plugins,

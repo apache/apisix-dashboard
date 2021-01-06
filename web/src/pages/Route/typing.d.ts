@@ -251,7 +251,7 @@ declare namespace RouteModule {
   // TODO： grpc and websocket
   type debugRequest = {
     url: string;
-    request_protocol: 'http' | 'https' | 'grpc' | 'websocket';
+    request_protocol: RequestProtocol | 'grpc';
     method: string;
     body_params?: any;
     header_params?: any;
@@ -270,6 +270,12 @@ declare namespace RouteModule {
   };
   type DebugViewProps = {
     form: FormInstance;
+  };
+  type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'json' | 'raw input';
+  type DebugDodyViewProps = {
+    form: FormInstance;
+    changeBodyParamsType:(type: DebugBodyType) => void;
+    codeMirrorRef: any;
   };
   type DebugDrawProps = {
     visible: boolean;

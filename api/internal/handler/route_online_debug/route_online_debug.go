@@ -52,7 +52,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 type ParamsInput struct {
 	URL             string              `json:"url,omitempty"`
 	RequestProtocol string              `json:"request_protocol,omitempty"`
-	BodyParams      map[string]string   `json:"body_params,omitempty"`
+	BodyParams      string              `json:"body_params,omitempty"`
 	Method          string              `json:"method,omitempty"`
 	HeaderParams    map[string][]string `json:"header_params,omitempty"`
 }
@@ -88,11 +88,11 @@ type HTTPProtocolSupport struct {
 
 func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{}, error) {
 	paramsInput := c.Input().(*ParamsInput)
-	bodyParams, _ := json.Marshal(paramsInput.BodyParams)
+	bodyParams := paramsInput.BodyParams
 	client := &http.Client{}
 
 	client.Timeout = 5 * time.Second
-	req, err := http.NewRequest(strings.ToUpper(paramsInput.Method), paramsInput.URL, strings.NewReader(string(bodyParams)))
+	req, err := http.NewRequest(strings.ToUpper(paramsInput.Method), paramsInput.URL, strings.NewReader(bodyParams))
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}
