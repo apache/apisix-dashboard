@@ -244,7 +244,7 @@ func TestRoute_With_Jwt_Plugin(t *testing.T) {
 	}
 	defer resp.Body.Close()
 	assert.Equal(t, 200, resp.StatusCode)
-	respBody, _ := ioutil.ReadAll(resp.Body)
+	jwttoken, _ := ioutil.ReadAll(resp.Body)
 
 	tests = []HttpTestCase{
 		{
@@ -252,7 +252,7 @@ func TestRoute_With_Jwt_Plugin(t *testing.T) {
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": string(respBody)},
+			Headers:      map[string]string{"Authorization": string(jwttoken)},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 			Sleep:        sleepTime,
