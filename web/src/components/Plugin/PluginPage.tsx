@@ -97,7 +97,6 @@ const PluginPage: React.FC<Props> = ({
               ).map((item) => (
                 <Card
                   key={item.name}
-                  hoverable
                   actions={[
                     <Button
                       type={
@@ -128,7 +127,7 @@ const PluginPage: React.FC<Props> = ({
                   <img
                     alt="pluginImg"
                     src={defaultPluginImg}
-                    style={{ width: 50, height: 50, opacity: 0.4 }}
+                    style={{ width: 50, height: 50, opacity: 0.2 }}
                   />
                 </Card>
               ))}
