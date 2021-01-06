@@ -55,6 +55,13 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const methodWithoutBody = ['GET', 'HEAD'];
   const [bodyCodeMirrorMode, setBodyCodeMirrorMode] = useState(DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode)
 
+  enum DebugBodyType {
+    None = 0,
+    FormUrlencoded,
+    Json,
+    RawInput,
+  }
+
   const resetForms = () => {
     queryForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     bodyForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
@@ -63,13 +70,6 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     setResponseCode(`${formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })}`);
     setBodyType(DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.None]);
   };
-
-  enum DebugBodyType {
-    None = 0,
-    FormUrlencoded,
-    Json,
-    RawInput,
-  }
 
   useEffect(() => {
     resetForms();
