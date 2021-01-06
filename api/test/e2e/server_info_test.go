@@ -88,3 +88,62 @@ func TestServerInfo_List(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 }
+
+func TestServerInfo_Get_OmitEmptyValue(t *testing.T) {
+	// wait for apisix report
+	time.Sleep(2 * time.Second)
+	testCases := []HttpTestCase{
+		{
+			Desc:           "get server info",
+			Object:         ManagerApiExpect(t),
+			Path:           "/apisix/admin/server_info/apisix-server1",
+			Method:         http.MethodGet,
+			Headers:        map[string]string{"Authorization": token},
+			ExpectStatus:   http.StatusOK,
+			UnexpectedBody: "\"create_time\":",
+		},
+		{
+			Desc:           "get server info",
+			Object:         ManagerApiExpect(t),
+			Path:           "/apisix/admin/server_info/apisix-server1",
+			Method:         http.MethodGet,
+			Headers:        map[string]string{"Authorization": token},
+			ExpectStatus:   http.StatusOK,
+			UnexpectedBody: "\"update_time\":",
+		},
+	}
+
+	for _, tc := range testCases {
+		testCaseCheck(tc, t)
+	}
+}
+
+func TestServerInfo_List_OmitEmptyValue(t *testing.T) {
+	testCases := []HttpTestCase{
+		{
+			Desc:           "list all server info",
+			Object:         ManagerApiExpect(t),
+			Path:           "/apisix/admin/server_info",
+			Method:         http.MethodGet,
+			Headers:        map[string]string{"Authorization": token},
+			ExpectStatus:   http.StatusOK,
+			ExpectBody:     "\"total_size\":2",
+			UnexpectedBody: "\"create_time\":",
+		},
+		{
+			Desc:           "list server info with hostname",
+			Object:         ManagerApiExpect(t),
+			Path:           "/apisix/admin/server_info",
+			Query:          "hostname=apisix_",
+			Method:         http.MethodGet,
+			Headers:        map[string]string{"Authorization": token},
+			ExpectStatus:   http.StatusOK,
+			ExpectBody:     "\"total_size\":2",
+			UnexpectedBody: "\"update_time\":",
+		},
+	}
+
+	for _, tc := range testCases {
+		testCaseCheck(tc, t)
+	}
+}

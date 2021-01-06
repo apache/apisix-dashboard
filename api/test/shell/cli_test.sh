@@ -20,6 +20,17 @@
 set -ex
 VERSION=$(cat ./VERSION)
 
+# test content in .githash
+if [[ -f ../.githash ]]; then
+    GITHASH=$(cat ../.githash)
+    if [[ ! $GITHASH =~ ^[a-z0-9]{7}$ ]]; then
+        echo "failed: verify .githash content failed"
+        exit 1
+    fi
+else
+    GITHASH=$(HASH="ref: HEAD"; while [[ $HASH == ref\:* ]]; do HASH="$(cat "../.git/$(echo $HASH | cut -d \  -f 2)")"; done; echo ${HASH:0:7})
+fi
+
 clean_up() {
     git checkout conf/conf.yaml
 }
@@ -40,7 +51,7 @@ clean_logfile() {
 trap clean_up EXIT
 
 export GO111MODULE=on
-go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version=${VERSION}" ./cmd/manager
+go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version=${VERSION} -X github.com/apisix/manager-api/cmd.GitHash=${GITHASH}" ./cmd/manager
 
 # default level: warn, path: logs/error.log
 
@@ -115,6 +126,27 @@ if [[ $res != "hi~" ]]; then
 fi
 clean_up
 
+# run with -p flag out of the default directory
+workDir=$(pwd)
+distDir=/tmp/manager-api
+cp -r $workDir $distDir
+cd $distDir
+rm -fr bin && mkdir bin && mv ./manager-api ./bin/
+rm -rf html && mkdir html && echo "hi~" >> html/index.html
+cd bin && ./manager-api -p $distDir &
+sleep 5
+
+res=$(curl http://127.0.0.1:9000)
+pkill -f manager-api
+rm -fr $distDir
+
+if [[ $res != "hi~" ]]; then
+    echo "failed: manager-api can't run with -p flag out of the default directory"
+    exit 1
+fi
+cd $workDir
+clean_up
+
 # test start info
 
 LOGLEVEL=$(cat conf/conf.yaml | awk '$1=="level:"{print $2}')
@@ -130,6 +162,11 @@ if [[ `grep -c "The manager-api is running successfully\!" ${STDOUT}` -ne '1' ]]
 fi
 
 if [[ `grep -c "${VERSION}" ${STDOUT}` -ne '1' ]]; then
+    echo "failed: the manager server didn't show started info"
+    exit 1
+fi
+
+if [[ `grep -c "${GITHASH}" ${STDOUT}` -ne '1' ]]; then
     echo "failed: the manager server didn't show started info"
     exit 1
 fi

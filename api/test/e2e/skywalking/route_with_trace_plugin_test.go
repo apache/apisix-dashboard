@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package e2e
+package skywalking
 
 import (
 	"net/http"
@@ -22,13 +22,17 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+
+	"e2e"
 )
 
+var sleepTime = time.Duration(300) * time.Millisecond
+
 func TestRoute_With_Plugin_Skywalking(t *testing.T) {
-	tests := []HttpTestCase{
+	tests := []e2e.HttpTestCase{
 		{
 			Desc:         "make sure the route is not created ",
-			Object:       APISIXExpect(t),
+			Object:       e2e.APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
@@ -36,7 +40,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 		},
 		{
 			Desc:   "create route",
-			Object: ManagerApiExpect(t),
+			Object: e2e.ManagerApiExpect(t),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -55,12 +59,12 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 					}]
 				}
 			}`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": e2e.Token},
 			ExpectStatus: http.StatusOK,
 		},
 		{
 			Desc:         "tiger skywalking",
-			Object:       APISIXExpect(t),
+			Object:       e2e.APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
@@ -70,23 +74,23 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc, t)
+		e2e.RunTestCases(tc, t)
 	}
 
 	// sleep for process log
 	time.Sleep(4 * time.Second)
 
 	// verify by checking log
-	logContent := readAPISIXErrorLog(t)
+	logContent := e2e.ReadAPISIXErrorLog(t)
 	assert.Contains(t, logContent, "segments reported")
 
 	// clean log
-	cleanAPISIXErrorLog(t)
+	e2e.CleanAPISIXErrorLog(t)
 
-	tests = []HttpTestCase{
+	tests = []e2e.HttpTestCase{
 		{
 			Desc:   "update route to change sample ratio",
-			Object: ManagerApiExpect(t),
+			Object: e2e.ManagerApiExpect(t),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -105,12 +109,12 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 					}]
 				}
 			}`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": e2e.Token},
 			ExpectStatus: http.StatusOK,
 		},
 		{
 			Desc:         "access the route",
-			Object:       APISIXExpect(t),
+			Object:       e2e.APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
@@ -120,31 +124,31 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc, t)
+		e2e.RunTestCases(tc, t)
 	}
 
 	// sleep for process log
 	time.Sleep(4 * time.Second)
 
 	// verify by checking log
-	logContent = readAPISIXErrorLog(t)
+	logContent = e2e.ReadAPISIXErrorLog(t)
 	assert.Contains(t, logContent, "miss sampling, ignore")
 
 	// clean log
-	cleanAPISIXErrorLog(t)
+	e2e.CleanAPISIXErrorLog(t)
 
-	tests = []HttpTestCase{
+	tests = []e2e.HttpTestCase{
 		{
 			Desc:         "delete route",
-			Object:       ManagerApiExpect(t),
+			Object:       e2e.ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": e2e.Token},
 			ExpectStatus: http.StatusOK,
 		},
 		{
 			Desc:         "make sure the route has been deleted",
-			Object:       APISIXExpect(t),
+			Object:       e2e.APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
 			ExpectStatus: http.StatusNotFound,
@@ -154,6 +158,6 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc, t)
+		e2e.RunTestCases(tc, t)
 	}
 }
