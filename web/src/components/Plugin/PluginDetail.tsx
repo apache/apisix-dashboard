@@ -30,8 +30,9 @@ import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
 import { LinkOutlined } from '@ant-design/icons';
-
 import Ajv, { DefinedError, ValidateFunction } from 'ajv';
+import addFormats from 'ajv-formats';
+
 import { fetchSchema } from './service';
 
 type Props = {
@@ -47,6 +48,7 @@ type Props = {
 };
 
 const ajv = new Ajv();
+addFormats(ajv);
 
 const FORM_ITEM_LAYOUT = {
   labelCol: {
@@ -98,28 +100,17 @@ const PluginDetail: React.FC<Props> = ({
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
     return fetchSchema(pluginName, schemaType).then((schema) => {
       return new Promise((resolve) => {
-        let validate: ValidateFunction;
-
-        /**
-         * Bypass some special plugins
-         * TEMP: https://github.com/ajv-validator/ajv/issues/1382
-         */
-        if (pluginName === 'ip-restriction') {
+        if (schema.oneOf) {
+          (schema.oneOf || []).forEach((item: any) => {
+            injectDisableProperty(item);
+          });
+        } else {
+          injectDisableProperty(schema);
+        }
+        const validate = ajv.compile(schema);
+        if (validate(value)) {
           resolve(value);
           return;
-        } else {
-          if (schema.oneOf) {
-            (schema.oneOf || []).forEach((item: any) => {
-              injectDisableProperty(item);
-            });
-          } else {
-            injectDisableProperty(schema);
-          }
-          validate = ajv.compile(schema);
-          if (validate(value)) {
-            resolve(value);
-            return;
-          }
         }
 
         // eslint-disable-next-line

@@ -336,7 +336,49 @@
       }
     }
   ],
-  "ip-restriction": [],
+  "ip-restriction": [
+    {
+      "shouldValid": true,
+      "data": {
+        "whitelist": ["10.255.254.0/24", "192.168.0.0/16"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "whitelist": ["10.255.256.0/24", "192.168.0.0/16"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "whitelist": ["10.255.254.0/38", "192.168.0.0/16"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {}
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "blacklist": []
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "whitelist": ["172.17.40.0/24"],
+        "blacklist": ["10.255.0.0/16"]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "blacklist": ["::1", "fe80::/32"]
+      }
+    }
+  ],
   "kafka-logger": [
     {
       "shouldValid": true,
