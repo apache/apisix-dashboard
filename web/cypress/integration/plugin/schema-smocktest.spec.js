@@ -35,7 +35,9 @@ context('smoke test for plugin schmea', () => {
         const name = card.innerText;
         const cases = (this.cases[name] || [])
         cases.forEach(({ shouldValid, data, type = "" }) => {
-          // NOTE: 非 consumer 的测试
+          /**
+           * NOTE: This test is mainly for GlobalPlugin, which is using consumer-type schema.
+          */
           if (type === "consumer") {
             return true
           }
@@ -65,7 +67,6 @@ context('smoke test for plugin schmea', () => {
             const drawerSelector = '.ant-drawer-content';
             cy.get(drawerSelector).should('not.exist');
           } else {
-            // TODO: 关闭错误框
             cy.get(this.selector.notification).should('contain', 'Invalid plugin data');
             cy.contains('Cancel').click({
               force: true,
