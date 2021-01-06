@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useEffect, useRef } from 'react';
-import { Button, notification, PageHeader, Switch, Form, Select, Divider, Drawer } from 'antd';
+import { Button, notification, PageHeader, Switch, Form, Select, Divider, Drawer, Alert } from 'antd';
 import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
@@ -29,6 +29,7 @@ type Props = {
   type?: 'global' | 'scoped';
   schemaType: PluginComponent.Schema;
   initialData: object;
+  pluginList: PluginComponent.Meta[],
   readonly?: boolean;
   visible: boolean;
   onClose?: () => void;
@@ -65,15 +66,17 @@ const PluginDetail: React.FC<Props> = ({
   type = 'scoped',
   schemaType = 'route',
   visible,
+  pluginList = [],
   readonly = false,
   initialData = {},
-  onClose = () => {},
-  onChange = () => {},
+  onClose = () => { },
+  onChange = () => { },
 }) => {
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
   const ref = useRef<any>(null);
-  const data = initialData[name];
+  const data = initialData[name] || {};
+  const pluginType = pluginList.find(item => item.name === name)?.type
 
   useEffect(() => {
     form.setFieldsValue({ disable: initialData[name] && !initialData[name].disable });
@@ -149,7 +152,7 @@ const PluginDetail: React.FC<Props> = ({
         placement="right"
         closable={false}
         onClose={onClose}
-        width={600}
+        width={700}
         footer={
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             {' '}
@@ -204,7 +207,9 @@ const PluginDetail: React.FC<Props> = ({
         <Divider orientation="left">Data Editor</Divider>
         <PageHeader
           title=""
-          subTitle={`Current Plugin: ${name}`}
+          subTitle={
+            (pluginType === 'auth' && schemaType !== 'consumer') ? <Alert message={`${name} does not require configuration`} type="warning" />
+              : <>Current plugin: {name}</>}
           ghost={false}
           extra={[
             <Button
