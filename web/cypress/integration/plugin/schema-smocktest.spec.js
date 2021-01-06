@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('smoke test for plugin schmea', () => {
+context('smoke test for plugin schema', () => {
   beforeEach(() => {
     cy.login();
 
