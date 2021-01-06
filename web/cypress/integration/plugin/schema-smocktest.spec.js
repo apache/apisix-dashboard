@@ -36,7 +36,7 @@ context('smoke test for plugin schmea', () => {
         const cases = (this.cases[name] || [])
         cases.forEach(({ shouldValid, data, type = "" }) => {
           /**
-           * NOTE: This test is mainly for GlobalPlugin, which is using consumer-type schema.
+           * NOTE: This test is mainly for GlobalPlugin, which is using non-consumer-type schema.
           */
           if (type === "consumer") {
             return true
