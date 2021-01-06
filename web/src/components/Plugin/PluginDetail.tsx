@@ -21,7 +21,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
 import { LinkOutlined } from '@ant-design/icons';
 
-import Ajv, { DefinedError } from 'ajv';
+import Ajv, { DefinedError, ValidateFunction } from 'ajv';
 import { fetchSchema } from './service';
 
 type Props = {
@@ -46,20 +46,6 @@ const FORM_ITEM_LAYOUT = {
   },
 };
 
-// NOTE: This function has side effect because it mutates the original schema data
-const injectDisableProperty = (schema: Record<string, any>) => {
-  // NOTE: The frontend will inject the disable property into schema just like the manager-api does
-  if (!schema.properties) {
-    // eslint-disable-next-line
-    schema.properties = {};
-  }
-  // eslint-disable-next-line
-  (schema.properties as any).disable = {
-    type: 'boolean',
-  };
-  return schema;
-};
-
 const PluginDetail: React.FC<Props> = ({
   name,
   type = 'scoped',
@@ -76,24 +62,27 @@ const PluginDetail: React.FC<Props> = ({
   const data = initialData[name];
 
   useEffect(() => {
-    form.setFieldsValue({ disable: initialData[name] && !initialData[name].disable });
+    form.setFieldsValue({ disable: initialData[name] && !initialData[name].disable, scope: "global" });
   }, []);
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
     return fetchSchema(pluginName, schemaType).then((schema) => {
       return new Promise((resolve) => {
-        if (schema.oneOf) {
-          (schema.oneOf || []).forEach((item: any) => {
-            injectDisableProperty(item);
-          });
-        } else {
-          injectDisableProperty(schema);
-        }
+        let validate: ValidateFunction;
 
-        const validate = ajv.compile(schema);
-        if (validate(value)) {
+        /**
+         * Bypass some special plugins
+         * TEMP: https://github.com/ajv-validator/ajv/issues/1382
+        */
+        if (pluginName === 'ip-restriction') {
           resolve(value);
           return;
+        } else {
+          validate = ajv.compile(schema);
+          if (validate(value)) {
+            resolve(value);
+            return;
+          }
         }
 
         // eslint-disable-next-line
@@ -195,8 +184,8 @@ const PluginDetail: React.FC<Props> = ({
           </Form.Item>
           {type === 'global' && (
             <Form.Item label="Scope" name="scope">
-              <Select disabled defaultValue="Global">
-                <Select.Option value="Global">Global</Select.Option>
+              <Select disabled>
+                <Select.Option value="global">Global</Select.Option>
               </Select>
             </Form.Item>
           )}

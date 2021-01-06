@@ -1,0 +1,336 @@
+{
+  "basic-auth": [
+    {
+      "type": "consumer",
+      "shouldValid": true,
+      "data": {
+        "username": "foo",
+        "password": "bar"
+      }
+    },
+    {
+      "type": "consumer",
+      "shouldValid": false,
+      "data": {
+        "username": 123,
+        "password": "bar"
+      }
+    },
+    {
+      "type": "consumer",
+      "shouldValid": false,
+      "data": {
+        "username": "foo"
+      }
+    },
+    {
+      "type": "consumer",
+      "shouldValid": false,
+      "data": {}
+    },
+    {
+      "type": "consumer",
+      "shouldValid": false,
+      "data": "blah"
+    },
+    {
+      "shouldValid": true,
+      "data": {}
+    }
+  ],
+  "hmac-auth": [
+    {
+      "shouldValid": true,
+      "data": {}
+    }
+  ],
+  "jwt-auth": [
+    {
+      "shouldValid": true,
+      "data": {}
+    }
+  ],
+  "key-auth": [
+    {
+      "shouldValid": true,
+      "data": {}
+    }
+  ],
+  "wolf-rbac": [
+    {
+      "shouldValid": true,
+      "data": {}
+    }
+  ],
+  "api-breaker": [
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 502,
+        "unhealthy": {
+          "http_statuses": [500],
+          "failures": 1
+        },
+        "healthy": {
+          "http_statuses": [200],
+          "successes": 1
+        }
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 502
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 502,
+        "healthy": {}
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 502,
+        "unhealthy": {}
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "break_response_code": 199,
+        "unhealthy": {
+          "http_statuses": [500, 503],
+          "failures": 3
+        },
+        "healthy": {
+          "http_statuses": [200, 206],
+          "successes": 3
+        }
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "break_response_code": 200,
+        "max_breaker_sec": -1
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "break_response_code": 200,
+        "max_breaker_sec": 40,
+        "unhealthy": {
+          "http_statuses": [500, 603],
+          "failures": 3
+        },
+        "healthy": {
+          "http_statuses": [200, 206],
+          "successes": 3
+        }
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "break_response_code": 500,
+        "unhealthy": {
+          "http_statuses": [500, 503],
+          "failures": 3
+        },
+        "healthy": {
+          "http_statuses": [206, 206],
+          "successes": 3
+        }
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 599,
+        "unhealthy": {
+          "http_statuses": [500, 503],
+          "failures": 3
+        },
+        "healthy": {
+          "http_statuses": [200, 206],
+          "successes": 3
+        }
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 502,
+        "unhealthy": {
+          "failures": 3
+        },
+        "healthy": {
+          "successes": 3
+        }
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 502,
+        "max_breaker_sec": 10,
+        "unhealthy": {
+          "http_statuses": [500, 503],
+          "failures": 1
+        },
+        "healthy": {
+          "successes": 3
+        }
+      }
+    }
+  ],
+  "authz-keycloak": [
+    {
+      "shouldValid": true,
+      "data": {
+        "token_endpoint": "https://efactory-security-portal.salzburgresearch.at/",
+        "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "token_endpoint": "https://efactory-security-portal.salzburgresearch.at/",
+        "permissions": ["res:customer#scopes:view"],
+        "timeout": 1000,
+        "audience": "University",
+        "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "permissions": ["res:customer#scopes:view"]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "token_endpoint": "http://127.0.0.1:8090/auth/realms/University/protocol/openid-connect/token",
+        "permissions": ["course_resource#view"],
+        "audience": "course_management",
+        "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
+        "timeout": 3000
+      }
+    }
+  ],
+  "batch-requests": [],
+  "consumer-restriction": [],
+  "cors": [],
+  "echo": [],
+  "fault-injection": [],
+  "grpc-transcode": [],
+  "http-logger": [],
+  "ip-restriction": [],
+  "kafka-logger": [],
+  "limit-conn": [
+    {
+      "shouldValid": true,
+      "data": {
+        "conn": 1,
+        "burst": 0,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "conn": 1,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "burst": 0,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "conn": -1,
+        "burst": 0,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "conn": 100,
+        "burst": 50,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "server_addr"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "conn": 5,
+        "burst": 1,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "http_x_real_ip"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "conn": 5,
+        "burst": 1,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "http_x_forwarded_for"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "conn": 2,
+        "burst": 1,
+        "default_conn_delay": 0.1,
+        "key": "remote_addr"
+      }
+    }
+  ],
+  "limit-count": [],
+  "limit-req": [],
+  "openid-connect": [],
+  "prometheus": [],
+  "proxy-cache": [],
+  "proxy-mirror": [],
+  "proxy-rewrite": [],
+  "redirect": [],
+  "referer-restriction": [],
+  "request-id": [],
+  "response-rewrite": [],
+  "serverless-post-function": [],
+  "serverless-pre-function": [],
+  "sls-logger": [],
+  "syslog": [],
+  "tcp-logger": [],
+  "traffic-split": [],
+  "udp-logger": [],
+  "uri-blocker": [],
+  "zipkin": [],
+  "request-validation": [],
+  "mqtt-proxy": []
+}

@@ -20,7 +20,8 @@ context('smoke test for plugin schmea', () => {
   beforeEach(() => {
     cy.login();
 
-    cy.fixture('plugin-schema-valid-data.json').as('validData');
+    cy.fixture('selector.json').as('selector');
+    cy.fixture('plugin-dataset.json').as('cases');
   });
 
   it('should visit plugin market', function () {
@@ -29,41 +30,48 @@ context('smoke test for plugin schmea', () => {
     cy.contains('Create').click();
 
     const nameSelector = '[data-cy-plugin-name]';
-    cy.get(nameSelector).then((cards) => {
+    cy.get(nameSelector).then(function (cards) {
       [...cards].forEach((card) => {
         const name = card.innerText;
-        cy.contains(name)
-          .parents('.ant-card-bordered')
-          .within(() => {
-            cy.contains('Enable').click({
-              force: true,
+        const cases = (this.cases[name] || [])
+        cases.forEach(({ shouldValid, data, type = "" }) => {
+          // NOTE: 非 consumer 的测试
+          if (type === "consumer") {
+            return true
+          }
+
+          cy.contains(name)
+            .parents('.ant-card-bordered')
+            .within(() => {
+              cy.contains('Enable').click({
+                force: true,
+              });
+
+              cy.wait(500);
             });
 
-            cy.wait(500);
+          const switchSelector = '#disable';
+          cy.get(switchSelector).click();
+
+          cy.window().then(({ codemirror }) => {
+            if (codemirror) {
+              codemirror.setValue(JSON.stringify(data));
+            }
           });
 
-        const switchSelector = '#disable';
-        cy.get(switchSelector).click();
+          cy.contains('Submit').click();
 
-        const data = JSON.stringify(this.validData[name]);
-        // NOTE: may don't have that plugin's data
-        if (!data) {
-          cy.contains('Cancel').click({
-            force: true,
-          });
-          return;
-        }
-
-        cy.window().then(({ codemirror }) => {
-          if (codemirror) {
-            codemirror.setValue(data);
+          if (shouldValid) {
+            const drawerSelector = '.ant-drawer-content';
+            cy.get(drawerSelector).should('not.exist');
+          } else {
+            // TODO: 关闭错误框
+            cy.get(this.selector.notification).should('contain', 'Invalid plugin data');
+            cy.contains('Cancel').click({
+              force: true,
+            });
           }
         });
-
-        cy.contains('Submit').click();
-
-        const drawerSelector = '.ant-drawer-content';
-        cy.get(drawerSelector).should('not.exist');
       });
     });
   });
