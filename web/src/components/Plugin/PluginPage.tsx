@@ -21,6 +21,7 @@ import { orderBy } from 'lodash';
 
 import PluginDetail from './PluginDetail';
 import { fetchList } from './service';
+import defaultPluginImg from '../../../public/static/default-plugin.png';
 
 type Props = {
   readonly?: boolean;
@@ -96,6 +97,7 @@ const PluginPage: React.FC<Props> = ({
               ).map((item) => (
                 <Card
                   key={item.name}
+                  hoverable
                   actions={[
                     <Button
                       type={
@@ -110,19 +112,25 @@ const PluginPage: React.FC<Props> = ({
                       Enable
                     </Button>,
                   ]}
-                  bodyStyle={{
-                    height: 151,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    textAlign: 'center',
-                  }}
                   title={[
                     <div style={{ width: '100%', textAlign: 'center' }}>
                       <span key={2}>{item.name}</span>
                     </div>,
                   ]}
-                  style={{ height: 258, width: 200 }}
-                />
+                  bodyStyle={{
+                    minHeight: 151,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                  style={{ width: 200 }}
+                >
+                  <img
+                    alt="pluginImg"
+                    src={defaultPluginImg}
+                    style={{ width: 50, height: 50, opacity: 0.4 }}
+                  />
+                </Card>
               ))}
             </PanelSection>
           );
