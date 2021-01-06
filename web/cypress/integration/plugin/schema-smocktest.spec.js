@@ -33,13 +33,13 @@ context('smoke test for plugin schema', () => {
     cy.get(nameSelector).then(function (cards) {
       [...cards].forEach((card) => {
         const name = card.innerText;
-        const cases = (this.cases[name] || [])
-        cases.forEach(({ shouldValid, data, type = "" }) => {
+        const cases = this.cases[name] || [];
+        cases.forEach(({ shouldValid, data, type = '' }) => {
           /**
            * NOTE: This test is mainly for GlobalPlugin, which is using non-consumer-type schema.
-          */
-          if (type === "consumer") {
-            return true
+           */
+          if (type === 'consumer') {
+            return true;
           }
 
           cy.contains(name)
@@ -49,6 +49,7 @@ context('smoke test for plugin schema', () => {
                 force: true,
               });
 
+              // NOTE: wait for the Drawer to appear on the DOM
               cy.wait(500);
             });
 
@@ -63,6 +64,8 @@ context('smoke test for plugin schema', () => {
 
           cy.contains('Submit').click();
 
+          // NOTE: wait for the HTTP call
+          cy.wait(500);
           if (shouldValid) {
             const drawerSelector = '.ant-drawer-content';
             cy.get(drawerSelector).should('not.exist');
