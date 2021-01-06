@@ -939,7 +939,7 @@ func TestRoute(t *testing.T) {
 	assert.Equal(t, len(dataPage.Rows), 1)
 
         //sleep
-        time.Sleep(time.Duration(100) * time.Millisecond)
+	time.Sleep(time.Duration(100) * time.Millisecond)
 
 	// list search and status not match
 	listInput = &ListInput{}
