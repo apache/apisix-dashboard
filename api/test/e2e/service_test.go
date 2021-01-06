@@ -158,7 +158,79 @@ func TestService(t *testing.T) {
 	defer resp.Body.Close()
 	assert.Equal(t, 200, resp.StatusCode)
 	assert.Equal(t, "100", resp.Header["X-Ratelimit-Limit"][0])
-	assert.Equal(t, "99",  resp.Header["X-Ratelimit-Remaining"][0])
+	assert.Equal(t, "99", resp.Header["X-Ratelimit-Remaining"][0])
+
+	tests = []HttpTestCase{
+		{
+			Desc:    "create service with all options",
+			Object:  ManagerApiExpect(t),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/services/s1",
+			Headers: map[string]string{"Authorization": token},
+			Body: `{
+				"name": "testservice",
+				"desc": "testservice_desc",
+				"labels": {
+					"build":"16",
+					"env":"production",
+					"version":"v2"
+				},
+				"enable_websocket":true,
+				"plugins": { 
+					"limit-count": { 
+						"count": 100, 
+						"time_window": 60, 
+						"rejected_code": 503, 
+						"key": "remote_addr" 
+					} 
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"create_time":1602883670,
+					"update_time":1602893670,
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:       "get the service s1",
+			Object:     ManagerApiExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/apisix/admin/services/s1",
+			Headers:    map[string]string{"Authorization": token},
+			ExpectCode: http.StatusOK,
+			ExpectBody: "\"name\":\"testservice\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
+		},
+		{
+			Desc:   "create route using the service just created",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"service_id": "s1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "verify route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
 }
 
 func TestService_Teardown(t *testing.T) {
