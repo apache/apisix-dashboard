@@ -15,7 +15,17 @@
  * limitations under the License.
  */
 import React, { useEffect, useRef } from 'react';
-import { Button, notification, PageHeader, Switch, Form, Select, Divider, Drawer, Alert } from 'antd';
+import {
+  Button,
+  notification,
+  PageHeader,
+  Switch,
+  Form,
+  Select,
+  Divider,
+  Drawer,
+  Alert,
+} from 'antd';
 import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
@@ -29,7 +39,7 @@ type Props = {
   type?: 'global' | 'scoped';
   schemaType: PluginComponent.Schema;
   initialData: object;
-  pluginList: PluginComponent.Meta[],
+  pluginList: PluginComponent.Meta[];
   readonly?: boolean;
   visible: boolean;
   onClose?: () => void;
@@ -47,6 +57,20 @@ const FORM_ITEM_LAYOUT = {
   },
 };
 
+// NOTE: This function has side effect because it mutates the original schema data
+const injectDisableProperty = (schema: Record<string, any>) => {
+  // NOTE: The frontend will inject the disable property into schema just like the manager-api does
+  if (!schema.properties) {
+    // eslint-disable-next-line
+    schema.properties = {};
+  }
+  // eslint-disable-next-line
+  (schema.properties as any).disable = {
+    type: 'boolean',
+  };
+  return schema;
+};
+
 const PluginDetail: React.FC<Props> = ({
   name,
   type = 'scoped',
@@ -55,17 +79,20 @@ const PluginDetail: React.FC<Props> = ({
   pluginList = [],
   readonly = false,
   initialData = {},
-  onClose = () => { },
-  onChange = () => { },
+  onClose = () => {},
+  onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
   const ref = useRef<any>(null);
   const data = initialData[name] || {};
-  const pluginType = pluginList.find(item => item.name === name)?.type
+  const pluginType = pluginList.find((item) => item.name === name)?.type;
 
   useEffect(() => {
-    form.setFieldsValue({ disable: initialData[name] && !initialData[name].disable, scope: "global" });
+    form.setFieldsValue({
+      disable: initialData[name] && !initialData[name].disable,
+      scope: 'global',
+    });
   }, []);
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
@@ -76,11 +103,18 @@ const PluginDetail: React.FC<Props> = ({
         /**
          * Bypass some special plugins
          * TEMP: https://github.com/ajv-validator/ajv/issues/1382
-        */
+         */
         if (pluginName === 'ip-restriction') {
           resolve(value);
           return;
         } else {
+          if (schema.oneOf) {
+            (schema.oneOf || []).forEach((item: any) => {
+              injectDisableProperty(item);
+            });
+          } else {
+            injectDisableProperty(schema);
+          }
           validate = ajv.compile(schema);
           if (validate(value)) {
             resolve(value);
@@ -197,8 +231,12 @@ const PluginDetail: React.FC<Props> = ({
         <PageHeader
           title=""
           subTitle={
-            (pluginType === 'auth' && schemaType !== 'consumer') ? <Alert message={`${name} does not require configuration`} type="warning" />
-              : <>Current plugin: {name}</>}
+            pluginType === 'auth' && schemaType !== 'consumer' ? (
+              <Alert message={`${name} does not require configuration`} type="warning" />
+            ) : (
+              <>Current plugin: {name}</>
+            )
+          }
           ghost={false}
           extra={[
             <Button
