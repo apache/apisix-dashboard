@@ -24,21 +24,23 @@
     .ant-drawer-body {
       padding: 16px;
     }
-    .ant-radio-wrapper {
-      display: block;
-      height: 30px;
-      line-height: 30px;
-    }
     .ant-form-item {
       margin-bottom: 8px;
-    }
-    .ant-radio-group {
-      margin-right: 16px;
-      border-right: 1px solid #e0e0e0;
     }
   }
   .authForm {
     display: flex;
     margin: 16px;
+    :global {
+      .ant-radio-wrapper {
+        display: block;
+        height: 30px;
+        line-height: 30px;
+      }
+      .ant-radio-group {
+        margin-right: 16px;
+        border-right: 1px solid #e0e0e0;
+      }
+    }
   }
 }
