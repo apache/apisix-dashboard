@@ -48,11 +48,10 @@ context('smoke test for plugin schema', () => {
               cy.contains('Enable').click({
                 force: true,
               });
-
-              // NOTE: wait for the Drawer to appear on the DOM
-              cy.wait(500);
             });
 
+          // NOTE: wait for the Drawer to appear on the DOM
+          cy.wait(800);
           const switchSelector = '#disable';
           cy.get(switchSelector).click();
 
@@ -71,6 +70,10 @@ context('smoke test for plugin schema', () => {
             cy.get(drawerSelector).should('not.exist');
           } else {
             cy.get(this.selector.notification).should('contain', 'Invalid plugin data');
+
+            cy.get('.anticon-close').click({
+              multiple: true,
+            });
             cy.contains('Cancel').click({
               force: true,
             });
