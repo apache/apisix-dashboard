@@ -77,6 +77,7 @@ const PluginPage: React.FC<Props> = ({
       .ant-card-body .icon {
           width: 5em;
           height: 5em;
+          margin-right: 0;
           overflow: hidden;
           vertical-align: -0.15em;
           fill: currentColor;
