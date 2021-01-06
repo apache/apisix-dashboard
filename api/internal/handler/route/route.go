@@ -23,6 +23,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -178,9 +179,10 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 }
 
 type ListInput struct {
-	Name  string `auto_read:"name,query"`
-	URI   string `auto_read:"uri,query"`
-	Label string `auto_read:"label,query"`
+	Name   string `auto_read:"name,query"`
+	URI    string `auto_read:"uri,query"`
+	Label  string `auto_read:"label,query"`
+	Status string `auto_read:"status,query"`
 	store.Pagination
 }
 
@@ -216,6 +218,10 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 			}
 
 			if input.Label != "" && !utils.LabelContains(obj.(*entity.Route).Labels, labelMap) {
+				return false
+			}
+
+			if input.Status != "" && strconv.Itoa(int(obj.(*entity.Route).Status)) != input.Status {
 				return false
 			}
 
