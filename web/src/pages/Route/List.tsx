@@ -305,6 +305,7 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'page.route.onlineDebug' })}
           </Button>,
         ]}
+        rowSelection={true}
       />
       <DebugDrawView
         visible={debugDrawVisible}
