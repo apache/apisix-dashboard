@@ -1,0 +1,1347 @@
+{
+  "basic-auth": [
+    {
+      "type": "consumer",
+      "shouldValid": true,
+      "data": {
+        "username": "foo",
+        "password": "bar"
+      }
+    },
+    {
+      "type": "consumer",
+      "shouldValid": false,
+      "data": {
+        "username": 123,
+        "password": "bar"
+      }
+    },
+    {
+      "type": "consumer",
+      "shouldValid": false,
+      "data": {
+        "username": "foo"
+      }
+    },
+    {
+      "type": "consumer",
+      "shouldValid": false,
+      "data": {}
+    },
+    {
+      "type": "consumer",
+      "shouldValid": false,
+      "data": "blah"
+    },
+    {
+      "shouldValid": true,
+      "data": {}
+    }
+  ],
+  "hmac-auth": [
+    {
+      "shouldValid": true,
+      "data": {}
+    }
+  ],
+  "jwt-auth": [
+    {
+      "shouldValid": true,
+      "data": {}
+    }
+  ],
+  "key-auth": [
+    {
+      "shouldValid": true,
+      "data": {}
+    }
+  ],
+  "wolf-rbac": [
+    {
+      "shouldValid": true,
+      "data": {}
+    }
+  ],
+  "api-breaker": [
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 502,
+        "unhealthy": {
+          "http_statuses": [500],
+          "failures": 1
+        },
+        "healthy": {
+          "http_statuses": [200],
+          "successes": 1
+        }
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 502
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 502,
+        "healthy": {}
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 502,
+        "unhealthy": {}
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "break_response_code": 199,
+        "unhealthy": {
+          "http_statuses": [500, 503],
+          "failures": 3
+        },
+        "healthy": {
+          "http_statuses": [200, 206],
+          "successes": 3
+        }
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "break_response_code": 200,
+        "max_breaker_sec": -1
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "break_response_code": 200,
+        "max_breaker_sec": 40,
+        "unhealthy": {
+          "http_statuses": [500, 603],
+          "failures": 3
+        },
+        "healthy": {
+          "http_statuses": [200, 206],
+          "successes": 3
+        }
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "break_response_code": 500,
+        "unhealthy": {
+          "http_statuses": [500, 503],
+          "failures": 3
+        },
+        "healthy": {
+          "http_statuses": [206, 206],
+          "successes": 3
+        }
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 599,
+        "unhealthy": {
+          "http_statuses": [500, 503],
+          "failures": 3
+        },
+        "healthy": {
+          "http_statuses": [200, 206],
+          "successes": 3
+        }
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 502,
+        "unhealthy": {
+          "failures": 3
+        },
+        "healthy": {
+          "successes": 3
+        }
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "break_response_code": 502,
+        "max_breaker_sec": 10,
+        "unhealthy": {
+          "http_statuses": [500, 503],
+          "failures": 1
+        },
+        "healthy": {
+          "successes": 3
+        }
+      }
+    }
+  ],
+  "authz-keycloak": [
+    {
+      "shouldValid": true,
+      "data": {
+        "token_endpoint": "https://efactory-security-portal.salzburgresearch.at/",
+        "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "token_endpoint": "https://efactory-security-portal.salzburgresearch.at/",
+        "permissions": ["res:customer#scopes:view"],
+        "timeout": 1000,
+        "audience": "University",
+        "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "permissions": ["res:customer#scopes:view"]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "token_endpoint": "http://127.0.0.1:8090/auth/realms/University/protocol/openid-connect/token",
+        "permissions": ["course_resource#view"],
+        "audience": "course_management",
+        "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
+        "timeout": 3000
+      }
+    }
+  ],
+  "batch-requests": [],
+  "consumer-restriction": [
+    {
+      "shouldValid": true,
+      "data": {
+        "title": "whitelist",
+        "whitelist": ["jack1", "jack2"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "whitelist": ["jack1"],
+        "blacklist": ["jack2"]
+      }
+    }
+  ],
+  "cors": [
+    {
+      "shouldValid": true,
+      "data": {
+        "allow_origins": "",
+        "allow_methods": "",
+        "allow_headers": "",
+        "expose_headers": "",
+        "max_age": 600,
+        "allow_credential": true
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "allow_origins": "",
+        "allow_methods": "",
+        "allow_headers": "",
+        "expose_headers": "",
+        "max_age": "600",
+        "allow_credential": true
+      }
+    }
+  ],
+  "echo": [],
+  "fault-injection": [
+    {
+      "shouldValid": false,
+      "data": {
+        "abort": {
+          "http_status": 100,
+          "body": "Fault Injection!\n"
+        }
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "abort": {}
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {}
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "delay": {}
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "delay": {
+          "duration": "test"
+        }
+      }
+    }
+  ],
+  "grpc-transcode": [],
+  "http-logger": [
+    {
+      "shouldValid": true,
+      "data": {
+        "uri": "http://127.0.0.1"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "uri": "http://127.0.0.1",
+        "auth_header": "Basic 123",
+        "timeout": 3,
+        "name": "http-logger",
+        "max_retry_count": 2,
+        "retry_delay": 2,
+        "buffer_duration": 2,
+        "inactive_timeout": 2,
+        "batch_max_size": 500
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "auth_header": "Basic 123",
+        "timeout": 3,
+        "name": "http-logger",
+        "max_retry_count": 2,
+        "retry_delay": 2,
+        "buffer_duration": 2,
+        "inactive_timeout": 2,
+        "batch_max_size": 500
+      }
+    }
+  ],
+  "ip-restriction": [
+    {
+      "shouldValid": true,
+      "data": {
+        "whitelist": ["10.255.254.0/24", "192.168.0.0/16"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "whitelist": ["10.255.256.0/24", "192.168.0.0/16"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "whitelist": ["10.255.254.0/38", "192.168.0.0/16"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {}
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "blacklist": []
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "whitelist": ["172.17.40.0/24"],
+        "blacklist": ["10.255.0.0/16"]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "blacklist": ["::1", "fe80::/32"]
+      }
+    }
+  ],
+  "kafka-logger": [
+    {
+      "shouldValid": true,
+      "data": {
+        "kafka_topic": "test",
+        "key": "key1",
+        "broker_list": {
+          "127.0.0.1": 3
+        }
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "kafka_topic": "test",
+        "key": "key1"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "kafka_topic": "test",
+        "key": "key1",
+        "broker_list": {
+          "127.0.0.1": 3000
+        },
+        "timeout": "10"
+      }
+    }
+  ],
+  "limit-conn": [
+    {
+      "shouldValid": true,
+      "data": {
+        "conn": 1,
+        "burst": 0,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "conn": 1,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "burst": 0,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "conn": -1,
+        "burst": 0,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "conn": 100,
+        "burst": 50,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "server_addr"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "conn": 5,
+        "burst": 1,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "http_x_real_ip"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "conn": 5,
+        "burst": 1,
+        "default_conn_delay": 0.1,
+        "rejected_code": 503,
+        "key": "http_x_forwarded_for"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "conn": 2,
+        "burst": 1,
+        "default_conn_delay": 0.1,
+        "key": "remote_addr"
+      }
+    }
+  ],
+  "limit-count": [
+    {
+      "shouldValid": true,
+      "data": { "count": 2, "time_window": 60, "rejected_code": 503, "key": "remote_addr" }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "count": 2,
+        "time_window": 60,
+        "rejected_code": 503,
+        "key": "host"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "time_window": 60,
+        "rejected_code": 503
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "count": -100,
+        "time_window": 60,
+        "rejected_code": 503,
+        "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "count": 2,
+        "time_window": 60,
+        "rejected_code": 503,
+        "key": "server_addr"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "count": 2,
+        "time_window": 60,
+        "key": "remote_addr"
+      }
+    }
+  ],
+  "limit-req": [
+    {
+      "shouldValid": true,
+      "data": {
+        "rate": 1,
+        "burst": 0,
+        "rejected_code": 503,
+        "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "burst": 0,
+        "rejected_code": 503,
+        "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "rate": -1,
+        "burst": 0.1,
+        "rejected_code": 503,
+        "key": "remote_addr"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "rate": 1,
+        "burst": 0,
+        "key": "remote_addr"
+      }
+    }
+  ],
+  "openid-connect": [
+    {
+      "shouldValid": true,
+      "data": {
+        "client_id": "a",
+        "client_secret": "b",
+        "discovery": "c"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "client_secret": "b",
+        "discovery": "c"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "client_id": 123,
+        "client_secret": "b",
+        "discovery": "c"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "client_id": "kbyuFDidLLm280LIwVFiazOqjO3ty8KH",
+        "client_secret": "60Op4HFM0I8ajz0WdiStAbziZ-VFQttXuxixHHs2R7r7-CW8GR79l-mmLqMhc-Sa",
+        "discovery": "http://127.0.0.1:1980/.well-known/openid-configuration",
+        "redirect_uri": "https://iresty.com",
+        "ssl_verify": false,
+        "timeout": 10,
+        "scope": "apisix"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "discovery": "http://127.0.0.1:8090/auth/realms/University/.well-known/openid-configuration",
+        "realm": "University",
+        "client_id": "course_management",
+        "client_secret": "d1ec69e9-55d2-4109-a3ea-befa071579d5",
+        "redirect_uri": "http://127.0.0.1:]] .. ngx.var.server_port .. [[/authenticated",
+        "ssl_verify": false,
+        "timeout": 10,
+        "introspection_endpoint_auth_method": "client_secret_post",
+        "introspection_endpoint": "http://127.0.0.1:8090/auth/realms/University/protocol/openid-connect/token/introspect",
+        "set_access_token_header": true,
+        "access_token_in_authorization_header": false,
+        "set_id_token_header": true,
+        "set_userinfo_header": true
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "client_id": "kbyuFDidLLm280LIwVFiazOqjO3ty8KH",
+        "client_secret": "60Op4HFM0I8ajz0WdiStAbziZ-VFQttXuxixHHs2R7r7-CW8GR79l-mmLqMhc-Sa",
+        "discovery": "https://samples.auth0.com/.well-known/openid-configuration",
+        "redirect_uri": "https://iresty.com",
+        "ssl_verify": false,
+        "timeout": 10,
+        "bearer_only": true,
+        "scope": "apisix"
+      }
+    }
+  ],
+  "prometheus": [
+    {
+      "shouldValid": true,
+      "data": {}
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "invalid": "invalid"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "invalid_property": 1
+      }
+    }
+  ],
+  "proxy-cache": [
+    {
+      "shouldValid": true,
+      "data": {
+        "cache_bypass": ["$arg_bypass"],
+        "cache_method": ["GET"],
+        "cache_http_status": [200],
+        "hide_cache_headers": true,
+        "no_cache": ["$arg_no_cache"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "cache_zone": "disk_cache_one",
+        "cache_bypass": ["$arg_bypass"],
+        "cache_method": "GET",
+        "cache_http_status": [200],
+        "hide_cache_headers": true,
+        "no_cache": ["$arg_no_cache"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "cache_zone": "disk_cache_one",
+        "cache_key": "${uri}-cache-key",
+        "cache_bypass": ["$arg_bypass"],
+        "cache_method": ["GET"],
+        "cache_http_status": [200],
+        "hide_cache_headers": true,
+        "no_cache": ["$arg_no_cache"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "cache_zone": "disk_cache_one",
+        "cache_bypass": "$arg_bypass",
+        "cache_method": ["GET"],
+        "cache_http_status": [200],
+        "hide_cache_headers": true,
+        "no_cache": ["$arg_no_cache"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "cache_zone": "disk_cache_one",
+        "cache_bypass": ["$arg_bypass"],
+        "cache_method": ["GET"],
+        "cache_http_status": [200],
+        "hide_cache_headers": true,
+        "no_cache": "$arg_no_cache"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "cache_zone": "disk_cache_one",
+        "cache_key": ["$uri-", "-cache-id"],
+        "cache_bypass": ["$arg_bypass"],
+        "cache_method": ["GET"],
+        "cache_http_status": [200],
+        "hide_cache_headers": true,
+        "no_cache": ["$arg_no_cache"]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "cache_zone": "disk_cache_one",
+        "cache_bypass": ["$arg_bypass"],
+        "cache_method": ["GET"],
+        "cache_http_status": [200],
+        "hide_cache_headers": true,
+        "no_cache": ["$arg_no_cache"]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "cache_zone": "disk_cache_one",
+        "cache_bypass": ["$arg_bypass"],
+        "cache_method": ["GET"],
+        "cache_http_status": [200],
+        "hide_cache_headers": false,
+        "no_cache": ["$arg_no_cache"]
+      }
+    }
+  ],
+  "proxy-mirror": [
+    {
+      "shouldValid": false,
+      "data": {
+        "host": "127.0.0.1:1999"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "host": "http://127.0.0.1"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "host": "http://127.0.0.1:1999/invalid_uri"
+      }
+    }
+  ],
+  "proxy-rewrite": [
+    {
+      "shouldValid": true,
+      "data": {
+        "uri": "/apisix/home",
+        "host": "apisix.apache.org",
+        "scheme": "http"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "uri": "/apisix/home",
+        "host": "apisix.apache.org",
+        "scheme": "tcp"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "uri": "/uri/plugin_proxy_rewrite",
+        "headers": {
+          "X-Api-Version": "v2"
+        }
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "regex_uri": ["^/test/(.*)/(.*)/(.*)", "/$1_$2_$3"]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "uri": "/hello",
+        "regex_uri": ["^/test/(.*)", "/${1}1"]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "uri": "home"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "uri": "/apisix/home",
+        "host": "apisix.apache.org",
+        "scheme": "http",
+        "invalid_att": "invalid"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "uri": "/uri",
+        "headers": {
+          "x-api": "$remote_addr",
+          "name": "$arg_name",
+          "x-key": "$http_key"
+        }
+      }
+    }
+  ],
+  "redirect": [
+    {
+      "shouldValid": true,
+      "data": {
+        "ret_code": 302,
+        "uri": "/foo"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "uri": "/foo"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "uri": "$uri/test/a${arg_name}c",
+        "ret_code": 302
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "uri": "/foo$$uri",
+        "ret_code": 302
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "uri": "\\$uri/foo$uri\\$uri/bar",
+        "ret_code": 301
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "uri": "https://$host$request_uri",
+        "ret_code": 301
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "http_to_https": true
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "http_to_https": true,
+        "ret_code": 302
+      }
+    }
+  ],
+  "referer-restriction": [
+    {
+      "shouldValid": true,
+      "data": {
+        "whitelist": ["*.xx.com", "yy.com"]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "bypass_missing": true,
+        "whitelist": ["*.xx.com", "yy.com"]
+      }
+    }
+  ],
+  "request-id": [
+    {
+      "shouldValid": true,
+      "data": {}
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "include_in_response": "bad_type"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "header_name": "Custom-Header-Name"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "include_in_response": true
+      }
+    }
+  ],
+  "response-rewrite": [
+    {
+      "shouldValid": true,
+      "data": {
+        "body": "Hello world",
+        "headers": {
+          "X-Server-id": 3
+        }
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "status_code": 599
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "body": 2,
+        "headers": {
+          "X-Server-id": "3"
+        }
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "headers": {
+          "X-Server-id": 3,
+          "X-Server-status": "on",
+          "Content-Type": ""
+        },
+        "body": "new body\n"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "body": "new body2\n"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "headers": {
+          "Location": "https://www.apache.org"
+        },
+        "status_code": 302
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "body": "SGVsbG8K",
+        "body_base64": true
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "body": "1",
+        "body_base64": true
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "headers": {
+          "X-Server-id": 3,
+          "X-Server-status": "on",
+          "Content-Type": ""
+        },
+        "body": "new body\n"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "body": "Hello world",
+        "headers": {
+          "X-Server-id": 3
+        },
+        "invalid_att": "invalid"
+      }
+    }
+  ],
+  "serverless-post-function": [],
+  "serverless-pre-function": [],
+  "sls-logger": [
+    {
+      "shouldValid": true,
+      "data": {
+        "host": "cn-zhangjiakou-intranet.log.aliyuncs.com",
+        "port": 10009,
+        "project": "your-project",
+        "logstore": "your-logstore",
+        "access_key_id": "your_access_key",
+        "access_key_secret": "your_access_secret"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "host": "cn-zhangjiakou-intranet.log.aliyuncs.com",
+        "port": 10009,
+        "project": "your-project",
+        "logstore": "your-logstore",
+        "access_key_id": "your_access_key",
+        "access_key_secret": "your_access_secret",
+        "timeout": "10"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "host": "100.100.99.135",
+        "port": 10009,
+        "project": "your_project",
+        "logstore": "your_logstore",
+        "access_key_id": "your_access_key_id",
+        "access_key_secret": "your_access_key_secret",
+        "timeout": 30000
+      }
+    }
+  ],
+  "syslog": [
+    {
+      "shouldValid": true,
+      "data": {
+        "host": "127.0.0.1",
+        "port": 3000
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": { "host": "127.0.0.1" }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "host": "127.0.0.1",
+        "port": "3000"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "host": "127.0.0.1",
+        "port": 5044
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "host": "127.0.0.1",
+        "port": 5044,
+        "flush_limit": 1,
+        "timeout": 1
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "host": "127.0.0.1",
+        "port": 5044,
+        "batch_max_size": 1
+      }
+    }
+  ],
+  "tcp-logger": [
+    {
+      "shouldValid": true,
+      "data": { "host": "127.0.0.1", "port": 3000 }
+    },
+    {
+      "shouldValid": false,
+      "data": { "port": 3000 }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "host": "127.0.0.1",
+        "port": 2000,
+        "timeout": "10",
+        "tls": false,
+        "tls_options": "tls options"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "host": "127.0.0.1",
+        "port": 5044,
+        "tls": false
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "host": "312.0.0.1",
+        "port": 2000,
+        "batch_max_size": 1,
+        "max_retry_count": 2,
+        "retry_delay": 0
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "host": "127.0.0.1",
+        "port": 5044,
+        "tls": false,
+        "batch_max_size": 1
+      }
+    }
+  ],
+  "traffic-split": [
+    {
+      "shouldValid": true,
+      "data": {
+        "rules": [
+          {
+            "match": [
+              {
+                "vars": [
+                  ["arg_name", "==", "jack"],
+                  ["arg_age", "!", "<", "16"]
+                ]
+              },
+              {
+                "vars": [
+                  ["arg_name", "==", "rose"],
+                  ["arg_age", "!", ">", "32"]
+                ]
+              }
+            ],
+            "weighted_upstreams": [
+              {
+                "upstream": {
+                  "name": "upstream_A",
+                  "type": "roundrobin",
+                  "nodes": { "127.0.0.1:1981": 2 },
+                  "timeout": { "connect": 15, "send": 15, "read": 15 }
+                },
+                "weight": 2
+              },
+              {
+                "upstream": {
+                  "name": "upstream_B",
+                  "type": "roundrobin",
+                  "nodes": { "127.0.0.1:1982": 2 },
+                  "timeout": { "connect": 15, "send": 15, "read": 15 }
+                },
+                "weight": 2
+              },
+              {
+                "weight": 1
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "rules": [
+          {
+            "weighted_upstreams": [
+              {
+                "upstream": {
+                  "name": "upstream_A",
+                  "type": "roundrobin",
+                  "nodes": { "127.0.0.1:1981": 2 },
+                  "timeout": { "connect": 15, "send": 15, "read": 15 }
+                },
+                "weight": 2
+              },
+              {
+                "weight": 1
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "rules": [
+          {
+            "match": [
+              {
+                "vars": ["arg_name", 123, "jack"]
+              }
+            ],
+            "weighted_upstreams": [
+              {
+                "upstream": {
+                  "name": "upstream_A",
+                  "type": "roundrobin",
+                  "nodes": {
+                    "127.0.0.1:1981": 2
+                  },
+                  "timeout": { "connect": 15, "send": 15, "read": 15 }
+                },
+                "weight": 2
+              },
+              {
+                "weight": 1
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "udp-logger": [
+    {
+      "shouldValid": true,
+      "data": { "host": "127.0.0.1", "port": 3000 }
+    },
+    {
+      "shouldValid": false,
+      "data": { "port": 3000 }
+    },
+    {
+      "shouldValid": false,
+      "data": { "host": "127.0.0.1", "port": 3000, "timeout": "10" }
+    }
+  ],
+  "uri-blocker": [
+    {
+      "shouldValid": true,
+      "data": {
+        "block_rules": [".+("]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "block_rules": ["^a", "^b"]
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "block_rules": ["aa"]
+      }
+    }
+  ],
+  "zipkin": [
+    {
+      "shouldValid": true,
+      "data": {
+        "endpoint": "http://127.0.0.1",
+        "sample_ratio": 0.001
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "endpoint": "http://127.0.0.1",
+        "sample_ratio": -0.1
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "endpoint": "http://127.0.0.1",
+        "sample_ratio": 2
+      }
+    }
+  ],
+  "request-validation": [
+    {
+      "shouldValid": true,
+      "data": {
+        "body_schema": {}
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {}
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "body_schema": {
+          "type": "object",
+          "required": ["required_payload"],
+          "properties": {
+            "required_payload": { "type": "string" },
+            "boolean_payload": { "type": "boolean" },
+            "timeouts": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 254,
+              "default": 3
+            },
+            "req_headers": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "mqtt-proxy": []
+}

@@ -32,7 +32,7 @@ const PluginMarket: React.FC = () => {
       });
       setInitialData(plugins);
     });
-  }
+  };
 
   useEffect(() => {
     initPageData();
