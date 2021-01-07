@@ -3,10 +3,10 @@ name: Backend E2E Test
 on:
   push:
     branches:
-      - master
+      - v2.3
   pull_request:
     branches:
-      - master
+      - v2.3
 
 jobs:
   run-test:

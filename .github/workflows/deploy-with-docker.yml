@@ -3,7 +3,7 @@ name: Test and Deploy with Docker
 on:
   push:
     branches:
-      - master
+      - v2.3
 
 jobs:
   build:

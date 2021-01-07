@@ -3,14 +3,14 @@
 name: Test building web in multiple node version
 
 # Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# events but only for the v2.3 branch
 on:
   push:
     branches:
-      - master
+      - v2.3
   pull_request:
     branches:
-      - master
+      - v2.3
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:

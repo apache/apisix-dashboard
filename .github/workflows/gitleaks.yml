@@ -5,10 +5,10 @@ name: gitLeaks
 on:
   push:
     branches:
-      - master
+      - v2.3
   pull_request:
     branches:
-      - master
+      - v2.3
 
 jobs:
   gitleaks:
