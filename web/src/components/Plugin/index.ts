@@ -15,4 +15,4 @@
  * limitations under the License.
  */
 export { default } from './PluginPage';
-export { PLUGIN_MAPPER_SOURCE } from './data';
+export { PLUGIN_ICON_LIST } from './data';
