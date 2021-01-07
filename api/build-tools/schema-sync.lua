@@ -26,6 +26,7 @@ local fake_module_list = {
     'ngx.errlog',
     'ngx.process',
     'ngx.re',
+    'ngx.ssl',
     'net.url',
     'opentracing.tracer',
     'pb',
@@ -35,6 +36,7 @@ local fake_module_list = {
 
     'resty.cookie',
     'resty.core.regex',
+    'resty.core.base',
     'resty.hmac',
     'resty.http',
     'resty.ipmatcher',
@@ -52,6 +54,9 @@ local fake_module_list = {
     'resty.rediscluster',
     'resty.signal',
     'resty.string',
+    'resty.aes',
+    'resty.radixtree',
+    'resty.expr.v1',
 
     'apisix.consumer',
     'apisix.core.json',
@@ -84,6 +89,8 @@ ngx.socket = {}
 ngx.thread = {}
 ngx.worker = {}
 ngx.re.gmatch = empty_function
+ngx.req = {}
+ngx.config = {}
 ngx.shared = {
     ["plugin-api-breaker"] = {}
 }
@@ -112,7 +119,10 @@ package.loaded["apisix.core"] = {
     table = {
         insert = empty_function
     },
-    string = {}
+    string = {},
+    version = {
+        VERSION = ""
+    }
 }
 
 
