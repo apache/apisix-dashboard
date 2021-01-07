@@ -81,6 +81,9 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     let transformDataForm: string[];
     let transformDataJson: object;
     const formData: RouteModule.debugRequestParamsFormData[] = bodyForm.getFieldsValue().params;
+    if (methodWithoutBody.includes(httpMethod)) {
+      return undefined
+    }
     switch (bodyType) {
       case 'x-www-form-urlencoded':
         transformDataForm = (formData || [])
