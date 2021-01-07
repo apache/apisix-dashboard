@@ -1,11 +1,12 @@
 name: go-lint
+
 on:
   push:
     branches:
-      - master
+      - v2.3
   pull_request:
     branches:
-      - master
+      - v2.3
 
 jobs:
   golangci:

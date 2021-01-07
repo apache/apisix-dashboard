@@ -3,10 +3,10 @@ name: Frontend e2e test
 on:
   push:
     branches:
-      - master
+      - v2.3
   pull_request:
     branches:
-      - master
+      - v2.3
 defaults:
   run:
     working-directory: web

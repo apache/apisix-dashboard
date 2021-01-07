@@ -2,7 +2,7 @@ name: spellchecker
 on:
   pull_request:
     branches:
-      - master
+      - v2.3
 jobs:
   misspell:
     name: runner/misspell
