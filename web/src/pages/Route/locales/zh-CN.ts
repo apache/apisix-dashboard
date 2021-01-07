@@ -125,4 +125,6 @@ export default {
   'page.route.TabPane.authentication': '认证',
   'page.route.TabPane.response': '响应结果',
   'page.route.debugWithoutAuth': '当前请求不启用任何认证方式。',
+  'page.route.button.exportOpenApi': '导出OpenApi',
+  'page.route.exportRoutesTips': '请选择下载文件的类型',
 };

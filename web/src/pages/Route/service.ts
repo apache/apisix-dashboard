@@ -118,3 +118,9 @@ export const fetchServiceList = () =>
     data: data.rows,
     total: data.total_size,
   }));
+
+export const exportRoutes = (ids: string) => {
+  return request(`/routes/export/${ids}`, {
+    method: 'post',
+  });
+};

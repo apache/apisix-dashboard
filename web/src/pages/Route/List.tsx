@@ -20,27 +20,46 @@ import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag, Space, Select } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined, BugOutlined } from '@ant-design/icons';
+import { PlusOutlined, BugOutlined, ExportOutlined } from '@ant-design/icons';
+import { js_beautify } from 'js-beautify';
+import yaml from 'js-yaml';
+import moment from 'moment';
 
 import { timestampToLocaleString } from '@/helpers';
-import { fetchList, remove, fetchLabelList, updateRouteStatus } from './service';
+import { fetchList, remove, fetchLabelList, updateRouteStatus, exportRoutes } from './service';
 import { DebugDrawView } from './components/DebugViews';
+import { EXPORT_FILE_MIME_TYPE_SUPPORTED } from './constants';
 
 const { OptGroup, Option } = Select;
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
+  const [exportFileTypeForm] = Form.useForm();
+
+  enum RouteStatus {
+    Offline = 0,
+    Publish,
+  };
+
+  enum ExportFileType {
+    Json = 0,
+    Yaml
+  }
 
   const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
   useEffect(() => {
     fetchLabelList().then(setLabelList);
   }, []);
-  enum RouteStatus {
-    Offline = 0,
-    Publish,
-  }
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (currentSelectKeys: string[]) => {
+      setSelectedRowKeys(currentSelectKeys)
+    },
+  };
 
   const handleTableActionSuccessResponse = (msgTip: string) => {
     notification.success({
@@ -62,6 +81,67 @@ const Page: React.FC = () => {
       );
     });
   };
+
+  const handleExport = (exportFileType: number) => {
+    exportRoutes(selectedRowKeys.join(',')).then((resp) => {
+      let exportFile: string;
+      let exportFileName = `APISIX_routes_${moment().format('YYYYMMDDHHmmss')}`;
+
+      switch (exportFileType) {
+        case ExportFileType.Yaml:
+          exportFile = yaml.dump(resp.data);
+          exportFileName = `${exportFileName}.json`;
+          break;
+        case ExportFileType.Json:
+        default:
+          exportFile = js_beautify(JSON.stringify(resp.data), {
+            indent_size: 2,
+          });
+          exportFileName = `${exportFileName}.yaml`;
+          break;
+      }
+
+      const blob = new Blob([exportFile], {
+        type: EXPORT_FILE_MIME_TYPE_SUPPORTED[exportFileType],
+      })
+      const aLink = document.createElement('a');
+      const evt = document.createEvent('MouseEvents');
+      evt.initEvent('click', false, true);
+      aLink.download = exportFileName;
+      aLink.href = window.URL.createObjectURL(blob);
+      aLink.dispatchEvent(evt);
+    })
+  }
+
+  const ListFooter: React.FC = () => {
+    return (
+      <>
+        <Popconfirm
+          title={
+            <Form form={exportFileTypeForm} initialValues={{ fileType: ExportFileType.Json }}>
+              <div style={{marginBottom:8}}>{formatMessage({ id: 'page.route.exportRoutesTips' })}</div>
+              <Form.Item name="fileType" noStyle>
+                <Radio.Group>
+                  <Radio value={ExportFileType.Json}>Json</Radio>
+                  <Radio value={ExportFileType.Yaml}>Yaml</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Form>
+          }
+          onConfirm={() => {
+            handleExport(exportFileTypeForm.getFieldValue('fileType'));
+          }}
+          okText={formatMessage({ id: 'component.global.confirm' })}
+          cancelText={formatMessage({ id: 'component.global.cancel' })}
+        >
+          <Button type="primary" disabled={selectedRowKeys.length === 0}>
+            <ExportOutlined />
+              {formatMessage({id: 'page.route.button.exportOpenApi'})}
+          </Button>
+        </Popconfirm>
+      </>
+    )
+  }
 
   const [debugDrawVisible, setDebugDrawVisible] = useState(false);
 
@@ -200,12 +280,17 @@ const Page: React.FC = () => {
 
         return (
           <Select style={{ width: '100%' }} allowClear>
+<<<<<<< HEAD
             <Option key={RouteStatus.Offline} value={RouteStatus.Offline}>
               {formatMessage({ id: 'page.route.unpublished' })}
             </Option>
             <Option key={RouteStatus.Publish} value={RouteStatus.Publish}>
               {formatMessage({ id: 'page.route.published' })}
             </Option>
+=======
+            <Option key={RouteStatus.Offline} value={RouteStatus.Offline}>{formatMessage({ id: 'page.route.unpublished' })}</Option>
+            <Option key={RouteStatus.Publish} value={RouteStatus.Publish}>{formatMessage({ id: 'page.route.published' })}</Option>
+>>>>>>> fix: export file type
           </Select>
         );
       },
@@ -305,7 +390,9 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'page.route.onlineDebug' })}
           </Button>,
         ]}
-        rowSelection={true}
+        rowSelection={rowSelection}
+        footer={() => (<ListFooter />)
+        }
       />
       <DebugDrawView
         visible={debugDrawVisible}
