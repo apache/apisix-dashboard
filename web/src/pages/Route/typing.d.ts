@@ -274,7 +274,7 @@ declare namespace RouteModule {
   type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'json' | 'raw input';
   type DebugDodyViewProps = {
     form: FormInstance;
-    changeBodyParamsType:(type: DebugBodyType) => void;
+    changeBodyParamsType: (type: DebugBodyType) => void;
     codeMirrorRef: any;
   };
   type DebugDrawProps = {
