@@ -24,14 +24,19 @@ import { omit } from 'lodash';
 
 import PluginDetail from '@/components/Plugin/PluginDetail';
 
-import { fetchList, createOrUpdate } from './service';
+import { fetchList, fetchPluginList, createOrUpdate } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
   const [visible, setVisible] = useState(false);
   const [initialData, setInitialData] = useState({});
+  const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState('');
+
+  useEffect(() => {
+    fetchPluginList().then(setPluginList);
+  }, []);
 
   useEffect(() => {
     if (!name) {
@@ -98,6 +103,7 @@ const Page: React.FC = () => {
       type="global"
       schemaType="route"
       initialData={initialData}
+      pluginList={pluginList}
       onClose={() => {
         setVisible(false);
       }}
