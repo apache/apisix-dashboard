@@ -1,4 +1,5 @@
 name: go-lint
+
 on:
   push:
     branches:
