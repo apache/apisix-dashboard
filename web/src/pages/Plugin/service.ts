@@ -46,3 +46,9 @@ export const createOrUpdate = (data: Partial<Omit<PluginModule.GlobalRule, 'id'>
     method: 'PUT',
     data: { id: DEFAULT_GLOBAL_RULE_ID, ...data },
   });
+
+  export const fetchPluginList = () => {
+    return request<Res<PluginComponent.Meta[]>>('/plugins?all=true').then((data) => {
+      return data.data;
+    });
+  };
