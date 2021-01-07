@@ -21,7 +21,7 @@ context('Create and Delete Upstream', () => {
   const sleepTime = 100; // the unit is milliseconds
   const domSelectors = {
     notification: '.ant-notification-notice-message',
-    selectItem: '.ant-select-item-option-content'
+    selectItem: '.ant-select-item-option-content',
   };
 
   beforeEach(() => {
