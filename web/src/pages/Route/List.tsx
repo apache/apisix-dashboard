@@ -40,11 +40,11 @@ const Page: React.FC = () => {
   enum RouteStatus {
     Offline = 0,
     Publish,
-  };
+  }
 
   enum ExportFileType {
     Json = 0,
-    Yaml
+    Yaml,
   }
 
   const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
@@ -57,7 +57,7 @@ const Page: React.FC = () => {
   const rowSelection = {
     selectedRowKeys,
     onChange: (currentSelectKeys: string[]) => {
-      setSelectedRowKeys(currentSelectKeys)
+      setSelectedRowKeys(currentSelectKeys);
     },
   };
 
@@ -103,15 +103,15 @@ const Page: React.FC = () => {
 
       const blob = new Blob([exportFile], {
         type: EXPORT_FILE_MIME_TYPE_SUPPORTED[exportFileType],
-      })
+      });
       const aLink = document.createElement('a');
       const evt = document.createEvent('MouseEvents');
       evt.initEvent('click', false, true);
       aLink.download = exportFileName;
       aLink.href = window.URL.createObjectURL(blob);
       aLink.dispatchEvent(evt);
-    })
-  }
+    });
+  };
 
   const ListFooter: React.FC = () => {
     return (
@@ -119,7 +119,9 @@ const Page: React.FC = () => {
         <Popconfirm
           title={
             <Form form={exportFileTypeForm} initialValues={{ fileType: ExportFileType.Json }}>
-              <div style={{marginBottom:8}}>{formatMessage({ id: 'page.route.exportRoutesTips' })}</div>
+              <div style={{ marginBottom: 8 }}>
+                {formatMessage({ id: 'page.route.exportRoutesTips' })}
+              </div>
               <Form.Item name="fileType" noStyle>
                 <Radio.Group>
                   <Radio value={ExportFileType.Json}>Json</Radio>
@@ -136,12 +138,12 @@ const Page: React.FC = () => {
         >
           <Button type="primary" disabled={selectedRowKeys.length === 0}>
             <ExportOutlined />
-              {formatMessage({id: 'page.route.button.exportOpenApi'})}
+            {formatMessage({ id: 'page.route.button.exportOpenApi' })}
           </Button>
         </Popconfirm>
       </>
-    )
-  }
+    );
+  };
 
   const [debugDrawVisible, setDebugDrawVisible] = useState(false);
 
@@ -280,17 +282,12 @@ const Page: React.FC = () => {
 
         return (
           <Select style={{ width: '100%' }} allowClear>
-<<<<<<< HEAD
             <Option key={RouteStatus.Offline} value={RouteStatus.Offline}>
               {formatMessage({ id: 'page.route.unpublished' })}
             </Option>
             <Option key={RouteStatus.Publish} value={RouteStatus.Publish}>
               {formatMessage({ id: 'page.route.published' })}
             </Option>
-=======
-            <Option key={RouteStatus.Offline} value={RouteStatus.Offline}>{formatMessage({ id: 'page.route.unpublished' })}</Option>
-            <Option key={RouteStatus.Publish} value={RouteStatus.Publish}>{formatMessage({ id: 'page.route.published' })}</Option>
->>>>>>> fix: export file type
           </Select>
         );
       },
@@ -391,8 +388,7 @@ const Page: React.FC = () => {
           </Button>,
         ]}
         rowSelection={rowSelection}
-        footer={() => (<ListFooter />)
-        }
+        footer={() => <ListFooter />}
       />
       <DebugDrawView
         visible={debugDrawVisible}

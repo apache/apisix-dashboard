@@ -119,4 +119,3 @@ export const DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED = [
 ];
 
 export const EXPORT_FILE_MIME_TYPE_SUPPORTED = ['application/json', 'application/x-yaml'];
-
