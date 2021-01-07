@@ -59,6 +59,7 @@ func TestRoute(t *testing.T) {
 	  "vars": [],
 	  "remote_addrs": ["127.0.0.0/8"],
 	  "methods": ["PUT", "GET"],
+	  "status": 1,
 	  "upstream": {
 	      "type": "roundrobin",
 	      "nodes": [{
@@ -415,6 +416,7 @@ func TestRoute(t *testing.T) {
 	  "hosts": ["foo.com", "*.bar.com"],
 	  "remote_addrs": ["127.0.0.0/8"],
 	  "methods": ["PUT", "GET"],
+	  "status": 1,
 	  "labels": {
 	      "l1": "v1",
 	      "l2": "v2"
@@ -925,6 +927,42 @@ func TestRoute(t *testing.T) {
 	dataPage = retPage.(*store.ListOutput)
 	assert.Equal(t, len(dataPage.Rows), 0)
 
+	// list search and status match
+	listInput = &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "status": "1"}`
+	err = json.Unmarshal([]byte(reqBody), listInput)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
+        //sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
+	// list search and status not match
+	listInput = &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "name": "a", "status": "0"}`
+	err = json.Unmarshal([]byte(reqBody), listInput)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 0)
+
+	//list search with name and status
+	listInput = &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "name": "a", "status": "1"}`
+	err = json.Unmarshal([]byte(reqBody), listInput)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
 	//list search with name and label
 	listInput = &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "a", "label":"l1:v1"}`
@@ -950,6 +988,17 @@ func TestRoute(t *testing.T) {
 	//list search with uri,name and label
 	listInput = &ListInput{}
 	reqBody = `{"page_size": 1, "page": 1, "name": "a", "uri": "index", "label":"l1:v1"}`
+	err = json.Unmarshal([]byte(reqBody), listInput)
+	assert.Nil(t, err)
+	ctx.SetInput(listInput)
+	retPage, err = handler.List(ctx)
+	assert.Nil(t, err)
+	dataPage = retPage.(*store.ListOutput)
+	assert.Equal(t, len(dataPage.Rows), 1)
+
+	//list search with uri,name, status and label
+	listInput = &ListInput{}
+	reqBody = `{"page_size": 1, "page": 1, "name": "a", "status": "1", "uri": "index", "label":"l1:v1"}`
 	err = json.Unmarshal([]byte(reqBody), listInput)
 	assert.Nil(t, err)
 	ctx.SetInput(listInput)
