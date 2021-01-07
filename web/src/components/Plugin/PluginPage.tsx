@@ -124,8 +124,10 @@ const PluginPage: React.FC<Props> = ({
                     </Button>,
                   ]}
                   title={[
-                    <div style={{ width: '100%', textAlign: 'center' }}>
-                      <span key={2}>{item.name}</span>
+                    <div style={{ width: '100%', textAlign: 'center' }} key={1}>
+                      <span key={2} data-cy-plugin-name={item.name}>
+                        {item.name}
+                      </span>
                     </div>,
                   ]}
                   bodyStyle={{
