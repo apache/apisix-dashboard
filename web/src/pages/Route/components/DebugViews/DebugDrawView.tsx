@@ -53,7 +53,9 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const bodyCodeMirrorRef = useRef<any>(null);
   const [bodyType, setBodyType] = useState('none');
   const methodWithoutBody = ['GET', 'HEAD'];
-  const [bodyCodeMirrorMode, setBodyCodeMirrorMode] = useState(DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode)
+  const [bodyCodeMirrorMode, setBodyCodeMirrorMode] = useState(
+    DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode,
+  );
 
   enum DebugBodyType {
     None = 0,
@@ -79,12 +81,15 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     let transformDataForm: string[];
     let transformDataJson: object;
     const formData: RouteModule.debugRequestParamsFormData[] = bodyForm.getFieldsValue().params;
+    if (methodWithoutBody.includes(httpMethod)) {
+      return undefined
+    }
     switch (bodyType) {
       case 'x-www-form-urlencoded':
         transformDataForm = (formData || [])
           .filter((data) => data.check)
           .map((data) => {
-            return `${data.key}=${data.value}`
+            return `${data.key}=${data.value}`;
           });
 
         return transformDataForm.join('&');
@@ -265,37 +270,44 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             </TabPane>
             {showBodyTab && (
               <TabPane tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })} key="body">
-                <Radio.Group onChange={(e) => {setBodyType(e.target.value)}} value={bodyType}>
-                  {
-                    DEBUG_BODY_TYPE_SUPPORTED.map((type) => (
-                      <Radio value={type} key={type}>{type}</Radio>
-                    ))
-                  }
-                </Radio.Group>
-                {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput] && <Select
-                  size="small"
-                  onChange={(value) => {
-                    setBodyCodeMirrorMode(value)
+                <Radio.Group
+                  onChange={(e) => {
+                    setBodyType(e.target.value);
                   }}
-                  style={{ width: 100 }}
-                  defaultValue={bodyCodeMirrorMode}>
-                  {
-                    DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED.map((modeObj) =>(
-                    <Select.Option key={modeObj.name} value={modeObj.mode}>{modeObj.name}</Select.Option>
-                    ))
-                  }
-                </Select>}
-                <div style={{marginTop: 16}}>
-                  {
-                    (bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded] || bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.Json]) &&
+                  value={bodyType}
+                >
+                  {DEBUG_BODY_TYPE_SUPPORTED.map((type) => (
+                    <Radio value={type} key={type}>
+                      {type}
+                    </Radio>
+                  ))}
+                </Radio.Group>
+                {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput] && (
+                  <Select
+                    size="small"
+                    onChange={(value) => {
+                      setBodyCodeMirrorMode(value);
+                    }}
+                    style={{ width: 100 }}
+                    defaultValue={bodyCodeMirrorMode}
+                  >
+                    {DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED.map((modeObj) => (
+                      <Select.Option key={modeObj.name} value={modeObj.mode}>
+                        {modeObj.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                )}
+                <div style={{ marginTop: 16 }}>
+                  {(bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded] ||
+                    bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.Json]) && (
                     <DebugParamsView form={bodyForm} />
-                  }
+                  )}
 
-                  {
-                    (bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput]) &&
+                  {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput] && (
                     <Form>
                       <Form.Item>
-                          <CodeMirror
+                        <CodeMirror
                           ref={bodyCodeMirrorRef}
                           height={250}
                           options={{
@@ -310,7 +322,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                         />
                       </Form.Item>
                     </Form>
-                  }
+                  )}
                 </div>
               </TabPane>
             )}
