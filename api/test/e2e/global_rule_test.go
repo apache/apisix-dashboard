@@ -17,7 +17,6 @@
 package e2e
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -297,17 +296,17 @@ func TestGlobalRule_with_createtime_updatetime(t *testing.T) {
 			Path:   "/apisix/admin/global_rules/1",
 			Method: http.MethodPut,
 			Body: `{
-				     "plugins": {
-					   "response-rewrite": {
-					     "headers": {
-						   "X-VERSION":"1.0"
-						 }
-					   },
-					   "uri-blocker": {
-					     "block_rules": ["select.+(from|limit)", "(?:(union(.*?)select))"]
-					   }
-					 }
-				   }`,
+                                "plugins": {
+		                        "response-rewrite": {
+		                            "headers": {
+		                                "X-VERSION":"1.0"
+		                            }
+		                        },
+					"uri-blocker": {
+						"block_rules": ["select.+(from|limit)", "(?:(union(.*?)select))"]
+					}
+                                }
+                        }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
@@ -319,19 +318,20 @@ func TestGlobalRule_with_createtime_updatetime(t *testing.T) {
 	}
 
 	basepath := "http://127.0.0.1:9000/apisix/admin/global_rules/1"
-	time.Sleep(time.Duration(1) * time.Second)
+	time.Sleep(time.Duration(100) * time.Millisecond)
 
 	// get the global_rule, save createtime and updatetime
 	request, _ := http.NewRequest("GET", basepath, nil)
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
-	if err != nil {
-		fmt.Printf("server not responding %s", err.Error())
-	}
+	assert.Nil(t, err)
 	defer resp.Body.Close()
+
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
+	assert.True(t, createtime.Int() >= time.Now().Unix()-1 && createtime.Int() <= time.Now().Unix()+1)
+	assert.True(t, updatetime.Int() >= time.Now().Unix()-1 && updatetime.Int() <= time.Now().Unix()+1)
 
 	// wait 1 second so the update_time should be different
 	time.Sleep(time.Duration(1) * time.Second)
@@ -343,20 +343,19 @@ func TestGlobalRule_with_createtime_updatetime(t *testing.T) {
 			Path:   "/apisix/admin/global_rules/1",
 			Method: http.MethodPut,
 			Body: `{
-			         "plugins": {
-			           "response-rewrite": {
-			            "headers": {
-			              "X-VERSION":"1.1"
-			            }
-			           },
-			            "uri-blocker": {
-			              "block_rules": ["select.+(from|limit)", "(?:(union(.*?)select))"]
-			            }
-			         }
-			      }`,
+                                "plugins": {
+		                        "response-rewrite": {
+		                            "headers": {
+		                                "X-VERSION":"1.1"
+		                            }
+		                        },
+					"uri-blocker": {
+						"block_rules": ["select.+(from|limit)", "(?:(union(.*?)select))"]
+					}
+                                }
+                        }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
 		},
 	}
 
@@ -368,7 +367,10 @@ func TestGlobalRule_with_createtime_updatetime(t *testing.T) {
 	time.Sleep(time.Duration(1) * time.Second)
 	request, _ = http.NewRequest("GET", basepath, nil)
 	request.Header.Add("Authorization", token)
-	resp, _ = http.DefaultClient.Do(request)
+	resp, err = http.DefaultClient.Do(request)
+	assert.Nil(t, err)
+	defer resp.Body.Close()
+
 	respBody, _ = ioutil.ReadAll(resp.Body)
 	createtime2 := gjson.Get(string(respBody), "data.create_time")
 	updatetime2 := gjson.Get(string(respBody), "data.update_time")
