@@ -42,6 +42,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler/ssl"
 	"github.com/apisix/manager-api/internal/handler/upstream"
 	"github.com/apisix/manager-api/internal/log"
+	"github.com/apisix/manager-api/internal/handler/route_export"
 )
 
 func SetUpRouter() *gin.Engine {
@@ -73,6 +74,7 @@ func SetUpRouter() *gin.Engine {
 		route_online_debug.NewHandler,
 		server_info.NewHandler,
 		label.NewHandler,
+		route_export.NewHandler,
 	}
 
 	for i := range factories {
