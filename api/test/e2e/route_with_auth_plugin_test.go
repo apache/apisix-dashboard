@@ -17,7 +17,6 @@
 package e2e
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -239,9 +238,7 @@ func TestRoute_With_Jwt_Plugin(t *testing.T) {
 	request, _ := http.NewRequest("GET", basepath+"/apisix/plugin/jwt/sign?key=user-key", nil)
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
-	if err != nil {
-		fmt.Printf("server not responding %s", err.Error())
-	}
+	assert.Nil(t, err)
 	defer resp.Body.Close()
 	assert.Equal(t, 200, resp.StatusCode)
 	jwttoken, _ := ioutil.ReadAll(resp.Body)
