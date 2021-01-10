@@ -32,13 +32,11 @@ const ServerInfo: React.FC = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    fetchInfoList().then((list) => {
-      list = list.map(item => {
-        moment.locale(['en-US', 'zh-CN']);
+    fetchInfoList().then((infoList) => {
+      const list = infoList.map(item => {
         return {
           ...item,
           boot_time: moment(item.boot_time * 1000).format('YYYY-MM-DD HH:mm:ss'),
-          // boot_time: new Date(item.boot_time * 1000).toISOString(),
           last_report_time: moment(item.last_report_time * 1000).format('YYYY-MM-DD HH:mm:ss'),
           up_time: moment(item.boot_time * 1000).fromNow(true),
         }
