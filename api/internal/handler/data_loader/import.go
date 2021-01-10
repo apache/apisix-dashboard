@@ -3,11 +3,9 @@ package data_loader
 import (
 	"bufio"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"path"
-	"reflect"
 	"regexp"
 	"strings"
 
@@ -173,39 +171,22 @@ func checkRouteName(name string) (bool, error) {
 	return true, nil
 }
 
-func structByReflect(data map[string]interface{}, inStructPtr interface{}) error {
-	rType := reflect.TypeOf(inStructPtr)
-	rVal := reflect.ValueOf(inStructPtr)
-	if rType.Kind() != reflect.Ptr {
-		return errors.New("inStructPtr must be ptr to struct")
-	}
-	rType = rType.Elem()
-	rVal = rVal.Elem()
-
-	for i := 0; i < rType.NumField(); i++ {
-		t := rType.Field(i)
-		f := rVal.Field(i)
-		v, ok := data[t.Name]
-		if !ok {
-			continue
-		}
-
-		f.Set(reflect.ValueOf(v))
-	}
-
-	return nil
-}
 
 func parseExtension(val *openapi3.Operation) (*entity.Route, error) {
 	routeMap := map[string]interface{}{}
 	for key, val := range val.Extensions {
 		if strings.HasPrefix(key, "x-apisix-") {
-			routeMap[key] = val
+			routeMap[strings.TrimPrefix(key, "x-apisix-")] = val
 		}
 	}
 
 	route := new(entity.Route)
-	err := structByReflect(routeMap, route)
+	routeJson, err := json.Marshal(routeMap)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(routeJson, &route)
 	if err != nil {
 		return nil, err
 	}
@@ -215,10 +196,6 @@ func parseExtension(val *openapi3.Operation) (*entity.Route, error) {
 
 func OpenAPI3ToRoute(swagger *openapi3.Swagger) ([]*entity.Route, error) {
 	var routes []*entity.Route
-	//if globalUpstreams, ok := swagger.Extensions["x-apisix-upstreams"]; ok {
-	//        globalUpstreams = globalUpstreams.([]map[string]interface{})
-	//
-	//}
 	paths := swagger.Paths
 	var upstream *entity.UpstreamDef
 	var err error
@@ -230,7 +207,6 @@ func OpenAPI3ToRoute(swagger *openapi3.Swagger) ([]*entity.Route, error) {
 				return nil, err
 			}
 		}
-
 		if v.Get != nil {
 			route, err := getRouteFromPaths("GET", k, v.Get, swagger)
 			if err != nil {
@@ -308,15 +284,10 @@ func parseParameters(parameters openapi3.Parameters, plugins map[string]interfac
 	plugins["request-validation"] = requestValidation
 }
 
-func parseRequestBody(requestBody *openapi3.RequestBodyRef, swagger *openapi3.Swagger, plugins map[string]interface{}, route *entity.Route) {
-	vars := make([]interface{}, 0)
+func parseRequestBody(requestBody *openapi3.RequestBodyRef, swagger *openapi3.Swagger, plugins map[string]interface{}) {
 	schema := requestBody.Value.Content
 	requestValidation := make(map[string]interface{})
-	for k, v := range schema {
-		item := []string{"http_Content-type", "==", ""}
-		item[2] = k
-		vars = append(vars, item)
-
+	for _, v := range schema {
 		if v.Schema.Ref != "" {
 			s := getParameters(v.Schema.Ref, &swagger.Components).Value
 			requestValidation["body_schema"] = &entity.RequestValidation{
@@ -360,8 +331,6 @@ func parseRequestBody(requestBody *openapi3.RequestBodyRef, swagger *openapi3.Sw
 		}
 		plugins["request-validation"] = requestValidation
 	}
-
-	route.Vars = vars
 }
 
 func parseSecurity(security openapi3.SecurityRequirements, securitySchemes openapi3.SecuritySchemes, plugins map[string]interface{}) {
@@ -447,7 +416,7 @@ func getRouteFromPaths(method, key string, value *openapi3.Operation, swagger *o
 	}
 
 	if value.RequestBody != nil {
-		parseRequestBody(value.RequestBody, swagger, route.Plugins, route)
+		parseRequestBody(value.RequestBody, swagger, route.Plugins)
 	}
 
 	if value.Security != nil && swagger.Components.SecuritySchemes != nil {
