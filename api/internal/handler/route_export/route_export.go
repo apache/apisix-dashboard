@@ -18,17 +18,19 @@ package route_export
 
 import (
 	"encoding/json"
+	"reflect"
+	"regexp"
+	"strings"
+
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
-	"reflect"
-	"regexp"
-	"strings"
 )
 
 type Handler struct {
@@ -164,7 +166,10 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 							param.In = "header"
 							requestValidation := &entity.RequestValidation{}
 							reqBytes, _ := json.Marshal(&v)
-							json.Unmarshal(reqBytes, requestValidation)
+							err := json.Unmarshal(reqBytes, requestValidation)
+							if err != nil {
+								log.Errorf("json marshal failed: %s", err)
+							}
 							for key1, value1 := range requestValidation.Properties.(map[string]interface{}) {
 								for _, arr := range requestValidation.Required {
 									if arr == key1 {
@@ -182,7 +187,10 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 							m := map[string]*openapi3.MediaType{}
 							reqBytes, _ := json.Marshal(&v)
 							schema := &openapi3.Schema{}
-							json.Unmarshal(reqBytes, schema)
+							err := json.Unmarshal(reqBytes, schema)
+							if err != nil {
+								log.Errorf("json marshal failed: %s", err)
+							}
 							for _, va := range route.Vars.([]interface{}) {
 								compile := regexp.MustCompile("^http_.*")
 								match := compile.Match([]byte(va.([]interface{})[0].(string)))
