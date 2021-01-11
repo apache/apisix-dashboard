@@ -17,43 +17,16 @@
 package e2e
 
 import (
-	"fmt"
-	"io/ioutil"
 	"net/http"
-	"os/exec"
-	"strings"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func readAPISIXErrorLog(t *testing.T) string {
-	bytes, err := ioutil.ReadFile("../docker/apisix_logs/error.log")
-	assert.Nil(t, err)
-	logContent := string(bytes)
-	return logContent
-}
-
-func cleanAPISIXErrorLog(t *testing.T) {
-	cmd := exec.Command("pwd")
-	pwdByte, err := cmd.CombinedOutput()
-	pwd := string(pwdByte)
-
-	pwd = strings.Replace(pwd, "\n", "", 1)
-	pwd = strings.Replace(pwd, "/e2e", "", 1)
-
-	cmd = exec.Command("sudo", "echo", " > ", pwd+"/docker/apisix_logs/error.log")
-	_, err = cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("cmd error:", err.Error())
-	}
-	assert.Nil(t, err)
-}
-
 func TestRoute_With_Log_Plugin(t *testing.T) {
 	// clean log
-	cleanAPISIXErrorLog(t)
+	CleanAPISIXErrorLog(t)
 
 	tests := []HttpTestCase{
 		{
@@ -116,11 +89,11 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 
 	// verify http logger by checking log
 	//todo: should use a fake upstream for confirming whether we got the log data.
-	logContent := readAPISIXErrorLog(t)
+	logContent := ReadAPISIXErrorLog(t)
 	assert.Contains(t, logContent, "Batch Processor[http logger] successfully processed the entries")
 
 	// clean log
-	cleanAPISIXErrorLog(t)
+	CleanAPISIXErrorLog(t)
 
 	tests = []HttpTestCase{
 		{
@@ -175,11 +148,11 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 
 	// verify http logger by checking log
 	//todo: should use a fake upstream for confirming whether we got the log data.
-	logContent = readAPISIXErrorLog(t)
+	logContent = ReadAPISIXErrorLog(t)
 	assert.Contains(t, logContent, "Batch Processor[http logger] failed to process entries: failed to connect to host[127.0.0.1] port[8888] connection refused")
 
 	// clean log
-	cleanAPISIXErrorLog(t)
+	CleanAPISIXErrorLog(t)
 
 	// todo: check disable http logger
 
