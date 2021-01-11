@@ -17,7 +17,6 @@
 package e2e
 
 import (
-	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -83,9 +82,8 @@ func TestService(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 
-	// hit routes
-	time.Sleep(sleepTime)
 	// batch test /server_port api
+	time.Sleep(sleepTime)
 	res := BatchTestServerPort(t, 18)
 	assert.True(t, res["1980"] == 3)
 	assert.True(t, res["1981"] == 6)
@@ -152,9 +150,7 @@ func TestService(t *testing.T) {
 	request, _ := http.NewRequest("GET", basepath+"/server_port", nil)
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
-	if err != nil {
-		fmt.Printf("server not responding %s", err.Error())
-	}
+	assert.Nil(t, err)
 	defer resp.Body.Close()
 	assert.Equal(t, 200, resp.StatusCode)
 	assert.Equal(t, "100", resp.Header["X-Ratelimit-Limit"][0])
