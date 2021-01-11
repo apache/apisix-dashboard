@@ -237,7 +237,7 @@ type Script struct {
 
 // swagger:model GlobalPlugins
 type GlobalPlugins struct {
-	ID      interface{}            `json:"id"`
+	BaseInfo
 	Plugins map[string]interface{} `json:"plugins"`
 }
 

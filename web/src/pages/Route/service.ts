@@ -49,7 +49,7 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
       label: labels.concat(API_VERSION).join(','),
       page: current,
       page_size: pageSize,
-      status
+      status,
     },
   }).then(({ data }) => {
     return {

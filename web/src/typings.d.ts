@@ -43,6 +43,7 @@ interface Window {
     fieldsObject: GAFieldsObject | string,
   ) => void;
   reloadAuthorized: () => void;
+  codemirror: Record<string, any>;
 }
 
 declare let ga: Function;

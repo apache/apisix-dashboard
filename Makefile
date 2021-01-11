@@ -36,7 +36,7 @@ help:
 ### build:		Build Apache APISIX Dashboard, it contains web and manager-api
 .PHONY: build
 build: web-default api-default
-	api/build.sh && cd ./web && export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true && yarn install && yarn build  && mkdir -p ../output/logs
+	api/build.sh && cd ./web && export CYPRESS_INSTALL_BINARY=0  && yarn install && yarn build  && mkdir -p ../output/logs
 
 
 .PHONY: web-default
