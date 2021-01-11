@@ -84,7 +84,7 @@ type Route struct {
 	Vars            interface{}            `json:"vars,omitempty"`
 	FilterFunc      string                 `json:"filter_func,omitempty"`
 	Script          interface{}            `json:"script,omitempty"`
-	Plugins         map[string]interface{} `json:"plugins"`
+	Plugins         map[string]interface{} `json:"plugins,omitempty"`
 	Upstream        *UpstreamDef           `json:"upstream,omitempty"`
 	ServiceID       interface{}            `json:"service_id,omitempty"`
 	UpstreamID      interface{}            `json:"upstream_id,omitempty"`
@@ -92,11 +92,6 @@ type Route struct {
 	Labels          map[string]string      `json:"labels,omitempty"`
 	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
 	Status          Status                 `json:"status"`
-}
-
-type RouteImport struct {
-	Plugins map[string]interface{} `json:"plugins"`
-	Route
 }
 
 // --- structures for upstream start  ---
@@ -238,9 +233,6 @@ type Service struct {
 type Script struct {
 	ID     string      `json:"id"`
 	Script interface{} `json:"script,omitempty"`
-}
-
-type SecurityPlugin struct {
 }
 
 type RequestValidation struct {
