@@ -169,7 +169,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
       cancelText={formatMessage({ id: 'component.global.cancel' })}
       destroyOnClose
     >
-      <Form form={modalForm} labelCol={{ span: 4 }}>
+      <Form form={modalForm} layout="vertical">
         <Form.Item
           label={formatMessage({ id: 'page.route.parameterPosition' })}
           name="position"
