@@ -93,9 +93,6 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 		extensions := make(map[string]interface{})
 		path.Summary = route.Desc
 		path.OperationID = route.Name
-		if route.URI != "" {
-			extensions["x-apisix-uri"] = route.URI
-		}
 		if route.Upstream != nil {
 			extensions["x-apisix-upstream"] = route.Upstream
 		}
@@ -132,8 +129,17 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 		if route.Vars != nil {
 			extensions["x-apisix-vars"] = route.Vars
 		}
+
 		// analysis route.URIs
-		for _, uri := range route.Uris {
+		routeURIs := []string{}
+		if route.URI != "" {
+			routeURIs = append(routeURIs, route.URI)
+		}
+		if route.Uris != nil {
+			routeURIs = route.Uris
+		}
+
+		for _, uri := range routeURIs {
 			if strings.Contains(uri, "*") {
 				paths[strings.Split(uri, "*")[0]+"{params}"] = pathItem
 				// add params introduce
@@ -148,6 +154,7 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 				paths[uri] = pathItem
 			}
 		}
+
 		if route.Plugins != nil {
 			param := &openapi3.Parameter{}
 			secReq := &openapi3.SecurityRequirements{}

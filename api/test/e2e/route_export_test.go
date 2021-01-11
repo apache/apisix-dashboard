@@ -111,7 +111,7 @@ func TestRoute_Export(t *testing.T) {
 					}
 				},
 				"status": 1,
-				"uris": ["/hello2"],
+				"uri": "/hello2",
 				"hosts": ["foo.com", "*.bar.com"],
 				"methods": ["GET", "POST"],
 				"upstream": {
