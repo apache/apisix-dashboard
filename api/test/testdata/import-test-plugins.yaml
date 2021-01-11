@@ -18,7 +18,7 @@ info:
     test title
 paths:
   /hello:    
-    get:
+    post:
       x-api-limit: 20
       description: |-
         hello world.
