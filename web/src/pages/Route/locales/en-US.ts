@@ -127,4 +127,6 @@ export default {
   'page.route.debugWithoutAuth': 'This request does not use any authorization.',
   'page.route.button.exportOpenApi': 'Export OpenApi',
   'page.route.exportRoutesTips': 'Please choose the type of file you want to download',
+  'page.route.button.importOpenApi': 'Import OpenApi',
+  'page.route.button.selectFile': 'Select File',
 };

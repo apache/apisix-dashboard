@@ -20,13 +20,13 @@ import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag, Space, Select } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined, BugOutlined, ExportOutlined } from '@ant-design/icons';
+import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined, UploadOutlined } from '@ant-design/icons';
 import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
 import moment from 'moment';
 
 import { timestampToLocaleString } from '@/helpers';
-import { fetchList, remove, fetchLabelList, updateRouteStatus, exportRoutes } from './service';
+import { fetchList, remove, fetchLabelList, updateRouteStatus, exportRoutes, importRoutes } from './service';
 import { DebugDrawView } from './components/DebugViews';
 import { EXPORT_FILE_MIME_TYPE_SUPPORTED } from './constants';
 
@@ -49,6 +49,8 @@ const Page: React.FC = () => {
 
   const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [uploadFileList, setUploadFileList] = useState([]);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   useEffect(() => {
     fetchLabelList().then(setLabelList);
@@ -112,6 +114,17 @@ const Page: React.FC = () => {
       aLink.dispatchEvent(evt);
     });
   };
+
+  const handleImport = () => {
+    const formData = new FormData();
+    
+    formData.append('file', uploadFileList[0]);
+
+    importRoutes(formData).then((resp) => {
+      handleTableActionSuccessResponse(`${formatMessage({ id: 'page.route.button.importOpenApi'})}${formatMessage({ id: 'component.status.success'})}`)
+      setShowImportModal(false);
+    })
+  }
 
   const ListFooter: React.FC = () => {
     return (
@@ -382,6 +395,12 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
+          <Button type="primary" onClick={() => {
+            setShowImportModal(true);
+          }}>
+            <ImportOutlined />
+            {formatMessage({ id: 'page.route.button.importOpenApi' })}
+          </Button>,
           <Button type="primary" onClick={() => setDebugDrawVisible(true)}>
             <BugOutlined />
             {formatMessage({ id: 'page.route.onlineDebug' })}
@@ -396,6 +415,32 @@ const Page: React.FC = () => {
           setDebugDrawVisible(false);
         }}
       />
+
+      <Modal title={formatMessage({ id: 'page.route.button.importOpenApi'})}
+        visible={showImportModal}
+        onOk={handleImport}
+        onCancel={() => {
+        setShowImportModal(false);
+      }}>
+        <Upload
+          fileList={uploadFileList}
+          beforeUpload= {file => {
+            setUploadFileList([file]);
+            return false;
+          }}
+          onRemove={file => {
+            setUploadFileList([]);
+          }}>
+          <Button type="primary" icon={<ImportOutlined />}>{formatMessage({ id: 'page.route.button.selectFile'})}</Button>
+        </Upload>
+        <Divider />
+        <div>
+          <p>Instructions：</p>
+          <p><a href='#'>APISIX OpenApi Instructions</a></p>
+        </div>
+
+      </Modal>
+
     </PageHeaderWrapper>
   );
 };

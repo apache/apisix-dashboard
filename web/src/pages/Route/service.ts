@@ -124,3 +124,11 @@ export const exportRoutes = (ids: string) => {
     method: 'post',
   });
 };
+
+export const importRoutes = (formData) => {
+  return request('/import', {
+    method: 'POST',
+    data: formData,
+    requestType: 'form',
+  })
+}

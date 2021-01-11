@@ -127,4 +127,6 @@ export default {
   'page.route.debugWithoutAuth': '当前请求不启用任何认证方式。',
   'page.route.button.exportOpenApi': '导出OpenApi',
   'page.route.exportRoutesTips': '请选择下载文件的类型',
+  'page.route.button.importOpenApi': '导入OpenApi',
+  'page.route.button.selectFile': '选择上传文件',
 };
