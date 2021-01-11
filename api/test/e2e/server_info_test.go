@@ -121,6 +121,17 @@ func TestServerInfo_List_OmitEmptyValue(t *testing.T) {
 			ExpectBody:   "\"total_size\":2",
 			UnexpectBody: []string{"\"create_time\":", "\"update_time\":"},
 		},
+		{
+			Desc:         "list server info with hostname",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/server_info",
+			Query:        "hostname=apisix_",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"total_size\":2",
+			UnexpectBody: []string{"\"create_time\":", "\"update_time\":"},
+		},
 	}
 
 	for _, tc := range testCases {
