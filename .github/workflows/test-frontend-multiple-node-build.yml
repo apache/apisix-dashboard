@@ -35,7 +35,7 @@ jobs:
       # Install dependencies
       - name: Install dependencies
         working-directory: web
-        run: yarn
+        run: CYPRESS_INSTALL_BINARY=0 yarn
 
       - name: Lint
         working-directory: web
