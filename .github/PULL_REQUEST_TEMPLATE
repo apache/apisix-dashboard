@@ -4,6 +4,7 @@ Please answer these questions before submitting a pull request
 - [ ] Bugfix
 - [ ] New feature provided
 - [ ] Improve performance
+- [ ] Backport patches
 
 - Related issues
 
@@ -16,3 +17,13 @@ ___
 ___
 ### New feature or improvement
 - Describe the details and related test reports.
+
+___
+### Backport patches
+- Why need to backport?
+
+- Source branch
+
+- Related commits and pull requests
+
+- Target branch

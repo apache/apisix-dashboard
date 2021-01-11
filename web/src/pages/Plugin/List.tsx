@@ -24,25 +24,32 @@ import { omit } from 'lodash';
 
 import PluginDetail from '@/components/Plugin/PluginDetail';
 
-import { fetchList, createOrUpdate } from './service';
+import { fetchList, fetchPluginList, createOrUpdate } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
   const [visible, setVisible] = useState(false);
   const [initialData, setInitialData] = useState({});
+  const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState('');
 
   useEffect(() => {
-    fetchList().then(({ data }) => {
-      const plugins: any = {};
-      // eslint-disable-next-line no-shadow
-      data.forEach(({ name, value }) => {
-        plugins[name] = value;
-      });
-      setInitialData(plugins);
-    });
+    fetchPluginList().then(setPluginList);
   }, []);
+
+  useEffect(() => {
+    if (!name) {
+      fetchList().then(({ data }) => {
+        const plugins: any = {};
+        // eslint-disable-next-line no-shadow
+        data.forEach(({ name, value }) => {
+          plugins[name] = value;
+        });
+        setInitialData(plugins);
+      });
+    }
+  }, [name]);
 
   const columns: ProColumns<PluginModule.TransformedPlugin>[] = [
     {
@@ -72,6 +79,7 @@ const Page: React.FC = () => {
                 const plugins = omit(initialData, [`${record.name}`]);
                 createOrUpdate({ plugins }).then(() => {
                   ref.current?.reload();
+                  setName('');
                 });
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
@@ -95,17 +103,21 @@ const Page: React.FC = () => {
       type="global"
       schemaType="route"
       initialData={initialData}
+      pluginList={pluginList}
       onClose={() => {
         setVisible(false);
       }}
       onChange={({ formData, codemirrorData }) => {
+        const disable = !formData.disable;
         createOrUpdate({
           plugins: {
             ...initialData,
-            [name]: { ...codemirrorData, ...formData },
+            [name]: { ...codemirrorData, disable },
           },
         }).then(() => {
           setVisible(false);
+          setName('');
+          ref.current?.reload();
         });
       }}
     />
