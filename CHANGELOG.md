@@ -34,7 +34,6 @@
 * Support to use absolute path in conf.WebDir. [#1055](https://github.com/apache/apisix-dashboard/pull/1055)
 * Support to search route by label. [#1061](https://github.com/apache/apisix-dashboard/pull/1061)
 * Support server info preview. [#958](https://github.com/apache/apisix-dashboard/pull/958) [#949](https://github.com/apache/apisix-dashboard/pull/949)
-* Support search route by labels. [#1061](https://github.com/apache/apisix-dashboard/pull/1061)
 * Support custom port for Upstream module. [#1078](https://github.com/apache/apisix-dashboard/pull/1078)
 * Support to show plugin type and other properties [#1111](https://github.com/apache/apisix-dashboard/pull/1111)
 * Support websocket for Route module. [#1079](https://github.com/apache/apisix-dashboard/pull/1079)
