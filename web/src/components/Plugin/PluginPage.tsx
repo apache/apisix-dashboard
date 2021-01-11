@@ -34,7 +34,7 @@ type Props = {
 
 const PanelSectionStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(5, 20%)',
+  gridTemplateColumns: 'repeat(4, 25%)',
   gridRowGap: 15,
   gridColumnGap: 10,
   width: 'calc(100% - 20px)',
