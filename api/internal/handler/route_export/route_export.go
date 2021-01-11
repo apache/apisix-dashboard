@@ -161,11 +161,11 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 
 				// analysis request-validation plugin
 				if key == "request-validation" {
-					for k, v := range value.(map[string]interface{}) {
-						if k == "header_schema" {
+					if valueMap, ok := value.(map[string]interface{}); ok {
+						if hsVal, ok := valueMap["header_schema"]; ok {
 							param.In = "header"
 							requestValidation := &entity.RequestValidation{}
-							reqBytes, _ := json.Marshal(&v)
+							reqBytes, _ := json.Marshal(&hsVal)
 							err := json.Unmarshal(reqBytes, requestValidation)
 							if err != nil {
 								log.Errorf("json marshal failed: %s", err)
@@ -183,9 +183,10 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 								paramsRefs = append(paramsRefs, &openapi3.ParameterRef{Value: param})
 							}
 						}
-						if k == "body_schema" {
+
+						if bsVal, ok := valueMap["body_schema"]; ok {
 							m := map[string]*openapi3.MediaType{}
-							reqBytes, _ := json.Marshal(&v)
+							reqBytes, _ := json.Marshal(&bsVal)
 							schema := &openapi3.Schema{}
 							err := json.Unmarshal(reqBytes, schema)
 							if err != nil {

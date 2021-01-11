@@ -67,25 +67,6 @@ func TestRoute_Export(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			Desc:         "hit the route just created - wildcard domain name",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello_",
-			Headers:      map[string]string{"Host": "test.bar.com"},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world\n",
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "hit the route just created",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello_",
-			Headers:      map[string]string{"Host": "foo.com"},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world\n",
-		},
-		{
 			Desc:         "export route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPost,
@@ -93,6 +74,80 @@ func TestRoute_Export(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"data\":{\"components\":{},\"info\":{\"title\":\"Routes Export\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{\"/hello_\":{\"get\":{\"operationId\":\"aaaaGet\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}},\"post\":{\"operationId\":\"aaaaPost\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}}}}}",
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	tests2 := []HttpTestCase{
+		{
+			Desc:         "hit route2 that not exist",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello2",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+		},
+		{
+			Desc:   "create route2",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r2",
+			Body: `{
+				"name": "aaaa2",
+				"labels": {
+					"build":"16",
+					"env":"production",
+					"version":"v2"
+				},
+				"plugins": {
+					"limit-count": {
+						"count": 2,
+						"time_window": 60,
+						"rejected_code": 503,
+						"key": "remote_addr"
+					}
+				},
+				"status": 1,
+				"uris": ["/hello2"],
+				"hosts": ["foo.com", "*.bar.com"],
+				"methods": ["GET", "POST"],
+				"upstream": {
+					"nodes": {
+						"172.16.238.20:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "export route2",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"data\":{\"components\":{},\"info\":{\"title\":\"Routes Export\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{\"/hello2\":{\"get\":{\"operationId\":\"aaaa2Get\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}},\"post\":{\"operationId\":\"aaaa2Post\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}}}}}",
+		},
+	}
+	for _, tc := range tests2 {
+		testCaseCheck(tc, t)
+	}
+
+	tests3 := []HttpTestCase{
+
+		{
+			Desc:         "export route route2",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r1,r2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"data\":{\"components\":{},\"info\":{\"title\":\"Routes Export\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{\"/hello2\":{\"get\":{\"operationId\":\"aaaa2Get\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}},\"post\":{\"operationId\":\"aaaa2Post\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}}},\"/hello_\":{\"get\":{\"operationId\":\"aaaa2Get\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}},\"post\":{\"operationId\":\"aaaa2Post\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}}}}}",
 		},
 		{
 			Desc:         "delete the route just created",
@@ -112,8 +167,26 @@ func TestRoute_Export(t *testing.T) {
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        sleepTime,
 		},
+		{
+			Desc:         "delete the route2 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route2 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello2",
+			Headers:      map[string]string{"Host": "bar.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
 	}
-	for _, tc := range tests {
+	for _, tc := range tests3 {
 		testCaseCheck(tc, t)
 	}
 }
