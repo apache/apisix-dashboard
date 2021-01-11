@@ -78,15 +78,18 @@ type ListInput struct {
 	Label string `auto_read:"label,query"`
 }
 
-func subsetOf(reqLabels, labels map[string]string) map[string]string {
+func subsetOf(reqLabels map[string]struct{}, labels map[string]string) map[string]string {
 	if len(reqLabels) == 0 {
 		return labels
 	}
 
 	var res = make(map[string]string)
 	for k, v := range labels {
-		l, exist := reqLabels[k]
-		if exist && ((l == "") || v == l) {
+		if _, exist := reqLabels[k]; exist {
+			res[k] = v
+		}
+
+		if _, exist := reqLabels[k+":"+v]; exist {
 			res[k] = v
 		}
 	}

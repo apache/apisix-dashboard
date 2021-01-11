@@ -66,12 +66,17 @@ func TestGenLabelMap(t *testing.T) {
 	expectedErr := errors.New("malformed label")
 	mp, err := GenLabelMap("l1")
 	assert.Nil(t, err)
-	assert.Equal(t, mp["l1"], "")
+	assert.Equal(t, mp["l1"], struct{}{})
 
 	mp, err = GenLabelMap("l1,l2:v2")
 	assert.Nil(t, err)
-	assert.Equal(t, mp["l1"], "")
-	assert.Equal(t, mp["l2"], "v2")
+	assert.Equal(t, mp["l1"], struct{}{})
+	assert.Equal(t, mp["l2:v2"], struct{}{})
+
+	mp, err = GenLabelMap("l1:v1,l1:v2")
+	assert.Nil(t, err)
+	assert.Equal(t, mp["l1:v1"], struct{}{})
+	assert.Equal(t, mp["l1:v2"], struct{}{})
 
 	mp, err = GenLabelMap(",")
 	assert.Equal(t, expectedErr, err)
@@ -83,20 +88,32 @@ func TestGenLabelMap(t *testing.T) {
 }
 
 func TestLabelContains(t *testing.T) {
-	mp1, _ := GenLabelMap("l1,l2:v2")
-	mp2 := map[string]string{
+	reqMap, _ := GenLabelMap("l1,l2:v2")
+	mp := map[string]string{
 		"l1": "v1",
 	}
-	assert.True(t, LabelContains(mp2, mp1))
+	assert.True(t, LabelContains(mp, reqMap))
 
-	mp3 := map[string]string{
+	mp = map[string]string{
 		"l1": "v1",
 		"l2": "v3",
 	}
-	assert.True(t, LabelContains(mp3, mp1))
+	assert.True(t, LabelContains(mp, reqMap))
 
-	mp4 := map[string]string{
+	mp = map[string]string{
 		"l2": "v3",
 	}
-	assert.False(t, LabelContains(mp4, mp1))
+	assert.False(t, LabelContains(mp, reqMap))
+
+	reqMap, _ = GenLabelMap("l1:v1,l1:v2")
+	mp = map[string]string{
+		"l1": "v1",
+	}
+	assert.True(t, LabelContains(mp, reqMap))
+
+	reqMap, _ = GenLabelMap("l1:v1,l1:v2")
+	mp = map[string]string{
+		"l1": "v2",
+	}
+	assert.True(t, LabelContains(mp, reqMap))
 }

@@ -21,6 +21,8 @@ import { orderBy } from 'lodash';
 
 import PluginDetail from './PluginDetail';
 import { fetchList } from './service';
+import { PLUGIN_ICON_LIST } from './data'
+import defaultPluginImg from '../../../public/static/default-plugin.png';
 
 type Props = {
   readonly?: boolean;
@@ -32,7 +34,7 @@ type Props = {
 
 const PanelSectionStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(5, 20%)',
+  gridTemplateColumns: 'repeat(4, 25%)',
   gridRowGap: 15,
   gridColumnGap: 10,
   width: 'calc(100% - 20px)',
@@ -70,7 +72,18 @@ const PluginPage: React.FC<Props> = ({
   }, []);
 
   const PluginList = () => (
-    <>
+    <><style>
+      {`
+      .ant-card-body .icon {
+          width: 5em;
+          height: 5em;
+          margin-right: 0;
+          overflow: hidden;
+          vertical-align: -0.15em;
+          fill: currentColor;
+        }`
+      }
+    </style>
       <Sider theme="light">
         <Anchor offsetTop={150}>
           {/* eslint-disable-next-line no-shadow */}
@@ -110,19 +123,28 @@ const PluginPage: React.FC<Props> = ({
                       Enable
                     </Button>,
                   ]}
-                  bodyStyle={{
-                    height: 151,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    textAlign: 'center',
-                  }}
                   title={[
-                    <div style={{ width: '100%', textAlign: 'center' }}>
-                      <span key={2}>{item.name}</span>
+                    <div style={{ width: '100%', textAlign: 'center' }} key={1}>
+                      <span key={2} data-cy-plugin-name={item.name}>
+                        {item.name}
+                      </span>
                     </div>,
                   ]}
-                  style={{ height: 258, width: 200 }}
-                />
+                  bodyStyle={{
+                    minHeight: 151,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                  style={{ width: 200 }}
+                >
+                  {Boolean(PLUGIN_ICON_LIST[item.name]) && PLUGIN_ICON_LIST[item.name]}
+                  {Boolean(!PLUGIN_ICON_LIST[item.name]) && <img
+                    alt="pluginImg"
+                    src={defaultPluginImg}
+                    style={{ width: 50, height: 50, opacity: 0.2 }}
+                  />}
+                </Card>
               ))}
             </PanelSection>
           );
@@ -140,6 +162,7 @@ const PluginPage: React.FC<Props> = ({
         visible={name !== NEVER_EXIST_PLUGIN_FLAG}
         schemaType={schemaType}
         initialData={initialData}
+        pluginList={pluginList}
         onClose={() => {
           setName(NEVER_EXIST_PLUGIN_FLAG);
         }}

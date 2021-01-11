@@ -19,6 +19,7 @@
 
 # Table of Contents
 
+- [2.3.0](#230)
 - [2.2.0](#220)
 - [2.1.1](#211)
 - [2.1.0](#210)
@@ -26,6 +27,29 @@
 - [1.5.0](#150)
 - [1.0.0](#100)
 
+# 2.3.0
+
+### Core
+
+* Support to use absolute path in conf.WebDir. [#1055](https://github.com/apache/apisix-dashboard/pull/1055)
+* Support to search route by label. [#1061](https://github.com/apache/apisix-dashboard/pull/1061)
+* Support server info preview. [#958](https://github.com/apache/apisix-dashboard/pull/958) [#949](https://github.com/apache/apisix-dashboard/pull/949)
+* Support custom port for Upstream module. [#1078](https://github.com/apache/apisix-dashboard/pull/1078)
+* Support to show plugin type and other properties [#1111](https://github.com/apache/apisix-dashboard/pull/1111)
+* Support websocket for Route module. [#1079](https://github.com/apache/apisix-dashboard/pull/1079)
+* Support Service module on the frontend. [#1089](https://github.com/apache/apisix-dashboard/pull/1089)
+* Support group for Route module. [#999](https://github.com/apache/apisix-dashboard/pull/999)
+* Support Global Plugin. [#1057](https://github.com/apache/apisix-dashboard/pull/1057) [#1106](https://github.com/apache/apisix-dashboard/pull/1106)
+* Support Version Manager. [#1157](https://github.com/apache/apisix-dashboard/pull/1157)
+* Use Cobra as the cli scafford. [#773](https://github.com/apache/apisix-dashboard/pull/773)
+* Remove Lua dependency. [#1083](https://github.com/apache/apisix-dashboard/pull/1083)
+* Improve E2E testcases for the backend. [#1012](https://github.com/apache/apisix-dashboard/pull/1012), [#1123](https://github.com/apache/apisix-dashboard/pull/1123)
+* Improve E2E testcases for the frontend. [#1074](https://github.com/apache/apisix-dashboard/pull/1074)
+* Improve online debug. [#979](https://github.com/apache/apisix-dashboard/pull/979)
+* Improve Route publish/offline. [#1081](https://github.com/apache/apisix-dashboard/pull/1081) [#991](https://github.com/apache/apisix-dashboard/pull/991)
+* Improve plugin module for the frontend. [#1047](https://github.com/apache/apisix-dashboard/pull/1047) [#978](https://github.com/apache/apisix-dashboard/pull/978)
+* Fix error occurred when enable or disable existing SSL [#1064](https://github.com/apache/apisix-dashboard/pull/1064)
+* Fix the problem that route created by Admin API (without ID) cannot be shown in Manager API. [#1063](https://github.com/apache/apisix-dashboard/pull/1063)
 
 # 2.2.0
 

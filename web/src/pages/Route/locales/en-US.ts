@@ -35,7 +35,7 @@ export default {
 
   'page.route.input.placeholder.parameterNameHttpHeader': 'Request header name, for example: HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': 'Parameter name, for example: id',
-  'page.route.input.placeholder.requestUrl': 'please input the request URL',
+  'page.route.input.placeholder.requestUrl': 'please input the valid request URL',
   'page.route.input.placeholder.paramKey': 'Param Key',
   'page.route.input.placeholder.paramValue': 'Param Value',
 

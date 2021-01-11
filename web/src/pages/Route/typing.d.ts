@@ -83,7 +83,7 @@ declare namespace RouteModule {
     remote_addrs: string[];
     vars: [string, Operator, string][];
     upstream: {
-      type: 'roundrobin' | 'chash';
+      type: 'roundrobin' | 'chash' | 'ewma';
       hash_on?: string;
       key?: string;
       nodes: {
@@ -134,16 +134,14 @@ declare namespace RouteModule {
     advancedMatchingRules: MatchingRule[];
     disabled?: boolean;
     isEdit?: boolean;
-    onChange?(data: {
-      action: 'redirectOptionChange' | 'advancedMatchingRulesChange' | 'labelsChange';
-      data: T;
-    }): void;
+    onChange?(data: { action: string; data: T }): void;
   };
 
   type Form1Data = {
     name: string;
     desc: string;
-    labels: string[];
+    custom_version_label: string;
+    custom_normal_labels: string[];
     priority: number;
     websocket: boolean;
     hosts: string[];
@@ -253,7 +251,7 @@ declare namespace RouteModule {
   // TODO： grpc and websocket
   type debugRequest = {
     url: string;
-    request_protocol: 'http' | 'https' | 'grpc' | 'websocket';
+    request_protocol: RequestProtocol | 'grpc';
     method: string;
     body_params?: any;
     header_params?: any;
@@ -272,6 +270,12 @@ declare namespace RouteModule {
   };
   type DebugViewProps = {
     form: FormInstance;
+  };
+  type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'json' | 'raw input';
+  type DebugDodyViewProps = {
+    form: FormInstance;
+    changeBodyParamsType: (type: DebugBodyType) => void;
+    codeMirrorRef: any;
   };
   type DebugDrawProps = {
     visible: boolean;

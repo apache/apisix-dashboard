@@ -142,15 +142,15 @@ func TestHandler_List(t *testing.T) {
 				PageNumber: 1,
 			},
 			giveData: []*entity.GlobalPlugins{
-				{ID: "global-rules-1"},
-				{ID: "global-rules-2"},
-				{ID: "global-rules-3"},
+				{BaseInfo: entity.BaseInfo{ID: "global-rules-1"}},
+				{BaseInfo: entity.BaseInfo{ID: "global-rules-2"}},
+				{BaseInfo: entity.BaseInfo{ID: "global-rules-3"}},
 			},
 			wantRet: &store.ListOutput{
 				Rows: []interface{}{
-					&entity.GlobalPlugins{ID: "global-rules-1"},
-					&entity.GlobalPlugins{ID: "global-rules-2"},
-					&entity.GlobalPlugins{ID: "global-rules-3"},
+					&entity.GlobalPlugins{BaseInfo: entity.BaseInfo{ID: "global-rules-1"}},
+					&entity.GlobalPlugins{BaseInfo: entity.BaseInfo{ID: "global-rules-2"}},
+					&entity.GlobalPlugins{BaseInfo: entity.BaseInfo{ID: "global-rules-3"}},
 				},
 				TotalSize: 3,
 			},
@@ -209,7 +209,7 @@ func TestHandler_List(t *testing.T) {
 func TestHandler_Set(t *testing.T) {
 	tests := []struct {
 		caseDesc   string
-		giveInput  *entity.GlobalPlugins
+		giveInput  *SetInput
 		giveCtx    context.Context
 		giveErr    error
 		wantErr    error
@@ -219,15 +219,17 @@ func TestHandler_Set(t *testing.T) {
 	}{
 		{
 			caseDesc: "normal",
-			giveInput: &entity.GlobalPlugins{
+			giveInput: &SetInput{
 				ID: "name",
-				Plugins: map[string]interface{}{
-					"jwt-auth": map[string]interface{}{},
+				GlobalPlugins: entity.GlobalPlugins{
+					Plugins: map[string]interface{}{
+						"jwt-auth": map[string]interface{}{},
+					},
 				},
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
 			wantInput: &entity.GlobalPlugins{
-				ID: "name",
+				BaseInfo: entity.BaseInfo{ID: "name"},
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{},
 				},
@@ -237,14 +239,14 @@ func TestHandler_Set(t *testing.T) {
 		},
 		{
 			caseDesc: "store create failed",
-			giveInput: &entity.GlobalPlugins{
-				ID:      "name",
-				Plugins: nil,
+			giveInput: &SetInput{
+				ID:            "name",
+				GlobalPlugins: entity.GlobalPlugins{},
 			},
 			giveErr: fmt.Errorf("create failed"),
 			wantInput: &entity.GlobalPlugins{
-				ID:      "name",
-				Plugins: map[string]interface{}(nil),
+				BaseInfo: entity.BaseInfo{ID: "name"},
+				Plugins:  map[string]interface{}(nil),
 			},
 			wantErr: fmt.Errorf("create failed"),
 			wantRet: &data.SpecCodeResponse{
@@ -258,10 +260,11 @@ func TestHandler_Set(t *testing.T) {
 		t.Run(tc.caseDesc, func(t *testing.T) {
 			methodCalled := true
 			mStore := &store.MockInterface{}
-			mStore.On("Create", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			mStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				methodCalled = true
 				assert.Equal(t, tc.giveCtx, args.Get(0))
 				assert.Equal(t, tc.wantInput, args.Get(1))
+				assert.True(t, args.Bool(2))
 			}).Return(tc.giveErr)
 
 			h := Handler{globalRuleStore: mStore}
