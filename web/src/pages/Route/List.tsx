@@ -14,20 +14,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Button, Popconfirm, notification, Tag, Space } from 'antd';
+import { Button, Popconfirm, notification, Tag, Space, Select } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, BugOutlined } from '@ant-design/icons';
 
 import { timestampToLocaleString } from '@/helpers';
+import { fetchList, remove, fetchLabelList, updateRouteStatus } from './service';
+import { DebugDrawView } from './components/DebugViews';
 
-import { fetchList, remove } from './service';
+const { OptGroup, Option } = Select;
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
+
+  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
+
+  useEffect(() => {
+    fetchLabelList().then(setLabelList);
+  }, []);
+  enum RouteStatus {
+    Offline = 0,
+    Publish,
+  }
+
+  const handleTableActionSuccessResponse = (msgTip: string) => {
+    notification.success({
+      message: msgTip,
+    });
+
+    ref.current?.reload();
+  };
+
+  const handlePublishOffline = (rid: string, status: RouteModule.RouteStatus) => {
+    updateRouteStatus(rid, status).then(() => {
+      const actionName = status
+        ? formatMessage({ id: 'page.route.publish' })
+        : formatMessage({ id: 'page.route.offline' });
+      handleTableActionSuccessResponse(
+        `${actionName} ${formatMessage({
+          id: 'menu.routes',
+        })} ${formatMessage({ id: 'component.status.success' })}`,
+      );
+    });
+  };
+
+  const [debugDrawVisible, setDebugDrawVisible] = useState(false);
 
   const columns: ProColumns<RouteModule.ResponseBody>[] = [
     {
@@ -65,6 +100,116 @@ const Page: React.FC = () => {
       hideInSearch: true,
     },
     {
+      title: formatMessage({ id: 'component.global.labels' }),
+      dataIndex: 'labels',
+      render: (_, record) => {
+        return Object.keys(record.labels || {})
+          .filter((item) => item !== 'API_VERSION')
+          .map((item) => (
+            <Tag key={Math.random().toString(36).slice(2)}>
+              {item}:{record.labels[item]}
+            </Tag>
+          ));
+      },
+      renderFormItem: (_, { type }) => {
+        if (type === 'form') {
+          return null;
+        }
+
+        return (
+          <Select
+            mode="tags"
+            style={{ width: '100%' }}
+            tagRender={(props) => {
+              const { value, closable, onClose } = props;
+              return (
+                <Tag closable={closable} onClose={onClose} style={{ marginRight: 3 }}>
+                  {value}
+                </Tag>
+              );
+            }}
+          >
+            {Object.keys(labelList)
+              .filter((item) => item !== 'API_VERSION')
+              .map((key) => {
+                return (
+                  <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
+                    {(labelList[key] || []).map((value: string) => (
+                      <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
+                        {' '}
+                        {value}{' '}
+                      </Option>
+                    ))}
+                  </OptGroup>
+                );
+              })}
+          </Select>
+        );
+      },
+    },
+    {
+      title: formatMessage({ id: 'component.global.version' }),
+      dataIndex: 'API_VERSION',
+      render: (_, record) => {
+        return Object.keys(record.labels || {})
+          .filter((item) => item === 'API_VERSION')
+          .map((item) => record.labels[item]);
+      },
+      renderFormItem: (_, { type }) => {
+        if (type === 'form') {
+          return null;
+        }
+
+        return (
+          <Select style={{ width: '100%' }} allowClear>
+            {Object.keys(labelList)
+              .filter((item) => item === 'API_VERSION')
+              .map((key) => {
+                return (
+                  <OptGroup label={key} key={Math.random().toString(36).slice(2)}>
+                    {(labelList[key] || []).map((value: string) => (
+                      <Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
+                        {' '}
+                        {value}{' '}
+                      </Option>
+                    ))}
+                  </OptGroup>
+                );
+              })}
+          </Select>
+        );
+      },
+    },
+    {
+      title: formatMessage({ id: 'page.route.status' }),
+      dataIndex: 'status',
+      render: (_, record) => (
+        <>
+          {record.status ? (
+            <Tag color="green">{formatMessage({ id: 'page.route.published' })}</Tag>
+          ) : (
+            <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
+          )}
+        </>
+      ),
+      renderFormItem: (_, { type }) => {
+        if (type === 'form') {
+          return null;
+        }
+
+        return (
+          <Select style={{ width: '100%' }} allowClear>
+            <option key={RouteStatus.Offline} value={RouteStatus.Offline}>
+              {formatMessage({ id: 'page.route.unpublished' })}
+            </option>
+            <option key={RouteStatus.Publish} value={RouteStatus.Publish}>
+              {formatMessage({ id: 'page.route.published' })}
+            </option>
+          </Select>
+        );
+      },
+    },
+    {
       title: formatMessage({ id: 'component.global.updateTime' }),
       dataIndex: 'update_time',
       hideInSearch: true,
@@ -77,25 +222,49 @@ const Page: React.FC = () => {
       render: (_, record) => (
         <>
           <Space align="baseline">
-            <Button
-              type="primary"
-              onClick={() => history.push(`/routes/${record.id}/edit`)}
-              style={{ marginRight: 10 }}
-            >
+            {!record.status ? (
+              <Button
+                type="primary"
+                onClick={() => {
+                  handlePublishOffline(record.id, RouteStatus.Publish);
+                }}
+              >
+                {formatMessage({ id: 'page.route.publish' })}
+              </Button>
+            ) : null}
+            {record.status ? (
+              <Popconfirm
+                title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
+                onConfirm={() => {
+                  handlePublishOffline(record.id, RouteStatus.Offline);
+                }}
+                okButtonProps={{
+                  danger: true,
+                }}
+                okText={formatMessage({ id: 'component.global.confirm' })}
+                cancelText={formatMessage({ id: 'component.global.cancel' })}
+              >
+                <Button type="primary" danger disabled={Boolean(!record.status)}>
+                  {formatMessage({ id: 'page.route.offline' })}
+                </Button>
+              </Popconfirm>
+            ) : null}
+            <Button type="primary" onClick={() => history.push(`/routes/${record.id}/edit`)}>
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
                 remove(record.id!).then(() => {
-                  notification.success({
-                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                  handleTableActionSuccessResponse(
+                    `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
                       id: 'menu.routes',
                     })} ${formatMessage({ id: 'component.status.success' })}`,
-                  });
-                  /* eslint-disable no-unused-expressions */
-                  ref.current?.reload();
+                  );
                 });
+              }}
+              okButtonProps={{
+                danger: true,
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
               cancelText={formatMessage({ id: 'component.global.cancel' })}
@@ -121,12 +290,26 @@ const Page: React.FC = () => {
         rowKey="id"
         columns={columns}
         request={fetchList}
+        search={{
+          searchText: formatMessage({ id: 'component.global.search' }),
+          resetText: formatMessage({ id: 'component.global.reset' }),
+        }}
         toolBarRender={() => [
           <Button type="primary" onClick={() => history.push(`/routes/create`)}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
+          <Button type="primary" onClick={() => setDebugDrawVisible(true)}>
+            <BugOutlined />
+            {formatMessage({ id: 'page.route.onlineDebug' })}
+          </Button>,
         ]}
+      />
+      <DebugDrawView
+        visible={debugDrawVisible}
+        onClose={() => {
+          setDebugDrawVisible(false);
+        }}
       />
     </PageHeaderWrapper>
   );

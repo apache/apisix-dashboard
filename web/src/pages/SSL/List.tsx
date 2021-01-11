@@ -106,6 +106,10 @@ const Page: React.FC = () => {
         columns={columns}
         actionRef={tableRef}
         request={fetchList}
+        search={{
+          searchText: formatMessage({ id: 'component.global.search' }),
+          resetText: formatMessage({ id: 'component.global.reset' }),
+        }}
         toolBarRender={() => [
           <Button type="primary" onClick={() => history.push(`/ssl/create`)}>
             <PlusOutlined />

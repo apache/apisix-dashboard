@@ -17,10 +17,13 @@
 package utils
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"net"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/sony/sonyflake"
 )
@@ -93,4 +96,68 @@ func InterfaceToString(val interface{}) string {
 	}
 	str := fmt.Sprintf("%v", val)
 	return str
+}
+
+// Note: json.Marshal and json.Unmarshal may cause the precision loss
+func ObjectClone(origin, copy interface{}) error {
+	byt, err := json.Marshal(origin)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(byt, copy)
+	return err
+}
+
+func GenLabelMap(label string) (map[string]struct{}, error) {
+	var err = errors.New("malformed label")
+	mp := make(map[string]struct{})
+
+	if label == "" {
+		return mp, nil
+	}
+
+	labels := strings.Split(label, ",")
+	for _, l := range labels {
+		kv := strings.Split(l, ":")
+		if len(kv) == 2 {
+			if kv[0] == "" || kv[1] == "" {
+				return nil, err
+			}
+
+			// Because the labels may contain the same key, like this: label=version:v1,version:v2
+			// we need to combine them as a map's key
+			mp[l] = struct{}{}
+		} else if len(kv) == 1 {
+			if kv[0] == "" {
+				return nil, err
+			}
+
+			mp[kv[0]] = struct{}{}
+		} else {
+			return nil, err
+		}
+	}
+
+	return mp, nil
+}
+
+func LabelContains(labels map[string]string, reqLabels map[string]struct{}) bool {
+	if len(reqLabels) == 0 {
+		return true
+	}
+
+	for k, v := range labels {
+		// first check the key
+		if _, exist := reqLabels[k]; exist {
+			return true
+		}
+
+		// second check the key:value
+		if _, exist := reqLabels[k+":"+v]; exist {
+			return true
+		}
+	}
+
+	return false
 }

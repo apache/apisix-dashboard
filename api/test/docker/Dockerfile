@@ -25,7 +25,7 @@ RUN mkdir -p /go/manager-api/conf \
     && mkdir -p /go/manager-api/build-tools \
     && go env -w GOPROXY=https://goproxy.io,direct \
     && export GOPROXY=https://goproxy.io \
-    && go build -o /go/manager-api/manager-api \
+    && go build -o /go/manager-api/manager-api ./cmd/manager \
     && mv /go/src/github.com/apisix/manager-api/entry.sh /go/manager-api/ \
     && mv /go/src/github.com/apisix/manager-api/build-tools/* /go/manager-api/build-tools/ \
     && mv /go/src/github.com/apisix/manager-api/conf/conf.yaml /go/manager-api/conf/conf.yaml \
@@ -50,7 +50,6 @@ RUN mkdir -p /go/manager-api \
    && echo "hosts: files dns" > /etc/nsswitch.conf \
    && rm -rf /var/cache/apk/*
 
-RUN apk add lua5.1
 
 WORKDIR /go/manager-api
 COPY --from=build-env /go/manager-api/ /go/manager-api/

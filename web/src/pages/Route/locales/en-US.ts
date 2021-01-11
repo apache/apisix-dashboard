@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 export default {
-  'page.route.button.returnList': 'Return Route List',
+  'page.route.button.returnList': 'Goto List',
+  'page.route.button.send': 'Send',
+  'page.route.onlineDebug': 'Online Debug',
 
   'page.route.parameterPosition': 'Parameter Position',
   'page.route.httpRequestHeader': 'HTTP Request Header',
@@ -29,9 +31,13 @@ export default {
   'page.route.regexMatch': 'Regex Match',
   'page.route.rule': 'Rule',
   'page.route.httpHeaderName': 'HTTP Request Header Name',
+  'page.route.service': 'Service',
 
   'page.route.input.placeholder.parameterNameHttpHeader': 'Request header name, for example: HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': 'Parameter name, for example: id',
+  'page.route.input.placeholder.requestUrl': 'please input the valid request URL',
+  'page.route.input.placeholder.paramKey': 'Param Key',
+  'page.route.input.placeholder.paramValue': 'Param Value',
 
   'page.route.form.itemRulesRequiredMessage.parameterName':
     'Only letters and Numbers are supported, and can only begin with letters',
@@ -55,6 +61,10 @@ export default {
   'page.route.input.placeholder.redirectCustom': 'For example: /foo/index.html',
   'page.route.select.option.redirect301': '301(Permanent Redirect)',
   'page.route.select.option.redirect302': '302(Temporary Redirect)',
+  'page.route.form.itemLabel.username': 'Username',
+  'page.route.form.itemLabel.password': 'Password',
+  'page.route.form.itemLabel.token': 'Token',
+  'page.route.form.itemLabel.apikey': 'Apikey',
 
   'page.route.form.itemExtraMessage.domain':
     'Domain Name or IP, support for generic Domain Name, for example: *.test.com',
@@ -75,6 +85,9 @@ export default {
   'page.route.status': 'Status',
   'page.route.groupName': 'GroupName',
   'page.route.offline': 'Offline',
+  'page.route.publish': 'Publish',
+  'page.route.published': 'Published',
+  'page.route.unpublished': 'UnPublished',
 
   'page.route.select.option.inputManually': 'Input Manually',
   'page.route.form.itemLabel.domainNameOrIp': 'Domain Name/IP',
@@ -103,4 +116,13 @@ export default {
   'page.route.domainName': 'Domain Name',
   'page.route.path': 'Path',
   'page.route.remoteAddrs': 'Remote Addrs',
+  'page.route.PanelSection.title.defineRequestParams': 'Define Request Parameters',
+  'page.route.PanelSection.title.responseResult': 'Response Result',
+  'page.route.debug.showResultAfterSendRequest': 'Show Result After Send Request',
+  'page.route.TabPane.queryParams': 'Query Params',
+  'page.route.TabPane.bodyParams': 'Body Params',
+  'page.route.TabPane.headerParams': 'Header Params',
+  'page.route.TabPane.authentication': 'Authentication',
+  'page.route.TabPane.response': 'Response',
+  'page.route.debugWithoutAuth': 'This request does not use any authorization.',
 };

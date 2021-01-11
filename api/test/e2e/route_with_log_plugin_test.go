@@ -17,47 +17,20 @@
 package e2e
 
 import (
-	"fmt"
-	"io/ioutil"
 	"net/http"
-	"os/exec"
-	"strings"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func readAPISIXErrorLog(t *testing.T) string {
-	bytes, err := ioutil.ReadFile("../docker/apisix_logs/error.log")
-	assert.Nil(t, err)
-	logContent := string(bytes)
-	return logContent
-}
-
-func cleanAPISIXErrorLog(t *testing.T) {
-	cmd := exec.Command("pwd")
-	pwdByte, err := cmd.CombinedOutput()
-	pwd := string(pwdByte)
-
-	pwd = strings.Replace(pwd, "\n", "", 1)
-	pwd = strings.Replace(pwd, "/e2e", "", 1)
-
-	cmd = exec.Command("sudo", "echo", " > ", pwd+"/docker/apisix_logs/error.log")
-	_, err = cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("cmd error:", err.Error())
-	}
-	assert.Nil(t, err)
-}
-
 func TestRoute_With_Log_Plugin(t *testing.T) {
 	// clean log
-	cleanAPISIXErrorLog(t)
+	CleanAPISIXErrorLog(t)
 
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "make sure the route is not created ",
+			Desc:         "make sure the route is not created ",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -65,10 +38,10 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 		},
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello_",
 				"plugins": {
@@ -97,7 +70,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "access route to trigger log",
+			Desc:         "access route to trigger log",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -108,7 +81,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// sleep for process log
@@ -116,18 +89,18 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 
 	// verify http logger by checking log
 	//todo: should use a fake upstream for confirming whether we got the log data.
-	logContent := readAPISIXErrorLog(t)
+	logContent := ReadAPISIXErrorLog(t)
 	assert.Contains(t, logContent, "Batch Processor[http logger] successfully processed the entries")
 
 	// clean log
-	cleanAPISIXErrorLog(t)
+	CleanAPISIXErrorLog(t)
 
 	tests = []HttpTestCase{
 		{
-			caseDesc: "create route with wrong https endpoint",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r2",
+			Desc:   "create route with wrong https endpoint",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r2",
 			Body: `{
 				"uri": "/hello",
 				"plugins": {
@@ -156,7 +129,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "access route to trigger log",
+			Desc:         "access route to trigger log",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -167,7 +140,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 
 	// sleep for process log
@@ -175,17 +148,17 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 
 	// verify http logger by checking log
 	//todo: should use a fake upstream for confirming whether we got the log data.
-	logContent = readAPISIXErrorLog(t)
+	logContent = ReadAPISIXErrorLog(t)
 	assert.Contains(t, logContent, "Batch Processor[http logger] failed to process entries: failed to connect to host[127.0.0.1] port[8888] connection refused")
 
 	// clean log
-	cleanAPISIXErrorLog(t)
+	CleanAPISIXErrorLog(t)
 
 	// todo: check disable http logger
 
 	tests = []HttpTestCase{
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -193,7 +166,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route has been deleted",
+			Desc:         "make sure the route has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -202,7 +175,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "delete route 2",
+			Desc:         "delete route 2",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r2",
@@ -210,7 +183,7 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "make sure the route 2 has been deleted",
+			Desc:         "make sure the route 2 has been deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -221,6 +194,6 @@ func TestRoute_With_Log_Plugin(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

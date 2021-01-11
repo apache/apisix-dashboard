@@ -17,7 +17,12 @@
 import { request } from 'umi';
 import { pickBy, identity } from 'lodash';
 
-import { transformStepData, transformRouteData, transformUpstreamNodes } from './transform';
+import {
+  transformStepData,
+  transformRouteData,
+  transformUpstreamNodes,
+  transformLabelList,
+} from './transform';
 
 export const create = (data: RouteModule.RequestData) =>
   request(`/routes`, {
@@ -35,12 +40,16 @@ export const fetchItem = (rid: number) =>
   request(`/routes/${rid}`).then((data) => transformRouteData(data.data));
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
+  const { labels = [], API_VERSION = [], status } = res;
+
   return request<Res<ResListData<RouteModule.ResponseBody>>>('/routes', {
     params: {
       name: res.name,
       uri: res.uri,
+      label: labels.concat(API_VERSION).join(','),
       page: current,
       page_size: pageSize,
+      status,
     },
   }).then(({ data }) => {
     return {
@@ -85,3 +94,27 @@ export const checkHostWithSSL = (hosts: string[]) =>
     method: 'POST',
     data: hosts,
   });
+
+export const fetchLabelList = () =>
+  request('/labels/route').then(
+    ({ data }) => transformLabelList(data.rows) as RouteModule.LabelList,
+  );
+
+export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) =>
+  request(`/routes/${rid}`, {
+    method: 'PATCH',
+    data: { status },
+  });
+
+export const debugRoute = (data: RouteModule.debugRequest) => {
+  return request('/debug-request-forwarding', {
+    method: 'post',
+    data,
+  });
+};
+
+export const fetchServiceList = () =>
+  request('/services').then(({ data }) => ({
+    data: data.rows,
+    total: data.total_size,
+  }));

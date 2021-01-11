@@ -20,6 +20,17 @@
 set -ex
 VERSION=$(cat ./VERSION)
 
+# test content in .githash
+if [[ -f ../.githash ]]; then
+    GITHASH=$(cat ../.githash)
+    if [[ ! $GITHASH =~ ^[a-z0-9]{7}$ ]]; then
+        echo "failed: verify .githash content failed"
+        exit 1
+    fi
+else
+    GITHASH=$(HASH="ref: HEAD"; while [[ $HASH == ref\:* ]]; do HASH="$(cat "../.git/$(echo $HASH | cut -d \  -f 2)")"; done; echo ${HASH:0:7})
+fi
+
 clean_up() {
     git checkout conf/conf.yaml
 }
@@ -40,7 +51,7 @@ clean_logfile() {
 trap clean_up EXIT
 
 export GO111MODULE=on
-go build -o ./manager-api -ldflags "-X main.Version=${VERSION}" .
+go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version=${VERSION} -X github.com/apisix/manager-api/cmd.GitHash=${GITHASH}" ./cmd/manager
 
 # default level: warn, path: logs/error.log
 
@@ -95,6 +106,46 @@ if [[ `grep -c "INFO" ./error.log` -eq '0' ]]; then
     exit 1
 fi
 
+# run on a different path
+workDir=$(pwd)
+rm -rf html
+mkdir html
+cd html
+echo "hi~" >> index.html
+APISIX_API_WORKDIR=$workDir $workDir/manager-api &
+sleep 5
+
+res=$(curl http://127.0.0.1:9000)
+pkill -f manager-api
+cd -
+rm -rf html
+
+if [[ $res != "hi~" ]]; then
+    echo "failed: manager-api cant run on a different path"
+    exit 1
+fi
+clean_up
+
+# run with -p flag out of the default directory
+workDir=$(pwd)
+distDir=/tmp/manager-api
+cp -r $workDir $distDir
+cd $distDir
+rm -fr bin && mkdir bin && mv ./manager-api ./bin/
+rm -rf html && mkdir html && echo "hi~" >> html/index.html
+cd bin && ./manager-api -p $distDir &
+sleep 5
+
+res=$(curl http://127.0.0.1:9000)
+pkill -f manager-api
+rm -fr $distDir
+
+if [[ $res != "hi~" ]]; then
+    echo "failed: manager-api can't run with -p flag out of the default directory"
+    exit 1
+fi
+cd $workDir
+clean_up
 
 # test start info
 
@@ -111,6 +162,11 @@ if [[ `grep -c "The manager-api is running successfully\!" ${STDOUT}` -ne '1' ]]
 fi
 
 if [[ `grep -c "${VERSION}" ${STDOUT}` -ne '1' ]]; then
+    echo "failed: the manager server didn't show started info"
+    exit 1
+fi
+
+if [[ `grep -c "${GITHASH}" ${STDOUT}` -ne '1' ]]; then
     echo "failed: the manager server didn't show started info"
     exit 1
 fi
@@ -136,7 +192,7 @@ sleep 6
 
 cat ${logfile}
 
-if [[ `grep -c "api/main.go:" ${logfile}` -ne '1' ]]; then
+if [[ `grep -c "cmd/managerapi.go" ${logfile}` -ne '1' ]]; then
     echo "failed: failed to write the correct caller"
     exit 1
 fi
@@ -196,7 +252,7 @@ if [ -z "${token}" ]; then
 fi
 
 # more validation to make sure it's ok to access etcd
-resp=$(curl -ig http://127.0.0.1:9000/apisix/admin/consumers -i -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}')
+resp=$(curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/consumers -i -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}')
 respCode=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
 respMessage=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "message" | sed 's/:/\n/g' | sed '1d')
 if [ "$respCode" != "0" ] || [ $respMessage != "\"\"" ]; then

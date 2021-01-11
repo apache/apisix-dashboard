@@ -43,7 +43,8 @@ export const FORM_ITEM_WITHOUT_LABEL = {
 export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   name: '',
   desc: '',
-  status: false,
+  labels: [],
+  status: 1,
   priority: 0,
   websocket: false,
   hosts: [''],
@@ -53,6 +54,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   redirectURI: '',
   ret_code: 302,
   methods: HTTP_METHOD_OPTION_LIST,
+  service_id: '',
 };
 
 export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
@@ -83,3 +85,36 @@ export const HASH_KEY_LIST = [
 ];
 
 export const HASH_ON_LIST = ['vars', 'header', 'cookie', 'consumer'];
+
+export const AUTH_LIST = ['basic-auth', 'jwt-auth', 'key-auth'];
+
+export const PROTOCOL_SUPPORTED: RouteModule.debugRequest['request_protocol'][] = ['http', 'https'];
+
+export const DEFAULT_DEBUG_PARAM_FORM_DATA = {
+  params: [
+    {
+      check: false,
+      key: '',
+      value: '',
+    },
+  ],
+  type: 'json',
+};
+
+export const DEFAULT_DEBUG_AUTH_FORM_DATA = {
+  authType: 'none',
+};
+
+export const DEBUG_BODY_TYPE_SUPPORTED: RouteModule.DebugBodyType[] = [
+  'none',
+  'x-www-form-urlencoded',
+  'json',
+  'raw input',
+];
+
+// Note: codemirror mode: apl for text; javascript for json(need to format); xml for xml;
+export const DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED = [
+  { name: 'Json', mode: 'javascript' },
+  { name: 'Text', mode: 'apl' },
+  { name: 'XML', mode: 'xml' },
+];

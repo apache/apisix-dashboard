@@ -20,6 +20,7 @@
 # Apache APISIX Dashboard (Experimental)
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/apisix-dashboard/blob/master/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/apache/apisix-dashboard)](https://goreportcard.com/report/github.com/apache/apisix-dashboard)
 
 <p align="center">
   <a href="https://apisix.apache.org/">Website</a> •
@@ -27,7 +28,10 @@
   <a href="https://twitter.com/apacheapisix">Twitter</a>
 </p>
 
-The latest version is 2.1.1 and should be used with APISIX 2.1. It is not recommended to use with other APISIX versions.
+- The master version should be used with Apache APISIX master version.
+
+- The latest released version is 2.2 and should be used with Apache APISIX 2.1. It is not recommended to use with other Apache APISIX versions.
+
 
 ## What's Apache APISIX Dashboard
 

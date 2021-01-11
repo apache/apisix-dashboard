@@ -33,7 +33,7 @@ export const fetchItem = (username: string) =>
 
 export const create = (data: ConsumerModule.Entity) =>
   request('/consumers', {
-    method: 'POST',
+    method: 'PUT',
     data,
   });
 
@@ -44,3 +44,9 @@ export const update = (username: string, data: ConsumerModule.Entity) =>
   });
 
 export const remove = (username: string) => request(`/consumers/${username}`, { method: 'DELETE' });
+
+export const fetchPlugList = () => {
+  return request<Res<PluginComponent.Meta[]>>('/plugins?all=true').then((data) => {
+    return data.data;
+  });
+};

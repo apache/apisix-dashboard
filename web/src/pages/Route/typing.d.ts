@@ -35,7 +35,7 @@ declare namespace RouteModule {
     desc: string;
     uris: string[];
     hosts: string[];
-    status: boolean;
+    status: number;
   };
 
   type Step3Data = {
@@ -70,8 +70,9 @@ declare namespace RouteModule {
   // Request Body or Response Data for API
   type Body = {
     id?: number;
-    status: boolean;
+    status: number;
     name: string;
+    labels: Record<string, string>;
     desc: string;
     priority?: number;
     methods: HttpMethod[];
@@ -82,7 +83,7 @@ declare namespace RouteModule {
     remote_addrs: string[];
     vars: [string, Operator, string][];
     upstream: {
-      type: 'roundrobin' | 'chash';
+      type: 'roundrobin' | 'chash' | 'ewma';
       hash_on?: string;
       key?: string;
       nodes: {
@@ -105,48 +106,8 @@ declare namespace RouteModule {
     };
     script: Record<string, any>;
     url?: string;
-  };
-
-  type RouteParamSchema = {
-    type: string | integer | boolean | object | array;
-  };
-
-  type RouteParam = {
-    name: string;
-    in: 'query' | 'header' | 'path' | 'cookie';
-    description: string;
-    required: boolean;
-    style?: 'form' | 'simple';
-    explode?: boolean;
-    schema?: RouteParamSchema;
-  };
-
-  type PathSchema = {
-    tags: string;
-    summary: string;
-    description: string;
-    operationId: string;
-    requestBody?: object;
-    parameters?: RouteParam[];
-    responses: ResponseScheme;
-  };
-
-  type ResponseSchema = {
-    [code: string]: {
-      description: string;
-      content: ResponseItemContent;
-    };
-  };
-
-  type ResponseItemContent = {
-    'application/xml'?: {};
-    'application/json'?: {};
-  };
-
-  type TagSchema = {
-    name: string;
-    description: string;
-    externalDocs?: object;
+    enable_websocket?: boolean;
+    service_id?: string;
   };
 
   // step1
@@ -158,20 +119,29 @@ declare namespace RouteModule {
     key: string;
   }
 
+  type ResponseLabelList = Record<string, string>[];
+
+  type LabelList = Record<string, string[]>;
+
+  type LabelTableProps = {
+    labelKey: string;
+    labelValue: string;
+    key: string;
+  };
+
   type Step1PassProps = {
     form: FormInstance;
     advancedMatchingRules: MatchingRule[];
     disabled?: boolean;
     isEdit?: boolean;
-    onChange?(data: {
-      action: 'redirectOptionChange' | 'advancedMatchingRulesChange';
-      data: T;
-    }): void;
+    onChange?(data: { action: string; data: T }): void;
   };
 
   type Form1Data = {
     name: string;
     desc: string;
+    custom_version_label: string;
+    custom_normal_labels: string[];
     priority: number;
     websocket: boolean;
     hosts: string[];
@@ -181,7 +151,9 @@ declare namespace RouteModule {
     redirectOption: 'forceHttps' | 'customRedirect' | 'disabled';
     redirectURI?: string;
     ret_code?: number;
-    status: boolean;
+    status: number;
+    enable_websocket?: boolean;
+    service_id: string;
   };
 
   type AdvancedMatchingRules = {
@@ -202,7 +174,7 @@ declare namespace RouteModule {
   };
 
   type Form2Data = {
-    type: 'roundrobin' | 'chash';
+    type: 'roundrobin' | 'chash' | 'ewma';
     hash_on?: string;
     key?: string;
     upstreamPath?: string;
@@ -253,6 +225,7 @@ declare namespace RouteModule {
     remote_addrs: string[];
     script: any;
     desc?: string;
+    labels: Record<string, string>;
     upstream: {
       checks: UpstreamModule.HealthCheck;
       create_time: number;
@@ -270,5 +243,42 @@ declare namespace RouteModule {
     hosts?: string[];
     create_time: number;
     update_time: number;
+    status: number;
+  };
+
+  type RouteStatus = 0 | 1;
+
+  // TODO： grpc and websocket
+  type debugRequest = {
+    url: string;
+    request_protocol: RequestProtocol | 'grpc';
+    method: string;
+    body_params?: any;
+    header_params?: any;
+  };
+  type authData = {
+    authType: string;
+    username?: string;
+    password?: string;
+    Authorization?: string;
+    apikey?: string;
+  };
+  type debugRequestParamsFormData = {
+    check: boolean;
+    key: string;
+    value: string;
+  };
+  type DebugViewProps = {
+    form: FormInstance;
+  };
+  type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'json' | 'raw input';
+  type DebugDodyViewProps = {
+    form: FormInstance;
+    changeBodyParamsType: (type: DebugBodyType) => void;
+    codeMirrorRef: any;
+  };
+  type DebugDrawProps = {
+    visible: boolean;
+    onClose(): void;
   };
 }

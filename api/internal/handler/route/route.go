@@ -19,25 +19,26 @@ package route
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"os/exec"
+	"os"
+	"path/filepath"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
+	"github.com/yuin/gopher-lua"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
-
-	"github.com/apisix/manager-api/conf"
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
-	"github.com/apisix/manager-api/log"
 )
 
 type Handler struct {
@@ -71,7 +72,39 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.DELETE("/apisix/admin/routes/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
+	r.PATCH("/apisix/admin/routes/:id", consts.ErrorWrapper(Patch))
+	r.PATCH("/apisix/admin/routes/:id/*path", consts.ErrorWrapper(Patch))
+
 	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))
+}
+
+func Patch(c *gin.Context) (interface{}, error) {
+	reqBody, _ := c.GetRawData()
+	ID := c.Param("id")
+	subPath := c.Param("path")
+
+	routeStore := store.GetStore(store.HubKeyRoute)
+	stored, err := routeStore.Get(ID)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	res, err := utils.MergePatch(stored, subPath, reqBody)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	var route entity.Route
+	err = json.Unmarshal(res, &route)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	if err := routeStore.Update(c, &route, false); err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	return nil, nil
 }
 
 type GetInput struct {
@@ -104,6 +137,11 @@ type GetInput struct {
 // - name: uri
 //   in: query
 //   description: uri of route
+//   required: false
+//   type: string
+// - name: label
+//   in: query
+//   description: label of route
 //   required: false
 //   type: string
 // responses:
@@ -141,8 +179,10 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 }
 
 type ListInput struct {
-	Name string `auto_read:"name,query"`
-	URI  string `auto_read:"uri,query"`
+	Name   string `auto_read:"name,query"`
+	URI    string `auto_read:"uri,query"`
+	Label  string `auto_read:"label,query"`
+	Status string `auto_read:"status,query"`
 	store.Pagination
 }
 
@@ -161,21 +201,30 @@ func uriContains(obj *entity.Route, uri string) bool {
 
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
+	labelMap, err := utils.GenLabelMap(input.Label)
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("%s: \"%s\"", err.Error(), input.Label)
+	}
 
 	ret, err := h.routeStore.List(store.ListInput{
 		Predicate: func(obj interface{}) bool {
-			if input.Name != "" && input.URI != "" {
-				if strings.Contains(obj.(*entity.Route).Name, input.Name) {
-					return uriContains(obj.(*entity.Route), input.URI)
-				}
+			if input.Name != "" && !strings.Contains(obj.(*entity.Route).Name, input.Name) {
 				return false
 			}
-			if input.Name != "" {
-				return strings.Contains(obj.(*entity.Route).Name, input.Name)
+
+			if input.URI != "" && !uriContains(obj.(*entity.Route), input.URI) {
+				return false
 			}
-			if input.URI != "" {
-				return uriContains(obj.(*entity.Route), input.URI)
+
+			if input.Label != "" && !utils.LabelContains(obj.(*entity.Route).Labels, labelMap) {
+				return false
 			}
+
+			if input.Status != "" && strconv.Itoa(int(obj.(*entity.Route).Status)) != input.Status {
+				return false
+			}
+
 			return true
 		},
 		Format: func(obj interface{}) interface{} {
@@ -213,21 +262,36 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	cmd := exec.Command("sh", "-c",
-		"cd "+conf.WorkDir+"/dag-to-lua && lua cli.lua "+
-			"'"+string(scriptString)+"'")
-
-	stdout, _ := cmd.StdoutPipe()
-	defer stdout.Close()
-	if err := cmd.Start(); err != nil {
+	workDir, err := filepath.Abs(conf.WorkDir)
+	if err != nil {
+		return "", err
+	}
+	libDir := filepath.Join(workDir, "dag-to-lua/")
+	if err := os.Chdir(libDir); err != nil {
+		log.Errorf("Chdir to libDir failed: %s", err)
 		return "", err
 	}
 
-	result, _ := ioutil.ReadAll(stdout)
-	resData := string(result)
+	defer func() {
+		if err := os.Chdir(workDir); err != nil {
+			log.Errorf("Chdir to workDir failed: %s", err)
+		}
+	}()
 
-	return resData, nil
+	L := lua.NewState()
+	defer L.Close()
+
+	if err := L.DoString(`
+	        local dag_to_lua = require 'dag-to-lua'
+		local conf = [==[` + string(scriptString) + `]==]
+	        code = dag_to_lua.generate(conf)
+        `); err != nil {
+		return "", err
+	}
+
+	code := L.GetGlobal("code")
+
+	return code.String(), nil
 }
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
@@ -289,13 +353,15 @@ type UpdateInput struct {
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
-	if input.ID != "" {
-		input.Route.ID = input.ID
+
+	// check if ID in body is equal ID in path
+	if err := handler.IDCompare(input.ID, input.Route.ID); err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
-	if input.Route.Host != "" && len(input.Route.Hosts) > 0 {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			fmt.Errorf("only one of host or hosts is allowed")
+	// if has id in path, use it
+	if input.ID != "" {
+		input.Route.ID = input.ID
 	}
 
 	//check depend

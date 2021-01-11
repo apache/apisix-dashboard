@@ -24,10 +24,10 @@ import (
 func TestRoute_with_vars(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "add route with vars (args)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "add route with vars (args)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"vars": [
@@ -47,7 +47,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with right args",
+			Desc:         "hit the route with right args",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         `/hello`,
@@ -57,7 +57,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with wrong args",
+			Desc:         "hit the route with wrong args",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         `/hello`,
@@ -67,7 +67,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with no args",
+			Desc:         "hit the route with no args",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         `/hello`,
@@ -76,10 +76,10 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc: "update route with vars (header)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route with vars (header)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"vars": [
@@ -99,7 +99,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with right header",
+			Desc:         "hit the route with right header",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"k": "header"},
@@ -109,7 +109,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with wrong header",
+			Desc:         "hit the route with wrong header",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"k": "jack"},
@@ -119,7 +119,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with no header",
+			Desc:         "hit the route with no header",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         `/hello`,
@@ -128,10 +128,10 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc: "update route with vars (cookie)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "update route with vars (cookie)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"vars": [
@@ -151,7 +151,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with right Cookie",
+			Desc:         "hit the route with right Cookie",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Cookie": "_octo=GH1.1.572248189.1598928545; _device_id=2c1a1a52074e66a3a008e4b73c690500; logged_in=yes;"},
@@ -161,7 +161,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with wrong Cookie",
+			Desc:         "hit the route with wrong Cookie",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Cookie": "jack"},
@@ -171,7 +171,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with no Cookie",
+			Desc:         "hit the route with no Cookie",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         `/hello`,
@@ -180,7 +180,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -190,10 +190,10 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc: "add route with multiple vars (args, cookie and header)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "add route with multiple vars (args, cookie and header)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"vars": [
@@ -215,7 +215,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with right parameters",
+			Desc:         "hit the route with right parameters",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"k": "header", "Cookie": "_octo=GH1.1.572248189.1598928545; _device_id=2c1a1a52074e66a3a008e4b73c690500; logged_in=yes;"},
@@ -226,7 +226,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with wrong arg",
+			Desc:         "hit the route with wrong arg",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"k": "header", "Cookie": "_octo=GH1.1.572248189.1598928545; _device_id=2c1a1a52074e66a3a008e4b73c690500; logged_in=yes;"},
@@ -236,7 +236,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with wrong header",
+			Desc:         "hit the route with wrong header",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"k": "test", "Cookie": "_octo=GH1.1.572248189.1598928545; _device_id=2c1a1a52074e66a3a008e4b73c690500; logged_in=yes;"},
@@ -247,7 +247,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "hit the route with wrong cookie",
+			Desc:         "hit the route with wrong cookie",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"k": "header", "Cookie": "_octo=GH1.1.572248189.1598928545; logged_in=yes;"},
@@ -258,7 +258,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -268,10 +268,10 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc: "add route with vars (args is digital)",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "add route with vars (args is digital)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uri": "/hello",
 					"vars": [
@@ -291,7 +291,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "verify route",
+			Desc:         "verify route",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         `/hello`,
@@ -301,7 +301,7 @@ func TestRoute_with_vars(t *testing.T) {
 		},
 
 		{
-			caseDesc:     "delete the route with vars (args is digital)",
+			Desc:         "delete the route with vars (args is digital)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -312,6 +312,6 @@ func TestRoute_with_vars(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }

@@ -15,16 +15,18 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Anchor, Layout, Switch, Card, Tooltip, Button, notification, Avatar } from 'antd';
-import { SettingFilled } from '@ant-design/icons';
+import { Anchor, Layout, Card, Button } from 'antd';
 import { PanelSection } from '@api7-dashboard/ui';
-import { validate } from 'json-schema';
+import { orderBy } from 'lodash';
 
-import { fetchSchema, getList } from './service';
-import CodeMirrorDrawer from './CodeMirrorDrawer';
+import PluginDetail from './PluginDetail';
+import { fetchList } from './service';
+import { PLUGIN_ICON_LIST } from './data'
+import defaultPluginImg from '../../../public/static/default-plugin.png';
 
 type Props = {
   readonly?: boolean;
+  type?: 'global' | 'scoped';
   initialData?: PluginComponent.Data;
   schemaType?: PluginComponent.Schema;
   onChange?: (data: PluginComponent.Data) => void;
@@ -32,7 +34,7 @@ type Props = {
 
 const PanelSectionStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(3, 33.333333%)',
+  gridTemplateColumns: 'repeat(4, 25%)',
   gridRowGap: 15,
   gridColumnGap: 10,
   width: 'calc(100% - 20px)',
@@ -46,149 +48,145 @@ const NEVER_EXIST_PLUGIN_FLAG = 'NEVER_EXIST_PLUGIN_FLAG';
 const PluginPage: React.FC<Props> = ({
   readonly = false,
   initialData = {},
-  schemaType = '',
-  onChange = () => {},
+  schemaType = 'route',
+  type = 'scoped',
+  onChange = () => { },
 }) => {
-  const [pluginList, setPlugin] = useState<PluginComponent.Meta[][]>([]);
+  const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
+  const [typeList, setTypeList] = useState<string[]>([]);
 
+  const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join('');
   useEffect(() => {
-    getList().then(setPlugin);
+    fetchList().then((data) => {
+      setPluginList(data);
+
+      const categoryList: string[] = [];
+      data.forEach((item) => {
+        if (!categoryList.includes(firstUpperCase(item.type))) {
+          categoryList.push(firstUpperCase(item.type));
+        }
+      });
+      setTypeList(categoryList.sort());
+    });
   }, []);
 
-  const validateData = (pluginName: string, value: PluginComponent.Data) => {
-    fetchSchema(pluginName, schemaType).then((schema) => {
-      // NOTE: The frontend will inject the disable property into schema just like the manager-api does
-      if (!schema.properties) {
-        // eslint-disable-next-line
-        schema.properties = {}
+  const PluginList = () => (
+    <><style>
+      {`
+      .ant-card-body .icon {
+          width: 5em;
+          height: 5em;
+          margin-right: 0;
+          overflow: hidden;
+          vertical-align: -0.15em;
+          fill: currentColor;
+        }`
       }
-      // eslint-disable-next-line
-      ;(schema.properties as any).disable = {
-        type: "boolean"
-      }
-
-      const { valid, errors } = validate(value, schema);
-      if (valid) {
-        setName(NEVER_EXIST_PLUGIN_FLAG);
-        onChange({ ...initialData, [pluginName]: value });
-        return;
-      }
-      errors?.forEach((item) => {
-        notification.error({
-          message: 'Invalid plugin data',
-          description: item.message,
-        });
-      });
-      setName(pluginName);
-    });
-  };
-
-  return (
-    <>
-      <style>{`
-        .ant-avatar > img {
-          object-fit: contain;
-        }
-        .ant-avatar {
-          background-color: transparent;
-        }
-        .ant-avatar.ant-avatar-icon {
-          font-size: 32px;
-        }
-      `}</style>
-      <Layout>
-        <Sider theme="light">
-          <Anchor offsetTop={150}>
-            {pluginList.map((plugins) => {
-              const { category } = plugins[0];
-              return (
-                <Anchor.Link
-                  href={`#plugin-category-${category}`}
-                  title={category}
-                  key={category}
-                />
-              );
-            })}
-          </Anchor>
-        </Sider>
-        <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
-          {pluginList.map((plugins) => {
-            const { category } = plugins[0];
-            return (
-              <PanelSection
-                title={category}
-                key={category}
-                style={PanelSectionStyle}
-                id={`plugin-category-${category}`}
-              >
-                {plugins.map((item) => (
-                  <Card
-                    key={item.name}
-                    title={[
-                      item.avatar && (
-                        <Avatar
-                          key={1}
-                          icon={item.avatar}
-                          className="plugin-avatar"
-                          style={{
-                            marginRight: 5,
-                          }}
-                        />
-                      ),
-                      <span key={2}>{item.name}</span>,
-                    ]}
-                    style={{ height: 66 }}
-                    extra={[
-                      <Tooltip title="Setting" key={`plugin-card-${item.name}-extra-tooltip-2`}>
-                        <Button
-                          shape="circle"
-                          icon={<SettingFilled />}
-                          style={{ marginRight: 10, marginLeft: 10 }}
-                          size="middle"
-                          onClick={() => {
-                            setName(item.name);
-                          }}
-                        />
-                      </Tooltip>,
-                      <Switch
-                        defaultChecked={initialData[item.name] && !initialData[item.name].disable}
-                        disabled={readonly}
-                        onChange={(isChecked) => {
-                          if (isChecked) {
-                            validateData(item.name, {
-                              ...initialData[item.name],
-                              disable: false
-                            });
-                          } else {
-                            onChange({
-                              ...initialData,
-                              [item.name]: { ...initialData[item.name], disable: true },
-                            });
-                          }
-                        }}
-                        key={Math.random().toString(36).substring(7)}
-                      />,
-                    ]}
-                  />
-                ))}
-              </PanelSection>
-            );
+    </style>
+      <Sider theme="light">
+        <Anchor offsetTop={150}>
+          {/* eslint-disable-next-line no-shadow */}
+          {typeList.map((type) => {
+            return <Anchor.Link href={`#plugin-category-${type}`} title={type} key={type} />;
           })}
-        </Content>
-      </Layout>
-      <CodeMirrorDrawer
+        </Anchor>
+      </Sider>
+      <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
+        {/* eslint-disable-next-line no-shadow */}
+        {typeList.map((type) => {
+          return (
+            <PanelSection
+              title={type}
+              key={type}
+              style={PanelSectionStyle}
+              id={`plugin-category-${type}`}
+            >
+              {orderBy(
+                pluginList.filter((item) => item.type === type.toLowerCase()),
+                'name',
+                'asc',
+              ).map((item) => (
+                <Card
+                  key={item.name}
+                  actions={[
+                    <Button
+                      type={
+                        initialData[item.name] && !initialData[item.name].disable
+                          ? 'primary'
+                          : 'default'
+                      }
+                      onClick={() => {
+                        setName(item.name);
+                      }}
+                    >
+                      Enable
+                    </Button>,
+                  ]}
+                  title={[
+                    <div style={{ width: '100%', textAlign: 'center' }} key={1}>
+                      <span key={2} data-cy-plugin-name={item.name}>
+                        {item.name}
+                      </span>
+                    </div>,
+                  ]}
+                  bodyStyle={{
+                    minHeight: 151,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                  style={{ width: 200 }}
+                >
+                  {Boolean(PLUGIN_ICON_LIST[item.name]) && PLUGIN_ICON_LIST[item.name]}
+                  {Boolean(!PLUGIN_ICON_LIST[item.name]) && <img
+                    alt="pluginImg"
+                    src={defaultPluginImg}
+                    style={{ width: 50, height: 50, opacity: 0.2 }}
+                  />}
+                </Card>
+              ))}
+            </PanelSection>
+          );
+        })}
+      </Content>
+    </>
+  );
+
+  const Plugin = () => (
+    <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
+      <PluginDetail
         name={name}
-        visible={name !== NEVER_EXIST_PLUGIN_FLAG}
-        data={initialData[name]}
         readonly={readonly}
+        type={type}
+        visible={name !== NEVER_EXIST_PLUGIN_FLAG}
+        schemaType={schemaType}
+        initialData={initialData}
+        pluginList={pluginList}
         onClose={() => {
           setName(NEVER_EXIST_PLUGIN_FLAG);
         }}
-        onSubmit={(value) => {
-          validateData(name, value);
+        onChange={({ codemirrorData, formData }) => {
+          onChange({
+            ...initialData,
+            [name]: { ...codemirrorData, disable: !formData.disable },
+          });
+          setName(NEVER_EXIST_PLUGIN_FLAG);
         }}
       />
+    </Content>
+  );
+  return (
+    <>
+      <style>{`
+        .ant-avatar {
+          background-color: transparent;
+        }
+      `}</style>
+      <Layout>
+        <PluginList />
+        <Plugin />
+      </Layout>
     </>
   );
 };

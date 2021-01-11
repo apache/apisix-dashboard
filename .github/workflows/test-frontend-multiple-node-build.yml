@@ -28,14 +28,14 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2.1.3
+        uses: actions/setup-node@v2.1.4
         with:
           node-version: ${{ matrix.node-version }}
 
       # Install dependencies
       - name: Install dependencies
         working-directory: web
-        run: yarn
+        run: CYPRESS_INSTALL_BINARY=0 yarn
 
       - name: Lint
         working-directory: web

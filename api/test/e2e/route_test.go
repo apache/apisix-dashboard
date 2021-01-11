@@ -24,10 +24,10 @@ import (
 func TestRoute_Invalid_Host(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "invalid host",
-			Object:   ManagerApiExpect(t),
-			Path:     "/apisix/admin/routes/r1",
-			Method:   http.MethodPut,
+			Desc:   "invalid host",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
 			Body: `{
 				"uri": "/hello_",
 				"host": "$%$foo.com",
@@ -42,10 +42,10 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc: "invalid hosts",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "invalid hosts",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello_",
 				"hosts": ["$%$foo.com", "*.bar.com"],
@@ -60,10 +60,10 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc: "create route with host and hosts together at the same time",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route with host and hosts together at the same time",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello_",
 				"host": "github.com",
@@ -79,7 +79,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:     "hit route not created",
+			Desc:         "hit route not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -88,7 +88,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 		{
-			caseDesc:     "hit route not created",
+			Desc:         "hit route not created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -99,14 +99,14 @@ func TestRoute_Invalid_Host(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_Create_With_Hosts(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc:     "hit route that not exist",
+			Desc:         "hit route that not exist",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -115,10 +115,10 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 		{
-			caseDesc: "create route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello_",
 				"hosts": ["foo.com", "*.bar.com"],
@@ -133,10 +133,10 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc: "create route with int uri",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:   "create route with int uri",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": 123456
 			}`,
@@ -144,7 +144,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			ExpectStatus: http.StatusBadRequest,
 		},
 		{
-			caseDesc:     "hit the route just created - wildcard domain name",
+			Desc:         "hit the route just created - wildcard domain name",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -154,7 +154,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "hit the route just created",
+			Desc:         "hit the route just created",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
@@ -163,7 +163,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			ExpectBody:   "hello world\n",
 		},
 		{
-			caseDesc:     "hit the route not exists",
+			Desc:         "hit the route not exists",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello_111",
@@ -171,22 +171,79 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
+		{
+			Desc:         "delete the route just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			Headers:      map[string]string{"Host": "bar.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
 	}
 }
 
 func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			caseDesc: "update route",
-			Object:   ManagerApiExpect(t),
-			Method:   http.MethodPut,
-			Path:     "/apisix/admin/routes/r1",
+			Desc:         "hit route that not exist",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+		},
+		{
+			Desc:   "create route with host foo.com",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-				"uri": "/hello1",
+				"uri": "/hello",
+				"methods": ["GET"],
+				"hosts": ["foo.com"],
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route just create",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Host": "foo.com"},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:   "update route with host bar.com",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
 				"hosts": ["bar.com"],
 				"upstream": {
 					"nodes": {
@@ -199,35 +256,25 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "hit the route just updated",
+			Desc:         "hit the route with host foo.com",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello_",
+			Path:         "/hello",
 			Headers:      map[string]string{"Host": "foo.com"},
 			ExpectStatus: http.StatusNotFound,
-			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "hit the route just updated",
+			Desc:         "hit the route just updated",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello1",
+			Path:         "/hello",
 			Headers:      map[string]string{"Host": "bar.com"},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello1 world\n",
+			ExpectBody:   "hello world\n",
 		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc)
-	}
-}
-
-func TestRoute_Delete_Routes_With_Hosts(t *testing.T) {
-	tests := []HttpTestCase{
 		{
-			caseDesc:     "delete route",
+			Desc:         "delete route",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
@@ -235,18 +282,10 @@ func TestRoute_Delete_Routes_With_Hosts(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
-			caseDesc:     "delete not exist route",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/not-exist",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusNotFound,
-		},
-		{
-			caseDesc:     "hit the route just deleted",
+			Desc:         "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/hello1",
+			Path:         "/hello",
 			Headers:      map[string]string{"Host": "bar.com"},
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
@@ -255,6 +294,215 @@ func TestRoute_Delete_Routes_With_Hosts(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		testCaseCheck(tc)
+		testCaseCheck(tc, t)
+	}
+}
+
+func TestRoute_Patch(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+
+			Desc:         "make sure the route not exists",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+		},
+		{
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"upstream": {
+					"nodes": {
+						"172.16.238.20:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route just created ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "route patch for update status(route offline)",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPatch,
+			Path:         "/apisix/admin/routes/r1",
+			Body:         `{"status":0}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "make sure the route has been offline",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "route patch for update status (route online)",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPatch,
+			Path:         "/apisix/admin/routes/r1/status",
+			Body:         "1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "make sure the route has been online",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+}
+
+//uris methods remote_addrs
+func TestRoute_With_Empty_Array(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			Desc:   "create route with empty hosts and host",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
+			Body: `{
+				"uri": "/hello",
+				"hosts": [],
+				"host": "test.com",
+				"upstream": {
+					"nodes": {
+						"172.16.238.20:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   `{"code":10000,"message":"schema validate failed: (root): Must validate one and only one schema (oneOf)\n(root): Must validate all the schemas (allOf)\nhosts: Array must have at least 1 items"}`,
+		},
+		{
+			Desc:         "make sure the route not created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Host": "test.com"},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+		},
+		{
+			Desc:   "create route with empty hosts",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
+			Body: `{
+				"uri": "/hello",
+				"hosts": [],
+				"upstream": {
+					"nodes": {
+						"172.16.238.20:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   `{"code":10000,"message":"schema validate failed: hosts: Array must have at least 1 items"}`,
+		},
+		{
+			Desc:         "make sure the route not created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+		},
+		{
+			Desc:   "create route with empty uris and uri",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
+			Body: `{
+				"uri": "/hello",
+				"uris": [],
+				"upstream": {
+					"nodes": {
+						"172.16.238.20:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   `{"code":10000,"message":"schema validate failed: (root): Must validate one and only one schema (oneOf)\n(root): Must validate all the schemas (allOf)\nuris: Array must have at least 1 items"}`,
+		},
+		{
+			Desc:   "create route with empty remote_addrs and remote_addr",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
+			Body: `{
+				"uri": "/hello",
+				"remote_addrs": [],
+				"remote_addr": "0.0.0.0",
+				"upstream": {
+					"nodes": {
+						"172.16.238.20:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   `{"code":10000,"message":"schema validate failed: (root): Must validate one and only one schema (oneOf)\n(root): Must validate all the schemas (allOf)\nremote_addrs: Array must have at least 1 items"}`,
+		},
+		{
+			Desc:         "make sure the route not created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
 	}
 }

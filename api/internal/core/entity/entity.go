@@ -25,8 +25,8 @@ import (
 
 type BaseInfo struct {
 	ID         interface{} `json:"id"`
-	CreateTime int64       `json:"create_time"`
-	UpdateTime int64       `json:"update_time"`
+	CreateTime int64       `json:"create_time,omitempty"`
+	UpdateTime int64       `json:"update_time,omitempty"`
 }
 
 func (info *BaseInfo) GetBaseInfo() *BaseInfo {
@@ -52,6 +52,12 @@ func (info *BaseInfo) Updating(storedInfo *BaseInfo) {
 	info.UpdateTime = time.Now().Unix()
 }
 
+func (info *BaseInfo) KeyCompat(key string) {
+	if info.ID == nil && key != "" {
+		info.ID = key
+	}
+}
+
 type BaseInfoSetter interface {
 	GetBaseInfo() *BaseInfo
 }
@@ -59,6 +65,8 @@ type BaseInfoSetter interface {
 type BaseInfoGetter interface {
 	GetBaseInfo() *BaseInfo
 }
+
+type Status uint8
 
 // swagger:model Route
 type Route struct {
@@ -83,6 +91,7 @@ type Route struct {
 	ServiceProtocol string                 `json:"service_protocol,omitempty"`
 	Labels          map[string]string      `json:"labels,omitempty"`
 	EnableWebsocket bool                   `json:"enable_websocket,omitempty"`
+	Status          Status                 `json:"status"`
 }
 
 // --- structures for upstream start  ---
@@ -224,4 +233,20 @@ type Service struct {
 type Script struct {
 	ID     string      `json:"id"`
 	Script interface{} `json:"script,omitempty"`
+}
+
+// swagger:model GlobalPlugins
+type GlobalPlugins struct {
+	BaseInfo
+	Plugins map[string]interface{} `json:"plugins"`
+}
+
+type ServerInfo struct {
+	BaseInfo
+	LastReportTime int64  `json:"last_report_time,omitempty"`
+	UpTime         int64  `json:"up_time,omitempty"`
+	BootTime       int64  `json:"boot_time,omitempty"`
+	EtcdVersion    string `json:"etcd_version,omitempty"`
+	Hostname       string `json:"hostname,omitempty"`
+	Version        string `json:"version,omitempty"`
 }

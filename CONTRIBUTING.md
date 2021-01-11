@@ -163,7 +163,7 @@ Breaking Change section should start with the phrase "BREAKING CHANGE: " followe
 
 ### Revert commits
 
-If the commit reverts a previous commit, it should begin with `revert: `, followed by the header of the reverted commit.
+If the commit reverts a previous commit, it should begin with `revert:`, followed by the header of the reverted commit.
 
 The content of the commit message body should contain:
 

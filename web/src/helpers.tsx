@@ -19,6 +19,7 @@ import { notification } from 'antd';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { history } from 'umi';
 import moment from 'moment';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 import { codeMessage } from './constants';
 import IconFont from './components/IconFont';
@@ -31,14 +32,14 @@ export const getMenuData = (): MenuDataItem[] => {
       icon: <IconFont name="icondashboard" />,
     },
     {
+      name: 'service',
+      path: '/service/list',
+      icon: <IconFont name="iconconsumer" />,
+    },
+    {
       name: 'routes',
       path: '/routes/list',
       icon: <IconFont name="iconroute" />,
-    },
-    {
-      name: 'ssl',
-      path: '/ssl/list',
-      icon: <IconFont name="iconssl" />,
     },
     {
       name: 'upstream',
@@ -51,9 +52,24 @@ export const getMenuData = (): MenuDataItem[] => {
       icon: <IconFont name="iconconsumer" />,
     },
     {
+      name: 'plugin',
+      path: '/plugin/list',
+      icon: <IconFont name="iconconsumer" />,
+    },
+    {
+      name: 'ssl',
+      path: '/ssl/list',
+      icon: <IconFont name="iconssl" />,
+    },
+    {
       name: 'setting',
       path: '/settings',
       icon: <IconFont name="iconsetting" />,
+    },
+    {
+      name: 'serverinfo',
+      path: '/serverinfo',
+      icon: <InfoCircleOutlined />,
     },
   ];
 };
@@ -66,6 +82,20 @@ export const isLoginPage = () => window.location.pathname.indexOf('/user/login')
 export const errorHandler = (error: { response: Response; data: any }): Promise<Response> => {
   const { response } = error;
   if (error && response && response.status) {
+    // handle global rules
+    if ([404].includes(response.status) && response.url.includes('/global_rules/')) {
+      const responseCloned = { ...response } as any;
+      responseCloned.status = 200;
+      responseCloned.data = {
+        code: 0,
+        message: '',
+        data: {
+          plugins: {},
+        },
+      };
+      return Promise.resolve(responseCloned);
+    }
+
     if ([401].includes(response.status) && !isLoginPage()) {
       history.replace(`/user/logout?redirect=${encodeURIComponent(window.location.pathname)}`);
       return Promise.reject(response);
