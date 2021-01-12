@@ -54,6 +54,9 @@
 		"global_rule": {
 			"additionalProperties": false,
 			"properties": {
+				"create_time": {
+					"type": "integer"
+				},
 				"id": {
 					"anyOf": [{
 						"maxLength": 64,
@@ -67,6 +70,9 @@
 				},
 				"plugins": {
 					"type": "object"
+				},
+				"update_time": {
+					"type": "integer"
 				}
 			},
 			"required": ["plugins"],
