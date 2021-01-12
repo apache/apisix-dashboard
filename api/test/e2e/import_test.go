@@ -23,6 +23,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"testing"
+	"time"
 )
 
 func TestImport_default(t *testing.T) {
@@ -36,6 +37,9 @@ func TestImport_default(t *testing.T) {
 		{Name: "file", Filepath: path},
 	}
 	PostFile(ManagerAPIHost+"/apisix/admin/import", nil, files, headers)
+
+	// sleep for data sync
+	time.Sleep(sleepTime)
 
 	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/routes", nil)
 	request.Header.Add("Authorization", token)
@@ -103,6 +107,9 @@ func TestImport_json(t *testing.T) {
 	}
 	PostFile(ManagerAPIHost+"/apisix/admin/import", nil, files, headers)
 
+	// sleep for data sync
+	time.Sleep(sleepTime)
+
 	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/routes", nil)
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
@@ -168,6 +175,9 @@ func TestImport_with_plugins(t *testing.T) {
 		{Name: "file", Filepath: path},
 	}
 	PostFile(ManagerAPIHost+"/apisix/admin/import", nil, files, headers)
+
+	// sleep for data sync
+	time.Sleep(sleepTime)
 
 	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/routes", nil)
 	request.Header.Add("Authorization", token)
