@@ -142,15 +142,15 @@ func TestHandler_List(t *testing.T) {
 				PageNumber: 1,
 			},
 			giveData: []*entity.GlobalPlugins{
-				{ID: "global-rules-1"},
-				{ID: "global-rules-2"},
-				{ID: "global-rules-3"},
+				{BaseInfo: entity.BaseInfo{ID: "global-rules-1"}},
+				{BaseInfo: entity.BaseInfo{ID: "global-rules-2"}},
+				{BaseInfo: entity.BaseInfo{ID: "global-rules-3"}},
 			},
 			wantRet: &store.ListOutput{
 				Rows: []interface{}{
-					&entity.GlobalPlugins{ID: "global-rules-1"},
-					&entity.GlobalPlugins{ID: "global-rules-2"},
-					&entity.GlobalPlugins{ID: "global-rules-3"},
+					&entity.GlobalPlugins{BaseInfo: entity.BaseInfo{ID: "global-rules-1"}},
+					&entity.GlobalPlugins{BaseInfo: entity.BaseInfo{ID: "global-rules-2"}},
+					&entity.GlobalPlugins{BaseInfo: entity.BaseInfo{ID: "global-rules-3"}},
 				},
 				TotalSize: 3,
 			},
@@ -229,7 +229,7 @@ func TestHandler_Set(t *testing.T) {
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
 			wantInput: &entity.GlobalPlugins{
-				ID: "name",
+				BaseInfo: entity.BaseInfo{ID: "name"},
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{},
 				},
@@ -245,8 +245,8 @@ func TestHandler_Set(t *testing.T) {
 			},
 			giveErr: fmt.Errorf("create failed"),
 			wantInput: &entity.GlobalPlugins{
-				ID:      "name",
-				Plugins: map[string]interface{}(nil),
+				BaseInfo: entity.BaseInfo{ID: "name"},
+				Plugins:  map[string]interface{}(nil),
 			},
 			wantErr: fmt.Errorf("create failed"),
 			wantRet: &data.SpecCodeResponse{
