@@ -17,7 +17,7 @@
 declare namespace PluginComponent {
   type Data = object;
 
-  type Schema = '' | 'route' | 'consumer' | 'service';
+  type Schema = '' | 'route' | 'consumer';
 
   type Meta = {
     name: string;
@@ -27,4 +27,6 @@ declare namespace PluginComponent {
     version: number;
     consumer_schema?: object;
   };
+
+  type ReferPage = '' | 'route' | 'consumer' | 'service' | 'plugin'
 }

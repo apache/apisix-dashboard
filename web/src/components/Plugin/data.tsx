@@ -26,3 +26,8 @@ export const PLUGIN_ICON_LIST: Record<string, any> = {
   'openid-connect': <IconFont name="iconicons8-openid" />,
   'kafka-logger': <IconFont name="iconApache_kafka" />,
 };
+
+export const PLUGIN_FILTER_LIST: Record<string, { list: PluginComponent.ReferPage[] }> =
+{
+  redirect: { list: ['route'] }
+}
