@@ -72,21 +72,7 @@ Support the following ways currently.
 
 1. [Source Codes](./docs/deploy.md)
 2. [Docker](./docs/deploy-with-docker.md)
-3. RPM package（only for CentOS 7）
-   - install runtime dependencies: [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
-   - install Apache APISIX Dashboard：
-
-   ```shell
-   $ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.3/apisix-dashboard-v2.3-1.x86_64.rpm
-   ```
-
-   - start Apache APISIX Dashboard:
-
-   ```shell
-   $ sudo nohup manager-api -p /usr/local/apisix/dashboard/ &
-   ```
-
-   **Note**: For more detail please follow [Source Codes](./docs/deploy.md).
+3. [RPM package （only for CentOS 7）](./docs/deploy-with-rpm.md)
 
 ## Development
 
