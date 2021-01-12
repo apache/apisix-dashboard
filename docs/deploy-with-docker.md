@@ -19,7 +19,7 @@
 
 # Building and Launching with Docker
 
-**NOTE:** We support official Docker Image, please visit [DockerHub](https://hub.docker.com/r/apache/apisix-dashboard) for more information. The following steps are for building Docker Image manually.
+**NOTE:** We support Docker Image, please visit [DockerHub](https://hub.docker.com/r/apache/apisix-dashboard) for more information. The following steps are for building Docker Image manually.
 
 To build the Dashboard with Docker, you simply download the `Dockerfile` file from the **root directory** to your device (no need to download all source codes) then follow this guide.
 
