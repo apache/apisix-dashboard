@@ -165,11 +165,12 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	if err := h.serviceStore.Create(c.Context(), input); err != nil {
+	ret, err := h.serviceStore.Create(c.Context(), input)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type UpdateInput struct {

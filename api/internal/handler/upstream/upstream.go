@@ -149,11 +149,12 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Upstream)
 
-	if err := h.upstreamStore.Create(c.Context(), input); err != nil {
+	ret, err := h.upstreamStore.Create(c.Context(), input)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type UpdateInput struct {

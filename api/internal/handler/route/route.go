@@ -348,16 +348,17 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 
 		//save original conf
-		if err = h.scriptStore.Create(c.Context(), script); err != nil {
+		if _, err = h.scriptStore.Create(c.Context(), script); err != nil {
 			return nil, err
 		}
 	}
 
-	if err := h.routeStore.Create(c.Context(), input); err != nil {
+	ret, err := h.routeStore.Create(c.Context(), input)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type UpdateInput struct {
@@ -429,7 +430,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		if err = h.scriptStore.Update(c.Context(), script, true); err != nil {
 			//if not exists, create
 			if err.Error() == fmt.Sprintf("key: %s is not found", script.ID) {
-				if err := h.scriptStore.Create(c.Context(), script); err != nil {
+				if _, err := h.scriptStore.Create(c.Context(), script); err != nil {
 					return handler.SpecCodeResponse(err), err
 				}
 			} else {
