@@ -73,7 +73,7 @@ Support the following ways currently.
 1. [Source Codes](./docs/deploy.md)
 2. [Docker](./docs/deploy-with-docker.md)
 3. RPM package（only for CentOS 7）
-   - Installation runtime dependencies: [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
+   - install runtime dependencies: [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
    - install Apache APISIX Dashboard：
 
    ```shell
