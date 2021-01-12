@@ -70,9 +70,9 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 
 Support the following ways currently.
 
-1. [Source Codes](./docs/deploy.md)
-2. [Docker](./docs/deploy-with-docker.md)
-3. [RPM package （only for CentOS 7）](./docs/deploy-with-rpm.md)
+- [Source Codes](./docs/deploy.md)
+- [Docker](./docs/deploy-with-docker.md)
+- [RPM package（only for CentOS 7）](./docs/deploy-with-rpm.md)
 
 ## Development
 
