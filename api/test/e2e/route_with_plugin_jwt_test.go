@@ -285,5 +285,4 @@ func TestRoute_With_Jwt_Plugin(t *testing.T) {
 	for _, tc := range tests {
 		testCaseCheck(tc, t)
 	}
-
 }
