@@ -17,47 +17,28 @@
 # If you want to set the specified configuration value, you can set the new
 # in this file. For example if you want to specify the etcd address:
 #
-consumes:
-- application/json
-- application/xml
+openapi: 3.0.0
 info:
-  description: |-
-    test desc
+  version: 1.0.0-oas3
+  description: test desc
   license:
     name: Apache License 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0
-  title: |-
-    test title
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+  title: test title
 paths:
-  /hello:    
+  /hello:
     get:
       x-api-limit: 20
-      description: |-
-        hello world.
+      description: hello world.
       operationId: hello
       x-apisix-upstream:
         type: roundrobin
         nodes:
-          - host: "172.16.238.20"
+          - host: 172.16.238.20
             port: 1980
             weight: 1
-      produces:
-      - application/json
       responses:
-        "0":
+        '200':
           description: list response
-          schema:
-            items:
-              $ref: '#/definitions/service'
-            type: array
         default:
           description: unexpected error
-          schema:
-            $ref: '#/definitions/ApiError'
-produces:
-- application/json
-- application/xml
-schemes:
-- http
-- https
-swagger: "2.0"

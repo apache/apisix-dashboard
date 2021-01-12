@@ -17,17 +17,14 @@
 # If you want to set the specified configuration value, you can set the new
 # in this file. For example if you want to specify the etcd address:
 #
-consumes:
-- application/json
-- application/xml
+
 components:
   securitySchemes:
     basicAuth:
       type: http
       scheme: basic
-      username: test
-      password: testp
 info:
+  version: "1"
   description: |-
     test desc
   license:
@@ -73,27 +70,13 @@ paths:
               required:
                 - status
 
-      produces:
-      - application/json
-
       security:
       - basicAuth: []
 
       responses:
-        "0":
+        200:
           description: list response
-          schema:
-            items:
-              $ref: '#/definitions/service'
-            type: array
         default:
           description: unexpected error
-          schema:
-            $ref: '#/definitions/ApiError'
-produces:
-- application/json
-- application/xml
-schemes:
-- http
-- https
-swagger: "2.0"
+
+openapi: 3.0.0

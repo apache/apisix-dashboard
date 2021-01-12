@@ -1,9 +1,7 @@
 {
-  "consumes": [
-    "application/json",
-    "application/xml"
-  ],
+  "openapi": "3.0.0",
   "info": {
+    "version": "1.0.0-oas3",
     "description": "test desc",
     "license": {
       "name": "Apache License 2.0",
@@ -27,36 +25,15 @@
             }
           ]
         },
-        "produces": [
-          "application/json"
-        ],
         "responses": {
-          "0": {
-            "description": "list response",
-            "schema": {
-              "items": {
-                "$ref": "#/definitions/service"
-              },
-              "type": "array"
-            }
+          "200": {
+            "description": "list response"
           },
           "default": {
-            "description": "unexpected error",
-            "schema": {
-              "$ref": "#/definitions/ApiError"
-            }
+            "description": "unexpected error"
           }
         }
       }
     }
-  },
-  "produces": [
-    "application/json",
-    "application/xml"
-  ],
-  "schemes": [
-    "http",
-    "https"
-  ],
-  "swagger": "2.0"
+  }
 }
