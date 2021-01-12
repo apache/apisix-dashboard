@@ -29,6 +29,7 @@ import { timestampToLocaleString } from '@/helpers';
 import { fetchList, remove, fetchLabelList, updateRouteStatus, exportRoutes, importRoutes } from './service';
 import { DebugDrawView } from './components/DebugViews';
 import { EXPORT_FILE_MIME_TYPE_SUPPORTED } from './constants';
+import { RcFile } from 'antd/lib/upload';
 
 const { OptGroup, Option } = Select;
 
@@ -49,7 +50,7 @@ const Page: React.FC = () => {
 
   const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-  const [uploadFileList, setUploadFileList] = useState([]);
+  const [uploadFileList, setUploadFileList] = useState<RcFile[]>([]);
   const [showImportModal, setShowImportModal] = useState(false);
 
   useEffect(() => {
@@ -120,7 +121,7 @@ const Page: React.FC = () => {
     
     formData.append('file', uploadFileList[0]);
 
-    importRoutes(formData).then((resp) => {
+    importRoutes(formData).then(() => {
       handleTableActionSuccessResponse(`${formatMessage({ id: 'page.route.button.importOpenApi'})}${formatMessage({ id: 'component.status.success'})}`)
       setShowImportModal(false);
     })
@@ -396,6 +397,7 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
           <Button type="primary" onClick={() => {
+            setUploadFileList([]);
             setShowImportModal(true);
           }}>
             <ImportOutlined />
@@ -428,7 +430,7 @@ const Page: React.FC = () => {
             setUploadFileList([file]);
             return false;
           }}
-          onRemove={file => {
+          onRemove={() => {
             setUploadFileList([]);
           }}>
           <Button type="primary" icon={<ImportOutlined />}>{formatMessage({ id: 'page.route.button.selectFile'})}</Button>
