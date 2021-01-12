@@ -22,7 +22,7 @@ etcd:
     - "http://172.16.238.10:2379"
     - "http://172.16.238.11:2379"
     - "http://172.16.238.12:2379"
-  resync_delay: 0.1 # sync data from etcd quickly for e2e test
+  resync_delay: 0.1  # sync data from etcd quickly for e2e test
 
 apisix:
   id: "apisix-server2"

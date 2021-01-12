@@ -17,6 +17,8 @@
 /* eslint-disable no-undef */
 
 context('smoke test for plugin schema', () => {
+  const timeout = 50000;
+
   beforeEach(() => {
     cy.login();
 
@@ -34,6 +36,7 @@ context('smoke test for plugin schema', () => {
       [...cards].forEach((card) => {
         const name = card.innerText;
         const cases = this.cases[name] || [];
+        // eslint-disable-next-line consistent-return
         cases.forEach(({ shouldValid, data, type = '' }) => {
           /**
            * NOTE: This test is mainly for GlobalPlugin, which is using non-consumer-type schema.
@@ -47,35 +50,53 @@ context('smoke test for plugin schema', () => {
             .within(() => {
               cy.contains('Enable').click({
                 force: true,
+                timeout
               });
             });
 
           // NOTE: wait for the Drawer to appear on the DOM
-          cy.wait(800);
-          const switchSelector = '#disable';
-          cy.get(switchSelector).click();
+          const drawerSelector = '.ant-drawer-content'
+          cy.get(drawerSelector).within(() => {
+            const switchSelector = '#disable';
+            cy.get(switchSelector).click({
+              force: true,
+              timeout
+            });
+          });
 
-          cy.window().then(({ codemirror }) => {
+          cy.window().then(({
+            codemirror
+          }) => {
             if (codemirror) {
               codemirror.setValue(JSON.stringify(data));
             }
           });
 
-          cy.contains('Submit').click();
+          cy.get(drawerSelector).within(() => {
+            cy.contains('Submit').click({
+              force: true,
+              timeout
+            });
+          });
 
           // NOTE: wait for the HTTP call
           cy.wait(500);
           if (shouldValid) {
-            const drawerSelector = '.ant-drawer-content';
             cy.get(drawerSelector).should('not.exist');
           } else {
             cy.get(this.selector.notification).should('contain', 'Invalid plugin data');
 
             cy.get('.anticon-close').click({
+              force: true,
+              timeout,
               multiple: true,
             });
-            cy.contains('Cancel').click({
-              force: true,
+
+            cy.get(drawerSelector).within(() => {
+              cy.contains('Cancel').click({
+                force: true,
+                timeout,
+              });
             });
           }
         });
