@@ -139,7 +139,6 @@ func TestRoute_Export(t *testing.T) {
 	}
 
 	tests3 := []HttpTestCase{
-
 		{
 			Desc:         "export route route2",
 			Object:       ManagerApiExpect(t),

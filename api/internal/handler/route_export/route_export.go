@@ -62,7 +62,6 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 			return nil, err
 		}
 		routes = append(routes, route.(*entity.Route))
-
 	}
 	return routeToOpenApi3(routes), nil
 }
@@ -83,13 +82,12 @@ var (
 func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 	paths := openapi3.Paths{}
 	pathItem := &openapi3.PathItem{}
-	path := &openapi3.Operation{}
+	path := openapi3.Operation{}
 	paramsRefs := []*openapi3.ParameterRef{}
 	requestBody := &openapi3.RequestBody{}
 	components := &openapi3.Components{}
 	secSchemas := openapi3.SecuritySchemes{}
 	for _, route := range routes {
-
 		extensions := make(map[string]interface{})
 		path.Summary = route.Desc
 		path.OperationID = route.Name
@@ -251,106 +249,22 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 			switch strings.ToUpper(route.Methods[i]) {
 			case "GET":
 				//pathItem.Get = path
-				pathItem.Get = &openapi3.Operation{
-					ExtensionProps: path.ExtensionProps,
-					Tags:           path.Tags,
-					Summary:        path.Summary,
-					Description:    path.Description,
-					OperationID:    path.OperationID + "Get",
-					Parameters:     path.Parameters,
-					RequestBody:    path.RequestBody,
-					Responses:      path.Responses,
-					Callbacks:      path.Callbacks,
-					Deprecated:     path.Deprecated,
-					Security:       path.Security,
-					Servers:        path.Servers,
-					ExternalDocs:   path.ExternalDocs,
-				}
-
+				pathItem.Get = parsePathItem(path, "Get")
 			case "POST":
 				//pathItem.Post = path
-				pathItem.Post = &openapi3.Operation{
-					ExtensionProps: path.ExtensionProps,
-					Tags:           path.Tags,
-					Summary:        path.Summary,
-					Description:    path.Description,
-					OperationID:    path.OperationID + "Post",
-					Parameters:     path.Parameters,
-					RequestBody:    path.RequestBody,
-					Responses:      path.Responses,
-					Callbacks:      path.Callbacks,
-					Deprecated:     path.Deprecated,
-					Security:       path.Security,
-					Servers:        path.Servers,
-					ExternalDocs:   path.ExternalDocs,
-				}
+				pathItem.Post = parsePathItem(path, "Post")
 			case "PUT":
 				//pathItem.Put = path
-				pathItem.Put = &openapi3.Operation{
-					ExtensionProps: path.ExtensionProps,
-					Tags:           path.Tags,
-					Summary:        path.Summary,
-					Description:    path.Description,
-					OperationID:    path.OperationID + "Put",
-					Parameters:     path.Parameters,
-					RequestBody:    path.RequestBody,
-					Responses:      path.Responses,
-					Callbacks:      path.Callbacks,
-					Deprecated:     path.Deprecated,
-					Security:       path.Security,
-					Servers:        path.Servers,
-					ExternalDocs:   path.ExternalDocs,
-				}
+				pathItem.Put = parsePathItem(path, "Put")
 			case "DELETE":
 				//pathItem.Delete = path
-				pathItem.Delete = &openapi3.Operation{
-					ExtensionProps: path.ExtensionProps,
-					Tags:           path.Tags,
-					Summary:        path.Summary,
-					Description:    path.Description,
-					OperationID:    path.OperationID + "Delete",
-					Parameters:     path.Parameters,
-					Responses:      path.Responses,
-					Callbacks:      path.Callbacks,
-					Deprecated:     path.Deprecated,
-					Security:       path.Security,
-					Servers:        path.Servers,
-					ExternalDocs:   path.ExternalDocs,
-				}
+				pathItem.Delete = parsePathItem(path, "Delete")
 			case "PATCH":
 				//pathItem.Patch = path
-				pathItem.Patch = &openapi3.Operation{
-					ExtensionProps: path.ExtensionProps,
-					Tags:           path.Tags,
-					Summary:        path.Summary,
-					Description:    path.Description,
-					OperationID:    path.OperationID + "Patch",
-					Parameters:     path.Parameters,
-					RequestBody:    path.RequestBody,
-					Responses:      path.Responses,
-					Callbacks:      path.Callbacks,
-					Deprecated:     path.Deprecated,
-					Security:       path.Security,
-					Servers:        path.Servers,
-					ExternalDocs:   path.ExternalDocs,
-				}
+				pathItem.Patch = parsePathItem(path, "Patch")
 			case "HEAD":
 				//pathItem.Head = path
-				pathItem.Head = &openapi3.Operation{
-					ExtensionProps: path.ExtensionProps,
-					Tags:           path.Tags,
-					Summary:        path.Summary,
-					Description:    path.Description,
-					OperationID:    path.OperationID + "Head",
-					Parameters:     path.Parameters,
-					RequestBody:    path.RequestBody,
-					Responses:      path.Responses,
-					Callbacks:      path.Callbacks,
-					Deprecated:     path.Deprecated,
-					Security:       path.Security,
-					Servers:        path.Servers,
-					ExternalDocs:   path.ExternalDocs,
-				}
+				pathItem.Head = parsePathItem(path, "HEAD")
 			}
 		}
 	}
@@ -362,4 +276,23 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 		Components: *components,
 	}
 	return &swagger
+}
+
+func parsePathItem(path openapi3.Operation, routeMethod string) *openapi3.Operation {
+	_path := &openapi3.Operation{
+		ExtensionProps: path.ExtensionProps,
+		Tags:           path.Tags,
+		Summary:        path.Summary,
+		Description:    path.Description,
+		OperationID:    path.OperationID + routeMethod,
+		Parameters:     path.Parameters,
+		RequestBody:    path.RequestBody,
+		Responses:      path.Responses,
+		Callbacks:      path.Callbacks,
+		Deprecated:     path.Deprecated,
+		Security:       path.Security,
+		Servers:        path.Servers,
+		ExternalDocs:   path.ExternalDocs,
+	}
+	return _path
 }
