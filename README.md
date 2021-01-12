@@ -32,7 +32,6 @@
 
 - The latest released version is 2.2 and should be used with Apache APISIX 2.1. It is not recommended to use with other Apache APISIX versions.
 
-
 ## What's Apache APISIX Dashboard
 
 The Apache APISIX Dashboard is designed to make it as easy as possible for users to operate [Apache APISIX](https://github.com/apache/apisix) through a frontend interface.
