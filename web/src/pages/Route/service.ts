@@ -130,5 +130,5 @@ export const importRoutes = (formData) => {
     method: 'POST',
     data: formData,
     requestType: 'form',
-  })
-}
+  });
+};
