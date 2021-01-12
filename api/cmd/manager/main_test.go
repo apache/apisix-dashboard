@@ -22,7 +22,7 @@ import (
 	"syscall"
 	"testing"
 )
-func TestMain(m *testing.M) {
+func TestMainWrapper(t *testing.T) {
 	var (
 		args []string
 	)
