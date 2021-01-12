@@ -410,6 +410,7 @@ const Page: React.FC = () => {
         ]}
         rowSelection={rowSelection}
         footer={() => <ListFooter />}
+        tableAlertRender={false}
       />
       <DebugDrawView
         visible={debugDrawVisible}
