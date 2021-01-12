@@ -25,6 +25,7 @@ import (
 	"net"
 	"net/http"
 	"os/exec"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -163,21 +164,21 @@ func BatchTestServerPort(t *testing.T, times int) map[string]int {
 var sleepTime = time.Duration(300) * time.Millisecond
 
 type HttpTestCase struct {
-	Desc           string
-	Object         *httpexpect.Expect
-	Method         string
-	Path           string
-	Query          string
-	Body           string
-	Headers        map[string]string
-	Headers_test   map[string]interface{}
-	ExpectStatus   int
-	ExpectCode     int
-	ExpectMessage  string
-	ExpectBody     string
-	UnexpectedBody string
-	ExpectHeaders  map[string]string
-	Sleep          time.Duration //ms
+	Desc          string
+	Object        *httpexpect.Expect
+	Method        string
+	Path          string
+	Query         string
+	Body          string
+	Headers       map[string]string
+	Headers_test  map[string]interface{}
+	ExpectStatus  int
+	ExpectCode    int
+	ExpectMessage string
+	ExpectBody    interface{}
+	UnexpectBody  interface{}
+	ExpectHeaders map[string]string
+	Sleep         time.Duration //ms
 }
 
 func testCaseCheck(tc HttpTestCase, t *testing.T) {
@@ -241,15 +242,38 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 		}
 
 		// match body
-		if tc.ExpectBody != "" {
-			resp.Body().Contains(tc.ExpectBody)
+		if tc.ExpectBody != nil {
+			assert.Contains(t, []string{"string", "[]string"}, reflect.TypeOf(tc.ExpectBody).String())
+			if body, ok := tc.ExpectBody.(string); ok {
+				if body == "" {
+					// "" indicates the body is expected to be empty
+					resp.Body().Empty()
+				} else {
+					resp.Body().Contains(body)
+				}
+			} else if bodies, ok := tc.ExpectBody.([]string); ok && len(bodies) != 0 {
+				for _, b := range bodies {
+					resp.Body().Contains(b)
+				}
+			}
 		}
 
-		// match UnexpectedBody
-		if tc.UnexpectedBody != "" {
-			resp.Body().NotContains(tc.UnexpectedBody)
+		// match UnexpectBody
+		if tc.UnexpectBody != nil {
+			assert.Contains(t, []string{"string", "[]string"}, reflect.TypeOf(tc.UnexpectBody).String())
+			if body, ok := tc.UnexpectBody.(string); ok {
+				// "" indicates the body is expected to be non empty
+				if body == "" {
+					resp.Body().NotEmpty()
+				} else {
+					resp.Body().NotContains(body)
+				}
+			} else if bodies, ok := tc.UnexpectBody.([]string); ok && len(bodies) != 0 {
+				for _, b := range bodies {
+					resp.Body().NotContains(b)
+				}
+			}
 		}
-
 	})
 }
 
@@ -276,7 +300,7 @@ func CleanAPISIXErrorLog(t *testing.T) {
 	pwd := string(pwdByte)
 	pwd = strings.Replace(pwd, "\n", "", 1)
 	pwd = pwd[:strings.Index(pwd, "/e2e")]
-	cmd = exec.Command("sudo", "echo", " > ", pwd + "/docker/apisix_logs/error.log")
+	cmd = exec.Command("sudo", "echo", " > ", pwd+"/docker/apisix_logs/error.log")
 	_, err = cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("cmd error:", err.Error())
