@@ -25,7 +25,7 @@ RUN mkdir -p /go/manager-api/conf \
     && mkdir -p /go/manager-api/build-tools \
     && go env -w GOPROXY=https://goproxy.io,direct \
     && export GOPROXY=https://goproxy.io \
-    && go test -c -race -cover -covermode=atomic -o /go/manager-api/manager-api -coverpkg . ./cmd/manager \
+    && go test -c -race -cover -covermode=atomic -o /go/manager-api/manager-api -coverpkg "./..." ./cmd/manager \
     && mv /go/src/github.com/apisix/manager-api/entry.sh /go/manager-api/ \
     && mv /go/src/github.com/apisix/manager-api/build-tools/* /go/manager-api/build-tools/ \
     && mv /go/src/github.com/apisix/manager-api/conf/conf.yaml /go/manager-api/conf/conf.yaml \
