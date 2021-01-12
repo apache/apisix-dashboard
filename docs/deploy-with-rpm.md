@@ -17,20 +17,22 @@
 #
 -->
 
-## install runtime dependencies
+# Deploy with RPM
 
-- [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
+**NOTE:** Only support CentOS 7 currently, for more infomation, please refer to [here](./docs/deploy.md).
 
-## install Apache APISIX Dashboard
+## Install from RPM
 
-```shell
+```sh
 $ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.3/apisix-dashboard-v2.3-1.x86_64.rpm
 ```
 
-## start Apache APISIX Dashboard
+## Run
 
-```shell
+Before you start, make sure the following dependencies are installed and running in your environment.
+
+- [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
+
+```sh
 $ sudo nohup manager-api -p /usr/local/apisix/dashboard/ &
 ```
-
-**Note**: For more detail please follow [Source Codes](./docs/deploy.md).
