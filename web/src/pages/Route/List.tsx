@@ -112,14 +112,14 @@ const Page: React.FC = () => {
       switch (exportFileType) {
         case ExportFileType.Yaml:
           exportFile = yaml.dump(resp.data);
-          exportFileName = `${exportFileName}.json`;
+          exportFileName = `${exportFileName}.yaml`;
           break;
         case ExportFileType.Json:
         default:
           exportFile = js_beautify(JSON.stringify(resp.data), {
             indent_size: 2,
           });
-          exportFileName = `${exportFileName}.yaml`;
+          exportFileName = `${exportFileName}.json`;
           break;
       }
 
