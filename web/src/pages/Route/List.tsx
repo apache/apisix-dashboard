@@ -20,16 +20,17 @@ import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag, Space, Select } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined, UploadOutlined } from '@ant-design/icons';
+import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined } from '@ant-design/icons';
 import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
 import moment from 'moment';
 
 import { timestampToLocaleString } from '@/helpers';
+import { RcFile } from 'antd/lib/upload';
 import { fetchList, remove, fetchLabelList, updateRouteStatus, exportRoutes, importRoutes } from './service';
 import { DebugDrawView } from './components/DebugViews';
 import { EXPORT_FILE_MIME_TYPE_SUPPORTED } from './constants';
-import { RcFile } from 'antd/lib/upload';
+
 
 const { OptGroup, Option } = Select;
 
