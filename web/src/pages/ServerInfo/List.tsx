@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react';
 import { Select, Empty, Form } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useIntl } from 'umi';
+import moment from 'moment';
 
 import { fetchInfoList } from './service';
 import styles from './style.less';
@@ -31,7 +32,16 @@ const ServerInfo: React.FC = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    fetchInfoList().then((list) => {
+    fetchInfoList().then((infoList) => {
+      const list = infoList.map(item => {
+        return {
+          ...item,
+          boot_time: moment(item.boot_time * 1000).format('YYYY-MM-DD HH:mm:ss'),
+          last_report_time: moment(item.last_report_time * 1000).format('YYYY-MM-DD HH:mm:ss'),
+          up_time: moment(item.boot_time * 1000).fromNow(true),
+        }
+      });
+
       setNodeList(list);
       if (list.length) {
         form.setFieldsValue({
