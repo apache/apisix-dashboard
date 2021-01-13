@@ -68,7 +68,7 @@ context('Create and Delete Route', () => {
     // go to step3
     cy.contains('Next').click();
 
-    // redirect plugin show not display in route step3
+    // redirect plugin should not display in route step3
     const nameSelector = '[data-cy-plugin-name]';
     cy.get(nameSelector).then((cards) => {
       [...cards].forEach(card => {
