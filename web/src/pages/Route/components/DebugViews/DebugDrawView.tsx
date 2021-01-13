@@ -60,7 +60,6 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   enum DebugBodyType {
     None = 0,
     FormUrlencoded,
-    Json,
     RawInput,
   }
 
@@ -79,7 +78,6 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
 
   const transformBodyParamsFormData = () => {
     let transformDataForm: string[];
-    let transformDataJson: Record<string, any>;
     const formData: RouteModule.debugRequestParamsFormData[] = bodyForm.getFieldsValue().params;
     if (methodWithoutBody.includes(httpMethod)) {
       return undefined;
@@ -93,18 +91,6 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
           });
 
         return transformDataForm.join('&');
-      case 'json':
-        transformDataJson = {};
-        (formData || [])
-          .filter((data) => data.check)
-          .forEach((data) => {
-            transformDataJson = {
-              ...transformDataJson,
-              [data.key]: data.value,
-            };
-          });
-
-        return JSON.stringify(transformDataJson);
       case 'raw input':
         return bodyCodeMirrorRef.current.editor.getValue();
       case 'none':
@@ -292,15 +278,14 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                     defaultValue={bodyCodeMirrorMode}
                   >
                     {DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED.map((modeObj) => (
-                      <Select.Option key={modeObj.name} value={modeObj.mode}>
+                      <Option key={modeObj.name} value={modeObj.mode}>
                         {modeObj.name}
-                      </Select.Option>
+                      </Option>
                     ))}
                   </Select>
                 )}
                 <div style={{ marginTop: 16 }}>
-                  {(bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded] ||
-                    bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.Json]) && (
+                  {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded] && (
                     <DebugParamsView form={bodyForm} />
                   )}
 

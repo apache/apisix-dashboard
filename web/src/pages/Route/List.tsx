@@ -200,12 +200,12 @@ const Page: React.FC = () => {
 
         return (
           <Select style={{ width: '100%' }} allowClear>
-            <option key={RouteStatus.Offline} value={RouteStatus.Offline}>
+            <Option key={RouteStatus.Offline} value={RouteStatus.Offline}>
               {formatMessage({ id: 'page.route.unpublished' })}
-            </option>
-            <option key={RouteStatus.Publish} value={RouteStatus.Publish}>
+            </Option>
+            <Option key={RouteStatus.Publish} value={RouteStatus.Publish}>
               {formatMessage({ id: 'page.route.published' })}
-            </option>
+            </Option>
           </Select>
         );
       },
