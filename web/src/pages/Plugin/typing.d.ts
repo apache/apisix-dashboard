@@ -19,11 +19,11 @@ declare namespace PluginModule {
   type TransformedPlugin = {
     id: string;
     name: string;
-    value: object;
+    value: Record<string, any>;
   };
 
   type GlobalRule = {
     id: string;
-    plugins: Record<string, object>;
+    plugins: Record<string, any>;
   };
 }

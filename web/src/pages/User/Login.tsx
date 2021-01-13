@@ -22,7 +22,7 @@ import { SettingOutlined } from '@ant-design/icons';
 
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
 import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
-import { UserModule } from '@/pages/User/typing';
+import type { UserModule } from '@/pages/User/typing';
 import logo from '@/assets/logo.svg';
 import { getUrlQuery } from '@/helpers';
 import Footer from '@/components/Footer';

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React from 'react';
-import { UserModule } from '@/pages/User/typing';
+import type { UserModule } from '@/pages/User/typing';
 import { formatMessage } from '@@/plugin-locale/localeExports';
 
 const LoginMethodExample: UserModule.LoginMethod = {

@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import type React from 'react';
 
 declare namespace UserModule {
-  interface LoginMethod {
+  type LoginMethod = {
     id: string;
     name: string;
     render: () => React.ReactElement;
@@ -26,17 +26,17 @@ declare namespace UserModule {
     checkData: () => Promise<boolean>;
     submit: (data) => Promise<LoginResponse>;
     logout: () => void;
-  }
+  };
 
   type LoginData = {
     [string]: string;
   };
 
-  interface LoginResponse {
+  type LoginResponse = {
     status: boolean;
     message: string;
     data: {
       [string]: any;
     };
-  }
+  };
 }

@@ -15,17 +15,17 @@
  * limitations under the License.
  */
 declare namespace PluginComponent {
-  type Data = object;
+  type Data = Record<string, any>;
 
   type Schema = '' | 'route' | 'consumer';
 
   type Meta = {
     name: string;
     priority: number;
-    schema: object;
+    schema: Record<string, any>;
     type: string;
     version: number;
-    consumer_schema?: object;
+    consumer_schema?: Record<string, any>;
   };
 
   type ReferPage = '' | 'route' | 'consumer' | 'service' | 'plugin'

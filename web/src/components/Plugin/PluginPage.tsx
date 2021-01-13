@@ -52,7 +52,7 @@ const PluginPage: React.FC<Props> = ({
   schemaType = 'route',
   referPage = '',
   type = 'scoped',
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
@@ -74,8 +74,9 @@ const PluginPage: React.FC<Props> = ({
   }, []);
 
   const PluginList = () => (
-    <><style>
-      {`
+    <>
+      <style>
+        {`
       .ant-card-body .icon {
           width: 5em;
           height: 5em;
@@ -83,29 +84,28 @@ const PluginPage: React.FC<Props> = ({
           overflow: hidden;
           vertical-align: -0.15em;
           fill: currentColor;
-        }`
-      }
-    </style>
+        }`}
+      </style>
       <Sider theme="light">
         <Anchor offsetTop={150}>
-          {/* eslint-disable-next-line no-shadow */}
-          {typeList.map((type) => {
-            return <Anchor.Link href={`#plugin-category-${type}`} title={type} key={type} />;
+          {typeList.map((typeItem) => {
+            return (
+              <Anchor.Link href={`#plugin-category-${typeItem}`} title={typeItem} key={typeItem} />
+            );
           })}
         </Anchor>
       </Sider>
       <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
-        {/* eslint-disable-next-line no-shadow */}
-        {typeList.map((type) => {
+        {typeList.map((typeItem) => {
           return (
             <PanelSection
-              title={type}
-              key={type}
+              title={typeItem}
+              key={typeItem}
               style={PanelSectionStyle}
-              id={`plugin-category-${type}`}
+              id={`plugin-category-${typeItem}`}
             >
               {orderBy(
-                pluginList.filter((item) => item.type === type.toLowerCase()),
+                pluginList.filter((item) => item.type === typeItem.toLowerCase()),
                 'name',
                 'asc',
               ).map((item) => (
@@ -136,16 +136,18 @@ const PluginPage: React.FC<Props> = ({
                     minHeight: 151,
                     display: 'flex',
                     justifyContent: 'center',
-                    alignItems: 'center'
+                    alignItems: 'center',
                   }}
                   style={{ width: 200 }}
                 >
                   {Boolean(PLUGIN_ICON_LIST[item.name]) && PLUGIN_ICON_LIST[item.name]}
-                  {Boolean(!PLUGIN_ICON_LIST[item.name]) && <img
-                    alt="pluginImg"
-                    src={defaultPluginImg}
-                    style={{ width: 50, height: 50, opacity: 0.2 }}
-                  />}
+                  {Boolean(!PLUGIN_ICON_LIST[item.name]) && (
+                    <img
+                      alt="pluginImg"
+                      src={defaultPluginImg}
+                      style={{ width: 50, height: 50, opacity: 0.2 }}
+                    />
+                  )}
                 </Card>
               ))}
             </PanelSection>

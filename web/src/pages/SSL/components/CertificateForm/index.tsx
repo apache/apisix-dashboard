@@ -17,12 +17,12 @@
 import React from 'react';
 import { Form, Input, Tag } from 'antd';
 import { useIntl } from 'umi';
-import { FormInstance } from 'antd/lib/form';
+import type { FormInstance } from 'antd/lib/form';
 
-interface CertificateFormProps {
+type CertificateFormProps = {
   mode: 'EDIT' | 'VIEW';
   form: FormInstance;
-}
+};
 
 const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
   const { formatMessage } = useIntl();

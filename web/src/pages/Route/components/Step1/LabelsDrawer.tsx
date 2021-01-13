@@ -27,7 +27,7 @@ type Props = {
   actionName: string;
   dataSource: string[];
   disabled: boolean;
-  onClose(): void;
+  onClose: () => void;
 } & Pick<RouteModule.Step1PassProps, 'onChange'>;
 
 const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {

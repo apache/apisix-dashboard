@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import { notification } from 'antd';
-import { MenuDataItem } from '@ant-design/pro-layout';
+import type { MenuDataItem } from '@ant-design/pro-layout';
 import { history } from 'umi';
 import moment from 'moment';
 import { InfoCircleOutlined } from '@ant-design/icons';
