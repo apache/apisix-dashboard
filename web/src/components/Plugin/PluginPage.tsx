@@ -61,8 +61,8 @@ const PluginPage: React.FC<Props> = ({
   const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join('');
   useEffect(() => {
     fetchList().then((data) => {
-      const filterData = data.filter((item) => !(PLUGIN_FILTER_LIST[item.name] && PLUGIN_FILTER_LIST[item.name].list.includes(referPage)));
-      setPluginList(filterData);
+      const filteredData = data.filter((item) => !(PLUGIN_FILTER_LIST[item.name] && PLUGIN_FILTER_LIST[item.name].list.includes(referPage)));
+      setPluginList(filteredData);
       const categoryList: string[] = [];
       data.forEach((item) => {
         if (!categoryList.includes(firstUpperCase(item.type))) {
