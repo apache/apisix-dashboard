@@ -33,13 +33,13 @@ const ServerInfo: React.FC = () => {
 
   useEffect(() => {
     fetchInfoList().then((infoList) => {
-      const list = infoList.map(item => {
+      const list = infoList.map((item) => {
         return {
           ...item,
           boot_time: moment(item.boot_time * 1000).format('YYYY-MM-DD HH:mm:ss'),
           last_report_time: moment(item.last_report_time * 1000).format('YYYY-MM-DD HH:mm:ss'),
           up_time: moment(item.boot_time * 1000).fromNow(true),
-        }
+        };
       });
 
       setNodeList(list);
