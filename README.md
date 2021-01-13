@@ -73,6 +73,7 @@ Support the following ways currently.
 
 - [Source Codes](./docs/deploy.md)
 - [Docker](./docs/deploy-with-docker.md)
+- [RPM package（only for CentOS 7）](./docs/deploy-with-rpm.md)
 
 ## Development
 
