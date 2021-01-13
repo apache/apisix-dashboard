@@ -166,9 +166,13 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 					return nil, err
 				}
 				byteLabels, err := utils.MergeJson(_serviceLabels, _labels)
+				if err != nil {
+					log.Errorf("Labels MergeJson err: ", err)
+					return nil, err
+				}
 				err = json.Unmarshal([]byte(byteLabels), &labels)
 				if err != nil {
-					log.Errorf("JsonToMapDemo err: ", err)
+					log.Errorf("JsonToMap err: ", err)
 					return nil, err
 				}
 				if labels != nil {
@@ -326,6 +330,10 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 					return nil, err
 				}
 				bytePlugins, err := utils.MergeJson(_servicePlugins, _plugins)
+				if err != nil {
+					log.Errorf("Plugins MergeJson err: ", err)
+					return nil, err
+				}
 				err = json.Unmarshal([]byte(bytePlugins), &plugins)
 				if err != nil {
 					log.Errorf("JsonToMapDemo err: ", err)
