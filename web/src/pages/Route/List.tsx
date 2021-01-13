@@ -63,8 +63,8 @@ const Page: React.FC = () => {
   }
 
   enum ExportFileType {
-    Json = 0,
-    Yaml,
+    JSON = 0,
+    YAML,
   }
 
   const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
@@ -110,11 +110,11 @@ const Page: React.FC = () => {
       let exportFileName = `APISIX_routes_${moment().format('YYYYMMDDHHmmss')}`;
 
       switch (exportFileType) {
-        case ExportFileType.Yaml:
+        case ExportFileType.YAML:
           exportFile = yaml.dump(resp.data);
           exportFileName = `${exportFileName}.yaml`;
           break;
-        case ExportFileType.Json:
+        case ExportFileType.JSON:
         default:
           exportFile = js_beautify(JSON.stringify(resp.data), {
             indent_size: 2,
@@ -161,8 +161,8 @@ const Page: React.FC = () => {
               </div>
               <Form.Item name="fileType" noStyle>
                 <Radio.Group>
-                  <Radio value={ExportFileType.Json}>Json</Radio>
-                  <Radio value={ExportFileType.Yaml}>Yaml</Radio>
+                  <Radio value={ExportFileType.JSON}>Json</Radio>
+                  <Radio value={ExportFileType.YAML}>Yaml</Radio>
                 </Radio.Group>
               </Form.Item>
             </Form>
