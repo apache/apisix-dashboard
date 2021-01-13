@@ -22,9 +22,7 @@ declare namespace ServiceModule {
     upstream_id: string;
     labels: string;
     enable_websocket: boolean;
-    plugins: {
-      [name: string]: any;
-    };
+    plugins: Record<string, any>;
   };
 
   type ResponseBody = {

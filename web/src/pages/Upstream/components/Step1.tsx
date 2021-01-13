@@ -16,7 +16,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { Form, Input } from 'antd';
-import { FormInstance } from 'antd/lib/form';
+import type { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 
 import UpstreamForm, { DEFAULT_UPSTREAM } from '@/components/Upstream';

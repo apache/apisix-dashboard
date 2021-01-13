@@ -30,7 +30,8 @@ import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
 import { LinkOutlined } from '@ant-design/icons';
-import Ajv, { DefinedError } from 'ajv';
+import Ajv from 'ajv';
+import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
 
 import { fetchSchema } from './service';
@@ -39,7 +40,7 @@ type Props = {
   name: string;
   type?: 'global' | 'scoped';
   schemaType: PluginComponent.Schema;
-  initialData: object;
+  initialData: Record<string, any>;
   pluginList: PluginComponent.Meta[];
   readonly?: boolean;
   visible: boolean;

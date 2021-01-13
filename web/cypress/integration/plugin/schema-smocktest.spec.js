@@ -50,23 +50,21 @@ context('smoke test for plugin schema', () => {
             .within(() => {
               cy.contains('Enable').click({
                 force: true,
-                timeout
+                timeout,
               });
             });
 
           // NOTE: wait for the Drawer to appear on the DOM
-          const drawerSelector = '.ant-drawer-content'
+          const drawerSelector = '.ant-drawer-content';
           cy.get(drawerSelector).within(() => {
             const switchSelector = '#disable';
             cy.get(switchSelector).click({
               force: true,
-              timeout
+              timeout,
             });
           });
 
-          cy.window().then(({
-            codemirror
-          }) => {
+          cy.window().then(({ codemirror }) => {
             if (codemirror) {
               codemirror.setValue(JSON.stringify(data));
             }
@@ -75,7 +73,7 @@ context('smoke test for plugin schema', () => {
           cy.get(drawerSelector).within(() => {
             cy.contains('Submit').click({
               force: true,
-              timeout
+              timeout,
             });
           });
 

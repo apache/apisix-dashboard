@@ -18,10 +18,7 @@ declare namespace ConsumerModule {
   type Entity = {
     username: string;
     desc: string;
-    plugins: {
-      // TODO: 完善类型
-      [name: string]: any;
-    };
+    plugins: Record<string, any>;
   };
 
   type ResEntity = Entity & {

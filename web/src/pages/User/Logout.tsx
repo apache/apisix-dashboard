@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import type React from 'react';
+
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
 import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
-import { UserModule } from '@/pages/User/typing';
+import type { UserModule } from '@/pages/User/typing';
 import { getUrlQuery } from '@/helpers';
 
 /**
