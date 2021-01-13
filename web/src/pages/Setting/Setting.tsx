@@ -75,6 +75,8 @@ const Setting: React.FC = () => {
               }
               history.push(path);
             }
+          } else {
+          history.push('/');
           }
         }, 500);
       });
