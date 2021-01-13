@@ -26,3 +26,9 @@ export const PLUGIN_ICON_LIST: Record<string, any> = {
   'openid-connect': <IconFont name="iconicons8-openid" />,
   'kafka-logger': <IconFont name="iconApache_kafka" />,
 };
+
+// This list is used to filter out plugins that cannot be displayed in the plugins list.
+export const PLUGIN_FILTER_LIST: Record<string, { list: PluginComponent.ReferPage[] }> =
+{
+  redirect: { list: ['route'] } // Filter out the redirect plugin on the route page.
+}

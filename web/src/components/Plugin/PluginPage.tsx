@@ -21,7 +21,7 @@ import { orderBy } from 'lodash';
 
 import PluginDetail from './PluginDetail';
 import { fetchList } from './service';
-import { PLUGIN_ICON_LIST } from './data';
+import { PLUGIN_ICON_LIST, PLUGIN_FILTER_LIST } from './data'
 import defaultPluginImg from '../../../public/static/default-plugin.png';
 
 type Props = {
@@ -29,6 +29,7 @@ type Props = {
   type?: 'global' | 'scoped';
   initialData?: PluginComponent.Data;
   schemaType?: PluginComponent.Schema;
+  referPage?: PluginComponent.ReferPage;
   onChange?: (data: PluginComponent.Data) => void;
 };
 
@@ -49,6 +50,7 @@ const PluginPage: React.FC<Props> = ({
   readonly = false,
   initialData = {},
   schemaType = 'route',
+  referPage = '',
   type = 'scoped',
   onChange = () => {},
 }) => {
@@ -59,8 +61,8 @@ const PluginPage: React.FC<Props> = ({
   const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join('');
   useEffect(() => {
     fetchList().then((data) => {
-      setPluginList(data);
-
+      const filteredData = data.filter((item) => !(PLUGIN_FILTER_LIST[item.name] && PLUGIN_FILTER_LIST[item.name].list.includes(referPage)));
+      setPluginList(filteredData);
       const categoryList: string[] = [];
       data.forEach((item) => {
         if (!categoryList.includes(firstUpperCase(item.type))) {
@@ -156,27 +158,25 @@ const PluginPage: React.FC<Props> = ({
   );
 
   const Plugin = () => (
-    <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
-      <PluginDetail
-        name={name}
-        readonly={readonly}
-        type={type}
-        visible={name !== NEVER_EXIST_PLUGIN_FLAG}
-        schemaType={schemaType}
-        initialData={initialData}
-        pluginList={pluginList}
-        onClose={() => {
-          setName(NEVER_EXIST_PLUGIN_FLAG);
-        }}
-        onChange={({ codemirrorData, formData }) => {
-          onChange({
-            ...initialData,
-            [name]: { ...codemirrorData, disable: !formData.disable },
-          });
-          setName(NEVER_EXIST_PLUGIN_FLAG);
-        }}
-      />
-    </Content>
+    <PluginDetail
+      name={name}
+      readonly={readonly}
+      type={type}
+      visible={name !== NEVER_EXIST_PLUGIN_FLAG}
+      schemaType={schemaType}
+      initialData={initialData}
+      pluginList={pluginList}
+      onClose={() => {
+        setName(NEVER_EXIST_PLUGIN_FLAG);
+      }}
+      onChange={({ codemirrorData, formData }) => {
+        onChange({
+          ...initialData,
+          [name]: { ...codemirrorData, disable: !formData.disable },
+        });
+        setName(NEVER_EXIST_PLUGIN_FLAG);
+      }}
+    />
   );
   return (
     <>
