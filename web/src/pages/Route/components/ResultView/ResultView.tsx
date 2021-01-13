@@ -19,7 +19,7 @@ import { Result, Button } from 'antd';
 import { history, useIntl } from 'umi';
 
 type Props = {
-  createNew(): void;
+  createNew: () => void;
 };
 
 const ResultView: React.FC<Props> = (props) => {

@@ -27,7 +27,7 @@ type Props = {
     plugins: PluginComponent.Data;
     script: Record<string, any>;
   };
-  onChange(data: { plugins: PluginComponent.Data; script: any }): void;
+  onChange: (data: { plugins: PluginComponent.Data; script: any }) => void;
   readonly?: boolean;
   isForceHttps: boolean;
 };

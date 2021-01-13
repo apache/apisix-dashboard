@@ -18,9 +18,9 @@ export declare namespace PluginOrchestrationModule {
   type Meta = {
     name: string;
     priority: number;
-    schema: object;
+    schema: Record<string, any>;
     type: string;
     version: number;
-    consumer_schema?: object;
+    consumer_schema?: Record<string, any>;
   };
 }

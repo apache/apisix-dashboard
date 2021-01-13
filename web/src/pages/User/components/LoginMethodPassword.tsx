@@ -16,11 +16,11 @@
  */
 import React from 'react';
 import { Form, Input } from 'antd';
-import { FormInstance } from 'antd/lib/form';
+import type { FormInstance } from 'antd/lib/form';
 import { UserOutlined, LockTwoTone } from '@ant-design/icons';
 import { request, formatMessage } from 'umi';
 
-import { UserModule } from '@/pages/User/typing';
+import type { UserModule } from '@/pages/User/typing';
 
 const formRef = React.createRef<FormInstance>();
 

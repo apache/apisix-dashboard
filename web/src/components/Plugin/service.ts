@@ -28,7 +28,7 @@ export const fetchList = () => {
  * default schema is route for plugins in route
  * support schema: consumer for plugins in consumer
  */
-const cachedPluginSchema: Record<string, object> = {
+const cachedPluginSchema: Record<string, any> = {
   route: {},
   consumer: {},
 };

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React from 'react';
-import { FormInstance } from 'antd/lib/form';
+import type { FormInstance } from 'antd/lib/form';
 
 import PluginPage from '@/components/Plugin';
 import Step1 from './Step1';
