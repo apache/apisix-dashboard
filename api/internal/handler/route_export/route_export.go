@@ -18,6 +18,7 @@ package route_export
 
 import (
 	"encoding/json"
+	"fmt"
 	"reflect"
 	"regexp"
 	"strings"
@@ -26,20 +27,26 @@ import (
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/log"
+	"github.com/apisix/manager-api/internal/utils"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 )
 
 type Handler struct {
-	routeStore store.Interface
+	routeStore    store.Interface
+	upstreamStore store.Interface
+	serviceStore  store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{
-		routeStore: store.GetStore(store.HubKeyRoute),
+		routeStore:    store.GetStore(store.HubKeyRoute),
+		upstreamStore: store.GetStore(store.HubKeyUpstream),
+		serviceStore:  store.GetStore(store.HubKeyService),
 	}, nil
 }
 
@@ -56,6 +63,7 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ExportInput)
 	ids := strings.Split(input.IDs, ",")
 	routes := []*entity.Route{}
+
 	for _, id := range ids {
 		route, err := h.routeStore.Get(id)
 		if err != nil {
@@ -63,7 +71,12 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 		}
 		routes = append(routes, route.(*entity.Route))
 	}
-	return routeToOpenApi3(routes), nil
+
+	swagger, err := h.routeToOpenApi3(routes)
+	if err != nil {
+		return nil, err
+	}
+	return swagger, nil
 }
 
 type AuthType string
@@ -77,9 +90,11 @@ const (
 var (
 	openApi = "3.0.0"
 	title   = "Routes Export"
+	service interface{}
+	err     error
 )
 
-func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
+func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, error) {
 	paths := openapi3.Paths{}
 	pathItem := &openapi3.PathItem{}
 	path := openapi3.Operation{}
@@ -87,40 +102,102 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 	requestBody := &openapi3.RequestBody{}
 	components := &openapi3.Components{}
 	secSchemas := openapi3.SecuritySchemes{}
+	servicePlugins := make(map[string]interface{})
+	plugins := make(map[string]interface{})
+	serviceLabels := make(map[string]string)
+	labels := make(map[string]string)
+
 	for _, route := range routes {
 		extensions := make(map[string]interface{})
 		path.Summary = route.Desc
 		path.OperationID = route.Name
+
+		if route.ServiceID != nil {
+			serviceID := utils.InterfaceToString(route.ServiceID)
+			service, err = h.serviceStore.Get(serviceID)
+			if err != nil {
+				if err == data.ErrNotFound {
+					return nil, fmt.Errorf("service id: %s not found", route.ServiceID)
+				}
+				return nil, err
+			}
+			extensions["x-apisix-serviceID"] = route.ServiceID
+
+			_service := service.(*entity.Service)
+			servicePlugins = _service.Plugins
+			serviceLabels = _service.Labels
+		}
+
 		if route.Upstream != nil {
 			extensions["x-apisix-upstream"] = route.Upstream
+		} else if route.UpstreamID != nil && route.Upstream == nil {
+			upstreamID := utils.InterfaceToString(route.UpstreamID)
+			upstream, err := h.upstreamStore.Get(upstreamID)
+			if err != nil {
+				if err == data.ErrNotFound {
+					return nil, fmt.Errorf("upstream id: %s not found", route.UpstreamID)
+				}
+				return nil, err
+			}
+			extensions["x-apisix-upstream"] = upstream
+		} else if route.UpstreamID == nil && route.Upstream == nil && route.ServiceID != nil {
+			_service := service.(*entity.Service)
+			extensions["x-apisix-upstream"] = _service.Upstream
 		}
+
 		if route.Host != "" {
 			extensions["x-apisix-host"] = route.Host
 		}
+
 		if route.Hosts != nil {
 			extensions["x-apisix-hosts"] = route.Hosts
 		}
+
 		if route.Labels != nil {
+			if route.ServiceID != nil {
+				_serviceLabels, err := json.Marshal(serviceLabels)
+				if err != nil {
+					log.Errorf("MapToJson err: ", err)
+					return nil, err
+				}
+				_labels, err := json.Marshal(route.Labels)
+				if err != nil {
+					log.Errorf("MapToJson err: ", err)
+					return nil, err
+				}
+				byteLabels, err := utils.MergeJson(_serviceLabels, _labels)
+				err = json.Unmarshal([]byte(byteLabels), &labels)
+				if err != nil {
+					log.Errorf("JsonToMapDemo err: ", err)
+					return nil, err
+				}
+				if labels != nil {
+					extensions["x-apisix-labels"] = labels
+				}
+			}
 			extensions["x-apisix-labels"] = route.Labels
+		} else if route.Labels == nil && route.ServiceID != nil {
+			if serviceLabels != nil {
+				extensions["x-apisix-labels"] = serviceLabels
+			}
 		}
+
 		if route.RemoteAddr != "" {
 			extensions["x-apisix-remoteAddr"] = route.RemoteAddr
 		}
+
 		if route.RemoteAddrs != nil {
 			extensions["x-apisix-remoteAddrs"] = route.RemoteAddrs
 		}
+
 		if route.FilterFunc != "" {
 			extensions["x-apisix-filterFunc"] = route.FilterFunc
 		}
-		if route.ServiceID != nil {
-			extensions["x-apisix-serviceID"] = route.ServiceID
-		}
-		if route.UpstreamID != nil {
-			extensions["x-apisix-upstreamID"] = route.UpstreamID
-		}
+
 		if route.Script != nil {
 			extensions["x-apisix-script"] = route.Script
 		}
+
 		if route.ServiceProtocol != "" {
 			extensions["x-apisix-serviceProtocol"] = route.ServiceProtocol
 		}
@@ -133,6 +210,7 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 		if route.URI != "" {
 			routeURIs = append(routeURIs, route.URI)
 		}
+
 		if route.Uris != nil {
 			routeURIs = route.Uris
 		}
@@ -156,7 +234,7 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 		if route.Plugins != nil {
 			param := &openapi3.Parameter{}
 			secReq := &openapi3.SecurityRequirements{}
-			plugins := make(map[string]interface{})
+
 			// analysis plugins
 			for key, value := range route.Plugins {
 				// analysis proxy-rewrite plugin
@@ -235,6 +313,28 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 				plugins[key] = value
 			}
 			path.Security = secReq
+
+			if route.ServiceID != nil {
+				_servicePlugins, err := json.Marshal(servicePlugins)
+				if err != nil {
+					log.Errorf("MapToJson err: ", err)
+					return nil, err
+				}
+				_plugins, err := json.Marshal(plugins)
+				if err != nil {
+					log.Errorf("MapToJson err: ", err)
+					return nil, err
+				}
+				bytePlugins, err := utils.MergeJson(_servicePlugins, _plugins)
+				err = json.Unmarshal([]byte(bytePlugins), &plugins)
+				if err != nil {
+					log.Errorf("JsonToMapDemo err: ", err)
+					return nil, err
+				}
+			}
+			extensions["x-apisix-plugins"] = plugins
+		} else if route.Plugins == nil && route.ServiceID != nil {
+			plugins = servicePlugins
 			extensions["x-apisix-plugins"] = plugins
 		}
 
@@ -245,6 +345,7 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 		path.Parameters = paramsRefs
 		path.RequestBody = &openapi3.RequestBodyRef{Value: requestBody}
 		path.Responses = openapi3.NewResponses()
+
 		for i := range route.Methods {
 			switch strings.ToUpper(route.Methods[i]) {
 			case "GET":
@@ -268,6 +369,7 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 			}
 		}
 	}
+
 	components.SecuritySchemes = secSchemas
 	swagger := openapi3.Swagger{
 		OpenAPI:    openApi,
@@ -275,7 +377,7 @@ func routeToOpenApi3(routes []*entity.Route) *openapi3.Swagger {
 		Paths:      paths,
 		Components: *components,
 	}
-	return &swagger
+	return &swagger, nil
 }
 
 func parsePathItem(path openapi3.Operation, routeMethod string) *openapi3.Operation {

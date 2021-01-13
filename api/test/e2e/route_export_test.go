@@ -188,4 +188,207 @@ func TestRoute_Export(t *testing.T) {
 	for _, tc := range tests3 {
 		testCaseCheck(tc, t)
 	}
+
+	// The test case tests the creation of a complete service.
+	// And according to the service_ ID to create a route.
+	// Test whether the plugin upstream label in the service is integrated with route and exported.
+	tests4 := []HttpTestCase{
+		{
+			Desc:    "create service with all options",
+			Object:  ManagerApiExpect(t),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/services/s1",
+			Headers: map[string]string{"Authorization": token},
+			Body: `{
+				"name": "testservice",
+				"desc": "testservice_desc",
+				"labels": {
+					"build":"16",
+					"env":"production",
+					"version":"v2"
+				},
+				"enable_websocket":true,
+				"plugins": { 
+					"limit-count": { 
+						"count": 100, 
+						"time_window": 60, 
+						"rejected_code": 503, 
+						"key": "remote_addr" 
+					} 
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"create_time":1602883670,
+					"update_time":1602893670,
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:       "get the service s1",
+			Object:     ManagerApiExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/apisix/admin/services/s1",
+			Headers:    map[string]string{"Authorization": token},
+			ExpectCode: http.StatusOK,
+			ExpectBody: "\"name\":\"testservice\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
+		},
+		{
+			Desc:   "create route3 using the service just created",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r3",
+			Body: `{
+				"methods": ["GET"],
+				"uri": "/hello",
+				"service_id": "s1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route3",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r3",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "{\"code\":0,\"message\":\"\",\"data\":{\"components\":{},\"info\":{\"title\":\"Routes Export\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{\"/hello\":{\"get\":{\"operationId\":\"Get\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"x-apisix-enableWebsocket\":false,\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-serviceID\":\"s1\",\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}}}}}",
+		},
+		{
+			Desc:         "delete the route3 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r3",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route3 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests4 {
+		testCaseCheck(tc, t)
+	}
+
+	// This test case tests the creation of a complete service.
+	// And create a complete route, export rules as route upstream data for high priority, direct use.
+	// However, if the data in the service (label, plugins) does not exist in the route, it will be fused and exported.
+	// If it exists, the data in route will be used first
+	tests5 := []HttpTestCase{
+		{
+			Desc:    "create service with all options",
+			Object:  ManagerApiExpect(t),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/services/s2",
+			Headers: map[string]string{"Authorization": token},
+			Body: `{
+				"name": "testservice",
+				"desc": "testservice_desc",
+				"labels": {
+					"build":"16",
+					"env":"production",
+					"version":"v2"
+				},
+				"enable_websocket":true,
+				"plugins": { 
+					"limit-count": { 
+						"count": 100, 
+						"time_window": 60, 
+						"rejected_code": 503, 
+						"key": "remote_addr" 
+					} 
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"create_time":1602883670,
+					"update_time":1602893670,
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:       "get the service s2",
+			Object:     ManagerApiExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/apisix/admin/services/s2",
+			Headers:    map[string]string{"Authorization": token},
+			ExpectCode: http.StatusOK,
+			ExpectBody: "\"name\":\"testservice\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
+		},
+		{
+			Desc:   "create route4 using the service just created",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r4",
+			Body: `{
+				"methods": ["GET"],
+				"uri": "/hello",
+				"service_id": "s2",
+				"enable_websocket":false,
+				"plugins": { 
+					"prometheus": {
+						"disable": false
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route4",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r4",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "data\":{\"components\":{},\"info\":{\"title\":\"Routes Export\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{\"/hello\":{\"get\":{\"operationId\":\"Get\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60},\"prometheus\":{\"disable\":false}},\"x-apisix-priority\":0,\"x-apisix-serviceID\":\"s2\",\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}}}}}",
+		},
+		{
+			Desc:         "delete the route4 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r4",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route4 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests5 {
+		testCaseCheck(tc, t)
+	}
 }
