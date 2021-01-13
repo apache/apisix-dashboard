@@ -154,27 +154,25 @@ const PluginPage: React.FC<Props> = ({
   );
 
   const Plugin = () => (
-    <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
-      <PluginDetail
-        name={name}
-        readonly={readonly}
-        type={type}
-        visible={name !== NEVER_EXIST_PLUGIN_FLAG}
-        schemaType={schemaType}
-        initialData={initialData}
-        pluginList={pluginList}
-        onClose={() => {
-          setName(NEVER_EXIST_PLUGIN_FLAG);
-        }}
-        onChange={({ codemirrorData, formData }) => {
-          onChange({
-            ...initialData,
-            [name]: { ...codemirrorData, disable: !formData.disable },
-          });
-          setName(NEVER_EXIST_PLUGIN_FLAG);
-        }}
-      />
-    </Content>
+    <PluginDetail
+      name={name}
+      readonly={readonly}
+      type={type}
+      visible={name !== NEVER_EXIST_PLUGIN_FLAG}
+      schemaType={schemaType}
+      initialData={initialData}
+      pluginList={pluginList}
+      onClose={() => {
+        setName(NEVER_EXIST_PLUGIN_FLAG);
+      }}
+      onChange={({ codemirrorData, formData }) => {
+        onChange({
+          ...initialData,
+          [name]: { ...codemirrorData, disable: !formData.disable },
+        });
+        setName(NEVER_EXIST_PLUGIN_FLAG);
+      }}
+    />
   );
   return (
     <>
