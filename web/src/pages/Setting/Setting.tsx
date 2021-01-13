@@ -62,7 +62,15 @@ const Setting: React.FC = () => {
         });
         setTimeout(() => {
           const redirect = getUrlQuery('redirect');
-          window.location.href = redirect ? decodeURIComponent(redirect) : '/';
+          const currentHost = window.location.host;
+          if (redirect) {
+            const redirectUrl = decodeURIComponent(redirect);
+            const redirectHost = redirectUrl.split('/')[2];
+            if (currentHost === redirectHost) {
+              window.location.href = redirectUrl;
+            }
+          }
+
         }, 500);
       });
     });
