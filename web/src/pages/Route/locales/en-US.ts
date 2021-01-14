@@ -125,8 +125,8 @@ export default {
   'page.route.TabPane.authentication': 'Authentication',
   'page.route.TabPane.response': 'Response',
   'page.route.debugWithoutAuth': 'This request does not use any authorization.',
-  'page.route.button.exportOpenApi': 'Export OpenApi',
+  'page.route.button.exportOpenApi': 'Export OpenAPI',
   'page.route.exportRoutesTips': 'Please choose the type of file you want to download',
-  'page.route.button.importOpenApi': 'Import OpenApi',
+  'page.route.button.importOpenApi': 'Import OpenAPI',
   'page.route.button.selectFile': 'Select File',
 };
