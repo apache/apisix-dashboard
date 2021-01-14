@@ -1369,18 +1369,18 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	ctx := droplet.NewContext()
 	route := &entity.Route{}
 	reqBody := `{
-		  "id": "1",
-		  "uri": "/index.html",
-		  "upstream": {
-		      "type": "roundrobin",
-		      "nodes": [{
-		          "host": "www.a.com",
-		          "port": 80,
-		          "weight": 1
-		      }]
-		  },
-		  "script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M"
-		}`
+		"id": "1",
+		"uri": "/index.html",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "www.a.com",
+				"port": 80,
+				"weight": 1
+			}]
+		},
+		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M"
+	}`
 	err = json.Unmarshal([]byte(reqBody), route)
 	assert.Nil(t, err)
 	ctx.SetInput(route)
@@ -1474,18 +1474,18 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	ctx = droplet.NewContext()
 	route = &entity.Route{}
 	reqBody = `{
-		  "id": "1",
-		  "uri": "/index.html",
-		  "upstream": {
-		      "type": "roundrobin",
-		      "nodes": [{
-		          "host": "www.a.com",
-		          "port": 80,
-		          "weight": 1
-		      }]
-		  },
-		  "script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
-		}`
+		"id": "1",
+		"uri": "/index.html",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "www.a.com",
+				"port": 80,
+				"weight": 1
+			}]
+		},
+		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
+	}`
 	err = json.Unmarshal([]byte(reqBody), route)
 	assert.Nil(t, err)
 	ctx.SetInput(route)

@@ -164,7 +164,7 @@ func LabelContains(labels map[string]string, reqLabels map[string]struct{}) bool
 }
 
 // ValidateLuaCode validates lua syntax for input code, return nil
-// if passwd, otherwise a non-nil error will be returned
+// if passed, otherwise a non-nil error will be returned
 func ValidateLuaCode(code string) error {
 	_, err := parse.Parse(strings.NewReader(code), "<string>")
 	return err

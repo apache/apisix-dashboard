@@ -29,17 +29,17 @@ func TestRoute_with_script_lucacode(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-					 "uri": "/hello",
-					 "upstream": {
+					"uri": "/hello",
+					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
 							"host": "172.16.238.20",
 							"port": 1980,
 							"weight": 1
 						}]
-					 },
-					 "script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M"
-				 }`,
+					},
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -59,17 +59,17 @@ func TestRoute_with_script_lucacode(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-					 "uri": "/hello",
-					 "upstream": {
+					"uri": "/hello",
+					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
 							"host": "172.16.238.20",
 							"port": 1981,
 							"weight": 1
 						}]
-					 },
-					 "script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M"
-				 }`,
+					},
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -79,17 +79,17 @@ func TestRoute_with_script_lucacode(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-					 "uri": "/hello",
-					 "upstream": {
+					"uri": "/hello",
+					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
 							"host": "172.16.238.20",
 							"port": 1980,
 							"weight": 1
 						}]
-					 },
-					 "script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
-				 }`,
+					},
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
 		},
@@ -108,17 +108,17 @@ func TestRoute_with_script_lucacode(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-					 "uri": "/hello",
-					 "upstream": {
+					"uri": "/hello",
+					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
 							"host": "172.16.238.20",
 							"port": 1980,
 							"weight": 1
 						}]
-					 },
-					 "script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
-				 }`,
+					},
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
+			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
 		},
