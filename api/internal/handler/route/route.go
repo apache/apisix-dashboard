@@ -333,9 +333,17 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		// Explicitly to lua if input script is of the map type, otherwise
 		// it will always represent a piece of lua code of the string type.
 		if scriptConf, ok := input.Script.(map[string]interface{}); ok {
+			// For lua code of map type, syntax validation is done by
+			// the generateLuaCode function
 			input.Script, err = generateLuaCode(scriptConf)
 			if err != nil {
-				return nil, err
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+			}
+		} else {
+			// For lua code of string type, use utility func to syntax validation
+			err = utils.ValidateLuaCode(input.Script.(string))
+			if err != nil {
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 			}
 		}
 
@@ -398,15 +406,25 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		script := &entity.Script{}
 		script.ID = input.ID
 		script.Script = input.Script
+
+		var err error
 		// Explicitly to lua if input script is of the map type, otherwise
 		// it will always represent a piece of lua code of the string type.
-		var err error
 		if scriptConf, ok := input.Script.(map[string]interface{}); ok {
+			// For lua code of map type, syntax validation is done by
+			// the generateLuaCode function
 			input.Route.Script, err = generateLuaCode(scriptConf)
 			if err != nil {
-				return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+			}
+		} else {
+			// For lua code of string type, use utility func to syntax validation
+			err = utils.ValidateLuaCode(input.Script.(string))
+			if err != nil {
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 			}
 		}
+
 		//save original conf
 		if err = h.scriptStore.Update(c.Context(), script, true); err != nil {
 			//if not exists, create

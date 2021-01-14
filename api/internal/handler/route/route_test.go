@@ -1365,6 +1365,7 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	}
 	assert.NotNil(t, handler)
 
+	// create with script of valid lua syntax
 	ctx := droplet.NewContext()
 	route := &entity.Route{}
 	reqBody := `{
@@ -1386,10 +1387,10 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	_, err = handler.Create(ctx)
 	assert.Nil(t, err)
 
-	//sleep
+	// sleep
 	time.Sleep(time.Duration(20) * time.Millisecond)
 
-	//get
+	// get
 	input := &GetInput{}
 	input.ID = "1"
 	ctx.SetInput(input)
@@ -1399,7 +1400,7 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	assert.Equal(t, stored.ID, route.ID)
 	assert.Equal(t, "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M", stored.Script)
 
-	//update
+	// update via empty script
 	route2 := &UpdateInput{}
 	route2.ID = "1"
 	reqBody = `{
@@ -1435,7 +1436,32 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	assert.Equal(t, stored.ID, route.ID)
 	assert.Nil(t, stored.Script)
 
-	//delete test data
+	// 2nd update via invalid script
+	input3 := &UpdateInput{}
+	input3.ID = "1"
+	reqBody = `{
+		"id": "1",
+		"uri": "/index.html",
+		"enable_websocket": true,
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "www.a.com",
+				"port": 80,
+				"weight": 1
+			}]
+		},
+		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
+	}`
+
+	err = json.Unmarshal([]byte(reqBody), input3)
+	assert.Nil(t, err)
+	ctx.SetInput(input3)
+	_, err = handler.Update(ctx)
+	// err should NOT be nil
+	assert.NotNil(t, err)
+
+	// delete test data
 	inputDel := &BatchDelete{}
 	reqBody = `{"ids": "1"}`
 	err = json.Unmarshal([]byte(reqBody), inputDel)
@@ -1443,4 +1469,26 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	ctx.SetInput(inputDel)
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)
+
+	// 2nd create with script of invalid lua syntax
+	ctx = droplet.NewContext()
+	route = &entity.Route{}
+	reqBody = `{
+		  "id": "1",
+		  "uri": "/index.html",
+		  "upstream": {
+		      "type": "roundrobin",
+		      "nodes": [{
+		          "host": "www.a.com",
+		          "port": 80,
+		          "weight": 1
+		      }]
+		  },
+		  "script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
+		}`
+	err = json.Unmarshal([]byte(reqBody), route)
+	assert.Nil(t, err)
+	ctx.SetInput(route)
+	_, err = handler.Create(ctx)
+	assert.NotNil(t, err)
 }

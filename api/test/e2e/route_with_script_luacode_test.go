@@ -24,7 +24,7 @@ import (
 func TestRoute_with_script_lucacode(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			Desc:   "create route with script of lua code",
+			Desc:   "create route with script of valid lua code",
 			Object: ManagerApiExpect(t),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -54,6 +54,46 @@ func TestRoute_with_script_lucacode(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
+			Desc:   "update route with script of valid lua code",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					 "uri": "/hello",
+					 "upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1981,
+							"weight": 1
+						}]
+					 },
+					 "script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M"
+				 }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:   "update route with script of invalid lua code",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					 "uri": "/hello",
+					 "upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					 },
+					 "script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
+				 }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
 			Desc:         "delete the route (r1)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
@@ -61,6 +101,26 @@ func TestRoute_with_script_lucacode(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
+		},
+		{
+			Desc:   "create route with script of invalid lua code",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					 "uri": "/hello",
+					 "upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					 },
+					 "script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
+				 }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
 		},
 	}
 
