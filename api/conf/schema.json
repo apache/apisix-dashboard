@@ -3647,6 +3647,7 @@
 		"traffic-split": {
 			"priority": 966,
 			"schema": {
+				"additionalProperties": false,
 				"properties": {
 					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
@@ -3654,6 +3655,7 @@
 					},
 					"rules": {
 						"items": {
+							"additionalProperties": false,
 							"properties": {
 								"match": {
 									"default": [{
