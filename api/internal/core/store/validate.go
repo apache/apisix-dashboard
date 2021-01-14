@@ -266,7 +266,8 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 
 		if properties, ok := schemaMap["properties"]; ok {
 			if propertiesMap, ok := properties.(map[string]interface{}); ok {
-				if _, ok := propertiesMap["$comment"]; ok {
+				if val, ok := propertiesMap["$comment"]; ok {
+					_ = val
 					delete(propertiesMap, "$comment")
 				}
 			}
