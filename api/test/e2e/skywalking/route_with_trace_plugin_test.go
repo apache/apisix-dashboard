@@ -60,8 +60,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": e2e.Token},
-			//ExpectStatus: http.StatusOK,
-			ExpectBody: "test",
+			ExpectStatus: http.StatusOK,
 		},
 		{
 			Desc:         "tiger skywalking",
