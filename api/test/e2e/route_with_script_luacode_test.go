@@ -45,7 +45,7 @@ func TestRoute_with_script_lucacode(t *testing.T) {
 							"weight": 1
 						}]
 					},
-					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M"
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -84,7 +84,7 @@ func TestRoute_with_script_lucacode(t *testing.T) {
 							"weight": 1
 						}]
 					},
-					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M"
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -104,7 +104,7 @@ func TestRoute_with_script_lucacode(t *testing.T) {
 							"weight": 1
 						}]
 					},
-					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\")"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
@@ -133,7 +133,7 @@ func TestRoute_with_script_lucacode(t *testing.T) {
 							"weight": 1
 						}]
 					},
-					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\")"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,

@@ -119,11 +119,11 @@ func TestLabelContains(t *testing.T) {
 }
 
 func TestValidateLuaCode(t *testing.T) {
-	validLuaCode := "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M"
+	validLuaCode := "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M"
 	err := ValidateLuaCode(validLuaCode)
 	assert.Nil(t, err)
 
-	invalidLuaCode := "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
+	invalidLuaCode := "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\")"
 	err = ValidateLuaCode(invalidLuaCode)
 	assert.NotNil(t, err)
 	assert.Equal(t, "<string> at EOF:   syntax error\n", err.Error())

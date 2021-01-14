@@ -1379,7 +1379,7 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 				"weight": 1
 			}]
 		},
-		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M"
+		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M"
 	}`
 	err = json.Unmarshal([]byte(reqBody), route)
 	assert.Nil(t, err)
@@ -1398,7 +1398,7 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	stored := ret.(*entity.Route)
 	assert.Nil(t, err)
 	assert.Equal(t, stored.ID, route.ID)
-	assert.Equal(t, "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\") \n end \nreturn _M", stored.Script)
+	assert.Equal(t, "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M", stored.Script)
 
 	// update via empty script
 	route2 := &UpdateInput{}
@@ -1451,7 +1451,7 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 				"weight": 1
 			}]
 		},
-		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
+		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\")"
 	}`
 
 	err = json.Unmarshal([]byte(reqBody), input3)
@@ -1484,7 +1484,7 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 				"weight": 1
 			}]
 		},
-		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.INFO,\"hit access phase\")"
+		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\")"
 	}`
 	err = json.Unmarshal([]byte(reqBody), route)
 	assert.Nil(t, err)
