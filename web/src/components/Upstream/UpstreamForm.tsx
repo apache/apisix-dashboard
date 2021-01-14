@@ -61,6 +61,7 @@ type Props = {
   showSelector?: boolean;
   // FIXME: use proper typing
   ref?: any;
+  required: boolean,
 };
 
 const removeBtnStyle = {
@@ -70,11 +71,12 @@ const removeBtnStyle = {
 };
 
 const UpstreamForm: React.FC<Props> = forwardRef(
-  ({ form, disabled, list = [], showSelector }, ref) => {
+  ({ form, disabled, list = [], showSelector, required = true }, ref) => {
     const { formatMessage } = useIntl();
     const [readonly, setReadonly] = useState(
       Boolean(form.getFieldValue('upstream_id')) || disabled,
     );
+    const [hidenForm, setHidenForm] = useState(false);
 
     const timeoutFields = [
       {
@@ -610,6 +612,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             name="upstream_id"
             shouldUpdate={(prev, next) => {
               setReadonly(Boolean(next.upstream_id));
+              setHidenForm(!Boolean(next.upstream_id === 'None'));
               if (prev.upstream_id !== next.upstream_id) {
                 const id = next.upstream_id;
                 if (id) {
@@ -639,120 +642,123 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   {item.name}
                 </Select.Option>
               ))}
+              {Boolean(!required) && <Select.Option value={'None'} >None</Select.Option>}
             </Select>
           </Form.Item>
         )}
 
-        <Form.Item
-          label={formatMessage({ id: 'page.upstream.step.type' })}
-          name="type"
-          rules={[{ required: true }]}
-        >
-          <Select disabled={readonly}>
-            {Object.entries(Type).map(([label, value]) => {
-              return (
-                <Select.Option value={value} key={value}>
-                  {label}
-                </Select.Option>
-              );
-            })}
-          </Select>
-        </Form.Item>
-        <Form.Item shouldUpdate noStyle>
-          {() => {
-            if (form.getFieldValue('type') === 'chash') {
-              return <CHash />;
-            }
-            return null;
-          }}
-        </Form.Item>
-        {NodeList()}
-        <Form.Item
-          label={formatMessage({ id: 'page.upstream.step.pass-host' })}
-          name="pass_host"
-          extra={formatMessage({ id: 'page.upstream.step.pass-host.tips' })}
-        >
-          <Select disabled={readonly}>
-            <Select.Option value="pass">
-              {formatMessage({ id: 'page.upstream.step.pass-host.pass' })}
-            </Select.Option>
-            <Select.Option value="node">
-              {formatMessage({ id: 'page.upstream.step.pass-host.node' })}
-            </Select.Option>
-            <Select.Option value="rewrite">
-              {formatMessage({ id: 'page.upstream.step.pass-host.rewrite' })}
-            </Select.Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          noStyle
-          shouldUpdate={(prev, next) => {
-            return prev.pass_host !== next.pass_host;
-          }}
-        >
-          {() => {
-            if (form.getFieldValue('pass_host') === 'rewrite') {
-              return (
-                <Form.Item
-                  label={formatMessage({ id: 'page.upstream.step.pass-host.upstream_host' })}
-                  name="upstream_host"
-                >
-                  <Input disabled={readonly} />
-                </Form.Item>
-              );
-            }
-            return null;
-          }}
-        </Form.Item>
-
-        {timeoutFields.map(({ label, name }) => (
-          <Form.Item label={label} required key={label}>
-            <Form.Item
-              name={name}
-              noStyle
-              rules={[
-                {
-                  required: true,
-                  message: formatMessage({ id: `page.upstream.step.input.${name[1]}.timeout` }),
-                },
-              ]}
-            >
-              <InputNumber disabled={readonly} />
-            </Form.Item>
-            <TimeUnit />
+        {hidenForm && (<>
+          <Form.Item
+            label={formatMessage({ id: 'page.upstream.step.type' })}
+            name="type"
+            rules={[{ required: true }]}
+          >
+            <Select disabled={readonly}>
+              {Object.entries(Type).map(([label, value]) => {
+                return (
+                  <Select.Option value={value} key={value}>
+                    {label}
+                  </Select.Option>
+                );
+              })}
+            </Select>
           </Form.Item>
-        ))}
+          <Form.Item shouldUpdate noStyle>
+            {() => {
+              if (form.getFieldValue('type') === 'chash') {
+                return <CHash />;
+              }
+              return null;
+            }}
+          </Form.Item>
+          {NodeList()}
+          <Form.Item
+            label={formatMessage({ id: 'page.upstream.step.pass-host' })}
+            name="pass_host"
+            extra={formatMessage({ id: 'page.upstream.step.pass-host.tips' })}
+          >
+            <Select disabled={readonly}>
+              <Select.Option value="pass">
+                {formatMessage({ id: 'page.upstream.step.pass-host.pass' })}
+              </Select.Option>
+              <Select.Option value="node">
+                {formatMessage({ id: 'page.upstream.step.pass-host.node' })}
+              </Select.Option>
+              <Select.Option value="rewrite">
+                {formatMessage({ id: 'page.upstream.step.pass-host.rewrite' })}
+              </Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            noStyle
+            shouldUpdate={(prev, next) => {
+              return prev.pass_host !== next.pass_host;
+            }}
+          >
+            {() => {
+              if (form.getFieldValue('pass_host') === 'rewrite') {
+                return (
+                  <Form.Item
+                    label={formatMessage({ id: 'page.upstream.step.pass-host.upstream_host' })}
+                    name="upstream_host"
+                  >
+                    <Input disabled={readonly} />
+                  </Form.Item>
+                );
+              }
+              return null;
+            }}
+          </Form.Item>
 
-        <PanelSection
-          title={formatMessage({ id: 'page.upstream.step.healthyCheck.healthy.check' })}
-        >
-          {[
-            {
-              label: formatMessage({ id: 'page.upstream.step.healthyCheck.active' }),
-              name: ['checks', 'active'],
-              component: <ActiveHealthCheck />,
-            },
-            {
-              label: formatMessage({ id: 'page.upstream.step.healthyCheck.passive' }),
-              name: ['checks', 'passive'],
-              component: <InActiveHealthCheck />,
-            },
-          ].map(({ label, name, component }) => (
-            <div key={label}>
-              <Form.Item label={label} name={name} valuePropName="checked" key={label}>
-                <Switch disabled={readonly} />
+          {timeoutFields.map(({ label, name }) => (
+            <Form.Item label={label} required key={label}>
+              <Form.Item
+                name={name}
+                noStyle
+                rules={[
+                  {
+                    required: true,
+                    message: formatMessage({ id: `page.upstream.step.input.${name[1]}.timeout` }),
+                  },
+                ]}
+              >
+                <InputNumber disabled={readonly} />
               </Form.Item>
-              <Form.Item shouldUpdate noStyle>
-                {() => {
-                  if (form.getFieldValue(name)) {
-                    return component;
-                  }
-                  return null;
-                }}
-              </Form.Item>
-            </div>
+              <TimeUnit />
+            </Form.Item>
           ))}
-        </PanelSection>
+
+          <PanelSection
+            title={formatMessage({ id: 'page.upstream.step.healthyCheck.healthy.check' })}
+          >
+            {[
+              {
+                label: formatMessage({ id: 'page.upstream.step.healthyCheck.active' }),
+                name: ['checks', 'active'],
+                component: <ActiveHealthCheck />,
+              },
+              {
+                label: formatMessage({ id: 'page.upstream.step.healthyCheck.passive' }),
+                name: ['checks', 'passive'],
+                component: <InActiveHealthCheck />,
+              },
+            ].map(({ label, name, component }) => (
+              <div key={label}>
+                <Form.Item label={label} name={name} valuePropName="checked" key={label}>
+                  <Switch disabled={readonly} />
+                </Form.Item>
+                <Form.Item shouldUpdate noStyle>
+                  {() => {
+                    if (form.getFieldValue(name)) {
+                      return component;
+                    }
+                    return null;
+                  }}
+                </Form.Item>
+              </div>
+            ))}
+          </PanelSection>
+        </>)}
       </Form>
     );
   },
