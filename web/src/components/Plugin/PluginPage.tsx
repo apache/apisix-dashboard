@@ -21,7 +21,7 @@ import { orderBy } from 'lodash';
 
 import PluginDetail from './PluginDetail';
 import { fetchList } from './service';
-import { PLUGIN_ICON_LIST, PLUGIN_FILTER_LIST } from './data'
+import { PLUGIN_ICON_LIST, PLUGIN_FILTER_LIST } from './data';
 import defaultPluginImg from '../../../public/static/default-plugin.png';
 
 type Props = {
@@ -61,7 +61,12 @@ const PluginPage: React.FC<Props> = ({
   const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join('');
   useEffect(() => {
     fetchList().then((data) => {
-      const filteredData = data.filter((item) => !(PLUGIN_FILTER_LIST[item.name] && PLUGIN_FILTER_LIST[item.name].list.includes(referPage)));
+      const filteredData = data.filter(
+        (item) =>
+          !(
+            PLUGIN_FILTER_LIST[item.name] && PLUGIN_FILTER_LIST[item.name].list.includes(referPage)
+          ),
+      );
       setPluginList(filteredData);
       const categoryList: string[] = [];
       data.forEach((item) => {
