@@ -69,14 +69,14 @@ const Setting: React.FC = () => {
             const redirectHost = pathArray[2];
             if (currentHost === redirectHost) {
               let path = '';
-              for (let i = 3; i < pathArray.length; i++) {
+              for (let i = 3; i < pathArray.length; i += 1) {
                 path += '/';
                 path += pathArray[i];
               }
               history.push(path);
             }
           } else {
-          history.push('/');
+            history.push('/');
           }
         }, 500);
       });
