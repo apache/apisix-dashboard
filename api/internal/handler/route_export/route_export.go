@@ -106,9 +106,9 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 	plugins := make(map[string]interface{})
 	serviceLabels := make(map[string]string)
 	labels := make(map[string]string)
+	extensions := make(map[string]interface{})
 
 	for _, route := range routes {
-		extensions := make(map[string]interface{})
 		path.Summary = route.Desc
 		path.OperationID = route.Name
 
@@ -153,37 +153,14 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 			extensions["x-apisix-hosts"] = route.Hosts
 		}
 
-		if route.Labels != nil {
-			if route.ServiceID != nil {
-				_serviceLabels, err := json.Marshal(serviceLabels)
-				if err != nil {
-					log.Errorf("MapToJson err: ", err)
-					return nil, err
-				}
-				_labels, err := json.Marshal(route.Labels)
-				if err != nil {
-					log.Errorf("MapToJson err: ", err)
-					return nil, err
-				}
-				byteLabels, err := utils.MergeJson(_serviceLabels, _labels)
-				if err != nil {
-					log.Errorf("Labels MergeJson err: ", err)
-					return nil, err
-				}
-				err = json.Unmarshal([]byte(byteLabels), &labels)
-				if err != nil {
-					log.Errorf("JsonToMap err: ", err)
-					return nil, err
-				}
-				if labels != nil {
-					extensions["x-apisix-labels"] = labels
-				}
-			}
-			extensions["x-apisix-labels"] = route.Labels
-		} else if route.Labels == nil && route.ServiceID != nil {
-			if serviceLabels != nil {
-				extensions["x-apisix-labels"] = serviceLabels
-			}
+		//Parse Labels
+		labels, err = parseLabels(route, serviceLabels, labels)
+		if err != nil {
+			log.Errorf("parseLabels err: ", err)
+			return nil, err
+		}
+		if labels != nil {
+			extensions["x-apisix-labels"] = labels
 		}
 
 		if route.RemoteAddr != "" {
@@ -235,114 +212,13 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 			}
 		}
 
-		if route.Plugins != nil {
-			param := &openapi3.Parameter{}
-			secReq := &openapi3.SecurityRequirements{}
-
-			// analysis plugins
-			for key, value := range route.Plugins {
-				// analysis proxy-rewrite plugin
-				//if key == "proxy-rewrite" {
-				//	continue
-				//}
-
-				// analysis request-validation plugin
-				if key == "request-validation" {
-					if valueMap, ok := value.(map[string]interface{}); ok {
-						if hsVal, ok := valueMap["header_schema"]; ok {
-							param.In = "header"
-							requestValidation := &entity.RequestValidation{}
-							reqBytes, _ := json.Marshal(&hsVal)
-							err := json.Unmarshal(reqBytes, requestValidation)
-							if err != nil {
-								log.Errorf("json marshal failed: %s", err)
-							}
-							for key1, value1 := range requestValidation.Properties.(map[string]interface{}) {
-								for _, arr := range requestValidation.Required {
-									if arr == key1 {
-										param.Required = true
-									}
-								}
-								param.Name = key1
-								typeStr := value1.(map[string]interface{})
-								schema := &openapi3.Schema{Type: typeStr["type"].(string)}
-								param.Schema = &openapi3.SchemaRef{Value: schema}
-								paramsRefs = append(paramsRefs, &openapi3.ParameterRef{Value: param})
-							}
-						}
-
-						if bsVal, ok := valueMap["body_schema"]; ok {
-							m := map[string]*openapi3.MediaType{}
-							reqBytes, _ := json.Marshal(&bsVal)
-							schema := &openapi3.Schema{}
-							err := json.Unmarshal(reqBytes, schema)
-							if err != nil {
-								log.Errorf("json marshal failed: %s", err)
-							}
-							for _, va := range route.Vars.([]interface{}) {
-								compile := regexp.MustCompile("^http_.*")
-								match := compile.Match([]byte(va.([]interface{})[0].(string)))
-								if match {
-									m[va.([]interface{})[2].(string)] = &openapi3.MediaType{Schema: &openapi3.SchemaRef{Value: schema}}
-									requestBody.Content = m
-								}
-							}
-						}
-					}
-					continue
-				}
-				// analysis security plugins
-				securityEnv := &openapi3.SecurityRequirement{}
-				switch key {
-				case string(KeyAuth):
-					secSchemas["api_key"] = &openapi3.SecuritySchemeRef{Value: openapi3.NewCSRFSecurityScheme()}
-					securityEnv.Authenticate("api_key", " ")
-					secReq.With(*securityEnv)
-					continue
-				case string(BasicAuth):
-					secSchemas["basicAuth"] = &openapi3.SecuritySchemeRef{Value: &openapi3.SecurityScheme{
-						Type: "basicAuth",
-						Name: "basicAuth",
-						In:   "header",
-					}}
-					securityEnv.Authenticate("basicAuth", " ")
-					secReq.With(*securityEnv)
-					continue
-				case string(JWTAuth):
-					secSchemas["bearerAuth"] = &openapi3.SecuritySchemeRef{Value: openapi3.NewJWTSecurityScheme()}
-					securityEnv.Authenticate("bearerAuth", " ")
-					secReq.With(*securityEnv)
-					continue
-				}
-				plugins[key] = value
-			}
-			path.Security = secReq
-
-			if route.ServiceID != nil {
-				_servicePlugins, err := json.Marshal(servicePlugins)
-				if err != nil {
-					log.Errorf("MapToJson err: ", err)
-					return nil, err
-				}
-				_plugins, err := json.Marshal(plugins)
-				if err != nil {
-					log.Errorf("MapToJson err: ", err)
-					return nil, err
-				}
-				bytePlugins, err := utils.MergeJson(_servicePlugins, _plugins)
-				if err != nil {
-					log.Errorf("Plugins MergeJson err: ", err)
-					return nil, err
-				}
-				err = json.Unmarshal([]byte(bytePlugins), &plugins)
-				if err != nil {
-					log.Errorf("JsonToMapDemo err: ", err)
-					return nil, err
-				}
-			}
-			extensions["x-apisix-plugins"] = plugins
-		} else if route.Plugins == nil && route.ServiceID != nil {
-			plugins = servicePlugins
+		//Parse Route Plugins
+		path, secSchemas, paramsRefs, plugins, err = parseRoutePlugins(route, paramsRefs, plugins, path, servicePlugins, secSchemas, requestBody)
+		if err != nil {
+			log.Errorf("parseRoutePlugins err: ", err)
+			return nil, err
+		}
+		if plugins != nil {
 			extensions["x-apisix-plugins"] = plugins
 		}
 
@@ -388,6 +264,42 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 	return &swagger, nil
 }
 
+func parseLabels(route *entity.Route, serviceLabels map[string]string, labels map[string]string) (map[string]string, error) {
+	if route.Labels != nil {
+		if route.ServiceID != nil {
+			_serviceLabels, err := json.Marshal(serviceLabels)
+			if err != nil {
+				log.Errorf("MapToJson err: ", err)
+				return nil, err
+			}
+			_labels, err := json.Marshal(route.Labels)
+			if err != nil {
+				log.Errorf("MapToJson err: ", err)
+				return nil, err
+			}
+			byteLabels, err := utils.MergeJson(_serviceLabels, _labels)
+			if err != nil {
+				log.Errorf("Labels MergeJson err: ", err)
+				return nil, err
+			}
+			err = json.Unmarshal([]byte(byteLabels), &labels)
+			if err != nil {
+				log.Errorf("JsonToMap err: ", err)
+				return nil, err
+			}
+			if labels != nil {
+				return labels, nil
+			}
+		}
+		return route.Labels, nil
+	} else if route.Labels == nil && route.ServiceID != nil {
+		if serviceLabels != nil {
+			return serviceLabels, nil
+		}
+	}
+	return nil, nil
+}
+
 func parsePathItem(path openapi3.Operation, routeMethod string) *openapi3.Operation {
 	_path := &openapi3.Operation{
 		ExtensionProps: path.ExtensionProps,
@@ -405,4 +317,116 @@ func parsePathItem(path openapi3.Operation, routeMethod string) *openapi3.Operat
 		ExternalDocs:   path.ExternalDocs,
 	}
 	return _path
+}
+
+func parseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef, plugins map[string]interface{}, path openapi3.Operation, servicePlugins map[string]interface{}, secSchemas openapi3.SecuritySchemes, requestBody *openapi3.RequestBody) (openapi3.Operation, openapi3.SecuritySchemes, []*openapi3.ParameterRef, map[string]interface{}, error) {
+	if route.Plugins != nil {
+		param := &openapi3.Parameter{}
+		secReq := &openapi3.SecurityRequirements{}
+
+		// analysis plugins
+		for key, value := range route.Plugins {
+			// analysis proxy-rewrite plugin
+			//if key == "proxy-rewrite" {
+			//	continue
+			//}
+
+			// analysis request-validation plugin
+			if key == "request-validation" {
+				if valueMap, ok := value.(map[string]interface{}); ok {
+					if hsVal, ok := valueMap["header_schema"]; ok {
+						param.In = "header"
+						requestValidation := &entity.RequestValidation{}
+						reqBytes, _ := json.Marshal(&hsVal)
+						err := json.Unmarshal(reqBytes, requestValidation)
+						if err != nil {
+							log.Errorf("json marshal failed: %s", err)
+						}
+						for key1, value1 := range requestValidation.Properties.(map[string]interface{}) {
+							for _, arr := range requestValidation.Required {
+								if arr == key1 {
+									param.Required = true
+								}
+							}
+							param.Name = key1
+							typeStr := value1.(map[string]interface{})
+							schema := &openapi3.Schema{Type: typeStr["type"].(string)}
+							param.Schema = &openapi3.SchemaRef{Value: schema}
+							paramsRefs = append(paramsRefs, &openapi3.ParameterRef{Value: param})
+						}
+					}
+
+					if bsVal, ok := valueMap["body_schema"]; ok {
+						m := map[string]*openapi3.MediaType{}
+						reqBytes, _ := json.Marshal(&bsVal)
+						schema := &openapi3.Schema{}
+						err := json.Unmarshal(reqBytes, schema)
+						if err != nil {
+							log.Errorf("json marshal failed: %s", err)
+						}
+						for _, va := range route.Vars.([]interface{}) {
+							compile := regexp.MustCompile("^http_.*")
+							match := compile.Match([]byte(va.([]interface{})[0].(string)))
+							if match {
+								m[va.([]interface{})[2].(string)] = &openapi3.MediaType{Schema: &openapi3.SchemaRef{Value: schema}}
+								requestBody.Content = m
+							}
+						}
+					}
+				}
+				continue
+			}
+			// analysis security plugins
+			securityEnv := &openapi3.SecurityRequirement{}
+			switch key {
+			case string(KeyAuth):
+				secSchemas["api_key"] = &openapi3.SecuritySchemeRef{Value: openapi3.NewCSRFSecurityScheme()}
+				securityEnv.Authenticate("api_key", " ")
+				secReq.With(*securityEnv)
+				continue
+			case string(BasicAuth):
+				secSchemas["basicAuth"] = &openapi3.SecuritySchemeRef{Value: &openapi3.SecurityScheme{
+					Type: "basicAuth",
+					Name: "basicAuth",
+					In:   "header",
+				}}
+				securityEnv.Authenticate("basicAuth", " ")
+				secReq.With(*securityEnv)
+				continue
+			case string(JWTAuth):
+				secSchemas["bearerAuth"] = &openapi3.SecuritySchemeRef{Value: openapi3.NewJWTSecurityScheme()}
+				securityEnv.Authenticate("bearerAuth", " ")
+				secReq.With(*securityEnv)
+				continue
+			}
+			plugins[key] = value
+		}
+		path.Security = secReq
+
+		if route.ServiceID != nil {
+			_servicePlugins, err := json.Marshal(servicePlugins)
+			if err != nil {
+				log.Errorf("MapToJson err: ", err)
+				return path, nil, nil, nil, err
+			}
+			_plugins, err := json.Marshal(plugins)
+			if err != nil {
+				log.Errorf("MapToJson err: ", err)
+				return path, nil, nil, nil, err
+			}
+			bytePlugins, err := utils.MergeJson(_servicePlugins, _plugins)
+			if err != nil {
+				log.Errorf("Plugins MergeJson err: ", err)
+				return path, nil, nil, nil, err
+			}
+			err = json.Unmarshal([]byte(bytePlugins), &plugins)
+			if err != nil {
+				log.Errorf("JsonToMapDemo err: ", err)
+				return path, nil, nil, nil, err
+			}
+		}
+	} else if route.Plugins == nil && route.ServiceID != nil {
+		plugins = servicePlugins
+	}
+	return path, secSchemas, paramsRefs, plugins, nil
 }
