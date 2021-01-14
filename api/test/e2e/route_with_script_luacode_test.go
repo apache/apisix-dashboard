@@ -54,6 +54,15 @@ func TestRoute_with_script_lucacode(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
+			Desc:         "hit the route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world\n",
+		},
+		{
 			Desc:   "update route with script of valid lua code",
 			Object: ManagerApiExpect(t),
 			Method: http.MethodPut,

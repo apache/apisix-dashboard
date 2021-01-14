@@ -1489,6 +1489,8 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), route)
 	assert.Nil(t, err)
 	ctx.SetInput(route)
-	_, err = handler.Create(ctx)
+	ret, err = handler.Create(ctx)
 	assert.NotNil(t, err)
+	assert.EqualError(t, err, "<string> at EOF:   syntax error\n")
+	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 }
