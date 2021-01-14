@@ -125,7 +125,7 @@ export const exportRoutes = (ids: string) => {
   });
 };
 
-export const importRoutes = (formData) => {
+export const importRoutes = (formData: FormData) => {
   return request('/import', {
     method: 'POST',
     data: formData,

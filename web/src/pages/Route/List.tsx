@@ -36,6 +36,7 @@ import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined } from '@ant-
 import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
 import moment from 'moment';
+import { saveAs } from 'file-saver';
 
 import { timestampToLocaleString } from '@/helpers';
 import type { RcFile } from 'antd/lib/upload';
@@ -66,6 +67,7 @@ const Page: React.FC = () => {
     JSON = 0,
     YAML,
   }
+
 
   const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
@@ -104,7 +106,7 @@ const Page: React.FC = () => {
     });
   };
 
-  const handleExport = (exportFileType: number) => {
+  const handleExport = (exportFileType: ExportFileType) => {
     exportRoutes(selectedRowKeys.join(',')).then((resp) => {
       let exportFile: string;
       let exportFileName = `APISIX_routes_${moment().format('YYYYMMDDHHmmss')}`;
@@ -112,26 +114,22 @@ const Page: React.FC = () => {
       switch (exportFileType) {
         case ExportFileType.YAML:
           exportFile = yaml.dump(resp.data);
-          exportFileName = `${exportFileName}.yaml`;
+          exportFileName = `${exportFileName}.${ExportFileType[ExportFileType.YAML].toLocaleLowerCase()}`;
           break;
         case ExportFileType.JSON:
         default:
           exportFile = js_beautify(JSON.stringify(resp.data), {
             indent_size: 2,
           });
-          exportFileName = `${exportFileName}.json`;
+          exportFileName = `${exportFileName}.${ExportFileType[ExportFileType.JSON].toLocaleLowerCase()}`;
           break;
       }
 
       const blob = new Blob([exportFile], {
         type: EXPORT_FILE_MIME_TYPE_SUPPORTED[exportFileType],
       });
-      const aLink = document.createElement('a');
-      const evt = document.createEvent('MouseEvents');
-      evt.initEvent('click', false, true);
-      aLink.download = exportFileName;
-      aLink.href = window.URL.createObjectURL(blob);
-      aLink.dispatchEvent(evt);
+
+      saveAs(window.URL.createObjectURL(blob), exportFileName)
     });
   };
 
@@ -154,7 +152,7 @@ const Page: React.FC = () => {
     return (
       <Popconfirm
         title={
-          <Form form={exportFileTypeForm} initialValues={{ fileType: ExportFileType.Json }}>
+          <Form form={exportFileTypeForm} initialValues={{ fileType: ExportFileType.JSON }}>
             <div style={{ marginBottom: 8 }}>
               {formatMessage({ id: 'page.route.exportRoutesTips' })}
             </div>
