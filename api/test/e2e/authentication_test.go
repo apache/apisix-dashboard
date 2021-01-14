@@ -38,7 +38,7 @@ func TestAuthentication_token(t *testing.T) {
 			Path:         "/apisix/admin/routes",
 			Headers:      map[string]string{"Authorization": "Not-A-Valid-Token"},
 			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   "\"message\":\"Request Unauthorized\"",
+			ExpectBody:   "\"message\":\"request unauthorized\"",
 		},
 		{
 			Desc:         "Access without authentication token",
@@ -46,7 +46,7 @@ func TestAuthentication_token(t *testing.T) {
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes",
 			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   "\"message\":\"Request Unauthorized\"",
+			ExpectBody:   "\"message\":\"request unauthorized\"",
 		},
 	}
 

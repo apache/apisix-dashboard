@@ -21,6 +21,7 @@ require (
 	github.com/gin-contrib/sessions v0.0.3
 	github.com/gin-contrib/static v0.0.0-20200916080430-d45d9a37d28e
 	github.com/gin-gonic/gin v1.6.3
+	github.com/go-playground/assert/v2 v2.0.1
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/google/uuid v1.1.2 // indirect
@@ -29,8 +30,8 @@ require (
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/prometheus/client_golang v1.8.0 // indirect
 	github.com/satori/go.uuid v1.2.0
-	github.com/shiningrush/droplet v0.2.3
-	github.com/shiningrush/droplet/wrapper/gin v0.2.0
+	github.com/shiningrush/droplet v0.2.4
+	github.com/shiningrush/droplet/wrapper/gin v0.2.1
 	github.com/sirupsen/logrus v1.7.0 // indirect
 	github.com/sony/sonyflake v1.0.0
 	github.com/spf13/cobra v0.0.3
