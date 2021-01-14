@@ -125,8 +125,8 @@ export default {
   'page.route.TabPane.authentication': '认证',
   'page.route.TabPane.response': '响应结果',
   'page.route.debugWithoutAuth': '当前请求不启用任何认证方式。',
-  'page.route.button.exportOpenApi': '导出 OpenApi',
+  'page.route.button.exportOpenApi': '导出 OpenAPI',
   'page.route.exportRoutesTips': '请选择下载文件的类型',
-  'page.route.button.importOpenApi': '导入 OpenApi',
+  'page.route.button.importOpenApi': '导入 OpenAPI',
   'page.route.button.selectFile': '选择上传文件',
 };

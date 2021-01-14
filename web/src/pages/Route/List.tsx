@@ -38,7 +38,7 @@ import yaml from 'js-yaml';
 import moment from 'moment';
 
 import { timestampToLocaleString } from '@/helpers';
-import { RcFile } from 'antd/lib/upload';
+import type { RcFile } from 'antd/lib/upload';
 import {
   fetchList,
   remove,
@@ -152,33 +152,31 @@ const Page: React.FC = () => {
 
   const ListFooter: React.FC = () => {
     return (
-      <>
-        <Popconfirm
-          title={
-            <Form form={exportFileTypeForm} initialValues={{ fileType: ExportFileType.Json }}>
-              <div style={{ marginBottom: 8 }}>
-                {formatMessage({ id: 'page.route.exportRoutesTips' })}
-              </div>
-              <Form.Item name="fileType" noStyle>
-                <Radio.Group>
-                  <Radio value={ExportFileType.JSON}>Json</Radio>
-                  <Radio value={ExportFileType.YAML}>Yaml</Radio>
-                </Radio.Group>
-              </Form.Item>
-            </Form>
-          }
-          onConfirm={() => {
-            handleExport(exportFileTypeForm.getFieldValue('fileType'));
-          }}
-          okText={formatMessage({ id: 'component.global.confirm' })}
-          cancelText={formatMessage({ id: 'component.global.cancel' })}
-        >
-          <Button type="primary" disabled={selectedRowKeys.length === 0}>
-            <ExportOutlined />
-            {formatMessage({ id: 'page.route.button.exportOpenApi' })}
-          </Button>
-        </Popconfirm>
-      </>
+      <Popconfirm
+        title={
+          <Form form={exportFileTypeForm} initialValues={{ fileType: ExportFileType.Json }}>
+            <div style={{ marginBottom: 8 }}>
+              {formatMessage({ id: 'page.route.exportRoutesTips' })}
+            </div>
+            <Form.Item name="fileType" noStyle>
+              <Radio.Group>
+                <Radio value={ExportFileType.JSON}>Json</Radio>
+                <Radio value={ExportFileType.YAML}>Yaml</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </Form>
+        }
+        onConfirm={() => {
+          handleExport(exportFileTypeForm.getFieldValue('fileType'));
+        }}
+        okText={formatMessage({ id: 'component.global.confirm' })}
+        cancelText={formatMessage({ id: 'component.global.cancel' })}
+      >
+        <Button type="primary" disabled={selectedRowKeys.length === 0}>
+          <ExportOutlined />
+          {formatMessage({ id: 'page.route.button.exportOpenApi' })}
+        </Button>
+      </Popconfirm>
     );
   };
 
