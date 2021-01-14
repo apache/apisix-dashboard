@@ -234,10 +234,11 @@ const PluginDetail: React.FC<Props> = ({
               type="default"
               icon={<LinkOutlined />}
               onClick={() => {
-               if(name.includes("serverless"))
-                  {window.open(`https://github.com/apache/apisix/blob/master/doc/plugins/serverless.md`);}
-                else
-                  {window.open(`https://github.com/apache/apisix/blob/master/doc/plugins/${name}.md`);}
+               if (name.startsWith("serverless")) {
+                 window.open('https://github.com/apache/apisix/blob/master/doc/plugins/serverless.md');
+               } else {
+                 window.open(`https://github.com/apache/apisix/blob/master/doc/plugins/${name}.md`);
+               }
               }}
               key={1}
             >
