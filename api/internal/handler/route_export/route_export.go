@@ -89,15 +89,13 @@ const (
 
 var (
 	openApi = "3.0.0"
-	title   = "Routes Export"
+	title   = "RoutesExport"
 	service interface{}
 	err     error
 )
 
 func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, error) {
 	paths := openapi3.Paths{}
-	pathItem := &openapi3.PathItem{}
-	path := openapi3.Operation{}
 	paramsRefs := []*openapi3.ParameterRef{}
 	requestBody := &openapi3.RequestBody{}
 	components := &openapi3.Components{}
@@ -109,6 +107,8 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 	extensions := make(map[string]interface{})
 
 	for _, route := range routes {
+		pathItem := &openapi3.PathItem{}
+		path := openapi3.Operation{}
 		path.Summary = route.Desc
 		path.OperationID = route.Name
 

@@ -18,10 +18,82 @@ package e2e
 
 import (
 	"net/http"
+	"strings"
 	"testing"
 )
 
 func TestRoute_Export(t *testing.T) {
+	exportStrR1 := `
+			"/hello_": {
+				"get": {
+					"operationId": "aaaaGet",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"security": [],
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-hosts": ["foo.com", "*.bar.com"],
+					"x-apisix-labels": {
+						"build": "16",
+						"env": "production",
+						"version": "v2"
+					},
+					"x-apisix-plugins": {
+						"limit-count": {
+							"count": 2,
+							"key": "remote_addr",
+							"rejected_code": 503,
+							"time_window": 60
+						}
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"post": {
+					"operationId": "aaaaPost",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"security": [],
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-hosts": ["foo.com", "*.bar.com"],
+					"x-apisix-labels": {
+						"build": "16",
+						"env": "production",
+						"version": "v2"
+					},
+					"x-apisix-plugins": {
+						"limit-count": {
+							"count": 2,
+							"key": "remote_addr",
+							"rejected_code": 503,
+							"time_window": 60
+						}
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				}
+			}`
+	exportStrR1 = replaceStr(exportStrR1)
+
 	tests := []HttpTestCase{
 		{
 			Desc:         "hit route that not exist",
@@ -73,12 +145,83 @@ func TestRoute_Export(t *testing.T) {
 			Path:         "/apisix/admin/routes/export/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"data\":{\"components\":{},\"info\":{\"title\":\"Routes Export\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{\"/hello_\":{\"get\":{\"operationId\":\"aaaaGet\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}},\"post\":{\"operationId\":\"aaaaPost\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}}}}}",
+			ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR1 + "}}",
 		},
 	}
 	for _, tc := range tests {
 		testCaseCheck(tc, t)
 	}
+
+	exportStrR2 := `
+			"/hello2": {
+				"get": {
+					"operationId": "aaaa2Get",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"security": [],
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-hosts": ["foo.com", "*.bar.com"],
+					"x-apisix-labels": {
+						"build": "16",
+						"env": "production",
+						"version": "v2"
+					},
+					"x-apisix-plugins": {
+						"limit-count": {
+							"count": 2,
+							"key": "remote_addr",
+							"rejected_code": 503,
+							"time_window": 60
+						}
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"post": {
+					"operationId": "aaaa2Post",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"security": [],
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-hosts": ["foo.com", "*.bar.com"],
+					"x-apisix-labels": {
+						"build": "16",
+						"env": "production",
+						"version": "v2"
+					},
+					"x-apisix-plugins": {
+						"limit-count": {
+							"count": 2,
+							"key": "remote_addr",
+							"rejected_code": 503,
+							"time_window": 60
+						}
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				}
+			}`
+	exportStrR2 = replaceStr(exportStrR2)
 
 	tests2 := []HttpTestCase{
 		{
@@ -131,7 +274,7 @@ func TestRoute_Export(t *testing.T) {
 			Path:         "/apisix/admin/routes/export/r2",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"data\":{\"components\":{},\"info\":{\"title\":\"Routes Export\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{\"/hello2\":{\"get\":{\"operationId\":\"aaaa2Get\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}},\"post\":{\"operationId\":\"aaaa2Post\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}}}}}",
+			ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "}}",
 		},
 	}
 	for _, tc := range tests2 {
@@ -146,7 +289,7 @@ func TestRoute_Export(t *testing.T) {
 			Path:         "/apisix/admin/routes/export/r1,r2",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"data\":{\"components\":{},\"info\":{\"title\":\"Routes Export\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{\"/hello2\":{\"get\":{\"operationId\":\"aaaa2Get\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}},\"post\":{\"operationId\":\"aaaa2Post\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}}},\"/hello_\":{\"get\":{\"operationId\":\"aaaa2Get\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}},\"post\":{\"operationId\":\"aaaa2Post\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-hosts\":[\"foo.com\",\"*.bar.com\"],\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":2,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":{\"172.16.238.20:1980\":1},\"type\":\"roundrobin\"}}}}}",
+			ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "," + exportStrR1 + "}}",
 		},
 		{
 			Desc:         "delete the route just created",
@@ -188,6 +331,82 @@ func TestRoute_Export(t *testing.T) {
 	for _, tc := range tests3 {
 		testCaseCheck(tc, t)
 	}
+
+	serviceStrS1 := `
+	"name": "testservice", 
+	"desc": "testservice_desc", 
+	"upstream": {
+		"nodes": [{
+			"host": "172.16.238.20",
+			"port": 1980,
+			"weight": 1
+		}],
+		"type": "roundrobin"
+	}, 
+	"plugins": {
+		"limit-count": {
+			"count": 100,
+			"key": "remote_addr",
+			"rejected_code": 503,
+			"time_window": 60
+		}
+	}, 
+	"labels": {
+		"build": "16",
+		"env": "production",
+		"version": "v2"
+	}, 
+	"enable_websocket": true
+	`
+	serviceStrS1 = replaceStr(serviceStrS1)
+
+	exportStrR3 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {
+				"get": {
+					"operationId": "Get",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-labels": {
+						"build": "16",
+						"env": "production",
+						"version": "v2"
+					},
+					"x-apisix-plugins": {
+						"limit-count": {
+							"count": 100,
+							"key": "remote_addr",
+							"rejected_code": 503,
+							"time_window": 60
+						}
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-serviceID": "s1",
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}],
+						"type": "roundrobin"
+					}
+				}
+			}
+		}
+	}`
+	exportStrR3 = replaceStr(exportStrR3)
 
 	// The test case tests the creation of a complete service.
 	// And according to the service_ ID to create a route.
@@ -236,7 +455,7 @@ func TestRoute_Export(t *testing.T) {
 			Path:       "/apisix/admin/services/s1",
 			Headers:    map[string]string{"Authorization": token},
 			ExpectCode: http.StatusOK,
-			ExpectBody: "\"name\":\"testservice\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
+			ExpectBody: serviceStrS1,
 		},
 		{
 			Desc:   "create route3 using the service just created",
@@ -259,7 +478,7 @@ func TestRoute_Export(t *testing.T) {
 			Path:         "/apisix/admin/routes/export/r3",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "{\"code\":0,\"message\":\"\",\"data\":{\"components\":{},\"info\":{\"title\":\"Routes Export\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{\"/hello\":{\"get\":{\"operationId\":\"Get\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"x-apisix-enableWebsocket\":false,\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"x-apisix-priority\":0,\"x-apisix-serviceID\":\"s1\",\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}}}}}",
+			ExpectBody:   "{\"code\":0,\"message\":\"\",\"data\":" + exportStrR3,
 		},
 		{
 			Desc:         "delete the route3 just created",
@@ -283,6 +502,84 @@ func TestRoute_Export(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 
+	serviceStrS2 := `
+	"name": "testservice", 
+	"desc": "testservice_desc", 
+	"upstream": {
+		"nodes": [{
+			"host": "172.16.238.20",
+			"port": 1980,
+			"weight": 1
+		}],
+		"type": "roundrobin"
+	}, 
+	"plugins": {
+		"limit-count": {
+			"count": 100,
+			"key": "remote_addr",
+			"rejected_code": 503,
+			"time_window": 60
+		}
+	}, 
+	"labels": {
+		"build": "16",
+		"env": "production",
+		"version": "v2"
+	}, 
+	"enable_websocket": true`
+	serviceStrS2 = replaceStr(serviceStrS2)
+
+	exportStrR4 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {
+				"get": {
+					"operationId": "Get",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"security": [],
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-labels": {
+						"build": "16",
+						"env": "production",
+						"version": "v2"
+					},
+					"x-apisix-plugins": {
+						"limit-count": {
+							"count": 100,
+							"key": "remote_addr",
+							"rejected_code": 503,
+							"time_window": 60
+						},
+						"prometheus": {
+							"disable": false
+						}
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-serviceID": "s2",
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}],
+						"type": "roundrobin"
+					}
+				}
+			}
+		}
+	}`
+	exportStrR4 = replaceStr(exportStrR4)
 	// This test case tests the creation of a complete service.
 	// And create a complete route, export rules as route upstream data for high priority, direct use.
 	// However, if the data in the service (label, plugins) does not exist in the route, it will be fused and exported.
@@ -331,7 +628,7 @@ func TestRoute_Export(t *testing.T) {
 			Path:       "/apisix/admin/services/s2",
 			Headers:    map[string]string{"Authorization": token},
 			ExpectCode: http.StatusOK,
-			ExpectBody: "\"name\":\"testservice\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
+			ExpectBody: serviceStrS2,
 		},
 		{
 			Desc:   "create route4 using the service just created",
@@ -368,7 +665,7 @@ func TestRoute_Export(t *testing.T) {
 			Path:         "/apisix/admin/routes/export/r4",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "data\":{\"components\":{},\"info\":{\"title\":\"Routes Export\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{\"/hello\":{\"get\":{\"operationId\":\"Get\",\"requestBody\":{},\"responses\":{\"default\":{\"description\":\"\"}},\"security\":[],\"x-apisix-enableWebsocket\":false,\"x-apisix-labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"x-apisix-plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60},\"prometheus\":{\"disable\":false}},\"x-apisix-priority\":0,\"x-apisix-serviceID\":\"s2\",\"x-apisix-status\":1,\"x-apisix-upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}}}}}",
+			ExpectBody:   exportStrR4,
 		},
 		{
 			Desc:         "delete the route4 just created",
@@ -391,4 +688,11 @@ func TestRoute_Export(t *testing.T) {
 	for _, tc := range tests5 {
 		testCaseCheck(tc, t)
 	}
+}
+
+func replaceStr(str string) string {
+	str = strings.Replace(str, "\n", "", -1)
+	str = strings.Replace(str, "\t", "", -1)
+	str = strings.Replace(str, " ", "", -1)
+	return str
 }
