@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import { Form, Input } from 'antd';
-import { FormInstance } from 'antd/lib/form';
+import type { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 
 const FORM_LAYOUT = {

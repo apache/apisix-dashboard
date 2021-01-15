@@ -18,6 +18,7 @@
 -->
 
 # API doc of Manager API.
+
 Manager API directly operates ETCD and provides data management for Apache APISIX, provides APIs for Front-end or other clients.
 
 **License:** [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
@@ -25,6 +26,7 @@ Manager API directly operates ETCD and provides data management for Apache APISI
 ### /apisix/admin/check_ssl_cert
 
 #### POST
+
 ##### Summary:
 
 verify SSL cert and key.
@@ -46,6 +48,7 @@ verify SSL cert and key.
 ### /apisix/admin/check_ssl_exists
 
 #### POST
+
 ##### Summary:
 
 Check whether the SSL exists.
@@ -67,6 +70,7 @@ Check whether the SSL exists.
 ### /apisix/admin/consumers
 
 #### GET
+
 ##### Summary:
 
 Return the consumer list according to the specified page number and page size, and can search consumers by username.
@@ -89,6 +93,7 @@ Return the consumer list according to the specified page number and page size, a
 ### /apisix/admin/notexist/routes
 
 #### GET
+
 ##### Summary:
 
 Return result of route exists checking by name and exclude id.
@@ -110,6 +115,7 @@ Return result of route exists checking by name and exclude id.
 ### /apisix/admin/routes
 
 #### GET
+
 ##### Summary:
 
 Return the route list according to the specified page number and page size, and can search routes by name and uri.
@@ -134,6 +140,7 @@ Return the route list according to the specified page number and page size, and 
 ### /apisix/admin/services
 
 #### GET
+
 ##### Summary:
 
 Return the service list according to the specified page number and page size, and can search services by name.
@@ -156,6 +163,7 @@ Return the service list according to the specified page number and page size, an
 ### /apisix/admin/ssl
 
 #### GET
+
 ##### Summary:
 
 Return the SSL list according to the specified page number and page size, and can SSLs search by sni.
@@ -178,6 +186,7 @@ Return the SSL list according to the specified page number and page size, and ca
 ### /apisix/admin/upstreams
 
 #### GET
+
 ##### Summary:
 
 Return the upstream list according to the specified page number and page size, and can search upstreams by name.
@@ -200,6 +209,7 @@ Return the upstream list according to the specified page number and page size, a
 ### /apisix/admin/user/login
 
 #### POST
+
 ##### Summary:
 
 user login.
@@ -219,7 +229,6 @@ user login.
 | default | unexpected error | [ApiError](#ApiError) |
 
 ### Models
-
 
 #### ApiError
 

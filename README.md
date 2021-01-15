@@ -33,7 +33,6 @@
 
 - The latest released version is [2.3](https://apisix.apache.org/downloads/) and should be used with [Apache APISIX 2.2](https://apisix.apache.org/downloads/). It is not recommended to use with other Apache APISIX versions.
 
-
 ## What's Apache APISIX Dashboard
 
 The Apache APISIX Dashboard is designed to make it as easy as possible for users to operate [Apache APISIX](https://github.com/apache/apisix) through a frontend interface.

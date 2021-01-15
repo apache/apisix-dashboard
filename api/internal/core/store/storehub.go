@@ -35,7 +35,7 @@ const (
 	HubKeyUpstream   HubKey = "upstream"
 	HubKeyScript     HubKey = "script"
 	HubKeyGlobalRule HubKey = "global_rule"
-	HubKeyServerInfo HubKey = `server_info`
+	HubKeyServerInfo HubKey = "server_info"
 )
 
 var (

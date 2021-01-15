@@ -334,10 +334,10 @@
 				},
 				"upstream": {
 					"additionalProperties": false,
-					"anyOf": [{
+					"oneOf": [{
 						"required": ["nodes", "type"]
 					}, {
-						"required": ["service_name", "type"]
+						"required": ["discovery_type", "service_name", "type"]
 					}],
 					"properties": {
 						"checks": {
@@ -543,7 +543,7 @@
 						},
 						"hash_on": {
 							"default": "vars",
-							"enum": ["consumer", "cookie", "header", "vars"],
+							"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
 							"type": "string"
 						},
 						"id": {
@@ -582,7 +582,6 @@
 						},
 						"nodes": {
 							"anyOf": [{
-								"minProperties": 1,
 								"patternProperties": {
 									".*": {
 										"description": "weight of node",
@@ -761,10 +760,10 @@
 				},
 				"upstream": {
 					"additionalProperties": false,
-					"anyOf": [{
+					"oneOf": [{
 						"required": ["nodes", "type"]
 					}, {
-						"required": ["service_name", "type"]
+						"required": ["discovery_type", "service_name", "type"]
 					}],
 					"properties": {
 						"checks": {
@@ -970,7 +969,7 @@
 						},
 						"hash_on": {
 							"default": "vars",
-							"enum": ["consumer", "cookie", "header", "vars"],
+							"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
 							"type": "string"
 						},
 						"id": {
@@ -1009,7 +1008,6 @@
 						},
 						"nodes": {
 							"anyOf": [{
-								"minProperties": 1,
 								"patternProperties": {
 									".*": {
 										"description": "weight of node",
@@ -1268,10 +1266,10 @@
 				},
 				"upstream": {
 					"additionalProperties": false,
-					"anyOf": [{
+					"oneOf": [{
 						"required": ["nodes", "type"]
 					}, {
-						"required": ["service_name", "type"]
+						"required": ["discovery_type", "service_name", "type"]
 					}],
 					"properties": {
 						"checks": {
@@ -1477,7 +1475,7 @@
 						},
 						"hash_on": {
 							"default": "vars",
-							"enum": ["consumer", "cookie", "header", "vars"],
+							"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
 							"type": "string"
 						},
 						"id": {
@@ -1516,7 +1514,6 @@
 						},
 						"nodes": {
 							"anyOf": [{
-								"minProperties": 1,
 								"patternProperties": {
 									".*": {
 										"description": "weight of node",
@@ -1617,10 +1614,10 @@
 		},
 		"upstream": {
 			"additionalProperties": false,
-			"anyOf": [{
+			"oneOf": [{
 				"required": ["nodes", "type"]
 			}, {
-				"required": ["service_name", "type"]
+				"required": ["discovery_type", "service_name", "type"]
 			}],
 			"properties": {
 				"checks": {
@@ -1826,7 +1823,7 @@
 				},
 				"hash_on": {
 					"default": "vars",
-					"enum": ["consumer", "cookie", "header", "vars"],
+					"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
 					"type": "string"
 				},
 				"id": {
@@ -1865,7 +1862,6 @@
 				},
 				"nodes": {
 					"anyOf": [{
-						"minProperties": 1,
 						"patternProperties": {
 							".*": {
 								"description": "weight of node",
@@ -1963,11 +1959,15 @@
 		"api-breaker": {
 			"priority": 1005,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"break_response_code": {
 						"maximum": 599,
 						"minimum": 200,
 						"type": "integer"
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"healthy": {
 						"default": {
@@ -2033,9 +2033,23 @@
 		"authz-keycloak": {
 			"priority": 2000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"anyOf": [{
+					"required": ["discovery"]
+				}, {
+					"required": ["token_endpoint"]
+				}],
 				"properties": {
 					"audience": {
 						"maxLength": 100,
+						"minLength": 1,
+						"type": "string"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"discovery": {
+						"maxLength": 4096,
 						"minLength": 1,
 						"type": "string"
 					},
@@ -2089,7 +2103,6 @@
 						"type": "string"
 					}
 				},
-				"required": ["token_endpoint"],
 				"type": "object"
 			},
 			"version": 0.1
@@ -2111,6 +2124,7 @@
 			},
 			"priority": 2520,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
 					"disable": {
@@ -2138,6 +2152,7 @@
 			},
 			"priority": 4010,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
 					"disable": {
@@ -2151,6 +2166,7 @@
 		"consumer-restriction": {
 			"priority": 2400,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"oneOf": [{
 					"properties": {
 						"blacklist": {
@@ -2208,6 +2224,7 @@
 		"cors": {
 			"priority": 4000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"allow_credential": {
 						"default": false,
@@ -2229,6 +2246,9 @@
 						"description": "you can use '*' to allow all origins when no credentials,'**' to allow forcefully(it will bring some security risks, be carefully),multiple origin use ',' to split. default: *.",
 						"type": "string"
 					},
+					"disable": {
+						"type": "boolean"
+					},
 					"expose_headers": {
 						"default": "*",
 						"description": "you can use '*' to expose all header when no credentials,multiple header use ',' to split. default: *.",
@@ -2247,6 +2267,7 @@
 		"echo": {
 			"priority": 412,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"anyOf": [{
 					"required": ["before_body"]
@@ -2273,6 +2294,9 @@
 						"description": "body to replace upstream response.",
 						"type": "string"
 					},
+					"disable": {
+						"type": "boolean"
+					},
 					"headers": {
 						"description": "new headers for response",
 						"minProperties": 1,
@@ -2286,6 +2310,7 @@
 		"fault-injection": {
 			"priority": 11000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"minProperties": 1,
 				"properties": {
 					"abort": {
@@ -2321,6 +2346,9 @@
 						},
 						"required": ["duration"],
 						"type": "object"
+					},
+					"disable": {
+						"type": "boolean"
 					}
 				},
 				"type": "object"
@@ -2330,12 +2358,16 @@
 		"grpc-transcode": {
 			"priority": 506,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": true,
 				"properties": {
 					"deadline": {
 						"default": 0,
 						"description": "deadline for grpc, millisecond",
 						"type": "number"
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"method": {
 						"description": "the method name in the grpc service.",
@@ -2434,6 +2466,7 @@
 			},
 			"priority": 2530,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
 					"disable": {
@@ -2463,6 +2496,7 @@
 			},
 			"priority": 410,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"auth_header": {
 						"default": "",
@@ -2482,6 +2516,9 @@
 						"default": "json",
 						"enum": ["json", "new_line"],
 						"type": "string"
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"inactive_timeout": {
 						"default": 5,
@@ -2524,6 +2561,7 @@
 		"ip-restriction": {
 			"priority": 3000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"oneOf": [{
 					"additionalProperties": false,
 					"properties": {
@@ -2646,6 +2684,7 @@
 			},
 			"priority": 2510,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
 					"disable": {
@@ -2660,6 +2699,7 @@
 		"kafka-logger": {
 			"priority": 403,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"batch_max_size": {
 						"default": 1000,
@@ -2673,6 +2713,9 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"inactive_timeout": {
 						"default": 5,
@@ -2732,6 +2775,7 @@
 			},
 			"priority": 2500,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
 					"disable": {
@@ -2746,6 +2790,7 @@
 		"limit-conn": {
 			"priority": 1003,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"burst": {
 						"minimum": 0,
@@ -2758,6 +2803,9 @@
 					"default_conn_delay": {
 						"exclusiveMinimum": 0,
 						"type": "number"
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"key": {
 						"enum": ["consumer_name", "http_x_forwarded_for", "http_x_real_ip", "remote_addr", "server_addr"],
@@ -2777,6 +2825,7 @@
 		"limit-count": {
 			"priority": 1002,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"dependencies": {
 					"policy": {
 						"oneOf": [{
@@ -2843,6 +2892,9 @@
 						"minimum": 0,
 						"type": "integer"
 					},
+					"disable": {
+						"type": "boolean"
+					},
 					"key": {
 						"default": "remote_addr",
 						"enum": ["consumer_name", "http_x_forwarded_for", "http_x_real_ip", "remote_addr", "server_addr", "service_id"],
@@ -2872,10 +2924,14 @@
 		"limit-req": {
 			"priority": 1001,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"burst": {
 						"minimum": 0,
 						"type": "number"
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"key": {
 						"enum": ["consumer_name", "http_x_forwarded_for", "http_x_real_ip", "remote_addr", "server_addr"],
@@ -2899,7 +2955,11 @@
 		"mqtt-proxy": {
 			"priority": 1000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
 					"protocol_level": {
 						"type": "integer"
 					},
@@ -2926,7 +2986,13 @@
 		"openid-connect": {
 			"priority": 2599,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
+					"access_token_in_authorization_header": {
+						"default": false,
+						"description": "Whether the access token should be added in the Authorization header as opposed to the X-Access-Token header.",
+						"type": "boolean"
+					},
 					"bearer_only": {
 						"default": false,
 						"type": "boolean"
@@ -2936,6 +3002,9 @@
 					},
 					"client_secret": {
 						"type": "string"
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"discovery": {
 						"type": "string"
@@ -2966,6 +3035,21 @@
 						"default": "openid",
 						"type": "string"
 					},
+					"set_access_token_header": {
+						"default": true,
+						"description": "Whether the access token should be added as a header to the request for downstream",
+						"type": "boolean"
+					},
+					"set_id_token_header": {
+						"default": true,
+						"description": "Whether the ID token should be added in the X-ID-Token header to the request for downstream.",
+						"type": "boolean"
+					},
+					"set_userinfo_header": {
+						"default": true,
+						"description": "Whether the user info token should be added in the X-Userinfo header to the request for downstream.",
+						"type": "boolean"
+					},
 					"ssl_verify": {
 						"default": false,
 						"type": "boolean"
@@ -2988,6 +3072,7 @@
 		"prometheus": {
 			"priority": 500,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
 					"disable": {
@@ -3001,6 +3086,7 @@
 		"proxy-cache": {
 			"priority": 1009,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"cache_bypass": {
 						"items": {
@@ -3049,6 +3135,9 @@
 						"minLength": 1,
 						"type": "string"
 					},
+					"disable": {
+						"type": "boolean"
+					},
 					"hide_cache_headers": {
 						"default": false,
 						"type": "boolean"
@@ -3069,8 +3158,12 @@
 		"proxy-mirror": {
 			"priority": 1010,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"minProperties": 1,
 				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
 					"host": {
 						"pattern": "^http(s)?:\\/\\/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:[0-9]{1,5})?$",
 						"type": "string"
@@ -3084,9 +3177,13 @@
 		"proxy-rewrite": {
 			"priority": 1008,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"minProperties": 1,
 				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
 					"headers": {
 						"description": "new headers for request",
 						"minProperties": 1,
@@ -3127,12 +3224,16 @@
 		"redirect": {
 			"priority": 900,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"oneOf": [{
 					"required": ["uri"]
 				}, {
 					"required": ["http_to_https"]
 				}],
 				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
 					"http_to_https": {
 						"type": "boolean"
 					},
@@ -3154,10 +3255,14 @@
 		"referer-restriction": {
 			"priority": 2990,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
 					"bypass_missing": {
 						"default": false,
+						"type": "boolean"
+					},
+					"disable": {
 						"type": "boolean"
 					},
 					"whitelist": {
@@ -3177,7 +3282,11 @@
 		"request-id": {
 			"priority": 11010,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
 					"header_name": {
 						"default": "X-Request-Id",
 						"type": "string"
@@ -3194,6 +3303,7 @@
 		"request-validation": {
 			"priority": 2800,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"anyOf": [{
 					"properties": {
 						"body_schema": {
@@ -3224,6 +3334,7 @@
 		"response-rewrite": {
 			"priority": 899,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"minProperties": 1,
 				"properties": {
@@ -3234,6 +3345,9 @@
 					"body_base64": {
 						"default": false,
 						"description": "whether new body for response need base64 decode before return",
+						"type": "boolean"
+					},
+					"disable": {
 						"type": "boolean"
 					},
 					"headers": {
@@ -3252,10 +3366,28 @@
 			},
 			"version": 0.1
 		},
+		"server-info": {
+			"priority": 990,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"additionalProperties": false,
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"serverless-post-function": {
 			"priority": -2000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
 					"functions": {
 						"items": {
 							"type": "string"
@@ -3277,7 +3409,11 @@
 		"serverless-pre-function": {
 			"priority": 10000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
 					"functions": {
 						"items": {
 							"type": "string"
@@ -3299,6 +3435,7 @@
 		"sls-logger": {
 			"priority": 406,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"access_key_id": {
 						"type": "string"
@@ -3315,6 +3452,9 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"host": {
 						"type": "string"
@@ -3365,6 +3505,7 @@
 		"syslog": {
 			"priority": 401,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"batch_max_size": {
 						"default": 1000,
@@ -3375,6 +3516,9 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"drop_limit": {
 						"default": 1048576,
@@ -3437,6 +3581,7 @@
 		"tcp-logger": {
 			"priority": 405,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"batch_max_size": {
 						"default": 1000,
@@ -3447,6 +3592,9 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"host": {
 						"type": "string"
@@ -3499,9 +3647,15 @@
 		"traffic-split": {
 			"priority": 966,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"additionalProperties": false,
 				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
 					"rules": {
 						"items": {
+							"additionalProperties": false,
 							"properties": {
 								"match": {
 									"default": [{
@@ -3564,10 +3718,10 @@
 										"properties": {
 											"upstream": {
 												"additionalProperties": false,
-												"anyOf": [{
+												"oneOf": [{
 													"required": ["nodes", "type"]
 												}, {
-													"required": ["service_name", "type"]
+													"required": ["discovery_type", "service_name", "type"]
 												}],
 												"properties": {
 													"checks": {
@@ -3773,7 +3927,7 @@
 													},
 													"hash_on": {
 														"default": "vars",
-														"enum": ["consumer", "cookie", "header", "vars"],
+														"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
 														"type": "string"
 													},
 													"id": {
@@ -3812,7 +3966,6 @@
 													},
 													"nodes": {
 														"anyOf": [{
-															"minProperties": 1,
 															"patternProperties": {
 																".*": {
 																	"description": "weight of node",
@@ -3934,6 +4087,7 @@
 		"udp-logger": {
 			"priority": 400,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"batch_max_size": {
 						"default": 1000,
@@ -3944,6 +4098,9 @@
 						"default": 60,
 						"minimum": 1,
 						"type": "integer"
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"host": {
 						"type": "string"
@@ -3979,6 +4136,7 @@
 		"uri-blocker": {
 			"priority": 2900,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"block_rules": {
 						"items": {
@@ -3988,6 +4146,9 @@
 						},
 						"type": "array",
 						"uniqueItems": true
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"rejected_code": {
 						"default": 403,
@@ -4003,10 +4164,14 @@
 		"wolf-rbac": {
 			"priority": 2555,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
 					"appid": {
 						"default": "unset",
 						"type": "string"
+					},
+					"disable": {
+						"type": "boolean"
 					},
 					"header_prefix": {
 						"default": "X-",
@@ -4025,7 +4190,11 @@
 		"zipkin": {
 			"priority": 11011,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
 					"endpoint": {
 						"type": "string"
 					},

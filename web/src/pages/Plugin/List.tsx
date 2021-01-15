@@ -17,7 +17,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
-import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, Popconfirm, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { omit } from 'lodash';
@@ -42,9 +43,8 @@ const Page: React.FC = () => {
     if (!name) {
       fetchList().then(({ data }) => {
         const plugins: any = {};
-        // eslint-disable-next-line no-shadow
-        data.forEach(({ name, value }) => {
-          plugins[name] = value;
+        data.forEach(({ name: pluginName, value }) => {
+          plugins[pluginName] = value;
         });
         setInitialData(plugins);
       });

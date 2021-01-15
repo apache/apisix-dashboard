@@ -68,6 +68,14 @@ context('Create and Delete Route', () => {
     // go to step3
     cy.contains('Next').click();
 
+    // redirect plugin should not display in route step3
+    const nameSelector = '[data-cy-plugin-name]';
+    cy.get(nameSelector).then((cards) => {
+      [...cards].forEach(card => {
+        expect(card.innerText).to.not.equal('redirect')
+      });
+    });
+
     // config prometheus plugin
     cy.contains('.ant-card', 'prometheus').within(() => {
       cy.get('button').first().click();

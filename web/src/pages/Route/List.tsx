@@ -16,7 +16,8 @@
  */
 import React, { useRef, useEffect, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag, Space, Select } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined, BugOutlined } from '@ant-design/icons';
@@ -199,12 +200,12 @@ const Page: React.FC = () => {
 
         return (
           <Select style={{ width: '100%' }} allowClear>
-            <option key={RouteStatus.Offline} value={RouteStatus.Offline}>
+            <Option key={RouteStatus.Offline} value={RouteStatus.Offline}>
               {formatMessage({ id: 'page.route.unpublished' })}
-            </option>
-            <option key={RouteStatus.Publish} value={RouteStatus.Publish}>
+            </Option>
+            <Option key={RouteStatus.Publish} value={RouteStatus.Publish}>
               {formatMessage({ id: 'page.route.published' })}
-            </option>
+            </Option>
           </Select>
         );
       },

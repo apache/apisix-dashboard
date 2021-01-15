@@ -46,4 +46,3 @@ This is a backend project which the dashboard depends on, implemented by Golang.
 2. The `internal` directory contains the main logic of manager-api.
 3. The `conf` directory contains the default configuration file.
 4. The `test` directory contains E2E test cases.
-
