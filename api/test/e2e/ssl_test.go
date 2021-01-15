@@ -90,7 +90,7 @@ func TestSSL_Basic(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			caseDesc:     "check ssl labels",
+			Desc:         "check ssl labels",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/ssl/1",
