@@ -25,7 +25,6 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({
   disabled,
   isServiceId = false
 }) => {
-  console.log('isServiceId: ', isServiceId);
   const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
   useEffect(() => {
     fetchUpstreamList().then(({ data }) => setList(data));

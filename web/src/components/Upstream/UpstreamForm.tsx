@@ -98,18 +98,34 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     }));
 
     useEffect(() => {
-      const formData = form.getFieldsValue();
-      const { id } = formData;
-      if (id) {
-        setReadonly(true);
+      const formData = transformRequest(form.getFieldsValue()) || {};
+      const { upstream_id } = form.getFieldsValue();
+
+      if (required && upstream_id ==='None') {
         requestAnimationFrame(() => {
-          form.setFieldsValue(list.find((item) => item.id === id));
+          form.resetFields();
+          setHidenForm(false);
         });
       }
 
-      if (!required && !id && !Object.keys(formData).length) {
-        form.setFieldsValue({ upstream_id: 'None' });
+      if (upstream_id === 'None') {
+        setHidenForm(true);
       }
+
+      if (upstream_id) {
+        requestAnimationFrame(() => {
+          form.setFieldsValue(list.find((item) => item.id === upstream_id));
+        });
+      }
+
+      if (!required && !Object.keys(formData).length && upstream_id !== 'None') {
+        requestAnimationFrame(() => {
+          form.setFieldsValue({ upstream_id: 'None' });
+          setHidenForm(true);
+        });
+      }
+
+      setReadonly(Boolean(upstream_id));
     }, [list]);
 
     const CHash = () => (
@@ -615,25 +631,13 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           <Form.Item
             label={formatMessage({ id: 'page.upstream.step.select.upstream' })}
             name="upstream_id"
-            shouldUpdate={(prev, next) => {
-              setReadonly(Boolean(next.upstream_id));
-              setHidenForm(Boolean(next.upstream_id === 'None'));
-              if (prev.upstream_id !== next.upstream_id) {
-                const id = next.upstream_id;
-                if (id) {
-                  form.setFieldsValue(list.find((item) => item.id === id));
-                  form.setFieldsValue({
-                    upstream_id: id,
-                  });
-                }
-              }
-              return prev.upstream_id !== next.upstream_id;
-            }}
           >
             <Select
               disabled={disabled}
-              onChange={(id) => {
-                form.setFieldsValue(list.find((item) => item.id === id));
+              onChange={(upstream_id) => {
+                setReadonly(Boolean(upstream_id));
+                setHidenForm(Boolean(upstream_id === 'None'));
+                form.setFieldsValue(list.find((item) => item.id === upstream_id));
               }}
             >
               {Boolean(!required) && <Select.Option value={'None'} >None</Select.Option>}
