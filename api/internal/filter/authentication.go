@@ -39,7 +39,7 @@ func (mw *AuthenticationMiddleware) Handle(ctx droplet.Context) error {
 	if httpReq == nil {
 		err := errors.New("input middleware cannot get http request")
 
-		// Wrong useage, just panic here and let recoverHandler to deal with
+		// Wrong usage, just panic here and let recoverHandler to deal with
 		panic(err)
 	}
 
