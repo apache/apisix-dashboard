@@ -19,22 +19,23 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"github.com/apisix/manager-api/internal/filter"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	"github.com/shiningrush/droplet"
+	"github.com/spf13/cobra"
+
 	"github.com/apisix/manager-api/internal"
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/filter"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
-	"github.com/shiningrush/droplet"
-	"github.com/spf13/cobra"
 )
 
 var (
