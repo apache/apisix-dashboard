@@ -543,7 +543,7 @@
 						},
 						"hash_on": {
 							"default": "vars",
-							"enum": ["consumer", "cookie", "header", "vars"],
+							"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
 							"type": "string"
 						},
 						"id": {
@@ -969,7 +969,7 @@
 						},
 						"hash_on": {
 							"default": "vars",
-							"enum": ["consumer", "cookie", "header", "vars"],
+							"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
 							"type": "string"
 						},
 						"id": {
@@ -1475,7 +1475,7 @@
 						},
 						"hash_on": {
 							"default": "vars",
-							"enum": ["consumer", "cookie", "header", "vars"],
+							"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
 							"type": "string"
 						},
 						"id": {
@@ -1823,7 +1823,7 @@
 				},
 				"hash_on": {
 					"default": "vars",
-					"enum": ["consumer", "cookie", "header", "vars"],
+					"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
 					"type": "string"
 				},
 				"id": {
@@ -1959,8 +1959,8 @@
 		"api-breaker": {
 			"priority": 1005,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"break_response_code": {
 						"maximum": 599,
 						"minimum": 200,
@@ -2033,13 +2033,13 @@
 		"authz-keycloak": {
 			"priority": 2000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"anyOf": [{
 					"required": ["discovery"]
 				}, {
 					"required": ["token_endpoint"]
 				}],
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"audience": {
 						"maxLength": 100,
 						"minLength": 1,
@@ -2124,9 +2124,9 @@
 			},
 			"priority": 2520,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					}
@@ -2152,9 +2152,9 @@
 			},
 			"priority": 4010,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					}
@@ -2166,6 +2166,7 @@
 		"consumer-restriction": {
 			"priority": 2400,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"oneOf": [{
 					"properties": {
 						"blacklist": {
@@ -2212,7 +2213,6 @@
 					"title": "whitelist"
 				}],
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					}
@@ -2224,8 +2224,8 @@
 		"cors": {
 			"priority": 4000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"allow_credential": {
 						"default": false,
 						"description": "allow client append credential. according to CORS specification,if you set this option to 'true', you can not use '*' for other options.",
@@ -2267,6 +2267,7 @@
 		"echo": {
 			"priority": 412,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"anyOf": [{
 					"required": ["before_body"]
@@ -2277,7 +2278,6 @@
 				}],
 				"minProperties": 1,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"after_body": {
 						"description": "body after the modification of filter phase.",
 						"type": "string"
@@ -2310,9 +2310,9 @@
 		"fault-injection": {
 			"priority": 11000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"minProperties": 1,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"abort": {
 						"properties": {
 							"body": {
@@ -2358,9 +2358,9 @@
 		"grpc-transcode": {
 			"priority": 506,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": true,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"deadline": {
 						"default": 0,
 						"description": "deadline for grpc, millisecond",
@@ -2466,9 +2466,9 @@
 			},
 			"priority": 2530,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					}
@@ -2496,8 +2496,8 @@
 			},
 			"priority": 410,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"auth_header": {
 						"default": "",
 						"type": "string"
@@ -2561,6 +2561,7 @@
 		"ip-restriction": {
 			"priority": 3000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"oneOf": [{
 					"additionalProperties": false,
 					"properties": {
@@ -2621,7 +2622,6 @@
 					"title": "blacklist"
 				}],
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					}
@@ -2684,9 +2684,9 @@
 			},
 			"priority": 2510,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					}
@@ -2699,8 +2699,8 @@
 		"kafka-logger": {
 			"priority": 403,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"batch_max_size": {
 						"default": 1000,
 						"minimum": 1,
@@ -2775,9 +2775,9 @@
 			},
 			"priority": 2500,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					}
@@ -2790,8 +2790,8 @@
 		"limit-conn": {
 			"priority": 1003,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"burst": {
 						"minimum": 0,
 						"type": "integer"
@@ -2825,6 +2825,7 @@
 		"limit-count": {
 			"priority": 1002,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"dependencies": {
 					"policy": {
 						"oneOf": [{
@@ -2887,7 +2888,6 @@
 					}
 				},
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"count": {
 						"minimum": 0,
 						"type": "integer"
@@ -2924,8 +2924,8 @@
 		"limit-req": {
 			"priority": 1001,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"burst": {
 						"minimum": 0,
 						"type": "number"
@@ -2955,8 +2955,8 @@
 		"mqtt-proxy": {
 			"priority": 1000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					},
@@ -2986,8 +2986,8 @@
 		"openid-connect": {
 			"priority": 2599,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"access_token_in_authorization_header": {
 						"default": false,
 						"description": "Whether the access token should be added in the Authorization header as opposed to the X-Access-Token header.",
@@ -3072,9 +3072,9 @@
 		"prometheus": {
 			"priority": 500,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					}
@@ -3086,8 +3086,8 @@
 		"proxy-cache": {
 			"priority": 1009,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"cache_bypass": {
 						"items": {
 							"pattern": "(^[^\\$].+$|^\\$[0-9a-zA-Z_]+$)",
@@ -3158,9 +3158,9 @@
 		"proxy-mirror": {
 			"priority": 1010,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"minProperties": 1,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					},
@@ -3177,10 +3177,10 @@
 		"proxy-rewrite": {
 			"priority": 1008,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"minProperties": 1,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					},
@@ -3224,13 +3224,13 @@
 		"redirect": {
 			"priority": 900,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"oneOf": [{
 					"required": ["uri"]
 				}, {
 					"required": ["http_to_https"]
 				}],
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					},
@@ -3255,9 +3255,9 @@
 		"referer-restriction": {
 			"priority": 2990,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"bypass_missing": {
 						"default": false,
 						"type": "boolean"
@@ -3282,8 +3282,8 @@
 		"request-id": {
 			"priority": 11010,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					},
@@ -3303,6 +3303,7 @@
 		"request-validation": {
 			"priority": 2800,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"anyOf": [{
 					"properties": {
 						"body_schema": {
@@ -3321,7 +3322,6 @@
 					"title": "Header schema"
 				}],
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					}
@@ -3334,10 +3334,10 @@
 		"response-rewrite": {
 			"priority": 899,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"minProperties": 1,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"body": {
 						"description": "new body for response",
 						"type": "string"
@@ -3369,9 +3369,9 @@
 		"server-info": {
 			"priority": 990,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					}
@@ -3383,8 +3383,8 @@
 		"serverless-post-function": {
 			"priority": -2000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					},
@@ -3409,8 +3409,8 @@
 		"serverless-pre-function": {
 			"priority": 10000,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					},
@@ -3435,8 +3435,8 @@
 		"sls-logger": {
 			"priority": 406,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"access_key_id": {
 						"type": "string"
 					},
@@ -3505,8 +3505,8 @@
 		"syslog": {
 			"priority": 401,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"batch_max_size": {
 						"default": 1000,
 						"minimum": 1,
@@ -3581,8 +3581,8 @@
 		"tcp-logger": {
 			"priority": 405,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"batch_max_size": {
 						"default": 1000,
 						"minimum": 1,
@@ -3647,9 +3647,9 @@
 		"traffic-split": {
 			"priority": 966,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"additionalProperties": false,
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					},
@@ -3927,7 +3927,7 @@
 													},
 													"hash_on": {
 														"default": "vars",
-														"enum": ["consumer", "cookie", "header", "vars"],
+														"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
 														"type": "string"
 													},
 													"id": {
@@ -4087,8 +4087,8 @@
 		"udp-logger": {
 			"priority": 400,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"batch_max_size": {
 						"default": 1000,
 						"minimum": 1,
@@ -4136,8 +4136,8 @@
 		"uri-blocker": {
 			"priority": 2900,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"block_rules": {
 						"items": {
 							"maxLength": 4096,
@@ -4164,8 +4164,8 @@
 		"wolf-rbac": {
 			"priority": 2555,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"appid": {
 						"default": "unset",
 						"type": "string"
@@ -4190,8 +4190,8 @@
 		"zipkin": {
 			"priority": 11011,
 			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
 				"properties": {
-					"$comment": "this is a mark for our injected plugin schema",
 					"disable": {
 						"type": "boolean"
 					},
