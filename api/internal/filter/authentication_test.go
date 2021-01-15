@@ -69,7 +69,8 @@ func TestAuthenticationMiddleware_Handle(t *testing.T) {
 
 	// test without http.Request
 	err := mw.Handle(ctx)
-	assert.Contains(t, err.Error(), "input middleware cannot get http request")
+	panicErr := recover()
+	assert.Contains(t, panicErr.Error(), "input middleware cannot get http request")
 
 	ctx.Set(middleware.KeyHttpRequest, fakeReq)
 

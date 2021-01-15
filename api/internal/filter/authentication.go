@@ -37,11 +37,10 @@ type AuthenticationMiddleware struct {
 func (mw *AuthenticationMiddleware) Handle(ctx droplet.Context) error {
 	httpReq := ctx.Get(middleware.KeyHttpRequest)
 	if httpReq == nil {
-		err := errors.New("input middleware cannot get http request, " +
-			"please check if HttpInfoInjectorMiddleware middlle work well")
+		err := errors.New("input middleware cannot get http request")
 
-		ctx.SetOutput(&data.SpecCodeResponse{StatusCode: http.StatusInternalServerError})
-		return err
+		// Wrong useage, just panic here and let recoverHandler to deal with
+		panic(err)
 	}
 
 	req := httpReq.(*http.Request)
