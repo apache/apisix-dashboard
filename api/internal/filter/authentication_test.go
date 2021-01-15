@@ -52,6 +52,14 @@ func (mw *mockMiddleware) Handle(ctx droplet.Context) error {
 	return errors.New("next middleware")
 }
 
+func testPanic(t *testing.T, mw AuthenticationMiddleware, ctx droplet.Context) {
+	defer func() {
+		panicErr := recover()
+		assert.Contains(t, panicErr.(error).Error(), "input middleware cannot get http request")
+	}()
+	_ = mw.Handle(ctx)
+}
+
 func TestAuthenticationMiddleware_Handle(t *testing.T) {
 	ctx := droplet.NewContext()
 	fakeReq, _ := http.NewRequest(http.MethodGet, "", nil)
@@ -68,9 +76,7 @@ func TestAuthenticationMiddleware_Handle(t *testing.T) {
 	mw.SetNext(&mockMw)
 
 	// test without http.Request
-	_ = mw.Handle(ctx)
-	panicErr := recover()
-	assert.Contains(t, panicErr.(error).Error(), "input middleware cannot get http request")
+	testPanic(t, mw, ctx)
 
 	ctx.Set(middleware.KeyHttpRequest, fakeReq)
 
