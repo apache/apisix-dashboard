@@ -87,6 +87,9 @@ context('e2e test for plugin page', () => {
   });
 
   it('should delete the plugin', () => {
+    cy.visit('/');
+    cy.contains('Plugin').click();
+    cy.wait(sleepTime * 5);
     cy.contains('redirect').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
 
