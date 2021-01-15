@@ -17,20 +17,22 @@
 import React from 'react';
 import { Form, Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { UploadFile } from 'antd/lib/upload/interface';
+import type { UploadFile } from 'antd/lib/upload/interface';
 import styles from '@/pages/SSL/style.less';
 import { useIntl } from 'umi';
 
 export type UploadType = 'PUBLIC_KEY' | 'PRIVATE_KEY';
 
-interface UploaderProps {
+type UploaderProps = {
   data: {
     publicKeyList: UploadFile[];
     privateKeyList: UploadFile[];
   };
-  onSuccess(data: SSLModule.UploadPrivateSuccessData | SSLModule.UploadPublicSuccessData): void;
-  onRemove(type: UploadType): void;
-}
+  onSuccess: (
+    data: Partial<SSLModule.UploadPrivateSuccessData & SSLModule.UploadPublicSuccessData>,
+  ) => void;
+  onRemove: (type: UploadType) => void;
+};
 
 const CertificateUploader: React.FC<UploaderProps> = ({ onSuccess, onRemove, data }) => {
   const { publicKeyList = [], privateKeyList = [] } = data;

@@ -15,12 +15,10 @@
  * limitations under the License.
  */
 import React from 'react';
-import { RequestConfig, history } from 'umi';
-import {
-  BasicLayoutProps,
-  Settings as LayoutSettings,
-  TopNavHeaderProps,
-} from '@ant-design/pro-layout';
+import { history } from 'umi';
+import type { RequestConfig } from 'umi';
+import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import moment from 'moment';
 
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
@@ -34,6 +32,7 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   settings?: LayoutSettings;
 }> {
+  moment.locale(['en-US', 'zh-CN']);
   const token = localStorage.getItem('token');
   if (!token) {
     history.replace(`/user/login?redirect=${encodeURIComponent(window.location.pathname)}`);
@@ -46,11 +45,7 @@ export async function getInitialState(): Promise<{
   };
 }
 
-export const layout = ({
-  initialState,
-}: {
-  initialState: { settings?: LayoutSettings };
-}): BasicLayoutProps & TopNavHeaderProps => {
+export const layout = ({ initialState }: { initialState: { settings?: LayoutSettings } }) => {
   return {
     headerRender: undefined,
     rightContentRender: () => <RightContent />,

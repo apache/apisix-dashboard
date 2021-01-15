@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React from 'react';
-import { FormInstance } from 'antd/lib/form';
+import type { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 
 import PluginOrchestration from '@/components/PluginOrchestration';

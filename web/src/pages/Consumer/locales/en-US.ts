@@ -17,9 +17,9 @@
 export default {
   'page.consumer.form.itemRuleMessage.username':
     'Maximum length is 100, only letters, numbers and _ are supported, and can only begin with letters',
-  'page.consumer.form.itemExtraMessage.username': 'Username should be unique',
+  'page.consumer.form.itemExtraMessage.username': 'Name should be unique',
   'page.consumer.notification.warning.enableAuthenticationPlugin':
     'Please enable one authentication plugin',
-  'page.consumer.username': 'Username',
+  'page.consumer.username': 'Name',
   'page.consumer.updateTime': 'Update Time',
 };

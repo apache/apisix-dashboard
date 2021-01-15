@@ -25,8 +25,8 @@ import (
 
 type BaseInfo struct {
 	ID         interface{} `json:"id"`
-	CreateTime int64       `json:"create_time"`
-	UpdateTime int64       `json:"update_time"`
+	CreateTime int64       `json:"create_time,omitempty"`
+	UpdateTime int64       `json:"update_time,omitempty"`
 }
 
 func (info *BaseInfo) GetBaseInfo() *BaseInfo {
@@ -237,8 +237,8 @@ type Script struct {
 
 // swagger:model GlobalPlugins
 type GlobalPlugins struct {
-	ID      interface{}            `json:"id"`
-	Plugins map[string]interface{} `json:"plugins,omitempty"`
+	BaseInfo
+	Plugins map[string]interface{} `json:"plugins"`
 }
 
 type ServerInfo struct {

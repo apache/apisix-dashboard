@@ -63,7 +63,7 @@ func TestHandler_Get(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.caseDesc, func(t *testing.T) {
-			getCalled := true
+			getCalled := false
 			mStore := &store.MockInterface{}
 			mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
 				getCalled = true
@@ -140,7 +140,7 @@ func TestHandler_List(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.caseDesc, func(t *testing.T) {
-			getCalled := true
+			getCalled := false
 			mStore := &store.MockInterface{}
 			mStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
 				getCalled = true

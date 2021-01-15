@@ -19,13 +19,13 @@ declare namespace RouteModule {
 
   type VarPosition = 'arg' | 'http' | 'cookie';
 
-  interface MatchingRule {
+  type MatchingRule = {
     position: VarPosition;
     name: string;
     operator: Operator;
     value: string;
     key: string;
-  }
+  };
 
   type RequestProtocol = 'https' | 'http' | 'websocket';
 
@@ -50,14 +50,11 @@ declare namespace RouteModule {
     weight: number;
   };
 
-  interface UpstreamHeader {
+  type UpstreamHeader = {
     header_name: string;
     header_value: string;
-  }
-
-  interface UpstreamHeader {
     key: string;
-  }
+  };
 
   type ModalType = 'CREATE' | 'EDIT';
 
@@ -83,12 +80,10 @@ declare namespace RouteModule {
     remote_addrs: string[];
     vars: [string, Operator, string][];
     upstream: {
-      type: 'roundrobin' | 'chash';
+      type: 'roundrobin' | 'chash' | 'ewma';
       hash_on?: string;
       key?: string;
-      nodes: {
-        [key: string]: number;
-      };
+      nodes: Record<string, number>;
       timeout: {
         connect: number;
         send: number;
@@ -101,23 +96,20 @@ declare namespace RouteModule {
       to: string;
     };
     upstream_id?: string;
-    plugins: {
-      [name: string]: any;
-    };
+    plugins: Record<string, any>;
     script: Record<string, any>;
     url?: string;
     enable_websocket?: boolean;
     service_id?: string;
   };
 
-  // step1
-  interface MatchingRule {
+  type MatchingRule = {
     position: VarPosition;
     name: string;
     operator: Operator;
     value: string;
     key: string;
-  }
+  };
 
   type ResponseLabelList = Record<string, string>[];
 
@@ -134,16 +126,14 @@ declare namespace RouteModule {
     advancedMatchingRules: MatchingRule[];
     disabled?: boolean;
     isEdit?: boolean;
-    onChange?(data: {
-      action: 'redirectOptionChange' | 'advancedMatchingRulesChange' | 'labelsChange';
-      data: T;
-    }): void;
+    onChange?: (data: { action: string; data: T }) => void;
   };
 
   type Form1Data = {
     name: string;
     desc: string;
-    labels: string[];
+    custom_version_label: string;
+    custom_normal_labels: string[];
     priority: number;
     websocket: boolean;
     hosts: string[];
@@ -186,9 +176,7 @@ declare namespace RouteModule {
       send: number;
       read: number;
     };
-    nodes: {
-      [key: string]: number;
-    };
+    nodes: Record<string, number>;
   };
 
   type RequestData = {
@@ -253,7 +241,7 @@ declare namespace RouteModule {
   // TODO： grpc and websocket
   type debugRequest = {
     url: string;
-    request_protocol: 'http' | 'https' | 'grpc' | 'websocket';
+    request_protocol: RequestProtocol | 'grpc';
     method: string;
     body_params?: any;
     header_params?: any;
@@ -273,8 +261,14 @@ declare namespace RouteModule {
   type DebugViewProps = {
     form: FormInstance;
   };
+  type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'raw input';
+  type DebugDodyViewProps = {
+    form: FormInstance;
+    changeBodyParamsType: (type: DebugBodyType) => void;
+    codeMirrorRef: any;
+  };
   type DebugDrawProps = {
     visible: boolean;
-    onClose(): void;
+    onClose: () => void;
   };
 }
