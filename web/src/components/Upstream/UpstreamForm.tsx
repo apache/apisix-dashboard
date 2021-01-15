@@ -101,7 +101,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       const formData = transformRequest(form.getFieldsValue()) || {};
       const { upstream_id } = form.getFieldsValue();
 
-      if (required && upstream_id ==='None') {
+      if (required && upstream_id === 'None') {
         requestAnimationFrame(() => {
           form.resetFields();
           setHidenForm(false);
@@ -125,7 +125,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         });
       }
 
-      setReadonly(Boolean(upstream_id));
+      setReadonly(Boolean(upstream_id) || disabled);
     }, [list]);
 
     const CHash = () => (
