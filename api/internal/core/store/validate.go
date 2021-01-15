@@ -264,15 +264,6 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 		}
 		schemaMap := schemaValue.(map[string]interface{})
 
-		if properties, ok := schemaMap["properties"]; ok {
-			if propertiesMap, ok := properties.(map[string]interface{}); ok {
-				if val, ok := propertiesMap["$comment"]; ok {
-					_ = val
-					delete(propertiesMap, "$comment")
-				}
-			}
-		}
-
 		schemaByte, err := json.Marshal(schemaMap)
 		if err != nil {
 			log.Warnf("schema validate failed: schema json encode failed, path: %s, %w", "plugins."+pluginName, err)
