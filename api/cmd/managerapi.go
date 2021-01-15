@@ -25,15 +25,17 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/shiningrush/droplet"
+	"github.com/spf13/cobra"
+
 	"github.com/apisix/manager-api/internal"
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/filter"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
-	"github.com/shiningrush/droplet"
-	"github.com/spf13/cobra"
 )
 
 var (
@@ -62,7 +64,7 @@ func NewManagerAPICommand() *cobra.Command {
 				var newMws []droplet.Middleware
 				// default middleware order: resp_reshape, auto_input, traffic_log
 				// We should put err_transform at second to catch all error
-				newMws = append(newMws, mws[0], &handler.ErrorTransformMiddleware{})
+				newMws = append(newMws, mws[0], &handler.ErrorTransformMiddleware{}, &filter.AuthenticationMiddleware{})
 				newMws = append(newMws, mws[1:]...)
 				return newMws
 			}
