@@ -162,7 +162,7 @@ func TestService(t *testing.T) {
 		{
 			Desc:    "create service with all options via POST method",
 			Object:  ManagerApiExpect(t),
-			Method:  http.MethodPut,
+			Method:  http.MethodPost,
 			Path:    "/apisix/admin/services",
 			Headers: map[string]string{"Authorization": token},
 			Body: `{
