@@ -32,7 +32,6 @@ func TestMainWrapper(t *testing.T) {
 	)
 	for _, arg := range os.Args {
 		switch {
-		case strings.HasPrefix(arg, "DEVEL"):
 		case strings.HasPrefix(arg, "-test"):
 		default:
 			args = append(args, arg)
