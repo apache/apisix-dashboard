@@ -71,8 +71,8 @@ context('Create and Delete Route', () => {
     // redirect plugin should not display in route step3
     const nameSelector = '[data-cy-plugin-name]';
     cy.get(nameSelector).then((cards) => {
-      [...cards].forEach(card => {
-        expect(card.innerText).to.not.equal('redirect')
+      [...cards].forEach((card) => {
+        expect(card.innerText).to.not.equal('redirect');
       });
     });
 
