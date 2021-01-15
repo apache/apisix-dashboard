@@ -19,6 +19,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"github.com/apisix/manager-api/internal/filter"
 	"net/http"
 	"os"
 	"os/signal"
@@ -62,7 +63,7 @@ func NewManagerAPICommand() *cobra.Command {
 				var newMws []droplet.Middleware
 				// default middleware order: resp_reshape, auto_input, traffic_log
 				// We should put err_transform at second to catch all error
-				newMws = append(newMws, mws[0], &handler.ErrorTransformMiddleware{})
+				newMws = append(newMws, mws[0], &handler.ErrorTransformMiddleware{}, &filter.AuthenticationMiddleware{})
 				newMws = append(newMws, mws[1:]...)
 				return newMws
 			}
