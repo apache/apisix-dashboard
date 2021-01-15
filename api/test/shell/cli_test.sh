@@ -263,3 +263,22 @@ fi
 pkill -f manager-api
 
 check_logfile
+
+# use custom port
+clean_up
+
+sed -i 's/9000/8088/' conf/conf.yaml
+./manager-api > ./api.log 2>&1 &
+sleep 2
+cat ./api.log
+cat conf/conf.yaml
+
+# verify custom port
+curl http://127.0.0.1:8088/apisix/admin/user/login -X POST -i -d '{"username":"admin", "password": "admin"}'
+code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} http://127.0.0.1:8088/apisix/admin/user/login -X POST -i -d '{"username":"admin", "password": "admin"}')
+if [ ! $code -eq 200 ]; then
+    echo "failed: failed to custom port"
+    exit 1
+fi
+
+pkill -f manager-api
