@@ -27,7 +27,7 @@ context('Create Route with Upstream', () => {
     cy.login();
   });
 
-  it('should create route with upstream', () => {
+  it('should create test upstream', () => {
     // create a test upstream
     cy.visit('/');
     cy.contains('Upstream').click();
@@ -39,7 +39,9 @@ context('Create Route with Upstream', () => {
     cy.get('#nodes_0_host').type('10.89.90.237');
     cy.contains('Next').click();
     cy.contains('Submit').click();
+  });
 
+  it('should create route with upstream', () => {
     // go to route creat page
     cy.visit('/');
     cy.contains('Route').click();
