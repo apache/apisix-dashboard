@@ -54,13 +54,14 @@ context('Create Route with Upstream', () => {
     cy.contains('Next').click();
 
     // select existed upstream_id will be disabled
-    cy.get('[title="Customize"]').click();
+    cy.get('[title=Custom]').click();
     cy.contains(name.upstream).click();
     cy.get(':input').should('be.disabled');
+    cy.wait(1000);
 
-    // select Customize upstream_id will not be disabled
+    // select Custom upstream_id will not be disabled
     cy.get('[title=test_upstream]').click();
-    cy.contains('Customize').click();
+    cy.contains('Custom').click();
     cy.get(':input').should('not.be.disabled');
 
     // change domain name/IP
@@ -92,10 +93,11 @@ context('Create Route with Upstream', () => {
     cy.get('#upstream_id').click();
     cy.contains(name.upstream).click();
     cy.get(':input').should('be.disabled');
+    cy.wait(1000);
 
-    // select Customize upstream_id will not be disabled
+    // select Custom upstream_id will not be disabled
     cy.get('[title=test_upstream]').click();
-    cy.contains('Customize').click();
+    cy.contains('Custom').click();
     cy.get(':input').should('not.be.disabled');
 
     // change domain name/IP
