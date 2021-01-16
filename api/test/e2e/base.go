@@ -25,7 +25,6 @@ import (
 	"net"
 	"net/http"
 	"os/exec"
-	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -46,7 +45,15 @@ var (
 )
 
 func init() {
-	//login to get auth token
+	token = getToken()
+	Token = token
+}
+
+func getToken () string {
+	if token != "" {
+		return token
+	}
+
 	requestBody := []byte(`{
 		"username": "admin",
 		"password": "admin"
@@ -73,7 +80,8 @@ func init() {
 
 	respond := gjson.ParseBytes(body)
 	token = respond.Get("data.token").String()
-	Token = token
+
+	return token
 }
 
 func httpGet(url string) ([]byte, int, error) {
@@ -97,7 +105,7 @@ func httpGet(url string) ([]byte, int, error) {
 	return body, resp.StatusCode, nil
 }
 
-func ManagerApiExpect(t *testing.T) *httpexpect.Expect {
+func ManagerApiExpect(t httpexpect.LoggerReporter) *httpexpect.Expect {
 	return httpexpect.New(t, ManagerAPIHost)
 }
 
@@ -181,8 +189,7 @@ type HttpTestCase struct {
 	Sleep         time.Duration //ms
 }
 
-func testCaseCheck(tc HttpTestCase, t *testing.T) {
-	t.Run(tc.Desc, func(t *testing.T) {
+func testCaseCheck(tc HttpTestCase) {
 		//init
 		expectObj := tc.Object
 		var req *httpexpect.Request
@@ -243,7 +250,7 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 
 		// match body
 		if tc.ExpectBody != nil {
-			assert.Contains(t, []string{"string", "[]string"}, reflect.TypeOf(tc.ExpectBody).String())
+			//assert.Contains(t, []string{"string", "[]string"}, reflect.TypeOf(tc.ExpectBody).String())
 			if body, ok := tc.ExpectBody.(string); ok {
 				if body == "" {
 					// "" indicates the body is expected to be empty
@@ -260,7 +267,7 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 
 		// match UnexpectBody
 		if tc.UnexpectBody != nil {
-			assert.Contains(t, []string{"string", "[]string"}, reflect.TypeOf(tc.UnexpectBody).String())
+			//assert.Contains(t, []string{"string", "[]string"}, reflect.TypeOf(tc.UnexpectBody).String())
 			if body, ok := tc.UnexpectBody.(string); ok {
 				// "" indicates the body is expected to be non empty
 				if body == "" {
@@ -274,11 +281,10 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 				}
 			}
 		}
-	})
 }
 
-func RunTestCases(tc HttpTestCase, t *testing.T) {
-	testCaseCheck(tc, t)
+func RunTestCases(tc HttpTestCase) {
+	testCaseCheck(tc)
 }
 
 func ReadAPISIXErrorLog(t *testing.T) string {
