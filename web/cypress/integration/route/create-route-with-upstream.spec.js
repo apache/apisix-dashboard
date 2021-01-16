@@ -54,13 +54,13 @@ context('Create Route with Upstream', () => {
     cy.contains('Next').click();
 
     // select existed upstream_id will be disabled
-    cy.get('[title=Custom]').click();
+    cy.contains('Custom').click();
     cy.contains(name.upstream).click();
     cy.get(':input').should('be.disabled');
     cy.wait(1000);
 
     // select Custom upstream_id will not be disabled
-    cy.get('[title=test_upstream]').click();
+    cy.contains('test_upstream').click();
     cy.contains('Custom').click();
     cy.get(':input').should('not.be.disabled');
 
@@ -96,7 +96,7 @@ context('Create Route with Upstream', () => {
     cy.wait(1000);
 
     // select Custom upstream_id will not be disabled
-    cy.get('[title=test_upstream]').click();
+    cy.contains('test_upstream').click();
     cy.contains('Custom').click();
     cy.get(':input').should('not.be.disabled');
 
