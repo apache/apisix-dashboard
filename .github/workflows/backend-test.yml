@@ -111,7 +111,7 @@ jobs:
         run: |
           git clone https://github.com/wadey/gocovmerge.git
           cd gocovmerge
-          go build .
+          go build . -o ./gocovmerge
           cd ../
           ./gocovmerge/gocovmerge ./api/test/testdata/integrationcover.out coverage.txt > ./api/coverage.txt
           cat ./api/coverage.txt
