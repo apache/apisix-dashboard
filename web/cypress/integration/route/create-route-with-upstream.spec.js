@@ -17,9 +17,12 @@
 /* eslint-disable no-undef */
 
 context('Create Route with Upstream', () => {
+  const name = {
+    upstream: 'test_upstream',
+    route: 'test_route',
+  };
   const domSelectors = {
     notification: '.ant-notification-notice-message',
-    selectItem: '.ant-select-item-option-content',
   };
 
   beforeEach(() => {
@@ -27,46 +30,42 @@ context('Create Route with Upstream', () => {
     cy.login();
   });
 
-  it('should create test upstream', () => {
+  it('should create route with upstream', () => {
     // create a test upstream
     cy.visit('/');
     cy.contains('Upstream').click();
     cy.wait(1000);
     cy.contains('Create').click();
 
-    cy.get('#name').type('test_upstream');
+    cy.get('#name').type(name.upstream);
     cy.get('#desc').type('desc_by_autotest');
     cy.get('#nodes_0_host').type('10.89.90.237');
     cy.contains('Next').click();
     cy.contains('Submit').click();
-  });
 
-  it('should create route with upstream', () => {
     // go to route creat page
     cy.visit('/');
     cy.contains('Route').click();
+    cy.wait(1000);
     cy.contains('Create').click();
 
     // input name and description
-    cy.get('#name').type('test_router');
+    cy.get('#name').type(name.route);
     cy.contains('Next').click();
 
     // select existed upstream_id will be disabled
-    cy.get('[title="Manual fill"]').click();
-    cy.get(domSelectors.selectItem).within(() => {
-      cy.contains('test_upstream').click();
-    });
+    cy.get('[title="Customize"]').click();
+    cy.contains(name.upstream).click();
     cy.get(':input').should('be.disabled');
 
-    // select Manual fill upstream_id will not be disabled
-    cy.get('[title="test_upstream"]').click();
-    cy.get(domSelectors.selectItem).within(() => {
-      cy.contains('Manual fill').click();
-    });
+    // select Customize upstream_id will not be disabled
+    cy.get('[title=test_upstream]').click();
+    cy.contains('Customize').click();
     cy.get(':input').should('not.be.disabled');
 
     // change domain name/IP
     cy.get('#nodes_0_host').clear().type('127.0.0.1');
+    cy.wait(1000);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -79,10 +78,10 @@ context('Create Route with Upstream', () => {
     cy.contains('Route').click();
 
     // edit existed router
-    cy.get('[title=Name]').type('test_router');
+    cy.get('[title=Name]').type(name.route);
     cy.contains('Search').click();
     cy.wait(1000);
-    cy.contains('test_router').siblings().contains('Edit').click();
+    cy.contains(name.route).siblings().contains('Edit').click();
     cy.wait(1000);
     cy.contains('Next').click();
 
@@ -91,16 +90,12 @@ context('Create Route with Upstream', () => {
 
     // select existed upstream_id will be disabled
     cy.get('#upstream_id').click();
-    cy.get(domSelectors.selectItem).within(() => {
-      cy.contains('test_upstream').click();
-    });
+    cy.contains(name.upstream).click();
     cy.get(':input').should('be.disabled');
 
-    // select Manual fill upstream_id will not be disabled
+    // select Customize upstream_id will not be disabled
     cy.get('[title=test_upstream]').click();
-    cy.get(domSelectors.selectItem).within(() => {
-      cy.contains('Manual fill').click();
-    });
+    cy.contains('Customize').click();
     cy.get(':input').should('not.be.disabled');
 
     // change domain name/IP
@@ -112,10 +107,10 @@ context('Create Route with Upstream', () => {
     cy.url().should('contains', 'routes/list');
 
     // check if the changes have been saved
-    cy.get('[title=Name]').type('test_router');
+    cy.get('[title=Name]').type(name.route);
     cy.contains('Search').click();
     cy.wait(1000);
-    cy.contains('test_router').siblings().contains('Edit').click();
+    cy.contains(name.route).siblings().contains('Edit').click();
     cy.wait(1000);
     cy.contains('Next').click();
     cy.get('#nodes_0_host').should('value', '127.0.0.2');
@@ -123,16 +118,16 @@ context('Create Route with Upstream', () => {
 
   it('should delete ths test route and upstream', () => {
     cy.visit('/routes/list');
-    cy.get('[title=Name]').type('test_router');
+    cy.get('[title=Name]').type(name.route);
     cy.contains('Search').click();
-    cy.contains('test_router').siblings().contains('Delete').click();
+    cy.contains(name.route).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');
 
     cy.visit('/');
     cy.contains('Upstream').click();
     cy.wait(1000);
-    cy.contains('test_upstream').siblings().contains('Delete').click();
+    cy.contains(name.upstream).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(domSelectors.notification).should('contain', 'Delete successfully');
   });
