@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  run-test:
+  backend-e2e-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -57,3 +57,8 @@ jobs:
         working-directory: ./api/test/testdata
         run: |
           go tool cover -func=./integrationcover.out
+
+      - name: upload coverage profile
+      working-directory: ./api/test/testdata
+        run: |
+          bash <(curl -s https://codecov.io/bash) -f ./integrationcover.out
