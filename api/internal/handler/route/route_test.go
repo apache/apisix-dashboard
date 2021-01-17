@@ -391,8 +391,12 @@ func TestRoute(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), route)
 	assert.Nil(t, err)
 	ctx.SetInput(route)
-	_, err = handler.Create(ctx)
+	ret, err := handler.Create(ctx)
 	assert.Nil(t, err)
+	// check the returned valued
+	objRet, ok := ret.(*entity.Route)
+	assert.True(t, ok)
+	assert.Equal(t, "1", objRet.ID)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -401,7 +405,7 @@ func TestRoute(t *testing.T) {
 	input := &GetInput{}
 	input.ID = "1"
 	ctx.SetInput(input)
-	ret, err := handler.Get(ctx)
+	ret, err = handler.Get(ctx)
 	stored := ret.(*entity.Route)
 	assert.Nil(t, err)
 	assert.Equal(t, stored.ID, route.ID)
@@ -938,7 +942,7 @@ func TestRoute(t *testing.T) {
 	dataPage = retPage.(*store.ListOutput)
 	assert.Equal(t, len(dataPage.Rows), 1)
 
-	//sleep
+	// sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
 
 	// list search and status not match
@@ -1024,8 +1028,11 @@ func TestRoute(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), route3)
 	assert.Nil(t, err)
 	ctx.SetInput(route3)
-	_, err = handler.Create(ctx)
+	ret, err = handler.Create(ctx)
 	assert.Nil(t, err)
+	objRet, ok = ret.(*entity.Route)
+	assert.True(t, ok)
+	assert.Equal(t, "2", objRet.ID)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -1153,8 +1160,11 @@ func TestRoute(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), route11)
 	assert.Nil(t, err)
 	ctx.SetInput(route11)
-	_, err = handler.Create(ctx)
+	ret, err = handler.Create(ctx)
 	assert.Nil(t, err)
+	objRet, ok = ret.(*entity.Route)
+	assert.True(t, ok)
+	assert.Equal(t, "11", objRet.ID)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -1288,8 +1298,11 @@ func Test_Route_With_Script_Dag2lua(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), route)
 	assert.Nil(t, err)
 	ctx.SetInput(route)
-	_, err = handler.Create(ctx)
+	ret, err := handler.Create(ctx)
 	assert.Nil(t, err)
+	objRet, ok := ret.(*entity.Route)
+	assert.True(t, ok)
+	assert.Equal(t, "1", objRet.ID)
 
 	//sleep
 	time.Sleep(time.Duration(20) * time.Millisecond)
@@ -1298,7 +1311,7 @@ func Test_Route_With_Script_Dag2lua(t *testing.T) {
 	input := &GetInput{}
 	input.ID = "1"
 	ctx.SetInput(input)
-	ret, err := handler.Get(ctx)
+	ret, err = handler.Get(ctx)
 	stored := ret.(*entity.Route)
 	assert.Nil(t, err)
 	assert.Equal(t, stored.ID, route.ID)

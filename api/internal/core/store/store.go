@@ -37,7 +37,7 @@ import (
 type Interface interface {
 	Get(key string) (interface{}, error)
 	List(input ListInput) (*ListOutput, error)
-	Create(ctx context.Context, obj interface{}) error
+	Create(ctx context.Context, obj interface{}) (interface{}, error)
 	Update(ctx context.Context, obj interface{}, createIfNotExist bool) error
 	BatchDelete(ctx context.Context, keys []string) error
 }
@@ -240,36 +240,36 @@ func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 	return err
 }
 
-func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
+func (s *GenericStore) Create(ctx context.Context, obj interface{}) (interface{}, error) {
 	if setter, ok := obj.(entity.BaseInfoSetter); ok {
 		info := setter.GetBaseInfo()
 		info.Creating()
 	}
 
 	if err := s.ingestValidate(obj); err != nil {
-		return err
+		return nil, err
 	}
 
 	key := s.opt.KeyFunc(obj)
 	if key == "" {
-		return fmt.Errorf("key is required")
+		return nil, fmt.Errorf("key is required")
 	}
 	_, ok := s.cache.Load(key)
 	if ok {
 		log.Warnf("key: %s is conflicted", key)
-		return fmt.Errorf("key: %s is conflicted", key)
+		return nil, fmt.Errorf("key: %s is conflicted", key)
 	}
 
 	bs, err := json.Marshal(obj)
 	if err != nil {
 		log.Errorf("json marshal failed: %s", err)
-		return fmt.Errorf("json marshal failed: %s", err)
+		return nil, fmt.Errorf("json marshal failed: %s", err)
 	}
 	if err := s.Stg.Create(ctx, s.GetObjStorageKey(obj), string(bs)); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return obj, nil
 }
 
 func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotExist bool) error {
@@ -284,7 +284,8 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotE
 	storedObj, ok := s.cache.Load(key)
 	if !ok {
 		if createIfNotExist {
-			return s.Create(ctx, obj)
+			_, err := s.Create(ctx, obj)
+			return err
 		}
 		log.Warnf("key: %s is not found", key)
 		return fmt.Errorf("key: %s is not found", key)

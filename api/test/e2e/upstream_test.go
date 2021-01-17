@@ -424,3 +424,70 @@ func TestUpstream_Delete(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 }
+
+func TestUpstream_Create_via_Post(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			Desc:   "create upstream via POST",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/upstreams",
+			Body: `{
+				"id": "u1",
+				"nodes": [{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 1
+				}],
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			// should return id and other request body content
+			ExpectBody: []string{"\"id\":\"u1\"", "\"type\":\"roundrobin\""},
+		},
+		{
+			Desc:   "create route using the upstream just created",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/1",
+			Body: `{
+				"uri": "/hello",
+				"upstream_id": "u1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "hit the route just created",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        sleepTime,
+		},
+		//
+		{
+			Desc:         "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "delete upstream",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/u1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+}
