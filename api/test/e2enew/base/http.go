@@ -28,8 +28,16 @@ func HttpGet(url string, headers map[string]string) ([]byte, int, error) {
 	return httpRequest(http.MethodGet, url, headers, "")
 }
 
+func HttpDelete(url string, headers map[string]string) ([]byte, int, error) {
+	return httpRequest(http.MethodDelete, url, headers, "")
+}
+
 func HttpPut(url string, headers map[string]string, reqBody string) ([]byte, int, error) {
 	return httpRequest(http.MethodPut, url, headers, reqBody)
+}
+
+func HttpPost(url string, headers map[string]string, reqBody string) ([]byte, int, error) {
+	return httpRequest(http.MethodPost, url, headers, reqBody)
 }
 
 func httpRequest(method, url string, headers map[string]string, reqBody string) ([]byte, int, error) {

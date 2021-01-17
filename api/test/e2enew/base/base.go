@@ -40,7 +40,7 @@ var (
 
 	UpstreamIp             = "127.0.0.1"
 	APISIXHost             = "http://127.0.0.1:9080"
-	APISIXInternalUrl      = "http://172.16.238.30:9080"
+	APISIXInternalUrl      = "http://127.0.0.1:9080"
 	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
 	ManagerAPIHost         = "http://127.0.0.1:9000"
 )
@@ -281,4 +281,20 @@ func CleanResource(resource string) {
 		}
 		RunTestCase(tc)
 	}
+}
+
+var jwtToken string
+
+func GetJwtToken(userKey string) string {
+	if jwtToken != "" {
+		return jwtToken
+	}
+	time.Sleep(SleepTime)
+
+	body, status, err := HttpGet(APISIXHost+"/apisix/plugin/jwt/sign?key="+userKey, nil)
+	assert.Nil(ginkgo.GinkgoT(), err)
+	assert.Equal(ginkgo.GinkgoT(), http.StatusOK, status)
+	jwtToken = string(body)
+
+	return jwtToken
 }
