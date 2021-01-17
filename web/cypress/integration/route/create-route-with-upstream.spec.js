@@ -50,7 +50,6 @@ context('Create Route with Upstream', () => {
     // go to route creat page
     cy.visit('/');
     cy.contains('Route').click();
-    cy.wait(1000);
     cy.contains('Create').click();
 
     cy.get('#name').type(routeName);
