@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global_rule
+package common
 
 import (
 	"testing"
@@ -25,12 +25,11 @@ import (
 	"e2enew/base"
 )
 
-func TestGlobalRule(t *testing.T) {
-	ginkgo.RunSpecs(t, "global rule suite")
+func TestCommon(t *testing.T) {
+	ginkgo.RunSpecs(t, "common test suite")
 }
 
 var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("global_rules")
 	base.CleanResource("routes")
 	time.Sleep(base.SleepTime)
 })
