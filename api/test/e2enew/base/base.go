@@ -37,9 +37,9 @@ import (
 var (
 	token string
 
-	UpstreamIp             = "127.0.0.1"
+	UpstreamIp             = "172.16.238.20"
 	APISIXHost             = "http://127.0.0.1:9080"
-	APISIXInternalUrl      = "http://127.0.0.1:9080"
+	APISIXInternalUrl      = "http://172.16.238.30:9080"
 	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
 	ManagerAPIHost         = "http://127.0.0.1:9000"
 )

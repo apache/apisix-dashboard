@@ -25,7 +25,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 	tests := []HttpTestCase{
 		{
 			Desc:   "config route with invalid remote_addr",
-			Object: base.ManagerApiExpect(),
+			Object: ManagerApiExpect(t),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -40,22 +40,22 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 						}]
 					}
 				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addr: Must validate at least one schema (anyOf)\\nremote_addr: Does not match format 'ipv4'\"",
 		},
 		{
 			Desc:         "verify route",
-			Object:       base.APISIXExpect(),
+			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
-			Sleep:        base.SleepTime,
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:   "config route with invalid remote_addr",
-			Object: base.ManagerApiExpect(),
+			Object: ManagerApiExpect(t),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -70,22 +70,22 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 						}]
 					}
 				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addr: Must validate at least one schema (anyOf)\\nremote_addr: Does not match format 'ipv4'\"",
 		},
 		{
 			Desc:         "verify route",
-			Object:       base.APISIXExpect(),
+			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
-			Sleep:        base.SleepTime,
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:   "config route with invalid remote_addrs",
-			Object: base.ManagerApiExpect(),
+			Object: ManagerApiExpect(t),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -100,18 +100,18 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 						}]
 					}
 				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addrs.1: Must validate at least one schema (anyOf)\\nremote_addrs.1: Does not match format 'ipv4'\"",
 		},
 		{
 			Desc:         "verify route",
-			Object:       base.APISIXExpect(),
+			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusNotFound,
-			Sleep:        base.SleepTime,
+			Sleep:        sleepTime,
 		},
 	}
 
