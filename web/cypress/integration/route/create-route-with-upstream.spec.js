@@ -19,7 +19,9 @@
 context('Create Route with Upstream', () => {
   const upstreamName = 'test_upstream';
   const routeName = 'test_route';
-  const domSelector = ':input';
+  const domSelector = {
+    input: ':input',
+  };
   const testData = {
     desc: 'desc_by_autotes',
     initialIp: '10.89.90.237',
@@ -58,13 +60,13 @@ context('Create Route with Upstream', () => {
     // select existed upstream_id will be disabled
     cy.contains('Custom').click();
     cy.contains(upstreamName).click();
-    cy.get(domSelector).should('be.disabled');
+    cy.get(domSelector.input).should('be.disabled');
     cy.wait(1000);
 
     // select Custom upstream_id will not be disabled
     cy.contains(upstreamName).click();
     cy.contains('Custom').click();
-    cy.get(domSelector).should('not.be.disabled');
+    cy.get(domSelector.input).should('not.be.disabled');
 
     // change domain name/IP
     cy.get('#nodes_0_host').clear().type(testData.testIp);
@@ -94,13 +96,13 @@ context('Create Route with Upstream', () => {
     // select existed upstream_id will be disabled
     cy.get('#upstream_id').click();
     cy.contains(upstreamName).click();
-    cy.get(domSelector).should('be.disabled');
+    cy.get(domSelector.input).should('be.disabled');
     cy.wait(1000);
 
     // select Custom upstream_id will not be disabled
     cy.contains('test_upstream').click();
     cy.contains('Custom').click();
-    cy.get(domSelector).should('not.be.disabled');
+    cy.get(domSelector.input).should('not.be.disabled');
 
     // change domain name/IP
     cy.get('#nodes_0_host').clear().type(testData.verificationIp);
@@ -120,7 +122,7 @@ context('Create Route with Upstream', () => {
     cy.get('#nodes_0_host').should('value', testData.verificationIp);
   });
 
-  it('should delete ths test route and upstream', () => {
+  it('should delete this test route and upstream', () => {
     cy.visit('/routes/list');
     cy.get('[title=Name]').type(routeName);
     cy.contains('Search').click();
