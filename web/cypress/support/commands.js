@@ -34,3 +34,81 @@ Cypress.Commands.add('login', () => {
     localStorage.setItem('umi_locale', 'en-US');
   });
 });
+
+Cypress.Commands.add('addPlugins', () => {
+  const timeout = 50000;
+  const domSelectors = {
+    name: '[data-cy-plugin-name]',
+    parents: '.ant-card-bordered',
+    drawer: '.ant-drawer-content',
+    switch: '#disable',
+    close: '.anticon-close',
+  };
+
+  cy.get(domSelectors.name).then(function (cards) {
+    [...cards].forEach((card) => {
+      const name = card.innerText;
+      const cases = this.cases[name] || [];
+      // eslint-disable-next-line consistent-return
+      cases.forEach(({ shouldValid, data, type = '' }) => {
+        /**
+         * NOTE: This test is mainly for GlobalPlugin, which is using non-consumer-type schema.
+         */
+        if (type === 'consumer') {
+          return true;
+        }
+
+        cy.contains(name)
+          .parents(domSelectors.parents)
+          .within(() => {
+            cy.contains('Enable').click({
+              force: true,
+              timeout,
+            });
+          });
+
+        // NOTE: wait for the Drawer to appear on the DOM
+        cy.get(domSelectors.drawer).within(() => {
+          cy.get(domSelectors.switch).click({
+            force: true,
+            timeout,
+          });
+        });
+
+        cy.window().then(({ codemirror }) => {
+          if (codemirror) {
+            codemirror.setValue(JSON.stringify(data));
+          }
+        });
+
+        cy.get(domSelectors.drawer).within(() => {
+          cy.contains('Submit').click({
+            force: true,
+            timeout,
+          });
+        });
+
+        // NOTE: wait for the HTTP call
+        cy.wait(500);
+        if (shouldValid === true) {
+          cy.get(domSelectors.drawer).should('not.exist');
+        } else if (shouldValid === false) {
+          cy.get(this.selector.notification).should('contain', 'Invalid plugin data');
+
+          cy.get(domSelectors.close).click({
+            force: true,
+            timeout,
+            multiple: true,
+          });
+
+          cy.get(domSelectors.drawer).within(() => {
+            cy.contains('Cancel').click({
+              force: true,
+              timeout,
+            });
+          });
+        }
+      });
+    });
+  });
+});
