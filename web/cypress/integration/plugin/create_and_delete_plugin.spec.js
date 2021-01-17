@@ -17,12 +17,7 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Plugin List', () => {
-  const timeout = 50000;
   const domSelectors = {
-    name: '[data-cy-plugin-name]',
-    parents: '.ant-card-bordered',
-    drawer: '.ant-drawer-content',
-    switch: '#disable',
     tableCell: '.ant-table-cell',
     empty: '.ant-empty-normal',
   };
@@ -30,48 +25,16 @@ context('Create and Delete Plugin List', () => {
   beforeEach(() => {
     cy.login();
 
-    cy.fixture('pluginList.json').as('cases');
+    cy.fixture('plugin-list.json').as('cases');
   });
 
-  it('should create plugin', () => {
+  it('should create plugins', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
     cy.contains('Create').click();
 
-    cy.get(domSelectors.name).then(function (cards) {
-      [...cards].forEach((card) => {
-        const name = card.innerText;
-        const cases = this.cases[name] || [];
-
-        cases.forEach(({ data }) => {
-          cy.contains(name).parents(domSelectors.parents).within(() => {
-            cy.contains('Enable').click({
-              force: true,
-            });
-          });
-
-          cy.get(domSelectors.drawer).within(() => {
-            cy.get(domSelectors.switch).click({
-              force: true,
-              timeout,
-            });
-          });
-
-          cy.window().then(({ codemirror }) => {
-            if (codemirror) {
-              codemirror.setValue(JSON.stringify(data));
-            }
-          });
-
-          cy.get(domSelectors.drawer).within(() => {
-            cy.contains('Submit').click({
-              force: true,
-              timeout,
-            });
-          });
-        });
-      });
-    });
+    // add test plugins
+    cy.addPlugins();
   });
 
   it('should delete plugin list', () => {
