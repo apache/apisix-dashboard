@@ -307,3 +307,34 @@ func CleanAPISIXErrorLog(t *testing.T) {
 	}
 	assert.Nil(t, err)
 }
+
+// ReadAPISIXAccessLog reads the access log of APISIX.
+func ReadAPISIXAccessLog(t *testing.T) string {
+	cmd := exec.Command("pwd")
+	pwdByte, err := cmd.CombinedOutput()
+	pwd := string(pwdByte)
+	pwd = strings.Replace(pwd, "\n", "", 1)
+	pwd = pwd[:strings.Index(pwd, "/e2e")]
+	bytes, err := ioutil.ReadFile(pwd + "/docker/apisix_logs/access.log")
+	assert.Nil(t, err)
+	logContent := string(bytes)
+
+	return logContent
+}
+
+// CleanAPISIXAccessLog cleans the access log of APISIX.
+// It's always recommended to call this function before checking
+// its content.
+func CleanAPISIXAccessLog(t *testing.T) {
+	cmd := exec.Command("pwd")
+	pwdByte, err := cmd.CombinedOutput()
+	pwd := string(pwdByte)
+	pwd = strings.Replace(pwd, "\n", "", 1)
+	pwd = pwd[:strings.Index(pwd, "/e2e")]
+	cmd = exec.Command("sudo", "echo", " > ", pwd+"/docker/apisix_logs/access.log")
+	_, err = cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("cmd error:", err.Error())
+	}
+	assert.Nil(t, err)
+}
