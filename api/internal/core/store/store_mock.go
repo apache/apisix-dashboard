@@ -191,9 +191,7 @@ func (m *Mock) onUpdate() {
 func (m *Mock) onBatchDelete() {
 	rf := func(ctx context.Context, keys []string) error {
 		for _, k := range keys {
-			if _, exist := m.storage[k]; exist {
-				delete(m.storage, k)
-			}
+			delete(m.storage, k)
 		}
 
 		return nil
