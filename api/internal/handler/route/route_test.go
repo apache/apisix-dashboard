@@ -14,11 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package route
 
 import (
 	"encoding/json"
+	"errors"
+	"context"
+	"fmt"
+	"github.com/gogo/protobuf/test"
+	"go/build"
+	"golang.org/x/net/html/atom"
+	"google.golang.org/genproto/googleapis/devtools/resultstore/v2"
 	"net/http"
 	"testing"
 	"time"
@@ -26,1277 +32,1094 @@ import (
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 
-	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/conf"
+	"github.com/apisix/manager-api/internal/core/storage"
 )
 
-func TestRoute(t *testing.T) {
-	// init
-	err := storage.InitETCDClient(conf.ETCDConfig)
-	assert.Nil(t, err)
-	err = store.InitStores()
-	assert.Nil(t, err)
 
-	handler := &Handler{
-		routeStore:    store.GetStore(store.HubKeyRoute),
-		svcStore:      store.GetStore(store.HubKeyService),
-		upstreamStore: store.GetStore(store.HubKeyUpstream),
-		scriptStore:   store.GetStore(store.HubKeyScript),
-	}
-	assert.NotNil(t, handler)
-
-	//create Note: depends on lib `dag-to-lua` if script exists
-	ctx := droplet.NewContext()
-	route := &entity.Route{}
-	reqBody := `{
-	  "id": "1",
-	  "name": "aaaa",
-	  "uri": "/index.html",
-	  "hosts": ["foo.com", "*.bar.com"],
-	  "vars": [],
-	  "remote_addrs": ["127.0.0.0/8"],
-	  "methods": ["PUT", "GET"],
-	  "upstream": {
-	      "type": "roundrobin",
-	      "nodes": [{
-	          "host": "www.a.com",
-	          "port": 80,
-	          "weight": 1
-	      }]
-	  },
-	  "script":{
-	      "rule":{
-	          "root":"451106f8-560c-43a4-acf2-2a6ed0ea57b8",
-	          "451106f8-560c-43a4-acf2-2a6ed0ea57b8":[
-	              [
-	                  "code == 403",
-	                  "b93d622c-92ef-48b4-b6bb-57e1ce893ee3"
-	              ],
-	              [
-	                  "",
-	                  "988ef5c2-c896-4606-a666-3d4cbe24a731"
-	              ]
-	          ]
-	      },
-	      "conf":{
-	          "451106f8-560c-43a4-acf2-2a6ed0ea57b8":{
-	              "name":"uri-blocker",
-	              "conf":{
-	                  "block_rules":[
-	                      "root.exe",
-	                      "root.m+"
-	                  ],
-	                  "rejected_code":403
-	              }
-	          },
-	          "988ef5c2-c896-4606-a666-3d4cbe24a731":{
-	              "name":"kafka-logger",
-	              "conf":{
-	                  "batch_max_size":1000,
-	                  "broker_list":{
-	
-	                  },
-	                  "buffer_duration":60,
-	                  "inactive_timeout":5,
-	                  "include_req_body":false,
-	                  "kafka_topic":"1",
-	                  "key":"2",
-	                  "max_retry_count":0,
-	                  "name":"kafka logger",
-	                  "retry_delay":1,
-	                  "timeout":3
-	              }
-	          },
-	          "b93d622c-92ef-48b4-b6bb-57e1ce893ee3":{
-	              "name":"fault-injection",
-	              "conf":{
-	                  "abort":{
-	                      "body":"200",
-	                      "http_status":300
-	                  },
-	                  "delay":{
-	                      "duration":500
-	                  }
-	              }
-	          }
-	      },
-	      "chart":{
-	          "hovered":{
-	
-	          },
-	          "links":{
-	              "3a110c30-d6f3-40b1-a8ac-b828cfaa2489":{
-	                  "from":{
-	                      "nodeId":"3365eca3-4bc8-4769-bab3-1485dfd6a43c",
-	                      "portId":"port3"
-	                  },
-	                  "id":"3a110c30-d6f3-40b1-a8ac-b828cfaa2489",
-	                  "to":{
-	                      "nodeId":"b93d622c-92ef-48b4-b6bb-57e1ce893ee3",
-	                      "portId":"port1"
-	                  }
-	              },
-	              "c1958993-c1ef-44b1-bb32-7fc6f34870c2":{
-	                  "from":{
-	                      "nodeId":"3365eca3-4bc8-4769-bab3-1485dfd6a43c",
-	                      "portId":"port2"
-	                  },
-	                  "id":"c1958993-c1ef-44b1-bb32-7fc6f34870c2",
-	                  "to":{
-	                      "nodeId":"988ef5c2-c896-4606-a666-3d4cbe24a731",
-	                      "portId":"port1"
-	                  }
-	              },
-	              "f9c42bf6-c8aa-4e86-8498-8dfbc5c53c23":{
-	                  "from":{
-	                      "nodeId":"451106f8-560c-43a4-acf2-2a6ed0ea57b8",
-	                      "portId":"port2"
-	                  },
-	                  "id":"f9c42bf6-c8aa-4e86-8498-8dfbc5c53c23",
-	                  "to":{
-	                      "nodeId":"3365eca3-4bc8-4769-bab3-1485dfd6a43c",
-	                      "portId":"port1"
-	                  }
-	              }
-	          },
-	          "nodes":{
-	              "3365eca3-4bc8-4769-bab3-1485dfd6a43c":{
-	                  "id":"3365eca3-4bc8-4769-bab3-1485dfd6a43c",
-	                  "orientation":0,
-	                  "ports":{
-	                      "port1":{
-	                          "id":"port1",
-	                          "position":{
-	                              "x":107,
-	                              "y":0
-	                          },
-	                          "type":"input"
-	                      },
-	                      "port2":{
-	                          "id":"port2",
-	                          "position":{
-	                              "x":92,
-	                              "y":96
-	                          },
-	                          "properties":{
-	                              "value":"no"
-	                          },
-	                          "type":"output"
-	                      },
-	                      "port3":{
-	                          "id":"port3",
-	                          "position":{
-	                              "x":122,
-	                              "y":96
-	                          },
-	                          "properties":{
-	                              "value":"yes"
-	                          },
-	                          "type":"output"
-	                      }
-	                  },
-	                  "position":{
-	                      "x":750.2627969928922,
-	                      "y":301.0370335799397
-	                  },
-	                  "properties":{
-	                      "customData":{
-	                          "name":"code == 403",
-	                          "type":1
-	                      }
-	                  },
-	                  "size":{
-	                      "height":96,
-	                      "width":214
-	                  },
-	                  "type":"判断条件"
-	              },
-	              "451106f8-560c-43a4-acf2-2a6ed0ea57b8":{
-	                  "id":"451106f8-560c-43a4-acf2-2a6ed0ea57b8",
-	                  "orientation":0,
-	                  "ports":{
-	                      "port1":{
-	                          "id":"port1",
-	                          "position":{
-	                              "x":100,
-	                              "y":0
-	                          },
-	                          "properties":{
-	                              "custom":"property"
-	                          },
-	                          "type":"input"
-	                      },
-	                      "port2":{
-	                          "id":"port2",
-	                          "position":{
-	                              "x":100,
-	                              "y":96
-	                          },
-	                          "properties":{
-	                              "custom":"property"
-	                          },
-	                          "type":"output"
-	                      }
-	                  },
-	                  "position":{
-	                      "x":741.5684544145346,
-	                      "y":126.75879247285502
-	                  },
-	                  "properties":{
-	                      "customData":{
-	                          "data":{
-	                              "block_rules":[
-	                                  "root.exe",
-	                                  "root.m+"
-	                              ],
-	                              "rejected_code":403
-	                          },
-	                          "name":"uri-blocker",
-	                          "type":0
-	                      }
-	                  },
-	                  "size":{
-	                      "height":96,
-	                      "width":201
-	                  },
-	                  "type":"uri-blocker"
-	              },
-	              "988ef5c2-c896-4606-a666-3d4cbe24a731":{
-	                  "id":"988ef5c2-c896-4606-a666-3d4cbe24a731",
-	                  "orientation":0,
-	                  "ports":{
-	                      "port1":{
-	                          "id":"port1",
-	                          "position":{
-	                              "x":106,
-	                              "y":0
-	                          },
-	                          "properties":{
-	                              "custom":"property"
-	                          },
-	                          "type":"input"
-	                      },
-	                      "port2":{
-	                          "id":"port2",
-	                          "position":{
-	                              "x":106,
-	                              "y":96
-	                          },
-	                          "properties":{
-	                              "custom":"property"
-	                          },
-	                          "type":"output"
-	                      }
-	                  },
-	                  "position":{
-	                      "x":607.9687500000001,
-	                      "y":471.17788461538447
-	                  },
-	                  "properties":{
-	                      "customData":{
-	                          "data":{
-	                              "batch_max_size":1000,
-	                              "broker_list":{
-	
-	                              },
-	                              "buffer_duration":60,
-	                              "inactive_timeout":5,
-	                              "include_req_body":false,
-	                              "kafka_topic":"1",
-	                              "key":"2",
-	                              "max_retry_count":0,
-	                              "name":"kafka logger",
-	                              "retry_delay":1,
-	                              "timeout":3
-	                          },
-	                          "name":"kafka-logger",
-	                          "type":0
-	                      }
-	                  },
-	                  "size":{
-	                      "height":96,
-	                      "width":212
-	                  },
-	                  "type":"kafka-logger"
-	              },
-	              "b93d622c-92ef-48b4-b6bb-57e1ce893ee3":{
-	                  "id":"b93d622c-92ef-48b4-b6bb-57e1ce893ee3",
-	                  "orientation":0,
-	                  "ports":{
-	                      "port1":{
-	                          "id":"port1",
-	                          "position":{
-	                              "x":110,
-	                              "y":0
-	                          },
-	                          "properties":{
-	                              "custom":"property"
-	                          },
-	                          "type":"input"
-	                      },
-	                      "port2":{
-	                          "id":"port2",
-	                          "position":{
-	                              "x":110,
-	                              "y":96
-	                          },
-	                          "properties":{
-	                              "custom":"property"
-	                          },
-	                          "type":"output"
-	                      }
-	                  },
-	                  "position":{
-	                      "x":988.9074986362261,
-	                      "y":478.62041800736495
-	                  },
-	                  "properties":{
-	                      "customData":{
-	                          "data":{
-	                              "abort":{
-	                                  "body":"200",
-	                                  "http_status":300
-	                              },
-	                              "delay":{
-	                                  "duration":500
-	                              }
-	                          },
-	                          "name":"fault-injection",
-	                          "type":0
-	                      }
-	                  },
-	                  "size":{
-	                      "height":96,
-	                      "width":219
-	                  },
-	                  "type":"fault-injection"
-	              }
-	          },
-	          "offset":{
-	              "x":-376.83,
-	              "y":87.98
-	          },
-	          "scale":0.832,
-	          "selected":{
-	              "id":"b93d622c-92ef-48b4-b6bb-57e1ce893ee3",
-	              "type":"node"
-	          }
-	      }
-	  }
-	}`
-	err = json.Unmarshal([]byte(reqBody), route)
-	assert.Nil(t, err)
-	ctx.SetInput(route)
-	_, err = handler.Create(ctx)
-	assert.Nil(t, err)
-
-	//sleep
-	time.Sleep(time.Duration(100) * time.Millisecond)
-
-	//get
-	input := &GetInput{}
-	input.ID = "1"
-	ctx.SetInput(input)
-	ret, err := handler.Get(ctx)
-	stored := ret.(*entity.Route)
-	assert.Nil(t, err)
-	assert.Equal(t, stored.ID, route.ID)
-
-	//update
-	route2 := &UpdateInput{}
-	route2.ID = "1"
-	reqBody = `{
-	  "id": "1",
-	  "name": "aaaa",
-	  "uri": "/index.html",
-	  "hosts": ["foo.com", "*.bar.com"],
-	  "remote_addrs": ["127.0.0.0/8"],
-	  "methods": ["PUT", "GET"],
-	  "labels": {
-	      "l1": "v1",
-	      "l2": "v2"
-      },
-	  "upstream": {
-	      "type": "roundrobin",
-	      "nodes": [{
-	          "host": "www.a.com",
-	          "port": 80,
-	          "weight": 1
-	      }]
-	  },
-	  "script":{
-	      "rule":{
-	          "root":"451106f8-560c-43a4-acf2-2a6ed0ea57b8",
-	          "451106f8-560c-43a4-acf2-2a6ed0ea57b8":[
-	              [
-	                  "code == 403",
-	                  "b93d622c-92ef-48b4-b6bb-57e1ce893ee3"
-	              ],
-	              [
-	                  "",
-	                  "988ef5c2-c896-4606-a666-3d4cbe24a731"
-	              ]
-	          ]
-	      },
-	      "conf":{
-	          "451106f8-560c-43a4-acf2-2a6ed0ea57b8":{
-	              "name":"uri-blocker",
-	              "conf":{
-	                  "block_rules":[
-	                      "root.exe",
-	                      "root.m+"
-	                  ],
-	                  "rejected_code":403
-	              }
-	          },
-	          "988ef5c2-c896-4606-a666-3d4cbe24a731":{
-	              "name":"kafka-logger",
-	              "conf":{
-	                  "batch_max_size":1000,
-	                  "broker_list":{
-	
-	                  },
-	                  "buffer_duration":60,
-	                  "inactive_timeout":5,
-	                  "include_req_body":false,
-	                  "kafka_topic":"1",
-	                  "key":"2",
-	                  "max_retry_count":0,
-	                  "name":"kafka logger",
-	                  "retry_delay":1,
-	                  "timeout":3
-	              }
-	          },
-	          "b93d622c-92ef-48b4-b6bb-57e1ce893ee3":{
-	              "name":"fault-injection",
-	              "conf":{
-	                  "abort":{
-	                      "body":"200",
-	                      "http_status":300
-	                  },
-	                  "delay":{
-	                      "duration":500
-	                  }
-	              }
-	          }
-	      },
-	      "chart":{
-	          "hovered":{
-	
-	          },
-	          "links":{
-	              "3a110c30-d6f3-40b1-a8ac-b828cfaa2489":{
-	                  "from":{
-	                      "nodeId":"3365eca3-4bc8-4769-bab3-1485dfd6a43c",
-	                      "portId":"port3"
-	                  },
-	                  "id":"3a110c30-d6f3-40b1-a8ac-b828cfaa2489",
-	                  "to":{
-	                      "nodeId":"b93d622c-92ef-48b4-b6bb-57e1ce893ee3",
-	                      "portId":"port1"
-	                  }
-	              },
-	              "c1958993-c1ef-44b1-bb32-7fc6f34870c2":{
-	                  "from":{
-	                      "nodeId":"3365eca3-4bc8-4769-bab3-1485dfd6a43c",
-	                      "portId":"port2"
-	                  },
-	                  "id":"c1958993-c1ef-44b1-bb32-7fc6f34870c2",
-	                  "to":{
-	                      "nodeId":"988ef5c2-c896-4606-a666-3d4cbe24a731",
-	                      "portId":"port1"
-	                  }
-	              },
-	              "f9c42bf6-c8aa-4e86-8498-8dfbc5c53c23":{
-	                  "from":{
-	                      "nodeId":"451106f8-560c-43a4-acf2-2a6ed0ea57b8",
-	                      "portId":"port2"
-	                  },
-	                  "id":"f9c42bf6-c8aa-4e86-8498-8dfbc5c53c23",
-	                  "to":{
-	                      "nodeId":"3365eca3-4bc8-4769-bab3-1485dfd6a43c",
-	                      "portId":"port1"
-	                  }
-	              }
-	          },
-	          "nodes":{
-	              "3365eca3-4bc8-4769-bab3-1485dfd6a43c":{
-	                  "id":"3365eca3-4bc8-4769-bab3-1485dfd6a43c",
-	                  "orientation":0,
-	                  "ports":{
-	                      "port1":{
-	                          "id":"port1",
-	                          "position":{
-	                              "x":107,
-	                              "y":0
-	                          },
-	                          "type":"input"
-	                      },
-	                      "port2":{
-	                          "id":"port2",
-	                          "position":{
-	                              "x":92,
-	                              "y":96
-	                          },
-	                          "properties":{
-	                              "value":"no"
-	                          },
-	                          "type":"output"
-	                      },
-	                      "port3":{
-	                          "id":"port3",
-	                          "position":{
-	                              "x":122,
-	                              "y":96
-	                          },
-	                          "properties":{
-	                              "value":"yes"
-	                          },
-	                          "type":"output"
-	                      }
-	                  },
-	                  "position":{
-	                      "x":750.2627969928922,
-	                      "y":301.0370335799397
-	                  },
-	                  "properties":{
-	                      "customData":{
-	                          "name":"code == 403",
-	                          "type":1
-	                      }
-	                  },
-	                  "size":{
-	                      "height":96,
-	                      "width":214
-	                  },
-	                  "type":"判断条件"
-	              },
-	              "451106f8-560c-43a4-acf2-2a6ed0ea57b8":{
-	                  "id":"451106f8-560c-43a4-acf2-2a6ed0ea57b8",
-	                  "orientation":0,
-	                  "ports":{
-	                      "port1":{
-	                          "id":"port1",
-	                          "position":{
-	                              "x":100,
-	                              "y":0
-	                          },
-	                          "properties":{
-	                              "custom":"property"
-	                          },
-	                          "type":"input"
-	                      },
-	                      "port2":{
-	                          "id":"port2",
-	                          "position":{
-	                              "x":100,
-	                              "y":96
-	                          },
-	                          "properties":{
-	                              "custom":"property"
-	                          },
-	                          "type":"output"
-	                      }
-	                  },
-	                  "position":{
-	                      "x":741.5684544145346,
-	                      "y":126.75879247285502
-	                  },
-	                  "properties":{
-	                      "customData":{
-	                          "data":{
-	                              "block_rules":[
-	                                  "root.exe",
-	                                  "root.m+"
-	                              ],
-	                              "rejected_code":403
-	                          },
-	                          "name":"uri-blocker",
-	                          "type":0
-	                      }
-	                  },
-	                  "size":{
-	                      "height":96,
-	                      "width":201
-	                  },
-	                  "type":"uri-blocker"
-	              },
-	              "988ef5c2-c896-4606-a666-3d4cbe24a731":{
-	                  "id":"988ef5c2-c896-4606-a666-3d4cbe24a731",
-	                  "orientation":0,
-	                  "ports":{
-	                      "port1":{
-	                          "id":"port1",
-	                          "position":{
-	                              "x":106,
-	                              "y":0
-	                          },
-	                          "properties":{
-	                              "custom":"property"
-	                          },
-	                          "type":"input"
-	                      },
-	                      "port2":{
-	                          "id":"port2",
-	                          "position":{
-	                              "x":106,
-	                              "y":96
-	                          },
-	                          "properties":{
-	                              "custom":"property"
-	                          },
-	                          "type":"output"
-	                      }
-	                  },
-	                  "position":{
-	                      "x":607.9687500000001,
-	                      "y":471.17788461538447
-	                  },
-	                  "properties":{
-	                      "customData":{
-	                          "data":{
-	                              "batch_max_size":1000,
-	                              "broker_list":{
-	
-	                              },
-	                              "buffer_duration":60,
-	                              "inactive_timeout":5,
-	                              "include_req_body":false,
-	                              "kafka_topic":"1",
-	                              "key":"2",
-	                              "max_retry_count":0,
-	                              "name":"kafka logger",
-	                              "retry_delay":1,
-	                              "timeout":3
-	                          },
-	                          "name":"kafka-logger",
-	                          "type":0
-	                      }
-	                  },
-	                  "size":{
-	                      "height":96,
-	                      "width":212
-	                  },
-	                  "type":"kafka-logger"
-	              },
-	              "b93d622c-92ef-48b4-b6bb-57e1ce893ee3":{
-	                  "id":"b93d622c-92ef-48b4-b6bb-57e1ce893ee3",
-	                  "orientation":0,
-	                  "ports":{
-	                      "port1":{
-	                          "id":"port1",
-	                          "position":{
-	                              "x":110,
-	                              "y":0
-	                          },
-	                          "properties":{
-	                              "custom":"property"
-	                          },
-	                          "type":"input"
-	                      },
-	                      "port2":{
-	                          "id":"port2",
-	                          "position":{
-	                              "x":110,
-	                              "y":96
-	                          },
-	                          "properties":{
-	                              "custom":"property"
-	                          },
-	                          "type":"output"
-	                      }
-	                  },
-	                  "position":{
-	                      "x":988.9074986362261,
-	                      "y":478.62041800736495
-	                  },
-	                  "properties":{
-	                      "customData":{
-	                          "data":{
-	                              "abort":{
-	                                  "body":"200",
-	                                  "http_status":300
-	                              },
-	                              "delay":{
-	                                  "duration":500
-	                              }
-	                          },
-	                          "name":"fault-injection",
-	                          "type":0
-	                      }
-	                  },
-	                  "size":{
-	                      "height":96,
-	                      "width":219
-	                  },
-	                  "type":"fault-injection"
-	              }
-	          },
-	          "offset":{
-	              "x":-376.83,
-	              "y":87.98
-	          },
-	          "scale":0.832,
-	          "selected":{
-	              "id":"b93d622c-92ef-48b4-b6bb-57e1ce893ee3",
-	              "type":"node"
-	          }
-	      }
-	  }
-	}`
-
-	err = json.Unmarshal([]byte(reqBody), route2)
-	assert.Nil(t, err)
-	ctx.SetInput(route2)
-	_, err = handler.Update(ctx)
-	assert.Nil(t, err)
-
-	//sleep
-	time.Sleep(time.Duration(100) * time.Millisecond)
-
-	// check ID discrepancy on Update
-
-	// Fail: test the string body id value != string route id value
-	errRoute := &UpdateInput{}
-	errRoute.ID = "2"
-	err = json.Unmarshal([]byte(reqBody), errRoute)
-	assert.Nil(t, err)
-	ctx.SetInput(errRoute)
-	ret, err = handler.Update(ctx)
-	assert.NotNil(t, err)
-	assert.EqualError(t, err, "ID on path (2) doesn't match ID on body (1)")
-	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
-
-	// Fail: tests the float body id value != string route id value
-	reqBodyErr := `{
-		"id": 1,
-		"uri": "/index.html",
-		"upstream": {
-			"type": "roundrobin",
-			"nodes": [{
-				"host": "www.a.com",
-				"port": 80,
-				"weight": 1
-			}]
-		}
-	}`
-	errRoute = &UpdateInput{}
-	errRoute.ID = "2"
-	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
-	assert.Nil(t, err)
-	ctx.SetInput(errRoute)
-	ret, err = handler.Update(ctx)
-	assert.NotNil(t, err)
-	assert.EqualError(t, err, "ID on path (2) doesn't match ID on body (1)")
-	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
-
-	// Success: tests the float body id value is == string route id value
-	reqBodyErr = `{
-		"id": 10,
-		"uri": "/index.html",
-		"upstream": {
-			"type": "roundrobin",
-			"nodes": [{
-				"host": "www.a.com",
-				"port": 80,
-				"weight": 1
-			}]
-		}
-	}`
-	errRoute = &UpdateInput{}
-	errRoute.ID = "10"
-	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
-	assert.Nil(t, err)
-	ctx.SetInput(errRoute)
-	ret, err = handler.Update(ctx)
-	assert.Nil(t, err)
-
-	// Success: tests the Body ID can be nil
-	reqBodyErr = `{
-		"uri": "/index.html",
-		"upstream": {
-			"type": "roundrobin",
-			"nodes": [{
-				"host": "www.a.com",
-				"port": 80,
-				"weight": 1
-			}]
-		}
-	}`
-	errRoute = &UpdateInput{}
-	errRoute.ID = "r1"
-	err = json.Unmarshal([]byte(reqBodyErr), errRoute)
-	assert.Nil(t, err)
-	ctx.SetInput(errRoute)
-	ret, err = handler.Update(ctx)
-	assert.Nil(t, err)
-
-	//sleep
-	time.Sleep(time.Duration(100) * time.Millisecond)
-
-	//list
-	listInput := &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err := handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage := retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 1)
-
-	//list search match
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "name": "a", "uri": "index"}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err = handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage = retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 1)
-
-	//list search name not match
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "name": "not-exists", "uri": "index"}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err = handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage = retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 0)
-
-	//list search uri not match
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "name": "a", "uri": "not-exists"}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err = handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage = retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 0)
-
-	//list search label not match
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "label":"l3"}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err = handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage = retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 0)
-
-	//list search label match
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "label":"l1"}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err = handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage = retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 1)
-
-	//list search label match
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "label":"l1:v1"}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err = handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage = retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 1)
-
-	//list search and label not match
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "label":"l1:v2"}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err = handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage = retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 0)
-
-	//list search with name and label
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "name": "a", "label":"l1:v1"}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err = handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage = retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 1)
-
-	//list search with uri and label
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "uri": "index", "label":"l1:v1"}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err = handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage = retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 1)
-
-	//list search with uri,name and label
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "name": "a", "uri": "index", "label":"l1:v1"}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err = handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage = retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 1)
-
-	//create route using uris
-	route3 := &entity.Route{}
-	reqBody = `{
-	  "id": "2",
-	  "name": "bbbbb",
-	  "uris": ["/aa", "/bb"],
-	  "hosts": ["foo.com", "*.bar.com"],
-	  "remote_addrs": ["127.0.0.0/8"],
-	  "methods": ["PUT", "GET"],
-	  "upstream": {
-	      "type": "roundrobin",
-	      "nodes": {"www.a.com:80": 1}
-	  }
-	}`
-	err = json.Unmarshal([]byte(reqBody), route3)
-	assert.Nil(t, err)
-	ctx.SetInput(route3)
-	_, err = handler.Create(ctx)
-	assert.Nil(t, err)
-
-	//sleep
-	time.Sleep(time.Duration(100) * time.Millisecond)
-
-	//list search match uris
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1, "name": "bbb", "uri": "bb"}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err = handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage = retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 1)
-
-	//delete test data
-	inputDel := &BatchDelete{}
-	reqBody = `{"ids": "1,2"}`
-	err = json.Unmarshal([]byte(reqBody), inputDel)
-	assert.Nil(t, err)
-	ctx.SetInput(inputDel)
-	_, err = handler.BatchDelete(ctx)
-	assert.Nil(t, err)
-
-	//sleep
-	time.Sleep(time.Duration(100) * time.Millisecond)
-
-	//get route -- deleted, not found
-	getInput := &GetInput{}
-	reqBody = `{"id": "1"}`
-	err = json.Unmarshal([]byte(reqBody), getInput)
-	assert.Nil(t, err)
-	ctx.SetInput(getInput)
-	ret, err = handler.Get(ctx)
-	assert.EqualError(t, err, "data not found")
-	assert.Equal(t, http.StatusNotFound, ret.(*data.SpecCodeResponse).StatusCode)
-
-	//delete test data
-	reqBody = `{"ids": "not-exists"}`
-	err = json.Unmarshal([]byte(reqBody), inputDel)
-	assert.Nil(t, err)
-	ctx.SetInput(inputDel)
-	ret, err = handler.BatchDelete(ctx)
-	assert.NotNil(t, err)
-	assert.Equal(t, http.StatusNotFound, ret.(*data.SpecCodeResponse).StatusCode)
-
-	//create route with not exist upstream id
-	route4 := &entity.Route{}
-	reqBody = `{
-	  "id": "2222",
-	  "name": "r222",
-	  "uris": ["/aa", "/bb"],
-	  "upstream_id": "not-exists"
-	}`
-	err = json.Unmarshal([]byte(reqBody), route4)
-	assert.Nil(t, err)
-	ctx.SetInput(route4)
-	ret, err = handler.Create(ctx)
-	assert.NotNil(t, err)
-	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
-
-	//type:chash, hash_on: vars, wrong key
-	route5 := &entity.Route{}
-	reqBody = `{
-	  "id": "1",
-	  "methods": ["GET"],
-	  "upstream": {
-	      "nodes": {
-	          "127.0.0.1:8080": 1
-	      },
-	      "type": "chash",
-	      "hash_on":"vars",
-	      "key": "not_support"
-	  },
-	  "desc": "new route",
-	  "uri": "/index.html"
-	}`
-	err = json.Unmarshal([]byte(reqBody), route5)
-	assert.Nil(t, err)
-	ctx.SetInput(route5)
-	ret, err = handler.Create(ctx)
-	assert.NotNil(t, err)
-	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
-
-	//type:chash, hash_on: cookie, missing key
-	route6 := &entity.Route{}
-	reqBody = `{
-	  "id": "1",
-	  "methods": ["GET"],
-	  "upstream": {
-	      "nodes": {
-	          "127.0.0.1:8080": 1
-	      },
-	      "type": "chash",
-	      "hash_on":"cookie"
-	  },
-	  "desc": "new route",
-	  "uri": "/index.html"
-	}`
-	err = json.Unmarshal([]byte(reqBody), route6)
-	assert.Nil(t, err)
-	ctx.SetInput(route6)
-	ret, err = handler.Create(ctx)
-	assert.NotNil(t, err)
-	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
-
-	//create route with out upstream
-	route11 := &entity.Route{}
-	reqBody = `{
-	  "id": "11",
-	  "name": "bbbbb",
-	  "uri": "/r11",
-	  "hosts": ["foo.com", "*.bar.com"],
-	  "remote_addrs": ["127.0.0.0/8"],
-	  "methods": ["PUT", "GET"],
-	  "plugins": {
-	      "limit-count": {
-	          "count": 2,
-	          "time_window": 60,
-	          "rejected_code": 503,
-	          "key": "remote_addr"
-	      }
-	  }
-	}`
-	err = json.Unmarshal([]byte(reqBody), route11)
-	assert.Nil(t, err)
-	ctx.SetInput(route11)
-	_, err = handler.Create(ctx)
-	assert.Nil(t, err)
-
-	//sleep
-	time.Sleep(time.Duration(100) * time.Millisecond)
-
-	//get
-	input11 := &GetInput{}
-	input11.ID = "11"
-	ctx.SetInput(input11)
-	ret, err = handler.Get(ctx)
-	assert.Nil(t, err)
-	stored = ret.(*entity.Route)
-	assert.Equal(t, "11", stored.ID)
-
-	//list
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 10, "page": 1}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	_, err = handler.List(ctx)
-	assert.Nil(t, err)
-
-	//list search match
-	listInput = &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1,  "uri": "r11"}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err = handler.List(ctx)
-	assert.Nil(t, err)
-	dataPage = retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 1)
-
-	//delete test data
-	reqBody = `{"ids": "11"}`
-	err = json.Unmarshal([]byte(reqBody), inputDel)
-	assert.Nil(t, err)
-	ctx.SetInput(inputDel)
-	_, err = handler.BatchDelete(ctx)
-	assert.Nil(t, err)
+type testCase struct {
+	caseDesc string
+	giveInput interface{}
+	mockInput interface{}
+	mockRet   interface{}
+	mockErr   interface{}
+	wantRet   interface{}
+	wantErr   interface{}
+	called    bool
+	upstreamInput string
+	scriptInput string
+	serviceInput string
 }
 
-func Test_Route_With_Script(t *testing.T) {
-	// init
-	err := storage.InitETCDClient(conf.ETCDConfig)
-	assert.Nil(t, err)
-	err = store.InitStores()
-	assert.Nil(t, err)
-
-	handler := &Handler{
-		routeStore:    store.GetStore(store.HubKeyRoute),
-		svcStore:      store.GetStore(store.HubKeyService),
-		upstreamStore: store.GetStore(store.HubKeyUpstream),
-		scriptStore:   store.GetStore(store.HubKeyScript),
-	}
-	assert.NotNil(t, handler)
-
-	//create Note: depends on lib `dag-to-lua` if script exists
-	ctx := droplet.NewContext()
-	route := &entity.Route{}
-	reqBody := `{
-		  "id": "1",
-		  "uri": "/index.html",
-		  "upstream": {
-		      "type": "roundrobin",
-		      "nodes": [{
-		          "host": "www.a.com",
-		          "port": 80,
-		          "weight": 1
-		      }]
-		  },
-		  "script":{
-		      "rule":{
-		          "root":"451106f8-560c-43a4-acf2-2a6ed0ea57b8",
-		          "451106f8-560c-43a4-acf2-2a6ed0ea57b8":[
-		              [
-		                  "code == 403",
-		                  "b93d622c-92ef-48b4-b6bb-57e1ce893ee3"
-		              ],
-		              [
-		                  "",
-		                  "988ef5c2-c896-4606-a666-3d4cbe24a731"
-		              ]
-		          ]
-		      },
-		      "conf":{
-		          "451106f8-560c-43a4-acf2-2a6ed0ea57b8":{
-		              "name":"uri-blocker",
-		              "conf":{
-		                  "block_rules":[
-		                      "root.exe",
-		                      "root.m+"
-		                  ],
-		                  "rejected_code":403
-		              }
-		          },
-		          "988ef5c2-c896-4606-a666-3d4cbe24a731":{
-		              "name":"kafka-logger",
-		              "conf":{
-		                  "batch_max_size":1000,
-		                  "broker_list":{
-		                  },
-		                  "buffer_duration":60,
-		                  "inactive_timeout":5,
-		                  "include_req_body":false,
-		                  "kafka_topic":"1",
-		                  "key":"2",
-		                  "max_retry_count":0,
-		                  "name":"kafka logger",
-		                  "retry_delay":1,
-		                  "timeout":3
-		              }
-		          },
-		          "b93d622c-92ef-48b4-b6bb-57e1ce893ee3":{
-		              "name":"fault-injection",
-		              "conf":{
-		                  "abort":{
-		                      "body":"200",
-		                      "http_status":300
-		                  },
-		                  "delay":{
-		                      "duration":500
-		                  }
-		              }
-		          }
-		      },
-		      "chart":{
-		      }
-		  }
-		}`
-	err = json.Unmarshal([]byte(reqBody), route)
-	assert.Nil(t, err)
-	ctx.SetInput(route)
-	_, err = handler.Create(ctx)
-	assert.Nil(t, err)
-
-	//sleep
-	time.Sleep(time.Duration(20) * time.Millisecond)
-
-	//get
-	input := &GetInput{}
-	input.ID = "1"
-	ctx.SetInput(input)
-	ret, err := handler.Get(ctx)
-	stored := ret.(*entity.Route)
-	assert.Nil(t, err)
-	assert.Equal(t, stored.ID, route.ID)
-	assert.NotNil(t, stored.Script)
-
-	//update
-	route2 := &UpdateInput{}
-	route2.ID = "1"
-	reqBody = `{
-		"id": "1",
-		"uri": "/index.html",
-		"enable_websocket": true,
-		"upstream": {
-			"type": "roundrobin",
-			"nodes": [{
-				"host": "www.a.com",
-				"port": 80,
-				"weight": 1
-			}]
+func genServiceStore(t *testing.T, getInput string) *store.MockInterface {
+	ret1 := func(c context.Context, input string) interface{} {
+		if input == "s1" {
+			return &entity.Service{
+				BaseInfo:entity.BaseInfo{
+					ID:"s1",
+					CreateTime: 1609752277,
+				},
+				Name: "s1",
+				Desc: "service s1",
+			}
 		}
-	}`
 
-	err = json.Unmarshal([]byte(reqBody), route2)
-	assert.Nil(t, err)
-	ctx.SetInput(route2)
-	_, err = handler.Update(ctx)
-	assert.Nil(t, err)
+		return nil
+	}
 
-	//sleep
-	time.Sleep(time.Duration(100) * time.Millisecond)
+	ret2 := func(c context.Context, input string) interface{} {
+		if input == "not_found" {
+			return data.ErrNotFound
+		}
 
-	//get, script should be nil
-	input = &GetInput{}
-	input.ID = "1"
-	ctx.SetInput(input)
-	ret, err = handler.Get(ctx)
-	stored = ret.(*entity.Route)
-	assert.Nil(t, err)
-	assert.Equal(t, stored.ID, route.ID)
-	assert.Nil(t, stored.Script)
+		if input == "error" {
+			return errors.New("service error")
+		}
 
-	//delete test data
-	inputDel := &BatchDelete{}
-	reqBody = `{"ids": "1"}`
-	err = json.Unmarshal([]byte(reqBody), inputDel)
-	assert.Nil(t, err)
-	ctx.SetInput(inputDel)
-	_, err = handler.BatchDelete(ctx)
-	assert.Nil(t, err)
+		return nil
+	}
+
+	svcStore := &store.MockInterface{}
+	svcStore.On("Get", mock.Anything).Run(func(args mock.Arguments){
+		id := args.Get(0).(string)
+		assert.Equal(t, getInput, id)
+	}).Return(ret1, ret2)
+
+	return svcStore
 }
+
+func genUpstreamStore(t *testing.T, getInput string) *store.MockInterface {
+	ret1 := func(c context.Context, input string) interface{} {
+		return nil
+	}
+
+	ret2 := func(c context.Context, input string) interface{} {
+		if input == "not_found" {
+			return data.ErrNotFound
+		}
+
+		if input == "error" {
+			return errors.New("upstream error")
+		}
+		return nil
+	}
+
+	upstreamStore :=&store.MockInterface{}
+	upstreamStore.On("Get", mock.Anything).Run(func(args mock.Arguments){
+		id := args.Get(0).(string)
+		assert.Equal(t, getInput, id)
+	}).Return(ret1, ret2)
+
+	return upstreamStore
+}
+
+func genScriptStore(t *testing.T, getInput string) *store.MockInterface {
+	ret1 := func(c context.Context, input string) interface{} {
+		return nil
+	}
+
+	ret2 := func(c context.Context, input string) interface{} {
+		return nil
+	}
+
+	scriptStore := &store.MockInterface{}
+	scriptStore.On("Get", mock.Anything).Run(func(args mock.Arguments){
+		id := args.Get(0).(string)
+		assert.Equal(t, getInput, id)
+	}).Return(ret1, ret2)
+
+	return scriptStore
+}
+
+
+
+func TestRoute_Get(t *testing.T) {
+	tests := []testCase{
+		{
+			caseDesc: "route: get success",
+			giveInput: GetInput{ID: "s1"},
+			mockInput: "s1",
+			mockRet:  &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID: "s1",
+				},
+				URI: "/test",
+			},
+			mockErr: nil,
+			wantRet:  &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID: "s1",
+				},
+				URI: "/test",
+			},
+			wantErr: nil,
+			called: true,
+		},
+		{
+			caseDesc:   "route: store get failed",
+			giveInput:  &GetInput{ID: "failed_key"},
+			mockInput: "failed_key",
+			mockRet: nil,
+			mockErr:    fmt.Errorf("get failed"),
+			wantRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
+			},
+			wantErr:    fmt.Errorf("get failed"),
+			called: true,
+		},
+	}
+
+	for _, tc := range tests{
+		getCalled := false
+		mStore := &store.MockInterface{}
+
+		mStore.On("Get", mock.Anything).Run(func(args mock.Arguments){
+			getCalled = true
+			assert.Equal(t, tc.mockInput, args.Get(0))
+		}).Return(tc.mockRet, tc.mockErr)
+
+		h := Handler{routeStore: mStore}
+		ctx := droplet.NewContext()
+		ctx.SetInput(tc.giveInput)
+		ret, err := h.Get(ctx)
+		assert.True(t, tc.called, getCalled)
+		assert.Equal(t, tc.wantRet, ret)
+		assert.Equal(t, tc.wantErr, err)
+	}
+}
+
+func TestRoute_List(t *testing.T) {
+	mockData := []*entity.Route{
+		{
+			BaseInfo:entity.BaseInfo{CreateTime: 1609742634},
+			Name: "r1",
+			URI: "/test_r1",
+			Labels: map[string]string{
+			"version": "v1",
+			"build": "16",
+			},
+			Upstream: &entity.UpstreamDef{
+				Nodes: []interface{}{
+					map[string]interface{}{
+						"host":   "39.97.63.215",
+						"port":   float64(80),
+						"weight": float64(1),
+					},
+				},
+			},
+		},
+		{
+			BaseInfo:entity.BaseInfo{CreateTime: 1609742635},
+			Name: "r2",
+			URI: "/test_r2",
+			Labels: map[string]string{
+				"version": "v1",
+				"build": "16",
+			},
+		},
+		{
+			BaseInfo:entity.BaseInfo{CreateTime: 1609742636},
+			Name:"route_test",
+			URI:"/test_route_test",
+			Labels: map[string]string{
+				"version": "v2",
+				"build": "17",
+			},
+		},
+		{
+			BaseInfo:entity.BaseInfo{CreateTime: 1609742636},
+			Name:"test_route",
+			URI:"/test_test_route",
+			Labels: map[string]string{
+				"version": "v2",
+				"build": "17",
+				"extra":"test",
+			},
+		},
+	}
+
+
+	tests := []testCase{
+		{
+			caseDesc: "list all route",
+			giveInput: &ListInput{
+				Pagination: store.Pagination{
+					PageSize: 10,
+					PageNumber: 10,
+				},
+			},
+			mockInput: store.ListInput{
+				PageSize: 10,
+				PageNumber: 10,
+			},
+			wantRet: &store.ListOutput{
+				Rows: []interface{}{
+					mockData[0],
+					mockData[1],
+					mockData[2],
+					mockData[3],
+				},
+				TotalSize: 4,
+			},
+			called: true,
+		},
+		{
+			caseDesc: "list routes with name",
+			giveInput: &ListInput{
+				Name :"route",
+				Pagination: store.Pagination{
+					PageSize:   10,
+					PageNumber: 10,
+				},
+			},
+			mockInput: store.ListInput{
+				PageSize:   10,
+				PageNumber: 10,
+			},
+			wantRet: &store.ListOutput{
+				Rows: []interface{}{
+					mockData[2],
+					mockData[3],
+				},
+				TotalSize: 2,
+			},
+			called: true,
+		},
+		{
+			caseDesc: "list routes with uri",
+			giveInput: &ListInput{
+				Name:"test_r2",
+				Pagination:store.Pagination{
+					PageSize: 10,
+					PageNumber: 10,
+				},
+			},
+			mockInput: store.ListInput{
+				PageSize:10,
+				PageNumber: 10,
+			},
+			wantRet: &store.ListOutput{
+				Rows: []interface{}{
+					mockData[2],
+				},
+				TotalSize: 1,
+			},
+			called: true,
+		},
+		{
+			caseDesc: "list routes with label",
+			giveInput: &ListInput{
+				Label: "version:v1",
+				Pagination:store.Pagination{
+					PageSize: 10,
+					PageNumber: 10,
+				},
+			},
+			mockInput: store.ListInput{
+				PageSize:10,
+				PageNumber: 10,
+			},
+			wantRet: &store.ListOutput{
+				Rows: []interface{}{
+					mockData[1],
+					mockData[2],
+				},
+				TotalSize: 2,
+			},
+			called: true,
+		},
+		{
+			caseDesc: "list routes with label",
+			giveInput: &ListInput{
+				Label: "extra",
+				Pagination:store.Pagination{
+					PageSize: 10,
+					PageNumber: 10,
+				},
+			},
+			mockInput: store.ListInput{
+				PageSize:10,
+				PageNumber: 10,
+			},
+			wantRet: &store.ListOutput{
+				Rows: []interface{}{
+					mockData[3],
+				},
+				TotalSize: 1,
+			},
+			called: true,
+		},
+		{
+			caseDesc: "list routes and test format",
+			giveInput: &ListInput{
+				Name: "r1",
+				Pagination:store.Pagination{
+					PageSize: 10,
+					PageNumber: 10,
+				},
+			},
+			mockInput: store.ListInput{
+				PageSize: 10,
+				PageNumber: 10,
+			},
+			wantRet: &store.ListOutput{
+				Rows:[]interface{} {
+					&entity.Route{
+						BaseInfo:entity.BaseInfo{CreateTime: 1609742634},
+						Name: "r1",
+						URI: "/test_r1",
+						Labels: map[string]string{
+							"version": "v1",
+							"build": "16",
+						},
+						Upstream: &entity.UpstreamDef{
+							Nodes: []*entity.Node{
+								{
+									Host:   "39.97.63.215",
+									Port:   80,
+									Weight: 1,
+								},
+							},
+						},
+					},
+				},
+
+				TotalSize: 1,
+			},
+			called: true,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T){
+			getCalled := false
+			mStore := &store.MockInterface{}
+			mStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				input := args.Get(0).(store.ListInput)
+				mockInput := tc.mockInput.(ListInput)
+				assert.Equal(t, mockInput.PageSize, input.PageSize)
+				assert.Equal(t, mockInput.PageNumber, input.PageNumber)
+			}).Return(func(input store.ListInput)*store.ListOutput {
+				var returnData []interface{}
+				for _, c := range mockData {
+					if input.Predicate(c) {
+						if input.Format == nil {
+							returnData = append(returnData, c)
+							continue
+						}
+
+						returnData = append(returnData, input.Format(c))
+					}
+				}
+
+				return &store.ListOutput{
+					Rows: returnData,
+					TotalSize: len(returnData),
+				}
+			}, tc.mockErr)
+
+			h := Handler{routeStore: mStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+
+			ret, err := h.List(ctx)
+			assert.Equal(t, tc.called, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
+	}
+}
+
+
+func TestRoute_Create(t *testing.T) {
+	giveInput := &entity.Service{
+		BaseInfo: entity.BaseInfo{
+			ID: "s1",
+			CreateTime: 1609746531,
+		},
+		Name: "s1",
+		Desc: "test_route",
+		UpstreamID: "u1",
+		Script: "",
+		Labels: map[string]string{
+			"version": "v1",
+		},
+	}
+
+	tests := []testCase{
+		{
+			caseDesc: "create route success",
+			giveInput: &entity.Route{
+				BaseInfo:entity.BaseInfo{
+					ID: "s1",
+					CreateTime:1609746531,
+				},
+				Name: "s1",
+				Desc: "test_route",
+				UpstreamID: "u1",
+				ServiceID: "s1",
+				Script: "",
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
+			mockInput: giveInput,
+			upstreamInput: "u1",
+			serviceInput: "s1",
+			scriptInput: "",
+			wantRet: nil,
+			wantErr: nil,
+		},
+		{
+			caseDesc: "create route failed, service not found",
+			giveInput: &entity.Route{
+				BaseInfo:entity.BaseInfo{
+					ID: "s2",
+					CreateTime:1609746531,
+				},
+				Name: "s1",
+				Desc: "test_route",
+				UpstreamID: "u1",
+				ServiceID: "not_found",
+				Script: "",
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
+			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr: fmt.Errorf("service id: not_found not found"),
+			upstreamInput: "u1",
+			serviceInput: "not_found",
+			scriptInput: "",
+			called: false,
+		},
+		{
+			caseDesc: "create route failed, service store get error",
+			giveInput: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:"r1",
+					CreateTime: 1609746531,
+				},
+				Name: "r1",
+				Desc: "test route",
+				UpstreamID: "r1",
+				// mock store will return err if service is s3
+				ServiceID: "error",
+				Script: "",
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
+			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr: errors.New("service error"),
+			upstreamInput: "r1",
+			serviceInput: "error",
+			scriptInput: "",
+			called: false,
+		},
+		{
+			caseDesc: "create route failed, upstream not found",
+			giveInput: &entity.Route{
+				BaseInfo:entity.BaseInfo{
+					ID: "s2",
+					CreateTime:1609746531,
+				},
+				Name: "s1",
+				Desc: "test_route",
+				UpstreamID: "not_found",
+				ServiceID: "s2",
+				Script: "",
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
+			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr: fmt.Errorf("upstream id: not_found not found"),
+			upstreamInput: "not_found",
+			serviceInput: "s2",
+			scriptInput: "",
+			called: false,
+		},
+		{
+			caseDesc: "create route failed, upstream store get error",
+			giveInput: &entity.Route{
+				BaseInfo:entity.BaseInfo{
+					ID: "s2",
+					CreateTime:1609746531,
+				},
+				Name: "s1",
+				Desc: "test_route",
+				UpstreamID: "error",
+				ServiceID: "s2",
+				Script: "",
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
+			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr: fmt.Errorf("upstream error"),
+			upstreamInput: "error",
+			serviceInput: "s2",
+			scriptInput: "",
+			called: false,
+		},
+		{
+			caseDesc: "create route failed, script create error",
+			giveInput: &entity.Route{
+				BaseInfo:entity.BaseInfo{
+					ID: "s2",
+					CreateTime:1609746531,
+				},
+				Name: "s1",
+				Desc: "test_route",
+				UpstreamID: "u1",
+				ServiceID: "s2",
+				Script: "",
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
+			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr: fmt.Errorf("upstream error"),
+			upstreamInput: "u1",
+			serviceInput: "s2",
+			scriptInput: "",
+			called: false,
+		},
+
+		// TODO: test script
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T){
+			getCalled := false
+
+			mStore := &store.MockInterface{}
+			mStore.On("Create", mock.Anything, mock.Anything).Run(func(args mock.Arguments){
+				id := args.Get(1).(*entity.Route)
+				assert.Equal(t, tc.giveInput, id)
+			})
+			h := Handler{svcStore: genServiceStore(t, tc.serviceInput),
+				         upstreamStore: genUpstreamStore(t, tc.upstreamInput),
+			             scriptStore: genScriptStore(t, tc.scriptInput),
+			             routeStore: mStore}
+
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.Create(ctx)
+			assert.Equal(t, tc.giveInput, getCalled, ret)
+			assert.Equal(t, tc.wantRet, tc.wantErr, err)
+		})
+	}
+}
+
+func TestRoute_Update(t *testing.T) {
+	giveInput := &entity.Route{
+		BaseInfo: entity.BaseInfo{
+			ID: "r1",
+			CreateTime: 1609746531,
+		},
+		Name: "s1",
+		Desc: "test_route",
+		UpstreamID: "u1",
+		Script: "",
+		Labels: map[string]string{
+			"version": "v1",
+		},
+	}
+
+	tests := []testCase{
+		{
+			caseDesc:  "update script",
+			giveInput: &UpdateInput{
+				ID: "r1",
+				Route:entity.Route{
+					Name: "r1",
+					Desc: "updated route",
+					UpstreamID: "u2",
+					Script: "",
+					Labels: map[string]string{
+						"version":"v2",
+					},
+				},
+			},
+			mockInput: &entity.Service{
+				BaseInfo: entity.BaseInfo{
+					ID: "s1",
+				},
+				Name:       "s1",
+				UpstreamID: "u1",
+				Desc:       "test service",
+			},
+			mockErr: nil,
+			upstreamInput: "u1",
+			serviceInput: "s2",
+			scriptInput:  "",
+			called: true,
+		},
+		{
+			caseDesc: "update failed, different id",
+			giveInput: &UpdateInput{
+				ID: "r1",
+				Route: entity.Route{
+					BaseInfo: entity.BaseInfo{
+						ID: "r2",
+					},
+					Name:       "s1",
+					UpstreamID: "u1",
+					Desc:       "test service",
+				},
+			},
+			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr: fmt.Errorf("ID on path (r1) doesn't match ID on body (r2)"),
+			called: true,
+		},
+		{
+			caseDesc: "update failed, service not found",
+			giveInput: &UpdateInput{
+				ID:"r1",
+				Route: entity.Route{
+					BaseInfo: entity.BaseInfo{
+						ID:"r1",
+					},
+					Name: "test route",
+					ServiceID: "not_found",
+					UpstreamID: "u1",
+				},
+			},
+			wantRet:  &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr: fmt.Errorf("service id: not_found not found"),
+		},
+		{
+			caseDesc: "update failed, service return error",
+			giveInput: &UpdateInput{
+				ID:"r1",
+				Route: entity.Route{
+					BaseInfo:entity.BaseInfo{
+						ID:"r1",
+					},
+					Name: "test route",
+					ServiceID: "error",
+					UpstreamID: "u1",
+				},
+			},
+			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr: fmt.Errorf("service error"),
+		},
+		{
+			caseDesc: "update failed, upstream not found",
+			giveInput: &UpdateInput{
+				ID: "r1",
+				Route: entity.Route{
+					Name:       "s1",
+					UpstreamID: "not_found",
+					Desc:       "test route",
+				},
+			},
+			wantRet:       &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr:       fmt.Errorf("upstream id: not_found not found"),
+			called: false,
+		},
+		{
+			caseDesc: "update failed, upstream return error",
+			giveInput: &UpdateInput{
+				ID: "r1",
+				Route: entity.Route{
+					Name:       "r1",
+					UpstreamID: "error",
+					Desc:       "test route",
+				},
+			},
+			wantErr:       fmt.Errorf("unknown error"),
+			wantRet:       &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			upstreamInput: "error",
+			called: false,
+		},
+		{
+			caseDesc: "update failed, route return error",
+			giveInput: &UpdateInput{
+				ID:"r1",
+				Route: entity.Route{
+					Name:"r1",
+					Desc: "test route",
+				},
+			},
+			mockInput: &entity.Route{
+				Name:"r1",
+				Desc: "test route",
+			},
+			mockErr: fmt.Errorf("route update error"),
+			wantErr: fmt.Errorf("route update error"),
+			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			upstreamInput: "u1",
+			serviceInput: "s1",
+			scriptInput: "",
+			called: true,
+		},
+
+		// TODO: test script
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := false
+			routeStore := &store.MockInterface{}
+
+			routeStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments){
+				getCalled = true
+				input  := args.Get(1).(*entity.Route)
+				createIfNotExist := args.Get(2).(bool)
+				assert.Equal(t, tc.mockInput, input)
+				assert.True(t, createIfNotExist)
+			})
+
+			upstreamStore := genUpstreamStore(t, tc.upstreamInput)
+			scriptStore := genScriptStore(t, tc.scriptInput)
+			serviceStore := genServiceStore(t, tc.serviceInput)
+
+			scriptStore.On("Create")
+			scriptStore.On("BatchDelete")
+
+			h := Handler{svcStore: serviceStore, upstreamStore: upstreamStore, scriptStore: scriptStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.Update(ctx)
+			assert.Equal(t, tc.called, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
+	}
+}
+
+// Todo: wait for patch fix
+/*
+func TestService_Patch(t *testing.T) {
+	existService := &entity.Service{
+		BaseInfo: entity.BaseInfo{
+			ID:         "s1",
+			CreateTime: 1609340491,
+			UpdateTime: 1609340491,
+		},
+		Name:            "exist_service",
+		UpstreamID:      "u1",
+		EnableWebsocket: false,
+		Labels: map[string]string{
+			"version": "v1",
+		},
+		Plugins: map[string]interface{}{
+			"limit-count": map[string]interface{}{
+				"count":         2,
+				"time_window":   60,
+				"rejected_code": 503,
+				"key":           "remote_addr",
+			},
+		},
+	}
+	tests := []struct {
+		caseDesc     string
+		giveInput    *UpdateInput
+		giveErr      error
+		wantInput    *entity.Service
+		wantErr      error
+		wantRet      interface{}
+		serviceInput string
+		serviceRet   *entity.Service
+		serviceErr   error
+	}{
+		{
+			caseDesc: "patch all success",
+			giveInput: &UpdateInput{
+				ID: "s1",
+				Service: entity.Service{
+					Name:            "patched success",
+					UpstreamID:      "u2",
+					EnableWebsocket: true,
+					Labels: map[string]string{
+						"version": "v1",
+						"build":   "16",
+					},
+					Plugins: map[string]interface{}{
+						"key-auth": map[string]interface{}{
+							"key": "auth-one",
+						},
+					},
+				},
+			},
+			wantInput: &entity.Service{
+				Name:            "patched success",
+				UpstreamID:      "u2",
+				EnableWebsocket: true,
+				Labels: map[string]string{
+					"version": "v1",
+					"build":   "16",
+				},
+				Plugins: map[string]interface{}{
+					"limit-count": map[string]interface{}{
+						"count":         2,
+						"time_window":   60,
+						"rejected_code": 504,
+						"key":           "remote_addr",
+					},
+					"key-auth": map[string]interface{}{
+						"key": "auth-one",
+					},
+				},
+			},
+			serviceInput: "s1",
+			serviceRet:   existService,
+		},
+		{
+			caseDesc: "patch desc success",
+			giveInput: &UpdateInput{
+				ID: "s1/name",
+				Service: entity.Service{
+					Name: "patched success",
+				},
+			},
+			wantInput: &entity.Service{
+				Name:            "patched success",
+				UpstreamID:      "u2",
+				EnableWebsocket: true,
+				Labels: map[string]string{
+					"version": "v1",
+				},
+				Plugins: map[string]interface{}{
+					"limit-count": map[string]interface{}{
+						"count":         2,
+						"time_window":   60,
+						"rejected_code": 503,
+						"key":           "remote_addr",
+					},
+				},
+			},
+			serviceInput: "s1",
+			serviceRet:   existService,
+		},
+		{
+			caseDesc: "patch labels success",
+			giveInput: &UpdateInput{
+				ID: "s1/labels",
+				Service: entity.Service{
+					Labels: map[string]string{
+						"version": "v2",
+					},
+				},
+			},
+			wantInput: &entity.Service{
+				Name:            "patched success",
+				UpstreamID:      "u2",
+				EnableWebsocket: true,
+				Labels: map[string]string{
+					"version": "v2",
+				},
+				Plugins: map[string]interface{}{
+					"limit-count": map[string]interface{}{
+						"count":         2,
+						"time_window":   60,
+						"rejected_code": 503,
+						"key":           "remote_addr",
+					},
+				},
+			},
+			serviceInput: "s1",
+			serviceRet:   existService,
+		},
+		{
+			caseDesc: "patch enable_websocket success",
+			giveInput: &UpdateInput{
+				ID: "s1/enable_websocket",
+				Service: entity.Service{
+					EnableWebsocket: false,
+				},
+			},
+			wantInput: &entity.Service{
+				Name:            "patched success",
+				UpstreamID:      "u2",
+				EnableWebsocket: false,
+				Labels: map[string]string{
+					"version": "v2",
+				},
+				Plugins: map[string]interface{}{
+					"limit-count": map[string]interface{}{
+						"count":         2,
+						"time_window":   60,
+						"rejected_code": 503,
+						"key":           "remote_addr",
+					},
+				},
+			},
+			serviceInput: "s1",
+			serviceRet:   existService,
+		},
+		{
+			caseDesc: "patch plugins success",
+			giveInput: &UpdateInput{
+				ID: "s1/plugins",
+				Service: entity.Service{
+					Plugins: map[string]interface{}{
+						"limit-count": map[string]interface{}{
+							"count":         2,
+							"time_window":   60,
+							"rejected_code": 504,
+							"key":           "remote_addr",
+						},
+					},
+				},
+			},
+			wantInput: &entity.Service{
+				Name:            "patched success",
+				UpstreamID:      "u2",
+				EnableWebsocket: false,
+				Labels: map[string]string{
+					"version": "v2",
+				},
+				Plugins: map[string]interface{}{
+					"limit-count": map[string]interface{}{
+						"count":         2,
+						"time_window":   60,
+						"rejected_code": 504,
+						"key":           "remote_addr",
+					},
+				},
+			},
+			serviceInput: "s1",
+			serviceRet:   existService,
+		},
+		{
+			caseDesc: "patch failed, service store get error",
+			giveInput: &UpdateInput{
+				ID: "s1",
+				Service: entity.Service{
+					Name: "test service",
+				},
+			},
+			serviceInput: "s1",
+			serviceErr:   fmt.Errorf("get error"),
+			wantRet:      handler.SpecCodeResponse(fmt.Errorf("get error")),
+			wantErr:      fmt.Errorf("get error"),
+		},
+		{
+			caseDesc: "patch failed, service store update error",
+			giveInput: &UpdateInput{
+				ID: "s1/name",
+				Service: entity.Service{
+					Name: "patched success",
+				},
+			},
+			giveErr: fmt.Errorf("update error"),
+			wantInput: &entity.Service{
+				Name:            "patched success",
+				UpstreamID:      "u2",
+				EnableWebsocket: true,
+				Labels: map[string]string{
+					"version": "v1",
+				},
+				Plugins: map[string]interface{}{
+					"limit-count": map[string]interface{}{
+						"count":         2,
+						"time_window":   60,
+						"rejected_code": 503,
+						"key":           "remote_addr",
+					},
+				},
+			},
+			serviceInput: "s1",
+			serviceRet:   existService,
+			wantRet:      handler.SpecCodeResponse(fmt.Errorf("update error")),
+			wantErr:      fmt.Errorf("update error"),
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := false
+			serviceStore := &store.MockInterface{}
+			serviceStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				input := args.Get(1).(*entity.Service)
+				createIfNotExist := args.Get(2).(bool)
+				assert.Equal(t, tc.wantInput, input)
+				assert.False(t, createIfNotExist)
+			}).Return(tc.giveErr)
+			serviceStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+				input := args.Get(0).(string)
+				assert.Equal(t, tc.serviceInput, input)
+			}).Return(tc.serviceRet, tc.serviceErr)
+			h := Handler{serviceStore: serviceStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.Patch(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
+	}
+}
+*/
+
+func TestServices_Delete(t *testing.T) {
+	tests := []testCase {
+		{
+			caseDesc: "delete success",
+			giveInput: &BatchDelete{
+				IDs: "r1",
+			},
+			mockInput: []string{"s1"},
+			called: true,
+		},
+		{
+			caseDesc: "batch delete success",
+			giveInput: &BatchDelete{
+				IDs: "s1,s2",
+			},
+			mockInput: []string{"s1", "s2"},
+			called: true,
+		},
+		{
+			caseDesc: "delete failed",
+			giveInput: &BatchDelete{
+				IDs: "s1",
+			},
+			mockInput: []string{"s1"},
+			mockErr:   fmt.Errorf("delete error"),
+			wantRet:   handler.SpecCodeResponse(fmt.Errorf("delete error")),
+			wantErr:   fmt.Errorf("delete error"),
+			called: true,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := false
+			serviceStore := &store.MockInterface{}
+			serviceStore.On("BatchDelete", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				input := args.Get(1).([]string)
+				assert.Equal(t, tc.mockInput, input)
+			}).Return(tc.mockErr)
+
+			h := Handler{routeStore: serviceStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.BatchDelete(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
+	}
+}
+
+func TestRoute_Exist(t *testing.T) {
+	tests := []testCase{
+		{
+			caseDesc: "exist "
+		},
+	}
+
+}
+
