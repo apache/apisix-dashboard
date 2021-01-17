@@ -17,13 +17,29 @@
 package base
 
 import (
-	"github.com/stretchr/testify/assert"
+	"bytes"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func HttpGet(url string, headers map[string]string) ([]byte, int, error) {
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	return httpRequest(http.MethodGet, url, headers, "")
+}
+
+func HttpPut(url string, headers map[string]string, reqBody string) ([]byte, int, error) {
+	return httpRequest(http.MethodPut, url, headers, reqBody)
+}
+
+func httpRequest(method, url string, headers map[string]string, reqBody string) ([]byte, int, error) {
+	var requestBody = new(bytes.Buffer)
+	if reqBody != "" {
+		requestBody = bytes.NewBuffer([]byte(reqBody))
+	}
+	req, err := http.NewRequest(method, url, requestBody)
+
+	req.Close = true
 	if err != nil {
 		return nil, 0, err
 	}

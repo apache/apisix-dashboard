@@ -17,14 +17,16 @@
 package consumer
 
 import (
-	"e2enew/base"
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
-	"net/http"
-	"time"
+
+	"e2enew/base"
 )
 
 var _ = ginkgo.Describe("Consumer", func() {
@@ -433,41 +435,41 @@ var _ = ginkgo.Describe("Consumer", func() {
 			"Authorization": base.GetToken(),
 		}
 		respBody, status, err := base.HttpGet(url, headers)
+		if err != nil {
+			fmt.Printf("err1: %s", err)
+		}
 		assert.Equal(ginkgo.GinkgoT(), 200, status)
 		assert.Nil(ginkgo.GinkgoT(), err)
 
 		createTime := gjson.Get(string(respBody), "data.create_time")
 		updateTime := gjson.Get(string(respBody), "data.update_time")
 
-		fmt.Println("string(respBody)1:", string(respBody))
-
 		assert.Equal(ginkgo.GinkgoT(), true, createTime.Int() >= time.Now().Unix()-1 && createTime.Int() <= time.Now().Unix()+1)
 		assert.Equal(ginkgo.GinkgoT(), true, updateTime.Int() >= time.Now().Unix()-1 && updateTime.Int() <= time.Now().Unix()+1)
 
-		base.RunTestCase(base.HttpTestCase{
-			Desc:   "update the consumer",
-			Object: base.ManagerApiExpect(),
-			Path:   "/apisix/admin/consumers",
-			Method: http.MethodPut,
-			Body: `{
-				        "username":"jack",
-				        "desc": "updated consumer"
-			        }`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			Sleep:        1 * time.Second,
-		})
+		// sleep 1 second for time compare
+		time.Sleep(1 * time.Second)
+		// update consumer
+		reqBody := `{
+		        "username":"jack",
+		        "desc": "updated consumer"
+	        }`
+		respBody, status, err = base.HttpPut(base.ManagerAPIHost+"/apisix/admin/consumers", headers, reqBody)
+		if err != nil {
+			fmt.Printf("err2: %s", err)
+		}
+		assert.Nil(ginkgo.GinkgoT(), err)
+		assert.Equal(ginkgo.GinkgoT(), 200, status)
 
 		time.Sleep(base.SleepTime)
 
+		// check update
 		respBody, status, err = base.HttpGet(url, headers)
 		assert.Equal(ginkgo.GinkgoT(), 200, status)
 		assert.Nil(ginkgo.GinkgoT(), err)
 
 		createTime2 := gjson.Get(string(respBody), "data.create_time")
 		updateTime2 := gjson.Get(string(respBody), "data.update_time")
-
-		fmt.Println("string(respBody):", string(respBody))
 
 		// verify the consumer and compare result
 		assert.Equal(ginkgo.GinkgoT(), "updated consumer", gjson.Get(string(respBody), "data.desc").String())

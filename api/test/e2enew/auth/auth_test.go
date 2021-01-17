@@ -17,11 +17,12 @@
 package auth
 
 import (
-	"e2enew/base"
 	"net/http"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
+
+	"e2enew/base"
 )
 
 var _ = ginkgo.Describe("Authentication", func() {

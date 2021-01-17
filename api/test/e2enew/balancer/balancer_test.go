@@ -17,13 +17,14 @@
 package balancer
 
 import (
-	"e2enew/base"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
+	"github.com/stretchr/testify/assert"
+
+	"e2enew/base"
 )
 
 var _ = ginkgo.Describe("Balancer", func() {
