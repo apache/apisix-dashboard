@@ -19,6 +19,7 @@
 context('Create Route with Upstream', () => {
   const domSelector = {
     input: ':input',
+    notification: '.ant-notification-notice-message',
   };
   const data = {
     upstreamName: 'test_upstream',
@@ -29,11 +30,9 @@ context('Create Route with Upstream', () => {
     verificationIp: '127.0.0.2',
     deleteRouteSuccess: 'Delete Route Successfully',
     deleteUpstreamSuccess: 'Delete successfully',
-    notification: '.ant-notification-notice-message',
   };
 
   beforeEach(() => {
-    // init login
     cy.login();
   });
 
@@ -49,7 +48,7 @@ context('Create Route with Upstream', () => {
     cy.contains('Next').click();
     cy.contains('Submit').click();
 
-    // go to route creat page
+    // go to route create page
     cy.visit('/');
     cy.contains('Route').click();
     cy.contains('Create').click();
@@ -84,7 +83,9 @@ context('Create Route with Upstream', () => {
     cy.get('[title=Name]').type(data.routeName);
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('Edit').click();
-    cy.wait(1000);
+
+    // wait for resource to resolve 
+    cy.wait(500);
     cy.contains('Next').click();
 
     // check if the changes have been saved
@@ -122,12 +123,12 @@ context('Create Route with Upstream', () => {
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(data.notification).should('contain', data.deleteRouteSuccess);
+    cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
 
     cy.visit('/');
     cy.contains('Upstream').click();
     cy.contains(data.upstreamName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(data.notification).should('contain', data.deleteUpstreamSuccess);
+    cy.get(domSelector.notification).should('contain', data.deleteUpstreamSuccess);
   });
 });
