@@ -44,14 +44,14 @@ var _ = ginkgo.Describe("Authentication", func() {
 			Path:         "/apisix/admin/routes",
 			Headers:      map[string]string{"Authorization": "Not-A-Valid-Token"},
 			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `"message":"Request Unauthorized"`,
+			ExpectBody:   `"message":"request unauthorized"`,
 		}),
 		table.Entry("Access without authentication token", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/routes",
 			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `"message":"Request Unauthorized"`,
+			ExpectBody:   `"message":"request unauthorized"`,
 		}),
 	)
 })
