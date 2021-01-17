@@ -190,11 +190,12 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	ssl.Labels = input.Labels
 	//set default value for SSL status, if not set, it will be 0 which means disable.
 	ssl.Status = conf.SSLDefaultStatus
-	if err := h.sslStore.Create(c.Context(), ssl); err != nil {
+	ret, err := h.sslStore.Create(c.Context(), ssl)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type UpdateInput struct {

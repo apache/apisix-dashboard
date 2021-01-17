@@ -96,8 +96,11 @@ func TestUpstream(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), upstream)
 	assert.Nil(t, err)
 	ctx.SetInput(upstream)
-	_, err = upstreamHandler.Create(ctx)
+	ret, err := upstreamHandler.Create(ctx)
 	assert.Nil(t, err)
+	objRet, ok := ret.(*entity.Upstream)
+	assert.True(t, ok)
+	assert.Equal(t, "1", objRet.ID)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -106,7 +109,7 @@ func TestUpstream(t *testing.T) {
 	input := &GetInput{}
 	input.ID = "1"
 	ctx.SetInput(input)
-	ret, err := upstreamHandler.Get(ctx)
+	ret, err = upstreamHandler.Get(ctx)
 	stored := ret.(*entity.Upstream)
 	assert.Nil(t, err)
 	assert.Equal(t, stored.ID, upstream.ID)
@@ -205,8 +208,11 @@ func TestUpstream_Pass_Host(t *testing.T) {
 	err := json.Unmarshal([]byte(reqBody), upstream)
 	assert.Nil(t, err)
 	ctx.SetInput(upstream)
-	_, err = upstreamHandler.Create(ctx)
+	ret, err := upstreamHandler.Create(ctx)
 	assert.Nil(t, err)
+	objRet, ok := ret.(*entity.Upstream)
+	assert.True(t, ok)
+	assert.Equal(t, "2", objRet.ID)
 
 	//sleep
 	time.Sleep(time.Duration(20) * time.Millisecond)
@@ -215,7 +221,7 @@ func TestUpstream_Pass_Host(t *testing.T) {
 	input := &GetInput{}
 	input.ID = "2"
 	ctx.SetInput(input)
-	ret, err := upstreamHandler.Get(ctx)
+	ret, err = upstreamHandler.Get(ctx)
 	stored := ret.(*entity.Upstream)
 	assert.Nil(t, err)
 	assert.Equal(t, stored.ID, upstream.ID)

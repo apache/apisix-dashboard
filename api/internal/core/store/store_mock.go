@@ -18,6 +18,7 @@ package store
 
 import (
 	"context"
+
 	"github.com/stretchr/testify/mock"
 )
 
@@ -48,9 +49,9 @@ func (m *MockInterface) List(input ListInput) (*ListOutput, error) {
 	return r0, r1
 }
 
-func (m *MockInterface) Create(ctx context.Context, obj interface{}) error {
+func (m *MockInterface) Create(ctx context.Context, obj interface{}) (interface{}, error) {
 	ret := m.Mock.Called(ctx, obj)
-	return ret.Error(0)
+	return ret.Get(0), ret.Error(1)
 }
 
 func (m *MockInterface) Update(ctx context.Context, obj interface{}, createOnFail bool) error {
