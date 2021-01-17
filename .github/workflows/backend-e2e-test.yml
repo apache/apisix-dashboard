@@ -53,7 +53,7 @@ jobs:
         working-directory: ./api/test/e2e/skywalking
         run: go test -v
 
-   backend-e2e-test:
+  backend-e2e-test:
     runs-on: ubuntu-latest
 
     steps:
