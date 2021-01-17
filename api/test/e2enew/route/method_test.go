@@ -26,29 +26,28 @@ import (
 )
 
 var _ = ginkgo.Describe("Route", func() {
-	table.DescribeTable("test route with remote_addr",
+	table.DescribeTable("test route with method and methods",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("config route with invalid remote_addr", base.HttpTestCase{
+		table.Entry("create route with invalid method", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-					"uri": "/hello",
-					"remote_addr": "127.0.0.",
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "` + base.UpstreamIp + `",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
+					 "uri": "/hello",
+					 "methods": ["TEST"],
+					 "upstream": {
+						 "type": "roundrobin",
+						 "nodes": [{
+							 "host": "` + base.UpstreamIp + `",
+							 "port": 1980,
+							 "weight": 1
+						 }]
+					 }
+				 }`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addr: Must validate at least one schema (anyOf)\\nremote_addr: Does not match format 'ipv4'\"",
 		}),
 		table.Entry("verify route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
@@ -58,206 +57,32 @@ var _ = ginkgo.Describe("Route", func() {
 			ExpectStatus: http.StatusNotFound,
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("config route with invalid remote_addr", base.HttpTestCase{
+		table.Entry("create route with valid method", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-					"uri": "/hello",
-					"remote_addr": "127.0.0.aa",
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "` + base.UpstreamIp + `",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addr: Must validate at least one schema (anyOf)\\nremote_addr: Does not match format 'ipv4'\"",
-		}),
-		table.Entry("verify route", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusNotFound,
-			Sleep:        base.SleepTime,
-		}),
-		table.Entry("config route with invalid remote_addrs", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/routes/r1",
-			Body: `{
-					"uri": "/hello",
-					"remote_addrs": ["127.0.0.1","192.168.0."],
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "` + base.UpstreamIp + `",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addrs.1: Must validate at least one schema (anyOf)\\nremote_addrs.1: Does not match format 'ipv4'\"",
-		}),
-		table.Entry("verify route", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusNotFound,
-			Sleep:        base.SleepTime,
-		}),
-	)
-})
-
-var _ = ginkgo.Describe("Route", func() {
-	table.DescribeTable("test validate remote_addr",
-		func(tc base.HttpTestCase) {
-			base.RunTestCase(tc)
-		},
-		table.Entry("add route with valid remote_addr", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/routes/r1",
-			Body: `{
-					"uri": "/hello",
-					"remote_addr": "172.16.238.1",
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "` + base.UpstreamIp + `",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
+					 "uri": "/hello",
+					 "methods": ["GET"],
+					 "upstream": {
+						 "type": "roundrobin",
+						 "nodes": [{
+							 "host": "` + base.UpstreamIp + `",
+							 "port": 1980,
+							 "weight": 1
+						 }]
+					 }
+				 }`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("verify route with valid remote_addr", base.HttpTestCase{
+		table.Entry("verify route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        base.SleepTime,
-		}),
-		table.Entry("update route with valid remote_addr (CIDR)", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/routes/r1",
-			Body: `{
-					"uri": "/hello",
-					"remote_addr": "172.16.238.1/24",
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "` + base.UpstreamIp + `",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("verify route with valid remote_addr (CIDR)", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        base.SleepTime,
-		}),
-		table.Entry("update route with valid remote_addrs", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/routes/r1",
-			Body: `{
-					"uri": "/hello",
-					"remote_addrs": ["172.16.238.1","192.168.0.2/24"],
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "` + base.UpstreamIp + `",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("verify route updated", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        base.SleepTime,
-		}),
-		table.Entry("update remote_addr to not be hit", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/routes/r1",
-			Body: `{
-					"uri": "/hello",
-					"remote_addr": "10.10.10.10",
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "` + base.UpstreamIp + `",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("verify route", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusNotFound,
-			Sleep:        base.SleepTime,
-		}),
-		table.Entry("update remote_addrs to not be hit", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/routes/r1",
-			Body: `{
-					"uri": "/hello",
-					"remote_addrs": ["10.10.10.10","11.11.11.1/24"],
-					"upstream": {
-						"type": "roundrobin",
-						"nodes": [{
-							"host": "` + base.UpstreamIp + `",
-							"port": 1980,
-							"weight": 1
-						}]
-					}
-				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("verify route", base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusNotFound,
 			Sleep:        base.SleepTime,
 		}),
 		table.Entry("delete route", base.HttpTestCase{
@@ -266,14 +91,188 @@ var _ = ginkgo.Describe("Route", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("create route with valid methods", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					 "uri": "/hello",
+					 "methods": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+					 "upstream": {
+						 "type": "roundrobin",
+						 "nodes": [{
+							 "host": "` + base.UpstreamIp + `",
+							 "port": 1980,
+							 "weight": 1
+						 }]
+					 }
+				 }`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("verify route by post", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodPost,
+			Path:         "/hello",
+			Body:         `test=test`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("verify it again after deleting the route", base.HttpTestCase{
+		table.Entry("verify route by put", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodPut,
+			Path:         "/hello",
+			Body:         `test=test`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify route by get", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify route by delete", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify route by patch", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodPatch,
+			Path:         "/hello",
+			Body:         `test=test`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("delete route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("add route with lower case methods", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					 "uri": "/hello",
+					 "methods": ["GET", "post"],
+					 "upstream": {
+						 "type": "roundrobin",
+						 "nodes": [{
+							 "host": "` + base.UpstreamIp + `",
+							 "port": 1980,
+							 "weight": 1
+						 }]
+					 }
+				}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusBadRequest,
+		}),
+		table.Entry("verify route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("add route with methods GET", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					 "uri": "/hello",
+					 "methods": ["GET"],
+					 "upstream": {
+						 "type": "roundrobin",
+						 "nodes": [{
+							 "host": "` + base.UpstreamIp + `",
+							 "port": 1980,
+							 "weight": 1
+						 }]
+					 }
+				 }`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("verify route by get", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify route by post", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodPost,
+			Path:         "/hello",
+			Body:         `test=test`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("update route methods to POST", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					 "uri": "/hello",
+					 "methods": ["POST"],
+					 "upstream": {
+						 "type": "roundrobin",
+						 "nodes": [{
+							 "host": "` + base.UpstreamIp + `",
+							 "port": 1980,
+							 "weight": 1
+						 }]
+					 }
+				 }`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("verify route by get", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify route by post", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodPost,
+			Path:         "/hello",
+			Body:         `test=test`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("delete route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
 		}),
 	)

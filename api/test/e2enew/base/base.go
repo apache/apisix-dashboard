@@ -26,7 +26,6 @@ import (
 	"net/http"
 	"os/exec"
 	"strings"
-	"testing"
 	"time"
 
 	"github.com/gavv/httpexpect/v2"
@@ -233,7 +232,8 @@ func RunTestCase(tc HttpTestCase) {
 	}
 }
 
-func ReadAPISIXErrorLog(t *testing.T) string {
+func ReadAPISIXErrorLog() string {
+	t := getTestingHandle()
 	cmd := exec.Command("pwd")
 	pwdByte, err := cmd.CombinedOutput()
 	pwd := string(pwdByte)
@@ -246,7 +246,8 @@ func ReadAPISIXErrorLog(t *testing.T) string {
 	return logContent
 }
 
-func CleanAPISIXErrorLog(t *testing.T) {
+func CleanAPISIXErrorLog() {
+	t := getTestingHandle()
 	cmd := exec.Command("pwd")
 	pwdByte, err := cmd.CombinedOutput()
 	pwd := string(pwdByte)
