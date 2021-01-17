@@ -74,7 +74,7 @@ context('Create and Delete Plugin List', () => {
     });
   });
 
-  it('should deletd plugin list', () => {
+  it('should delete plugin list', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
 
