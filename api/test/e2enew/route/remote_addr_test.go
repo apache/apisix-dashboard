@@ -14,17 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package e2e
+package route
 
 import (
 	"net/http"
-	"testing"
+
+	"github.com/onsi/ginkgo"
+	"github.com/onsi/ginkgo/extensions/table"
+
+	"e2enew/base"
 )
 
-func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			Desc:   "config route with invalid remote_addr",
+var _ = ginkgo.Describe("Route", func() {
+	table.DescribeTable("test route with remote_addr",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("config route with invalid remote_addr", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -34,7 +40,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "` + base.UpstreamIp + `",
 							"port": 1980,
 							"weight": 1
 						}]
@@ -43,18 +49,16 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addr: Must validate at least one schema (anyOf)\\nremote_addr: Does not match format 'ipv4'\"",
-		},
-		{
-			Desc:         "verify route",
+		}),
+		table.Entry("verify route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
 			Sleep:        base.SleepTime,
-		},
-		{
-			Desc:   "config route with invalid remote_addr",
+		}),
+		table.Entry("config route with invalid remote_addr", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -64,7 +68,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "` + base.UpstreamIp + `",
 							"port": 1980,
 							"weight": 1
 						}]
@@ -73,18 +77,16 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addr: Must validate at least one schema (anyOf)\\nremote_addr: Does not match format 'ipv4'\"",
-		},
-		{
-			Desc:         "verify route",
+		}),
+		table.Entry("verify route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
 			Sleep:        base.SleepTime,
-		},
-		{
-			Desc:   "config route with invalid remote_addrs",
+		}),
+		table.Entry("config route with invalid remote_addrs", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -94,7 +96,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "` + base.UpstreamIp + `",
 							"port": 1980,
 							"weight": 1
 						}]
@@ -103,19 +105,14 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   "\"code\":10000,\"message\":\"schema validate failed: remote_addrs.1: Must validate at least one schema (anyOf)\\nremote_addrs.1: Does not match format 'ipv4'\"",
-		},
-		{
-			Desc:         "verify route",
+		}),
+		table.Entry("verify route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
 			Sleep:        base.SleepTime,
-		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc, t)
-	}
-}
+		}),
+	)
+})
