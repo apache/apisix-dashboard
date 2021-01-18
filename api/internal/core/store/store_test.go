@@ -49,7 +49,7 @@ func TestNewGenericStore(t *testing.T) {
 				KeyFunc:  dfFunc,
 			},
 			wantStore: &GenericStore{
-				Stg: &storage.EtcdV3Storage{},
+				Stg: storage.GenEtcdStorage(),
 				opt: GenericStoreOption{
 					BasePath: "test",
 					ObjType:  reflect.TypeOf(GenericStoreOption{}),

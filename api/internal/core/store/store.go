@@ -83,7 +83,7 @@ func NewGenericStore(opt GenericStoreOption) (*GenericStore, error) {
 	s := &GenericStore{
 		opt: opt,
 	}
-	s.Stg = &storage.EtcdV3Storage{}
+	s.Stg = storage.GenEtcdStorage()
 
 	return s, nil
 }
