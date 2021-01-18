@@ -19,7 +19,6 @@ package common
 import (
 	"net/http"
 
-
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
 
