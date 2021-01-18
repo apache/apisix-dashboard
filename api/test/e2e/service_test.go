@@ -156,14 +156,17 @@ func TestService(t *testing.T) {
 	assert.Equal(t, "100", resp.Header["X-Ratelimit-Limit"][0])
 	assert.Equal(t, "99", resp.Header["X-Ratelimit-Remaining"][0])
 
+	// Create another service(id=s2) via HTTP POST to check the
+	// returned value, still attached to route(id=r1)
 	tests = []HttpTestCase{
 		{
-			Desc:    "create service with all options",
+			Desc:    "create service with all options via POST method",
 			Object:  ManagerApiExpect(t),
-			Method:  http.MethodPut,
-			Path:    "/apisix/admin/services/s1",
+			Method:  http.MethodPost,
+			Path:    "/apisix/admin/services",
 			Headers: map[string]string{"Authorization": token},
 			Body: `{
+				"id": "s2",
 				"name": "testservice",
 				"desc": "testservice_desc",
 				"labels": {
@@ -192,12 +195,13 @@ func TestService(t *testing.T) {
 				}
 			}`,
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"id\":\"s2\"",
 		},
 		{
-			Desc:       "get the service s1",
+			Desc:       "get the service s2",
 			Object:     ManagerApiExpect(t),
 			Method:     http.MethodGet,
-			Path:       "/apisix/admin/services/s1",
+			Path:       "/apisix/admin/services/s2",
 			Headers:    map[string]string{"Authorization": token},
 			ExpectCode: http.StatusOK,
 			ExpectBody: "\"name\":\"testservice\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
@@ -209,7 +213,7 @@ func TestService(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 				"uri": "/hello",
-				"service_id": "s1"
+				"service_id": "s2"
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
@@ -232,10 +236,21 @@ func TestService(t *testing.T) {
 func TestService_Teardown(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			Desc:         "delete the service",
+			// Delete the service created via HTTP PUT
+			Desc:         "delete the service(id=s1)",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			// Delete the service created via HTTP POST
+			Desc:         "delete the service(id=s2)",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s2",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,

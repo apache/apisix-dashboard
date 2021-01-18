@@ -68,8 +68,11 @@ func TestService(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), service)
 	assert.Nil(t, err)
 	ctx.SetInput(service)
-	_, err = handler.Create(ctx)
+	ret, err := handler.Create(ctx)
 	assert.Nil(t, err)
+	objRet, ok := ret.(*entity.Service)
+	assert.True(t, ok)
+	assert.Equal(t, "1", objRet.ID)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -78,7 +81,7 @@ func TestService(t *testing.T) {
 	input := &GetInput{}
 	input.ID = "1"
 	ctx.SetInput(input)
-	ret, err := handler.Get(ctx)
+	ret, err = handler.Get(ctx)
 	stored := ret.(*entity.Service)
 	assert.Nil(t, err)
 	assert.Equal(t, stored.ID, service.ID)
@@ -173,8 +176,11 @@ func TestService(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), service11)
 	assert.Nil(t, err)
 	ctx.SetInput(service11)
-	_, err = handler.Create(ctx)
+	ret, err = handler.Create(ctx)
 	assert.Nil(t, err)
+	objRet, ok = ret.(*entity.Service)
+	assert.True(t, ok)
+	assert.Equal(t, "11", objRet.ID)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)

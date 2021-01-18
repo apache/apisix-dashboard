@@ -35,7 +35,7 @@ type GAFieldsObject = {
   eventLabel?: string;
   eventValue?: number;
   nonInteraction?: boolean;
-}
+};
 type Window = {
   ga: (
     command: 'send',
@@ -44,7 +44,7 @@ type Window = {
   ) => void;
   reloadAuthorized: () => void;
   codemirror: Record<string, any>;
-}
+};
 
 declare let ga: Function;
 

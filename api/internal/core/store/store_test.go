@@ -613,12 +613,17 @@ func TestGenericStore_Create(t *testing.T) {
 
 		tc.giveStore.Stg = mStorage
 		tc.giveStore.opt.Validator = mValidator
-		err := tc.giveStore.Create(context.TODO(), tc.giveObj)
+		ret, err := tc.giveStore.Create(context.TODO(), tc.giveObj)
 		assert.True(t, validateCalled, tc.caseDesc)
 		if err != nil {
 			assert.Equal(t, tc.wantErr, err, tc.caseDesc)
 			continue
 		}
+		retTs, ok := ret.(*TestStruct)
+		assert.True(t, ok)
+		// The returned value (retTs) should be the same as the input (tc.giveObj)
+		assert.Equal(t, tc.giveObj.Field1, retTs.Field1, tc.caseDesc)
+		assert.Equal(t, tc.giveObj.Field2, retTs.Field2, tc.caseDesc)
 		assert.True(t, createCalled, tc.caseDesc)
 	}
 }

@@ -45,6 +45,14 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 
 ![architecture](./docs/images/architecture.png)
 
+## Demo
+
+```
+URL: http://139.217.190.60/
+Username: admin
+Password: admin
+```
+
 ## Project structure
 
 ```
