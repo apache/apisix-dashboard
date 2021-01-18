@@ -136,9 +136,8 @@ func (s *GenericStore) Init() error {
 	return nil
 }
 
-func (s *GenericStore) Get(ctx context.Context, key string) (interface{}, error) {
+func (s *GenericStore) Get(_ context.Context, key string) (interface{}, error) {
 	ret, ok := s.cache.Load(key)
-	_ = ctx
 	if !ok {
 		log.Warnf("data not found by key: %s", key)
 		return nil, data.ErrNotFound
@@ -174,9 +173,8 @@ var defLessFunc = func(i, j interface{}) bool {
 	return iID < jID
 }
 
-func (s *GenericStore) List(ctx context.Context, input ListInput) (*ListOutput, error) {
+func (s *GenericStore) List(_ context.Context, input ListInput) (*ListOutput, error) {
 	var ret []interface{}
-	_ = ctx
 	s.cache.Range(func(key, value interface{}) bool {
 		if input.Predicate != nil && !input.Predicate(value) {
 			return true
