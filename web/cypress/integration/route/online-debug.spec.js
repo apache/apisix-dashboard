@@ -18,7 +18,15 @@
 
 context('Online debug', () => {
   const ServerHost = '139.217.190.60';
-  const urisWithSpecialChars = ['/get', '/deps-get', '/deps.get', '/get?search=1', '/get?search=%U%E', '/get?search=v1&number=-1', '/get?search=1+1'];
+  const urisWithSpecialChars = [
+    '/get',
+    '/deps-get',
+    '/deps.get',
+    '/get?search=1',
+    '/get?search=%U%E',
+    '/get?search=v1&number=-1',
+    '/get?search=1+1',
+  ];
   beforeEach(() => {
     // init login
     cy.login();
