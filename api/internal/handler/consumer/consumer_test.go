@@ -206,7 +206,17 @@ func TestHandler_Create(t *testing.T) {
 					},
 				},
 			},
-			wantRet:    nil,
+			wantRet: &entity.Consumer{
+				BaseInfo: entity.BaseInfo{
+					ID: "name",
+				},
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 86400,
+					},
+				},
+			},
 			wantCalled: true,
 		},
 		{
@@ -260,7 +270,16 @@ func TestHandler_Create(t *testing.T) {
 			ctx.SetContext(tc.giveCtx)
 			ret, err := h.Set(ctx)
 			assert.Equal(t, tc.wantCalled, methodCalled)
-			assert.Equal(t, tc.wantRet, ret)
+			// if ret is entity.Consumer, need to ignore
+			// create_time and update_time before assertion
+			if retObj, ok := ret.(*entity.Consumer); ok {
+				retObj.BaseInfo.CreateTime = 0
+				retObj.BaseInfo.UpdateTime = 0
+				assert.Equal(t, tc.wantRet, retObj)
+			} else {
+				// tc.wantRet is *data.SpecCodeResponse
+				assert.Equal(t, tc.wantRet, ret)
+			}
 			assert.Equal(t, tc.wantErr, err)
 		})
 	}
@@ -301,7 +320,17 @@ func TestHandler_Update(t *testing.T) {
 					},
 				},
 			},
-			wantRet:    nil,
+			wantRet: &entity.Consumer{
+				BaseInfo: entity.BaseInfo{
+					ID: "name",
+				},
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 500,
+					},
+				},
+			},
 			wantCalled: true,
 		},
 		{
@@ -351,7 +380,16 @@ func TestHandler_Update(t *testing.T) {
 			ctx.SetContext(tc.giveCtx)
 			ret, err := h.Set(ctx)
 			assert.Equal(t, tc.wantCalled, methodCalled)
-			assert.Equal(t, tc.wantRet, ret)
+			// if ret is entity.Consumer, need to ignore
+			// create_time and update_time before assertion
+			if retObj, ok := ret.(*entity.Consumer); ok {
+				retObj.BaseInfo.CreateTime = 0
+				retObj.BaseInfo.UpdateTime = 0
+				assert.Equal(t, tc.wantRet, retObj)
+			} else {
+				// tc.wantRet is *data.SpecCodeResponse
+				assert.Equal(t, tc.wantRet, ret)
+			}
 			assert.Equal(t, tc.wantErr, err)
 		})
 	}

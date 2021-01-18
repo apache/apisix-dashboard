@@ -112,8 +112,13 @@ func TestService(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), service2)
 	assert.Nil(t, err)
 	ctx.SetInput(service2)
-	_, err = handler.Update(ctx)
+	ret, err = handler.Update(ctx)
 	assert.Nil(t, err)
+	// Check the returned value
+	objRet, ok = ret.(*entity.Service)
+	assert.True(t, ok)
+	assert.Equal(t, service2.ID, objRet.ID)
+	assert.Equal(t, service2.Name, objRet.Name)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)

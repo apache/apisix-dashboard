@@ -54,6 +54,7 @@ func TestService(t *testing.T) {
 				}
 			}`,
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"s1\"", "\"name\":\"testservice\""},
 		},
 		{
 			Desc:       "get the service s1",

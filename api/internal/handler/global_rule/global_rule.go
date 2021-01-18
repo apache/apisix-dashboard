@@ -141,11 +141,12 @@ func (h *Handler) Set(c droplet.Context) (interface{}, error) {
 		input.GlobalPlugins.ID = input.ID
 	}
 
-	if err := h.globalRuleStore.Update(c.Context(), &input.GlobalPlugins, true); err != nil {
+	ret, err := h.globalRuleStore.Update(c.Context(), &input.GlobalPlugins, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 func Patch(c *gin.Context) (interface{}, error) {
@@ -170,11 +171,12 @@ func Patch(c *gin.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := routeStore.Update(c, &globalRule, false); err != nil {
+	ret, err := routeStore.Update(c, &globalRule, false)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type BatchDeleteInput struct {

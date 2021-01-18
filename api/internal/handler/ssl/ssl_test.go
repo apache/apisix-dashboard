@@ -85,6 +85,12 @@ func TestSSL(t *testing.T) {
 	ctx.SetInput(ssl2)
 	_, err = handler.Update(ctx)
 	assert.Nil(t, err)
+	// check the returned value
+	objRet, ok = ret.(*entity.SSL)
+	assert.True(t, ok)
+	assert.Equal(t, "1", objRet.ID)
+	assert.Equal(t, ssl2.Key, objRet.Key)
+	assert.Equal(t, ssl2.Cert, objRet.Cert)
 
 	//list
 	listInput := &ListInput{}

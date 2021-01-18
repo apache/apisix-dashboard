@@ -101,11 +101,12 @@ func Patch(c *gin.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := routeStore.Update(c, &route, false); err != nil {
+	ret, err := routeStore.Update(c, &route, false)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type GetInput struct {
@@ -427,7 +428,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 
 		//save original conf
-		if err = h.scriptStore.Update(c.Context(), script, true); err != nil {
+		if _, err = h.scriptStore.Update(c.Context(), script, true); err != nil {
 			//if not exists, create
 			if err.Error() == fmt.Sprintf("key: %s is not found", script.ID) {
 				if _, err := h.scriptStore.Create(c.Context(), script); err != nil {
@@ -448,11 +449,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	if err := h.routeStore.Update(c.Context(), &input.Route, true); err != nil {
+	ret, err := h.routeStore.Update(c.Context(), &input.Route, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type BatchDelete struct {

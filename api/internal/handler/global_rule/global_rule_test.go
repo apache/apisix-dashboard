@@ -234,7 +234,12 @@ func TestHandler_Set(t *testing.T) {
 					"jwt-auth": map[string]interface{}{},
 				},
 			},
-			wantRet:    nil,
+			wantRet: &entity.GlobalPlugins{
+				BaseInfo: entity.BaseInfo{ID: "name"},
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{},
+				},
+			},
 			wantCalled: true,
 		},
 		{
@@ -273,7 +278,16 @@ func TestHandler_Set(t *testing.T) {
 			ctx.SetContext(tc.giveCtx)
 			ret, err := h.Set(ctx)
 			assert.Equal(t, tc.wantCalled, methodCalled)
-			assert.Equal(t, tc.wantRet, ret)
+			// if ret is entity.GlobalPlugins, need to ignore
+			// create_time and update_time before assertion
+			if retObj, ok := ret.(*entity.GlobalPlugins); ok {
+				retObj.BaseInfo.CreateTime = 0
+				retObj.BaseInfo.UpdateTime = 0
+				assert.Equal(t, tc.wantRet, retObj)
+			} else {
+				// tc.wantRet is *data.SpecCodeResponse
+				assert.Equal(t, tc.wantRet, ret)
+			}
 			assert.Equal(t, tc.wantErr, err)
 		})
 	}

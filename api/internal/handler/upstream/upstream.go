@@ -174,11 +174,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		input.Upstream.ID = input.ID
 	}
 
-	if err := h.upstreamStore.Update(c.Context(), &input.Upstream, true); err != nil {
+	ret, err := h.upstreamStore.Update(c.Context(), &input.Upstream, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type BatchDelete struct {
@@ -227,11 +228,12 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := h.upstreamStore.Update(c.Context(), &stored, false); err != nil {
+	ret, err := h.upstreamStore.Update(c.Context(), &stored, false)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type ExistInput struct {

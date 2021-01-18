@@ -131,6 +131,7 @@ func TestSSL_Basic(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"status\": 0",
 		},
 	}
 
@@ -155,6 +156,7 @@ func TestSSL_Basic(t *testing.T) {
 			Body:         `1`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"status\": 1",
 		},
 		{
 			Desc:         "hit the route using HTTPS, make sure enable successful",
