@@ -48,7 +48,6 @@ context('Create Route with Upstream', () => {
     cy.contains('Next').click();
     cy.contains('Submit').click();
 
-    // go to route create page
     cy.visit('/');
     cy.contains('Route').click();
     cy.contains('Create').click();
@@ -91,17 +90,14 @@ context('Create Route with Upstream', () => {
     // check if the changes have been saved
     cy.get('#nodes_0_host').should('value', data.testIp);
 
-    // select existed upstream_id will be disabled
     cy.get('#upstream_id').click();
     cy.contains(data.upstreamName).click();
     cy.get(domSelector.input).should('be.disabled');
 
-    // select Custom upstream_id will not be disabled
     cy.contains('test_upstream').click();
     cy.contains('Custom').click();
     cy.get(domSelector.input).should('not.be.disabled');
 
-    // change domain name/IP
     cy.get('#nodes_0_host').clear().type(data.verificationIp);
     cy.contains('Next').click();
     cy.contains('Next').click();
