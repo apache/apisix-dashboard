@@ -143,7 +143,7 @@ func Import(c *gin.Context) (interface{}, error) {
 				return nil, err
 			}
 			// save original conf
-			if err = scriptStore.Create(c, script); err != nil {
+			if _, err = scriptStore.Create(c, script); err != nil {
 				return nil, err
 			}
 		}
@@ -155,7 +155,7 @@ func Import(c *gin.Context) (interface{}, error) {
 
 	// create route
 	for _, route := range routes {
-		if err := routeStore.Create(c, route); err != nil {
+		if _, err := routeStore.Create(c, route); err != nil {
 			println(err.Error())
 			return handler.SpecCodeResponse(err), err
 		}
