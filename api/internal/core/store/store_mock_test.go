@@ -30,6 +30,7 @@ import (
 
 type testObj struct {
 	entity.BaseInfo
+
 	Name  string
 	Value string
 }
@@ -49,7 +50,7 @@ func TestMock_Create(t *testing.T) {
 
 	// create failed, "key is required"
 	ret, err = m.Create(ctx, &testObj{Name: ""})
-	assert.Equal(t, fmt.Errorf("key is required"), err)
+	assert.Error(t, err, "key is required")
 	assert.Nil(t, ret)
 
 	// create failed, "key is conflicted"
@@ -151,7 +152,7 @@ func TestMock_Update(t *testing.T) {
 
 	// update failed, name is required
 	err = m.Update(ctx, &testObj{Name: "", Value: "value"}, false)
-	assert.Equal(t, fmt.Errorf("key is required"), err)
+	assert.Error(t, err, "key is required")
 
 	//update failed, name
 	err = m.Update(ctx, &testObj{Name: "test3", Value: "value"}, false)

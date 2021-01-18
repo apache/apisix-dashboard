@@ -19,6 +19,7 @@ package store
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"sort"
 
@@ -29,6 +30,7 @@ import (
 
 type Mock struct {
 	MockInterface
+
 	storage   map[string]interface{}
 	validator Validator
 	keyFunc   func(obj interface{}) string
@@ -63,7 +65,7 @@ func (m *Mock) create(ctx context.Context, obj interface{}) (interface{}, error)
 
 	key := m.keyFunc(obj)
 	if key == "" {
-		return nil, fmt.Errorf("key is required")
+		return nil, errors.New("key is required")
 	}
 	if _, exist := m.storage[key]; exist {
 		return nil, fmt.Errorf("key: %s is conflicted", key)
@@ -155,7 +157,7 @@ func (m *Mock) onUpdate() {
 
 		key := m.keyFunc(obj)
 		if key == "" {
-			return fmt.Errorf("key is required")
+			return errors.New("key is required")
 		}
 
 		storedObj, exist := m.storage[key]
