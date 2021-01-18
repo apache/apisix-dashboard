@@ -32,7 +32,7 @@ context('e2e test for plugin page', () => {
 
     // enable auth plugin
     cy.contains('.ant-card', 'key-auth').within(() => {
-      cy.get('button').click({ timeout: sleepTime });
+      cy.get('button').click({ timeout: sleepTime * 2 });
     });
     // edit CodeMirror
     cy.get('.CodeMirror')
@@ -44,7 +44,7 @@ context('e2e test for plugin page', () => {
 
     // enable redirect plugin
     cy.contains('.ant-card', 'redirect').within(() => {
-      cy.get('button').click({ timeout: sleepTime });
+      cy.get('button').click({ timeout: sleepTime * 2 });
     });
     // edit CodeMirror
     cy.get('.CodeMirror')
