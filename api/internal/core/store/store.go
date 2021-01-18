@@ -284,8 +284,7 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotE
 	storedObj, ok := s.cache.Load(key)
 	if !ok {
 		if createIfNotExist {
-			_, err := s.Create(ctx, obj)
-			return nil, err
+			return s.Create(ctx, obj)
 		}
 		log.Warnf("key: %s is not found", key)
 		return nil, fmt.Errorf("key: %s is not found", key)
