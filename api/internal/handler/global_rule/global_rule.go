@@ -69,7 +69,7 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.globalRuleStore.Get(input.ID)
+	r, err := h.globalRuleStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -112,7 +112,7 @@ type ListInput struct {
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	ret, err := h.globalRuleStore.List(store.ListInput{
+	ret, err := h.globalRuleStore.List(c.Context(), store.ListInput{
 		PageSize:   input.PageSize,
 		PageNumber: input.PageNumber,
 	})
@@ -154,7 +154,7 @@ func Patch(c *gin.Context) (interface{}, error) {
 	subPath := c.Param("path")
 
 	routeStore := store.GetStore(store.HubKeyGlobalRule)
-	stored, err := routeStore.Get(ID)
+	stored, err := routeStore.Get(c, ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}

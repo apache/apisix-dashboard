@@ -80,7 +80,7 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	ret, err := h.sslStore.Get(input.ID)
+	ret, err := h.sslStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -139,7 +139,7 @@ type ListInput struct {
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	ret, err := h.sslStore.List(store.ListInput{
+	ret, err := h.sslStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			if input.SNI != "" {
 				if strings.Contains(obj.(*entity.SSL).Sni, input.SNI) {
@@ -239,7 +239,7 @@ func Patch(c *gin.Context) (interface{}, error) {
 	subPath := c.Param("path")
 
 	sslStore := store.GetStore(store.HubKeySsl)
-	stored, err := sslStore.Get(ID)
+	stored, err := sslStore.Get(c, ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -458,7 +458,7 @@ func Exist(c *gin.Context) (interface{}, error) {
 	}
 
 	routeStore := store.GetStore(store.HubKeySsl)
-	ret, err := routeStore.List(store.ListInput{
+	ret, err := routeStore.List(c, store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,

@@ -26,12 +26,14 @@ type MockInterface struct {
 	mock.Mock
 }
 
-func (m *MockInterface) Get(key string) (interface{}, error) {
+func (m *MockInterface) Get(ctx context.Context, key string) (interface{}, error) {
+	_ = ctx
 	ret := m.Mock.Called(key)
 	return ret.Get(0), ret.Error(1)
 }
 
-func (m *MockInterface) List(input ListInput) (*ListOutput, error) {
+func (m *MockInterface) List(ctx context.Context, input ListInput) (*ListOutput, error) {
+	_ = ctx
 	ret := m.Called(input)
 
 	var (

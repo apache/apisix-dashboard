@@ -71,7 +71,7 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.serviceStore.Get(input.ID)
+	r, err := h.serviceStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -126,7 +126,7 @@ type ListInput struct {
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	ret, err := h.serviceStore.List(store.ListInput{
+	ret, err := h.serviceStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			if input.Name != "" {
 				return strings.Contains(obj.(*entity.Service).Name, input.Name)
@@ -155,7 +155,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 
 	if input.UpstreamID != nil {
 		upstreamID := utils.InterfaceToString(input.UpstreamID)
-		_, err := h.upstreamStore.Get(upstreamID)
+		_, err := h.upstreamStore.Get(c.Context(), upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -192,7 +192,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 
 	if input.UpstreamID != nil {
 		upstreamID := utils.InterfaceToString(input.UpstreamID)
-		_, err := h.upstreamStore.Get(upstreamID)
+		_, err := h.upstreamStore.Get(c.Context(), upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -232,7 +232,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		subPath = arr[1]
 	}
 
-	stored, err := h.serviceStore.Get(input.ID)
+	stored, err := h.serviceStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
