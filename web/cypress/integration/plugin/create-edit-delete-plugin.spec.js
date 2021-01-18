@@ -17,7 +17,7 @@
 /* eslint-disable no-undef */
 
 context('e2e test for plugin page', () => {
-  const sleepTime = 100;
+  const sleepTime = 50000;
 
   beforeEach(() => {
     // init login
@@ -27,24 +27,24 @@ context('e2e test for plugin page', () => {
   it('should enable two plugins', () => {
     //  go to route plugin list page
     cy.visit('/');
-    cy.contains('Plugin').click({ timeout: sleepTime * 5 });
-    cy.contains('Create').click({ timeout: sleepTime * 5 });
+    cy.contains('Plugin').click({ force: true, timeout, });
+    cy.contains('Create').click({ force: true, timeout, });
 
     // enable auth plugin
     cy.contains('.ant-card', 'key-auth').within(() => {
-      cy.get('button').click({ timeout: sleepTime * 2 });
+      cy.get('button').click({ force: true, timeout, });
     });
     // edit CodeMirror
     cy.get('.CodeMirror')
       .first()
       .then((editor) => {
         cy.get('#disable').click();
-        cy.contains('button', 'Submit').click({ timeout: sleepTime * 3 });
+        cy.contains('button', 'Submit').click({ force: true, timeout, });
       });
 
     // enable redirect plugin
     cy.contains('.ant-card', 'redirect').within(() => {
-      cy.get('button').click({ timeout: sleepTime * 2 });
+      cy.get('button').click({ force: true, timeout, });
     });
     // edit CodeMirror
     cy.get('.CodeMirror')
@@ -66,7 +66,7 @@ context('e2e test for plugin page', () => {
   });
 
   it('should edit the plugin', () => {
-    cy.contains('key-auth').siblings().contains('Edit').click({ timeout: sleepTime });
+    cy.contains('key-auth').siblings().contains('Edit').click({ force: true, timeout, });
     cy.get('.CodeMirror')
       .first()
       .then((editor) => {
@@ -83,7 +83,7 @@ context('e2e test for plugin page', () => {
   it('should delete the plugin', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
-    cy.contains('redirect').siblings().contains('Delete').click({ timeout: sleepTime * 5 });
+    cy.contains('redirect').siblings().contains('Delete').click({ force: true, timeout, });
     cy.contains('button', 'Confirm').click();
 
     // back to plugin list page
