@@ -17,14 +17,21 @@
 package common
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
-	"net/http"
 
 	"e2enew/base"
 )
 
 var _ = ginkgo.Describe("ID Compatible", func() {
+	ginkgo.JustAfterEach(func() {
+		if ginkgo.CurrentGinkgoTestDescription().Failed {
+			fmt.Println("routes: ", base.GetResourceList("routes"))
+		}
+	})
 	table.DescribeTable("test id compatible(int)",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
@@ -405,4 +412,8 @@ var _ = ginkgo.Describe("ID Compatible", func() {
 			Sleep:        base.SleepTime,
 		}),
 	)
+
+	ginkgo.It("clean routes", func() {
+		base.CleanResource("routes")
+	})
 })

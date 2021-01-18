@@ -17,13 +17,23 @@
 package common
 
 import (
-	"e2enew/base"
+	"fmt"
+	"net/http"
+
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
-	"net/http"
+
+
+	"e2enew/base"
 )
 
 var _ = ginkgo.Describe("JSON Schema", func() {
+	ginkgo.JustAfterEach(func() {
+		if ginkgo.CurrentGinkgoTestDescription().Failed {
+			fmt.Println("routes: ", base.GetResourceList("routes"))
+		}
+	})
+
 	table.DescribeTable("test json schema validate",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)

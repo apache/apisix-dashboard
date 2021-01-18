@@ -261,7 +261,7 @@ func CleanAPISIXErrorLog() {
 	assert.Nil(t, err)
 }
 
-func CleanResource(resource string) {
+func GetResourceList(resource string) string {
 	t := getTestingHandle()
 	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/"+resource, nil)
 	request.Header.Add("Authorization", GetToken())
@@ -269,7 +269,13 @@ func CleanResource(resource string) {
 	assert.Nil(t, err)
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
-	list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
+
+	return string(respBody)
+}
+
+func CleanResource(resource string) {
+	resources := GetResourceList(resource)
+	list := gjson.Get(resources, "data.rows").Value().([]interface{})
 	for _, item := range list {
 		route := item.(map[string]interface{})
 		tc := HttpTestCase{
@@ -282,6 +288,7 @@ func CleanResource(resource string) {
 		}
 		RunTestCase(tc)
 	}
+	time.Sleep(SleepTime)
 }
 
 var jwtToken string
