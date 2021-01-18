@@ -30,20 +30,21 @@ context('Online debug', () => {
   beforeEach(() => {
     // init login
     cy.login();
-    cy.fixture('selector.json').as('domSelector');
   });
 
   it('shoule not show notification when debug a non existent route with specified special characters', () => {
-    //  go to route create page
+    // go to route list page
     cy.visit('/');
     cy.contains('Route').click();
 
+    // show online debug draw
     cy.contains('Online Debug').click();
 
+    // input uri with specified special characters
     urisWithSpecialChars.forEach((uri) => {
       cy.get('#debugUri').type(`${ServerHost}/${uri}`);
       cy.contains('Send').click();
-
+      // should not show the notification
       cy.contains('please input the valid request URL').should('not.exist');
     });
   });
