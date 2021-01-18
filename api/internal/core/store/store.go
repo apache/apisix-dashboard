@@ -37,7 +37,7 @@ import (
 type Interface interface {
 	Get(key string) (interface{}, error)
 	List(input ListInput) (*ListOutput, error)
-	Create(ctx context.Context, obj interface{}) error
+	Create(ctx context.Context, obj interface{}) (interface{}, error)
 	Update(ctx context.Context, obj interface{}, createIfNotExist bool) error
 	BatchDelete(ctx context.Context, keys []string) error
 }
@@ -241,6 +241,7 @@ func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 }
 
 func (s *GenericStore) CreateCheck(obj interface{}) ([]byte, error) {
+
 	if setter, ok := obj.(entity.BaseInfoSetter); ok {
 		info := setter.GetBaseInfo()
 		info.Creating()
@@ -269,7 +270,7 @@ func (s *GenericStore) CreateCheck(obj interface{}) ([]byte, error) {
 	return bytes, nil
 }
 
-func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
+func (s *GenericStore) Create(ctx context.Context, obj interface{}) (interface{}, error) {
 	if setter, ok := obj.(entity.BaseInfoSetter); ok {
 		info := setter.GetBaseInfo()
 		info.Creating()
@@ -277,14 +278,14 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) error {
 
 	bytes, err := s.CreateCheck(obj)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if err := s.Stg.Create(ctx, s.GetObjStorageKey(obj), string(bytes)); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return obj, nil
 }
 
 func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotExist bool) error {
@@ -299,7 +300,8 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotE
 	storedObj, ok := s.cache.Load(key)
 	if !ok {
 		if createIfNotExist {
-			return s.Create(ctx, obj)
+			_, err := s.Create(ctx, obj)
+			return err
 		}
 		log.Warnf("key: %s is not found", key)
 		return fmt.Errorf("key: %s is not found", key)

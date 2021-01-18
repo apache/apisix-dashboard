@@ -1,3 +1,4 @@
+<!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -14,15 +15,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+-->
 
-MD001: false
-MD004: false
-MD013: false
-MD014: false
-MD024: false
-MD026: false
-MD029: false
-MD033: false
-MD034: false
-MD040: false
-MD041: false
+# Deploy with RPM
+
+**NOTE:** Only support CentOS 7 currently, for more information, please refer to [here](./deploy.md).
+
+## Install from RPM
+
+```sh
+$ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.3/apisix-dashboard-v2.3-1.x86_64.rpm
+```
+
+## Run
+
+Before you start, make sure the following dependencies are installed and running in your environment.
+
+- [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
+
+```sh
+$ sudo nohup manager-api -p /usr/local/apisix/dashboard/ &
+```

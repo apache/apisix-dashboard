@@ -17,62 +17,78 @@
 package filter
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
+	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
+	"github.com/shiningrush/droplet/middleware"
 
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/log"
 )
 
-func Authentication() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		if c.Request.URL.Path != "/apisix/admin/user/login" && strings.HasPrefix(c.Request.URL.Path, "/apisix") {
-			tokenStr := c.GetHeader("Authorization")
+type AuthenticationMiddleware struct {
+	middleware.BaseMiddleware
+}
 
-			// verify token
-			token, err := jwt.ParseWithClaims(tokenStr, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-				return []byte(conf.AuthConf.Secret), nil
-			})
+func (mw *AuthenticationMiddleware) Handle(ctx droplet.Context) error {
+	httpReq := ctx.Get(middleware.KeyHttpRequest)
+	if httpReq == nil {
+		err := errors.New("input middleware cannot get http request")
 
-			errResp := gin.H{
-				"code":    010013,
-				"message": "Request Unauthorized",
-			}
-
-			if err != nil || token == nil || !token.Valid {
-				log.Warnf("token validate failed: %s", err)
-				c.AbortWithStatusJSON(http.StatusUnauthorized, errResp)
-				return
-			}
-
-			claims, ok := token.Claims.(*jwt.StandardClaims)
-			if !ok {
-				log.Warnf("token validate failed: %s, %v", err, token.Valid)
-				c.AbortWithStatusJSON(http.StatusUnauthorized, errResp)
-				return
-			}
-
-			if err := token.Claims.Valid(); err != nil {
-				log.Warnf("token claims validate failed: %s", err)
-				c.AbortWithStatusJSON(http.StatusUnauthorized, errResp)
-				return
-			}
-
-			if claims.Subject == "" {
-				log.Warn("token claims subject empty")
-				c.AbortWithStatusJSON(http.StatusUnauthorized, errResp)
-				return
-			}
-
-			if _, ok := conf.UserList[claims.Subject]; !ok {
-				log.Warnf("user not exists by token claims subject %s", claims.Subject)
-				c.AbortWithStatusJSON(http.StatusUnauthorized, errResp)
-				return
-			}
-		}
-		c.Next()
+		// Wrong usage, just panic here and let recoverHandler to deal with
+		panic(err)
 	}
+
+	req := httpReq.(*http.Request)
+
+	if req.URL.Path != "/apisix/admin/user/login" && strings.HasPrefix(req.URL.Path, "/apisix") {
+		tokenStr := req.Header.Get("Authorization")
+
+		// verify token
+		token, err := jwt.ParseWithClaims(tokenStr, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(conf.AuthConf.Secret), nil
+		})
+
+		// TODO: design the response error code
+		response := data.Response{Code: 010013, Message: "request unauthorized"}
+
+		if err != nil || token == nil || !token.Valid {
+			log.Warnf("token validate failed: %s", err)
+			ctx.SetOutput(&data.SpecCodeResponse{StatusCode: http.StatusUnauthorized, Response: response})
+			return nil
+		}
+
+		claims, ok := token.Claims.(*jwt.StandardClaims)
+		if !ok {
+			log.Warnf("token validate failed: %s, %v", err, token.Valid)
+			ctx.SetOutput(&data.SpecCodeResponse{StatusCode: http.StatusUnauthorized, Response: response})
+			return nil
+		}
+
+		if err := token.Claims.Valid(); err != nil {
+			log.Warnf("token claims validate failed: %s", err)
+			ctx.SetOutput(&data.SpecCodeResponse{StatusCode: http.StatusUnauthorized, Response: response})
+			return nil
+		}
+
+		if claims.Subject == "" {
+			log.Warn("token claims subject empty")
+			ctx.SetOutput(&data.SpecCodeResponse{StatusCode: http.StatusUnauthorized, Response: response})
+			return nil
+		}
+
+		if _, ok := conf.UserList[claims.Subject]; !ok {
+			log.Warnf("user not exists by token claims subject %s", claims.Subject)
+			ctx.SetOutput(&data.SpecCodeResponse{StatusCode: http.StatusUnauthorized, Response: response})
+			return nil
+		}
+
+		return mw.BaseMiddleware.Handle(ctx)
+	}
+
+	return mw.BaseMiddleware.Handle(ctx)
 }

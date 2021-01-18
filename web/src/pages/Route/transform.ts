@@ -149,7 +149,7 @@ const transformVarsToRules = (
   });
 
 export const transformUpstreamNodes = (
-  nodes: { [key: string]: number } = {},
+  nodes: Record<string, number> = {},
 ): RouteModule.UpstreamHost[] => {
   const data: RouteModule.UpstreamHost[] = [];
   Object.entries(nodes).forEach(([k, v]) => {
