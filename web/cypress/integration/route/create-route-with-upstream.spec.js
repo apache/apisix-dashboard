@@ -21,7 +21,7 @@ context('Create Route with Upstream', () => {
     input: ':input',
     notification: '.ant-notification-notice-message',
     node_0_host: '#nodes_0_host',
-    name: domSelector.name,
+    name: '#name',
     description: '#desc',
     upstreamSelector: '#upstream_id',
     searchName: '[title=Name]',
