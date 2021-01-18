@@ -32,8 +32,8 @@ context('Create Route with Upstream', () => {
     routeName: 'test_route',
     description: 'desc_by_autotes',
     host: '10.89.90.237',
-    testIp: '127.0.0.1',
-    verificationIp: '127.0.0.2',
+    ip1: '127.0.0.1',
+    ip2: '127.0.0.2',
     deleteRouteSuccess: 'Delete Route Successfully',
     deleteUpstreamSuccess: 'Delete successfully',
   };
@@ -76,7 +76,7 @@ context('Create Route with Upstream', () => {
   });
 
   it('should submit custom Upstream properties successfully', () => {
-    cy.get(domSelector.node_0_host).clear().type(data.testIp);
+    cy.get(domSelector.node_0_host).clear().type(data.ip1);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -97,7 +97,7 @@ context('Create Route with Upstream', () => {
     cy.contains('Next').click();
 
     // check if the changes have been saved
-    cy.get(domSelector.node_0_host).should('value', data.testIp);
+    cy.get(domSelector.node_0_host).should('value', data.ip1);
 
     cy.get(domSelector.upstreamSelector).click();
     cy.contains(data.upstreamName).click();
@@ -107,7 +107,7 @@ context('Create Route with Upstream', () => {
     cy.contains('Custom').click();
     cy.get(domSelector.input).should('not.be.disabled');
 
-    cy.get(domSelector.node_0_host).clear().type(data.verificationIp);
+    cy.get(domSelector.node_0_host).clear().type(data.ip2);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -119,7 +119,7 @@ context('Create Route with Upstream', () => {
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('Edit').click();
     cy.contains('Next').click();
-    cy.get(domSelector.node_0_host).should('value', data.verificationIp);
+    cy.get(domSelector.node_0_host).should('value', data.ip2);
   });
 
   it('should delete this test route and upstream', () => {
