@@ -35,7 +35,7 @@ Cypress.Commands.add('login', () => {
   });
 });
 
-Cypress.Commands.add('addPlugins', () => {
+Cypress.Commands.add('addPlugins', (cases) => {
   const timeout = 50000;
   const domSelectors = {
     name: '[data-cy-plugin-name]',
