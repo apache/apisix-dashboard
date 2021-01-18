@@ -37,10 +37,15 @@ func TestSSL_Basic(t *testing.T) {
 	assert.Nil(t, err)
 	apisixKey, err := ioutil.ReadFile("../certs/apisix.key")
 	assert.Nil(t, err)
-	body, err := json.Marshal(map[string]string{
+	body, err := json.Marshal(map[string]interface{}{
 		"id":   "1",
 		"cert": string(testCert),
 		"key":  string(testKey),
+		"labels": map[string]string{
+			"build":   "16",
+			"env":     "production",
+			"version": "v3",
+		},
 	})
 	assert.Nil(t, err)
 	invalidBody, err := json.Marshal(map[string]string{
@@ -82,7 +87,16 @@ func TestSSL_Basic(t *testing.T) {
 			Body:         string(body),
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"id\":\"1\"",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "check ssl labels",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/ssl/1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v3\"",
 		},
 		{
 			Desc:   "create route",

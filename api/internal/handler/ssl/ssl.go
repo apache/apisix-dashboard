@@ -187,6 +187,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 
 	ssl.ID = input.ID
+	ssl.Labels = input.Labels
 	//set default value for SSL status, if not set, it will be 0 which means disable.
 	ssl.Status = conf.SSLDefaultStatus
 	ret, err := h.sslStore.Create(c.Context(), ssl)
@@ -217,6 +218,10 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 
 	if input.ID != "" {
 		ssl.ID = input.ID
+	}
+
+	if input.Labels != nil {
+		ssl.Labels = input.Labels
 	}
 
 	//set default value for SSL status, if not set, it will be 0 which means disable.
