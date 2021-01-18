@@ -27,29 +27,24 @@ context('e2e test for plugin page', () => {
   it('should enable two plugins', () => {
     //  go to route plugin list page
     cy.visit('/');
-    cy.contains('Plugin').click();
-    cy.wait(sleepTime * 5);
-    cy.contains('Create').click();
-    cy.wait(sleepTime * 5);
+    cy.contains('Plugin').click({ timeout: sleepTime * 5 });
+    cy.contains('Create').click({ timeout: sleepTime * 5 });
 
     // enable auth plugin
     cy.contains('.ant-card', 'key-auth').within(() => {
-      cy.get('button').click();
-      cy.wait(sleepTime);
+      cy.get('button').click({ timeout: sleepTime });
     });
     // edit CodeMirror
     cy.get('.CodeMirror')
       .first()
       .then((editor) => {
         cy.get('#disable').click();
-        cy.contains('button', 'Submit').click();
+        cy.contains('button', 'Submit').click({ timeout: sleepTime * 3 });
       });
-    cy.wait(sleepTime * 3);
 
     // enable redirect plugin
     cy.contains('.ant-card', 'redirect').within(() => {
-      cy.get('button').click();
-      cy.wait(sleepTime);
+      cy.get('button').click({ timeout: sleepTime });
     });
     // edit CodeMirror
     cy.get('.CodeMirror')
@@ -71,8 +66,7 @@ context('e2e test for plugin page', () => {
   });
 
   it('should edit the plugin', () => {
-    cy.contains('key-auth').siblings().contains('Edit').click();
-    cy.wait(sleepTime);
+    cy.contains('key-auth').siblings().contains('Edit').click({ timeout: sleepTime });
     cy.get('.CodeMirror')
       .first()
       .then((editor) => {
@@ -89,8 +83,7 @@ context('e2e test for plugin page', () => {
   it('should delete the plugin', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
-    cy.wait(sleepTime * 5);
-    cy.contains('redirect').siblings().contains('Delete').click();
+    cy.contains('redirect').siblings().contains('Delete').click({ timeout: sleepTime * 5 });
     cy.contains('button', 'Confirm').click();
 
     // back to plugin list page
