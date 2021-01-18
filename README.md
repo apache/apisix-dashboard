@@ -84,6 +84,8 @@ Support the following ways currently.
 
 ## Development
 
+Pull requests are encouraged and always welcome. [Pick an issue](https://github.com/apache/apisix-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) and help us out!
+
 Please refer to the [Development Guide](./docs/develop.md).
 
 ## User Guide
