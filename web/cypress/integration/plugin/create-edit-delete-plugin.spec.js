@@ -17,7 +17,7 @@
 /* eslint-disable no-undef */
 
 context('e2e test for plugin page', () => {
-  const sleepTime = 50000;
+  const timeout = 50000;
 
   beforeEach(() => {
     // init login
