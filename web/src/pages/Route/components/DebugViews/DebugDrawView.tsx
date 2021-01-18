@@ -224,6 +224,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             })}
           </Select>
           <Search
+            id="debugUri"
             placeholder={formatMessage({ id: 'page.route.input.placeholder.requestUrl' })}
             allowClear
             enterButton={formatMessage({ id: 'page.route.button.send' })}
