@@ -245,8 +245,7 @@ func (v *APISIXJsonSchemaValidator) Validate(obj interface{}) error {
 			}
 			errString.AppendString(vErr.String())
 		}
-		j, _ := json.Marshal(obj)
-		log.Errorf("schema validate failed:s: %v, obj: %s", v.schemaDef, string(j))
+		log.Errorf("schema validate failed:s: %v, obj: %#v", v.schemaDef, obj)
 		return fmt.Errorf("schema validate failed: %s", errString.String())
 	}
 

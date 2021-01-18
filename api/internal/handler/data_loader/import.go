@@ -75,12 +75,12 @@ func Import(c *gin.Context) (interface{}, error) {
 
 	// read file and parse
 	handle, err := file.Open()
-	defer func() {
-		err = handle.Close()
-	}()
 	if err != nil {
 		return nil, err
 	}
+	defer func() {
+		err = handle.Close()
+	}()
 
 	reader := bufio.NewReader(handle)
 	bytes := make([]byte, file.Size)
@@ -133,9 +133,10 @@ func Import(c *gin.Context) (interface{}, error) {
 			if route.ID == "" {
 				route.ID = utils.GetFlakeUidStr()
 			}
-			script := &entity.Script{}
-			script.ID = utils.InterfaceToString(route.ID)
-			script.Script = route.Script
+			script := &entity.Script{
+				ID:     utils.InterfaceToString(route.ID),
+				Script: route.Script,
+			}
 			// to lua
 			var err error
 			route.Script, err = routeHandler.GenerateLuaCode(route.Script.(map[string]interface{}))
@@ -156,7 +157,6 @@ func Import(c *gin.Context) (interface{}, error) {
 	// create route
 	for _, route := range routes {
 		if _, err := routeStore.Create(c, route); err != nil {
-			println(err.Error())
 			return handler.SpecCodeResponse(err), err
 		}
 	}
@@ -186,7 +186,6 @@ func checkRouteName(name string) (bool, error) {
 
 	return true, nil
 }
-
 
 func parseExtension(val *openapi3.Operation) (*entity.Route, error) {
 	routeMap := map[string]interface{}{}
