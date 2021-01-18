@@ -177,6 +177,7 @@ func TestHandler_Create(t *testing.T) {
 		giveInput  *SetInput
 		giveCtx    context.Context
 		giveErr    error
+		giveRet    interface{}
 		wantErr    error
 		wantInput  *SetInput
 		wantRet    interface{}
@@ -193,6 +194,17 @@ func TestHandler_Create(t *testing.T) {
 				},
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
+			giveRet: &entity.Consumer{
+				BaseInfo: entity.BaseInfo{
+					ID: "name",
+				},
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 86400,
+					},
+				},
+			},
 			wantInput: &SetInput{
 				Consumer: entity.Consumer{
 					BaseInfo: entity.BaseInfo{
@@ -231,6 +243,9 @@ func TestHandler_Create(t *testing.T) {
 					},
 				},
 			},
+			giveRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
+			},
 			giveErr: fmt.Errorf("create failed"),
 			wantInput: &SetInput{
 				Consumer: entity.Consumer{
@@ -262,7 +277,7 @@ func TestHandler_Create(t *testing.T) {
 				assert.Equal(t, tc.giveCtx, args.Get(0))
 				assert.Equal(t, &tc.wantInput.Consumer, args.Get(1))
 				assert.True(t, args.Bool(2))
-			}).Return(tc.giveErr)
+			}).Return(tc.giveRet, tc.giveErr)
 
 			h := Handler{consumerStore: mStore}
 			ctx := droplet.NewContext()
@@ -270,16 +285,7 @@ func TestHandler_Create(t *testing.T) {
 			ctx.SetContext(tc.giveCtx)
 			ret, err := h.Set(ctx)
 			assert.Equal(t, tc.wantCalled, methodCalled)
-			// if ret is entity.Consumer, need to ignore
-			// create_time and update_time before assertion
-			if retObj, ok := ret.(*entity.Consumer); ok {
-				retObj.BaseInfo.CreateTime = 0
-				retObj.BaseInfo.UpdateTime = 0
-				assert.Equal(t, tc.wantRet, retObj)
-			} else {
-				// tc.wantRet is *data.SpecCodeResponse
-				assert.Equal(t, tc.wantRet, ret)
-			}
+			assert.Equal(t, tc.wantRet, ret)
 			assert.Equal(t, tc.wantErr, err)
 		})
 	}
@@ -290,6 +296,7 @@ func TestHandler_Update(t *testing.T) {
 		caseDesc   string
 		giveInput  *SetInput
 		giveCtx    context.Context
+		giveRet    interface{}
 		giveErr    error
 		wantErr    error
 		wantInput  *entity.Consumer
@@ -309,6 +316,17 @@ func TestHandler_Update(t *testing.T) {
 				},
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
+			giveRet: &entity.Consumer{
+				BaseInfo: entity.BaseInfo{
+					ID: "name",
+				},
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 500,
+					},
+				},
+			},
 			wantInput: &entity.Consumer{
 				BaseInfo: entity.BaseInfo{
 					ID: "name",
@@ -343,6 +361,9 @@ func TestHandler_Update(t *testing.T) {
 					},
 				},
 			},
+			giveRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
+			},
 			giveErr: fmt.Errorf("create failed"),
 			wantInput: &entity.Consumer{
 				BaseInfo: entity.BaseInfo{
@@ -372,7 +393,7 @@ func TestHandler_Update(t *testing.T) {
 				assert.Equal(t, tc.giveCtx, args.Get(0))
 				assert.Equal(t, tc.wantInput, args.Get(1))
 				assert.True(t, args.Bool(2))
-			}).Return(tc.giveErr)
+			}).Return(tc.giveRet, tc.giveErr)
 
 			h := Handler{consumerStore: mStore}
 			ctx := droplet.NewContext()
@@ -380,16 +401,7 @@ func TestHandler_Update(t *testing.T) {
 			ctx.SetContext(tc.giveCtx)
 			ret, err := h.Set(ctx)
 			assert.Equal(t, tc.wantCalled, methodCalled)
-			// if ret is entity.Consumer, need to ignore
-			// create_time and update_time before assertion
-			if retObj, ok := ret.(*entity.Consumer); ok {
-				retObj.BaseInfo.CreateTime = 0
-				retObj.BaseInfo.UpdateTime = 0
-				assert.Equal(t, tc.wantRet, retObj)
-			} else {
-				// tc.wantRet is *data.SpecCodeResponse
-				assert.Equal(t, tc.wantRet, ret)
-			}
+			assert.Equal(t, tc.wantRet, ret)
 			assert.Equal(t, tc.wantErr, err)
 		})
 	}

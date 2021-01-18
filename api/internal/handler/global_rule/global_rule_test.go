@@ -211,6 +211,7 @@ func TestHandler_Set(t *testing.T) {
 		caseDesc   string
 		giveInput  *SetInput
 		giveCtx    context.Context
+		giveRet    interface{}
 		giveErr    error
 		wantErr    error
 		wantInput  *entity.GlobalPlugins
@@ -228,6 +229,12 @@ func TestHandler_Set(t *testing.T) {
 				},
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
+			giveRet: &entity.GlobalPlugins{
+				BaseInfo: entity.BaseInfo{ID: "name"},
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{},
+				},
+			},
 			wantInput: &entity.GlobalPlugins{
 				BaseInfo: entity.BaseInfo{ID: "name"},
 				Plugins: map[string]interface{}{
@@ -249,6 +256,9 @@ func TestHandler_Set(t *testing.T) {
 				GlobalPlugins: entity.GlobalPlugins{},
 			},
 			giveErr: fmt.Errorf("create failed"),
+			giveRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
+			},
 			wantInput: &entity.GlobalPlugins{
 				BaseInfo: entity.BaseInfo{ID: "name"},
 				Plugins:  map[string]interface{}(nil),
@@ -270,7 +280,7 @@ func TestHandler_Set(t *testing.T) {
 				assert.Equal(t, tc.giveCtx, args.Get(0))
 				assert.Equal(t, tc.wantInput, args.Get(1))
 				assert.True(t, args.Bool(2))
-			}).Return(tc.giveErr)
+			}).Return(tc.giveRet, tc.giveErr)
 
 			h := Handler{globalRuleStore: mStore}
 			ctx := droplet.NewContext()
@@ -278,16 +288,7 @@ func TestHandler_Set(t *testing.T) {
 			ctx.SetContext(tc.giveCtx)
 			ret, err := h.Set(ctx)
 			assert.Equal(t, tc.wantCalled, methodCalled)
-			// if ret is entity.GlobalPlugins, need to ignore
-			// create_time and update_time before assertion
-			if retObj, ok := ret.(*entity.GlobalPlugins); ok {
-				retObj.BaseInfo.CreateTime = 0
-				retObj.BaseInfo.UpdateTime = 0
-				assert.Equal(t, tc.wantRet, retObj)
-			} else {
-				// tc.wantRet is *data.SpecCodeResponse
-				assert.Equal(t, tc.wantRet, ret)
-			}
+			assert.Equal(t, tc.wantRet, ret)
 			assert.Equal(t, tc.wantErr, err)
 		})
 	}
