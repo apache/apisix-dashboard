@@ -62,7 +62,7 @@ paths:
             schema:
               properties:
                 name:
-                  description: Updated name of the pet
+                  description: Update pet's name
                   type: string
                 status:
                   description: Updated status of the pet
