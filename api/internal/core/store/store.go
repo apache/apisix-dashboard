@@ -35,8 +35,8 @@ import (
 )
 
 type Interface interface {
-	Get(key string) (interface{}, error)
-	List(input ListInput) (*ListOutput, error)
+	Get(ctx context.Context, key string) (interface{}, error)
+	List(ctx context.Context, input ListInput) (*ListOutput, error)
 	Create(ctx context.Context, obj interface{}) (interface{}, error)
 	Update(ctx context.Context, obj interface{}, createIfNotExist bool) error
 	BatchDelete(ctx context.Context, keys []string) error
@@ -136,7 +136,7 @@ func (s *GenericStore) Init() error {
 	return nil
 }
 
-func (s *GenericStore) Get(key string) (interface{}, error) {
+func (s *GenericStore) Get(_ context.Context, key string) (interface{}, error) {
 	ret, ok := s.cache.Load(key)
 	if !ok {
 		log.Warnf("data not found by key: %s", key)
@@ -173,7 +173,7 @@ var defLessFunc = func(i, j interface{}) bool {
 	return iID < jID
 }
 
-func (s *GenericStore) List(input ListInput) (*ListOutput, error) {
+func (s *GenericStore) List(_ context.Context, input ListInput) (*ListOutput, error) {
 	var ret []interface{}
 	s.cache.Range(func(key, value interface{}) bool {
 		if input.Predicate != nil && !input.Predicate(value) {

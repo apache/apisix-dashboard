@@ -286,8 +286,7 @@ func TestGenericStore_Get(t *testing.T) {
 		for k, v := range tc.giveCache {
 			tc.giveStore.cache.Store(k, v)
 		}
-
-		ret, err := tc.giveStore.Get(tc.giveId)
+		ret, err := tc.giveStore.Get(context.Background(), tc.giveId)
 		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
 		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
 	}
@@ -441,7 +440,7 @@ func TestGenericStore_List(t *testing.T) {
 			tc.giveStore.cache.Store(k, v)
 		}
 
-		ret, err := tc.giveStore.List(tc.giveInput)
+		ret, err := tc.giveStore.List(context.Background(), tc.giveInput)
 		assert.Equal(t, tc.wantRet.TotalSize, ret.TotalSize, tc.caseDesc)
 		assert.ElementsMatch(t, tc.wantRet.Rows, ret.Rows, tc.caseDesc)
 		assert.Equal(t, tc.wantErr, err, tc.caseDesc)

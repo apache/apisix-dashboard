@@ -71,7 +71,7 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.upstreamStore.Get(input.ID)
+	r, err := h.upstreamStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -124,7 +124,7 @@ type ListInput struct {
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	ret, err := h.upstreamStore.List(store.ListInput{
+	ret, err := h.upstreamStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			if input.Name != "" {
 				return strings.Contains(obj.(*entity.Upstream).Name, input.Name)
@@ -204,7 +204,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		subPath = arr[1]
 	}
 
-	stored, err := h.upstreamStore.Get(input.ID)
+	stored, err := h.upstreamStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -254,7 +254,7 @@ func Exist(c *gin.Context) (interface{}, error) {
 	exclude := c.Query("exclude")
 	routeStore := store.GetStore(store.HubKeyUpstream)
 
-	ret, err := routeStore.List(store.ListInput{
+	ret, err := routeStore.List(c, store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,
@@ -283,7 +283,7 @@ func Exist(c *gin.Context) (interface{}, error) {
 func listUpstreamNames(c *gin.Context) (interface{}, error) {
 	routeStore := store.GetStore(store.HubKeyUpstream)
 
-	ret, err := routeStore.List(store.ListInput{
+	ret, err := routeStore.List(c, store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,
