@@ -54,9 +54,9 @@ func (m *MockInterface) Create(ctx context.Context, obj interface{}) (interface{
 	return ret.Get(0), ret.Error(1)
 }
 
-func (m *MockInterface) Update(ctx context.Context, obj interface{}, createOnFail bool) error {
+func (m *MockInterface) Update(ctx context.Context, obj interface{}, createOnFail bool) (interface{}, error) {
 	ret := m.Mock.Called(ctx, obj, createOnFail)
-	return ret.Error(0)
+	return ret.Get(0), ret.Error(1)
 }
 
 func (m *MockInterface) BatchDelete(ctx context.Context, keys []string) error {

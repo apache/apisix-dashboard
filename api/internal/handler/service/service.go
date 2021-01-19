@@ -202,11 +202,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	if err := h.serviceStore.Update(c.Context(), &input.Service, true); err != nil {
+	ret, err := h.serviceStore.Update(c.Context(), &input.Service, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type BatchDelete struct {
@@ -255,9 +256,10 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := h.serviceStore.Update(c.Context(), &stored, false); err != nil {
+	ret, err := h.serviceStore.Update(c.Context(), &stored, false)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }

@@ -757,8 +757,13 @@ func TestRoute(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), route2)
 	assert.Nil(t, err)
 	ctx.SetInput(route2)
-	_, err = handler.Update(ctx)
+	ret, err = handler.Update(ctx)
 	assert.Nil(t, err)
+	// check the returned value
+	objRet, ok = ret.(*entity.Route)
+	assert.True(t, ok)
+	assert.Equal(t, route2.ID, objRet.ID)
+	assert.Equal(t, route2.Labels, objRet.Labels)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -819,6 +824,10 @@ func TestRoute(t *testing.T) {
 	ctx.SetInput(errRoute)
 	ret, err = handler.Update(ctx)
 	assert.Nil(t, err)
+	// Check the returned value
+	objRet, ok = ret.(*entity.Route)
+	assert.True(t, ok)
+	assert.Equal(t, errRoute.ID, objRet.ID)
 
 	// Success: tests the Body ID can be nil
 	reqBodyErr = `{
@@ -839,6 +848,10 @@ func TestRoute(t *testing.T) {
 	ctx.SetInput(errRoute)
 	ret, err = handler.Update(ctx)
 	assert.Nil(t, err)
+	// Check the returned value
+	objRet, ok = ret.(*entity.Route)
+	assert.True(t, ok)
+	assert.Equal(t, errRoute.ID, objRet.ID)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -1337,8 +1350,14 @@ func Test_Route_With_Script_Dag2lua(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), route2)
 	assert.Nil(t, err)
 	ctx.SetInput(route2)
-	_, err = handler.Update(ctx)
+	ret, err = handler.Update(ctx)
 	assert.Nil(t, err)
+	// check the returned value
+	objRet, ok = ret.(*entity.Route)
+	assert.True(t, ok)
+	assert.Equal(t, route2.ID, objRet.ID)
+	// script returned should be nil
+	assert.Nil(t, objRet.Script)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -1433,8 +1452,14 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), route2)
 	assert.Nil(t, err)
 	ctx.SetInput(route2)
-	_, err = handler.Update(ctx)
+	ret, err = handler.Update(ctx)
 	assert.Nil(t, err)
+	// check the returned value
+	objRet, ok := ret.(*entity.Route)
+	assert.True(t, ok)
+	assert.Equal(t, route2.ID, objRet.ID)
+	// script returned should be nil
+	assert.Nil(t, objRet.Script)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)

@@ -166,8 +166,12 @@ func TestUpstream(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), upstream2)
 	assert.Nil(t, err)
 	ctx.SetInput(upstream2)
-	_, err = upstreamHandler.Update(ctx)
+	ret, err = upstreamHandler.Update(ctx)
 	assert.Nil(t, err)
+	// check the returned value
+	objRet, ok = ret.(*entity.Upstream)
+	assert.True(t, ok)
+	assert.Equal(t, upstream2.ID, objRet.ID)
 
 	//list
 	listInput := &ListInput{}

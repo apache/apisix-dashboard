@@ -211,6 +211,7 @@ func TestHandler_Set(t *testing.T) {
 		caseDesc   string
 		giveInput  *SetInput
 		giveCtx    context.Context
+		giveRet    interface{}
 		giveErr    error
 		wantErr    error
 		wantInput  *entity.GlobalPlugins
@@ -228,13 +229,24 @@ func TestHandler_Set(t *testing.T) {
 				},
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
+			giveRet: &entity.GlobalPlugins{
+				BaseInfo: entity.BaseInfo{ID: "name"},
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{},
+				},
+			},
 			wantInput: &entity.GlobalPlugins{
 				BaseInfo: entity.BaseInfo{ID: "name"},
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{},
 				},
 			},
-			wantRet:    nil,
+			wantRet: &entity.GlobalPlugins{
+				BaseInfo: entity.BaseInfo{ID: "name"},
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{},
+				},
+			},
 			wantCalled: true,
 		},
 		{
@@ -244,6 +256,9 @@ func TestHandler_Set(t *testing.T) {
 				GlobalPlugins: entity.GlobalPlugins{},
 			},
 			giveErr: fmt.Errorf("create failed"),
+			giveRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
+			},
 			wantInput: &entity.GlobalPlugins{
 				BaseInfo: entity.BaseInfo{ID: "name"},
 				Plugins:  map[string]interface{}(nil),
@@ -265,7 +280,7 @@ func TestHandler_Set(t *testing.T) {
 				assert.Equal(t, tc.giveCtx, args.Get(0))
 				assert.Equal(t, tc.wantInput, args.Get(1))
 				assert.True(t, args.Bool(2))
-			}).Return(tc.giveErr)
+			}).Return(tc.giveRet, tc.giveErr)
 
 			h := Handler{globalRuleStore: mStore}
 			ctx := droplet.NewContext()

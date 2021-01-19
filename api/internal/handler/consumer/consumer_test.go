@@ -177,6 +177,7 @@ func TestHandler_Create(t *testing.T) {
 		giveInput  *SetInput
 		giveCtx    context.Context
 		giveErr    error
+		giveRet    interface{}
 		wantErr    error
 		wantInput  *SetInput
 		wantRet    interface{}
@@ -193,6 +194,17 @@ func TestHandler_Create(t *testing.T) {
 				},
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
+			giveRet: &entity.Consumer{
+				BaseInfo: entity.BaseInfo{
+					ID: "name",
+				},
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 86400,
+					},
+				},
+			},
 			wantInput: &SetInput{
 				Consumer: entity.Consumer{
 					BaseInfo: entity.BaseInfo{
@@ -206,7 +218,17 @@ func TestHandler_Create(t *testing.T) {
 					},
 				},
 			},
-			wantRet:    nil,
+			wantRet: &entity.Consumer{
+				BaseInfo: entity.BaseInfo{
+					ID: "name",
+				},
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 86400,
+					},
+				},
+			},
 			wantCalled: true,
 		},
 		{
@@ -220,6 +242,9 @@ func TestHandler_Create(t *testing.T) {
 						},
 					},
 				},
+			},
+			giveRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
 			},
 			giveErr: fmt.Errorf("create failed"),
 			wantInput: &SetInput{
@@ -252,7 +277,7 @@ func TestHandler_Create(t *testing.T) {
 				assert.Equal(t, tc.giveCtx, args.Get(0))
 				assert.Equal(t, &tc.wantInput.Consumer, args.Get(1))
 				assert.True(t, args.Bool(2))
-			}).Return(tc.giveErr)
+			}).Return(tc.giveRet, tc.giveErr)
 
 			h := Handler{consumerStore: mStore}
 			ctx := droplet.NewContext()
@@ -271,6 +296,7 @@ func TestHandler_Update(t *testing.T) {
 		caseDesc   string
 		giveInput  *SetInput
 		giveCtx    context.Context
+		giveRet    interface{}
 		giveErr    error
 		wantErr    error
 		wantInput  *entity.Consumer
@@ -290,6 +316,17 @@ func TestHandler_Update(t *testing.T) {
 				},
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
+			giveRet: &entity.Consumer{
+				BaseInfo: entity.BaseInfo{
+					ID: "name",
+				},
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 500,
+					},
+				},
+			},
 			wantInput: &entity.Consumer{
 				BaseInfo: entity.BaseInfo{
 					ID: "name",
@@ -301,7 +338,17 @@ func TestHandler_Update(t *testing.T) {
 					},
 				},
 			},
-			wantRet:    nil,
+			wantRet: &entity.Consumer{
+				BaseInfo: entity.BaseInfo{
+					ID: "name",
+				},
+				Username: "name",
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{
+						"exp": 500,
+					},
+				},
+			},
 			wantCalled: true,
 		},
 		{
@@ -313,6 +360,9 @@ func TestHandler_Update(t *testing.T) {
 						"jwt-auth": map[string]interface{}{},
 					},
 				},
+			},
+			giveRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
 			},
 			giveErr: fmt.Errorf("create failed"),
 			wantInput: &entity.Consumer{
@@ -343,7 +393,7 @@ func TestHandler_Update(t *testing.T) {
 				assert.Equal(t, tc.giveCtx, args.Get(0))
 				assert.Equal(t, tc.wantInput, args.Get(1))
 				assert.True(t, args.Bool(2))
-			}).Return(tc.giveErr)
+			}).Return(tc.giveRet, tc.giveErr)
 
 			h := Handler{consumerStore: mStore}
 			ctx := droplet.NewContext()

@@ -131,6 +131,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"r1\"", "\"uri\":\"/hello_\""},
 		},
 		{
 			Desc:   "create route with int uri",
@@ -227,6 +228,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"r1\"", "\"hosts\":[\"foo.com\"]"},
 		},
 		{
 			Desc:         "hit the route just create",
@@ -254,6 +256,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"r1\"", "\"hosts\":[\"bar.com\"]"},
 		},
 		{
 			Desc:         "hit the route with host foo.com",

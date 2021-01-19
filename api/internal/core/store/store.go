@@ -38,7 +38,7 @@ type Interface interface {
 	Get(ctx context.Context, key string) (interface{}, error)
 	List(ctx context.Context, input ListInput) (*ListOutput, error)
 	Create(ctx context.Context, obj interface{}) (interface{}, error)
-	Update(ctx context.Context, obj interface{}, createIfNotExist bool) error
+	Update(ctx context.Context, obj interface{}, createIfNotExist bool) (interface{}, error)
 	BatchDelete(ctx context.Context, keys []string) error
 }
 
@@ -272,23 +272,22 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) (interface{}
 	return obj, nil
 }
 
-func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotExist bool) error {
+func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotExist bool) (interface{}, error) {
 	if err := s.ingestValidate(obj); err != nil {
-		return err
+		return nil, err
 	}
 
 	key := s.opt.KeyFunc(obj)
 	if key == "" {
-		return fmt.Errorf("key is required")
+		return nil, fmt.Errorf("key is required")
 	}
 	storedObj, ok := s.cache.Load(key)
 	if !ok {
 		if createIfNotExist {
-			_, err := s.Create(ctx, obj)
-			return err
+			return s.Create(ctx, obj)
 		}
 		log.Warnf("key: %s is not found", key)
-		return fmt.Errorf("key: %s is not found", key)
+		return nil, fmt.Errorf("key: %s is not found", key)
 	}
 
 	if setter, ok := obj.(entity.BaseInfoGetter); ok {
@@ -301,13 +300,13 @@ func (s *GenericStore) Update(ctx context.Context, obj interface{}, createIfNotE
 	bs, err := json.Marshal(obj)
 	if err != nil {
 		log.Errorf("json marshal failed: %s", err)
-		return fmt.Errorf("json marshal failed: %s", err)
+		return nil, fmt.Errorf("json marshal failed: %s", err)
 	}
 	if err := s.Stg.Update(ctx, s.GetObjStorageKey(obj), string(bs)); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return obj, nil
 }
 
 func (s *GenericStore) BatchDelete(ctx context.Context, keys []string) error {

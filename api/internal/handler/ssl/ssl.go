@@ -226,11 +226,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 
 	//set default value for SSL status, if not set, it will be 0 which means disable.
 	ssl.Status = conf.SSLDefaultStatus
-	if err := h.sslStore.Update(c.Context(), ssl, true); err != nil {
+	ret, err := h.sslStore.Update(c.Context(), ssl, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 func Patch(c *gin.Context) (interface{}, error) {
@@ -255,11 +256,12 @@ func Patch(c *gin.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := sslStore.Update(c, &ssl, false); err != nil {
+	ret, err := sslStore.Update(c, &ssl, false)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type BatchDelete struct {

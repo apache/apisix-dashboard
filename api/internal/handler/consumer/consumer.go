@@ -147,11 +147,12 @@ func (h *Handler) Set(c droplet.Context) (interface{}, error) {
 	input.Consumer.ID = input.Consumer.Username
 	ensurePluginsDefValue(input.Plugins)
 
-	if err := h.consumerStore.Update(c.Context(), &input.Consumer, true); err != nil {
+	ret, err := h.consumerStore.Update(c.Context(), &input.Consumer, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 func ensurePluginsDefValue(plugins map[string]interface{}) {
