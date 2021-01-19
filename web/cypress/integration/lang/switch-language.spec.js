@@ -18,8 +18,8 @@
 
 context('Switch language', () => {
   const timeout = 1000;
-  const domSelectors = {
-    switch: '.ant-space-align-center',
+  const domSelector = {
+    switcher: '.ant-space-align-center',
   };
 
   beforeEach(() => {
@@ -29,13 +29,13 @@ context('Switch language', () => {
   it('should switch language', () => {
     cy.visit('/');
 
-    cy.get(domSelectors.switch).click('right');
+    cy.get(domSelector.switcher).click('right');
     cy.contains('简体中文').click({
       timeout,
     });
     cy.contains('服务').click();
 
-    cy.get(domSelectors.switch).click('right');
+    cy.get(domSelector.switcher).click('right');
     cy.contains('English').click({
       timeout,
     });
