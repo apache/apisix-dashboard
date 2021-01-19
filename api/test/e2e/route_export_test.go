@@ -497,6 +497,15 @@ func TestRoute_Export(t *testing.T) {
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        sleepTime,
 		},
+		{
+			Desc:         "delete the service1",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
 	}
 	for _, tc := range tests4 {
 		testCaseCheck(tc, t)
@@ -682,6 +691,15 @@ func TestRoute_Export(t *testing.T) {
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "delete the service2",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
 		},
 	}
