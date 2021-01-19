@@ -39,7 +39,7 @@ context('e2e test for plugin page', () => {
       .first()
       .then((editor) => {
         cy.get('#disable').click();
-        cy.contains('button', 'Submit').click({ force: true, timeout, });
+        cy.contains('button', 'Submit').click({ force: true, timeout });
       });
 
     // enable redirect plugin
@@ -54,7 +54,7 @@ context('e2e test for plugin page', () => {
           "uri": "/test/default.html",
           "ret_code": 301
         }));
-        cy.get('#disable').click();
+        cy.get('#disable').click({ force: true, timeout, });
         cy.contains('button', 'Submit').click();
       });
 
