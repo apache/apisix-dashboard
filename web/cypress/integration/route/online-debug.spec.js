@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 import menuLocaleUS from '../../../src/locales/en-US/menu';
-import RouteLocaleUS from '../../../src/pages/Route/locales/en-US';
+import routeLocaleUS from '../../../src/pages/Route/locales/en-US';
 import defaultSettings from '../../../config/defaultSettings';
 
 context('Online debug', () => {
@@ -46,15 +46,15 @@ context('Online debug', () => {
     cy.contains(menuLocaleUS['menu.routes']).click();
 
     // show online debug draw
-    cy.contains(RouteLocaleUS['page.route.onlineDebug']).click();
+    cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
 
     // input uri with specified special characters
     urisWithSpecialChars.forEach((uri) => {
       cy.get(domSelector.uriInput).clear();
       cy.get(domSelector.uriInput).type(`${defaultSettings.serveUrlMap[SERVE_ENV].split('//').pop()}/${uri}`);
-      cy.contains(RouteLocaleUS['page.route.button.send']).click();
+      cy.contains(routeLocaleUS['page.route.button.send']).click();
       // should not show the notification
-      cy.contains(RouteLocaleUS['page.route.input.placeholder.requestUrl']).should('not.exist');
+      cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('not.exist');
     });
   });
 });
