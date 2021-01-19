@@ -3226,14 +3226,14 @@
   resolved "https://registry.yarnpkg.com/@umijs/plugin-crossorigin/-/plugin-crossorigin-1.2.0.tgz#bf9ec0ccd76cf04e178c63fda813b06e93280131"
   integrity sha512-/3y8PELpL/mNo6tBeegXVZwn75lG/8Z9FN6L1huKm3UQFQUjhKeJy8Sw8p3IkwXjwSYyE5gjuSB3Bb6NZlLDUQ==
 
-"@umijs/plugin-dva@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@umijs/plugin-dva/-/plugin-dva-0.9.1.tgz#08588b80ff9867e256368aa91923ac48c0a01602"
-  integrity sha512-ZaaZnrqFu9fRtyl7Ah8WN3RJHpJb4PM2ZH7BC0+BqMbEVOyUQkBgf4cy/ddkJ1skbKQVlHN1ZQIiaB6q1nxJww==
+"@umijs/plugin-dva@0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@umijs/plugin-dva/-/plugin-dva-0.10.0.tgz#e9a8ada937c3fe7403ab9608fa1b8b0ebed522ac"
+  integrity sha512-o1JId7Da9qIJbbR/eip4Bg8ljfTI9oGf640Y3xhZQ240jBAmoNh+u87zxD84v9Q55diEs/QjT8Yxrsm+oexHJQ==
   dependencies:
     babel-plugin-dva-hmr "^0.4.2"
     dva "^2.6.0-beta.20"
-    dva-immer "^0.5.0"
+    dva-immer "^0.5.2"
     dva-loading "^3.0.20"
 
 "@umijs/plugin-esbuild@^1.0.0-beta.2":
@@ -3266,10 +3266,10 @@
     lodash "^4.17.15"
     path-to-regexp "1.x"
 
-"@umijs/plugin-locale@0.10.6":
-  version "0.10.6"
-  resolved "https://registry.yarnpkg.com/@umijs/plugin-locale/-/plugin-locale-0.10.6.tgz#4ed9241cda94b27372afe013b1fd965ae0d72c18"
-  integrity sha512-s6jLULuvACFmLyBtSTrh3akS+EhjyY/2nGADCPBdfleSom4hXYRMPUfKRoQgsCrChfnokB020dWyWqoaULFOMA==
+"@umijs/plugin-locale@0.10.7":
+  version "0.10.7"
+  resolved "https://registry.yarnpkg.com/@umijs/plugin-locale/-/plugin-locale-0.10.7.tgz#e3745c42f8ded1e78c9380f48a5709b48acea452"
+  integrity sha512-3IzArcu8Qo+K/1icclQ0yo2r1Y84YKGAJMU6RRKi9pTORz4RWUtxvfCWrjCl44CFoGYnSR0+kiWOL4FF71bgRg==
   dependencies:
     "@ant-design/icons" "^4.1.0"
     "@formatjs/intl-pluralrules" "^1.5.0"
@@ -3371,20 +3371,20 @@
     umi-webpack-bundle-analyzer "3.6.0"
     zlib "1.0.5"
 
-"@umijs/preset-react@^1.4.24":
-  version "1.7.10"
-  resolved "https://registry.yarnpkg.com/@umijs/preset-react/-/preset-react-1.7.10.tgz#e9bc1fa16b411857cbbab25bf6473fe24977dd18"
-  integrity sha512-0ktg4vcL6NAGzjBiNs2VOL0gLf6V2zjY0f6FBO/x8WQkzTYQjXcXD4peOnP5jX+DSmmB0jGQMDGn1q7Bmdgitw==
+"@umijs/preset-react@^1.7.11":
+  version "1.7.12"
+  resolved "https://registry.yarnpkg.com/@umijs/preset-react/-/preset-react-1.7.12.tgz#0db22344bbf4ad289ec50a1683a88ff50f6b3599"
+  integrity sha512-jC0c3O1gANDpDVs+YuB4M56DcVQbumOKLUjJDRTDynDczb4v1+rcsUcjHwjb6wCw80isCq4noFPv9RbkeQjfDQ==
   dependencies:
     "@umijs/plugin-access" "2.3.3"
     "@umijs/plugin-analytics" "0.2.2"
     "@umijs/plugin-antd" "0.9.1"
     "@umijs/plugin-crossorigin" "1.2.0"
-    "@umijs/plugin-dva" "0.9.1"
+    "@umijs/plugin-dva" "0.10.0"
     "@umijs/plugin-helmet" "1.1.1"
     "@umijs/plugin-initial-state" "2.3.0"
     "@umijs/plugin-layout" "0.13.5"
-    "@umijs/plugin-locale" "0.10.6"
+    "@umijs/plugin-locale" "0.10.7"
     "@umijs/plugin-model" "2.5.6"
     "@umijs/plugin-request" "2.5.2"
     "@umijs/plugin-test" "1.0.0"
@@ -6764,10 +6764,10 @@ dva-core@2.0.4:
     redux-saga "^0.16.0"
     warning "^3.0.0"
 
-dva-immer@^0.5.0:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/dva-immer/-/dva-immer-0.5.1.tgz#eee1372dfd1a8f76601df511ba42576e8a789091"
-  integrity sha512-AGrW5GvrhF2kISWKuhYAwzWE9LlI0Mg/axsXI7FqlEOZQWOF7zgqQhlDB/0OZ990b2roEjaSMhMtanJ2lwSUTw==
+dva-immer@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/dva-immer/-/dva-immer-0.5.2.tgz#128bd6d96b25f11e6f137807b614b9c58cf03f32"
+  integrity sha512-xg23ktGsrdzgiU0ACl8vFm2+E2GBWbtXndXRKM9wtHDR+yMH27NfttVuAZQWvv4aaj6f5/bC+TdsZ9t7n6cAhQ==
   dependencies:
     "@babel/runtime" "^7.0.0"
     immer "^7.0.5"
