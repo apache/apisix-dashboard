@@ -18,8 +18,9 @@
 
 context('e2e test for plugin page', () => {
   const timeout = 50000;
-
   beforeEach(() => {
+    cy.intercept('/apisix/admin/plugins?all=true').as('getPlugins');
+    cy.intercept('/apisix/admin/global_rules/1').as('getGlobalRules');
     // init login
     cy.login();
   });
@@ -31,15 +32,16 @@ context('e2e test for plugin page', () => {
     cy.contains('Create').click({ force: true, timeout, });
 
     // enable auth plugin
+    cy.wait('@getPlugins');
     cy.contains('.ant-card', 'key-auth').within(() => {
       cy.get('button').click({ force: true, timeout, });
     });
     // edit CodeMirror
     cy.get('.CodeMirror')
       .first()
-      .then((editor) => {
+      .then(() => {
         cy.get('#disable').click();
-        cy.contains('button', 'Submit').click({ force: true, timeout });
+        cy.contains('button', 'Submit').click({ force: true, timeout, });
       });
 
     // enable redirect plugin
@@ -61,6 +63,7 @@ context('e2e test for plugin page', () => {
     // back to plugin list page
     cy.visit('/');
     cy.contains('Plugin').click();
+    cy.wait('@getGlobalRules');
     cy.get('.ant-table-tbody').should('contain', 'key-auth');
     cy.get('.ant-table-tbody').should('contain', 'redirect');
   });
@@ -69,7 +72,7 @@ context('e2e test for plugin page', () => {
     cy.contains('key-auth').siblings().contains('Edit').click({ force: true, timeout, });
     cy.get('.CodeMirror')
       .first()
-      .then((editor) => {
+      .then(() => {
         cy.get('#disable').click();
         cy.contains('button', 'Submit').click();
       });
@@ -77,6 +80,7 @@ context('e2e test for plugin page', () => {
     // back to plugin list page
     cy.visit('/');
     cy.contains('Plugin').click();
+    cy.wait('@getGlobalRules');
     cy.contains('key-auth').should('not.exist');
   });
 
@@ -89,6 +93,7 @@ context('e2e test for plugin page', () => {
     // back to plugin list page
     cy.visit('/');
     cy.contains('Plugin').click();
+    cy.wait('@getGlobalRules');
     cy.contains('redirect').should('not.exist');
   });
 });
