@@ -31,8 +31,8 @@ context('Online debug', () => {
     '/get?search=1+1',
   ];
   const domSelector = {
-    uriInput: '#debugUri'
-  }
+    uriInput: '#debugUri',
+  };
 
   beforeEach(() => {
     // init login
