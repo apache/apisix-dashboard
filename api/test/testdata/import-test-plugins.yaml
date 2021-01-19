@@ -61,17 +61,17 @@ paths:
           'application/x-www-form-urlencoded':
             schema:
               properties:
-                  name: 
-                    description: Updated name of the pet
-                    type: string
-                  status:
-                    description: Updated status of the pet
-                    type: string
+                name:
+                  description: Updated name of the pet
+                  type: string
+                status:
+                  description: Updated status of the pet
+                  type: string
               required:
                 - status
 
       security:
-      - basicAuth: []
+        - basicAuth: []
 
       responses:
         200:
