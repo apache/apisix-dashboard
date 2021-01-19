@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 /* eslint-disable no-undef */
+import menuLocaleUS from '../../../src/locales/en-US/menu';
+import RouteLocaleUS from '../../../src/pages/Route/locales/en-US';
 
 context('Online debug', () => {
   const ServerHost = '139.217.190.60';
@@ -22,11 +24,16 @@ context('Online debug', () => {
     '/get',
     '/deps-get',
     '/deps.get',
+    '/deps_get',
     '/get?search=1',
     '/get?search=%U%E',
     '/get?search=v1&number=-1',
     '/get?search=1+1',
   ];
+  const domSelector = {
+    uriInput: '#debugUri'
+  }
+
   beforeEach(() => {
     // init login
     cy.login();
@@ -35,18 +42,18 @@ context('Online debug', () => {
   it('shoule not show notification when debug a non existent route with specified special characters', () => {
     // go to route list page
     cy.visit('/');
-    cy.contains('Route').click();
+    cy.contains(menuLocaleUS['menu.routes']).click();
 
     // show online debug draw
-    cy.contains('Online Debug').click();
+    cy.contains(RouteLocaleUS['page.route.onlineDebug']).click();
 
     // input uri with specified special characters
     urisWithSpecialChars.forEach((uri) => {
-      cy.get('#debugUri').clear();
-      cy.get('#debugUri').type(`${ServerHost}/${uri}`);
-      cy.contains('Send').click();
+      cy.get(domSelector.uriInput).clear();
+      cy.get(domSelector.uriInput).type(`${ServerHost}/${uri}`);
+      cy.contains(RouteLocaleUS['page.route.button.send']).click();
       // should not show the notification
-      cy.contains('please input the valid request URL').should('not.exist');
+      cy.contains(RouteLocaleUS['page.route.input.placeholder.requestUrl']).should('not.exist');
     });
   });
 });
