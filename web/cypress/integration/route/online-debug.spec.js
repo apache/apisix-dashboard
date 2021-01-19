@@ -17,9 +17,9 @@
 /* eslint-disable no-undef */
 import menuLocaleUS from '../../../src/locales/en-US/menu';
 import RouteLocaleUS from '../../../src/pages/Route/locales/en-US';
+import defaultSettings from '../../../config/defaultSettings';
 
 context('Online debug', () => {
-  const ServerHost = '139.217.190.60';
   const urisWithSpecialChars = [
     '/get',
     '/deps-get',
@@ -33,6 +33,7 @@ context('Online debug', () => {
   const domSelector = {
     uriInput: '#debugUri',
   };
+  const { SERVE_ENV = 'dev' } = Cypress.env();
 
   beforeEach(() => {
     // init login
@@ -50,7 +51,7 @@ context('Online debug', () => {
     // input uri with specified special characters
     urisWithSpecialChars.forEach((uri) => {
       cy.get(domSelector.uriInput).clear();
-      cy.get(domSelector.uriInput).type(`${ServerHost}/${uri}`);
+      cy.get(domSelector.uriInput).type(`${defaultSettings.serveUrlMap[SERVE_ENV].split('//').pop()}/${uri}`);
       cy.contains(RouteLocaleUS['page.route.button.send']).click();
       // should not show the notification
       cy.contains(RouteLocaleUS['page.route.input.placeholder.requestUrl']).should('not.exist');
