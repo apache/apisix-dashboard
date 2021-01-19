@@ -42,6 +42,7 @@ context('Online debug', () => {
 
     // input uri with specified special characters
     urisWithSpecialChars.forEach((uri) => {
+      cy.get('#debugUri').clear();
       cy.get('#debugUri').type(`${ServerHost}/${uri}`);
       cy.contains('Send').click();
       // should not show the notification
