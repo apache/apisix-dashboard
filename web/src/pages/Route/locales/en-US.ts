@@ -55,8 +55,8 @@ export default {
     'Maximum length 100, only letters, Numbers, _, and - are supported, and can only begin with letters',
 
   'page.route.panelSection.title.requestConfigBasicDefine': 'Request Basic Define',
-  'page.route.protocol': 'Protocol',
   'page.route.form.itemLabel.httpMethod': 'HTTP Method',
+  'page.route.form.itemLabel.scheme': 'Scheme',
   'page.route.form.itemLabel.priority': 'Priority',
   'page.route.form.itemLabel.redirect': 'Redirect',
   'page.route.select.option.enableHttps': 'Enable HTTPS',
@@ -104,7 +104,11 @@ export default {
   'page.route.weight': 'Weight',
   'page.route.radio.staySame': 'Stay The Same',
   'page.route.form.itemLabel.newPath': 'New Path',
-  'page.route.form.itemLabel.rewriteType': 'Request Path',
+  'page.route.form.itemLabel.newHost': 'New Host',
+  'page.route.form.itemLabel.regx': 'Regexp',
+  'page.route.form.itemLabel.template': 'Template',
+  'page.route.form.itemLabel.uriRewriteType': 'URI Override',
+  'page.route.form.itemLabel.hostRewriteType': 'Host Override',
   'page.route.form.itemLabel.redirectURI': 'Redirect URI',
   'page.route.input.placeholder.newPath': 'For example: /foo/bar/index.html',
 
@@ -134,5 +138,7 @@ export default {
   'page.route.exportRoutesTips': 'Please choose the type of file you want to export',
   'page.route.button.importOpenApi': 'Import OpenAPI',
   'page.route.button.selectFile': 'Please Select File',
-  'page.route.list': 'Route List'
+  'page.route.list': 'Route List',
+  'page.route.panelSection.title.requestOverride': 'Request Override',
+  'page.route.form.itemLabel.headerRewrite': 'Header Override',
 };
