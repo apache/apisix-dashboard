@@ -40,7 +40,7 @@ context('settings page smoke test', () => {
       .and('contain', 'Grafana address should begin with HTTP or HTTPS');
   });
 
-  it('should set a invaild url', () => {
+  it('should set a invalid url', () => {
     cy.visit('/');
     cy.contains('Settings').click();
     cy.wait(500);
