@@ -163,6 +163,7 @@ declare namespace RouteModule {
     form: FormInstance;
     disabled?: boolean;
     upstreamRef: any;
+    isServiceId: boolean;
   };
 
   type Form2Data = {
