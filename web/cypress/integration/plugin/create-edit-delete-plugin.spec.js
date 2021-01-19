@@ -20,9 +20,9 @@ context('e2e test for plugin page', () => {
   const drawerSelector = '.ant-drawer-content';
   const timeout = 50000;
   beforeEach(() => {
-    cy.intercept('/apisix/admin/plugins?all=true').as('getPlugins');
-    cy.intercept('/apisix/admin/global_rules/1').as('getGlobalRules');
-    cy.intercept('/apisix/admin/schema/plugins/*').as('schemaAPI');
+    cy.intercept('GET', '/apisix/admin/plugins?all=true').as('getPlugins');
+    cy.intercept('PUT', '/apisix/admin/global_rules/1').as('putGlobalRules');
+    cy.intercept('GET', '/apisix/admin/global_rules/1').as('getGlobalRules');
     // init login
     cy.login();
   });
@@ -61,7 +61,7 @@ context('e2e test for plugin page', () => {
         timeout,
       });
     });
-    cy.wait('@getGlobalRules');
+    cy.wait('@putGlobalRules');
 
 
     // enable redirect plugin
@@ -96,7 +96,7 @@ context('e2e test for plugin page', () => {
         timeout,
       });
     });
-      cy.wait('@getGlobalRules');
+    cy.wait('@putGlobalRules');
 
     // back to plugin list page
     cy.visit('/');
@@ -121,7 +121,6 @@ context('e2e test for plugin page', () => {
     // back to plugin list page
     cy.visit('/');
     cy.contains('Plugin').click();
-    cy.wait('@getGlobalRules');
     cy.contains('key-auth').should('not.exist');
   });
 
