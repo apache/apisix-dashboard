@@ -276,7 +276,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
         </Button>
       )}
       <Table key="table" bordered dataSource={advancedMatchingRules} columns={columns} />
-      {/* NOTE: tricky way, switch visible on Modal component will ocure error */}
+      {/* NOTE: tricky way, switch visible on Modal component will occur error */}
       {visible ? renderModal() : null}
     </PanelSection>
   );
