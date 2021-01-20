@@ -20,9 +20,6 @@ context('e2e test for plugin page', () => {
   const drawerSelector = '.ant-drawer-content';
   const timeout = 50000;
   beforeEach(() => {
-    cy.intercept('GET', '/apisix/admin/plugins?all=true').as('getPlugins');
-    cy.intercept('PUT', '/apisix/admin/global_rules/1').as('putGlobalRules');
-    cy.intercept('GET', '/apisix/admin/global_rules/1').as('getGlobalRules');
     // init login
     cy.login();
   });
@@ -40,7 +37,7 @@ context('e2e test for plugin page', () => {
     });
 
     // enable auth plugin
-    cy.wait('@getPlugins');
+    cy.wait(500);
     cy.contains('.ant-card', 'key-auth').within(() => {
       cy.get('button').click({
         force: true,
@@ -61,9 +58,7 @@ context('e2e test for plugin page', () => {
         timeout,
       });
     });
-    cy.wait('@putGlobalRules');
-
-
+    cy.wait(500);
     // enable redirect plugin
     cy.contains('.ant-card', 'redirect').within(() => {
       cy.get('button').click({
@@ -96,12 +91,12 @@ context('e2e test for plugin page', () => {
         timeout,
       });
     });
-    cy.wait('@putGlobalRules');
+    cy.wait(500);
 
     // back to plugin list page
     cy.visit('/');
     cy.contains('Plugin').click();
-    cy.wait('@getGlobalRules');
+    cy.wait(500);
     cy.get('.ant-table-tbody').should('contain', 'key-auth');
     cy.get('.ant-table-tbody').should('contain', 'redirect');
   });
@@ -136,7 +131,7 @@ context('e2e test for plugin page', () => {
     // back to plugin list page
     cy.visit('/');
     cy.contains('Plugin').click();
-    cy.wait('@getGlobalRules');
+    cy.wait(100);
     cy.contains('redirect').should('not.exist');
   });
 });
