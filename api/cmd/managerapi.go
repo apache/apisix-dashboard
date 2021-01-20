@@ -143,7 +143,7 @@ func newStopCommand() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			pid, err := utils.ReadPID(conf.PIDPath)
 			if err != nil {
-				if syscall.ENOENT.Error() == err.Error() {
+				if syscall.ENOENT.Error() != err.Error() {
 					fmt.Fprintf(os.Stderr, "failed to get manager-api pid: %s\n", err)
 				} else {
 					fmt.Fprintf(os.Stderr,  "pid path %s not found, is manager-api running?\n", conf.PIDPath)
