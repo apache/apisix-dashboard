@@ -19,7 +19,7 @@ import { notification } from 'antd';
 import type { MenuDataItem } from '@ant-design/pro-layout';
 import { history } from 'umi';
 import moment from 'moment';
-import { InfoCircleOutlined } from '@ant-design/icons';
+
 
 import { codeMessage } from './constants';
 import IconFont from './components/IconFont';
@@ -69,7 +69,7 @@ export const getMenuData = (): MenuDataItem[] => {
     {
       name: 'serverinfo',
       path: '/serverinfo',
-      icon: <InfoCircleOutlined />,
+      icon: <IconFont name="iconinfocircle"/>,
     },
   ];
 };
