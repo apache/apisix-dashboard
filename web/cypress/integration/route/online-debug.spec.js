@@ -56,7 +56,7 @@ context('Online debug', () => {
       // should not show the notification
       
       // test ci failed 
-      cy.wait(500)
+      cy.wait(5000)
       cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('not.exist');
     });
   });
