@@ -51,7 +51,7 @@ context('Online debug', () => {
     // input uri with specified special characters
     urisWithSpecialChars.forEach((uri) => {
       cy.get(domSelector.uriInput).clear();
-      cy.get(domSelector.uriInput).type(`${defaultSettings.serveUrlMap[SERVE_ENV].split('//').pop()}/${uri}`);
+      cy.get(domSelector.uriInput).type(`${defaultSettings.serveUrlMap[SERVE_ENV].split('//').pop()}${uri}`);
       cy.contains(routeLocaleUS['page.route.button.send']).click();
       // should not show the notification
       cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('not.exist');
