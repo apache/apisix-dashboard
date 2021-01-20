@@ -47,16 +47,19 @@ context('Online debug', () => {
 
     // show online debug draw
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
+    // an intercept for debug request
+    cy.intercept(`/apisix/admin/debug-request-forwarding`).as('debugForwardingRequest');
 
     // input uri with specified special characters
     urisWithSpecialChars.forEach((uri) => {
       cy.get(domSelector.uriInput).clear();
       cy.get(domSelector.uriInput).type(`${defaultSettings.serveUrlMap[SERVE_ENV].split('//').pop()}${uri}`);
       cy.contains(routeLocaleUS['page.route.button.send']).click();
-      // should not show the notification
       
-      // test ci failed 
-      cy.wait(5000)
+      // wait until every request finished
+      cy.wait('@debugForwardingRequest');
+
+      // should not show the notification about input the valid request url
       cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('not.exist');
     });
   });
