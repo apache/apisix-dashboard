@@ -89,7 +89,6 @@ context('Create and Search Route', () => {
     cy.contains('Route').click();
 
     // search one label
-    cy.wait(500);
     cy.get('[title=Labels]').click();
     cy.get(this.domSelector.dropdown).within(() => {
       cy.contains('value0').click();
