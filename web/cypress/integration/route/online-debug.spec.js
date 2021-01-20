@@ -54,6 +54,9 @@ context('Online debug', () => {
       cy.get(domSelector.uriInput).type(`${defaultSettings.serveUrlMap[SERVE_ENV].split('//').pop()}${uri}`);
       cy.contains(routeLocaleUS['page.route.button.send']).click();
       // should not show the notification
+      
+      // test ci failed 
+      cy.wait(500)
       cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('not.exist');
     });
   });
