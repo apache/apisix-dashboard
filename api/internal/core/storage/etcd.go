@@ -29,9 +29,9 @@ import (
 )
 
 const (
-	// SkippedValueInitDir indicates the init_dir etcd
-	// event will be skipped
-	SkippedValueInitDir = "init_dir"
+	// SkippedValueEtcdInitDir indicates the init_dir
+	// etcd event will be skipped
+	SkippedValueEtcdInitDir = "init_dir"
 )
 
 var (
@@ -127,7 +127,7 @@ func (s *EtcdV3Storage) List(ctx context.Context, key string) ([]Keypair, error)
 			Key:   string(resp.Kvs[i].Key),
 			Value: string(resp.Kvs[i].Value),
 			// Mark the init_dir etcd event as skippable if value is init_dir
-			Skipped: string(resp.Kvs[i].Value) == SkippedValueInitDir,
+			Skipped: string(resp.Kvs[i].Value) == SkippedValueEtcdInitDir,
 		}
 		ret = append(ret, data)
 	}
@@ -184,7 +184,7 @@ func (s *EtcdV3Storage) Watch(ctx context.Context, key string) <-chan WatchRespo
 						Value: string(event.Events[i].Kv.Value),
 						// Mark the init_dir etcd event as skippable
 						// if it's a init_dir event
-						Skipped: string(event.Events[i].Kv.Value) == SkippedValueInitDir,
+						Skipped: string(event.Events[i].Kv.Value) == SkippedValueEtcdInitDir,
 					},
 				}
 				switch event.Events[i].Type {
