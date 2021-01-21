@@ -55,6 +55,7 @@ func TestUpstream_chash_query_string(t *testing.T) {
 				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"1\"", "\"key\":\"query_string\""},
 		},
 		{
 			Desc:   "create route using the upstream just created",
@@ -131,6 +132,7 @@ func TestUpstream_chash_arg_xxx(t *testing.T) {
 				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"1\"", "\"key\":\"arg_device_id\""},
 		},
 	}
 

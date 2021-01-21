@@ -85,7 +85,7 @@ func Patch(c *gin.Context) (interface{}, error) {
 	subPath := c.Param("path")
 
 	routeStore := store.GetStore(store.HubKeyRoute)
-	stored, err := routeStore.Get(ID)
+	stored, err := routeStore.Get(c, ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -101,11 +101,12 @@ func Patch(c *gin.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := routeStore.Update(c, &route, false); err != nil {
+	ret, err := routeStore.Update(c, &route, false)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type GetInput struct {
@@ -159,14 +160,14 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.routeStore.Get(input.ID)
+	r, err := h.routeStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusNotFound}, err
 	}
 
 	//format respond
 	route := r.(*entity.Route)
-	script, _ := h.scriptStore.Get(input.ID)
+	script, _ := h.scriptStore.Get(c.Context(), input.ID)
 	if script != nil {
 		route.Script = script.(*entity.Script).Script
 	}
@@ -208,7 +209,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 			fmt.Errorf("%s: \"%s\"", err.Error(), input.Label)
 	}
 
-	ret, err := h.routeStore.List(store.ListInput{
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			if input.Name != "" && !strings.Contains(obj.(*entity.Route).Name, input.Name) {
 				return false
@@ -248,7 +249,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	for i, item := range ret.Rows {
 		route = item.(*entity.Route)
 		id := utils.InterfaceToString(route.ID)
-		script, _ := h.scriptStore.Get(id)
+		script, _ := h.scriptStore.Get(c.Context(), id)
 		if script != nil {
 			route.Script = script.(*entity.Script).Script
 		}
@@ -300,7 +301,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	//check depend
 	if input.ServiceID != nil {
 		serviceID := utils.InterfaceToString(input.ServiceID)
-		_, err := h.svcStore.Get(serviceID)
+		_, err := h.svcStore.Get(c.Context(), serviceID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -311,7 +312,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 	if input.UpstreamID != nil {
 		upstreamID := utils.InterfaceToString(input.UpstreamID)
-		_, err := h.upstreamStore.Get(upstreamID)
+		_, err := h.upstreamStore.Get(c.Context(), upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -383,7 +384,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	//check depend
 	if input.ServiceID != nil {
 		serviceID := utils.InterfaceToString(input.ServiceID)
-		_, err := h.svcStore.Get(serviceID)
+		_, err := h.svcStore.Get(c.Context(), serviceID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -394,7 +395,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 	if input.UpstreamID != nil {
 		upstreamID := utils.InterfaceToString(input.UpstreamID)
-		_, err := h.upstreamStore.Get(upstreamID)
+		_, err := h.upstreamStore.Get(c.Context(), upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -429,7 +430,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 
 		//save original conf
-		if err = h.scriptStore.Update(c.Context(), script, true); err != nil {
+		if _, err = h.scriptStore.Update(c.Context(), script, true); err != nil {
 			//if not exists, create
 			if err.Error() == fmt.Sprintf("key: %s is not found", script.ID) {
 				if _, err := h.scriptStore.Create(c.Context(), script); err != nil {
@@ -442,7 +443,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	} else {
 		//remove exists script
 		id := utils.InterfaceToString(input.Route.ID)
-		script, _ := h.scriptStore.Get(id)
+		script, _ := h.scriptStore.Get(c.Context(), id)
 		if script != nil {
 			if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(id, ",")); err != nil {
 				log.Warnf("delete script %s failed", input.Route.ID)
@@ -450,11 +451,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	if err := h.routeStore.Update(c.Context(), &input.Route, true); err != nil {
+	ret, err := h.routeStore.Update(c.Context(), &input.Route, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type BatchDelete struct {
@@ -528,7 +530,7 @@ func Exist(c *gin.Context) (interface{}, error) {
 	exclude := c.Query("exclude")
 	routeStore := store.GetStore(store.HubKeyRoute)
 
-	ret, err := routeStore.List(store.ListInput{
+	ret, err := routeStore.List(c, store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,

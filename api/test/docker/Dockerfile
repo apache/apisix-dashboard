@@ -25,7 +25,7 @@ RUN mkdir -p /go/manager-api/conf \
     && mkdir -p /go/manager-api/build-tools \
     && go env -w GOPROXY=https://goproxy.io,direct \
     && export GOPROXY=https://goproxy.io \
-    && go build -o /go/manager-api/manager-api ./cmd/manager \
+    && go test -c -cover -covermode=atomic -o /go/manager-api/manager-api -coverpkg "./..." ./cmd/manager \
     && mv /go/src/github.com/apisix/manager-api/entry.sh /go/manager-api/ \
     && mv /go/src/github.com/apisix/manager-api/build-tools/* /go/manager-api/build-tools/ \
     && mv /go/src/github.com/apisix/manager-api/conf/conf.yaml /go/manager-api/conf/conf.yaml \
@@ -60,5 +60,5 @@ RUN mkdir logs
 EXPOSE 9000
 
 RUN chmod +x ./entry.sh
-
-CMD ["/bin/ash", "-c", "/go/manager-api/entry.sh"]
+ENTRYPOINT ["/go/manager-api/manager-api"]
+CMD ["-test.coverprofile=./testdata/integrationcover.out"]
