@@ -1,32 +1,38 @@
-name: ❄️ Lint
+name: Linter
 
 on: [pull_request]
 
 jobs:
-  markdownlint:
-    name: 🍇 Markdown
+  markdown-linter:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: 🚀 Use Node.js
+      - name: Use Node.js
         uses: actions/setup-node@v2.1.4
         with:
-          node-version: '12.x'
+          node-version: "12.x"
       - run: npm install -g markdownlint-cli@0.25.0
       - run: markdownlint '**/*.md' --ignore node_modules
-  yamllint:
-    name: 🍏 YAML
+
+  yaml-linter:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.x'  # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64'  # optional x64 or x86. Defaults to x64 if not specified
+          python-version: "3.x"
+          architecture: "x64"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install yamllint
-      - name: 🧹 YAML Lint
+      - name: YAML Lint
         run: |
           yamllint .
+
+  go-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: run lint
+        run: make go-lint
