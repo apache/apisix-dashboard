@@ -18,6 +18,7 @@ package data_loader
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -105,12 +106,12 @@ func Import(c *gin.Context) (interface{}, error) {
 
 	// check route
 	for _, route := range routes {
-		_, err := checkRouteName(route.Name)
+		_, err := checkRouteName(c, route.Name)
 		if err != nil {
 			continue
 		}
 		if route.ServiceID != nil {
-			_, err := routeStore.Get(utils.InterfaceToString(route.ServiceID))
+			_, err := routeStore.Get(c, utils.InterfaceToString(route.ServiceID))
 			if err != nil {
 				if err == data.ErrNotFound {
 					return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -120,7 +121,7 @@ func Import(c *gin.Context) (interface{}, error) {
 			}
 		}
 		if route.UpstreamID != nil {
-			_, err := upstreamStore.Get(utils.InterfaceToString(route.UpstreamID))
+			_, err := upstreamStore.Get(c, utils.InterfaceToString(route.UpstreamID))
 			if err != nil {
 				if err == data.ErrNotFound {
 					return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -164,9 +165,9 @@ func Import(c *gin.Context) (interface{}, error) {
 	return nil, nil
 }
 
-func checkRouteName(name string) (bool, error) {
+func checkRouteName(ctx context.Context, name string) (bool, error) {
 	routeStore := store.GetStore(store.HubKeyRoute)
-	ret, err := routeStore.List(store.ListInput{
+	ret, err := routeStore.List(ctx, store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,
