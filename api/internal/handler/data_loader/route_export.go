@@ -17,6 +17,7 @@
 package data_loader
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"reflect"
@@ -65,7 +66,7 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 	routes := []*entity.Route{}
 
 	for _, id := range ids {
-		route, err := h.routeStore.Get(id)
+		route, err := h.routeStore.Get(context.Background(), id)
 		if err != nil {
 			return nil, err
 		}
@@ -114,7 +115,7 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 
 		if route.ServiceID != nil {
 			serviceID := utils.InterfaceToString(route.ServiceID)
-			service, err = h.serviceStore.Get(serviceID)
+			service, err = h.serviceStore.Get(context.Background(), serviceID)
 			if err != nil {
 				if err == data.ErrNotFound {
 					return nil, fmt.Errorf("service id: %s not found", route.ServiceID)
@@ -132,7 +133,7 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 			extensions["x-apisix-upstream"] = route.Upstream
 		} else if route.UpstreamID != nil && route.Upstream == nil {
 			upstreamID := utils.InterfaceToString(route.UpstreamID)
-			upstream, err := h.upstreamStore.Get(upstreamID)
+			upstream, err := h.upstreamStore.Get(context.Background(), upstreamID)
 			if err != nil {
 				if err == data.ErrNotFound {
 					return nil, fmt.Errorf("upstream id: %s not found", route.UpstreamID)
