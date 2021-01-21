@@ -60,7 +60,7 @@ export default {
   'component.global.name': 'Name',
   'component.global.updateTime': 'UpdateAt',
   'component.global.form.itemExtraMessage.nameGloballyUnique': 'Name should be globally unique',
-  'component.global.input.placeholder.description': 'Can not more than 200 characters',
+  'component.global.input.placeholder.description': 'Can not more than 256 characters',
   // User component
   'component.user.loginByPassword': 'Username & Password',
   'component.user.login': 'Login',
