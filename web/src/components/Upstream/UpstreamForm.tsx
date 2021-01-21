@@ -18,10 +18,11 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Divider, Form, Input, InputNumber, Row, Select, Switch } from 'antd';
 import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { useIntl } from 'umi';
+import type { FormInstance } from 'antd/es/form';
 
 import { PanelSection } from '@api7-dashboard/ui';
 import { transformRequest } from '@/pages/Upstream/transform';
-import type { FormInstance } from 'antd/es/form';
+import { DEFAULT_UPSTREAM } from './constant'
 
 enum Type {
   roundrobin = 'roundrobin',
@@ -638,6 +639,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 setReadonly(Boolean(upstream_id));
                 setHidenForm(Boolean(upstream_id === 'None'));
                 form.setFieldsValue(list.find((item) => item.id === upstream_id));
+                if (upstream_id === '') {
+                  form.setFieldsValue(DEFAULT_UPSTREAM);
+                }
               }}
             >
               {Boolean(!required) && <Select.Option value={'None'} >None</Select.Option>}
