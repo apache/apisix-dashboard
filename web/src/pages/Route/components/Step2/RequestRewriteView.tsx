@@ -23,7 +23,7 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({
   form,
   upstreamRef,
   disabled,
-  isServiceId = false
+  hasServiceId = false
 }) => {
   const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
   useEffect(() => {
@@ -36,7 +36,7 @@ const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({
       disabled={disabled}
       list={list}
       showSelector
-      required={!isServiceId}
+      required={!hasServiceId}
       key={1}
     />
   );

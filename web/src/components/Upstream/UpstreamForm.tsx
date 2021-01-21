@@ -102,30 +102,28 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       const formData = transformRequest(form.getFieldsValue()) || {};
       const { upstream_id } = form.getFieldsValue();
 
-      if (required && upstream_id === 'None') {
-        requestAnimationFrame(() => {
-          form.resetFields();
-          setHidenForm(false);
-        });
-      }
-
       if (upstream_id === 'None') {
         setHidenForm(true);
+        if (required) {
+          requestAnimationFrame(() => {
+            form.resetFields();
+            form.setFieldsValue(DEFAULT_UPSTREAM);
+            setHidenForm(false);
+          });
+        }
+      } else {
+        if (upstream_id) {
+          requestAnimationFrame(() => {
+            form.setFieldsValue(list.find((item) => item.id === upstream_id));
+          });
+        }
+        if (!required && !Object.keys(formData).length) {
+          requestAnimationFrame(() => {
+            form.setFieldsValue({ upstream_id: 'None' });
+            setHidenForm(true);
+          });
+        }
       }
-
-      if (upstream_id) {
-        requestAnimationFrame(() => {
-          form.setFieldsValue(list.find((item) => item.id === upstream_id));
-        });
-      }
-
-      if (!required && !Object.keys(formData).length && upstream_id !== 'None') {
-        requestAnimationFrame(() => {
-          form.setFieldsValue({ upstream_id: 'None' });
-          setHidenForm(true);
-        });
-      }
-
       setReadonly(Boolean(upstream_id) || disabled);
     }, [list]);
 
@@ -640,6 +638,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 setHidenForm(Boolean(upstream_id === 'None'));
                 form.setFieldsValue(list.find((item) => item.id === upstream_id));
                 if (upstream_id === '') {
+                  form.resetFields();
                   form.setFieldsValue(DEFAULT_UPSTREAM);
                 }
               }}
