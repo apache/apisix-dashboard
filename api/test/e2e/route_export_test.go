@@ -57,7 +57,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"192.168.177.131:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -90,7 +90,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"192.168.177.131:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -134,7 +134,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"192.168.177.131:1980": 1
+						"172.16.238.20:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -186,7 +186,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"192.168.177.131:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -219,7 +219,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"192.168.177.131:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -263,7 +263,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"192.168.177.131:1980": 1
+						"172.16.238.20:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -341,7 +341,7 @@ func TestRoute_Export(t *testing.T) {
 	"desc": "testservice_desc", 
 	"upstream": {
 		"nodes": [{
-			"host": "192.168.177.131",
+			"host": "172.16.238.20",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -399,7 +399,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "192.168.177.131",
+							"host": "172.16.238.20",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -443,7 +443,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -519,7 +519,7 @@ func TestRoute_Export(t *testing.T) {
 	"desc": "testservice_desc", 
 	"upstream": {
 		"nodes": [{
-			"host": "192.168.177.131",
+			"host": "172.16.238.20",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -580,7 +580,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "192.168.177.131",
+							"host": "172.16.238.20",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -624,7 +624,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -659,7 +659,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -768,7 +768,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "192.168.177.131",
+							"host": "172.16.238.20",
 							"port": 1981,
 							"weight": 1
 						}],
@@ -789,7 +789,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}
@@ -853,7 +853,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1981,
 						"weight": 1
 					}]
@@ -950,7 +950,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}
@@ -1044,7 +1044,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 				 "upstream": {
 					 "type": "roundrobin",
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1118,6 +1118,9 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 		"paths": {
 			"/hello": {}
 		}`
+
+	time.Sleep(sleepTime)
+
 	exportStrJWT = replaceStr(exportStrJWT)
 	// verify token and clean test data
 	tests = []HttpTestCase{
@@ -1138,6 +1141,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 			Headers:      map[string]string{"Authorization": jwtToken},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "verify route with incorrect jwt token",
@@ -1217,6 +1221,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 			"/hello": {}
 		}`
 	exportStrJWTNoAlgorithm = replaceStr(exportStrJWTNoAlgorithm)
+
 	tests = []HttpTestCase{
 		{
 			Desc:   "create consumer with jwt (no algorithm)",
@@ -1237,6 +1242,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"code\":0",
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "get the consumer",
@@ -1261,7 +1267,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1269,12 +1275,15 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
 		},
 	}
 
 	for _, tc := range tests {
 		testCaseCheck(tc, t)
 	}
+
+	time.Sleep(sleepTime)
 
 	// get the token of jwt
 	basepath := "http://127.0.0.1:9080"
