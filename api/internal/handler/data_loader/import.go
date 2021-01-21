@@ -20,6 +20,7 @@ import (
 	"bufio"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"path"
@@ -93,6 +94,11 @@ func Import(c *gin.Context) (interface{}, error) {
 	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData(bytes)
 	if err != nil {
 		return nil, err
+	}
+
+	if len(swagger.Paths) < 1 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			errors.New("empty or invalid imported file")
 	}
 
 	routes, err := OpenAPI3ToRoute(swagger)
