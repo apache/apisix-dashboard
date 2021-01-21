@@ -148,13 +148,17 @@ func TestGenericStore_Init(t *testing.T) {
 			giveResp: storage.WatchResponse{
 				Events: []storage.Event{
 					{
-						Type:  storage.EventTypePut,
-						Key:   "test/demo3-f1",
-						Value: `{"Field1":"demo3-f1", "Field2":"demo3-f2"}`,
+						Keypair: storage.Keypair{
+							Key:   "test/demo3-f1",
+							Value: `{"Field1":"demo3-f1", "Field2":"demo3-f2"}`,
+						},
+						Type: storage.EventTypePut,
 					},
 					{
 						Type: storage.EventTypeDelete,
-						Key:  "test/demo1-f1",
+						Keypair: storage.Keypair{
+							Key: "test/demo1-f1",
+						},
 					},
 				},
 			},

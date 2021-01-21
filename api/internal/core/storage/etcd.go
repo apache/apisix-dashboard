@@ -28,6 +28,12 @@ import (
 	"github.com/apisix/manager-api/internal/utils"
 )
 
+const (
+	// SkippedValueInitDir indicates the init_dir etcd
+	// event will be skipped
+	SkippedValueInitDir = "init_dir"
+)
+
 var (
 	Client *clientv3.Client
 )
@@ -120,6 +126,8 @@ func (s *EtcdV3Storage) List(ctx context.Context, key string) ([]Keypair, error)
 		data := Keypair{
 			Key:   string(resp.Kvs[i].Key),
 			Value: string(resp.Kvs[i].Value),
+			// Mark the init_dir etcd event as skippable if value is init_dir
+			Skipped: string(resp.Kvs[i].Value) == SkippedValueInitDir,
 		}
 		ret = append(ret, data)
 	}
@@ -171,8 +179,13 @@ func (s *EtcdV3Storage) Watch(ctx context.Context, key string) <-chan WatchRespo
 
 			for i := range event.Events {
 				e := Event{
-					Key:   string(event.Events[i].Kv.Key),
-					Value: string(event.Events[i].Kv.Value),
+					Keypair: Keypair{
+						Key:   string(event.Events[i].Kv.Key),
+						Value: string(event.Events[i].Kv.Value),
+						// Mark the init_dir etcd event as skippable
+						// if it's a init_dir event
+						Skipped: string(event.Events[i].Kv.Value) == SkippedValueInitDir,
+					},
 				}
 				switch event.Events[i].Type {
 				case clientv3.EventTypePut:
