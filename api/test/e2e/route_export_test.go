@@ -1118,9 +1118,6 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 		"paths": {
 			"/hello": {}
 		}`
-
-	time.Sleep(sleepTime)
-
 	exportStrJWT = replaceStr(exportStrJWT)
 	// verify token and clean test data
 	tests = []HttpTestCase{
@@ -1151,6 +1148,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 			Headers:      map[string]string{"Authorization": "invalid-token"},
 			ExpectStatus: http.StatusUnauthorized,
 			ExpectBody:   `{"message":"invalid jwt string"}`,
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "export route",
@@ -1340,6 +1338,170 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+}
+
+func TestExportRoute_With_Auth_Plugin(t *testing.T) {
+	// apikey-auth plugin
+	// basic-auth plugin
+	tests := []HttpTestCase{
+		{
+			Desc:         "make sure the route is not created ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+		},
+		{
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				 "uri": "/hello",
+				 "plugins": {
+					 "key-auth": {},
+					 "basic-auth": {}
+				 },
+				 "upstream": {
+					 "type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				 }
+			 }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"code":0`,
+		},
+		{
+			Desc:         "make sure the consumer is not created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+		},
+		{
+			Desc:   "create consumer",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
+			Body: `{
+				"username": "jack",
+				"plugins": {
+					"key-auth": {
+						"key": "auth-one"
+					},
+					"basic-auth": {
+						"username": "jack",
+						"password": "123456"
+					}
+				},
+				"desc": "test description"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	time.Sleep(sleepTime)
+
+	exportStrAuth := `"data": {
+		"components": {
+			"securitySchemes": {
+				"api_key": {
+					"in": "header",
+					"name": "X-XSRF-TOKEN",
+					"type": "apiKey"
+				},
+				"basicAuth": {
+					"in": "header",
+					"name": "basicAuth",
+					"type": "basicAuth"
+				}
+			}
+		},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {}
+		}
+	}`
+
+	time.Sleep(sleepTime)
+
+	exportStrAuth = replaceStr(exportStrAuth)
+
+	tests = []HttpTestCase{
+		{
+			Desc:         "verify route with correct basic-auth and key-auth token",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": "Basic amFjazoxMjM0NTYKIA==", "apikey": "auth-one"},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStrAuth,
+		},
+		{
+			Desc:         "delete consumer",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "verify route with the basic-auth and key-auth token from just deleted consumer",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": "Basic amFjazoxMjM0NTYKIA==", "apikey": "auth-one"},
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   `{"message":"Missing related consumer"}`,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "verify the deleted route ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
 		},
 	}
 
