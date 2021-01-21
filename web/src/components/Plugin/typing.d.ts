@@ -28,5 +28,5 @@ declare namespace PluginComponent {
     consumer_schema?: Record<string, any>;
   };
 
-  type ReferPage = '' | 'route' | 'consumer' | 'service' | 'plugin'
+  type ReferPage = '' | 'route' | 'consumer' | 'service' | 'plugin';
 }

@@ -41,7 +41,7 @@
 * Support group for Route module. [#999](https://github.com/apache/apisix-dashboard/pull/999)
 * Support Global Plugin. [#1057](https://github.com/apache/apisix-dashboard/pull/1057) [#1106](https://github.com/apache/apisix-dashboard/pull/1106)
 * Support Version Manager. [#1157](https://github.com/apache/apisix-dashboard/pull/1157)
-* Use Cobra as the cli scafford. [#773](https://github.com/apache/apisix-dashboard/pull/773)
+* Use Cobra as the cli scaffold. [#773](https://github.com/apache/apisix-dashboard/pull/773)
 * Remove Lua dependency. [#1083](https://github.com/apache/apisix-dashboard/pull/1083)
 * Improve E2E testcases for the backend. [#1012](https://github.com/apache/apisix-dashboard/pull/1012), [#1123](https://github.com/apache/apisix-dashboard/pull/1123)
 * Improve E2E testcases for the frontend. [#1074](https://github.com/apache/apisix-dashboard/pull/1074)

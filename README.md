@@ -45,6 +45,14 @@ Note: Currently the Dashboard does not have complete coverage of Apache APISIX f
 
 ![architecture](./docs/images/architecture.png)
 
+## Demo
+
+```
+URL: http://139.217.190.60/
+Username: admin
+Password: admin
+```
+
 ## Project structure
 
 ```
@@ -75,6 +83,8 @@ Support the following ways currently.
 - [RPM package（only for CentOS 7）](./docs/deploy-with-rpm.md)
 
 ## Development
+
+Pull requests are encouraged and always welcome. [Pick an issue](https://github.com/apache/apisix-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) and help us out!
 
 Please refer to the [Development Guide](./docs/develop.md).
 

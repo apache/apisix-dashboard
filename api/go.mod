@@ -29,8 +29,8 @@ require (
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/prometheus/client_golang v1.8.0 // indirect
 	github.com/satori/go.uuid v1.2.0
-	github.com/shiningrush/droplet v0.2.3
-	github.com/shiningrush/droplet/wrapper/gin v0.2.0
+	github.com/shiningrush/droplet v0.2.4
+	github.com/shiningrush/droplet/wrapper/gin v0.2.1
 	github.com/sirupsen/logrus v1.7.0 // indirect
 	github.com/sony/sonyflake v1.0.0
 	github.com/spf13/cobra v0.0.3

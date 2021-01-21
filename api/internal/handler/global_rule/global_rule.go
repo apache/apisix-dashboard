@@ -69,7 +69,7 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.globalRuleStore.Get(input.ID)
+	r, err := h.globalRuleStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -112,7 +112,7 @@ type ListInput struct {
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	ret, err := h.globalRuleStore.List(store.ListInput{
+	ret, err := h.globalRuleStore.List(c.Context(), store.ListInput{
 		PageSize:   input.PageSize,
 		PageNumber: input.PageNumber,
 	})
@@ -141,11 +141,12 @@ func (h *Handler) Set(c droplet.Context) (interface{}, error) {
 		input.GlobalPlugins.ID = input.ID
 	}
 
-	if err := h.globalRuleStore.Update(c.Context(), &input.GlobalPlugins, true); err != nil {
+	ret, err := h.globalRuleStore.Update(c.Context(), &input.GlobalPlugins, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 func Patch(c *gin.Context) (interface{}, error) {
@@ -154,7 +155,7 @@ func Patch(c *gin.Context) (interface{}, error) {
 	subPath := c.Param("path")
 
 	routeStore := store.GetStore(store.HubKeyGlobalRule)
-	stored, err := routeStore.Get(ID)
+	stored, err := routeStore.Get(c, ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -170,11 +171,12 @@ func Patch(c *gin.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := routeStore.Update(c, &globalRule, false); err != nil {
+	ret, err := routeStore.Update(c, &globalRule, false)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type BatchDeleteInput struct {

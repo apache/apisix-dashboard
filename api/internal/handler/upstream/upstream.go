@@ -71,7 +71,7 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.upstreamStore.Get(input.ID)
+	r, err := h.upstreamStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -124,7 +124,7 @@ type ListInput struct {
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	ret, err := h.upstreamStore.List(store.ListInput{
+	ret, err := h.upstreamStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			if input.Name != "" {
 				return strings.Contains(obj.(*entity.Upstream).Name, input.Name)
@@ -149,11 +149,12 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Upstream)
 
-	if err := h.upstreamStore.Create(c.Context(), input); err != nil {
+	ret, err := h.upstreamStore.Create(c.Context(), input)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type UpdateInput struct {
@@ -173,11 +174,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		input.Upstream.ID = input.ID
 	}
 
-	if err := h.upstreamStore.Update(c.Context(), &input.Upstream, true); err != nil {
+	ret, err := h.upstreamStore.Update(c.Context(), &input.Upstream, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type BatchDelete struct {
@@ -203,7 +205,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		subPath = arr[1]
 	}
 
-	stored, err := h.upstreamStore.Get(input.ID)
+	stored, err := h.upstreamStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -226,11 +228,12 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := h.upstreamStore.Update(c.Context(), &stored, false); err != nil {
+	ret, err := h.upstreamStore.Update(c.Context(), &stored, false)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type ExistInput struct {
@@ -253,7 +256,7 @@ func Exist(c *gin.Context) (interface{}, error) {
 	exclude := c.Query("exclude")
 	routeStore := store.GetStore(store.HubKeyUpstream)
 
-	ret, err := routeStore.List(store.ListInput{
+	ret, err := routeStore.List(c, store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,
@@ -282,7 +285,7 @@ func Exist(c *gin.Context) (interface{}, error) {
 func listUpstreamNames(c *gin.Context) (interface{}, error) {
 	routeStore := store.GetStore(store.HubKeyUpstream)
 
-	ret, err := routeStore.List(store.ListInput{
+	ret, err := routeStore.List(c, store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,

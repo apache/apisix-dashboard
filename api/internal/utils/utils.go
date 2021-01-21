@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/sony/sonyflake"
+	"github.com/yuin/gopher-lua/parse"
 )
 
 var _sf *sonyflake.Sonyflake
@@ -160,4 +161,11 @@ func LabelContains(labels map[string]string, reqLabels map[string]struct{}) bool
 	}
 
 	return false
+}
+
+// ValidateLuaCode validates lua syntax for input code, return nil
+// if passed, otherwise a non-nil error will be returned
+func ValidateLuaCode(code string) error {
+	_, err := parse.Parse(strings.NewReader(code), "<string>")
+	return err
 }
