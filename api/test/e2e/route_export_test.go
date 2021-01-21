@@ -17,9 +17,13 @@
 package e2e
 
 import (
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestRoute_Export(t *testing.T) {
@@ -53,7 +57,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"192.168.177.131:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -86,7 +90,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"192.168.177.131:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -105,7 +109,7 @@ func TestRoute_Export(t *testing.T) {
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 		{
-			Desc:   "create route",
+			Desc:   "create route with uris and hosts to test whether the uris parsing is correct",
 			Object: ManagerApiExpect(t),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -130,7 +134,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"192.168.177.131:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -164,7 +168,7 @@ func TestRoute_Export(t *testing.T) {
 					},
 					"security": [],
 					"x-apisix-enableWebsocket": false,
-					"x-apisix-hosts": ["foo.com", "*.bar.com"],
+					"x-apisix-host": "*.bar.com",
 					"x-apisix-labels": {
 						"build": "16",
 						"env": "production",
@@ -182,7 +186,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"192.168.177.131:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -197,7 +201,7 @@ func TestRoute_Export(t *testing.T) {
 					},
 					"security": [],
 					"x-apisix-enableWebsocket": false,
-					"x-apisix-hosts": ["foo.com", "*.bar.com"],
+					"x-apisix-host": "*.bar.com",
 					"x-apisix-labels": {
 						"build": "16",
 						"env": "production",
@@ -215,7 +219,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"192.168.177.131:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -229,12 +233,12 @@ func TestRoute_Export(t *testing.T) {
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello2",
-			Headers:      map[string]string{"Host": "foo.com"},
+			Headers:      map[string]string{"Host": "bar.com"},
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		},
 		{
-			Desc:   "create route2",
+			Desc:   "create route2 with uri and host to test whether the uri parsing is correct",
 			Object: ManagerApiExpect(t),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r2",
@@ -255,11 +259,11 @@ func TestRoute_Export(t *testing.T) {
 				},
 				"status": 1,
 				"uri": "/hello2",
-				"hosts": ["foo.com", "*.bar.com"],
+				"host": "*.bar.com",
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"192.168.177.131:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -283,7 +287,7 @@ func TestRoute_Export(t *testing.T) {
 
 	tests3 := []HttpTestCase{
 		{
-			Desc:         "export route route2",
+			Desc:         "export route and route2",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodPost,
 			Path:         "/apisix/admin/routes/export/r1,r2",
@@ -337,7 +341,7 @@ func TestRoute_Export(t *testing.T) {
 	"desc": "testservice_desc", 
 	"upstream": {
 		"nodes": [{
-			"host": "172.16.238.20",
+			"host": "192.168.177.131",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -392,11 +396,10 @@ func TestRoute_Export(t *testing.T) {
 						}
 					},
 					"x-apisix-priority": 0,
-					"x-apisix-serviceID": "s1",
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "192.168.177.131",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -440,7 +443,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "192.168.177.131",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -458,7 +461,7 @@ func TestRoute_Export(t *testing.T) {
 			ExpectBody: serviceStrS1,
 		},
 		{
-			Desc:   "create route3 using the service just created",
+			Desc:   "create route3 using the service id just created",
 			Object: ManagerApiExpect(t),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r3",
@@ -516,7 +519,7 @@ func TestRoute_Export(t *testing.T) {
 	"desc": "testservice_desc", 
 	"upstream": {
 		"nodes": [{
-			"host": "172.16.238.20",
+			"host": "192.168.177.131",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -574,11 +577,10 @@ func TestRoute_Export(t *testing.T) {
 						}
 					},
 					"x-apisix-priority": 0,
-					"x-apisix-serviceID": "s2",
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "192.168.177.131",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -622,7 +624,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "192.168.177.131",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -640,7 +642,7 @@ func TestRoute_Export(t *testing.T) {
 			ExpectBody: serviceStrS2,
 		},
 		{
-			Desc:   "create route4 using the service just created",
+			Desc:   "Create Route4 and test the priority merging function of upstream, label and plugin when both service and route are included",
 			Object: ManagerApiExpect(t),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r4",
@@ -657,7 +659,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "192.168.177.131",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -704,6 +706,635 @@ func TestRoute_Export(t *testing.T) {
 		},
 	}
 	for _, tc := range tests5 {
+		testCaseCheck(tc, t)
+	}
+
+	serviceStrS3 := `
+	"name": "testservice", 
+	"desc": "testservice_desc", 
+	"upstream_id": "1", 
+	"plugins": {
+		"limit-count": {
+			"count": 100,
+			"key": "remote_addr",
+			"rejected_code": 503,
+			"time_window": 60
+		}
+	}, 
+	"labels": {
+		"build": "16",
+		"env": "production",
+		"version": "v2"
+	}, 
+	"enable_websocket": true`
+	serviceStrS3 = replaceStr(serviceStrS3)
+
+	exportStrR5 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {
+				"get": {
+					"operationId": "Get",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"security": [],
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-labels": {
+						"build": "16",
+						"env": "production",
+						"version": "v2"
+					},
+					"x-apisix-plugins": {
+						"limit-count": {
+							"count": 100,
+							"key": "remote_addr",
+							"rejected_code": 503,
+							"time_window": 60
+						},
+						"prometheus": {
+							"disable": false
+						}
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": [{
+							"host": "192.168.177.131",
+							"port": 1981,
+							"weight": 1
+						}],
+						"type": "roundrobin"
+					}
+				}
+			}
+		}
+	}`
+	exportStrR5 = replaceStr(exportStrR5)
+
+	tests6 := []HttpTestCase{
+		{
+			Desc:   "create upstream",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
+			Body: `{
+				"nodes": [
+					{
+						"host": "192.168.177.131",
+						"port": 1980,
+						"weight": 1
+					}
+				],
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:    "create service with upstream id",
+			Object:  ManagerApiExpect(t),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/services/s3",
+			Headers: map[string]string{"Authorization": token},
+			Body: `{
+				"name": "testservice",
+				"desc": "testservice_desc",
+				"labels": {
+					"build":"16",
+					"env":"production",
+					"version":"v2"
+				},
+				"enable_websocket":true,
+				"plugins": { 
+					"limit-count": { 
+						"count": 100, 
+						"time_window": 60, 
+						"rejected_code": 503, 
+						"key": "remote_addr" 
+					} 
+				},
+				"upstream_id": "1"
+			}`,
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:       "get the service s3",
+			Object:     ManagerApiExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/apisix/admin/services/s3",
+			Headers:    map[string]string{"Authorization": token},
+			ExpectCode: http.StatusOK,
+			ExpectBody: serviceStrS3,
+		},
+		{
+			Desc:   "Create a route5 with the id of the service3 created with upstream id",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r5",
+			Body: `{
+				"methods": ["GET"],
+				"uri": "/hello",
+				"service_id": "s3",
+				"enable_websocket":false,
+				"plugins": { 
+					"prometheus": {
+						"disable": false
+					}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "192.168.177.131",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route5",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r5",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStrR5,
+		},
+		{
+			Desc:         "delete the route5 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r5",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route5 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "delete the service3",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s3",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "remove upstream",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+	for _, tc := range tests6 {
+		testCaseCheck(tc, t)
+	}
+
+	exportStrR7 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {
+				"get": {
+					"operationId": "Get",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"security": [],
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-plugins": {
+						"prometheus": {
+							"disable": false
+						}
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"id": "3"`
+	exportStrR7 = replaceStr(exportStrR7)
+
+	tests8 := []HttpTestCase{
+		{
+			Desc:   "create upstream3",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/3",
+			Body: `{
+				"nodes": [
+					{
+						"host": "192.168.177.131",
+						"port": 1980,
+						"weight": 1
+					}
+				],
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:   "Create a route8 using upstream id",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r8",
+			Body: `{
+				"methods": ["GET"],
+				"uri": "/hello",
+				"enable_websocket":false,
+				"plugins": { 
+					"prometheus": {
+						"disable": false
+					}
+				},
+				"upstream_id": "3"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route8",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r8",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStrR7,
+		},
+		{
+			Desc:         "delete the route8 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r8",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route8 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "remove upstream3",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/3",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+	for _, tc := range tests8 {
+		testCaseCheck(tc, t)
+	}
+
+}
+
+func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			Desc:         "make sure the route is not created ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+		},
+		{
+			Desc:   "create route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				 "uri": "/hello",
+				 "plugins": {
+					 "jwt-auth": {}
+				 },
+				 "upstream": {
+					 "type": "roundrobin",
+					"nodes": [{
+						"host": "192.168.177.131",
+						"port": 1980,
+						"weight": 1
+					}]
+				 }
+			 }`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"code":0`,
+		},
+		{
+			Desc:         "make sure the consumer is not created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+		},
+		{
+			Desc:   "create consumer",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
+			Body: `{
+				"username": "jack",
+				"plugins": {
+					"jwt-auth": {
+						"key": "user-key",
+						"secret": "my-secret-key",
+						"algorithm": "HS256"
+					}
+				},
+				"desc": "test description"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	time.Sleep(sleepTime)
+
+	// sign jwt token
+	body, status, err := httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key")
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusOK, status)
+	jwtToken := string(body)
+
+	// sign jwt token with not exists key
+	body, status, err = httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=not-exist-key")
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusNotFound, status)
+
+	exportStrJWT := `{
+		"components": {
+			"securitySchemes": {
+				"bearerAuth": {
+					"bearerFormat": "JWT",
+					"scheme": "bearer",
+					"type": "http"
+				}
+			}
+		},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {}
+		}`
+	exportStrJWT = replaceStr(exportStrJWT)
+	// verify token and clean test data
+	tests = []HttpTestCase{
+		{
+			Desc:         "verify route without jwt token",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   `{"message":"Missing JWT token in request"}`,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "verify route with correct jwt token",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": jwtToken},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+		},
+		{
+			Desc:         "verify route with incorrect jwt token",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": "invalid-token"},
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   `{"message":"invalid jwt string"}`,
+		},
+		{
+			Desc:         "export route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStrJWT,
+		},
+		{
+			Desc:         "delete consumer",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "verify route with the jwt token from just deleted consumer",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": jwtToken},
+			ExpectStatus: http.StatusUnauthorized,
+			ExpectBody:   `{"message":"Missing related consumer"}`,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "delete route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "verify the deleted route ",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	exportStrJWTNoAlgorithm := `{
+		"components": {
+			"securitySchemes": {
+				"bearerAuth": {
+					"bearerFormat": "JWT",
+					"scheme": "bearer",
+					"type": "http"
+				}
+			}
+		},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {}
+		}`
+	exportStrJWTNoAlgorithm = replaceStr(exportStrJWTNoAlgorithm)
+	tests = []HttpTestCase{
+		{
+			Desc:   "create consumer with jwt (no algorithm)",
+			Object: ManagerApiExpect(t),
+			Path:   "/apisix/admin/consumers",
+			Method: http.MethodPut,
+			Body: `{
+				"username":"consumer_1",
+				"desc": "test description",
+				"plugins":{
+					"jwt-auth":{
+						"exp":86400,
+						"key":"user-key",
+						"secret":"my-secret-key"
+					}
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"code\":0",
+		},
+		{
+			Desc:         "get the consumer",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/consumers/consumer_1",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"username\":\"consumer_1\"",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:   "create the route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"plugins": {
+					"jwt-auth": {}
+				},
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "192.168.177.131",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	// get the token of jwt
+	basepath := "http://127.0.0.1:9080"
+	request, _ := http.NewRequest("GET", basepath+"/apisix/plugin/jwt/sign?key=user-key", nil)
+	request.Header.Add("Authorization", token)
+	resp, err := http.DefaultClient.Do(request)
+	assert.Nil(t, err)
+	defer resp.Body.Close()
+	assert.Equal(t, 200, resp.StatusCode)
+	jwttoken, _ := ioutil.ReadAll(resp.Body)
+
+	tests = []HttpTestCase{
+		{
+			Desc:         "hit route with jwt token",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": string(jwttoken)},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStrJWTNoAlgorithm,
+		},
+		{
+			Desc:         "delete consumer",
+			Object:       ManagerApiExpect(t),
+			Path:         "/apisix/admin/consumers/consumer_1",
+			Method:       http.MethodDelete,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"code\":0",
+		},
+		{
+			Desc:         "after delete consumer verify it again",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "delete the route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
 		testCaseCheck(tc, t)
 	}
 }

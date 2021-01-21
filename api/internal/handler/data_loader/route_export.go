@@ -105,9 +105,9 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 	plugins := make(map[string]interface{})
 	serviceLabels := make(map[string]string)
 	labels := make(map[string]string)
-	extensions := make(map[string]interface{})
 
 	for _, route := range routes {
+		extensions := make(map[string]interface{})
 		pathItem := &openapi3.PathItem{}
 		path := openapi3.Operation{}
 		path.Summary = route.Desc
@@ -122,7 +122,6 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 				}
 				return nil, err
 			}
-			extensions["x-apisix-serviceID"] = route.ServiceID
 
 			_service := service.(*entity.Service)
 			servicePlugins = _service.Plugins
@@ -160,6 +159,7 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 			log.Errorf("parseLabels err: ", err)
 			return nil, err
 		}
+
 		if labels != nil {
 			extensions["x-apisix-labels"] = labels
 		}
