@@ -20,18 +20,24 @@ import routeLocaleUS from '../../../src/pages/Route/locales/en-US';
 import defaultSettings from '../../../config/defaultSettings';
 
 context('Online debug', () => {
-  const urisWithSpecialChars = [
-    'localhost:9000/get',
-    '127.0.0.1:9000/get',
-    'baidu.com/get',
-    'localhost:9000/deps-get',
-    'localhost:9000/deps.get',
-    'localhost:9000/deps_get',
-    'localhost:9000/get?search=1',
-    'localhost:9000/get?search=%U%E',
-    'localhost:9000/get?search=v1&number=-1',
-    'localhost:9000/get?search=1+1',
-  ];
+  const data = {
+    uris: [
+      'localhost:9000/get',
+      '127.0.0.1:9000/get',
+      'www.baidu.com/get',
+      'baidu.com/get',
+      'test-host.com/get',
+      'test-host.com/aBCdsf/defsdf456eweWQE',
+      'localhost:9000/deps-get',
+      'localhost:9000/deps.get',
+      'localhost:9000/deps_get',
+      'localhost:9000/get?search=1',
+      'localhost:9000/get?search=v1,sd&number=-1',
+      'localhost:9000/get?search=1+1',
+      'localhost:9000/api/commands/submit.html#Requirements?test=apisix.com',
+      'localhost:9000/js6/main.jsp?sid=pARQZYHABxkSVdeMvXAAEtfJKbWQocOA&df=mail126_mailmaster#module=mbox.ListModule%7C%7B"filter"'
+    ]
+  };
   const domSelector = {
     uriInput: '#debugUri',
   };
@@ -41,7 +47,7 @@ context('Online debug', () => {
     cy.login();
   });
 
-  it('shoule not show notification when debug a non existent route with specified special characters', () => {
+  it('shoule not show the invalid url notification', () => {
     // go to route list page
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
@@ -50,7 +56,7 @@ context('Online debug', () => {
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
 
     // input uri with specified special characters
-    urisWithSpecialChars.forEach((uri) => {
+    data.uris.forEach((uri) => {
       cy.get(domSelector.uriInput).clear();
       cy.get(domSelector.uriInput).type(uri);
       cy.contains(routeLocaleUS['page.route.button.send']).click();
