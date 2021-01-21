@@ -28,13 +28,13 @@ context('Create and Delete Plugin List', () => {
     cy.fixture('plugin-list.json').as('cases');
   });
 
-  it('should create plugins', () => {
+  it('should create plugins', function () {
     cy.visit('/');
     cy.contains('Plugin').click();
     cy.contains('Create').click();
 
     // add test plugins
-    cy.addPlugins();
+    cy.addPlugins(this.cases);
   });
 
   it('should delete plugin list', () => {

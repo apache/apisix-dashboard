@@ -35,7 +35,7 @@ Cypress.Commands.add('login', () => {
   });
 });
 
-Cypress.Commands.add('addPlugins', () => {
+Cypress.Commands.add('addPlugins', (cases) => {
   const timeout = 50000;
   const domSelectors = {
     name: '[data-cy-plugin-name]',
@@ -45,13 +45,10 @@ Cypress.Commands.add('addPlugins', () => {
     close: '.anticon-close',
   };
 
-  // NOTE: Need to load a set of fixed data, and assign the alias to 'cases'.
-  cy.get('@cases');
-
   cy.get(domSelectors.name).then(function (cards) {
     [...cards].forEach((card) => {
       const name = card.innerText;
-      const pluginCases = '@cases'[name] || [];
+      const pluginCases = cases[name] || [];
       // eslint-disable-next-line consistent-return
       pluginCases.forEach(({ shouldValid, data, type = '' }) => {
         /**
