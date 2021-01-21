@@ -21,19 +21,20 @@ import defaultSettings from '../../../config/defaultSettings';
 
 context('Online debug', () => {
   const urisWithSpecialChars = [
-    '/get',
-    '/deps-get',
-    '/deps.get',
-    '/deps_get',
-    '/get?search=1',
-    '/get?search=%U%E',
-    '/get?search=v1&number=-1',
-    '/get?search=1+1',
+    'localhost:9000/get',
+    '127.0.0.1:9000/get',
+    'baidu.com/get',
+    'localhost:9000/deps-get',
+    'localhost:9000/deps.get',
+    'localhost:9000/deps_get',
+    'localhost:9000/get?search=1',
+    'localhost:9000/get?search=%U%E',
+    'localhost:9000/get?search=v1&number=-1',
+    'localhost:9000/get?search=1+1',
   ];
   const domSelector = {
     uriInput: '#debugUri',
   };
-  const { SERVE_ENV = 'dev' } = Cypress.env();
 
   beforeEach(() => {
     // init login
@@ -47,17 +48,12 @@ context('Online debug', () => {
 
     // show online debug draw
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
-    // an intercept for debug request
-    // cy.intercept(`/apisix/admin/debug-request-forwarding`).as('debugForwardingRequest');
 
     // input uri with specified special characters
     urisWithSpecialChars.forEach((uri) => {
       cy.get(domSelector.uriInput).clear();
-      cy.get(domSelector.uriInput).type(`139.217.190.60/${uri}`);
+      cy.get(domSelector.uriInput).type(uri);
       cy.contains(routeLocaleUS['page.route.button.send']).click();
-      
-      // wait until every request finished
-      // cy.wait('@debugForwardingRequest');
 
       // should not show the notification about input the valid request url
       cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('not.exist');
