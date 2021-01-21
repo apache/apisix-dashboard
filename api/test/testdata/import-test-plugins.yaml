@@ -33,7 +33,7 @@ info:
   title: |-
     test title
 paths:
-  /hello:    
+  /hello:
     post:
       x-api-limit: 20
       description: |-
@@ -46,15 +46,15 @@ paths:
             port: 1980
             weight: 1
       parameters:
-      - name: id
-        in: header
-        description: ID of pet to use
-        required: true
-        schema:
-          type: array
-          items:
-            type: string
-        style: simple
+        - name: id
+          in: header
+          description: ID of pet to use
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+          style: simple
 
       requestBody:
         content:
