@@ -216,6 +216,10 @@ export const transformRouteData = (data: RouteModule.Body) => {
 
   const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);
 
+  if (upstream && Object.keys(upstream).length) {
+    upstream.upstream_id = '';
+  }
+
   const form2Data: RouteModule.Form2Data = upstream || { upstream_id };
 
   const { plugins, script } = data;
