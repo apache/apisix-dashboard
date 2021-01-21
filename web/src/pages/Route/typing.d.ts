@@ -80,6 +80,7 @@ declare namespace RouteModule {
     remote_addrs: string[];
     vars: [string, Operator, string][];
     upstream: {
+      upstream_id?: string;
       type: 'roundrobin' | 'chash' | 'ewma';
       hash_on?: string;
       key?: string;
