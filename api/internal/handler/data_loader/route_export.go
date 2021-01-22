@@ -197,15 +197,15 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 		}
 
 		if route.RemoteAddr != "" {
-			extensions["x-apisix-remoteAddr"] = route.RemoteAddr
+			extensions["x-apisix-remote_addr"] = route.RemoteAddr
 		}
 
 		if route.RemoteAddrs != nil {
-			extensions["x-apisix-remoteAddrs"] = route.RemoteAddrs
+			extensions["x-apisix-remote_addrs"] = route.RemoteAddrs
 		}
 
 		if route.FilterFunc != "" {
-			extensions["x-apisix-filterFunc"] = route.FilterFunc
+			extensions["x-apisix-filter_func"] = route.FilterFunc
 		}
 
 		if route.Script != nil {
@@ -213,7 +213,7 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 		}
 
 		if route.ServiceProtocol != "" {
-			extensions["x-apisix-serviceProtocol"] = route.ServiceProtocol
+			extensions["x-apisix-service_protocol"] = route.ServiceProtocol
 		}
 		if route.Vars != nil {
 			extensions["x-apisix-vars"] = route.Vars
@@ -257,7 +257,7 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 
 		extensions["x-apisix-priority"] = route.Priority
 		extensions["x-apisix-status"] = route.Status
-		extensions["x-apisix-enableWebsocket"] = route.EnableWebsocket
+		extensions["x-apisix-enable_websocket"] = route.EnableWebsocket
 		path.Extensions = extensions
 		path.Parameters = paramsRefs
 		path.RequestBody = &openapi3.RequestBodyRef{Value: requestBody}

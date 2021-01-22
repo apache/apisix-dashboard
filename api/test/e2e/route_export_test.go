@@ -40,7 +40,7 @@ func TestRoute_Export(t *testing.T) {
 						}
 					},
 					"security": [],
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["foo.com", "*.bar.com"],
 					"x-apisix-labels": {
 						"build": "16",
@@ -73,7 +73,7 @@ func TestRoute_Export(t *testing.T) {
 						}
 					},
 					"security": [],
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["foo.com", "*.bar.com"],
 					"x-apisix-labels": {
 						"build": "16",
@@ -170,7 +170,7 @@ func TestRoute_Export(t *testing.T) {
 						}
 					},
 					"security": [],
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-host": "*.bar.com",
 					"x-apisix-labels": {
 						"build": "16",
@@ -203,7 +203,7 @@ func TestRoute_Export(t *testing.T) {
 						}
 					},
 					"security": [],
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-host": "*.bar.com",
 					"x-apisix-labels": {
 						"build": "16",
@@ -395,7 +395,7 @@ func TestRoute_Export(t *testing.T) {
 							"description": ""
 						}
 					},
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-labels": {
 						"build": "16",
 						"env": "production",
@@ -575,7 +575,7 @@ func TestRoute_Export(t *testing.T) {
 						}
 					},
 					"security": [],
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-labels": {
 						"build": "16",
 						"env": "production",
@@ -763,7 +763,7 @@ func TestRoute_Export(t *testing.T) {
 						}
 					},
 					"security": [],
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-labels": {
 						"build": "16",
 						"env": "production",
@@ -946,7 +946,7 @@ func TestRoute_Export(t *testing.T) {
 						}
 					},
 					"security": [],
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-plugins": {
 						"prometheus": {
 							"disable": false
@@ -1065,7 +1065,7 @@ func TestRoute_Export(t *testing.T) {
 					},
 					"security": [],
 					"summary": "所有",
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-labels": {
 						"API_VERSION": "v1", 
 						"test": "1"
@@ -1256,7 +1256,7 @@ func TestRoute_Export(t *testing.T) {
 					},
 					"security": [],
 					"summary": "所有",
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-labels": {
 						"API_VERSION": "v1", 
 						"test": "1"
@@ -1894,7 +1894,7 @@ func TestRoute_Export_Label(t *testing.T) {
 						}
 					},
 					"summary": "所有",
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-labels": {
 						"build": "16", 
 						"env": "production", 
@@ -2035,7 +2035,7 @@ func TestRoute_Export_Label(t *testing.T) {
 						}
 					},
 					"summary": "所有",
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-labels": {
 						"build": "16", 
 						"env": "production", 
@@ -2188,7 +2188,7 @@ func TestRoute_Export_Request_Validation(t *testing.T) {
 					},
 					"security": [],
 					"summary": "所有",
-					"x-apisix-enableWebsocket": false,
+					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["test.com"],
 					"x-apisix-plugins": {},
 					"x-apisix-priority": 0,
