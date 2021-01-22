@@ -36,7 +36,7 @@ type WatchResponse struct {
 type Keypair struct {
 	Key   string
 	Value string
-	// If true, this keypair will NOT be processed in store
+	// If true, this keypair will NOT be processed in store.
 	Skipped bool
 }
 
