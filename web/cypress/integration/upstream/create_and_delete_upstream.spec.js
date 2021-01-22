@@ -45,8 +45,8 @@ context('Create and Delete Upstream', () => {
     cy.get('#nodes_0_port').clear().type('7000');
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(domSelectors.notification).should('contain', 'Create upstream successfully');
-    cy.contains('Create upstream successfully');
+    cy.get(domSelectors.notification).should('contain', 'Create Upstream Successfully');
+    cy.contains('Create Upstream Successfully');
     cy.wait(sleepTime * 5);
     cy.url().should('contains', 'upstream/list');
   });
@@ -57,7 +57,7 @@ context('Create and Delete Upstream', () => {
     cy.wait(sleepTime * 5);
     cy.contains(name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(domSelectors.notification).should('contain', 'Delete successfully');
+    cy.get(domSelectors.notification).should('contain', 'Delete Upstream Successfully');
   });
 
   it('should create chash upstream', () => {
@@ -101,7 +101,7 @@ context('Create and Delete Upstream', () => {
     // next to finish
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(domSelectors.notification).should('contain', 'Create upstream successfully');
+    cy.get(domSelectors.notification).should('contain', 'Create Upstream Successfully');
     cy.wait(sleepTime * 5);
     cy.url().should('contains', 'upstream/list');
   });
@@ -112,6 +112,6 @@ context('Create and Delete Upstream', () => {
     cy.wait(sleepTime * 5);
     cy.contains(name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(domSelectors.notification).should('contain', 'Delete successfully');
+    cy.get(domSelectors.notification).should('contain', 'Delete Upstream Successfully');
   });
 });

@@ -82,7 +82,7 @@ export default {
 
   'page.upstream.create.edit': 'Edit',
   'page.upstream.create.create': 'Create',
-  'page.upstream.create.upstream.successfully': 'upstream successfully',
+  'page.upstream.create.upstream.successfully': 'Upstream Successfully',
   'page.upstream.create.basic.info': 'Basic Information',
   'page.upstream.create.preview': 'Preview',
 
@@ -95,7 +95,7 @@ export default {
   'page.upstream.list.confirm.delete': 'Are you sure to delete ?',
   'page.upstream.list.confirm': 'Confirm',
   'page.upstream.list.cancel': 'Cancel',
-  'page.upstream.list.delete.successfully': 'Delete successfully',
+  'page.upstream.list.delete.successfully': 'Delete Upstream Successfully',
   'page.upstream.list.delete': 'Delete',
   'page.upstream.list': 'Upstream List',
   'page.upstream.list.input': 'Please input',
