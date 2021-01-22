@@ -41,6 +41,8 @@ export default {
   'page.route.unpublished': '未发布',
   'page.route.onlineDebug': '在线调试',
   'page.route.service': '服务',
+  'page.route.instructions': '说明',
+  'page.route.import': '导入',
 
   // button
   'page.route.button.returnList': '返回路由列表',
@@ -128,5 +130,5 @@ export default {
   'page.route.button.exportOpenApi': '导出 OpenAPI',
   'page.route.exportRoutesTips': '请选择下载文件的类型',
   'page.route.button.importOpenApi': '导入 OpenAPI',
-  'page.route.button.selectFile': '选择上传文件',
+  'page.route.button.selectFile': '请选择上传文件',
 };

@@ -32,6 +32,8 @@ export default {
   'page.route.rule': 'Rule',
   'page.route.httpHeaderName': 'HTTP Request Header Name',
   'page.route.service': 'Service',
+  'page.route.instructions': 'Instructions',
+  'page.route.import': 'Import',
 
   'page.route.input.placeholder.parameterNameHttpHeader': 'Request header name, for example: HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': 'Parameter name, for example: id',
@@ -128,5 +130,5 @@ export default {
   'page.route.button.exportOpenApi': 'Export OpenAPI',
   'page.route.exportRoutesTips': 'Please choose the type of file you want to download',
   'page.route.button.importOpenApi': 'Import OpenAPI',
-  'page.route.button.selectFile': 'Select File',
+  'page.route.button.selectFile': 'Please Select File',
 };

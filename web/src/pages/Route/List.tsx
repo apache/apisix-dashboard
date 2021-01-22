@@ -68,7 +68,6 @@ const Page: React.FC = () => {
     YAML,
   }
 
-
   const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [uploadFileList, setUploadFileList] = useState<RcFile[]>([]);
@@ -82,7 +81,7 @@ const Page: React.FC = () => {
     selectedRowKeys,
     onChange: (currentSelectKeys: string[]) => {
       setSelectedRowKeys(currentSelectKeys);
-    },
+    }
   };
 
   const handleTableActionSuccessResponse = (msgTip: string) => {
@@ -135,7 +134,12 @@ const Page: React.FC = () => {
 
   const handleImport = () => {
     const formData = new FormData();
-
+    if (!uploadFileList[0]) {
+      notification.warn({
+        message: formatMessage({ id: 'page.route.button.selectFile' }),
+      });
+      return;
+    }
     formData.append('file', uploadFileList[0]);
 
     importRoutes(formData).then(() => {
@@ -465,9 +469,9 @@ const Page: React.FC = () => {
         </Upload>
         <Divider />
         <div>
-          <p>Instructions：</p>
+        <p>{formatMessage({id: 'page.route.instructions'})}:</p>
           <p>
-            <a href="#">APISIX OpenApi Instructions</a>
+            <a href="https://github.com/apache/apisix-dashboard/blob/master/docs/IMPORT_OPENAPI_USER_GUIDE.md" target='_blank'>1. {`${formatMessage({id: 'page.route.import'})} ${formatMessage({id: 'page.route.instructions'})}`}</a>
           </p>
         </div>
       </Modal>
