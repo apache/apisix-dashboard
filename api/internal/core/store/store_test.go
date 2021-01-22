@@ -136,21 +136,12 @@ func TestGenericStore_Init(t *testing.T) {
 			},
 			giveListRet: []storage.Keypair{
 				{
-					Key:     "test/demo1-f1",
-					Value:   `{"Field1":"demo1-f1", "Field2":"demo1-f2"}`,
-					Skipped: false,
+					Key:   "test/demo1-f1",
+					Value: `{"Field1":"demo1-f1", "Field2":"demo1-f2"}`,
 				},
 				{
-					Key:     "test/demo2-f1",
-					Value:   `{"Field1":"demo2-f1", "Field2":"demo2-f2"}`,
-					Skipped: false,
-				},
-				{
-					// It's an skippable data, which would be skipped
-					// to initialize cache
-					Key:     "test/demoX-f1",
-					Value:   "skippable value",
-					Skipped: true,
+					Key:   "test/demo2-f1",
+					Value: `{"Field1":"demo2-f1", "Field2":"demo2-f2"}`,
 				},
 			},
 			giveWatchCh: make(chan storage.WatchResponse),
@@ -168,16 +159,6 @@ func TestGenericStore_Init(t *testing.T) {
 						Keypair: storage.Keypair{
 							Key: "test/demo1-f1",
 						},
-					},
-					{
-						// As an skippable event from watch, it will be
-						// skipped to store in cache
-						Keypair: storage.Keypair{
-							Key:     "test/demoY-f1",
-							Value:   "skippable value",
-							Skipped: true,
-						},
-						Type: storage.EventTypePut,
 					},
 				},
 			},

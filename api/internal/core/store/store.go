@@ -96,11 +96,6 @@ func (s *GenericStore) Init() error {
 		return err
 	}
 	for i := range ret {
-		// If the kv has been marked as skippable in underlying storage,
-		// just skip it
-		if ret[i].Skipped {
-			continue
-		}
 		key := ret[i].Key[len(s.opt.BasePath)+1:]
 		objPtr, err := s.StringToObjPtr(ret[i].Value, key)
 		if err != nil {
@@ -121,11 +116,6 @@ func (s *GenericStore) Init() error {
 			for i := range event.Events {
 				switch event.Events[i].Type {
 				case storage.EventTypePut:
-					// If the watch event has been marked as skippable
-					// in underlying storage, just skip it
-					if event.Events[i].Skipped {
-						continue
-					}
 					key := event.Events[i].Key[len(s.opt.BasePath)+1:]
 					objPtr, err := s.StringToObjPtr(event.Events[i].Value, key)
 					if err != nil {
