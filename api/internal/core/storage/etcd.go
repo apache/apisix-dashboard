@@ -28,6 +28,20 @@ import (
 	"github.com/apisix/manager-api/internal/utils"
 )
 
+const (
+	// SkippedValueEtcdInitDir indicates the init_dir
+	// etcd event will be skipped.
+	SkippedValueEtcdInitDir = "init_dir"
+
+	// SkippedValueEtcdEmptyObject indicates the data with an
+	// empty JSON value `{}`, which may be set by APISIX,
+	// should be also skipped.
+	//
+	// Important: at present, `{}`` is considered as invalid,
+	// but may be changed in the future.
+	SkippedValueEtcdEmptyObject = "{}"
+)
+
 var (
 	Client *clientv3.Client
 )
@@ -120,6 +134,13 @@ func (s *EtcdV3Storage) List(ctx context.Context, key string) ([]Keypair, error)
 		data := Keypair{
 			Key:   string(resp.Kvs[i].Key),
 			Value: string(resp.Kvs[i].Value),
+			// Mark as skippable if its value is init_dir or {}
+			// during fetching-all phase.
+			//
+			// For more complex cases, a explicit function to determine if
+			// skippable would be better.
+			Skipped: string(resp.Kvs[i].Value) == SkippedValueEtcdInitDir ||
+				string(resp.Kvs[i].Value) == SkippedValueEtcdEmptyObject,
 		}
 		ret = append(ret, data)
 	}
@@ -171,8 +192,17 @@ func (s *EtcdV3Storage) Watch(ctx context.Context, key string) <-chan WatchRespo
 
 			for i := range event.Events {
 				e := Event{
-					Key:   string(event.Events[i].Kv.Key),
-					Value: string(event.Events[i].Kv.Value),
+					Keypair: Keypair{
+						Key:   string(event.Events[i].Kv.Key),
+						Value: string(event.Events[i].Kv.Value),
+						// Mark this Keypais as skippable if its value is init_dir or {}
+						// during watching phase.
+						//
+						// For more complex cases, a explicit function to determine if
+						// skippable would be better.
+						Skipped: string(event.Events[i].Kv.Value) == SkippedValueEtcdInitDir ||
+							string(event.Events[i].Kv.Value) == SkippedValueEtcdEmptyObject,
+					},
 				}
 				switch event.Events[i].Type {
 				case clientv3.EventTypePut:

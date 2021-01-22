@@ -36,12 +36,13 @@ type WatchResponse struct {
 type Keypair struct {
 	Key   string
 	Value string
+	// If true, this keypair will NOT be processed in store.
+	Skipped bool
 }
 
 type Event struct {
-	Type  EventType
-	Key   string
-	Value string
+	Keypair
+	Type EventType
 }
 
 type EventType string
