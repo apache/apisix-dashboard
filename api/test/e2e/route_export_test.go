@@ -27,6 +27,8 @@ import (
 )
 
 func TestRoute_Export(t *testing.T) {
+
+	// 1.Export data as the route of URIs Hosts
 	exportStrR1 := `
 			"/hello_": {
 				"get": {
@@ -57,7 +59,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"192.168.177.131:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -90,7 +92,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"192.168.177.131:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -134,7 +136,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"192.168.177.131:1980": 1
+						"172.16.238.20:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -156,6 +158,7 @@ func TestRoute_Export(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 
+	// 2.Export data as the route of URI host
 	exportStrR2 := `
 			"/hello2": {
 				"get": {
@@ -186,7 +189,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"192.168.177.131:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -219,7 +222,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"192.168.177.131:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -263,7 +266,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"192.168.177.131:1980": 1
+						"172.16.238.20:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -285,6 +288,7 @@ func TestRoute_Export(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 
+	// 3. Use two interfaces to export all routes separately(r1,r2 and exportall routes)
 	tests3 := []HttpTestCase{
 		{
 			Desc:         "export route and route2",
@@ -345,12 +349,13 @@ func TestRoute_Export(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 
+	// 4.Create a service that contains complete data and use the service_ id create route
 	serviceStrS1 := `
 	"name": "testservice", 
 	"desc": "testservice_desc", 
 	"upstream": {
 		"nodes": [{
-			"host": "192.168.177.131",
+			"host": "172.16.238.20",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -408,7 +413,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "192.168.177.131",
+							"host": "172.16.238.20",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -420,9 +425,6 @@ func TestRoute_Export(t *testing.T) {
 	}`
 	exportStrR3 = replaceStr(exportStrR3)
 
-	// The test case tests the creation of a complete service.
-	// And according to the service_ ID to create a route.
-	// Test whether the plugin upstream label in the service is integrated with route and exported.
 	tests4 := []HttpTestCase{
 		{
 			Desc:    "create service with all options",
@@ -452,7 +454,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -523,12 +525,17 @@ func TestRoute_Export(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 
+	// 5.Create a service containing plugin and a route containing plugin to test the fusion of exported data
+	// This test case tests the creation of a complete service.
+	// And create a complete route, export rules as route upstream data for high priority, direct use.
+	// However, if the data in the service plugins does not exist in the route, it will be fused and exported.
+	// If it exists, the data in route will be used first
 	serviceStrS2 := `
 	"name": "testservice", 
 	"desc": "testservice_desc", 
 	"upstream": {
 		"nodes": [{
-			"host": "192.168.177.131",
+			"host": "172.16.238.20",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -589,7 +596,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "192.168.177.131",
+							"host": "172.16.238.20",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -600,10 +607,7 @@ func TestRoute_Export(t *testing.T) {
 		}
 	}`
 	exportStrR4 = replaceStr(exportStrR4)
-	// This test case tests the creation of a complete service.
-	// And create a complete route, export rules as route upstream data for high priority, direct use.
-	// However, if the data in the service (label, plugins) does not exist in the route, it will be fused and exported.
-	// If it exists, the data in route will be used first
+
 	tests5 := []HttpTestCase{
 		{
 			Desc:    "create service with all options",
@@ -633,7 +637,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -668,7 +672,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -718,6 +722,9 @@ func TestRoute_Export(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 
+	// 6.Create a service according to the upstream ID and a route according to the service ID.
+	// The test export also contains the upstream.
+	// Use the upstream of route.
 	serviceStrS3 := `
 	"name": "testservice", 
 	"desc": "testservice_desc", 
@@ -777,7 +784,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "192.168.177.131",
+							"host": "172.16.238.20",
 							"port": 1981,
 							"weight": 1
 						}],
@@ -798,7 +805,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}
@@ -862,7 +869,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1981,
 						"weight": 1
 					}]
@@ -920,7 +927,8 @@ func TestRoute_Export(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 
-	exportStrR7 := `{
+	// 8.Create and export route according to upstream ID
+	exportStrR8 := `{
 		"components": {},
 		"info": {
 			"title": "RoutesExport",
@@ -948,7 +956,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"id": "3"`
-	exportStrR7 = replaceStr(exportStrR7)
+	exportStrR8 = replaceStr(exportStrR8)
 
 	tests8 := []HttpTestCase{
 		{
@@ -959,7 +967,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}
@@ -996,7 +1004,7 @@ func TestRoute_Export(t *testing.T) {
 			Path:         "/apisix/admin/routes/export/r8",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   exportStrR7,
+			ExpectBody:   exportStrR8,
 		},
 		{
 			Desc:         "delete the route8 just created",
@@ -1028,6 +1036,9 @@ func TestRoute_Export(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 
+	// 9.Create service according to upstream1 ID
+	// Create route according to upstream2 ID and service ID
+	// Export route
 	serviceStrS4 := `
 	"name": "testservice", 
 	"desc": "testservice_desc", 
@@ -1035,7 +1046,7 @@ func TestRoute_Export(t *testing.T) {
 	"enable_websocket": true`
 	serviceStrS4 = replaceStr(serviceStrS4)
 
-	exportStrR8 := `{
+	exportStrR9 := `{
 		"components": {},
 		"info": {
 			"title": "RoutesExport",
@@ -1068,7 +1079,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"id": "5"`
-	exportStrR8 = replaceStr(exportStrR8)
+	exportStrR9 = replaceStr(exportStrR9)
 
 	tests9 := []HttpTestCase{
 		{
@@ -1079,7 +1090,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}
@@ -1097,7 +1108,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1981,
 						"weight": 1
 					}
@@ -1147,7 +1158,7 @@ func TestRoute_Export(t *testing.T) {
 					"API_VERSION": "v1"
 				},
 				"vars": [
-					["==", "test"]
+					["arg_name", "==", "test"]
 				],
 				"uri": "/hello",
 				"enable_websocket":false,
@@ -1169,7 +1180,7 @@ func TestRoute_Export(t *testing.T) {
 			Path:         "/apisix/admin/routes/export/r9",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   exportStrR8,
+			ExpectBody:   exportStrR9,
 		},
 		{
 			Desc:         "delete the route9 just created",
@@ -1217,6 +1228,170 @@ func TestRoute_Export(t *testing.T) {
 	for _, tc := range tests9 {
 		testCaseCheck(tc, t)
 	}
+
+	// 10.Creating route10 using service ID does not contain upstream data
+	serviceStrS5 := `
+	"name": "testservice", 
+	"desc": "testservice_desc", 
+	"upstream_id": "6", 
+	"enable_websocket": true`
+	serviceStrS5 = replaceStr(serviceStrS5)
+
+	exportStrR10 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {
+				"get": {
+					"operationId": "route_allGet",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"security": [],
+					"summary": "所有",
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-labels": {
+						"API_VERSION": "v1", 
+						"test": "1"
+					},
+					"x-apisix-plugins": {
+						"prometheus": {
+							"disable": false
+						}
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"id": "6"`
+	exportStrR10 = replaceStr(exportStrR10)
+
+	tests10 := []HttpTestCase{
+		{
+			Desc:   "create upstream6",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/6",
+			Body: `{
+				"nodes": [
+					{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}
+				],
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:    "create service",
+			Object:  ManagerApiExpect(t),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/services/s5",
+			Headers: map[string]string{"Authorization": token},
+			Body: `{
+				"name": "testservice",
+				"desc": "testservice_desc",
+				"enable_websocket":true,
+				"upstream_id": "6"
+			}`,
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:       "get the service s5",
+			Object:     ManagerApiExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/apisix/admin/services/s5",
+			Headers:    map[string]string{"Authorization": token},
+			ExpectCode: http.StatusOK,
+			ExpectBody: serviceStrS5,
+		},
+		{
+			Desc:   "Creating route10 using service ID does not contain upstream data",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r10",
+			Body: `{
+				"name": "route_all",
+				"desc": "所有",
+				"status": 1,
+				"methods": ["GET"],
+				"priority": 0,
+				"service_id": "s5",
+				"labels": {
+					"test": "1",
+					"API_VERSION": "v1"
+				},
+				"vars": [
+					["arg_name", "==", "test"]
+				],
+				"uri": "/hello",
+				"enable_websocket":false,
+				"plugins": { 
+					"prometheus": {
+						"disable": false
+					}
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route10",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r10",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStrR10,
+		},
+		{
+			Desc:         "delete the route10 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r10",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route10 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "remove upstream6",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/6",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "delete the service5",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s5",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests10 {
+		testCaseCheck(tc, t)
+	}
 }
 
 func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
@@ -1242,7 +1417,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 				 "upstream": {
 					 "type": "roundrobin",
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1320,15 +1495,6 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 	// verify token and clean test data
 	tests = []HttpTestCase{
 		{
-			Desc:         "verify route without jwt token",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `{"message":"Missing JWT token in request"}`,
-			Sleep:        sleepTime,
-		},
-		{
 			Desc:         "verify route with correct jwt token",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
@@ -1336,16 +1502,6 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 			Headers:      map[string]string{"Authorization": jwtToken},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "verify route with incorrect jwt token",
-			Object:       APISIXExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": "invalid-token"},
-			ExpectStatus: http.StatusUnauthorized,
-			ExpectBody:   `{"message":"invalid jwt string"}`,
 			Sleep:        sleepTime,
 		},
 		{
@@ -1463,7 +1619,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1570,7 +1726,7 @@ func TestExportRoute_With_Auth_Plugin(t *testing.T) {
 				 "upstream": {
 					 "type": "roundrobin",
 					"nodes": [{
-						"host": "192.168.177.131",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1706,6 +1862,418 @@ func TestExportRoute_With_Auth_Plugin(t *testing.T) {
 	for _, tc := range tests {
 		testCaseCheck(tc, t)
 	}
+}
+
+func TestRoute_Export_Label(t *testing.T) {
+	// 10.Create a service with label data and a route with label data, and export the route.
+	// Label is the original data of the route
+	serviceStrS1 := `
+	"name": "testservice", 
+	"desc": "testservice_desc", 
+	"labels": {
+		"build": "10"
+	}, 
+	"enable_websocket": true`
+	serviceStrS1 = replaceStr(serviceStrS1)
+
+	exportStrR1 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {
+				"get": {
+					"operationId": "route_allGet",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-labels": {
+						"build": "16", 
+						"env": "production", 
+						"version": "v2"
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-vars":[
+						[
+							"arg_name",
+							"==",
+							"test"
+							]
+						]
+					}`
+	exportStrR1 = replaceStr(exportStrR1)
+
+	tests := []HttpTestCase{
+
+		{
+			Desc:    "create service",
+			Object:  ManagerApiExpect(t),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/services/s1",
+			Headers: map[string]string{"Authorization": token},
+			Body: `{
+				"name": "testservice",
+				"desc": "testservice_desc",
+				"enable_websocket":true,
+				"labels": {
+					"build": "10"
+				}
+			}`,
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:       "get the service s1",
+			Object:     ManagerApiExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/apisix/admin/services/s1",
+			Headers:    map[string]string{"Authorization": token},
+			ExpectCode: http.StatusOK,
+			ExpectBody: serviceStrS1,
+		},
+		{
+			Desc:   "Create a service with label data and a route with label data",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"name": "route_all",
+				"desc": "所有",
+				"status": 1,
+				"methods": ["GET"],
+				"service_id": "s1",
+				"labels": {
+					"build": "16",
+					"env": "production",
+					"version": "v2"
+				},
+				"vars": [
+					["arg_name", "==", "test"]
+				],
+				"uri": "/hello"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route1",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStrR1,
+		},
+		{
+			Desc:         "delete the route1 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route1 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "delete the service1",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	// 11.Create a service with label data and a route without label data, and export the route.
+	//  Label is the data of the service
+	serviceStrS2 := `
+	"name": "testservice", 
+	"desc": "testservice_desc", 
+	"labels": {
+		"build": "16", 
+		"env": "production", 
+		"version": "v2"
+	},
+	"enable_websocket": true`
+	serviceStrS2 = replaceStr(serviceStrS2)
+
+	exportStrR2 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {
+				"get": {
+					"operationId": "route_allGet",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-labels": {
+						"build": "16", 
+						"env": "production", 
+						"version": "v2"
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-vars":[
+						[
+							"arg_name",
+							"==",
+							"test"
+							]
+						]
+					}`
+	exportStrR2 = replaceStr(exportStrR2)
+
+	tests2 := []HttpTestCase{
+
+		{
+			Desc:    "create service",
+			Object:  ManagerApiExpect(t),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/services/s2",
+			Headers: map[string]string{"Authorization": token},
+			Body: `{
+				"name": "testservice",
+				"desc": "testservice_desc",
+				"enable_websocket":true,
+				"labels": {
+					"build": "16", 
+					"env": "production", 
+					"version": "v2"
+				}
+			}`,
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:       "get the service s2",
+			Object:     ManagerApiExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/apisix/admin/services/s2",
+			Headers:    map[string]string{"Authorization": token},
+			ExpectCode: http.StatusOK,
+			ExpectBody: serviceStrS2,
+		},
+		{
+			Desc:   "Create a service with label data and a route without label data",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r2",
+			Body: `{
+				"name": "route_all",
+				"desc": "所有",
+				"status": 1,
+				"methods": ["GET"],
+				"service_id": "s2",
+				"vars": [
+					["arg_name", "==", "test"]
+				],
+				"uri": "/hello"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route2",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStrR2,
+		},
+		{
+			Desc:         "delete the route2 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route2 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "delete the service2",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests2 {
+		testCaseCheck(tc, t)
+	}
+}
+
+func TestRoute_Export_Request_Validation(t *testing.T) {
+	// 12.Test export route request_ validation data correctness
+	exportStrR1 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/test-test": {
+				"get": {
+					"operationId": "route_allGet",
+					"parameters": [{
+						"in": "header",
+						"name": "test",
+						"schema": {
+							"type": "string"
+						}
+					}],
+					"requestBody": {
+						"content": {
+							"*/*": {
+								"schema": {
+									"properties": {
+										"boolean_payload": {
+											"type": "boolean"
+										},
+										"required_payload": {
+											"type": "string"
+										}
+									},
+									"required": ["required_payload"],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"security": [],
+					"summary": "所有",
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-plugins": {},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1
+				}
+			}
+		}
+	}`
+	exportStrR1 = replaceStr(exportStrR1)
+
+	tests := []HttpTestCase{
+		{
+			Desc:   "Create a route containing request_ validation data",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					"uris": ["/test-test"],
+					"name": "route_all",
+					"desc": "所有",
+					"methods": ["GET"],
+					"hosts": ["test.com"],
+					"plugins": {
+						"request-validation": {
+							"body_schema": {
+								"properties": {
+									"boolean_payload": {
+										"type": "boolean"
+									},
+									"required_payload": {
+										"type": "string"
+									}
+								},
+								"required": ["required_payload"],
+								"type": "object"
+							},
+							"disable": false,
+							"header_schema": {
+								"properties": {
+									"test": {
+										"enum": "test-enum",
+										"type": "string"
+									}
+								},
+								"type": "string"
+							}
+						}
+					},
+					"status": 1
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route1",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStrR1,
+		},
+		{
+			Desc:         "delete the route1 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route1 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
 }
 
 func replaceStr(str string) string {

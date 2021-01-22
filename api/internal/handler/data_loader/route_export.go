@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
-	"regexp"
 	"strings"
 
 	"github.com/apisix/manager-api/internal/core/entity"
@@ -163,7 +162,19 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 			extensions["x-apisix-upstream"] = upstream
 		} else if route.UpstreamID == nil && route.Upstream == nil && route.ServiceID != nil {
 			_service := service.(*entity.Service)
-			extensions["x-apisix-upstream"] = _service.Upstream
+			if _service.Upstream != nil {
+				extensions["x-apisix-upstream"] = _service.Upstream
+			} else if _service.Upstream == nil && _service.UpstreamID != nil {
+				upstreamID := utils.InterfaceToString(_service.UpstreamID)
+				upstream, err := h.upstreamStore.Get(context.Background(), upstreamID)
+				if err != nil {
+					if err == data.ErrNotFound {
+						return nil, fmt.Errorf("upstream id: %s not found", _service.UpstreamID)
+					}
+					return nil, err
+				}
+				extensions["x-apisix-upstream"] = upstream
+			}
 		}
 
 		if route.Host != "" {
@@ -363,14 +374,9 @@ func parseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef,
 						if err != nil {
 							log.Errorf("json marshal failed: %s", err)
 						}
-						for _, va := range route.Vars.([]interface{}) {
-							compile := regexp.MustCompile("^http_.*")
-							match := compile.Match([]byte(va.([]interface{})[0].(string)))
-							if match {
-								m[va.([]interface{})[2].(string)] = &openapi3.MediaType{Schema: &openapi3.SchemaRef{Value: schema}}
-								requestBody.Content = m
-							}
-						}
+
+						m["*/*"] = &openapi3.MediaType{Schema: &openapi3.SchemaRef{Value: schema}}
+						requestBody.Content = m
 					}
 				}
 				continue
