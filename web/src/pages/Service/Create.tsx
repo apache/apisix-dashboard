@@ -82,8 +82,8 @@ const Page: React.FC = (props) => {
       .then(() => {
         notification.success({
           message: `${serviceId
-              ? formatMessage({ id: 'component.global.edit' })
-              : formatMessage({ id: 'component.global.create' })
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
             } ${formatMessage({ id: 'menu.service' })} ${formatMessage({
               id: 'component.status.success',
             })}`,
@@ -115,8 +115,8 @@ const Page: React.FC = (props) => {
     <>
       <PageHeaderWrapper
         title={`${(props as any).match.params.rid
-            ? formatMessage({ id: 'component.global.edit' })
-            : formatMessage({ id: 'component.global.create' })
+          ? formatMessage({ id: 'component.global.edit' })
+          : formatMessage({ id: 'component.global.create' })
           } ${formatMessage({ id: 'menu.service' })}`}
       >
         <Card bordered={false}>
