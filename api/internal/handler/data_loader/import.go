@@ -296,8 +296,11 @@ func parseParameters(parameters openapi3.Parameters, plugins map[string]interfac
 			}
 		}
 	}
-	requestValidation := make(map[string]interface{})
 
+	requestValidation := make(map[string]interface{})
+	if rv, ok := plugins["request-validation"]; ok {
+		requestValidation = rv.(map[string]interface{})
+	}
 	requestValidation["header_schema"] = &entity.RequestValidation{
 		Type:       "object",
 		Required:   required,
@@ -309,6 +312,9 @@ func parseParameters(parameters openapi3.Parameters, plugins map[string]interfac
 func parseRequestBody(requestBody *openapi3.RequestBodyRef, swagger *openapi3.Swagger, plugins map[string]interface{}) {
 	schema := requestBody.Value.Content
 	requestValidation := make(map[string]interface{})
+	if rv, ok := plugins["request-validation"]; ok {
+		requestValidation = rv.(map[string]interface{})
+	}
 	for _, v := range schema {
 		if v.Schema.Ref != "" {
 			s := getParameters(v.Schema.Ref, &swagger.Components).Value
