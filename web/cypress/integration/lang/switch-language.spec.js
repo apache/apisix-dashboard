@@ -14,40 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package storage
+/* eslint-disable no-undef */
 
-import "context"
+context('Switch language', () => {
+  const timeout = 1000;
+  const domSelector = {
+    switcher: '.ant-space-align-center',
+  };
 
-type Interface interface {
-	Get(ctx context.Context, key string) (string, error)
-	List(ctx context.Context, key string) ([]Keypair, error)
-	Create(ctx context.Context, key, val string) error
-	Update(ctx context.Context, key, val string) error
-	BatchDelete(ctx context.Context, keys []string) error
-	Watch(ctx context.Context, key string) <-chan WatchResponse
-}
+  beforeEach(() => {
+    cy.login();
+  });
 
-type WatchResponse struct {
-	Events   []Event
-	Error    error
-	Canceled bool
-}
+  it('should switch language', () => {
+    cy.visit('/');
 
-type Keypair struct {
-	Key   string
-	Value string
-	// If true, this keypair will NOT be processed in store.
-	Skipped bool
-}
+    cy.get(domSelector.switcher).click('right');
+    cy.contains('简体中文').click({
+      timeout,
+    });
+    cy.contains('服务').click();
 
-type Event struct {
-	Keypair
-	Type EventType
-}
-
-type EventType string
-
-var (
-	EventTypePut    EventType = "put"
-	EventTypeDelete EventType = "delete"
-)
+    cy.get(domSelector.switcher).click('right');
+    cy.contains('English').click({
+      timeout,
+    });
+    cy.contains('Create');
+  });
+});
