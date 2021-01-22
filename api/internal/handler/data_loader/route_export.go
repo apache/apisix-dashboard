@@ -288,35 +288,12 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 
 func parseLabels(route *entity.Route, serviceLabels map[string]string, labels map[string]string) (map[string]string, error) {
 	if route.Labels != nil {
-		if route.ServiceID != nil {
-			_serviceLabels, err := json.Marshal(serviceLabels)
-			if err != nil {
-				log.Errorf("MapToJson err: ", err)
-				return nil, err
-			}
-			_labels, err := json.Marshal(route.Labels)
-			if err != nil {
-				log.Errorf("MapToJson err: ", err)
-				return nil, err
-			}
-			byteLabels, err := utils.MergeJson(_serviceLabels, _labels)
-			if err != nil {
-				log.Errorf("Labels MergeJson err: ", err)
-				return nil, err
-			}
-			err = json.Unmarshal([]byte(byteLabels), &labels)
-			if err != nil {
-				log.Errorf("JsonToMap err: ", err)
-				return nil, err
-			}
-			if labels != nil {
-				return labels, nil
-			}
-		}
 		return route.Labels, nil
 	} else if route.Labels == nil && route.ServiceID != nil {
 		if serviceLabels != nil {
 			return serviceLabels, nil
+		} else if serviceLabels == nil {
+			return nil, nil
 		}
 	}
 	return nil, nil
@@ -425,7 +402,7 @@ func parseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef,
 		}
 		path.Security = secReq
 
-		if route.ServiceID != nil {
+		if route.ServiceID != nil && servicePlugins != nil {
 			_servicePlugins, err := json.Marshal(servicePlugins)
 			if err != nil {
 				log.Errorf("MapToJson err: ", err)

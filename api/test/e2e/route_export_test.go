@@ -57,7 +57,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"192.168.177.131:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -90,7 +90,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"192.168.177.131:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -134,7 +134,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"192.168.177.131:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -186,7 +186,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"192.168.177.131:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -219,7 +219,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"192.168.177.131:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -263,7 +263,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"192.168.177.131:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -296,7 +296,7 @@ func TestRoute_Export(t *testing.T) {
 			ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "," + exportStrR1 + "}}",
 		},
 		{
-			Desc:         "export route and route2",
+			Desc:         "use the exportall inerface to export all routes",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/exportall/routes",
@@ -350,7 +350,7 @@ func TestRoute_Export(t *testing.T) {
 	"desc": "testservice_desc", 
 	"upstream": {
 		"nodes": [{
-			"host": "172.16.238.20",
+			"host": "192.168.177.131",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -408,7 +408,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "192.168.177.131",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -452,7 +452,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "192.168.177.131",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -528,7 +528,7 @@ func TestRoute_Export(t *testing.T) {
 	"desc": "testservice_desc", 
 	"upstream": {
 		"nodes": [{
-			"host": "172.16.238.20",
+			"host": "192.168.177.131",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -589,7 +589,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "192.168.177.131",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -633,7 +633,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "192.168.177.131",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -668,7 +668,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "192.168.177.131",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -777,7 +777,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "192.168.177.131",
 							"port": 1981,
 							"weight": 1
 						}],
@@ -798,7 +798,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.16.238.20",
+						"host": "192.168.177.131",
 						"port": 1980,
 						"weight": 1
 					}
@@ -862,7 +862,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "192.168.177.131",
 						"port": 1981,
 						"weight": 1
 					}]
@@ -959,7 +959,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.16.238.20",
+						"host": "192.168.177.131",
 						"port": 1980,
 						"weight": 1
 					}
@@ -1028,6 +1028,195 @@ func TestRoute_Export(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 
+	serviceStrS4 := `
+	"name": "testservice", 
+	"desc": "testservice_desc", 
+	"upstream_id": "4", 
+	"enable_websocket": true`
+	serviceStrS4 = replaceStr(serviceStrS4)
+
+	exportStrR8 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {
+				"get": {
+					"operationId": "route_allGet",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"security": [],
+					"summary": "所有",
+					"x-apisix-enableWebsocket": false,
+					"x-apisix-labels": {
+						"API_VERSION": "v1", 
+						"test": "1"
+					},
+					"x-apisix-plugins": {
+						"prometheus": {
+							"disable": false
+						}
+					},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"id": "5"`
+	exportStrR8 = replaceStr(exportStrR8)
+
+	tests9 := []HttpTestCase{
+		{
+			Desc:   "create upstream4",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/4",
+			Body: `{
+				"nodes": [
+					{
+						"host": "192.168.177.131",
+						"port": 1980,
+						"weight": 1
+					}
+				],
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:   "create upstream5",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/5",
+			Body: `{
+				"nodes": [
+					{
+						"host": "192.168.177.131",
+						"port": 1981,
+						"weight": 1
+					}
+				],
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:    "create service",
+			Object:  ManagerApiExpect(t),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/services/s4",
+			Headers: map[string]string{"Authorization": token},
+			Body: `{
+				"name": "testservice",
+				"desc": "testservice_desc",
+				"enable_websocket":true,
+				"upstream_id": "4"
+			}`,
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:       "get the service s4",
+			Object:     ManagerApiExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/apisix/admin/services/s4",
+			Headers:    map[string]string{"Authorization": token},
+			ExpectCode: http.StatusOK,
+			ExpectBody: serviceStrS4,
+		},
+		{
+			Desc:   "Create a route9 using upstream id and service id",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r9",
+			Body: `{
+				"name": "route_all",
+				"desc": "所有",
+				"status": 1,
+				"methods": ["GET"],
+				"priority": 0,
+				"service_id": "s4",
+				"labels": {
+					"test": "1",
+					"API_VERSION": "v1"
+				},
+				"vars": [
+					["==", "test"]
+				],
+				"uri": "/hello",
+				"enable_websocket":false,
+				"plugins": { 
+					"prometheus": {
+						"disable": false
+					}
+				},
+				"upstream_id": "5"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route9",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r9",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStrR8,
+		},
+		{
+			Desc:         "delete the route9 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r9",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route9 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "remove upstream4",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/4",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "remove upstream5",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/5",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "delete the service4",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s4",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests9 {
+		testCaseCheck(tc, t)
+	}
 }
 
 func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
@@ -1053,7 +1242,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 				 "upstream": {
 					 "type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "192.168.177.131",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1274,7 +1463,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "192.168.177.131",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1381,7 +1570,7 @@ func TestExportRoute_With_Auth_Plugin(t *testing.T) {
 				 "upstream": {
 					 "type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "192.168.177.131",
 						"port": 1980,
 						"weight": 1
 					}]
