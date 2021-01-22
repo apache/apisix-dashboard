@@ -54,6 +54,7 @@ func NewHandler() (handler.RouteRegister, error) {
 func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.POST("/apisix/admin/routes/export/:ids", wgin.Wraps(h.ExportRoutes,
 		wrapper.InputType(reflect.TypeOf(ExportInput{}))))
+	r.GET("/apisix/admin/exportall/routes", wgin.Wraps(h.ExportAllRoutes))
 }
 
 type ExportInput struct {
@@ -94,6 +95,26 @@ var (
 	service interface{}
 	err     error
 )
+
+func (h *Handler) ExportAllRoutes(c droplet.Context) (interface{}, error) {
+	routelist, err := h.routeStore.List(c.Context(), store.ListInput{})
+
+	if err != nil {
+		return nil, err
+	}
+
+	routes := []*entity.Route{}
+
+	for _, route := range routelist.Rows {
+		routes = append(routes, route.(*entity.Route))
+	}
+
+	swagger, err := h.routeToOpenApi3(routes)
+	if err != nil {
+		return nil, err
+	}
+	return swagger, nil
+}
 
 func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, error) {
 	paths := openapi3.Paths{}
