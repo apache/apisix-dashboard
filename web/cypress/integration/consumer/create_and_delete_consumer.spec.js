@@ -18,7 +18,6 @@
 
 context('Create and Delete Consumer', () => {
   const name = `consumerName${new Date().valueOf()}`;
-  const sleepTime = 100;
   const domSelectors = {
     notification: '.ant-notification-notice-message',
     pluginsCard: '.ant-card',
@@ -33,14 +32,12 @@ context('Create and Delete Consumer', () => {
     // go to consumer create page
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.wait(sleepTime * 5);
     cy.contains('Create').click();
 
     // basic information
     cy.get('#username').type(name);
     cy.get('#desc').type('desc_by_autotest');
     cy.contains('Next').click();
-    cy.wait(sleepTime * 3);
 
     // plugin config
     cy.contains(domSelectors.pluginsCard, 'key-auth').within(() => {
@@ -68,7 +65,6 @@ context('Create and Delete Consumer', () => {
   it('delete the consumer', () => {
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.wait(sleepTime * 5);
     cy.contains(name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(domSelectors.notification).should('contain', 'Delete Consumer Successfully');
@@ -78,14 +74,12 @@ context('Create and Delete Consumer', () => {
     // go to consumer create page
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.wait(sleepTime * 5);
     cy.contains('Create').click();
 
     // basic information
     cy.get('#username').type(name);
     cy.get('#desc').type('desc_by_autotest');
     cy.contains('Next').click();
-    cy.wait(sleepTime * 3);
 
     // plugin config
     cy.contains(domSelectors.pluginsCard, 'key-auth').within(() => {
