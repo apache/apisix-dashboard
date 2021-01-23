@@ -35,7 +35,7 @@ Cypress.Commands.add('login', () => {
   });
 });
 
-Cypress.Commands.add('addPlugins', (cases) => {
+Cypress.Commands.add('configurePlugins', (cases) => {
   const timeout = 50000;
   const domSelectors = {
     name: '[data-cy-plugin-name]',
@@ -51,9 +51,6 @@ Cypress.Commands.add('addPlugins', (cases) => {
       const pluginCases = cases[name] || [];
       // eslint-disable-next-line consistent-return
       pluginCases.forEach(({ shouldValid, data, type = '' }) => {
-        /**
-         * NOTE: This test is mainly for GlobalPlugin, which is using non-consumer-type schema.
-         */
         if (type === 'consumer') {
           return true;
         }
@@ -89,7 +86,6 @@ Cypress.Commands.add('addPlugins', (cases) => {
         });
 
         // NOTE: wait for the HTTP call
-        cy.wait(500);
         if (shouldValid === true) {
           cy.get(domSelectors.drawer).should('not.exist');
         } else if (shouldValid === false) {
