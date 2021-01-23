@@ -29,13 +29,17 @@ import (
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gin-gonic/gin"
+	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
+	"github.com/shiningrush/droplet/middleware"
+	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
 	routeHandler "github.com/apisix/manager-api/internal/handler/route"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
 )
@@ -57,26 +61,38 @@ func NewHandler() (handler.RouteRegister, error) {
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.POST("/apisix/admin/import", consts.ErrorWrapper(Import))
+	r.POST("/apisix/admin/import", wgin.Wraps(h.Import))
 }
 
-func Import(c *gin.Context) (interface{}, error) {
-	file, err := c.FormFile("file")
+type ImportInput struct {
+	ForceCover bool `auto_read:"force_cover,query"`
+}
+
+func (h *Handler) Import(c droplet.Context) (interface{}, error) {
+	httpReq := c.Get(middleware.KeyHttpRequest)
+	if httpReq == nil {
+		return nil, errors.New("input middleware cannot get http request")
+	}
+	req := httpReq.(*http.Request)
+	req.Body = http.MaxBytesReader(nil, req.Body, int64(conf.ImportSizeLimit))
+	if err := req.ParseMultipartForm(int64(conf.ImportSizeLimit)); err != nil {
+		log.Warnf("upload file size exceeds limit: %s", err)
+		return nil, fmt.Errorf("the file size exceeds the limit; limit %d", conf.ImportSizeLimit)
+	}
+
+	_, fileHeader, err := req.FormFile("file")
 	if err != nil {
 		return nil, err
 	}
 
 	// file check
-	suffix := path.Ext(file.Filename)
+	suffix := path.Ext(fileHeader.Filename)
 	if suffix != ".json" && suffix != ".yaml" && suffix != ".yml" {
 		return nil, fmt.Errorf("the file type error: %s", suffix)
 	}
-	if file.Size > int64(conf.ImportSizeLimit) {
-		return nil, fmt.Errorf("the file size exceeds the limit; limit %d", conf.ImportSizeLimit)
-	}
 
 	// read file and parse
-	handle, err := file.Open()
+	handle, err := fileHeader.Open()
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +101,7 @@ func Import(c *gin.Context) (interface{}, error) {
 	}()
 
 	reader := bufio.NewReader(handle)
-	bytes := make([]byte, file.Size)
+	bytes := make([]byte, fileHeader.Size)
 	_, err = reader.Read(bytes)
 	if err != nil {
 		return nil, err
@@ -110,14 +126,18 @@ func Import(c *gin.Context) (interface{}, error) {
 	upstreamStore := store.GetStore(store.HubKeyUpstream)
 	scriptStore := store.GetStore(store.HubKeyScript)
 
+	//input := c.Input().(*ImportInput)
+
 	// check route
 	for _, route := range routes {
-		_, err := checkRouteName(c, route.Name)
-		if err != nil {
-			continue
+		err := checkRouteExist(c.Context(), route)
+		if err != nil && false {
+			log.Warnf("import duplicate: %s, route: %#v", err, route)
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				errors.New("")
 		}
 		if route.ServiceID != nil {
-			_, err := routeStore.Get(c, utils.InterfaceToString(route.ServiceID))
+			_, err := routeStore.Get(c.Context(), utils.InterfaceToString(route.ServiceID))
 			if err != nil {
 				if err == data.ErrNotFound {
 					return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -127,7 +147,7 @@ func Import(c *gin.Context) (interface{}, error) {
 			}
 		}
 		if route.UpstreamID != nil {
-			_, err := upstreamStore.Get(c, utils.InterfaceToString(route.UpstreamID))
+			_, err := upstreamStore.Get(c.Context(), utils.InterfaceToString(route.UpstreamID))
 			if err != nil {
 				if err == data.ErrNotFound {
 					return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -151,7 +171,7 @@ func Import(c *gin.Context) (interface{}, error) {
 				return nil, err
 			}
 			// save original conf
-			if _, err = scriptStore.Create(c, script); err != nil {
+			if _, err = scriptStore.Create(c.Context(), script); err != nil {
 				return nil, err
 			}
 		}
@@ -163,7 +183,7 @@ func Import(c *gin.Context) (interface{}, error) {
 
 	// create route
 	for _, route := range routes {
-		if _, err := routeStore.Create(c, route); err != nil {
+		if _, err := routeStore.Create(c.Context(), route); err != nil {
 			return handler.SpecCodeResponse(err), err
 		}
 	}
@@ -171,27 +191,35 @@ func Import(c *gin.Context) (interface{}, error) {
 	return nil, nil
 }
 
-func checkRouteName(ctx context.Context, name string) (bool, error) {
+func checkRouteExist(ctx context.Context, route *entity.Route) error {
 	routeStore := store.GetStore(store.HubKeyRoute)
 	ret, err := routeStore.List(ctx, store.ListInput{
-		Predicate:  nil,
+		Predicate: func(obj interface{}) bool {
+			id := utils.InterfaceToString(route.ID)
+			item := obj.(*entity.Route)
+			if id != "" && id == utils.InterfaceToString(item.ID) {
+				return false
+			}
+			if item.Host == route.Host && item.URI == route.URI && utils.StringSliceEqual(item.Uris, route.Uris) &&
+				utils.StringSliceEqual(item.RemoteAddrs, route.RemoteAddrs) && item.RemoteAddr == route.RemoteAddr &&
+				utils.StringSliceEqual(item.Hosts, route.Hosts) && item.Priority == route.Priority &&
+				item.Vars == route.Vars && item.FilterFunc == route.FilterFunc {
+				return false
+			}
+			return true
+		},
 		PageSize:   0,
 		PageNumber: 0,
 	})
 	if err != nil {
-		return false, err
+		return err
 	}
 
-	sort := store.NewSort(nil)
-	filter := store.NewFilter([]string{"name", name})
-	pagination := store.NewPagination(0, 0)
-	query := store.NewQuery(sort, filter, pagination)
-	rows := store.NewFilterSelector(routeHandler.ToRows(ret), query)
-	if len(rows) > 0 {
-		return false, consts.InvalidParam("route name is duplicate")
+	if len(ret.Rows) > 0 {
+		return consts.InvalidParam("route is duplicate")
 	}
 
-	return true, nil
+	return nil
 }
 
 func parseExtension(val *openapi3.Operation) (*entity.Route, error) {
@@ -216,6 +244,42 @@ func parseExtension(val *openapi3.Operation) (*entity.Route, error) {
 	return route, nil
 }
 
+type PathValue struct {
+	Method string
+	Value  *openapi3.Operation
+}
+
+func mergePathValue(key string, values []PathValue, swagger *openapi3.Swagger) (map[string]*entity.Route, error) {
+	var parsed []PathValue
+	var routes = map[string]*entity.Route{}
+	for _, value := range values {
+		fmt.Println("m:", value.Method)
+		value.Value.OperationID = strings.Replace(value.Value.OperationID, value.Method, "", 1)
+		var eq = false
+		for _, v := range parsed {
+			if utils.ValueEqual(v.Value, value.Value) {
+				eq = true
+				if routes[v.Method].Methods == nil {
+					routes[v.Method].Methods = []string{}
+				}
+				routes[v.Method].Methods = append(routes[v.Method].Methods, value.Method)
+				fmt.Printf("methods: %v, value.Method: %v, v.Method: %v", routes[v.Method].Methods, value.Method, v.Method)
+			}
+		}
+		// not equal to the previous ones
+		if !eq {
+			route, err := getRouteFromPaths(value.Method, key, value.Value, swagger)
+			if err != nil {
+				return nil, err
+			}
+			routes[value.Method] = route
+			parsed = append(parsed, value)
+		}
+	}
+
+	return routes, nil
+}
+
 func OpenAPI3ToRoute(swagger *openapi3.Swagger) ([]*entity.Route, error) {
 	var routes []*entity.Route
 	paths := swagger.Paths
@@ -229,47 +293,58 @@ func OpenAPI3ToRoute(swagger *openapi3.Swagger) ([]*entity.Route, error) {
 				return nil, err
 			}
 		}
+
+		var values []PathValue
 		if v.Get != nil {
-			route, err := getRouteFromPaths("GET", k, v.Get, swagger)
-			if err != nil {
-				return nil, err
+			value := PathValue{
+				Method: http.MethodGet,
+				Value:  v.Get,
 			}
-			routes = append(routes, route)
+			values = append(values, value)
 		}
 		if v.Post != nil {
-			route, err := getRouteFromPaths("POST", k, v.Post, swagger)
-			if err != nil {
-				return nil, err
+			value := PathValue{
+				Method: http.MethodPost,
+				Value:  v.Post,
 			}
-			routes = append(routes, route)
+			values = append(values, value)
 		}
 		if v.Head != nil {
-			route, err := getRouteFromPaths("HEAD", k, v.Head, swagger)
-			if err != nil {
-				return nil, err
+			value := PathValue{
+				Method: http.MethodHead,
+				Value:  v.Head,
 			}
-			routes = append(routes, route)
+			values = append(values, value)
 		}
 		if v.Put != nil {
-			route, err := getRouteFromPaths("PUT", k, v.Put, swagger)
-			if err != nil {
-				return nil, err
+			value := PathValue{
+				Method: http.MethodPut,
+				Value:  v.Put,
 			}
-			routes = append(routes, route)
+			values = append(values, value)
 		}
 		if v.Patch != nil {
-			route, err := getRouteFromPaths("PATCH", k, v.Patch, swagger)
-			if err != nil {
-				return nil, err
+			value := PathValue{
+				Method: http.MethodPatch,
+				Value:  v.Patch,
 			}
-			routes = append(routes, route)
+			values = append(values, value)
+		}
+		if v.Delete != nil {
+			value := PathValue{
+				Method: http.MethodDelete,
+				Value:  v.Delete,
+			}
+			values = append(values, value)
 		}
 
-		if v.Delete != nil {
-			route, err := getRouteFromPaths("DELETE", k, v.Delete, swagger)
-			if err != nil {
-				return nil, err
-			}
+		// merge same route
+		tmp, err := mergePathValue(k, values, swagger)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, route := range tmp {
 			routes = append(routes, route)
 		}
 	}
