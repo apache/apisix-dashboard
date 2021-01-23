@@ -31,6 +31,7 @@ context('smoke test for plugin schema', () => {
     cy.contains('Plugin').click();
     cy.contains('Create').click();
 
+    // add test plugins
     cy.configurePlugins(this.cases);
   });
 });
