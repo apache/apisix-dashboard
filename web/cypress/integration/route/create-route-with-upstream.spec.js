@@ -23,20 +23,19 @@ context('Create Route with Upstream', () => {
     node_0_host: '#nodes_0_host',
     name: '#name',
     description: '#desc',
-    upstreamSelector: '#upstream_id',
-    searchName: '[title=Name]',
-    custom: '[title=Custom]',
+    search_name: '[title=Name]',
+    custom_upstream: '[title=Custom]',
   };
 
   const data = {
-    upstreamName: 'test_upstream',
-    routeName: 'test_route',
+    upstream_name: 'test_upstream',
+    route_name: 'test_route',
     description: 'desc_by_autotes',
     host: '10.89.90.237',
     ip1: '127.0.0.1',
     ip2: '127.0.0.2',
-    deleteRouteSuccess: 'Delete Route Successfully',
-    deleteUpstreamSuccess: 'Delete Upstream Successfully',
+    delete_route_success: 'Delete Route Successfully',
+    delete_upstream_success: 'Delete Upstream Successfully',
   };
 
   beforeEach(() => {
@@ -48,7 +47,7 @@ context('Create Route with Upstream', () => {
     cy.contains('Upstream').click();
     cy.contains('Create').click();
 
-    cy.get(domSelector.name).type(data.upstreamName);
+    cy.get(domSelector.name).type(data.upstream_name);
     cy.get(domSelector.description).type(data.description);
     cy.get(domSelector.node_0_host).type(data.host);
     cy.contains('Next').click();
@@ -60,18 +59,18 @@ context('Create Route with Upstream', () => {
     cy.contains('Route').click();
     cy.contains('Create').click();
 
-    cy.get(domSelector.name).type(data.routeName);
+    cy.get(domSelector.name).type(data.route_name);
     cy.contains('Next').click();
   });
 
   it('should disable Upstream input boxes after selecting an existing upstream', () => {
     cy.contains('Custom').click();
-    cy.contains(data.upstreamName).click();
+    cy.contains(data.upstream_name).click();
     cy.get(domSelector.input).should('be.disabled');
   });
 
   it('should enable Upstream input boxes after selecting Custom mode', () => {
-    cy.contains(data.upstreamName).click();
+    cy.contains(data.upstream_name).click();
     cy.contains('Custom').click();
     cy.get(domSelector.input).should('not.be.disabled');
   });
@@ -89,21 +88,21 @@ context('Create Route with Upstream', () => {
     cy.visit('/');
     cy.contains('Route').click();
 
-    cy.get(domSelector.searchName).type(data.routeName);
+    cy.get(domSelector.search_name).type(data.route_name);
     cy.contains('Search').click();
-    cy.contains(data.routeName).siblings().contains('Edit').click();
+    cy.contains(data.route_name).siblings().contains('Edit').click();
 
-    cy.get(domSelector.name).click().should('value', data.routeName);
+    cy.get(domSelector.name).click().should('value', data.route_name);
     cy.contains('Next').click();
 
     // check if the changes have been saved
     cy.get(domSelector.node_0_host).should('value', data.ip1);
 
-    cy.get(domSelector.custom).click();
-    cy.contains(data.upstreamName).click();
+    cy.get(domSelector.custom_upstream).click();
+    cy.contains(data.upstream_name).click();
     cy.get(domSelector.input).should('be.disabled');
 
-    cy.contains(data.upstreamName).click();
+    cy.contains(data.upstream_name).click();
     cy.contains('Custom').click();
     cy.get(domSelector.input).should('not.be.disabled');
 
@@ -115,28 +114,28 @@ context('Create Route with Upstream', () => {
     cy.url().should('contains', 'routes/list');
 
     // check if the changes have been saved
-    cy.get(domSelector.searchName).type(data.routeName);
+    cy.get(domSelector.search_name).type(data.route_name);
     cy.contains('Search').click();
-    cy.contains(data.routeName).siblings().contains('Edit').click();
+    cy.contains(data.route_name).siblings().contains('Edit').click();
     cy.contains('Next').click();
     cy.get(domSelector.node_0_host).should('value', data.ip2);
   });
 
   it('should delete this test route and upstream', () => {
     cy.visit('/routes/list');
-    cy.get(domSelector.searchName).type(data.routeName);
+    cy.get(domSelector.search_name).type(data.route_name);
     cy.contains('Search').click();
-    cy.contains(data.routeName).siblings().contains('Delete').click();
+    cy.contains(data.route_name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
+    cy.get(domSelector.notification).should('contain', data.delete_route_success);
 
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.contains(data.upstreamName).siblings().contains('Delete').click();
+    cy.contains(data.upstream_name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(domSelector.notification).should(
       'contain',
-      data.deleteUpstreamSuccess,
+      data.delete_upstream_success,
     );
   });
 });
