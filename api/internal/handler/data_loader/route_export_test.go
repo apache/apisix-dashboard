@@ -69,7 +69,7 @@ func TestExportRoutes1(t *testing.T) {
 		"paths": {
 			"/hello_": {
 				"get": {
-					"operationId": "aaaaGet",
+					"operationId": "aaaaGET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -102,7 +102,7 @@ func TestExportRoutes1(t *testing.T) {
 					}
 				},
 				"post": {
-					"operationId": "aaaaPost",
+					"operationId": "aaaaPOST",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -196,7 +196,7 @@ func TestExportRoutes2(t *testing.T) {
 		"paths": {
 			"/hello2": {
 				"get": {
-					"operationId": "aaaa2Get",
+					"operationId": "aaaa2GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -229,7 +229,7 @@ func TestExportRoutes2(t *testing.T) {
 					}
 				},
 				"post": {
-					"operationId": "aaaa2Post",
+					"operationId": "aaaa2POST",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -330,7 +330,7 @@ func TestExportRoutesCreateByServiceId(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "Get",
+					"operationId": "GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -450,7 +450,7 @@ func TestExportRoutesCreateByServiceId2(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "Get",
+					"operationId": "GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -578,7 +578,7 @@ func TestExportRoutesCreateByServiceId3(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "Get",
+					"operationId": "GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -685,7 +685,7 @@ func TestExportRoutesCreateByUpstreamId(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "Get",
+					"operationId": "GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -809,7 +809,7 @@ func TestExportRoutesCreateByUpstreamIdandServiceId(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "route_allGet",
+					"operationId": "route_allGET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -938,7 +938,7 @@ func TestExportRoutesCreateByServiceIdNoUpstream(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "route_allGet",
+					"operationId": "route_allGET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -1048,7 +1048,7 @@ func TestExportRoutesCreateByLabel(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "route_allGet",
+					"operationId": "route_allGET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -1134,7 +1134,7 @@ func TestExportRoutesCreateByLabel2(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "route_allGet",
+					"operationId": "route_allGET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -1230,7 +1230,7 @@ func TestExportRoutesCreateByRequestValidation(t *testing.T) {
 		"paths": {
 			"/test-test": {
 				"get": {
-					"operationId": "route_allGet",
+					"operationId": "route_allGET",
 					"parameters": [{
 						"in": "header",
 						"name": "test",
@@ -1280,6 +1280,164 @@ func TestExportRoutesCreateByRequestValidation(t *testing.T) {
 	}).Return(route, nil)
 
 	h := Handler{routeStore: mStore}
+	ctx := droplet.NewContext()
+	ctx.SetInput(input)
+
+	ret, err := h.ExportRoutes(ctx)
+	assert.Nil(t, err)
+	_ret, err := json.Marshal(ret)
+	if err != nil {
+	}
+	assert.Equal(t, replaceStr(exportR), string(_ret))
+	assert.NotNil(t, _ret)
+}
+
+func TestExportRoutesCreateByJWTAuth(t *testing.T) {
+	input := &ExportInput{IDs: "1"}
+	r := `{
+		"uri": "/hello",
+		"plugins": {
+			"jwt-auth": {}
+		},
+		"upstream": {
+			"type": "roundrobin",
+		   "nodes": [{
+			   "host": "172.16.238.20",
+			   "port": 1980,
+			   "weight": 1
+		   }]
+		}
+	}`
+
+	c := `{
+		"username": "jack",
+		"plugins": {
+			"jwt-auth": {
+				"key": "user-key",
+				"secret": "my-secret-key",
+				"algorithm": "HS256"
+			}
+		},
+		"desc": "test description"
+	}`
+
+	exportR := `{
+		"components": {
+			"securitySchemes": {
+				"bearerAuth": {
+					"bearerFormat": "JWT",
+					"scheme": "bearer",
+					"type": "http"
+				}
+			}
+		},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {}
+		}
+	}`
+
+	var route *entity.Route
+	var consumer *entity.Consumer
+	err := json.Unmarshal([]byte(r), &route)
+	err = json.Unmarshal([]byte(c), &consumer)
+
+	mStore := &store.MockInterface{}
+	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+	}).Return(route, nil)
+
+	mStoreConsumer := &store.MockInterface{}
+	mStoreConsumer.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+	}).Return(consumer, nil)
+
+	h := Handler{routeStore: mStore, consumerStore: mStoreConsumer}
+	ctx := droplet.NewContext()
+	ctx.SetInput(input)
+
+	ret, err := h.ExportRoutes(ctx)
+	assert.Nil(t, err)
+	_ret, err := json.Marshal(ret)
+	if err != nil {
+	}
+	assert.Equal(t, replaceStr(exportR), string(_ret))
+	assert.NotNil(t, _ret)
+}
+
+func TestExportRoutesCreateByKeyAuthAndBasicAuth(t *testing.T) {
+	input := &ExportInput{IDs: "1"}
+	r := `{
+		"uri": "/hello",
+		"plugins": {
+			"key-auth": {},
+			"basic-auth": {}
+		},
+		"upstream": {
+			"type": "roundrobin",
+		   "nodes": [{
+			   "host": "172.16.238.20",
+			   "port": 1980,
+			   "weight": 1
+		   }]
+		}
+	}`
+
+	c := `{
+		"username": "jack",
+		"plugins": {
+			"key-auth": {
+				"key": "auth-one"
+			},
+			"basic-auth": {
+				"username": "jack",
+				"password": "123456"
+			}
+		},
+		"desc": "test description"
+	}`
+
+	exportR := `{
+		"components": {
+			"securitySchemes": {
+				"api_key": {
+					"in": "header",
+					"name": "X-XSRF-TOKEN",
+					"type": "apiKey"
+				},
+				"basicAuth": {
+					"in": "header",
+					"name": "basicAuth",
+					"type": "basicAuth"
+				}
+			}
+		},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/hello": {}
+		}
+	}`
+
+	var route *entity.Route
+	var consumer *entity.Consumer
+	err := json.Unmarshal([]byte(r), &route)
+	err = json.Unmarshal([]byte(c), &consumer)
+
+	mStore := &store.MockInterface{}
+	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+	}).Return(route, nil)
+
+	mStoreConsumer := &store.MockInterface{}
+	mStoreConsumer.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+	}).Return(consumer, nil)
+
+	h := Handler{routeStore: mStore, consumerStore: mStoreConsumer}
 	ctx := droplet.NewContext()
 	ctx.SetInput(input)
 

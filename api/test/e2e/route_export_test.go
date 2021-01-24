@@ -32,7 +32,7 @@ func TestRoute_Export(t *testing.T) {
 	exportStrR1 := `
 			"/hello_": {
 				"get": {
-					"operationId": "aaaaGet",
+					"operationId": "aaaaGET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -65,7 +65,7 @@ func TestRoute_Export(t *testing.T) {
 					}
 				},
 				"post": {
-					"operationId": "aaaaPost",
+					"operationId": "aaaaPOST",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -162,7 +162,7 @@ func TestRoute_Export(t *testing.T) {
 	exportStrR2 := `
 			"/hello2": {
 				"get": {
-					"operationId": "aaaa2Get",
+					"operationId": "aaaa2GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -195,7 +195,7 @@ func TestRoute_Export(t *testing.T) {
 					}
 				},
 				"post": {
-					"operationId": "aaaa2Post",
+					"operationId": "aaaa2POST",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -388,7 +388,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "Get",
+					"operationId": "GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -567,7 +567,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "Get",
+					"operationId": "GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -755,7 +755,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "Get",
+					"operationId": "GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -938,7 +938,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "Get",
+					"operationId": "GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -1056,7 +1056,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "route_allGet",
+					"operationId": "route_allGET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -1247,7 +1247,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "route_allGet",
+					"operationId": "route_allGET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -1886,7 +1886,7 @@ func TestRoute_Export_Label(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "route_allGet",
+					"operationId": "route_allGET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -2027,7 +2027,7 @@ func TestRoute_Export_Label(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "route_allGet",
+					"operationId": "route_allGET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -2155,7 +2155,7 @@ func TestRoute_Export_Request_Validation(t *testing.T) {
 		"paths": {
 			"/test-test": {
 				"get": {
-					"operationId": "route_allGet",
+					"operationId": "route_allGET",
 					"parameters": [{
 						"in": "header",
 						"name": "test",
@@ -2282,3 +2282,4 @@ func replaceStr(str string) string {
 	str = strings.Replace(str, " ", "", -1)
 	return str
 }
+

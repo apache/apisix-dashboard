@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"reflect"
 	"strings"
 
@@ -40,6 +41,7 @@ type Handler struct {
 	routeStore    store.Interface
 	upstreamStore store.Interface
 	serviceStore  store.Interface
+	consumerStore store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
@@ -47,6 +49,7 @@ func NewHandler() (handler.RouteRegister, error) {
 		routeStore:    store.GetStore(store.HubKeyRoute),
 		upstreamStore: store.GetStore(store.HubKeyUpstream),
 		serviceStore:  store.GetStore(store.HubKeyService),
+		consumerStore: store.GetStore(store.HubKeyConsumer),
 	}, nil
 }
 
@@ -265,24 +268,24 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 
 		for i := range route.Methods {
 			switch strings.ToUpper(route.Methods[i]) {
-			case "GET":
+			case http.MethodGet:
 				//pathItem.Get = path
-				pathItem.Get = parsePathItem(path, "Get")
-			case "POST":
+				pathItem.Get = parsePathItem(path, http.MethodGet)
+			case http.MethodPost:
 				//pathItem.Post = path
-				pathItem.Post = parsePathItem(path, "Post")
-			case "PUT":
+				pathItem.Post = parsePathItem(path, http.MethodPost)
+			case http.MethodPut:
 				//pathItem.Put = path
-				pathItem.Put = parsePathItem(path, "Put")
-			case "DELETE":
+				pathItem.Put = parsePathItem(path, http.MethodPut)
+			case http.MethodDelete:
 				//pathItem.Delete = path
-				pathItem.Delete = parsePathItem(path, "Delete")
-			case "PATCH":
+				pathItem.Delete = parsePathItem(path, http.MethodDelete)
+			case http.MethodPatch:
 				//pathItem.Patch = path
-				pathItem.Patch = parsePathItem(path, "Patch")
-			case "HEAD":
+				pathItem.Patch = parsePathItem(path, http.MethodPatch)
+			case http.MethodHead:
 				//pathItem.Head = path
-				pathItem.Head = parsePathItem(path, "HEAD")
+				pathItem.Head = parsePathItem(path, http.MethodHead)
 			}
 		}
 	}
@@ -435,3 +438,4 @@ func parseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef,
 	}
 	return path, secSchemas, paramsRefs, plugins, nil
 }
+
