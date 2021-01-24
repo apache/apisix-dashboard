@@ -25,6 +25,7 @@ context('Create Route with Upstream', () => {
     description: '#desc',
     upstreamSelector: '#upstream_id',
     searchName: '[title=Name]',
+    custom: '[title=Custom]',
   };
 
   const data = {
@@ -35,7 +36,7 @@ context('Create Route with Upstream', () => {
     ip1: '127.0.0.1',
     ip2: '127.0.0.2',
     deleteRouteSuccess: 'Delete Route Successfully',
-    deleteUpstreamSuccess: 'Delete successfully',
+    deleteUpstreamSuccess: 'Delete Upstream Successfully',
   };
 
   beforeEach(() => {
@@ -98,7 +99,7 @@ context('Create Route with Upstream', () => {
     // check if the changes have been saved
     cy.get(domSelector.node_0_host).should('value', data.ip1);
 
-    cy.get(domSelector.upstreamSelector).click();
+    cy.get(domSelector.custom).click();
     cy.contains(data.upstreamName).click();
     cy.get(domSelector.input).should('be.disabled');
 
