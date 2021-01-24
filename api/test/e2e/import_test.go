@@ -27,7 +27,7 @@ import (
 )
 
 func TestImport_default(t *testing.T) {
-	path, err := filepath.Abs("../testdata/import-test-default.yaml")
+	path, err := filepath.Abs("../testdata/import/default.yaml")
 	assert.Nil(t, err)
 
 	headers := map[string]string{
@@ -96,7 +96,7 @@ func TestImport_default(t *testing.T) {
 }
 
 func TestImport_json(t *testing.T) {
-	path, err := filepath.Abs("../testdata/import-test.json")
+	path, err := filepath.Abs("../testdata/import/default.json")
 	assert.Nil(t, err)
 
 	headers := map[string]string{
@@ -165,7 +165,7 @@ func TestImport_json(t *testing.T) {
 }
 
 func TestImport_with_plugins(t *testing.T) {
-	path, err := filepath.Abs("../testdata/import-test-plugins.yaml")
+	path, err := filepath.Abs("../testdata/import/with-plugins.yaml")
 	assert.Nil(t, err)
 
 	headers := map[string]string{

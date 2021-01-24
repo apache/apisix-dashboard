@@ -38,17 +38,15 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-	routeHandler "github.com/apisix/manager-api/internal/handler/route"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
-	routeStore    store.Interface
+	routeStore    *store.GenericStore
 	svcStore      store.Interface
 	upstreamStore store.Interface
-	scriptStore   store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
@@ -56,7 +54,6 @@ func NewHandler() (handler.RouteRegister, error) {
 		routeStore:    store.GetStore(store.HubKeyRoute),
 		svcStore:      store.GetStore(store.HubKeyService),
 		upstreamStore: store.GetStore(store.HubKeyUpstream),
-		scriptStore:   store.GetStore(store.HubKeyScript),
 	}, nil
 }
 
@@ -90,7 +87,7 @@ func (h *Handler) Import(c droplet.Context) (interface{}, error) {
 	// file check
 	suffix := path.Ext(fileHeader.Filename)
 	if suffix != ".json" && suffix != ".yaml" && suffix != ".yml" {
-		return nil, fmt.Errorf("the file type error: %s", suffix)
+		return nil, fmt.Errorf("required file type is .yaml, .yml or .json but got: %s", suffix)
 	}
 
 	// read file and parse
@@ -124,21 +121,15 @@ func (h *Handler) Import(c droplet.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	routeStore := store.GetStore(store.HubKeyRoute)
-	upstreamStore := store.GetStore(store.HubKeyUpstream)
-	scriptStore := store.GetStore(store.HubKeyScript)
-
-	//input := c.Input().(*ImportInput)
-
 	// check route
 	for _, route := range routes {
-		err := checkRouteExist(c.Context(), route)
+		err := checkRouteExist(c.Context(), h.routeStore, route)
 		if err != nil && Force != "1" {
 			log.Warnf("import duplicate: %s, route: %#v", err, route)
 			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
 		if route.ServiceID != nil {
-			_, err := routeStore.Get(c.Context(), utils.InterfaceToString(route.ServiceID))
+			_, err := h.svcStore.Get(c.Context(), utils.InterfaceToString(route.ServiceID))
 			if err != nil {
 				if err == data.ErrNotFound {
 					return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -148,7 +139,7 @@ func (h *Handler) Import(c droplet.Context) (interface{}, error) {
 			}
 		}
 		if route.UpstreamID != nil {
-			_, err := upstreamStore.Get(c.Context(), utils.InterfaceToString(route.UpstreamID))
+			_, err := h.upstreamStore.Get(c.Context(), utils.InterfaceToString(route.UpstreamID))
 			if err != nil {
 				if err == data.ErrNotFound {
 					return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -157,43 +148,30 @@ func (h *Handler) Import(c droplet.Context) (interface{}, error) {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 			}
 		}
-		if route.Script != nil {
-			if route.ID == "" {
-				route.ID = utils.GetFlakeUidStr()
-			}
-			script := &entity.Script{
-				ID:     utils.InterfaceToString(route.ID),
-				Script: route.Script,
-			}
-			// to lua
-			var err error
-			route.Script, err = routeHandler.GenerateLuaCode(route.Script.(map[string]interface{}))
-			if err != nil {
-				return nil, err
-			}
-			// save original conf
-			if _, err = scriptStore.Create(c.Context(), script); err != nil {
-				return nil, err
-			}
-		}
 
-		if _, err := routeStore.CreateCheck(route); err != nil {
+		if _, err := h.routeStore.CreateCheck(route); err != nil {
 			return handler.SpecCodeResponse(err), err
 		}
 	}
 
 	// create route
 	for _, route := range routes {
-		if _, err := routeStore.Create(c.Context(), route); err != nil {
-			return handler.SpecCodeResponse(err), err
+		if Force == "1" && route.ID != nil {
+			if _, err := h.routeStore.Update(c.Context(), route, true); err != nil {
+				return handler.SpecCodeResponse(err), err
+			}
+		} else {
+			if _, err := h.routeStore.Create(c.Context(), route); err != nil {
+				return handler.SpecCodeResponse(err), err
+			}
 		}
 	}
 
 	return nil, nil
 }
 
-func checkRouteExist(ctx context.Context, route *entity.Route) error {
-	routeStore := store.GetStore(store.HubKeyRoute)
+func checkRouteExist(ctx context.Context, routeStore *store.GenericStore, route *entity.Route) error {
+	//routeStore := store.GetStore(store.HubKeyRoute)
 	ret, err := routeStore.List(ctx, store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			id := utils.InterfaceToString(route.ID)
