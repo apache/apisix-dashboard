@@ -17,9 +17,11 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Plugin List', () => {
+  const timeout = 5000;
   const domSelectors = {
     tableCell: '.ant-table-cell',
     empty: '.ant-empty-normal',
+    refresh: '.anticon-reload',
   };
 
   beforeEach(() => {
@@ -40,15 +42,15 @@ context('Create and Delete Plugin List', () => {
   it('should delete plugin list', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
-
-    cy.wait(500);
+    
+    cy.get(domSelectors.refresh).click();
     cy.get(domSelectors.tableCell).then(function (rows) {
       [...rows].forEach((row) => {
         const name = row.innerText;
         const cases = this.cases[name] || [];
 
         cases.forEach(() => {
-          cy.contains(name).siblings().contains('Delete').click();
+          cy.contains(name).siblings().contains('Delete').click({ timeout });
           cy.contains('button', 'Confirm').click();
         });
       });

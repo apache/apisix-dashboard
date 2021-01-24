@@ -17,8 +17,6 @@
 /* eslint-disable no-undef */
 
 context('smoke test for plugin schema', () => {
-  const timeout = 50000;
-
   beforeEach(() => {
     cy.login();
 
@@ -31,7 +29,6 @@ context('smoke test for plugin schema', () => {
     cy.contains('Plugin').click();
     cy.contains('Create').click();
 
-    // add test plugins
     cy.configurePlugins(this.cases);
   });
 });
