@@ -65,8 +65,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           });
 
         // NOTE: wait for the Drawer to appear on the DOM
-        cy.get({ timeout });
-        cy.get(domSelectors.drawer).within(() => {
+        cy.get(domSelectors.drawer, { timeout }).within(() => {
           cy.get(domSelectors.switch).click({
             force: true,
             timeout,
