@@ -65,7 +65,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 }
 
 type ImportInput struct {
-	ForceCover bool `auto_read:"force_cover,query"`
+	Force bool `auto_read:"force,query"`
 }
 
 func (h *Handler) Import(c droplet.Context) (interface{}, error) {
@@ -79,6 +79,8 @@ func (h *Handler) Import(c droplet.Context) (interface{}, error) {
 		log.Warnf("upload file size exceeds limit: %s", err)
 		return nil, fmt.Errorf("the file size exceeds the limit; limit %d", conf.ImportSizeLimit)
 	}
+
+	Force := req.URL.Query().Get("force")
 
 	_, fileHeader, err := req.FormFile("file")
 	if err != nil {
@@ -131,10 +133,9 @@ func (h *Handler) Import(c droplet.Context) (interface{}, error) {
 	// check route
 	for _, route := range routes {
 		err := checkRouteExist(c.Context(), route)
-		if err != nil && false {
+		if err != nil && Force != "1" {
 			log.Warnf("import duplicate: %s, route: %#v", err, route)
-			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-				errors.New("")
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
 		if route.ServiceID != nil {
 			_, err := routeStore.Get(c.Context(), utils.InterfaceToString(route.ServiceID))
@@ -197,13 +198,14 @@ func checkRouteExist(ctx context.Context, route *entity.Route) error {
 		Predicate: func(obj interface{}) bool {
 			id := utils.InterfaceToString(route.ID)
 			item := obj.(*entity.Route)
-			if id != "" && id == utils.InterfaceToString(item.ID) {
+			if id != "" && id != utils.InterfaceToString(item.ID) {
 				return false
 			}
-			if item.Host == route.Host && item.URI == route.URI && utils.StringSliceEqual(item.Uris, route.Uris) &&
+
+			if !(item.Host == route.Host && item.URI == route.URI && utils.StringSliceEqual(item.Uris, route.Uris) &&
 				utils.StringSliceEqual(item.RemoteAddrs, route.RemoteAddrs) && item.RemoteAddr == route.RemoteAddr &&
 				utils.StringSliceEqual(item.Hosts, route.Hosts) && item.Priority == route.Priority &&
-				item.Vars == route.Vars && item.FilterFunc == route.FilterFunc {
+				utils.ValueEqual(item.Vars, route.Vars) && item.FilterFunc == route.FilterFunc) {
 				return false
 			}
 			return true
@@ -214,11 +216,9 @@ func checkRouteExist(ctx context.Context, route *entity.Route) error {
 	if err != nil {
 		return err
 	}
-
 	if len(ret.Rows) > 0 {
 		return consts.InvalidParam("route is duplicate")
 	}
-
 	return nil
 }
 
@@ -253,7 +253,6 @@ func mergePathValue(key string, values []PathValue, swagger *openapi3.Swagger) (
 	var parsed []PathValue
 	var routes = map[string]*entity.Route{}
 	for _, value := range values {
-		fmt.Println("m:", value.Method)
 		value.Value.OperationID = strings.Replace(value.Value.OperationID, value.Method, "", 1)
 		var eq = false
 		for _, v := range parsed {
@@ -263,7 +262,6 @@ func mergePathValue(key string, values []PathValue, swagger *openapi3.Swagger) (
 					routes[v.Method].Methods = []string{}
 				}
 				routes[v.Method].Methods = append(routes[v.Method].Methods, value.Method)
-				fmt.Printf("methods: %v, value.Method: %v, v.Method: %v", routes[v.Method].Methods, value.Method, v.Method)
 			}
 		}
 		// not equal to the previous ones
