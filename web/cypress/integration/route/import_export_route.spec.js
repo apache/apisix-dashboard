@@ -19,7 +19,8 @@ import actionBarUS from '../../../src/components/ActionBar/locales/en-US';
 import componentLocaleUS from '../../../src/locales/en-US/component';
 import menuLocaleUS from '../../../src/locales/en-US/menu';
 import routeLocaleUS from '../../../src/pages/Route/locales/en-US';
-context('Create two routes', () => {
+
+context('import and export routes', () => {
   const domSelector = {
     route_name: '#name',
     nodes_0_host: '#nodes_0_host',
@@ -29,14 +30,16 @@ context('Create two routes', () => {
     route_name_1: 'route_name_1',
     upstream_node0_host_0: '1.1.1.1',
     upstream_node0_host_1: '2.2.2.2',
+    importErrorMsg: 'required file type is .yaml, .yml or .json but got: .txt',
   }
 
-  const yourFixturePath = './import.json';
+  const uploadRouteFiles = ['../../../api/test/testdata/import/default.json','../../../api/test/testdata/import/default.yaml','import-error.txt']
   beforeEach(() => {
     // init login
     cy.login();
+    cy.fixture('selector.json').as('domSelector');
   });
-  it('should create route1 and route2', () => {
+  /* it('should create route1 and route2', () => {
     //  go to route create page
     cy.visit('/');
     // create two routes
@@ -71,13 +74,36 @@ context('Create two routes', () => {
     // download a json files
     // down load a yaml files
   });
-  it('should import route: route_name_0, route_name_1', () => {
+   */
+  it('should import route(s) from be test files', () => {
     cy.visit('/');
     cy.contains('Route').click();
-    // click import button
-    cy.contains(routeLocaleUS['page.route.button.importOpenApi']).click();
-    //
-    cy.get('[type=file]').attachFile(yourFixturePath);
-    cy.contains(componentLocaleUS['component.global.confirm']).click();
+    
+    uploadRouteFiles.forEach((file) => {
+      // click import button
+      cy.contains(routeLocaleUS['page.route.button.importOpenApi']).click();
+      // select file
+      cy.get('[type=file]').attachFile(file);
+      // click submit
+      cy.contains(componentLocaleUS['component.global.confirm']).click();
+      // show upload notification
+      if (file === 'import-error.txt') {
+        // show error msg
+        cy.get('.ant-notification-notice-description').should('contain', data.importErrorMsg);
+        // close modal
+        cy.contains(componentLocaleUS['component.global.cancel']).click();
+      } else {
+        cy.get('.ant-notification-notice-message').should('contain', `${routeLocaleUS['page.route.button.importOpenApi']} ${componentLocaleUS['component.status.success']}`);
+        cy.get('.ant-notification-close-icon').click();
+        // delete route just imported
+        cy.contains(componentLocaleUS['component.global.delete']).click();
+        cy.contains(componentLocaleUS['component.global.confirm']).click();
+        // show delete successfully notification
+        cy.get('.ant-notification-notice-message').should('contain', `${componentLocaleUS['component.global.delete']} ${menuLocaleUS['menu.routes']} ${componentLocaleUS['component.status.success']}`);
+        cy.get('.ant-notification-close-icon').click();
+      }
+      
+    })
+    
   });
 });

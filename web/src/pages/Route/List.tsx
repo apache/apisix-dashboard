@@ -144,7 +144,7 @@ const Page: React.FC = () => {
 
     importRoutes(formData).then(() => {
       handleTableActionSuccessResponse(
-        `${formatMessage({ id: 'page.route.button.importOpenApi' })}${formatMessage({
+        `${formatMessage({ id: 'page.route.button.importOpenApi' })} ${formatMessage({
           id: 'component.status.success',
         })}`,
       );
