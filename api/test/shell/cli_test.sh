@@ -223,7 +223,7 @@ clean_up
 ./manager-api &
 sleep 3
 
-curl http://127.0.0.1:9000/apisix/admin/user/login -d '{"username":"admin", "password": "admin"}'
+curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}'
 
 ./manager-api stop
 sleep 6
@@ -272,7 +272,7 @@ fi
 sleep 3
 
 # validate process is right by requesting login api
-resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -d '{"username":"admin", "password": "admin"}')
+resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}')
 token=$(echo "${resp}" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
 if [ -z "${token}" ]; then
     echo "login failed"
@@ -280,7 +280,7 @@ if [ -z "${token}" ]; then
 fi
 
 # more validation to make sure it's ok to access etcd
-resp=$(curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/consumers -i -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}')
+resp=$(curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/consumers -i -H "Content-Type: application/json" -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}')
 respCode=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
 respMessage=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "message" | sed 's/:/\n/g' | sed '1d')
 if [ "$respCode" != "0" ] || [ $respMessage != "\"\"" ]; then
