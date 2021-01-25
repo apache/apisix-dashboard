@@ -179,6 +179,7 @@ services:
     restart: always
     volumes:
       - ./manager-api-conf.yaml:/go/manager-api/conf/conf.yaml:ro
+      - ../testdata:/go/manager-api/testdata
     depends_on:
       - node1
       - node2

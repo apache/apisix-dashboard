@@ -16,39 +16,29 @@
  */
 /* eslint-disable no-undef */
 
-context('create and delete service ', () => {
+context('Switch language', () => {
+  const timeout = 1000;
+  const domSelector = {
+    switcher: '.ant-space-align-center',
+  };
+
   beforeEach(() => {
-    // init login
     cy.login();
   });
 
-  it('should create service', () => {
-    // go to create service page
+  it('should switch language', () => {
     cy.visit('/');
-    cy.contains('Service').click();
-    cy.contains('Create').click();
 
-    cy.get('#name').type('service');
-    cy.get('#desc').type('desc');
-    cy.get('#nodes_0_host').click();
-    cy.get('#nodes_0_host').type('12.12.12.12');
-
-    cy.contains('Next').click();
-    cy.contains('Next').click();
-    cy.contains('Submit').click();
-  });
-
-  it('should delete the service', () => {
-    cy.visit('/');
-    cy.contains('Service').click();
-
-    cy.get('[title=Name]').type('service');
-    cy.contains('Search').click();
-
-    cy.contains('service').siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
-    cy.fixture('selector.json').then(({ notification }) => {
-      cy.get(notification).should('contain', 'Delete Service Successfully');
+    cy.get(domSelector.switcher).click('right');
+    cy.contains('简体中文').click({
+      timeout,
     });
+    cy.contains('服务').click();
+
+    cy.get(domSelector.switcher).click('right');
+    cy.contains('English').click({
+      timeout,
+    });
+    cy.contains('Create');
   });
 });

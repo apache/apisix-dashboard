@@ -23,7 +23,6 @@ context('settings page smoke test', () => {
   };
 
   beforeEach(() => {
-    // init login
     cy.login();
   });
 
@@ -31,7 +30,6 @@ context('settings page smoke test', () => {
     // go to settings page
     cy.visit('/');
     cy.contains('Settings').click();
-    cy.wait(500);
     cy.url().should('contains', '/settings');
     cy.get(domSelectors.pageContent)
       .children()
@@ -43,7 +41,6 @@ context('settings page smoke test', () => {
   it('should set a invalid url', () => {
     cy.visit('/');
     cy.contains('Settings').click();
-    cy.wait(500);
     cy.url().should('contains', '/settings');
     cy.get('#grafanaURL').clear().type('httx://www.test.com');
     cy.get('.ant-form-item-explain').should('contain', 'Address is illegality');
@@ -52,12 +49,13 @@ context('settings page smoke test', () => {
   it('should set a accessible url', () => {
     cy.visit('/');
     cy.contains('Settings').click();
-    cy.wait(500);
     cy.url().should('contains', '/settings');
     cy.get('#grafanaURL').clear().type('https://apisix.apache.org/');
     cy.contains('Submit').click();
+
     cy.get(domSelectors.notificationMsg).should('contain', 'Update Configuration Successfully');
-    cy.wait(1000);
+    cy.intercept('https://apisix.apache.org/').as('fetchurl');
+    cy.wait('@fetchurl');
     cy.get(domSelectors.pageContent).children().should('contain', 'Metrics');
   });
 });

@@ -96,9 +96,6 @@ func (s *GenericStore) Init() error {
 		return err
 	}
 	for i := range ret {
-		if ret[i].Value == "init_dir" {
-			continue
-		}
 		key := ret[i].Key[len(s.opt.BasePath)+1:]
 		objPtr, err := s.StringToObjPtr(ret[i].Value, key)
 		if err != nil {

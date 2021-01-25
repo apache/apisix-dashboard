@@ -50,7 +50,7 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, upstreamRef, ...
           <h2 style={style}>
             {formatMessage({ id: 'page.route.steps.stepTitle.defineApiBackendServe' })}
           </h2>
-          <Step2 form={form2} upstreamRef={upstreamRef} disabled />
+          <Step2 form={form2} upstreamRef={upstreamRef} disabled hasServiceId={form1.getFieldValue('service_id') !== ''} />
           <h2 style={style}>
             {formatMessage({ id: 'component.global.steps.stepTitle.pluginConfig' })}
           </h2>

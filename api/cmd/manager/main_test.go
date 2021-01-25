@@ -14,32 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
-import UpstreamForm from '@/components/Upstream';
+package main
+import (
+	"os"
+	"os/signal"
+	"strings"
+	"syscall"
+	"testing"
+)
+func TestMainWrapper(t *testing.T) {
+	if os.Getenv("ENV") == "test" {
+		t.Skip("skipping build binary when execute unit test")
+	}
 
-import { fetchUpstreamList } from '../../service';
-
-const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({
-  form,
-  upstreamRef,
-  disabled,
-  hasServiceId = false
-}) => {
-  const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
-  useEffect(() => {
-    fetchUpstreamList().then(({ data }) => setList(data));
-  }, []);
-  return (
-    <UpstreamForm
-      ref={upstreamRef}
-      form={form}
-      disabled={disabled}
-      list={list}
-      showSelector
-      required={!hasServiceId}
-      key={1}
-    />
-  );
-};
-
-export default RequestRewriteView;
+	var (
+		args []string
+	)
+	for _, arg := range os.Args {
+		switch {
+		case strings.HasPrefix(arg, "-test"):
+		default:
+			args = append(args, arg)
+		}
+	}
+	waitCh := make(chan int, 1)
+	os.Args = args
+	go func() {
+		main()
+		close(waitCh)
+	}()
+	signalCh := make(chan os.Signal, 1)
+	signal.Notify(signalCh, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGHUP)
+	select {
+	case <-signalCh:
+		return
+	case <-waitCh:
+		return
+	}
+}

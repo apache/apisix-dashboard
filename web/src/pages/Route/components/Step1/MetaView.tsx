@@ -134,6 +134,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
         <Input.TextArea
           placeholder={formatMessage({ id: 'component.global.input.placeholder.description' })}
           disabled={disabled}
+          showCount maxLength={256}
         />
       </Form.Item>
 
