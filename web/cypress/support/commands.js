@@ -85,7 +85,6 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           });
         });
 
-        // NOTE: wait for the HTTP call
         if (shouldValid === true) {
           cy.get(domSelectors.drawer).should('not.exist');
         } else if (shouldValid === false) {
