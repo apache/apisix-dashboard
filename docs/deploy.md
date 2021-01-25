@@ -80,6 +80,9 @@ $ nohup ./manager-api &
 
 5. Stop the Dashboard
 
+`manager-api` provides a sub command `stop` to quit the program gracefully, just
+run:
+
 ```sh
-$ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
+$ ./manager-api stop
 ```

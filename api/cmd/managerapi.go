@@ -60,6 +60,19 @@ func NewManagerAPICommand() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			conf.InitConf()
 			log.InitLogger()
+
+			if err := utils.WritePID(conf.PIDPath); err != nil {
+				log.Errorf("failed to write pid: %s", err)
+				panic(err)
+			}
+			utils.AppendToClosers(func() error {
+				if err := os.Remove(conf.PIDPath); err != nil {
+					log.Errorf("failed to remove pid path: %s", err)
+					return err
+				}
+				return nil
+			})
+
 			droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
 				var newMws []droplet.Middleware
 				// default middleware order: resp_reshape, auto_input, traffic_log
@@ -119,5 +132,28 @@ func NewManagerAPICommand() *cobra.Command {
 	}
 
 	cmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
+
+	cmd.AddCommand(newStopCommand())
+	return cmd
+}
+
+func newStopCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use: "stop",
+		Run: func(cmd *cobra.Command, args []string) {
+			pid, err := utils.ReadPID(conf.PIDPath)
+			if err != nil {
+				if syscall.ENOENT.Error() != err.Error() {
+					fmt.Fprintf(os.Stderr, "failed to get manager-api pid: %s\n", err)
+				} else {
+					fmt.Fprintf(os.Stderr,  "pid path %s not found, is manager-api running?\n", conf.PIDPath)
+				}
+				return
+			}
+			if err := syscall.Kill(pid, syscall.SIGINT); err != nil {
+				fmt.Fprintf(os.Stderr, "failed to kill manager-api: %s", err)
+			}
+		},
+	}
 	return cmd
 }
