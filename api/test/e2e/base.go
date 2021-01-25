@@ -54,6 +54,7 @@ func init() {
 
 	url := ManagerAPIHost + "/apisix/admin/user/login"
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
+	req.Header.Add("Content-Type", "application/json")
 	if err != nil {
 		panic(err)
 	}
