@@ -2948,13 +2948,13 @@
     "@typescript-eslint/types" "4.13.0"
     eslint-visitor-keys "^2.0.0"
 
-"@uiw/react-codemirror@^3.0.1":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-3.0.2.tgz#448c030d472c761e9265051019c1dbc1d6b2e41e"
-  integrity sha512-09d1Nd0G3sllZPx1hFMN+Bc6WP6C9/RvvLnKgU/7zew0mk9U1cCGYPEeJGubC1pNQTi408yBBaYLxyt7nZ8Qlw==
+"@uiw/react-codemirror@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-3.0.5.tgz#cda1ad64cb5a82b085575e316ed462db2bf320b4"
+  integrity sha512-Fwn55BYknCScDuN6MIzlFxSU3BsHHQDADcr6q46O6NBGRRFyD1UEIdN0cgitHqBCX2v1+b4CajadPChat6WVrQ==
   dependencies:
     "@babel/runtime" "7.11.2"
-    codemirror "5.57.0"
+    codemirror "5.59.0"
 
 "@umijs/ast@3.3.4":
   version "3.3.4"
@@ -5473,10 +5473,10 @@ code-point-at@^1.0.0:
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
-codemirror@5.57.0:
-  version "5.57.0"
-  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.57.0.tgz#d26365b72f909f5d2dbb6b1209349ca1daeb2d50"
-  integrity sha512-WGc6UL7Hqt+8a6ZAsj/f1ApQl3NPvHY/UQSzG6fB6l4BjExgVdhFaxd7mRTw1UCiYe/6q86zHP+kfvBQcZGvUg==
+codemirror@5.59.0:
+  version "5.59.0"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.59.0.tgz#6d8132055459aabf21d04cae5cf5c430e5c57bb9"
+  integrity sha512-UGzSkCacY9z0rSpQ3wnTWRN2nvRE6foDXnJltWW8pazInR/R+3gXHrao4IFQMv/bSBvFBxt8/HPpkpKAS54x5Q==
 
 collapse-white-space@^1.0.2:
   version "1.0.6"
