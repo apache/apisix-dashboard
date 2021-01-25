@@ -21,7 +21,9 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
@@ -412,8 +414,13 @@ func ParseRouteUris(route *entity.Route, paths openapi3.Paths, paramsRefs []*ope
 	}
 
 	for _, uri := range routeURIs {
+		_time := time.Now().UnixNano() / 1e6
 		if strings.Contains(uri, "*") {
-			paths[strings.Split(uri, "*")[0]+"{params}"] = pathItem
+			if _, ok := paths[strings.Split(uri, "*")[0]+"{params}"]; !ok {
+				paths[strings.Split(uri, "*")[0]+"{params}"] = pathItem
+			} else {
+				paths[strings.Split(uri, "*")[0]+"{params}"+"-APISIX-REPEAT-URI-"+strconv.FormatInt(_time, 10)] = pathItem
+			}
 			// add params introduce
 			paramsRefs = append(paramsRefs, &openapi3.ParameterRef{
 				Value: &openapi3.Parameter{
@@ -423,7 +430,11 @@ func ParseRouteUris(route *entity.Route, paths openapi3.Paths, paramsRefs []*ope
 					Description: "params in path",
 					Schema:      &openapi3.SchemaRef{Value: &openapi3.Schema{Type: "string"}}}})
 		} else {
-			paths[uri] = pathItem
+			if _, ok := paths[uri]; !ok {
+				paths[uri] = pathItem
+			} else {
+				paths[uri+"-APISIX-REPEAT-URI-"+strconv.FormatInt(_time, 10)] = pathItem
+			}
 		}
 	}
 	return paths, paramsRefs

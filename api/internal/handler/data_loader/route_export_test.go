@@ -1750,6 +1750,112 @@ func TestExportRoutesCreateByUpstreamIDAndServiceID2(t *testing.T) {
 	assert.True(t, getCalled)
 }
 
+// 16.Add suffix when testing the same URI export "APISIX-REPEAT-URI-" + Millisecond time stamp:  "APISIX-REPEAT-URI-1257894000000"
+func TestExportRoutesSameURI(t *testing.T) {
+	input := &store.ListInput{}
+	//*entity.Route
+	r1 := `{
+		"uris": ["/test-test"],
+		"name": "route_all",
+		"desc": "所有",
+		"methods": ["GET"],
+		"hosts": ["test.com"],
+		"status": 1,
+		"upstream": {
+			"nodes": {
+				"172.16.238.20:1980": 1
+			},
+			"type": "roundrobin"
+		}
+}`
+
+	r2 := `{
+		"uris": ["/test-test"],
+		"name": "route_all",
+		"desc": "所有",
+		"methods": ["GET"],
+		"hosts": ["test.com"],
+		"status": 1,
+		"upstream": {
+			"nodes": {
+				"172.16.238.20:1980": 1
+			},
+			"type": "roundrobin"
+		}
+}`
+
+	exportR1 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/test-test": {
+				"get": {
+					"operationId": "route_allGET",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-plugins": {},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				}
+			},
+			"/test-test-APISIX-REPEAT-URI-`
+	var route *entity.Route
+	var route2 *entity.Route
+	var routes []*entity.Route
+	err := json.Unmarshal([]byte(r1), &route)
+	err = json.Unmarshal([]byte(r2), &route2)
+	mStore := &store.MockInterface{}
+	getCalled := false
+
+	routes = append(routes, route)
+	routes = append(routes, route2)
+
+	mStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
+		getCalled = true
+	}).Return(func(input store.ListInput) *store.ListOutput {
+		var returnData []interface{}
+		for _, c := range routes {
+			returnData = append(returnData, c)
+		}
+		return &store.ListOutput{
+			Rows:      returnData,
+			TotalSize: len(returnData),
+		}
+	}, nil)
+
+	h := Handler{routeStore: mStore}
+	ctx := droplet.NewContext()
+	ctx.SetInput(input)
+
+	ret, err := h.ExportAllRoutes(ctx)
+	assert.Nil(t, err)
+	ret1, err := json.Marshal(ret)
+	if err != nil {
+	}
+	find := strings.Contains(string(ret1), replaceStr(exportR1))
+	//assert.Equal(t, replaceStr(exportR1), string(ret1))
+	assert.True(t, find)
+	assert.NotNil(t, ret1)
+	assert.True(t, getCalled)
+}
+
 func replaceStr(str string) string {
 	str = strings.Replace(str, "\n", "", -1)
 	str = strings.Replace(str, "\t", "", -1)

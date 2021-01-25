@@ -2276,6 +2276,139 @@ func TestRoute_Export_Request_Validation(t *testing.T) {
 
 }
 
+func TestRoute_Export_Equal_URI(t *testing.T) {
+	// 13.Add suffix when testing the same URI export
+	exportStrR1R2 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/test-test": {
+				"get": {
+					"operationId": "route_allGET",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-plugins": {},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				}
+			},
+			"/test-test-APISIX-REPEAT-URI-`
+	exportStrR1R2 = replaceStr(exportStrR1R2)
+
+	tests := []HttpTestCase{
+		{
+			Desc:   "Create a route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					"uris": ["/test-test"],
+					"name": "route_all",
+					"desc": "所有",
+					"methods": ["GET"],
+					"hosts": ["test.com"],
+					"status": 1,
+					"upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:   "Create a route2",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r2",
+			Body: `{
+					"uris": ["/test-test"],
+					"name": "route_all",
+					"desc": "所有",
+					"methods": ["GET"],
+					"hosts": ["test.com"],
+					"status": 1,
+					"upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "use the exportall inerface to export all routes",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/routes/export/r1,r2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStrR1R2,
+		},
+		{
+			Desc:         "delete the route1 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route1 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "delete the route2 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r2",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route2 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+}
+
 func replaceStr(str string) string {
 	str = strings.Replace(str, "\n", "", -1)
 	str = strings.Replace(str, "\t", "", -1)
