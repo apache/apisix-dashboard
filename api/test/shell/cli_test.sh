@@ -19,6 +19,7 @@
 
 set -ex
 VERSION=$(cat ./VERSION)
+KERNEL=$(uname -s)
 
 # test content in .githash
 if [[ -f ../.githash ]]; then
@@ -57,7 +58,8 @@ go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version
 
 ./manager-api &
 sleep 3
-pkill -f manager-api
+./manager-api stop
+sleep 6
 
 check_logfile
 
@@ -70,11 +72,15 @@ clean_logfile
 
 # change level and test signal
 
-sed -i 's/level: warn/level: info/' conf/conf.yaml
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" 's/level: warn/level: info/' conf/conf.yaml
+else
+  sed -i 's/level: warn/level: info/' conf/conf.yaml
+fi
 
 ./manager-api &>/dev/null &
 sleep 3
-pkill -2 -f manager-api
+./manager-api stop
 sleep 6
 
 check_logfile
@@ -93,11 +99,16 @@ clean_logfile
 
 # change path
 
-sed -i 's/logs\/error.log/.\/error.log/' conf/conf.yaml
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" 's/logs\/error.log/.\/error.log/' conf/conf.yaml
+else
+  sed -i 's/logs\/error.log/.\/error.log/' conf/conf.yaml
+fi
 
 ./manager-api &
 sleep 3
-pkill -f manager-api
+./manager-api stop
+sleep 6
 
 check_logfile
 
@@ -116,7 +127,7 @@ APISIX_API_WORKDIR=$workDir $workDir/manager-api &
 sleep 5
 
 res=$(curl http://127.0.0.1:9000)
-pkill -f manager-api
+$workDir/manager-api stop
 cd -
 rm -rf html
 
@@ -130,22 +141,21 @@ clean_up
 workDir=$(pwd)
 distDir=/tmp/manager-api
 cp -r $workDir $distDir
-cd $distDir
-rm -fr bin && mkdir bin && mv ./manager-api ./bin/
-rm -rf html && mkdir html && echo "hi~" >> html/index.html
-cd bin && ./manager-api -p $distDir &
+cd $distDir && rm -rf bin && mkdir bin && mv ./manager-api ./bin/
+cd $distDir && rm -rf html && mkdir html && echo "hi~" >> html/index.html
+cd $distDir/bin && ./manager-api -p $distDir &
 sleep 5
 
 res=$(curl http://127.0.0.1:9000)
-pkill -f manager-api
+$distDir/bin/manager-api stop
+sleep 6
 rm -fr $distDir
 
 if [[ $res != "hi~" ]]; then
     echo "failed: manager-api can't run with -p flag out of the default directory"
     exit 1
 fi
-cd $workDir
-clean_up
+cd $workDir && git checkout conf/conf.yaml
 
 # test start info
 
@@ -155,6 +165,8 @@ PORT=$(cat conf/conf.yaml | awk '$1=="port:"{print $2}')
 STDOUT=/tmp/manager-api
 ./manager-api &>/tmp/manager-api &
 sleep 3
+./manager-api stop
+sleep 6
 
 if [[ `grep -c "The manager-api is running successfully\!" ${STDOUT}` -ne '1' ]]; then
     echo "failed: the manager server didn't show started info"
@@ -185,7 +197,12 @@ fi
 
 clean_up
 
-sed -i 's/127.0.0.1:2379/127.0.0.0:2379/' conf/conf.yaml
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" 's/127.0.0.1:2379/127.0.0.0:2379/' conf/conf.yaml
+else
+  sed -i 's/127.0.0.1:2379/127.0.0.0:2379/' conf/conf.yaml
+fi
+
 
 ./manager-api > output.log 2>&1 &
 sleep 6
@@ -197,6 +214,8 @@ if [[ `grep -c "cmd/managerapi.go" ${logfile}` -ne '1' ]]; then
     exit 1
 fi
 
+./manager-api stop
+sleep 6
 # clean config
 clean_up
 
@@ -206,7 +225,8 @@ sleep 3
 
 curl http://127.0.0.1:9000/apisix/admin/user/login -d '{"username":"admin", "password": "admin"}'
 
-pkill -f manager-api
+./manager-api stop
+sleep 6
 
 if [[ `grep -c "/apisix/admin/user/login" ./logs/access.log` -eq '0' ]]; then
     echo "failed: failed to write access log"
@@ -236,9 +256,17 @@ if [[ `grep -c "etcdserver: user name is empty" ${logfile}` -eq '0' ]]; then
     exit 1
 fi
 
+./manager-api stop
+sleep 6
+
 # modify etcd auth config
-sed -i '1,$s/# username: "root"    # ignore etcd username if not enable etcd auth/username: "root"/g' conf/conf.yaml
-sed -i '1,$s/# password: "123456"  # ignore etcd password if not enable etcd auth/password: "root"/g' conf/conf.yaml
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" '1,$s/# username: "root"    # ignore etcd username if not enable etcd auth/username: "root"/g' conf/conf.yaml
+  sed -i "" '1,$s/# password: "123456"  # ignore etcd password if not enable etcd auth/password: "root"/g' conf/conf.yaml
+else
+  sed -i '1,$s/# username: "root"    # ignore etcd username if not enable etcd auth/username: "root"/g' conf/conf.yaml
+  sed -i '1,$s/# password: "123456"  # ignore etcd password if not enable etcd auth/password: "root"/g' conf/conf.yaml
+fi
 
 ./manager-api &
 sleep 3
@@ -260,6 +288,6 @@ if [ "$respCode" != "0" ] || [ $respMessage != "\"\"" ]; then
     exit 1
 fi
 
-pkill -f manager-api
+./manager-api stop
 
 check_logfile

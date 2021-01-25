@@ -31,6 +31,14 @@ export default {
   title: 'APISIX Dashboard',
   pwa: false,
   iconfontUrl: '',
+  serveUrlMap: {
+    dev: 'http://139.217.190.60',
+    test: 'http://localhost:9000',
+  },
 } as LayoutSettings & {
   pwa: boolean;
+  serveUrlMap: {
+    dev: string;
+    test: string;
+  };
 };

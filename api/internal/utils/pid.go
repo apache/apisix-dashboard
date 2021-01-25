@@ -14,32 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
-import UpstreamForm from '@/components/Upstream';
 
-import { fetchUpstreamList } from '../../service';
+package utils
 
-const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({
-  form,
-  upstreamRef,
-  disabled,
-  hasServiceId = false
-}) => {
-  const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
-  useEffect(() => {
-    fetchUpstreamList().then(({ data }) => setList(data));
-  }, []);
-  return (
-    <UpstreamForm
-      ref={upstreamRef}
-      form={form}
-      disabled={disabled}
-      list={list}
-      showSelector
-      required={!hasServiceId}
-      key={1}
-    />
-  );
-};
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strconv"
+)
 
-export default RequestRewriteView;
+// WritePID write pid to the given file path.
+func WritePID(filepath string) error {
+	pid := os.Getpid()
+	f, err := os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC|os.O_CREATE, 0600)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if _, err := f.WriteString(strconv.Itoa(pid)); err != nil {
+		return err
+	}
+	return nil
+}
+
+// ReadPID reads the pid from the given file path.
+func ReadPID(filepath string) (int, error) {
+	data, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		return -1, err
+	}
+	pid, err := strconv.Atoi(string(data))
+	if err != nil {
+		return -1, fmt.Errorf("invalid pid: %s", err)
+	}
+	return pid, nil
+}
