@@ -42,7 +42,7 @@ context('Create and Search Route', () => {
     nodes_0_host: '#nodes_0_host',
     searchName: '[title=Name]',
     searchLabels: '[title=Labels]',
-    refresh: 'anticon-reload',
+    refresh: '.anticon-reload',
   };
 
   beforeEach(() => {
