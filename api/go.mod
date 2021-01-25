@@ -35,7 +35,7 @@ require (
 	github.com/sony/sonyflake v1.0.0
 	github.com/spf13/cobra v0.0.3
 	github.com/stretchr/testify v1.6.1
-	github.com/tidwall/gjson v1.6.1
+	github.com/tidwall/gjson v1.6.7
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20200427203606-3cfed13b9966 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0
 	github.com/yuin/gopher-lua v0.0.0-20200816102855-ee81675732da
