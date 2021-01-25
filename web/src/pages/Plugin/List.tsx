@@ -79,6 +79,7 @@ const Page: React.FC = () => {
                 const plugins = omit(initialData, [`${record.name}`]);
                 createOrUpdate({ plugins }).then(() => {
                   ref.current?.reload();
+                  setInitialData(plugins);
                   setName('');
                 });
               }}

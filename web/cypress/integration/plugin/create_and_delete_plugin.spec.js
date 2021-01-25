@@ -16,19 +16,46 @@
  */
 /* eslint-disable no-undef */
 
-context('smoke test for plugin schema', () => {
+context('Create and Delete Plugin List', () => {
+  const timeout = 5000;
+  const domSelectors = {
+    tableCell: '.ant-table-cell',
+    empty: '.ant-empty-normal',
+    refresh: '.anticon-reload',
+  };
+
   beforeEach(() => {
     cy.login();
 
-    cy.fixture('selector.json').as('selector');
-    cy.fixture('plugin-dataset.json').as('cases');
+    cy.fixture('plugin-list.json').as('cases');
   });
 
-  it('should visit plugin market', function () {
+  it('should create plugins', function () {
     cy.visit('/');
     cy.contains('Plugin').click();
     cy.contains('Create').click();
 
+    // add test plugins
     cy.configurePlugins(this.cases);
+  });
+
+  it('should delete plugin list', () => {
+    cy.visit('/');
+    cy.contains('Plugin').click();
+    cy.get(domSelectors.refresh).click();
+    cy.get(domSelectors.tableCell).then(function (rows) {
+      [...rows].forEach((row) => {
+        const name = row.innerText;
+        const cases = this.cases[name] || [];
+
+        cases.forEach(() => {
+          cy.contains(name).siblings().contains('Delete').click({ timeout });
+          cy.contains('button', 'Confirm').click();
+        });
+      });
+    });
+
+    // check if plugin list is empty
+    cy.get(domSelectors.empty);
   });
 });
