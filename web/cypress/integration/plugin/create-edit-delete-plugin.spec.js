@@ -48,7 +48,10 @@ context('Create and Delete Plugin List', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
 
-    cy.contains(data.name).siblings().contains('Edit').click();
+    cy.contains(data.name).siblings().contains('Edit').click({
+      force: true,
+      timeout,
+    });
     cy.get(domSelector.codemirror)
       .first()
       .then(() => {
@@ -61,6 +64,7 @@ context('Create and Delete Plugin List', () => {
   it('should delete plugin list', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
+    
     cy.get(domSelector.refresh).click();
     cy.get(domSelector.tableCell, { timeout }).then(function (rows) {
       [...rows].forEach((row) => {

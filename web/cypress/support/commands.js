@@ -61,7 +61,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           });
 
         // NOTE: wait for the Drawer to appear on the DOM
-        cy.get(domSelectors.drawer, { timeout }).within(() => {
+        cy.get(domSelectors.drawer, { timeout }).should('be.visible').within(() => {
           cy.get(domSelectors.switch).click({
             force: true,
             timeout,
@@ -92,7 +92,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
             multiple: true,
           });
 
-          cy.get(domSelectors.drawer, { timeout }).within(() => {
+          cy.get(domSelectors.drawer, { timeout }).should('be.visible').within(() => {
             cy.contains('Cancel').click({
               force: true,
               timeout,
