@@ -41,7 +41,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
     close: '.anticon-close',
   };
 
-  cy.get(domSelectors.name).then(function (cards) {
+  cy.get(domSelectors.name, { timeout }).then(function (cards) {
     [...cards].forEach((card) => {
       const name = card.innerText;
       const pluginCases = cases[name] || [];
@@ -56,7 +56,6 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           .within(() => {
             cy.contains('Enable').click({
               force: true,
-              timeout,
             });
           });
 
