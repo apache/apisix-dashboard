@@ -42,6 +42,7 @@ context('Create and Search Route', () => {
     nodes_0_host: '#nodes_0_host',
     searchName: '[title=Name]',
     searchLabels: '[title=Labels]',
+    refresh: 'anticon-reload',
   };
 
   beforeEach(() => {
@@ -112,6 +113,7 @@ context('Create and Search Route', () => {
     cy.contains('Route').click();
 
     // search one label
+    cy.get(domSelector.refresh).click();
     cy.get(domSelector.searchLabels).click();
     cy.get(this.domSelector.dropdown).within(() => {
       cy.contains(data.value0).click();
