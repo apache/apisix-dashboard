@@ -27,6 +27,3 @@ jobs:
       - name: run test
         working-directory: ./api
         run: sudo ./test/shell/cli_test.sh
-
-      - name: make api-test
-        run: make api-test
