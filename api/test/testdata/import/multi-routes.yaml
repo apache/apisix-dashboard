@@ -23,9 +23,9 @@ info:
   version: 3.0.0
 openapi: 3.0.0
 paths:
-  /head:
+  /get:
     delete:
-      operationId: api1Delete
+      operationId: api1DELETE
       requestBody: {}
       responses:
         default:
@@ -35,190 +35,6 @@ paths:
         API_VERSION: v2
         dev: test
       x-apisix-plugins:
-        node-status:
-          disable: true
-        proxy-rewrite:
-          disable: false
-          scheme: https
-      x-apisix-priority: 0
-      x-apisix-status: 1
-      x-apisix-upstream:
-        nodes:
-          - host: httpin.org
-            port: 80
-            weight: 1
-        timeout:
-          connect: 6000
-          read: 6000
-          send: 6000
-        type: roundrobin
-        pass_host: pass
-      x-apisix-vars: []
-    get:
-      operationId: api1Get
-      requestBody: {}
-      responses:
-        default:
-          description: ''
-      x-apisix-enableWebsocket: false
-      x-apisix-labels:
-        API_VERSION: v2
-        dev: test
-      x-apisix-plugins:
-        node-status:
-          disable: true
-        proxy-rewrite:
-          disable: false
-          scheme: https
-      x-apisix-priority: 0
-      x-apisix-status: 1
-      x-apisix-upstream:
-        nodes:
-          - host: httpin.org
-            port: 80
-            weight: 1
-        timeout:
-          connect: 6000
-          read: 6000
-          send: 6000
-        type: roundrobin
-        pass_host: pass
-      x-apisix-vars: []
-    head:
-      operationId: api1HEAD
-      requestBody: {}
-      responses:
-        default:
-          description: ''
-      x-apisix-enableWebsocket: false
-      x-apisix-labels:
-        API_VERSION: v2
-        dev: test
-      x-apisix-plugins:
-        node-status:
-          disable: true
-        proxy-rewrite:
-          disable: false
-          scheme: https
-      x-apisix-priority: 0
-      x-apisix-status: 1
-      x-apisix-upstream:
-        nodes:
-          - host: httpin.org
-            port: 80
-            weight: 1
-        timeout:
-          connect: 6000
-          read: 6000
-          send: 6000
-        type: roundrobin
-        pass_host: pass
-      x-apisix-vars: []
-    patch:
-      operationId: api1Patch
-      requestBody: {}
-      responses:
-        default:
-          description: ''
-      x-apisix-enableWebsocket: false
-      x-apisix-labels:
-        API_VERSION: v2
-        dev: test
-      x-apisix-plugins:
-        node-status:
-          disable: true
-        proxy-rewrite:
-          disable: false
-          scheme: https
-      x-apisix-priority: 0
-      x-apisix-status: 1
-      x-apisix-upstream:
-        nodes:
-          - host: httpin.org
-            port: 80
-            weight: 1
-        timeout:
-          connect: 6000
-          read: 6000
-          send: 6000
-        type: roundrobin
-        pass_host: pass
-      x-apisix-vars: []
-    post:
-      operationId: api1Post
-      requestBody: {}
-      responses:
-        default:
-          description: ''
-      x-apisix-enableWebsocket: false
-      x-apisix-labels:
-        API_VERSION: v2
-        dev: test
-      x-apisix-plugins:
-        node-status:
-          disable: true
-        proxy-rewrite:
-          disable: false
-          scheme: https
-      x-apisix-priority: 0
-      x-apisix-status: 1
-      x-apisix-upstream:
-        nodes:
-          - host: httpin.org
-            port: 80
-            weight: 1
-        timeout:
-          connect: 6000
-          read: 6000
-          send: 6000
-        type: roundrobin
-        pass_host: pass
-      x-apisix-vars: []
-    put:
-      operationId: api1Put
-      requestBody: {}
-      responses:
-        default:
-          description: ''
-      x-apisix-enableWebsocket: false
-      x-apisix-labels:
-        API_VERSION: v2
-        dev: test
-      x-apisix-plugins:
-        node-status:
-          disable: true
-        proxy-rewrite:
-          disable: false
-          scheme: https
-      x-apisix-priority: 0
-      x-apisix-status: 1
-      x-apisix-upstream:
-        nodes:
-          - host: httpin.org
-            port: 80
-            weight: 1
-        timeout:
-          connect: 6000
-          read: 6000
-          send: 6000
-        type: roundrobin
-        pass_host: pass
-      x-apisix-vars: []
-  /post:
-    post:
-      operationId: test_postPost
-      requestBody: {}
-      responses:
-        default:
-          description: ''
-      security: []
-      x-apisix-enableWebsocket: false
-      x-apisix-labels:
-        API_VERSION: v1
-        version: v1
-      x-apisix-plugins:
-        node-status:
-          disable: true
         proxy-rewrite:
           disable: false
           scheme: https
@@ -234,5 +50,175 @@ paths:
           read: 6000
           send: 6000
         type: roundrobin
-        pass_host: pass
+        pass_host: node
+      x-apisix-vars: []
+    get:
+      operationId: api1GET
+      requestBody: {}
+      responses:
+        default:
+          description: ''
+      x-apisix-enableWebsocket: false
+      x-apisix-labels:
+        API_VERSION: v2
+        dev: test
+      x-apisix-plugins:
+        proxy-rewrite:
+          disable: false
+          scheme: https
+      x-apisix-priority: 0
+      x-apisix-status: 1
+      x-apisix-upstream:
+        nodes:
+          - host: httpbin.org
+            port: 443
+            weight: 1
+        timeout:
+          connect: 6000
+          read: 6000
+          send: 6000
+        type: roundrobin
+        pass_host: node
+      x-apisix-vars: []
+    head:
+      operationId: api1HEAD
+      requestBody: {}
+      responses:
+        default:
+          description: ''
+      x-apisix-enableWebsocket: false
+      x-apisix-labels:
+        API_VERSION: v2
+        dev: test
+      x-apisix-plugins:
+        proxy-rewrite:
+          disable: false
+          scheme: https
+      x-apisix-priority: 0
+      x-apisix-status: 1
+      x-apisix-upstream:
+        nodes:
+          - host: httpbin.org
+            port: 443
+            weight: 1
+        timeout:
+          connect: 6000
+          read: 6000
+          send: 6000
+        type: roundrobin
+        pass_host: node
+      x-apisix-vars: []
+    patch:
+      operationId: api1PATCH
+      requestBody: {}
+      responses:
+        default:
+          description: ''
+      x-apisix-enableWebsocket: false
+      x-apisix-labels:
+        API_VERSION: v2
+        dev: test
+      x-apisix-plugins:
+        proxy-rewrite:
+          disable: false
+          scheme: https
+      x-apisix-priority: 0
+      x-apisix-status: 1
+      x-apisix-upstream:
+        nodes:
+          - host: httpbin.org
+            port: 443
+            weight: 1
+        timeout:
+          connect: 6000
+          read: 6000
+          send: 6000
+        type: roundrobin
+        pass_host: node
+      x-apisix-vars: []
+    post:
+      operationId: api1POST
+      requestBody: {}
+      responses:
+        default:
+          description: ''
+      x-apisix-enableWebsocket: false
+      x-apisix-labels:
+        API_VERSION: v2
+        dev: test
+      x-apisix-plugins:
+        proxy-rewrite:
+          disable: false
+          scheme: https
+      x-apisix-priority: 0
+      x-apisix-status: 1
+      x-apisix-upstream:
+        nodes:
+          - host: httpbin.org
+            port: 443
+            weight: 1
+        timeout:
+          connect: 6000
+          read: 6000
+          send: 6000
+        type: roundrobin
+        pass_host: node
+      x-apisix-vars: []
+    put:
+      operationId: api1PUT
+      requestBody: {}
+      responses:
+        default:
+          description: ''
+      x-apisix-enableWebsocket: false
+      x-apisix-labels:
+        API_VERSION: v2
+        dev: test
+      x-apisix-plugins:
+        proxy-rewrite:
+          disable: false
+          scheme: https
+      x-apisix-priority: 0
+      x-apisix-status: 1
+      x-apisix-upstream:
+        nodes:
+          - host: httpbin.org
+            port: 443
+            weight: 1
+        timeout:
+          connect: 6000
+          read: 6000
+          send: 6000
+        type: roundrobin
+        pass_host: node
+      x-apisix-vars: []
+  /post:
+    post:
+      operationId: test_postPOST
+      requestBody: {}
+      responses:
+        default:
+          description: ''
+      security: []
+      x-apisix-enableWebsocket: false
+      x-apisix-labels:
+        API_VERSION: v1
+        version: v1
+      x-apisix-plugins:
+        proxy-rewrite:
+          disable: false
+          scheme: https
+      x-apisix-priority: 0
+      x-apisix-status: 1
+      x-apisix-upstream:
+        nodes:
+          - host: httpbin.org
+            port: 443
+            weight: 1
+        timeout:
+          connect: 6000
+          read: 6000
+          send: 6000
+        type: roundrobin
+        pass_host: node
       x-apisix-vars: []
