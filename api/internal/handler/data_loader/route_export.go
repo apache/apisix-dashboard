@@ -17,7 +17,6 @@
 package data_loader
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -70,7 +69,7 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 	routes := []*entity.Route{}
 
 	for _, id := range ids {
-		route, err := h.routeStore.Get(context.Background(), id)
+		route, err := h.routeStore.Get(c.Context(), id)
 		if err != nil {
 			return nil, err
 		}
@@ -454,7 +453,7 @@ func (h *Handler) ParseRouteUpstream(c droplet.Context, route *entity.Route) (in
 			return _service.Upstream, nil
 		} else if _service.Upstream == nil && _service.UpstreamID != nil {
 			upstreamID := utils.InterfaceToString(_service.UpstreamID)
-			upstream, err := h.upstreamStore.Get(context.Background(), upstreamID)
+			upstream, err := h.upstreamStore.Get(c.Context(), upstreamID)
 			if err != nil {
 				if err == data.ErrNotFound {
 					return nil, fmt.Errorf("upstream id: %s not found", _service.UpstreamID)
