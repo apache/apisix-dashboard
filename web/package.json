@@ -54,7 +54,7 @@
     "@mrblenny/react-flow-chart": "^0.0.14",
     "@rjsf/antd": "2.2.0",
     "@rjsf/core": "2.2.0",
-    "@uiw/react-codemirror": "^3.0.1",
+    "@uiw/react-codemirror": "^3.0.5",
     "ajv": "^7.0.3",
     "ajv-formats": "^1.5.1",
     "antd": "^4.4.0",
