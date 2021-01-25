@@ -15,16 +15,12 @@
  * limitations under the License.
  */
 /* eslint-disable no-undef */
+import defaultSettings from '../../config/defaultSettings';
 
 Cypress.Commands.add('login', () => {
-  const serveUrlMap = {
-    dev: 'http://139.217.190.60',
-    test: 'http://localhost:9000',
-  };
-
   const { SERVE_ENV = 'dev' } = Cypress.env();
 
-  cy.request('POST', `${serveUrlMap[SERVE_ENV]}/apisix/admin/user/login`, {
+  cy.request('POST', `${defaultSettings.serveUrlMap[SERVE_ENV]}/apisix/admin/user/login`, {
     username: 'user',
     password: 'user',
   }).then((res) => {
