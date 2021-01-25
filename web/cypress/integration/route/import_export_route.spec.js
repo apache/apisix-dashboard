@@ -24,6 +24,7 @@ context('import and export routes', () => {
   const domSelector = {
     route_name: '#name',
     nodes_0_host: '#nodes_0_host',
+    file: '[type=file]',
   }
   const data = {
     route_name_0: 'route_name_0',
@@ -31,15 +32,17 @@ context('import and export routes', () => {
     upstream_node0_host_0: '1.1.1.1',
     upstream_node0_host_1: '2.2.2.2',
     importErrorMsg: 'required file type is .yaml, .yml or .json but got: .txt',
+    uploadRouteFiles: ['../../../api/test/testdata/import/default.json','../../../api/test/testdata/import/default.yaml','import-error.txt'],
+    jsonMask: 'cypress/downloads/*.png',
+    yamlMask: 'cypress/downloads/*.yaml',
   }
 
-  const uploadRouteFiles = ['../../../api/test/testdata/import/default.json','../../../api/test/testdata/import/default.yaml','import-error.txt']
   beforeEach(() => {
     // init login
     cy.login();
     cy.fixture('selector.json').as('domSelector');
   });
-  /* it('should create route1 and route2', () => {
+  it('should create route1 and route2', () => {
     //  go to route create page
     cy.visit('/');
     // create two routes
@@ -69,41 +72,51 @@ context('import and export routes', () => {
     }
     // click Export OpenAPI Button
     cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).click();
-    // click Confirm button in the popup
+    // click Confirm button in the popup to download Json file
     cy.contains(componentLocaleUS['component.global.confirm']).click();
-    // download a json files
-    // down load a yaml files
+
+    cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).click();
+    // click Confirm button in the popup to download Yaml file
+    cy.contains('Yaml').click();
+    cy.contains(componentLocaleUS['component.global.confirm']).click();
   });
-   */
-  it('should import route(s) from be test files', () => {
+
+  it('should delete the route', function () {
+    cy.visit('/routes/list');
+    for (let i = 0; i < 2; i += 1) {
+      cy.contains(data[`route_name_${i}`]).siblings().contains('Delete').click();
+      cy.contains('button', 'Confirm').click();
+      cy.get(this.domSelector.notification).should('contain', `${componentLocaleUS['component.global.delete']} ${menuLocaleUS['menu.routes']} ${componentLocaleUS['component.status.success']}`);
+    }
+  });
+
+  it('should import route(s) from be test files', function() {
     cy.visit('/');
     cy.contains('Route').click();
     
-    uploadRouteFiles.forEach((file) => {
+    data.uploadRouteFiles.forEach((file) => {
       // click import button
       cy.contains(routeLocaleUS['page.route.button.importOpenApi']).click();
       // select file
-      cy.get('[type=file]').attachFile(file);
+      cy.get(domSelector.file).attachFile(file);
       // click submit
       cy.contains(componentLocaleUS['component.global.confirm']).click();
       // show upload notification
       if (file === 'import-error.txt') {
         // show error msg
-        cy.get('.ant-notification-notice-description').should('contain', data.importErrorMsg);
+        cy.get(this.domSelector.notificationDesc).should('contain', data.importErrorMsg);
         // close modal
         cy.contains(componentLocaleUS['component.global.cancel']).click();
       } else {
-        cy.get('.ant-notification-notice-message').should('contain', `${routeLocaleUS['page.route.button.importOpenApi']} ${componentLocaleUS['component.status.success']}`);
-        cy.get('.ant-notification-close-icon').click();
+        cy.get(this.domSelector.notification).should('contain', `${routeLocaleUS['page.route.button.importOpenApi']} ${componentLocaleUS['component.status.success']}`);
+        cy.get(this.domSelector.notificationCloseIcon).click();
         // delete route just imported
         cy.contains(componentLocaleUS['component.global.delete']).click();
         cy.contains(componentLocaleUS['component.global.confirm']).click();
         // show delete successfully notification
-        cy.get('.ant-notification-notice-message').should('contain', `${componentLocaleUS['component.global.delete']} ${menuLocaleUS['menu.routes']} ${componentLocaleUS['component.status.success']}`);
-        cy.get('.ant-notification-close-icon').click();
+        cy.get(this.domSelector.notification).should('contain', `${componentLocaleUS['component.global.delete']} ${menuLocaleUS['menu.routes']} ${componentLocaleUS['component.status.success']}`);
+        cy.get(this.domSelector.notificationCloseIcon).click();
       }
-      
     })
-    
   });
 });
