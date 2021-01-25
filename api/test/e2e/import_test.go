@@ -341,7 +341,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 		{
 			Desc:         "verify the route just imported",
 			Object:       APISIXExpect(t),
-			Method:       http.MethodPost,
+			Method:       http.MethodGet,
 			Path:         "/get",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"url": "https://127.0.0.1/get"`,
