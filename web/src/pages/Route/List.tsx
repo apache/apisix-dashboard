@@ -448,6 +448,7 @@ const Page: React.FC = () => {
       <Modal
         title={formatMessage({ id: 'page.route.button.importOpenApi' })}
         visible={showImportModal}
+        okText={formatMessage({id: 'component.global.confirm'})}
         onOk={handleImport}
         onCancel={() => {
           setShowImportModal(false);
