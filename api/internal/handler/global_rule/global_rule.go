@@ -31,7 +31,6 @@ import (
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/utils"
-	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -55,8 +54,10 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.PUT("/apisix/admin/global_rules", wgin.Wraps(h.Set,
 		wrapper.InputType(reflect.TypeOf(SetInput{}))))
 
-	r.PATCH("/apisix/admin/global_rules/:id", consts.ErrorWrapper(Patch))
-	r.PATCH("/apisix/admin/global_rules/:id/*path", consts.ErrorWrapper(Patch))
+	r.PATCH("/apisix/admin/global_rules/:id", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
+	r.PATCH("/apisix/admin/global_rules/:id/*path", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
 
 	r.DELETE("/apisix/admin/global_rules/:id", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDeleteInput{}))))
@@ -149,13 +150,20 @@ func (h *Handler) Set(c droplet.Context) (interface{}, error) {
 	return ret, nil
 }
 
-func Patch(c *gin.Context) (interface{}, error) {
-	reqBody, _ := c.GetRawData()
-	ID := c.Param("id")
-	subPath := c.Param("path")
+type PatchInput struct {
+	ID      string `auto_read:"id,path"`
+	SubPath string `auto_read:"path,path"`
+	Body    []byte `auto_read:"@body"`
+}
+
+func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*PatchInput)
+	reqBody := input.Body
+	ID := input.ID
+	subPath := input.SubPath
 
 	routeStore := store.GetStore(store.HubKeyGlobalRule)
-	stored, err := routeStore.Get(c, ID)
+	stored, err := routeStore.Get(c.Context(), ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -171,7 +179,7 @@ func Patch(c *gin.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	ret, err := routeStore.Update(c, &globalRule, false)
+	ret, err := routeStore.Update(c.Context(), &globalRule, false)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}

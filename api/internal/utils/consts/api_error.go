@@ -17,39 +17,10 @@
 package consts
 
 import (
-	"net/http"
-	"strings"
-
 	"github.com/gin-gonic/gin"
 )
 
 type WrapperHandle func(c *gin.Context) (interface{}, error)
-
-func ErrorWrapper(handle WrapperHandle) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		data, err := handle(c)
-		if err != nil {
-			apiError, ok := err.(*ApiError)
-			if !ok {
-				errMsg := err.Error()
-				if strings.Contains(errMsg, "required") ||
-					strings.Contains(errMsg, "conflicted") ||
-					strings.Contains(errMsg, "invalid") ||
-					strings.Contains(errMsg, "missing") ||
-					strings.Contains(errMsg, "validate failed") {
-					apiError = InvalidParam(errMsg)
-				} else if strings.Contains(errMsg, "not found") {
-					apiError = NotFound(errMsg)
-				} else {
-					apiError = SystemError(errMsg)
-				}
-			}
-			c.JSON(apiError.Status, apiError)
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{"data": data, "code": 0, "message": "success"})
-	}
-}
 
 // swagger:model ApiError
 type ApiError struct {
