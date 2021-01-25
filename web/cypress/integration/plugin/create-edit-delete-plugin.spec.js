@@ -18,10 +18,15 @@
 
 context('Create and Delete Plugin List', () => {
   const timeout = 5000;
-  const domSelectors = {
+  const data = {
+    name: 'api-breaker',
+  };
+  const domSelector = {
     tableCell: '.ant-table-cell',
     empty: '.ant-empty-normal',
     refresh: '.anticon-reload',
+    codemirror: '.CodeMirror',
+    switch: '#disable',
   };
 
   beforeEach(() => {
@@ -43,21 +48,21 @@ context('Create and Delete Plugin List', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
 
-    cy.contains('api-breaker').siblings().contains('Edit').click();
-    cy.get('.CodeMirror')
+    cy.contains(data.name).siblings().contains('Edit').click();
+    cy.get(domSelector.codemirror)
       .first()
       .then(() => {
-        cy.get('#disable').click();
+        cy.get(domSelector.switch).click();
         cy.contains('button', 'Submit').click();
       });
-    cy.contains('api-breaker').should('not.exist');
+    cy.contains(data.name).should('not.exist');
   });
 
   it('should delete plugin list', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
-    cy.get(domSelectors.refresh).click();
-    cy.get(domSelectors.tableCell).then(function (rows) {
+    cy.get(domSelector.refresh).click();
+    cy.get(domSelector.tableCell, { timeout }).then(function (rows) {
       [...rows].forEach((row) => {
         const name = row.innerText;
         const cases = this.cases[name] || [];
@@ -70,6 +75,6 @@ context('Create and Delete Plugin List', () => {
     });
 
     // check if plugin list is empty
-    cy.get(domSelectors.empty);
+    cy.get(domSelector.empty);
   });
 });
