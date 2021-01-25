@@ -69,8 +69,7 @@ api-run: api-default
 
 ### api-stop:		Stop the manager-api
 api-stop:
-	kill $(ps aux | grep 'manager-api' | awk '{print $2}')
-
+	cd api && go run -ldflags "${GOLDFLAGS}" ./cmd/manager stop
 
 ### go-lint:		Lint Go source code
 .PHONY: go-lint
