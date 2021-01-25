@@ -50,7 +50,6 @@ context('Create and Search Route', () => {
   });
 
   it('should create route test1, test2, test3', function () {
-    //  go to route create page
     cy.visit('/');
     cy.contains('Route').click();
     for (let i = 0; i < 3; i += 1) {
@@ -78,7 +77,6 @@ context('Create and Search Route', () => {
       cy.contains('Next').click();
       cy.contains('Submit').click();
       cy.contains('Submit Successfully');
-      // back to route list page
       cy.contains('Goto List').click();
       cy.url().should('contains', 'routes/list');
     }
@@ -114,7 +112,6 @@ context('Create and Search Route', () => {
     cy.contains('Route').click();
 
     // search one label
-    cy.wait(500);
     cy.get(domSelector.searchLabels).click();
     cy.get(this.domSelector.dropdown).within(() => {
       cy.contains(data.value0).click();
