@@ -63,6 +63,7 @@ type ExportInput struct {
 	IDs string `auto_read:"ids,path"`
 }
 
+//ExportRoutes Export data by passing route ID, such as "R1" or multiple route parameters, such as "R1,R2"
 func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ExportInput)
 	ids := strings.Split(input.IDs, ",")
@@ -76,7 +77,7 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 		routes = append(routes, route.(*entity.Route))
 	}
 
-	swagger, err := h.routeToOpenApi3(routes)
+	swagger, err := h.RouteToOpenAPI3(c, routes)
 	if err != nil {
 		return nil, err
 	}
@@ -98,6 +99,7 @@ var (
 	err     error
 )
 
+//ExportAllRoutes All routes can be directly exported without passing parameters
 func (h *Handler) ExportAllRoutes(c droplet.Context) (interface{}, error) {
 	routelist, err := h.routeStore.List(c.Context(), store.ListInput{})
 
@@ -111,14 +113,15 @@ func (h *Handler) ExportAllRoutes(c droplet.Context) (interface{}, error) {
 		routes = append(routes, route.(*entity.Route))
 	}
 
-	swagger, err := h.routeToOpenApi3(routes)
+	swagger, err := h.RouteToOpenAPI3(c, routes)
 	if err != nil {
 		return nil, err
 	}
 	return swagger, nil
 }
 
-func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, error) {
+//RouteToOpenAPI3 Pass in route list parameter: []*entity.Route, convert route data to openapi3 and export processing function
+func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*openapi3.Swagger, error) {
 	paths := openapi3.Paths{}
 	paramsRefs := []*openapi3.ParameterRef{}
 	requestBody := &openapi3.RequestBody{}
@@ -138,7 +141,7 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 
 		if route.ServiceID != nil {
 			serviceID := utils.InterfaceToString(route.ServiceID)
-			service, err = h.serviceStore.Get(context.Background(), serviceID)
+			service, err = h.serviceStore.Get(c.Context(), serviceID)
 			if err != nil {
 				if err == data.ErrNotFound {
 					return nil, fmt.Errorf("service id: %s not found", route.ServiceID)
@@ -151,33 +154,14 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 			serviceLabels = _service.Labels
 		}
 
-		if route.Upstream != nil {
-			extensions["x-apisix-upstream"] = route.Upstream
-		} else if route.UpstreamID != nil && route.Upstream == nil {
-			upstreamID := utils.InterfaceToString(route.UpstreamID)
-			upstream, err := h.upstreamStore.Get(context.Background(), upstreamID)
-			if err != nil {
-				if err == data.ErrNotFound {
-					return nil, fmt.Errorf("upstream id: %s not found", route.UpstreamID)
-				}
-				return nil, err
-			}
-			extensions["x-apisix-upstream"] = upstream
-		} else if route.UpstreamID == nil && route.Upstream == nil && route.ServiceID != nil {
-			_service := service.(*entity.Service)
-			if _service.Upstream != nil {
-				extensions["x-apisix-upstream"] = _service.Upstream
-			} else if _service.Upstream == nil && _service.UpstreamID != nil {
-				upstreamID := utils.InterfaceToString(_service.UpstreamID)
-				upstream, err := h.upstreamStore.Get(context.Background(), upstreamID)
-				if err != nil {
-					if err == data.ErrNotFound {
-						return nil, fmt.Errorf("upstream id: %s not found", _service.UpstreamID)
-					}
-					return nil, err
-				}
-				extensions["x-apisix-upstream"] = upstream
-			}
+		//Parse upstream
+		_upstream, err := h.ParseRouteUpstream(c, route)
+
+		if err != nil {
+			log.Errorf("ParseRouteUpstream err: ", err)
+			return nil, err
+		} else if err == nil && _upstream != nil {
+			extensions["x-apisix-upstream"] = _upstream
 		}
 
 		if route.Host != "" {
@@ -189,7 +173,7 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 		}
 
 		//Parse Labels
-		labels, err = parseLabels(route, serviceLabels, labels)
+		labels, err = ParseLabels(route, serviceLabels, labels)
 		if err != nil {
 			log.Errorf("parseLabels err: ", err)
 			return nil, err
@@ -218,42 +202,22 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 		if route.ServiceProtocol != "" {
 			extensions["x-apisix-service_protocol"] = route.ServiceProtocol
 		}
+
 		if route.Vars != nil {
 			extensions["x-apisix-vars"] = route.Vars
 		}
 
-		// analysis route.URIs
-		routeURIs := []string{}
-		if route.URI != "" {
-			routeURIs = append(routeURIs, route.URI)
-		}
-
-		if route.Uris != nil {
-			routeURIs = route.Uris
-		}
-
-		for _, uri := range routeURIs {
-			if strings.Contains(uri, "*") {
-				paths[strings.Split(uri, "*")[0]+"{params}"] = pathItem
-				// add params introduce
-				paramsRefs = append(paramsRefs, &openapi3.ParameterRef{
-					Value: &openapi3.Parameter{
-						In:          "path",
-						Name:        "params",
-						Required:    true,
-						Description: "params in path",
-						Schema:      &openapi3.SchemaRef{Value: &openapi3.Schema{Type: "string"}}}})
-			} else {
-				paths[uri] = pathItem
-			}
-		}
+		// Parse Route URIs
+		paths, paramsRefs = ParseRouteUris(route, paths, paramsRefs, pathItem)
 
 		//Parse Route Plugins
-		path, secSchemas, paramsRefs, plugins, err = parseRoutePlugins(route, paramsRefs, plugins, path, servicePlugins, secSchemas, requestBody)
+		path, secSchemas, paramsRefs, plugins, err = ParseRoutePlugins(route, paramsRefs, plugins, path, servicePlugins, secSchemas, requestBody)
+
 		if err != nil {
 			log.Errorf("parseRoutePlugins err: ", err)
 			return nil, err
 		}
+
 		if plugins != nil {
 			extensions["x-apisix-plugins"] = plugins
 		}
@@ -269,23 +233,17 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 		for i := range route.Methods {
 			switch strings.ToUpper(route.Methods[i]) {
 			case http.MethodGet:
-				//pathItem.Get = path
-				pathItem.Get = parsePathItem(path, http.MethodGet)
+				pathItem.Get = ParsePathItem(path, http.MethodGet)
 			case http.MethodPost:
-				//pathItem.Post = path
-				pathItem.Post = parsePathItem(path, http.MethodPost)
+				pathItem.Post = ParsePathItem(path, http.MethodPost)
 			case http.MethodPut:
-				//pathItem.Put = path
-				pathItem.Put = parsePathItem(path, http.MethodPut)
+				pathItem.Put = ParsePathItem(path, http.MethodPut)
 			case http.MethodDelete:
-				//pathItem.Delete = path
-				pathItem.Delete = parsePathItem(path, http.MethodDelete)
+				pathItem.Delete = ParsePathItem(path, http.MethodDelete)
 			case http.MethodPatch:
-				//pathItem.Patch = path
-				pathItem.Patch = parsePathItem(path, http.MethodPatch)
+				pathItem.Patch = ParsePathItem(path, http.MethodPatch)
 			case http.MethodHead:
-				//pathItem.Head = path
-				pathItem.Head = parsePathItem(path, http.MethodHead)
+				pathItem.Head = ParsePathItem(path, http.MethodHead)
 			}
 		}
 	}
@@ -300,7 +258,9 @@ func (h *Handler) routeToOpenApi3(routes []*entity.Route) (*openapi3.Swagger, er
 	return &swagger, nil
 }
 
-func parseLabels(route *entity.Route, serviceLabels map[string]string, labels map[string]string) (map[string]string, error) {
+//ParseLabels When service and route have labels at the same time, use route's label.
+//When route has no label, service sometimes uses service's label. This function is used to process this logic
+func ParseLabels(route *entity.Route, serviceLabels map[string]string, labels map[string]string) (map[string]string, error) {
 	if route.Labels != nil {
 		return route.Labels, nil
 	} else if route.Labels == nil && route.ServiceID != nil {
@@ -313,7 +273,8 @@ func parseLabels(route *entity.Route, serviceLabels map[string]string, labels ma
 	return nil, nil
 }
 
-func parsePathItem(path openapi3.Operation, routeMethod string) *openapi3.Operation {
+//ParsePathItem Convert data in route to openapi3
+func ParsePathItem(path openapi3.Operation, routeMethod string) *openapi3.Operation {
 	_path := &openapi3.Operation{
 		ExtensionProps: path.ExtensionProps,
 		Tags:           path.Tags,
@@ -332,7 +293,8 @@ func parsePathItem(path openapi3.Operation, routeMethod string) *openapi3.Operat
 	return _path
 }
 
-func parseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef, plugins map[string]interface{}, path openapi3.Operation, servicePlugins map[string]interface{}, secSchemas openapi3.SecuritySchemes, requestBody *openapi3.RequestBody) (openapi3.Operation, openapi3.SecuritySchemes, []*openapi3.ParameterRef, map[string]interface{}, error) {
+// ParseRoutePlugins Merge service with plugin in route
+func ParseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef, plugins map[string]interface{}, path openapi3.Operation, servicePlugins map[string]interface{}, secSchemas openapi3.SecuritySchemes, requestBody *openapi3.RequestBody) (openapi3.Operation, openapi3.SecuritySchemes, []*openapi3.ParameterRef, map[string]interface{}, error) {
 	if route.Plugins != nil {
 		param := &openapi3.Parameter{}
 		secReq := &openapi3.SecurityRequirements{}
@@ -439,3 +401,68 @@ func parseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef,
 	return path, secSchemas, paramsRefs, plugins, nil
 }
 
+// ParseRouteUris The URI and URIs of route are converted to paths URI in openapi3
+func ParseRouteUris(route *entity.Route, paths openapi3.Paths, paramsRefs []*openapi3.ParameterRef, pathItem *openapi3.PathItem) (openapi3.Paths, []*openapi3.ParameterRef) {
+	routeURIs := []string{}
+	if route.URI != "" {
+		routeURIs = append(routeURIs, route.URI)
+	}
+
+	if route.Uris != nil {
+		routeURIs = route.Uris
+	}
+
+	for _, uri := range routeURIs {
+		if strings.Contains(uri, "*") {
+			paths[strings.Split(uri, "*")[0]+"{params}"] = pathItem
+			// add params introduce
+			paramsRefs = append(paramsRefs, &openapi3.ParameterRef{
+				Value: &openapi3.Parameter{
+					In:          "path",
+					Name:        "params",
+					Required:    true,
+					Description: "params in path",
+					Schema:      &openapi3.SchemaRef{Value: &openapi3.Schema{Type: "string"}}}})
+		} else {
+			paths[uri] = pathItem
+		}
+	}
+	return paths, paramsRefs
+}
+
+// ParseRouteUpstream Processing the upstream in service and route
+func (h *Handler) ParseRouteUpstream(c droplet.Context, route *entity.Route) (interface{}, error) {
+	// The upstream data of route has the highest priority.
+	// If there is one, it will be used directly.
+	// If there is no route, the upstream data of service will be used.
+	// If there is no route, the upstream data of service will not be used normally.
+	if route.Upstream != nil {
+		return route.Upstream, nil
+	} else if route.UpstreamID != nil && route.Upstream == nil {
+		upstreamID := utils.InterfaceToString(route.UpstreamID)
+		upstream, err := h.upstreamStore.Get(c.Context(), upstreamID)
+		if err != nil {
+			if err == data.ErrNotFound {
+				return nil, fmt.Errorf("upstream id: %s not found", route.UpstreamID)
+			}
+			return nil, err
+		}
+		return upstream, nil
+	} else if route.UpstreamID == nil && route.Upstream == nil && route.ServiceID != nil {
+		_service := service.(*entity.Service)
+		if _service.Upstream != nil {
+			return _service.Upstream, nil
+		} else if _service.Upstream == nil && _service.UpstreamID != nil {
+			upstreamID := utils.InterfaceToString(_service.UpstreamID)
+			upstream, err := h.upstreamStore.Get(context.Background(), upstreamID)
+			if err != nil {
+				if err == data.ErrNotFound {
+					return nil, fmt.Errorf("upstream id: %s not found", _service.UpstreamID)
+				}
+				return nil, err
+			}
+			return upstream, nil
+		}
+	}
+	return nil, nil
+}
