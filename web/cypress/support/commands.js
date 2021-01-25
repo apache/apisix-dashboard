@@ -74,7 +74,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           }
         });
 
-        cy.get(domSelectors.drawer).within(() => {
+        cy.get(domSelectors.drawer, { timeout }).within(() => {
           cy.contains('Submit').click({
             force: true,
             timeout,
@@ -82,7 +82,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
         });
 
         if (shouldValid === true) {
-          cy.get(domSelectors.drawer).should('not.exist');
+          cy.get(domSelectors.drawer, { timeout }).should('not.exist');
         } else if (shouldValid === false) {
           cy.get(this.selector.notification).should('contain', 'Invalid plugin data');
 
@@ -92,7 +92,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
             multiple: true,
           });
 
-          cy.get(domSelectors.drawer).within(() => {
+          cy.get(domSelectors.drawer, { timeout }).within(() => {
             cy.contains('Cancel').click({
               force: true,
               timeout,

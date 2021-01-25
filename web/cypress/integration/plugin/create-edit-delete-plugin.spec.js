@@ -39,6 +39,20 @@ context('Create and Delete Plugin List', () => {
     cy.configurePlugins(this.cases);
   });
 
+  it('should edit the plugin', () => {
+    cy.visit('/');
+    cy.contains('Plugin').click();
+
+    cy.contains('api-breaker').siblings().contains('Edit').click();
+    cy.get('.CodeMirror')
+      .first()
+      .then(() => {
+        cy.get('#disable').click();
+        cy.contains('button', 'Submit').click();
+      });
+    cy.contains('api-breaker').should('not.exist');
+  });
+
   it('should delete plugin list', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
