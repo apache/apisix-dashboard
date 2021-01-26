@@ -1463,13 +1463,13 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 	time.Sleep(sleepTime)
 
 	// sign jwt token
-	body, status, err := httpGet("http://172.16.238.20:9080/apisix/plugin/jwt/sign?key=user-key")
+	body, status, err := httpGet("http://127.0.0.10:9080/apisix/plugin/jwt/sign?key=user-key")
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, status)
 	jwtToken := string(body)
 
 	// sign jwt token with not exists key
-	body, status, err = httpGet("http://172.16.238.20:9080/apisix/plugin/jwt/sign?key=not-exist-key")
+	body, status, err = httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=not-exist-key")
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusNotFound, status)
 
@@ -1638,7 +1638,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 	time.Sleep(sleepTime)
 
 	// get the token of jwt
-	basepath := "http://172.16.238.20:9080"
+	basepath := "http://127.0.0.1:9080"
 	request, _ := http.NewRequest("GET", basepath+"/apisix/plugin/jwt/sign?key=user-key", nil)
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
