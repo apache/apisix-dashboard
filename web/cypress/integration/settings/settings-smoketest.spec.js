@@ -19,8 +19,8 @@
 context('settings page smoke test', () => {
   const data = {
     grafanaAddress: 'Grafana Address',
-    grafanaExplain1: 'Grafana address should begin with HTTP or HTTPS',
-    grafanaExplain2: 'Address is illegality',
+    grafanaExplanation1: 'Grafana address should begin with HTTP or HTTPS',
+    grafanaExplanation2: 'Address is illegality',
     updateSuccessfully: 'Update Configuration Successfully',
     invalidURL: 'httx://www.test.com',
     validURL: 'https://apisix.apache.org/',
@@ -48,7 +48,7 @@ context('settings page smoke test', () => {
       .children()
       .should('contain', 'Setting')
       .and('contain', data.grafanaAddress)
-      .and('contain', data.grafanaExplain1);
+      .and('contain', data.grafanaExplanation1);
   });
 
   it('should set a invalid url', () => {
@@ -57,7 +57,7 @@ context('settings page smoke test', () => {
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
     cy.get(domSelector.grafanaURL).clear().type(data.invalidURL);
-    cy.get(domSelector.explain).should('contain', data.grafanaExplain2);
+    cy.get(domSelector.explain).should('contain', data.grafanaExplanation2);
   });
 
   it('should set a accessible URL', () => {
