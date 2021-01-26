@@ -58,8 +58,6 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.GET("/apisix/admin/export/routes/:ids", wgin.Wraps(h.ExportRoutes,
 		wrapper.InputType(reflect.TypeOf(ExportInput{}))))
 	r.GET("/apisix/admin/export/routes", wgin.Wraps(h.ExportAllRoutes))
-	//"/apisix/admin/routes/export/:ids"
-	//r.GET("/apisix/admin/exportall/routes", wgin.Wraps(h.ExportAllRoutes))
 }
 
 type ExportInput struct {
