@@ -218,7 +218,6 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 		}
 
 		// set header
-		req.WithHeader("Content-Type", "application/json")
 		for key, val := range tc.Headers {
 			req.WithHeader(key, val)
 		}
