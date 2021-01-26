@@ -80,7 +80,6 @@ Cypress.Commands.add('configurePlugins', (cases) => {
             timeout,
           });
         });
-        cy.get(domSelectors.drawer, { timeout }).should('not.exist');
 
         if (shouldValid === true) {
           cy.get(domSelectors.drawer).should('not.exist');

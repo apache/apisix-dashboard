@@ -42,6 +42,7 @@ context('Create and Delete Plugin List', () => {
 
     // add test plugins
     cy.configurePlugins(this.cases);
+    cy.wait(200);
   });
 
   it('should edit the plugin', () => {
@@ -49,7 +50,6 @@ context('Create and Delete Plugin List', () => {
     cy.contains('Plugin').click();
     cy.contains(data.name).siblings().contains('Edit').click({
       force: true,
-      timeout,
     });
     cy.get(domSelector.codemirror)
       .first()
