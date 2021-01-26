@@ -48,7 +48,8 @@ context('Create and Delete Plugin List', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
 
-    cy.contains(data.name).siblings().contains('Edit').click({
+    cy.get(domSelector.refresh).click();
+    cy.contains(data.name).should('exist').siblings().contains('Edit').click({
       force: true,
     });
     cy.get(domSelector.codemirror)
