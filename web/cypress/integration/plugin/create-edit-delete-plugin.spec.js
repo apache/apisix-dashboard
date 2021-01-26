@@ -47,7 +47,6 @@ context('Create and Delete Plugin List', () => {
   it('should edit the plugin', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
-
     cy.contains(data.name).siblings().contains('Edit').click({
       force: true,
       timeout,
@@ -66,7 +65,7 @@ context('Create and Delete Plugin List', () => {
     cy.contains('Plugin').click();
 
     cy.get(domSelector.refresh).click();
-    cy.get(domSelector.tableCell, { timeout }).then(function (rows) {
+    cy.get(domSelector.tableCell, { timeout }).should('exist').then(function (rows) {
       [...rows].forEach((row) => {
         const name = row.innerText;
         const cases = this.cases[name] || [];
