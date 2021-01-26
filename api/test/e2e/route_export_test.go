@@ -59,7 +59,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"172.31.118.28:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -92,7 +92,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"172.31.118.28:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -136,7 +136,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"172.31.118.28:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -147,8 +147,8 @@ func TestRoute_Export(t *testing.T) {
 		{
 			Desc:         "export route",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r1",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR1 + "}}",
@@ -189,7 +189,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"172.31.118.28:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -222,7 +222,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"172.31.118.28:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -266,7 +266,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"172.31.118.28:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -277,8 +277,8 @@ func TestRoute_Export(t *testing.T) {
 		{
 			Desc:         "export route2",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r2",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r2",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "}}",
@@ -293,8 +293,8 @@ func TestRoute_Export(t *testing.T) {
 		{
 			Desc:         "export route and route2",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r1,r2",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r1,r2",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "," + exportStrR1 + "}}",
@@ -303,7 +303,7 @@ func TestRoute_Export(t *testing.T) {
 			Desc:         "use the exportall inerface to export all routes",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/apisix/admin/exportall/routes",
+			Path:         "/apisix/admin/export/routes",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "," + exportStrR1 + "}}",
@@ -355,7 +355,7 @@ func TestRoute_Export(t *testing.T) {
 	"desc": "testservice_desc", 
 	"upstream": {
 		"nodes": [{
-			"host": "172.16.238.20",
+			"host": "172.31.118.28",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -413,7 +413,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "172.31.118.28",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -454,7 +454,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "172.31.118.28",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -488,8 +488,8 @@ func TestRoute_Export(t *testing.T) {
 		{
 			Desc:         "export route3",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r3",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r3",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "{\"code\":0,\"message\":\"\",\"data\":" + exportStrR3,
@@ -535,7 +535,7 @@ func TestRoute_Export(t *testing.T) {
 	"desc": "testservice_desc", 
 	"upstream": {
 		"nodes": [{
-			"host": "172.16.238.20",
+			"host": "172.31.118.28",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -596,7 +596,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "172.31.118.28",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -637,7 +637,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "172.31.118.28",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -672,7 +672,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "172.31.118.28",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -685,8 +685,8 @@ func TestRoute_Export(t *testing.T) {
 		{
 			Desc:         "export route4",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r4",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r4",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   exportStrR4,
@@ -784,7 +784,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "172.31.118.28",
 							"port": 1981,
 							"weight": 1
 						}],
@@ -805,7 +805,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.16.238.20",
+						"host": "172.31.118.28",
 						"port": 1980,
 						"weight": 1
 					}
@@ -869,7 +869,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "172.31.118.28",
 						"port": 1981,
 						"weight": 1
 					}]
@@ -882,8 +882,8 @@ func TestRoute_Export(t *testing.T) {
 		{
 			Desc:         "export route5",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r5",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r5",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   exportStrR5,
@@ -967,7 +967,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.16.238.20",
+						"host": "172.31.118.28",
 						"port": 1980,
 						"weight": 1
 					}
@@ -1000,8 +1000,8 @@ func TestRoute_Export(t *testing.T) {
 		{
 			Desc:         "export route8",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r8",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r8",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   exportStrR8,
@@ -1090,7 +1090,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.16.238.20",
+						"host": "172.31.118.28",
 						"port": 1980,
 						"weight": 1
 					}
@@ -1108,7 +1108,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.16.238.20",
+						"host": "172.31.118.28",
 						"port": 1981,
 						"weight": 1
 					}
@@ -1176,8 +1176,8 @@ func TestRoute_Export(t *testing.T) {
 		{
 			Desc:         "export route9",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r9",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r9",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   exportStrR9,
@@ -1281,7 +1281,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.16.238.20",
+						"host": "172.31.118.28",
 						"port": 1980,
 						"weight": 1
 					}
@@ -1348,8 +1348,8 @@ func TestRoute_Export(t *testing.T) {
 		{
 			Desc:         "export route10",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r10",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r10",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   exportStrR10,
@@ -1417,7 +1417,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 				 "upstream": {
 					 "type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "172.31.118.28",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1463,13 +1463,13 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 	time.Sleep(sleepTime)
 
 	// sign jwt token
-	body, status, err := httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key")
+	body, status, err := httpGet("http://172.31.118.28:9080/apisix/plugin/jwt/sign?key=user-key")
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, status)
 	jwtToken := string(body)
 
 	// sign jwt token with not exists key
-	body, status, err = httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=not-exist-key")
+	body, status, err = httpGet("http://172.31.118.28:9080/apisix/plugin/jwt/sign?key=not-exist-key")
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusNotFound, status)
 
@@ -1507,8 +1507,8 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 		{
 			Desc:         "export route",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r1",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   exportStrJWT,
@@ -1619,7 +1619,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "172.31.118.28",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1638,7 +1638,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 	time.Sleep(sleepTime)
 
 	// get the token of jwt
-	basepath := "http://127.0.0.1:9080"
+	basepath := "http://172.31.118.28:9080"
 	request, _ := http.NewRequest("GET", basepath+"/apisix/plugin/jwt/sign?key=user-key", nil)
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
@@ -1661,8 +1661,8 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 		{
 			Desc:         "export route",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r1",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   exportStrJWTNoAlgorithm,
@@ -1726,7 +1726,7 @@ func TestExportRoute_With_Auth_Plugin(t *testing.T) {
 				 "upstream": {
 					 "type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "172.31.118.28",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1816,8 +1816,8 @@ func TestExportRoute_With_Auth_Plugin(t *testing.T) {
 		{
 			Desc:         "export route",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r1",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   exportStrAuth,
@@ -1967,8 +1967,8 @@ func TestRoute_Export_Label(t *testing.T) {
 		{
 			Desc:         "export route1",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r1",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   exportStrR1,
@@ -2105,8 +2105,8 @@ func TestRoute_Export_Label(t *testing.T) {
 		{
 			Desc:         "export route2",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r2",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r2",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   exportStrR2,
@@ -2246,8 +2246,8 @@ func TestRoute_Export_Request_Validation(t *testing.T) {
 		{
 			Desc:         "export route1",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r1",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   exportStrR1,
@@ -2303,7 +2303,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"172.31.118.28:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2327,7 +2327,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"status": 1,
 					"upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"172.31.118.28:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2350,7 +2350,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"status": 1,
 					"upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"172.31.118.28:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2362,8 +2362,8 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 		{
 			Desc:         "use the exportall inerface to export all routes",
 			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPost,
-			Path:         "/apisix/admin/routes/export/r1,r2",
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r1,r2",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   exportStrR1R2,
@@ -2415,3 +2415,4 @@ func replaceStr(str string) string {
 	str = strings.Replace(str, " ", "", -1)
 	return str
 }
+

@@ -23,19 +23,19 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	"time"
 
-	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/internal/core/store"
-	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/log"
-	"github.com/apisix/manager-api/internal/utils"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
+
+	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/log"
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
@@ -55,9 +55,11 @@ func NewHandler() (handler.RouteRegister, error) {
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.POST("/apisix/admin/routes/export/:ids", wgin.Wraps(h.ExportRoutes,
+	r.GET("/apisix/admin/export/routes/:ids", wgin.Wraps(h.ExportRoutes,
 		wrapper.InputType(reflect.TypeOf(ExportInput{}))))
-	r.GET("/apisix/admin/exportall/routes", wgin.Wraps(h.ExportAllRoutes))
+	r.GET("/apisix/admin/export/routes", wgin.Wraps(h.ExportAllRoutes))
+	//"/apisix/admin/routes/export/:ids"
+	//r.GET("/apisix/admin/exportall/routes", wgin.Wraps(h.ExportAllRoutes))
 }
 
 type ExportInput struct {
@@ -73,6 +75,9 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 	for _, id := range ids {
 		route, err := h.routeStore.Get(c.Context(), id)
 		if err != nil {
+			if err == data.ErrNotFound {
+				return nil, fmt.Errorf("route id: %s not found", id)
+			}
 			return nil, err
 		}
 		routes = append(routes, route.(*entity.Route))
@@ -94,10 +99,11 @@ const (
 )
 
 var (
-	openApi = "3.0.0"
-	title   = "RoutesExport"
-	service interface{}
-	err     error
+	openApi    = "3.0.0"
+	title      = "RoutesExport"
+	service    interface{}
+	err        error
+	pathNumber int
 )
 
 //ExportAllRoutes All routes can be directly exported without passing parameters
@@ -128,13 +134,15 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 	requestBody := &openapi3.RequestBody{}
 	components := &openapi3.Components{}
 	secSchemas := openapi3.SecuritySchemes{}
-	servicePlugins := make(map[string]interface{})
-	plugins := make(map[string]interface{})
-	serviceLabels := make(map[string]string)
-	labels := make(map[string]string)
+	pathNumber = 0
 
 	for _, route := range routes {
 		extensions := make(map[string]interface{})
+		servicePlugins := make(map[string]interface{})
+		plugins := make(map[string]interface{})
+		serviceLabels := make(map[string]string)
+		labels := make(map[string]string)
+
 		pathItem := &openapi3.PathItem{}
 		path := openapi3.Operation{}
 		path.Summary = route.Desc
@@ -174,7 +182,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 		}
 
 		//Parse Labels
-		labels, err = ParseLabels(route, serviceLabels, labels)
+		labels, err = ParseLabels(route, serviceLabels)
 		if err != nil {
 			log.Errorf("parseLabels err: ", err)
 			return nil, err
@@ -209,7 +217,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 		}
 
 		// Parse Route URIs
-		paths, paramsRefs = ParseRouteUris(route, paths, paramsRefs, pathItem)
+		paths, paramsRefs = ParseRouteUris(route, paths, paramsRefs, pathItem, pathNumber)
 
 		//Parse Route Plugins
 		path, secSchemas, paramsRefs, plugins, err = ParseRoutePlugins(route, paramsRefs, plugins, path, servicePlugins, secSchemas, requestBody)
@@ -261,7 +269,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 
 //ParseLabels When service and route have labels at the same time, use route's label.
 //When route has no label, service sometimes uses service's label. This function is used to process this logic
-func ParseLabels(route *entity.Route, serviceLabels map[string]string, labels map[string]string) (map[string]string, error) {
+func ParseLabels(route *entity.Route, serviceLabels map[string]string) (map[string]string, error) {
 	if route.Labels != nil {
 		return route.Labels, nil
 	} else if route.Labels == nil && route.ServiceID != nil {
@@ -302,11 +310,6 @@ func ParseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef,
 
 		// analysis plugins
 		for key, value := range route.Plugins {
-			// analysis proxy-rewrite plugin
-			//if key == "proxy-rewrite" {
-			//	continue
-			//}
-
 			// analysis request-validation plugin
 			if key == "request-validation" {
 				if valueMap, ok := value.(map[string]interface{}); ok {
@@ -340,7 +343,10 @@ func ParseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef,
 						if err != nil {
 							log.Errorf("json marshal failed: %s", err)
 						}
-
+						// In the swagger format conversion, there are many cases of content type data format
+						// Such as (application/json, application/xml, text/xml) and more.
+						// There are many matching methods, such as equal, inclusive and so on.
+						// Therefore, the current processing method is to use "*/*" to match all
 						m["*/*"] = &openapi3.MediaType{Schema: &openapi3.SchemaRef{Value: schema}}
 						requestBody.Content = m
 					}
@@ -403,7 +409,7 @@ func ParseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef,
 }
 
 // ParseRouteUris The URI and URIs of route are converted to paths URI in openapi3
-func ParseRouteUris(route *entity.Route, paths openapi3.Paths, paramsRefs []*openapi3.ParameterRef, pathItem *openapi3.PathItem) (openapi3.Paths, []*openapi3.ParameterRef) {
+func ParseRouteUris(route *entity.Route, paths openapi3.Paths, paramsRefs []*openapi3.ParameterRef, pathItem *openapi3.PathItem, pathNumber int) (openapi3.Paths, []*openapi3.ParameterRef) {
 	routeURIs := []string{}
 	if route.URI != "" {
 		routeURIs = append(routeURIs, route.URI)
@@ -414,12 +420,12 @@ func ParseRouteUris(route *entity.Route, paths openapi3.Paths, paramsRefs []*ope
 	}
 
 	for _, uri := range routeURIs {
-		_time := time.Now().UnixNano() / 1e6
 		if strings.Contains(uri, "*") {
 			if _, ok := paths[strings.Split(uri, "*")[0]+"{params}"]; !ok {
 				paths[strings.Split(uri, "*")[0]+"{params}"] = pathItem
 			} else {
-				paths[strings.Split(uri, "*")[0]+"{params}"+"-APISIX-REPEAT-URI-"+strconv.FormatInt(_time, 10)] = pathItem
+				pathNumber++
+				paths[strings.Split(uri, "*")[0]+"{params}"+"-APISIX-REPEAT-URI-"+strconv.Itoa(pathNumber)] = pathItem
 			}
 			// add params introduce
 			paramsRefs = append(paramsRefs, &openapi3.ParameterRef{
@@ -433,7 +439,8 @@ func ParseRouteUris(route *entity.Route, paths openapi3.Paths, paramsRefs []*ope
 			if _, ok := paths[uri]; !ok {
 				paths[uri] = pathItem
 			} else {
-				paths[uri+"-APISIX-REPEAT-URI-"+strconv.FormatInt(_time, 10)] = pathItem
+				pathNumber++
+				paths[uri+"-APISIX-REPEAT-URI-"+strconv.Itoa(pathNumber)] = pathItem
 			}
 		}
 	}
@@ -476,3 +483,4 @@ func (h *Handler) ParseRouteUpstream(c droplet.Context, route *entity.Route) (in
 	}
 	return nil, nil
 }
+

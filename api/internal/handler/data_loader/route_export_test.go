@@ -151,8 +151,7 @@ func TestExportRoutes1(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	ret1, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR1), string(ret1))
 	assert.NotNil(t, ret1)
 }
@@ -279,8 +278,7 @@ func TestExportRoutes2(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	ret1, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR2), string(ret1))
 	assert.NotNil(t, ret1)
 }
@@ -386,8 +384,7 @@ func TestExportRoutesCreateByServiceId(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
 }
@@ -511,8 +508,7 @@ func TestExportRoutesCreateByServiceId2(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
 }
@@ -648,8 +644,7 @@ func TestExportRoutesCreateByServiceId3(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
 }
@@ -740,8 +735,7 @@ func TestExportRoutesCreateByUpstreamId(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
 }
@@ -885,8 +879,7 @@ func TestExportRoutesCreateByUpstreamIdandServiceId(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
 }
@@ -1009,8 +1002,7 @@ func TestExportRoutesCreateByServiceIdNoUpstream(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
 }
@@ -1103,8 +1095,7 @@ func TestExportRoutesCreateByLabel(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
 }
@@ -1189,8 +1180,7 @@ func TestExportRoutesCreateByLabel2(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
 }
@@ -1299,8 +1289,7 @@ func TestExportRoutesCreateByRequestValidation(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
 }
@@ -1375,8 +1364,7 @@ func TestExportRoutesCreateByJWTAuth(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
 }
@@ -1459,8 +1447,7 @@ func TestExportRoutesCreateByKeyAuthAndBasicAuth(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
 }
@@ -1582,8 +1569,7 @@ func TestExportRoutesAll(t *testing.T) {
 	ret, err := h.ExportAllRoutes(ctx)
 	assert.Nil(t, err)
 	ret1, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR1), string(ret1))
 	assert.NotNil(t, ret1)
 	assert.True(t, getCalled)
@@ -1743,8 +1729,7 @@ func TestExportRoutesCreateByUpstreamIDAndServiceID2(t *testing.T) {
 	ret, err := h.ExportRoutes(ctx)
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
 	assert.True(t, getCalled)
@@ -1847,10 +1832,8 @@ func TestExportRoutesSameURI(t *testing.T) {
 	ret, err := h.ExportAllRoutes(ctx)
 	assert.Nil(t, err)
 	ret1, err := json.Marshal(ret)
-	if err != nil {
-	}
+	assert.Nil(t, err)
 	find := strings.Contains(string(ret1), replaceStr(exportR1))
-	//assert.Equal(t, replaceStr(exportR1), string(ret1))
 	assert.True(t, find)
 	assert.NotNil(t, ret1)
 	assert.True(t, getCalled)
@@ -1862,3 +1845,4 @@ func replaceStr(str string) string {
 	str = strings.Replace(str, " ", "", -1)
 	return str
 }
+
