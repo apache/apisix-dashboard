@@ -20,6 +20,7 @@ context('settings page smoke test', () => {
   const domSelectors = {
     pageContent: '.ant-pro-page-container',
     notificationMsg: '.ant-notification-notice-message',
+    setting: '.ant-space-align-center',
   };
 
   beforeEach(() => {
@@ -29,6 +30,7 @@ context('settings page smoke test', () => {
   it('should visit settings page', () => {
     // go to settings page
     cy.visit('/');
+    cy.get(domSelectors.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
     cy.get(domSelectors.pageContent)
@@ -40,22 +42,24 @@ context('settings page smoke test', () => {
 
   it('should set a invalid url', () => {
     cy.visit('/');
+    cy.get(domSelectors.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
     cy.get('#grafanaURL').clear().type('httx://www.test.com');
     cy.get('.ant-form-item-explain').should('contain', 'Address is illegality');
   });
 
-  it('should set a accessible url', () => {
+  it('should set a accessible URL', () => {
     cy.visit('/');
+    cy.get(domSelectors.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
     cy.get('#grafanaURL').clear().type('https://apisix.apache.org/');
     cy.contains('Submit').click();
 
     cy.get(domSelectors.notificationMsg).should('contain', 'Update Configuration Successfully');
-    cy.intercept('https://apisix.apache.org/').as('fetchurl');
-    cy.wait('@fetchurl');
+    cy.intercept('https://apisix.apache.org/').as('fetchURL');
+    cy.wait('@fetchURL');
     cy.get(domSelectors.pageContent).children().should('contain', 'Metrics');
   });
 });
