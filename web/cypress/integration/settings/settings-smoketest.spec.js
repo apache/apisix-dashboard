@@ -19,21 +19,20 @@
 context('settings page smoke test', () => {
   const data = {
     grafana_address: 'Grafana Address',
-    grafana_explain1: 'Grafana address should begin with HTTP or HTTPS',
-    grafana_explain2: 'Address is illegality',
-    update_success: 'Update Configuration Successfully',
-    url1: 'httx://www.test.com',
-    url2: 'https://apisix.apache.org/',
-    fetchURL: 'fetchURL',
+    start_explanation: 'Grafana address should begin with HTTP or HTTPS',
+    after_explanation: 'Address is illegality',
+    update_successfully: 'Update Configuration Successfully',
+    invalid_URL: 'httx://www.test.com',
+    new_URL: 'https://apisix.apache.org/',
+    fetch_URL: 'fetchURL',
     fetch: '@fetchURL',
   }
   const domSelector = {
-    pageContent: '.ant-pro-page-container',
+    page_content: '.ant-pro-page-container',
     notificationMsg: '.ant-notification-notice-message',
     setting: '.ant-space-align-center',
-    grafamaURL: '#grafanaURL',
+    grafama_URL: '#grafanaURL',
     explain: '.ant-form-item-explain',
-
   };
 
   beforeEach(() => {
@@ -41,16 +40,15 @@ context('settings page smoke test', () => {
   });
 
   it('should visit settings page', () => {
-    // go to settings page
     cy.visit('/');
     cy.get(domSelector.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get(domSelector.pageContent)
+    cy.get(domSelector.page_content)
       .children()
       .should('contain', 'Setting')
       .and('contain', data.grafana_address)
-      .and('contain', data.grafana_explain1);
+      .and('contain', data.start_explanation);
   });
 
   it('should set a invalid url', () => {
@@ -58,8 +56,8 @@ context('settings page smoke test', () => {
     cy.get(domSelector.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get(domSelector.grafamaURL).clear().type(data.url1);
-    cy.get(domSelector.explain).should('contain', data.grafana_explain2);
+    cy.get(domSelector.grafama_URL).clear().type(data.invalid_URL);
+    cy.get(domSelector.explain).should('contain', data.after_explanation);
   });
 
   it('should set a accessible URL', () => {
@@ -67,12 +65,12 @@ context('settings page smoke test', () => {
     cy.get(domSelector.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get(domSelector.grafamaURL).clear().type(data.url2);
+    cy.get(domSelector.grafama_URL).clear().type(data.new_URL);
     cy.contains('Submit').click();
 
-    cy.get(domSelector.notificationMsg).should('contain', data.update_success);
-    cy.intercept(data.url2).as(data.fetchURL);
+    cy.get(domSelector.notificationMsg).should('contain', data.update_successfully);
+    cy.intercept(data.new_URL).as(data.fetch_URL);
     cy.wait(data.fetch);
-    cy.get(domSelector.pageContent).children().should('contain', 'Metrics');
+    cy.get(domSelector.page_content).children().should('contain', 'Metrics');
   });
 });
