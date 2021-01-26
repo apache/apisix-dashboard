@@ -42,6 +42,7 @@ context('Create and Search Route', () => {
     nodes_0_host: '#nodes_0_host',
     searchName: '[title=Name]',
     searchLabels: '[title=Labels]',
+    refresh: '.anticon-reload',
   };
 
   beforeEach(() => {
@@ -50,7 +51,6 @@ context('Create and Search Route', () => {
   });
 
   it('should create route test1, test2, test3', function () {
-    //  go to route create page
     cy.visit('/');
     cy.contains('Route').click();
     for (let i = 0; i < 3; i += 1) {
@@ -78,7 +78,6 @@ context('Create and Search Route', () => {
       cy.contains('Next').click();
       cy.contains('Submit').click();
       cy.contains('Submit Successfully');
-      // back to route list page
       cy.contains('Goto List').click();
       cy.url().should('contains', 'routes/list');
     }
@@ -114,7 +113,7 @@ context('Create and Search Route', () => {
     cy.contains('Route').click();
 
     // search one label
-    cy.wait(500);
+    cy.get(domSelector.refresh).click();
     cy.get(domSelector.searchLabels).click();
     cy.get(this.domSelector.dropdown).within(() => {
       cy.contains(data.value0).click();
@@ -130,7 +129,7 @@ context('Create and Search Route', () => {
     cy.visit('/routes/list');
     for (let i = 0; i < 3; i += 1) {
       cy.contains(`test${i}`).siblings().contains('Delete').click();
-      cy.contains('button', 'Confirm').click();
+      cy.contains('button', 'Confirm').click({ timeout });
       cy.get(this.domSelector.notification).should('contain', data.deleteRouteSuccess);
     }
   });
