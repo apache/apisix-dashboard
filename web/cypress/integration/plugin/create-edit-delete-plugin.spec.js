@@ -79,6 +79,6 @@ context('Create and Delete Plugin List', () => {
     });
 
     // check if plugin list is empty
-    cy.get(domSelector.empty);
+    cy.get(domSelector.empty).should('be.visible');
   });
 });
