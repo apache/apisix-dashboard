@@ -58,6 +58,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.GET("/apisix/admin/export/routes/:ids", wgin.Wraps(h.ExportRoutes,
 		wrapper.InputType(reflect.TypeOf(ExportInput{}))))
 	r.GET("/apisix/admin/export/routes", wgin.Wraps(h.ExportAllRoutes))
+	//"/apisix/admin/routes/export/:ids"
+	//r.GET("/apisix/admin/exportall/routes", wgin.Wraps(h.ExportAllRoutes))
 }
 
 type ExportInput struct {
@@ -139,7 +141,6 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 		servicePlugins := make(map[string]interface{})
 		plugins := make(map[string]interface{})
 		serviceLabels := make(map[string]string)
-		labels := make(map[string]string)
 
 		pathItem := &openapi3.PathItem{}
 		path := openapi3.Operation{}
@@ -180,7 +181,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 		}
 
 		//Parse Labels
-		labels, err = ParseLabels(route, serviceLabels)
+		labels, err := ParseLabels(route, serviceLabels)
 		if err != nil {
 			log.Errorf("parseLabels err: ", err)
 			return nil, err
