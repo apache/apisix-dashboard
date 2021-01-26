@@ -41,7 +41,9 @@ context('Create and Delete Plugin List', () => {
     cy.contains('Create').click();
 
     // add test plugins
-    cy.configurePlugins(this.cases);
+    cy.get('@cases').then((cases) => {
+      cy.configurePlugins(cases);
+    })
   });
 
   it('should edit the plugin', () => {
