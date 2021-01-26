@@ -17,10 +17,23 @@
 /* eslint-disable no-undef */
 
 context('settings page smoke test', () => {
-  const domSelectors = {
+  const data = {
+    grafana_address: 'Grafana Address',
+    grafana_explain1: 'Grafana address should begin with HTTP or HTTPS',
+    grafana_explain2: 'Address is illegality',
+    update_success: 'Update Configuration Successfully',
+    url1: 'httx://www.test.com',
+    url2: 'https://apisix.apache.org/',
+    fetchURL: 'fetchURL',
+    fetch: '@fetchURL',
+  }
+  const domSelector = {
     pageContent: '.ant-pro-page-container',
     notificationMsg: '.ant-notification-notice-message',
     setting: '.ant-space-align-center',
+    grafamaURL: '#grafanaURL',
+    explain: '.ant-form-item-explain',
+
   };
 
   beforeEach(() => {
@@ -30,36 +43,36 @@ context('settings page smoke test', () => {
   it('should visit settings page', () => {
     // go to settings page
     cy.visit('/');
-    cy.get(domSelectors.setting).invoke('show').click('center');
+    cy.get(domSelector.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get(domSelectors.pageContent)
+    cy.get(domSelector.pageContent)
       .children()
       .should('contain', 'Setting')
-      .and('contain', 'Grafana Address')
-      .and('contain', 'Grafana address should begin with HTTP or HTTPS');
+      .and('contain', data.grafana_address)
+      .and('contain', data.grafana_explain1);
   });
 
   it('should set a invalid url', () => {
     cy.visit('/');
-    cy.get(domSelectors.setting).invoke('show').click('center');
+    cy.get(domSelector.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get('#grafanaURL').clear().type('httx://www.test.com');
-    cy.get('.ant-form-item-explain').should('contain', 'Address is illegality');
+    cy.get(domSelector.grafamaURL).clear().type(data.url1);
+    cy.get(domSelector.explain).should('contain', data.grafana_explain2);
   });
 
   it('should set a accessible URL', () => {
     cy.visit('/');
-    cy.get(domSelectors.setting).invoke('show').click('center');
+    cy.get(domSelector.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get('#grafanaURL').clear().type('https://apisix.apache.org/');
+    cy.get(domSelector.grafamaURL).clear().type(data.url2);
     cy.contains('Submit').click();
 
-    cy.get(domSelectors.notificationMsg).should('contain', 'Update Configuration Successfully');
-    cy.intercept('https://apisix.apache.org/').as('fetchURL');
-    cy.wait('@fetchURL');
-    cy.get(domSelectors.pageContent).children().should('contain', 'Metrics');
+    cy.get(domSelector.notificationMsg).should('contain', data.update_success);
+    cy.intercept(data.url2).as(data.fetchURL);
+    cy.wait(data.fetch);
+    cy.get(domSelector.pageContent).children().should('contain', 'Metrics');
   });
 });
