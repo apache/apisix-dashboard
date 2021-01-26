@@ -19,7 +19,7 @@
 context('Create and Delete Plugin List', () => {
   const timeout = 5000;
   const data = {
-    name: 'api-breaker',
+    name: 'jwt-auth',
   };
   const domSelector = {
     tableCell: '.ant-table-cell',
@@ -42,12 +42,12 @@ context('Create and Delete Plugin List', () => {
 
     // add test plugins
     cy.configurePlugins(this.cases);
-    cy.wait(200);
   });
 
   it('should edit the plugin', () => {
     cy.visit('/');
     cy.contains('Plugin').click();
+
     cy.contains(data.name).siblings().contains('Edit').click({
       force: true,
     });
