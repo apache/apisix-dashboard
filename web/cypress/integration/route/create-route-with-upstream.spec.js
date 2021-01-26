@@ -25,6 +25,7 @@ context('Create Route with Upstream', () => {
     description: '#desc',
     search_name: '[title=Name]',
     custom_upstream: '[title=Custom]',
+    refresh: '.anticon-reload',
   };
 
   const data = {
@@ -88,6 +89,7 @@ context('Create Route with Upstream', () => {
     cy.visit('/');
     cy.contains('Route').click();
 
+    cy.get(domSelector.refresh).click();
     cy.get(domSelector.search_name).type(data.route_name);
     cy.contains('Search').click();
     cy.contains(data.route_name).siblings().contains('Edit').click();
