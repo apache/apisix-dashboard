@@ -2278,7 +2278,7 @@ func TestRoute_Export_Request_Validation(t *testing.T) {
 
 func TestRoute_Export_Equal_URI(t *testing.T) {
 	// 13.Add suffix when testing the same URI export
-	exportStrR1R2 := `{
+	exportStrAll := `{
 		"components": {},
 		"info": {
 			"title": "RoutesExport",
@@ -2309,8 +2309,55 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					}
 				}
 			},
-			"/test-test-APISIX-REPEAT-URI-`
-	exportStrR1R2 = replaceStr(exportStrR1R2)
+			"/test-test-APISIX-REPEAT-URI-1": {
+				"get": {
+					"operationId": "route_allGET",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有1",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-plugins": {},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				}
+			},
+			"/test-test-APISIX-REPEAT-URI-2": {
+				"get": {
+					"operationId": "route_allGET",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有2",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-plugins": {},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1981": 1
+						},
+						"type": "roundrobin"
+					}
+				}
+			}
+		}
+	}`
+	exportStrAll = replaceStr(exportStrAll)
 
 	tests := []HttpTestCase{
 		{
@@ -2344,7 +2391,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			Body: `{
 					"uris": ["/test-test"],
 					"name": "route_all",
-					"desc": "所有",
+					"desc": "所有1",
 					"methods": ["GET"],
 					"hosts": ["test.com"],
 					"status": 1,
@@ -2360,13 +2407,36 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
+			Desc:   "Create a route3",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r3",
+			Body: `{
+					"uris": ["/test-test"],
+					"name": "route_all",
+					"desc": "所有2",
+					"methods": ["GET"],
+					"hosts": ["test.com"],
+					"status": 1,
+					"upstream": {
+						"nodes": {
+							"172.16.238.20:1981": 1
+						},
+						"type": "roundrobin"
+					}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
 			Desc:         "use the exportall inerface to export all routes",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/apisix/admin/export/routes/r1,r2",
+			Path:         "/apisix/admin/export/routes/r1,r2,r3",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   exportStrR1R2,
+			ExpectBody:   exportStrAll,
 		},
 		{
 			Desc:         "delete the route1 just created",

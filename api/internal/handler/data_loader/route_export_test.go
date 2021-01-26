@@ -1757,7 +1757,7 @@ func TestExportRoutesSameURI(t *testing.T) {
 	r2 := `{
 		"uris": ["/test-test"],
 		"name": "route_all",
-		"desc": "所有",
+		"desc": "所有1",
 		"methods": ["GET"],
 		"hosts": ["test.com"],
 		"status": 1,
@@ -1767,6 +1767,21 @@ func TestExportRoutesSameURI(t *testing.T) {
 			},
 			"type": "roundrobin"
 		}
+}`
+
+	r3 := `{
+	"uris": ["/test-test"],
+	"name": "route_all",
+	"desc": "所有2",
+	"methods": ["GET"],
+	"hosts": ["test.com"],
+	"status": 1,
+	"upstream": {
+		"nodes": {
+			"172.16.238.20:1981": 1
+		},
+		"type": "roundrobin"
+	}
 }`
 
 	exportR1 := `{
@@ -1800,17 +1815,67 @@ func TestExportRoutesSameURI(t *testing.T) {
 					}
 				}
 			},
-			"/test-test-APISIX-REPEAT-URI-`
+			"/test-test-APISIX-REPEAT-URI-1": {
+				"get": {
+					"operationId": "route_allGET",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有1",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-plugins": {},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				}
+			},
+			"/test-test-APISIX-REPEAT-URI-2": {
+				"get": {
+					"operationId": "route_allGET",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有2",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-plugins": {},
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1981": 1
+						},
+						"type": "roundrobin"
+					}
+				}
+			}
+		}
+	}`
 	var route *entity.Route
 	var route2 *entity.Route
+	var route3 *entity.Route
 	var routes []*entity.Route
 	err := json.Unmarshal([]byte(r1), &route)
 	err = json.Unmarshal([]byte(r2), &route2)
+	err = json.Unmarshal([]byte(r3), &route3)
 	mStore := &store.MockInterface{}
 	getCalled := false
 
 	routes = append(routes, route)
 	routes = append(routes, route2)
+	routes = append(routes, route3)
 
 	mStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
 		getCalled = true
@@ -1833,8 +1898,7 @@ func TestExportRoutesSameURI(t *testing.T) {
 	assert.Nil(t, err)
 	ret1, err := json.Marshal(ret)
 	assert.Nil(t, err)
-	find := strings.Contains(string(ret1), replaceStr(exportR1))
-	assert.True(t, find)
+	assert.Equal(t, replaceStr(exportR1), string(ret1))
 	assert.NotNil(t, ret1)
 	assert.True(t, getCalled)
 }
