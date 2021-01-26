@@ -280,7 +280,8 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 	if len(rows) > 0 {
 		r := rows[0].(*entity.Upstream)
 		if r.ID != exclude {
-			return nil, consts.InvalidParam("Upstream name is reduplicate")
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				consts.InvalidParam("Upstream name is reduplicate")
 		}
 	}
 

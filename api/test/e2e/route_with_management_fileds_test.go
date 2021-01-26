@@ -68,7 +68,6 @@ func TestRoute_with_name_desc(t *testing.T) {
 			Query:        "name=jack&exclude=r1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "access the route's uri (r1)",
@@ -78,7 +77,6 @@ func TestRoute_with_name_desc(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "verify the route's content (r1)",
@@ -88,7 +86,6 @@ func TestRoute_with_name_desc(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"name\":\"jack\",\"desc\":\"config route with name and desc\"",
-			Sleep:        sleepTime,
 		},
 	}
 	for _, tc := range tests {
