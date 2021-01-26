@@ -17,13 +17,14 @@
 package data_loader
 
 import (
-	"bufio"
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"path"
+	"reflect"
 	"regexp"
 	"strings"
 
@@ -31,7 +32,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
-	"github.com/shiningrush/droplet/middleware"
+	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
 	"github.com/apisix/manager-api/internal/conf"
@@ -49,6 +50,9 @@ type Handler struct {
 	upstreamStore store.Interface
 }
 
+var regPathVar = regexp.MustCompile(`{[\w.]*}`)
+var regPathRepeat = regexp.MustCompile(`-APISIX-REPEAT-URI-[\d]*`)
+
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{
 		routeStore:    store.GetStore(store.HubKeyRoute),
@@ -58,55 +62,33 @@ func NewHandler() (handler.RouteRegister, error) {
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.POST("/apisix/admin/import", wgin.Wraps(h.Import))
+	r.POST("/apisix/admin/import/routes", wgin.Wraps(h.Import,
+		wrapper.InputType(reflect.TypeOf(ImportInput{}))))
 }
 
 type ImportInput struct {
-	Force bool `auto_read:"force,query"`
+	Force byte `auto_read:"force,query"`
+	FileName string `auto_read:"_file"`
+	FileContent []byte `auto_read:"file"`
 }
 
 func (h *Handler) Import(c droplet.Context) (interface{}, error) {
-	httpReq := c.Get(middleware.KeyHttpRequest)
-	if httpReq == nil {
-		return nil, errors.New("input middleware cannot get http request")
-	}
-	req := httpReq.(*http.Request)
-	req.Body = http.MaxBytesReader(nil, req.Body, int64(conf.ImportSizeLimit))
-	if err := req.ParseMultipartForm(int64(conf.ImportSizeLimit)); err != nil {
-		log.Warnf("upload file size exceeds limit: %s", err)
-		return nil, fmt.Errorf("the file size exceeds the limit; limit %d", conf.ImportSizeLimit)
-	}
-
-	Force := req.URL.Query().Get("force")
-
-	_, fileHeader, err := req.FormFile("file")
-	if err != nil {
-		return nil, err
-	}
+	input := c.Input().(*ImportInput)
+	Force := input.Force
 
 	// file check
-	suffix := path.Ext(fileHeader.Filename)
+	suffix := path.Ext(input.FileName)
 	if suffix != ".json" && suffix != ".yaml" && suffix != ".yml" {
 		return nil, fmt.Errorf("required file type is .yaml, .yml or .json but got: %s", suffix)
 	}
 
-	// read file and parse
-	handle, err := fileHeader.Open()
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		err = handle.Close()
-	}()
-
-	reader := bufio.NewReader(handle)
-	bytes := make([]byte, fileHeader.Size)
-	_, err = reader.Read(bytes)
-	if err != nil {
-		return nil, err
+	contentLen := bytes.Count(input.FileContent, nil) - 1
+	if contentLen > conf.ImportSizeLimit {
+		log.Warnf("upload file size exceeds limit: %d", contentLen)
+		return nil, fmt.Errorf("the file size exceeds the limit; limit %d", conf.ImportSizeLimit)
 	}
 
-	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData(bytes)
+	swagger, err := openapi3.NewSwaggerLoader().LoadSwaggerFromData(input.FileContent)
 	if err != nil {
 		return nil, err
 	}
@@ -124,9 +106,10 @@ func (h *Handler) Import(c droplet.Context) (interface{}, error) {
 	// check route
 	for _, route := range routes {
 		err := checkRouteExist(c.Context(), h.routeStore, route)
-		if err != nil && Force != "1" {
+		if err != nil && Force != 1 {
 			log.Warnf("import duplicate: %s, route: %#v", err, route)
-			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				fmt.Errorf("route(uris:%v) conflict, %s", route.Uris, err)
 		}
 		if route.ServiceID != nil {
 			_, err := h.svcStore.Get(c.Context(), utils.InterfaceToString(route.ServiceID))
@@ -150,24 +133,30 @@ func (h *Handler) Import(c droplet.Context) (interface{}, error) {
 		}
 
 		if _, err := h.routeStore.CreateCheck(route); err != nil {
-			return handler.SpecCodeResponse(err), err
+			return handler.SpecCodeResponse(err),
+				fmt.Errorf("create route(uris:%v) failed: %s", route.Uris, err)
 		}
 	}
 
 	// create route
 	for _, route := range routes {
-		if Force == "1" && route.ID != nil {
+		if Force == 1 && route.ID != nil {
 			if _, err := h.routeStore.Update(c.Context(), route, true); err != nil {
-				return handler.SpecCodeResponse(err), err
+				return handler.SpecCodeResponse(err),
+					fmt.Errorf("update route(uris:%v) failed: %s", route.Uris, err)
 			}
 		} else {
 			if _, err := h.routeStore.Create(c.Context(), route); err != nil {
-				return handler.SpecCodeResponse(err), err
+				return handler.SpecCodeResponse(err),
+					fmt.Errorf("create route(uris:%v) failed: %s", route.Uris, err)
 			}
 		}
 	}
 
-	return nil, nil
+	return map[string]int{
+		"paths": len(swagger.Paths),
+		"routes": len(routes),
+	}, nil
 }
 
 func checkRouteExist(ctx context.Context, routeStore *store.GenericStore, route *entity.Route) error {
@@ -262,6 +251,7 @@ func OpenAPI3ToRoute(swagger *openapi3.Swagger) ([]*entity.Route, error) {
 	var upstream *entity.UpstreamDef
 	var err error
 	for k, v := range paths {
+		k = regPathRepeat.ReplaceAllString(k, "")
 		upstream = &entity.UpstreamDef{}
 		if up, ok := v.Extensions["x-apisix-upstream"]; ok {
 			err = json.Unmarshal(up.(json.RawMessage), upstream)
@@ -468,10 +458,10 @@ func parseSecurity(security openapi3.SecurityRequirements, securitySchemes opena
 	}
 }
 
+
 func getRouteFromPaths(method, key string, value *openapi3.Operation, swagger *openapi3.Swagger) (*entity.Route, error) {
 	// transform /path/{var} to  /path/*
-	reg := regexp.MustCompile(`{[\w.]*}`)
-	foundStr := reg.FindString(key)
+	foundStr := regPathVar.FindString(key)
 	if foundStr != "" {
 		key = strings.Split(key, foundStr)[0] + "*"
 	}

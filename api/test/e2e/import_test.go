@@ -37,7 +37,7 @@ func TestImport_default(t *testing.T) {
 	files := []UploadFile{
 		{Name: "file", Filepath: path},
 	}
-	PostFile(ManagerAPIHost+"/apisix/admin/import", nil, files, headers)
+	PostFile(ManagerAPIHost+"/apisix/admin/import/routes", nil, files, headers)
 
 	// sleep for data sync
 	time.Sleep(sleepTime)
@@ -106,7 +106,7 @@ func TestImport_json(t *testing.T) {
 	files := []UploadFile{
 		{Name: "file", Filepath: path},
 	}
-	PostFile(ManagerAPIHost+"/apisix/admin/import", nil, files, headers)
+	PostFile(ManagerAPIHost+"/apisix/admin/import/routes", nil, files, headers)
 
 	// sleep for data sync
 	time.Sleep(sleepTime)
@@ -175,7 +175,7 @@ func TestImport_with_plugins(t *testing.T) {
 	files := []UploadFile{
 		{Name: "file", Filepath: path},
 	}
-	PostFile(ManagerAPIHost+"/apisix/admin/import", nil, files, headers)
+	PostFile(ManagerAPIHost+"/apisix/admin/import/routes", nil, files, headers)
 
 	// sleep for data sync
 	time.Sleep(sleepTime)
@@ -270,7 +270,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 	files := []UploadFile{
 		{Name: "file", Filepath: path},
 	}
-	PostFile(ManagerAPIHost+"/apisix/admin/import", nil, files, headers)
+	PostFile(ManagerAPIHost+"/apisix/admin/import/routes", nil, files, headers)
 
 	// sleep for data sync
 	time.Sleep(sleepTime)
