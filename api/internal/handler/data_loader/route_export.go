@@ -133,7 +133,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 	requestBody := &openapi3.RequestBody{}
 	components := &openapi3.Components{}
 	secSchemas := openapi3.SecuritySchemes{}
-	_pathNumber := 0
+	_pathNumber := GetPathNumber()
 
 	for _, route := range routes {
 		extensions := make(map[string]interface{})
@@ -215,7 +215,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 		}
 
 		// Parse Route URIs
-		paths, paramsRefs, _pathNumber = ParseRouteUris(route, paths, paramsRefs, pathItem, _pathNumber)
+		paths, paramsRefs = ParseRouteUris(route, paths, paramsRefs, pathItem, _pathNumber())
 
 		//Parse Route Plugins
 		path, secSchemas, paramsRefs, plugins, err = ParseRoutePlugins(route, paramsRefs, plugins, path, servicePlugins, secSchemas, requestBody)
@@ -407,8 +407,7 @@ func ParseRoutePlugins(route *entity.Route, paramsRefs []*openapi3.ParameterRef,
 }
 
 // ParseRouteUris The URI and URIs of route are converted to paths URI in openapi3
-func ParseRouteUris(route *entity.Route, paths openapi3.Paths, paramsRefs []*openapi3.ParameterRef, pathItem *openapi3.PathItem, _pathNumber int) (openapi3.Paths, []*openapi3.ParameterRef, int) {
-	pathNumber := GetPathNumber(_pathNumber)
+func ParseRouteUris(route *entity.Route, paths openapi3.Paths, paramsRefs []*openapi3.ParameterRef, pathItem *openapi3.PathItem, _pathNumber int) (openapi3.Paths, []*openapi3.ParameterRef) {
 	routeURIs := []string{}
 	if route.URI != "" {
 		routeURIs = append(routeURIs, route.URI)
@@ -423,7 +422,6 @@ func ParseRouteUris(route *entity.Route, paths openapi3.Paths, paramsRefs []*ope
 			if _, ok := paths[strings.Split(uri, "*")[0]+"{params}"]; !ok {
 				paths[strings.Split(uri, "*")[0]+"{params}"] = pathItem
 			} else {
-				_pathNumber = pathNumber()
 				paths[strings.Split(uri, "*")[0]+"{params}"+"-APISIX-REPEAT-URI-"+strconv.Itoa(_pathNumber)] = pathItem
 			}
 			// add params introduce
@@ -438,12 +436,11 @@ func ParseRouteUris(route *entity.Route, paths openapi3.Paths, paramsRefs []*ope
 			if _, ok := paths[uri]; !ok {
 				paths[uri] = pathItem
 			} else {
-				_pathNumber = pathNumber()
 				paths[uri+"-APISIX-REPEAT-URI-"+strconv.Itoa(_pathNumber)] = pathItem
 			}
 		}
 	}
-	return paths, paramsRefs, _pathNumber
+	return paths, paramsRefs
 }
 
 // ParseRouteUpstream Processing the upstream in service and route
@@ -483,9 +480,10 @@ func (h *Handler) ParseRouteUpstream(c droplet.Context, route *entity.Route) (in
 	return nil, nil
 }
 
-func GetPathNumber(i int) func() int {
+func GetPathNumber() func() int {
+	i := 0
 	return func() int {
-		i += 1
+		i++
 		return i
 	}
 }

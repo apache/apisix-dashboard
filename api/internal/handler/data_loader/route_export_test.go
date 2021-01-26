@@ -1815,7 +1815,7 @@ func TestExportRoutesSameURI(t *testing.T) {
 					}
 				}
 			},
-			"/test-test-APISIX-REPEAT-URI-1": {
+			"/test-test-APISIX-REPEAT-URI-2": {
 				"get": {
 					"operationId": "route_allGET",
 					"requestBody": {},
@@ -1838,7 +1838,7 @@ func TestExportRoutesSameURI(t *testing.T) {
 					}
 				}
 			},
-			"/test-test-APISIX-REPEAT-URI-2": {
+			"/test-test-APISIX-REPEAT-URI-3": {
 				"get": {
 					"operationId": "route_allGET",
 					"requestBody": {},
