@@ -23,7 +23,7 @@ context('settings page smoke test', () => {
     grafanaExplain2: 'Address is illegality',
     updateSuccessfully: 'Update Configuration Successfully',
     invalidURL: 'httx://www.test.com',
-    ValidURL: 'https://apisix.apache.org/',
+    validURL: 'https://apisix.apache.org/',
     fetchURL: 'fetchURL',
     fetch: '@fetchURL',
   }
@@ -65,11 +65,11 @@ context('settings page smoke test', () => {
     cy.get(domSelector.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get(domSelector.grafanaURL).clear().type(data.ValidURL);
+    cy.get(domSelector.grafanaURL).clear().type(data.validURL);
     cy.contains('Submit').click();
 
     cy.get(domSelector.notificationMsg).should('contain', data.updateSuccessfully);
-    cy.intercept(data.ValidURL).as(data.fetchURL);
+    cy.intercept(data.validURL).as(data.fetchURL);
     cy.wait(data.fetch);
     cy.get(domSelector.pageContainer).children().should('contain', 'Metrics');
   });
