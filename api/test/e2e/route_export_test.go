@@ -59,7 +59,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.31.118.28:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -92,7 +92,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.31.118.28:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -136,7 +136,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"172.31.118.28:1980": 1
+						"172.16.238.20:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -189,7 +189,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.31.118.28:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -222,7 +222,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.31.118.28:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -266,7 +266,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"172.31.118.28:1980": 1
+						"172.16.238.20:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -355,7 +355,7 @@ func TestRoute_Export(t *testing.T) {
 	"desc": "testservice_desc", 
 	"upstream": {
 		"nodes": [{
-			"host": "172.31.118.28",
+			"host": "172.16.238.20",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -413,7 +413,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.31.118.28",
+							"host": "172.16.238.20",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -454,7 +454,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "172.31.118.28",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -535,7 +535,7 @@ func TestRoute_Export(t *testing.T) {
 	"desc": "testservice_desc", 
 	"upstream": {
 		"nodes": [{
-			"host": "172.31.118.28",
+			"host": "172.16.238.20",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -596,7 +596,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.31.118.28",
+							"host": "172.16.238.20",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -637,7 +637,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "172.31.118.28",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -672,7 +672,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.31.118.28",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -784,7 +784,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.31.118.28",
+							"host": "172.16.238.20",
 							"port": 1981,
 							"weight": 1
 						}],
@@ -805,7 +805,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.31.118.28",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}
@@ -869,7 +869,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.31.118.28",
+						"host": "172.16.238.20",
 						"port": 1981,
 						"weight": 1
 					}]
@@ -967,7 +967,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.31.118.28",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}
@@ -1090,7 +1090,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.31.118.28",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}
@@ -1108,7 +1108,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.31.118.28",
+						"host": "172.16.238.20",
 						"port": 1981,
 						"weight": 1
 					}
@@ -1281,7 +1281,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.31.118.28",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}
@@ -1417,7 +1417,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 				 "upstream": {
 					 "type": "roundrobin",
 					"nodes": [{
-						"host": "172.31.118.28",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1463,13 +1463,13 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 	time.Sleep(sleepTime)
 
 	// sign jwt token
-	body, status, err := httpGet("http://172.31.118.28:9080/apisix/plugin/jwt/sign?key=user-key")
+	body, status, err := httpGet("http://172.16.238.20:9080/apisix/plugin/jwt/sign?key=user-key")
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, status)
 	jwtToken := string(body)
 
 	// sign jwt token with not exists key
-	body, status, err = httpGet("http://172.31.118.28:9080/apisix/plugin/jwt/sign?key=not-exist-key")
+	body, status, err = httpGet("http://172.16.238.20:9080/apisix/plugin/jwt/sign?key=not-exist-key")
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusNotFound, status)
 
@@ -1619,7 +1619,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.31.118.28",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1638,7 +1638,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 	time.Sleep(sleepTime)
 
 	// get the token of jwt
-	basepath := "http://172.31.118.28:9080"
+	basepath := "http://172.16.238.20:9080"
 	request, _ := http.NewRequest("GET", basepath+"/apisix/plugin/jwt/sign?key=user-key", nil)
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
@@ -1726,7 +1726,7 @@ func TestExportRoute_With_Auth_Plugin(t *testing.T) {
 				 "upstream": {
 					 "type": "roundrobin",
 					"nodes": [{
-						"host": "172.31.118.28",
+						"host": "172.16.238.20",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -2303,7 +2303,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.31.118.28:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2327,7 +2327,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"status": 1,
 					"upstream": {
 						"nodes": {
-							"172.31.118.28:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2350,7 +2350,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"status": 1,
 					"upstream": {
 						"nodes": {
-							"172.31.118.28:1980": 1
+							"172.16.238.20:1980": 1
 						},
 						"type": "roundrobin"
 					}
