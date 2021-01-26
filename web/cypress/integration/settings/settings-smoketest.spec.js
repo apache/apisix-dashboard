@@ -18,20 +18,20 @@
 
 context('settings page smoke test', () => {
   const data = {
-    grafana_address: 'Grafana Address',
-    start_explanation: 'Grafana address should begin with HTTP or HTTPS',
-    after_explanation: 'Address is illegality',
-    update_successfully: 'Update Configuration Successfully',
-    invalid_URL: 'httx://www.test.com',
-    new_URL: 'https://apisix.apache.org/',
-    fetch_URL: 'fetchURL',
+    grafanaAddress: 'Grafana Address',
+    grafanaExplain1: 'Grafana address should begin with HTTP or HTTPS',
+    grafanaExplain2: 'Address is illegality',
+    updateSuccessfully: 'Update Configuration Successfully',
+    invalidURL: 'httx://www.test.com',
+    ValidURL: 'https://apisix.apache.org/',
+    fetchURL: 'fetchURL',
     fetch: '@fetchURL',
   }
   const domSelector = {
-    page_content: '.ant-pro-page-container',
+    pageContainer: '.ant-pro-page-container',
     notificationMsg: '.ant-notification-notice-message',
     setting: '.ant-space-align-center',
-    grafama_URL: '#grafanaURL',
+    grafanaURL: '#grafanaURL',
     explain: '.ant-form-item-explain',
   };
 
@@ -44,11 +44,11 @@ context('settings page smoke test', () => {
     cy.get(domSelector.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get(domSelector.page_content)
+    cy.get(domSelector.pageContainer)
       .children()
       .should('contain', 'Setting')
-      .and('contain', data.grafana_address)
-      .and('contain', data.start_explanation);
+      .and('contain', data.grafanaAddress)
+      .and('contain', data.grafanaExplain1);
   });
 
   it('should set a invalid url', () => {
@@ -56,8 +56,8 @@ context('settings page smoke test', () => {
     cy.get(domSelector.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get(domSelector.grafama_URL).clear().type(data.invalid_URL);
-    cy.get(domSelector.explain).should('contain', data.after_explanation);
+    cy.get(domSelector.grafanaURL).clear().type(data.invalidURL);
+    cy.get(domSelector.explain).should('contain', data.grafanaExplain2);
   });
 
   it('should set a accessible URL', () => {
@@ -65,12 +65,12 @@ context('settings page smoke test', () => {
     cy.get(domSelector.setting).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get(domSelector.grafama_URL).clear().type(data.new_URL);
+    cy.get(domSelector.grafanaURL).clear().type(data.ValidURL);
     cy.contains('Submit').click();
 
-    cy.get(domSelector.notificationMsg).should('contain', data.update_successfully);
-    cy.intercept(data.new_URL).as(data.fetch_URL);
+    cy.get(domSelector.notificationMsg).should('contain', data.updateSuccessfully);
+    cy.intercept(data.ValidURL).as(data.fetchURL);
     cy.wait(data.fetch);
-    cy.get(domSelector.page_content).children().should('contain', 'Metrics');
+    cy.get(domSelector.pageContainer).children().should('contain', 'Metrics');
   });
 });
