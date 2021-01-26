@@ -357,12 +357,15 @@ func TestRoute_Patch(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			Desc:         "route patch for update status (route online)",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPatch,
-			Path:         "/apisix/admin/routes/r1/status",
-			Body:         "1",
-			Headers:      map[string]string{"Authorization": token},
+			Desc:   "route patch for update status (route online)",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPatch,
+			Path:   "/apisix/admin/routes/r1/status",
+			Body:   "1",
+			Headers: map[string]string{
+				"Authorization": token,
+				"Content-Type":  "text/plain",
+			},
 			ExpectStatus: http.StatusOK,
 		},
 		{
