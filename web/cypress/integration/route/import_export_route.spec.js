@@ -19,6 +19,7 @@ import actionBarUS from '../../../src/components/ActionBar/locales/en-US';
 import componentLocaleUS from '../../../src/locales/en-US/component';
 import menuLocaleUS from '../../../src/locales/en-US/menu';
 import routeLocaleUS from '../../../src/pages/Route/locales/en-US';
+import yaml from 'js-yaml';
 
 context('import and export routes', () => {
   const domSelector = {
@@ -42,6 +43,7 @@ context('import and export routes', () => {
     yamlMask: 'cypress/downloads/*.yaml',
     jsonFile:
       '{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{"/{params}":{"get":{"operationId":"route_name_0GET","parameters":[{"description":"params in path","in":"path","name":"params","required":true,"schema":{"type":"string"}}],"requestBody":{},"responses":{"default":{"description":""}},"x-apisix-enable_websocket":false,"x-apisix-plugins":{},"x-apisix-priority":0,"x-apisix-status":1,"x-apisix-upstream":{"nodes":[{"host":"1.1.1.1","port":80,"weight":1}],"timeout":{"connect":6000,"read":6000,"send":6000},"type":"roundrobin","pass_host":"pass"},"x-apisix-vars":[]}}}}',
+    yamlFile:'{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{"/{params}":{"get":{"operationId":"route_name_0GET","parameters":[{"description":"params in path","in":"path","name":"params","required":true,"schema":{"type":"string"}}],"requestBody":{},"responses":{"default":{"description":""}},"x-apisix-enable_websocket":false,"x-apisix-plugins":{},"x-apisix-priority":0,"x-apisix-status":1,"x-apisix-upstream":{"nodes":[{"host":"1.1.1.1","port":80,"weight":1}],"timeout":{"connect":6000,"read":6000,"send":6000},"type":"roundrobin","pass_host":"pass"},"x-apisix-vars":[]}},"/{params}-APISIX-REPEAT-URI-2":{"get":{"operationId":"route_name_1GET","parameters":[{"description":"params in path","in":"path","name":"params","required":true,"schema":{"type":"string"}},{"description":"params in path","in":"path","name":"params","required":true,"schema":{"type":"string"}}],"requestBody":{},"responses":{"default":{"description":""}},"x-apisix-enable_websocket":false,"x-apisix-plugins":{},"x-apisix-priority":0,"x-apisix-status":1,"x-apisix-upstream":{"nodes":[{"host":"2.2.2.2","port":80,"weight":1}],"timeout":{"connect":6000,"read":6000,"send":6000},"type":"roundrobin","pass_host":"pass"},"x-apisix-vars":[]}}}}',
   };
 
   beforeEach(() => {
@@ -117,6 +119,9 @@ context('import and export routes', () => {
     cy.task('findFile', data.yamlMask).then((yamlFile) => {
       cy.log(`found file ${yamlFile}`);
       cy.log('**confirm downloaded yaml file**');
+      cy.readFile(yamlFile).then((fileContent) => {
+        expect(JSON.stringify(yaml.load(fileContent), null, null)).to.equal(data.yamlFile);
+      });
     });
   });
 
@@ -132,7 +137,7 @@ context('import and export routes', () => {
     }
   });
 
-  /* it('should import route(s) from be test files', function() {
+  it('should import route(s) from be test files', function() {
     cy.visit('/');
     cy.contains('Route').click();
     
@@ -160,5 +165,5 @@ context('import and export routes', () => {
         cy.get(this.domSelector.notificationCloseIcon).click();
       }
     })
-  }); */
+  });
 });

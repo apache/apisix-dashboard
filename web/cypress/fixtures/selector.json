@@ -2,6 +2,6 @@
   "dropdown": ".rc-virtual-list",
   "notification": ".ant-notification-notice-message",
   "drawerBody": ".ant-drawer-wrapper-body",
-  "notificationCloseIcon": "ant-notification-close-icon",
+  "notificationCloseIcon": ".ant-notification-close-icon",
   "notificationDesc": ".ant-notification-notice-description"
 }
