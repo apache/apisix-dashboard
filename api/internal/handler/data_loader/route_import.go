@@ -44,24 +44,26 @@ import (
 	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
-type Handler struct {
+type ImportHandler struct {
 	routeStore    *store.GenericStore
 	svcStore      store.Interface
 	upstreamStore store.Interface
 }
 
-var regPathVar = regexp.MustCompile(`{[\w.]*}`)
-var regPathRepeat = regexp.MustCompile(`-APISIX-REPEAT-URI-[\d]*`)
-
-func NewHandler() (handler.RouteRegister, error) {
-	return &Handler{
+func NewImportHandler() (handler.RouteRegister, error) {
+	return &ImportHandler{
 		routeStore:    store.GetStore(store.HubKeyRoute),
 		svcStore:      store.GetStore(store.HubKeyService),
 		upstreamStore: store.GetStore(store.HubKeyUpstream),
 	}, nil
 }
 
-func (h *Handler) ApplyRoute(r *gin.Engine) {
+
+var regPathVar = regexp.MustCompile(`{[\w.]*}`)
+var regPathRepeat = regexp.MustCompile(`-APISIX-REPEAT-URI-[\d]*`)
+
+
+func (h *ImportHandler) ApplyRoute(r *gin.Engine) {
 	r.POST("/apisix/admin/import/routes", wgin.Wraps(h.Import,
 		wrapper.InputType(reflect.TypeOf(ImportInput{}))))
 }
@@ -72,7 +74,7 @@ type ImportInput struct {
 	FileContent []byte `auto_read:"file"`
 }
 
-func (h *Handler) Import(c droplet.Context) (interface{}, error) {
+func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ImportInput)
 	Force := input.Force
 

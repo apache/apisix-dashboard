@@ -18,7 +18,6 @@ package internal
 
 import (
 	"fmt"
-	"github.com/apisix/manager-api/internal/handler/data_loader"
 	"path/filepath"
 
 	"github.com/gin-contrib/pprof"
@@ -32,6 +31,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/handler/authentication"
 	"github.com/apisix/manager-api/internal/handler/consumer"
+	"github.com/apisix/manager-api/internal/handler/data_loader"
 	"github.com/apisix/manager-api/internal/handler/global_rule"
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/label"
@@ -75,6 +75,7 @@ func SetUpRouter() *gin.Engine {
 		server_info.NewHandler,
 		label.NewHandler,
 		data_loader.NewHandler,
+		data_loader.NewImportHandler,
 	}
 
 	for i := range factories {
