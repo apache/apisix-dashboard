@@ -32,7 +32,7 @@ Cypress.Commands.add('login', () => {
 });
 
 Cypress.Commands.add('configurePlugins', (cases) => {
-  const timeout = 50000;
+  const timeout = 300;
   const domSelectors = {
     name: '[data-cy-plugin-name]',
     parents: '.ant-card-bordered',
@@ -61,7 +61,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           });
 
         // NOTE: wait for the Drawer to appear on the DOM
-        cy.get(domSelectors.drawer).invoke('show').within(() => {
+        cy.get(domSelectors.drawer, { timeout }).invoke('show').within(() => {
           cy.get(domSelectors.switch).click({
             force: true,
             timeout,
@@ -74,7 +74,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           }
         });
 
-        cy.get(domSelectors.drawer).within(() => {
+        cy.get(domSelectors.drawer, { timeout }).within(() => {
           cy.contains('Submit').click({
             force: true,
             timeout,

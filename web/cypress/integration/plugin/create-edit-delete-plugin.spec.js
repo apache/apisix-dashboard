@@ -19,7 +19,7 @@
 context('Create and Delete Plugin List', () => {
   const timeout = 5000;
   const data = {
-    name: 'jwt-auth',
+    name: 'hmac-auth',
   };
   const domSelector = {
     tableCell: '.ant-table-cell',
