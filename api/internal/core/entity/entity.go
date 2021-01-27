@@ -171,6 +171,12 @@ type UpstreamDef struct {
 	Labels       map[string]string `json:"labels,omitempty"`
 }
 
+type RequestValidation struct {
+	Type       string      `json:"type,omitempty"`
+	Required   []string    `json:"required,omitempty"`
+	Properties interface{} `json:"properties,omitempty"`
+}
+
 // swagger:model Upstream
 type Upstream struct {
 	BaseInfo

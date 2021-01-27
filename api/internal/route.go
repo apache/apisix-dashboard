@@ -31,6 +31,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/handler/authentication"
 	"github.com/apisix/manager-api/internal/handler/consumer"
+	"github.com/apisix/manager-api/internal/handler/data_loader"
 	"github.com/apisix/manager-api/internal/handler/global_rule"
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/label"
@@ -73,6 +74,7 @@ func SetUpRouter() *gin.Engine {
 		route_online_debug.NewHandler,
 		server_info.NewHandler,
 		label.NewHandler,
+		data_loader.NewHandler,
 	}
 
 	for i := range factories {
