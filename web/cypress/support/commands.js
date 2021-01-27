@@ -57,16 +57,13 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           .within(() => {
             cy.contains('Enable').click({
               force: true,
-              timeout,
             });
           });
 
         // NOTE: wait for the Drawer to appear on the DOM
-        cy.get(domSelectors.drawer_wrap, { timeout }).should('be.visible');
-        cy.get(domSelectors.drawer).within(() => {
+        cy.get(domSelectors.drawer, { timeout }).within(() => {
           cy.get(domSelectors.switch).click({
             force: true,
-            timeout,
           });
         });
 
@@ -79,7 +76,6 @@ Cypress.Commands.add('configurePlugins', (cases) => {
         cy.get(domSelectors.drawer, { timeout }).within(() => {
           cy.contains('Submit').click({
             force: true,
-            timeout,
           });
         });
 
@@ -90,14 +86,12 @@ Cypress.Commands.add('configurePlugins', (cases) => {
 
           cy.get(domSelectors.close).click({
             force: true,
-            timeout,
             multiple: true,
           });
 
           cy.get(domSelectors.drawer, { timeout }).invoke('show').within(() => {
             cy.contains('Cancel').click({
               force: true,
-              timeout,
             });
           });
         }
