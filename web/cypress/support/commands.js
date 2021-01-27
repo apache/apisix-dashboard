@@ -36,6 +36,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
   const domSelectors = {
     name: '[data-cy-plugin-name]',
     parents: '.ant-card-bordered',
+    drawer_wrap: '.ant-drawer-content-wrapper',
     drawer: '.ant-drawer-content',
     switch: '#disable',
     close: '.anticon-close',
@@ -61,7 +62,8 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           });
 
         // NOTE: wait for the Drawer to appear on the DOM
-        cy.get(domSelectors.drawer, { timeout }).invoke('show').within(() => {
+        cy.get(domSelectors.drawer_wrap, { timeout }).should('be.visible');
+        cy.get(domSelectors.drawer).within(() => {
           cy.get(domSelectors.switch).click({
             force: true,
             timeout,
