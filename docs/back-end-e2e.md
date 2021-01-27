@@ -19,9 +19,9 @@
 
 This document describes how to use E2E test locally.
 
-1. The E2E test using the back end needs to start the manage-API, admin-API, etcd and upstream node. 
+1. The E2E test using the back end needs to start the manage-API, admin-API, etcd and upstream node.
 
-2. To start the manage-API project locally, please refer to [develop](./develop.md) web section. 
+2. To start the manage-API project locally, please refer to [develop](./develop.md) web section.
 
 3. To start the etcd locally, please refer to [etcd start](https://github.com/apache/apisix/blob/master/doc/install-dependencies.md) web section.
 
@@ -40,36 +40,36 @@ This document describes how to use E2E test locally.
    ```sh
     # Local E2E test create route example
     {
-					"uris": ["/test-test"],
-					"name": "route_all",
-					"desc": "所有2",
-					"methods": ["GET"],
-					"hosts": ["test.com"],
-					"status": 1,
-					"upstream": {
-						"nodes": {
-                            # upstream node IP is required for local test
-							"(local ip):1981": 1
-						},
-						"type": "roundrobin"
-					}
-			}
+        "uris": ["/test-test"],
+        "name": "route_all",
+        "desc": "所有2",
+        "methods": ["GET"],
+        "hosts": ["test.com"],
+        "status": 1,
+        "upstream": {
+            "nodes": {
+                # upstream node IP is required for local test
+                "(local ip):1981": 1
+                        },
+            "type": "roundrobin"
+            }
+    }
 
-    #GitHub E2E test create route example
+     # GitHub E2E test create route example
     {
-					"uris": ["/test-test"],
-					"name": "route_all",
-					"desc": "所有2",
-					"methods": ["GET"],
-					"hosts": ["test.com"],
-					"status": 1,
-					"upstream": {
-						"nodes": {
-							"172.16.238.20:1981": 1
-						},
-						"type": "roundrobin"
-					}
-			}
+        "uris": ["/test-test"],
+        "name": "route_all",
+        "desc": "所有2",
+        "methods": ["GET"],
+        "hosts": ["test.com"],
+        "status": 1,
+        "upstream": {
+            "nodes": {
+                "172.16.238.20:1981": 1
+                        },
+            "type": "roundrobin"
+            }
+    }
    ```
 
 8. Enter the E2E folder and execute the command to test all E2E test files.
