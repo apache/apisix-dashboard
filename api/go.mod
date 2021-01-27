@@ -17,6 +17,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/evanphx/json-patch/v5 v5.1.0
+	github.com/getkin/kin-openapi v0.33.0
 	github.com/gin-contrib/pprof v1.3.0
 	github.com/gin-contrib/sessions v0.0.3
 	github.com/gin-contrib/static v0.0.0-20200916080430-d45d9a37d28e
@@ -29,7 +30,7 @@ require (
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/prometheus/client_golang v1.8.0 // indirect
 	github.com/satori/go.uuid v1.2.0
-	github.com/shiningrush/droplet v0.2.6-0.20210126131015-cbf9557974f7
+	github.com/shiningrush/droplet v0.2.6-0.20210127040147-53817015cd1b
 	github.com/shiningrush/droplet/wrapper/gin v0.2.1
 	github.com/sirupsen/logrus v1.7.0 // indirect
 	github.com/sony/sonyflake v1.0.0

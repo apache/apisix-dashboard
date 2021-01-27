@@ -1463,13 +1463,13 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 	time.Sleep(sleepTime)
 
 	// sign jwt token
-	body, status, err := httpGet("http://127.0.0.10:9080/apisix/plugin/jwt/sign?key=user-key")
+	body, status, err := httpGet("http://127.0.0.10:9080/apisix/plugin/jwt/sign?key=user-key", nil)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, status)
 	jwtToken := string(body)
 
 	// sign jwt token with not exists key
-	body, status, err = httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=not-exist-key")
+	body, status, err = httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=not-exist-key", nil)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusNotFound, status)
 
@@ -2485,4 +2485,3 @@ func replaceStr(str string) string {
 	str = strings.Replace(str, " ", "", -1)
 	return str
 }
-

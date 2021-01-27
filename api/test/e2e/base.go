@@ -77,10 +77,13 @@ func init() {
 	Token = token
 }
 
-func httpGet(url string) ([]byte, int, error) {
+func httpGet(url string, headers map[string]string) ([]byte, int, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, 0, err
+	}
+	for key, val := range headers {
+		req.Header.Add(key, val)
 	}
 
 	client := &http.Client{}

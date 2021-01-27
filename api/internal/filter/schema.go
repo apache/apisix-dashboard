@@ -178,7 +178,6 @@ func SchemaCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		pathPrefix := "/apisix/admin/"
 		resource := strings.TrimPrefix(c.Request.URL.Path, pathPrefix)
-
 		idx := strings.LastIndex(resource, "/")
 		if idx > 1 {
 			resource = resource[:idx]

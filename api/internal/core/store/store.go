@@ -221,7 +221,7 @@ func (s *GenericStore) List(_ context.Context, input ListInput) (*ListOutput, er
 func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 	if s.opt.Validator != nil {
 		if err := s.opt.Validator.Validate(obj); err != nil {
-			log.Errorf("data validate failed: %s", err)
+			log.Errorf("data validate failed: %s, %v", err, obj)
 			return err
 		}
 	}
@@ -237,7 +237,8 @@ func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 	return err
 }
 
-func (s *GenericStore) Create(ctx context.Context, obj interface{}) (interface{}, error) {
+func (s *GenericStore) CreateCheck(obj interface{}) ([]byte, error) {
+
 	if setter, ok := obj.(entity.BaseInfoSetter); ok {
 		info := setter.GetBaseInfo()
 		info.Creating()
@@ -257,12 +258,27 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) (interface{}
 		return nil, fmt.Errorf("key: %s is conflicted", key)
 	}
 
-	bs, err := json.Marshal(obj)
+	bytes, err := json.Marshal(obj)
 	if err != nil {
 		log.Errorf("json marshal failed: %s", err)
 		return nil, fmt.Errorf("json marshal failed: %s", err)
 	}
-	if err := s.Stg.Create(ctx, s.GetObjStorageKey(obj), string(bs)); err != nil {
+
+	return bytes, nil
+}
+
+func (s *GenericStore) Create(ctx context.Context, obj interface{}) (interface{}, error) {
+	if setter, ok := obj.(entity.BaseInfoSetter); ok {
+		info := setter.GetBaseInfo()
+		info.Creating()
+	}
+
+	bytes, err := s.CreateCheck(obj)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.Stg.Create(ctx, s.GetObjStorageKey(obj), string(bytes)); err != nil {
 		return nil, err
 	}
 
