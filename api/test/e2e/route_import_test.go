@@ -300,7 +300,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Sleep:        sleepTime,
 		}
 		tests = append(tests, tc)
-		uris := route["uris"].([]string)
+		uris := route["uris"].([]interface{})
 		isGet := false
 		for _, uri := range uris {
 			if uri == "/get" {
