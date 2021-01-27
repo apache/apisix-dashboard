@@ -47,9 +47,7 @@ context('Create and Delete Plugin List', () => {
   });
 
   it('should edit the plugin', () => {
-    cy.visit('/');
-    cy.contains('Plugin').click();
-
+    cy.visit('/plugin/list');
     cy.get(domSelector.refresh).click();
     cy.contains(data.name).should('exist').siblings().contains('Edit').click({
       force: true,
