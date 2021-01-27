@@ -19,13 +19,13 @@
 
 This document describes how to use E2E test locally.
 
-1. The E2E test using the back end needs to start the manage-API, admin-API, etcd and upstream node.
+1. To run back end E2E test, please start the `manager-api`, `admin-api`, etcd and upstream node at first.
 
-2. To start the manage-API project locally, please refer to [develop](./develop.md) web section.
+2. To start the `manager-api` project locally, please refer to [develop](./develop.md) web section.
 
 3. To start the etcd locally, please refer to [etcd start](https://github.com/apache/apisix/blob/master/doc/install-dependencies.md) web section.
 
-4. To start the admin-API project locally, please refer to [admin-API start](https://github.com/apache/apisix#get-started) web section.
+4. To start the `admin-api` project locally, please refer to [admin-api start](https://github.com/apache/apisix#get-started) web section.
 
 5. To start the upstream node locally, please install docker in the local environment and execute the command.
 
@@ -42,7 +42,7 @@ This document describes how to use E2E test locally.
     {
         "uris": ["/test-test"],
         "name": "route_all",
-        "desc": "所有2",
+        "desc": "test",
         "methods": ["GET"],
         "hosts": ["test.com"],
         "status": 1,
@@ -50,25 +50,25 @@ This document describes how to use E2E test locally.
             "nodes": {
                 # upstream node IP is required for local test
                 "(local ip):1981": 1
-                        },
+            },
             "type": "roundrobin"
-            }
+         }
     }
 
      # GitHub E2E test create route example
     {
         "uris": ["/test-test"],
         "name": "route_all",
-        "desc": "所有2",
+        "desc": "test",
         "methods": ["GET"],
         "hosts": ["test.com"],
         "status": 1,
         "upstream": {
             "nodes": {
                 "172.16.238.20:1981": 1
-                        },
+            },
             "type": "roundrobin"
-            }
+         }
     }
    ```
 
