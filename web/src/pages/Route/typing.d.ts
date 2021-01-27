@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 declare namespace RouteModule {
-  type Operator = '==' | '~=' | '>' | '<' | '~~';
+  type Operator = '==' | '~=' | '>' | '<' | '~~' | 'IN';
 
   type VarPosition = 'arg' | 'http' | 'cookie';
 
