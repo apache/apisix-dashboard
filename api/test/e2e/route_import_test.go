@@ -300,9 +300,15 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Sleep:        sleepTime,
 		}
 		tests = append(tests, tc)
-
+		uris := route["uris"].([]string)
+		isGet := false
+		for _, uri := range uris {
+			if uri == "/get" {
+				isGet = true
+			}
+		}
 		// verify route data
-		if route["uri"].(string) == "/get" {
+		if isGet {
 			tcDataVerify := HttpTestCase{
 				Desc:         "verify data of route",
 				Object:       ManagerApiExpect(t),

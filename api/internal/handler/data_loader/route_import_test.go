@@ -67,7 +67,7 @@ func TestImport_invalid_file_type(t *testing.T) {
 	input.FileName = "file1.txt"
 	input.FileContent = []byte("hello")
 
-	h := Handler{}
+	h := ImportHandler{}
 	ctx := droplet.NewContext()
 	ctx.SetInput(input)
 
@@ -80,7 +80,7 @@ func TestImport_invalid_content(t *testing.T) {
 	input.FileName = "file1.json"
 	input.FileContent = []byte(`{"test": "a"}`)
 
-	h := Handler{}
+	h := ImportHandler{}
 	ctx := droplet.NewContext()
 	ctx.SetInput(input)
 
@@ -110,7 +110,7 @@ func TestImport_with_service_id(t *testing.T) {
 	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
 	}).Return(nil, errors.New("data not found by key: service1"))
 
-	h := Handler{
+	h := ImportHandler{
 		routeStore:    &store.GenericStore{},
 		svcStore:      mStore,
 		upstreamStore: mStore,
@@ -126,7 +126,7 @@ func TestImport_with_service_id(t *testing.T) {
 	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
 	}).Return(nil, data.ErrNotFound)
 
-	h = Handler{
+	h = ImportHandler{
 		routeStore:    &store.GenericStore{},
 		svcStore:      mStore,
 		upstreamStore: mStore,
@@ -148,7 +148,7 @@ func TestImport_with_upstream_id(t *testing.T) {
 	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
 	}).Return(nil, errors.New("data not found by key: upstream1"))
 
-	h := Handler{
+	h := ImportHandler{
 		routeStore:    &store.GenericStore{},
 		svcStore:      mStore,
 		upstreamStore: mStore,
@@ -164,7 +164,7 @@ func TestImport_with_upstream_id(t *testing.T) {
 	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
 	}).Return(nil, data.ErrNotFound)
 
-	h = Handler{
+	h = ImportHandler{
 		routeStore:    &store.GenericStore{},
 		svcStore:      mStore,
 		upstreamStore: mStore,
