@@ -36,11 +36,11 @@ type UploadFile struct {
 
 var httpClient = &http.Client{}
 
-func PostFile(reqUrl string, reqParams map[string]string, files []UploadFile, headers map[string]string) string {
+func PostFile(reqUrl string, reqParams map[string]string, files []UploadFile, headers map[string]string) ([]byte, int, error) {
 	return post(reqUrl, reqParams, "multipart/form-data", files, headers)
 }
 
-func post(reqUrl string, reqParams map[string]string, contentType string, files []UploadFile, headers map[string]string) string {
+func post(reqUrl string, reqParams map[string]string, contentType string, files []UploadFile, headers map[string]string) ([]byte, int, error) {
 	requestBody, realContentType := getReader(reqParams, contentType, files)
 	httpRequest, _ := http.NewRequest("POST", reqUrl, requestBody)
 	httpRequest.Header.Add("Content-Type", realContentType)
@@ -56,9 +56,12 @@ func post(reqUrl string, reqParams map[string]string, contentType string, files 
 
 	defer resp.Body.Close()
 
-	response, _ := ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, 0, err
+	}
 
-	return string(response)
+	return body, resp.StatusCode, nil
 }
 
 func getReader(reqParams map[string]string, contentType string, files []UploadFile) (io.Reader, string) {
