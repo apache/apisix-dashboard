@@ -31,7 +31,7 @@ Cypress.Commands.add('login', () => {
   });
 });
 
-Cypress.Commands.add('configurePlugins', () => {
+Cypress.Commands.add('configurePlugins', (cases) => {
   const timeout = 300;
   const domSelectors = {
     name: '[data-cy-plugin-name]',
@@ -45,7 +45,7 @@ Cypress.Commands.add('configurePlugins', () => {
   cy.get(domSelectors.name, { timeout }).then(function (cards) {
     [...cards].forEach((card) => {
       const name = card.innerText;
-      const pluginCases = this.cases[name] || [];
+      const pluginCases = cases[name] || [];
       // eslint-disable-next-line consistent-return
       pluginCases.forEach(({ shouldValid, data, type = '' }) => {
         if (type === 'consumer') {
@@ -61,6 +61,7 @@ Cypress.Commands.add('configurePlugins', () => {
           });
 
         // NOTE: wait for the Drawer to appear on the DOM
+        cy.wait(500);
         cy.get(domSelectors.drawer, { timeout }).within(() => {
           cy.get(domSelectors.switch).click({
             force: true,
