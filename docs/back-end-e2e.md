@@ -73,7 +73,7 @@ This document describes how to use E2E test locally.
    ```
 
 8. Enter the E2E folder and execute the command to test all E2E test files.
- 
+
    ```sh
     cd /(Your apisix-dashboard folder path)/api/test/e2e
     go test -v
