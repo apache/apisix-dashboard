@@ -50,6 +50,26 @@ func TestRoute_with_name_desc(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
+			Desc:         "check route exists by name",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/notexist/routes",
+			Query:        "name=jack",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "Route name is reduplicate",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "check route exists by name (exclude it self)",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/notexist/routes",
+			Query:        "name=jack&exclude=r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
 			Desc:         "access the route's uri (r1)",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
@@ -57,7 +77,6 @@ func TestRoute_with_name_desc(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "verify the route's content (r1)",
@@ -67,7 +86,6 @@ func TestRoute_with_name_desc(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"name\":\"jack\",\"desc\":\"config route with name and desc\"",
-			Sleep:        sleepTime,
 		},
 	}
 	for _, tc := range tests {

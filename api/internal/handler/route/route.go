@@ -73,19 +73,29 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.DELETE("/apisix/admin/routes/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
-	r.PATCH("/apisix/admin/routes/:id", consts.ErrorWrapper(Patch))
-	r.PATCH("/apisix/admin/routes/:id/*path", consts.ErrorWrapper(Patch))
+	r.PATCH("/apisix/admin/routes/:id", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
+	r.PATCH("/apisix/admin/routes/:id/*path", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
 
-	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))
+	r.GET("/apisix/admin/notexist/routes", wgin.Wraps(h.Exist,
+		wrapper.InputType(reflect.TypeOf(ExistCheckInput{}))))
 }
 
-func Patch(c *gin.Context) (interface{}, error) {
-	reqBody, _ := c.GetRawData()
-	ID := c.Param("id")
-	subPath := c.Param("path")
+type PatchInput struct {
+	ID      string `auto_read:"id,path"`
+	SubPath string `auto_read:"path,path"`
+	Body    []byte `auto_read:"@body"`
+}
+
+func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*PatchInput)
+	reqBody := input.Body
+	ID := input.ID
+	subPath := input.SubPath
 
 	routeStore := store.GetStore(store.HubKeyRoute)
-	stored, err := routeStore.Get(c, ID)
+	stored, err := routeStore.Get(c.Context(), ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -101,7 +111,7 @@ func Patch(c *gin.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	ret, err := routeStore.Update(c, &route, false)
+	ret, err := routeStore.Update(c.Context(), &route, false)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -493,6 +503,11 @@ func toRows(list *store.ListOutput) []store.Row {
 	return rows
 }
 
+type ExistCheckInput struct {
+	Name    string `auto_read:"name,query"`
+	Exclude string `auto_read:"exclude,query"`
+}
+
 // swagger:operation GET /apisix/admin/notexist/routes checkRouteExist
 //
 // Return result of route exists checking by name and exclude id.
@@ -520,15 +535,13 @@ func toRows(list *store.ListOutput) []store.Row {
 //     description: unexpected error
 //     schema:
 //       "$ref": "#/definitions/ApiError"
-func Exist(c *gin.Context) (interface{}, error) {
-	//input := c.Input().(*ExistInput)
-
-	//temporary
-	name := c.Query("name")
-	exclude := c.Query("exclude")
+func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*ExistCheckInput)
+	name := input.Name
+	exclude := input.Exclude
 	routeStore := store.GetStore(store.HubKeyRoute)
 
-	ret, err := routeStore.List(c, store.ListInput{
+	ret, err := routeStore.List(c.Context(), store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,

@@ -54,6 +54,7 @@ func init() {
 
 	url := ManagerAPIHost + "/apisix/admin/user/login"
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
+	req.Header.Add("Content-Type", "application/json")
 	if err != nil {
 		panic(err)
 	}
@@ -217,8 +218,17 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 		}
 
 		// set header
+		setContentType := false
 		for key, val := range tc.Headers {
 			req.WithHeader(key, val)
+			if strings.ToLower(key) == "content-type" {
+				setContentType = true
+			}
+		}
+
+		// set default content-type
+		if !setContentType {
+			req.WithHeader("Content-Type", "application/json")
 		}
 
 		// set body
