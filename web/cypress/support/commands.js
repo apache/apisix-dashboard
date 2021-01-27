@@ -72,11 +72,10 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           if (codemirror) {
             codemirror.setValue(JSON.stringify(data));
           }
-        });
-
-        cy.get(domSelectors.drawer, { timeout }).within(() => {
-          cy.contains('Submit').click({
-            force: true,
+          cy.get(domSelectors.drawer, { timeout }).within(() => {
+            cy.contains('Submit').click({
+              force: true,
+            });
           });
         });
 
