@@ -31,7 +31,7 @@ Cypress.Commands.add('login', () => {
   });
 });
 
-Cypress.Commands.add('configurePlugins', (cases) => {
+Cypress.Commands.add('configurePlugins', () => {
   const timeout = 300;
   const domSelectors = {
     name: '[data-cy-plugin-name]',
@@ -45,7 +45,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
   cy.get(domSelectors.name, { timeout }).then(function (cards) {
     [...cards].forEach((card) => {
       const name = card.innerText;
-      const pluginCases = cases[name] || [];
+      const pluginCases = this.cases[name] || [];
       // eslint-disable-next-line consistent-return
       pluginCases.forEach(({ shouldValid, data, type = '' }) => {
         if (type === 'consumer') {
