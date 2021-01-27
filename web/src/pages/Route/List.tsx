@@ -29,7 +29,7 @@ import {
   Form,
   Upload,
   Modal,
-  Divider,
+  Divider
 } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined } from '@ant-design/icons';
@@ -81,7 +81,8 @@ const Page: React.FC = () => {
     selectedRowKeys,
     onChange: (currentSelectKeys: string[]) => {
       setSelectedRowKeys(currentSelectKeys);
-    }
+    },
+    preserveSelectedRowKeys: true,
   };
 
   const handleTableActionSuccessResponse = (msgTip: string) => {
@@ -173,6 +174,7 @@ const Page: React.FC = () => {
         }}
         okText={formatMessage({ id: 'component.global.confirm' })}
         cancelText={formatMessage({ id: 'component.global.cancel' })}
+        disabled={selectedRowKeys.length === 0}
       >
         <Button type="primary" disabled={selectedRowKeys.length === 0}>
           <ExportOutlined />
