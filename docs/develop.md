@@ -55,6 +55,8 @@ $ make api-stop
 
 4. Please refer to the [FAQ](./FAQ.md) about the problem of displaying exception in the dashboard after adding custom plugins or modifying plugin's schema.
 
+5. If writing an back end E2E test, refer to the [Back End E2E Writing Guide](./back-end-e2e.md)
+
 ### web
 
 1. Go to the `web` directory.
