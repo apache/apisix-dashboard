@@ -62,9 +62,7 @@ context('Create and Delete Plugin List', () => {
   });
 
   it('should delete plugin list', () => {
-    cy.visit('/');
-    cy.contains('Plugin').click();
-
+    cy.visit('/plugin/list');
     cy.get(domSelector.refresh).click();
     cy.get(domSelector.tableCell, { timeout }).should('exist').then(function (rows) {
       [...rows].forEach((row) => {
