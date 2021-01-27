@@ -67,8 +67,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 }
 
 type ImportInput struct {
-	Force bool `auto_read:"force,query"`
-	FileName string `auto_read:"_file"`
+	Force       bool   `auto_read:"force,query"`
+	FileName    string `auto_read:"_file"`
 	FileContent []byte `auto_read:"file"`
 }
 
@@ -154,7 +154,7 @@ func (h *Handler) Import(c droplet.Context) (interface{}, error) {
 	}
 
 	return map[string]int{
-		"paths": len(swagger.Paths),
+		"paths":  len(swagger.Paths),
 		"routes": len(routes),
 	}, nil
 }
@@ -458,7 +458,6 @@ func parseSecurity(security openapi3.SecurityRequirements, securitySchemes opena
 	}
 }
 
-
 func getRouteFromPaths(method, key string, value *openapi3.Operation, swagger *openapi3.Swagger) (*entity.Route, error) {
 	// transform /path/{var} to  /path/*
 	foundStr := regPathVar.FindString(key)
@@ -471,7 +470,7 @@ func getRouteFromPaths(method, key string, value *openapi3.Operation, swagger *o
 		return nil, err
 	}
 
-	route.URI = key
+	route.Uris = []string{key}
 	route.Name = value.OperationID
 	route.Desc = value.Summary
 	route.Methods = []string{method}

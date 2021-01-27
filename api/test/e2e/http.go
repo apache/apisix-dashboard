@@ -50,14 +50,11 @@ func post(reqUrl string, reqParams map[string]string, contentType string, files 
 		}
 	}
 	resp, err := httpClient.Do(httpRequest)
-
-	defer func() {
-		err = resp.Body.Close()
-	}()
-
 	if err != nil {
 		panic(err)
 	}
+
+	defer resp.Body.Close()
 
 	response, _ := ioutil.ReadAll(resp.Body)
 
