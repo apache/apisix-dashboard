@@ -269,7 +269,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	return ret, nil
 }
 
-func GenerateLuaCode(script map[string]interface{}) (string, error) {
+func generateLuaCode(script map[string]interface{}) (string, error) {
 	scriptString, err := json.Marshal(script)
 	if err != nil {
 		return "", err
@@ -341,13 +341,12 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		script.Script = input.Script
 
 		var err error
-
 		// Explicitly to lua if input script is of the map type, otherwise
 		// it will always represent a piece of lua code of the string type.
 		if scriptConf, ok := input.Script.(map[string]interface{}); ok {
 			// For lua code of map type, syntax validation is done by
 			// the generateLuaCode function
-			input.Script, err = GenerateLuaCode(scriptConf)
+			input.Script, err = generateLuaCode(scriptConf)
 			if err != nil {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 			}
@@ -421,13 +420,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		script.Script = input.Script
 
 		var err error
-
 		// Explicitly to lua if input script is of the map type, otherwise
 		// it will always represent a piece of lua code of the string type.
 		if scriptConf, ok := input.Script.(map[string]interface{}); ok {
 			// For lua code of map type, syntax validation is done by
 			// the generateLuaCode function
-			input.Route.Script, err = GenerateLuaCode(scriptConf)
+			input.Route.Script, err = generateLuaCode(scriptConf)
 			if err != nil {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 			}
@@ -497,7 +495,7 @@ type ExistInput struct {
 	Name string `auto_read:"name,query"`
 }
 
-func ToRows(list *store.ListOutput) []store.Row {
+func toRows(list *store.ListOutput) []store.Row {
 	rows := make([]store.Row, list.TotalSize)
 	for i := range list.Rows {
 		rows[i] = list.Rows[i].(*entity.Route)
@@ -557,7 +555,7 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 	filter := store.NewFilter([]string{"name", name})
 	pagination := store.NewPagination(0, 0)
 	query := store.NewQuery(sort, filter, pagination)
-	rows := store.NewFilterSelector(ToRows(ret), query)
+	rows := store.NewFilterSelector(toRows(ret), query)
 
 	if len(rows) > 0 {
 		r := rows[0].(*entity.Route)
