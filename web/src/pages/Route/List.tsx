@@ -29,7 +29,7 @@ import {
   Form,
   Upload,
   Modal,
-  Divider
+  Divider,
 } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined } from '@ant-design/icons';
@@ -114,14 +114,18 @@ const Page: React.FC = () => {
       switch (exportFileType) {
         case ExportFileType.YAML:
           exportFile = yaml.dump(resp.data);
-          exportFileName = `${exportFileName}.${ExportFileType[ExportFileType.YAML].toLocaleLowerCase()}`;
+          exportFileName = `${exportFileName}.${ExportFileType[
+            ExportFileType.YAML
+          ].toLocaleLowerCase()}`;
           break;
         case ExportFileType.JSON:
         default:
           exportFile = js_beautify(JSON.stringify(resp.data), {
             indent_size: 2,
           });
-          exportFileName = `${exportFileName}.${ExportFileType[ExportFileType.JSON].toLocaleLowerCase()}`;
+          exportFileName = `${exportFileName}.${ExportFileType[
+            ExportFileType.JSON
+          ].toLocaleLowerCase()}`;
           break;
       }
 
@@ -129,7 +133,7 @@ const Page: React.FC = () => {
         type: EXPORT_FILE_MIME_TYPE_SUPPORTED[exportFileType],
       });
 
-      saveAs(window.URL.createObjectURL(blob), exportFileName)
+      saveAs(window.URL.createObjectURL(blob), exportFileName);
     });
   };
 
@@ -450,7 +454,7 @@ const Page: React.FC = () => {
       <Modal
         title={formatMessage({ id: 'page.route.button.importOpenApi' })}
         visible={showImportModal}
-        okText={formatMessage({id: 'component.global.confirm'})}
+        okText={formatMessage({ id: 'component.global.confirm' })}
         onOk={handleImport}
         onCancel={() => {
           setShowImportModal(false);
@@ -472,9 +476,17 @@ const Page: React.FC = () => {
         </Upload>
         <Divider />
         <div>
-        <p>{formatMessage({id: 'page.route.instructions'})}:</p>
+          <p>{formatMessage({ id: 'page.route.instructions' })}:</p>
           <p>
-            <a href="https://github.com/apache/apisix-dashboard/blob/master/docs/IMPORT_OPENAPI_USER_GUIDE.md" target='_blank'>1. {`${formatMessage({id: 'page.route.import'})} ${formatMessage({id: 'page.route.instructions'})}`}</a>
+            <a
+              href="https://github.com/apache/apisix-dashboard/blob/master/docs/IMPORT_OPENAPI_USER_GUIDE.md"
+              target="_blank"
+            >
+              1.{' '}
+              {`${formatMessage({ id: 'page.route.import' })} ${formatMessage({
+                id: 'page.route.instructions',
+              })}`}
+            </a>
           </p>
         </div>
       </Modal>

@@ -25,17 +25,24 @@ context('import and export routes', () => {
     route_name: '#name',
     nodes_0_host: '#nodes_0_host',
     file: '[type=file]',
-  }
+    fileTypeRadio: '[type=radio]',
+  };
   const data = {
     route_name_0: 'route_name_0',
     route_name_1: 'route_name_1',
     upstream_node0_host_0: '1.1.1.1',
     upstream_node0_host_1: '2.2.2.2',
     importErrorMsg: 'required file type is .yaml, .yml or .json but got: .txt',
-    uploadRouteFiles: ['../../../api/test/testdata/import/default.json','../../../api/test/testdata/import/default.yaml','import-error.txt'],
-    jsonMask: 'cypress/downloads/*.png',
+    uploadRouteFiles: [
+      '../../../api/test/testdata/import/default.json',
+      '../../../api/test/testdata/import/default.yaml',
+      'import-error.txt',
+    ],
+    jsonMask: 'cypress/downloads/*.json',
     yamlMask: 'cypress/downloads/*.yaml',
-  }
+    jsonFile:
+      '{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{"/{params}":{"get":{"operationId":"route_name_0GET","parameters":[{"description":"params in path","in":"path","name":"params","required":true,"schema":{"type":"string"}}],"requestBody":{},"responses":{"default":{"description":""}},"x-apisix-enable_websocket":false,"x-apisix-plugins":{},"x-apisix-priority":0,"x-apisix-status":1,"x-apisix-upstream":{"nodes":[{"host":"1.1.1.1","port":80,"weight":1}],"timeout":{"connect":6000,"read":6000,"send":6000},"type":"roundrobin","pass_host":"pass"},"x-apisix-vars":[]}}}}',
+  };
 
   beforeEach(() => {
     // init login
@@ -46,39 +53,71 @@ context('import and export routes', () => {
     //  go to route create page
     cy.visit('/');
     // create two routes
-    for (let i=0; i<2; i += 1) {
+    for (let i = 0; i < 2; i += 1) {
       cy.contains(menuLocaleUS['menu.routes']).click();
       cy.contains(componentLocaleUS['component.global.create']).click();
       // input name, click Next
       cy.get(domSelector.route_name).type(data[`route_name_${i}`]);
+      //FIXME: only GET in methods
+      cy.get('#methods').click();
+      for (let i = 0; i < 7; i += 1) {
+        cy.get('#methods').type('{backspace}');
+      }
+      cy.get('#methods').type('GET');
+      cy.get('#methods').type('{enter}');
+
       cy.contains(actionBarUS['component.actionbar.button.nextStep']).click();
       // input nodes_0_host, click Next
-      cy.get(domSelector.nodes_0_host).type(data[`upstream_node0_host_${i}`])
+      cy.get(domSelector.nodes_0_host).type(data[`upstream_node0_host_${i}`]);
       cy.contains(actionBarUS['component.actionbar.button.nextStep']).click();
       // do not config plugins, click Next
       cy.contains(actionBarUS['component.actionbar.button.nextStep']).click();
       // click submit to create route
       cy.contains(componentLocaleUS['component.global.submit']).click();
       // submit successfully
-      cy.contains(`${componentLocaleUS['component.global.submit']} ${componentLocaleUS['component.status.success']}`);
+      cy.contains(
+        `${componentLocaleUS['component.global.submit']} ${componentLocaleUS['component.status.success']}`,
+      ).should('exist');
     }
   });
   it('should export route: route_name_0, route_name_1', () => {
     cy.visit('/');
     cy.contains('Route').click();
-    // select two routes in the list
-    for (let i=0; i<2; i += 1) {
-      cy.contains(data[`route_name_${i}`]).prev().click();
-    }
+
+    // export button should be disabled without any route items selected
+    cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).should('be.disabled');
+    // popup confirm should not exit when click disabled export button
+    cy.contains(routeLocaleUS['page.route.exportRoutesTips']).should('not.exist');
+
+    // export one route
+    cy.contains(data['route_name_0']).prev().click();
+    // after select route item(s), export button should not be disabled
+    cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).should('not.disabled');
     // click Export OpenAPI Button
     cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).click();
-    // click Confirm button in the popup to download Json file
+    // after click enabled export button, popup confirm should appeare
+    cy.contains(routeLocaleUS['page.route.exportRoutesTips']).should('exist');
+    // click Confirm button in the popup to download Json file(debault option)
     cy.contains(componentLocaleUS['component.global.confirm']).click();
-
+    cy.wait(500);
+    cy.task('findFile', data.jsonMask).then((jsonFile) => {
+      cy.log(`found file ${jsonFile}`);
+      cy.log('**confirm downloaded json file**');
+      cy.readFile(jsonFile).then((fileContent) => {
+        expect(JSON.stringify(fileContent)).to.equal(data.jsonFile);
+      });
+    });
+    // export 2 routes
+    cy.contains(data['route_name_1']).prev().click();
     cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).click();
     // click Confirm button in the popup to download Yaml file
-    cy.contains('Yaml').click();
+    cy.get(domSelector.fileTypeRadio).check('1');
     cy.contains(componentLocaleUS['component.global.confirm']).click();
+    cy.wait(500);
+    cy.task('findFile', data.yamlMask).then((yamlFile) => {
+      cy.log(`found file ${yamlFile}`);
+      cy.log('**confirm downloaded yaml file**');
+    });
   });
 
   it('should delete the route', function () {
@@ -86,11 +125,14 @@ context('import and export routes', () => {
     for (let i = 0; i < 2; i += 1) {
       cy.contains(data[`route_name_${i}`]).siblings().contains('Delete').click();
       cy.contains('button', 'Confirm').click();
-      cy.get(this.domSelector.notification).should('contain', `${componentLocaleUS['component.global.delete']} ${menuLocaleUS['menu.routes']} ${componentLocaleUS['component.status.success']}`);
+      cy.get(this.domSelector.notification).should(
+        'contain',
+        `${componentLocaleUS['component.global.delete']} ${menuLocaleUS['menu.routes']} ${componentLocaleUS['component.status.success']}`,
+      );
     }
   });
 
-  it('should import route(s) from be test files', function() {
+  /* it('should import route(s) from be test files', function() {
     cy.visit('/');
     cy.contains('Route').click();
     
@@ -118,5 +160,5 @@ context('import and export routes', () => {
         cy.get(this.domSelector.notificationCloseIcon).click();
       }
     })
-  });
+  }); */
 });
