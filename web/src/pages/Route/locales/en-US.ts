@@ -29,6 +29,7 @@ export default {
   'page.route.greaterThan': 'Greater Than',
   'page.route.lessThan': 'Less Than',
   'page.route.regexMatch': 'Regex Match',
+  'page.route.in': 'IN',
   'page.route.rule': 'Rule',
   'page.route.httpHeaderName': 'HTTP Request Header Name',
   'page.route.service': 'Service',
