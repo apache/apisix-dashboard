@@ -28,7 +28,6 @@ import (
 	"testing"
 
 	"github.com/shiningrush/droplet"
-	"github.com/shiningrush/droplet/middleware"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
@@ -64,24 +63,26 @@ func createRequestMultipartFiles(t *testing.T, files ...testFile) *http.Request 
 }
 
 func TestImport_invalid_file_type(t *testing.T) {
-	file := testFile{"file", "file1.txt", []byte("hello")}
-	req := createRequestMultipartFiles(t, file)
+	input := &ImportInput{}
+	input.FileName = "file1.txt"
+	input.FileContent = []byte("hello")
 
 	h := Handler{}
 	ctx := droplet.NewContext()
-	ctx.Set(middleware.KeyHttpRequest, req)
+	ctx.SetInput(input)
 
 	_, err := h.Import(ctx)
 	assert.EqualError(t, err, "required file type is .yaml, .yml or .json but got: .txt")
 }
 
 func TestImport_invalid_content(t *testing.T) {
-	file := testFile{"file", "file1.json", []byte(`{"test": "a"}`)}
-	req := createRequestMultipartFiles(t, file)
+	input := &ImportInput{}
+	input.FileName = "file1.json"
+	input.FileContent = []byte(`{"test": "a"}`)
 
 	h := Handler{}
 	ctx := droplet.NewContext()
-	ctx.Set(middleware.KeyHttpRequest, req)
+	ctx.SetInput(input)
 
 	_, err := h.Import(ctx)
 	assert.EqualError(t, err, "empty or invalid imported file")
@@ -101,8 +102,9 @@ func ReadFile(t *testing.T, filePath string) []byte {
 
 func TestImport_with_service_id(t *testing.T) {
 	bytes := ReadFile(t, "test/testdata/import/with-service-id.yaml")
-	file := testFile{"file", "file1.yaml", bytes}
-	req := createRequestMultipartFiles(t, file)
+	input := &ImportInput{}
+	input.FileName = "file1.json"
+	input.FileContent = bytes
 
 	mStore := &store.MockInterface{}
 	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
@@ -114,7 +116,7 @@ func TestImport_with_service_id(t *testing.T) {
 		upstreamStore: mStore,
 	}
 	ctx := droplet.NewContext()
-	ctx.Set(middleware.KeyHttpRequest, req)
+	ctx.SetInput(input)
 
 	_, err := h.Import(ctx)
 	assert.EqualError(t, err, "data not found by key: service1")
@@ -130,7 +132,7 @@ func TestImport_with_service_id(t *testing.T) {
 		upstreamStore: mStore,
 	}
 	ctx = droplet.NewContext()
-	ctx.Set(middleware.KeyHttpRequest, req)
+	ctx.SetInput(input)
 
 	_, err = h.Import(ctx)
 	assert.EqualError(t, err, "service id: service1 not found")
@@ -138,8 +140,9 @@ func TestImport_with_service_id(t *testing.T) {
 
 func TestImport_with_upstream_id(t *testing.T) {
 	bytes := ReadFile(t, "test/testdata/import/with-upstream-id.yaml")
-	file := testFile{"file", "file1.yaml", bytes}
-	req := createRequestMultipartFiles(t, file)
+	input := &ImportInput{}
+	input.FileName = "file1.json"
+	input.FileContent = bytes
 
 	mStore := &store.MockInterface{}
 	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
@@ -151,7 +154,7 @@ func TestImport_with_upstream_id(t *testing.T) {
 		upstreamStore: mStore,
 	}
 	ctx := droplet.NewContext()
-	ctx.Set(middleware.KeyHttpRequest, req)
+	ctx.SetInput(input)
 
 	_, err := h.Import(ctx)
 	assert.EqualError(t, err, "data not found by key: upstream1")
@@ -167,7 +170,7 @@ func TestImport_with_upstream_id(t *testing.T) {
 		upstreamStore: mStore,
 	}
 	ctx = droplet.NewContext()
-	ctx.Set(middleware.KeyHttpRequest, req)
+	ctx.SetInput(input)
 
 	_, err = h.Import(ctx)
 	assert.EqualError(t, err, "upstream id: upstream1 not found")
