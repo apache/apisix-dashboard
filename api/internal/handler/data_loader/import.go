@@ -67,7 +67,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 }
 
 type ImportInput struct {
-	Force byte `auto_read:"force,query"`
+	Force bool `auto_read:"force,query"`
 	FileName string `auto_read:"_file"`
 	FileContent []byte `auto_read:"file"`
 }
@@ -106,7 +106,7 @@ func (h *Handler) Import(c droplet.Context) (interface{}, error) {
 	// check route
 	for _, route := range routes {
 		err := checkRouteExist(c.Context(), h.routeStore, route)
-		if err != nil && Force != 1 {
+		if err != nil && !Force {
 			log.Warnf("import duplicate: %s, route: %#v", err, route)
 			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
 				fmt.Errorf("route(uris:%v) conflict, %s", route.Uris, err)
@@ -140,7 +140,7 @@ func (h *Handler) Import(c droplet.Context) (interface{}, error) {
 
 	// create route
 	for _, route := range routes {
-		if Force == 1 && route.ID != nil {
+		if Force && route.ID != nil {
 			if _, err := h.routeStore.Update(c.Context(), route, true); err != nil {
 				return handler.SpecCodeResponse(err),
 					fmt.Errorf("update route(uris:%v) failed: %s", route.Uris, err)
