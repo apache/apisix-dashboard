@@ -26,6 +26,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestExport_Route_Data_Empty(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			Desc:         "Export route when data is empty",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "{\"code\":10000,\"message\":\"Route data is empty, cannot be exported\",\"data\":null",
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+}
+
 func TestRoute_Export(t *testing.T) {
 
 	// 1.Export data as the route of URIs Hosts

@@ -19,6 +19,7 @@ package data_loader
 
 import (
 	"encoding/json"
+	"errors"
 	"strings"
 	"testing"
 
@@ -1903,10 +1904,48 @@ func TestExportRoutesSameURI(t *testing.T) {
 	assert.True(t, getCalled)
 }
 
+func TestExportRoutesParameterEmpty(t *testing.T) {
+	// Error test when pass parameter is null
+	h := Handler{}
+
+	exportInput := &ExportInput{}
+	exportInput.IDs = ""
+
+	ctx := droplet.NewContext()
+	ctx.SetInput(exportInput)
+
+	_, err1 := h.ExportRoutes(ctx)
+	assert.Equal(t, errors.New("Parameter IDs cannot be empty"), err1)
+}
+
+func TestExportAllRoutesDataEmpty(t *testing.T) {
+	// When there is no route data in the database, export route
+	input := &store.ListInput{}
+	mStore := &store.MockInterface{}
+	getCalled := false
+
+	mStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
+		getCalled = true
+	}).Return(func(input store.ListInput) *store.ListOutput {
+		var returnData []interface{}
+		return &store.ListOutput{
+			Rows:      returnData,
+			TotalSize: 0,
+		}
+	}, nil)
+
+	h := Handler{routeStore: mStore}
+	ctx := droplet.NewContext()
+	ctx.SetInput(input)
+
+	_, err := h.ExportAllRoutes(ctx)
+	assert.Equal(t, errors.New("Route data is empty, cannot be exported"), err)
+	assert.True(t, getCalled)
+}
+
 func replaceStr(str string) string {
 	str = strings.Replace(str, "\n", "", -1)
 	str = strings.Replace(str, "\t", "", -1)
 	str = strings.Replace(str, " ", "", -1)
 	return str
 }
-
