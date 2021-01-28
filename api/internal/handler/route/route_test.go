@@ -1431,6 +1431,8 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, stored.ID, route.ID)
 	assert.Equal(t, "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M", stored.Script)
+	// If not specify script_id in request, script_id should be equal to id
+	assert.Equal(t, stored.ScriptID, route.ID)
 
 	// update via empty script
 	route2 := &UpdateInput{}
@@ -1458,8 +1460,9 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	objRet, ok := ret.(*entity.Route)
 	assert.True(t, ok)
 	assert.Equal(t, route2.ID, objRet.ID)
-	// script returned should be nil
+	// script and script_id returned should be nil
 	assert.Nil(t, objRet.Script)
+	assert.Nil(t, objRet.ScriptID)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -1531,4 +1534,223 @@ func Test_Route_With_Script_Luacode(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "<string> at EOF:   syntax error\n")
 	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
+}
+
+func Test_Route_With_Script_ID(t *testing.T) {
+	// init
+	err := storage.InitETCDClient(conf.ETCDConfig)
+	assert.Nil(t, err)
+	err = store.InitStores()
+	assert.Nil(t, err)
+
+	handler := &Handler{
+		routeStore:    store.GetStore(store.HubKeyRoute),
+		svcStore:      store.GetStore(store.HubKeyService),
+		upstreamStore: store.GetStore(store.HubKeyUpstream),
+		scriptStore:   store.GetStore(store.HubKeyScript),
+	}
+	assert.NotNil(t, handler)
+
+	// create with invalid script_id - not equal to id
+	ctx := droplet.NewContext()
+	route := &entity.Route{}
+	errReqBody := `{
+		"id": "1",
+		"uri": "/index.html",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "www.a.com",
+				"port": 80,
+				"weight": 1
+			}]
+		},
+		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M",
+		"script_id": "not-1"
+	}`
+	err = json.Unmarshal([]byte(errReqBody), route)
+	assert.Nil(t, err)
+	ctx.SetInput(route)
+	ret, err := handler.Create(ctx)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "script_id must be the same as id")
+	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
+
+	// create with invalid script_id - set script_id but without id
+	route = &entity.Route{}
+	errReqBody = `{
+		"uri": "/index.html",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "www.a.com",
+				"port": 80,
+				"weight": 1
+			}]
+		},
+		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M",
+		"script_id": "1"
+	}`
+	err = json.Unmarshal([]byte(errReqBody), route)
+	assert.Nil(t, err)
+	ctx.SetInput(route)
+	ret, err = handler.Create(ctx)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "script_id must be the same as id")
+	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
+
+	// create with invalid script_id - set script_id but without script
+	route = &entity.Route{}
+	errReqBody = `{
+		"id": "1",
+		"uri": "/index.html",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "www.a.com",
+				"port": 80,
+				"weight": 1
+			}]
+		},
+		"script_id": "1"
+	}`
+	err = json.Unmarshal([]byte(errReqBody), route)
+	assert.Nil(t, err)
+	ctx.SetInput(route)
+	ret, err = handler.Create(ctx)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "script_id cannot be set if script is unset")
+	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
+
+	// create with valid script_id
+	route = &entity.Route{}
+	reqBody := `{
+		"id": "1",
+		"uri": "/index.html",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "www.a.com",
+				"port": 80,
+				"weight": 1
+			}]
+		},
+		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M",
+		"script_id": "1"
+	}`
+	err = json.Unmarshal([]byte(reqBody), route)
+	assert.Nil(t, err)
+	ctx.SetInput(route)
+	_, err = handler.Create(ctx)
+	assert.Nil(t, err)
+
+	// sleep
+	time.Sleep(time.Duration(20) * time.Millisecond)
+
+	// get
+	input := &GetInput{}
+	input.ID = "1"
+	ctx.SetInput(input)
+	ret, err = handler.Get(ctx)
+	stored := ret.(*entity.Route)
+	assert.Nil(t, err)
+	assert.Equal(t, stored.ScriptID, route.ID)
+
+	// update via invalid script_id - not equal to id
+	route2 := &UpdateInput{}
+	route2.ID = "1"
+	errReqBody = `{
+			"id": "1",
+			"uri": "/index.html",
+			"enable_websocket": true,
+			"upstream": {
+				"type": "roundrobin",
+				"nodes": [{
+					"host": "www.a.com",
+					"port": 80,
+					"weight": 1
+				}]
+			},
+			"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M",
+			"script_id": "not-1"
+		}`
+
+	err = json.Unmarshal([]byte(errReqBody), route2)
+	assert.Nil(t, err)
+	ctx.SetInput(route2)
+	ret, err = handler.Update(ctx)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "script_id must be the same as id")
+	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
+
+	// update via invalid script_id - set script_id but without script
+	route2 = &UpdateInput{}
+	route2.ID = "1"
+	errReqBody = `{
+			"id": "1",
+			"uri": "/index.html",
+			"enable_websocket": true,
+			"upstream": {
+				"type": "roundrobin",
+				"nodes": [{
+					"host": "www.a.com",
+					"port": 80,
+					"weight": 1
+				}]
+			},
+			"script_id": "1"
+		}`
+	err = json.Unmarshal([]byte(errReqBody), route2)
+	assert.Nil(t, err)
+	ctx.SetInput(route2)
+	ret, err = handler.Update(ctx)
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "script_id cannot be set if script is unset")
+	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
+
+	// update via valid script_id
+	route2 = &UpdateInput{}
+	route2.ID = "1"
+	reqBody = `{
+				"id": "1",
+				"uri": "/index.html",
+				"enable_websocket": true,
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "www.a.com",
+						"port": 80,
+						"weight": 1
+					}]
+				},
+				"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase, again\") \n end \nreturn _M",
+				"script_id": "1"
+			}`
+	err = json.Unmarshal([]byte(reqBody), route2)
+	assert.Nil(t, err)
+	ctx.SetInput(route2)
+	_, err = handler.Update(ctx)
+	assert.Nil(t, err)
+
+	// sleep
+	time.Sleep(time.Duration(20) * time.Millisecond)
+
+	// get
+	input = &GetInput{}
+	input.ID = "1"
+	ctx.SetInput(input)
+	ret, err = handler.Get(ctx)
+	stored = ret.(*entity.Route)
+	assert.Nil(t, err)
+	assert.Equal(t, stored.ScriptID, route.ID)
+	assert.Equal(t, "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase, again\") \n end \nreturn _M", stored.Script)
+
+	// delete test data
+	inputDel := &BatchDelete{}
+	reqBody = `{"ids": "1"}`
+	err = json.Unmarshal([]byte(reqBody), inputDel)
+	assert.Nil(t, err)
+	ctx.SetInput(inputDel)
+	_, err = handler.BatchDelete(ctx)
+	assert.Nil(t, err)
 }
