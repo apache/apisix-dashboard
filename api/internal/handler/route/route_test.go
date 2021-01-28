@@ -1577,6 +1577,7 @@ func Test_Route_With_Script_ID(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 
 	// create with invalid script_id - set script_id but without id
+	route = &entity.Route{}
 	errReqBody = `{
 		"uri": "/index.html",
 		"upstream": {
@@ -1599,6 +1600,7 @@ func Test_Route_With_Script_ID(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 
 	// create with invalid script_id - set script_id but without script
+	route = &entity.Route{}
 	errReqBody = `{
 		"id": "1",
 		"uri": "/index.html",
@@ -1621,6 +1623,7 @@ func Test_Route_With_Script_ID(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, ret.(*data.SpecCodeResponse).StatusCode)
 
 	// create with valid script_id
+	route = &entity.Route{}
 	reqBody := `{
 		"id": "1",
 		"uri": "/index.html",
@@ -1633,7 +1636,7 @@ func Test_Route_With_Script_ID(t *testing.T) {
 			}]
 		},
 		"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M",
-		"script": "1"
+		"script_id": "1"
 	}`
 	err = json.Unmarshal([]byte(reqBody), route)
 	assert.Nil(t, err)
@@ -1669,7 +1672,7 @@ func Test_Route_With_Script_ID(t *testing.T) {
 				}]
 			},
 			"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M",
-			"script_id: "not-1"
+			"script_id": "not-1"
 		}`
 
 	err = json.Unmarshal([]byte(errReqBody), route2)
@@ -1695,7 +1698,7 @@ func Test_Route_With_Script_ID(t *testing.T) {
 					"weight": 1
 				}]
 			},
-			"script_id: "1"
+			"script_id": "1"
 		}`
 	err = json.Unmarshal([]byte(errReqBody), route2)
 	assert.Nil(t, err)
@@ -1721,7 +1724,7 @@ func Test_Route_With_Script_ID(t *testing.T) {
 					}]
 				},
 				"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase, again\") \n end \nreturn _M",
-				"script_id: "1"
+				"script_id": "1"
 			}`
 	err = json.Unmarshal([]byte(reqBody), route2)
 	assert.Nil(t, err)
