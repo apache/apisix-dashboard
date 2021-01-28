@@ -31,14 +31,16 @@ context('Switch language', () => {
 
     cy.get(domSelector.switcher).click('right');
     cy.contains('简体中文').click({
+      force: true,
       timeout,
     });
     cy.contains('服务').click();
 
     cy.get(domSelector.switcher).click('right');
     cy.contains('English').click({
+      force: true,
       timeout,
     });
-    cy.contains('Create');
+    cy.contains('Create').should('exist');
   });
 });
