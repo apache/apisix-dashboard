@@ -332,6 +332,12 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 
+	// If route's script_id is set, it must be equals to the route's id.
+	if input.ScriptID != nil && (utils.InterfaceToString(input.ID) != utils.InterfaceToString(input.ScriptID)) {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("script_id must be the same as id")
+	}
+
 	if input.Script != nil {
 		if input.ID == "" {
 			input.ID = utils.GetFlakeUidStr()
@@ -361,6 +367,16 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		//save original conf
 		if _, err = h.scriptStore.Create(c.Context(), script); err != nil {
 			return nil, err
+		}
+
+		// After saving the Script entity, always set route's script_id
+		// the same as route's id.
+		input.ScriptID = input.ID
+	} else {
+		// If script is unset, script_id must be unset neither.
+		if input.ScriptID != nil {
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				fmt.Errorf("script_id cannot be set if script is unset")
 		}
 	}
 
@@ -414,6 +430,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
+	// If route's script_id is set, it must be equals to the route's id.
+	if input.Route.ScriptID != nil && (utils.InterfaceToString(input.ID) != utils.InterfaceToString(input.Route.ScriptID)) {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("script_id must be the same as id")
+	}
+
 	if input.Script != nil {
 		script := &entity.Script{}
 		script.ID = input.ID
@@ -448,7 +470,16 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 				return handler.SpecCodeResponse(err), err
 			}
 		}
+
+		// After updating the Script entity, always set route's script_id
+		// the same as route's id.
+		input.Route.ScriptID = input.ID
 	} else {
+		// If script is unset, script_id must be unset neither.
+		if input.Route.ScriptID != nil {
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				fmt.Errorf("script_id cannot be set if script is unset")
+		}
 		//remove exists script
 		id := utils.InterfaceToString(input.Route.ID)
 		script, _ := h.scriptStore.Get(c.Context(), id)

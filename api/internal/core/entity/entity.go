@@ -84,6 +84,7 @@ type Route struct {
 	Vars            interface{}            `json:"vars,omitempty"`
 	FilterFunc      string                 `json:"filter_func,omitempty"`
 	Script          interface{}            `json:"script,omitempty"`
+	ScriptID        interface{}            `json:"script_id,omitempty"` // For debug and optimization(cache), currently same as Route's ID
 	Plugins         map[string]interface{} `json:"plugins,omitempty"`
 	Upstream        *UpstreamDef           `json:"upstream,omitempty"`
 	ServiceID       interface{}            `json:"service_id,omitempty"`
