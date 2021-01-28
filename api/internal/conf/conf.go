@@ -52,6 +52,7 @@ var (
 	UserList         = make(map[string]User, 2)
 	AuthConf         Authentication
 	SSLDefaultStatus = 1 //enable ssl by default
+	ImportSizeLimit  = 10 * 1024 * 1024
 	PIDPath          = "/tmp/manager-api.pid"
 )
 

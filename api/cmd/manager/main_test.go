@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package main
+
 import (
 	"os"
 	"os/signal"
@@ -22,6 +23,7 @@ import (
 	"syscall"
 	"testing"
 )
+
 func TestMainWrapper(t *testing.T) {
 	if os.Getenv("ENV") == "test" {
 		t.Skip("skipping build binary when execute unit test")

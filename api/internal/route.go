@@ -75,6 +75,7 @@ func SetUpRouter() *gin.Engine {
 		server_info.NewHandler,
 		label.NewHandler,
 		data_loader.NewHandler,
+		data_loader.NewImportHandler,
 	}
 
 	for i := range factories {

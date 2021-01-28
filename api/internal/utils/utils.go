@@ -17,11 +17,13 @@
 package utils
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -168,4 +170,39 @@ func LabelContains(labels map[string]string, reqLabels map[string]struct{}) bool
 func ValidateLuaCode(code string) error {
 	_, err := parse.Parse(strings.NewReader(code), "<string>")
 	return err
+}
+
+//
+func StringSliceEqual(a, b []string) bool {
+	if (a == nil) != (b == nil) {
+		return false
+	}
+
+	if len(a) != len(b) {
+		return false
+	}
+
+	sort.Strings(a)
+	sort.Strings(b)
+
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
+// value compare
+func ValueEqual(a interface{}, b interface{}) bool {
+	aBytes, err := json.Marshal(a)
+	if err != nil {
+		return false
+	}
+	bBytes, err := json.Marshal(b)
+	if err != nil {
+		return false
+	}
+	return bytes.Equal(aBytes, bBytes)
 }

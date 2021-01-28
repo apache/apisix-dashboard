@@ -26,6 +26,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestExport_Route_Data_Empty(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			Desc:         "Export route when data is empty",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "{\"code\":10000,\"message\":\"Route data is empty, cannot be exported\",\"data\":null",
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+}
+
 func TestRoute_Export(t *testing.T) {
 
 	// 1.Export data as the route of URIs Hosts
@@ -1463,13 +1481,13 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 	time.Sleep(sleepTime)
 
 	// sign jwt token
-	body, status, err := httpGet("http://127.0.0.10:9080/apisix/plugin/jwt/sign?key=user-key")
+	body, status, err := httpGet("http://127.0.0.10:9080/apisix/plugin/jwt/sign?key=user-key", nil)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, status)
 	jwtToken := string(body)
 
 	// sign jwt token with not exists key
-	body, status, err = httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=not-exist-key")
+	body, status, err = httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=not-exist-key", nil)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusNotFound, status)
 
@@ -2485,4 +2503,3 @@ func replaceStr(str string) string {
 	str = strings.Replace(str, " ", "", -1)
 	return str
 }
-
