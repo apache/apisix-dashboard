@@ -67,6 +67,11 @@ type ExportInput struct {
 //ExportRoutes Export data by passing route ID, such as "R1" or multiple route parameters, such as "R1,R2"
 func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ExportInput)
+
+	if input.IDs == "" {
+		return nil, fmt.Errorf("Parameter IDs cannot be empty")
+	}
+
 	ids := strings.Split(input.IDs, ",")
 	routes := []*entity.Route{}
 
@@ -106,6 +111,10 @@ var (
 //ExportAllRoutes All routes can be directly exported without passing parameters
 func (h *Handler) ExportAllRoutes(c droplet.Context) (interface{}, error) {
 	routelist, err := h.routeStore.List(c.Context(), store.ListInput{})
+
+	if len(routelist.Rows) < 1 {
+		return nil, fmt.Errorf("Route data is empty, cannot be exported")
+	}
 
 	if err != nil {
 		return nil, err
@@ -485,4 +494,3 @@ func GetPathNumber() func() int {
 		return i
 	}
 }
-
