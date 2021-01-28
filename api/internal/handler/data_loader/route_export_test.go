@@ -1906,32 +1906,14 @@ func TestExportRoutesSameURI(t *testing.T) {
 
 func TestExportRoutesParameterEmpty(t *testing.T) {
 	// Error test when pass parameter is null
-	r1 := `{
-		"uris": ["/test-test"],
-		"name": "route_all",
-		"desc": "所有",
-		"methods": ["GET"],
-		"hosts": ["test.com"],
-		"status": 1,
-		"upstream": {
-			"nodes": {
-				"172.16.238.20:1980": 1
-			},
-			"type": "roundrobin"
-		}
-}`
-	var route *entity.Route
-	err := json.Unmarshal([]byte(r1), &route)
-	assert.Nil(t, err)
-	mStore := &store.MockInterface{}
-	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
-	}).Return(route, nil)
+	h := Handler{}
 
-	h := Handler{routeStore: mStore}
 	exportInput := &ExportInput{}
 	exportInput.IDs = ""
+
 	ctx := droplet.NewContext()
 	ctx.SetInput(exportInput)
+
 	_, err1 := h.ExportRoutes(ctx)
 	assert.Equal(t, errors.New("Parameter IDs cannot be empty"), err1)
 }
