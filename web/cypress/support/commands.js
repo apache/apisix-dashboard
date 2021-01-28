@@ -16,6 +16,7 @@
  */
 /* eslint-disable no-undef */
 import defaultSettings from '../../config/defaultSettings';
+import 'cypress-file-upload';
 
 Cypress.Commands.add('login', () => {
   const { SERVE_ENV = 'dev' } = Cypress.env();
