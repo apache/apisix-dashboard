@@ -27,6 +27,7 @@ context('Create and Delete Plugin List', () => {
     refresh: '.anticon-reload',
     codemirror: '.CodeMirror',
     switch: '#disable',
+    button: '.ant-btn-dangerous',
   };
 
   beforeEach(() => {
@@ -48,7 +49,6 @@ context('Create and Delete Plugin List', () => {
 
   it('should edit the plugin', () => {
     cy.visit('/plugin/list');
-    cy.get(domSelector.refresh).click();
     cy.contains(data.name).should('exist').siblings().contains('Edit').click({
       force: true,
     });
@@ -63,7 +63,7 @@ context('Create and Delete Plugin List', () => {
 
   it('should delete plugin list', () => {
     cy.visit('/plugin/list');
-    cy.get(domSelector.refresh).click();
+    cy.get(domSelector.button).should('exist');
     cy.get(domSelector.tableCell, { timeout }).should('exist').then(function (rows) {
       [...rows].forEach((row) => {
         const name = row.innerText;
