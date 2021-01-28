@@ -49,6 +49,7 @@ context('Create and Delete Plugin List', () => {
 
   it('should edit the plugin', () => {
     cy.visit('/plugin/list');
+
     cy.contains(data.name).should('exist').siblings().contains('Edit').click({
       force: true,
     });
@@ -63,6 +64,7 @@ context('Create and Delete Plugin List', () => {
 
   it('should delete plugin list', () => {
     cy.visit('/plugin/list');
+    
     cy.get(domSelector.button).should('exist');
     cy.get(domSelector.tableCell, { timeout }).should('exist').then(function (rows) {
       [...rows].forEach((row) => {
