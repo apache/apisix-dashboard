@@ -39,17 +39,16 @@ context('import and export routes', () => {
       '../../../api/test/testdata/import/default.yaml',
       'import-error.txt',
     ],
-    jsonMask: 'cypress/downloads/*.json',
+    // Note: export file's name will be end of a timestamp
+    jsonMask: 'cypress/downloads/*.json', 
     yamlMask: 'cypress/downloads/*.yaml',
-    jsonFile:
-      '{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{"/{params}":{"get":{"operationId":"route_name_0GET","parameters":[{"description":"params in path","in":"path","name":"params","required":true,"schema":{"type":"string"}}],"requestBody":{},"responses":{"default":{"description":""}},"x-apisix-enable_websocket":false,"x-apisix-plugins":{},"x-apisix-priority":0,"x-apisix-status":1,"x-apisix-upstream":{"nodes":[{"host":"1.1.1.1","port":80,"weight":1}],"timeout":{"connect":6000,"read":6000,"send":6000},"type":"roundrobin","pass_host":"pass"},"x-apisix-vars":[]}}}}',
-    yamlFile:'{"components":{},"info":{"title":"RoutesExport","version":"3.0.0"},"openapi":"3.0.0","paths":{"/{params}":{"get":{"operationId":"route_name_0GET","parameters":[{"description":"params in path","in":"path","name":"params","required":true,"schema":{"type":"string"}}],"requestBody":{},"responses":{"default":{"description":""}},"x-apisix-enable_websocket":false,"x-apisix-plugins":{},"x-apisix-priority":0,"x-apisix-status":1,"x-apisix-upstream":{"nodes":[{"host":"1.1.1.1","port":80,"weight":1}],"timeout":{"connect":6000,"read":6000,"send":6000},"type":"roundrobin","pass_host":"pass"},"x-apisix-vars":[]}},"/{params}-APISIX-REPEAT-URI-2":{"get":{"operationId":"route_name_1GET","parameters":[{"description":"params in path","in":"path","name":"params","required":true,"schema":{"type":"string"}},{"description":"params in path","in":"path","name":"params","required":true,"schema":{"type":"string"}}],"requestBody":{},"responses":{"default":{"description":""}},"x-apisix-enable_websocket":false,"x-apisix-plugins":{},"x-apisix-priority":0,"x-apisix-status":1,"x-apisix-upstream":{"nodes":[{"host":"2.2.2.2","port":80,"weight":1}],"timeout":{"connect":6000,"read":6000,"send":6000},"type":"roundrobin","pass_host":"pass"},"x-apisix-vars":[]}}}}',
   };
 
   beforeEach(() => {
     // init login
     cy.login();
     cy.fixture('selector.json').as('domSelector');
+    cy.fixture('export-route-dataset.json').as('exportFile');
   });
   it('should create route1 and route2', () => {
     //  go to route create page
@@ -82,7 +81,7 @@ context('import and export routes', () => {
       ).should('exist');
     }
   });
-  it('should export route: route_name_0, route_name_1', () => {
+  it('should export route: route_name_0, route_name_1', function (){
     cy.visit('/');
     cy.contains('Route').click();
 
@@ -91,7 +90,7 @@ context('import and export routes', () => {
     // popup confirm should not exit when click disabled export button
     cy.contains(routeLocaleUS['page.route.exportRoutesTips']).should('not.exist');
 
-    // export one route
+    // export one route with type json
     cy.contains(data['route_name_0']).prev().click();
     // after select route item(s), export button should not be disabled
     cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).should('not.disabled');
@@ -101,26 +100,27 @@ context('import and export routes', () => {
     cy.contains(routeLocaleUS['page.route.exportRoutesTips']).should('exist');
     // click Confirm button in the popup to download Json file(debault option)
     cy.contains(componentLocaleUS['component.global.confirm']).click();
-    cy.wait(500);
+
+    // export 2 routes with type yaml
+    cy.contains(data['route_name_1']).prev().click();
+    cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).click();
+    cy.contains(routeLocaleUS['page.route.exportRoutesTips']).should('exist');
+    // click Confirm button in the popup to download Yaml file
+    cy.get(domSelector.fileTypeRadio).check('1');
+    cy.contains(componentLocaleUS['component.global.confirm']).click();
+
     cy.task('findFile', data.jsonMask).then((jsonFile) => {
       cy.log(`found file ${jsonFile}`);
       cy.log('**confirm downloaded json file**');
       cy.readFile(jsonFile).then((fileContent) => {
-        expect(JSON.stringify(fileContent)).to.equal(data.jsonFile);
+        expect(JSON.stringify(fileContent)).to.equal(JSON.stringify(this.exportFile.jsonFile));
       });
     });
-    // export 2 routes
-    cy.contains(data['route_name_1']).prev().click();
-    cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).click();
-    // click Confirm button in the popup to download Yaml file
-    cy.get(domSelector.fileTypeRadio).check('1');
-    cy.contains(componentLocaleUS['component.global.confirm']).click();
-    cy.wait(500);
     cy.task('findFile', data.yamlMask).then((yamlFile) => {
       cy.log(`found file ${yamlFile}`);
       cy.log('**confirm downloaded yaml file**');
       cy.readFile(yamlFile).then((fileContent) => {
-        expect(JSON.stringify(yaml.load(fileContent), null, null)).to.equal(data.yamlFile);
+        expect(JSON.stringify(yaml.load(fileContent), null, null)).to.equal(JSON.stringify(this.exportFile.yamlFile));
       });
     });
   });
@@ -128,8 +128,8 @@ context('import and export routes', () => {
   it('should delete the route', function () {
     cy.visit('/routes/list');
     for (let i = 0; i < 2; i += 1) {
-      cy.contains(data[`route_name_${i}`]).siblings().contains('Delete').click();
-      cy.contains('button', 'Confirm').click();
+      cy.contains(data[`route_name_${i}`]).siblings().contains(componentLocaleUS['component.global.delete']).click();
+      cy.contains('button', componentLocaleUS['component.global.confirm']).click();
       cy.get(this.domSelector.notification).should(
         'contain',
         `${componentLocaleUS['component.global.delete']} ${menuLocaleUS['menu.routes']} ${componentLocaleUS['component.status.success']}`,
