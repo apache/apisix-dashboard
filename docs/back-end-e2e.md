@@ -72,6 +72,8 @@ This document describes how to use E2E test locally.
     }
    ```
 
+**NOTE:** Sometimes we need to delete the etcd store info. Otherwise, it will make the test failed.
+
 8. Enter the E2E folder and execute the command to test all E2E test files.
 
    ```sh
