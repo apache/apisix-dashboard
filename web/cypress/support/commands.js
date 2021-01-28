@@ -61,7 +61,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           });
 
         // NOTE: wait for the Drawer to appear on the DOM
-        cy.wait(500);
+        cy.wait(300);
         cy.get(domSelectors.drawer, { timeout }).within(() => {
           cy.get(domSelectors.switch).click({
             force: true,
@@ -79,6 +79,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           });
         });
 
+        cy.wait(300);
         if (shouldValid === true) {
           cy.get(domSelectors.drawer).should('not.exist');
         } else if (shouldValid === false) {
