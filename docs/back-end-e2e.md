@@ -19,6 +19,8 @@
 
 This document describes how to use E2E test locally.
 
+## Start with source code
+
 1. To run back end E2E test, please start the `manager-api`, `admin-api`, etcd and upstream node at first.
 
 2. To start the `manager-api` project locally, please refer to [develop](./develop.md) web section.
@@ -30,7 +32,7 @@ This document describes how to use E2E test locally.
 5. To start the upstream node locally, please install docker in the local environment and execute the command.
 
    ```sh
-    docker run -d --name upstream -v /(Your apisix-dashboard folder path)/api/test/docker/upstream.conf:/etc/nginx/conf.d/default.conf:ro -p 80:80 -p 1980:1980 -p 1981:1981 -p 1982:1982 -p 1983:1983 -p 1984:1984 johz/upstream:v2.0
+    docker run -d --name upstream -v /(Your apisix-dashboard folder path)/api/test/docker/upstream.conf:/etc/nginx/conf.d/default.conf:ro -p 80:80 -p 1980:1980 -p 1981:1981 -p 1982:1982 -p 1983:1983 -p 1984:1984 --ip 172.16.238.20 johz/upstream:v2.0
    ```
 
 6. After all the services are started, you can start the back-end E2E test.
@@ -72,18 +74,35 @@ This document describes how to use E2E test locally.
     }
    ```
 
+## Start with docker-compose
+
+1. [install docker-compose](https://docs.docker.com/compose/install/)
+
+2. Use docker-compose to run services such as `manager-api`, `admin-api`, etcd and upstream node. run the command.
+
+   ```sh
+   cd /(Your apisix-dashboard folder path)/api/test/docker
+   docker-compose up -d
+   ```
+
+## Start test
+
+1. After all the services are started, you can start the back-end E2E test.
+
 **NOTE:** Sometimes we need to delete the etcd store info. Otherwise, it will make the test failed.
 
-8. Enter the E2E folder and execute the command to test all E2E test files.
+2. Enter the E2E folder and execute the command to test all E2E test files.
 
    ```sh
     cd /(Your apisix-dashboard folder path)/api/test/e2e
     go test -v
    ```
 
-9. You can also do E2E test on a single file.
+3. You can also do E2E test on a single file.
 
    ```sh
     cd /(Your apisix-dashboard folder path)/api/test/e2e
     go test -v E2E-test-file.go base.go
    ```
+
+
