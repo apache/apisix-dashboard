@@ -235,6 +235,12 @@ type Script struct {
 	Script interface{} `json:"script,omitempty"`
 }
 
+type RequestValidation struct {
+	Type       string      `json:"type,omitempty"`
+	Required   []string    `json:"required,omitempty"`
+	Properties interface{} `json:"properties,omitempty"`
+}
+
 // swagger:model GlobalPlugins
 type GlobalPlugins struct {
 	BaseInfo

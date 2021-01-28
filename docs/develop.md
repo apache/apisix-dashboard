@@ -63,7 +63,7 @@ $ make api-stop
 $ cd ./web
 ```
 
-2. Please change the `manager-api` address in the `config/proxy.ts` file if needed.
+2. Please change the `manager-api` address in the `config/defaultSettings.ts` file if needed.
 
 3. Launch development mode
 

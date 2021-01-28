@@ -60,8 +60,10 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.DELETE("/apisix/admin/upstreams/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
-	r.GET("/apisix/admin/notexist/upstreams", consts.ErrorWrapper(Exist))
-	r.GET("/apisix/admin/names/upstreams", consts.ErrorWrapper(listUpstreamNames))
+	r.GET("/apisix/admin/notexist/upstreams", wgin.Wraps(h.Exist,
+		wrapper.InputType(reflect.TypeOf(ExistCheckInput{}))))
+
+	r.GET("/apisix/admin/names/upstreams", wgin.Wraps(h.listUpstreamNames))
 }
 
 type GetInput struct {
@@ -248,15 +250,18 @@ func toRows(list *store.ListOutput) []store.Row {
 	return rows
 }
 
-func Exist(c *gin.Context) (interface{}, error) {
-	//input := c.Input().(*ExistInput)
+type ExistCheckInput struct {
+	Name    string `auto_read:"name,query"`
+	Exclude string `auto_read:"exclude,query"`
+}
 
-	//temporary
-	name := c.Query("name")
-	exclude := c.Query("exclude")
+func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*ExistCheckInput)
+	name := input.Name
+	exclude := input.Exclude
 	routeStore := store.GetStore(store.HubKeyUpstream)
 
-	ret, err := routeStore.List(c, store.ListInput{
+	ret, err := routeStore.List(c.Context(), store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,
@@ -275,17 +280,18 @@ func Exist(c *gin.Context) (interface{}, error) {
 	if len(rows) > 0 {
 		r := rows[0].(*entity.Upstream)
 		if r.ID != exclude {
-			return nil, consts.InvalidParam("Upstream name is reduplicate")
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				consts.InvalidParam("Upstream name is reduplicate")
 		}
 	}
 
 	return nil, nil
 }
 
-func listUpstreamNames(c *gin.Context) (interface{}, error) {
+func (h *Handler) listUpstreamNames(c droplet.Context) (interface{}, error) {
 	routeStore := store.GetStore(store.HubKeyUpstream)
 
-	ret, err := routeStore.List(c, store.ListInput{
+	ret, err := routeStore.List(c.Context(), store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,

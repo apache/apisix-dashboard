@@ -163,12 +163,15 @@ func TestSSL_Basic(t *testing.T) {
 	// enable SSL again
 	tests = []HttpTestCase{
 		{
-			Desc:         "enable SSL",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPatch,
-			Path:         "/apisix/admin/ssl/1/status",
-			Body:         `1`,
-			Headers:      map[string]string{"Authorization": token},
+			Desc:   "enable SSL",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPatch,
+			Path:   "/apisix/admin/ssl/1/status",
+			Body:   `1`,
+			Headers: map[string]string{
+				"Authorization": token,
+				"Content-Type":  "text/plain",
+			},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"status\":1",
 		},
