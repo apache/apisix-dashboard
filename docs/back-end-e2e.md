@@ -104,5 +104,3 @@ This document describes how to use E2E test locally.
     cd /(Your apisix-dashboard folder path)/api/test/e2e
     go test -v E2E-test-file.go base.go
    ```
-
-
