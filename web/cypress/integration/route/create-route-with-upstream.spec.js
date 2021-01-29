@@ -88,6 +88,7 @@ context('Create Route with Upstream', () => {
     cy.visit('/');
     cy.contains('Route').click();
 
+    cy.reload();
     cy.get(domSelector.search_name).type(data.route_name);
     cy.contains('Search').click();
     cy.contains(data.route_name).siblings().contains('Edit').click();
