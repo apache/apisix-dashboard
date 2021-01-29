@@ -55,6 +55,8 @@ $ make api-stop
 
 4. Please refer to the [FAQ](./FAQ.md) about the problem of displaying exception in the dashboard after adding custom plugins or modifying plugin's schema.
 
+5. If writing an back end E2E test, please refer to the [Back End E2E Writing Guide](./back-end-e2e.md)
+
 ### web
 
 1. Go to the `web` directory.
@@ -73,4 +75,4 @@ $ yarn install
 $ yarn start
 ```
 
-4. If writing an E2E test, refer to the [E2E Writing Guide](./front-end-e2e.md)
+4. If writing an front end E2E test, please refer to the [Front End E2E Writing Guide](./front-end-e2e.md)
