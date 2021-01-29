@@ -269,3 +269,90 @@ func TestService_Teardown(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 }
+
+func TestService_Update_Use_Patch_Method(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			Desc:    "create service without plugin",
+			Object:  ManagerApiExpect(t),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/services/s5",
+			Headers: map[string]string{"Authorization": token},
+			Body: `{
+				"name": "testservice",
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"name\":\"testservice\",\"upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}}",
+		},
+		{
+			Desc:   "update service use patch method",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPatch,
+			Path:   "/apisix/admin/services/s5",
+			Body: `{
+				"name": "testpatch",
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1981,
+						"weight": 1
+					}]
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:       "get the service s5",
+			Object:     ManagerApiExpect(t),
+			Method:     http.MethodGet,
+			Path:       "/apisix/admin/services/s5",
+			Headers:    map[string]string{"Authorization": token},
+			ExpectCode: http.StatusOK,
+			ExpectBody: "\"name\":\"testpatch\",\"upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1981,\"weight\":1}],\"type\":\"roundrobin\"}}",
+		},
+		{
+			Desc:   "Update service using path parameter patch method",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPatch,
+			Path:   "/apisix/admin/services/s5/upstream",
+			Body:   `{"type":"roundrobin","nodes":[{"host":"172.16.238.20","port":1980,"weight":1}]}`,
+			Headers: map[string]string{
+				"Authorization": token,
+				"Content-Type":  "text/plain",
+			},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "get service data",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/services/s5",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"name\":\"testpatch\",\"upstream\":{\"nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}}",
+		},
+		{
+			Desc:         "delete service",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s5",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+}
+
