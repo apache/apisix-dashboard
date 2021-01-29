@@ -26,6 +26,7 @@ export default {
   'page.route.greaterThan': '大于',
   'page.route.lessThan': '小于',
   'page.route.regexMatch': '正则匹配',
+  'page.route.in': 'IN',
   'page.route.rule': '规则',
   'page.route.domainName': '域名',
   'page.route.path': '路径',
