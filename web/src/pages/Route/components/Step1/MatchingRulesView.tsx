@@ -123,7 +123,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
             renderText = formatMessage({ id: 'page.route.regexMatch' });
             break;
           case 'IN':
-            renderText = formatMessage({ id: 'page.route.in' });
+            renderText = formatMessage({ id: 'page.route.IN' });
             break;
           default:
             renderText = '';
@@ -242,7 +242,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
             <Option value=">">{formatMessage({ id: 'page.route.greaterThan' })}</Option>
             <Option value="<">{formatMessage({ id: 'page.route.lessThan' })}</Option>
             <Option value="~~">{formatMessage({ id: 'page.route.regexMatch' })}</Option>
-            <Option value="IN">{formatMessage({ id: 'page.route.in' })}</Option>
+            <Option value="IN">{formatMessage({ id: 'page.route.IN' })}</Option>
           </Select>
         </Form.Item>
         <Form.Item
