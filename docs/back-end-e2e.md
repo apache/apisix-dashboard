@@ -78,7 +78,7 @@ This document describes how to use E2E test locally.
 
 1. [install docker-compose](https://docs.docker.com/compose/install/)
 
-2. Use docker-compose to run services such as `manager-api`, `apisix`, `etcd` and `upstream-node`, run the command.
+2. Use `docker-compose` to run services such as `manager-api`, `apisix`, `etcd` and `upstream-node`, run the command.
 
    ```sh
    cd /(Your apisix-dashboard folder path)/api/test/docker
