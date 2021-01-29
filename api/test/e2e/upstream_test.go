@@ -523,3 +523,85 @@ func TestUpstream_Create_via_Post(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 }
+
+func TestUpstream_Update_Use_Patch_Method(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			Desc:   "create upstream via POST",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/upstreams",
+			Body: `{
+				"id": "u1",
+				"nodes": [{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 1
+				}],
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"u1\"", "\"type\":\"roundrobin\""},
+		},
+		{
+			Desc:   "update upstream use patch method",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPatch,
+			Path:   "/apisix/admin/upstreams/u1",
+			Body: `{
+				"nodes": [{
+					"host": "172.16.238.20",
+					"port": 1981,
+					"weight": 1
+				}],
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "get upstream data",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/upstreams/u1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "nodes\":[{\"host\":\"172.16.238.20\",\"port\":1981,\"weight\":1}],\"type\":\"roundrobin\"}",
+		},
+		{
+			Desc:   "Update upstream using path parameter patch method",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPatch,
+			Path:   "/apisix/admin/upstreams/u1/nodes",
+			Body:   `[{"host":"172.16.238.20","port": 1980,"weight":1}]`,
+			Headers: map[string]string{
+				"Authorization": token,
+				"Content-Type":  "text/plain",
+			},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "get upstream data",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/upstreams/u1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}",
+		},
+		{
+			Desc:         "delete upstream",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/u1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+}
+

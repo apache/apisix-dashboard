@@ -19,6 +19,7 @@ package upstream
 
 import (
 	"encoding/json"
+	"strings"
 	"testing"
 	"time"
 
@@ -240,3 +241,63 @@ func TestUpstream_Pass_Host(t *testing.T) {
 	assert.Nil(t, err)
 
 }
+
+func TestUpstream_Patch_Update(t *testing.T) {
+	//create
+	ctx := droplet.NewContext()
+	upstream := &entity.Upstream{}
+	reqBody := `{
+			"id": "3",
+			"nodes": [{
+				"host": "172.16.238.20",
+				"port": 1980,
+				"weight": 1
+			}],
+			"type": "roundrobin"
+		}`
+	err := json.Unmarshal([]byte(reqBody), upstream)
+	assert.Nil(t, err)
+	ctx.SetInput(upstream)
+	ret, err := upstreamHandler.Create(ctx)
+	assert.Nil(t, err)
+	objRet, ok := ret.(*entity.Upstream)
+	assert.True(t, ok)
+	assert.Equal(t, "3", objRet.ID)
+
+	//sleep
+	time.Sleep(time.Duration(20) * time.Millisecond)
+
+	reqBody1 := `{
+		"nodes": [{
+			"host": "172.16.238.20",
+			"port": 1981,
+			"weight": 1
+		}],
+		"type": "roundrobin"
+	}`
+	responesBody := `"nodes":[{"host":"172.16.238.20","port":1981,"weight":1}],"type":"roundrobin"}`
+
+	input2 := &PatchInput{}
+	input2.ID = "3"
+	input2.SubPath = ""
+	input2.Body = []byte(reqBody1)
+	ctx.SetInput(input2)
+
+	ret2, err := upstreamHandler.Patch(ctx)
+	assert.Nil(t, err)
+	_ret2, err := json.Marshal(ret2)
+	assert.Nil(t, err)
+	isContains := strings.Contains(string(_ret2), responesBody)
+	assert.True(t, isContains)
+
+	//delete test data
+	inputDel2 := &BatchDelete{}
+	reqBody = `{"ids": "3"}`
+	err = json.Unmarshal([]byte(reqBody), inputDel2)
+	assert.Nil(t, err)
+	ctx.SetInput(inputDel2)
+	_, err = upstreamHandler.BatchDelete(ctx)
+	assert.Nil(t, err)
+
+}
+
