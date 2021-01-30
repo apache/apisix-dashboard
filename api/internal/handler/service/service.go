@@ -17,12 +17,12 @@
 package service
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"reflect"
 	"strings"
 
+	"github.com/api7/go-jsonpatch"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
@@ -59,9 +59,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.PUT("/apisix/admin/services/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PATCH("/apisix/admin/services/:id", wgin.Wraps(h.Patch,
-		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
-	r.PATCH("/apisix/admin/services/:id/*path", wgin.Wraps(h.Patch,
-		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
+		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.DELETE("/apisix/admin/services/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 }
@@ -226,39 +224,42 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	return nil, nil
 }
 
-type PatchInput struct {
-	ID      string `auto_read:"id,path"`
-	SubPath string `auto_read:"path,path"`
-	Body    []byte `auto_read:"@body"`
-}
-
 func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*PatchInput)
-	reqBody := input.Body
-	ID := input.ID
-	subPath := input.SubPath
+	input := c.Input().(*UpdateInput)
+	arr := strings.Split(input.ID, "/")
+	var subPath string
+	if len(arr) > 1 {
+		input.ID = arr[0]
+		subPath = arr[1]
+	}
 
-	stored, err := h.serviceStore.Get(c.Context(), ID)
+	stored, err := h.serviceStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	res, err := utils.MergePatch(stored, subPath, reqBody)
-	if err != nil {
+	var patch jsonpatch.Patch
+	if subPath != "" {
+		patch = jsonpatch.Patch{
+			Operations: []jsonpatch.PatchOperation{
+				{Op: jsonpatch.Replace, Path: subPath, Value: c.Input()},
+			},
+		}
+	} else {
+		patch, err = jsonpatch.MakePatch(stored, input.Service)
+		if err != nil {
+			return handler.SpecCodeResponse(err), err
+		}
+	}
+
+	if err := patch.Apply(&stored); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	var service entity.Service
-	err = json.Unmarshal(res, &service)
-	if err != nil {
-		return handler.SpecCodeResponse(err), err
-	}
-
-	ret, err := h.serviceStore.Update(c.Context(), &service, false)
+	ret, err := h.serviceStore.Update(c.Context(), &stored, false)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
 	return ret, nil
 }
-
