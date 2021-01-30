@@ -26,8 +26,8 @@ jobs:
           docker-compose up -d
           sleep 5
           docker logs docker_managerapi_1
+          docker logs docker_apisix_1
           docker logs docker_apisix2_1
-          cat ./apisix_config2.yaml
           curl 127.0.0.1:9081
 
       - name: run test
