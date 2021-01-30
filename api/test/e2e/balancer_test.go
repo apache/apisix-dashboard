@@ -63,7 +63,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
+			Sleep:        2 * sleepTime,
 		},
 	}
 
@@ -72,7 +72,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 	}
 
 	// hit routes
-	time.Sleep(sleepTime)
+	time.Sleep(2 * sleepTime)
 	// batch test /server_port api
 	res := BatchTestServerPort(t, 18)
 	// BatchTestServerPort
