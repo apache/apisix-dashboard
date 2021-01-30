@@ -27,6 +27,7 @@ jobs:
           sleep 5
           docker logs docker_managerapi_1
           docker logs docker_apisix2_1
+          cat ./api/test/docker/apisix_config2.yaml
           curl 127.0.0.1:9081
 
       - name: run test
