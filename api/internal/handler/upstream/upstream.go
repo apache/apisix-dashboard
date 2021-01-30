@@ -210,10 +210,10 @@ type PatchInput struct {
 func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*PatchInput)
 	reqBody := input.Body
-	ID := input.ID
+	id := input.ID
 	subPath := input.SubPath
 
-	stored, err := h.upstreamStore.Get(c.Context(), ID)
+	stored, err := h.upstreamStore.Get(c.Context(), id)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -225,8 +225,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	}
 
 	var upstream entity.Upstream
-	err = json.Unmarshal(res, &upstream)
-	if err != nil {
+	if err := json.Unmarshal(res, &upstream); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
@@ -314,4 +313,3 @@ func (h *Handler) listUpstreamNames(c droplet.Context) (interface{}, error) {
 
 	return output, nil
 }
-
