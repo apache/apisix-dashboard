@@ -14,4 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {};
+export default {
+  'page.plugin.drawer.popconfirm.title.delete': '您确定删除该插件所有数据吗？',
+};
