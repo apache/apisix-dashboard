@@ -33,6 +33,11 @@ import (
 
 var _sf *sonyflake.Sonyflake
 
+var (
+	GitHash string
+	Version string
+)
+
 func init() {
 	saltStr, ok := os.LookupEnv("FLAKE_SALT")
 	var salt uint16
@@ -205,4 +210,15 @@ func ValueEqual(a interface{}, b interface{}) bool {
 		return false
 	}
 	return bytes.Equal(aBytes, bBytes)
+}
+
+// set the hash and version
+func SetHashAndVersion(hash, version string) {
+	GitHash = hash
+	Version = version
+}
+
+// get the hash and version
+func GetHashAndVersion() (string, string) {
+	return GitHash, Version
 }
