@@ -7,8 +7,6 @@ replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 replace github.com/coreos/bbolt => go.etcd.io/bbolt v1.3.5
 
 require (
-	github.com/api7/go-jsonpatch v0.0.0-20180223123257-a8710867776e
-	github.com/cameront/go-jsonpatch v0.0.0-20180223123257-a8710867776e // indirect
 	github.com/coreos/bbolt v0.0.0-00010101000000-000000000000 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
