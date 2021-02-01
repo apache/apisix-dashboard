@@ -35,8 +35,10 @@ import { LinkOutlined } from '@ant-design/icons';
 import Ajv from 'ajv';
 import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
+import { omit } from 'lodash';
 
 import { fetchSchema } from './service';
+import { createOrUpdate } from '@/pages/Plugin/service';
 
 type Props = {
   name: string;
@@ -181,6 +183,12 @@ const PluginDetail: React.FC<Props> = ({
                 title={formatMessage({ id: 'page.plugin.drawer.popconfirm.title.delete' })}
                 okText={formatMessage({ id: 'component.global.confirm' })}
                 cancelText={formatMessage({ id: 'component.global.cancel' })}
+                onConfirm={() => {
+                  const plugins = omit(initialData, [`${name}`]);
+                  createOrUpdate({ plugins }).then((value) => {
+                    onChange({ formData: plugins, codemirrorData: value });
+                  });
+                }}
               >
                 {
                   initialData[name] && !initialData[name].disable
