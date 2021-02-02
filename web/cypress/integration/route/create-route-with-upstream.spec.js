@@ -93,8 +93,8 @@ context('Create Route with Upstream', () => {
     cy.contains('Search').click();
     cy.contains(data.route_name).siblings().contains('Edit').click();
 
-    cy.get(domSelector.name).click().should('value', data.route_name);
-    cy.contains('Next').click();
+    cy.get(domSelector.name).should('value', data.route_name);
+    cy.contains('Next').click({force: true});
 
     // check if the changes have been saved
     cy.get(domSelector.node_0_host).should('value', data.ip1);
