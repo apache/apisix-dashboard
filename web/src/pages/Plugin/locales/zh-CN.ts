@@ -15,5 +15,5 @@
  * limitations under the License.
  */
 export default {
-  'page.plugin.drawer.popconfirm.title.delete': '您确定删除该插件所有数据吗？',
+  'page.plugin.drawer.popconfirm.title.delete': '确定删除该插件吗？',
 };
