@@ -37,8 +37,8 @@ import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
 import { omit } from 'lodash';
 
-import { fetchSchema } from './service';
 import { createOrUpdate } from '@/pages/Plugin/service';
+import { fetchSchema } from './service';
 
 type Props = {
   name: string;
