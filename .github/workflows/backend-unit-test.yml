@@ -24,13 +24,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: get lua lib
-        run: |
-          wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz
-          sudo mkdir -p ./api/dag-to-lua
-          tar -zxvf v1.1.tar.gz
-          sudo mv ./dag-to-lua-1.1/lib/* ./api/dag-to-lua/
-
       - name: setup go
         uses: actions/setup-go@v2.1.3
         with:

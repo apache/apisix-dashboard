@@ -14,23 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package global_rule
+
+package utils
 
 import (
-	"testing"
-	"time"
-
-	"github.com/onsi/ginkgo"
-
-	"e2enew/base"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strconv"
 )
 
-func TestGlobalRule(t *testing.T) {
-	ginkgo.RunSpecs(t, "global rule suite")
+// WritePID write pid to the given file path.
+func WritePID(filepath string) error {
+	pid := os.Getpid()
+	f, err := os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC|os.O_CREATE, 0600)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if _, err := f.WriteString(strconv.Itoa(pid)); err != nil {
+		return err
+	}
+	return nil
 }
 
-var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("global_rules")
-	base.CleanResource("routes")
-	time.Sleep(base.SleepTime)
-})
+// ReadPID reads the pid from the given file path.
+func ReadPID(filepath string) (int, error) {
+	data, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		return -1, err
+	}
+	pid, err := strconv.Atoi(string(data))
+	if err != nil {
+		return -1, fmt.Errorf("invalid pid: %s", err)
+	}
+	return pid, nil
+}

@@ -14,22 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package common
+/* eslint-disable no-undef */
 
-import (
-	"testing"
-	"time"
+context('Switch language', () => {
+  const timeout = 1000;
+  const domSelector = {
+    switcher: '.ant-space-align-center',
+  };
 
-	"github.com/onsi/ginkgo"
+  beforeEach(() => {
+    cy.login();
+  });
 
-	"e2enew/base"
-)
+  it('should switch language', () => {
+    cy.visit('/');
 
-func TestCommon(t *testing.T) {
-	ginkgo.RunSpecs(t, "common test suite")
-}
+    cy.get(domSelector.switcher).click('right');
+    cy.contains('简体中文').click({
+      force: true,
+      timeout,
+    });
+    cy.contains('服务').click();
 
-var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("routes")
-	time.Sleep(base.SleepTime)
-})
+    cy.get(domSelector.switcher).click('right');
+    cy.contains('English').click({
+      force: true,
+      timeout,
+    });
+    cy.contains('Create').should('exist');
+  });
+});

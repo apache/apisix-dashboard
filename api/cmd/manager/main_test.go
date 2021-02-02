@@ -14,23 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package balancer
+package main
 
 import (
+	"os"
+	"os/signal"
+	"strings"
+	"syscall"
 	"testing"
-	"time"
-
-	"github.com/onsi/ginkgo"
-
-	"e2enew/base"
 )
 
-func TestAuth(t *testing.T) {
-	ginkgo.RunSpecs(t, "balancer suite")
-}
+func TestMainWrapper(t *testing.T) {
+	if os.Getenv("ENV") == "test" {
+		t.Skip("skipping build binary when execute unit test")
+	}
 
-var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("upstreams")
-	base.CleanResource("routes")
-	time.Sleep(base.SleepTime)
-})
+	var (
+		args []string
+	)
+	for _, arg := range os.Args {
+		switch {
+		case strings.HasPrefix(arg, "-test"):
+		default:
+			args = append(args, arg)
+		}
+	}
+	waitCh := make(chan int, 1)
+	os.Args = args
+	go func() {
+		main()
+		close(waitCh)
+	}()
+	signalCh := make(chan os.Signal, 1)
+	signal.Notify(signalCh, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGHUP)
+	select {
+	case <-signalCh:
+		return
+	case <-waitCh:
+		return
+	}
+}

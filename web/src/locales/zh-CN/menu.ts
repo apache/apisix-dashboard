@@ -67,6 +67,6 @@ export default {
   'menu.consumer': '消费者',
   'menu.plugin': '插件',
   'menu.service': '服务',
-  'menu.setting': '设置',
-  'menu.serverinfo': '服务端信息',
+  'menu.setting': '系统设置',
+  'menu.serverinfo': '系统状态',
 };

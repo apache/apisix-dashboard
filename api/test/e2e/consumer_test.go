@@ -87,7 +87,7 @@ func TestConsumer_Create_And_Get(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"code\":0",
+			ExpectBody:   []string{"\"code\":0", "\"username\":\"consumer_2\""},
 		},
 		{
 			Desc:         "get consumer",
@@ -156,7 +156,7 @@ func TestConsumer_Update_And_Get(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"code\":0",
+			ExpectBody:   []string{"\"code\":0", "\"username\":\"consumer_3\"", "\"rejected_code\":503"},
 		},
 		{
 			Desc:   "update consumer by PUT",
@@ -177,7 +177,7 @@ func TestConsumer_Update_And_Get(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"code\":0",
+			ExpectBody:   []string{"\"code\":0", "\"username\":\"consumer_3\"", "\"rejected_code\":504"},
 		},
 		{
 			Desc:         "get consumer",

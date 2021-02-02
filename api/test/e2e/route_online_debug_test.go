@@ -485,7 +485,7 @@ func TestRoute_Online_Debug_Route_With_Jwt_Auth(t *testing.T) {
 	time.Sleep(sleepTime)
 
 	// sign jwt token
-	body, status, err := httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key")
+	body, status, err := httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=user-key", nil)
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, status)
 	jwtToken := string(body)

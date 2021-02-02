@@ -26,12 +26,12 @@ type MockInterface struct {
 	mock.Mock
 }
 
-func (m *MockInterface) Get(key string) (interface{}, error) {
+func (m *MockInterface) Get(_ context.Context, key string) (interface{}, error) {
 	ret := m.Mock.Called(key)
 	return ret.Get(0), ret.Error(1)
 }
 
-func (m *MockInterface) List(input ListInput) (*ListOutput, error) {
+func (m *MockInterface) List(_ context.Context, input ListInput) (*ListOutput, error) {
 	ret := m.Called(input)
 
 	var (
@@ -54,9 +54,9 @@ func (m *MockInterface) Create(ctx context.Context, obj interface{}) (interface{
 	return ret.Get(0), ret.Error(1)
 }
 
-func (m *MockInterface) Update(ctx context.Context, obj interface{}, createOnFail bool) error {
+func (m *MockInterface) Update(ctx context.Context, obj interface{}, createOnFail bool) (interface{}, error) {
 	ret := m.Mock.Called(ctx, obj, createOnFail)
-	return ret.Error(0)
+	return ret.Get(0), ret.Error(1)
 }
 
 func (m *MockInterface) BatchDelete(ctx context.Context, keys []string) error {

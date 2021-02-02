@@ -54,6 +54,7 @@ func init() {
 
 	url := ManagerAPIHost + "/apisix/admin/user/login"
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
+	req.Header.Add("Content-Type", "application/json")
 	if err != nil {
 		panic(err)
 	}
@@ -76,10 +77,13 @@ func init() {
 	Token = token
 }
 
-func httpGet(url string) ([]byte, int, error) {
+func httpGet(url string, headers map[string]string) ([]byte, int, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, 0, err
+	}
+	for key, val := range headers {
+		req.Header.Add(key, val)
 	}
 
 	client := &http.Client{}
@@ -143,6 +147,9 @@ func BatchTestServerPort(t *testing.T, times int) map[string]int {
 	for i := 0; i < times; i++ {
 		client = &http.Client{}
 		resp, err = client.Do(req)
+		if err != nil {
+			fmt.Printf("err: %s", err)
+		}
 		assert.Nil(t, err)
 
 		bodyByte, err = ioutil.ReadAll(resp.Body)
@@ -217,8 +224,17 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 		}
 
 		// set header
+		setContentType := false
 		for key, val := range tc.Headers {
 			req.WithHeader(key, val)
+			if strings.ToLower(key) == "content-type" {
+				setContentType = true
+			}
+		}
+
+		// set default content-type
+		if !setContentType {
+			req.WithHeader("Content-Type", "application/json")
 		}
 
 		// set body

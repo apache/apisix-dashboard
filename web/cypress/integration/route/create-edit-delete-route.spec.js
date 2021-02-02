@@ -62,7 +62,6 @@ context('Create and Delete Route', () => {
 
     // go to step2
     cy.contains('Next').click();
-    cy.wait(sleepTime * 3);
     cy.get('#nodes_0_host').type('12.12.12.12');
 
     // go to step3
@@ -98,13 +97,11 @@ context('Create and Delete Route', () => {
 
     cy.get('[title=Name]').type(name);
     cy.contains('Search').click();
-    cy.wait(1000);
     cy.contains(name).siblings().contains('Edit').click();
 
     cy.get('#name').clear().type(newName);
     cy.get('#desc').clear().type('new desc');
     cy.contains('Next').click();
-    cy.wait(1000);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();

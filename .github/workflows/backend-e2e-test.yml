@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  e2e-test:
+  backend-e2e-test-old:
     runs-on: ubuntu-latest
 
     steps:
@@ -53,6 +53,17 @@ jobs:
         working-directory: ./api/test/e2e/skywalking
         run: go test -v
 
+      - name: output test coverage
+        working-directory: ./api/test/testdata
+        run: |
+          go tool cover -func=./integrationcover.out
+
+      - name: upload coverage profile
+        working-directory: ./api/test/testdata
+        run: |
+          bash <(curl -s https://codecov.io/bash) -f ./integrationcover.out
+
+
   backend-e2e-test:
     runs-on: ubuntu-latest
 
@@ -77,3 +88,13 @@ jobs:
       - name: run test
         working-directory: ./api/test/e2enew
         run: ginkgo -r
+
+      - name: output test coverage
+        working-directory: ./api/test/testdata
+        run: |
+          go tool cover -func=./integrationcover.out
+
+      - name: upload coverage profile
+        working-directory: ./api/test/testdata
+        run: |
+          bash <(curl -s https://codecov.io/bash) -f ./integrationcover.out

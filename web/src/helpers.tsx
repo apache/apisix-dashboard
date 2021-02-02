@@ -19,7 +19,7 @@ import { notification } from 'antd';
 import type { MenuDataItem } from '@ant-design/pro-layout';
 import { history } from 'umi';
 import moment from 'moment';
-import { InfoCircleOutlined } from '@ant-design/icons';
+
 
 import { codeMessage } from './constants';
 import IconFont from './components/IconFont';
@@ -32,11 +32,6 @@ export const getMenuData = (): MenuDataItem[] => {
       icon: <IconFont name="icondashboard" />,
     },
     {
-      name: 'service',
-      path: '/service/list',
-      icon: <IconFont name="iconconsumer" />,
-    },
-    {
       name: 'routes',
       path: '/routes/list',
       icon: <IconFont name="iconroute" />,
@@ -45,6 +40,11 @@ export const getMenuData = (): MenuDataItem[] => {
       name: 'upstream',
       path: '/upstream/list',
       icon: <IconFont name="iconserver" />,
+    },
+    {
+      name: 'service',
+      path: '/service/list',
+      icon: <IconFont name="iconconsumer" />,
     },
     {
       name: 'consumer',
@@ -62,14 +62,9 @@ export const getMenuData = (): MenuDataItem[] => {
       icon: <IconFont name="iconssl" />,
     },
     {
-      name: 'setting',
-      path: '/settings',
-      icon: <IconFont name="iconsetting" />,
-    },
-    {
       name: 'serverinfo',
       path: '/serverinfo',
-      icon: <InfoCircleOutlined />,
+      icon: <IconFont name="iconinfocircle"/>,
     },
   ];
 };

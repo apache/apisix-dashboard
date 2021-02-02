@@ -74,6 +74,7 @@ func TestGlobalRule(t *testing.T) {
                         }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"X-VERSION\":\"1.0\"",
 		},
 		{
 			Desc:          "verify route with header",
@@ -119,6 +120,7 @@ func TestGlobalRule(t *testing.T) {
 			 }`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"X-VERSION\":\"2.0\"",
 		},
 		{
 			Desc:          "verify route that header should be the same as the route config",
@@ -154,6 +156,7 @@ func TestGlobalRule(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"key-auth\":{}",
 		},
 		{
 			Desc:         "make sure that patch succeeded",
@@ -175,6 +178,7 @@ func TestGlobalRule(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			UnexpectBody: "\"key-auth\":{}",
 		},
 		{
 			Desc:          "make sure that patch succeeded",

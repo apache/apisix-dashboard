@@ -23,7 +23,6 @@ context('ssl smoke test', () => {
   };
 
   beforeEach(() => {
-    // init login
     cy.login();
     cy.fixture('certificate.json').as('certificate');
   });
@@ -33,7 +32,6 @@ context('ssl smoke test', () => {
     // go to ssl create page
     cy.visit('/');
     cy.contains('SSL').click();
-    cy.wait(500);
     cy.contains('Create').click();
 
     const validCert = this.certificate.valid.cert;
@@ -43,14 +41,12 @@ context('ssl smoke test', () => {
 
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.wait(500);
     cy.url().should('contains', 'ssl/list');
   });
 
   it('should delete the ssl record just created', function () {
     cy.visit('/');
     cy.contains('SSL').click();
-    cy.wait(500);
     const sni = this.certificate.valid.sni;
     cy.contains(sni).parents().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
@@ -61,7 +57,6 @@ context('ssl smoke test', () => {
     // go to ssl create page
     cy.visit('/');
     cy.contains('SSL').click();
-    cy.wait(500);
     cy.contains('Create').click();
 
     const invalidCert = this.certificate.invalid.cert;
@@ -70,7 +65,6 @@ context('ssl smoke test', () => {
     cy.get('#key').type(invalidKey);
 
     cy.contains('Next').click();
-    cy.wait(100);
     cy.get(domSelectors.notificationDesc).should('contain', "key and cert don't match");
   });
 });
