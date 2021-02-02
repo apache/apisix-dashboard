@@ -28,6 +28,7 @@ context('Create and Delete Plugin List', () => {
     refresh: '.anticon-reload',
     codemirror: '.CodeMirror',
     switch: '#disable',
+    deleteBtn: '.ant-btn-dangerous',
   };
 
   beforeEach(() => {
@@ -65,20 +66,13 @@ context('Create and Delete Plugin List', () => {
 
   it('should delete plugin list', () => {
     cy.visit('/plugin/list');
-    cy.get('.ant-btn-dangerous').should('exist');
 
-    cy.get(domSelector.tableCell, { timeout }).should('exist').then(function (rows) {
-      [...rows].forEach((row) => {
-        const name = row.innerText;
-
-        if (this.cases[name]) {
-          cy.contains(name).siblings().contains('Delete').click({ timeout });
-          cy.contains('button', 'Confirm').click();
-          cy.get(this.domSelector.notification).should('contain', data.deleteSuccess);
-          cy.get(this.domSelector.notificationCloseIcon).click();
-        }
-      });
-    });
+    cy.get(domSelector.deleteBtn, { timeout }).each(function($el) {     
+      cy.wrap($el).click().click({ timeout });
+      cy.contains('button', 'Confirm').click({force: true});
+      cy.get(this.domSelector.notification).should('contain', data.deleteSuccess);
+      cy.get(this.domSelector.notificationCloseIcon).click();
+    })
 
     // check if plugin list is empty
     cy.get(domSelector.empty).should('be.visible');
