@@ -20,11 +20,6 @@ jobs:
         with:
           go-version: '1.13'
 
-      - name: download file Dockerfile-apisix
-        working-directory: ./api/test/docker
-        run: |
-          curl -o Dockerfile-apisix https://raw.githubusercontent.com/apache/apisix-docker/master/all-in-one/apisix/Dockerfile
-
       - name: run docker compose
         working-directory: ./api/test/docker
         run: |
