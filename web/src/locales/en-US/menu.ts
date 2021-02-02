@@ -71,5 +71,5 @@ export default {
   'menu.plugin': 'Plugin',
   'menu.service': 'Service',
   'menu.setting': 'Settings',
-  'menu.serverinfo': 'Server Info',
+  'menu.serverinfo': 'System Status',
 };

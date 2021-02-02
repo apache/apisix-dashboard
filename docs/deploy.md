@@ -43,7 +43,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 ## Clone the project
 
 ```sh
-$ git clone -b v2.2 https://github.com/apache/apisix-dashboard.git
+$ git clone -b v2.3 https://github.com/apache/apisix-dashboard.git
 ```
 
 ## Build
@@ -80,6 +80,9 @@ $ nohup ./manager-api &
 
 5. Stop the Dashboard
 
+`manager-api` provides a sub command `stop` to quit the program gracefully, just
+run:
+
 ```sh
-$ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
+$ ./manager-api stop
 ```

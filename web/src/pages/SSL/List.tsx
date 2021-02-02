@@ -16,17 +16,16 @@
  */
 import React, { useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag } from 'antd';
 import { useIntl, history } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 
 import { fetchList, remove as removeSSL } from '@/pages/SSL/service';
 import { timestampToLocaleString } from '@/helpers';
-import useForceIntl from '@/hooks/useForceIntl';
 
 const Page: React.FC = () => {
-  useForceIntl();
   const tableRef = useRef<ActionType>();
   const { formatMessage } = useIntl();
 

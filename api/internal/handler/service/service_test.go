@@ -89,7 +89,7 @@ func TestService_Get(t *testing.T) {
 		t.Run(tc.caseDesc, func(t *testing.T) {
 			getCalled := true
 			mStore := &store.MockInterface{}
-			mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+			mStore.On("Get", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				getCalled = true
 				assert.Equal(t, tc.wantGetKey, args.Get(0))
 			}).Return(tc.giveRet, tc.giveErr)
@@ -249,7 +249,7 @@ func TestService_List(t *testing.T) {
 		t.Run(tc.caseDesc, func(t *testing.T) {
 			getCalled := true
 			mStore := &store.MockInterface{}
-			mStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
+			mStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				getCalled = true
 				input := args.Get(0).(store.ListInput)
 				assert.Equal(t, tc.wantInput.PageSize, input.PageSize)
@@ -288,6 +288,7 @@ func TestService_Create(t *testing.T) {
 		caseDesc      string
 		getCalled     bool
 		giveInput     *entity.Service
+		giveRet       interface{}
 		giveErr       error
 		wantInput     *entity.Service
 		wantErr       error
@@ -385,10 +386,10 @@ func TestService_Create(t *testing.T) {
 				getCalled = true
 				input := args.Get(1).(*entity.Service)
 				assert.Equal(t, tc.wantInput, input)
-			}).Return(tc.giveErr)
+			}).Return(tc.giveRet, tc.giveErr)
 
 			upstreamStore := &store.MockInterface{}
-			upstreamStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+			upstreamStore.On("Get", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				id := args.Get(0).(string)
 				assert.Equal(t, tc.upstreamInput, id)
 			}).Return(tc.upstreamRet, tc.upstreamErr)
@@ -410,6 +411,7 @@ func TestService_Update(t *testing.T) {
 		getCalled     bool
 		giveInput     *UpdateInput
 		giveErr       error
+		giveRet       interface{}
 		wantInput     *entity.Service
 		wantErr       error
 		wantRet       interface{}
@@ -538,10 +540,10 @@ func TestService_Update(t *testing.T) {
 				createIfNotExist := args.Get(2).(bool)
 				assert.Equal(t, tc.wantInput, input)
 				assert.True(t, createIfNotExist)
-			}).Return(tc.giveErr)
+			}).Return(tc.giveRet, tc.giveErr)
 
 			upstreamStore := &store.MockInterface{}
-			upstreamStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+			upstreamStore.On("Get", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				id := args.Get(0).(string)
 				assert.Equal(t, tc.upstreamInput, id)
 			}).Return(tc.upstreamRet, tc.upstreamErr)
@@ -557,8 +559,6 @@ func TestService_Update(t *testing.T) {
 	}
 }
 
-// Todo: wait for patch fix
-/*
 func TestService_Patch(t *testing.T) {
 	existService := &entity.Service{
 		BaseInfo: entity.BaseInfo{
@@ -584,36 +584,50 @@ func TestService_Patch(t *testing.T) {
 
 	tests := []struct {
 		caseDesc     string
-		giveInput    *UpdateInput
+		giveInput    *PatchInput
 		giveErr      error
+		giveRet      interface{}
 		wantInput    *entity.Service
 		wantErr      error
 		wantRet      interface{}
 		serviceInput string
 		serviceRet   *entity.Service
 		serviceErr   error
+		called       bool
 	}{
 		{
 			caseDesc: "patch all success",
-			giveInput: &UpdateInput{
-				ID: "s1",
-				Service: entity.Service{
-					Name:            "patched success",
-					UpstreamID:      "u2",
-					EnableWebsocket: true,
-					Labels: map[string]string{
-						"version": "v1",
-						"build":   "16",
-					},
-					Plugins: map[string]interface{}{
-						"key-auth": map[string]interface{}{
-							"key": "auth-one",
+			giveInput: &PatchInput{
+				ID:      "s1",
+				SubPath: "",
+				Body: []byte(`{
+						"name":"patched",
+						"upstream_id":"u2",
+						"enable_websocket":true,
+						"labels":{
+							"version":"v1",
+							"build":"16"
 						},
-					},
-				},
+						"plugins":{
+							"limit-count":{
+								"count":2,
+								"time_window":60,
+								"rejected_code": 504,
+								"key":"remote_addr"
+							},
+							"key-auth":{
+								"key":"auth-one"
+							}
+						}
+					}`),
 			},
 			wantInput: &entity.Service{
-				Name:            "patched success",
+				BaseInfo: entity.BaseInfo{
+					ID:         "s1",
+					CreateTime: 1609340491,
+					UpdateTime: 1609340491,
+				},
+				Name:            "patched",
 				UpstreamID:      "u2",
 				EnableWebsocket: true,
 				Labels: map[string]string{
@@ -622,9 +636,9 @@ func TestService_Patch(t *testing.T) {
 				},
 				Plugins: map[string]interface{}{
 					"limit-count": map[string]interface{}{
-						"count":         2,
-						"time_window":   60,
-						"rejected_code": 504,
+						"count":         float64(2),
+						"time_window":   float64(60),
+						"rejected_code": float64(504),
 						"key":           "remote_addr",
 					},
 					"key-auth": map[string]interface{}{
@@ -634,166 +648,119 @@ func TestService_Patch(t *testing.T) {
 			},
 			serviceInput: "s1",
 			serviceRet:   existService,
+			called:       true,
 		},
 		{
-			caseDesc: "patch desc success",
-			giveInput: &UpdateInput{
-				ID: "s1/name",
-				Service: entity.Service{
-					Name: "patched success",
-				},
+			caseDesc: "patch name success",
+			giveInput: &PatchInput{
+				ID:      "s1",
+				SubPath: "/upstream_id",
+				Body:    []byte(`{"upstream_id":"u3"}`),
 			},
 			wantInput: &entity.Service{
-				Name:            "patched success",
-				UpstreamID:      "u2",
-				EnableWebsocket: true,
+				BaseInfo: entity.BaseInfo{
+					ID:         "s1",
+					CreateTime: 1609340491,
+					UpdateTime: 1609340491,
+				},
+				Name: "exist_service",
+				UpstreamID: map[string]interface{}{
+					"upstream_id": "u3",
+				},
+				EnableWebsocket: false,
 				Labels: map[string]string{
 					"version": "v1",
 				},
 				Plugins: map[string]interface{}{
 					"limit-count": map[string]interface{}{
-						"count":         2,
-						"time_window":   60,
-						"rejected_code": 503,
+						"count":         float64(2),
+						"time_window":   float64(60),
+						"rejected_code": float64(503),
 						"key":           "remote_addr",
 					},
 				},
 			},
 			serviceInput: "s1",
 			serviceRet:   existService,
+			called:       true,
+		},
+		{
+			caseDesc: "patch name success",
+			giveInput: &PatchInput{
+				ID:      "s1",
+				SubPath: "/upstream_id",
+				Body:    []byte(`{"upstream_id":"u3"}`),
+			},
+			wantInput: &entity.Service{
+				BaseInfo: entity.BaseInfo{
+					ID:         "s1",
+					CreateTime: 1609340491,
+					UpdateTime: 1609340491,
+				},
+				Name: "exist_service",
+				UpstreamID: map[string]interface{}{
+					"upstream_id": "u3",
+				},
+				EnableWebsocket: false,
+				Labels: map[string]string{
+					"version": "v1",
+				},
+				Plugins: map[string]interface{}{
+					"limit-count": map[string]interface{}{
+						"count":         float64(2),
+						"time_window":   float64(60),
+						"rejected_code": float64(503),
+						"key":           "remote_addr",
+					},
+				},
+			},
+			serviceInput: "s1",
+			serviceRet:   existService,
+			called:       true,
 		},
 		{
 			caseDesc: "patch labels success",
-			giveInput: &UpdateInput{
-				ID: "s1/labels",
-				Service: entity.Service{
-					Labels: map[string]string{
-						"version": "v2",
-					},
-				},
+			giveInput: &PatchInput{
+				ID:      "s1",
+				SubPath: "/labels",
+				Body:    []byte(`{"version": "v3"}`),
 			},
 			wantInput: &entity.Service{
-				Name:            "patched success",
-				UpstreamID:      "u2",
-				EnableWebsocket: true,
-				Labels: map[string]string{
-					"version": "v2",
+				BaseInfo: entity.BaseInfo{
+					ID:         "s1",
+					CreateTime: 1609340491,
+					UpdateTime: 1609340491,
 				},
-				Plugins: map[string]interface{}{
-					"limit-count": map[string]interface{}{
-						"count":         2,
-						"time_window":   60,
-						"rejected_code": 503,
-						"key":           "remote_addr",
-					},
-				},
-			},
-			serviceInput: "s1",
-			serviceRet:   existService,
-		},
-		{
-			caseDesc: "patch enable_websocket success",
-			giveInput: &UpdateInput{
-				ID: "s1/enable_websocket",
-				Service: entity.Service{
-					EnableWebsocket: false,
-				},
-			},
-			wantInput: &entity.Service{
-				Name:            "patched success",
-				UpstreamID:      "u2",
+				Name:            "exist_service",
 				EnableWebsocket: false,
 				Labels: map[string]string{
-					"version": "v2",
+					"version": "v3",
 				},
+				UpstreamID: "u1",
 				Plugins: map[string]interface{}{
 					"limit-count": map[string]interface{}{
-						"count":         2,
-						"time_window":   60,
-						"rejected_code": 503,
+						"count":         float64(2),
+						"time_window":   float64(60),
+						"rejected_code": float64(503),
 						"key":           "remote_addr",
 					},
 				},
 			},
 			serviceInput: "s1",
 			serviceRet:   existService,
-		},
-		{
-			caseDesc: "patch plugins success",
-			giveInput: &UpdateInput{
-				ID: "s1/plugins",
-				Service: entity.Service{
-					Plugins: map[string]interface{}{
-						"limit-count": map[string]interface{}{
-							"count":         2,
-							"time_window":   60,
-							"rejected_code": 504,
-							"key":           "remote_addr",
-						},
-					},
-				},
-			},
-			wantInput: &entity.Service{
-				Name:            "patched success",
-				UpstreamID:      "u2",
-				EnableWebsocket: false,
-				Labels: map[string]string{
-					"version": "v2",
-				},
-				Plugins: map[string]interface{}{
-					"limit-count": map[string]interface{}{
-						"count":         2,
-						"time_window":   60,
-						"rejected_code": 504,
-						"key":           "remote_addr",
-					},
-				},
-			},
-			serviceInput: "s1",
-			serviceRet:   existService,
+			called:       true,
 		},
 		{
 			caseDesc: "patch failed, service store get error",
-			giveInput: &UpdateInput{
-				ID: "s1",
-				Service: entity.Service{
-					Name: "test service",
-				},
+			giveInput: &PatchInput{
+				ID:   "s1",
+				Body: []byte{},
 			},
 			serviceInput: "s1",
 			serviceErr:   fmt.Errorf("get error"),
 			wantRet:      handler.SpecCodeResponse(fmt.Errorf("get error")),
 			wantErr:      fmt.Errorf("get error"),
-		},
-		{
-			caseDesc: "patch failed, service store update error",
-			giveInput: &UpdateInput{
-				ID: "s1/name",
-				Service: entity.Service{
-					Name: "patched success",
-				},
-			},
-			giveErr: fmt.Errorf("update error"),
-			wantInput: &entity.Service{
-				Name:            "patched success",
-				UpstreamID:      "u2",
-				EnableWebsocket: true,
-				Labels: map[string]string{
-					"version": "v1",
-				},
-				Plugins: map[string]interface{}{
-					"limit-count": map[string]interface{}{
-						"count":         2,
-						"time_window":   60,
-						"rejected_code": 503,
-						"key":           "remote_addr",
-					},
-				},
-			},
-			serviceInput: "s1",
-			serviceRet:   existService,
-			wantRet:      handler.SpecCodeResponse(fmt.Errorf("update error")),
-			wantErr:      fmt.Errorf("update error"),
+			called:       false,
 		},
 	}
 
@@ -807,9 +774,9 @@ func TestService_Patch(t *testing.T) {
 				createIfNotExist := args.Get(2).(bool)
 				assert.Equal(t, tc.wantInput, input)
 				assert.False(t, createIfNotExist)
-			}).Return(tc.giveErr)
+			}).Return(tc.giveRet, tc.giveErr)
 
-			serviceStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+			serviceStore.On("Get", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				input := args.Get(0).(string)
 				assert.Equal(t, tc.serviceInput, input)
 			}).Return(tc.serviceRet, tc.serviceErr)
@@ -818,14 +785,12 @@ func TestService_Patch(t *testing.T) {
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 			ret, err := h.Patch(ctx)
-			assert.True(t, getCalled)
+			assert.True(t, tc.called, getCalled)
 			assert.Equal(t, tc.wantRet, ret)
 			assert.Equal(t, tc.wantErr, err)
 		})
 	}
 }
-
-*/
 
 func TestServices_Delete(t *testing.T) {
 	tests := []struct {

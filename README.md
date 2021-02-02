@@ -21,6 +21,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/apisix-dashboard/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/apache/apisix-dashboard)](https://goreportcard.com/report/github.com/apache/apisix-dashboard)
+[![DockerHub](https://img.shields.io/docker/pulls/apache/apisix-dashboard.svg)](https://hub.docker.com/r/apache/apisix-dashboard)
 
 <p align="center">
   <a href="https://apisix.apache.org/">Website</a> •
@@ -30,8 +31,7 @@
 
 - The master version should be used with Apache APISIX master version.
 
-- The latest released version is 2.2 and should be used with Apache APISIX 2.1. It is not recommended to use with other Apache APISIX versions.
-
+- The latest released version is [2.3](https://apisix.apache.org/downloads/) and should be used with [Apache APISIX 2.2](https://apisix.apache.org/downloads/). It is not recommended to use with other Apache APISIX versions.
 
 ## What's Apache APISIX Dashboard
 
@@ -44,6 +44,14 @@ This project includes `Manager API`, which will gradually replace `Admin API` in
 Note: Currently the Dashboard does not have complete coverage of Apache APISIX features, [visit here](https://github.com/apache/apisix-dashboard/milestones) to view the milestones.
 
 ![architecture](./docs/images/architecture.png)
+
+## Demo
+
+```
+URL: http://139.217.190.60/
+Username: admin
+Password: admin
+```
 
 ## Project structure
 
@@ -72,8 +80,11 @@ Support the following ways currently.
 
 - [Source Codes](./docs/deploy.md)
 - [Docker](./docs/deploy-with-docker.md)
+- [RPM package（only for CentOS 7）](./docs/deploy-with-rpm.md)
 
 ## Development
+
+Pull requests are encouraged and always welcome. [Pick an issue](https://github.com/apache/apisix-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) and help us out!
 
 Please refer to the [Development Guide](./docs/develop.md).
 

@@ -45,3 +45,9 @@ output
 default.etcd
 api/build-tools/apisix
 /*.zip
+.githash
+
+# backend unit test output
+api/coverage.txt
+api/dag-to-lua/
+

@@ -17,12 +17,12 @@
 package service
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"reflect"
 	"strings"
 
-	"github.com/api7/go-jsonpatch"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
@@ -59,7 +59,9 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.PUT("/apisix/admin/services/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PATCH("/apisix/admin/services/:id", wgin.Wraps(h.Patch,
-		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
+	r.PATCH("/apisix/admin/services/:id/*path", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
 	r.DELETE("/apisix/admin/services/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 }
@@ -71,7 +73,7 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.serviceStore.Get(input.ID)
+	r, err := h.serviceStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -126,7 +128,7 @@ type ListInput struct {
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	ret, err := h.serviceStore.List(store.ListInput{
+	ret, err := h.serviceStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			if input.Name != "" {
 				return strings.Contains(obj.(*entity.Service).Name, input.Name)
@@ -155,7 +157,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 
 	if input.UpstreamID != nil {
 		upstreamID := utils.InterfaceToString(input.UpstreamID)
-		_, err := h.upstreamStore.Get(upstreamID)
+		_, err := h.upstreamStore.Get(c.Context(), upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -165,11 +167,12 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	if err := h.serviceStore.Create(c.Context(), input); err != nil {
+	ret, err := h.serviceStore.Create(c.Context(), input)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type UpdateInput struct {
@@ -191,7 +194,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 
 	if input.UpstreamID != nil {
 		upstreamID := utils.InterfaceToString(input.UpstreamID)
-		_, err := h.upstreamStore.Get(upstreamID)
+		_, err := h.upstreamStore.Get(c.Context(), upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -201,11 +204,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	if err := h.serviceStore.Update(c.Context(), &input.Service, true); err != nil {
+	ret, err := h.serviceStore.Update(c.Context(), &input.Service, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type BatchDelete struct {
@@ -222,41 +226,39 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	return nil, nil
 }
 
-func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*UpdateInput)
-	arr := strings.Split(input.ID, "/")
-	var subPath string
-	if len(arr) > 1 {
-		input.ID = arr[0]
-		subPath = arr[1]
-	}
+type PatchInput struct {
+	ID      string `auto_read:"id,path"`
+	SubPath string `auto_read:"path,path"`
+	Body    []byte `auto_read:"@body"`
+}
 
-	stored, err := h.serviceStore.Get(input.ID)
+func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*PatchInput)
+	reqBody := input.Body
+	ID := input.ID
+	subPath := input.SubPath
+
+	stored, err := h.serviceStore.Get(c.Context(), ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	var patch jsonpatch.Patch
-	if subPath != "" {
-		patch = jsonpatch.Patch{
-			Operations: []jsonpatch.PatchOperation{
-				{Op: jsonpatch.Replace, Path: subPath, Value: c.Input()},
-			},
-		}
-	} else {
-		patch, err = jsonpatch.MakePatch(stored, input.Service)
-		if err != nil {
-			return handler.SpecCodeResponse(err), err
-		}
-	}
-
-	if err := patch.Apply(&stored); err != nil {
+	res, err := utils.MergePatch(stored, subPath, reqBody)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := h.serviceStore.Update(c.Context(), &stored, false); err != nil {
+	var service entity.Service
+	err = json.Unmarshal(res, &service)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	ret, err := h.serviceStore.Update(c.Context(), &service, false)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	return ret, nil
 }
+

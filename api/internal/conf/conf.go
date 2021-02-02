@@ -34,6 +34,7 @@ const (
 	EnvBETA  = "beta"
 	EnvDEV   = "dev"
 	EnvLOCAL = "local"
+	EnvTEST  = "test"
 
 	WebDir = "html/"
 )
@@ -51,6 +52,8 @@ var (
 	UserList         = make(map[string]User, 2)
 	AuthConf         Authentication
 	SSLDefaultStatus = 1 //enable ssl by default
+	ImportSizeLimit  = 10 * 1024 * 1024
+	PIDPath          = "/tmp/manager-api.pid"
 )
 
 type Etcd struct {
@@ -100,9 +103,12 @@ type Config struct {
 	Authentication Authentication
 }
 
-// TODO: it is just for integration tests, we should call "InitLog" explicitly when remove all handler's integration tests
+// TODO: we should no longer use init() function after remove all handler's integration tests
+// ENV=test is for integration tests only, other ENV should call "InitConf" explicitly
 func init() {
-	InitConf()
+	if env := os.Getenv("ENV"); env == EnvTEST {
+		InitConf()
+	}
 }
 
 func InitConf() {

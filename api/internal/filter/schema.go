@@ -52,7 +52,7 @@ const (
 
 func parseCert(crt, key string) ([]string, error) {
 	if crt == "" || key == "" {
-		return nil, errors.New("invalid certificate")
+		return nil, errors.New("empty certificate or private key")
 	}
 
 	certDERBlock, _ := pem.Decode([]byte(crt))
@@ -72,7 +72,7 @@ func parseCert(crt, key string) ([]string, error) {
 	}
 
 	//domain
-	snis := []string{}
+	var snis []string
 	if x509Cert.DNSNames != nil && len(x509Cert.DNSNames) > 0 {
 		snis = x509Cert.DNSNames
 	} else if x509Cert.IPAddresses != nil && len(x509Cert.IPAddresses) > 0 {
@@ -178,7 +178,6 @@ func SchemaCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		pathPrefix := "/apisix/admin/"
 		resource := strings.TrimPrefix(c.Request.URL.Path, pathPrefix)
-
 		idx := strings.LastIndex(resource, "/")
 		if idx > 1 {
 			resource = resource[:idx]

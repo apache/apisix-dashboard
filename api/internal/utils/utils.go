@@ -17,15 +17,18 @@
 package utils
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 
 	"github.com/sony/sonyflake"
+	"github.com/yuin/gopher-lua/parse"
 )
 
 var _sf *sonyflake.Sonyflake
@@ -109,9 +112,9 @@ func ObjectClone(origin, copy interface{}) error {
 	return err
 }
 
-func GenLabelMap(label string) (map[string]string, error) {
+func GenLabelMap(label string) (map[string]struct{}, error) {
 	var err = errors.New("malformed label")
-	mp := make(map[string]string)
+	mp := make(map[string]struct{})
 
 	if label == "" {
 		return mp, nil
@@ -125,13 +128,15 @@ func GenLabelMap(label string) (map[string]string, error) {
 				return nil, err
 			}
 
-			mp[kv[0]] = kv[1]
+			// Because the labels may contain the same key, like this: label=version:v1,version:v2
+			// we need to combine them as a map's key
+			mp[l] = struct{}{}
 		} else if len(kv) == 1 {
 			if kv[0] == "" {
 				return nil, err
 			}
 
-			mp[kv[0]] = ""
+			mp[kv[0]] = struct{}{}
 		} else {
 			return nil, err
 		}
@@ -140,17 +145,64 @@ func GenLabelMap(label string) (map[string]string, error) {
 	return mp, nil
 }
 
-func LabelContains(labels, reqLabels map[string]string) bool {
+func LabelContains(labels map[string]string, reqLabels map[string]struct{}) bool {
 	if len(reqLabels) == 0 {
 		return true
 	}
 
 	for k, v := range labels {
-		l, exist := reqLabels[k]
-		if exist && ((l == "") || v == l) {
+		// first check the key
+		if _, exist := reqLabels[k]; exist {
+			return true
+		}
+
+		// second check the key:value
+		if _, exist := reqLabels[k+":"+v]; exist {
 			return true
 		}
 	}
 
 	return false
+}
+
+// ValidateLuaCode validates lua syntax for input code, return nil
+// if passed, otherwise a non-nil error will be returned
+func ValidateLuaCode(code string) error {
+	_, err := parse.Parse(strings.NewReader(code), "<string>")
+	return err
+}
+
+//
+func StringSliceEqual(a, b []string) bool {
+	if (a == nil) != (b == nil) {
+		return false
+	}
+
+	if len(a) != len(b) {
+		return false
+	}
+
+	sort.Strings(a)
+	sort.Strings(b)
+
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
+// value compare
+func ValueEqual(a interface{}, b interface{}) bool {
+	aBytes, err := json.Marshal(a)
+	if err != nil {
+		return false
+	}
+	bBytes, err := json.Marshal(b)
+	if err != nil {
+		return false
+	}
+	return bytes.Equal(aBytes, bBytes)
 }

@@ -31,6 +31,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/handler/authentication"
 	"github.com/apisix/manager-api/internal/handler/consumer"
+	"github.com/apisix/manager-api/internal/handler/data_loader"
 	"github.com/apisix/manager-api/internal/handler/global_rule"
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/label"
@@ -54,7 +55,7 @@ func SetUpRouter() *gin.Engine {
 	logger := log.GetLogger(log.AccessLog)
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("session", store))
-	r.Use(filter.CORS(), filter.RequestId(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.Authentication(), filter.RecoverHandler())
+	r.Use(filter.CORS(), filter.RequestId(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.RecoverHandler())
 	r.Use(static.Serve("/", static.LocalFile(filepath.Join(conf.WorkDir, conf.WebDir), false)))
 	r.NoRoute(func(c *gin.Context) {
 		c.File(fmt.Sprintf("%s/index.html", filepath.Join(conf.WorkDir, conf.WebDir)))
@@ -73,6 +74,8 @@ func SetUpRouter() *gin.Engine {
 		route_online_debug.NewHandler,
 		server_info.NewHandler,
 		label.NewHandler,
+		data_loader.NewHandler,
+		data_loader.NewImportHandler,
 	}
 
 	for i := range factories {

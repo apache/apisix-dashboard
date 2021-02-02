@@ -49,7 +49,7 @@ func TestNewGenericStore(t *testing.T) {
 				KeyFunc:  dfFunc,
 			},
 			wantStore: &GenericStore{
-				Stg: &storage.EtcdV3Storage{},
+				Stg: storage.GenEtcdStorage(),
 				opt: GenericStoreOption{
 					BasePath: "test",
 					ObjType:  reflect.TypeOf(GenericStoreOption{}),
@@ -148,13 +148,17 @@ func TestGenericStore_Init(t *testing.T) {
 			giveResp: storage.WatchResponse{
 				Events: []storage.Event{
 					{
-						Type:  storage.EventTypePut,
-						Key:   "test/demo3-f1",
-						Value: `{"Field1":"demo3-f1", "Field2":"demo3-f2"}`,
+						Keypair: storage.Keypair{
+							Key:   "test/demo3-f1",
+							Value: `{"Field1":"demo3-f1", "Field2":"demo3-f2"}`,
+						},
+						Type: storage.EventTypePut,
 					},
 					{
 						Type: storage.EventTypeDelete,
-						Key:  "test/demo1-f1",
+						Keypair: storage.Keypair{
+							Key: "test/demo1-f1",
+						},
 					},
 				},
 			},
@@ -286,8 +290,7 @@ func TestGenericStore_Get(t *testing.T) {
 		for k, v := range tc.giveCache {
 			tc.giveStore.cache.Store(k, v)
 		}
-
-		ret, err := tc.giveStore.Get(tc.giveId)
+		ret, err := tc.giveStore.Get(context.Background(), tc.giveId)
 		assert.Equal(t, tc.wantRet, ret, tc.caseDesc)
 		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
 	}
@@ -441,7 +444,7 @@ func TestGenericStore_List(t *testing.T) {
 			tc.giveStore.cache.Store(k, v)
 		}
 
-		ret, err := tc.giveStore.List(tc.giveInput)
+		ret, err := tc.giveStore.List(context.Background(), tc.giveInput)
 		assert.Equal(t, tc.wantRet.TotalSize, ret.TotalSize, tc.caseDesc)
 		assert.ElementsMatch(t, tc.wantRet.Rows, ret.Rows, tc.caseDesc)
 		assert.Equal(t, tc.wantErr, err, tc.caseDesc)
@@ -613,12 +616,17 @@ func TestGenericStore_Create(t *testing.T) {
 
 		tc.giveStore.Stg = mStorage
 		tc.giveStore.opt.Validator = mValidator
-		err := tc.giveStore.Create(context.TODO(), tc.giveObj)
+		ret, err := tc.giveStore.Create(context.TODO(), tc.giveObj)
 		assert.True(t, validateCalled, tc.caseDesc)
 		if err != nil {
 			assert.Equal(t, tc.wantErr, err, tc.caseDesc)
 			continue
 		}
+		retTs, ok := ret.(*TestStruct)
+		assert.True(t, ok)
+		// The returned value (retTs) should be the same as the input (tc.giveObj)
+		assert.Equal(t, tc.giveObj.Field1, retTs.Field1, tc.caseDesc)
+		assert.Equal(t, tc.giveObj.Field2, retTs.Field2, tc.caseDesc)
 		assert.True(t, createCalled, tc.caseDesc)
 	}
 }
@@ -722,12 +730,17 @@ func TestGenericStore_Update(t *testing.T) {
 		tc.giveStore.Stg = mStorage
 		tc.giveStore.opt.Validator = mValidator
 
-		err := tc.giveStore.Update(context.TODO(), tc.giveObj, false)
+		ret, err := tc.giveStore.Update(context.TODO(), tc.giveObj, false)
 		assert.True(t, validateCalled, tc.caseDesc)
 		if err != nil {
 			assert.Equal(t, tc.wantErr, err, tc.caseDesc)
 			continue
 		}
+		retTs, ok := ret.(*TestStruct)
+		assert.True(t, ok)
+		// The returned value (retTs) should be the same as the input (tc.giveObj)
+		assert.Equal(t, tc.giveObj.Field1, retTs.Field1, tc.caseDesc)
+		assert.Equal(t, tc.giveObj.Field2, retTs.Field2, tc.caseDesc)
 		assert.True(t, createCalled, tc.caseDesc)
 	}
 }

@@ -22,7 +22,6 @@ context('metrics page smoke test', () => {
   };
 
   beforeEach(() => {
-    // init login
     cy.login();
   });
 
@@ -30,7 +29,6 @@ context('metrics page smoke test', () => {
     // go to metrics page
     cy.visit('/');
     cy.contains('Metrics').click();
-    cy.wait(500);
     cy.url().should('contains', '/metrics');
     cy.get(domSelectors.pageContent)
       .children()

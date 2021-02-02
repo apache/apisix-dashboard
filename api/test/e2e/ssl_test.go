@@ -37,10 +37,15 @@ func TestSSL_Basic(t *testing.T) {
 	assert.Nil(t, err)
 	apisixKey, err := ioutil.ReadFile("../certs/apisix.key")
 	assert.Nil(t, err)
-	body, err := json.Marshal(map[string]string{
+	body, err := json.Marshal(map[string]interface{}{
 		"id":   "1",
 		"cert": string(testCert),
 		"key":  string(testKey),
+		"labels": map[string]string{
+			"build":   "16",
+			"env":     "production",
+			"version": "v3",
+		},
 	})
 	assert.Nil(t, err)
 	invalidBody, err := json.Marshal(map[string]string{
@@ -82,6 +87,16 @@ func TestSSL_Basic(t *testing.T) {
 			Body:         string(body),
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "check ssl labels",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/ssl/1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v3\"",
 		},
 		{
 			Desc:   "create route",
@@ -130,6 +145,7 @@ func TestSSL_Basic(t *testing.T) {
 			}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"status\":0",
 		},
 	}
 
@@ -147,13 +163,17 @@ func TestSSL_Basic(t *testing.T) {
 	// enable SSL again
 	tests = []HttpTestCase{
 		{
-			Desc:         "enable SSL",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodPatch,
-			Path:         "/apisix/admin/ssl/1/status",
-			Body:         `1`,
-			Headers:      map[string]string{"Authorization": token},
+			Desc:   "enable SSL",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPatch,
+			Path:   "/apisix/admin/ssl/1/status",
+			Body:   `1`,
+			Headers: map[string]string{
+				"Authorization": token,
+				"Content-Type":  "text/plain",
+			},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"status\":1",
 		},
 		{
 			Desc:         "hit the route using HTTPS, make sure enable successful",

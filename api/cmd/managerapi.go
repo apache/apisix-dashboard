@@ -25,22 +25,28 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/shiningrush/droplet"
+	"github.com/spf13/cobra"
+
 	"github.com/apisix/manager-api/internal"
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/filter"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
-	"github.com/shiningrush/droplet"
-	"github.com/spf13/cobra"
 )
 
-var Version string
+var (
+	Version string
+	GitHash string
+)
 
 func printInfo() {
 	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Version", Version)
+	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "GitHash", GitHash)
 	fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "Listen", conf.ServerHost, conf.ServerPort)
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Loglevel", conf.ErrorLogLevel)
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n\n", "Logfile", conf.ErrorLogPath)
@@ -53,11 +59,25 @@ func NewManagerAPICommand() *cobra.Command {
 		Short: "APISIX Manager API",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			conf.InitConf()
+			log.InitLogger()
+
+			if err := utils.WritePID(conf.PIDPath); err != nil {
+				log.Errorf("failed to write pid: %s", err)
+				panic(err)
+			}
+			utils.AppendToClosers(func() error {
+				if err := os.Remove(conf.PIDPath); err != nil {
+					log.Errorf("failed to remove pid path: %s", err)
+					return err
+				}
+				return nil
+			})
+
 			droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
 				var newMws []droplet.Middleware
 				// default middleware order: resp_reshape, auto_input, traffic_log
 				// We should put err_transform at second to catch all error
-				newMws = append(newMws, mws[0], &handler.ErrorTransformMiddleware{})
+				newMws = append(newMws, mws[0], &handler.ErrorTransformMiddleware{}, &filter.AuthenticationMiddleware{})
 				newMws = append(newMws, mws[1:]...)
 				return newMws
 			}
@@ -112,5 +132,28 @@ func NewManagerAPICommand() *cobra.Command {
 	}
 
 	cmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
+
+	cmd.AddCommand(newStopCommand())
+	return cmd
+}
+
+func newStopCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use: "stop",
+		Run: func(cmd *cobra.Command, args []string) {
+			pid, err := utils.ReadPID(conf.PIDPath)
+			if err != nil {
+				if syscall.ENOENT.Error() != err.Error() {
+					fmt.Fprintf(os.Stderr, "failed to get manager-api pid: %s\n", err)
+				} else {
+					fmt.Fprintf(os.Stderr,  "pid path %s not found, is manager-api running?\n", conf.PIDPath)
+				}
+				return
+			}
+			if err := syscall.Kill(pid, syscall.SIGINT); err != nil {
+				fmt.Fprintf(os.Stderr, "failed to kill manager-api: %s", err)
+			}
+		},
+	}
 	return cmd
 }

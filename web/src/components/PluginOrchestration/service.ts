@@ -16,7 +16,7 @@
  */
 import { request } from 'umi';
 
-import { PluginOrchestrationModule } from './typing';
+import type { PluginOrchestrationModule } from './typing';
 
 export const fetchList = () => {
   return request<Res<PluginOrchestrationModule.Meta[]>>('/plugins?all=true').then((data) => {

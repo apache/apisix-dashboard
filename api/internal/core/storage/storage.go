@@ -39,9 +39,8 @@ type Keypair struct {
 }
 
 type Event struct {
-	Type  EventType
-	Key   string
-	Value string
+	Keypair
+	Type EventType
 }
 
 type EventType string

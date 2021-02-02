@@ -17,17 +17,14 @@
 import React, { useRef } from 'react';
 import { history, useIntl } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, notification, Popconfirm, Space } from 'antd';
-
-import useForceIntl from '@/hooks/useForceIntl';
 
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
-  useForceIntl();
-
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
 
@@ -44,6 +41,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'desc',
+      hideInSearch: true,
     },
     {
       title: formatMessage({ id: 'component.global.operation' }),
@@ -96,6 +94,10 @@ const Page: React.FC = () => {
         rowKey="id"
         columns={columns}
         request={fetchList}
+        search={{
+          searchText: formatMessage({ id: 'component.global.search' }),
+          resetText: formatMessage({ id: 'component.global.reset' }),
+        }}
         toolBarRender={() => [
           <Button type="primary" onClick={() => history.push(`/service/create`)}>
             <PlusOutlined />

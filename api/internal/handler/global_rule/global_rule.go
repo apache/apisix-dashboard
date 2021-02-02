@@ -18,10 +18,12 @@ package global_rule
 
 import (
 	"encoding/json"
+	"net/http"
 	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -29,7 +31,6 @@ import (
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/utils"
-	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -49,12 +50,14 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.GET("/apisix/admin/global_rules", wgin.Wraps(h.List,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
 	r.PUT("/apisix/admin/global_rules/:id", wgin.Wraps(h.Set,
-		wrapper.InputType(reflect.TypeOf(entity.GlobalPlugins{}))))
+		wrapper.InputType(reflect.TypeOf(SetInput{}))))
 	r.PUT("/apisix/admin/global_rules", wgin.Wraps(h.Set,
-		wrapper.InputType(reflect.TypeOf(entity.GlobalPlugins{}))))
+		wrapper.InputType(reflect.TypeOf(SetInput{}))))
 
-	r.PATCH("/apisix/admin/global_rules/:id", consts.ErrorWrapper(Patch))
-	r.PATCH("/apisix/admin/global_rules/:id/*path", consts.ErrorWrapper(Patch))
+	r.PATCH("/apisix/admin/global_rules/:id", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
+	r.PATCH("/apisix/admin/global_rules/:id/*path", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
 
 	r.DELETE("/apisix/admin/global_rules/:id", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDeleteInput{}))))
@@ -67,7 +70,7 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.globalRuleStore.Get(input.ID)
+	r, err := h.globalRuleStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -110,7 +113,7 @@ type ListInput struct {
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	ret, err := h.globalRuleStore.List(store.ListInput{
+	ret, err := h.globalRuleStore.List(c.Context(), store.ListInput{
 		PageSize:   input.PageSize,
 		PageNumber: input.PageNumber,
 	})
@@ -121,23 +124,46 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	return ret, nil
 }
 
-func (h *Handler) Set(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*entity.GlobalPlugins)
+type SetInput struct {
+	entity.GlobalPlugins
+	ID string `auto_read:"id,path"`
+}
 
-	if err := h.globalRuleStore.Create(c.Context(), input); err != nil {
+func (h *Handler) Set(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*SetInput)
+
+	// check if ID in body is equal ID in path
+	if err := handler.IDCompare(input.ID, input.GlobalPlugins.ID); err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+	}
+
+	// if has id in path, use it
+	if input.ID != "" {
+		input.GlobalPlugins.ID = input.ID
+	}
+
+	ret, err := h.globalRuleStore.Update(c.Context(), &input.GlobalPlugins, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
-func Patch(c *gin.Context) (interface{}, error) {
-	reqBody, _ := c.GetRawData()
-	ID := c.Param("id")
-	subPath := c.Param("path")
+type PatchInput struct {
+	ID      string `auto_read:"id,path"`
+	SubPath string `auto_read:"path,path"`
+	Body    []byte `auto_read:"@body"`
+}
+
+func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*PatchInput)
+	reqBody := input.Body
+	ID := input.ID
+	subPath := input.SubPath
 
 	routeStore := store.GetStore(store.HubKeyGlobalRule)
-	stored, err := routeStore.Get(ID)
+	stored, err := routeStore.Get(c.Context(), ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -153,11 +179,12 @@ func Patch(c *gin.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := routeStore.Update(c, &globalRule, false); err != nil {
+	ret, err := routeStore.Update(c.Context(), &globalRule, false)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type BatchDeleteInput struct {

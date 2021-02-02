@@ -22,7 +22,7 @@ etcd:
     - "http://172.16.238.10:2379"
     - "http://172.16.238.11:2379"
     - "http://172.16.238.12:2379"
-  resync_delay: 0.1 # sync data from etcd quickly for e2e test
+  resync_delay: 0.1  # sync data from etcd quickly for e2e test
 
 apisix:
   id: "apisix-server1"
@@ -40,6 +40,11 @@ apisix:
     enable: true
     ssl_cert: "/usr/local/apisix/certs/apisix.crt"
     ssl_cert_key: "/usr/local/apisix/certs/apisix.key"
+
+  enable_control: true
+  control:
+    ip: "0.0.0.0"
+    port: 9090
 
 nginx_config:
   error_log_level: "debug"

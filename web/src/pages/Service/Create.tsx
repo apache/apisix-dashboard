@@ -70,9 +70,9 @@ const Page: React.FC = (props) => {
       plugins,
     };
 
-    const upstreamFormData = upstreamForm.getFieldsValue();
-    if (upstreamFormData.upstream_id === '') {
-      data.upstream = omit(upstreamFormData, ['upstream_id']);
+    const upstreamFormData = upstreamRef.current?.getData();
+    if (!upstreamFormData.upstream_id) {
+      data.upstream = upstreamFormData;
     } else {
       data.upstream_id = upstreamFormData.upstream_id;
     }
@@ -81,13 +81,12 @@ const Page: React.FC = (props) => {
     (serviceId ? update(serviceId, data) : create(data))
       .then(() => {
         notification.success({
-          message: `${
-            serviceId
-              ? formatMessage({ id: 'component.global.edit' })
-              : formatMessage({ id: 'component.global.create' })
-          } ${formatMessage({ id: 'menu.service' })} ${formatMessage({
-            id: 'component.status.success',
-          })}`,
+          message: `${serviceId
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
+            } ${formatMessage({ id: 'menu.service' })} ${formatMessage({
+              id: 'component.status.success',
+            })}`,
         });
         history.push('/service/list');
       })
@@ -115,11 +114,10 @@ const Page: React.FC = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={`${
-          (props as any).match.params.rid
-            ? formatMessage({ id: 'component.global.edit' })
-            : formatMessage({ id: 'component.global.create' })
-        } ${formatMessage({ id: 'menu.service' })}`}
+        title={`${(props as any).match.params.rid
+          ? formatMessage({ id: 'component.global.edit' })
+          : formatMessage({ id: 'component.global.create' })
+          } ${formatMessage({ id: 'menu.service' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: '25px' }}>
@@ -133,7 +131,14 @@ const Page: React.FC = (props) => {
           {step === 2 && (
             <PluginPage initialData={plugins} onChange={setPlugins} schemaType="route" />
           )}
-          {step === 3 && <Preview upstreamForm={upstreamForm} form={form} plugins={plugins} />}
+          {step === 3 && (
+            <Preview
+              upstreamForm={upstreamForm}
+              upstreamRef={upstreamRef}
+              form={form}
+              plugins={plugins}
+            />
+          )}
         </Card>
       </PageHeaderWrapper>
       <ActionBar step={step} lastStep={3} onChange={onStepChange} withResultView />

@@ -16,12 +16,13 @@
  */
 import React, { useState } from 'react';
 import { Form, Select } from 'antd';
-import { UploadFile } from 'antd/lib/upload/interface';
-import { FormInstance } from 'antd/es/form';
+import type { UploadFile } from 'antd/lib/upload/interface';
+import type { FormInstance } from 'antd/es/form';
 import { useIntl } from 'umi';
 
 import CertificateForm from '@/pages/SSL/components/CertificateForm';
-import CertificateUploader, { UploadType } from '@/pages/SSL/components/CertificateUploader';
+import CertificateUploader from '@/pages/SSL/components/CertificateUploader';
+import type { UploadType } from '@/pages/SSL/components/CertificateUploader';
 
 type CreateType = 'Upload' | 'Input';
 
@@ -48,6 +49,20 @@ const Step: React.FC<Props> = ({ form }) => {
     } else {
       form.setFieldsValue({ key: '' });
       setPrivateKeyList([]);
+    }
+  };
+
+  const handleSuccess = ({
+    cert,
+    key,
+    ...rest
+  }: Partial<SSLModule.UploadPrivateSuccessData & SSLModule.UploadPublicSuccessData>) => {
+    if (cert) {
+      setPublicKeyList(rest.publicKeyList!);
+      form.setFieldsValue({ cert });
+    } else {
+      form.setFieldsValue({ key });
+      setPrivateKeyList(rest.privateKeyList!);
     }
   };
   return (
@@ -86,19 +101,7 @@ const Step: React.FC<Props> = ({ form }) => {
       </div>
       {Boolean(createType === 'Upload') && (
         <CertificateUploader
-          onSuccess={({
-            cert,
-            key,
-            ...rest
-          }: SSLModule.UploadPrivateSuccessData & SSLModule.UploadPublicSuccessData) => {
-            if (cert) {
-              setPublicKeyList(rest.publicKeyList);
-              form.setFieldsValue({ cert });
-            } else {
-              form.setFieldsValue({ key });
-              setPrivateKeyList(rest.privateKeyList);
-            }
-          }}
+          onSuccess={handleSuccess}
           onRemove={onRemove}
           data={{ publicKeyList, privateKeyList }}
         />

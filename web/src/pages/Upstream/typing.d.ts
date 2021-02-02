@@ -82,5 +82,5 @@ declare namespace UpstreamModule {
   };
 
   // TODO: typing
-  type ResponseBody = {} & RequestBody;
+  type ResponseBody = Record<string, unknown> & RequestBody;
 }
