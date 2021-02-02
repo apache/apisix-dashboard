@@ -28,7 +28,6 @@ func TestInfo(t *testing.T) {
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/info",
-			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   []string{"commit_hash", "\"version\":\"master\""},
 		},
