@@ -73,7 +73,7 @@ func NewManagerAPICommand() *cobra.Command {
 				return nil
 			})
 
-			utils.SetHashAndVersion(GitHash, Version)
+			GitHash, Version = utils.GetHashAndVersion()
 
 			droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
 				var newMws []droplet.Middleware

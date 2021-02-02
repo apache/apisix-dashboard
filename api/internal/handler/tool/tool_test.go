@@ -19,20 +19,22 @@ package tool
 import (
 	"testing"
 
-	"github.com/apisix/manager-api/internal/utils"
 	"github.com/shiningrush/droplet"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/apisix/manager-api/internal/utils"
 )
 
 func TestInfo_Get(t *testing.T) {
 	h := Handler{}
 	ctx := droplet.NewContext()
 
-	utils.SetHashAndVersion("94d952f", "master")
+	hash, version := utils.GetHashAndVersion()
+
 	ret, err := h.Info(ctx)
 	assert.Nil(t, err)
 	assert.Equal(t, &InfoOutput{
-		Hash:    "94d952f",
-		Version: "master",
+		Hash:    hash,
+		Version: version,
 	}, ret)
 }
