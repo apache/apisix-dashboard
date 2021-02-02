@@ -25,12 +25,15 @@ export const transformLableValueToKeyValue = (data: string[]) => {
   });
 };
 
+// Transform Route data then sent to API
 export const transformStepData = ({
   form1Data,
   form2Data,
   advancedMatchingRules,
   step3Data,
 }: RouteModule.RequestData) => {
+  const { custom_normal_labels, custom_version_label, service_id = '' } = form1Data;
+
   let redirect: RouteModule.Redirect = {};
   const step3DataCloned = cloneDeep(step3Data);
   if (form1Data.redirectOption === 'disabled') {
@@ -44,14 +47,16 @@ export const transformStepData = ({
     };
   }
 
-  const labels = {};
-  transformLableValueToKeyValue(form1Data.labels).forEach((item) => {
-    labels[item.labelKey] = item.labelValue;
+  const labels: Record<string, string> = {};
+  transformLableValueToKeyValue(custom_normal_labels).forEach(({ labelKey, labelValue }) => {
+    labels[labelKey] = labelValue;
   });
-  const { service_id = '' } = form1Data;
+  if (custom_version_label) {
+    labels.API_VERSION = custom_version_label;
+  }
 
   const data: Partial<RouteModule.Body> = {
-    ...omit(form1Data, 'labels'),
+    ...form1Data,
     labels,
     ...step3DataCloned,
     vars: advancedMatchingRules.map((rule) => {
@@ -81,7 +86,7 @@ export const transformStepData = ({
     }
 
     if (redirect.http_to_https) {
-      if (Object.keys(data.plugins!).length === 0) {
+      if (Object.keys(data.plugins || {}).length === 0) {
         data.plugins = {};
       }
       data.plugins!.redirect = redirect;
@@ -92,6 +97,8 @@ export const transformStepData = ({
 
     // Remove some of the frontend custom variables
     return omit(data, [
+      'custom_version_label',
+      'custom_normal_labels',
       'advancedMatchingRules',
       'upstreamHostList',
       'upstreamPath',
@@ -100,8 +107,9 @@ export const transformStepData = ({
       'ret_code',
       'redirectOption',
       service_id.length === 0 ? 'service_id' : '',
-      !Object.keys(step3DataCloned.plugins || {}).length ? 'plugins' : '',
-      !Object.keys(step3DataCloned.script || {}).length ? 'script' : '',
+      form2Data.upstream_id === 'None' ? 'upstream_id' : '',
+      !Object.keys(data.plugins || {}).length ? 'plugins' : '',
+      !Object.keys(data.script || {}).length ? 'script' : '',
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
       data.remote_addrs?.filter(Boolean).length === 0 ? 'remote_addrs' : '',
@@ -123,6 +131,7 @@ export const transformStepData = ({
     service_id.length !== 0 ? 'service_id' : '',
     form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
     data.remote_addrs?.filter(Boolean).length !== 0 ? 'remote_addrs' : '',
+    form1Data.custom_version_label.length !== 0 ? 'labels' : '',
   ]);
 };
 
@@ -141,7 +150,7 @@ const transformVarsToRules = (
   });
 
 export const transformUpstreamNodes = (
-  nodes: { [key: string]: number } = {},
+  nodes: Record<string, number> = {},
 ): RouteModule.UpstreamHost[] => {
   const data: RouteModule.UpstreamHost[] = [];
   Object.entries(nodes).forEach(([k, v]) => {
@@ -154,11 +163,12 @@ export const transformUpstreamNodes = (
   return data;
 };
 
+// Transform response's data
 export const transformRouteData = (data: RouteModule.Body) => {
   const {
     name,
     desc,
-    labels,
+    labels = {},
     methods = [],
     uris,
     uri,
@@ -173,6 +183,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     priority = 0,
     enable_websocket,
   } = data;
+
   const form1Data: Partial<RouteModule.Form1Data> = {
     name,
     desc,
@@ -180,7 +191,11 @@ export const transformRouteData = (data: RouteModule.Body) => {
     hosts: hosts || (host && [host]) || [''],
     uris: uris || (uri && [uri]) || [],
     remote_addrs: remote_addrs || [''],
-    labels: Object.keys(labels || []).map((item) => `${item}:${labels[item]}`),
+    // NOTE: API_VERSION is a system label
+    custom_version_label: labels.API_VERSION || '',
+    custom_normal_labels: Object.keys(labels)
+      .filter((item) => item !== 'API_VERSION')
+      .map((key) => `${key}:${labels[key]}`),
     // @ts-ignore
     methods: methods.length ? methods : ['ALL'],
     priority,
@@ -200,6 +215,10 @@ export const transformRouteData = (data: RouteModule.Body) => {
   }
 
   const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);
+
+  if (upstream && Object.keys(upstream).length) {
+    upstream.upstream_id = '';
+  }
 
   const form2Data: RouteModule.Form2Data = upstream || { upstream_id };
 

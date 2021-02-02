@@ -17,70 +17,120 @@
 /* eslint-disable no-undef */
 
 context('Create and Search Route', () => {
+  const timeout = 500;
+  const data = {
+    host1: '11.11.11.11',
+    host2: '12.12.12.12',
+    test: 'test',
+    test0: 'test0',
+    test1: 'test1',
+    test2: 'test2',
+    testx: 'testx',
+    desc0: 'desc0',
+    desc1: 'desc1',
+    desc2: 'desc2',
+    value0: 'value0',
+    label0_value0: 'label0:value0',
+    deleteRouteSuccess: 'Delete Route Successfully',
+  };
+  const domSelector = {
+    name: '#name',
+    desc: '#desc',
+    hosts_0: '#hosts_0',
+    labels_0_labelKey: '#labels_0_labelKey',
+    labels_0_labelValue: '#labels_0_labelValue',
+    nodes_0_host: '#nodes_0_host',
+    searchName: '[title=Name]',
+    searchLabels: '[title=Labels]',
+    refresh: '.anticon-reload',
+  };
+
   beforeEach(() => {
-    // init login
     cy.login();
+    cy.fixture('selector.json').as('domSelector');
   });
 
-  it('should create route test1, test2, test3', () => {
-    //  go to route create page
+  it('should create route test1, test2, test3', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i += 1) {
       cy.contains('Create').click();
-      cy.get('#name').type('test' + i);
-      cy.get('#desc').type('desc' + i);
-      cy.get('#hosts_0').type('11.11.11.11');
+      cy.get(domSelector.name).type(`test${i}`);
+      cy.get(domSelector.desc).type(`desc${i}`);
+      cy.get(domSelector.hosts_0).type(data.host1);
+
+      // config label
+      cy.contains('Manage').click();
+
+      // eslint-disable-next-line no-loop-func
+      cy.get(this.domSelector.drawerBody).within(() => {
+        cy.contains('Add').click();
+        cy.get(domSelector.labels_0_labelKey).type(`label${i}`);
+        cy.get(domSelector.labels_0_labelValue).type(`value${i}`);
+        cy.contains('Confirm').click();
+      });
+
       cy.contains('Next').click();
-      cy.wait(400);
-      cy.get('#nodes_0_host').type('12.12.12.12', {
-        timeout: 500,
+      cy.get(domSelector.nodes_0_host).type(data.host2, {
+        timeout,
       });
       cy.contains('Next').click();
       cy.contains('Next').click();
       cy.contains('Submit').click();
       cy.contains('Submit Successfully');
-      // back to route list page
       cy.contains('Goto List').click();
       cy.url().should('contains', 'routes/list');
     }
   });
 
-  it('should search the route', () => {
+  it('should search the route with name', () => {
     cy.visit('/');
     cy.contains('Route').click();
     // full match
-    cy.get('[title=Name]').type('test1');
+    cy.get(domSelector.searchName).type(data.test1);
     cy.contains('Search').click();
-    cy.contains('test1').siblings().should('contain', 'desc1');
-    cy.contains('test0').should('not.exist');
-    cy.contains('test2').should('not.exist');
+    cy.contains(data.test1).siblings().should('contain', data.desc1);
+    cy.contains(data.test0).should('not.exist');
+    cy.contains(data.test2).should('not.exist');
     // partial match
     cy.reload();
-    cy.get('[title=Name]').type('test');
+    cy.get(domSelector.searchName).type(data.test);
     cy.contains('Search').click();
-    cy.contains('test0').siblings().should('contain', 'desc0');
-    cy.contains('test1').siblings().should('contain', 'desc1');
-    cy.contains('test2').siblings().should('contain', 'desc2');
+    cy.contains(data.test0).siblings().should('contain', data.desc0);
+    cy.contains(data.test1).siblings().should('contain', data.desc1);
+    cy.contains(data.test2).siblings().should('contain', data.desc2);
     // no match
     cy.reload();
-    cy.get('[title=Name]').type('testx');
+    cy.get(domSelector.searchName).type(data.testx);
     cy.contains('Search').click();
-    cy.contains('test0').should('not.exist');
-    cy.contains('test1').should('not.exist');
-    cy.contains('test2').should('not.exist');
+    cy.contains(data.test0).should('not.exist');
+    cy.contains(data.test1).should('not.exist');
+    cy.contains(data.test2).should('not.exist');
   });
 
-  it('should delete the route', () => {
+  it('should search the route with labels', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+
+    // search one label
+    cy.get(domSelector.refresh).click();
+    cy.get(domSelector.searchLabels).click();
+    cy.get(this.domSelector.dropdown).within(() => {
+      cy.contains(data.value0).click();
+    });
+    cy.contains('Search').click();
+
+    cy.contains(data.test0).siblings().should('contain', data.label0_value0);
+    cy.contains(data.test1).should('not.exist');
+    cy.contains(data.test2).should('not.exist');
+  });
+
+  it('should delete the route', function () {
     cy.visit('/routes/list');
-    for (let i = 0; i < 3; i++) {
-      cy.contains('test' + i)
-        .siblings()
-        .contains('Delete')
-        .click();
-      cy.contains('button', 'Confirm').click();
-      cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');
-      cy.wait(300);
+    for (let i = 0; i < 3; i += 1) {
+      cy.contains(`test${i}`).siblings().contains('Delete').click();
+      cy.contains('button', 'Confirm').click({ timeout });
+      cy.get(this.domSelector.notification).should('contain', data.deleteRouteSuccess);
     }
   });
 });

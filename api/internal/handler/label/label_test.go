@@ -221,30 +221,43 @@ func TestLabel(t *testing.T) {
 			}
 		}
 
+		var testCases []*testCase
+
 		expect := []interface{}{
 			Pair{"label1", "value1"},
 			Pair{"label1", "value2"},
 			Pair{"label2", "value2"},
 		}
-		case1 := newCase(giveData, expect)
-		case1.giveInput.Type = typ
+		tc := newCase(giveData, expect)
+		tc.giveInput.Type = typ
+		testCases = append(testCases, tc)
 
 		expect = []interface{}{
 			Pair{"label1", "value1"},
 			Pair{"label1", "value2"},
 		}
-		case2 := newCase(giveData, expect)
-		case2.giveInput.Type = typ
-		case2.giveInput.Label = "label1"
+		tc = newCase(giveData, expect)
+		tc.giveInput.Type = typ
+		tc.giveInput.Label = "label1"
+		testCases = append(testCases, tc)
 
 		expect = []interface{}{
 			Pair{"label1", "value2"},
 		}
-		case3 := newCase(giveData, expect)
-		case3.giveInput.Type = typ
-		case3.giveInput.Label = "label1:value2"
+		tc = newCase(giveData, expect)
+		tc.giveInput.Type = typ
+		tc.giveInput.Label = "label1:value2"
+		testCases = append(testCases, tc)
 
-		testCases := []*testCase{case1, case2, case3}
+		expect = []interface{}{
+			Pair{"label1", "value1"},
+			Pair{"label1", "value2"},
+		}
+		tc = newCase(giveData, expect)
+		tc.giveInput.Type = typ
+		tc.giveInput.Label = "label1:value1,label1:value2"
+		testCases = append(testCases, tc)
+
 		handler := Handler{}
 		for _, tc := range testCases {
 			switch typ {
@@ -290,6 +303,8 @@ func TestLabel(t *testing.T) {
 		serviceStore:  genMockStore(t, []interface{}{genService(m5)}),
 	}
 
+	var testCases []*testCase
+
 	expect := []interface{}{
 		Pair{"label1", "value1"},
 		Pair{"label1", "value2"},
@@ -298,35 +313,45 @@ func TestLabel(t *testing.T) {
 		Pair{"label4", "value4"},
 		Pair{"label5", "value5"},
 	}
-	case1 := newCase(nil, expect)
-	case1.giveInput.Type = "all"
+	tc := newCase(nil, expect)
+	tc.giveInput.Type = "all"
+	testCases = append(testCases, tc)
 
 	expect = []interface{}{
 		Pair{"label1", "value1"},
 		Pair{"label1", "value2"},
 	}
-	case2 := newCase(nil, expect)
-	case2.giveInput.Type = "all"
-	case2.giveInput.Label = "label1"
+	tc = newCase(nil, expect)
+	tc.giveInput.Type = "all"
+	tc.giveInput.Label = "label1"
+	testCases = append(testCases, tc)
 
 	expect = []interface{}{
 		Pair{"label1", "value2"},
 	}
-	case3 := newCase(nil, expect)
-	case3.giveInput.Type = "all"
-	case3.giveInput.Label = "label1:value2"
+	tc = newCase(nil, expect)
+	tc.giveInput.Type = "all"
+	tc.giveInput.Label = "label1:value2"
+	testCases = append(testCases, tc)
 
 	expect = []interface{}{
 		Pair{"label1", "value1"},
 		Pair{"label1", "value2"},
 		Pair{"label5", "value5"},
 	}
-	case4 := newCase(nil, expect)
-	case4.giveInput.Type = "all"
-	case4.giveInput.Label = "label1,label5:value5"
+	tc = newCase(nil, expect)
+	tc.giveInput.Type = "all"
+	tc.giveInput.Label = "label1,label5:value5"
 
-	testcase := []*testCase{case1, case2, case3, case4}
-	for _, tc := range testcase {
+	expect = []interface{}{
+		Pair{"label1", "value1"},
+		Pair{"label1", "value2"},
+	}
+	tc = newCase(nil, expect)
+	tc.giveInput.Type = "all"
+	tc.giveInput.Label = "label1=value1,label1=value2"
+
+	for _, tc := range testCases {
 		ctx := droplet.NewContext()
 		ctx.SetInput(tc.giveInput)
 		ret, err := handler.List(ctx)

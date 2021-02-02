@@ -23,14 +23,16 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
-	"github.com/yuin/gopher-lua"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
+	lua "github.com/yuin/gopher-lua"
+
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
@@ -71,19 +73,28 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.DELETE("/apisix/admin/routes/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
-	r.PATCH("/apisix/admin/routes/:id", consts.ErrorWrapper(Patch))
-	r.PATCH("/apisix/admin/routes/:id/*path", consts.ErrorWrapper(Patch))
+	r.PATCH("/apisix/admin/routes/:id", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
+	r.PATCH("/apisix/admin/routes/:id/*path", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
 
-	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))
+	r.GET("/apisix/admin/notexist/routes", wgin.Wraps(h.Exist,
+		wrapper.InputType(reflect.TypeOf(ExistCheckInput{}))))
 }
 
-func Patch(c *gin.Context) (interface{}, error) {
-	reqBody, _ := c.GetRawData()
-	ID := c.Param("id")
-	subPath := c.Param("path")
+type PatchInput struct {
+	ID      string `auto_read:"id,path"`
+	SubPath string `auto_read:"path,path"`
+	Body    []byte `auto_read:"@body"`
+}
 
-	routeStore := store.GetStore(store.HubKeyRoute)
-	stored, err := routeStore.Get(ID)
+func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*PatchInput)
+	reqBody := input.Body
+	ID := input.ID
+	subPath := input.SubPath
+
+	stored, err := h.routeStore.Get(c.Context(), ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -99,11 +110,12 @@ func Patch(c *gin.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := routeStore.Update(c, &route, false); err != nil {
+	ret, err := h.routeStore.Update(c.Context(), &route, false)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type GetInput struct {
@@ -157,14 +169,14 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.routeStore.Get(input.ID)
+	r, err := h.routeStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusNotFound}, err
 	}
 
 	//format respond
 	route := r.(*entity.Route)
-	script, _ := h.scriptStore.Get(input.ID)
+	script, _ := h.scriptStore.Get(c.Context(), input.ID)
 	if script != nil {
 		route.Script = script.(*entity.Script).Script
 	}
@@ -178,9 +190,10 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 }
 
 type ListInput struct {
-	Name  string `auto_read:"name,query"`
-	URI   string `auto_read:"uri,query"`
-	Label string `auto_read:"label,query"`
+	Name   string `auto_read:"name,query"`
+	URI    string `auto_read:"uri,query"`
+	Label  string `auto_read:"label,query"`
+	Status string `auto_read:"status,query"`
 	store.Pagination
 }
 
@@ -205,7 +218,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 			fmt.Errorf("%s: \"%s\"", err.Error(), input.Label)
 	}
 
-	ret, err := h.routeStore.List(store.ListInput{
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			if input.Name != "" && !strings.Contains(obj.(*entity.Route).Name, input.Name) {
 				return false
@@ -216,6 +229,10 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 			}
 
 			if input.Label != "" && !utils.LabelContains(obj.(*entity.Route).Labels, labelMap) {
+				return false
+			}
+
+			if input.Status != "" && strconv.Itoa(int(obj.(*entity.Route).Status)) != input.Status {
 				return false
 			}
 
@@ -241,7 +258,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	for i, item := range ret.Rows {
 		route = item.(*entity.Route)
 		id := utils.InterfaceToString(route.ID)
-		script, _ := h.scriptStore.Get(id)
+		script, _ := h.scriptStore.Get(c.Context(), id)
 		if script != nil {
 			route.Script = script.(*entity.Script).Script
 		}
@@ -293,7 +310,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	//check depend
 	if input.ServiceID != nil {
 		serviceID := utils.InterfaceToString(input.ServiceID)
-		_, err := h.svcStore.Get(serviceID)
+		_, err := h.svcStore.Get(c.Context(), serviceID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -304,7 +321,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 	if input.UpstreamID != nil {
 		upstreamID := utils.InterfaceToString(input.UpstreamID)
-		_, err := h.upstreamStore.Get(upstreamID)
+		_, err := h.upstreamStore.Get(c.Context(), upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -314,6 +331,12 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 
+	// If route's script_id is set, it must be equals to the route's id.
+	if input.ScriptID != nil && (utils.InterfaceToString(input.ID) != utils.InterfaceToString(input.ScriptID)) {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("script_id must be the same as id")
+	}
+
 	if input.Script != nil {
 		if input.ID == "" {
 			input.ID = utils.GetFlakeUidStr()
@@ -321,23 +344,47 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		script := &entity.Script{}
 		script.ID = utils.InterfaceToString(input.ID)
 		script.Script = input.Script
-		//to lua
+
 		var err error
-		input.Script, err = generateLuaCode(input.Script.(map[string]interface{}))
-		if err != nil {
+		// Explicitly to lua if input script is of the map type, otherwise
+		// it will always represent a piece of lua code of the string type.
+		if scriptConf, ok := input.Script.(map[string]interface{}); ok {
+			// For lua code of map type, syntax validation is done by
+			// the generateLuaCode function
+			input.Script, err = generateLuaCode(scriptConf)
+			if err != nil {
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+			}
+		} else {
+			// For lua code of string type, use utility func to syntax validation
+			err = utils.ValidateLuaCode(input.Script.(string))
+			if err != nil {
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+			}
+		}
+
+		//save original conf
+		if _, err = h.scriptStore.Create(c.Context(), script); err != nil {
 			return nil, err
 		}
-		//save original conf
-		if err = h.scriptStore.Create(c.Context(), script); err != nil {
-			return nil, err
+
+		// After saving the Script entity, always set route's script_id
+		// the same as route's id.
+		input.ScriptID = input.ID
+	} else {
+		// If script is unset, script_id must be unset neither.
+		if input.ScriptID != nil {
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				fmt.Errorf("script_id cannot be set if script is unset")
 		}
 	}
 
-	if err := h.routeStore.Create(c.Context(), input); err != nil {
+	ret, err := h.routeStore.Create(c.Context(), input)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type UpdateInput struct {
@@ -361,7 +408,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	//check depend
 	if input.ServiceID != nil {
 		serviceID := utils.InterfaceToString(input.ServiceID)
-		_, err := h.svcStore.Get(serviceID)
+		_, err := h.svcStore.Get(c.Context(), serviceID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -372,7 +419,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 	if input.UpstreamID != nil {
 		upstreamID := utils.InterfaceToString(input.UpstreamID)
-		_, err := h.upstreamStore.Get(upstreamID)
+		_, err := h.upstreamStore.Get(c.Context(), upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
@@ -382,36 +429,59 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
+	// If route's script_id is set, it must be equals to the route's id.
+	if input.Route.ScriptID != nil && (utils.InterfaceToString(input.ID) != utils.InterfaceToString(input.Route.ScriptID)) {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("script_id must be the same as id")
+	}
+
 	if input.Script != nil {
 		script := &entity.Script{}
 		script.ID = input.ID
 		script.Script = input.Script
-		//to lua
+
 		var err error
-		scriptConf, ok := input.Script.(map[string]interface{})
-		if !ok {
-			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-				fmt.Errorf("invalid `script`")
+		// Explicitly to lua if input script is of the map type, otherwise
+		// it will always represent a piece of lua code of the string type.
+		if scriptConf, ok := input.Script.(map[string]interface{}); ok {
+			// For lua code of map type, syntax validation is done by
+			// the generateLuaCode function
+			input.Route.Script, err = generateLuaCode(scriptConf)
+			if err != nil {
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+			}
+		} else {
+			// For lua code of string type, use utility func to syntax validation
+			err = utils.ValidateLuaCode(input.Script.(string))
+			if err != nil {
+				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+			}
 		}
-		input.Route.Script, err = generateLuaCode(scriptConf)
-		if err != nil {
-			return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
-		}
+
 		//save original conf
-		if err = h.scriptStore.Update(c.Context(), script, true); err != nil {
+		if _, err = h.scriptStore.Update(c.Context(), script, true); err != nil {
 			//if not exists, create
 			if err.Error() == fmt.Sprintf("key: %s is not found", script.ID) {
-				if err := h.scriptStore.Create(c.Context(), script); err != nil {
+				if _, err := h.scriptStore.Create(c.Context(), script); err != nil {
 					return handler.SpecCodeResponse(err), err
 				}
 			} else {
 				return handler.SpecCodeResponse(err), err
 			}
 		}
+
+		// After updating the Script entity, always set route's script_id
+		// the same as route's id.
+		input.Route.ScriptID = input.ID
 	} else {
+		// If script is unset, script_id must be unset neither.
+		if input.Route.ScriptID != nil {
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				fmt.Errorf("script_id cannot be set if script is unset")
+		}
 		//remove exists script
 		id := utils.InterfaceToString(input.Route.ID)
-		script, _ := h.scriptStore.Get(id)
+		script, _ := h.scriptStore.Get(c.Context(), id)
 		if script != nil {
 			if err := h.scriptStore.BatchDelete(c.Context(), strings.Split(id, ",")); err != nil {
 				log.Warnf("delete script %s failed", input.Route.ID)
@@ -419,11 +489,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	if err := h.routeStore.Update(c.Context(), &input.Route, true); err != nil {
+	ret, err := h.routeStore.Update(c.Context(), &input.Route, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type BatchDelete struct {
@@ -450,16 +521,9 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	return nil, nil
 }
 
-type ExistInput struct {
-	Name string `auto_read:"name,query"`
-}
-
-func toRows(list *store.ListOutput) []store.Row {
-	rows := make([]store.Row, list.TotalSize)
-	for i := range list.Rows {
-		rows[i] = list.Rows[i].(*entity.Route)
-	}
-	return rows
+type ExistCheckInput struct {
+	Name    string `auto_read:"name,query"`
+	Exclude string `auto_read:"exclude,query"`
 }
 
 // swagger:operation GET /apisix/admin/notexist/routes checkRouteExist
@@ -489,36 +553,30 @@ func toRows(list *store.ListOutput) []store.Row {
 //     description: unexpected error
 //     schema:
 //       "$ref": "#/definitions/ApiError"
-func Exist(c *gin.Context) (interface{}, error) {
-	//input := c.Input().(*ExistInput)
+func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*ExistCheckInput)
+	name := input.Name
+	exclude := input.Exclude
 
-	//temporary
-	name := c.Query("name")
-	exclude := c.Query("exclude")
-	routeStore := store.GetStore(store.HubKeyRoute)
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			r := obj.(*entity.Route)
+			if r.Name == name && r.ID != exclude {
+				return true
+			}
 
-	ret, err := routeStore.List(store.ListInput{
-		Predicate:  nil,
+			return false
+		},
 		PageSize:   0,
 		PageNumber: 0,
 	})
-
 	if err != nil {
 		return nil, err
 	}
 
-	sort := store.NewSort(nil)
-	filter := store.NewFilter([]string{"name", name})
-	pagination := store.NewPagination(0, 0)
-	query := store.NewQuery(sort, filter, pagination)
-	rows := store.NewFilterSelector(toRows(ret), query)
-
-	if len(rows) > 0 {
-		r := rows[0].(*entity.Route)
-		if r.ID != exclude {
-			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-				consts.InvalidParam("Route name is reduplicate")
-		}
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			consts.InvalidParam("Route name is reduplicate")
 	}
 
 	return nil, nil

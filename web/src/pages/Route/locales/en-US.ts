@@ -29,13 +29,16 @@ export default {
   'page.route.greaterThan': 'Greater Than',
   'page.route.lessThan': 'Less Than',
   'page.route.regexMatch': 'Regex Match',
+  'page.route.in': 'IN',
   'page.route.rule': 'Rule',
   'page.route.httpHeaderName': 'HTTP Request Header Name',
   'page.route.service': 'Service',
+  'page.route.instructions': 'Instructions',
+  'page.route.import': 'Import',
 
   'page.route.input.placeholder.parameterNameHttpHeader': 'Request header name, for example: HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': 'Parameter name, for example: id',
-  'page.route.input.placeholder.requestUrl': 'please input the request URL',
+  'page.route.input.placeholder.requestUrl': 'please input the valid request URL',
   'page.route.input.placeholder.paramKey': 'Param Key',
   'page.route.input.placeholder.paramValue': 'Param Value',
 
@@ -125,4 +128,8 @@ export default {
   'page.route.TabPane.authentication': 'Authentication',
   'page.route.TabPane.response': 'Response',
   'page.route.debugWithoutAuth': 'This request does not use any authorization.',
+  'page.route.button.exportOpenApi': 'Export OpenAPI',
+  'page.route.exportRoutesTips': 'Please choose the type of file you want to export',
+  'page.route.button.importOpenApi': 'Import OpenAPI',
+  'page.route.button.selectFile': 'Please Select File',
 };

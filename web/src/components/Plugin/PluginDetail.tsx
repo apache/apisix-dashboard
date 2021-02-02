@@ -15,20 +15,33 @@
  * limitations under the License.
  */
 import React, { useEffect, useRef } from 'react';
-import { Button, notification, PageHeader, Switch, Form, Select, Divider, Drawer } from 'antd';
+import {
+  Button,
+  notification,
+  PageHeader,
+  Switch,
+  Form,
+  Select,
+  Divider,
+  Drawer,
+  Alert,
+} from 'antd';
 import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
 import { LinkOutlined } from '@ant-design/icons';
+import Ajv from 'ajv';
+import type { DefinedError } from 'ajv';
+import addFormats from 'ajv-formats';
 
-import Ajv, { DefinedError } from 'ajv';
 import { fetchSchema } from './service';
 
 type Props = {
   name: string;
   type?: 'global' | 'scoped';
   schemaType: PluginComponent.Schema;
-  initialData: object;
+  initialData: Record<string, any>;
+  pluginList: PluginComponent.Meta[];
   readonly?: boolean;
   visible: boolean;
   onClose?: () => void;
@@ -36,6 +49,7 @@ type Props = {
 };
 
 const ajv = new Ajv();
+addFormats(ajv);
 
 const FORM_ITEM_LAYOUT = {
   labelCol: {
@@ -65,18 +79,23 @@ const PluginDetail: React.FC<Props> = ({
   type = 'scoped',
   schemaType = 'route',
   visible,
+  pluginList = [],
   readonly = false,
   initialData = {},
-  onClose = () => { },
-  onChange = () => { },
+  onClose = () => {},
+  onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
   const ref = useRef<any>(null);
-  const data = initialData[name];
+  const data = initialData[name] || {};
+  const pluginType = pluginList.find((item) => item.name === name)?.type;
 
   useEffect(() => {
-    form.setFieldsValue({ disable: initialData[name] && !initialData[name].disable });
+    form.setFieldsValue({
+      disable: initialData[name] && !initialData[name].disable,
+      scope: 'global',
+    });
   }, []);
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
@@ -89,7 +108,6 @@ const PluginDetail: React.FC<Props> = ({
         } else {
           injectDisableProperty(schema);
         }
-
         const validate = ajv.compile(schema);
         if (validate(value)) {
           resolve(value);
@@ -149,7 +167,7 @@ const PluginDetail: React.FC<Props> = ({
         placement="right"
         closable={false}
         onClose={onClose}
-        width={600}
+        width={700}
         footer={
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             {' '}
@@ -195,8 +213,8 @@ const PluginDetail: React.FC<Props> = ({
           </Form.Item>
           {type === 'global' && (
             <Form.Item label="Scope" name="scope">
-              <Select disabled defaultValue="Global">
-                <Select.Option value="Global">Global</Select.Option>
+              <Select disabled>
+                <Select.Option value="global">Global</Select.Option>
               </Select>
             </Form.Item>
           )}
@@ -204,14 +222,28 @@ const PluginDetail: React.FC<Props> = ({
         <Divider orientation="left">Data Editor</Divider>
         <PageHeader
           title=""
-          subTitle={`Current Plugin: ${name}`}
+          subTitle={
+            pluginType === 'auth' && schemaType !== 'consumer' ? (
+              <Alert message={`${name} does not require configuration`} type="warning" />
+            ) : (
+              <>Current plugin: {name}</>
+            )
+          }
           ghost={false}
           extra={[
             <Button
               type="default"
               icon={<LinkOutlined />}
               onClick={() => {
-                window.open(`https://github.com/apache/apisix/blob/master/doc/plugins/${name}.md`);
+                if (name.startsWith('serverless')) {
+                  window.open(
+                    'https://github.com/apache/apisix/blob/master/doc/plugins/serverless.md',
+                  );
+                } else {
+                  window.open(
+                    `https://github.com/apache/apisix/blob/master/doc/plugins/${name}.md`,
+                  );
+                }
               }}
               key={1}
             >
@@ -223,7 +255,13 @@ const PluginDetail: React.FC<Props> = ({
           ]}
         />
         <CodeMirror
-          ref={ref}
+          ref={(codemirror) => {
+            ref.current = codemirror;
+            if (codemirror) {
+              // NOTE: for debug & test
+              window.codemirror = codemirror.editor;
+            }
+          }}
           value={JSON.stringify(data, null, 2)}
           options={{
             mode: 'json-ld',

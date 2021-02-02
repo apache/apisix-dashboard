@@ -112,8 +112,8 @@ const Page: React.FC<Props> = (props) => {
             if (action === 'advancedMatchingRulesChange') {
               setAdvancedMatchingRules(data);
             }
-            if (action === 'labelsChange') {
-              form1.setFieldsValue({ ...form1.getFieldsValue(), labels: data });
+            if (action === 'custom_normal_labels') {
+              form1.setFieldsValue({ custom_normal_labels: data });
             }
           }}
           isEdit={props.route.path.indexOf('edit') > 0}
@@ -135,7 +135,7 @@ const Page: React.FC<Props> = (props) => {
         );
       }
 
-      return <Step2 form={form2} upstreamRef={upstreamRef} />;
+      return <Step2 form={form2} upstreamRef={upstreamRef} hasServiceId={form1.getFieldValue('service_id') !== ''} />;
     }
 
     if (step === 3) {
@@ -256,11 +256,10 @@ const Page: React.FC<Props> = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={`${
-          (props as any).match.params.rid
+        title={`${(props as any).match.params.rid
             ? formatMessage({ id: 'component.global.edit' })
             : formatMessage({ id: 'component.global.create' })
-        } ${formatMessage({ id: 'menu.routes' })}`}
+          } ${formatMessage({ id: 'menu.routes' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>

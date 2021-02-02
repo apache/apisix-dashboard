@@ -20,10 +20,13 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
-
+	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
+	"os/exec"
+	"reflect"
+	"strings"
 	"testing"
 	"time"
 
@@ -32,12 +35,15 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-var token string
+var (
+	token string
+	Token string
 
-var APISIXHost = "http://127.0.0.1:9080"
-var APISIXInternalUrl = "http://172.16.238.30:9080"
-var APISIXSingleWorkerHost = "http://127.0.0.1:9081"
-var ManagerAPIHost = "http://127.0.0.1:9000"
+	APISIXHost             = "http://127.0.0.1:9080"
+	APISIXInternalUrl      = "http://172.16.238.30:9080"
+	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
+	ManagerAPIHost         = "http://127.0.0.1:9000"
+)
 
 func init() {
 	//login to get auth token
@@ -48,6 +54,7 @@ func init() {
 
 	url := ManagerAPIHost + "/apisix/admin/user/login"
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
+	req.Header.Add("Content-Type", "application/json")
 	if err != nil {
 		panic(err)
 	}
@@ -67,12 +74,16 @@ func init() {
 
 	respond := gjson.ParseBytes(body)
 	token = respond.Get("data.token").String()
+	Token = token
 }
 
-func httpGet(url string) ([]byte, int, error) {
+func httpGet(url string, headers map[string]string) ([]byte, int, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, 0, err
+	}
+	for key, val := range headers {
+		req.Header.Add(key, val)
 	}
 
 	client := &http.Client{}
@@ -136,6 +147,9 @@ func BatchTestServerPort(t *testing.T, times int) map[string]int {
 	for i := 0; i < times; i++ {
 		client = &http.Client{}
 		resp, err = client.Do(req)
+		if err != nil {
+			fmt.Printf("err: %s", err)
+		}
 		assert.Nil(t, err)
 
 		bodyByte, err = ioutil.ReadAll(resp.Body)
@@ -168,7 +182,8 @@ type HttpTestCase struct {
 	ExpectStatus  int
 	ExpectCode    int
 	ExpectMessage string
-	ExpectBody    string
+	ExpectBody    interface{}
+	UnexpectBody  interface{}
 	ExpectHeaders map[string]string
 	Sleep         time.Duration //ms
 }
@@ -208,34 +223,134 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 			req.WithQueryString(tc.Query)
 		}
 
-		//set header
+		// set header
+		setContentType := false
 		for key, val := range tc.Headers {
 			req.WithHeader(key, val)
+			if strings.ToLower(key) == "content-type" {
+				setContentType = true
+			}
 		}
 
-		//set body
+		// set default content-type
+		if !setContentType {
+			req.WithHeader("Content-Type", "application/json")
+		}
+
+		// set body
 		if tc.Body != "" {
 			req.WithText(tc.Body)
 		}
 
-		//respond check
+		// respond check
 		resp := req.Expect()
 
-		//match http status
+		// match http status
 		if tc.ExpectStatus != 0 {
 			resp.Status(tc.ExpectStatus)
 		}
 
-		//match headers
+		// match headers
 		if tc.ExpectHeaders != nil {
 			for key, val := range tc.ExpectHeaders {
 				resp.Header(key).Equal(val)
 			}
 		}
 
-		//match body
-		if tc.ExpectBody != "" {
-			resp.Body().Contains(tc.ExpectBody)
+		// match body
+		if tc.ExpectBody != nil {
+			assert.Contains(t, []string{"string", "[]string"}, reflect.TypeOf(tc.ExpectBody).String())
+			if body, ok := tc.ExpectBody.(string); ok {
+				if body == "" {
+					// "" indicates the body is expected to be empty
+					resp.Body().Empty()
+				} else {
+					resp.Body().Contains(body)
+				}
+			} else if bodies, ok := tc.ExpectBody.([]string); ok && len(bodies) != 0 {
+				for _, b := range bodies {
+					resp.Body().Contains(b)
+				}
+			}
+		}
+
+		// match UnexpectBody
+		if tc.UnexpectBody != nil {
+			assert.Contains(t, []string{"string", "[]string"}, reflect.TypeOf(tc.UnexpectBody).String())
+			if body, ok := tc.UnexpectBody.(string); ok {
+				// "" indicates the body is expected to be non empty
+				if body == "" {
+					resp.Body().NotEmpty()
+				} else {
+					resp.Body().NotContains(body)
+				}
+			} else if bodies, ok := tc.UnexpectBody.([]string); ok && len(bodies) != 0 {
+				for _, b := range bodies {
+					resp.Body().NotContains(b)
+				}
+			}
 		}
 	})
+}
+
+func RunTestCases(tc HttpTestCase, t *testing.T) {
+	testCaseCheck(tc, t)
+}
+
+func ReadAPISIXErrorLog(t *testing.T) string {
+	cmd := exec.Command("pwd")
+	pwdByte, err := cmd.CombinedOutput()
+	pwd := string(pwdByte)
+	pwd = strings.Replace(pwd, "\n", "", 1)
+	pwd = pwd[:strings.Index(pwd, "/e2e")]
+	bytes, err := ioutil.ReadFile(pwd + "/docker/apisix_logs/error.log")
+	assert.Nil(t, err)
+	logContent := string(bytes)
+
+	return logContent
+}
+
+func CleanAPISIXErrorLog(t *testing.T) {
+	cmd := exec.Command("pwd")
+	pwdByte, err := cmd.CombinedOutput()
+	pwd := string(pwdByte)
+	pwd = strings.Replace(pwd, "\n", "", 1)
+	pwd = pwd[:strings.Index(pwd, "/e2e")]
+	cmd = exec.Command("sudo", "echo", " > ", pwd+"/docker/apisix_logs/error.log")
+	_, err = cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("cmd error:", err.Error())
+	}
+	assert.Nil(t, err)
+}
+
+// ReadAPISIXAccessLog reads the access log of APISIX.
+func ReadAPISIXAccessLog(t *testing.T) string {
+	cmd := exec.Command("pwd")
+	pwdByte, err := cmd.CombinedOutput()
+	pwd := string(pwdByte)
+	pwd = strings.Replace(pwd, "\n", "", 1)
+	pwd = pwd[:strings.Index(pwd, "/e2e")]
+	bytes, err := ioutil.ReadFile(pwd + "/docker/apisix_logs/access.log")
+	assert.Nil(t, err)
+	logContent := string(bytes)
+
+	return logContent
+}
+
+// CleanAPISIXAccessLog cleans the access log of APISIX.
+// It's always recommended to call this function before checking
+// its content.
+func CleanAPISIXAccessLog(t *testing.T) {
+	cmd := exec.Command("pwd")
+	pwdByte, err := cmd.CombinedOutput()
+	pwd := string(pwdByte)
+	pwd = strings.Replace(pwd, "\n", "", 1)
+	pwd = pwd[:strings.Index(pwd, "/e2e")]
+	cmd = exec.Command("sudo", "echo", " > ", pwd+"/docker/apisix_logs/access.log")
+	_, err = cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("cmd error:", err.Error())
+	}
+	assert.Nil(t, err)
 }

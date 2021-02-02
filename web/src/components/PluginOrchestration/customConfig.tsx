@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import { useIntl } from 'umi';
-import { INodeInnerDefaultProps, IPortDefaultProps } from '@mrblenny/react-flow-chart';
+import type { INodeInnerDefaultProps, IPortDefaultProps } from '@mrblenny/react-flow-chart';
 
 import { SOuter, SPortDefaultOuter } from './DrawPluginStyle';
 import { PanelType } from './index';

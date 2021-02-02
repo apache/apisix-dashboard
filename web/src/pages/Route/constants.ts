@@ -98,8 +98,24 @@ export const DEFAULT_DEBUG_PARAM_FORM_DATA = {
       value: '',
     },
   ],
+  type: 'json',
 };
 
 export const DEFAULT_DEBUG_AUTH_FORM_DATA = {
   authType: 'none',
 };
+
+export const DEBUG_BODY_TYPE_SUPPORTED: RouteModule.DebugBodyType[] = [
+  'none',
+  'x-www-form-urlencoded',
+  'raw input',
+];
+
+// Note: codemirror mode: apl for text; javascript for json(need to format); xml for xml;
+export const DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED = [
+  { name: 'Json', mode: 'javascript' },
+  { name: 'Text', mode: 'apl' },
+  { name: 'XML', mode: 'xml' },
+];
+
+export const EXPORT_FILE_MIME_TYPE_SUPPORTED = ['application/json', 'application/x-yaml'];

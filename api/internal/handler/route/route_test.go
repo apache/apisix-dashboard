@@ -19,15 +19,9 @@ package route
 import (
 	"encoding/json"
 	"errors"
-	"context"
 	"fmt"
-	"github.com/gogo/protobuf/test"
-	"go/build"
-	"golang.org/x/net/html/atom"
-	"google.golang.org/genproto/googleapis/devtools/resultstore/v2"
 	"net/http"
 	"testing"
-	"time"
 
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
@@ -37,153 +31,413 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/conf"
-	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
-
 type testCase struct {
-	caseDesc string
-	giveInput interface{}
-	mockInput interface{}
-	mockRet   interface{}
-	mockErr   interface{}
-	wantRet   interface{}
-	wantErr   interface{}
-	called    bool
-	upstreamInput string
-	scriptInput string
+	caseDesc     string
+	giveInput    interface{}
+	mockInput    interface{}
+	mockRet      interface{}
+	mockErr      interface{}
+	wantRet      interface{}
+	wantErr      interface{}
+	called       bool
 	serviceInput string
+	scriptRet    interface{}
+	scriptErr    error
+	serviceRet   interface{}
+	serviceErr   error
+	upstreamRet  interface{}
+	upstreamErr  error
 }
 
-func genServiceStore(t *testing.T, getInput string) *store.MockInterface {
-	ret1 := func(c context.Context, input string) interface{} {
-		if input == "s1" {
-			return &entity.Service{
-				BaseInfo:entity.BaseInfo{
-					ID:"s1",
-					CreateTime: 1609752277,
-				},
-				Name: "s1",
-				Desc: "service s1",
-			}
-		}
+var DagScript = `
+{
+    "rule":{
+        "root":"451106f8-560c-43a4-acf2-2a6ed0ea57b8",
+        "451106f8-560c-43a4-acf2-2a6ed0ea57b8":[
+            [
+                "code == 403",
+                "b93d622c-92ef-48b4-b6bb-57e1ce893ee3"
+            ],
+            [
+                "",
+                "988ef5c2-c896-4606-a666-3d4cbe24a731"
+            ]
+        ]
+    },
+    "conf":{
+        "451106f8-560c-43a4-acf2-2a6ed0ea57b8":{
+            "name":"uri-blocker",
+            "conf":{
+                "block_rules":[
+                    "root.exe",
+                    "root.m+"
+                ],
+                "rejected_code":403
+            }
+        },
+        "988ef5c2-c896-4606-a666-3d4cbe24a731":{
+            "name":"kafka-logger",
+            "conf":{
+                "batch_max_size":1000,
+                "broker_list":{
 
-		return nil
-	}
+                },
+                "buffer_duration":60,
+                "inactive_timeout":5,
+                "include_req_body":false,
+                "kafka_topic":"1",
+                "key":"2",
+                "max_retry_count":0,
+                "name":"kafka logger",
+                "retry_delay":1,
+                "timeout":3
+            }
+        },
+        "b93d622c-92ef-48b4-b6bb-57e1ce893ee3":{
+            "name":"fault-injection",
+            "conf":{
+                "abort":{
+                    "body":"200",
+                    "http_status":300
+                },
+                "delay":{
+                    "duration":500
+                }
+            }
+        }
+    },
+    "chart":{
+        "hovered":{
 
-	ret2 := func(c context.Context, input string) interface{} {
-		if input == "not_found" {
-			return data.ErrNotFound
-		}
+        },
+        "links":{
+            "3a110c30-d6f3-40b1-a8ac-b828cfaa2489":{
+                "from":{
+                    "nodeId":"3365eca3-4bc8-4769-bab3-1485dfd6a43c",
+                    "portId":"port3"
+                },
+                "id":"3a110c30-d6f3-40b1-a8ac-b828cfaa2489",
+                "to":{
+                    "nodeId":"b93d622c-92ef-48b4-b6bb-57e1ce893ee3",
+                    "portId":"port1"
+                }
+            },
+            "c1958993-c1ef-44b1-bb32-7fc6f34870c2":{
+                "from":{
+                    "nodeId":"3365eca3-4bc8-4769-bab3-1485dfd6a43c",
+                    "portId":"port2"
+                },
+                "id":"c1958993-c1ef-44b1-bb32-7fc6f34870c2",
+                "to":{
+                    "nodeId":"988ef5c2-c896-4606-a666-3d4cbe24a731",
+                    "portId":"port1"
+                }
+            },
+            "f9c42bf6-c8aa-4e86-8498-8dfbc5c53c23":{
+                "from":{
+                    "nodeId":"451106f8-560c-43a4-acf2-2a6ed0ea57b8",
+                    "portId":"port2"
+                },
+                "id":"f9c42bf6-c8aa-4e86-8498-8dfbc5c53c23",
+                "to":{
+                    "nodeId":"3365eca3-4bc8-4769-bab3-1485dfd6a43c",
+                    "portId":"port1"
+                }
+            }
+        },
+        "nodes":{
+            "3365eca3-4bc8-4769-bab3-1485dfd6a43c":{
+                "id":"3365eca3-4bc8-4769-bab3-1485dfd6a43c",
+                "orientation":0,
+                "ports":{
+                    "port1":{
+                        "id":"port1",
+                        "position":{
+                            "x":107,
+                            "y":0
+                        },
+                        "type":"input"
+                    },
+                    "port2":{
+                        "id":"port2",
+                        "position":{
+                            "x":92,
+                            "y":96
+                        },
+                        "properties":{
+                            "value":"no"
+                        },
+                        "type":"output"
+                    },
+                    "port3":{
+                        "id":"port3",
+                        "position":{
+                            "x":122,
+                            "y":96
+                        },
+                        "properties":{
+                            "value":"yes"
+                        },
+                        "type":"output"
+                    }
+                },
+                "position":{
+                    "x":750.2627969928922,
+                    "y":301.0370335799397
+                },
+                "properties":{
+                    "customData":{
+                        "name":"code == 403",
+                        "type":1
+                    }
+                },
+                "size":{
+                    "height":96,
+                    "width":214
+                },
+                "type":"判断条件"
+            },
+            "451106f8-560c-43a4-acf2-2a6ed0ea57b8":{
+                "id":"451106f8-560c-43a4-acf2-2a6ed0ea57b8",
+                "orientation":0,
+                "ports":{
+                    "port1":{
+                        "id":"port1",
+                        "position":{
+                            "x":100,
+                            "y":0
+                        },
+                        "properties":{
+                            "custom":"property"
+                        },
+                        "type":"input"
+                    },
+                    "port2":{
+                        "id":"port2",
+                        "position":{
+                            "x":100,
+                            "y":96
+                        },
+                        "properties":{
+                            "custom":"property"
+                        },
+                        "type":"output"
+                    }
+                },
+                "position":{
+                    "x":741.5684544145346,
+                    "y":126.75879247285502
+                },
+                "properties":{
+                    "customData":{
+                        "data":{
+                            "block_rules":[
+                                "root.exe",
+                                "root.m+"
+                            ],
+                            "rejected_code":403
+                        },
+                        "name":"uri-blocker",
+                        "type":0
+                    }
+                },
+                "size":{
+                    "height":96,
+                    "width":201
+                },
+                "type":"uri-blocker"
+            },
+            "988ef5c2-c896-4606-a666-3d4cbe24a731":{
+                "id":"988ef5c2-c896-4606-a666-3d4cbe24a731",
+                "orientation":0,
+                "ports":{
+                    "port1":{
+                        "id":"port1",
+                        "position":{
+                            "x":106,
+                            "y":0
+                        },
+                        "properties":{
+                            "custom":"property"
+                        },
+                        "type":"input"
+                    },
+                    "port2":{
+                        "id":"port2",
+                        "position":{
+                            "x":106,
+                            "y":96
+                        },
+                        "properties":{
+                            "custom":"property"
+                        },
+                        "type":"output"
+                    }
+                },
+                "position":{
+                    "x":607.9687500000001,
+                    "y":471.17788461538447
+                },
+                "properties":{
+                    "customData":{
+                        "data":{
+                            "batch_max_size":1000,
+                            "broker_list":{
 
-		if input == "error" {
-			return errors.New("service error")
-		}
-
-		return nil
-	}
-
-	svcStore := &store.MockInterface{}
-	svcStore.On("Get", mock.Anything).Run(func(args mock.Arguments){
-		id := args.Get(0).(string)
-		assert.Equal(t, getInput, id)
-	}).Return(ret1, ret2)
-
-	return svcStore
-}
-
-func genUpstreamStore(t *testing.T, getInput string) *store.MockInterface {
-	ret1 := func(c context.Context, input string) interface{} {
-		return nil
-	}
-
-	ret2 := func(c context.Context, input string) interface{} {
-		if input == "not_found" {
-			return data.ErrNotFound
-		}
-
-		if input == "error" {
-			return errors.New("upstream error")
-		}
-		return nil
-	}
-
-	upstreamStore :=&store.MockInterface{}
-	upstreamStore.On("Get", mock.Anything).Run(func(args mock.Arguments){
-		id := args.Get(0).(string)
-		assert.Equal(t, getInput, id)
-	}).Return(ret1, ret2)
-
-	return upstreamStore
-}
-
-func genScriptStore(t *testing.T, getInput string) *store.MockInterface {
-	ret1 := func(c context.Context, input string) interface{} {
-		return nil
-	}
-
-	ret2 := func(c context.Context, input string) interface{} {
-		return nil
-	}
-
-	scriptStore := &store.MockInterface{}
-	scriptStore.On("Get", mock.Anything).Run(func(args mock.Arguments){
-		id := args.Get(0).(string)
-		assert.Equal(t, getInput, id)
-	}).Return(ret1, ret2)
-
-	return scriptStore
-}
-
-
+                            },
+                            "buffer_duration":60,
+                            "inactive_timeout":5,
+                            "include_req_body":false,
+                            "kafka_topic":"1",
+                            "key":"2",
+                            "max_retry_count":0,
+                            "name":"kafka logger",
+                            "retry_delay":1,
+                            "timeout":3
+                        },
+                        "name":"kafka-logger",
+                        "type":0
+                    }
+                },
+                "size":{
+                    "height":96,
+                    "width":212
+                },
+                "type":"kafka-logger"
+            },
+            "b93d622c-92ef-48b4-b6bb-57e1ce893ee3":{
+                "id":"b93d622c-92ef-48b4-b6bb-57e1ce893ee3",
+                "orientation":0,
+                "ports":{
+                    "port1":{
+                        "id":"port1",
+                        "position":{
+                            "x":110,
+                            "y":0
+                        },
+                        "properties":{
+                            "custom":"property"
+                        },
+                        "type":"input"
+                    },
+                    "port2":{
+                        "id":"port2",
+                        "position":{
+                            "x":110,
+                            "y":96
+                        },
+                        "properties":{
+                            "custom":"property"
+                        },
+                        "type":"output"
+                    }
+                },
+                "position":{
+                    "x":988.9074986362261,
+                    "y":478.62041800736495
+                },
+                "properties":{
+                    "customData":{
+                        "data":{
+                            "abort":{
+                                "body":"200",
+                                "http_status":300
+                            },
+                            "delay":{
+                                "duration":500
+                            }
+                        },
+                        "name":"fault-injection",
+                        "type":0
+                    }
+                },
+                "size":{
+                    "height":96,
+                    "width":219
+                },
+                "type":"fault-injection"
+            }
+        },
+        "offset":{
+            "x":-376.83,
+            "y":87.98
+        },
+        "scale":0.832,
+        "selected":{
+            "id":"b93d622c-92ef-48b4-b6bb-57e1ce893ee3",
+            "type":"node"
+        }
+    }
+}`
 
 func TestRoute_Get(t *testing.T) {
 	tests := []testCase{
 		{
-			caseDesc: "route: get success",
-			giveInput: GetInput{ID: "s1"},
-			mockInput: "s1",
-			mockRet:  &entity.Route{
+			caseDesc:  "route: get success",
+			giveInput: &GetInput{ID: "r1"},
+			mockInput: "r1",
+			mockRet: &entity.Route{
 				BaseInfo: entity.BaseInfo{
-					ID: "s1",
+					ID: "r1",
 				},
 				URI: "/test",
 			},
 			mockErr: nil,
-			wantRet:  &entity.Route{
+			wantRet: &entity.Route{
 				BaseInfo: entity.BaseInfo{
-					ID: "s1",
+					ID: "r1",
 				},
-				URI: "/test",
+				Script: "script",
+				URI:    "/test",
 			},
-			wantErr: nil,
-			called: true,
+			wantErr:   nil,
+			called:    true,
+			scriptRet: &entity.Script{ID: "r1", Script: "script"},
+			scriptErr: nil,
 		},
 		{
-			caseDesc:   "route: store get failed",
-			giveInput:  &GetInput{ID: "failed_key"},
+			caseDesc:  "route: store get failed",
+			giveInput: &GetInput{ID: "failed_key"},
 			mockInput: "failed_key",
-			mockRet: nil,
-			mockErr:    fmt.Errorf("get failed"),
+			mockRet:   nil,
+			mockErr:   fmt.Errorf("get failed"),
 			wantRet: &data.SpecCodeResponse{
-				StatusCode: http.StatusInternalServerError,
+				StatusCode: http.StatusNotFound,
 			},
-			wantErr:    fmt.Errorf("get failed"),
-			called: true,
+			wantErr: fmt.Errorf("get failed"),
+			called:  true,
+		},
+		{
+			caseDesc:  "script: store get failed",
+			giveInput: &GetInput{ID: "failed_key"},
+			mockInput: "failed_key",
+			mockRet:   nil,
+			mockErr:   fmt.Errorf("get failed"),
+			wantRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusNotFound,
+			},
+			wantErr:   fmt.Errorf("get failed"),
+			scriptErr: errors.New("get failed"),
+			called:    true,
 		},
 	}
 
-	for _, tc := range tests{
+	for _, tc := range tests {
 		getCalled := false
 		mStore := &store.MockInterface{}
 
-		mStore.On("Get", mock.Anything).Run(func(args mock.Arguments){
+		mStore.On("Get", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 			getCalled = true
 			assert.Equal(t, tc.mockInput, args.Get(0))
 		}).Return(tc.mockRet, tc.mockErr)
 
-		h := Handler{routeStore: mStore}
+		sStore := &store.MockInterface{}
+		sStore.On("Get", mock.Anything, mock.Anything).Return(tc.scriptRet, tc.scriptErr)
+
+		h := Handler{routeStore: mStore, scriptStore: sStore}
 		ctx := droplet.NewContext()
 		ctx.SetInput(tc.giveInput)
 		ret, err := h.Get(ctx)
@@ -196,12 +450,12 @@ func TestRoute_Get(t *testing.T) {
 func TestRoute_List(t *testing.T) {
 	mockData := []*entity.Route{
 		{
-			BaseInfo:entity.BaseInfo{CreateTime: 1609742634},
-			Name: "r1",
-			URI: "/test_r1",
+			BaseInfo: entity.BaseInfo{CreateTime: 1609742634},
+			Name:     "r1",
+			URI:      "/test_r1",
 			Labels: map[string]string{
-			"version": "v1",
-			"build": "16",
+				"version": "v1",
+				"build":   "16",
 			},
 			Upstream: &entity.UpstreamDef{
 				Nodes: []interface{}{
@@ -214,47 +468,46 @@ func TestRoute_List(t *testing.T) {
 			},
 		},
 		{
-			BaseInfo:entity.BaseInfo{CreateTime: 1609742635},
-			Name: "r2",
-			URI: "/test_r2",
+			BaseInfo: entity.BaseInfo{CreateTime: 1609742635},
+			Name:     "r2",
+			URI:      "/test_r2",
 			Labels: map[string]string{
 				"version": "v1",
-				"build": "16",
+				"build":   "16",
 			},
 		},
 		{
-			BaseInfo:entity.BaseInfo{CreateTime: 1609742636},
-			Name:"route_test",
-			URI:"/test_route_test",
+			BaseInfo: entity.BaseInfo{CreateTime: 1609742636},
+			Name:     "route_test",
+			URI:      "/test_route_test",
 			Labels: map[string]string{
 				"version": "v2",
-				"build": "17",
+				"build":   "17",
 			},
 		},
 		{
-			BaseInfo:entity.BaseInfo{CreateTime: 1609742636},
-			Name:"test_route",
-			URI:"/test_test_route",
+			BaseInfo: entity.BaseInfo{CreateTime: 1609742636},
+			Name:     "test_route",
+			URI:      "/test_test_route",
 			Labels: map[string]string{
 				"version": "v2",
-				"build": "17",
-				"extra":"test",
+				"build":   "17",
+				"extra":   "test",
 			},
 		},
 	}
-
 
 	tests := []testCase{
 		{
 			caseDesc: "list all route",
 			giveInput: &ListInput{
 				Pagination: store.Pagination{
-					PageSize: 10,
+					PageSize:   10,
 					PageNumber: 10,
 				},
 			},
 			mockInput: store.ListInput{
-				PageSize: 10,
+				PageSize:   10,
 				PageNumber: 10,
 			},
 			wantRet: &store.ListOutput{
@@ -266,12 +519,13 @@ func TestRoute_List(t *testing.T) {
 				},
 				TotalSize: 4,
 			},
-			called: true,
+			scriptRet: &entity.Script{ID: "r1", Script: "script"},
+			called:    true,
 		},
 		{
 			caseDesc: "list routes with name",
 			giveInput: &ListInput{
-				Name :"route",
+				Name: "route",
 				Pagination: store.Pagination{
 					PageSize:   10,
 					PageNumber: 10,
@@ -288,62 +542,65 @@ func TestRoute_List(t *testing.T) {
 				},
 				TotalSize: 2,
 			},
-			called: true,
+			scriptRet: &entity.Script{ID: "r1", Script: "script"},
+			called:    true,
 		},
 		{
 			caseDesc: "list routes with uri",
 			giveInput: &ListInput{
-				Name:"test_r2",
-				Pagination:store.Pagination{
-					PageSize: 10,
+				URI: "test_r2",
+				Pagination: store.Pagination{
+					PageSize:   10,
 					PageNumber: 10,
 				},
 			},
 			mockInput: store.ListInput{
-				PageSize:10,
-				PageNumber: 10,
-			},
-			wantRet: &store.ListOutput{
-				Rows: []interface{}{
-					mockData[2],
-				},
-				TotalSize: 1,
-			},
-			called: true,
-		},
-		{
-			caseDesc: "list routes with label",
-			giveInput: &ListInput{
-				Label: "version:v1",
-				Pagination:store.Pagination{
-					PageSize: 10,
-					PageNumber: 10,
-				},
-			},
-			mockInput: store.ListInput{
-				PageSize:10,
+				PageSize:   10,
 				PageNumber: 10,
 			},
 			wantRet: &store.ListOutput{
 				Rows: []interface{}{
 					mockData[1],
-					mockData[2],
+				},
+				TotalSize: 1,
+			},
+			scriptRet: &entity.Script{ID: "r1", Script: "script"},
+			called:    true,
+		},
+		{
+			caseDesc: "list routes with label",
+			giveInput: &ListInput{
+				Label: "version:v1",
+				Pagination: store.Pagination{
+					PageSize:   10,
+					PageNumber: 10,
+				},
+			},
+			mockInput: store.ListInput{
+				PageSize:   10,
+				PageNumber: 10,
+			},
+			wantRet: &store.ListOutput{
+				Rows: []interface{}{
+					mockData[0],
+					mockData[1],
 				},
 				TotalSize: 2,
 			},
-			called: true,
+			scriptRet: &entity.Script{ID: "s1", Script: "script"},
+			called:    true,
 		},
 		{
 			caseDesc: "list routes with label",
 			giveInput: &ListInput{
 				Label: "extra",
-				Pagination:store.Pagination{
-					PageSize: 10,
+				Pagination: store.Pagination{
+					PageSize:   10,
 					PageNumber: 10,
 				},
 			},
 			mockInput: store.ListInput{
-				PageSize:10,
+				PageSize:   10,
 				PageNumber: 10,
 			},
 			wantRet: &store.ListOutput{
@@ -352,31 +609,33 @@ func TestRoute_List(t *testing.T) {
 				},
 				TotalSize: 1,
 			},
-			called: true,
+			scriptRet: &entity.Script{ID: "s1", Script: "script"},
+			called:    true,
 		},
 		{
 			caseDesc: "list routes and test format",
 			giveInput: &ListInput{
 				Name: "r1",
-				Pagination:store.Pagination{
-					PageSize: 10,
+				Pagination: store.Pagination{
+					PageSize:   10,
 					PageNumber: 10,
 				},
 			},
 			mockInput: store.ListInput{
-				PageSize: 10,
+				PageSize:   10,
 				PageNumber: 10,
 			},
 			wantRet: &store.ListOutput{
-				Rows:[]interface{} {
+				Rows: []interface{}{
 					&entity.Route{
-						BaseInfo:entity.BaseInfo{CreateTime: 1609742634},
-						Name: "r1",
-						URI: "/test_r1",
+						BaseInfo: entity.BaseInfo{CreateTime: 1609742634},
+						Name:     "r1",
+						URI:      "/test_r1",
 						Labels: map[string]string{
 							"version": "v1",
-							"build": "16",
+							"build":   "16",
 						},
+						Script: "script",
 						Upstream: &entity.UpstreamDef{
 							Nodes: []*entity.Node{
 								{
@@ -396,16 +655,16 @@ func TestRoute_List(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		t.Run(tc.caseDesc, func(t *testing.T){
+		t.Run(tc.caseDesc, func(t *testing.T) {
 			getCalled := false
 			mStore := &store.MockInterface{}
 			mStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
 				getCalled = true
 				input := args.Get(0).(store.ListInput)
-				mockInput := tc.mockInput.(ListInput)
+				mockInput := tc.mockInput.(store.ListInput)
 				assert.Equal(t, mockInput.PageSize, input.PageSize)
 				assert.Equal(t, mockInput.PageNumber, input.PageNumber)
-			}).Return(func(input store.ListInput)*store.ListOutput {
+			}).Return(func(input store.ListInput) *store.ListOutput {
 				var returnData []interface{}
 				for _, c := range mockData {
 					if input.Predicate(c) {
@@ -419,12 +678,15 @@ func TestRoute_List(t *testing.T) {
 				}
 
 				return &store.ListOutput{
-					Rows: returnData,
+					Rows:      returnData,
 					TotalSize: len(returnData),
 				}
 			}, tc.mockErr)
 
-			h := Handler{routeStore: mStore}
+			sStore := &store.MockInterface{}
+			sStore.On("Get", mock.Anything, mock.Anything).Return(tc.scriptRet, tc.scriptErr)
+
+			h := Handler{routeStore: mStore, scriptStore: sStore}
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 
@@ -436,232 +698,313 @@ func TestRoute_List(t *testing.T) {
 	}
 }
 
-
 func TestRoute_Create(t *testing.T) {
-	giveInput := &entity.Service{
-		BaseInfo: entity.BaseInfo{
-			ID: "s1",
-			CreateTime: 1609746531,
-		},
-		Name: "s1",
-		Desc: "test_route",
-		UpstreamID: "u1",
-		Script: "",
-		Labels: map[string]string{
-			"version": "v1",
-		},
-	}
+	scriptMap := make(map[string]interface{})
+
+	err := json.Unmarshal([]byte(DagScript), &scriptMap)
+	assert.Nil(t, err)
+
+	luaCode, err := generateLuaCode(scriptMap)
+	assert.Nil(t, err)
 
 	tests := []testCase{
 		{
 			caseDesc: "create route success",
 			giveInput: &entity.Route{
-				BaseInfo:entity.BaseInfo{
-					ID: "s1",
-					CreateTime:1609746531,
+				BaseInfo: entity.BaseInfo{
+					ID:         "s1",
+					CreateTime: 1609746531,
 				},
-				Name: "s1",
-				Desc: "test_route",
+				Name:       "s1",
+				Desc:       "test_route",
 				UpstreamID: "u1",
-				ServiceID: "s1",
-				Script: "",
+				ServiceID:  "s1",
+				Script:     "",
 				Labels: map[string]string{
 					"version": "v1",
 				},
 			},
-			mockInput: giveInput,
-			upstreamInput: "u1",
-			serviceInput: "s1",
-			scriptInput: "",
-			wantRet: nil,
-			wantErr: nil,
+			mockInput: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "s1",
+					CreateTime: 1609746531,
+				},
+				Name:       "s1",
+				Desc:       "test_route",
+				UpstreamID: "u1",
+				ServiceID:  "s1",
+				ScriptID:   "s1",
+				Script:     "",
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
+			serviceRet:  "service",
+			serviceErr:  nil,
+			upstreamRet: "upstream",
+			upstreamErr: nil,
+			scriptRet:   "script",
+			scriptErr:   nil,
+			wantRet:     nil,
+			wantErr:     nil,
+			called:      true,
 		},
 		{
 			caseDesc: "create route failed, service not found",
 			giveInput: &entity.Route{
-				BaseInfo:entity.BaseInfo{
-					ID: "s2",
-					CreateTime:1609746531,
+				BaseInfo: entity.BaseInfo{
+					ID:         "s2",
+					CreateTime: 1609746531,
 				},
-				Name: "s1",
-				Desc: "test_route",
+				Name:       "s1",
+				Desc:       "test_route",
 				UpstreamID: "u1",
-				ServiceID: "not_found",
-				Script: "",
+				ServiceID:  "not_found",
+				Script:     "",
 				Labels: map[string]string{
 					"version": "v1",
 				},
 			},
-			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			wantErr: fmt.Errorf("service id: not_found not found"),
-			upstreamInput: "u1",
-			serviceInput: "not_found",
-			scriptInput: "",
-			called: false,
+			wantRet:    &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr:    fmt.Errorf("service id: not_found not found"),
+			serviceRet: nil,
+			serviceErr: data.ErrNotFound,
 		},
 		{
 			caseDesc: "create route failed, service store get error",
 			giveInput: &entity.Route{
 				BaseInfo: entity.BaseInfo{
-					ID:"r1",
+					ID:         "r1",
 					CreateTime: 1609746531,
 				},
-				Name: "r1",
-				Desc: "test route",
+				Name:       "r1",
+				Desc:       "test route",
 				UpstreamID: "r1",
 				// mock store will return err if service is s3
 				ServiceID: "error",
-				Script: "",
+				Script:    "",
 				Labels: map[string]string{
 					"version": "v1",
 				},
 			},
-			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			wantErr: errors.New("service error"),
-			upstreamInput: "r1",
-			serviceInput: "error",
-			scriptInput: "",
-			called: false,
+			wantRet:    &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr:    errors.New("service error"),
+			serviceRet: nil,
+			serviceErr: errors.New("service error"),
+			called:     false,
 		},
 		{
 			caseDesc: "create route failed, upstream not found",
 			giveInput: &entity.Route{
-				BaseInfo:entity.BaseInfo{
-					ID: "s2",
-					CreateTime:1609746531,
+				BaseInfo: entity.BaseInfo{
+					ID:         "s2",
+					CreateTime: 1609746531,
 				},
-				Name: "s1",
-				Desc: "test_route",
+				Name:       "s1",
+				Desc:       "test_route",
 				UpstreamID: "not_found",
-				ServiceID: "s2",
-				Script: "",
+				ServiceID:  "s2",
+				Script:     "",
 				Labels: map[string]string{
 					"version": "v1",
 				},
 			},
-			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			wantErr: fmt.Errorf("upstream id: not_found not found"),
-			upstreamInput: "not_found",
-			serviceInput: "s2",
-			scriptInput: "",
-			called: false,
+			wantRet:     &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr:     fmt.Errorf("upstream id: not_found not found"),
+			upstreamErr: data.ErrNotFound,
+			called:      false,
 		},
 		{
 			caseDesc: "create route failed, upstream store get error",
 			giveInput: &entity.Route{
-				BaseInfo:entity.BaseInfo{
-					ID: "s2",
-					CreateTime:1609746531,
+				BaseInfo: entity.BaseInfo{
+					ID:         "s2",
+					CreateTime: 1609746531,
 				},
-				Name: "s1",
-				Desc: "test_route",
+				Name:       "s1",
+				Desc:       "test_route",
 				UpstreamID: "error",
-				ServiceID: "s2",
-				Script: "",
+				ServiceID:  "s2",
+				Script:     "",
 				Labels: map[string]string{
 					"version": "v1",
 				},
 			},
-			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			wantErr: fmt.Errorf("upstream error"),
-			upstreamInput: "error",
-			serviceInput: "s2",
-			scriptInput: "",
-			called: false,
+			wantRet:     &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr:     errors.New("upstream error"),
+			upstreamErr: errors.New("upstream error"),
+			called:      false,
 		},
 		{
 			caseDesc: "create route failed, script create error",
 			giveInput: &entity.Route{
-				BaseInfo:entity.BaseInfo{
-					ID: "s2",
-					CreateTime:1609746531,
+				BaseInfo: entity.BaseInfo{
+					ID:         "s2",
+					CreateTime: 1609746531,
 				},
-				Name: "s1",
-				Desc: "test_route",
+				Name:       "s1",
+				Desc:       "test_route",
 				UpstreamID: "u1",
-				ServiceID: "s2",
-				Script: "",
+				ServiceID:  "s2",
+				Script:     "",
 				Labels: map[string]string{
 					"version": "v1",
 				},
 			},
-			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			wantErr: fmt.Errorf("upstream error"),
-			upstreamInput: "u1",
-			serviceInput: "s2",
-			scriptInput: "",
-			called: false,
+			wantRet:    &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr:    fmt.Errorf("upstream error"),
+			serviceErr: fmt.Errorf("upstream error"),
+			called:     false,
 		},
-
-		// TODO: test script
+		{
+			caseDesc: "create route success with script",
+			giveInput: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "s1",
+					CreateTime: 1609746531,
+				},
+				Name:       "s1",
+				Desc:       "test_route",
+				UpstreamID: "u1",
+				ServiceID:  "s1",
+				Script:     scriptMap,
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
+			mockInput: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "s1",
+					CreateTime: 1609746531,
+				},
+				Name:       "s1",
+				Desc:       "test_route",
+				UpstreamID: "u1",
+				ServiceID:  "s1",
+				Script:     luaCode,
+				ScriptID:   "s1",
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
+			serviceRet:  "service",
+			serviceErr:  nil,
+			upstreamRet: "upstream",
+			upstreamErr: nil,
+			scriptRet:   "script",
+			scriptErr:   nil,
+			wantRet:     nil,
+			wantErr:     nil,
+			called:      true,
+		},
 	}
 
 	for _, tc := range tests {
-		t.Run(tc.caseDesc, func(t *testing.T){
+		t.Run(tc.caseDesc, func(t *testing.T) {
 			getCalled := false
 
 			mStore := &store.MockInterface{}
-			mStore.On("Create", mock.Anything, mock.Anything).Run(func(args mock.Arguments){
-				id := args.Get(1).(*entity.Route)
-				assert.Equal(t, tc.giveInput, id)
-			})
-			h := Handler{svcStore: genServiceStore(t, tc.serviceInput),
-				         upstreamStore: genUpstreamStore(t, tc.upstreamInput),
-			             scriptStore: genScriptStore(t, tc.scriptInput),
-			             routeStore: mStore}
+			mStore.On("Create", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				route := args.Get(1).(*entity.Route)
+				assert.Equal(t, tc.mockInput, route)
+			}).Return(tc.mockRet, tc.mockErr)
+
+			svcStore := &store.MockInterface{}
+			svcStore.On("Get", mock.Anything, mock.Anything).Return(tc.serviceRet, tc.serviceErr)
+
+			uStore := &store.MockInterface{}
+			uStore.On("Get", mock.Anything, mock.Anything).Return(tc.upstreamRet, tc.upstreamErr)
+
+			scriptStore := &store.MockInterface{}
+			scriptStore.On("Create", mock.Anything, mock.Anything).Return(tc.scriptRet, tc.serviceErr)
+
+			h := Handler{routeStore: mStore, svcStore: svcStore, upstreamStore: uStore, scriptStore: scriptStore}
 
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 			ret, err := h.Create(ctx)
-			assert.Equal(t, tc.giveInput, getCalled, ret)
-			assert.Equal(t, tc.wantRet, tc.wantErr, err)
+			assert.Equal(t, tc.called, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
 		})
 	}
 }
 
 func TestRoute_Update(t *testing.T) {
-	giveInput := &entity.Route{
-		BaseInfo: entity.BaseInfo{
-			ID: "r1",
-			CreateTime: 1609746531,
-		},
-		Name: "s1",
-		Desc: "test_route",
-		UpstreamID: "u1",
-		Script: "",
-		Labels: map[string]string{
-			"version": "v1",
-		},
-	}
+	luaScript := "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M"
+	scriptMap := make(map[string]interface{})
+	err := json.Unmarshal([]byte(DagScript), &scriptMap)
+	assert.Nil(t, err)
 
+	luaCode, err := generateLuaCode(scriptMap)
+	assert.Nil(t, err)
 	tests := []testCase{
 		{
-			caseDesc:  "update script",
+			caseDesc: "update success with script",
 			giveInput: &UpdateInput{
 				ID: "r1",
-				Route:entity.Route{
-					Name: "r1",
-					Desc: "updated route",
+				Route: entity.Route{
+					Name:       "r1",
+					Desc:       "updated route",
 					UpstreamID: "u2",
-					Script: "",
+					Script:     luaScript,
+					ServiceID:  "s1",
 					Labels: map[string]string{
-						"version":"v2",
+						"version": "v2",
 					},
 				},
 			},
-			mockInput: &entity.Service{
+			mockInput: &entity.Route{
 				BaseInfo: entity.BaseInfo{
-					ID: "s1",
+					ID: "r1",
 				},
-				Name:       "s1",
-				UpstreamID: "u1",
-				Desc:       "test service",
+				Name:       "r1",
+				Desc:       "updated route",
+				UpstreamID: "u2",
+				Script:     luaScript,
+				ScriptID:   "r1",
+				ServiceID:  "s1",
+				Labels: map[string]string{
+					"version": "v2",
+				},
 			},
-			mockErr: nil,
-			upstreamInput: "u1",
+			mockErr:      nil,
 			serviceInput: "s2",
-			scriptInput:  "",
-			called: true,
+			called:       true,
+		},
+		{
+			caseDesc: "update success with script map",
+			giveInput: &UpdateInput{
+				ID: "r1",
+				Route: entity.Route{
+					Name:       "r1",
+					Desc:       "updated route",
+					UpstreamID: "u2",
+					Script:     scriptMap,
+					ServiceID:  "s1",
+					Labels: map[string]string{
+						"version": "v2",
+					},
+				},
+			},
+			mockInput: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID: "r1",
+				},
+				Name:       "r1",
+				Desc:       "updated route",
+				UpstreamID: "u2",
+				Script:     luaCode,
+				ScriptID:   "r1",
+				ServiceID:  "s1",
+				Labels: map[string]string{
+					"version": "v2",
+				},
+			},
+			mockErr:      nil,
+			serviceInput: "s2",
+			called:       true,
 		},
 		{
 			caseDesc: "update failed, different id",
@@ -671,99 +1014,74 @@ func TestRoute_Update(t *testing.T) {
 					BaseInfo: entity.BaseInfo{
 						ID: "r2",
 					},
-					Name:       "s1",
+					Name:       "test_route",
 					UpstreamID: "u1",
 					Desc:       "test service",
 				},
 			},
 			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
 			wantErr: fmt.Errorf("ID on path (r1) doesn't match ID on body (r2)"),
-			called: true,
+			called:  false,
 		},
 		{
 			caseDesc: "update failed, service not found",
 			giveInput: &UpdateInput{
-				ID:"r1",
+				ID: "r1",
 				Route: entity.Route{
 					BaseInfo: entity.BaseInfo{
-						ID:"r1",
+						ID: "r1",
 					},
-					Name: "test route",
-					ServiceID: "not_found",
+					Name:       "test route",
+					ServiceID:  "not_found",
 					UpstreamID: "u1",
 				},
 			},
-			wantRet:  &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			wantErr: fmt.Errorf("service id: not_found not found"),
-		},
-		{
-			caseDesc: "update failed, service return error",
-			giveInput: &UpdateInput{
-				ID:"r1",
-				Route: entity.Route{
-					BaseInfo:entity.BaseInfo{
-						ID:"r1",
-					},
-					Name: "test route",
-					ServiceID: "error",
-					UpstreamID: "u1",
-				},
-			},
-			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			wantErr: fmt.Errorf("service error"),
+			wantRet:    &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr:    fmt.Errorf("service id: not_found not found"),
+			serviceErr: data.ErrNotFound,
+			called:     false,
 		},
 		{
 			caseDesc: "update failed, upstream not found",
 			giveInput: &UpdateInput{
 				ID: "r1",
 				Route: entity.Route{
-					Name:       "s1",
+					Name:       "test_route",
 					UpstreamID: "not_found",
+					ServiceID:  "s1",
 					Desc:       "test route",
 				},
 			},
-			wantRet:       &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			wantErr:       fmt.Errorf("upstream id: not_found not found"),
-			called: false,
-		},
-		{
-			caseDesc: "update failed, upstream return error",
-			giveInput: &UpdateInput{
-				ID: "r1",
-				Route: entity.Route{
-					Name:       "r1",
-					UpstreamID: "error",
-					Desc:       "test route",
-				},
-			},
-			wantErr:       fmt.Errorf("unknown error"),
-			wantRet:       &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			upstreamInput: "error",
-			called: false,
+			wantRet:     &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr:     fmt.Errorf("upstream id: not_found not found"),
+			serviceRet:  "service",
+			upstreamErr: data.ErrNotFound,
+			called:      false,
 		},
 		{
 			caseDesc: "update failed, route return error",
 			giveInput: &UpdateInput{
-				ID:"r1",
+				ID: "r1",
 				Route: entity.Route{
-					Name:"r1",
+					Name: "r1",
 					Desc: "test route",
 				},
 			},
 			mockInput: &entity.Route{
-				Name:"r1",
+				BaseInfo: entity.BaseInfo{
+					ID: "r1",
+				},
+				Name: "r1",
 				Desc: "test route",
 			},
-			mockErr: fmt.Errorf("route update error"),
-			wantErr: fmt.Errorf("route update error"),
-			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			upstreamInput: "u1",
+			mockErr:      fmt.Errorf("route update error"),
+			wantErr:      fmt.Errorf("route update error"),
+			wantRet:      &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError},
+			serviceRet:   "service",
+			upstreamRet:  "upstream",
 			serviceInput: "s1",
-			scriptInput: "",
-			called: true,
+			called:       true,
 		},
-
-		// TODO: test script
 	}
 
 	for _, tc := range tests {
@@ -771,22 +1089,27 @@ func TestRoute_Update(t *testing.T) {
 			getCalled := false
 			routeStore := &store.MockInterface{}
 
-			routeStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments){
+			routeStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				getCalled = true
-				input  := args.Get(1).(*entity.Route)
+				input := args.Get(1).(*entity.Route)
 				createIfNotExist := args.Get(2).(bool)
 				assert.Equal(t, tc.mockInput, input)
 				assert.True(t, createIfNotExist)
-			})
+			}).Return(tc.mockRet, tc.mockErr)
 
-			upstreamStore := genUpstreamStore(t, tc.upstreamInput)
-			scriptStore := genScriptStore(t, tc.scriptInput)
-			serviceStore := genServiceStore(t, tc.serviceInput)
+			serviceStore := &store.MockInterface{}
+			serviceStore.On("Get", mock.Anything, mock.Anything).Return(tc.serviceRet, tc.serviceErr)
 
-			scriptStore.On("Create")
-			scriptStore.On("BatchDelete")
+			upstreamStore := &store.MockInterface{}
+			upstreamStore.On("Get", mock.Anything, mock.Anything).Return(tc.upstreamRet, tc.upstreamErr)
 
-			h := Handler{svcStore: serviceStore, upstreamStore: upstreamStore, scriptStore: scriptStore}
+			scriptStore := &store.MockInterface{}
+			scriptStore.On("Get", mock.Anything, mock.Anything).Return(tc.scriptRet, tc.scriptErr)
+			scriptStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Return(luaScript, nil)
+
+			h := Handler{svcStore: serviceStore, upstreamStore: upstreamStore, scriptStore: scriptStore,
+				routeStore: routeStore}
+
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 			ret, err := h.Update(ctx)
@@ -797,17 +1120,18 @@ func TestRoute_Update(t *testing.T) {
 	}
 }
 
-// Todo: wait for patch fix
-/*
-func TestService_Patch(t *testing.T) {
-	existService := &entity.Service{
+func TestRoute_Patch(t *testing.T) {
+	existRoute := &entity.Route{
 		BaseInfo: entity.BaseInfo{
-			ID:         "s1",
+			ID:         "r1",
 			CreateTime: 1609340491,
 			UpdateTime: 1609340491,
 		},
-		Name:            "exist_service",
-		UpstreamID:      "u1",
+		Name:       "exist_service",
+		UpstreamID: "u1",
+		Upstream: &entity.UpstreamDef{
+			Key: "key",
+		},
 		EnableWebsocket: false,
 		Labels: map[string]string{
 			"version": "v1",
@@ -820,306 +1144,291 @@ func TestService_Patch(t *testing.T) {
 				"key":           "remote_addr",
 			},
 		},
+		Status: 1,
 	}
-	tests := []struct {
-		caseDesc     string
-		giveInput    *UpdateInput
-		giveErr      error
-		wantInput    *entity.Service
-		wantErr      error
-		wantRet      interface{}
-		serviceInput string
-		serviceRet   *entity.Service
-		serviceErr   error
-	}{
+
+	tests := []testCase{
 		{
-			caseDesc: "patch all success",
-			giveInput: &UpdateInput{
-				ID: "s1",
-				Service: entity.Service{
-					Name:            "patched success",
-					UpstreamID:      "u2",
-					EnableWebsocket: true,
-					Labels: map[string]string{
-						"version": "v1",
-						"build":   "16",
-					},
-					Plugins: map[string]interface{}{
-						"key-auth": map[string]interface{}{
-							"key": "auth-one",
-						},
-					},
-				},
+			caseDesc: "patch success",
+			giveInput: &PatchInput{
+				ID:      "r1",
+				SubPath: "",
+				Body:    []byte("{\"status\":0}"),
 			},
-			wantInput: &entity.Service{
-				Name:            "patched success",
-				UpstreamID:      "u2",
-				EnableWebsocket: true,
-				Labels: map[string]string{
-					"version": "v1",
-					"build":   "16",
+			mockInput: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "r1",
+					CreateTime: 1609340491,
+					UpdateTime: 1609340491,
 				},
-				Plugins: map[string]interface{}{
-					"limit-count": map[string]interface{}{
-						"count":         2,
-						"time_window":   60,
-						"rejected_code": 504,
-						"key":           "remote_addr",
-					},
-					"key-auth": map[string]interface{}{
-						"key": "auth-one",
-					},
+				Name:       "exist_service",
+				UpstreamID: "u1",
+				Upstream: &entity.UpstreamDef{
+					Key: "key",
 				},
-			},
-			serviceInput: "s1",
-			serviceRet:   existService,
-		},
-		{
-			caseDesc: "patch desc success",
-			giveInput: &UpdateInput{
-				ID: "s1/name",
-				Service: entity.Service{
-					Name: "patched success",
-				},
-			},
-			wantInput: &entity.Service{
-				Name:            "patched success",
-				UpstreamID:      "u2",
-				EnableWebsocket: true,
-				Labels: map[string]string{
-					"version": "v1",
-				},
-				Plugins: map[string]interface{}{
-					"limit-count": map[string]interface{}{
-						"count":         2,
-						"time_window":   60,
-						"rejected_code": 503,
-						"key":           "remote_addr",
-					},
-				},
-			},
-			serviceInput: "s1",
-			serviceRet:   existService,
-		},
-		{
-			caseDesc: "patch labels success",
-			giveInput: &UpdateInput{
-				ID: "s1/labels",
-				Service: entity.Service{
-					Labels: map[string]string{
-						"version": "v2",
-					},
-				},
-			},
-			wantInput: &entity.Service{
-				Name:            "patched success",
-				UpstreamID:      "u2",
-				EnableWebsocket: true,
-				Labels: map[string]string{
-					"version": "v2",
-				},
-				Plugins: map[string]interface{}{
-					"limit-count": map[string]interface{}{
-						"count":         2,
-						"time_window":   60,
-						"rejected_code": 503,
-						"key":           "remote_addr",
-					},
-				},
-			},
-			serviceInput: "s1",
-			serviceRet:   existService,
-		},
-		{
-			caseDesc: "patch enable_websocket success",
-			giveInput: &UpdateInput{
-				ID: "s1/enable_websocket",
-				Service: entity.Service{
-					EnableWebsocket: false,
-				},
-			},
-			wantInput: &entity.Service{
-				Name:            "patched success",
-				UpstreamID:      "u2",
 				EnableWebsocket: false,
 				Labels: map[string]string{
-					"version": "v2",
+					"version": "v1",
 				},
 				Plugins: map[string]interface{}{
 					"limit-count": map[string]interface{}{
-						"count":         2,
-						"time_window":   60,
-						"rejected_code": 503,
+						"count":         float64(2),
+						"time_window":   float64(60),
+						"rejected_code": float64(503),
 						"key":           "remote_addr",
 					},
 				},
+				Status: 0,
 			},
-			serviceInput: "s1",
-			serviceRet:   existService,
+			called: true,
 		},
 		{
-			caseDesc: "patch plugins success",
-			giveInput: &UpdateInput{
-				ID: "s1/plugins",
-				Service: entity.Service{
-					Plugins: map[string]interface{}{
-						"limit-count": map[string]interface{}{
-							"count":         2,
-							"time_window":   60,
-							"rejected_code": 504,
-							"key":           "remote_addr",
-						},
-					},
-				},
+			caseDesc: "patch success by path",
+			giveInput: &PatchInput{
+				ID:      "r1",
+				SubPath: "/status",
+				Body:    []byte("0"),
 			},
-			wantInput: &entity.Service{
-				Name:            "patched success",
-				UpstreamID:      "u2",
+			mockInput: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "r1",
+					CreateTime: 1609340491,
+					UpdateTime: 1609340491,
+				},
+				Name:       "exist_service",
+				UpstreamID: "u1",
+				Upstream: &entity.UpstreamDef{
+					Key: "key",
+				},
 				EnableWebsocket: false,
-				Labels: map[string]string{
-					"version": "v2",
-				},
-				Plugins: map[string]interface{}{
-					"limit-count": map[string]interface{}{
-						"count":         2,
-						"time_window":   60,
-						"rejected_code": 504,
-						"key":           "remote_addr",
-					},
-				},
-			},
-			serviceInput: "s1",
-			serviceRet:   existService,
-		},
-		{
-			caseDesc: "patch failed, service store get error",
-			giveInput: &UpdateInput{
-				ID: "s1",
-				Service: entity.Service{
-					Name: "test service",
-				},
-			},
-			serviceInput: "s1",
-			serviceErr:   fmt.Errorf("get error"),
-			wantRet:      handler.SpecCodeResponse(fmt.Errorf("get error")),
-			wantErr:      fmt.Errorf("get error"),
-		},
-		{
-			caseDesc: "patch failed, service store update error",
-			giveInput: &UpdateInput{
-				ID: "s1/name",
-				Service: entity.Service{
-					Name: "patched success",
-				},
-			},
-			giveErr: fmt.Errorf("update error"),
-			wantInput: &entity.Service{
-				Name:            "patched success",
-				UpstreamID:      "u2",
-				EnableWebsocket: true,
 				Labels: map[string]string{
 					"version": "v1",
 				},
 				Plugins: map[string]interface{}{
 					"limit-count": map[string]interface{}{
-						"count":         2,
-						"time_window":   60,
-						"rejected_code": 503,
+						"count":         float64(2),
+						"time_window":   float64(60),
+						"rejected_code": float64(503),
 						"key":           "remote_addr",
 					},
 				},
+				Status: 0,
 			},
-			serviceInput: "s1",
-			serviceRet:   existService,
-			wantRet:      handler.SpecCodeResponse(fmt.Errorf("update error")),
-			wantErr:      fmt.Errorf("update error"),
+			called: true,
+		},
+		{
+			caseDesc: "patch failed, path error",
+			giveInput: &PatchInput{
+				ID:      "r1",
+				SubPath: "error",
+				Body:    []byte("0"),
+			},
+			wantRet: handler.SpecCodeResponse(
+				errors.New("add operation does not apply: doc is missing path: \"error\": missing value")),
+			wantErr: errors.New("add operation does not apply: doc is missing path: \"error\": missing value"),
 		},
 	}
 	for _, tc := range tests {
 		t.Run(tc.caseDesc, func(t *testing.T) {
 			getCalled := false
-			serviceStore := &store.MockInterface{}
-			serviceStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+
+			routeStore := &store.MockInterface{}
+			routeStore.On("Get", mock.Anything, mock.Anything).Return(existRoute, nil)
+			routeStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				getCalled = true
-				input := args.Get(1).(*entity.Service)
+				input := args.Get(1).(*entity.Route)
 				createIfNotExist := args.Get(2).(bool)
-				assert.Equal(t, tc.wantInput, input)
+				assert.Equal(t, tc.mockInput, input)
 				assert.False(t, createIfNotExist)
-			}).Return(tc.giveErr)
-			serviceStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
-				input := args.Get(0).(string)
-				assert.Equal(t, tc.serviceInput, input)
-			}).Return(tc.serviceRet, tc.serviceErr)
-			h := Handler{serviceStore: serviceStore}
+			}).Return(tc.mockRet, tc.mockErr)
+			h := Handler{routeStore: routeStore}
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 			ret, err := h.Patch(ctx)
-			assert.True(t, getCalled)
+			assert.Equal(t, tc.called, getCalled)
 			assert.Equal(t, tc.wantRet, ret)
-			assert.Equal(t, tc.wantErr, err)
+			if tc.wantErr != nil && err != nil {
+				assert.Error(t, tc.wantErr.(error), err.Error())
+			} else {
+				assert.Equal(t, tc.wantErr, err)
+			}
 		})
 	}
 }
-*/
 
-func TestServices_Delete(t *testing.T) {
-	tests := []testCase {
+func TestRoute_Delete(t *testing.T) {
+	tests := []testCase{
 		{
 			caseDesc: "delete success",
 			giveInput: &BatchDelete{
 				IDs: "r1",
 			},
-			mockInput: []string{"s1"},
-			called: true,
+			mockInput: []string{"r1"},
+			called:    true,
 		},
 		{
 			caseDesc: "batch delete success",
 			giveInput: &BatchDelete{
-				IDs: "s1,s2",
+				IDs: "r1,r2",
 			},
-			mockInput: []string{"s1", "s2"},
-			called: true,
+			mockInput: []string{"r1", "r2"},
+			called:    true,
 		},
 		{
-			caseDesc: "delete failed",
+			caseDesc: "delete failed, route delete error",
 			giveInput: &BatchDelete{
-				IDs: "s1",
+				IDs: "r1",
 			},
-			mockInput: []string{"s1"},
+			mockInput: []string{"r1"},
 			mockErr:   fmt.Errorf("delete error"),
 			wantRet:   handler.SpecCodeResponse(fmt.Errorf("delete error")),
 			wantErr:   fmt.Errorf("delete error"),
-			called: true,
+			called:    true,
+		},
+		{
+			caseDesc: "delete failed, script delete error",
+			giveInput: &BatchDelete{
+				IDs: "r1",
+			},
+			mockInput: []string{"r1"},
+			scriptErr: fmt.Errorf("delete error"),
+			wantRet:   nil,
+			wantErr:   nil,
+			called:    true,
 		},
 	}
 
 	for _, tc := range tests {
 		t.Run(tc.caseDesc, func(t *testing.T) {
 			getCalled := false
-			serviceStore := &store.MockInterface{}
-			serviceStore.On("BatchDelete", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			routeStore := &store.MockInterface{}
+			routeStore.On("BatchDelete", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				getCalled = true
 				input := args.Get(1).([]string)
 				assert.Equal(t, tc.mockInput, input)
 			}).Return(tc.mockErr)
 
-			h := Handler{routeStore: serviceStore}
+			scriptStore := &store.MockInterface{}
+			scriptStore.On("BatchDelete", mock.Anything, mock.Anything).Return(tc.serviceRet, tc.scriptErr)
+
+			h := Handler{routeStore: routeStore, scriptStore: scriptStore}
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 			ret, err := h.BatchDelete(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			if tc.wantErr != nil && err != nil {
+				assert.Error(t, tc.wantErr.(error), err.Error())
+			} else {
+				assert.Equal(t, tc.wantErr, err)
+			}
+		})
+	}
+}
+
+func TestRoute_Exist(t *testing.T) {
+	mockData := []*entity.Route{
+		{
+			BaseInfo: entity.BaseInfo{ID: "001", CreateTime: 1609742634},
+			Name:     "r1",
+			URI:      "/test_r1",
+			Labels: map[string]string{
+				"version": "v1",
+				"build":   "16",
+			},
+			Upstream: &entity.UpstreamDef{
+				Nodes: []interface{}{
+					map[string]interface{}{
+						"host":   "39.97.63.215",
+						"port":   float64(80),
+						"weight": float64(1),
+					},
+				},
+			},
+		},
+		{
+			BaseInfo: entity.BaseInfo{ID: "002", CreateTime: 1609742635},
+			Name:     "r2",
+			URI:      "/test_r2",
+			Labels: map[string]string{
+				"version": "v1",
+				"build":   "16",
+			},
+		},
+		{
+			BaseInfo: entity.BaseInfo{ID: "003", CreateTime: 1609742636},
+			Name:     "route_test",
+			URI:      "/test_route_test",
+			Labels: map[string]string{
+				"version": "v2",
+				"build":   "17",
+			},
+		},
+	}
+
+	tests := []testCase{
+		{
+			caseDesc: "check route exist, excluded",
+			giveInput: &ExistCheckInput{
+				Name:    "r1",
+				Exclude: "001",
+			},
+			wantRet: nil,
+			called:  true,
+		},
+		{
+			caseDesc: "check route exist, not excluded",
+			giveInput: &ExistCheckInput{
+				Name:    "r1",
+				Exclude: "002",
+			},
+			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr: consts.InvalidParam("Route name is reduplicate"),
+			called:  true,
+		},
+		{
+			caseDesc: "check route exist, not existed",
+			giveInput: &ExistCheckInput{
+				Name:    "r3",
+				Exclude: "001",
+			},
+			wantRet: nil,
+			wantErr: nil,
+			called:  true,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := false
+			routeStore := &store.MockInterface{}
+			routeStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				var res []interface{}
+				for _, c := range mockData {
+					if input.Predicate(c) {
+						if input.Format != nil {
+							res = append(res, input.Format(c))
+						} else {
+							res = append(res, c)
+						}
+					}
+				}
+
+				return &store.ListOutput{
+					Rows:      res,
+					TotalSize: len(res),
+				}
+			}, nil)
+
+			h := Handler{routeStore: routeStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.Exist(ctx)
 			assert.True(t, getCalled)
 			assert.Equal(t, tc.wantRet, ret)
 			assert.Equal(t, tc.wantErr, err)
 		})
 	}
 }
-
-func TestRoute_Exist(t *testing.T) {
-	tests := []testCase{
-		{
-			caseDesc: "exist "
-		},
-	}
-
-}
-

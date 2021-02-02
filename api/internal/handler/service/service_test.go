@@ -19,6 +19,7 @@ package service
 
 import (
 	"encoding/json"
+	"strings"
 	"testing"
 	"time"
 
@@ -68,8 +69,11 @@ func TestService(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), service)
 	assert.Nil(t, err)
 	ctx.SetInput(service)
-	_, err = handler.Create(ctx)
+	ret, err := handler.Create(ctx)
 	assert.Nil(t, err)
+	objRet, ok := ret.(*entity.Service)
+	assert.True(t, ok)
+	assert.Equal(t, "1", objRet.ID)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -78,7 +82,7 @@ func TestService(t *testing.T) {
 	input := &GetInput{}
 	input.ID = "1"
 	ctx.SetInput(input)
-	ret, err := handler.Get(ctx)
+	ret, err = handler.Get(ctx)
 	stored := ret.(*entity.Service)
 	assert.Nil(t, err)
 	assert.Equal(t, stored.ID, service.ID)
@@ -109,8 +113,13 @@ func TestService(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), service2)
 	assert.Nil(t, err)
 	ctx.SetInput(service2)
-	_, err = handler.Update(ctx)
+	ret, err = handler.Update(ctx)
 	assert.Nil(t, err)
+	// Check the returned value
+	objRet, ok = ret.(*entity.Service)
+	assert.True(t, ok)
+	assert.Equal(t, service2.ID, objRet.ID)
+	assert.Equal(t, service2.Name, objRet.Name)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -173,8 +182,11 @@ func TestService(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), service11)
 	assert.Nil(t, err)
 	ctx.SetInput(service11)
-	_, err = handler.Create(ctx)
+	ret, err = handler.Create(ctx)
 	assert.Nil(t, err)
+	objRet, ok = ret.(*entity.Service)
+	assert.True(t, ok)
+	assert.Equal(t, "11", objRet.ID)
 
 	//sleep
 	time.Sleep(time.Duration(100) * time.Millisecond)
@@ -207,3 +219,73 @@ func TestService(t *testing.T) {
 	assert.Nil(t, err)
 
 }
+
+func TestService_Patch_Update(t *testing.T) {
+	//create
+	handler := &Handler{
+		serviceStore: store.GetStore(store.HubKeyService),
+	}
+	ctx := droplet.NewContext()
+	service := &entity.Service{}
+	reqBody := `{
+		"id": "3",
+		"name": "testservice",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "172.16.238.20",
+				"port": 1980,
+				"weight": 1
+			}]
+		}
+	}`
+	err := json.Unmarshal([]byte(reqBody), service)
+	assert.Nil(t, err)
+	ctx.SetInput(service)
+	ret, err := handler.Create(ctx)
+	assert.Nil(t, err)
+	objRet, ok := ret.(*entity.Service)
+	assert.True(t, ok)
+	assert.Equal(t, "3", objRet.ID)
+
+	//sleep
+	time.Sleep(time.Duration(20) * time.Millisecond)
+
+	reqBody1 := `{
+		"id": "3",
+		"name": "testpatch",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "172.16.238.20",
+				"port": 1981,
+				"weight": 1
+			}]
+		}
+	}`
+	responesBody := `"nodes":[{"host":"172.16.238.20","port":1981,"weight":1}],"type":"roundrobin"}`
+
+	input2 := &PatchInput{}
+	input2.ID = "3"
+	input2.SubPath = ""
+	input2.Body = []byte(reqBody1)
+	ctx.SetInput(input2)
+
+	ret2, err := handler.Patch(ctx)
+	assert.Nil(t, err)
+	_ret2, err := json.Marshal(ret2)
+	assert.Nil(t, err)
+	isContains := strings.Contains(string(_ret2), responesBody)
+	assert.True(t, isContains)
+
+	//delete test data
+	inputDel2 := &BatchDelete{}
+	reqBody = `{"ids": "3"}`
+	err = json.Unmarshal([]byte(reqBody), inputDel2)
+	assert.Nil(t, err)
+	ctx.SetInput(inputDel2)
+	_, err = handler.BatchDelete(ctx)
+	assert.Nil(t, err)
+
+}
+

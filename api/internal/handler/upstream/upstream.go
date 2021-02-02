@@ -17,11 +17,11 @@
 package upstream
 
 import (
+	"encoding/json"
 	"net/http"
 	"reflect"
 	"strings"
 
-	"github.com/api7/go-jsonpatch"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
@@ -31,6 +31,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
@@ -56,12 +57,16 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.PUT("/apisix/admin/upstreams/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
 	r.PATCH("/apisix/admin/upstreams/:id", wgin.Wraps(h.Patch,
-		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
+	r.PATCH("/apisix/admin/upstreams/:id/*path", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
 	r.DELETE("/apisix/admin/upstreams/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
-	r.GET("/apisix/admin/notexist/upstreams", consts.ErrorWrapper(Exist))
-	r.GET("/apisix/admin/names/upstreams", consts.ErrorWrapper(listUpstreamNames))
+	r.GET("/apisix/admin/notexist/upstreams", wgin.Wraps(h.Exist,
+		wrapper.InputType(reflect.TypeOf(ExistCheckInput{}))))
+
+	r.GET("/apisix/admin/names/upstreams", wgin.Wraps(h.listUpstreamNames))
 }
 
 type GetInput struct {
@@ -71,7 +76,7 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.upstreamStore.Get(input.ID)
+	r, err := h.upstreamStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -124,7 +129,7 @@ type ListInput struct {
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	ret, err := h.upstreamStore.List(store.ListInput{
+	ret, err := h.upstreamStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			if input.Name != "" {
 				return strings.Contains(obj.(*entity.Upstream).Name, input.Name)
@@ -149,11 +154,12 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Upstream)
 
-	if err := h.upstreamStore.Create(c.Context(), input); err != nil {
+	ret, err := h.upstreamStore.Create(c.Context(), input)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type UpdateInput struct {
@@ -173,11 +179,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		input.Upstream.ID = input.ID
 	}
 
-	if err := h.upstreamStore.Update(c.Context(), &input.Upstream, true); err != nil {
+	ret, err := h.upstreamStore.Update(c.Context(), &input.Upstream, true)
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	return ret, nil
 }
 
 type BatchDelete struct {
@@ -194,43 +201,40 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	return nil, nil
 }
 
-func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*UpdateInput)
-	arr := strings.Split(input.ID, "/")
-	var subPath string
-	if len(arr) > 1 {
-		input.ID = arr[0]
-		subPath = arr[1]
-	}
+type PatchInput struct {
+	ID      string `auto_read:"id,path"`
+	SubPath string `auto_read:"path,path"`
+	Body    []byte `auto_read:"@body"`
+}
 
-	stored, err := h.upstreamStore.Get(input.ID)
+func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*PatchInput)
+	reqBody := input.Body
+	id := input.ID
+	subPath := input.SubPath
+
+	stored, err := h.upstreamStore.Get(c.Context(), id)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	var patch jsonpatch.Patch
-	if subPath != "" {
-		patch = jsonpatch.Patch{
-			Operations: []jsonpatch.PatchOperation{
-				{Op: jsonpatch.Replace, Path: subPath, Value: c.Input()},
-			},
-		}
-	} else {
-		patch, err = jsonpatch.MakePatch(stored, input.Upstream)
-		if err != nil {
-			return handler.SpecCodeResponse(err), err
-		}
-	}
+	res, err := utils.MergePatch(stored, subPath, reqBody)
 
-	if err := patch.Apply(&stored); err != nil {
+	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	if err := h.upstreamStore.Update(c.Context(), &stored, false); err != nil {
+	var upstream entity.Upstream
+	if err := json.Unmarshal(res, &upstream); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return nil, nil
+	ret, err := h.upstreamStore.Update(c.Context(), &upstream, false)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	return ret, nil
 }
 
 type ExistInput struct {
@@ -245,15 +249,18 @@ func toRows(list *store.ListOutput) []store.Row {
 	return rows
 }
 
-func Exist(c *gin.Context) (interface{}, error) {
-	//input := c.Input().(*ExistInput)
+type ExistCheckInput struct {
+	Name    string `auto_read:"name,query"`
+	Exclude string `auto_read:"exclude,query"`
+}
 
-	//temporary
-	name := c.Query("name")
-	exclude := c.Query("exclude")
+func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*ExistCheckInput)
+	name := input.Name
+	exclude := input.Exclude
 	routeStore := store.GetStore(store.HubKeyUpstream)
 
-	ret, err := routeStore.List(store.ListInput{
+	ret, err := routeStore.List(c.Context(), store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,
@@ -272,17 +279,18 @@ func Exist(c *gin.Context) (interface{}, error) {
 	if len(rows) > 0 {
 		r := rows[0].(*entity.Upstream)
 		if r.ID != exclude {
-			return nil, consts.InvalidParam("Upstream name is reduplicate")
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				consts.InvalidParam("Upstream name is reduplicate")
 		}
 	}
 
 	return nil, nil
 }
 
-func listUpstreamNames(c *gin.Context) (interface{}, error) {
+func (h *Handler) listUpstreamNames(c droplet.Context) (interface{}, error) {
 	routeStore := store.GetStore(store.HubKeyUpstream)
 
-	ret, err := routeStore.List(store.ListInput{
+	ret, err := routeStore.List(c.Context(), store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,

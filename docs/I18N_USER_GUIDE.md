@@ -45,7 +45,7 @@ the key can be like this : [basicModule].[moduleName].[elementName].[...desc]
 
 ## Global locale keys
 
-we have already defined many global keys, before you do i18n, you can refer to [those](https://github.com/apache/apisix-dashboard/blob/master/src/locales/zh-CN/component.ts).
+we have already defined many global keys, before you do i18n, you can refer to [those](https://github.com/apache/apisix-dashboard/blob/master/web/src/locales/zh-CN/component.ts).
 
 ## Recommended subkey naming
 

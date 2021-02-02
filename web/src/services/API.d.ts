@@ -15,19 +15,19 @@
  * limitations under the License.
  */
 declare namespace API {
-  export interface CurrentUser {
+  export type CurrentUser = {
     avatar?: string;
     name?: string;
     userid?: string;
     access?: 'user' | 'guest' | 'admin';
-  }
+  };
 
-  export interface LoginStateType {
+  export type LoginStateType = {
     status?: 'ok' | 'error';
     type?: string;
-  }
+  };
 
-  export interface NoticeIconData {
+  export type NoticeIconData = {
     avatar?: string | React.ReactNode;
     title?: React.ReactNode;
     description?: React.ReactNode;
@@ -36,5 +36,5 @@ declare namespace API {
     style?: React.CSSProperties;
     key?: string | number;
     read?: boolean;
-  }
+  };
 }

@@ -16,7 +16,8 @@
  */
 import React, { Fragment, useState, useEffect } from 'react';
 import { cloneDeep } from 'lodash';
-import { FlowChart, IFlowChartCallbacks } from '@mrblenny/react-flow-chart';
+import { FlowChart } from '@mrblenny/react-flow-chart';
+import type { IFlowChartCallbacks } from '@mrblenny/react-flow-chart';
 import * as actions from '@mrblenny/react-flow-chart/src/container/actions';
 import { Form, Input, Button, Divider, Card, Select } from 'antd';
 import { withTheme } from '@rjsf/core';
@@ -30,7 +31,7 @@ import { INIT_CHART, PLUGINS_PORTS, CONDITION_PORTS } from './constants';
 import { SMessage, SContent, SSidebar } from './DrawPluginStyle';
 import { PortCustom, NodeInnerCustom } from './customConfig';
 import { fetchList } from './service';
-import { PluginOrchestrationModule } from './typing';
+import type { PluginOrchestrationModule } from './typing';
 
 export * from './transform';
 
@@ -42,7 +43,7 @@ export enum PanelType {
 
 type Props = {
   data: any;
-  onChange(data: object): void;
+  onChange: (data: Record<string, unknown>) => void;
   readonly: boolean;
 };
 
@@ -113,17 +114,16 @@ const SelectedSidebar: React.FC<Props> = ({ data = {}, onChange, readonly = fals
 
   const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join('');
   useEffect(() => {
-    // eslint-disable-next-line no-shadow
-    fetchList().then((data) => {
+    fetchList().then((list) => {
       const categoryList: string[] = [];
-      data.forEach((item) => {
+      list.forEach((item) => {
         if (!categoryList.includes(firstUpperCase(item.type))) {
           categoryList.push(firstUpperCase(item.type));
         }
       });
       setTypeList(['All', ...categoryList.sort()]);
-      setPluginList(data);
-      setShowList(data.map((item) => item.name).sort());
+      setPluginList(list);
+      setShowList(list.map((item) => item.name).sort());
     });
   }, []);
 

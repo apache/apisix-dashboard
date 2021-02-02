@@ -36,7 +36,7 @@ help:
 ### build:		Build Apache APISIX Dashboard, it contains web and manager-api
 .PHONY: build
 build: web-default api-default
-	api/build.sh && cd ./web && export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true && yarn install && yarn build  && mkdir -p ../output/logs
+	api/build.sh && cd ./web && export CYPRESS_INSTALL_BINARY=0  && yarn install && yarn build  && mkdir -p ../output/logs
 
 
 .PHONY: web-default
@@ -55,21 +55,32 @@ ifeq ("$(wildcard $(GO_EXEC))", "")
 endif
 
 
+### dag-lib:            get dag-lib
+.PHONY: dag-lib
+dag-lib:
+ifeq ("$(wildcard api/dag-to-lua/dag-to-lua.lua)", "")
+	wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -P /tmp
+	tar -zxvf /tmp/v1.1.tar.gz -C /tmp
+	mkdir ./api/dag-to-lua
+	cp -r /tmp/dag-to-lua-1.1/lib/* ./api/dag-to-lua
+endif
+
+
 ### api-test:		Run the tests of manager-api
 .PHONY: api-test
-api-test: api-default
-	cd api/ && APISIX_API_WORKDIR=$$PWD go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
+api-test: api-default dag-lib
+	cd api/ && APISIX_API_WORKDIR=$$PWD ENV=test go test -v -count=1 -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
 
 
 ### api-run:		Run the manager-api
 .PHONY: api-run
 api-run: api-default
-	cd api/ && go run ./cmd/manager
+	api/build.sh --dry-run
+
 
 ### api-stop:		Stop the manager-api
 api-stop:
-	kill $(ps aux | grep 'manager-api' | awk '{print $2}')
-
+	cd api && go run -ldflags "${GOLDFLAGS}" ./cmd/manager stop
 
 ### go-lint:		Lint Go source code
 .PHONY: go-lint
@@ -95,6 +106,7 @@ endif
 .PHONY: release-src
 release-src:
 	git clean -Xdf
+	rm -f ./.githash && git log --pretty=format:"%h" -1 > ./.githash
 	tar -zcvf $(RELEASE_SRC).tgz \
 	--exclude .github \
 	--exclude .git \

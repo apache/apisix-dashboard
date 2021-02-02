@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 declare namespace Setting {
-  interface GrafanaConfig {
+  type GrafanaConfig = {
     grafanaURL: string;
-  }
+  };
 }
