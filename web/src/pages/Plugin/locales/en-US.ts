@@ -15,5 +15,5 @@
  * limitations under the License.
  */
 export default {
-  'page.plugin.drawer.popconfirm.title.delete': 'Are you sure you want to delete all data from this plugin?',
+  'page.plugin.drawer.popconfirm.title.delete': 'Are you sure to delete this item?',
 };
