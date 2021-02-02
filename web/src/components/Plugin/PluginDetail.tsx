@@ -35,9 +35,7 @@ import { LinkOutlined } from '@ant-design/icons';
 import Ajv from 'ajv';
 import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
-import { omit } from 'lodash';
 
-import { createOrUpdate } from '@/pages/Plugin/service';
 import { fetchSchema } from './service';
 
 type Props = {
@@ -86,8 +84,8 @@ const PluginDetail: React.FC<Props> = ({
   pluginList = [],
   readonly = false,
   initialData = {},
-  onClose = () => { },
-  onChange = () => { },
+  onClose = () => {},
+  onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
@@ -184,14 +182,11 @@ const PluginDetail: React.FC<Props> = ({
                 okText={formatMessage({ id: 'component.global.confirm' })}
                 cancelText={formatMessage({ id: 'component.global.cancel' })}
                 onConfirm={() => {
-                  const plugins = omit(initialData, [`${name}`]);
-                  createOrUpdate({ plugins }).then((value) => {
-                    onChange({ formData: plugins, codemirrorData: value });
-                  });
+                  onChange({ formData: form.getFieldsValue(), codemirrorData: {}, shouldDelete: true });
                 }}
               >
                 {
-                  initialData[name] && !initialData[name].disable
+                  initialData[name]
                     ? <Button
                       key={3}
                       type="primary"
