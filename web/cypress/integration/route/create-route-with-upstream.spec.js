@@ -25,6 +25,7 @@ context('Create Route with Upstream', () => {
     description: '#desc',
     search_name: '[title=Name]',
     custom_upstream: '[title=Custom]',
+    select_upstream: '[data-cy=select_upstream]'
   };
 
   const data = {
@@ -64,7 +65,9 @@ context('Create Route with Upstream', () => {
   });
 
   it('should disable Upstream input boxes after selecting an existing upstream', () => {
+    cy.get(domSelector.select_upstream).click();
     cy.contains('Custom').click();
+    cy.get(domSelector.select_upstream).click();
     cy.contains(data.upstream_name).click();
     cy.get(domSelector.input).should('be.disabled');
   });
