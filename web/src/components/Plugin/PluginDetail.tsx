@@ -184,7 +184,7 @@ const PluginDetail: React.FC<Props> = ({
                 okText={formatMessage({ id: 'component.global.confirm' })}
                 cancelText={formatMessage({ id: 'component.global.cancel' })}
                 onConfirm={() => {
-                  const plugins = omit(initialData, [`${name}`]);
+                  const plugins = omit(initialData, name);
                   createOrUpdate({ plugins }).then((value) => {
                     onChange({ formData: plugins, codemirrorData: value });
                   });
