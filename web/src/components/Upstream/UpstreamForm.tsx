@@ -632,7 +632,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             name="upstream_id"
           >
             <Select
-              data-cy='select_upstream'
+              data-cy='upstream_selector'
               disabled={disabled}
               onChange={(upstream_id) => {
                 setReadonly(Boolean(upstream_id));
