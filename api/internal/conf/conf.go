@@ -42,7 +42,7 @@ const (
 var (
 	ENV              string
 	Schema           gjson.Result
-	WorkDir          = "."
+	WorkDir          = "../api/"
 	ServerHost       = "127.0.0.1"
 	ServerPort       = 80
 	ETCDConfig       *Etcd
@@ -54,6 +54,7 @@ var (
 	SSLDefaultStatus = 1 //enable ssl by default
 	ImportSizeLimit  = 10 * 1024 * 1024
 	PIDPath          = "/tmp/manager-api.pid"
+	FilePathSet		 = "conf/conf.yaml"
 )
 
 type Etcd struct {
@@ -123,7 +124,7 @@ func InitConf() {
 }
 
 func setConf() {
-	filePath := WorkDir + "/conf/conf.yaml"
+	filePath := WorkDir + FilePathSet
 	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
 	} else {
@@ -199,7 +200,7 @@ func initAuthentication(conf Authentication) {
 }
 
 func initSchema() {
-	filePath := WorkDir + "/conf/schema.json"
+	filePath := WorkDir + "conf/schema.json"
 	if schemaContent, err := ioutil.ReadFile(filePath); err != nil {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
 	} else {

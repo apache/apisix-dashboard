@@ -131,9 +131,9 @@ func NewManagerAPICommand() *cobra.Command {
 		},
 	}
 
-	cmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
-
-	cmd.AddCommand(newStopCommand())
+	cmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", conf.WorkDir, "current work directory")
+	cmd.PersistentFlags().StringVarP(&conf.FilePathSet, "filepath","c", conf.FilePathSet, "Config file path")
+	cmd.AddCommand(newStopCommand()) 
 	return cmd
 }
 
