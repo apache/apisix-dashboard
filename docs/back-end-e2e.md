@@ -78,7 +78,8 @@ This document describes how to use E2E test locally.
 
 1. [install docker-compose](https://docs.docker.com/compose/install/)
 
-**NOTE:** To run docker compose locally, you need to modify ./api/conf/conf.yaml 'host' and 'endpoints' configuration in the file
+**NOTE:** To run docker compose locally, you need to modify `./api/conf/conf.yaml` `host` and `endpoints` configuration in the file
+
    ```sh
    listen:
       host: 0.0.0.0
