@@ -785,7 +785,7 @@ func TestService_Patch(t *testing.T) {
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 			ret, err := h.Patch(ctx)
-			assert.True(t, tc.called, getCalled)
+			assert.Equal(t, tc.called, getCalled)
 			assert.Equal(t, tc.wantRet, ret)
 			assert.Equal(t, tc.wantErr, err)
 		})
