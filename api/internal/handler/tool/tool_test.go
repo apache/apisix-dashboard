@@ -31,7 +31,7 @@ func TestInfo_Get(t *testing.T) {
 
 	hash, version := utils.GetHashAndVersion()
 
-	ret, err := h.Info(ctx)
+	ret, err := h.Version(ctx)
 	assert.Nil(t, err)
 	assert.Equal(t, &InfoOutput{
 		Hash:    hash,

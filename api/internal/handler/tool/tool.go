@@ -38,10 +38,10 @@ func NewHandler() (handler.RouteRegister, error) {
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.GET("/info", wgin.Wraps(h.Info))
+	r.GET("/version", wgin.Wraps(h.Version))
 }
 
-func (h *Handler) Info(c droplet.Context) (interface{}, error) {
+func (h *Handler) Version(_ droplet.Context) (interface{}, error) {
 	hash, version := utils.GetHashAndVersion()
 	return &InfoOutput{
 		Hash:    hash,
