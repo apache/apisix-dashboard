@@ -42,7 +42,7 @@ const (
 var (
 	ENV              string
 	Schema           gjson.Result
-	WorkDir          = "../api"
+	WorkDir          = "."
 	ServerHost       = "127.0.0.1"
 	ServerPort       = 80
 	ETCDConfig       *Etcd
@@ -124,7 +124,10 @@ func InitConf() {
 }
 
 func setConf() {
-	filePath := WorkDir + FilePathSet
+	filePath := WorkDir +  FilePathSet
+	if(FilePathSet != "/conf/conf.yaml"){
+		filePath = FilePathSet
+	}
 	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
 	} else {
