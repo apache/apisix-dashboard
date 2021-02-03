@@ -128,8 +128,8 @@ services:
   apisix:
     hostname: apisix_server1
     build:
-      context: ../../
-      dockerfile: test/docker/Dockerfile-apisix
+      context: https://github.com/apache/apisix-docker.git#master:alpine-dev/
+      dockerfile: Dockerfile
       args:
         - APISIX_VERSION=master
     restart: always
@@ -153,8 +153,8 @@ services:
   apisix2:
     hostname: apisix_server2
     build:
-      context: ../../
-      dockerfile: test/docker/Dockerfile-apisix
+      context: https://github.com/apache/apisix-docker.git#master:alpine-dev/
+      dockerfile: Dockerfile
       args:
         - APISIX_VERSION=master
     restart: always
