@@ -23,7 +23,7 @@ COPY ./ ./
 
 RUN mkdir -p /go/manager-api/conf \
     && mkdir -p /go/manager-api/build-tools \
-    && go test -c -cover -covermode=atomic -o /go/manager-api/manager-api -coverpkg "./..." ./cmd/manager \
+    && go test -c -cover -covermode=atomic -ldflags "-X internal/utils.version=master -X internal/utils.gitHash=hash_test" -o /go/manager-api/manager-api -coverpkg "./..." ./cmd/manager \
     && mv /go/src/github.com/apisix/manager-api/entry.sh /go/manager-api/ \
     && mv /go/src/github.com/apisix/manager-api/build-tools/* /go/manager-api/build-tools/ \
     && mv /go/src/github.com/apisix/manager-api/conf/conf.yaml /go/manager-api/conf/conf.yaml \
