@@ -288,6 +288,16 @@ if [ "$respCode" != "0" ] || [ $respMessage != "\"\"" ]; then
     exit 1
 fi
 
-./manager-api stop
+# check the version api
+resp=$(curl http://127.0.0.1:9000/apisix/admin/tool/version)
+if [[ `grep -c "${VERSION}" ${resp}` -ne '1' ]]; then
+    echo "failed: can't through api to get version info"
+    exit 1
+fi
+
+if [[ `grep -c "${GITHASH}" ${resp}` -ne '1' ]]; then
+    echo "failed: can't through api to get githash info"
+    exit 1
+fi
 
 check_logfile
