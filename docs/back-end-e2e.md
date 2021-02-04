@@ -78,6 +78,19 @@ This document describes how to use E2E test locally.
 
 1. [install docker-compose](https://docs.docker.com/compose/install/)
 
+**NOTE:** In order to run docker compose locally, please change the values of `listen.host` and `etcd.endpoints` within `./api/conf/conf.yaml` as follows:
+
+   ```sh
+   listen:
+      host: 0.0.0.0
+      port: 9000
+   etcd:
+      endpoints:
+        - 172.16.238.10:2379
+        - 172.16.238.11:2379
+        - 172.16.238.12:2379
+   ```
+
 2. Use `docker-compose` to run services such as `manager-api`, `apisix`, `etcd` and `upstream-node`, run the command.
 
    ```sh
