@@ -290,4 +290,29 @@ fi
 
 ./manager-api stop
 
+# disable etcd auth
+curl -L http://localhost:2379/v3/auth/disable -d '{"name": "root", "password": "root"}'
+
 check_logfile
+clean_up
+
+# set ip allowed list
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" 's@127.0.0.0/24@10.0.0.1@' conf/conf.yaml
+else
+  sed -i 's@127.0.0.0/24@10.0.0.1@' conf/conf.yaml
+fi
+
+./manager-api &
+sleep 3
+
+# should be forbidden
+curl http://127.0.0.1:9000
+code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} http://127.0.0.1:9000)
+if [ ! $code -eq 403 ]; then
+    echo "failed: verify IP allowed list failed"
+    exit 1
+fi
+
+./manager-api stop
+clean_up
