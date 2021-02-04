@@ -132,9 +132,9 @@ func NewManagerAPICommand() *cobra.Command {
 	}
 
 	cmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", conf.WorkDir, "current work directory")
-	cmd.PersistentFlags().StringVarP(&conf.FilePathSet, "filepath","c", conf.FilePathSet, "Config file path")
-	
-	cmd.AddCommand(newStopCommand()) 
+	cmd.PersistentFlags().StringVarP(&conf.FilePathSet, "filepath", "c", conf.FilePathSet, "Config file path")
+
+	cmd.AddCommand(newStopCommand())
 	return cmd
 }
 
@@ -147,7 +147,7 @@ func newStopCommand() *cobra.Command {
 				if syscall.ENOENT.Error() != err.Error() {
 					fmt.Fprintf(os.Stderr, "failed to get manager-api pid: %s\n", err)
 				} else {
-					fmt.Fprintf(os.Stderr,  "pid path %s not found, is manager-api running?\n", conf.PIDPath)
+					fmt.Fprintf(os.Stderr, "pid path %s not found, is manager-api running?\n", conf.PIDPath)
 				}
 				return
 			}

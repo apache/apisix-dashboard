@@ -54,7 +54,7 @@ var (
 	SSLDefaultStatus = 1 //enable ssl by default
 	ImportSizeLimit  = 10 * 1024 * 1024
 	PIDPath          = "/tmp/manager-api.pid"
-	FilePathSet		 = "/conf/conf.yaml"
+	FilePathSet      = "/conf/conf.yaml"
 )
 
 type Etcd struct {
@@ -124,10 +124,7 @@ func InitConf() {
 }
 
 func setConf() {
-	filePath := WorkDir +  FilePathSet
-	if(FilePathSet != "/conf/conf.yaml"){
-		filePath = FilePathSet
-	}
+	filePath := WorkDir + FilePathSet
 	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
 	} else {
