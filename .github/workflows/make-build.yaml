@@ -13,6 +13,15 @@ jobs:
     name: use ubuntu
     runs-on: ubuntu-latest
 
+    services:
+      etcd:
+        image: bitnami/etcd:3.4.13
+        ports:
+          - 2379:2379
+          - 2380:2380
+        env:
+          ALLOW_NONE_AUTHENTICATION: yes
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -29,3 +38,10 @@ jobs:
 
       - name: make build
         run: make build
+
+      - name: run 
+        working-directory: ./output
+        run: ./manager-api
+
+      - name: check
+        run: api/test/shell/docker_deploy_test.sh -s true
