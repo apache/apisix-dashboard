@@ -651,11 +651,19 @@ func TestService_Patch(t *testing.T) {
 			called:       true,
 		},
 		{
-			caseDesc: "patch name success",
+			caseDesc: "patch part of service success",
 			giveInput: &PatchInput{
 				ID:      "s1",
-				SubPath: "/upstream_id",
-				Body:    []byte(`{"upstream_id":"u3"}`),
+				SubPath: "",
+				Body: []byte(`{
+						"name":"patched",
+						"upstream_id":"u2",
+						"enable_websocket":true,
+						"labels":{
+							"version":"v1",
+							"build":"16"
+						}
+					}`),
 			},
 			wantInput: &entity.Service{
 				BaseInfo: entity.BaseInfo{
@@ -663,13 +671,12 @@ func TestService_Patch(t *testing.T) {
 					CreateTime: 1609340491,
 					UpdateTime: 1609340491,
 				},
-				Name: "exist_service",
-				UpstreamID: map[string]interface{}{
-					"upstream_id": "u3",
-				},
-				EnableWebsocket: false,
+				Name:            "patched",
+				UpstreamID:      "u2",
+				EnableWebsocket: true,
 				Labels: map[string]string{
 					"version": "v1",
+					"build":   "16",
 				},
 				Plugins: map[string]interface{}{
 					"limit-count": map[string]interface{}{
@@ -685,7 +692,7 @@ func TestService_Patch(t *testing.T) {
 			called:       true,
 		},
 		{
-			caseDesc: "patch name success",
+			caseDesc: "patch name success with sub path",
 			giveInput: &PatchInput{
 				ID:      "s1",
 				SubPath: "/upstream_id",
