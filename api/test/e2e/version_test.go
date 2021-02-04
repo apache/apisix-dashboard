@@ -21,15 +21,35 @@ import (
 	"testing"
 )
 
-func TestInfo(t *testing.T) {
+func TestVersion(t *testing.T) {
 	tests := []HttpTestCase{
 		{
-			Desc:         "get info",
+			Desc:         "get version",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/version",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   []string{"commit_hash", "\"version\""},
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+}
+
+func TestVersionMatched(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			Desc:         "check version matched (not matched)",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/tool/version_match",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody: []string{"\"code\":2000001",
+				"\"message\":\"The version of manager-api and apisix are not matched.\"",
+				"\"matched\":false", "apisix-server1", "apisix-server2"},
 		},
 	}
 
