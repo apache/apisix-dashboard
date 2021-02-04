@@ -103,15 +103,10 @@ endif
 	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./
 
 
-### version-check: Check Apache APISIX Dashboard version for release
-.PHONY: version-check
-version-check:
-	./utils/version-check.sh
-
-
 ### release-src: Package Apache APISIX Dashboard source codes for release
 .PHONY: release-src
-release-src: version-check
+release-src:
+	./utils/version-check.sh ${VERSION}
 	git clean -Xdf
 	rm -f ./.githash && git log --pretty=format:"%h" -1 > ./.githash
 	tar -zcvf $(RELEASE_SRC).tgz \
