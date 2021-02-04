@@ -43,7 +43,7 @@ context('Create and Delete Plugin List', () => {
     // add test plugins
     cy.get('@cases').then((cases) => {
       cy.configurePlugins(cases);
-    })
+    });
   });
 
   it('should edit the plugin', () => {
@@ -64,17 +64,19 @@ context('Create and Delete Plugin List', () => {
   it('should delete plugin list', () => {
     cy.visit('/plugin/list');
     cy.get(domSelector.refresh).click();
-    cy.get(domSelector.tableCell, { timeout }).should('exist').then(function (rows) {
-      [...rows].forEach((row) => {
-        const name = row.innerText;
-        const cases = this.cases[name] || [];
+    cy.get(domSelector.tableCell, { timeout })
+      .should('exist')
+      .then(function (rows) {
+        [...rows].forEach((row) => {
+          const name = row.innerText;
+          const cases = this.cases[name] || [];
 
-        cases.forEach(() => {
-          cy.contains(name).siblings().contains('Delete').click({ timeout });
-          cy.contains('button', 'Confirm').click();
+          cases.forEach(() => {
+            cy.contains(name).siblings().contains('Delete').click({ timeout });
+            cy.contains('button', 'Confirm').click();
+          });
         });
       });
-    });
 
     // check if plugin list is empty
     cy.get(domSelector.empty).should('be.visible');

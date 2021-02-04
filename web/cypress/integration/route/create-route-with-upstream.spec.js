@@ -134,9 +134,6 @@ context('Create Route with Upstream', () => {
     cy.contains('Upstream').click();
     cy.contains(data.upstream_name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(domSelector.notification).should(
-      'contain',
-      data.delete_upstream_success,
-    );
+    cy.get(domSelector.notification).should('contain', data.delete_upstream_success);
   });
 });

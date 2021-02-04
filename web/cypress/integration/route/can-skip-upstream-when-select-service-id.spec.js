@@ -28,7 +28,7 @@ context('Can select service_id skip upstream in route', () => {
     delete_route_success: 'Delete Route Successfully',
     submit_success: 'Submit Successfully',
     delete_success: 'Delete Upstream Successfully',
-  }
+  };
   const domSelector = {
     name: '#name',
     nodes_0_host: '#nodes_0_host',
@@ -137,5 +137,3 @@ context('Can select service_id skip upstream in route', () => {
     cy.get(domSelector.notification).should('contain', data.delete_route_success);
   });
 });
-
-
