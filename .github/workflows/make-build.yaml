@@ -9,8 +9,8 @@ on:
       - master
 
 jobs:
-  make-build:
-    name: use ubuntu
+  make-build-test:
+    name: make build test
     runs-on: ubuntu-latest
 
     services:
