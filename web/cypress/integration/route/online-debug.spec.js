@@ -59,7 +59,7 @@ context('Online debug', () => {
     data.uris.forEach((uri) => {
       cy.get(domSelector.uriInput).clear();
       cy.get(domSelector.uriInput).type(uri);
-      cy.contains(routeLocaleUS['page.route.button.send']).click();
+      cy.contains(routeLocaleUS['page.route.button.send']).click({force: true});
 
       // should not show the notification about input the valid request url
       cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('not.exist');
