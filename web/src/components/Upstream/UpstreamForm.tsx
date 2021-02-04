@@ -630,6 +630,19 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           <Form.Item
             label={formatMessage({ id: 'page.upstream.step.select.upstream' })}
             name="upstream_id"
+            shouldUpdate={(prev, next) => {
+              setReadonly(Boolean(next.upstream_id));
+              if (prev.upstream_id !== next.upstream_id) {
+                const id = next.upstream_id;
+                if (id) {
+                  form.setFieldsValue(list.find((item) => item.id === id));
+                  form.setFieldsValue({
+                    upstream_id: id,
+                  });
+                }
+              }
+              return prev.upstream_id !== next.upstream_id;
+            }}
           >
             <Select
               data-cy='upstream_selector'
