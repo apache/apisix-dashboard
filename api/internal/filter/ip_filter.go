@@ -79,6 +79,7 @@ func checkIP(ipStr string, ips map[string]bool, subnets []*subnet) bool {
 }
 
 func IPFilter() gin.HandlerFunc {
+	ips, subnets := generateIPSet(conf.AllowList)
 	return func(c *gin.Context) {
 		ipStr := c.ClientIP()
 
@@ -93,7 +94,6 @@ func IPFilter() gin.HandlerFunc {
 			return
 		}
 
-		ips, subnets := generateIPSet(conf.AllowList)
 		res := checkIP(ipStr, ips, subnets)
 		if !res {
 			log.Warnf("forbidden by IP: %s", ipStr)
