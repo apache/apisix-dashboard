@@ -113,13 +113,17 @@ const Page: React.FC = () => {
       onClose={() => {
         setVisible(false);
       }}
-      onChange={({ formData, codemirrorData }) => {
+      onChange={({ formData, codemirrorData, shouldDelete }) => {
         const disable = !formData.disable;
+        let plugins = {
+          ...initialData,
+          [name]: { ...codemirrorData, disable },
+        };
+        if (shouldDelete === true) {
+          plugins = omit(plugins, name);
+        };
         createOrUpdate({
-          plugins: {
-            ...initialData,
-            [name]: { ...codemirrorData, disable },
-          },
+          plugins
         }).then(() => {
           setVisible(false);
           setName('');
