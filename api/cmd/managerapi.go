@@ -47,7 +47,7 @@ func printInfo() {
 	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Version", Version)
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "GitHash", GitHash)
-	fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "Listen", conf.ServerHost, conf.ServerPort)
+	fmt.Fprintf(os.Stdout, "%-8s: %d\n", "Listen", conf.ServerPort)
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Loglevel", conf.ErrorLogLevel)
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n\n", "Logfile", conf.ErrorLogPath)
 }
@@ -146,7 +146,7 @@ func newStopCommand() *cobra.Command {
 				if syscall.ENOENT.Error() != err.Error() {
 					fmt.Fprintf(os.Stderr, "failed to get manager-api pid: %s\n", err)
 				} else {
-					fmt.Fprintf(os.Stderr,  "pid path %s not found, is manager-api running?\n", conf.PIDPath)
+					fmt.Fprintf(os.Stderr, "pid path %s not found, is manager-api running?\n", conf.PIDPath)
 				}
 				return
 			}

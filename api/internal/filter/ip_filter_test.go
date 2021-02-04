@@ -14,18 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consts
+package filter
 
-import "github.com/shiningrush/droplet/data"
+import (
+	"testing"
 
-const (
-	ErrBadRequest = 20001
-	ErrForbidden  = 20002
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/apisix/manager-api/internal/conf"
 )
 
-var (
-	// base error please refer to github.com/shiningrush/droplet/data, such as data.ErrNotFound, data.ErrConflicted
-	ErrInvalidRequest       = data.BaseError{Code: ErrBadRequest, Message: "invalid request"}
-	ErrSchemaValidateFailed = data.BaseError{Code: ErrBadRequest, Message: "JSONSchema validate failed"}
-	ErrIPNotAllow           = data.BaseError{Code: ErrForbidden, Message: "IP address not allowed"}
-)
+func TestIPFilter_Handle(t *testing.T) {
+	// default allow ip list --> should normal
+	r := gin.New()
+	r.Use(IPFilter())
+
+	r.GET("/", func(c *gin.Context) {
+	})
+
+	w := performRequest(r, "GET", "/")
+	assert.Equal(t, 200, w.Code)
+
+	// should forbidden
+	conf.AllowList = []string{"10.0.0.0/8", "10.0.0.1"}
+	r.GET("/fbd", func(c *gin.Context) {
+	})
+
+	w = performRequest(r, "GET", "/fbd")
+	assert.Equal(t, 403, w.Code)
+
+	// should forbidden
+	conf.AllowList = []string{"10.0.0.0/8", "0.0.0.0/0"}
+	r.GET("/test", func(c *gin.Context) {
+	})
+	w = performRequest(r, "GET", "/test")
+	assert.Equal(t, 200, w.Code)
+}
