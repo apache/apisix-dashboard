@@ -1839,6 +1839,7 @@ func TestRoute_Patch_Update(t *testing.T) {
 	}`
 	responesBody := `"status":0`
 
+	// Test interface "/apisix/admin/routes/:id"
 	input2 := &PatchInput{}
 	input2.ID = "pr1"
 	input2.SubPath = ""
@@ -1933,6 +1934,7 @@ func TestRoute_Patch_Path_Update(t *testing.T) {
 	reqBody1 := `0`
 	responesBody := `"status":0`
 
+	// Test interface "/apisix/admin/routes/:id/*path"
 	input2 := &PatchInput{}
 	input2.ID = "pr1"
 	input2.SubPath = "/status"
