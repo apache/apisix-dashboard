@@ -35,8 +35,8 @@ context('Online debug', () => {
       'localhost:9000/get?search=v1,sd&number=-1',
       'localhost:9000/get?search=1+1',
       'localhost:9000/api/commands/submit.html#Requirements?test=apisix.com',
-      'localhost:9000/js6/main.jsp?sid=pARQZYHABxkSVdeMvXAAEtfJKbWQocOA&df=mail126_mailmaster#module=mbox.ListModule%7C%7B"filter"'
-    ]
+      'localhost:9000/js6/main.jsp?sid=pARQZYHABxkSVdeMvXAAEtfJKbWQocOA&df=mail126_mailmaster#module=mbox.ListModule%7C%7B"filter"',
+    ],
   };
   const domSelector = {
     uriInput: '#debugUri',
@@ -59,7 +59,7 @@ context('Online debug', () => {
     data.uris.forEach((uri) => {
       cy.get(domSelector.uriInput).clear();
       cy.get(domSelector.uriInput).type(uri);
-      cy.contains(routeLocaleUS['page.route.button.send']).click({force: true});
+      cy.contains(routeLocaleUS['page.route.button.send']).click({ force: true });
 
 
       // should not show the notification about input the valid request url

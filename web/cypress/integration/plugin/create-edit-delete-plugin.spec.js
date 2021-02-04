@@ -46,7 +46,7 @@ context('Create and Delete Plugin List', () => {
     // add test plugins
     cy.get('@cases').then((cases) => {
       cy.configurePlugins(cases);
-    })
+    });
   });
 
   it('should edit the plugin', () => {
@@ -67,12 +67,12 @@ context('Create and Delete Plugin List', () => {
   it('should delete plugin list', () => {
     cy.visit('/plugin/list');
 
-    cy.get(domSelector.deleteBtn, { timeout }).each(function($el) {     
+    cy.get(domSelector.deleteBtn, { timeout }).each(function ($el) {
       cy.wrap($el).click().click({ timeout });
-      cy.contains('button', 'Confirm').click({force: true});
+      cy.contains('button', 'Confirm').click({ force: true });
       cy.get(this.domSelector.notification).should('contain', data.deleteSuccess);
       cy.get(this.domSelector.notificationCloseIcon).click();
-    })
+    });
 
     // check if plugin list is empty
     cy.get(domSelector.empty).should('be.visible');

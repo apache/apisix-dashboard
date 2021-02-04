@@ -20,7 +20,6 @@ import type { MenuDataItem } from '@ant-design/pro-layout';
 import { history } from 'umi';
 import moment from 'moment';
 
-
 import { codeMessage } from './constants';
 import IconFont from './components/IconFont';
 
@@ -64,7 +63,7 @@ export const getMenuData = (): MenuDataItem[] => {
     {
       name: 'serverinfo',
       path: '/serverinfo',
-      icon: <IconFont name="iconinfocircle"/>,
+      icon: <IconFont name="iconinfocircle" />,
     },
   ];
 };
