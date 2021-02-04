@@ -14,32 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
-import UpstreamForm from '@/components/Upstream';
+package utils
 
-import { fetchUpstreamList } from '../../service';
+var (
+	gitHash string
+	version string
+)
 
-const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({
-  form,
-  upstreamRef,
-  disabled,
-  hasServiceId = false,
-}) => {
-  const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
-  useEffect(() => {
-    fetchUpstreamList().then(({ data }) => setList(data));
-  }, []);
-  return (
-    <UpstreamForm
-      ref={upstreamRef}
-      form={form}
-      disabled={disabled}
-      list={list}
-      showSelector
-      required={!hasServiceId}
-      key={1}
-    />
-  );
-};
-
-export default RequestRewriteView;
+// get the hash and version
+func GetHashAndVersion() (string, string) {
+	return gitHash, version
+}

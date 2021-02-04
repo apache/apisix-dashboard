@@ -27,7 +27,7 @@ context('create and delete service ', () => {
     create_service_success: 'Create Service Successfully',
     edit_service_success: 'Edit Service Successfully',
     delete_service_success: 'Delete Service Successfully',
-  }
+  };
 
   beforeEach(() => {
     cy.login();

@@ -64,7 +64,7 @@ context('Create and Delete Plugin List', () => {
       cy.contains('button', 'Confirm').click({ force: true });
       cy.get(this.domSelector.notification).should('contain', data.deleteSuccess);
       cy.get(this.domSelector.notificationCloseIcon).click();
-    })
+    });
 
     // check if plugin list is empty
     cy.get(this.domSelector.empty).should('be.visible');

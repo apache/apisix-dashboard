@@ -14,32 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
-import UpstreamForm from '@/components/Upstream';
+package tool
 
-import { fetchUpstreamList } from '../../service';
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/shiningrush/droplet"
+	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
-const RequestRewriteView: React.FC<RouteModule.Step2PassProps> = ({
-  form,
-  upstreamRef,
-  disabled,
-  hasServiceId = false,
-}) => {
-  const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
-  useEffect(() => {
-    fetchUpstreamList().then(({ data }) => setList(data));
-  }, []);
-  return (
-    <UpstreamForm
-      ref={upstreamRef}
-      form={form}
-      disabled={disabled}
-      list={list}
-      showSelector
-      required={!hasServiceId}
-      key={1}
-    />
-  );
-};
+	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils"
+)
 
-export default RequestRewriteView;
+type Handler struct {
+}
+
+type InfoOutput struct {
+	Hash    string `json:"commit_hash"`
+	Version string `json:"version"`
+}
+
+func NewHandler() (handler.RouteRegister, error) {
+	return &Handler{}, nil
+}
+
+func (h *Handler) ApplyRoute(r *gin.Engine) {
+	r.GET("/version", wgin.Wraps(h.Version))
+}
+
+func (h *Handler) Version(_ droplet.Context) (interface{}, error) {
+	hash, version := utils.GetHashAndVersion()
+	return &InfoOutput{
+		Hash:    hash,
+		Version: version,
+	}, nil
+}
