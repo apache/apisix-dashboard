@@ -9,8 +9,8 @@ on:
       - master
 
 jobs:
-  web-e2e:
-    name: Frontend e2e test
+  make-build:
+    name: use ubuntu
     runs-on: ubuntu-latest
 
     steps:
