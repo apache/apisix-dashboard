@@ -214,6 +214,7 @@ func TestSSL_Patch_Method(t *testing.T) {
 	assert.Equal(t, stored.Labels["version"], "v2")
 
 	//patch
+	// Test interface "/apisix/admin/ssl/:id/*path"
 	reqBody1 := `{
         "id":"1",
         "key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDGO0J9xrOcmvgh\npkqHIYHCw35FTfIT5uXOSzdF49M2ZAKBQwFG0ovYT8bc0glNLB+hpDhJPL531qSP\nl1ZOe0W1ofP1u0T5Zzc9Rub/kn7RMPq0BsSC6J3rF+rQEwh1PM8qUuD8DxZ7jaOL\niMNL6SyuZIPsS1kPPBtsioukdo666tbjNMixhQbI9Wpg55abdXRFh3i7Zu/9siF1\njCGcsskjOaUOY4sYQ3i5WU/HIIRhA82XuIL+Sxd32P8bKi2UT1sqFXRjAVR7KRWo\nIVvkmSLoZb9ucV6MsccDrRYBf6rLbI1tFj9l2rY6GTFlT+6z7K/ZI60DGi/hsBfl\nDeEQ5WuxAgMBAAECggEAVHQQyucpxHGdfzCKlfGnh+Oj20Du/p2jkHUpEkSSypxn\nGM0EMTkoTTsHvTJath8zRrlhJYqUlxfCOk6+fWc1dsGN30Yuh5b6yMd5SK8QCm20\nkZhEhoU2Kl+hMY66TsBefmia46hF6tOYNq1IjwHDgHTgY35ibgQsptyLy8Ca5HTC\nrnoocP2AcKtM+qwOMGiNHpeh+/zfB91C9AszvS8H2ao5nq4u0/JavPO4A4WmVYol\n7Qv9ACY/8uaKC79syahutbkMjwGsQgYsq9G0QpcLSCuOb4vBbOb130mptSM9NzKg\nTjSxF2D8ob//roZMc1ueTpqAY6WedKV3y3BIBDKuAQKBgQDgGyEsxwR9QtA5EH/h\nJ4GiTQn0aep8G2LSlAtHGndL3sxaGGLt2pk3lNIeRAbOS3APmYskBN418JIF/Ren\nE0CYSrTaxpTs9UXXkgKNJ63Z6r+btswTAVVXG5Zoi/5JRSHRquEVmKccM4zg3v6R\ny/nVhwXigUaRuLx+wCtoaGsaUQKBgQDicXFZ0TvN8tohqc8dbmOu2A25+ifFKHUA\nn3yxZIJtbTC9bJeuwtkqIFol1DXHLqYvdD5jQT3c4z6HekcmI9sEy1YzO4a3WUTI\nP//ogjDLXj402k+WCx1Us2HASxwU5cRvOpMhfnppYPSDXqBoH196UCDmOQuS1+Q8\njyPsNQmDYQKBgQDcm5hCvf87V4QmSIm6GOvR20iLY6BCX6seZEHd0r3Q4BgGMK9i\nOahOQJ++z3Rrq3M6yAligbBFJPZ6ErUv8RHLWO9D1exQfvorxT3huke3lxDbtkya\nANwDjdK4Q+ckNXufLDm6yrTmXBC4ZIvw9fyQKASw/lV7qYFUvNN+Shv0oQKBgQC+\nraw3Z7smV0NbaXRgYh5KkuAsJPvsR38OwT3s2qgBoRqTx6eKn8Tidk+y3xlR2nRS\nLV6DkeKX6Ds1NcBH25WIWfkCNzPfnKoQveOuVELmXTugody2ijFuq4a6uASzjC93\nQim24JwPtHbxUHNeelyZ0HODqbGXO3iTji0/sAGMwQKBgQC8yDwapXgrCWK34qpN\nSdO9uA4VstI3Ovb+o3Evfp1CvJnfk56ypO2DaqbuvMJsInuWRFU40UWp7Vxyl/hP\nXvGgEI3dbBy9KWFjAKfI2Wv3i+zvJ1mAHM3u1jcX3zxOxSAN4LJVBudgkGpop1ps\nW5tWveXiXwxCUE/r9ax4mfJvXQ==\n-----END PRIVATE KEY-----",
@@ -315,6 +316,7 @@ func TestSSL_Patch_Path_Method(t *testing.T) {
 	assert.Equal(t, stored.Labels["version"], "v2")
 
 	//patch
+	// Test interface "/apisix/admin/ssl/:id/*path"
 	reqBody1 := `{"build":"28","env":"dev1","version":"v2"}`
 
 	responesBody := `"labels":{"build":"28","env":"dev1","version":"v2"}`
