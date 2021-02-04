@@ -22,8 +22,9 @@ context('Create and Delete Route', () => {
   const sleepTime = 100;
 
   beforeEach(() => {
-    // init login
     cy.login();
+
+    cy.fixture('selector.json').as('domSelector');
   });
 
   it('should create route', () => {

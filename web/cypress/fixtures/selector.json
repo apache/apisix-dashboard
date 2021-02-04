@@ -1,7 +1,49 @@
 {
+  "switcher": ".ant-space-align-center",
   "dropdown": ".rc-virtual-list",
   "notification": ".ant-notification-notice-message",
   "drawerBody": ".ant-drawer-wrapper-body",
   "notificationCloseIcon": ".ant-notification-close-icon",
-  "notificationDesc": ".ant-notification-notice-description"
+  "notificationDesc": ".ant-notification-notice-description",
+
+  "pluginsCard": ".ant-card",
+  "pageContent": ".ant-pro-page-container",
+
+  "tableCell": ".ant-table-cell",
+  "empty": ".ant-empty-normal",
+  "refresh": ".anticon-reload",
+  "codemirror": ".CodeMirror",
+  "switch": "#disable",
+  "deleteBtn": ".ant-btn-dangerous",
+
+  "name": "#name",
+  "nodes_0_host": "#nodes_0_host",
+  "upstream_id": "#upstream_id",
+  "input": ":input",
+  "custom_upstream": "[title=Custom]",
+  "title_name": "[title=Name]",
+  "test_service": "[title=test_service]",
+
+  "description": "#desc",
+  "search_name": "[title=Name]",
+  "upstream_selector": "[data-cy=upstream_selector]",
+
+  "file": "[type=file]",
+  "fileTypeRadio": "[type=radio]",
+
+  "uriInput": "#debugUri",
+
+  "hosts_0": "#hosts_0",
+  "labels_0_labelKey": "#labels_0_labelKey",
+  "labels_0_labelValue": "#labels_0_labelValue",
+  "searchName": "[title=Name]",
+  "searchLabels": "[title=Labels]",
+
+  "pageContainer": ".ant-pro-page-container",
+  "notificationMsg": ".ant-notification-notice-message",
+  "setting": ".ant-space-align-center",
+  "grafanaURL": "#grafanaURL",
+  "explain": ".ant-form-item-explain",
+
+  "selectItem": ".ant-select-item-option-content"
 }

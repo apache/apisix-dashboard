@@ -38,17 +38,14 @@ context('Online debug', () => {
       'localhost:9000/js6/main.jsp?sid=pARQZYHABxkSVdeMvXAAEtfJKbWQocOA&df=mail126_mailmaster#module=mbox.ListModule%7C%7B"filter"'
     ]
   };
-  const domSelector = {
-    uriInput: '#debugUri',
-  };
 
   beforeEach(() => {
-    // init login
     cy.login();
+
+    cy.fixture('selector.json').as('domSelector');
   });
 
-  it('shoule not show the invalid url notification', () => {
-    // go to route list page
+  it('shoule not show the invalid url notification', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
 
@@ -57,9 +54,9 @@ context('Online debug', () => {
 
     // input uri with specified special characters
     data.uris.forEach((uri) => {
-      cy.get(domSelector.uriInput).clear();
-      cy.get(domSelector.uriInput).type(uri);
-      cy.contains(routeLocaleUS['page.route.button.send']).click({force: true});
+      cy.get(this.domSelector.uriInput).clear();
+      cy.get(this.domSelector.uriInput).type(uri);
+      cy.contains(routeLocaleUS['page.route.button.send']).click({ force: true });
 
       // should not show the notification about input the valid request url
       cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('not.exist');
