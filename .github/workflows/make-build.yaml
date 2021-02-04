@@ -39,7 +39,7 @@ jobs:
       - name: make build
         run: make build
 
-      - name: run
+      - name: start dashboard
         working-directory: ./output
         run: ./manager-api
 
