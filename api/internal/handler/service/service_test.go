@@ -265,6 +265,7 @@ func TestService_Patch_Update(t *testing.T) {
 	}`
 	responesBody := `"nodes":[{"host":"172.16.238.20","port":1981,"weight":1}],"type":"roundrobin"}`
 
+	// Test interface "/apisix/admin/services/:id"
 	input2 := &PatchInput{}
 	input2.ID = "3"
 	input2.SubPath = ""
@@ -281,6 +282,65 @@ func TestService_Patch_Update(t *testing.T) {
 	//delete test data
 	inputDel2 := &BatchDelete{}
 	reqBody = `{"ids": "3"}`
+	err = json.Unmarshal([]byte(reqBody), inputDel2)
+	assert.Nil(t, err)
+	ctx.SetInput(inputDel2)
+	_, err = handler.BatchDelete(ctx)
+	assert.Nil(t, err)
+
+}
+
+func TestService_Patch_Path_Update(t *testing.T) {
+	//create
+	handler := &Handler{
+		serviceStore: store.GetStore(store.HubKeyService),
+	}
+	ctx := droplet.NewContext()
+	service := &entity.Service{}
+	reqBody := `{
+		"id": "4",
+		"name": "testservice",
+		"upstream": {
+			"type": "roundrobin",
+			"nodes": [{
+				"host": "172.16.238.20",
+				"port": 1980,
+				"weight": 1
+			}]
+		}
+	}`
+	err := json.Unmarshal([]byte(reqBody), service)
+	assert.Nil(t, err)
+	ctx.SetInput(service)
+	ret, err := handler.Create(ctx)
+	assert.Nil(t, err)
+	objRet, ok := ret.(*entity.Service)
+	assert.True(t, ok)
+	assert.Equal(t, "4", objRet.ID)
+
+	//sleep
+	time.Sleep(time.Duration(20) * time.Millisecond)
+
+	reqBody1 := `"test_path_patch"`
+	responesBody := `"name":"test_path_patch"`
+
+	// Test interface "/apisix/admin/services/:id/*path"
+	input2 := &PatchInput{}
+	input2.ID = "4"
+	input2.SubPath = "/name"
+	input2.Body = []byte(reqBody1)
+	ctx.SetInput(input2)
+
+	ret2, err := handler.Patch(ctx)
+	assert.Nil(t, err)
+	_ret2, err := json.Marshal(ret2)
+	assert.Nil(t, err)
+	isContains := strings.Contains(string(_ret2), responesBody)
+	assert.True(t, isContains)
+
+	//delete test data
+	inputDel2 := &BatchDelete{}
+	reqBody = `{"ids": "4"}`
 	err = json.Unmarshal([]byte(reqBody), inputDel2)
 	assert.Nil(t, err)
 	ctx.SetInput(inputDel2)
