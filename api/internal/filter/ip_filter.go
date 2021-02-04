@@ -96,7 +96,7 @@ func IPFilter() gin.HandlerFunc {
 
 		res := checkIP(ipStr, ips, subnets)
 		if !res {
-			log.Warnf("forbidden by IP: %s", ipStr)
+			log.Warnf("forbidden by IP: %s, allowed list: %v", ipStr, conf.AllowList)
 			c.AbortWithStatusJSON(http.StatusForbidden, consts.ErrIPNotAllow)
 		}
 

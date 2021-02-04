@@ -26,7 +26,8 @@ import (
 )
 
 func TestIPFilter_Handle(t *testing.T) {
-	// default allow ip list --> should normal
+	// empty allowed ip list --> should normal
+	conf.AllowList = []string{}
 	r := gin.New()
 	r.Use(IPFilter())
 
@@ -38,14 +39,18 @@ func TestIPFilter_Handle(t *testing.T) {
 
 	// should forbidden
 	conf.AllowList = []string{"10.0.0.0/8", "10.0.0.1"}
+	r = gin.New()
+	r.Use(IPFilter())
 	r.GET("/fbd", func(c *gin.Context) {
 	})
 
 	w = performRequest(r, "GET", "/fbd")
 	assert.Equal(t, 403, w.Code)
 
-	// should forbidden
+	// should allowed
 	conf.AllowList = []string{"10.0.0.0/8", "0.0.0.0/0"}
+	r = gin.New()
+	r.Use(IPFilter())
 	r.GET("/test", func(c *gin.Context) {
 	})
 	w = performRequest(r, "GET", "/test")
