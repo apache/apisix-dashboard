@@ -29,7 +29,7 @@ func TestInfo(t *testing.T) {
 			Method:       http.MethodGet,
 			Path:         "/version",
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   []string{"commit_hash", "\"version\":\"master\""},
+			ExpectBody:   []string{"commit_hash", "\"version\""},
 		},
 	}
 
