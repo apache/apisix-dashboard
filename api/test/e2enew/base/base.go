@@ -17,7 +17,6 @@
 package base
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"fmt"
@@ -49,26 +48,13 @@ func GetToken() string {
 		return token
 	}
 
-	requestBody := []byte(`{
+	requestBody := `{
 		"username": "admin",
 		"password": "admin"
-	}`)
+	}`
 
 	url := ManagerAPIHost + "/apisix/admin/user/login"
-	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
-	if err != nil {
-		panic(err)
-	}
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
+	body, _, err := HttpPost(url, nil, requestBody)
 	if err != nil {
 		panic(err)
 	}
@@ -186,7 +172,6 @@ func RunTestCase(tc HttpTestCase) {
 		req.WithHeader("Content-Type", "application/json")
 	}
 
-
 	// set body
 	if tc.Body != "" {
 		req.WithText(tc.Body)
@@ -273,26 +258,21 @@ func CleanAPISIXErrorLog() {
 
 func GetResourceList(resource string) string {
 	t := getTestingHandle()
-	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/"+resource, nil)
-	request.Header.Add("Authorization", GetToken())
-	resp, err := http.DefaultClient.Do(request)
+	body, _, err := HttpGet(ManagerAPIHost+"/apisix/admin/"+resource, map[string]string{"Authorization": GetToken()})
 	assert.Nil(t, err)
-	defer resp.Body.Close()
-	respBody, _ := ioutil.ReadAll(resp.Body)
-
-	return string(respBody)
+	return string(body)
 }
 
 func CleanResource(resource string) {
 	resources := GetResourceList(resource)
 	list := gjson.Get(resources, "data.rows").Value().([]interface{})
 	for _, item := range list {
-		route := item.(map[string]interface{})
+		resourceObj := item.(map[string]interface{})
 		tc := HttpTestCase{
-			Desc:         "delete " + resource + "/" + route["id"].(string),
+			Desc:         "delete " + resource + "/" + resourceObj["id"].(string),
 			Object:       ManagerApiExpect(),
 			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/" + resource + "/" + route["id"].(string),
+			Path:         "/apisix/admin/" + resource + "/" + resourceObj["id"].(string),
 			Headers:      map[string]string{"Authorization": GetToken()},
 			ExpectStatus: http.StatusOK,
 		}

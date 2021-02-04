@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  backend-e2e-test-old:
+  backend-e2e-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -64,7 +64,7 @@ jobs:
           bash <(curl -s https://codecov.io/bash) -f ./integrationcover.out
 
 
-  backend-e2e-test:
+  backend-e2e-test-ginkgo:
     runs-on: ubuntu-latest
 
     steps:
