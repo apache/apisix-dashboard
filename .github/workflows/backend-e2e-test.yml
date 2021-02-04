@@ -20,6 +20,13 @@ jobs:
         with:
           go-version: '1.13'
 
+      - name: Modify conf.yaml Configure for use by the manage-api cluster
+        run: |
+          sed -i 's/127.0.0.1:2379/172.16.238.10:2379/' ./api/conf/conf.yaml
+          sed -i 's/127.0.0.1/0.0.0.0/' ./api/conf/conf.yaml
+          sed -i '/172.16.238.10:2379/a\      - 172.16.238.11:2379' ./api/conf/conf.yaml
+          sed -i '/172.16.238.10:2379/a\      - 172.16.238.12:2379' ./api/conf/conf.yaml
+
       - name: run docker compose
         working-directory: ./api/test/docker
         run: |

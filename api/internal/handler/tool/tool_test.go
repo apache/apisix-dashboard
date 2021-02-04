@@ -14,6 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-  'page.plugin.drawer.popconfirm.title.delete': '确定删除该插件吗？',
-};
+package tool
+
+import (
+	"testing"
+
+	"github.com/shiningrush/droplet"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/apisix/manager-api/internal/utils"
+)
+
+func TestInfo_Get(t *testing.T) {
+	h := Handler{}
+	ctx := droplet.NewContext()
+
+	hash, version := utils.GetHashAndVersion()
+
+	ret, err := h.Version(ctx)
+	assert.Nil(t, err)
+	assert.Equal(t, &InfoOutput{
+		Hash:    hash,
+		Version: version,
+	}, ret)
+}

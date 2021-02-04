@@ -73,6 +73,8 @@ func NewManagerAPICommand() *cobra.Command {
 				return nil
 			})
 
+			GitHash, Version = utils.GetHashAndVersion()
+
 			droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
 				var newMws []droplet.Middleware
 				// default middleware order: resp_reshape, auto_input, traffic_log
@@ -90,6 +92,7 @@ func NewManagerAPICommand() *cobra.Command {
 				log.Errorf("init stores fail: %w", err)
 				panic(err)
 			}
+
 			// routes
 			r := internal.SetUpRouter()
 			addr := fmt.Sprintf("%s:%d", conf.ServerHost, conf.ServerPort)
@@ -146,7 +149,7 @@ func newStopCommand() *cobra.Command {
 				if syscall.ENOENT.Error() != err.Error() {
 					fmt.Fprintf(os.Stderr, "failed to get manager-api pid: %s\n", err)
 				} else {
-					fmt.Fprintf(os.Stderr,  "pid path %s not found, is manager-api running?\n", conf.PIDPath)
+					fmt.Fprintf(os.Stderr, "pid path %s not found, is manager-api running?\n", conf.PIDPath)
 				}
 				return
 			}

@@ -14,6 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-  'page.plugin.drawer.popconfirm.title.delete': '确定删除该插件吗？',
-};
+package e2e
+
+import (
+	"net/http"
+	"testing"
+)
+
+func TestInfo(t *testing.T) {
+	tests := []HttpTestCase{
+		{
+			Desc:         "get info",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/version",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"commit_hash", "\"version\""},
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+}

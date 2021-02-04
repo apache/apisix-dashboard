@@ -24,7 +24,7 @@ context('Create Route with Upstream', () => {
     name: '#name',
     description: '#desc',
     search_name: '[title=Name]',
-    custom_upstream: '[title=Custom]',
+    upstream_selector: '[data-cy=upstream_selector]'
   };
 
   const data = {
@@ -64,13 +64,13 @@ context('Create Route with Upstream', () => {
   });
 
   it('should disable Upstream input boxes after selecting an existing upstream', () => {
-    cy.contains('Custom').click();
+    cy.get(domSelector.upstream_selector).click();
     cy.contains(data.upstream_name).click();
     cy.get(domSelector.input).should('be.disabled');
   });
 
   it('should enable Upstream input boxes after selecting Custom mode', () => {
-    cy.contains(data.upstream_name).click();
+    cy.get(domSelector.upstream_selector).click();
     cy.contains('Custom').click();
     cy.get(domSelector.input).should('not.be.disabled');
   });
@@ -93,13 +93,13 @@ context('Create Route with Upstream', () => {
     cy.contains('Search').click();
     cy.contains(data.route_name).siblings().contains('Edit').click();
 
-    cy.get(domSelector.name).click().should('value', data.route_name);
-    cy.contains('Next').click();
+    cy.get(domSelector.name).should('value', data.route_name);
+    cy.contains('Next').click({ force: true });
 
     // check if the changes have been saved
     cy.get(domSelector.node_0_host).should('value', data.ip1);
 
-    cy.get(domSelector.custom_upstream).click();
+    cy.get(domSelector.upstream_selector).click();
     cy.contains(data.upstream_name).click();
     cy.get(domSelector.input).should('be.disabled');
 
