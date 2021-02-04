@@ -56,10 +56,17 @@ var (
 	PIDPath          = "/tmp/manager-api.pid"
 )
 
+type MTLS struct {
+	CaFile   string `yaml:"ca_file"`
+	CertFile string `yaml:"cert_file"`
+	KeyFile  string `yaml:"key_file"`
+}
+
 type Etcd struct {
 	Endpoints []string
 	Username  string
 	Password  string
+	MTLS      *MTLS
 }
 
 type Listen struct {
