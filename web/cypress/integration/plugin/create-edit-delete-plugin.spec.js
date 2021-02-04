@@ -20,6 +20,7 @@ context('Create and Delete Plugin List', () => {
   const timeout = 5000;
   const data = {
     name: 'hmac-auth',
+    deleteSuccess: 'Delete Plugin Successfully',
   };
   const domSelector = {
     tableCell: '.ant-table-cell',
@@ -27,12 +28,14 @@ context('Create and Delete Plugin List', () => {
     refresh: '.anticon-reload',
     codemirror: '.CodeMirror',
     switch: '#disable',
+    deleteBtn: '.ant-btn-dangerous',
   };
 
   beforeEach(() => {
     cy.login();
 
     cy.fixture('plugin-list.json').as('cases');
+    cy.fixture('selector.json').as('domSelector');
   });
 
   it('should create plugins', function () {
@@ -63,18 +66,13 @@ context('Create and Delete Plugin List', () => {
 
   it('should delete plugin list', () => {
     cy.visit('/plugin/list');
-    cy.get(domSelector.refresh).click();
-    cy.get(domSelector.tableCell, { timeout }).should('exist').then(function (rows) {
-      [...rows].forEach((row) => {
-        const name = row.innerText;
-        const cases = this.cases[name] || [];
 
-        cases.forEach(() => {
-          cy.contains(name).siblings().contains('Delete').click({ timeout });
-          cy.contains('button', 'Confirm').click();
-        });
-      });
-    });
+    cy.get(domSelector.deleteBtn, { timeout }).each(function($el) {     
+      cy.wrap($el).click().click({ timeout });
+      cy.contains('button', 'Confirm').click({force: true});
+      cy.get(this.domSelector.notification).should('contain', data.deleteSuccess);
+      cy.get(this.domSelector.notificationCloseIcon).click();
+    })
 
     // check if plugin list is empty
     cy.get(domSelector.empty).should('be.visible');

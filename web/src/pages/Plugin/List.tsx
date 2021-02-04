@@ -19,7 +19,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import { Button, Popconfirm, Space } from 'antd';
+import { Button, Popconfirm, Space, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { omit } from 'lodash';
 
@@ -78,6 +78,11 @@ const Page: React.FC = () => {
               onConfirm={() => {
                 const plugins = omit(initialData, [`${record.name}`]);
                 createOrUpdate({ plugins }).then(() => {
+                  notification.success({
+                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                      id: 'menu.plugin',
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
+                  });
                   ref.current?.reload();
                   setInitialData(plugins);
                   setName('');
