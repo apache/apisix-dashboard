@@ -19,6 +19,7 @@ package route
 
 import (
 	"encoding/json"
+	"strings"
 	"net/http"
 	"testing"
 	"time"
@@ -1754,3 +1755,111 @@ func Test_Route_With_Script_ID(t *testing.T) {
 	_, err = handler.BatchDelete(ctx)
 	assert.Nil(t, err)
 }
+
+func TestRoute_Patch_Update(t *testing.T) {
+	// init
+	err := storage.InitETCDClient(conf.ETCDConfig)
+	assert.Nil(t, err)
+	err = store.InitStores()
+	assert.Nil(t, err)
+
+	handler := &Handler{
+		routeStore:    store.GetStore(store.HubKeyRoute),
+		svcStore:      store.GetStore(store.HubKeyService),
+		upstreamStore: store.GetStore(store.HubKeyUpstream),
+		scriptStore:   store.GetStore(store.HubKeyScript),
+	}
+	assert.NotNil(t, handler)
+
+	//create Note: depends on lib `dag-to-lua` if script exists
+	ctx := droplet.NewContext()
+	route := &entity.Route{}
+	reqBody := `{
+		"id": "pr1",
+		"name": "aaaa",
+		"labels": {
+			"build":"16",
+			"env":"production",
+			"version":"v2"
+		},
+		"plugins": {
+			"limit-count": {
+				"count": 2,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
+		},
+		"status": 1,
+		"uris": ["/hello_"],
+		"hosts": ["foo.com", "*.bar.com"],
+		"methods": ["GET", "POST"],
+		"upstream": {
+			"nodes": {
+				"172.16.238.20:1980": 1
+			},
+			"type": "roundrobin"
+		}
+	}`
+	err = json.Unmarshal([]byte(reqBody), route)
+	assert.Nil(t, err)
+	ctx.SetInput(route)
+	ret, err := handler.Create(ctx)
+	assert.Nil(t, err)
+	// check the returned valued
+	objRet, ok := ret.(*entity.Route)
+	assert.True(t, ok)
+	assert.Equal(t, "pr1", objRet.ID)
+
+	//sleep
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
+	//get
+	input := &GetInput{}
+	input.ID = "pr1"
+	ctx.SetInput(input)
+	ret, err = handler.Get(ctx)
+	stored := ret.(*entity.Route)
+	assert.Nil(t, err)
+	assert.Equal(t, stored.ID, route.ID)
+
+	reqBody1 := `{
+		"id": "pr1",
+		"name": "aaaa",
+		"status": 0,
+		"uris": ["/hello_"],
+		"hosts": ["foo.com", "*.bar.com"],
+		"methods": ["GET", "POST"],
+		"upstream": {
+			"nodes": {
+				"172.16.238.20:1980": 1
+			},
+			"type": "roundrobin"
+		}
+	}`
+	responesBody := `"status":0`
+
+	input2 := &PatchInput{}
+	input2.ID = "pr1"
+	input2.SubPath = ""
+	input2.Body = []byte(reqBody1)
+	ctx.SetInput(input2)
+
+	ret2, err := handler.Patch(ctx)
+	assert.Nil(t, err)
+	_ret2, err := json.Marshal(ret2)
+	assert.Nil(t, err)
+	isContains := strings.Contains(string(_ret2), responesBody)
+	assert.True(t, isContains)
+
+
+	// delete test data
+	inputDel := &BatchDelete{}
+	reqBody = `{"ids": "pr1"}`
+	err = json.Unmarshal([]byte(reqBody), inputDel)
+	assert.Nil(t, err)
+	ctx.SetInput(inputDel)
+	_, err = handler.BatchDelete(ctx)
+	assert.Nil(t, err)
+}
+
