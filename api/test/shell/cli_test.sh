@@ -193,6 +193,19 @@ if [[ `grep -c "${HOST}:${PORT}" ${STDOUT}` -ne '1' ]]; then
     exit 1
 fi
 
+# test -v command
+out=$(./manager-api -v 2>&1 || true)
+if [[ `echo $out | grep -c $VERSION` -ne '1' ]]; then
+    echo "failed: the manager server didn't show version info"
+    exit 1
+fi
+
+if [[ `echo $out | grep -c $GITHASH` -ne '1' ]]; then
+    echo "failed: the manager server didn't show git hash info"
+    exit 1
+fi
+
+
 # set an invalid etcd endpoint
 
 clean_up
