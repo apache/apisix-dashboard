@@ -368,15 +368,16 @@ sleep 3
 resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}')
 token=$(echo "${resp}" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
 if [ -z "${token}" ]; then
-    echo "login failed"
+    echo "login failed(mTLS connetct to ETCD)"
     exit 1
 fi
 
 # more validation to make sure it's ok to access etcd
-resp=$(curl -ig http://127.0.0.1:9000/apisix/admin/routes -i -H "Content-Type: application/json" -H "Authorization: $token")
+resp=$(curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/consumers -i -H "Content-Type: application/json" -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}')
 respCode=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
-if [ "$respCode" != "0" ]; then
-    echo "verify access etcd failed"
+respMessage=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "message" | sed 's/:/\n/g' | sed '1d')
+if [ "$respCode" != "0" ] || [ $respMessage != "\"\"" ]; then
+    echo "verify writing data failed(mTLS connetct to ETCD)"
     exit 1
 fi
 
