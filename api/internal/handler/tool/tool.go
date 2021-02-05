@@ -14,6 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-  'page.plugin.drawer.popconfirm.title.delete': '确定删除该插件吗？',
-};
+package tool
+
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/shiningrush/droplet"
+	wgin "github.com/shiningrush/droplet/wrapper/gin"
+
+	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils"
+)
+
+type Handler struct {
+}
+
+type InfoOutput struct {
+	Hash    string `json:"commit_hash"`
+	Version string `json:"version"`
+}
+
+func NewHandler() (handler.RouteRegister, error) {
+	return &Handler{}, nil
+}
+
+func (h *Handler) ApplyRoute(r *gin.Engine) {
+	r.GET("/version", wgin.Wraps(h.Version))
+}
+
+func (h *Handler) Version(_ droplet.Context) (interface{}, error) {
+	hash, version := utils.GetHashAndVersion()
+	return &InfoOutput{
+		Hash:    hash,
+		Version: version,
+	}, nil
+}
