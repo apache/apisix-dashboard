@@ -14,18 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consts
+package route
 
-import "github.com/shiningrush/droplet/data"
+import (
+	"testing"
+	"time"
 
-const (
-	ErrBadRequest = 20001
-	ErrForbidden  = 20002
+	"github.com/onsi/ginkgo"
+
+	"e2enew/base"
 )
 
-var (
-	// base error please refer to github.com/shiningrush/droplet/data, such as data.ErrNotFound, data.ErrConflicted
-	ErrInvalidRequest       = data.BaseError{Code: ErrBadRequest, Message: "invalid request"}
-	ErrSchemaValidateFailed = data.BaseError{Code: ErrBadRequest, Message: "JSONSchema validate failed"}
-	ErrIPNotAllow           = data.BaseError{Code: ErrForbidden, Message: "IP address not allowed"}
-)
+func TestRoute(t *testing.T) {
+	ginkgo.RunSpecs(t, "route suite")
+}
+
+var _ = ginkgo.AfterSuite(func() {
+	base.CleanResource("routes")
+	base.CleanResource("consumers")
+	time.Sleep(base.SleepTime)
+})

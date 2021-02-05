@@ -17,20 +17,17 @@
 /* eslint-disable no-undef */
 
 context('metrics page smoke test', () => {
-  const domSelectors = {
-    pageContent: '.ant-pro-page-container',
-  };
-
   beforeEach(() => {
     cy.login();
+
+    cy.fixture('selector.json').as('domSelector');
   });
 
-  it('visit metrics page', () => {
-    // go to metrics page
+  it('should visit metrics page', function () {
     cy.visit('/');
     cy.contains('Metrics').click();
     cy.url().should('contains', '/metrics');
-    cy.get(domSelectors.pageContent)
+    cy.get(this.domSelector.pageContent)
       .children()
       .should('contain', 'Metrics')
       .and('contain', 'You have not configured Grafana')
