@@ -44,4 +44,4 @@ jobs:
         run: ./manager-api
 
       - name: check
-        run: api/test/shell/docker_deploy_test.sh -s true
+        run: api/test/shell/manager_smoking.sh -s true
