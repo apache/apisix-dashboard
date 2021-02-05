@@ -56,7 +56,7 @@ func SetUpRouter() *gin.Engine {
 	logger := log.GetLogger(log.AccessLog)
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("session", store))
-	r.Use(filter.CORS(), filter.RequestId(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.RecoverHandler())
+	r.Use(filter.CORS(), filter.RequestId(), filter.IPFilter(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.RecoverHandler())
 	r.Use(static.Serve("/", static.LocalFile(filepath.Join(conf.WorkDir, conf.WebDir), false)))
 	r.NoRoute(func(c *gin.Context) {
 		c.File(fmt.Sprintf("%s/index.html", filepath.Join(conf.WorkDir, conf.WebDir)))
