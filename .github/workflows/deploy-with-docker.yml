@@ -40,7 +40,7 @@ jobs:
           docker logs docker-deploy_managerapi_1
 
       - name: Run Test
-        run: api/test/shell/docker_deploy_test.sh
+        run: api/test/shell/manager_smoking.sh -s false
 
       - name: Deploy
         if: ${{ github.event_name == 'push' }}
