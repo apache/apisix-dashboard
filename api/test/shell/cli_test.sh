@@ -343,23 +343,21 @@ check_logfile
 clean_up
 
 # mtls test
-
 ./etcd-v3.4.14-linux-amd64/etcd --name infra0 --data-dir infra0 \
-  --client-cert-auth --trusted-ca-file=$(pwd)/test/certs/mtls_ca.crt --cert-file=$(pwd)/test/certs/mtls_server.crt --key-file=$(pwd)/test/certs/mtls_server.key \
-  --advertise-client-urls https://127.0.0.1:3379 --listen-client-urls https://127.0.0.1:3379 --listen-peer-urls http://0.0.0.0:3380 &
+  --client-cert-auth --trusted-ca-file=$(pwd)/test/certs/mtls_ca.pem --cert-file=$(pwd)/test/certs/mtls_server.pem --key-file=$(pwd)/test/certs/mtls_server-key.pem \
+  --advertise-client-urls https://127.0.0.1:3379 --listen-client-urls https://127.0.0.1:3379 --listen-peer-urls http://127.0.0.1:3380 &
 
 currentDir=$(pwd)
 
 if [[ $KERNEL = "Darwin" ]]; then
   sed -i "" "s@key_file: \"\"@key_file: \"$currentDir/test/certs/mtls_client-key.pem\"@g" conf/conf.yaml
-  sed -i "" "s@cert_file: \"\"@key_file: \"$currentDir/test/certs/mtls_client.pem\"@g" conf/conf.yaml
-  sed -i "" "s@ca_file: \"\"@key_file: \"$currentDir/test/certs/mtls_ca.pem\"@g" conf/conf.yaml
+  sed -i "" "s@cert_file: \"\"@cert_file: \"$currentDir/test/certs/mtls_client.pem\"@g" conf/conf.yaml
+  sed -i "" "s@ca_file: \"\"@ca_file: \"$currentDir/test/certs/mtls_ca.pem\"@g" conf/conf.yaml
   sed -i "" 's/127.0.0.1:2379/127.0.0.1:3379/' conf/conf.yaml
 else
   sed -i "s@key_file: \"\"@key_file: \"$currentDir/test/certs/mtls_client-key.pem\"@g" conf/conf.yaml
-  sed -i "s@cert_file: \"\"@key_file: \"$currentDir/test/certs/mtls_client.pem\"@g" conf/conf.yaml
-  sed -i "s@ca_file: \"\"@key_file: \"$currentDir/test/certs/mtls_ca.pem\"@g" conf/conf.yaml
-
+  sed -i "s@cert_file: \"\"@cert_file: \"$currentDir/test/certs/mtls_client.pem\"@g" conf/conf.yaml
+  sed -i "s@ca_file: \"\"@ca_file: \"$currentDir/test/certs/mtls_ca.pem\"@g" conf/conf.yaml
   sed -i 's/127.0.0.1:2379/127.0.0.1:3379/' conf/conf.yaml
 fi
 
@@ -375,7 +373,7 @@ if [ -z "${token}" ]; then
 fi
 
 # more validation to make sure it's ok to access etcd
-resp=$(curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/routes -i -H "Content-Type: application/json" -H "Authorization: $token")
+resp=$(curl -ig http://127.0.0.1:9000/apisix/admin/routes -i -H "Content-Type: application/json" -H "Authorization: $token")
 respCode=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
 if [ "$respCode" != "0" ]; then
     echo "verify access etcd failed"
