@@ -48,7 +48,7 @@ func TestVersionMatched(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			ExpectBody: []string{"\"code\":2000001",
-				"\"message\":\"The version of manager-api and apisix are not matched.\"",
+				"\"message\":\"The manager-api and apache apisix are mismatched.\"",
 				"\"matched\":false", "apisix_server1", "apisix_server2"},
 		},
 	}

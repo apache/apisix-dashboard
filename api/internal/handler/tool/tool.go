@@ -47,7 +47,7 @@ type nodes struct {
 type VersionMatchOutput struct {
 	Matched          bool    `json:"matched"`
 	DashboardVersion string  `json:"dashboard_version"`
-	NotMatchedNodes  []nodes `json:"not_matched_nodes"`
+	MismatchedNodes  []nodes `json:"mismatched_nodes"`
 }
 
 func NewHandler() (handler.RouteRegister, error) {
@@ -76,13 +76,13 @@ func (h *Handler) VersionMatch(c droplet.Context) (interface{}, error) {
 
 	matchedVersion := utils.GetMatchedVersion(version)
 
-	var notMatchedNodes = make([]nodes, 0)
+	var mismatchedNodes = make([]nodes, 0)
 	_, err := h.serverInfoStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			serverInfo := obj.(*entity.ServerInfo)
 
 			if serverInfo.Version != matchedVersion {
-				notMatchedNodes = append(notMatchedNodes, nodes{
+				mismatchedNodes = append(mismatchedNodes, nodes{
 					Hostname: serverInfo.Hostname,
 					Version:  serverInfo.Version,
 				})
@@ -95,15 +95,15 @@ func (h *Handler) VersionMatch(c droplet.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	output.NotMatchedNodes = notMatchedNodes
-	if len(output.NotMatchedNodes) == 0 {
+	output.MismatchedNodes = mismatchedNodes
+	if len(output.MismatchedNodes) == 0 {
 		output.Matched = true
 	} else {
 		// TODO: move this to utils
 		return &data.SpecCodeResponse{StatusCode: http.StatusOK, Response: data.Response{
 			Data:    &output,
 			Code:    2000001,
-			Message: "The version of manager-api and apisix are not matched.",
+			Message: "The manager-api and apache apisix are mismatched.",
 		}}, nil
 	}
 

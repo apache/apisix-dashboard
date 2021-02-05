@@ -76,7 +76,7 @@ func TestTool_VersionMatch(t *testing.T) {
 				wantRet: &VersionMatchOutput{
 					Matched:          true,
 					DashboardVersion: "",
-					NotMatchedNodes:  make([]nodes, 0),
+					MismatchedNodes:  make([]nodes, 0),
 				},
 			},
 			{
@@ -103,7 +103,7 @@ func TestTool_VersionMatch(t *testing.T) {
 					Data: &VersionMatchOutput{
 						Matched:          false,
 						DashboardVersion: "",
-						NotMatchedNodes: []nodes{
+						MismatchedNodes: []nodes{
 							{
 								Hostname: "gentoo",
 								Version:  "2.2",
@@ -115,7 +115,7 @@ func TestTool_VersionMatch(t *testing.T) {
 						},
 					},
 					Code:    2000001,
-					Message: "The version of manager-api and apisix are not matched.",
+					Message: "The manager-api and apache apisix are mismatched.",
 				}},
 			},
 		}
