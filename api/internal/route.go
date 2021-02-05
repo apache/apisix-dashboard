@@ -41,6 +41,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler/server_info"
 	"github.com/apisix/manager-api/internal/handler/service"
 	"github.com/apisix/manager-api/internal/handler/ssl"
+	"github.com/apisix/manager-api/internal/handler/tool"
 	"github.com/apisix/manager-api/internal/handler/upstream"
 	"github.com/apisix/manager-api/internal/log"
 )
@@ -76,6 +77,7 @@ func SetUpRouter() *gin.Engine {
 		label.NewHandler,
 		data_loader.NewHandler,
 		data_loader.NewImportHandler,
+		tool.NewHandler,
 	}
 
 	for i := range factories {
