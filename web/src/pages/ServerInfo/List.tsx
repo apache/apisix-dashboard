@@ -57,30 +57,36 @@ const ServerInfo: React.FC = () => {
     fetchVersion().then(({ commit_hash, version }) => {
       setCommitHash(commit_hash);
       setDashboardVersion(version);
-    })
+    });
   }, []);
 
   return (
     <PageContainer title={formatMessage({ id: 'page.systemStatus.pageContainer.title' })}>
-      <Card title={formatMessage({ id: 'page.systemStatus.dashboardInfo' })} bodyStyle={{ padding: 0 }} style={{ marginBottom: 15 }}>
-        <div className={styles.wrap} >
-          {nodeList.length > 0 && (
-            <table className={styles.table}>
-              <tbody>
-                <tr>
-                  <td>commit_hash</td>
-                  <td>{commitHash}</td>
-                </tr>
-                <tr>
-                  <td>dashboard_version</td>
-                  <td>{dashboardVersion}</td>
-                </tr>
-              </tbody>
-            </table>
-          )}
+      <Card
+        title={formatMessage({ id: 'page.systemStatus.dashboardInfo' })}
+        bodyStyle={{ padding: 0 }}
+        style={{ marginBottom: 15 }}
+      >
+        <div className={styles.wrap}>
+          <table className={styles.table}>
+            <tbody>
+              <tr>
+                <td>commit_hash</td>
+                <td>{commitHash}</td>
+              </tr>
+              <tr>
+                <td>dashboard_version</td>
+                <td>{dashboardVersion}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </Card>
-      <Card title={formatMessage({ id: 'page.systemStatus.nodeInfo' })} bodyStyle={{ padding: 0 }} bordered={false}>
+      <Card
+        title={formatMessage({ id: 'page.systemStatus.nodeInfo' })}
+        bodyStyle={{ padding: 0 }}
+        bordered={false}
+      >
         <div className={styles.select}>
           <Form form={form}>
             <Form.Item wrapperCol={{ span: 10 }} style={{ marginBottom: 0 }} name="nodeId">
@@ -99,12 +105,12 @@ const ServerInfo: React.FC = () => {
                     {item.hostname}
                   </Option>
                 ))}
-              ;
-            </Select>
+                ;
+              </Select>
             </Form.Item>
             <Form.Item style={{ marginBottom: 0, fontSize: '12px', color: '#00000073' }}>
               {formatMessage({ id: 'page.systemStatus.desc' })}&nbsp;
-            <a
+              <a
                 href="https://github.com/apache/apisix/blob/master/doc/plugins/server-info.md"
                 target="_blank"
                 rel="noreferrer"
@@ -130,7 +136,6 @@ const ServerInfo: React.FC = () => {
           )}
         </div>
       </Card>
-
     </PageContainer>
   );
 };
