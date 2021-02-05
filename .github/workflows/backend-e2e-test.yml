@@ -118,6 +118,8 @@ jobs:
       - name: output test coverage
         working-directory: ./api/test/testdata
         run: |
+          pwd
+          ls -l
           go tool cover -func=./integrationcover.out
 
       - name: upload coverage profile
