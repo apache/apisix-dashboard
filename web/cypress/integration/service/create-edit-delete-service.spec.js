@@ -34,7 +34,7 @@ context('create and delete service ', () => {
     create_service_success: 'Create Service Successfully',
     edit_service_success: 'Edit Service Successfully',
     delete_service_success: 'Delete Service Successfully',
-  }
+  };
 
   beforeEach(() => {
     cy.login();
@@ -66,7 +66,7 @@ context('create and delete service ', () => {
 
     // Confirm whether the created data is saved.
     cy.get(domSelector.nodes_0_host).should('value', data.ip1);
-    cy.get(domSelector.desc).should('value', data.desc1)
+    cy.get(domSelector.desc).should('value', data.desc1);
     cy.get(domSelector.name).clear().type(data.service_name2);
     cy.get(domSelector.desc).clear().type(data.desc2);
     cy.get(domSelector.nodes_0_host).click();

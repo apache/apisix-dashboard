@@ -52,7 +52,7 @@ clean_logfile() {
 trap clean_up EXIT
 
 export GO111MODULE=on
-go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/cmd.Version=${VERSION} -X github.com/apisix/manager-api/cmd.GitHash=${GITHASH}" ./cmd/manager
+go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/internal/utils.version=${VERSION} -X github.com/apisix/manager-api/internal/utils.gitHash=${GITHASH}" ./cmd/manager
 
 # default level: warn, path: logs/error.log
 
@@ -193,6 +193,19 @@ if [[ `grep -c "${HOST}:${PORT}" ${STDOUT}` -ne '1' ]]; then
     exit 1
 fi
 
+# test -v command
+out=$(./manager-api -v 2>&1 || true)
+if [[ `echo $out | grep -c $VERSION` -ne '1' ]]; then
+    echo "failed: the manager server didn't show version info"
+    exit 1
+fi
+
+if [[ `echo $out | grep -c $GITHASH` -ne '1' ]]; then
+    echo "failed: the manager server didn't show git hash info"
+    exit 1
+fi
+
+
 # set an invalid etcd endpoint
 
 clean_up
@@ -232,6 +245,30 @@ if [[ `grep -c "/apisix/admin/user/login" ./logs/access.log` -eq '0' ]]; then
     echo "failed: failed to write access log"
     exit 1
 fi
+
+# clean config
+clean_up
+
+# set ip allowed list
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" 's@127.0.0.0/24@10.0.0.1@' conf/conf.yaml
+else
+  sed -i 's@127.0.0.0/24@10.0.0.1@' conf/conf.yaml
+fi
+
+./manager-api &
+sleep 3
+
+# should be forbidden
+curl http://127.0.0.1:9000
+code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} http://127.0.0.1:9000)
+if [ ! $code -eq 403 ]; then
+    echo "failed: verify IP allowed list failed"
+    exit 1
+fi
+
+./manager-api stop
+clean_up
 
 
 # etcd basic auth
@@ -288,6 +325,16 @@ if [ "$respCode" != "0" ] || [ $respMessage != "\"\"" ]; then
     exit 1
 fi
 
-./manager-api stop
+# check the version api
+resp=$(curl http://127.0.0.1:9000/apisix/admin/tool/version)
+if [[ `echo ${resp} | grep -c "${VERSION}"` -ne '1' ]]; then
+    echo "failed: can't through api to get version info"
+    exit 1
+fi
+
+if [[ `echo ${resp} | grep -c "${GITHASH}"` -ne '1' ]]; then
+    echo "failed: can't through api to get githash info"
+    exit 1
+fi
 
 check_logfile

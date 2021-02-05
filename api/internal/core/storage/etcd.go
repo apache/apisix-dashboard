@@ -27,6 +27,7 @@ import (
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
+	"github.com/apisix/manager-api/internal/utils/runtime"
 )
 
 const (
@@ -207,6 +208,7 @@ func (s *EtcdV3Storage) Watch(ctx context.Context, key string) <-chan WatchRespo
 	eventChan := s.client.Watch(ctx, key, clientv3.WithPrefix())
 	ch := make(chan WatchResponse, 1)
 	go func() {
+		defer runtime.HandlePanic()
 		for event := range eventChan {
 			output := WatchResponse{
 				Canceled: event.Canceled,
