@@ -54,8 +54,8 @@ context('Online debug', () => {
 
     // input uri with specified special characters
     data.uris.forEach((uri) => {
-      cy.get(this.domSelector.uriInput).clear();
-      cy.get(this.domSelector.uriInput).type(uri);
+      cy.get(this.domSelector.debugUri).clear();
+      cy.get(this.domSelector.debugUri).type(uri);
       cy.contains(routeLocaleUS['page.route.button.send']).click({ force: true });
 
       // should not show the notification about input the valid request url

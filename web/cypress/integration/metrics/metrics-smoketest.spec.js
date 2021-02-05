@@ -23,7 +23,7 @@ context('metrics page smoke test', () => {
     cy.fixture('selector.json').as('domSelector');
   });
 
-  it('visit metrics page', function () {
+  it('should visit metrics page', function () {
     cy.visit('/');
     cy.contains('Metrics').click();
     cy.url().should('contains', '/metrics');

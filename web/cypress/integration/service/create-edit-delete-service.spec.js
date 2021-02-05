@@ -55,7 +55,7 @@ context('create and delete service ', () => {
     cy.visit('/');
     cy.contains('Service').click();
 
-    cy.get(this.domSelector.search_name).type(data.service_name1);
+    cy.get(this.domSelector.nameSelector).type(data.service_name1);
     cy.contains('Search').click();
     cy.contains(data.service_name1).siblings().contains('Edit').click();
 
@@ -74,7 +74,7 @@ context('create and delete service ', () => {
 
   it('should delete the service', function () {
     // Confirm whether the edited data is saved.
-    cy.get(this.domSelector.search_name).type(data.service_name2);
+    cy.get(this.domSelector.nameSelector).type(data.service_name2);
     cy.contains('Search').click();
     cy.contains(data.service_name2).siblings().contains('Edit').click();
     cy.get(this.domSelector.nodes_0_host).should('value', data.ip2);

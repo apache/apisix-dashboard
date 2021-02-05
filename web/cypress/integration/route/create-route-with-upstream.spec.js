@@ -56,13 +56,13 @@ context('Create Route with Upstream', () => {
   });
 
   it('should disable Upstream input boxes after selecting an existing upstream', function () {
-    cy.get(this.domSelector.upstream_selector).click();
+    cy.get(this.domSelector.upstreamSelector).click();
     cy.contains(data.upstream_name).click();
     cy.get(this.domSelector.input).should('be.disabled');
   });
 
   it('should enable Upstream input boxes after selecting Custom mode', function () {
-    cy.get(this.domSelector.upstream_selector).click();
+    cy.get(this.domSelector.upstreamSelector).click();
     cy.contains('Custom').click();
     cy.get(this.domSelector.input).should('not.be.disabled');
   });
@@ -81,7 +81,7 @@ context('Create Route with Upstream', () => {
     cy.contains('Route').click();
 
     cy.reload();
-    cy.get(this.domSelector.search_name).type(data.route_name);
+    cy.get(this.domSelector.nameSelector).type(data.route_name);
     cy.contains('Search').click();
     cy.contains(data.route_name).siblings().contains('Edit').click();
 
@@ -91,7 +91,7 @@ context('Create Route with Upstream', () => {
     // check if the changes have been saved
     cy.get(this.domSelector.nodes_0_host).should('value', data.ip1);
 
-    cy.get(this.domSelector.upstream_selector).click();
+    cy.get(this.domSelector.upstreamSelector).click();
     cy.contains(data.upstream_name).click();
     cy.get(this.domSelector.input).should('be.disabled');
 
@@ -107,7 +107,7 @@ context('Create Route with Upstream', () => {
     cy.url().should('contains', 'routes/list');
 
     // check if the changes have been saved
-    cy.get(this.domSelector.search_name).type(data.route_name);
+    cy.get(this.domSelector.nameSelector).type(data.route_name);
     cy.contains('Search').click();
     cy.contains(data.route_name).siblings().contains('Edit').click();
     cy.contains('Next').click();
@@ -116,7 +116,7 @@ context('Create Route with Upstream', () => {
 
   it('should delete this test route and upstream', function () {
     cy.visit('/routes/list');
-    cy.get(this.domSelector.search_name).type(data.route_name);
+    cy.get(this.domSelector.nameSelector).type(data.route_name);
     cy.contains('Search').click();
     cy.contains(data.route_name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();

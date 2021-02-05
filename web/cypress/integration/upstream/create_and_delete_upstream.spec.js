@@ -60,15 +60,15 @@ context('Create and Delete Upstream', () => {
 
     // change upstream type to chash, todo: optimize the search method
     cy.get('[title=roundrobin]').click();
-    cy.get(this.domSelector.selectItem).within(() => {
+    cy.get(this.domSelector.upstreamType).within(() => {
       cy.contains('chash').click();
     });
     cy.get('#hash_on').click();
-    cy.get(this.domSelector.selectItem).within(() => {
+    cy.get(this.domSelector.upstreamType).within(() => {
       cy.contains('vars').click();
     });
     cy.get('#key').click();
-    cy.get(this.domSelector.selectItem).within(() => {
+    cy.get(this.domSelector.upstreamType).within(() => {
       cy.contains('remote_addr').click();
     });
 

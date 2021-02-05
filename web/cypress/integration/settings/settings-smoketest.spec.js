@@ -36,7 +36,7 @@ context('settings page smoke test', () => {
 
   it('should visit settings page', function () {
     cy.visit('/');
-    cy.get(this.domSelector.setting).invoke('show').click('center');
+    cy.get(this.domSelector.avatar).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
     cy.get(this.domSelector.pageContainer)
@@ -48,7 +48,7 @@ context('settings page smoke test', () => {
 
   it('should set a invalid url', function () {
     cy.visit('/');
-    cy.get(this.domSelector.setting).invoke('show').click('center');
+    cy.get(this.domSelector.avatar).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
     cy.get(this.domSelector.grafanaURL).clear().type(data.invalidURL);
@@ -57,13 +57,13 @@ context('settings page smoke test', () => {
 
   it('should set a accessible URL', function () {
     cy.visit('/');
-    cy.get(this.domSelector.setting).invoke('show').click('center');
+    cy.get(this.domSelector.avatar).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
     cy.get(this.domSelector.grafanaURL).clear().type(data.validURL);
     cy.contains('Submit').click();
 
-    cy.get(this.domSelector.notificationMsg).should('contain', data.updateSuccessfully);
+    cy.get(this.domSelector.notificationMessage).should('contain', data.updateSuccessfully);
     cy.intercept(data.validURL).as(data.fetchURL);
     cy.wait(data.fetch);
     cy.get(this.domSelector.pageContainer).children().should('contain', 'Metrics');

@@ -143,7 +143,7 @@ context('import and export routes', () => {
       // click import button
       cy.contains(routeLocaleUS['page.route.button.importOpenApi']).click();
       // select file
-      cy.get(this.domSelector.file).attachFile(file);
+      cy.get(this.domSelector.fileSelector).attachFile(file);
       // click submit
       cy.contains(componentLocaleUS['component.global.confirm']).click();
       // show upload notification

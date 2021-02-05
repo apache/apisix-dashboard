@@ -37,7 +37,7 @@ context('Create and Delete Consumer', () => {
     cy.contains('Next').click();
 
     // plugin config
-    cy.contains(this.domSelector.pluginsCard, 'key-auth').within(() => {
+    cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
       cy.get('button').first().click();
     });
 
@@ -77,7 +77,7 @@ context('Create and Delete Consumer', () => {
     cy.contains('Next').click();
 
     // plugin config
-    cy.contains(this.domSelector.pluginsCard, 'key-auth').within(() => {
+    cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
       cy.get('button').first().click();
     });
     // edit codeMirror

@@ -47,7 +47,7 @@ context('ssl smoke test', () => {
     const sni = this.certificate.valid.sni;
     cy.contains(sni).parents().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notificationMsg).should('contain', 'Remove target SSL successfully');
+    cy.get(this.domSelector.notificationMessage).should('contain', 'Remove target SSL successfully');
   });
 
   it('should set unmatch certificate and key by input', function () {

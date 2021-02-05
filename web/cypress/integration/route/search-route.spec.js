@@ -77,21 +77,21 @@ context('Create and Search Route', () => {
     cy.visit('/');
     cy.contains('Route').click();
     // full match
-    cy.get(this.domSelector.searchName).type(data.test1);
+    cy.get(this.domSelector.nameSelector).type(data.test1);
     cy.contains('Search').click();
     cy.contains(data.test1).siblings().should('contain', data.desc1);
     cy.contains(data.test0).should('not.exist');
     cy.contains(data.test2).should('not.exist');
     // partial match
     cy.reload();
-    cy.get(this.domSelector.searchName).type(data.test);
+    cy.get(this.domSelector.nameSelector).type(data.test);
     cy.contains('Search').click();
     cy.contains(data.test0).siblings().should('contain', data.desc0);
     cy.contains(data.test1).siblings().should('contain', data.desc1);
     cy.contains(data.test2).siblings().should('contain', data.desc2);
     // no match
     cy.reload();
-    cy.get(this.domSelector.searchName).type(data.testx);
+    cy.get(this.domSelector.nameSelector).type(data.testx);
     cy.contains('Search').click();
     cy.contains(data.test0).should('not.exist');
     cy.contains(data.test1).should('not.exist');
@@ -104,7 +104,7 @@ context('Create and Search Route', () => {
 
     // search one label
     cy.get(this.domSelector.refresh).click();
-    cy.get(this.domSelector.searchLabels).click();
+    cy.get(this.domSelector.labelSelector).click();
     cy.get(this.domSelector.dropdown).within(() => {
       cy.contains(data.value0).click();
     });

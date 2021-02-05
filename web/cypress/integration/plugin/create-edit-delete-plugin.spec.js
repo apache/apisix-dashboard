@@ -50,7 +50,7 @@ context('Create and Delete Plugin List', () => {
     cy.get(this.domSelector.codemirror)
       .first()
       .then(() => {
-        cy.get(this.domSelector.switch).click();
+        cy.get(this.domSelector.disabledSwitcher).click();
         cy.contains('button', 'Submit').click();
       });
     cy.contains(data.name).should('not.exist');
@@ -59,7 +59,7 @@ context('Create and Delete Plugin List', () => {
   it('should delete plugin list', function () {
     cy.visit('/plugin/list');
 
-    cy.get(this.domSelector.deleteBtn, { timeout }).each(function ($el) {
+    cy.get(this.domSelector.deleteButton, { timeout }).each(function ($el) {
       cy.wrap($el).click().click({ timeout });
       cy.contains('button', 'Confirm').click({ force: true });
       cy.get(this.domSelector.notification).should('contain', data.deleteSuccess);
