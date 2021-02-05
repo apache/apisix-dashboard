@@ -144,7 +144,7 @@ func NewManagerAPICommand() *cobra.Command {
 	}
 
 	cmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
-	cmd.PersistentFlags().BoolVarP(&showVersion, "show_version", "v", false, "show manager api-version")
+	cmd.PersistentFlags().BoolVarP(&showVersion, "version", "v", false, "show manager-api version")
 
 	cmd.AddCommand(newStopCommand())
 	return cmd
