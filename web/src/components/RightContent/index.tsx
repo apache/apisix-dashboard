@@ -26,7 +26,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import React, { useEffect } from 'react';
 import { useModel, SelectLang } from 'umi';
 
-import { fetchVersionMatch } from '@/services/tool'
+import { fetchVersionMatch } from '@/services/tool';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
 
@@ -53,7 +53,7 @@ const GlobalHeaderRight: React.FC = () => {
   }
   useEffect(() => {
     fetchVersionMatch();
-  }, [])
+  }, []);
   return (
     <Space className={className}>
       <Tooltip title="Documentation">
