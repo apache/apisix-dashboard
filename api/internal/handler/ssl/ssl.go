@@ -197,7 +197,6 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
-
 	return ret, nil
 }
 
@@ -246,11 +245,10 @@ type PatchInput struct {
 func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*PatchInput)
 	reqBody := input.Body
-	ID := input.ID
+	id := input.ID
 	subPath := input.SubPath
 
-	sslStore := store.GetStore(store.HubKeySsl)
-	stored, err := sslStore.Get(c.Context(), ID)
+	stored, err := h.sslStore.Get(c.Context(), id)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -266,7 +264,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	ret, err := sslStore.Update(c.Context(), &ssl, false)
+	ret, err := h.sslStore.Update(c.Context(), &ssl, false)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -473,8 +471,7 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
-	routeStore := store.GetStore(store.HubKeySsl)
-	ret, err := routeStore.List(c.Context(), store.ListInput{
+	ret, err := h.sslStore.List(c.Context(), store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,
