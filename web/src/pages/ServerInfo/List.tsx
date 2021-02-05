@@ -62,7 +62,7 @@ const ServerInfo: React.FC = () => {
 
   return (
     <PageContainer title={formatMessage({ id: 'page.systemStatus.pageContainer.title' })}>
-      <Card title={formatMessage({ id: 'page.systemStatus.dashboardInfo' })} style={{ marginBottom: 15 }}>
+      <Card title={formatMessage({ id: 'page.systemStatus.dashboardInfo' })} bodyStyle={{ padding: 0 }} style={{ marginBottom: 15 }}>
         <div className={styles.wrap} >
           {nodeList.length > 0 && (
             <table className={styles.table}>
@@ -80,10 +80,10 @@ const ServerInfo: React.FC = () => {
           )}
         </div>
       </Card>
-      <Card title={formatMessage({ id: 'page.systemStatus.nodeInfo' })} bordered={false}>
+      <Card title={formatMessage({ id: 'page.systemStatus.nodeInfo' })} bodyStyle={{ padding: 0 }} bordered={false}>
         <div className={styles.select}>
           <Form form={form}>
-            <Form.Item wrapperCol={{ span: 5 }} style={{ marginBottom: 0 }} name="nodeId">
+            <Form.Item wrapperCol={{ span: 10 }} style={{ marginBottom: 0 }} name="nodeId">
               <Select
                 placeholder={formatMessage({ id: 'page.systemStatus.select.placeholder' })}
                 onChange={(value) => {
