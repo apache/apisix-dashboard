@@ -22,9 +22,20 @@
   "input": ":input",
   "nameSelector": "[title=Name]",
   "serviceSelector": "[title=test_service]",
+  "nameSearch": "[title=Name]",
 
   "description": "#desc",
   "upstreamSelector": "[data-cy=upstream_selector]",
+  "addHost": "[data-cy=addHost]",
+  "hosts_1": "#hosts_1",
+  "remoteHost": "#remote_addrs_0",
+  "remoteAddress": "[data-cy=addRemoteAddr]",
+  "address1": "#remote_addrs_1",
+  "parameterPosition": "#position",
+  "ruleCard": ".ant-modal",
+  "operator": "#operator",
+  "value": "#value",
+  
 
   "fileSelector": "[type=file]",
   "fileTypeRadio": "[type=radio]",
