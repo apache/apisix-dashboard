@@ -739,15 +739,44 @@ func TestRoute_Create(t *testing.T) {
 					"version": "v1",
 				},
 			},
+			mockRet: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "s1",
+					CreateTime: 1609746531,
+				},
+				Name:       "s1",
+				Desc:       "test_route",
+				UpstreamID: "u1",
+				ServiceID:  "s1",
+				ScriptID:   "s1",
+				Script:     "",
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
 			serviceRet:  "service",
 			serviceErr:  nil,
 			upstreamRet: "upstream",
 			upstreamErr: nil,
 			scriptRet:   "script",
 			scriptErr:   nil,
-			wantRet:     nil,
-			wantErr:     nil,
-			called:      true,
+			wantRet: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "s1",
+					CreateTime: 1609746531,
+				},
+				Name:       "s1",
+				Desc:       "test_route",
+				UpstreamID: "u1",
+				ServiceID:  "s1",
+				ScriptID:   "s1",
+				Script:     "",
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
+			wantErr: nil,
+			called:  true,
 		},
 		{
 			caseDesc: "create route failed, service not found",
@@ -887,15 +916,44 @@ func TestRoute_Create(t *testing.T) {
 					"version": "v1",
 				},
 			},
+			mockRet: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "s1",
+					CreateTime: 1609746531,
+				},
+				Name:       "s1",
+				Desc:       "test_route",
+				UpstreamID: "u1",
+				ServiceID:  "s1",
+				Script:     luaCode,
+				ScriptID:   "s1",
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
 			serviceRet:  "service",
 			serviceErr:  nil,
 			upstreamRet: "upstream",
 			upstreamErr: nil,
 			scriptRet:   "script",
 			scriptErr:   nil,
-			wantRet:     nil,
-			wantErr:     nil,
-			called:      true,
+			wantRet: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "s1",
+					CreateTime: 1609746531,
+				},
+				Name:       "s1",
+				Desc:       "test_route",
+				UpstreamID: "u1",
+				ServiceID:  "s1",
+				Script:     luaCode,
+				ScriptID:   "s1",
+				Labels: map[string]string{
+					"version": "v1",
+				},
+			},
+			wantErr: nil,
+			called:  true,
 		},
 	}
 
@@ -969,6 +1027,34 @@ func TestRoute_Update(t *testing.T) {
 					"version": "v2",
 				},
 			},
+			mockRet: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID: "r1",
+				},
+				Name:       "r1",
+				Desc:       "updated route",
+				UpstreamID: "u2",
+				Script:     luaScript,
+				ScriptID:   "r1",
+				ServiceID:  "s1",
+				Labels: map[string]string{
+					"version": "v2",
+				},
+			},
+			wantRet: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID: "r1",
+				},
+				Name:       "r1",
+				Desc:       "updated route",
+				UpstreamID: "u2",
+				Script:     luaScript,
+				ScriptID:   "r1",
+				ServiceID:  "s1",
+				Labels: map[string]string{
+					"version": "v2",
+				},
+			},
 			mockErr:      nil,
 			serviceInput: "s2",
 			called:       true,
@@ -1002,7 +1088,35 @@ func TestRoute_Update(t *testing.T) {
 					"version": "v2",
 				},
 			},
-			mockErr:      nil,
+			mockRet: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID: "r1",
+				},
+				Name:       "r1",
+				Desc:       "updated route",
+				UpstreamID: "u2",
+				Script:     luaCode,
+				ScriptID:   "r1",
+				ServiceID:  "s1",
+				Labels: map[string]string{
+					"version": "v2",
+				},
+			},
+			mockErr: nil,
+			wantRet: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID: "r1",
+				},
+				Name:       "r1",
+				Desc:       "updated route",
+				UpstreamID: "u2",
+				Script:     luaCode,
+				ScriptID:   "r1",
+				ServiceID:  "s1",
+				Labels: map[string]string{
+					"version": "v2",
+				},
+			},
 			serviceInput: "s2",
 			called:       true,
 		},
@@ -1180,6 +1294,56 @@ func TestRoute_Patch(t *testing.T) {
 				},
 				Status: 0,
 			},
+			mockRet: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "r1",
+					CreateTime: 1609340491,
+					UpdateTime: 1609340491,
+				},
+				Name:       "exist_service",
+				UpstreamID: "u1",
+				Upstream: &entity.UpstreamDef{
+					Key: "key",
+				},
+				EnableWebsocket: false,
+				Labels: map[string]string{
+					"version": "v1",
+				},
+				Plugins: map[string]interface{}{
+					"limit-count": map[string]interface{}{
+						"count":         float64(2),
+						"time_window":   float64(60),
+						"rejected_code": float64(503),
+						"key":           "remote_addr",
+					},
+				},
+				Status: 0,
+			},
+			wantRet: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "r1",
+					CreateTime: 1609340491,
+					UpdateTime: 1609340491,
+				},
+				Name:       "exist_service",
+				UpstreamID: "u1",
+				Upstream: &entity.UpstreamDef{
+					Key: "key",
+				},
+				EnableWebsocket: false,
+				Labels: map[string]string{
+					"version": "v1",
+				},
+				Plugins: map[string]interface{}{
+					"limit-count": map[string]interface{}{
+						"count":         float64(2),
+						"time_window":   float64(60),
+						"rejected_code": float64(503),
+						"key":           "remote_addr",
+					},
+				},
+				Status: 0,
+			},
 			called: true,
 		},
 		{
@@ -1190,6 +1354,56 @@ func TestRoute_Patch(t *testing.T) {
 				Body:    []byte("0"),
 			},
 			mockInput: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "r1",
+					CreateTime: 1609340491,
+					UpdateTime: 1609340491,
+				},
+				Name:       "exist_service",
+				UpstreamID: "u1",
+				Upstream: &entity.UpstreamDef{
+					Key: "key",
+				},
+				EnableWebsocket: false,
+				Labels: map[string]string{
+					"version": "v1",
+				},
+				Plugins: map[string]interface{}{
+					"limit-count": map[string]interface{}{
+						"count":         float64(2),
+						"time_window":   float64(60),
+						"rejected_code": float64(503),
+						"key":           "remote_addr",
+					},
+				},
+				Status: 0,
+			},
+			mockRet: &entity.Route{
+				BaseInfo: entity.BaseInfo{
+					ID:         "r1",
+					CreateTime: 1609340491,
+					UpdateTime: 1609340491,
+				},
+				Name:       "exist_service",
+				UpstreamID: "u1",
+				Upstream: &entity.UpstreamDef{
+					Key: "key",
+				},
+				EnableWebsocket: false,
+				Labels: map[string]string{
+					"version": "v1",
+				},
+				Plugins: map[string]interface{}{
+					"limit-count": map[string]interface{}{
+						"count":         float64(2),
+						"time_window":   float64(60),
+						"rejected_code": float64(503),
+						"key":           "remote_addr",
+					},
+				},
+				Status: 0,
+			},
+			wantRet: &entity.Route{
 				BaseInfo: entity.BaseInfo{
 					ID:         "r1",
 					CreateTime: 1609340491,
