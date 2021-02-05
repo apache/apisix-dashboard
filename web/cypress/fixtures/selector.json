@@ -1,7 +1,57 @@
 {
+  "languageSwitcher": ".ant-space-align-center",
   "dropdown": ".rc-virtual-list",
   "notification": ".ant-notification-notice-message",
   "drawerBody": ".ant-drawer-wrapper-body",
   "notificationCloseIcon": ".ant-notification-close-icon",
-  "notificationDesc": ".ant-notification-notice-description"
+  "notificationDesc": ".ant-notification-notice-description",
+
+  "pluginCard": ".ant-card",
+  "pageContent": ".ant-pro-page-container",
+
+  "tableCell": ".ant-table-cell",
+  "empty": ".ant-empty-normal",
+  "refresh": ".anticon-reload",
+  "codemirror": ".CodeMirror",
+  "disabledSwitcher": "#disable",
+  "deleteButton": ".ant-btn-dangerous",
+
+  "name": "#name",
+  "nodes_0_host": "#nodes_0_host",
+  "upstream_id": "#upstream_id",
+  "input": ":input",
+  "nameSelector": "[title=Name]",
+  "serviceSelector": "[title=test_service]",
+  "nameSearch": "[title=Name]",
+
+  "description": "#desc",
+  "upstreamSelector": "[data-cy=upstream_selector]",
+  "addHost": "[data-cy=addHost]",
+  "hosts_1": "#hosts_1",
+  "remoteHost": "#remote_addrs_0",
+  "remoteAddress": "[data-cy=addRemoteAddr]",
+  "address1": "#remote_addrs_1",
+  "parameterPosition": "#position",
+  "ruleCard": ".ant-modal",
+  "operator": "#operator",
+  "value": "#value",
+  
+
+  "fileSelector": "[type=file]",
+  "fileTypeRadio": "[type=radio]",
+
+  "debugUri": "#debugUri",
+
+  "hosts_0": "#hosts_0",
+  "labels_0_labelKey": "#labels_0_labelKey",
+  "labels_0_labelValue": "#labels_0_labelValue",
+  "labelSelector": "[title=Labels]",
+
+  "pageContainer": ".ant-pro-page-container",
+  "notificationMessage": ".ant-notification-notice-message",
+  "avatar": ".ant-space-align-center",
+  "grafanaURL": "#grafanaURL",
+  "explain": ".ant-form-item-explain",
+
+  "upstreamType": ".ant-select-item-option-content"
 }

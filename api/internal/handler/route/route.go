@@ -94,8 +94,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	ID := input.ID
 	subPath := input.SubPath
 
-	routeStore := store.GetStore(store.HubKeyRoute)
-	stored, err := routeStore.Get(c.Context(), ID)
+	stored, err := h.routeStore.Get(c.Context(), ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -111,7 +110,7 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	ret, err := routeStore.Update(c.Context(), &route, false)
+	ret, err := h.routeStore.Update(c.Context(), &route, false)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -522,18 +521,6 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	return nil, nil
 }
 
-type ExistInput struct {
-	Name string `auto_read:"name,query"`
-}
-
-func toRows(list *store.ListOutput) []store.Row {
-	rows := make([]store.Row, list.TotalSize)
-	for i := range list.Rows {
-		rows[i] = list.Rows[i].(*entity.Route)
-	}
-	return rows
-}
-
 type ExistCheckInput struct {
 	Name    string `auto_read:"name,query"`
 	Exclude string `auto_read:"exclude,query"`
@@ -570,30 +557,26 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ExistCheckInput)
 	name := input.Name
 	exclude := input.Exclude
-	routeStore := store.GetStore(store.HubKeyRoute)
 
-	ret, err := routeStore.List(c.Context(), store.ListInput{
-		Predicate:  nil,
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			r := obj.(*entity.Route)
+			if r.Name == name && r.ID != exclude {
+				return true
+			}
+
+			return false
+		},
 		PageSize:   0,
 		PageNumber: 0,
 	})
-
 	if err != nil {
 		return nil, err
 	}
 
-	sort := store.NewSort(nil)
-	filter := store.NewFilter([]string{"name", name})
-	pagination := store.NewPagination(0, 0)
-	query := store.NewQuery(sort, filter, pagination)
-	rows := store.NewFilterSelector(toRows(ret), query)
-
-	if len(rows) > 0 {
-		r := rows[0].(*entity.Route)
-		if r.ID != exclude {
-			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-				consts.InvalidParam("Route name is reduplicate")
-		}
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			consts.InvalidParam("Route name is reduplicate")
 	}
 
 	return nil, nil

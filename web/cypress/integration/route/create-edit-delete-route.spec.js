@@ -22,27 +22,25 @@ context('Create and Delete Route', () => {
   const sleepTime = 100;
 
   beforeEach(() => {
-    // init login
     cy.login();
+
+    cy.fixture('selector.json').as('domSelector');
   });
 
-  it('should create route', () => {
-    //  go to route create page
+  it('should create route', function () {
     cy.visit('/');
     cy.contains('Route').click();
     cy.contains('Create').click();
-
-    // input name and description
-    cy.get('#name').type(name);
-    cy.get('#desc').type('desc');
+    cy.get(this.domSelector.name).type(name);
+    cy.get(this.domSelector.description).type('desc');
 
     // input request basic define
-    cy.get('#hosts_0').type('11.11.11.11');
-    cy.get('[data-cy=addHost]').click();
-    cy.get('#hosts_1').type('12.12.12.12');
-    cy.get('#remote_addrs_0').type('12.12.12.12');
-    cy.get('[data-cy=addRemoteAddr]').click();
-    cy.get('#remote_addrs_1').type('10.10.10.10');
+    cy.get(this.domSelector.hosts_0).type('11.11.11.11');
+    cy.get(this.domSelector.addHost).click();
+    cy.get(this.domSelector.hosts_1).type('12.12.12.12');
+    cy.get(this.domSelector.remoteHost).type('12.12.12.12');
+    cy.get(this.domSelector.remoteAddress).click();
+    cy.get(this.domSelector.address1).type('10.10.10.10');
     cy.contains('Advanced Routing Matching Conditions')
       .parent()
       .siblings()
@@ -50,21 +48,19 @@ context('Create and Delete Route', () => {
       .click();
 
     // create advanced routing matching conditions
-    cy.get('#position').click();
+    cy.get(this.domSelector.parameterPosition).click();
     cy.contains('Cookie').click();
-    cy.get('.ant-modal').within(() => {
-      cy.get('#name').type('modalName');
+    cy.get(this.domSelector.ruleCard).within(() => {
+      cy.get(this.domSelector.name).type('modalName');
     });
-    cy.get('#operator').click();
+    cy.get(this.domSelector.operator).click();
     cy.contains('Equal').click();
-    cy.get('#value').type('value');
+    cy.get(this.domSelector.value).type('value');
     cy.contains('Confirm').click();
 
-    // go to step2
-    cy.contains('Next').click();
-    cy.get('#nodes_0_host').type('12.12.12.12');
 
-    // go to step3
+    cy.contains('Next').click();
+    cy.get(this.domSelector.nodes_0_host).type('12.12.12.12');
     cy.contains('Next').click();
 
     // redirect plugin should not display in route step3
@@ -76,12 +72,10 @@ context('Create and Delete Route', () => {
     });
 
     // config prometheus plugin
-    cy.contains('.ant-card', 'prometheus').within(() => {
+    cy.contains(this.domSelector.pluginCard, 'prometheus').within(() => {
       cy.get('button').first().click();
     });
     cy.contains('button', 'Cancel').click();
-
-    // go to step4
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.contains('Submit Successfully');
@@ -91,16 +85,16 @@ context('Create and Delete Route', () => {
     cy.url().should('contains', 'routes/list');
   });
 
-  it('should edit the route', () => {
+  it('should edit the route', function () {
     cy.visit('/');
     cy.contains('Route').click();
 
-    cy.get('[title=Name]').type(name);
+    cy.get(this.domSelector.nameSelector).type(name);
     cy.contains('Search').click();
     cy.contains(name).siblings().contains('Edit').click();
 
-    cy.get('#name').clear().type(newName);
-    cy.get('#desc').clear().type('new desc');
+    cy.get(this.domSelector.name).clear().type(newName);
+    cy.get(this.domSelector.description).clear().type('new desc');
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Next').click();
@@ -111,12 +105,12 @@ context('Create and Delete Route', () => {
     cy.contains(newName).siblings().should('contain', 'new desc');
   });
 
-  it('should delete the route', () => {
+  it('should delete the route', function () {
     cy.visit('/routes/list');
-    cy.get('[title=Name]').type(newName);
+    cy.get(this.domSelector.nameSelector).type(newName);
     cy.contains('Search').click();
     cy.contains(newName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get('.ant-notification-notice-message').should('contain', 'Delete Route Successfully');
+    cy.get(this.domSelector.notification).should('contain', 'Delete Route Successfully');
   });
 });

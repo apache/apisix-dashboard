@@ -246,6 +246,30 @@ if [[ `grep -c "/apisix/admin/user/login" ./logs/access.log` -eq '0' ]]; then
     exit 1
 fi
 
+# clean config
+clean_up
+
+# set ip allowed list
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" 's@127.0.0.0/24@10.0.0.1@' conf/conf.yaml
+else
+  sed -i 's@127.0.0.0/24@10.0.0.1@' conf/conf.yaml
+fi
+
+./manager-api &
+sleep 3
+
+# should be forbidden
+curl http://127.0.0.1:9000
+code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} http://127.0.0.1:9000)
+if [ ! $code -eq 403 ]; then
+    echo "failed: verify IP allowed list failed"
+    exit 1
+fi
+
+./manager-api stop
+clean_up
+
 
 # etcd basic auth
 # add root user
@@ -314,3 +338,50 @@ if [[ `echo ${resp} | grep -c "${GITHASH}"` -ne '1' ]]; then
 fi
 
 check_logfile
+
+./manager-api stop
+clean_up
+
+# mtls test
+./etcd-v3.4.14-linux-amd64/etcd --name infra0 --data-dir infra0 \
+  --client-cert-auth --trusted-ca-file=$(pwd)/test/certs/mtls_ca.pem --cert-file=$(pwd)/test/certs/mtls_server.pem --key-file=$(pwd)/test/certs/mtls_server-key.pem \
+  --advertise-client-urls https://127.0.0.1:3379 --listen-client-urls https://127.0.0.1:3379 --listen-peer-urls http://127.0.0.1:3380 &
+
+currentDir=$(pwd)
+
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" "s@key_file: \"\"@key_file: \"$currentDir/test/certs/mtls_client-key.pem\"@g" conf/conf.yaml
+  sed -i "" "s@cert_file: \"\"@cert_file: \"$currentDir/test/certs/mtls_client.pem\"@g" conf/conf.yaml
+  sed -i "" "s@ca_file: \"\"@ca_file: \"$currentDir/test/certs/mtls_ca.pem\"@g" conf/conf.yaml
+  sed -i "" 's/127.0.0.1:2379/127.0.0.1:3379/' conf/conf.yaml
+else
+  sed -i "s@key_file: \"\"@key_file: \"$currentDir/test/certs/mtls_client-key.pem\"@g" conf/conf.yaml
+  sed -i "s@cert_file: \"\"@cert_file: \"$currentDir/test/certs/mtls_client.pem\"@g" conf/conf.yaml
+  sed -i "s@ca_file: \"\"@ca_file: \"$currentDir/test/certs/mtls_ca.pem\"@g" conf/conf.yaml
+  sed -i 's/127.0.0.1:2379/127.0.0.1:3379/' conf/conf.yaml
+fi
+
+./manager-api &
+sleep 3
+
+# validate process is right by requesting login api
+resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}')
+token=$(echo "${resp}" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
+if [ -z "${token}" ]; then
+    echo "login failed(mTLS connetct to ETCD)"
+    exit 1
+fi
+
+# more validation to make sure it's ok to access etcd
+resp=$(curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/consumers -i -H "Content-Type: application/json" -H "Authorization: $token" -d '{"username":"etcd_basic_auth_test"}')
+respCode=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
+respMessage=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "message" | sed 's/:/\n/g' | sed '1d')
+if [ "$respCode" != "0" ] || [ $respMessage != "\"\"" ]; then
+    echo "verify writing data failed(mTLS connetct to ETCD)"
+    exit 1
+fi
+
+pkill -f etcd
+
+./manager-api stop
+clean_up
