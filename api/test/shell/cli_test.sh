@@ -338,3 +338,39 @@ if [[ `echo ${resp} | grep -c "${GITHASH}"` -ne '1' ]]; then
 fi
 
 check_logfile
+
+
+# mtls test
+
+wget https://github.com/etcd-io/etcd/releases/download/v3.4.14/etcd-v3.4.14-linux-amd64.tar.gz
+
+tar zxvf etcd-v3.4.14-linux-amd64.tar.gz && cd etcd-v3.4.14-linux-amd64
+
+./etcd --name infra0 --data-dir infra0 \
+  --client-cert-auth --trusted-ca-file=./test/certs/mtls_ca.crt --cert-file=./test/certs/mtls_server.crt --key-file=./test/certs/mtls_server.key \
+  --advertise-client-urls https://127.0.0.1:3379 --listen-client-urls https://127.0.0.1:3379 &
+
+currentDir=$(pwd)
+
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" '1,$s/key_file: ""/key_file: "$currentDir/test/certs/mtls_client-key.pem"/g' conf/conf.yaml
+  sed -i "" '1,$s/cert_file: ""/key_file: "$currentDir/test/certs/mtls_client.pem"/g' conf/conf.yaml
+  sed -i "" '1,$s/ca_file: ""/key_file: "$currentDir/test/certs/mtls_ca.pem"/g' conf/conf.yaml
+  sed -i "" 's/127.0.0.1:2379/127.0.0.1:3379/' conf/conf.yaml
+else
+  sed -i '1,$s/key_file: ""/key_file: "$currentDir/test/certs/mtls_client-key.pem"/g' conf/conf.yaml
+  sed -i '1,$s/cert_file: ""/key_file: "$currentDir/test/certs/mtls_client.pem"/g' conf/conf.yaml
+  sed -i '1,$s/ca_file: ""/key_file: "$currentDir/test/certs/mtls_ca.pem"/g' conf/conf.yaml
+  sed -i 's/127.0.0.1:2379/127.0.0.1:3379/' conf/conf.yaml
+fi
+
+./manager-api &
+sleep 3
+
+# validate process is right by requesting login api
+resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}')
+token=$(echo "${resp}" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
+if [ -z "${token}" ]; then
+    echo "login failed"
+    exit 1
+fi
