@@ -195,12 +195,12 @@ fi
 
 # test -v command
 out=$(./manager-api -v 2>&1 || true)
-if [[ `grep -c "Version" $out` -ne '1' ]]; then
+if [[ `echo $out | grep -c $VERSION` -ne '1' ]]; then
     echo "failed: the manager server didn't show version info"
     exit 1
 fi
 
-if [[ `grep -c $GITHASH $out` -ne '1' ]]; then
+if [[ `echo $out | grep -c $GITHASH` -ne '1' ]]; then
     echo "failed: the manager server didn't show git hash info"
     exit 1
 fi
