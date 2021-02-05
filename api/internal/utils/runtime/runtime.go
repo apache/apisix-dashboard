@@ -14,26 +14,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package e2e
+package runtime
 
 import (
 	"net/http"
-	"testing"
+	"runtime"
+
+	"github.com/apisix/manager-api/internal/log"
 )
 
-func TestInfo(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			Desc:         "get info",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/tool/version",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   []string{"commit_hash", "\"version\""},
-		},
+var (
+	ActuallyPanic = true
+)
+
+var PanicHandlers = []func(interface{}){logPanic}
+
+func HandlePanic(additionalHandlers ...func(interface{})) {
+	if err := recover(); err != nil {
+		for _, fn := range PanicHandlers {
+			fn(err)
+		}
+		for _, fn := range additionalHandlers {
+			fn(err)
+		}
+		if ActuallyPanic {
+			panic(err)
+		}
+	}
+}
+
+func logPanic(r interface{}) {
+	if r == http.ErrAbortHandler {
+		return
 	}
 
-	for _, tc := range tests {
-		testCaseCheck(tc, t)
+	const size = 32 << 10
+	stacktrace := make([]byte, size)
+	stacktrace = stacktrace[:runtime.Stack(stacktrace, false)]
+	if _, ok := r.(string); ok {
+		log.Errorf("observed a panic: %s\n%s", r, stacktrace)
+	} else {
+		log.Errorf("observed a panic: %#v (%v)\n%s", r, r, stacktrace)
 	}
 }

@@ -14,26 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package e2e
+package runtime
 
 import (
-	"net/http"
 	"testing"
 )
 
-func TestInfo(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			Desc:         "get info",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/tool/version",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   []string{"commit_hash", "\"version\""},
+func TestHandleCrash(t *testing.T) {
+	defer func() {
+		if x := recover(); x == nil {
+			t.Errorf("Expected a panic to recover from")
+		}
+	}()
+	defer HandlePanic()
+	panic("Test Panic")
+}
+
+func TestCustomHandleCrash(t *testing.T) {
+	old := PanicHandlers
+	defer func() { PanicHandlers = old }()
+	var result interface{}
+	PanicHandlers = []func(interface{}){
+		func(r interface{}) {
+			result = r
 		},
 	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc, t)
+	func() {
+		defer func() {
+			if x := recover(); x == nil {
+				t.Errorf("Expected a panic to recover from")
+			}
+		}()
+		defer HandlePanic()
+		panic("test")
+	}()
+	if result != "test" {
+		t.Errorf("did not receive custom handler")
 	}
 }

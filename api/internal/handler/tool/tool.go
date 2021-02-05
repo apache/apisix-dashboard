@@ -38,7 +38,7 @@ func NewHandler() (handler.RouteRegister, error) {
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.GET("/version", wgin.Wraps(h.Version))
+	r.GET("/apisix/admin/tool/version", wgin.Wraps(h.Version))
 }
 
 func (h *Handler) Version(_ droplet.Context) (interface{}, error) {
