@@ -28,6 +28,11 @@ conf:
                           # etcd basic auth info
     # username: "root"    # ignore etcd username if not enable etcd auth
     # password: "123456"  # ignore etcd password if not enable etcd auth
+    mtls:
+      key_file: ""          # Path of your self-signed client side key
+      cert_file: ""         # Path of your self-signed client side cert
+      ca_file: ""           # Path of your self-signed ca cert, the CA is used to sign callers' certificates
+
   log:
     error_log:
       level: warn       # supports levels, lower to higher: debug, info, warn, error, panic, fatal

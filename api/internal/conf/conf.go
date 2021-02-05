@@ -57,10 +57,17 @@ var (
 	AllowList        []string
 )
 
+type MTLS struct {
+	CaFile   string `yaml:"ca_file"`
+	CertFile string `yaml:"cert_file"`
+	KeyFile  string `yaml:"key_file"`
+}
+
 type Etcd struct {
 	Endpoints []string
 	Username  string
 	Password  string
+	MTLS      *MTLS
 }
 
 type Listen struct {
@@ -222,5 +229,6 @@ func initEtcdConfig(conf Etcd) {
 		Endpoints: endpoints,
 		Username:  conf.Username,
 		Password:  conf.Password,
+		MTLS: conf.MTLS,
 	}
 }

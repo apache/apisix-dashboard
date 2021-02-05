@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"go.etcd.io/etcd/clientv3"
+	"go.etcd.io/etcd/pkg/transport"
 
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/log"
@@ -52,12 +53,28 @@ type EtcdV3Storage struct {
 }
 
 func InitETCDClient(etcdConf *conf.Etcd) error {
-	cli, err := clientv3.New(clientv3.Config{
+	config := clientv3.Config{
 		Endpoints:   etcdConf.Endpoints,
 		DialTimeout: 5 * time.Second,
 		Username:    etcdConf.Username,
 		Password:    etcdConf.Password,
-	})
+	}
+	// mTLS
+	if etcdConf.MTLS != nil && etcdConf.MTLS.CaFile != "" &&
+		etcdConf.MTLS.CertFile != "" && etcdConf.MTLS.KeyFile != "" {
+		tlsInfo := transport.TLSInfo{
+			CertFile:      etcdConf.MTLS.CertFile,
+			KeyFile:       etcdConf.MTLS.KeyFile,
+			TrustedCAFile: etcdConf.MTLS.CaFile,
+		}
+		tlsConfig, err := tlsInfo.ClientConfig()
+		if err != nil {
+			return err
+		}
+		config.TLS = tlsConfig
+	}
+
+	cli, err := clientv3.New(config)
 	if err != nil {
 		log.Errorf("init etcd failed: %s", err)
 		return fmt.Errorf("init etcd failed: %s", err)
