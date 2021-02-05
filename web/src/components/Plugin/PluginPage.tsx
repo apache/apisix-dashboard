@@ -17,7 +17,7 @@
 import React, { useEffect, useState } from 'react';
 import { Anchor, Layout, Card, Button } from 'antd';
 import { PanelSection } from '@api7-dashboard/ui';
-import { orderBy } from 'lodash';
+import { omit, orderBy } from 'lodash';
 
 import PluginDetail from './PluginDetail';
 import { fetchList } from './service';
@@ -174,11 +174,15 @@ const PluginPage: React.FC<Props> = ({
       onClose={() => {
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}
-      onChange={({ codemirrorData, formData }) => {
-        onChange({
+      onChange={({ codemirrorData, formData, shouldDelete }) => {
+        let plugins = {
           ...initialData,
           [name]: { ...codemirrorData, disable: !formData.disable },
-        });
+        };
+        if (shouldDelete === true) {
+          plugins = omit(plugins, name);
+        };
+        onChange(plugins);
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}
     />

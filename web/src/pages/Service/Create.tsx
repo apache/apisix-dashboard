@@ -81,12 +81,13 @@ const Page: React.FC = (props) => {
     (serviceId ? update(serviceId, data) : create(data))
       .then(() => {
         notification.success({
-          message: `${serviceId
-            ? formatMessage({ id: 'component.global.edit' })
-            : formatMessage({ id: 'component.global.create' })
-            } ${formatMessage({ id: 'menu.service' })} ${formatMessage({
-              id: 'component.status.success',
-            })}`,
+          message: `${
+            serviceId
+              ? formatMessage({ id: 'component.global.edit' })
+              : formatMessage({ id: 'component.global.create' })
+          } ${formatMessage({ id: 'menu.service' })} ${formatMessage({
+            id: 'component.status.success',
+          })}`,
         });
         history.push('/service/list');
       })
@@ -114,10 +115,11 @@ const Page: React.FC = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={`${(props as any).match.params.rid
-          ? formatMessage({ id: 'component.global.edit' })
-          : formatMessage({ id: 'component.global.create' })
-          } ${formatMessage({ id: 'menu.service' })}`}
+        title={`${
+          (props as any).match.params.rid
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
+        } ${formatMessage({ id: 'menu.service' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: '25px' }}>

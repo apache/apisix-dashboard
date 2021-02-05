@@ -26,7 +26,7 @@ context('settings page smoke test', () => {
     validURL: 'https://apisix.apache.org/',
     fetchURL: 'fetchURL',
     fetch: '@fetchURL',
-  }
+  };
   const domSelector = {
     pageContainer: '.ant-pro-page-container',
     notificationMsg: '.ant-notification-notice-message',
