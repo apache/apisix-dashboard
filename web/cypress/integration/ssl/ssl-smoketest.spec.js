@@ -17,14 +17,11 @@
 /* eslint-disable no-undef */
 
 context('ssl smoke test', () => {
-  const domSelectors = {
-    notificationDesc: '.ant-notification-notice-description',
-    notificationMsg: '.ant-notification-notice-message',
-  };
-
   beforeEach(() => {
     cy.login();
+
     cy.fixture('certificate.json').as('certificate');
+    cy.fixture('selector.json').as('domSelector');
   });
 
   it('should set match certificate and key by input', function () {
@@ -50,7 +47,7 @@ context('ssl smoke test', () => {
     const sni = this.certificate.valid.sni;
     cy.contains(sni).parents().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(domSelectors.notificationMsg).should('contain', 'Remove target SSL successfully');
+    cy.get(this.domSelector.notificationMessage).should('contain', 'Remove target SSL successfully');
   });
 
   it('should set unmatch certificate and key by input', function () {
@@ -65,6 +62,6 @@ context('ssl smoke test', () => {
     cy.get('#key').type(invalidKey);
 
     cy.contains('Next').click();
-    cy.get(domSelectors.notificationDesc).should('contain', "key and cert don't match");
+    cy.get(this.domSelector.notificationDesc).should('contain', "key and cert don't match");
   });
 });

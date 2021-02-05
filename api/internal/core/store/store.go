@@ -32,6 +32,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
+	"github.com/apisix/manager-api/internal/utils/runtime"
 )
 
 type Interface interface {
@@ -108,6 +109,7 @@ func (s *GenericStore) Init() error {
 	c, cancel := context.WithCancel(context.TODO())
 	ch := s.Stg.Watch(c, s.opt.BasePath)
 	go func() {
+		defer runtime.HandlePanic()
 		for event := range ch {
 			if event.Canceled {
 				log.Warnf("watch failed: %s", event.Error)

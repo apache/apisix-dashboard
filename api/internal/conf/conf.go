@@ -55,6 +55,7 @@ var (
 	ImportSizeLimit  = 10 * 1024 * 1024
 	PIDPath          = "/tmp/manager-api.pid"
 	FilePathSet      = "/conf/conf.yaml"
+	AllowList        []string
 )
 
 type Etcd struct {
@@ -83,9 +84,10 @@ type Log struct {
 }
 
 type Conf struct {
-	Etcd   Etcd
-	Listen Listen
-	Log    Log
+	Etcd      Etcd
+	Listen    Listen
+	Log       Log
+	AllowList []string `yaml:"allow_list"`
 }
 
 type User struct {
@@ -173,6 +175,8 @@ func setConf() {
 				panic(err)
 			}
 		}
+
+		AllowList = config.Conf.AllowList
 
 		//auth
 		initAuthentication(config.Authentication)

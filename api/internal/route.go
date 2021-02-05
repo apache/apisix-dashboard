@@ -41,6 +41,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler/server_info"
 	"github.com/apisix/manager-api/internal/handler/service"
 	"github.com/apisix/manager-api/internal/handler/ssl"
+	"github.com/apisix/manager-api/internal/handler/tool"
 	"github.com/apisix/manager-api/internal/handler/upstream"
 	"github.com/apisix/manager-api/internal/log"
 )
@@ -55,7 +56,7 @@ func SetUpRouter() *gin.Engine {
 	logger := log.GetLogger(log.AccessLog)
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("session", store))
-	r.Use(filter.CORS(), filter.RequestId(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.RecoverHandler())
+	r.Use(filter.CORS(), filter.RequestId(), filter.IPFilter(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.RecoverHandler())
 	r.Use(static.Serve("/", static.LocalFile(filepath.Join(conf.WorkDir, conf.WebDir), false)))
 	r.NoRoute(func(c *gin.Context) {
 		c.File(fmt.Sprintf("%s/index.html", filepath.Join(conf.WorkDir, conf.WebDir)))
@@ -76,6 +77,7 @@ func SetUpRouter() *gin.Engine {
 		label.NewHandler,
 		data_loader.NewHandler,
 		data_loader.NewImportHandler,
+		tool.NewHandler,
 	}
 
 	for i := range factories {

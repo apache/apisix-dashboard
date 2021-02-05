@@ -22,12 +22,6 @@ import routeLocaleUS from '../../../src/pages/Route/locales/en-US';
 import yaml from 'js-yaml';
 
 context('import and export routes', () => {
-  const domSelector = {
-    route_name: '#name',
-    nodes_0_host: '#nodes_0_host',
-    file: '[type=file]',
-    fileTypeRadio: '[type=radio]',
-  };
   const data = {
     route_name_0: 'route_name_0',
     route_name_1: 'route_name_1',
@@ -40,25 +34,24 @@ context('import and export routes', () => {
       'import-error.txt',
     ],
     // Note: export file's name will be end of a timestamp
-    jsonMask: 'cypress/downloads/*.json', 
+    jsonMask: 'cypress/downloads/*.json',
     yamlMask: 'cypress/downloads/*.yaml',
   };
 
   beforeEach(() => {
-    // init login
     cy.login();
+
     cy.fixture('selector.json').as('domSelector');
     cy.fixture('export-route-dataset.json').as('exportFile');
   });
-  it('should create route1 and route2', () => {
-    //  go to route create page
+  it('should create route1 and route2', function () {
     cy.visit('/');
     // create two routes
     for (let i = 0; i < 2; i += 1) {
       cy.contains(menuLocaleUS['menu.routes']).click();
       cy.contains(componentLocaleUS['component.global.create']).click();
       // input name, click Next
-      cy.get(domSelector.route_name).type(data[`route_name_${i}`]);
+      cy.get(this.domSelector.name).type(data[`route_name_${i}`]);
       //FIXME: only GET in methods
       cy.get('#methods').click();
       for (let i = 0; i < 7; i += 1) {
@@ -69,7 +62,7 @@ context('import and export routes', () => {
 
       cy.contains(actionBarUS['component.actionbar.button.nextStep']).click();
       // input nodes_0_host, click Next
-      cy.get(domSelector.nodes_0_host).type(data[`upstream_node0_host_${i}`]);
+      cy.get(this.domSelector.nodes_0_host).type(data[`upstream_node0_host_${i}`]);
       cy.contains(actionBarUS['component.actionbar.button.nextStep']).click();
       // do not config plugins, click Next
       cy.contains(actionBarUS['component.actionbar.button.nextStep']).click();
@@ -81,7 +74,7 @@ context('import and export routes', () => {
       ).should('exist');
     }
   });
-  it('should export route: route_name_0, route_name_1', function (){
+  it('should export route: route_name_0, route_name_1', function () {
     cy.visit('/');
     cy.contains('Route').click();
 
@@ -106,7 +99,7 @@ context('import and export routes', () => {
     cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).click();
     cy.contains(routeLocaleUS['page.route.exportRoutesTips']).should('exist');
     // click Confirm button in the popup to download Yaml file
-    cy.get(domSelector.fileTypeRadio).check('1');
+    cy.get(this.domSelector.fileTypeRadio).check('1');
     cy.contains(componentLocaleUS['component.global.confirm']).click();
 
     cy.task('findFile', data.jsonMask).then((jsonFile) => {
@@ -120,7 +113,9 @@ context('import and export routes', () => {
       cy.log(`found file ${yamlFile}`);
       cy.log('**confirm downloaded yaml file**');
       cy.readFile(yamlFile).then((fileContent) => {
-        expect(JSON.stringify(yaml.load(fileContent), null, null)).to.equal(JSON.stringify(this.exportFile.yamlFile));
+        expect(JSON.stringify(yaml.load(fileContent), null, null)).to.equal(
+          JSON.stringify(this.exportFile.yamlFile),
+        );
       });
     });
   });
@@ -128,7 +123,10 @@ context('import and export routes', () => {
   it('should delete the route', function () {
     cy.visit('/routes/list');
     for (let i = 0; i < 2; i += 1) {
-      cy.contains(data[`route_name_${i}`]).siblings().contains(componentLocaleUS['component.global.delete']).click();
+      cy.contains(data[`route_name_${i}`])
+        .siblings()
+        .contains(componentLocaleUS['component.global.delete'])
+        .click();
       cy.contains('button', componentLocaleUS['component.global.confirm']).click();
       cy.get(this.domSelector.notification).should(
         'contain',
@@ -137,15 +135,15 @@ context('import and export routes', () => {
     }
   });
 
-  it('should import route(s) from be test files', function() {
+  it('should import route(s) from be test files', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    
+
     data.uploadRouteFiles.forEach((file) => {
       // click import button
       cy.contains(routeLocaleUS['page.route.button.importOpenApi']).click();
       // select file
-      cy.get(domSelector.file).attachFile(file);
+      cy.get(this.domSelector.fileSelector).attachFile(file);
       // click submit
       cy.contains(componentLocaleUS['component.global.confirm']).click();
       // show upload notification
@@ -155,15 +153,21 @@ context('import and export routes', () => {
         // close modal
         cy.contains(componentLocaleUS['component.global.cancel']).click();
       } else {
-        cy.get(this.domSelector.notification).should('contain', `${routeLocaleUS['page.route.button.importOpenApi']} ${componentLocaleUS['component.status.success']}`);
+        cy.get(this.domSelector.notification).should(
+          'contain',
+          `${routeLocaleUS['page.route.button.importOpenApi']} ${componentLocaleUS['component.status.success']}`,
+        );
         cy.get(this.domSelector.notificationCloseIcon).click();
         // delete route just imported
         cy.contains(componentLocaleUS['component.global.delete']).click();
         cy.contains(componentLocaleUS['component.global.confirm']).click();
         // show delete successfully notification
-        cy.get(this.domSelector.notification).should('contain', `${componentLocaleUS['component.global.delete']} ${menuLocaleUS['menu.routes']} ${componentLocaleUS['component.status.success']}`);
+        cy.get(this.domSelector.notification).should(
+          'contain',
+          `${componentLocaleUS['component.global.delete']} ${menuLocaleUS['menu.routes']} ${componentLocaleUS['component.status.success']}`,
+        );
         cy.get(this.domSelector.notificationCloseIcon).click();
       }
-    })
+    });
   });
 });

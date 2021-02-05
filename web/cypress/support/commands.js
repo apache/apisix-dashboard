@@ -91,11 +91,13 @@ Cypress.Commands.add('configurePlugins', (cases) => {
             multiple: true,
           });
 
-          cy.get(domSelectors.drawer, { timeout }).invoke('show').within(() => {
-            cy.contains('Cancel').click({
-              force: true,
+          cy.get(domSelectors.drawer, { timeout })
+            .invoke('show')
+            .within(() => {
+              cy.contains('Cancel').click({
+                force: true,
+              });
             });
-          });
         }
       });
     });

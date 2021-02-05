@@ -14,6 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-  'page.plugin.drawer.popconfirm.title.delete': '确定删除该插件吗？',
-};
+package consts
+
+/*
+	Key is dashboard version
+	Val is apisix version
+*/
+var VersionMap = map[string]string{
+	"2.3": "2.2",
+	"2.4": "2.3",
+}

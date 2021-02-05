@@ -31,6 +31,6 @@ context('smoke test for plugin schema', () => {
 
     cy.get('@cases').then((cases) => {
       cy.configurePlugins(cases);
-    })
+    });
   });
 });
