@@ -347,20 +347,21 @@ wget https://github.com/etcd-io/etcd/releases/download/v3.4.14/etcd-v3.4.14-linu
 tar zxvf etcd-v3.4.14-linux-amd64.tar.gz && cd etcd-v3.4.14-linux-amd64
 
 ./etcd --name infra0 --data-dir infra0 \
-  --client-cert-auth --trusted-ca-file=./test/certs/mtls_ca.crt --cert-file=./test/certs/mtls_server.crt --key-file=./test/certs/mtls_server.key \
-  --advertise-client-urls https://127.0.0.1:3379 --listen-client-urls https://127.0.0.1:3379 &
+  --client-cert-auth --trusted-ca-file=$(pwd)/test/certs/mtls_ca.crt --cert-file=$(pwd)/test/certs/mtls_server.crt --key-file=$(pwd)/test/certs/mtls_server.key \
+  --advertise-client-urls https://127.0.0.1:3379 --listen-client-urls https://127.0.0.1:3379 --listen-peer-urls http://0.0.0.0:3380 &
 
 currentDir=$(pwd)
 
 if [[ $KERNEL = "Darwin" ]]; then
-  sed -i "" '1,$s/key_file: ""/key_file: "$currentDir/test/certs/mtls_client-key.pem"/g' conf/conf.yaml
-  sed -i "" '1,$s/cert_file: ""/key_file: "$currentDir/test/certs/mtls_client.pem"/g' conf/conf.yaml
-  sed -i "" '1,$s/ca_file: ""/key_file: "$currentDir/test/certs/mtls_ca.pem"/g' conf/conf.yaml
+  sed -i "" "s@key_file: \"\"@key_file: \"$currentDir/test/certs/mtls_client-key.pem\"@g" conf/conf.yaml
+  sed -i "" "s@cert_file: \"\"@key_file: \"$currentDir/test/certs/mtls_client.pem\"@g" conf/conf.yaml
+  sed -i "" "s@ca_file: \"\"@key_file: \"$currentDir/test/certs/mtls_ca.pem\"@g" conf/conf.yaml
   sed -i "" 's/127.0.0.1:2379/127.0.0.1:3379/' conf/conf.yaml
 else
-  sed -i '1,$s/key_file: ""/key_file: "$currentDir/test/certs/mtls_client-key.pem"/g' conf/conf.yaml
-  sed -i '1,$s/cert_file: ""/key_file: "$currentDir/test/certs/mtls_client.pem"/g' conf/conf.yaml
-  sed -i '1,$s/ca_file: ""/key_file: "$currentDir/test/certs/mtls_ca.pem"/g' conf/conf.yaml
+  sed -i "s@key_file: \"\"@key_file: \"$currentDir/test/certs/mtls_client-key.pem\"@g" conf/conf.yaml
+  sed -i "s@cert_file: \"\"@key_file: \"$currentDir/test/certs/mtls_client.pem\"@g" conf/conf.yaml
+  sed -i "s@ca_file: \"\"@key_file: \"$currentDir/test/certs/mtls_ca.pem\"@g" conf/conf.yaml
+
   sed -i 's/127.0.0.1:2379/127.0.0.1:3379/' conf/conf.yaml
 fi
 
