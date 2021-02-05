@@ -225,5 +225,6 @@ func initEtcdConfig(conf Etcd) {
 		Endpoints: endpoints,
 		Username:  conf.Username,
 		Password:  conf.Password,
+		MTLS: conf.MTLS,
 	}
 }
