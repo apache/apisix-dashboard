@@ -339,14 +339,12 @@ fi
 
 check_logfile
 
+./manager-api stop
+clean_up
 
 # mtls test
 
-wget https://github.com/etcd-io/etcd/releases/download/v3.4.14/etcd-v3.4.14-linux-amd64.tar.gz
-
-tar zxvf etcd-v3.4.14-linux-amd64.tar.gz && cd etcd-v3.4.14-linux-amd64
-
-./etcd --name infra0 --data-dir infra0 \
+./etcd-v3.4.14-linux-amd64/etcd --name infra0 --data-dir infra0 \
   --client-cert-auth --trusted-ca-file=$(pwd)/test/certs/mtls_ca.crt --cert-file=$(pwd)/test/certs/mtls_server.crt --key-file=$(pwd)/test/certs/mtls_server.key \
   --advertise-client-urls https://127.0.0.1:3379 --listen-client-urls https://127.0.0.1:3379 --listen-peer-urls http://0.0.0.0:3380 &
 
@@ -375,3 +373,16 @@ if [ -z "${token}" ]; then
     echo "login failed"
     exit 1
 fi
+
+# more validation to make sure it's ok to access etcd
+resp=$(curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/routes -i -H "Content-Type: application/json" -H "Authorization: $token")
+respCode=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
+if [ "$respCode" != "0" ]; then
+    echo "verify access etcd failed"
+    exit 1
+fi
+
+pkill -f etcd
+
+./manager-api stop
+clean_up
