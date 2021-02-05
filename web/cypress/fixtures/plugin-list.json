@@ -10,10 +10,7 @@
         "max_breaker_sec": 10,
         "unhealthy": {
           "failures": 1,
-          "http_statuses": [
-            500,
-            503
-          ]
+          "http_statuses": [500, 503]
         }
       }
     }

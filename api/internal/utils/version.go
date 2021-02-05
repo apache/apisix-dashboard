@@ -14,6 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-  'page.plugin.drawer.popconfirm.title.delete': '确定删除该插件吗？',
-};
+package utils
+
+var (
+	gitHash string
+	version string
+)
+
+// get the hash and version
+func GetHashAndVersion() (string, string) {
+	return gitHash, version
+}
