@@ -26,51 +26,46 @@ context('settings page smoke test', () => {
     validURL: 'https://apisix.apache.org/',
     fetchURL: 'fetchURL',
     fetch: '@fetchURL',
-  };
-  const domSelector = {
-    pageContainer: '.ant-pro-page-container',
-    notificationMsg: '.ant-notification-notice-message',
-    setting: '.ant-space-align-center',
-    grafanaURL: '#grafanaURL',
-    explain: '.ant-form-item-explain',
-  };
+  }
 
   beforeEach(() => {
     cy.login();
+
+    cy.fixture('selector.json').as('domSelector');
   });
 
-  it('should visit settings page', () => {
+  it('should visit settings page', function () {
     cy.visit('/');
-    cy.get(domSelector.setting).invoke('show').click('center');
+    cy.get(this.domSelector.avatar).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get(domSelector.pageContainer)
+    cy.get(this.domSelector.pageContainer)
       .children()
       .should('contain', 'Setting')
       .and('contain', data.grafanaAddress)
       .and('contain', data.grafanaExplanation1);
   });
 
-  it('should set a invalid url', () => {
+  it('should set a invalid url', function () {
     cy.visit('/');
-    cy.get(domSelector.setting).invoke('show').click('center');
+    cy.get(this.domSelector.avatar).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get(domSelector.grafanaURL).clear().type(data.invalidURL);
-    cy.get(domSelector.explain).should('contain', data.grafanaExplanation2);
+    cy.get(this.domSelector.grafanaURL).clear().type(data.invalidURL);
+    cy.get(this.domSelector.explain).should('contain', data.grafanaExplanation2);
   });
 
-  it('should set a accessible URL', () => {
+  it('should set a accessible URL', function () {
     cy.visit('/');
-    cy.get(domSelector.setting).invoke('show').click('center');
+    cy.get(this.domSelector.avatar).invoke('show').click('center');
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
-    cy.get(domSelector.grafanaURL).clear().type(data.validURL);
+    cy.get(this.domSelector.grafanaURL).clear().type(data.validURL);
     cy.contains('Submit').click();
 
-    cy.get(domSelector.notificationMsg).should('contain', data.updateSuccessfully);
+    cy.get(this.domSelector.notificationMessage).should('contain', data.updateSuccessfully);
     cy.intercept(data.validURL).as(data.fetchURL);
     cy.wait(data.fetch);
-    cy.get(domSelector.pageContainer).children().should('contain', 'Metrics');
+    cy.get(this.domSelector.pageContainer).children().should('contain', 'Metrics');
   });
 });

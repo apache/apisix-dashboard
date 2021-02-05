@@ -28,56 +28,48 @@ context('Can select service_id skip upstream in route', () => {
     delete_route_success: 'Delete Route Successfully',
     submit_success: 'Submit Successfully',
     delete_success: 'Delete Upstream Successfully',
-  };
-  const domSelector = {
-    name: '#name',
-    nodes_0_host: '#nodes_0_host',
-    upstream_id: '#upstream_id',
-    input: ':input',
-    custom_upstream: '[title=Custom]',
-    title_name: '[title=Name]',
-    test_service: '[title=test_service]',
-    notification: '.ant-notification-notice-message',
-  };
+  }
 
   beforeEach(() => {
     cy.login();
+
+    cy.fixture('selector.json').as('domSelector');
   });
 
-  it('should create test upstream and service', () => {
+  it('should create test upstream and service', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
     cy.contains('Create').click();
 
-    cy.get(domSelector.name).type(data.upstream_name);
-    cy.get(domSelector.nodes_0_host).type(data.ip);
+    cy.get(this.domSelector.name).type(data.upstream_name);
+    cy.get(this.domSelector.nodes_0_host).type(data.ip);
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(domSelector.notification).should('contain', data.creat_upstream_success);
+    cy.get(this.domSelector.notification).should('contain', data.creat_upstream_success);
     cy.contains(data.creat_upstream_success);
 
     cy.visit('/');
     cy.contains('Service').click();
     cy.contains('Create').click();
-    cy.get(domSelector.name).type(data.service_name);
-    cy.get(domSelector.custom_upstream).click();
+    cy.get(this.domSelector.name).type(data.service_name);
+    cy.get(this.domSelector.upstreamSelector).click();
     cy.contains(data.upstream_name).click();
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(domSelector.notification).should('contain', data.creat_service_success);
+    cy.get(this.domSelector.notification).should('contain', data.creat_service_success);
     cy.contains(data.creat_service_success);
   });
 
-  it('should skip upstream module after service is selected when creating route', () => {
+  it('should skip upstream module after service is selected when creating route', function () {
     cy.visit('/');
     cy.contains('Route').click();
     cy.contains('Create').click();
 
     // The None option doesn't exist when service isn't selected
-    cy.get(domSelector.name).type(data.route_name);
+    cy.get(this.domSelector.name).type(data.route_name);
     cy.contains('Next').click();
-    cy.get(domSelector.custom_upstream).click();
+    cy.get(this.domSelector.upstreamSelector).click();
     cy.contains('None').should('not.exist');
 
     cy.contains('Previous').click();
@@ -86,9 +78,9 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains('Next').click();
 
     // make sure upstream data can be saved
-    cy.get(domSelector.custom_upstream).click();
+    cy.get(this.domSelector.upstreamSelector).click();
     cy.contains(data.upstream_name).click();
-    cy.get(domSelector.input).should('be.disabled');
+    cy.get(this.domSelector.input).should('be.disabled');
 
     cy.contains(data.upstream_name).click();
     cy.contains('None').click();
@@ -98,17 +90,17 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains('Goto List').click();
   });
 
-  it('should skip upstream module after service is selected when editing route', () => {
+  it('should skip upstream module after service is selected when editing route', function () {
     cy.visit('/');
     cy.contains('Route').click();
 
-    cy.get(domSelector.title_name).type(data.route_name);
+    cy.get(this.domSelector.nameSelector).type(data.route_name);
     cy.contains('Search').click();
     cy.contains(data.route_name).siblings().contains('Edit').click();
-    cy.get(domSelector.test_service).click();
+    cy.get(this.domSelector.serviceSelector).click();
     cy.contains('None').click();
     cy.contains('Next').click();
-    cy.get(domSelector.upstream_id).click();
+    cy.get(this.domSelector.upstream_id).click();
     cy.contains('None').should('not.exist');
     cy.contains(data.upstream_name).click();
     cy.contains('Next').click();
@@ -117,23 +109,23 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains(data.submit_success);
   });
 
-  it('should delete upstream, service and route', () => {
+  it('should delete upstream, service and route', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
     cy.contains(data.upstream_name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(domSelector.notification).should('contain', data.delete_success);
+    cy.get(this.domSelector.notification).should('contain', data.delete_success);
 
     cy.visit('/');
     cy.contains('Service').click();
     cy.contains(data.service_name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(domSelector.notification).should('contain', data.delete_service_success);
+    cy.get(this.domSelector.notification).should('contain', data.delete_service_success);
 
     cy.visit('/');
     cy.contains('Route').click();
     cy.contains(data.route_name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(domSelector.notification).should('contain', data.delete_route_success);
+    cy.get(this.domSelector.notification).should('contain', data.delete_route_success);
   });
 });
