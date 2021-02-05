@@ -27,6 +27,11 @@ jobs:
           sed -i '/172.16.238.10:2379/a\      - 172.16.238.11:2379' ./api/conf/conf.yaml
           sed -i '/172.16.238.10:2379/a\      - 172.16.238.12:2379' ./api/conf/conf.yaml
 
+      - name: download file Dockerfile-apisix
+        working-directory: ./api/test/docker
+        run: |
+          curl -o Dockerfile-apisix https://raw.githubusercontent.com/apache/apisix-docker/master/alpine/Dockerfile
+
       - name: run docker compose
         working-directory: ./api/test/docker
         run: |
