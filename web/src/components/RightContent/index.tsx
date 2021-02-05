@@ -23,8 +23,10 @@
 */
 import { Tooltip, Tag, Space } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useModel, SelectLang } from 'umi';
+
+import { fetchVersionMatch } from '@/services/tool'
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
 
@@ -49,6 +51,9 @@ const GlobalHeaderRight: React.FC = () => {
   if ((navTheme === 'dark' && layout === 'top') || layout === 'mix') {
     className = `${styles.right}  ${styles.dark}`;
   }
+  useEffect(() => {
+    fetchVersionMatch();
+  }, [])
   return (
     <Space className={className}>
       <Tooltip title="Documentation">
