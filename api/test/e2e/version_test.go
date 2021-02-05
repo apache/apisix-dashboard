@@ -27,7 +27,7 @@ func TestVersion(t *testing.T) {
 			Desc:         "get version",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
-			Path:         "/version",
+			Path:         "/apisix/admin/tool/version",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   []string{"commit_hash", "\"version\""},
 		},

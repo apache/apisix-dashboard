@@ -39,17 +39,22 @@ import (
 )
 
 var (
-	Version string
-	GitHash string
+	showVersion bool
+	Version     string
+	GitHash     string
 )
 
 func printInfo() {
 	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Version", Version)
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "GitHash", GitHash)
+	printVersion()
 	fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "Listen", conf.ServerHost, conf.ServerPort)
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Loglevel", conf.ErrorLogLevel)
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n\n", "Logfile", conf.ErrorLogPath)
+}
+
+func printVersion() {
+	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Version", Version)
+	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "GitHash", GitHash)
 }
 
 // NewManagerAPICommand creates the manager-api command.
@@ -58,6 +63,12 @@ func NewManagerAPICommand() *cobra.Command {
 		Use:   "manager-api [flags]",
 		Short: "APISIX Manager API",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			GitHash, Version = utils.GetHashAndVersion()
+			if showVersion {
+				printVersion()
+				os.Exit(0)
+			}
+
 			conf.InitConf()
 			log.InitLogger()
 
@@ -72,8 +83,6 @@ func NewManagerAPICommand() *cobra.Command {
 				}
 				return nil
 			})
-
-			GitHash, Version = utils.GetHashAndVersion()
 
 			droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
 				var newMws []droplet.Middleware
@@ -135,6 +144,7 @@ func NewManagerAPICommand() *cobra.Command {
 	}
 
 	cmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
+	cmd.PersistentFlags().BoolVarP(&showVersion, "version", "v", false, "show manager-api version")
 
 	cmd.AddCommand(newStopCommand())
 	return cmd
