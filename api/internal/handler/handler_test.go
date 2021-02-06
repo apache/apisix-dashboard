@@ -21,8 +21,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/go-playground/assert/v2"
 	"github.com/shiningrush/droplet/data"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSpecCodeResponse(t *testing.T) {

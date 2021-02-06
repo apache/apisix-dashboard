@@ -71,8 +71,8 @@ const Page: React.FC = (props) => {
     };
 
     const upstreamFormData = upstreamRef.current?.getData();
-    if (upstreamFormData.upstream_id === '') {
-      data.upstream = omit(upstreamFormData, ['upstream_id']);
+    if (!upstreamFormData.upstream_id) {
+      data.upstream = upstreamFormData;
     } else {
       data.upstream_id = upstreamFormData.upstream_id;
     }

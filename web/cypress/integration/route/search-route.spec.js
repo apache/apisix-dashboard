@@ -33,31 +33,21 @@ context('Create and Search Route', () => {
     label0_value0: 'label0:value0',
     deleteRouteSuccess: 'Delete Route Successfully',
   };
-  const domSelector = {
-    name: '#name',
-    desc: '#desc',
-    hosts_0: '#hosts_0',
-    labels_0_labelKey: '#labels_0_labelKey',
-    labels_0_labelValue: '#labels_0_labelValue',
-    nodes_0_host: '#nodes_0_host',
-    searchName: '[title=Name]',
-    searchLabels: '[title=Labels]',
-  };
 
   beforeEach(() => {
     cy.login();
+
     cy.fixture('selector.json').as('domSelector');
   });
 
   it('should create route test1, test2, test3', function () {
-    //  go to route create page
     cy.visit('/');
     cy.contains('Route').click();
     for (let i = 0; i < 3; i += 1) {
       cy.contains('Create').click();
-      cy.get(domSelector.name).type(`test${i}`);
-      cy.get(domSelector.desc).type(`desc${i}`);
-      cy.get(domSelector.hosts_0).type(data.host1);
+      cy.get(this.domSelector.name).type(`test${i}`);
+      cy.get(this.domSelector.description).type(`desc${i}`);
+      cy.get(this.domSelector.hosts_0).type(data.host1);
 
       // config label
       cy.contains('Manage').click();
@@ -65,44 +55,43 @@ context('Create and Search Route', () => {
       // eslint-disable-next-line no-loop-func
       cy.get(this.domSelector.drawerBody).within(() => {
         cy.contains('Add').click();
-        cy.get(domSelector.labels_0_labelKey).type(`label${i}`);
-        cy.get(domSelector.labels_0_labelValue).type(`value${i}`);
+        cy.get(this.domSelector.labels_0_labelKey).type(`label${i}`);
+        cy.get(this.domSelector.labels_0_labelValue).type(`value${i}`);
         cy.contains('Confirm').click();
       });
 
       cy.contains('Next').click();
-      cy.get(domSelector.nodes_0_host).type(data.host2, {
+      cy.get(this.domSelector.nodes_0_host).type(data.host2, {
         timeout,
       });
       cy.contains('Next').click();
       cy.contains('Next').click();
       cy.contains('Submit').click();
       cy.contains('Submit Successfully');
-      // back to route list page
       cy.contains('Goto List').click();
       cy.url().should('contains', 'routes/list');
     }
   });
 
-  it('should search the route with name', () => {
+  it('should search the route with name', function () {
     cy.visit('/');
     cy.contains('Route').click();
     // full match
-    cy.get(domSelector.searchName).type(data.test1);
+    cy.get(this.domSelector.nameSearch).type(data.test1);
     cy.contains('Search').click();
     cy.contains(data.test1).siblings().should('contain', data.desc1);
     cy.contains(data.test0).should('not.exist');
     cy.contains(data.test2).should('not.exist');
     // partial match
     cy.reload();
-    cy.get(domSelector.searchName).type(data.test);
+    cy.get(this.domSelector.nameSearch).type(data.test);
     cy.contains('Search').click();
     cy.contains(data.test0).siblings().should('contain', data.desc0);
     cy.contains(data.test1).siblings().should('contain', data.desc1);
     cy.contains(data.test2).siblings().should('contain', data.desc2);
     // no match
     cy.reload();
-    cy.get(domSelector.searchName).type(data.testx);
+    cy.get(this.domSelector.nameSearch).type(data.testx);
     cy.contains('Search').click();
     cy.contains(data.test0).should('not.exist');
     cy.contains(data.test1).should('not.exist');
@@ -114,8 +103,8 @@ context('Create and Search Route', () => {
     cy.contains('Route').click();
 
     // search one label
-    cy.wait(500);
-    cy.get(domSelector.searchLabels).click();
+    cy.get(this.domSelector.refresh).click();
+    cy.get(this.domSelector.labelSelector).click();
     cy.get(this.domSelector.dropdown).within(() => {
       cy.contains(data.value0).click();
     });
@@ -130,7 +119,7 @@ context('Create and Search Route', () => {
     cy.visit('/routes/list');
     for (let i = 0; i < 3; i += 1) {
       cy.contains(`test${i}`).siblings().contains('Delete').click();
-      cy.contains('button', 'Confirm').click();
+      cy.contains('button', 'Confirm').click({ timeout });
       cy.get(this.domSelector.notification).should('contain', data.deleteRouteSuccess);
     }
   });

@@ -143,7 +143,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
 
   const handleDebug = (url: string) => {
     /* eslint-disable no-useless-escape */
-    const urlReg = /^(?=^.{3,255}$)(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/\w*)*(\.\w+)*([\?&]\w+=\w*)*$/;
+    const urlReg = /^[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\=\.\"\?\,\'\/\\\+&amp;%$#_]*)?$/;
     if (!urlReg.test(url)) {
       notification.warning({
         message: formatMessage({ id: 'page.route.input.placeholder.requestUrl' }),
@@ -224,6 +224,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             })}
           </Select>
           <Search
+            id="debugUri"
             placeholder={formatMessage({ id: 'page.route.input.placeholder.requestUrl' })}
             allowClear
             enterButton={formatMessage({ id: 'page.route.button.send' })}

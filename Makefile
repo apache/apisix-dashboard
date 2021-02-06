@@ -55,10 +55,21 @@ ifeq ("$(wildcard $(GO_EXEC))", "")
 endif
 
 
+### dag-lib:            get dag-lib
+.PHONY: dag-lib
+dag-lib:
+ifeq ("$(wildcard api/dag-to-lua/dag-to-lua.lua)", "")
+	wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -P /tmp
+	tar -zxvf /tmp/v1.1.tar.gz -C /tmp
+	mkdir ./api/dag-to-lua
+	cp -r /tmp/dag-to-lua-1.1/lib/* ./api/dag-to-lua
+endif
+
+
 ### api-test:		Run the tests of manager-api
 .PHONY: api-test
-api-test: api-default
-	cd api/ && APISIX_API_WORKDIR=$$PWD ENV=test go test -v -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
+api-test: api-default dag-lib
+	cd api/ && APISIX_API_WORKDIR=$$PWD ENV=test go test -v -count=1 -race -cover -coverprofile=coverage.txt -covermode=atomic ./...
 
 
 ### api-run:		Run the manager-api
@@ -69,8 +80,7 @@ api-run: api-default
 
 ### api-stop:		Stop the manager-api
 api-stop:
-	kill $(ps aux | grep 'manager-api' | awk '{print $2}')
-
+	cd api && go run -ldflags "${GOLDFLAGS}" ./cmd/manager stop
 
 ### go-lint:		Lint Go source code
 .PHONY: go-lint
@@ -82,8 +92,21 @@ go-lint: ## Run the golangci-lint application (install if not found)
 	@echo "running golangci-lint..."
 	@cd api && golangci-lint run --tests=false ./...
 
+
+### license-check:	Check Apache APISIX Dashboard Source Codes for Apache License
+.PHONY: license-check
+license-check:
+ifeq ("$(wildcard .actions/openwhisk-utilities/scancode/scanCode.py)", "")
+	git clone https://github.com/apache/openwhisk-utilities.git .actions/openwhisk-utilities
+	cp .actions/ASF* .actions/openwhisk-utilities/scancode/
+endif
+	.actions/openwhisk-utilities/scancode/scanCode.py --config .actions/ASF-Release.cfg ./
+
+
+### release-src: Package Apache APISIX Dashboard source codes for release
 .PHONY: release-src
 release-src:
+	./utils/version-check.sh ${VERSION}
 	git clean -Xdf
 	rm -f ./.githash && git log --pretty=format:"%h" -1 > ./.githash
 	tar -zcvf $(RELEASE_SRC).tgz \
@@ -107,4 +130,3 @@ release-src:
 	mv $(RELEASE_SRC).tgz release/$(RELEASE_SRC).tgz
 	mv $(RELEASE_SRC).tgz.asc release/$(RELEASE_SRC).tgz.asc
 	mv $(RELEASE_SRC).tgz.sha512 release/$(RELEASE_SRC).tgz.sha512
-

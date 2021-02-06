@@ -154,3 +154,202 @@ func TestRoute_with_script_lucacode(t *testing.T) {
 	// clean log
 	CleanAPISIXErrorLog(t)
 }
+
+func TestRoute_with_script_id(t *testing.T) {
+
+	// clean error log
+	CleanAPISIXErrorLog(t)
+
+	tests := []HttpTestCase{
+		{
+			Desc:   "create route with invalid script_id - not equal to id",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/routes",
+			Body: `{
+					"id": "r1",
+					"uri": "/hello",
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					},
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M",
+					"script_id": "not-r1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			Desc:   "create route with invalid script_id - set script_id but without id",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/routes",
+			Body: `{
+					"uri": "/hello",
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					},
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M",
+					"script_id": "r1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			Desc:   "create route with invalid script_id - set script_id but without script",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/routes",
+			Body: `{
+					"id": "r1",
+					"uri": "/hello",
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					},
+					"script_id": "r1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			Desc:   "create route with valid script_id",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/routes",
+			Body: `{
+					"id": "r1",
+					"uri": "/hello",
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					},
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M",
+					"script_id": "r1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "get the route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"script_id\":\"r1\"",
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "hit the route",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world\n",
+		},
+		{
+			Desc:   "update route with valid script_id",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					"uri": "/hello",
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1981,
+							"weight": 1
+						}]
+					},
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M",
+					"script_id": "r1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:   "update route with invalid script_id - not equal to id",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					"uri": "/hello",
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					},
+					"script": "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\")",
+					"script_id": "not-r1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			Desc:   "update route with invalid script_id - set script_id but without script",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					"uri": "/hello",
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}]
+					},
+					"script_id": "r1"
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusBadRequest,
+		},
+		{
+			Desc:         "delete the route (r1)",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+	}
+
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+	// sleep for process log
+	time.Sleep(1500 * time.Millisecond)
+
+	// verify the log generated by script set in Step-4 above
+	logContent := ReadAPISIXErrorLog(t)
+	assert.Contains(t, logContent, "hit access phase")
+
+	// clean log
+	CleanAPISIXErrorLog(t)
+}

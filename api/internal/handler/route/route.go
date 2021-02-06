@@ -73,19 +73,28 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.DELETE("/apisix/admin/routes/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 
-	r.PATCH("/apisix/admin/routes/:id", consts.ErrorWrapper(Patch))
-	r.PATCH("/apisix/admin/routes/:id/*path", consts.ErrorWrapper(Patch))
+	r.PATCH("/apisix/admin/routes/:id", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
+	r.PATCH("/apisix/admin/routes/:id/*path", wgin.Wraps(h.Patch,
+		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
 
-	r.GET("/apisix/admin/notexist/routes", consts.ErrorWrapper(Exist))
+	r.GET("/apisix/admin/notexist/routes", wgin.Wraps(h.Exist,
+		wrapper.InputType(reflect.TypeOf(ExistCheckInput{}))))
 }
 
-func Patch(c *gin.Context) (interface{}, error) {
-	reqBody, _ := c.GetRawData()
-	ID := c.Param("id")
-	subPath := c.Param("path")
+type PatchInput struct {
+	ID      string `auto_read:"id,path"`
+	SubPath string `auto_read:"path,path"`
+	Body    []byte `auto_read:"@body"`
+}
 
-	routeStore := store.GetStore(store.HubKeyRoute)
-	stored, err := routeStore.Get(c, ID)
+func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*PatchInput)
+	reqBody := input.Body
+	ID := input.ID
+	subPath := input.SubPath
+
+	stored, err := h.routeStore.Get(c.Context(), ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -101,7 +110,7 @@ func Patch(c *gin.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	ret, err := routeStore.Update(c, &route, false)
+	ret, err := h.routeStore.Update(c.Context(), &route, false)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -322,6 +331,12 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 
+	// If route's script_id is set, it must be equals to the route's id.
+	if input.ScriptID != nil && (utils.InterfaceToString(input.ID) != utils.InterfaceToString(input.ScriptID)) {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("script_id must be the same as id")
+	}
+
 	if input.Script != nil {
 		if input.ID == "" {
 			input.ID = utils.GetFlakeUidStr()
@@ -351,6 +366,16 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		//save original conf
 		if _, err = h.scriptStore.Create(c.Context(), script); err != nil {
 			return nil, err
+		}
+
+		// After saving the Script entity, always set route's script_id
+		// the same as route's id.
+		input.ScriptID = input.ID
+	} else {
+		// If script is unset, script_id must be unset neither.
+		if input.ScriptID != nil {
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				fmt.Errorf("script_id cannot be set if script is unset")
 		}
 	}
 
@@ -404,6 +429,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
+	// If route's script_id is set, it must be equals to the route's id.
+	if input.Route.ScriptID != nil && (utils.InterfaceToString(input.ID) != utils.InterfaceToString(input.Route.ScriptID)) {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("script_id must be the same as id")
+	}
+
 	if input.Script != nil {
 		script := &entity.Script{}
 		script.ID = input.ID
@@ -438,7 +469,16 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 				return handler.SpecCodeResponse(err), err
 			}
 		}
+
+		// After updating the Script entity, always set route's script_id
+		// the same as route's id.
+		input.Route.ScriptID = input.ID
 	} else {
+		// If script is unset, script_id must be unset neither.
+		if input.Route.ScriptID != nil {
+			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+				fmt.Errorf("script_id cannot be set if script is unset")
+		}
 		//remove exists script
 		id := utils.InterfaceToString(input.Route.ID)
 		script, _ := h.scriptStore.Get(c.Context(), id)
@@ -481,16 +521,9 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	return nil, nil
 }
 
-type ExistInput struct {
-	Name string `auto_read:"name,query"`
-}
-
-func toRows(list *store.ListOutput) []store.Row {
-	rows := make([]store.Row, list.TotalSize)
-	for i := range list.Rows {
-		rows[i] = list.Rows[i].(*entity.Route)
-	}
-	return rows
+type ExistCheckInput struct {
+	Name    string `auto_read:"name,query"`
+	Exclude string `auto_read:"exclude,query"`
 }
 
 // swagger:operation GET /apisix/admin/notexist/routes checkRouteExist
@@ -520,36 +553,30 @@ func toRows(list *store.ListOutput) []store.Row {
 //     description: unexpected error
 //     schema:
 //       "$ref": "#/definitions/ApiError"
-func Exist(c *gin.Context) (interface{}, error) {
-	//input := c.Input().(*ExistInput)
+func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*ExistCheckInput)
+	name := input.Name
+	exclude := input.Exclude
 
-	//temporary
-	name := c.Query("name")
-	exclude := c.Query("exclude")
-	routeStore := store.GetStore(store.HubKeyRoute)
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			r := obj.(*entity.Route)
+			if r.Name == name && r.ID != exclude {
+				return true
+			}
 
-	ret, err := routeStore.List(c, store.ListInput{
-		Predicate:  nil,
+			return false
+		},
 		PageSize:   0,
 		PageNumber: 0,
 	})
-
 	if err != nil {
 		return nil, err
 	}
 
-	sort := store.NewSort(nil)
-	filter := store.NewFilter([]string{"name", name})
-	pagination := store.NewPagination(0, 0)
-	query := store.NewQuery(sort, filter, pagination)
-	rows := store.NewFilterSelector(toRows(ret), query)
-
-	if len(rows) > 0 {
-		r := rows[0].(*entity.Route)
-		if r.ID != exclude {
-			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-				consts.InvalidParam("Route name is reduplicate")
-		}
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			consts.InvalidParam("Route name is reduplicate")
 	}
 
 	return nil, nil

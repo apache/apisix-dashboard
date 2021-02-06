@@ -19,6 +19,42 @@
 
 set -ex
 
+helpFunction()
+{
+   echo ""
+   echo "Usage: $0 -s true"
+   echo -e "\t-s whether skip docker, true or false"
+   echo -e "\t-h helper info"
+   exit 1
+}
+
+while getopts "s:h:" opt
+do
+   case "$opt" in
+      s ) skip="$OPTARG" ;;
+      ? ) helpFunction ;; 
+   esac
+done
+
+if [ -z "$skip" ]
+then
+   echo "Some parameters are empty";
+   helpFunction;
+fi
+
+if "$skip" 
+then 
+   echo "skip docker check"
+else
+   # Version output
+	verline=$(docker logs docker-deploy_managerapi_1 | grep -E "^Version : [A-Za-z0-9\-\_\.]+")
+	if [ -z "$verline" ];then
+	    echo "no Version output"
+	    exit 1
+	fi
+fi
+
+
 # web page
 curl http://127.0.0.1:9000
 code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} http://127.0.0.1:9000)
@@ -32,6 +68,7 @@ resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -X POST -d '{"username
 token=$(echo "${resp}" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
 if [ -z "${token}" ]; then
     echo "login failed"
+    exit 1
 fi
 
 # plugin orchestration

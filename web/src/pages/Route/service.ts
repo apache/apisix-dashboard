@@ -118,3 +118,15 @@ export const fetchServiceList = () =>
     data: data.rows,
     total: data.total_size,
   }));
+
+export const exportRoutes = (ids?: string) => {
+  return request(`/export/routes/${ids}`);
+};
+
+export const importRoutes = (formData: FormData) => {
+  return request('/import/routes', {
+    method: 'POST',
+    data: formData,
+    requestType: 'form',
+  });
+};

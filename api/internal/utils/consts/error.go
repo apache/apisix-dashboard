@@ -20,10 +20,12 @@ import "github.com/shiningrush/droplet/data"
 
 const (
 	ErrBadRequest = 20001
+	ErrForbidden  = 20002
 )
 
 var (
 	// base error please refer to github.com/shiningrush/droplet/data, such as data.ErrNotFound, data.ErrConflicted
 	ErrInvalidRequest       = data.BaseError{Code: ErrBadRequest, Message: "invalid request"}
 	ErrSchemaValidateFailed = data.BaseError{Code: ErrBadRequest, Message: "JSONSchema validate failed"}
+	ErrIPNotAllow           = data.BaseError{Code: ErrForbidden, Message: "IP address not allowed"}
 )

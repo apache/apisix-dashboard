@@ -52,12 +52,22 @@ var (
 	UserList         = make(map[string]User, 2)
 	AuthConf         Authentication
 	SSLDefaultStatus = 1 //enable ssl by default
+	ImportSizeLimit  = 10 * 1024 * 1024
+	PIDPath          = "/tmp/manager-api.pid"
+	AllowList        []string
 )
+
+type MTLS struct {
+	CaFile   string `yaml:"ca_file"`
+	CertFile string `yaml:"cert_file"`
+	KeyFile  string `yaml:"key_file"`
+}
 
 type Etcd struct {
 	Endpoints []string
 	Username  string
 	Password  string
+	MTLS      *MTLS
 }
 
 type Listen struct {
@@ -80,9 +90,10 @@ type Log struct {
 }
 
 type Conf struct {
-	Etcd   Etcd
-	Listen Listen
-	Log    Log
+	Etcd      Etcd
+	Listen    Listen
+	Log       Log
+	AllowList []string `yaml:"allow_list"`
 }
 
 type User struct {
@@ -171,6 +182,8 @@ func setConf() {
 			}
 		}
 
+		AllowList = config.Conf.AllowList
+
 		//auth
 		initAuthentication(config.Authentication)
 	}
@@ -216,5 +229,6 @@ func initEtcdConfig(conf Etcd) {
 		Endpoints: endpoints,
 		Username:  conf.Username,
 		Password:  conf.Password,
+		MTLS: conf.MTLS,
 	}
 }

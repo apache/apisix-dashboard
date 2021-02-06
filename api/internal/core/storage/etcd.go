@@ -22,10 +22,26 @@ import (
 	"time"
 
 	"go.etcd.io/etcd/clientv3"
+	"go.etcd.io/etcd/pkg/transport"
 
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
+	"github.com/apisix/manager-api/internal/utils/runtime"
+)
+
+const (
+	// SkippedValueEtcdInitDir indicates the init_dir
+	// etcd event will be skipped.
+	SkippedValueEtcdInitDir = "init_dir"
+
+	// SkippedValueEtcdEmptyObject indicates the data with an
+	// empty JSON value {}, which may be set by APISIX,
+	// should be also skipped.
+	//
+	// Important: at present, {} is considered as invalid,
+	// but may be changed in the future.
+	SkippedValueEtcdEmptyObject = "{}"
 )
 
 var (
@@ -37,12 +53,28 @@ type EtcdV3Storage struct {
 }
 
 func InitETCDClient(etcdConf *conf.Etcd) error {
-	cli, err := clientv3.New(clientv3.Config{
+	config := clientv3.Config{
 		Endpoints:   etcdConf.Endpoints,
 		DialTimeout: 5 * time.Second,
 		Username:    etcdConf.Username,
 		Password:    etcdConf.Password,
-	})
+	}
+	// mTLS
+	if etcdConf.MTLS != nil && etcdConf.MTLS.CaFile != "" &&
+		etcdConf.MTLS.CertFile != "" && etcdConf.MTLS.KeyFile != "" {
+		tlsInfo := transport.TLSInfo{
+			CertFile:      etcdConf.MTLS.CertFile,
+			KeyFile:       etcdConf.MTLS.KeyFile,
+			TrustedCAFile: etcdConf.MTLS.CaFile,
+		}
+		tlsConfig, err := tlsInfo.ClientConfig()
+		if err != nil {
+			return err
+		}
+		config.TLS = tlsConfig
+	}
+
+	cli, err := clientv3.New(config)
 	if err != nil {
 		log.Errorf("init etcd failed: %s", err)
 		return fmt.Errorf("init etcd failed: %s", err)
@@ -117,9 +149,21 @@ func (s *EtcdV3Storage) List(ctx context.Context, key string) ([]Keypair, error)
 	}
 	var ret []Keypair
 	for i := range resp.Kvs {
+		key := string(resp.Kvs[i].Key)
+		value := string(resp.Kvs[i].Value)
+
+		// Skip the data if its value is init_dir or {}
+		// during fetching-all phase.
+		//
+		// For more complex cases, an explicit function to determine if
+		// skippable would be better.
+		if value == SkippedValueEtcdInitDir || value == SkippedValueEtcdEmptyObject {
+			continue
+		}
+
 		data := Keypair{
-			Key:   string(resp.Kvs[i].Key),
-			Value: string(resp.Kvs[i].Value),
+			Key:   key,
+			Value: value,
 		}
 		ret = append(ret, data)
 	}
@@ -164,15 +208,30 @@ func (s *EtcdV3Storage) Watch(ctx context.Context, key string) <-chan WatchRespo
 	eventChan := s.client.Watch(ctx, key, clientv3.WithPrefix())
 	ch := make(chan WatchResponse, 1)
 	go func() {
+		defer runtime.HandlePanic()
 		for event := range eventChan {
 			output := WatchResponse{
 				Canceled: event.Canceled,
 			}
 
 			for i := range event.Events {
+				key := string(event.Events[i].Kv.Key)
+				value := string(event.Events[i].Kv.Value)
+
+				// Skip the data if its value is init_dir or {}
+				// during watching phase.
+				//
+				// For more complex cases, an explicit function to determine if
+				// skippable would be better.
+				if value == SkippedValueEtcdInitDir || value == SkippedValueEtcdEmptyObject {
+					continue
+				}
+
 				e := Event{
-					Key:   string(event.Events[i].Kv.Key),
-					Value: string(event.Events[i].Kv.Value),
+					Keypair: Keypair{
+						Key:   key,
+						Value: value,
+					},
 				}
 				switch event.Events[i].Type {
 				case clientv3.EventTypePut:

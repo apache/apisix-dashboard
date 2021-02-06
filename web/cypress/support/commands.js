@@ -15,16 +15,13 @@
  * limitations under the License.
  */
 /* eslint-disable no-undef */
+import defaultSettings from '../../config/defaultSettings';
+import 'cypress-file-upload';
 
 Cypress.Commands.add('login', () => {
-  const serveUrlMap = {
-    dev: 'http://139.217.190.60',
-    test: 'http://localhost:9000',
-  };
-
   const { SERVE_ENV = 'dev' } = Cypress.env();
 
-  cy.request('POST', `${serveUrlMap[SERVE_ENV]}/apisix/admin/user/login`, {
+  cy.request('POST', `${defaultSettings.serveUrlMap[SERVE_ENV]}/apisix/admin/user/login`, {
     username: 'user',
     password: 'user',
   }).then((res) => {
@@ -32,5 +29,77 @@ Cypress.Commands.add('login', () => {
     localStorage.setItem('token', res.body.data.token);
     // set default language
     localStorage.setItem('umi_locale', 'en-US');
+  });
+});
+
+Cypress.Commands.add('configurePlugins', (cases) => {
+  const timeout = 300;
+  const domSelectors = {
+    name: '[data-cy-plugin-name]',
+    parents: '.ant-card-bordered',
+    drawer_wrap: '.ant-drawer-content-wrapper',
+    drawer: '.ant-drawer-content',
+    switch: '#disable',
+    close: '.anticon-close',
+  };
+
+  cy.get(domSelectors.name, { timeout }).then(function (cards) {
+    [...cards].forEach((card) => {
+      const name = card.innerText;
+      const pluginCases = cases[name] || [];
+      // eslint-disable-next-line consistent-return
+      pluginCases.forEach(({ shouldValid, data, type = '' }) => {
+        if (type === 'consumer') {
+          return true;
+        }
+
+        cy.contains(name)
+          .parents(domSelectors.parents)
+          .within(() => {
+            cy.contains('Enable').click({
+              force: true,
+            });
+          });
+
+        // NOTE: wait for the Drawer to appear on the DOM
+        cy.wait(300);
+        cy.get(domSelectors.drawer, { timeout }).within(() => {
+          cy.get(domSelectors.switch).click({
+            force: true,
+          });
+        });
+
+        cy.window().then(({ codemirror }) => {
+          if (codemirror) {
+            codemirror.setValue(JSON.stringify(data));
+          }
+          cy.get(domSelectors.drawer, { timeout }).within(() => {
+            cy.contains('Submit').click({
+              force: true,
+            });
+          });
+        });
+
+        cy.wait(300);
+        if (shouldValid === true) {
+          cy.get(domSelectors.drawer).should('not.exist');
+        } else if (shouldValid === false) {
+          cy.get(this.selector.notification).should('contain', 'Invalid plugin data');
+
+          cy.get(domSelectors.close).click({
+            force: true,
+            multiple: true,
+          });
+
+          cy.get(domSelectors.drawer, { timeout })
+            .invoke('show')
+            .within(() => {
+              cy.contains('Cancel').click({
+                force: true,
+              });
+            });
+        }
+      });
+    });
   });
 });

@@ -32,6 +32,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
+	"github.com/apisix/manager-api/internal/utils/runtime"
 )
 
 type Interface interface {
@@ -96,9 +97,6 @@ func (s *GenericStore) Init() error {
 		return err
 	}
 	for i := range ret {
-		if ret[i].Value == "init_dir" {
-			continue
-		}
 		key := ret[i].Key[len(s.opt.BasePath)+1:]
 		objPtr, err := s.StringToObjPtr(ret[i].Value, key)
 		if err != nil {
@@ -111,6 +109,7 @@ func (s *GenericStore) Init() error {
 	c, cancel := context.WithCancel(context.TODO())
 	ch := s.Stg.Watch(c, s.opt.BasePath)
 	go func() {
+		defer runtime.HandlePanic()
 		for event := range ch {
 			if event.Canceled {
 				log.Warnf("watch failed: %s", event.Error)
@@ -224,7 +223,7 @@ func (s *GenericStore) List(_ context.Context, input ListInput) (*ListOutput, er
 func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 	if s.opt.Validator != nil {
 		if err := s.opt.Validator.Validate(obj); err != nil {
-			log.Errorf("data validate failed: %s", err)
+			log.Errorf("data validate failed: %s, %v", err, obj)
 			return err
 		}
 	}
@@ -240,7 +239,8 @@ func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 	return err
 }
 
-func (s *GenericStore) Create(ctx context.Context, obj interface{}) (interface{}, error) {
+func (s *GenericStore) CreateCheck(obj interface{}) ([]byte, error) {
+
 	if setter, ok := obj.(entity.BaseInfoSetter); ok {
 		info := setter.GetBaseInfo()
 		info.Creating()
@@ -260,12 +260,27 @@ func (s *GenericStore) Create(ctx context.Context, obj interface{}) (interface{}
 		return nil, fmt.Errorf("key: %s is conflicted", key)
 	}
 
-	bs, err := json.Marshal(obj)
+	bytes, err := json.Marshal(obj)
 	if err != nil {
 		log.Errorf("json marshal failed: %s", err)
 		return nil, fmt.Errorf("json marshal failed: %s", err)
 	}
-	if err := s.Stg.Create(ctx, s.GetObjStorageKey(obj), string(bs)); err != nil {
+
+	return bytes, nil
+}
+
+func (s *GenericStore) Create(ctx context.Context, obj interface{}) (interface{}, error) {
+	if setter, ok := obj.(entity.BaseInfoSetter); ok {
+		info := setter.GetBaseInfo()
+		info.Creating()
+	}
+
+	bytes, err := s.CreateCheck(obj)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.Stg.Create(ctx, s.GetObjStorageKey(obj), string(bytes)); err != nil {
 		return nil, err
 	}
 

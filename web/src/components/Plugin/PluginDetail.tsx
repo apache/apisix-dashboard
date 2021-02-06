@@ -25,6 +25,8 @@ import {
   Divider,
   Drawer,
   Alert,
+  Space,
+  Popconfirm,
 } from 'antd';
 import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
@@ -174,24 +176,44 @@ const PluginDetail: React.FC<Props> = ({
             <Button onClick={onClose} key={1}>
               {formatMessage({ id: 'component.global.cancel' })}
             </Button>
-            <Button
-              key={2}
-              type="primary"
-              onClick={() => {
-                try {
-                  const editorData = JSON.parse(ref.current?.editor.getValue());
-                  validateData(name, editorData).then((value) => {
-                    onChange({ formData: form.getFieldsValue(), codemirrorData: value });
+            <Space>
+              <Popconfirm
+                title={formatMessage({ id: 'page.plugin.drawer.popconfirm.title.delete' })}
+                okText={formatMessage({ id: 'component.global.confirm' })}
+                cancelText={formatMessage({ id: 'component.global.cancel' })}
+                onConfirm={() => {
+                  onChange({
+                    formData: form.getFieldsValue(),
+                    codemirrorData: {},
+                    shouldDelete: true,
                   });
-                } catch (error) {
-                  notification.error({
-                    message: 'Invalid JSON data',
-                  });
-                }
-              }}
-            >
-              {formatMessage({ id: 'component.global.submit' })}
-            </Button>
+                }}
+              >
+                {initialData[name] ? (
+                  <Button key={3} type="primary" danger>
+                    {formatMessage({ id: 'component.global.delete' })}
+                  </Button>
+                ) : null}
+              </Popconfirm>
+              <Button
+                key={2}
+                type="primary"
+                onClick={() => {
+                  try {
+                    const editorData = JSON.parse(ref.current?.editor.getValue());
+                    validateData(name, editorData).then((value) => {
+                      onChange({ formData: form.getFieldsValue(), codemirrorData: value });
+                    });
+                  } catch (error) {
+                    notification.error({
+                      message: 'Invalid JSON data',
+                    });
+                  }
+                }}
+              >
+                {formatMessage({ id: 'component.global.submit' })}
+              </Button>
+            </Space>
           </div>
         }
       >
@@ -235,11 +257,15 @@ const PluginDetail: React.FC<Props> = ({
               type="default"
               icon={<LinkOutlined />}
               onClick={() => {
-               if (name.startsWith("serverless")) {
-                 window.open('https://github.com/apache/apisix/blob/master/doc/plugins/serverless.md');
-               } else {
-                 window.open(`https://github.com/apache/apisix/blob/master/doc/plugins/${name}.md`);
-               }
+                if (name.startsWith('serverless')) {
+                  window.open(
+                    'https://github.com/apache/apisix/blob/master/doc/plugins/serverless.md',
+                  );
+                } else {
+                  window.open(
+                    `https://github.com/apache/apisix/blob/master/doc/plugins/${name}.md`,
+                  );
+                }
               }}
               key={1}
             >

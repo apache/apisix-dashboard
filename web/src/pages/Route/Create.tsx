@@ -135,7 +135,13 @@ const Page: React.FC<Props> = (props) => {
         );
       }
 
-      return <Step2 form={form2} upstreamRef={upstreamRef} />;
+      return (
+        <Step2
+          form={form2}
+          upstreamRef={upstreamRef}
+          hasServiceId={form1.getFieldValue('service_id') !== ''}
+        />
+      );
     }
 
     if (step === 3) {

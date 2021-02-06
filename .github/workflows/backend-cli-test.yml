@@ -24,6 +24,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: download etcd
+        working-directory: ./api
+        run: |
+          wget https://github.com/etcd-io/etcd/releases/download/v3.4.14/etcd-v3.4.14-linux-amd64.tar.gz
+          tar zxvf etcd-v3.4.14-linux-amd64.tar.gz
+
       - name: run test
         working-directory: ./api
         run: sudo ./test/shell/cli_test.sh
