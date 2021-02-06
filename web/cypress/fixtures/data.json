@@ -7,14 +7,18 @@
   "deleteRouteSuccess": "Delete Route Successfully",
   "submitSuccess": "Submit Successfully",
   "deleteUpstreamSuccess": "Delete Upstream Successfully",
+  "createConsumerSuccess": "Create Consumer Successfully",
+  "deleteConsumerSuccess": "Delete Consumer Successfully",
   "upstreamName": "test_upstream",
   "serviceName": "test_service",
   "serviceName2": "test_service",
   "routeName": "test_route",
+  "consumerrName": "test_consumer",
   "ip1": "127.0.0.1",
   "ip2": "127.0.0.2",
   "host1": "11.11.11.11",
   "host2": "12.12.12.12",
+  "host3": "10.10.10.10",
   "description": "desc_by_autotes",
   "description2": "new desc",
   "grafanaAddress": "Grafana Address",
@@ -22,5 +26,6 @@
   "grafanaExplanation2": "Address is illegality",
   "updateSuccessfully": "Update Configuration Successfully",
   "sslRemoveSuccessfully": "Remove target SSL successfully",
-  "sslErrorAlert": "key and cert don't match"
+  "sslErrorAlert": "key and cert don't match",
+  "pluginErrorAlert": "Invalid plugin data"
 }

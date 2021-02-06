@@ -65,7 +65,7 @@ context('Create and Search Route', () => {
       cy.contains('Next').click();
       cy.contains('Next').click();
       cy.contains('Submit').click();
-      cy.contains('Submit Successfully');
+      cy.contains(this.data.submitSuccess);
       cy.contains('Goto List').click();
       cy.url().should('contains', 'routes/list');
     }
