@@ -23,7 +23,7 @@ context('settings page smoke test', () => {
     grafanaExplanation2: 'Address is illegality',
     updateSuccessfully: 'Update Configuration Successfully',
     invalidURL: 'httx://www.test.com',
-    validURL: 'https://apisix.apache.org/',
+    validURL: 'http://localhost:8000/routes/list',
     fetchURL: 'fetchURL',
     fetch: '@fetchURL',
   }
