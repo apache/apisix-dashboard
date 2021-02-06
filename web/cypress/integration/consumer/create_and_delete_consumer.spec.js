@@ -30,8 +30,8 @@ context('Create and Delete Consumer', () => {
     cy.contains('Create').click();
 
     // basic information
-    cy.get('#username').type(this.data.consumerrName);
-    cy.get('#desc').type(this.data.description);
+    cy.get(this.domSelector.username).type(this.data.consumerrName);
+    cy.get(this.domSelector.description).type(this.data.description);
     cy.contains('Next').click();
 
     // plugin config
@@ -39,9 +39,9 @@ context('Create and Delete Consumer', () => {
       cy.get('button').first().click();
     });
 
-    cy.get('#disable').click();
+    cy.get(this.domSelector.disabledSwitcher).click();
     // edit codemirror
-    cy.get('.CodeMirror')
+    cy.get(this.domSelector.codeMirror)
       .first()
       .then((editor) => {
         editor[0].CodeMirror.setValue(
@@ -70,8 +70,8 @@ context('Create and Delete Consumer', () => {
     cy.contains('Consumer').click();
     cy.contains('Create').click();
     // basic information
-    cy.get('#username').type(this.data.consumerrName);
-    cy.get('#desc').type(this.data.description);
+    cy.get(this.domSelector.username).type(this.data.consumerrName);
+    cy.get(this.domSelector.description).type(this.data.description);
     cy.contains('Next').click();
 
     // plugin config
@@ -79,7 +79,7 @@ context('Create and Delete Consumer', () => {
       cy.get('button').first().click();
     });
     // edit codeMirror
-    cy.get('.CodeMirror')
+    cy.get(this.domSelector.codeMirror)
       .first()
       .then((editor) => {
         editor[0].CodeMirror.setValue(

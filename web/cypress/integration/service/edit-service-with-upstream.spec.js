@@ -17,20 +17,10 @@
 /* eslint-disable no-undef */
 
 context('Edit Service with Upstream', () => {
-  const domSelector = {
-    name: '#name',
-    desc: '#desc',
-    nodes_0_host: '#nodes_0_host',
-    notification: '.ant-notification-notice-message',
-    search_name: '[title=Name]',
-    upstream_selector: '[title=Custom]',
-    test_upstream: '[title=test_upstream]',
-    input: ':input',
-  };
-
   beforeEach(() => {
     cy.login();
 
+    cy.fixture('selector.json').as('domSelector');
     cy.fixture('data.json').as('data');
   });
 
@@ -39,11 +29,11 @@ context('Edit Service with Upstream', () => {
     cy.contains('Upstream').click();
     cy.contains('Create').click();
 
-    cy.get(domSelector.name).type(this.data.upstreamName);
-    cy.get(domSelector.nodes_0_host).type(this.data.ip1);
+    cy.get(this.domSelector.name).type(this.data.upstreamName);
+    cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(domSelector.notification).should('contain', this.data.createUpstreamSuccess);
+    cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
     cy.url().should('contains', 'upstream/list');
   });
 
@@ -51,50 +41,50 @@ context('Edit Service with Upstream', () => {
     cy.visit('/');
     cy.contains('Service').click();
     cy.contains('Create').click();
-    cy.get(domSelector.name).type(this.data.serviceName);
-    cy.get(domSelector.desc).type(this.data.description);
-    cy.get(domSelector.upstream_selector).click();
+    cy.get(this.domSelector.name).type(this.data.serviceName);
+    cy.get(this.domSelector.description).type(this.data.description);
+    cy.get(this.domSelector.upstreamSelector).click();
     cy.contains(this.data.upstreamName).click();
-    cy.get(domSelector.input).should('be.disabled');
+    cy.get(this.domSelector.input).should('be.disabled');
 
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(domSelector.notification).should('contain', this.data.createServiceSuccess);
+    cy.get(this.domSelector.notification).should('contain', this.data.createServiceSuccess);
   });
 
   it('should edit the service', function () {
     cy.visit('/');
     cy.contains('Service').click();
 
-    cy.get(domSelector.search_name).type(this.data.serviceName);
+    cy.get(this.domSelector.nameSearch).type(this.data.serviceName);
     cy.contains('Search').click();
     cy.contains(this.data.serviceName).siblings().contains('Edit').click();
 
-    cy.get(domSelector.nodes_0_host).click({ force: true }).should('value', this.data.ip1);
-    cy.get(domSelector.input).should('be.disabled');
+    cy.get(this.domSelector.nodes_0_host).click({ force: true }).should('value', this.data.ip1);
+    cy.get(this.domSelector.input).should('be.disabled');
 
-    cy.get(domSelector.test_upstream).click();
+    cy.get(this.domSelector.upstreamSelector).click();
     cy.contains('Custom').click();
-    cy.get(domSelector.nodes_0_host).should('not.be.disabled').clear().type(this.data.ip2);
+    cy.get(this.domSelector.nodes_0_host).should('not.be.disabled').clear().type(this.data.ip2);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(domSelector.notification).should('contain', this.data.editServiceSuccess);
+    cy.get(this.domSelector.notification).should('contain', this.data.editServiceSuccess);
   });
 
   it('should delete this service and upstream', function () {
     cy.visit('/service/list');
-    cy.get(domSelector.search_name).type(this.data.serviceName);
+    cy.get(this.domSelector.nameSearch).type(this.data.serviceName);
     cy.contains('Search').click();
     cy.contains(this.data.serviceName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(domSelector.notification).should('contain', this.data.deleteServiceSuccess);
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteServiceSuccess);
 
     cy.visit('/');
     cy.contains('Upstream').click();
     cy.contains(this.data.upstreamName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
   });
 });
