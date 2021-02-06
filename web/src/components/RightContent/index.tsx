@@ -40,6 +40,10 @@ const ENVTagColor = {
 
 const GlobalHeaderRight: React.FC = () => {
   const { initialState } = useModel('@@initialState');
+  
+  useEffect(() => {
+    fetchVersionMatch();
+  }, []);
 
   if (!initialState || !initialState.settings) {
     return null;
@@ -51,9 +55,7 @@ const GlobalHeaderRight: React.FC = () => {
   if ((navTheme === 'dark' && layout === 'top') || layout === 'mix') {
     className = `${styles.right}  ${styles.dark}`;
   }
-  useEffect(() => {
-    fetchVersionMatch();
-  }, []);
+
   return (
     <Space className={className}>
       <Tooltip title="Documentation">
