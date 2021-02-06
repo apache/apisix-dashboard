@@ -23,8 +23,10 @@
 */
 import { Tooltip, Tag, Space } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useModel, SelectLang } from 'umi';
+
+import { fetchVersionMatch } from '@/services/tool';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
 
@@ -38,6 +40,10 @@ const ENVTagColor = {
 
 const GlobalHeaderRight: React.FC = () => {
   const { initialState } = useModel('@@initialState');
+  
+  useEffect(() => {
+    fetchVersionMatch();
+  }, []);
 
   if (!initialState || !initialState.settings) {
     return null;
@@ -49,6 +55,7 @@ const GlobalHeaderRight: React.FC = () => {
   if ((navTheme === 'dark' && layout === 'top') || layout === 'mix') {
     className = `${styles.right}  ${styles.dark}`;
   }
+
   return (
     <Space className={className}>
       <Tooltip title="Documentation">

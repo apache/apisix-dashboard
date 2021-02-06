@@ -121,9 +121,9 @@ const Page: React.FC = () => {
         };
         if (shouldDelete === true) {
           plugins = omit(plugins, name);
-        };
+        }
         createOrUpdate({
-          plugins
+          plugins,
         }).then(() => {
           setVisible(false);
           setName('');
