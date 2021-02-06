@@ -23,6 +23,7 @@ context('Create and Delete Upstream', () => {
     cy.login();
 
     cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
   });
 
   it('should create upstream with default type (roundrobin)', function () {
@@ -31,14 +32,14 @@ context('Create and Delete Upstream', () => {
     cy.contains('Create').click();
 
     cy.get('#name').type(name);
-    cy.get('#desc').type('desc_by_autotest');
+    cy.get('#desc').type(this.data.description);
 
-    cy.get('#nodes_0_host').type('127.0.0.1');
+    cy.get('#nodes_0_host').type(this.data.ip1);
     cy.get('#nodes_0_port').clear().type('7000');
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(this.domSelector.notification).should('contain', 'Create Upstream Successfully');
-    cy.contains('Create Upstream Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
+    cy.contains(this.data.createUpstreamSuccess);
     cy.url().should('contains', 'upstream/list');
   });
 
@@ -47,7 +48,7 @@ context('Create and Delete Upstream', () => {
     cy.contains('Upstream').click();
     cy.contains(name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', 'Delete Upstream Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
   });
 
   it('should create chash upstream', function () {
@@ -56,7 +57,7 @@ context('Create and Delete Upstream', () => {
     cy.contains('Create').click();
 
     cy.get('#name').type(name);
-    cy.get('#desc').type('desc_by_autotest');
+    cy.get('#desc').type(this.data.description);
 
     // change upstream type to chash, todo: optimize the search method
     cy.get('[title=roundrobin]').click();
@@ -73,19 +74,19 @@ context('Create and Delete Upstream', () => {
     });
 
     // add first upstream node
-    cy.get('#nodes_0_host').type('127.0.0.1');
+    cy.get('#nodes_0_host').type(this.data.ip1);
     cy.get('#nodes_0_port').clear().type('7000');
 
     // add second upstream node
     cy.get('.ant-btn-dashed').click();
-    cy.get('#nodes_1_host').type('127.0.0.1');
+    cy.get('#nodes_1_host').type(this.data.ip1);
     cy.get('#nodes_1_port').clear().type('7001');
     cy.get('#nodes_1_weight').clear().type('2');
 
     // next to finish
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(this.domSelector.notification).should('contain', 'Create Upstream Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
     cy.url().should('contains', 'upstream/list');
   });
 
@@ -94,6 +95,6 @@ context('Create and Delete Upstream', () => {
     cy.contains('Upstream').click();
     cy.contains(name).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', 'Delete Upstream Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
   });
 });

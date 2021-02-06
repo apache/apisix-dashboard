@@ -25,6 +25,7 @@ context('Create and Delete Route', () => {
     cy.login();
 
     cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
   });
 
   it('should create route', function () {
@@ -78,7 +79,7 @@ context('Create and Delete Route', () => {
     cy.contains('button', 'Cancel').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.contains('Submit Successfully');
+    cy.contains(this.data.submitSuccess);
 
     // back to route list page
     cy.contains('Goto List').click();
@@ -99,7 +100,7 @@ context('Create and Delete Route', () => {
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.contains('Submit Successfully');
+    cy.contains(this.data.submitSuccess);
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
     cy.contains(newName).siblings().should('contain', 'new desc');
@@ -111,6 +112,6 @@ context('Create and Delete Route', () => {
     cy.contains('Search').click();
     cy.contains(newName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', 'Delete Route Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
   });
 });
