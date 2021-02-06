@@ -18,8 +18,10 @@
 package ssl
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"testing"
 
@@ -34,12 +36,16 @@ import (
 	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
-var (
-	_key  string = "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDGO0J9xrOcmvgh\npkqHIYHCw35FTfIT5uXOSzdF49M2ZAKBQwFG0ovYT8bc0glNLB+hpDhJPL531qSP\nl1ZOe0W1ofP1u0T5Zzc9Rub/kn7RMPq0BsSC6J3rF+rQEwh1PM8qUuD8DxZ7jaOL\niMNL6SyuZIPsS1kPPBtsioukdo666tbjNMixhQbI9Wpg55abdXRFh3i7Zu/9siF1\njCGcsskjOaUOY4sYQ3i5WU/HIIRhA82XuIL+Sxd32P8bKi2UT1sqFXRjAVR7KRWo\nIVvkmSLoZb9ucV6MsccDrRYBf6rLbI1tFj9l2rY6GTFlT+6z7K/ZI60DGi/hsBfl\nDeEQ5WuxAgMBAAECggEAVHQQyucpxHGdfzCKlfGnh+Oj20Du/p2jkHUpEkSSypxn\nGM0EMTkoTTsHvTJath8zRrlhJYqUlxfCOk6+fWc1dsGN30Yuh5b6yMd5SK8QCm20\nkZhEhoU2Kl+hMY66TsBefmia46hF6tOYNq1IjwHDgHTgY35ibgQsptyLy8Ca5HTC\nrnoocP2AcKtM+qwOMGiNHpeh+/zfB91C9AszvS8H2ao5nq4u0/JavPO4A4WmVYol\n7Qv9ACY/8uaKC79syahutbkMjwGsQgYsq9G0QpcLSCuOb4vBbOb130mptSM9NzKg\nTjSxF2D8ob//roZMc1ueTpqAY6WedKV3y3BIBDKuAQKBgQDgGyEsxwR9QtA5EH/h\nJ4GiTQn0aep8G2LSlAtHGndL3sxaGGLt2pk3lNIeRAbOS3APmYskBN418JIF/Ren\nE0CYSrTaxpTs9UXXkgKNJ63Z6r+btswTAVVXG5Zoi/5JRSHRquEVmKccM4zg3v6R\ny/nVhwXigUaRuLx+wCtoaGsaUQKBgQDicXFZ0TvN8tohqc8dbmOu2A25+ifFKHUA\nn3yxZIJtbTC9bJeuwtkqIFol1DXHLqYvdD5jQT3c4z6HekcmI9sEy1YzO4a3WUTI\nP//ogjDLXj402k+WCx1Us2HASxwU5cRvOpMhfnppYPSDXqBoH196UCDmOQuS1+Q8\njyPsNQmDYQKBgQDcm5hCvf87V4QmSIm6GOvR20iLY6BCX6seZEHd0r3Q4BgGMK9i\nOahOQJ++z3Rrq3M6yAligbBFJPZ6ErUv8RHLWO9D1exQfvorxT3huke3lxDbtkya\nANwDjdK4Q+ckNXufLDm6yrTmXBC4ZIvw9fyQKASw/lV7qYFUvNN+Shv0oQKBgQC+\nraw3Z7smV0NbaXRgYh5KkuAsJPvsR38OwT3s2qgBoRqTx6eKn8Tidk+y3xlR2nRS\nLV6DkeKX6Ds1NcBH25WIWfkCNzPfnKoQveOuVELmXTugody2ijFuq4a6uASzjC93\nQim24JwPtHbxUHNeelyZ0HODqbGXO3iTji0/sAGMwQKBgQC8yDwapXgrCWK34qpN\nSdO9uA4VstI3Ovb+o3Evfp1CvJnfk56ypO2DaqbuvMJsInuWRFU40UWp7Vxyl/hP\nXvGgEI3dbBy9KWFjAKfI2Wv3i+zvJ1mAHM3u1jcX3zxOxSAN4LJVBudgkGpop1ps\nW5tWveXiXwxCUE/r9ax4mfJvXQ==\n-----END PRIVATE KEY-----"
-	_cert string = "-----BEGIN CERTIFICATE-----\nMIIEVzCCAr+gAwIBAgIQITiNM7xmudhg3pK85KDwLDANBgkqhkiG9w0BAQsFADB/\nMR4wHAYDVQQKExVta2NlcnQgZGV2ZWxvcG1lbnQgQ0ExKjAoBgNVBAsMIWp1bnh1\nY2hlbkBqdW54dWRlQWlyIChqdW54dSBjaGVuKTExMC8GA1UEAwwobWtjZXJ0IGp1\nbnh1Y2hlbkBqdW54dWRlQWlyIChqdW54dSBjaGVuKTAeFw0xOTA2MDEwMDAwMDBa\nFw0zMDA3MDgwNzQ4MDJaMFUxJzAlBgNVBAoTHm1rY2VydCBkZXZlbG9wbWVudCBj\nZXJ0aWZpY2F0ZTEqMCgGA1UECwwhanVueHVjaGVuQGp1bnh1ZGVBaXIgKGp1bnh1\nIGNoZW4pMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxjtCfcaznJr4\nIaZKhyGBwsN+RU3yE+blzks3RePTNmQCgUMBRtKL2E/G3NIJTSwfoaQ4STy+d9ak\nj5dWTntFtaHz9btE+Wc3PUbm/5J+0TD6tAbEguid6xfq0BMIdTzPKlLg/A8We42j\ni4jDS+ksrmSD7EtZDzwbbIqLpHaOuurW4zTIsYUGyPVqYOeWm3V0RYd4u2bv/bIh\ndYwhnLLJIzmlDmOLGEN4uVlPxyCEYQPNl7iC/ksXd9j/GyotlE9bKhV0YwFUeykV\nqCFb5Jki6GW/bnFejLHHA60WAX+qy2yNbRY/Zdq2OhkxZU/us+yv2SOtAxov4bAX\n5Q3hEOVrsQIDAQABo3kwdzAOBgNVHQ8BAf8EBAMCBaAwEwYDVR0lBAwwCgYIKwYB\nBQUHAwEwDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBRU+EbJj+Hp62gCrNvb3yQk\nYnPHXDAhBgNVHREEGjAYgglyb3V0ZS5jb22CCyoucm91dGUuY29tMA0GCSqGSIb3\nDQEBCwUAA4IBgQAvKN2GEorAlx5sfUU2uiL49iFmQSMDLZQminQl1RIHTI/h+jz8\nNluZSdxDFmNq8am6B2ofD3VLl6StC/G+G6YuekPz+QrUNK4UB+8ftRmY4YRFGTQ6\nRnFli1wOq2ES9vPjKlIj77cznr8uwVHPHq8JxGbn/rx3oVDVPndXFCkJJ1DDjRT+\n22atHNzHt5bc9ut8Fq5NW61P+nnMMFShKJaPBkmm9Pf2pEOd8Y7OU8Iy1Kj65fsE\nUshGF5+RWoxdv6/9f6/uOQhmq3MEKqneUC3pjVZ8TiBlRvADxxR5krvujQswms0D\nFGpRMtGpPGMWTuptSIMwNcar/luVig7wGIBeV5ZaOlSOx3911le9mlS7+2lLqf5H\n5dsMkP30Sjv/jfrIL+SE1qeK3kjL0iIwA/PPARvhctExs9y2llT9+drbJofZUi+I\nZdYfAfyJT4htbcl7jHN8oY7vzwgTyxCcBxkbqKfBqabneutj0jfX39zP0G696tiZ\ndQFXCS4wkvw0CG0=\n-----END CERTIFICATE-----"
-)
+func getTestKeyCert(t *testing.T) (string, string) {
+	testCert, err := ioutil.ReadFile("../../../test/certs/test2.crt")
+	assert.Nil(t, err)
+	testKey, err := ioutil.ReadFile("../../../test/certs/test2.key")
+	assert.Nil(t, err)
+	return string(testCert), string(testKey)
+}
 
 func TestSSL_Get(t *testing.T) {
+	_cert, _ := getTestKeyCert(t)
 	tests := []struct {
 		caseDesc   string
 		giveInput  *GetInput
@@ -57,7 +63,7 @@ func TestSSL_Get(t *testing.T) {
 				BaseInfo: entity.BaseInfo{
 					ID: "ssl1",
 				},
-				Key:  _key,
+				Key:  "",
 				Cert: _cert,
 				Labels: map[string]string{
 					"build":   "16",
@@ -245,6 +251,7 @@ func TestSSLs_List(t *testing.T) {
 }
 
 func TestSSL_Create(t *testing.T) {
+	_cert, _key := getTestKeyCert(t)
 	tests := []struct {
 		caseDesc  string
 		getCalled bool
@@ -281,9 +288,9 @@ func TestSSL_Create(t *testing.T) {
 					"env":     "production",
 					"version": "v2",
 				},
-				Snis:          []string{"route.com", "*.route.com"},
-				ValidityStart: 1559347200,
-				ValidityEnd:   1909727282,
+				Snis:          []string{"test2.com", "*.test2.com"},
+				ValidityStart: 1586038672,
+				ValidityEnd:   4739638672,
 				Status:        1,
 			},
 			wantInput: &entity.SSL{
@@ -297,25 +304,25 @@ func TestSSL_Create(t *testing.T) {
 					"env":     "production",
 					"version": "v2",
 				},
-				Snis:          []string{"route.com", "*.route.com"},
-				ValidityStart: 1559347200,
-				ValidityEnd:   1909727282,
+				Snis:          []string{"test2.com", "*.test2.com"},
+				ValidityStart: 1586038672,
+				ValidityEnd:   4739638672,
 				Status:        1,
 			},
 			wantRet: &entity.SSL{
 				BaseInfo: entity.BaseInfo{
 					ID: "ssl1",
 				},
-				Key:  _key,
+				Key:  "",
 				Cert: _cert,
 				Labels: map[string]string{
 					"build":   "16",
 					"env":     "production",
 					"version": "v2",
 				},
-				Snis:          []string{"route.com", "*.route.com"},
-				ValidityStart: 1559347200,
-				ValidityEnd:   1909727282,
+				Snis:          []string{"test2.com", "*.test2.com"},
+				ValidityStart: 1586038672,
+				ValidityEnd:   4739638672,
 				Status:        1,
 			},
 			wantErr: nil,
@@ -341,9 +348,9 @@ func TestSSL_Create(t *testing.T) {
 					"env":     "production",
 					"version": "v2",
 				},
-				Snis:          []string{"route.com", "*.route.com"},
-				ValidityStart: 1559347200,
-				ValidityEnd:   1909727282,
+				Snis:          []string{"test2.com", "*.test2.com"},
+				ValidityStart: 1586038672,
+				ValidityEnd:   4739638672,
 				Status:        1,
 			},
 			wantErr: fmt.Errorf("create failed"),
@@ -375,6 +382,7 @@ func TestSSL_Create(t *testing.T) {
 }
 
 func TestSSL_Update(t *testing.T) {
+	_cert, _key := getTestKeyCert(t)
 	tests := []struct {
 		caseDesc  string
 		getCalled bool
@@ -400,6 +408,22 @@ func TestSSL_Update(t *testing.T) {
 					},
 				},
 			},
+			giveRet: &entity.SSL{
+				BaseInfo: entity.BaseInfo{
+					ID: "ssl1",
+				},
+				Key:  _key,
+				Cert: _cert,
+				Labels: map[string]string{
+					"build":   "16",
+					"env":     "production",
+					"version": "v2",
+				},
+				Snis:          []string{"test2.com", "*.test2.com"},
+				ValidityStart: 1586038672,
+				ValidityEnd:   4739638672,
+				Status:        1,
+			},
 			wantInput: &entity.SSL{
 				BaseInfo: entity.BaseInfo{
 					ID: "ssl1",
@@ -411,9 +435,25 @@ func TestSSL_Update(t *testing.T) {
 					"env":     "production",
 					"version": "v2",
 				},
-				Snis:          []string{"route.com", "*.route.com"},
-				ValidityStart: 1559347200,
-				ValidityEnd:   1909727282,
+				Snis:          []string{"test2.com", "*.test2.com"},
+				ValidityStart: 1586038672,
+				ValidityEnd:   4739638672,
+				Status:        1,
+			},
+			wantRet: &entity.SSL{
+				BaseInfo: entity.BaseInfo{
+					ID: "ssl1",
+				},
+				Key:  "",
+				Cert: _cert,
+				Labels: map[string]string{
+					"build":   "16",
+					"env":     "production",
+					"version": "v2",
+				},
+				Snis:          []string{"test2.com", "*.test2.com"},
+				ValidityStart: 1586038672,
+				ValidityEnd:   4739638672,
 				Status:        1,
 			},
 		},
@@ -463,6 +503,7 @@ func TestSSL_Update(t *testing.T) {
 }
 
 func TestSSL_Patch(t *testing.T) {
+	_cert, _key := getTestKeyCert(t)
 	existSSL := &entity.SSL{
 		BaseInfo: entity.BaseInfo{
 			ID:         "ssl1",
@@ -479,6 +520,24 @@ func TestSSL_Patch(t *testing.T) {
 		},
 	}
 
+	patchSSL := &entity.SSL{
+		BaseInfo: entity.BaseInfo{
+			ID:         "ssl1",
+			CreateTime: 1609340491,
+			UpdateTime: 1609340491,
+		},
+		Status: 1,
+		Key:    _key,
+		Cert:   _cert,
+		Labels: map[string]string{
+			"build":   "16",
+			"env":     "production",
+			"version": "v2",
+		},
+	}
+	patchSSLBytes, err := json.Marshal(patchSSL)
+	assert.Nil(t, err)
+
 	tests := []struct {
 		caseDesc  string
 		getCalled bool
@@ -491,10 +550,26 @@ func TestSSL_Patch(t *testing.T) {
 	}{
 		{
 			caseDesc: "patch success",
+			giveRet: &entity.SSL{
+				BaseInfo: entity.BaseInfo{
+					ID: "ssl1",
+				},
+				Key:  _key,
+				Cert: _cert,
+				Labels: map[string]string{
+					"build":   "16",
+					"env":     "production",
+					"version": "v2",
+				},
+				Snis:          []string{"test2.com", "*.test2.com"},
+				ValidityStart: 1586038672,
+				ValidityEnd:   4739638672,
+				Status:        1,
+			},
 			giveInput: &PatchInput{
 				ID:      "ssl1",
 				SubPath: "",
-				Body:    []byte("{\"status\":1}"),
+				Body:    patchSSLBytes,
 			},
 			wantInput: &entity.SSL{
 				BaseInfo: entity.BaseInfo{
@@ -510,6 +585,22 @@ func TestSSL_Patch(t *testing.T) {
 					"env":     "production",
 					"version": "v2",
 				},
+			},
+			wantRet: &entity.SSL{
+				BaseInfo: entity.BaseInfo{
+					ID: "ssl1",
+				},
+				Key:  "",
+				Cert: _cert,
+				Labels: map[string]string{
+					"build":   "16",
+					"env":     "production",
+					"version": "v2",
+				},
+				Snis:          []string{"test2.com", "*.test2.com"},
+				ValidityStart: 1586038672,
+				ValidityEnd:   4739638672,
+				Status:        1,
 			},
 			getCalled: true,
 		},
@@ -520,6 +611,22 @@ func TestSSL_Patch(t *testing.T) {
 				SubPath: "/status",
 				Body:    []byte("1"),
 			},
+			giveRet: &entity.SSL{
+				BaseInfo: entity.BaseInfo{
+					ID: "ssl1",
+				},
+				Key:  _key,
+				Cert: _cert,
+				Labels: map[string]string{
+					"build":   "16",
+					"env":     "production",
+					"version": "v2",
+				},
+				Snis:          []string{"test2.com", "*.test2.com"},
+				ValidityStart: 1586038672,
+				ValidityEnd:   4739638672,
+				Status:        1,
+			},
 			wantInput: &entity.SSL{
 				BaseInfo: entity.BaseInfo{
 					ID:         "ssl1",
@@ -534,6 +641,22 @@ func TestSSL_Patch(t *testing.T) {
 					"env":     "production",
 					"version": "v2",
 				},
+			},
+			wantRet: &entity.SSL{
+				BaseInfo: entity.BaseInfo{
+					ID: "ssl1",
+				},
+				Key:  "",
+				Cert: _cert,
+				Labels: map[string]string{
+					"build":   "16",
+					"env":     "production",
+					"version": "v2",
+				},
+				Snis:          []string{"test2.com", "*.test2.com"},
+				ValidityStart: 1586038672,
+				ValidityEnd:   4739638672,
+				Status:        1,
 			},
 			getCalled: true,
 		},

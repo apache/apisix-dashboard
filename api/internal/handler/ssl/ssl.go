@@ -197,7 +197,17 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
-	return ret, nil
+
+	//format respond
+	_ssl := &entity.SSL{}
+	err = utils.ObjectClone(ret, _ssl)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+	_ssl.Key = ""
+	_ssl.Keys = nil
+
+	return _ssl, nil
 }
 
 type UpdateInput struct {
@@ -233,7 +243,16 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	//format respond
+	_ssl := &entity.SSL{}
+	err = utils.ObjectClone(ret, _ssl)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+	_ssl.Key = ""
+	_ssl.Keys = nil
+
+	return _ssl, nil
 }
 
 type PatchInput struct {
@@ -269,7 +288,16 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	//format respond
+	_ssl := &entity.SSL{}
+	err = utils.ObjectClone(ret, _ssl)
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+	_ssl.Key = ""
+	_ssl.Keys = nil
+
+	return _ssl, nil
 }
 
 type BatchDelete struct {
