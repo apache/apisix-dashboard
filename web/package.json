@@ -80,6 +80,7 @@
     "styled-components": "^5.2.1",
     "umi": "^3.1.2",
     "umi-request": "^1.0.8",
+    "url-regex-safe": "^1.0.2",
     "use-merge-value": "^1.0.1",
     "uuid": "7.0.3"
   },
