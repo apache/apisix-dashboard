@@ -258,10 +258,15 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ExistCheckInput)
 	name := input.Name
 	exclude := input.Exclude
-	routeStore := store.GetStore(store.HubKeyUpstream)
 
-	ret, err := routeStore.List(c.Context(), store.ListInput{
-		Predicate:  nil,
+	ret, err := h.upstreamStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			r := obj.(*entity.Upstream)
+			if r.Name == name && r.ID != exclude {
+				return true
+			}
+			return false
+		},
 		PageSize:   0,
 		PageNumber: 0,
 	})
@@ -270,27 +275,15 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	sort := store.NewSort(nil)
-	filter := store.NewFilter([]string{"name", name})
-	pagination := store.NewPagination(0, 0)
-	query := store.NewQuery(sort, filter, pagination)
-	rows := store.NewFilterSelector(toRows(ret), query)
-
-	if len(rows) > 0 {
-		r := rows[0].(*entity.Upstream)
-		if r.ID != exclude {
-			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-				consts.InvalidParam("Upstream name is reduplicate")
-		}
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			consts.InvalidParam("Upstream name is reduplicate")
 	}
-
 	return nil, nil
 }
 
 func (h *Handler) listUpstreamNames(c droplet.Context) (interface{}, error) {
-	routeStore := store.GetStore(store.HubKeyUpstream)
-
-	ret, err := routeStore.List(c.Context(), store.ListInput{
+	ret, err := h.upstreamStore.List(c.Context(), store.ListInput{
 		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,
