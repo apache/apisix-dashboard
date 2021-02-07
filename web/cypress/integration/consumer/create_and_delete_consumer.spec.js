@@ -30,7 +30,7 @@ context('Create and Delete Consumer', () => {
     cy.contains('Create').click();
 
     // basic information
-    cy.get(this.domSelector.username).type(this.data.consumerrName);
+    cy.get(this.domSelector.username).type(this.data.consumerName);
     cy.get(this.domSelector.description).type(this.data.description);
     cy.contains('Next').click();
 
@@ -59,7 +59,7 @@ context('Create and Delete Consumer', () => {
   it('delete the consumer', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.contains(this.data.consumerrName).siblings().contains('Delete').click();
+    cy.contains(this.data.consumerName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.deleteConsumerSuccess);
   });
@@ -70,7 +70,7 @@ context('Create and Delete Consumer', () => {
     cy.contains('Consumer').click();
     cy.contains('Create').click();
     // basic information
-    cy.get(this.domSelector.username).type(this.data.consumerrName);
+    cy.get(this.domSelector.username).type(this.data.consumerName);
     cy.get(this.domSelector.description).type(this.data.description);
     cy.contains('Next').click();
 
