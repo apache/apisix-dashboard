@@ -52,6 +52,12 @@ else
 	    echo "no Version output"
 	    exit 1
 	fi
+	# Version output
+	hashline=$(docker logs docker-deploy_managerapi_1 | grep -E "^GitHash : [A-Za-z0-9\-\_\.]+")
+	if [ -z "$hashline" ];then
+	    echo "no GitHash output"
+	    exit 1
+	fi
 fi
 
 

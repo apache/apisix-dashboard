@@ -19,9 +19,10 @@ FROM alpine:latest as pre-build
 ARG APISIX_DASHBOARD_VERSION=master
 
 RUN set -x \
-    && wget https://github.com/apache/apisix-dashboard/archive/${APISIX_DASHBOARD_VERSION}.tar.gz -O /tmp/apisix-dashboard.tar.gz \
-    && mkdir /usr/local/apisix-dashboard \
-    && tar -xvf /tmp/apisix-dashboard.tar.gz -C /usr/local/apisix-dashboard --strip 1
+    && apk add --no-cache --virtual .builddeps git \
+    && git clone https://github.com/apache/apisix-dashboard.git -b ${APISIX_DASHBOARD_VERSION} /usr/local/apisix-dashboard \
+    && cd /usr/local/apisix-dashboard && git clean -Xdf \
+    && rm -f ./.githash && git log --pretty=format:"%h" -1 > ./.githash
 
 FROM golang:1.14 as api-builder
 
