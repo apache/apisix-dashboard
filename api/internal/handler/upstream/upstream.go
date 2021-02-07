@@ -241,14 +241,6 @@ type ExistInput struct {
 	Name string `auto_read:"name,query"`
 }
 
-func toRows(list *store.ListOutput) []store.Row {
-	rows := make([]store.Row, list.TotalSize)
-	for i := range list.Rows {
-		rows[i] = list.Rows[i].(*entity.Upstream)
-	}
-	return rows
-}
-
 type ExistCheckInput struct {
 	Name    string `auto_read:"name,query"`
 	Exclude string `auto_read:"exclude,query"`
@@ -306,3 +298,4 @@ func (h *Handler) listUpstreamNames(c droplet.Context) (interface{}, error) {
 
 	return output, nil
 }
+
