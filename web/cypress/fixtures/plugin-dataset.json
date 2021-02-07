@@ -192,34 +192,81 @@
     {
       "shouldValid": true,
       "data": {
-        "token_endpoint": "https://efactory-security-portal.salzburgresearch.at/",
-        "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket"
+        "client_id" : "foo",
+        "token_endpoint" : "https://host.domain/auth/realms/foo/protocol/openid-connect/token"
       }
     },
     {
       "shouldValid": true,
       "data": {
-        "token_endpoint": "https://efactory-security-portal.salzburgresearch.at/",
-        "permissions": ["res:customer#scopes:view"],
-        "timeout": 1000,
+        "client_id": "foo",
+        "discovery": "https://host.domain/auth/realms/foo/.well-known/uma2-configuration"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "audience": "foo",
+        "discovery": "https://host.domain/auth/realms/foo/.well-known/uma2-configuration"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "client_id": "foo",
+        "lazy_load_paths": true,
+        "token_endpoint": "https://host.domain/auth/realms/foo/protocol/openid-connect/token",
+        "resource_registration_endpoint": "https://host.domain/auth/realms/foo/authz/protection/resource_set"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "client_id": "foo",
+        "lazy_load_paths": true,
+        "discovery": "https://host.domain/auth/realms/foo/.well-known/uma2-configuration"
+      }
+    },
+    {
+      "shouldValid": true,
+      "data": {
+        "discovery": "https://host.domain/auth/realms/foo/.well-known/uma2-configuration",
+        "token_endpoint": "https://host.domain/auth/realms/foo/protocol/openid-connect/token",
+        "resource_registration_endpoint": "https://host.domain/auth/realms/foo/authz/protection/resource_set",
+        "client_id": "University",
         "audience": "University",
-        "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket"
+        "client_secret": "secret",
+        "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
+        "policy_enforcement_mode": "ENFORCING",
+        "permissions": ["res:customer#scopes:view"],
+        "lazy_load_paths": false,
+        "http_method_as_scope": false,
+        "timeout": 1000,
+        "ssl_verify": false,
+        "cache_ttl_seconds": 1000,
+        "keepalive": true,
+        "keepalive_timeout": 10000,
+        "keepalive_pool": 5
       }
     },
     {
       "shouldValid": false,
       "data": {
-        "permissions": ["res:customer#scopes:view"]
+        "client_id": "foo"
       }
     },
     {
-      "shouldValid": true,
+      "shouldValid": false,
       "data": {
-        "token_endpoint": "http://127.0.0.1:8090/auth/realms/University/protocol/openid-connect/token",
-        "permissions": ["course_resource#view"],
-        "audience": "course_management",
-        "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
-        "timeout": 3000
+        "discovery": "https://host.domain/auth/realms/foo/.well-known/uma2-configuration"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "client_id": "foo",
+        "token_endpoint": "https://host.domain/auth/realms/foo/protocol/openid-connect/token",
+        "lazy_load_paths": true
       }
     }
   ],
