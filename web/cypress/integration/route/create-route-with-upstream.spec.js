@@ -26,6 +26,7 @@ context('Create Route with Upstream', () => {
     ip2: '127.0.0.2',
     delete_route_success: 'Delete Route Successfully',
     delete_upstream_success: 'Delete Upstream Successfully',
+    submitSuccess: 'Submit Successfully',
   };
 
   beforeEach(() => {
@@ -46,32 +47,27 @@ context('Create Route with Upstream', () => {
     cy.contains('Submit').click();
   });
 
-  it('should enter the Route creator', function () {
+  it('should create route with upstream just created', function () {
     cy.visit('/');
     cy.contains('Route').click();
     cy.contains('Create').click();
 
     cy.get(this.domSelector.name).type(data.route_name);
     cy.contains('Next').click();
-  });
-
-  it('should disable Upstream input boxes after selecting an existing upstream', function () {
+    // should disable Upstream input boxes after selecting an existing upstream
     cy.get(this.domSelector.upstreamSelector).click();
     cy.contains(data.upstream_name).click();
     cy.get(this.domSelector.input).should('be.disabled');
-  });
-
-  it('should enable Upstream input boxes after selecting Custom mode', function () {
+    // should enable Upstream input boxes after selecting Custom mode
     cy.get(this.domSelector.upstreamSelector).click();
     cy.contains('Custom').click();
     cy.get(this.domSelector.input).should('not.be.disabled');
-  });
-
-  it('should submit custom Upstream properties successfully', function () {
+    
     cy.get(this.domSelector.nodes_0_host).clear().type(data.ip1);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
+    cy.contains(data.submitSuccess).should('be.visible');
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
   });
@@ -80,7 +76,6 @@ context('Create Route with Upstream', () => {
     cy.visit('/');
     cy.contains('Route').click();
 
-    cy.reload();
     cy.get(this.domSelector.nameSelector).type(data.route_name);
     cy.contains('Search').click();
     cy.contains(data.route_name).siblings().contains('Edit').click();
@@ -103,6 +98,7 @@ context('Create Route with Upstream', () => {
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
+    cy.contains(data.submitSuccess).should('be.visible');
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
 
@@ -110,7 +106,9 @@ context('Create Route with Upstream', () => {
     cy.get(this.domSelector.nameSelector).type(data.route_name);
     cy.contains('Search').click();
     cy.contains(data.route_name).siblings().contains('Edit').click();
-    cy.contains('Next').click();
+    // ensure it has already change to edit page
+    cy.get(this.domSelector.name).should('value', data.route_name);
+    cy.contains('Next').click({force: true});
     cy.get(this.domSelector.nodes_0_host).should('value', data.ip2);
   });
 
