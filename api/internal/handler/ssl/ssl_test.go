@@ -45,7 +45,7 @@ func getTestKeyCert(t *testing.T) (string, string) {
 }
 
 func TestSSL_Get(t *testing.T) {
-	_cert, _ := getTestKeyCert(t)
+	_cert, _key := getTestKeyCert(t)
 	tests := []struct {
 		caseDesc   string
 		giveInput  *GetInput
@@ -63,7 +63,7 @@ func TestSSL_Get(t *testing.T) {
 				BaseInfo: entity.BaseInfo{
 					ID: "ssl1",
 				},
-				Key:  "",
+				Key:  _key,
 				Cert: _cert,
 				Labels: map[string]string{
 					"build":   "16",

@@ -504,4 +504,3 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 
 	return nil, nil
 }
-
