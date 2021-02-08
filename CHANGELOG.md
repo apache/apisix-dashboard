@@ -30,7 +30,7 @@
 
 # 2.4.0
 
-This release mainly improve basic features, bugfix and adds test cases.
+This release mainly improves basic features, bugfix and adds test cases.
 
 `Manager API` 2.4 should be used with [Apache APISIX 2.3](https://github.com/apache/apisix/releases/tag/2.3). It is not recommended to use with other Apache APISIX versions.
 
@@ -68,6 +68,7 @@ This release mainly improve basic features, bugfix and adds test cases.
 - Enhance plugin schema smoke test [#1261](https://github.com/apache/apisix-dashboard/pull/1261)
 - Delete unnecessary wait in front-end test. [#1370](https://github.com/apache/apisix-dashboard/pull/1370)
 - Add edit the plugin testcase [#1372](https://github.com/apache/apisix-dashboard/pull/1372)
+
 ### Doc
 
 - Doc: add document for introducing bakend e2e test. [#1381](https://github.com/apache/apisix-dashboard/pull/1381)
