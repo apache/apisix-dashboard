@@ -16,4 +16,5 @@
  */
 export default {
   'page.plugin.drawer.popconfirm.title.delete': 'Are you sure to delete this item?',
+  'page.plugin.list': 'Plugin List'
 };

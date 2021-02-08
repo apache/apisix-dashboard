@@ -134,11 +134,7 @@ const Page: React.FC = () => {
   );
 
   return (
-    <PageHeaderWrapper
-      title={`${formatMessage({ id: 'menu.plugin' })} ${formatMessage({
-        id: 'component.global.list',
-      })}`}
-    >
+    <PageHeaderWrapper title={formatMessage({ id: 'page.plugin.list' })}>
       <ProTable<PluginModule.TransformedPlugin>
         actionRef={ref}
         rowKey="id"
