@@ -42,7 +42,7 @@ This release mainly improves basic features, bugfix and adds test cases.
 - Support to get manager-api version through API. [#1429](https://github.com/apache/apisix-dashboard/pull/1429)
 - Support import route from OpenAPI specification3.0. [#1102](https://github.com/apache/apisix-dashboard/pull/1102)
 - Support export route from OpenAPI specification3.0. [#1245](https://github.com/apache/apisix-dashboard/pull/1245)
-- Support string type for the script field in Route. [#1289](https://github.com/apache/apisix-dashboard/pull/1245)
+- Support string type for the script field in Route. [#1289](https://github.com/apache/apisix-dashboard/pull/1289)
 - Feat: add script_id field in Route.entity. [#1386](https://github.com/apache/apisix-dashboard/pull/1386)
 - Feat: add stop subcommand. [#741](https://github.com/apache/apisix-dashboard/pull/741)
 - Feat: add e2e test coverage. [#1270](https://github.com/apache/apisix-dashboard/pull/1270)
