@@ -298,4 +298,3 @@ func (h *Handler) listUpstreamNames(c droplet.Context) (interface{}, error) {
 
 	return output, nil
 }
-
