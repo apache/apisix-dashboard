@@ -207,12 +207,11 @@ func TestUpstreams_List(t *testing.T) {
 			UpstreamDef: entity.UpstreamDef{
 				Name: "upstream2",
 				Key:  "server_addr2",
-				Nodes: []map[string]interface{}{
-					{
-						"host":   "39.97.63.215",
-						"port":   float64(80),
-						"weight": float64(1),
-					},
+
+				Nodes: entity.Node{
+					Host:   "39.97.63.215",
+					Port:   80,
+					Weight: 0,
 				},
 			},
 		},
@@ -225,11 +224,11 @@ func TestUpstreams_List(t *testing.T) {
 			UpstreamDef: entity.UpstreamDef{
 				Name: "upstream3",
 				Key:  "server_addr3",
-				Nodes: []map[string]interface{}{
+				Nodes: []entity.Node{
 					{
-						"host":   "39.97.63.215",
-						"port":   float64(80),
-						"weight": float64(1),
+						Host:   "39.97.63.215",
+						Port:   80,
+						Weight: 0,
 					},
 				},
 			},
@@ -869,7 +868,7 @@ func TestUpstream_Update(t *testing.T) {
 			},
 		},
 		{
-			caseDesc: "create failed, different id",
+			caseDesc: "update failed, different id",
 			giveInput: &UpdateInput{
 				ID: "u1",
 				Upstream: entity.Upstream{
@@ -1734,4 +1733,3 @@ func TestUpstream_ListUpstreamNames(t *testing.T) {
 		})
 	}
 }
-
