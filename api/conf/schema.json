@@ -29,7 +29,7 @@
 							"description": "value of label",
 							"maxLength": 64,
 							"minLength": 1,
-							"pattern": "^[a-zA-Z0-9-_.]+$",
+							"pattern": "^\\S+$",
 							"type": "string"
 						}
 					},
@@ -219,7 +219,7 @@
 							"description": "value of label",
 							"maxLength": 64,
 							"minLength": 1,
-							"pattern": "^[a-zA-Z0-9-_.]+$",
+							"pattern": "^\\S+$",
 							"type": "string"
 						}
 					},
@@ -569,7 +569,7 @@
 									"description": "value of label",
 									"maxLength": 64,
 									"minLength": 1,
-									"pattern": "^[a-zA-Z0-9-_.]+$",
+									"pattern": "^\\S+$",
 									"type": "string"
 								}
 							},
@@ -628,6 +628,10 @@
 							"minimum": 0,
 							"type": "integer"
 						},
+						"scheme": {
+							"default": "http",
+							"enum": ["grpc", "grpcs", "http", "https"]
+						},
 						"service_name": {
 							"maxLength": 100,
 							"minLength": 1,
@@ -636,15 +640,15 @@
 						"timeout": {
 							"properties": {
 								"connect": {
-									"minimum": 0,
+									"exclusiveMinimum": 0,
 									"type": "number"
 								},
 								"read": {
-									"minimum": 0,
+									"exclusiveMinimum": 0,
 									"type": "number"
 								},
 								"send": {
-									"minimum": 0,
+									"exclusiveMinimum": 0,
 									"type": "number"
 								}
 							},
@@ -653,7 +657,7 @@
 						},
 						"type": {
 							"description": "algorithms of load balancing",
-							"enum": ["chash", "ewma", "roundrobin"],
+							"enum": ["chash", "ewma", "least_conn", "roundrobin"],
 							"type": "string"
 						},
 						"update_time": {
@@ -736,7 +740,7 @@
 							"description": "value of label",
 							"maxLength": 64,
 							"minLength": 1,
-							"pattern": "^[a-zA-Z0-9-_.]+$",
+							"pattern": "^\\S+$",
 							"type": "string"
 						}
 					},
@@ -995,7 +999,7 @@
 									"description": "value of label",
 									"maxLength": 64,
 									"minLength": 1,
-									"pattern": "^[a-zA-Z0-9-_.]+$",
+									"pattern": "^\\S+$",
 									"type": "string"
 								}
 							},
@@ -1054,6 +1058,10 @@
 							"minimum": 0,
 							"type": "integer"
 						},
+						"scheme": {
+							"default": "http",
+							"enum": ["grpc", "grpcs", "http", "https"]
+						},
 						"service_name": {
 							"maxLength": 100,
 							"minLength": 1,
@@ -1062,15 +1070,15 @@
 						"timeout": {
 							"properties": {
 								"connect": {
-									"minimum": 0,
+									"exclusiveMinimum": 0,
 									"type": "number"
 								},
 								"read": {
-									"minimum": 0,
+									"exclusiveMinimum": 0,
 									"type": "number"
 								},
 								"send": {
-									"minimum": 0,
+									"exclusiveMinimum": 0,
 									"type": "number"
 								}
 							},
@@ -1079,7 +1087,7 @@
 						},
 						"type": {
 							"description": "algorithms of load balancing",
-							"enum": ["chash", "ewma", "roundrobin"],
+							"enum": ["chash", "ewma", "least_conn", "roundrobin"],
 							"type": "string"
 						},
 						"update_time": {
@@ -1166,7 +1174,7 @@
 							"description": "value of label",
 							"maxLength": 64,
 							"minLength": 1,
-							"pattern": "^[a-zA-Z0-9-_.]+$",
+							"pattern": "^\\S+$",
 							"type": "string"
 						}
 					},
@@ -1501,7 +1509,7 @@
 									"description": "value of label",
 									"maxLength": 64,
 									"minLength": 1,
-									"pattern": "^[a-zA-Z0-9-_.]+$",
+									"pattern": "^\\S+$",
 									"type": "string"
 								}
 							},
@@ -1560,6 +1568,10 @@
 							"minimum": 0,
 							"type": "integer"
 						},
+						"scheme": {
+							"default": "http",
+							"enum": ["grpc", "grpcs", "http", "https"]
+						},
 						"service_name": {
 							"maxLength": 100,
 							"minLength": 1,
@@ -1568,15 +1580,15 @@
 						"timeout": {
 							"properties": {
 								"connect": {
-									"minimum": 0,
+									"exclusiveMinimum": 0,
 									"type": "number"
 								},
 								"read": {
-									"minimum": 0,
+									"exclusiveMinimum": 0,
 									"type": "number"
 								},
 								"send": {
-									"minimum": 0,
+									"exclusiveMinimum": 0,
 									"type": "number"
 								}
 							},
@@ -1585,7 +1597,7 @@
 						},
 						"type": {
 							"description": "algorithms of load balancing",
-							"enum": ["chash", "ewma", "roundrobin"],
+							"enum": ["chash", "ewma", "least_conn", "roundrobin"],
 							"type": "string"
 						},
 						"update_time": {
@@ -1849,7 +1861,7 @@
 							"description": "value of label",
 							"maxLength": 64,
 							"minLength": 1,
-							"pattern": "^[a-zA-Z0-9-_.]+$",
+							"pattern": "^\\S+$",
 							"type": "string"
 						}
 					},
@@ -1908,6 +1920,10 @@
 					"minimum": 0,
 					"type": "integer"
 				},
+				"scheme": {
+					"default": "http",
+					"enum": ["grpc", "grpcs", "http", "https"]
+				},
 				"service_name": {
 					"maxLength": 100,
 					"minLength": 1,
@@ -1916,15 +1932,15 @@
 				"timeout": {
 					"properties": {
 						"connect": {
-							"minimum": 0,
+							"exclusiveMinimum": 0,
 							"type": "number"
 						},
 						"read": {
-							"minimum": 0,
+							"exclusiveMinimum": 0,
 							"type": "number"
 						},
 						"send": {
-							"minimum": 0,
+							"exclusiveMinimum": 0,
 							"type": "number"
 						}
 					},
@@ -1933,7 +1949,7 @@
 				},
 				"type": {
 					"description": "algorithms of load balancing",
-					"enum": ["chash", "ewma", "roundrobin"],
+					"enum": ["chash", "ewma", "least_conn", "roundrobin"],
 					"type": "string"
 				},
 				"update_time": {
@@ -2034,13 +2050,56 @@
 			"priority": 2000,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
-				"anyOf": [{
-					"required": ["discovery"]
+				"allOf": [{
+					"anyOf": [{
+						"required": ["discovery"]
+					}, {
+						"required": ["token_endpoint"]
+					}]
 				}, {
-					"required": ["token_endpoint"]
+					"anyOf": [{
+						"required": ["client_id"]
+					}, {
+						"required": ["audience"]
+					}]
+				}, {
+					"anyOf": [{
+						"properties": {
+							"lazy_load_paths": {
+								"enum": [false]
+							}
+						}
+					}, {
+						"anyOf": [{
+							"required": ["discovery"]
+						}, {
+							"required": ["resource_registration_endpoint"]
+						}],
+						"properties": {
+							"lazy_load_paths": {
+								"enum": [true]
+							}
+						}
+					}]
 				}],
 				"properties": {
 					"audience": {
+						"description": "Deprecated, use `client_id` instead.",
+						"maxLength": 100,
+						"minLength": 1,
+						"type": "string"
+					},
+					"cache_ttl_seconds": {
+						"default": 86400,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"client_id": {
+						"maxLength": 100,
+						"minLength": 1,
+						"type": "string"
+					},
+					"client_secret": {
 						"maxLength": 100,
 						"minLength": 1,
 						"type": "string"
@@ -2060,6 +2119,10 @@
 						"minLength": 1,
 						"type": "string"
 					},
+					"http_method_as_scope": {
+						"default": false,
+						"type": "boolean"
+					},
 					"keepalive": {
 						"default": true,
 						"type": "boolean"
@@ -2074,6 +2137,10 @@
 						"minimum": 1000,
 						"type": "integer"
 					},
+					"lazy_load_paths": {
+						"default": false,
+						"type": "boolean"
+					},
 					"permissions": {
 						"items": {
 							"maxLength": 100,
@@ -2086,6 +2153,11 @@
 					"policy_enforcement_mode": {
 						"default": "ENFORCING",
 						"enum": ["ENFORCING", "PERMISSIVE"],
+						"type": "string"
+					},
+					"resource_registration_endpoint": {
+						"maxLength": 4096,
+						"minLength": 1,
 						"type": "string"
 					},
 					"ssl_verify": {
@@ -2327,6 +2399,10 @@
 								"maximum": 100,
 								"minimum": 0,
 								"type": "integer"
+							},
+							"vars": {
+								"maxItems": 20,
+								"type": "array"
 							}
 						},
 						"required": ["http_status"],
@@ -2342,6 +2418,10 @@
 								"maximum": 100,
 								"minimum": 0,
 								"type": "integer"
+							},
+							"vars": {
+								"maxItems": 20,
+								"type": "array"
 							}
 						},
 						"required": ["duration"],
@@ -2381,7 +2461,7 @@
 								"type": "string"
 							}, {
 								"description": "int64 as result",
-								"enum": ["enum_as_value", "ienum_as_name"],
+								"enum": ["enum_as_name", "enum_as_value"],
 								"type": "string"
 							}, {
 								"description": "default values option",
@@ -2813,6 +2893,7 @@
 					},
 					"rejected_code": {
 						"default": 503,
+						"maximum": 599,
 						"minimum": 200,
 						"type": "integer"
 					}
@@ -2889,7 +2970,7 @@
 				},
 				"properties": {
 					"count": {
-						"minimum": 0,
+						"exclusiveMinimum": 0,
 						"type": "integer"
 					},
 					"disable": {
@@ -2907,12 +2988,12 @@
 					},
 					"rejected_code": {
 						"default": 503,
-						"maximum": 600,
+						"maximum": 599,
 						"minimum": 200,
 						"type": "integer"
 					},
 					"time_window": {
-						"minimum": 0,
+						"exclusiveMinimum": 0,
 						"type": "integer"
 					}
 				},
@@ -2938,11 +3019,12 @@
 						"type": "string"
 					},
 					"rate": {
-						"minimum": 0,
+						"exclusiveMinimum": 0,
 						"type": "number"
 					},
 					"rejected_code": {
 						"default": 503,
+						"maximum": 599,
 						"minimum": 200,
 						"type": "integer"
 					}
@@ -3191,7 +3273,7 @@
 					},
 					"host": {
 						"description": "new host for upstream",
-						"pattern": "^[0-9a-zA-Z-.]+$",
+						"pattern": "^[0-9a-zA-Z-.]+(:\\d{1,5})?$",
 						"type": "string"
 					},
 					"regex_uri": {
@@ -3953,7 +4035,7 @@
 																"description": "value of label",
 																"maxLength": 64,
 																"minLength": 1,
-																"pattern": "^[a-zA-Z0-9-_.]+$",
+																"pattern": "^\\S+$",
 																"type": "string"
 															}
 														},
@@ -4012,6 +4094,10 @@
 														"minimum": 0,
 														"type": "integer"
 													},
+													"scheme": {
+														"default": "http",
+														"enum": ["grpc", "grpcs", "http", "https"]
+													},
 													"service_name": {
 														"maxLength": 100,
 														"minLength": 1,
@@ -4020,15 +4106,15 @@
 													"timeout": {
 														"properties": {
 															"connect": {
-																"minimum": 0,
+																"exclusiveMinimum": 0,
 																"type": "number"
 															},
 															"read": {
-																"minimum": 0,
+																"exclusiveMinimum": 0,
 																"type": "number"
 															},
 															"send": {
-																"minimum": 0,
+																"exclusiveMinimum": 0,
 																"type": "number"
 															}
 														},
@@ -4037,7 +4123,7 @@
 													},
 													"type": {
 														"description": "algorithms of load balancing",
-														"enum": ["chash", "ewma", "roundrobin"],
+														"enum": ["chash", "ewma", "least_conn", "roundrobin"],
 														"type": "string"
 													},
 													"update_time": {

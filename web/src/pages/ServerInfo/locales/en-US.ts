@@ -15,8 +15,10 @@
  * limitations under the License.
  */
 export default {
-  'page.serverinfo.pageContainer.title': 'Server Info',
-  'page.serverinfo.select.placeholder': 'Please select node',
-  'page.serverinfo.desc': 'The relevant plugin need to be enabled to report server info.',
-  'page.serverinfo.link': 'How to enable?',
+  'page.systemStatus.pageContainer.title': 'System Status',
+  'page.systemStatus.select.placeholder': 'Please select a apache apisix node',
+  'page.systemStatus.desc': 'The relevant plugin needs to be enabled to report server info.',
+  'page.systemStatus.link': 'How to enable?',
+  'page.systemStatus.dashboardInfo': 'Dashboard',
+  'page.systemStatus.nodeInfo': 'APISIX Nodes',
 };

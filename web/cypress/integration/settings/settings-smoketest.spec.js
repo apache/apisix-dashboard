@@ -19,7 +19,7 @@
 context('settings page smoke test', () => {
   const data = {
     invalidURL: 'httx://www.test.com',
-    validURL: 'https://apisix.apache.org/',
+    validURL: 'http://localhost:8000/routes/list',
     fetchURL: 'fetchURL',
     fetch: '@fetchURL',
   }

@@ -30,6 +30,7 @@ export default {
   'page.ssl.upload': '上传',
 
   'page.ssl.notification.updateCertEnableStatusSuccessfully': '更新证书启用状态成功',
+  'page.ssl.list': '证书列表',
   'page.ssl.list.expirationTime': '过期时间',
   'page.ssl.list.ifEnable': '是否启用',
   'page.ssl.list.periodOfValidity': '有效期',

@@ -181,7 +181,7 @@ const PluginPage: React.FC<Props> = ({
         };
         if (shouldDelete === true) {
           plugins = omit(plugins, name);
-        };
+        }
         onChange(plugins);
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}

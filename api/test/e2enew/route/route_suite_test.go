@@ -14,11 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-  'page.systemStatus.pageContainer.title': '系统信息',
-  'page.systemStatus.select.placeholder': '请选择节点',
-  'page.systemStatus.desc': '需启用相关插件，才能获取信息。',
-  'page.systemStatus.link': '如何启用？',
-  'page.systemStatus.dashboardInfo': 'Dashboard',
-  'page.systemStatus.nodeInfo': 'APISIX 节点',
-};
+package route
+
+import (
+	"testing"
+	"time"
+
+	"github.com/onsi/ginkgo"
+
+	"e2enew/base"
+)
+
+func TestRoute(t *testing.T) {
+	ginkgo.RunSpecs(t, "route suite")
+}
+
+var _ = ginkgo.AfterSuite(func() {
+	base.CleanResource("routes")
+	base.CleanResource("consumers")
+	time.Sleep(base.SleepTime)
+})

@@ -36,32 +36,27 @@ context('Create Route with Upstream', () => {
     cy.contains('Submit').click();
   });
 
-  it('should enter the Route creator', function () {
+  it('should create route with upstream just created', function () {
     cy.visit('/');
     cy.contains('Route').click();
     cy.contains('Create').click();
 
     cy.get(this.domSelector.name).type(this.data.routeName);
     cy.contains('Next').click();
-  });
-
-  it('should disable Upstream input boxes after selecting an existing upstream', function () {
+    // should disable Upstream input boxes after selecting an existing upstream
     cy.get(this.domSelector.upstreamSelector).click();
     cy.contains(this.data.upstreamName).click();
     cy.get(this.domSelector.input).should('be.disabled');
-  });
-
-  it('should enable Upstream input boxes after selecting Custom mode', function () {
+    // should enable Upstream input boxes after selecting Custom mode
     cy.get(this.domSelector.upstreamSelector).click();
     cy.contains('Custom').click();
     cy.get(this.domSelector.input).should('not.be.disabled');
-  });
 
-  it('should submit custom Upstream properties successfully', function () {
     cy.get(this.domSelector.nodes_0_host).clear().type(this.data.ip1);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
+    cy.contains(this.data.submitSuccess).should('be.visible');
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
   });
@@ -69,9 +64,8 @@ context('Create Route with Upstream', () => {
   it('should edit this route with upstream', function () {
     cy.visit('/');
     cy.contains('Route').click();
-
-    cy.reload();
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
+
     cy.contains('Search').click();
     cy.contains(this.data.routeName).siblings().contains('Edit').click();
 
@@ -93,14 +87,18 @@ context('Create Route with Upstream', () => {
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
+    cy.contains(this.data.submitSuccess).should('be.visible');
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
 
     // check if the changes have been saved
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
+
     cy.contains(this.data.routeName).siblings().contains('Edit').click();
-    cy.contains('Next').click();
+    // ensure it has already change to edit page
+    cy.get(this.domSelector.name).should('value', this.data.routeName);
+    cy.contains('Next').click({ force: true });
     cy.get(this.domSelector.nodes_0_host).should('value', this.data.ip2);
   });
 
