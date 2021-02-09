@@ -84,11 +84,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper
-      title={`${formatMessage({ id: 'menu.service' })} ${formatMessage({
-        id: 'component.global.list',
-      })}`}
-    >
+    <PageHeaderWrapper title={formatMessage({ id: 'page.service.list' })}>
       <ProTable<ServiceModule.ResponseBody>
         actionRef={ref}
         rowKey="id"

@@ -406,11 +406,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper
-      title={`${formatMessage({ id: 'menu.routes' })} ${formatMessage({
-        id: 'component.global.list',
-      })}`}
-    >
+    <PageHeaderWrapper title={formatMessage({ id: 'page.route.list' })}>
       <ProTable<RouteModule.ResponseBody>
         actionRef={ref}
         rowKey="id"
