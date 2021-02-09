@@ -96,7 +96,7 @@ context('Create Route with Upstream', () => {
     cy.contains('Search').click();
 
     cy.contains(this.data.routeName).siblings().contains('Edit').click();
-    // ensure it has already change to edit page
+    // ensure it has already changed to edit page
     cy.get(this.domSelector.name).should('value', this.data.routeName);
     cy.contains('Next').click({ force: true });
     cy.get(this.domSelector.nodes_0_host).should('value', this.data.ip2);
