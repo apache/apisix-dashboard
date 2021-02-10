@@ -62,7 +62,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           });
 
         // NOTE: wait for the Drawer to appear on the DOM
-        cy.get(domSelectors.drawer_wrap).should('be.visible');
+        cy.focused(domSelectors.drawer_wrap).should('be.visible');
         cy.get(domSelectors.drawer, { timeout }).within(() => {
           cy.get(domSelectors.switch).click({
             force: true,
@@ -85,7 +85,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
         } else if (shouldValid === false) {
           cy.get(this.selector.notification).should('contain', 'Invalid plugin data');
 
-          cy.get(domSelectors.close).click({
+          cy.get(domSelectors.close).should('be.visible').click({
             force: true,
             multiple: true,
           });
