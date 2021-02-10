@@ -48,3 +48,7 @@ jobs:
 
       - name: Start frontend then test
         run: yarn test:e2e
+
+      - name: Report e2e coverage
+        run: npx nyc report --reporter=text-summary
+        
