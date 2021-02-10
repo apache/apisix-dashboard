@@ -25,6 +25,7 @@ context('Create and Delete Route', () => {
     cy.login();
 
     cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
   });
 
   it('should create route', function () {
@@ -32,15 +33,15 @@ context('Create and Delete Route', () => {
     cy.contains('Route').click();
     cy.contains('Create').click();
     cy.get(this.domSelector.name).type(name);
-    cy.get(this.domSelector.description).type('desc');
+    cy.get(this.domSelector.description).type(this.data.description);
 
     // input request basic define
-    cy.get(this.domSelector.hosts_0).type('11.11.11.11');
+    cy.get(this.domSelector.hosts_0).type(this.data.host1);
     cy.get(this.domSelector.addHost).click();
-    cy.get(this.domSelector.hosts_1).type('12.12.12.12');
-    cy.get(this.domSelector.remoteHost).type('12.12.12.12');
+    cy.get(this.domSelector.hosts_1).type(this.data.host2);
+    cy.get(this.domSelector.remoteHost).type(this.data.host2);
     cy.get(this.domSelector.remoteAddress).click();
-    cy.get(this.domSelector.address1).type('10.10.10.10');
+    cy.get(this.domSelector.address1).type(this.data.host3);
     cy.contains('Advanced Routing Matching Conditions')
       .parent()
       .siblings()
@@ -58,9 +59,8 @@ context('Create and Delete Route', () => {
     cy.get(this.domSelector.value).type('value');
     cy.contains('Confirm').click();
 
-
     cy.contains('Next').click();
-    cy.get(this.domSelector.nodes_0_host).type('12.12.12.12');
+    cy.get(this.domSelector.nodes_0_host).type(this.data.host2);
     cy.contains('Next').click();
 
     // redirect plugin should not display in route step3
@@ -78,7 +78,7 @@ context('Create and Delete Route', () => {
     cy.contains('button', 'Cancel').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.contains('Submit Successfully');
+    cy.contains(this.data.submitSuccess);
 
     // back to route list page
     cy.contains('Goto List').click();
@@ -94,15 +94,15 @@ context('Create and Delete Route', () => {
     cy.contains(name).siblings().contains('Edit').click();
 
     cy.get(this.domSelector.name).clear().type(newName);
-    cy.get(this.domSelector.description).clear().type('new desc');
+    cy.get(this.domSelector.description).clear().type(this.data.description2);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.contains('Submit Successfully');
+    cy.contains(this.data.submitSuccess);
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
-    cy.contains(newName).siblings().should('contain', 'new desc');
+    cy.contains(newName).siblings().should('contain', this.data.description2);
   });
 
   it('should delete the route', function () {
@@ -111,6 +111,6 @@ context('Create and Delete Route', () => {
     cy.contains('Search').click();
     cy.contains(newName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', 'Delete Route Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
   });
 });
