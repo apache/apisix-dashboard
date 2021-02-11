@@ -1,6 +1,7 @@
 {
   "api-breaker": [
     {
+      "shouldValid": true,
       "data": {
         "break_response_code": 502,
         "disable": false,
@@ -17,6 +18,7 @@
   ],
   "echo": [
     {
+      "shouldValid": true,
       "data": {
         "before_body": "before the body modification ",
         "disable": false
@@ -25,6 +27,7 @@
   ],
   "jwt-auth": [
     {
+      "shouldValid": true,
       "data": {
         "disable": false
       }
@@ -32,6 +35,7 @@
   ],
   "hmac-auth": [
     {
+      "shouldValid": true,
       "data": {}
     }
   ]
