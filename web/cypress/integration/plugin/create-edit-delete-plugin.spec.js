@@ -59,6 +59,7 @@ context('Create and Delete Plugin List', () => {
   it('should delete plugin list', function () {
     cy.visit('/plugin/list');
 
+    cy.get(this.domSelector.deleteButton).should('exist');
     cy.get(this.domSelector.deleteButton, { timeout }).each(function ($el) {
       cy.wrap($el).click().click({ timeout });
       cy.contains('button', 'Confirm').click({ force: true });
