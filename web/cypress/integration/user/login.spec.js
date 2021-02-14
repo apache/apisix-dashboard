@@ -44,4 +44,11 @@ context('Login Test', () => {
     cy.contains('Login').click();
     cy.get('.ant-notification-notice-message').should('contain', 'Successfully');
   });
+
+  it('Press Enter to login success', () => {
+    cy.visit('/user/Login');
+    cy.get('#control-ref_username').type('user');
+    cy.get('#control-ref_password').type('user{enter}');
+    cy.get('.ant-notification-notice-message').should('contain', 'Successfully');
+  });
 });
