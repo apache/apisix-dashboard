@@ -21,7 +21,6 @@ context('Login Test', () => {
     // set default language
     localStorage.setItem('umi_locale', 'en-US');
     cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
   });
 
   it('login failed with empty username and password', function () {
@@ -33,7 +32,7 @@ context('Login Test', () => {
 
   it('login with invalid credentials', function () {
     cy.visit('/user/Login');
-    cy.get(this.domSelector.usernameInput).type(this.data.user);
+    cy.get(this.domSelector.usernameInput).type('user');
     cy.get(this.domSelector.passwordInput).type('invalidPassword');
     cy.contains('Login').click();
     cy.get(this.domSelector.notification).should('contain', 'Request Error Code: 10000');
@@ -41,16 +40,16 @@ context('Login Test', () => {
 
   it('login success', function () {
     cy.visit('/user/Login');
-    cy.get(this.domSelector.usernameInput).type(this.data.user);
-    cy.get(this.domSelector.passwordInput).type(this.data.user);
+    cy.get(this.domSelector.usernameInput).type('user');
+    cy.get(this.domSelector.passwordInput).type('user');
     cy.contains('Login').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.successfully);
+    cy.get(this.domSelector.notification).should('contain', 'Successfully');
   });
 
   it('should press Enter to login successfully', function () {
     cy.visit('/user/Login');
-    cy.get(this.domSelector.usernameInput).type(this.data.user);
+    cy.get(this.domSelector.usernameInput).type('user');
     cy.get(this.domSelector.passwordInput).type('user{enter}');
-    cy.get(this.domSelector.notification).should('contain', this.data.successfully);
+    cy.get(this.domSelector.notification).should('contain', 'Successfully');
   });
 });
