@@ -99,13 +99,13 @@ func TestService(t *testing.T) {
 			Headers: map[string]string{"Authorization": token},
 			Body: `{
 				"name": "testservice",
-				"plugins": { 
-					"limit-count": { 
-						"count": 100, 
-						"time_window": 60, 
-						"rejected_code": 503, 
-						"key": "remote_addr" 
-					} 
+				"plugins": {
+					"limit-count": {
+						"count": 100,
+						"time_window": 60,
+						"rejected_code": 503,
+						"key": "remote_addr"
+					}
 				},
 				"upstream": {
 					"type": "roundrobin",
@@ -176,13 +176,13 @@ func TestService(t *testing.T) {
 					"version":"v2"
 				},
 				"enable_websocket":true,
-				"plugins": { 
-					"limit-count": { 
-						"count": 100, 
-						"time_window": 60, 
-						"rejected_code": 503, 
-						"key": "remote_addr" 
-					} 
+				"plugins": {
+					"limit-count": {
+						"count": 100,
+						"time_window": 60,
+						"rejected_code": 503,
+						"key": "remote_addr"
+					}
 				},
 				"upstream": {
 					"type": "roundrobin",
