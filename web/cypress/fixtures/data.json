@@ -27,5 +27,7 @@
   "updateSuccessfully": "Update Configuration Successfully",
   "deleteSSLSuccess": "Remove target SSL successfully",
   "sslErrorAlert": "key and cert don't match",
-  "pluginErrorAlert": "Invalid plugin data"
+  "pluginErrorAlert": "Invalid plugin data",
+  "successfully": "Successfully",
+  "user": "user"
 }
