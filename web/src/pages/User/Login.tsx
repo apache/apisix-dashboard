@@ -73,8 +73,8 @@ const Page: React.FC = () => {
     });
   };
 
-  const onKeyDown = (e: any) => {
-    if (e.keyCode === 13) {
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
       onSubmit();
     }
   }
