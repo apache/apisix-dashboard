@@ -62,7 +62,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           });
 
         // NOTE: wait for the Drawer to appear on the DOM
-        cy.focused(domSelectors.drawer_wrap).should('exist');
+        cy.focused(domSelectors.drawer).should('exist');
         cy.get(domSelectors.drawer, { timeout }).within(() => {
           cy.get(domSelectors.switch).click({
             force: true,
@@ -77,6 +77,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
             cy.contains('Submit').click({
               force: true,
             });
+            cy.get(domSelectors.drawer).should('not.exist');
           });
         });
 
