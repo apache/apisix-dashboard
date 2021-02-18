@@ -128,6 +128,7 @@ sleep 5
 
 res=$(curl http://127.0.0.1:9000)
 $workDir/manager-api stop
+sleep 6
 cd -
 rm -rf html
 
@@ -163,7 +164,7 @@ LOGLEVEL=$(cat conf/conf.yaml | awk '$1=="level:"{print $2}')
 HOST=$(cat conf/conf.yaml | awk '$1=="host:"{print $2}')
 PORT=$(cat conf/conf.yaml | awk '$1=="port:"{print $2}')
 STDOUT=/tmp/manager-api
-./manager-api &>/tmp/manager-api &
+./manager-api &> ${STDOUT} &
 sleep 3
 ./manager-api stop
 sleep 6
