@@ -15,6 +15,6 @@
  * limitations under the License.
  */
 export default {
-  'component.plugin.tip1': 'After customizing the plugin, you need to update schema.json.',
+  'component.plugin.tip1': 'NOTE: After customizing the plugin, you need to update schema.json.',
   'component.plugin.tip2': 'How to update?',
 };

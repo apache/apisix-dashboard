@@ -15,6 +15,6 @@
  * limitations under the License.
  */
 export default {
-  'component.plugin.tip1': '自定义插件后（修改、新增、删除等），需更新 schema.json。',
+  'component.plugin.tip1': '注意：自定义插件后（修改、新增、删除等），需更新 schema.json。',
   'component.plugin.tip2': '如何更新？',
 };
