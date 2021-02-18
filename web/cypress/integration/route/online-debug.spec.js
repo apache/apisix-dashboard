@@ -48,7 +48,7 @@ context('Online debug', () => {
     cy.fixture('selector.json').as('domSelector');
   });
 
-  it('shoule not show the invalid url notification', function () {
+  it('should not show the invalid url notification', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
 
@@ -66,7 +66,7 @@ context('Online debug', () => {
     });
   });
 
-  it('shoule not show the invalid url notification', function () {
+  it('should not show the invalid url notification', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
 
@@ -89,4 +89,36 @@ context('Online debug', () => {
       cy.get(this.domSelector.notificationCloseIcon).click();
     });
   });
+
+  it('should debug POST request with file and text', function() {
+    cy.visit('/');
+    cy.contains(menuLocaleUS['menu.routes']).click();
+
+    // show online debug draw
+    cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
+    cy.get('[data-cy=debug-draw]').should('be.visible');
+
+    //
+    cy.get('[data-cy=debug-method]').click();
+    cy.contains('POST').click();
+
+    //
+    cy.get('[data-cy=debug-protocol]').click();
+    cy.contains('https://').click();
+
+    cy.get('#debugUri').type('httpbin.org/post');
+    cy.contains('Body Params').should('be.visible').click();
+
+    cy.contains('form-data').should('be.visible').click();
+    cy.get('#dynamic_form_data_item_params_0_key').type('file');
+    cy.get('[data-cy=debug-formdata-type-0]').click();
+    cy.contains('File').click();
+
+    cy.get('[data-cy=debug-upload-btn-0]').should('be.visible');
+    cy.get('#dynamic_form_data_item_params_0_value').attachFile('../../../api/test/testdata/import/default.json');
+
+    cy.contains(routeLocaleUS['page.route.button.send']).click();
+
+
+  })
 });

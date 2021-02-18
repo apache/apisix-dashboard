@@ -209,6 +209,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         props.onClose();
       }}
       className={styles.routeDebugDraw}
+      data-cy='debug-draw'
     >
       <Card bordered={false}>
         <Input.Group compact>
@@ -220,6 +221,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
               setShowBodyTab(!(methodWithoutBody.indexOf(value) > -1));
             }}
             size="large"
+            data-cy='debug-method'
           >
             {HTTP_METHOD_OPTION_LIST.map((method) => {
               return (
@@ -236,6 +238,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
               setRequestProtocol(value);
             }}
             size="large"
+            data-cy='debug-protocol'
           >
             {PROTOCOL_SUPPORTED.map((protocol) => {
               return (

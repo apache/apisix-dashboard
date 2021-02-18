@@ -77,7 +77,7 @@ const DebugFormDataView: React.FC<RouteModule.DebugViewProps> = (props) => {
                     <Form.Item name={[field.name, 'type']}>
                       <Select defaultValue={DebugBodyFormDataValueType.Text} options={typeOptions} onChange={(value) => {
                         handleTypeChanged(value, index)
-                      }} />
+                      }} data-cy={`debug-formdata-type-${index}`}/>
                     </Form.Item>
                   </Col>
                   <Col span={7}>
@@ -103,7 +103,7 @@ const DebugFormDataView: React.FC<RouteModule.DebugViewProps> = (props) => {
                           getValueFromEvent={normFile}
                           >
                             <Upload maxCount={1}>
-                              <Button type="primary" icon={<ImportOutlined />}>
+                              <Button type="primary" icon={<ImportOutlined />} data-cy={`debug-upload-btn-${index}`}>
                                 {formatMessage({ id: 'page.route.button.selectFile' })}
                               </Button>
                             </Upload>
