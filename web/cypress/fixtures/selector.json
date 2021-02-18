@@ -56,5 +56,9 @@
   "grafanaURL": "#grafanaURL",
   "explain": ".ant-form-item-explain",
 
-  "upstreamType": ".ant-select-item-option-content"
+  "upstreamType": ".ant-select-item-option-content",
+
+  "errorExplain": ".ant-form-item-explain",
+  "usernameInput": "#control-ref_username",
+  "passwordInput": "#control-ref_password"
 }
