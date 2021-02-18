@@ -30,6 +30,7 @@ import {
   PROTOCOL_SUPPORTED,
   DEBUG_BODY_TYPE_SUPPORTED,
   DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED,
+  DebugBodyFormDataValueType,
 } from '../../constants';
 import { DebugParamsView, AuthenticationView, DebugFormDataView } from '.';
 import { debugRoute } from '../../service';
@@ -86,8 +87,8 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     }
 
     switch (bodyType) {
-      case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded]:
-        let transformFormUrlencoded: string[];
+      case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded]: {
+        let transformFormUrlencoded: string[] = [];
         const FormUrlencodedData: RouteModule.debugRequestParamsFormData[] = urlencodedForm.getFieldsValue().params;
         
         transformFormUrlencoded = (FormUrlencodedData || [])
@@ -97,25 +98,24 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
           });
 
         return transformFormUrlencoded.join('&');
-
+      }
       case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput]:
         return bodyCodeMirrorRef.current.editor.getValue();
-
-      case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormData]:
+      case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormData]: {
         const transformFormData = new FormData();
         const formDataData: RouteModule.debugRequestParamsFormData[] = formDataForm.getFieldsValue().params;
 
         (formDataData || [])
           .filter((data) => data.check)
           .forEach((data) => {
-            if (data.type === 'file') {
+            if (data.type === DebugBodyFormDataValueType.File) {
               transformFormData.append(data.key, data.value.originFileObj)
             } else {
               transformFormData.append(data.key, data.value)
             }
           })
         return transformFormData;
-
+      }
       case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.None]:
       default:
         return undefined;

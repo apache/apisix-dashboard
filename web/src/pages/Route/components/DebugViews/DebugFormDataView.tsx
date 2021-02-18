@@ -18,20 +18,17 @@ import React, { useState } from 'react';
 import { Form, Input, Row, Col, Checkbox, Select, Upload, Button } from 'antd';
 import { useIntl } from 'umi';
 import { MinusCircleOutlined, ImportOutlined } from '@ant-design/icons';
+import { DebugBodyFormDataValueType } from '../../constants';
 
 import styles from './index.less';
 
 const DebugFormDataView: React.FC<RouteModule.DebugViewProps> = (props) => {
   const { formatMessage } = useIntl();
-  enum DebugBodyFormDataValueType {
-    Text = 0,
-    File,
-  }
   const typeOptions = [
-    { label: 'Text', value: 'text' },
-    { label: 'File', value: 'file' },
+    { label: DebugBodyFormDataValueType.Text, value: DebugBodyFormDataValueType.Text },
+    { label: DebugBodyFormDataValueType.File, value: DebugBodyFormDataValueType.File },
   ];
-  const [typeList, setTypeList] = useState({0: 'text'});
+  const [typeList, setTypeList] = useState({0: DebugBodyFormDataValueType.Text});
   const handleTypeChanged = (value: string, index: number) => {
     setTypeList({...typeList, [index]: value})
   }
@@ -78,14 +75,14 @@ const DebugFormDataView: React.FC<RouteModule.DebugViewProps> = (props) => {
                   </Col>
                   <Col span={4}>
                     <Form.Item name={[field.name, 'type']}>
-                      <Select defaultValue='text' options={typeOptions} onChange={(value) => {
+                      <Select defaultValue={DebugBodyFormDataValueType.Text} options={typeOptions} onChange={(value) => {
                         handleTypeChanged(value, index)
                       }} />
                     </Form.Item>
                   </Col>
                   <Col span={7}>
                     {
-                      ( typeList[index] === 'text' || !typeList[index] )&&
+                      ( typeList[index] === DebugBodyFormDataValueType.Text || !typeList[index] )&&
                       (
                         <Form.Item name={[field.name, 'value']}>
                           <Input
@@ -97,7 +94,7 @@ const DebugFormDataView: React.FC<RouteModule.DebugViewProps> = (props) => {
                       )
                     }
                     {
-                      typeList[index] === 'file' &&
+                      typeList[index] === DebugBodyFormDataValueType.File &&
                       (
                         <Form.Item>
                           <Form.Item
