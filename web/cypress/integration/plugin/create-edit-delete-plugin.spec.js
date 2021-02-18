@@ -59,12 +59,13 @@ context('Create and Delete Plugin List', () => {
   it('should delete plugin list', function () {
     cy.visit('/plugin/list');
 
+    cy.get(this.domSelector.refresh).click();
     cy.get(this.domSelector.deleteButton).should('be.visible');
     cy.get(this.domSelector.deleteButton, { timeout }).each(function ($el) {
       cy.wrap($el).click().click({ timeout });
       cy.contains('button', 'Confirm').click({ force: true });
       cy.get(this.domSelector.notification).should('contain', this.data.deletePluginSuccess);
-      cy.get(this.domSelector.notificationCloseIcon).click();
+      cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
     });
 
     // check if plugin list is empty
