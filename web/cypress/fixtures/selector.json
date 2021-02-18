@@ -39,7 +39,7 @@
   "ruleCard": ".ant-modal",
   "operator": "#operator",
   "value": "#value",
-  
+
   "fileSelector": "[type=file]",
   "fileTypeRadio": "[type=radio]",
 
