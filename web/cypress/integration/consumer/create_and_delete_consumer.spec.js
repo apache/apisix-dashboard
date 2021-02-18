@@ -17,23 +17,21 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Consumer', () => {
-  const name = `consumerName${new Date().valueOf()}`;
-
   beforeEach(() => {
     cy.login();
 
     cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
   });
 
   it('creates consumer with key-auth', function () {
-    // go to consumer create page
     cy.visit('/');
     cy.contains('Consumer').click();
     cy.contains('Create').click();
 
     // basic information
-    cy.get('#username').type(name);
-    cy.get('#desc').type('desc_by_autotest');
+    cy.get(this.domSelector.username).type(this.data.consumerName);
+    cy.get(this.domSelector.description).type(this.data.description);
     cy.contains('Next').click();
 
     // plugin config
@@ -41,9 +39,9 @@ context('Create and Delete Consumer', () => {
       cy.get('button').first().click();
     });
 
-    cy.get('#disable').click();
+    cy.get(this.domSelector.disabledSwitcher).click();
     // edit codemirror
-    cy.get('.CodeMirror')
+    cy.get(this.domSelector.codeMirror)
       .first()
       .then((editor) => {
         editor[0].CodeMirror.setValue(
@@ -55,15 +53,15 @@ context('Create and Delete Consumer', () => {
       });
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
-    cy.get(this.domSelector.notification).should('contain', 'Create Consumer Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.createConsumerSuccess);
   });
 
   it('delete the consumer', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.contains(name).siblings().contains('Delete').click();
+    cy.contains(this.data.consumerName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', 'Delete Consumer Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteConsumerSuccess);
   });
 
   it('creates consumer with wrong json', function () {
@@ -72,8 +70,8 @@ context('Create and Delete Consumer', () => {
     cy.contains('Consumer').click();
     cy.contains('Create').click();
     // basic information
-    cy.get('#username').type(name);
-    cy.get('#desc').type('desc_by_autotest');
+    cy.get(this.domSelector.username).type(this.data.consumerName);
+    cy.get(this.domSelector.description).type(this.data.description);
     cy.contains('Next').click();
 
     // plugin config
@@ -81,7 +79,7 @@ context('Create and Delete Consumer', () => {
       cy.get('button').first().click();
     });
     // edit codeMirror
-    cy.get('.CodeMirror')
+    cy.get(this.domSelector.codeMirror)
       .first()
       .then((editor) => {
         editor[0].CodeMirror.setValue(
@@ -91,6 +89,6 @@ context('Create and Delete Consumer', () => {
         );
         cy.contains('button', 'Submit').click();
       });
-    cy.get(this.domSelector.notification).should('contain', 'Invalid plugin data');
+    cy.get(this.domSelector.notification).should('contain', this.data.pluginErrorAlert);
   });
 });

@@ -19,8 +19,6 @@
 context('Create and Search Route', () => {
   const timeout = 500;
   const data = {
-    host1: '11.11.11.11',
-    host2: '12.12.12.12',
     test: 'test',
     test0: 'test0',
     test1: 'test1',
@@ -31,13 +29,13 @@ context('Create and Search Route', () => {
     desc2: 'desc2',
     value0: 'value0',
     label0_value0: 'label0:value0',
-    deleteRouteSuccess: 'Delete Route Successfully',
   };
 
   beforeEach(() => {
     cy.login();
 
     cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
   });
 
   it('should create route test1, test2, test3', function () {
@@ -47,7 +45,7 @@ context('Create and Search Route', () => {
       cy.contains('Create').click();
       cy.get(this.domSelector.name).type(`test${i}`);
       cy.get(this.domSelector.description).type(`desc${i}`);
-      cy.get(this.domSelector.hosts_0).type(data.host1);
+      cy.get(this.domSelector.hosts_0).type(this.data.host1);
 
       // config label
       cy.contains('Manage').click();
@@ -61,13 +59,13 @@ context('Create and Search Route', () => {
       });
 
       cy.contains('Next').click();
-      cy.get(this.domSelector.nodes_0_host).type(data.host2, {
+      cy.get(this.domSelector.nodes_0_host).type(this.data.host2, {
         timeout,
       });
       cy.contains('Next').click();
       cy.contains('Next').click();
       cy.contains('Submit').click();
-      cy.contains('Submit Successfully');
+      cy.contains(this.data.submitSuccess);
       cy.contains('Goto List').click();
       cy.url().should('contains', 'routes/list');
     }
@@ -120,7 +118,7 @@ context('Create and Search Route', () => {
     for (let i = 0; i < 3; i += 1) {
       cy.contains(`test${i}`).siblings().contains('Delete').click({ timeout });
       cy.contains('button', 'Confirm').click({ timeout });
-      cy.get(this.domSelector.notification).should('contain', data.deleteRouteSuccess);
+      cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
     }
   });
 });

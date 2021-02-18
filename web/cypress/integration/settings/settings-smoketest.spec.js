@@ -18,10 +18,6 @@
 
 context('settings page smoke test', () => {
   const data = {
-    grafanaAddress: 'Grafana Address',
-    grafanaExplanation1: 'Grafana address should begin with HTTP or HTTPS',
-    grafanaExplanation2: 'Address is illegality',
-    updateSuccessfully: 'Update Configuration Successfully',
     invalidURL: 'httx://www.test.com',
     validURL: 'http://localhost:8000/routes/list',
     fetchURL: 'fetchURL',
@@ -32,6 +28,7 @@ context('settings page smoke test', () => {
     cy.login();
 
     cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
   });
 
   it('should visit settings page', function () {
@@ -42,8 +39,8 @@ context('settings page smoke test', () => {
     cy.get(this.domSelector.pageContainer)
       .children()
       .should('contain', 'Setting')
-      .and('contain', data.grafanaAddress)
-      .and('contain', data.grafanaExplanation1);
+      .and('contain', this.data.grafanaAddress)
+      .and('contain', this.data.grafanaExplanation1);
   });
 
   it('should set a invalid url', function () {
@@ -52,7 +49,7 @@ context('settings page smoke test', () => {
     cy.contains('Settings').click();
     cy.url().should('contains', '/settings');
     cy.get(this.domSelector.grafanaURL).clear().type(data.invalidURL);
-    cy.get(this.domSelector.explain).should('contain', data.grafanaExplanation2);
+    cy.get(this.domSelector.explain).should('contain', this.data.grafanaExplanation2);
   });
 
   it('should set a accessible URL', function () {
@@ -63,7 +60,7 @@ context('settings page smoke test', () => {
     cy.get(this.domSelector.grafanaURL).clear().type(data.validURL);
     cy.contains('Submit').click();
 
-    cy.get(this.domSelector.notificationMessage).should('contain', data.updateSuccessfully);
+    cy.get(this.domSelector.notificationMessage).should('contain', this.data.updateSuccessfully);
     cy.intercept(data.validURL).as(data.fetchURL);
     cy.wait(data.fetch);
     cy.get(this.domSelector.pageContainer).children().should('contain', 'Metrics');
