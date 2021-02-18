@@ -31,6 +31,6 @@ context('metrics page smoke test', () => {
       .children()
       .should('contain', 'Metrics')
       .and('contain', 'You have not configured Grafana')
-      .and('contain', 'Configure Now');
+      .and('contain', 'Configure');
   });
 });
