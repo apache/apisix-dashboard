@@ -14,19 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare namespace ServerInfoModule {
-  type Node = {
-    id: string;
-    last_report_time: integer;
-    up_time: integer;
-    boot_time: integer;
-    etcd_version: string;
-    hostname: string;
-    version: string;
-  };
-
-  type DashboardInfo = {
-    commit_hash: string,
-    version: string
-  }
-}
+export default {
+  'component.plugin.tip1': '注意：自定义插件后（修改、新增、删除等），需更新 schema.json。',
+  'component.plugin.tip2': '如何更新？',
+};

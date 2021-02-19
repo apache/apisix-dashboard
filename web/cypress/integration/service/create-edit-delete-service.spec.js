@@ -17,22 +17,11 @@
 /* eslint-disable no-undef */
 
 context('create and delete service ', () => {
-  const data = {
-    service_name1: 'service',
-    service_name2: 'new service',
-    desc1: 'desc',
-    desc2: 'new desc',
-    ip1: '12.12.12.12',
-    ip2: '12.12.12.10',
-    create_service_success: 'Create Service Successfully',
-    edit_service_success: 'Edit Service Successfully',
-    delete_service_success: 'Delete Service Successfully',
-  };
-
   beforeEach(() => {
     cy.login();
 
     cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
   });
 
   it('should create service', function () {
@@ -40,50 +29,50 @@ context('create and delete service ', () => {
     cy.contains('Service').click();
     cy.contains('Create').click();
 
-    cy.get(this.domSelector.name).type(data.service_name1);
-    cy.get(this.domSelector.description).type(data.desc1);
+    cy.get(this.domSelector.name).type(this.data.serviceName);
+    cy.get(this.domSelector.description).type(this.data.description);
     cy.get(this.domSelector.nodes_0_host).click();
-    cy.get(this.domSelector.nodes_0_host).type(data.ip1);
+    cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
 
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(this.domSelector.notification).should('contain', data.create_service_success);
+    cy.get(this.domSelector.notification).should('contain', this.data.createServiceSuccess);
   });
 
   it('should edit the service', function () {
     cy.visit('/');
     cy.contains('Service').click();
 
-    cy.get(this.domSelector.nameSelector).type(data.service_name1);
+    cy.get(this.domSelector.nameSelector).type(this.data.serviceName);
     cy.contains('Search').click();
-    cy.contains(data.service_name1).siblings().contains('Edit').click();
+    cy.contains(this.data.serviceName).siblings().contains('Edit').click();
 
     // Confirm whether the created data is saved.
-    cy.get(this.domSelector.nodes_0_host).should('value', data.ip1);
-    cy.get(this.domSelector.description).should('value', data.desc1)
-    cy.get(this.domSelector.name).clear().type(data.service_name2);
-    cy.get(this.domSelector.description).clear().type(data.desc2);
+    cy.get(this.domSelector.nodes_0_host).should('value', this.data.ip1);
+    cy.get(this.domSelector.description).should('value', this.data.description)
+    cy.get(this.domSelector.name).clear().type(this.data.serviceName2);
+    cy.get(this.domSelector.description).clear().type(this.data.description2);
     cy.get(this.domSelector.nodes_0_host).click();
-    cy.get(this.domSelector.nodes_0_host).clear().type(data.ip2);
+    cy.get(this.domSelector.nodes_0_host).clear().type(this.data.ip2);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(this.domSelector.notification).should('contain', data.edit_service_success);
+    cy.get(this.domSelector.notification).should('contain', this.data.editServiceSuccess);
   });
 
   it('should delete the service', function () {
     // Confirm whether the edited data is saved.
-    cy.get(this.domSelector.nameSelector).type(data.service_name2);
+    cy.get(this.domSelector.nameSelector).type(this.data.serviceName2);
     cy.contains('Search').click();
-    cy.contains(data.service_name2).siblings().contains('Edit').click();
-    cy.get(this.domSelector.nodes_0_host).should('value', data.ip2);
-    cy.get(this.domSelector.description).should('value', data.desc2);
+    cy.contains(this.data.serviceName2).siblings().contains('Edit').click();
+    cy.get(this.domSelector.nodes_0_host).should('value', this.data.ip2);
+    cy.get(this.domSelector.description).should('value', this.data.description2);
 
     cy.visit('/');
     cy.contains('Service').click();
-    cy.contains(data.service_name2).siblings().contains('Delete').click();
+    cy.contains(this.data.serviceName2).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', data.delete_service_success);
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteServiceSuccess);
   });
 });

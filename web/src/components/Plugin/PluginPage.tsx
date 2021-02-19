@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react';
 import { Anchor, Layout, Card, Button } from 'antd';
 import { PanelSection } from '@api7-dashboard/ui';
 import { omit, orderBy } from 'lodash';
+import { useIntl } from 'umi';
 
 import PluginDetail from './PluginDetail';
 import { fetchList } from './service';
@@ -54,6 +55,8 @@ const PluginPage: React.FC<Props> = ({
   type = 'scoped',
   onChange = () => {},
 }) => {
+  const { formatMessage } = useIntl();
+
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
   const [typeList, setTypeList] = useState<string[]>([]);
@@ -158,6 +161,15 @@ const PluginPage: React.FC<Props> = ({
             </PanelSection>
           );
         })}
+        <br />
+        {formatMessage({ id: 'component.plugin.tip1' })}
+        <a
+          href="https://github.com/apache/apisix-dashboard/blob/master/docs/FAQ.md#4-after-modifying-the-plugin-schema-or-creating-a-custom-plugin-in-apache-apisix-why-cant-i-find-it-on-the-dashboard"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {formatMessage({ id: 'component.plugin.tip2' })}
+        </a>
       </Content>
     </>
   );

@@ -20,7 +20,6 @@ context('Create and Delete Plugin List', () => {
   const timeout = 5000;
   const data = {
     name: 'hmac-auth',
-    deleteSuccess: 'Delete Plugin Successfully',
   };
 
   beforeEach(() => {
@@ -28,6 +27,7 @@ context('Create and Delete Plugin List', () => {
 
     cy.fixture('plugin-list.json').as('cases');
     cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
   });
 
   it('should create plugins', function () {
@@ -62,7 +62,7 @@ context('Create and Delete Plugin List', () => {
     cy.get(this.domSelector.deleteButton, { timeout }).each(function ($el) {
       cy.wrap($el).click().click({ timeout });
       cy.contains('button', 'Confirm').click({ force: true });
-      cy.get(this.domSelector.notification).should('contain', data.deleteSuccess);
+      cy.get(this.domSelector.notification).should('contain', this.data.deletePluginSuccess);
       cy.get(this.domSelector.notificationCloseIcon).click();
     });
 

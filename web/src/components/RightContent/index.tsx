@@ -40,7 +40,7 @@ const ENVTagColor = {
 
 const GlobalHeaderRight: React.FC = () => {
   const { initialState } = useModel('@@initialState');
-  
+
   useEffect(() => {
     fetchVersionMatch();
   }, []);

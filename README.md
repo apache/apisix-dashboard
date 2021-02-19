@@ -31,7 +31,7 @@
 
 - The master version should be used with Apache APISIX master version.
 
-- The latest released version is [2.3](https://apisix.apache.org/downloads/) and should be used with [Apache APISIX 2.2](https://apisix.apache.org/downloads/). It is not recommended to use with other Apache APISIX versions.
+- The latest released version is [2.4](https://apisix.apache.org/downloads/) and should be used with [Apache APISIX 2.3](https://apisix.apache.org/downloads/). It is not recommended to use with other Apache APISIX versions.
 
 ## What's Apache APISIX Dashboard
 

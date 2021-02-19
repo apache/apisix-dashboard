@@ -369,8 +369,8 @@ func TestRoute_Export(t *testing.T) {
 
 	// 4.Create a service that contains complete data and use the service_ id create route
 	serviceStrS1 := `
-	"name": "testservice", 
-	"desc": "testservice_desc", 
+	"name": "testservice",
+	"desc": "testservice_desc",
 	"upstream": {
 		"nodes": [{
 			"host": "172.16.238.20",
@@ -378,7 +378,7 @@ func TestRoute_Export(t *testing.T) {
 			"weight": 1
 		}],
 		"type": "roundrobin"
-	}, 
+	},
 	"plugins": {
 		"limit-count": {
 			"count": 100,
@@ -386,12 +386,12 @@ func TestRoute_Export(t *testing.T) {
 			"rejected_code": 503,
 			"time_window": 60
 		}
-	}, 
+	},
 	"labels": {
 		"build": "16",
 		"env": "production",
 		"version": "v2"
-	}, 
+	},
 	"enable_websocket": true
 	`
 	serviceStrS1 = replaceStr(serviceStrS1)
@@ -459,13 +459,13 @@ func TestRoute_Export(t *testing.T) {
 					"version":"v2"
 				},
 				"enable_websocket":true,
-				"plugins": { 
-					"limit-count": { 
-						"count": 100, 
-						"time_window": 60, 
-						"rejected_code": 503, 
-						"key": "remote_addr" 
-					} 
+				"plugins": {
+					"limit-count": {
+						"count": 100,
+						"time_window": 60,
+						"rejected_code": 503,
+						"key": "remote_addr"
+					}
 				},
 				"upstream": {
 					"type": "roundrobin",
@@ -549,8 +549,8 @@ func TestRoute_Export(t *testing.T) {
 	// However, if the data in the service plugins does not exist in the route, it will be fused and exported.
 	// If it exists, the data in route will be used first
 	serviceStrS2 := `
-	"name": "testservice", 
-	"desc": "testservice_desc", 
+	"name": "testservice",
+	"desc": "testservice_desc",
 	"upstream": {
 		"nodes": [{
 			"host": "172.16.238.20",
@@ -558,7 +558,7 @@ func TestRoute_Export(t *testing.T) {
 			"weight": 1
 		}],
 		"type": "roundrobin"
-	}, 
+	},
 	"plugins": {
 		"limit-count": {
 			"count": 100,
@@ -566,12 +566,12 @@ func TestRoute_Export(t *testing.T) {
 			"rejected_code": 503,
 			"time_window": 60
 		}
-	}, 
+	},
 	"labels": {
 		"build": "16",
 		"env": "production",
 		"version": "v2"
-	}, 
+	},
 	"enable_websocket": true`
 	serviceStrS2 = replaceStr(serviceStrS2)
 
@@ -642,13 +642,13 @@ func TestRoute_Export(t *testing.T) {
 					"version":"v2"
 				},
 				"enable_websocket":true,
-				"plugins": { 
-					"limit-count": { 
-						"count": 100, 
-						"time_window": 60, 
-						"rejected_code": 503, 
-						"key": "remote_addr" 
-					} 
+				"plugins": {
+					"limit-count": {
+						"count": 100,
+						"time_window": 60,
+						"rejected_code": 503,
+						"key": "remote_addr"
+					}
 				},
 				"upstream": {
 					"type": "roundrobin",
@@ -682,7 +682,7 @@ func TestRoute_Export(t *testing.T) {
 				"uri": "/hello",
 				"service_id": "s2",
 				"enable_websocket":false,
-				"plugins": { 
+				"plugins": {
 					"prometheus": {
 						"disable": false
 					}
@@ -744,9 +744,9 @@ func TestRoute_Export(t *testing.T) {
 	// The test export also contains the upstream.
 	// Use the upstream of route.
 	serviceStrS3 := `
-	"name": "testservice", 
-	"desc": "testservice_desc", 
-	"upstream_id": "1", 
+	"name": "testservice",
+	"desc": "testservice_desc",
+	"upstream_id": "1",
 	"plugins": {
 		"limit-count": {
 			"count": 100,
@@ -754,12 +754,12 @@ func TestRoute_Export(t *testing.T) {
 			"rejected_code": 503,
 			"time_window": 60
 		}
-	}, 
+	},
 	"labels": {
 		"build": "16",
 		"env": "production",
 		"version": "v2"
-	}, 
+	},
 	"enable_websocket": true`
 	serviceStrS3 = replaceStr(serviceStrS3)
 
@@ -848,13 +848,13 @@ func TestRoute_Export(t *testing.T) {
 					"version":"v2"
 				},
 				"enable_websocket":true,
-				"plugins": { 
-					"limit-count": { 
-						"count": 100, 
-						"time_window": 60, 
-						"rejected_code": 503, 
-						"key": "remote_addr" 
-					} 
+				"plugins": {
+					"limit-count": {
+						"count": 100,
+						"time_window": 60,
+						"rejected_code": 503,
+						"key": "remote_addr"
+					}
 				},
 				"upstream_id": "1"
 			}`,
@@ -879,7 +879,7 @@ func TestRoute_Export(t *testing.T) {
 				"uri": "/hello",
 				"service_id": "s3",
 				"enable_websocket":false,
-				"plugins": { 
+				"plugins": {
 					"prometheus": {
 						"disable": false
 					}
@@ -1004,7 +1004,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET"],
 				"uri": "/hello",
 				"enable_websocket":false,
-				"plugins": { 
+				"plugins": {
 					"prometheus": {
 						"disable": false
 					}
@@ -1058,9 +1058,9 @@ func TestRoute_Export(t *testing.T) {
 	// Create route according to upstream2 ID and service ID
 	// Export route
 	serviceStrS4 := `
-	"name": "testservice", 
-	"desc": "testservice_desc", 
-	"upstream_id": "4", 
+	"name": "testservice",
+	"desc": "testservice_desc",
+	"upstream_id": "4",
 	"enable_websocket": true`
 	serviceStrS4 = replaceStr(serviceStrS4)
 
@@ -1085,7 +1085,7 @@ func TestRoute_Export(t *testing.T) {
 					"summary": "所有",
 					"x-apisix-enable_websocket": false,
 					"x-apisix-labels": {
-						"API_VERSION": "v1", 
+						"API_VERSION": "v1",
 						"test": "1"
 					},
 					"x-apisix-plugins": {
@@ -1180,7 +1180,7 @@ func TestRoute_Export(t *testing.T) {
 				],
 				"uri": "/hello",
 				"enable_websocket":false,
-				"plugins": { 
+				"plugins": {
 					"prometheus": {
 						"disable": false
 					}
@@ -1249,9 +1249,9 @@ func TestRoute_Export(t *testing.T) {
 
 	// 10.Creating route10 using service ID does not contain upstream data
 	serviceStrS5 := `
-	"name": "testservice", 
-	"desc": "testservice_desc", 
-	"upstream_id": "6", 
+	"name": "testservice",
+	"desc": "testservice_desc",
+	"upstream_id": "6",
 	"enable_websocket": true`
 	serviceStrS5 = replaceStr(serviceStrS5)
 
@@ -1276,7 +1276,7 @@ func TestRoute_Export(t *testing.T) {
 					"summary": "所有",
 					"x-apisix-enable_websocket": false,
 					"x-apisix-labels": {
-						"API_VERSION": "v1", 
+						"API_VERSION": "v1",
 						"test": "1"
 					},
 					"x-apisix-plugins": {
@@ -1353,7 +1353,7 @@ func TestRoute_Export(t *testing.T) {
 				],
 				"uri": "/hello",
 				"enable_websocket":false,
-				"plugins": { 
+				"plugins": {
 					"prometheus": {
 						"disable": false
 					}
@@ -1886,11 +1886,11 @@ func TestRoute_Export_Label(t *testing.T) {
 	// 10.Create a service with label data and a route with label data, and export the route.
 	// Label is the original data of the route
 	serviceStrS1 := `
-	"name": "testservice", 
-	"desc": "testservice_desc", 
+	"name": "testservice",
+	"desc": "testservice_desc",
 	"labels": {
 		"build": "10"
-	}, 
+	},
 	"enable_websocket": true`
 	serviceStrS1 = replaceStr(serviceStrS1)
 
@@ -1914,8 +1914,8 @@ func TestRoute_Export_Label(t *testing.T) {
 					"summary": "所有",
 					"x-apisix-enable_websocket": false,
 					"x-apisix-labels": {
-						"build": "16", 
-						"env": "production", 
+						"build": "16",
+						"env": "production",
 						"version": "v2"
 					},
 					"x-apisix-priority": 0,
@@ -2025,11 +2025,11 @@ func TestRoute_Export_Label(t *testing.T) {
 	// 11.Create a service with label data and a route without label data, and export the route.
 	//  Label is the data of the service
 	serviceStrS2 := `
-	"name": "testservice", 
-	"desc": "testservice_desc", 
+	"name": "testservice",
+	"desc": "testservice_desc",
 	"labels": {
-		"build": "16", 
-		"env": "production", 
+		"build": "16",
+		"env": "production",
 		"version": "v2"
 	},
 	"enable_websocket": true`
@@ -2055,8 +2055,8 @@ func TestRoute_Export_Label(t *testing.T) {
 					"summary": "所有",
 					"x-apisix-enable_websocket": false,
 					"x-apisix-labels": {
-						"build": "16", 
-						"env": "production", 
+						"build": "16",
+						"env": "production",
 						"version": "v2"
 					},
 					"x-apisix-priority": 0,
@@ -2084,8 +2084,8 @@ func TestRoute_Export_Label(t *testing.T) {
 				"desc": "testservice_desc",
 				"enable_websocket":true,
 				"labels": {
-					"build": "16", 
-					"env": "production", 
+					"build": "16",
+					"env": "production",
 					"version": "v2"
 				}
 			}`,
