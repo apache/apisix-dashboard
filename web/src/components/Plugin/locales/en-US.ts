@@ -14,19 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare namespace ServerInfoModule {
-  type Node = {
-    id: string;
-    last_report_time: integer;
-    up_time: integer;
-    boot_time: integer;
-    etcd_version: string;
-    hostname: string;
-    version: string;
-  };
-
-  type DashboardInfo = {
-    commit_hash: string,
-    version: string
-  }
-}
+export default {
+  'component.plugin.tip1': 'NOTE: After customizing the plugin, you need to update schema.json.',
+  'component.plugin.tip2': 'How to update?',
+};
