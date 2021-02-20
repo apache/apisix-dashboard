@@ -19,7 +19,7 @@
 context('Create and Delete Plugin List', () => {
   const timeout = 5000;
   const data = {
-    name: 'hmac-auth',
+    name: 'api-breaker',
   };
 
   beforeEach(() => {
