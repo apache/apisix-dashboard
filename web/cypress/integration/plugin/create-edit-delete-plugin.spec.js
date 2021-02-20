@@ -21,21 +21,20 @@ context('Create and Delete Plugin List', () => {
   const data = {
     name: 'hmac-auth',
   };
-
+  
   beforeEach(() => {
     cy.login();
 
-    cy.fixture('plugin-list.json').as('cases');
     cy.fixture('selector.json').as('domSelector');
     cy.fixture('data.json').as('data');
+    cy.fixture('plugin-dataset.json').as('cases');
   });
 
-  it('should create plugins', function () {
+  it('should visit plugin market', function () {
     cy.visit('/');
     cy.contains('Plugin').click();
     cy.contains('Create').click();
 
-    // add test plugins
     cy.get('@cases').then((cases) => {
       cy.configurePlugins(cases);
     });
@@ -43,6 +42,7 @@ context('Create and Delete Plugin List', () => {
 
   it('should edit the plugin', function () {
     cy.visit('/plugin/list');
+
     cy.get(this.domSelector.refresh).click();
     cy.contains(data.name).should('exist').siblings().contains('Edit').click({
       force: true,
