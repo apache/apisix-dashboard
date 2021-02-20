@@ -40,9 +40,11 @@ Refer to the beginning in:
 https://github.com/apache/apisix/blob/master/doc/control-api.md
 
 2. Execute the following commands to export jsonchema on your APISIX server (if it is configured for non-local access, it does not need to be executed on your APISIX server, and the access IP and port should be modified accordingly)
+
 ```sh
 curl 127.0.0.1:9090/v1/schema> schema.json
 ```
+
 Refer to https://github.com/apache/apisix/blob/master/doc/control-api.md#get-v1schema
 
 3. Copy the exported schema.json to the conf directory in the Dashboard working directory
