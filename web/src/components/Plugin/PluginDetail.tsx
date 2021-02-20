@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Button,
   notification,
@@ -92,6 +92,11 @@ const PluginDetail: React.FC<Props> = ({
   const ref = useRef<any>(null);
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.type;
+  const [configType, setConfigType] = useState<PluginComponent.CodeMirrorMode>('javascript');
+  const modeOptions = [
+    { label: 'Json', value: 'javascript' },
+    { label: 'Yaml', value: 'yaml' },
+  ];
 
   useEffect(() => {
     form.setFieldsValue({
@@ -144,7 +149,13 @@ const PluginDetail: React.FC<Props> = ({
       });
     });
   };
-
+  const handleModeChange = (value) => {
+    switch (value){
+      case 'javescript':
+        
+      case 'yaml':
+    }
+  }
   const formatCodes = () => {
     try {
       if (ref.current) {
@@ -243,6 +254,7 @@ const PluginDetail: React.FC<Props> = ({
         </Form>
         <Divider orientation="left">Data Editor</Divider>
         <PageHeader
+          className="test"
           title=""
           subTitle={
             pluginType === 'auth' && schemaType !== 'consumer' ? (
@@ -271,7 +283,14 @@ const PluginDetail: React.FC<Props> = ({
             >
               Document
             </Button>,
-            <Button type="primary" onClick={formatCodes} key={2}>
+            <Select defaultValue="javascript" options={modeOptions} onChange={(value: PluginComponent.CodeMirrorMode) => {
+              // change codemirror mode to
+              setConfigType(value)
+              // change configdata type
+
+              
+            }}></Select>,
+            <Button type="primary" onClick={formatCodes} key={3}>
               Format
             </Button>,
           ]}
@@ -286,7 +305,7 @@ const PluginDetail: React.FC<Props> = ({
           }}
           value={JSON.stringify(data, null, 2)}
           options={{
-            mode: 'json-ld',
+            mode: configType,
             readOnly: readonly ? 'nocursor' : '',
             lineWrapping: true,
             lineNumbers: true,
