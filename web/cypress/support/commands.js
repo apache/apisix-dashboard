@@ -85,7 +85,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
         if (shouldValid === true) {
           cy.get(domSelectors.drawer).should('not.exist');
         } else if (shouldValid === false) {
-          cy.get(this.selector.notification).should('contain', 'Invalid plugin data');
+          cy.get(this.domSelector.notification).should('contain', 'Invalid plugin data');
 
           cy.get(domSelectors.close).should('be.visible').click({
             force: true,
