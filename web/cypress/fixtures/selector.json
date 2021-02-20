@@ -8,6 +8,7 @@
   "drawerBody": ".ant-drawer-wrapper-body",
   "notificationCloseIcon": ".ant-notification-close-icon",
   "notificationDesc": ".ant-notification-notice-description",
+  "errorNotification:": ".ant-notification-notice-error",
 
   "pluginCard": ".ant-card",
   "pageContent": ".ant-pro-page-container",

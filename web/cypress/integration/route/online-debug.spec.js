@@ -20,6 +20,7 @@ import routeLocaleUS from '../../../src/pages/Route/locales/en-US';
 import defaultSettings from '../../../config/defaultSettings';
 
 context('Online debug', () => {
+  const { SERVE_ENV = 'dev' } = Cypress.env();
   const data = {
     validUris: [
       'localhost:9000/get',
@@ -40,7 +41,19 @@ context('Online debug', () => {
     invalidUrls: [
       '000'
     ],
+    postUrl: `${defaultSettings.serveUrlMap[SERVE_ENV].split('//')[1]}/apisix/admin/import/routes`,
+    uploadFile: '../../../api/test/testdata/import/default.json',
   };
+
+  const domSelector = {
+    debugDraw: '[data-cy=debug-draw]',
+    deubugMethod: '[data-cy=debug-method]',
+    debugProtocol: '[data-cy=debug-protocol]',
+    debugFormDataKey0: '#dynamic_form_data_item_params_0_key',
+    debugFormDataType0: '[data-cy=debug-formdata-type-0]',
+    debugFormDataValue0: '#dynamic_form_data_item_params_0_value',
+    debugFormDataFileButton0: '[data-cy=debug-upload-btn-0]',
+  }
 
   beforeEach(() => {
     cy.login();
@@ -66,7 +79,7 @@ context('Online debug', () => {
     });
   });
 
-  it('should not show the invalid url notification', function () {
+  it('should show the invalid url notification', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
 
@@ -90,35 +103,42 @@ context('Online debug', () => {
     });
   });
 
-  it('should debug POST request with file and text', function() {
+  it('should debug POST request with file successfully', function() {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
 
     // show online debug draw
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
-    cy.get('[data-cy=debug-draw]').should('be.visible');
+    cy.get(domSelector.debugDraw).should('be.visible');
 
-    //
-    cy.get('[data-cy=debug-method]').click();
+    // change request method POST
+    cy.get(domSelector.deubugMethod).click();
     cy.contains('POST').click();
 
-    //
-    cy.get('[data-cy=debug-protocol]').click();
-    cy.contains('https://').click();
+    // change request protocol http
+    cy.get(domSelector.debugProtocol).click();
+    cy.contains('http://').click();
 
-    cy.get('#debugUri').type('httpbin.org/post');
+    cy.get(this.domSelector.debugUri).type(data.postUrl);
     cy.contains('Body Params').should('be.visible').click();
 
     cy.contains('form-data').should('be.visible').click();
-    cy.get('#dynamic_form_data_item_params_0_key').type('file');
-    cy.get('[data-cy=debug-formdata-type-0]').click();
-    cy.contains('File').click();
+    cy.get(domSelector.debugFormDataKey0).type('file');
 
-    cy.get('[data-cy=debug-upload-btn-0]').should('be.visible');
-    cy.get('#dynamic_form_data_item_params_0_value').attachFile('../../../api/test/testdata/import/default.json');
+    // check change type
+    cy.get(domSelector.debugFormDataType0).click();
+    cy.contains('Text').click();
+    // assert: text input dom should be visible
+    cy.get(domSelector.debugFormDataValue0).should('be.visible');
+    cy.get(domSelector.debugFormDataType0).click();
+    cy.contains('File').click();
+    // assert: upload file button should be visible
+    cy.get(domSelector.debugFormDataFileButton0).should('be.visible');
+    // attach file
+    cy.get(domSelector.debugFormDataValue0).attachFile(data.uploadFile);
 
     cy.contains(routeLocaleUS['page.route.button.send']).click();
-
-
+    // assert: send request ok
+    cy.get(this.domSelector.errorNotification).should('not.exist');
   })
 });
