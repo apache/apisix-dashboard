@@ -126,11 +126,8 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}
-	defer func() {
-		if resp != nil {
-			resp.Body.Close()
-		}
-	}()
+
+	defer resp.Body.Close()
 
 	_body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -150,3 +147,4 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	}
 	return result, nil
 }
+
