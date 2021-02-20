@@ -21,7 +21,7 @@ context('Create and Delete Plugin List', () => {
   const data = {
     name: 'hmac-auth',
   };
-  
+
   beforeEach(() => {
     cy.login();
 
