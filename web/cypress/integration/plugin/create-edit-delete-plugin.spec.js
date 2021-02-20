@@ -18,9 +18,6 @@
 
 context('Create and Delete Plugin List', () => {
   const timeout = 5000;
-  const data = {
-    name: 'api-breaker',
-  };
 
   beforeEach(() => {
     cy.login();
@@ -44,16 +41,13 @@ context('Create and Delete Plugin List', () => {
     cy.visit('/plugin/list');
 
     cy.get(this.domSelector.refresh).click();
-    cy.contains(data.name).should('exist').siblings().contains('Edit').click({
-      force: true,
-    });
+    cy.contains('Edit').click();
     cy.get(this.domSelector.codemirror)
       .first()
       .then(() => {
         cy.get(this.domSelector.disabledSwitcher).click();
         cy.contains('button', 'Submit').click();
       });
-    cy.contains(data.name).should('not.exist');
   });
 
   it('should delete plugin list', function () {
