@@ -90,7 +90,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
       case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded]: {
         let transformFormUrlencoded: string[] = [];
         const FormUrlencodedData: RouteModule.debugRequestParamsFormData[] = urlencodedForm.getFieldsValue().params;
-        
+
         transformFormUrlencoded = (FormUrlencodedData || [])
           .filter((data) => data.check)
           .map((data) => {
