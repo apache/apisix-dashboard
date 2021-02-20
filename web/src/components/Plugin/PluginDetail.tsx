@@ -37,6 +37,7 @@ import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
 
 import { fetchSchema } from './service';
+import { json2yaml, yaml2json } from '../../helpers';
 
 type Props = {
   name: string;
@@ -92,7 +93,7 @@ const PluginDetail: React.FC<Props> = ({
   const ref = useRef<any>(null);
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.type;
-  const [configType, setConfigType] = useState<PluginComponent.CodeMirrorMode>('javascript');
+  const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>('javascript');
   const modeOptions = [
     { label: 'Json', value: 'javascript' },
     { label: 'Yaml', value: 'yaml' },
@@ -149,12 +150,23 @@ const PluginDetail: React.FC<Props> = ({
       });
     });
   };
-  const handleModeChange = (value) => {
+  const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
     switch (value){
-      case 'javescript':
-        
+      case 'javascript':
+        ref.current.editor.setValue(
+          js_beautify(yaml2json(ref.current.editor.getValue(), true), {
+            indent_size: 2,
+          }),
+        );
+        break;
       case 'yaml':
+        ref.current.editor.setValue(
+          json2yaml(ref.current.editor.getValue())
+        );
+        break;
+      default: break;
     }
+    setCodeMirrorMode(value)
   }
   const formatCodes = () => {
     try {
@@ -211,7 +223,9 @@ const PluginDetail: React.FC<Props> = ({
                 type="primary"
                 onClick={() => {
                   try {
-                    const editorData = JSON.parse(ref.current?.editor.getValue());
+                    const editorData = codeMirrorMode === 'javascript' ?
+                      JSON.parse(ref.current?.editor.getValue()) :
+                      yaml2json(ref.current?.editor.getValue(), false);
                     validateData(name, editorData).then((value) => {
                       onChange({ formData: form.getFieldsValue(), codemirrorData: value });
                     });
@@ -284,11 +298,7 @@ const PluginDetail: React.FC<Props> = ({
               Document
             </Button>,
             <Select defaultValue="javascript" options={modeOptions} onChange={(value: PluginComponent.CodeMirrorMode) => {
-              // change codemirror mode to
-              setConfigType(value)
-              // change configdata type
-
-              
+              handleModeChange(value)
             }}></Select>,
             <Button type="primary" onClick={formatCodes} key={3}>
               Format
@@ -305,7 +315,7 @@ const PluginDetail: React.FC<Props> = ({
           }}
           value={JSON.stringify(data, null, 2)}
           options={{
-            mode: configType,
+            mode: codeMirrorMode,
             readOnly: readonly ? 'nocursor' : '',
             lineWrapping: true,
             lineNumbers: true,

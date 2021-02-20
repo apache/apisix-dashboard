@@ -19,6 +19,8 @@ import { notification } from 'antd';
 import type { MenuDataItem } from '@ant-design/pro-layout';
 import { history } from 'umi';
 import moment from 'moment';
+import YAML from 'yaml';
+import yaml from 'js-yaml';
 
 import { codeMessage } from './constants';
 import IconFont from './components/IconFont';
@@ -130,3 +132,20 @@ export const timestampToLocaleString = (timestamp: number) => {
 
   return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
 };
+
+/**
+ * Transform json string to yaml string
+ * @param json
+ */
+export const json2yaml = (json: string): string => {
+  return yaml.dump(JSON.parse(json))
+}
+
+/**
+ * Transform yaml string to json
+ * @param yaml
+ * @param returnString true for json string , false for json object
+ */
+export const yaml2json = (yaml: string, returnString: boolean): string | Object => {
+  return returnString? JSON.stringify(YAML.parse(yaml)): YAML.parse(yaml);
+}
