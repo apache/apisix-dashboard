@@ -17,6 +17,7 @@
 package route_online_debug
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/onsi/ginkgo"
@@ -45,7 +46,7 @@ var _ = ginkgo.Describe("Route_Online_Debug", func() {
 				"Authorization":                 base.GetToken(),
 				"online_debug_url":              base.APISIXInternalUrl + `/hello_`,
 				"online_debug_request_protocol": "http",
-				"online_debug_method":           "POST",
+				"online_debug_method":           "GET",
 				"Content-Type":                  "multipart/form-data",
 				"online_debug_header_params":    `{"test":["test1"]}`,
 			},
@@ -96,11 +97,12 @@ var _ = ginkgo.Describe("Route_Online_Debug", func() {
 				"Authorization":                 base.GetToken(),
 				"online_debug_url":              base.APISIXInternalUrl + `/hello?name=aaa`,
 				"online_debug_request_protocol": "http",
-				"online_debug_method":           "POST",
+				"online_debug_method":           "GET",
 				"Content-Type":                  "multipart/form-data",
 				"online_debug_header_params":    `{"test":["test1"]}`,
 			},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world`,
 			Sleep:        base.SleepTime,
 		}),
 		table.Entry("delete the route just created", base.HttpTestCase{
@@ -163,12 +165,12 @@ var _ = ginkgo.Describe("Route_Online_Debug", func() {
 				"Authorization":                 base.GetToken(),
 				"online_debug_url":              base.APISIXInternalUrl + `/hello`,
 				"online_debug_request_protocol": "http",
-				"online_debug_method":           "POST",
+				"online_debug_method":           "GET",
 				"Content-Type":                  "multipart/form-data",
-				"online_debug_header_params":    `{"test":["test1"]}`,
-				"version":                       "v2",
+				"online_debug_header_params":    `{"test":["test1"],"version":["v2"]}`,
 			},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world`,
 			Sleep:        base.SleepTime,
 		}),
 		table.Entry("delete the route just created", base.HttpTestCase{
@@ -233,11 +235,12 @@ var _ = ginkgo.Describe("Route_Online_Debug", func() {
 				"online_debug_url":              base.APISIXInternalUrl + `/hello`,
 				"online_debug_request_protocol": "http",
 				"online_debug_method":           "POST",
-				"Content-Type":                  "multipart/form-data",
+				"Content-Type":                  "multipart/form-data;boundary=----WebKitFormBoundaryzTFTFj7bAbvCd8kB",
 				"online_debug_header_params":    `{"test":["test1"]}`,
 			},
 			ExpectStatus: http.StatusOK,
-			Sleep:        base.SleepTime,
+			//ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world"`,
+			Sleep: base.SleepTime,
 		}),
 		table.Entry("delete the route just created", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
@@ -330,6 +333,7 @@ var _ = ginkgo.Describe("Route_Online_Debug", func() {
 				"online_debug_header_params":    `{"test":["test1"],"Authorization": ["Basic amFjazoxMjM0NTYKIA=="]}`,
 			},
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world`,
 		}),
 		table.Entry("online debug without basic-auth", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
@@ -382,7 +386,7 @@ var _ = ginkgo.Describe("Route_Online_Debug", func() {
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		}),
-		table.Entry("create route with header params", base.HttpTestCase{
+		table.Entry("create route enable key-auth plugin", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -428,6 +432,21 @@ var _ = ginkgo.Describe("Route_Online_Debug", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
+		table.Entry("online debug with key-auth", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/debug-request-forwarding",
+			Headers: map[string]string{
+				"Authorization":                 base.GetToken(),
+				"online_debug_url":              base.APISIXInternalUrl + `/hello`,
+				"online_debug_request_protocol": "http",
+				"online_debug_method":           "GET",
+				"Content-Type":                  "multipart/form-data",
+				"online_debug_header_params":    `{"test":["test1"],"apikey":["user-key"]}`,
+			},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world`,
+		}),
 		table.Entry("online debug without key-auth", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPost,
@@ -466,5 +485,140 @@ var _ = ginkgo.Describe("Route_Online_Debug", func() {
 			ExpectStatus: http.StatusOK,
 		}),
 	)
+})
+
+var _ = ginkgo.Describe("Route_Online_Debug_Route_With_JWT_Auth", func() {
+	ginkgo.It("hit route that not exist", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+		})
+	})
+	ginkgo.It("create route enable jwt-auth plugin", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+			"uri": "/hello",
+			"methods": ["GET"],
+			"plugins": {
+				"jwt-auth": {}
+			},
+			"upstream": {
+				"type": "roundrobin",
+				"nodes": [{
+					"host": "172.16.238.20",
+					"port": 1980,
+					"weight": 1
+				}]
+			}
+		}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("make sure the consumer is not created", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+		})
+	})
+	ginkgo.It("create consumer", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/consumers",
+			Body: `{
+				"username": "jack",
+				"plugins": {
+					"jwt-auth": {
+						"key": "user-key",
+						"secret": "my-secret-key",
+						"algorithm": "HS256"
+					}
+				},
+				"desc": "test description"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("online debug with JWT-auth", func() {
+		jsonStr := `{"test":["test1"]}`
+		var _headerParams map[string]interface{}
+		json.Unmarshal([]byte(jsonStr), &_headerParams)
+		jwtToken := base.GetJwtToken("user-key")
+		l := []string{jwtToken}
+		_headerParams["Authorization"] = l
+		headerParams, _ := json.Marshal(_headerParams)
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/debug-request-forwarding",
+			Headers: map[string]string{
+				"Authorization":                 base.GetToken(),
+				"online_debug_url":              base.APISIXInternalUrl + `/hello`,
+				"online_debug_request_protocol": "http",
+				"online_debug_method":           "GET",
+				"Content-Type":                  "multipart/form-data",
+				"online_debug_header_params":    string(headerParams),
+			},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world`,
+		})
+	})
+	ginkgo.It("online debug without JWT-auth", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/debug-request-forwarding",
+			Headers: map[string]string{
+				"Authorization":                 base.GetToken(),
+				"online_debug_url":              base.APISIXInternalUrl + `/hello`,
+				"online_debug_request_protocol": "http",
+				"online_debug_method":           "GET",
+				"Content-Type":                  "multipart/form-data",
+				"online_debug_header_params":    `{"test":["test1"]}`,
+			},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"data":{"code":401,"message":"401 Unauthorized","data":{"message":"Missing JWT token in request"}}`,
+		})
+	})
+	ginkgo.It("delete the route just created", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("hit the route just deleted", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("delete consumer", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
 })
 
