@@ -147,4 +147,3 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	}
 	return result, nil
 }
-
