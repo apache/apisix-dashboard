@@ -14,23 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
-
-context('metrics page smoke test', () => {
-  beforeEach(() => {
-    cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-  });
-
-  it('should visit metrics page', function () {
-    cy.visit('/');
-    cy.contains('Metrics').click();
-    cy.url().should('contains', '/metrics');
-    cy.get(this.domSelector.pageContent)
-      .children()
-      .should('contain', 'Metrics')
-      .and('contain', 'You have not configured Grafana')
-      .and('contain', 'Configure');
-  });
-});
+export default {
+  'component.plugin.tip1': '注意：自定义插件后（修改、新增、删除等），需更新 schema.json。',
+  'component.plugin.tip2': '如何更新？',
+};

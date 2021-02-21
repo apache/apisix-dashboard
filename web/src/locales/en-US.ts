@@ -23,6 +23,7 @@ import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/setting';
 import PluginOrchestration from '../components/PluginOrchestration/locales/en-US';
+import Plugin from '../components/Plugin/locales/en-US';
 
 export default {
   'navBar.lang': 'Languages',
@@ -38,4 +39,5 @@ export default {
   ...component,
   ...ActionBarEnUS,
   ...PluginOrchestration,
+  ...Plugin,
 };

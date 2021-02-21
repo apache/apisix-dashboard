@@ -23,6 +23,7 @@ import pwa from './zh-CN/pwa';
 import settingDrawer from './zh-CN/settingDrawer';
 import settings from './zh-CN/setting';
 import PluginOrchestration from '../components/PluginOrchestration/locales/zh-CN';
+import Plugin from '../components/Plugin/locales/zh-CN';
 
 export default {
   'navBar.lang': '语言',
@@ -38,4 +39,5 @@ export default {
   ...component,
   ...ActionBarZhCN,
   ...PluginOrchestration,
+  ...Plugin,
 };

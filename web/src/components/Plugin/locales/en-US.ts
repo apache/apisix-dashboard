@@ -14,23 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
-
-context('metrics page smoke test', () => {
-  beforeEach(() => {
-    cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-  });
-
-  it('should visit metrics page', function () {
-    cy.visit('/');
-    cy.contains('Metrics').click();
-    cy.url().should('contains', '/metrics');
-    cy.get(this.domSelector.pageContent)
-      .children()
-      .should('contain', 'Metrics')
-      .and('contain', 'You have not configured Grafana')
-      .and('contain', 'Configure');
-  });
-});
+export default {
+  'component.plugin.tip1': 'NOTE: After customizing the plugin, you need to update schema.json.',
+  'component.plugin.tip2': 'How to update?',
+};
