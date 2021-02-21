@@ -226,7 +226,7 @@ func initEtcdConfig(conf Etcd) {
 		endpoints = conf.Endpoints
 	}
 
-	var prefix = "/apisix"
+	prefix := "/apisix"
 	if len(conf.Prefix) > 0 {
 		prefix = conf.Prefix
 	}
