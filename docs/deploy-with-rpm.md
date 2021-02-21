@@ -24,7 +24,7 @@
 ## Install from RPM
 
 ```sh
-$ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.3/apisix-dashboard-v2.3-1.x86_64.rpm
+$ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.4/apisix-dashboard-v2.4-1.x86_64.rpm
 ```
 
 ## Run
