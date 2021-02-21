@@ -11,9 +11,24 @@ jobs:
       - name: 🚀 Use Node.js
         uses: actions/setup-node@v2.1.4
         with:
-          node-version: '12.x'
+          node-version: '14.x'
       - run: npm install -g markdownlint-cli@0.25.0
       - run: markdownlint '**/*.md' --ignore node_modules
+  misspell:
+    name: runner/misspell
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code.
+        uses: actions/checkout@v1
+      - name: Install
+        run: |
+          wget -O - -q https://git.io/misspell | sh -s -- -b .
+      - name: Misspell
+        run: |
+          find . -type f -maxdepth 1 | xargs ./misspell -error
+          find . -name "*.go" -type f | xargs ./misspell -error
+          find docs -type f | xargs ./misspell -error
+          find web/src web/cypress -type f | xargs ./misspell -error
   yamllint:
     name: 🍏 YAML
     runs-on: ubuntu-latest
@@ -29,4 +44,12 @@ jobs:
           pip install yamllint
       - name: 🧹 YAML Lint
         run: |
-          yamllint .
+          # return non-zero exit code on warnings
+          yamllint --strict .
+  trailing-whitespace:
+    name: Trailing whitespace
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check for trailing whitespace
+        run: "! git grep -EIn $'[ \t]+$'"

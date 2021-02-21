@@ -16,10 +16,11 @@
  */
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Empty, Button, Card } from 'antd';
+import { Empty, Button, Card, Tooltip } from 'antd';
 import { history, useIntl } from 'umi';
 
 import { getGrafanaURL } from './service';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const Metrics: React.FC = () => {
   const [grafanaURL, setGrafanaURL] = useState<string | undefined>();
@@ -32,7 +33,16 @@ const Metrics: React.FC = () => {
   }, []);
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'menu.metrics' })}>
+    <PageHeaderWrapper
+      title={
+        <>
+          {formatMessage({ id: 'menu.metrics' })}&nbsp;
+          <Tooltip title={formatMessage({ id: 'page.metrics.tip' })}>
+            <QuestionCircleOutlined />
+          </Tooltip>
+        </>
+      }
+    >
       <Card>
         {!grafanaURL && (
           <Empty
