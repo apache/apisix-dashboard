@@ -18,10 +18,14 @@ package route_online_debug
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
+	"path/filepath"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
+	"github.com/stretchr/testify/assert"
+	"github.com/tidwall/gjson"
 
 	"e2enew/base"
 )
@@ -234,13 +238,13 @@ var _ = ginkgo.Describe("Route_Online_Debug", func() {
 				"Authorization":                 base.GetToken(),
 				"online_debug_url":              base.APISIXInternalUrl + `/hello`,
 				"online_debug_request_protocol": "http",
-				"online_debug_method":           "POST",
-				"Content-Type":                  "multipart/form-data;boundary=----WebKitFormBoundaryzTFTFj7bAbvCd8kB",
+				"online_debug_method":           http.MethodPost,
+				"Content-Type":                  "application/json",
 				"online_debug_header_params":    `{"test":["test1"]}`,
 			},
 			ExpectStatus: http.StatusOK,
-			//ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world"`,
-			Sleep: base.SleepTime,
+			ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world`,
+			Sleep:        base.SleepTime,
 		}),
 		table.Entry("delete the route just created", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
@@ -552,13 +556,16 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_JWT_Auth", func() {
 		})
 	})
 	ginkgo.It("online debug with JWT-auth", func() {
+		t := ginkgo.GinkgoT()
 		jsonStr := `{"test":["test1"]}`
 		var _headerParams map[string]interface{}
-		json.Unmarshal([]byte(jsonStr), &_headerParams)
+		err := json.Unmarshal([]byte(jsonStr), &_headerParams)
+		assert.Nil(t, err)
 		jwtToken := base.GetJwtToken("user-key")
 		l := []string{jwtToken}
 		_headerParams["Authorization"] = l
-		headerParams, _ := json.Marshal(_headerParams)
+		headerParams, err := json.Marshal(_headerParams)
+		assert.Nil(t, err)
 		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPost,
@@ -622,3 +629,156 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_JWT_Auth", func() {
 	})
 })
 
+var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Files", func() {
+	ginkgo.It("hit route that not exist", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+		})
+	})
+	ginkgo.It("create route enable basic-auth plugin", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r2",
+			Body: `{
+				"uri": "/hello_",
+				"methods": ["POST"],
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": [{
+						"host": "172.16.238.20",
+						"port": 1980,
+						"weight": 1
+					}]
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("online debug with file", func() {
+		t := ginkgo.GinkgoT()
+		path, err := filepath.Abs("../../testdata/import/default.yaml")
+		assert.Nil(t, err)
+		files := []base.UploadFile{
+			{Name: "file", Filepath: path},
+		}
+
+		headers := map[string]string{}
+
+		jsonStr := `{"test":["test1"]}`
+		var _headerParams map[string]interface{}
+		err = json.Unmarshal([]byte(jsonStr), &_headerParams)
+		assert.Nil(t, err)
+		l := []string{base.GetToken()}
+		_headerParams["Authorization"] = l
+		headerParams, err := json.Marshal(_headerParams)
+		assert.Nil(t, err)
+
+		basePath := "http://127.0.0.1:9000/apisix/admin/debug-request-forwarding"
+		requestBody, requestContentType := base.GetReader(headers, "multipart/form-data", files)
+		httpRequest, err := http.NewRequest(http.MethodPost, basePath, requestBody)
+		assert.Nil(t, err)
+		httpRequest.Header.Add("Content-Type", requestContentType)
+		httpRequest.Header.Add("Authorization", base.GetToken())
+		httpRequest.Header.Add("online_debug_request_protocol", "http")
+		httpRequest.Header.Add("online_debug_url", base.ManagerAPIHost+`/apisix/admin/import/routes`)
+		httpRequest.Header.Add("online_debug_method", http.MethodPost)
+		httpRequest.Header.Add("online_debug_header_params", string(headerParams))
+		client := &http.Client{}
+		resp, err := client.Do(httpRequest)
+		assert.Nil(t, err)
+
+		defer resp.Body.Close()
+
+		respBody, err := ioutil.ReadAll(resp.Body)
+		assert.Nil(t, err)
+		realBody := gjson.Get(string(respBody), "data")
+		// todo get successful result and compare
+		assert.Contains(t, realBody.String(), `"data":{"paths":1,"routes":1}`)
+	})
+
+	ginkgo.It("verify the route just imported and delete data", func() {
+		t := ginkgo.GinkgoT()
+		request, _ := http.NewRequest("GET", base.ManagerAPIHost+"/apisix/admin/routes", nil)
+		request.Header.Add("Authorization", base.GetToken())
+		resp, err := http.DefaultClient.Do(request)
+		assert.Nil(t, err)
+		defer resp.Body.Close()
+		respBody, _ := ioutil.ReadAll(resp.Body)
+		list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
+
+		var tests []base.HttpTestCase
+		for _, item := range list {
+			route := item.(map[string]interface{})
+			tc := base.HttpTestCase{
+				Desc:         "route patch for update status(online)",
+				Object:       base.ManagerApiExpect(),
+				Method:       http.MethodPatch,
+				Path:         "/apisix/admin/routes/" + route["id"].(string),
+				Body:         `{"status":1}`,
+				Headers:      map[string]string{"Authorization": base.GetToken()},
+				ExpectStatus: http.StatusOK,
+				Sleep:        base.SleepTime,
+			}
+			tests = append(tests, tc)
+		}
+
+		// verify route
+		tests = append(tests, base.HttpTestCase{
+			Desc:         "verify the route just imported",
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		})
+
+		// delete test data
+		for _, item := range list {
+			route := item.(map[string]interface{})
+			tc := base.HttpTestCase{
+				Desc:         "delete route",
+				Object:       base.ManagerApiExpect(),
+				Method:       http.MethodDelete,
+				Path:         "/apisix/admin/routes/" + route["id"].(string),
+				Headers:      map[string]string{"Authorization": base.GetToken()},
+				ExpectStatus: http.StatusOK,
+			}
+			tests = append(tests, tc)
+		}
+
+		for _, tc := range tests {
+			base.RunTestCase(tc)
+		}
+
+	})
+
+	ginkgo.It("hit the route just deleted", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        base.SleepTime,
+		})
+	})
+
+	ginkgo.It("hit the route just deleted", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        base.SleepTime,
+		})
+	})
+})
