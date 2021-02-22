@@ -28,7 +28,7 @@ Before development, refer to this [guide](./deploy.md) to install dependencies.
 ## Clone the project
 
 ```sh
-$ git clone -b v2.2 https://github.com/apache/apisix-dashboard.git
+$ git clone -b v2.4 https://github.com/apache/apisix-dashboard.git
 ```
 
 ## Start developing
