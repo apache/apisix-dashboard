@@ -135,17 +135,17 @@ export const timestampToLocaleString = (timestamp: number) => {
 
 /**
  * Transform json string to yaml string
- * @param json
+ * @param jsonStr
  */
-export const json2yaml = (json: string): string => {
-  return yaml.dump(JSON.parse(json))
+export const json2yaml = (jsonStr: string): string => {
+  return yaml.dump(JSON.parse(jsonStr))
 }
 
 /**
  * Transform yaml string to json
- * @param yaml
+ * @param yamlStr
  * @param returnString true for json string , false for json object
  */
-export const yaml2json = (yaml: string, returnString: boolean): string | Object => {
-  return returnString? JSON.stringify(YAML.parse(yaml)): YAML.parse(yaml);
+export const yaml2json = (yamlStr: string, returnString: boolean): string | Object => {
+  return returnString? JSON.stringify(YAML.parse(yamlStr)): YAML.parse(yamlStr);
 }
