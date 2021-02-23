@@ -681,7 +681,8 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Files", func() {
 		assert.Nil(t, err)
 
 		basePath := "http://127.0.0.1:9000/apisix/admin/debug-request-forwarding"
-		requestBody, requestContentType := base.GetReader(headers, "multipart/form-data", files)
+		requestBody, requestContentType, err := base.GetReader(headers, "multipart/form-data", files)
+		assert.Nil(t, err)
 		httpRequest, err := http.NewRequest(http.MethodPost, basePath, requestBody)
 		assert.Nil(t, err)
 		httpRequest.Header.Add("Content-Type", requestContentType)

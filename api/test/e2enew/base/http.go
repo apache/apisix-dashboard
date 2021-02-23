@@ -105,10 +105,10 @@ func BatchTestServerPort(times int) map[string]int {
 	return res
 }
 
-func GetReader(reqParams map[string]string, contentType string, files []UploadFile) (io.Reader, string) {
+func GetReader(reqParams map[string]string, contentType string, files []UploadFile) (io.Reader, string, error) {
 	if strings.Index(contentType, "json") > -1 {
 		bytesData, _ := json.Marshal(reqParams)
-		return bytes.NewReader(bytesData), contentType
+		return bytes.NewReader(bytesData), contentType, nil
 	}
 	if files != nil {
 		body := &bytes.Buffer{}
@@ -116,24 +116,24 @@ func GetReader(reqParams map[string]string, contentType string, files []UploadFi
 		for _, uploadFile := range files {
 			file, err := os.Open(uploadFile.Filepath)
 			if err != nil {
-				panic(err)
+				return nil, "", err
 			}
 			part, err := writer.CreateFormFile(uploadFile.Name, filepath.Base(uploadFile.Filepath))
 			if err != nil {
-				panic(err)
+				return nil, "", err
 			}
 			_, err = io.Copy(part, file)
-			file.Close()
+			defer file.Close()
 		}
 		for k, v := range reqParams {
 			if err := writer.WriteField(k, v); err != nil {
-				panic(err)
+				return nil, "", err
 			}
 		}
 		if err := writer.Close(); err != nil {
-			panic(err)
+			return nil, "", err
 		}
-		return body, writer.FormDataContentType()
+		return body, writer.FormDataContentType(), nil
 	}
 
 	urlValues := url.Values{}
@@ -143,5 +143,5 @@ func GetReader(reqParams map[string]string, contentType string, files []UploadFi
 
 	reqBody := urlValues.Encode()
 
-	return strings.NewReader(reqBody), contentType
+	return strings.NewReader(reqBody), contentType, nil
 }
