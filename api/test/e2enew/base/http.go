@@ -118,12 +118,12 @@ func GetReader(reqParams map[string]string, contentType string, files []UploadFi
 			if err != nil {
 				return nil, "", err
 			}
+			defer file.Close()
 			part, err := writer.CreateFormFile(uploadFile.Name, filepath.Base(uploadFile.Filepath))
 			if err != nil {
 				return nil, "", err
 			}
 			_, err = io.Copy(part, file)
-			defer file.Close()
 		}
 		for k, v := range reqParams {
 			if err := writer.WriteField(k, v); err != nil {
