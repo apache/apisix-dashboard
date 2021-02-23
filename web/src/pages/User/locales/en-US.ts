@@ -25,6 +25,8 @@ export default {
   'component.user.loginMethodPassword.incorrectPassword': 'Incorrect username or password',
   'component.user.loginMethodPassword.fieldInvalid': 'Please check username and password',
   'component.user.loginMethodPassword.success': 'Login Success',
+  'component.user.loginMethodPassword.changeDefaultAccount': 'How to update username/password?',
+  'component.user.loginMethodPassword.modificationMethod': 'Please modify the users field in the /api/conf/conf.yaml file',
   'component.user.loginMethodExample': 'Example',
   'component.user.loginMethodExample.message':
     'Example Login Method, It is only used as an extension example of login method and cannot be used.',

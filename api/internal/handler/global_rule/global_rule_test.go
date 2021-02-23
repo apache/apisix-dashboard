@@ -101,7 +101,7 @@ func TestHandler_Get(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.caseDesc, func(t *testing.T) {
-			getCalled := true
+			getCalled := false
 			mStore := &store.MockInterface{}
 			mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
 				getCalled = true
@@ -142,15 +142,15 @@ func TestHandler_List(t *testing.T) {
 				PageNumber: 1,
 			},
 			giveData: []*entity.GlobalPlugins{
-				{ID: "global-rules-1"},
-				{ID: "global-rules-2"},
-				{ID: "global-rules-3"},
+				{BaseInfo: entity.BaseInfo{ID: "global-rules-1"}},
+				{BaseInfo: entity.BaseInfo{ID: "global-rules-2"}},
+				{BaseInfo: entity.BaseInfo{ID: "global-rules-3"}},
 			},
 			wantRet: &store.ListOutput{
 				Rows: []interface{}{
-					&entity.GlobalPlugins{ID: "global-rules-1"},
-					&entity.GlobalPlugins{ID: "global-rules-2"},
-					&entity.GlobalPlugins{ID: "global-rules-3"},
+					&entity.GlobalPlugins{BaseInfo: entity.BaseInfo{ID: "global-rules-1"}},
+					&entity.GlobalPlugins{BaseInfo: entity.BaseInfo{ID: "global-rules-2"}},
+					&entity.GlobalPlugins{BaseInfo: entity.BaseInfo{ID: "global-rules-3"}},
 				},
 				TotalSize: 3,
 			},
@@ -175,7 +175,7 @@ func TestHandler_List(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.caseDesc, func(t *testing.T) {
-			getCalled := true
+			getCalled := false
 			mStore := &store.MockInterface{}
 			mStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
 				getCalled = true
@@ -211,6 +211,7 @@ func TestHandler_Set(t *testing.T) {
 		caseDesc   string
 		giveInput  *SetInput
 		giveCtx    context.Context
+		giveRet    interface{}
 		giveErr    error
 		wantErr    error
 		wantInput  *entity.GlobalPlugins
@@ -228,13 +229,24 @@ func TestHandler_Set(t *testing.T) {
 				},
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
-			wantInput: &entity.GlobalPlugins{
-				ID: "name",
+			giveRet: &entity.GlobalPlugins{
+				BaseInfo: entity.BaseInfo{ID: "name"},
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{},
 				},
 			},
-			wantRet:    nil,
+			wantInput: &entity.GlobalPlugins{
+				BaseInfo: entity.BaseInfo{ID: "name"},
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{},
+				},
+			},
+			wantRet: &entity.GlobalPlugins{
+				BaseInfo: entity.BaseInfo{ID: "name"},
+				Plugins: map[string]interface{}{
+					"jwt-auth": map[string]interface{}{},
+				},
+			},
 			wantCalled: true,
 		},
 		{
@@ -244,9 +256,12 @@ func TestHandler_Set(t *testing.T) {
 				GlobalPlugins: entity.GlobalPlugins{},
 			},
 			giveErr: fmt.Errorf("create failed"),
+			giveRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
+			},
 			wantInput: &entity.GlobalPlugins{
-				ID:      "name",
-				Plugins: map[string]interface{}(nil),
+				BaseInfo: entity.BaseInfo{ID: "name"},
+				Plugins:  map[string]interface{}(nil),
 			},
 			wantErr: fmt.Errorf("create failed"),
 			wantRet: &data.SpecCodeResponse{
@@ -265,7 +280,7 @@ func TestHandler_Set(t *testing.T) {
 				assert.Equal(t, tc.giveCtx, args.Get(0))
 				assert.Equal(t, tc.wantInput, args.Get(1))
 				assert.True(t, args.Bool(2))
-			}).Return(tc.giveErr)
+			}).Return(tc.giveRet, tc.giveErr)
 
 			h := Handler{globalRuleStore: mStore}
 			ctx := droplet.NewContext()

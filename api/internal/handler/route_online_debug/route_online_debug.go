@@ -44,13 +44,6 @@ type ProtocolSupport interface {
 	RequestForwarding(c droplet.Context) (interface{}, error)
 }
 
-var protocolMap map[string]ProtocolSupport
-
-func init() {
-	protocolMap = make(map[string]ProtocolSupport)
-	protocolMap["http"] = &HTTPProtocolSupport{}
-}
-
 func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.POST("/apisix/admin/debug-request-forwarding", wgin.Wraps(DebugRequestForwarding,
 		wrapper.InputType(reflect.TypeOf(ParamsInput{}))))
@@ -59,7 +52,7 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 type ParamsInput struct {
 	URL             string              `json:"url,omitempty"`
 	RequestProtocol string              `json:"request_protocol,omitempty"`
-	BodyParams      map[string]string   `json:"body_params,omitempty"`
+	BodyParams      string              `json:"body_params,omitempty"`
 	Method          string              `json:"method,omitempty"`
 	HeaderParams    map[string][]string `json:"header_params,omitempty"`
 }
@@ -77,10 +70,16 @@ func DebugRequestForwarding(c droplet.Context) (interface{}, error) {
 	if requestProtocol == "" {
 		requestProtocol = "http"
 	}
+
+	protocolMap := make(map[string]ProtocolSupport)
+	protocolMap["http"] = &HTTPProtocolSupport{}
+	protocolMap["https"] = &HTTPProtocolSupport{}
+
 	if v, ok := protocolMap[requestProtocol]; ok {
 		return v.RequestForwarding(c)
 	} else {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("protocol unspported %s", paramsInput.RequestProtocol)
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("Protocol unsupported %s, only http or https is allowed, but given %s", paramsInput.RequestProtocol, paramsInput.RequestProtocol)
 	}
 }
 
@@ -89,11 +88,11 @@ type HTTPProtocolSupport struct {
 
 func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{}, error) {
 	paramsInput := c.Input().(*ParamsInput)
-	bodyParams, _ := json.Marshal(paramsInput.BodyParams)
+	bodyParams := paramsInput.BodyParams
 	client := &http.Client{}
 
 	client.Timeout = 5 * time.Second
-	req, err := http.NewRequest(strings.ToUpper(paramsInput.Method), paramsInput.URL, strings.NewReader(string(bodyParams)))
+	req, err := http.NewRequest(strings.ToUpper(paramsInput.Method), paramsInput.URL, strings.NewReader(bodyParams))
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}

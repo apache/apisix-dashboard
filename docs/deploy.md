@@ -43,7 +43,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 ## Clone the project
 
 ```sh
-$ git clone -b v2.2 https://github.com/apache/apisix-dashboard.git
+$ git clone -b v2.4 https://github.com/apache/apisix-dashboard.git
 ```
 
 ## Build
@@ -80,6 +80,25 @@ $ nohup ./manager-api &
 
 5. Stop the Dashboard
 
+`manager-api` provides a sub command `stop` to quit the program gracefully, just
+run:
+
 ```sh
-$ kill $(ps aux | grep 'manager-api' | awk '{print $2}')
+$ ./manager-api stop
+```
+
+## Working directory
+
+the `output` directory mention above is the default working directory.
+
+You can move the entire directory to any path you want, and use the `-p` to specify it as the working directory.
+
+For example, you can move it to `/usr/local/apisix-dashboard/`
+
+```sh
+$ mv ./output/manager-api /usr/local/bin/
+
+$ mv ./output/ /usr/local/apisix-dashboard/
+
+$ manager-api -p /usr/local/apisix-dashboard/
 ```

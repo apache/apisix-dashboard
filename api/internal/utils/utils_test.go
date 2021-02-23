@@ -117,3 +117,14 @@ func TestLabelContains(t *testing.T) {
 	}
 	assert.True(t, LabelContains(mp, reqMap))
 }
+
+func TestValidateLuaCode(t *testing.T) {
+	validLuaCode := "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\") \n end \nreturn _M"
+	err := ValidateLuaCode(validLuaCode)
+	assert.Nil(t, err)
+
+	invalidLuaCode := "local _M = {} \n function _M.access(api_ctx) \n ngx.log(ngx.WARN,\"hit access phase\")"
+	err = ValidateLuaCode(invalidLuaCode)
+	assert.NotNil(t, err)
+	assert.Equal(t, "<string> at EOF:   syntax error\n", err.Error())
+}

@@ -16,30 +16,74 @@
  */
 import React, { useRef, useEffect, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Button, Popconfirm, notification, Tag, Space, Select } from 'antd';
+import ProTable from '@ant-design/pro-table';
+import type { ProColumns, ActionType } from '@ant-design/pro-table';
+import {
+  Button,
+  Popconfirm,
+  notification,
+  Tag,
+  Space,
+  Select,
+  Radio,
+  Form,
+  Upload,
+  Modal,
+  Divider,
+} from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined, BugOutlined } from '@ant-design/icons';
+import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined } from '@ant-design/icons';
+import { js_beautify } from 'js-beautify';
+import yaml from 'js-yaml';
+import moment from 'moment';
+import { saveAs } from 'file-saver';
 
 import { timestampToLocaleString } from '@/helpers';
-import { fetchList, remove, fetchLabelList, updateRouteStatus } from './service';
+import type { RcFile } from 'antd/lib/upload';
+import {
+  fetchList,
+  remove,
+  fetchLabelList,
+  updateRouteStatus,
+  exportRoutes,
+  importRoutes,
+} from './service';
 import { DebugDrawView } from './components/DebugViews';
+import { EXPORT_FILE_MIME_TYPE_SUPPORTED } from './constants';
 
 const { OptGroup, Option } = Select;
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
+  const [exportFileTypeForm] = Form.useForm();
 
-  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
-
-  useEffect(() => {
-    fetchLabelList().then(setLabelList);
-  }, []);
   enum RouteStatus {
     Offline = 0,
     Publish,
   }
+
+  enum ExportFileType {
+    JSON = 0,
+    YAML,
+  }
+
+  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [uploadFileList, setUploadFileList] = useState<RcFile[]>([]);
+  const [showImportModal, setShowImportModal] = useState(false);
+
+  useEffect(() => {
+    fetchLabelList().then(setLabelList);
+  }, []);
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (currentSelectKeys: string[]) => {
+      setSelectedRowKeys(currentSelectKeys);
+    },
+    preserveSelectedRowKeys: true,
+  };
 
   const handleTableActionSuccessResponse = (msgTip: string) => {
     notification.success({
@@ -60,6 +104,88 @@ const Page: React.FC = () => {
         })} ${formatMessage({ id: 'component.status.success' })}`,
       );
     });
+  };
+
+  const handleExport = (exportFileType: ExportFileType) => {
+    exportRoutes(selectedRowKeys.join(',')).then((resp) => {
+      let exportFile: string;
+      let exportFileName = `APISIX_routes_${moment().format('YYYYMMDDHHmmss')}`;
+
+      switch (exportFileType) {
+        case ExportFileType.YAML:
+          exportFile = yaml.dump(resp.data);
+          exportFileName = `${exportFileName}.${ExportFileType[
+            ExportFileType.YAML
+          ].toLocaleLowerCase()}`;
+          break;
+        case ExportFileType.JSON:
+        default:
+          exportFile = js_beautify(JSON.stringify(resp.data), {
+            indent_size: 2,
+          });
+          exportFileName = `${exportFileName}.${ExportFileType[
+            ExportFileType.JSON
+          ].toLocaleLowerCase()}`;
+          break;
+      }
+
+      const blob = new Blob([exportFile], {
+        type: EXPORT_FILE_MIME_TYPE_SUPPORTED[exportFileType],
+      });
+
+      saveAs(window.URL.createObjectURL(blob), exportFileName);
+    });
+  };
+
+  const handleImport = () => {
+    const formData = new FormData();
+    if (!uploadFileList[0]) {
+      notification.warn({
+        message: formatMessage({ id: 'page.route.button.selectFile' }),
+      });
+      return;
+    }
+    formData.append('file', uploadFileList[0]);
+
+    importRoutes(formData).then(() => {
+      handleTableActionSuccessResponse(
+        `${formatMessage({ id: 'page.route.button.importOpenApi' })} ${formatMessage({
+          id: 'component.status.success',
+        })}`,
+      );
+      setShowImportModal(false);
+    });
+  };
+
+  const ListFooter: React.FC = () => {
+    return (
+      <Popconfirm
+        title={
+          <Form form={exportFileTypeForm} initialValues={{ fileType: ExportFileType.JSON }}>
+            <div style={{ marginBottom: 8 }}>
+              {formatMessage({ id: 'page.route.exportRoutesTips' })}
+            </div>
+            <Form.Item name="fileType" noStyle>
+              <Radio.Group>
+                <Radio value={ExportFileType.JSON}>Json</Radio>
+                <Radio value={ExportFileType.YAML}>Yaml</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </Form>
+        }
+        onConfirm={() => {
+          handleExport(exportFileTypeForm.getFieldValue('fileType'));
+        }}
+        okText={formatMessage({ id: 'component.global.confirm' })}
+        cancelText={formatMessage({ id: 'component.global.cancel' })}
+        disabled={selectedRowKeys.length === 0}
+      >
+        <Button type="primary" disabled={selectedRowKeys.length === 0}>
+          <ExportOutlined />
+          {formatMessage({ id: 'page.route.button.exportOpenApi' })}
+        </Button>
+      </Popconfirm>
+    );
   };
 
   const [debugDrawVisible, setDebugDrawVisible] = useState(false);
@@ -161,7 +287,7 @@ const Page: React.FC = () => {
         }
 
         return (
-          <Select style={{ width: '100%' }}>
+          <Select style={{ width: '100%' }} allowClear>
             {Object.keys(labelList)
               .filter((item) => item === 'API_VERSION')
               .map((key) => {
@@ -192,6 +318,22 @@ const Page: React.FC = () => {
           )}
         </>
       ),
+      renderFormItem: (_, { type }) => {
+        if (type === 'form') {
+          return null;
+        }
+
+        return (
+          <Select style={{ width: '100%' }} allowClear>
+            <Option key={RouteStatus.Offline} value={RouteStatus.Offline}>
+              {formatMessage({ id: 'page.route.unpublished' })}
+            </Option>
+            <Option key={RouteStatus.Publish} value={RouteStatus.Publish}>
+              {formatMessage({ id: 'page.route.published' })}
+            </Option>
+          </Select>
+        );
+      },
     },
     {
       title: formatMessage({ id: 'component.global.updateTime' }),
@@ -264,11 +406,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper
-      title={`${formatMessage({ id: 'menu.routes' })} ${formatMessage({
-        id: 'component.global.list',
-      })}`}
-    >
+    <PageHeaderWrapper title={formatMessage({ id: 'page.route.list' })}>
       <ProTable<RouteModule.ResponseBody>
         actionRef={ref}
         rowKey="id"
@@ -283,11 +421,24 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
+          <Button
+            type="primary"
+            onClick={() => {
+              setUploadFileList([]);
+              setShowImportModal(true);
+            }}
+          >
+            <ImportOutlined />
+            {formatMessage({ id: 'page.route.button.importOpenApi' })}
+          </Button>,
           <Button type="primary" onClick={() => setDebugDrawVisible(true)}>
             <BugOutlined />
             {formatMessage({ id: 'page.route.onlineDebug' })}
           </Button>,
         ]}
+        rowSelection={rowSelection}
+        footer={() => <ListFooter />}
+        tableAlertRender={false}
       />
       <DebugDrawView
         visible={debugDrawVisible}
@@ -295,6 +446,46 @@ const Page: React.FC = () => {
           setDebugDrawVisible(false);
         }}
       />
+
+      <Modal
+        title={formatMessage({ id: 'page.route.button.importOpenApi' })}
+        visible={showImportModal}
+        okText={formatMessage({ id: 'component.global.confirm' })}
+        onOk={handleImport}
+        onCancel={() => {
+          setShowImportModal(false);
+        }}
+      >
+        <Upload
+          fileList={uploadFileList}
+          beforeUpload={(file) => {
+            setUploadFileList([file]);
+            return false;
+          }}
+          onRemove={() => {
+            setUploadFileList([]);
+          }}
+        >
+          <Button type="primary" icon={<ImportOutlined />}>
+            {formatMessage({ id: 'page.route.button.selectFile' })}
+          </Button>
+        </Upload>
+        <Divider />
+        <div>
+          <p>{formatMessage({ id: 'page.route.instructions' })}:</p>
+          <p>
+            <a
+              href="https://github.com/apache/apisix-dashboard/blob/master/docs/IMPORT_OPENAPI_USER_GUIDE.md"
+              target="_blank"
+            >
+              1.{' '}
+              {`${formatMessage({ id: 'page.route.import' })} ${formatMessage({
+                id: 'page.route.instructions',
+              })}`}
+            </a>
+          </p>
+        </div>
+      </Modal>
     </PageHeaderWrapper>
   );
 };

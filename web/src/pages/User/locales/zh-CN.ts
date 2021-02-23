@@ -25,6 +25,8 @@ export default {
   'component.user.loginMethodPassword.incorrectPassword': '账号或密码错误',
   'component.user.loginMethodPassword.fieldInvalid': '请检查账号和密码',
   'component.user.loginMethodPassword.success': '登录成功',
+  'component.user.loginMethodPassword.changeDefaultAccount': '如何修改默认账户和密码？',
+  'component.user.loginMethodPassword.modificationMethod': '请修改 /api/conf/conf.yaml 文件中 users 字段',
   'component.user.loginMethodExample': '示例登录',
   'component.user.loginMethodExample.message': '示例登录方式，仅作为登录方式扩展例子，无法使用',
 };

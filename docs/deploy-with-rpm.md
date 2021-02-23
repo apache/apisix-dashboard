@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+<!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -15,35 +15,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+-->
 
-set -ex
+# Deploy with RPM
 
-pwd=`pwd`
+**NOTE:** Only support CentOS 7 currently, for more information, please refer to [here](./deploy.md).
 
-if [[ -n $1 && -d "$1" ]]; then
-  path=$1
-  if [[ -d "${path}/apisix" ]]; then
-    cp -R ${path}/apisix/ ./api/build-tools/apisix/
-  else
-    cp -R ${path}/ ./api/build-tools/apisix/
-  fi
-else
-  version="master"
-  if [[ -n $1 ]]; then
-  version=$1
-  fi
-  wget -O $version.zip https://github.com/apache/apisix/archive/$version.zip
+## Install from RPM
 
-  unzip $version.zip
-  mkdir -p ./api/build-tools/apisix/
-  cp -a ./apisix-$version/apisix/. ./api/build-tools/apisix/
-  ls -l ./api/build-tools/apisix/
-  rm -rf ./apisix-$version
-fi
+```sh
+$ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.4/apisix-dashboard-2.4-0.x86_64.rpm
+```
 
-cd ./api/build-tools/ && lua schema-sync.lua > ${pwd}/api/conf/schema.json && cd ../../
+## Run
 
-rm -rf ./api/build-tools/apisix/
+Before you start, make sure the following dependencies are installed and running in your environment.
 
-echo "sync success:"
-echo "${pwd}/api/conf/schema.json"
+- [etcd](https://etcd.io/docs/v3.4.0/dl-build/) 3.4.0+
+
+```sh
+$ sudo nohup manager-api -p /usr/local/apisix/dashboard/ &
+```

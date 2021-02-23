@@ -33,27 +33,23 @@ If you are using Apache APISIX below v2.0, be aware that the data from the etcd 
 
 ### 4. After modifying the plugin schema or creating a custom plugin in Apache APISIX, why can't I find it on the dashboard?
 
-Since the Dashboard caches the jsonschema data of the plugins in Apache APISIX, you need to synchronize the data in the Dashboard after you create your custom plugins in Apache APISIX, which currently **only supports manual operation**, this issue will be optimized in the following versions. Please follow the following guide.
+Since the Dashboard caches the jsonschema data of the plugins in Apache APISIX, you need to synchronize the data in the Dashboard after you create your custom plugins in Apache APISIX, which currently **only supports manual operation**. Please follow the following guide.
 
-1. Install [Lua](https://www.lua.org/download.html) and `zip`.
+1. Confirm that your APISIX is running and has enabled control API (enabled by default and only runs local access)
+Refer to the beginning in:
+https://github.com/apache/apisix/blob/master/doc/control-api.md
 
-2. Execute the following commands.
-
-```sh
-# `$version` is the version number of Apache APISIX, e.g. master or 2.1.
-$ api/build-tools/schema-sync.sh $version
-```
-
-If you have a custom plugin, make sure it is in the `apisix` directory and use the following command.
+2. Execute the following commands to export jsonchema on your APISIX server (if it is configured for non-local access, it does not need to be executed on your APISIX server, and the access IP and port should be modified accordingly)
 
 ```sh
-$ api/build-tools/schema-sync.sh /path/to/apisix
-
-# e.g
-$ api/build-tools/schema-sync.sh /usr/local/apisix
+curl 127.0.0.1:9090/v1/schema > schema.json
 ```
 
-After the command finishes executing, if you are using a binary `manager-api` that has already been built, you will need to manually copy `api/conf/schema.json` to the `conf` directory under the Dashboard **working directory**. where **working directory** refers to the `conf` directory under this [document](./deploy.md) is the `output` directory, or the directory with the modified name, that is generated in the root directory after the build is complete.
+Refer to https://github.com/apache/apisix/blob/master/doc/control-api.md#get-v1schema
+
+3. Copy the exported `schema.json` to the `conf` directory in the Dashboard working directory (About working directory, please refer to https://github.com/apache/apisix-dashboard/blob/master/docs/deploy.md#working-directory)
+
+4. Restart the Manager API
 
 ### 5. How to write API documentation
 

@@ -17,7 +17,7 @@
 import React, { useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Form, Input, Row, Col, notification } from 'antd';
-import { useIntl } from 'umi';
+import { history, useIntl } from 'umi';
 
 import { getUrlQuery } from '@/helpers';
 import ActionBar from '@/components/ActionBar';
@@ -62,7 +62,22 @@ const Setting: React.FC = () => {
         });
         setTimeout(() => {
           const redirect = getUrlQuery('redirect');
-          window.location.href = redirect ? decodeURIComponent(redirect) : '/';
+          const currentHost = window.location.host;
+          if (redirect) {
+            const redirectUrl = decodeURIComponent(redirect);
+            const pathArray = redirectUrl.split('/');
+            const redirectHost = pathArray[2];
+            if (currentHost === redirectHost) {
+              let path = '';
+              for (let i = 3; i < pathArray.length; i += 1) {
+                path += '/';
+                path += pathArray[i];
+              }
+              history.push(path);
+            }
+          } else {
+            history.push('/');
+          }
         }, 500);
       });
     });

@@ -27,7 +27,7 @@ type Props = {
     plugins: PluginComponent.Data;
     script: Record<string, any>;
   };
-  onChange(data: { plugins: PluginComponent.Data; script: any }): void;
+  onChange: (data: { plugins: PluginComponent.Data; script: any }) => void;
   readonly?: boolean;
   isForceHttps: boolean;
 };
@@ -85,6 +85,7 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
         <PluginPage
           initialData={plugins}
           schemaType="route"
+          referPage="route"
           onChange={(pluginsData) => onChange({ plugins: pluginsData, script: {} })}
         />
       )}

@@ -54,7 +54,7 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.serverInfoStore.Get(input.ID)
+	r, err := h.serverInfoStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -70,7 +70,7 @@ type ListInput struct {
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
 
-	ret, err := h.serverInfoStore.List(store.ListInput{
+	ret, err := h.serverInfoStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			if input.Hostname != "" {
 				return strings.Contains(obj.(*entity.ServerInfo).Hostname, input.Hostname)

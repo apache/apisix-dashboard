@@ -23,7 +23,7 @@ export default {
   contentWidth: 'Fluid',
   fixedHeader: false,
   autoHideHeader: false,
-  fixSiderbar: false,
+  fixSiderbar: true,
   colorWeak: false,
   menu: {
     locale: true,
@@ -31,6 +31,14 @@ export default {
   title: 'APISIX Dashboard',
   pwa: false,
   iconfontUrl: '',
+  serveUrlMap: {
+    dev: 'http://139.217.190.60',
+    test: 'http://localhost:9000',
+  },
 } as LayoutSettings & {
   pwa: boolean;
+  serveUrlMap: {
+    dev: string;
+    test: string;
+  };
 };

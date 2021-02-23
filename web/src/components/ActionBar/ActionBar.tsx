@@ -14,16 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { CSSProperties } from 'react';
+import React from 'react';
+import type { CSSProperties } from 'react';
 import { Row, Col, Button } from 'antd';
 import { useIntl } from 'umi';
 
-interface Props {
+type Props = {
   step: number;
   lastStep: number;
-  onChange(nextStep: number): void;
+  onChange: (nextStep: number) => void;
   withResultView?: boolean;
-}
+};
 
 const style: CSSProperties = {
   position: 'fixed',

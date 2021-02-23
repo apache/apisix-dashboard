@@ -107,6 +107,7 @@ export const transformStepData = ({
       'ret_code',
       'redirectOption',
       service_id.length === 0 ? 'service_id' : '',
+      form2Data.upstream_id === 'None' ? 'upstream_id' : '',
       !Object.keys(data.plugins || {}).length ? 'plugins' : '',
       !Object.keys(data.script || {}).length ? 'script' : '',
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
@@ -149,7 +150,7 @@ const transformVarsToRules = (
   });
 
 export const transformUpstreamNodes = (
-  nodes: { [key: string]: number } = {},
+  nodes: Record<string, number> = {},
 ): RouteModule.UpstreamHost[] => {
   const data: RouteModule.UpstreamHost[] = [];
   Object.entries(nodes).forEach(([k, v]) => {
@@ -214,6 +215,10 @@ export const transformRouteData = (data: RouteModule.Body) => {
   }
 
   const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);
+
+  if (upstream && Object.keys(upstream).length) {
+    upstream.upstream_id = '';
+  }
 
   const form2Data: RouteModule.Form2Data = upstream || { upstream_id };
 

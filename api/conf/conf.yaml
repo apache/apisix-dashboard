@@ -19,6 +19,8 @@ conf:
   listen:
     host: 127.0.0.1     # `manager api` listening ip or host name
     port: 9000          # `manager api` listening port
+  allow_list:           # If we don't set any IP list, then any IP access is allowed by default.
+    - 127.0.0.0/24
   etcd:
     endpoints:          # supports defining multiple etcd host addresses for an etcd cluster
       - 127.0.0.1:2379
@@ -26,6 +28,11 @@ conf:
                           # etcd basic auth info
     # username: "root"    # ignore etcd username if not enable etcd auth
     # password: "123456"  # ignore etcd password if not enable etcd auth
+    mtls:
+      key_file: ""          # Path of your self-signed client side key
+      cert_file: ""         # Path of your self-signed client side cert
+      ca_file: ""           # Path of your self-signed ca cert, the CA is used to sign callers' certificates
+
   log:
     error_log:
       level: warn       # supports levels, lower to higher: debug, info, warn, error, panic, fatal

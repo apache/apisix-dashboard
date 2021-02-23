@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 import React from 'react';
+import type { FormInstance } from 'antd/es/form';
 
-import { FormInstance } from 'antd/es/form';
 import CertificateForm from '@/pages/SSL/components/CertificateForm';
 
 type Props = {

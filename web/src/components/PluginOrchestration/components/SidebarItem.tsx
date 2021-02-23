@@ -15,16 +15,17 @@
  * limitations under the License.
  */
 import * as React from 'react';
-import { INode, REACT_FLOW_CHART } from '@mrblenny/react-flow-chart';
+import { REACT_FLOW_CHART } from '@mrblenny/react-flow-chart';
+import type { INode } from '@mrblenny/react-flow-chart';
 import { Button } from 'antd';
 
 import { SOuter } from '../DrawPluginStyle';
 
-export interface ISidebarItemProps {
+export type ISidebarItemProps = {
   type: string;
   ports: INode['ports'];
   properties?: any;
-}
+};
 
 export const SidebarItem: React.FC<ISidebarItemProps> = ({ type, ports, properties }) => {
   return (

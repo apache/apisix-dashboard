@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
@@ -13,6 +16,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - uses: Azure/docker-login@v1
+        if: ${{ github.event_name == 'push' }}
         with:
           login-server: apisixacr.azurecr.cn
           username: ${{ secrets.REGISTRY_USERNAME }}
@@ -22,10 +26,11 @@ jobs:
         run: |
           docker build -t dashboard:ci . --build-arg APISIX_DASHBOARD_VERSION=master
 
-      - name: Modify ETCD IP
+      - name: Modify Config
         run: |
           sed -i 's/127.0.0.1:2379/172.16.238.10:2379/' api/conf/conf.yaml
           sed -i 's/host: 127.0.0.1/host: 0.0.0.0/' api/conf/conf.yaml
+          sed -i 's@127.0.0.0/24@0.0.0.0/0@' ./api/conf/conf.yaml
 
       - name: Run Docker Compose
         working-directory: ./api/test/docker-deploy
@@ -35,9 +40,10 @@ jobs:
           docker logs docker-deploy_managerapi_1
 
       - name: Run Test
-        run: api/test/shell/docker_deploy_test.sh
+        run: api/test/shell/manager_smoking.sh -s false
 
       - name: Deploy
+        if: ${{ github.event_name == 'push' }}
         run: |
           docker tag dashboard:ci apisixacr.azurecr.cn/dashboard:${{ github.sha }}
           docker push apisixacr.azurecr.cn/dashboard:${{ github.sha }}

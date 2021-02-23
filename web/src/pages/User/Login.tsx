@@ -22,7 +22,7 @@ import { SettingOutlined } from '@ant-design/icons';
 
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
 import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
-import { UserModule } from '@/pages/User/typing';
+import type { UserModule } from '@/pages/User/typing';
 import logo from '@/assets/logo.svg';
 import { getUrlQuery } from '@/helpers';
 import Footer from '@/components/Footer';
@@ -73,6 +73,12 @@ const Page: React.FC = () => {
     });
   };
 
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      onSubmit();
+    }
+  }
+
   if (localStorage.getItem('token')) {
     history.replace('/');
     return null;
@@ -99,7 +105,7 @@ const Page: React.FC = () => {
           </div>
         </div>
         <div className={styles.main}>
-          <Tabs activeKey={loginMethod.id} onChange={onTabChange}>
+          <Tabs activeKey={loginMethod.id} onChange={onTabChange} onKeyDown={onKeyDown}>
             {loginMethods.map((item) => (
               <Tab key={item.id} tab={item.name}>
                 {item.render()}

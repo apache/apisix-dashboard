@@ -17,32 +17,39 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
-import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { Button, Popconfirm, Space } from 'antd';
+import ProTable from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import { Button, Popconfirm, Space, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { omit } from 'lodash';
 
 import PluginDetail from '@/components/Plugin/PluginDetail';
 
-import { fetchList, createOrUpdate } from './service';
+import { fetchList, fetchPluginList, createOrUpdate } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
   const [visible, setVisible] = useState(false);
   const [initialData, setInitialData] = useState({});
+  const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState('');
 
   useEffect(() => {
-    fetchList().then(({ data }) => {
-      const plugins: any = {};
-      // eslint-disable-next-line no-shadow
-      data.forEach(({ name, value }) => {
-        plugins[name] = value;
-      });
-      setInitialData(plugins);
-    });
+    fetchPluginList().then(setPluginList);
   }, []);
+
+  useEffect(() => {
+    if (!name) {
+      fetchList().then(({ data }) => {
+        const plugins: any = {};
+        data.forEach(({ name: pluginName, value }) => {
+          plugins[pluginName] = value;
+        });
+        setInitialData(plugins);
+      });
+    }
+  }, [name]);
 
   const columns: ProColumns<PluginModule.TransformedPlugin>[] = [
     {
@@ -71,7 +78,14 @@ const Page: React.FC = () => {
               onConfirm={() => {
                 const plugins = omit(initialData, [`${record.name}`]);
                 createOrUpdate({ plugins }).then(() => {
+                  notification.success({
+                    message: `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                      id: 'menu.plugin',
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
+                  });
                   ref.current?.reload();
+                  setInitialData(plugins);
+                  setName('');
                 });
               }}
               okText={formatMessage({ id: 'component.global.confirm' })}
@@ -95,28 +109,32 @@ const Page: React.FC = () => {
       type="global"
       schemaType="route"
       initialData={initialData}
+      pluginList={pluginList}
       onClose={() => {
         setVisible(false);
       }}
-      onChange={({ formData, codemirrorData }) => {
+      onChange={({ formData, codemirrorData, shouldDelete }) => {
+        const disable = !formData.disable;
+        let plugins = {
+          ...initialData,
+          [name]: { ...codemirrorData, disable },
+        };
+        if (shouldDelete === true) {
+          plugins = omit(plugins, name);
+        }
         createOrUpdate({
-          plugins: {
-            ...initialData,
-            [name]: { ...codemirrorData, ...formData },
-          },
+          plugins,
         }).then(() => {
           setVisible(false);
+          setName('');
+          ref.current?.reload();
         });
       }}
     />
   );
 
   return (
-    <PageHeaderWrapper
-      title={`${formatMessage({ id: 'menu.plugin' })} ${formatMessage({
-        id: 'component.global.list',
-      })}`}
-    >
+    <PageHeaderWrapper title={formatMessage({ id: 'page.plugin.list' })}>
       <ProTable<PluginModule.TransformedPlugin>
         actionRef={ref}
         rowKey="id"

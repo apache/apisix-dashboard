@@ -16,6 +16,7 @@
  */
 /* eslint-disable no-undef */
 import './commands';
+import '@cypress/code-coverage/support';
 
 Cypress.on('uncaught:exception', () => {
   // returning false here prevents Cypress from

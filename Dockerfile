@@ -19,9 +19,10 @@ FROM alpine:latest as pre-build
 ARG APISIX_DASHBOARD_VERSION=master
 
 RUN set -x \
-    && wget https://github.com/apache/apisix-dashboard/archive/${APISIX_DASHBOARD_VERSION}.tar.gz -O /tmp/apisix-dashboard.tar.gz \
-    && mkdir /usr/local/apisix-dashboard \
-    && tar -xvf /tmp/apisix-dashboard.tar.gz -C /usr/local/apisix-dashboard --strip 1
+    && apk add --no-cache --virtual .builddeps git \
+    && git clone https://github.com/apache/apisix-dashboard.git -b ${APISIX_DASHBOARD_VERSION} /usr/local/apisix-dashboard \
+    && cd /usr/local/apisix-dashboard && git clean -Xdf \
+    && rm -f ./.githash && git log --pretty=format:"%h" -1 > ./.githash
 
 FROM golang:1.14 as api-builder
 
@@ -31,21 +32,9 @@ WORKDIR /usr/local/apisix-dashboard
 
 COPY --from=pre-build /usr/local/apisix-dashboard .
 
-WORKDIR /usr/local/apisix-dashboard/api
-
-RUN mkdir -p ../output/conf \
-    && cp ./conf/*.json ../output/conf
-
-RUN wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -O /tmp/v1.1.tar.gz \
-    && mkdir /tmp/dag-to-lua \
-    && tar -xvf /tmp/v1.1.tar.gz -C /tmp/dag-to-lua --strip 1 \
-    && mkdir -p ../output/dag-to-lua \
-    && mv /tmp/dag-to-lua/lib/* ../output/dag-to-lua/
-
-RUN if [ "$ENABLE_PROXY" = "true" ] ; then go env -w GOPROXY=https://goproxy.io,direct ; fi
-
-RUN go env -w GO111MODULE=on \
-    && CGO_ENABLED=0 go build -o ../output/manager-api ./cmd/manager
+RUN if [ "$ENABLE_PROXY" = "true" ] ; then go env -w GOPROXY=https://goproxy.io,direct ; fi \
+    && go env -w GO111MODULE=on \
+    && CGO_ENABLED=0 ./api/build.sh
 
 FROM node:14-alpine as fe-builder
 
@@ -57,11 +46,9 @@ COPY --from=pre-build /usr/local/apisix-dashboard .
 
 WORKDIR /usr/local/apisix-dashboard/web
 
-RUN if [ "$ENABLE_PROXY" = "true" ] ; then yarn config set registry https://registry.npm.taobao.org/ ; fi
-
-RUN yarn install
-
-RUN yarn build
+RUN if [ "$ENABLE_PROXY" = "true" ] ; then yarn config set registry https://registry.npm.taobao.org/ ; fi \
+    && yarn install \
+    && yarn build
 
 FROM alpine:latest as prod
 

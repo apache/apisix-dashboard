@@ -17,96 +17,82 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Upstream', () => {
-  const name = `upstreamName${new Date().valueOf()}`;
-  const sleepTime = 100; // the unit is milliseconds
-  const domSelectors = {
-    notification: '.ant-notification-notice-message',
-  };
-
   beforeEach(() => {
-    // init login
     cy.login();
+
+    cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
   });
 
-  it('should create upstream with default type (roundrobin)', () => {
-    // go to upstream create page
+  it('should create upstream with default type (roundrobin)', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(sleepTime * 5);
     cy.contains('Create').click();
 
-    // input name and description
-    cy.get('#name').type(name);
-    cy.get('#desc').type('desc_by_autotest');
+    cy.get(this.domSelector.name).type(this.data.upstreamName);
+    cy.get(this.domSelector.description).type(this.data.description);
 
-    // input information
-    cy.get('#nodes_0_host').type('127.0.0.1');
-    cy.get('#nodes_0_port').clear().type('7000');
+    cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
+    cy.get(this.domSelector.nodes_0_port).clear().type('7000');
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(domSelectors.notification).should('contain', 'Create upstream successfully');
-    cy.contains('Create upstream successfully');
-    cy.wait(sleepTime * 5);
+    cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
+    cy.contains(this.data.createUpstreamSuccess);
     cy.url().should('contains', 'upstream/list');
   });
 
-  it('should delete the upstream', () => {
+  it('should delete the upstream', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(sleepTime * 5);
-    cy.contains(name).siblings().contains('Delete').click();
+    cy.contains(this.data.upstreamName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(domSelectors.notification).should('contain', 'Delete successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
   });
 
-  it('should create chash upstream', () => {
-    // go to upstream create page
+  it('should create chash upstream', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(sleepTime * 5);
     cy.contains('Create').click();
 
-    // input name and description
-    cy.get('#name').type(name);
-    cy.get('#desc').type('desc_by_autotest');
+    cy.get(this.domSelector.name).type(this.data.upstreamName);
+    cy.get(this.domSelector.description).type(this.data.description);
 
     // change upstream type to chash, todo: optimize the search method
     cy.get('[title=roundrobin]').click();
-    cy.wait(sleepTime);
-    cy.get('.ant-select-item:nth-child(2)').click();
+    cy.get(this.domSelector.upstreamType).within(() => {
+      cy.contains('chash').click();
+    });
     cy.get('#hash_on').click();
-    cy.wait(sleepTime);
-    cy.get('.ant-select-item-option-active:nth-child(1) > .ant-select-item-option-content').click();
+    cy.get(this.domSelector.upstreamType).within(() => {
+      cy.contains('vars').click();
+    });
     cy.get('#key').click();
-    cy.wait(sleepTime);
-    cy.get(
-      'div:nth-child(8) .ant-select-item:nth-child(1) > .ant-select-item-option-content:nth-child(1)',
-    ).click();
+    cy.get(this.domSelector.upstreamType).within(() => {
+      cy.contains('remote_addr').click();
+    });
 
     // add first upstream node
-    cy.get('#nodes_0_host').type('127.0.0.1');
-    cy.get('#nodes_0_port').clear().type('7000');
+    cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
+    cy.get(this.domSelector.nodes_0_port).clear().type('7000');
 
     // add second upstream node
     cy.get('.ant-btn-dashed').click();
-    cy.get('#nodes_1_host').type('127.0.0.1');
+    cy.get('#nodes_1_host').type(this.data.ip1);
     cy.get('#nodes_1_port').clear().type('7001');
     cy.get('#nodes_1_weight').clear().type('2');
 
     // next to finish
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(domSelectors.notification).should('contain', 'Create upstream successfully');
-    cy.wait(sleepTime * 5);
+    cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
     cy.url().should('contains', 'upstream/list');
   });
 
-  it('should delete the upstream', () => {
+  it('should delete the upstream', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.wait(sleepTime * 5);
-    cy.contains(name).siblings().contains('Delete').click();
+    cy.contains(this.data.upstreamName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(domSelectors.notification).should('contain', 'Delete successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
   });
 });
