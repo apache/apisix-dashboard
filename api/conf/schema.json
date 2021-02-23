@@ -78,6 +78,37 @@
 			"required": ["plugins"],
 			"type": "object"
 		},
+		"plugin_config": {
+			"additionalProperties": false,
+			"properties": {
+				"create_time": {
+					"type": "integer"
+				},
+				"desc": {
+					"maxLength": 256,
+					"type": "string"
+				},
+				"id": {
+					"anyOf": [{
+						"maxLength": 64,
+						"minLength": 1,
+						"pattern": "^[a-zA-Z0-9-_.]+$",
+						"type": "string"
+					}, {
+						"minimum": 1,
+						"type": "integer"
+					}]
+				},
+				"plugins": {
+					"type": "object"
+				},
+				"update_time": {
+					"type": "integer"
+				}
+			},
+			"required": ["id", "plugins"],
+			"type": "object"
+		},
 		"plugins": {
 			"items": {
 				"properties": {
