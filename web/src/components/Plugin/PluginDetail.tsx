@@ -268,7 +268,6 @@ const PluginDetail: React.FC<Props> = ({
         </Form>
         <Divider orientation="left">Data Editor</Divider>
         <PageHeader
-          className="test"
           title=""
           subTitle={
             pluginType === 'auth' && schemaType !== 'consumer' ? (
