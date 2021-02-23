@@ -168,6 +168,8 @@
 			"not": {
 				"anyOf": [{
 					"required": ["plugins", "script"]
+				}, {
+					"required": ["plugin_config_id", "script"]
 				}]
 			},
 			"properties": {
@@ -238,6 +240,17 @@
 					"maxLength": 100,
 					"minLength": 1,
 					"type": "string"
+				},
+				"plugin_config_id": {
+					"anyOf": [{
+						"maxLength": 64,
+						"minLength": 1,
+						"pattern": "^[a-zA-Z0-9-_.]+$",
+						"type": "string"
+					}, {
+						"minimum": 1,
+						"type": "integer"
+					}]
 				},
 				"plugins": {
 					"type": "object"
@@ -368,7 +381,7 @@
 													"uniqueItems": true
 												},
 												"interval": {
-													"default": 0,
+													"default": 1,
 													"minimum": 1,
 													"type": "integer"
 												},
@@ -435,7 +448,7 @@
 													"uniqueItems": true
 												},
 												"interval": {
-													"default": 0,
+													"default": 1,
 													"minimum": 1,
 													"type": "integer"
 												},
@@ -633,7 +646,7 @@
 							"enum": ["grpc", "grpcs", "http", "https"]
 						},
 						"service_name": {
-							"maxLength": 100,
+							"maxLength": 256,
 							"minLength": 1,
 							"type": "string"
 						},
@@ -798,7 +811,7 @@
 													"uniqueItems": true
 												},
 												"interval": {
-													"default": 0,
+													"default": 1,
 													"minimum": 1,
 													"type": "integer"
 												},
@@ -865,7 +878,7 @@
 													"uniqueItems": true
 												},
 												"interval": {
-													"default": 0,
+													"default": 1,
 													"minimum": 1,
 													"type": "integer"
 												},
@@ -1063,7 +1076,7 @@
 							"enum": ["grpc", "grpcs", "http", "https"]
 						},
 						"service_name": {
-							"maxLength": 100,
+							"maxLength": 256,
 							"minLength": 1,
 							"type": "string"
 						},
@@ -1308,7 +1321,7 @@
 													"uniqueItems": true
 												},
 												"interval": {
-													"default": 0,
+													"default": 1,
 													"minimum": 1,
 													"type": "integer"
 												},
@@ -1375,7 +1388,7 @@
 													"uniqueItems": true
 												},
 												"interval": {
-													"default": 0,
+													"default": 1,
 													"minimum": 1,
 													"type": "integer"
 												},
@@ -1573,7 +1586,7 @@
 							"enum": ["grpc", "grpcs", "http", "https"]
 						},
 						"service_name": {
-							"maxLength": 100,
+							"maxLength": 256,
 							"minLength": 1,
 							"type": "string"
 						},
@@ -1660,7 +1673,7 @@
 											"uniqueItems": true
 										},
 										"interval": {
-											"default": 0,
+											"default": 1,
 											"minimum": 1,
 											"type": "integer"
 										},
@@ -1727,7 +1740,7 @@
 											"uniqueItems": true
 										},
 										"interval": {
-											"default": 0,
+											"default": 1,
 											"minimum": 1,
 											"type": "integer"
 										},
@@ -1925,7 +1938,7 @@
 					"enum": ["grpc", "grpcs", "http", "https"]
 				},
 				"service_name": {
-					"maxLength": 100,
+					"maxLength": 256,
 					"minLength": 1,
 					"type": "string"
 				},
@@ -2920,6 +2933,11 @@
 								"policy": {
 									"enum": ["redis"]
 								},
+								"redis_database": {
+									"default": 0,
+									"minimum": 0,
+									"type": "integer"
+								},
 								"redis_host": {
 									"minLength": 2,
 									"type": "string"
@@ -3834,7 +3852,7 @@
 																				"uniqueItems": true
 																			},
 																			"interval": {
-																				"default": 0,
+																				"default": 1,
 																				"minimum": 1,
 																				"type": "integer"
 																			},
@@ -3901,7 +3919,7 @@
 																				"uniqueItems": true
 																			},
 																			"interval": {
-																				"default": 0,
+																				"default": 1,
 																				"minimum": 1,
 																				"type": "integer"
 																			},
@@ -4099,7 +4117,7 @@
 														"enum": ["grpc", "grpcs", "http", "https"]
 													},
 													"service_name": {
-														"maxLength": 100,
+														"maxLength": 256,
 														"minLength": 1,
 														"type": "string"
 													},
