@@ -604,4 +604,3 @@ func TestUpstream_Update_Use_Patch_Method(t *testing.T) {
 		testCaseCheck(tc, t)
 	}
 }
-
