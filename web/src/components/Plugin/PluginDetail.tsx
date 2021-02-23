@@ -93,9 +93,9 @@ const PluginDetail: React.FC<Props> = ({
   const ref = useRef<any>(null);
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.type;
-  const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>('javascript');
+  const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>('json');
   const modeOptions = [
-    { label: 'Json', value: 'javascript' },
+    { label: 'Json', value: 'json' },
     { label: 'Yaml', value: 'yaml' },
   ];
 
