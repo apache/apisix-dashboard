@@ -304,13 +304,13 @@ func TestExportRoutesCreateByServiceId(t *testing.T) {
 			"version":"v2"
 		},
 		"enable_websocket":true,
-		"plugins": { 
-			"limit-count": { 
-				"count": 100, 
-				"time_window": 60, 
-				"rejected_code": 503, 
-				"key": "remote_addr" 
-			} 
+		"plugins": {
+			"limit-count": {
+				"count": 100,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
 		},
 		"upstream": {
 			"type": "roundrobin",
@@ -399,7 +399,7 @@ func TestExportRoutesCreateByServiceId2(t *testing.T) {
 		"uri": "/hello",
 		"service_id": "s1",
 		"enable_websocket":false,
-		"plugins": { 
+		"plugins": {
 			"prometheus": {
 				"disable": false
 			}
@@ -424,13 +424,13 @@ func TestExportRoutesCreateByServiceId2(t *testing.T) {
 			"version":"v2"
 		},
 		"enable_websocket":true,
-		"plugins": { 
-			"limit-count": { 
-				"count": 100, 
-				"time_window": 60, 
-				"rejected_code": 503, 
-				"key": "remote_addr" 
-			} 
+		"plugins": {
+			"limit-count": {
+				"count": 100,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
 		},
 		"upstream": {
 			"type": "roundrobin",
@@ -539,13 +539,13 @@ func TestExportRoutesCreateByServiceId3(t *testing.T) {
 			"version":"v2"
 		},
 		"enable_websocket":true,
-		"plugins": { 
-			"limit-count": { 
-				"count": 100, 
-				"time_window": 60, 
-				"rejected_code": 503, 
-				"key": "remote_addr" 
-			} 
+		"plugins": {
+			"limit-count": {
+				"count": 100,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
 		},
 		"upstream_id": "u1"
 	}`
@@ -555,7 +555,7 @@ func TestExportRoutesCreateByServiceId3(t *testing.T) {
 		"uri": "/hello",
 		"service_id": "s1",
 		"enable_websocket":false,
-		"plugins": { 
+		"plugins": {
 			"prometheus": {
 				"disable": false
 			}
@@ -669,7 +669,7 @@ func TestExportRoutesCreateByUpstreamId(t *testing.T) {
 		"methods": ["GET"],
 		"uri": "/hello",
 		"enable_websocket":false,
-		"plugins": { 
+		"plugins": {
 			"prometheus": {
 				"disable": false
 			}
@@ -766,13 +766,13 @@ func TestExportRoutesCreateByUpstreamIdandServiceId(t *testing.T) {
 			"version":"v2"
 		},
 		"enable_websocket":true,
-		"plugins": { 
-			"limit-count": { 
-				"count": 100, 
-				"time_window": 60, 
-				"rejected_code": 503, 
-				"key": "remote_addr" 
-			} 
+		"plugins": {
+			"limit-count": {
+				"count": 100,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
 		},
 		"upstream_id": "u1"
 	}`
@@ -793,7 +793,7 @@ func TestExportRoutesCreateByUpstreamIdandServiceId(t *testing.T) {
 		],
 		"uri": "/hello",
 		"enable_websocket":false,
-		"plugins": { 
+		"plugins": {
 			"prometheus": {
 				"disable": false
 			}
@@ -923,7 +923,7 @@ func TestExportRoutesCreateByServiceIdNoUpstream(t *testing.T) {
 		],
 		"uri": "/hello",
 		"enable_websocket":false,
-		"plugins": { 
+		"plugins": {
 			"prometheus": {
 				"disable": false
 			}
@@ -1110,8 +1110,8 @@ func TestExportRoutesCreateByLabel2(t *testing.T) {
 		"desc": "testservice_desc",
 		"enable_websocket":true,
 		"labels": {
-			"build": "16", 
-			"env": "production", 
+			"build": "16",
+			"env": "production",
 			"version": "v2"
 		}
 	}`
@@ -1628,7 +1628,7 @@ func TestExportRoutesCreateByUpstreamIDAndServiceID2(t *testing.T) {
 		],
 		"uri": "/hello",
 		"enable_websocket":false,
-		"plugins": { 
+		"plugins": {
 			"prometheus": {
 				"disable": false
 			}

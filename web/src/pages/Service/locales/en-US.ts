@@ -18,4 +18,5 @@ export default {
   'page.service.steps.stepTitle.basicInformation': 'Basic Information',
   'page.service.steps.stepTitle.pluginConfig': 'Plugin Config',
   'page.service.steps.stepTitle.preview': 'Preview',
+  'page.service.list': 'Service List'
 };

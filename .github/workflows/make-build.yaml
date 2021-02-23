@@ -1,0 +1,47 @@
+name: make build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  make-build-test:
+    name: make build test
+    runs-on: ubuntu-latest
+
+    services:
+      etcd:
+        image: bitnami/etcd:3.4.13
+        ports:
+          - 2379:2379
+          - 2380:2380
+        env:
+          ALLOW_NONE_AUTHENTICATION: yes
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 14.x
+
+      - name: Setup golang environment
+        uses: actions/setup-go@v2.1.3
+        with:
+          go-version: '1.13'
+
+      - name: make build
+        run: make build
+
+      - name: start dashboard
+        working-directory: ./output
+        run: ./manager-api > ./api.log 2>&1 &
+
+      - name: check
+        run: api/test/shell/manager_smoking.sh -s true

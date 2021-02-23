@@ -15,17 +15,19 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Select, Empty, Form } from 'antd';
+import { Select, Empty, Form, Card } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useIntl } from 'umi';
 import moment from 'moment';
 
-import { fetchInfoList } from './service';
+import { fetchInfoList, fetchVersion } from './service';
 import styles from './style.less';
 
 const ServerInfo: React.FC = () => {
   const [data, setData] = useState<ServerInfoModule.Node>();
   const [nodeList, setNodeList] = useState<ServerInfoModule.Node[]>([]);
+  const [commitHash, setCommitHash] = useState('');
+  const [dashboardVersion, setDashboardVersion] = useState('');
   const { formatMessage } = useIntl();
   const { Option } = Select;
 
@@ -51,58 +53,89 @@ const ServerInfo: React.FC = () => {
         setData(list[0]);
       }
     });
+
+    fetchVersion().then(({ commit_hash, version }) => {
+      setCommitHash(commit_hash);
+      setDashboardVersion(version);
+    });
   }, []);
 
   return (
-    <PageContainer title={formatMessage({ id: 'page.serverinfo.pageContainer.title' })}>
-      <div className={styles.select}>
-        <Form form={form}>
-          <Form.Item wrapperCol={{ span: 5 }} style={{ marginBottom: 0 }} name="nodeId">
-            <Select
-              placeholder={formatMessage({ id: 'page.serverinfo.select.placeholder' })}
-              onChange={(value) => {
-                setData(
-                  nodeList.find((item) => {
-                    return item.id === value;
-                  }),
-                );
-              }}
-            >
-              {nodeList.map((item) => (
-                <Option key={item.hostname} value={item.id}>
-                  {item.hostname}
-                </Option>
-              ))}
-              ;
-            </Select>
-          </Form.Item>
-          <Form.Item style={{ marginBottom: 0, fontSize: '12px', color: '#00000073' }}>
-            {formatMessage({ id: 'page.serverinfo.desc' })}&nbsp;
-            <a
-              href="https://github.com/apache/apisix/blob/master/doc/plugins/server-info.md"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {formatMessage({ id: 'page.serverinfo.link' })}
-            </a>
-          </Form.Item>
-        </Form>
-      </div>
-      <div className={styles.wrap}>
-        {nodeList.length === 0 && <Empty />}
-        {nodeList.length > 0 && (
+    <PageContainer title={formatMessage({ id: 'page.systemStatus.pageContainer.title' })}>
+      <Card
+        title={formatMessage({ id: 'page.systemStatus.dashboardInfo' })}
+        bodyStyle={{ padding: 0 }}
+        style={{ marginBottom: 15 }}
+      >
+        <div className={styles.wrap}>
           <table className={styles.table}>
             <tbody>
-              {Object.entries(data || {}).map((item) => (
-                <tr>
-                  <td>{item[0]}</td>
-                  <td>{item[1]}</td>
-                </tr>
-              ))}
+              <tr>
+                <td>commit_hash</td>
+                <td>{commitHash}</td>
+              </tr>
+              <tr>
+                <td>dashboard_version</td>
+                <td>{dashboardVersion}</td>
+              </tr>
             </tbody>
           </table>
-        )}
-      </div>
+        </div>
+      </Card>
+      <Card
+        title={formatMessage({ id: 'page.systemStatus.nodeInfo' })}
+        bodyStyle={{ padding: 0 }}
+        bordered={false}
+      >
+        <div className={styles.select}>
+          <Form form={form}>
+            <Form.Item wrapperCol={{ span: 10 }} style={{ marginBottom: 0 }} name="nodeId">
+              <Select
+                placeholder={formatMessage({ id: 'page.systemStatus.select.placeholder' })}
+                onChange={(value) => {
+                  setData(
+                    nodeList.find((item) => {
+                      return item.id === value;
+                    }),
+                  );
+                }}
+              >
+                {nodeList.map((item) => (
+                  <Option key={item.hostname} value={item.id}>
+                    {item.hostname}
+                  </Option>
+                ))}
+                ;
+              </Select>
+            </Form.Item>
+            <Form.Item style={{ marginBottom: 0, fontSize: '12px', color: '#00000073' }}>
+              {formatMessage({ id: 'page.systemStatus.desc' })}&nbsp;
+              <a
+                href="https://github.com/apache/apisix/blob/master/doc/plugins/server-info.md"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {formatMessage({ id: 'page.systemStatus.link' })}
+              </a>
+            </Form.Item>
+          </Form>
+        </div>
+        <div className={styles.wrap}>
+          {nodeList.length === 0 && <Empty />}
+          {nodeList.length > 0 && (
+            <table className={styles.table}>
+              <tbody>
+                {Object.entries(data || {}).map((item) => (
+                  <tr>
+                    <td>{item[0]}</td>
+                    <td>{item[1]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </Card>
     </PageContainer>
   );
 };

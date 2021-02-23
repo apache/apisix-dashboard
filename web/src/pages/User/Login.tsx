@@ -73,6 +73,12 @@ const Page: React.FC = () => {
     });
   };
 
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      onSubmit();
+    }
+  }
+
   if (localStorage.getItem('token')) {
     history.replace('/');
     return null;
@@ -99,7 +105,7 @@ const Page: React.FC = () => {
           </div>
         </div>
         <div className={styles.main}>
-          <Tabs activeKey={loginMethod.id} onChange={onTabChange}>
+          <Tabs activeKey={loginMethod.id} onChange={onTabChange} onKeyDown={onKeyDown}>
             {loginMethods.map((item) => (
               <Tab key={item.id} tab={item.name}>
                 {item.render()}

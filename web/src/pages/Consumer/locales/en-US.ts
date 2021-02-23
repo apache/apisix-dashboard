@@ -22,4 +22,5 @@ export default {
     'Please enable one authentication plugin',
   'page.consumer.username': 'Name',
   'page.consumer.updateTime': 'Update Time',
+  'page.consumer.list': 'Consumer List'
 };

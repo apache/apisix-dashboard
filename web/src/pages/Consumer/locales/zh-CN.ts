@@ -21,4 +21,5 @@ export default {
   'page.consumer.notification.warning.enableAuthenticationPlugin': '请启用一种身份认证类插件',
   'page.consumer.username': '名称',
   'page.consumer.updateTime': '更新时间',
+  'page.consumer.list': '消费者列表'
 };

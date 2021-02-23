@@ -21,6 +21,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import { PanelSection } from '@api7-dashboard/ui';
 import queryString from 'query-string';
 import Base64 from 'base-64';
+import urlRegexSafe from 'url-regex-safe';
 
 import {
   HTTP_METHOD_OPTION_LIST,
@@ -143,8 +144,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
 
   const handleDebug = (url: string) => {
     /* eslint-disable no-useless-escape */
-    const urlReg = /^[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\=\.\"\?\,\'\/\\\+&amp;%$#_]*)?$/;
-    if (!urlReg.test(url)) {
+    if (!urlRegexSafe({exact: true, strict: false}).test(url)) {
       notification.warning({
         message: formatMessage({ id: 'page.route.input.placeholder.requestUrl' }),
       });

@@ -182,20 +182,18 @@ const PluginDetail: React.FC<Props> = ({
                 okText={formatMessage({ id: 'component.global.confirm' })}
                 cancelText={formatMessage({ id: 'component.global.cancel' })}
                 onConfirm={() => {
-                  onChange({ formData: form.getFieldsValue(), codemirrorData: {}, shouldDelete: true });
+                  onChange({
+                    formData: form.getFieldsValue(),
+                    codemirrorData: {},
+                    shouldDelete: true,
+                  });
                 }}
               >
-                {
-                  initialData[name]
-                    ? <Button
-                      key={3}
-                      type="primary"
-                      danger
-                    >
-                      {formatMessage({ id: 'component.global.delete' })}
-                    </Button>
-                    : null
-                }
+                {initialData[name] ? (
+                  <Button key={3} type="primary" danger>
+                    {formatMessage({ id: 'component.global.delete' })}
+                  </Button>
+                ) : null}
               </Popconfirm>
               <Button
                 key={2}
@@ -250,8 +248,8 @@ const PluginDetail: React.FC<Props> = ({
             pluginType === 'auth' && schemaType !== 'consumer' ? (
               <Alert message={`${name} does not require configuration`} type="warning" />
             ) : (
-                <>Current plugin: {name}</>
-              )
+              <>Current plugin: {name}</>
+            )
           }
           ghost={false}
           extra={[

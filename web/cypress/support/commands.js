@@ -62,7 +62,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           });
 
         // NOTE: wait for the Drawer to appear on the DOM
-        cy.wait(300);
+        cy.focused(domSelectors.drawer).should('exist');
         cy.get(domSelectors.drawer, { timeout }).within(() => {
           cy.get(domSelectors.switch).click({
             force: true,
@@ -73,20 +73,21 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           if (codemirror) {
             codemirror.setValue(JSON.stringify(data));
           }
+          cy.get(domSelectors.drawer).should('exist');
           cy.get(domSelectors.drawer, { timeout }).within(() => {
             cy.contains('Submit').click({
               force: true,
             });
+            cy.get(domSelectors.drawer).should('not.exist');
           });
         });
 
-        cy.wait(300);
         if (shouldValid === true) {
           cy.get(domSelectors.drawer).should('not.exist');
         } else if (shouldValid === false) {
-          cy.get(this.selector.notification).should('contain', 'Invalid plugin data');
+          cy.get(this.domSelector.notification).should('contain', 'Invalid plugin data');
 
-          cy.get(domSelectors.close).click({
+          cy.get(domSelectors.close).should('be.visible').click({
             force: true,
             multiple: true,
           });

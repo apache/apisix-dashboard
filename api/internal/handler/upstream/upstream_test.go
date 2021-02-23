@@ -19,285 +19,1717 @@ package upstream
 
 import (
 	"encoding/json"
-	"strings"
+	"errors"
+	"fmt"
+	"net/http"
 	"testing"
-	"time"
 
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 
-	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
-	"github.com/apisix/manager-api/internal/core/storage"
 	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
-var upstreamHandler *Handler
-
-func TestUpstream(t *testing.T) {
-	// init
-	err := storage.InitETCDClient(conf.ETCDConfig)
-	assert.Nil(t, err)
-	err = store.InitStores()
-	assert.Nil(t, err)
-
-	upstreamHandler = &Handler{
-		upstreamStore: store.GetStore(store.HubKeyUpstream),
+func TestUpstream_Get(t *testing.T) {
+	tests := []struct {
+		caseDesc   string
+		giveInput  *GetInput
+		giveRet    *entity.Upstream
+		giveErr    error
+		wantErr    error
+		wantGetKey string
+		wantRet    interface{}
+	}{
+		{
+			caseDesc:   "upstream: get success",
+			giveInput:  &GetInput{ID: "u1"},
+			wantGetKey: "u1",
+			giveRet: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": 15,
+						"send":    15,
+						"read":    15,
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr",
+					Nodes: []map[string]interface{}{
+						{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			wantRet: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": 15,
+						"send":    15,
+						"read":    15,
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr",
+					Nodes: []map[string]interface{}{
+						{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+		},
+		{
+			caseDesc:   "store get failed",
+			giveInput:  &GetInput{ID: "failed_key"},
+			wantGetKey: "failed_key",
+			giveErr:    fmt.Errorf("get failed"),
+			wantErr:    fmt.Errorf("get failed"),
+			wantRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusInternalServerError,
+			},
+		},
 	}
-	assert.NotNil(t, upstreamHandler)
 
-	//create
-	ctx := droplet.NewContext()
-	upstream := &entity.Upstream{}
-	reqBody := `{
-		"id": "1",
-		"name": "upstream3",
-		"description": "upstream upstream",
-		"type": "roundrobin",
-		"nodes": [{
-			"host": "a.a.com",
-			"port": 80,
-			"weight": 1
-		}],
-		"timeout":{
-			"connect":15,
-			"send":15,
-			"read":15
-		},
-		"hash_on": "header",
-		"key": "server_addr",
-		"checks": {
-			"active": {
-				"timeout": 5,
-				"http_path": "/status",
-				"host": "foo.com",
-				"healthy": {
-					"interval": 2,
-					"successes": 1
-				},
-				"unhealthy": {
-					"interval": 1,
-					"http_failures": 2
-				},
-				"req_headers": ["User-Agent: curl/7.29.0"]
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := true
+			upstreamStore := &store.MockInterface{}
+			upstreamStore.On("Get", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				assert.Equal(t, tc.wantGetKey, args.Get(0))
+			}).Return(tc.giveRet, tc.giveErr)
+
+			h := Handler{upstreamStore: upstreamStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.Get(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
+	}
+}
+
+func TestUpstreams_List(t *testing.T) {
+	mockData := []*entity.Upstream{
+		{
+			BaseInfo: entity.BaseInfo{
+				ID:         "u1",
+				CreateTime: 1609340491,
+				UpdateTime: 1609340491,
 			},
-			"passive": {
-				"healthy": {
-					"http_statuses": [200, 201],
-					"successes": 3
+			UpstreamDef: entity.UpstreamDef{
+				Name: "upstream1",
+				Key:  "server_addr",
+				Nodes: []map[string]interface{}{
+					{
+						"host":   "39.97.63.215",
+						"port":   float64(80),
+						"weight": float64(1),
+					},
 				},
-				"unhealthy": {
-					"http_statuses": [500],
-					"http_failures": 3,
-					"tcp_failures": 3
-				}
-			}
-		}
-	}`
-	err = json.Unmarshal([]byte(reqBody), upstream)
-	assert.Nil(t, err)
-	ctx.SetInput(upstream)
-	ret, err := upstreamHandler.Create(ctx)
-	assert.Nil(t, err)
-	objRet, ok := ret.(*entity.Upstream)
-	assert.True(t, ok)
-	assert.Equal(t, "1", objRet.ID)
-
-	//sleep
-	time.Sleep(time.Duration(100) * time.Millisecond)
-
-	//get
-	input := &GetInput{}
-	input.ID = "1"
-	ctx.SetInput(input)
-	ret, err = upstreamHandler.Get(ctx)
-	stored := ret.(*entity.Upstream)
-	assert.Nil(t, err)
-	assert.Equal(t, stored.ID, upstream.ID)
-
-	//update
-	upstream2 := &UpdateInput{}
-	upstream2.ID = "1"
-	reqBody = `{
-		"id": "1",
-		"name": "upstream3",
-		"description": "upstream upstream",
-		"type": "roundrobin",
-		"nodes": [{
-			"host": "a.a.com",
-			"port": 80,
-			"weight": 1
-		}],
-		"timeout":{
-			"connect":15,
-			"send":15,
-			"read":15
-		},
-		"enable_websocket": true,
-		"hash_on": "header",
-		"key": "server_addr",
-		"checks": {
-			"active": {
-				"timeout": 5,
-				"http_path": "/status",
-				"host": "foo.com",
-				"healthy": {
-					"interval": 2,
-					"successes": 1
-				},
-				"unhealthy": {
-					"interval": 1,
-					"http_failures": 2
-				},
-				"req_headers": ["User-Agent: curl/7.29.0"]
 			},
-			"passive": {
-				"healthy": {
-					"http_statuses": [200, 201],
-					"successes": 3
+		},
+		{
+			BaseInfo: entity.BaseInfo{
+				ID:         "u2",
+				CreateTime: 1609340491,
+				UpdateTime: 1609340491,
+			},
+			UpstreamDef: entity.UpstreamDef{
+				Name: "upstream2",
+				Key:  "server_addr2",
+
+				Nodes: entity.Node{
+					Host:   "39.97.63.215",
+					Port:   80,
+					Weight: 0,
 				},
-				"unhealthy": {
-					"http_statuses": [500],
-					"http_failures": 3,
-					"tcp_failures": 3
+			},
+		},
+		{
+			BaseInfo: entity.BaseInfo{
+				ID:         "u3",
+				CreateTime: 1609340491,
+				UpdateTime: 1609340491,
+			},
+			UpstreamDef: entity.UpstreamDef{
+				Name: "upstream3",
+				Key:  "server_addr3",
+				Nodes: []entity.Node{
+					{
+						Host:   "39.97.63.215",
+						Port:   80,
+						Weight: 0,
+					},
+				},
+			},
+		},
+	}
+
+	tests := []struct {
+		caseDesc  string
+		giveInput *ListInput
+		giveData  []*entity.Upstream
+		giveErr   error
+		wantErr   error
+		wantInput store.ListInput
+		wantRet   interface{}
+	}{
+		{
+			caseDesc: "list all upstream",
+			giveInput: &ListInput{
+				Pagination: store.Pagination{
+					PageSize:   10,
+					PageNumber: 10,
+				},
+			},
+			wantInput: store.ListInput{
+				PageSize:   10,
+				PageNumber: 10,
+			},
+			wantRet: &store.ListOutput{
+				Rows: []interface{}{
+					mockData[0],
+					mockData[1],
+					mockData[2],
+				},
+				TotalSize: 3,
+			},
+		},
+		{
+			caseDesc: "list upstream with 'upstream1'",
+			giveInput: &ListInput{
+				Name: "upstream1",
+				Pagination: store.Pagination{
+					PageSize:   10,
+					PageNumber: 10,
+				},
+			},
+			wantInput: store.ListInput{
+				PageSize:   10,
+				PageNumber: 10,
+			},
+			wantRet: &store.ListOutput{
+				Rows: []interface{}{
+					mockData[0],
+				},
+				TotalSize: 1,
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := true
+			upstreamStore := &store.MockInterface{}
+			upstreamStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				input := args.Get(0).(store.ListInput)
+				assert.Equal(t, tc.wantInput.PageSize, input.PageSize)
+				assert.Equal(t, tc.wantInput.PageNumber, input.PageNumber)
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				var returnData []interface{}
+				for _, c := range mockData {
+					if input.Predicate(c) {
+						if input.Format == nil {
+							returnData = append(returnData, c)
+							continue
+						}
+						returnData = append(returnData, input.Format(c))
+					}
 				}
+				return &store.ListOutput{
+					Rows:      returnData,
+					TotalSize: len(returnData),
+				}
+			}, tc.giveErr)
+
+			h := Handler{upstreamStore: upstreamStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.List(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
+	}
+}
+
+func TestUpstream_Create(t *testing.T) {
+	tests := []struct {
+		caseDesc  string
+		getCalled bool
+		giveInput *entity.Upstream
+		giveRet   interface{}
+		giveErr   error
+		wantInput *entity.Upstream
+		wantErr   error
+		wantRet   interface{}
+	}{
+		{
+			caseDesc:  "create success",
+			getCalled: true,
+			giveInput: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": 15,
+						"send":    15,
+						"read":    15,
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr",
+					Nodes: []map[string]interface{}{
+						{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			giveRet: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": 15,
+						"send":    15,
+						"read":    15,
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr",
+					Nodes: []map[string]interface{}{
+						{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			wantInput: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": 15,
+						"send":    15,
+						"read":    15,
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr",
+					Nodes: []map[string]interface{}{
+						{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			wantRet: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": 15,
+						"send":    15,
+						"read":    15,
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr",
+					Nodes: []map[string]interface{}{
+						{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			wantErr: nil,
+		},
+		{
+			caseDesc:  "create failed, create return error",
+			getCalled: true,
+			giveInput: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": 15,
+						"send":    15,
+						"read":    15,
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr",
+					Nodes: []map[string]interface{}{
+						{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			giveErr: fmt.Errorf("create failed"),
+			wantInput: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": 15,
+						"send":    15,
+						"read":    15,
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr",
+					Nodes: []map[string]interface{}{
+						{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			wantErr: fmt.Errorf("create failed"),
+			wantRet: handler.SpecCodeResponse(fmt.Errorf("create failed")),
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := false
+
+			upstreamStore := &store.MockInterface{}
+			upstreamStore.On("Create", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				input := args.Get(1).(*entity.Upstream)
+				assert.Equal(t, tc.wantInput, input)
+			}).Return(tc.giveRet, tc.giveErr)
+
+			h := Handler{upstreamStore: upstreamStore}
+
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.Create(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
+	}
+}
+
+func TestUpstream_Update(t *testing.T) {
+	tests := []struct {
+		caseDesc  string
+		getCalled bool
+		giveInput *UpdateInput
+		giveErr   error
+		giveRet   interface{}
+		wantInput *entity.Upstream
+		wantErr   error
+		wantRet   interface{}
+	}{
+		{
+			caseDesc:  "update success",
+			getCalled: true,
+			giveInput: &UpdateInput{
+				ID: "u1",
+				Upstream: entity.Upstream{
+					UpstreamDef: entity.UpstreamDef{
+						Name: "upstream1",
+						Timeout: map[string]interface{}{
+							"connect": 15,
+							"send":    15,
+							"read":    15,
+						},
+						Checks: map[string]interface{}{
+							"active": map[string]interface{}{
+								"timeout":   float64(5),
+								"http_path": "/status",
+								"host":      "foo.com",
+								"healthy": map[string]interface{}{
+									"interval":  2,
+									"successes": 1,
+								},
+								"unhealthy": map[string]interface{}{
+									"interval":      1,
+									"http_failures": 2,
+								},
+								"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+							},
+							"passive": map[string]interface{}{
+								"healthy": map[string]interface{}{
+									"http_statuses": []interface{}{float64(200), float64(201)},
+									"successes":     float64(3),
+								},
+								"unhealthy": map[string]interface{}{
+									"http_statuses": []interface{}{float64(500)},
+									"http_failures": 3,
+									"tcp_failures":  3,
+								},
+							},
+						},
+						Key: "server_addr",
+						Nodes: []map[string]interface{}{
+							{
+								"host":   "39.97.63.215",
+								"port":   float64(80),
+								"weight": float64(1),
+							},
+						},
+					},
+				},
+			},
+			giveRet: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": 15,
+						"send":    15,
+						"read":    15,
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": 3,
+								"tcp_failures":  3,
+							},
+						},
+					},
+					Key: "server_addr",
+					Nodes: []map[string]interface{}{
+						{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			wantInput: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": 15,
+						"send":    15,
+						"read":    15,
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": 3,
+								"tcp_failures":  3,
+							},
+						},
+					},
+					Key: "server_addr",
+					Nodes: []map[string]interface{}{
+						{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			wantRet: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": 15,
+						"send":    15,
+						"read":    15,
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": 3,
+								"tcp_failures":  3,
+							},
+						},
+					},
+					Key: "server_addr",
+					Nodes: []map[string]interface{}{
+						{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+		},
+		{
+			caseDesc: "update failed, different id",
+			giveInput: &UpdateInput{
+				ID: "u1",
+				Upstream: entity.Upstream{
+					BaseInfo: entity.BaseInfo{
+						ID: "u2",
+					},
+					UpstreamDef: entity.UpstreamDef{
+						Name: "upstream1",
+						Timeout: map[string]interface{}{
+							"connect": 15,
+							"send":    15,
+							"read":    15,
+						},
+						Checks: map[string]interface{}{
+							"active": map[string]interface{}{
+								"timeout":   float64(5),
+								"http_path": "/status",
+								"host":      "foo.com",
+								"healthy": map[string]interface{}{
+									"interval":  2,
+									"successes": 1,
+								},
+								"unhealthy": map[string]interface{}{
+									"interval":      1,
+									"http_failures": 2,
+								},
+								"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+							},
+							"passive": map[string]interface{}{
+								"healthy": map[string]interface{}{
+									"http_statuses": []interface{}{float64(200), float64(201)},
+									"successes":     float64(3),
+								},
+								"unhealthy": map[string]interface{}{
+									"http_statuses": []interface{}{float64(500)},
+									"http_failures": 3,
+									"tcp_failures":  3,
+								},
+							},
+						},
+						Key: "server_addr",
+						Nodes: []map[string]interface{}{
+							{
+								"host":   "39.97.63.215",
+								"port":   float64(80),
+								"weight": float64(1),
+							},
+						},
+					},
+				},
+			},
+			wantRet: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr: fmt.Errorf("ID on path (u1) doesn't match ID on body (u2)"),
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := false
+			upstreamStore := &store.MockInterface{}
+			upstreamStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				input := args.Get(1).(*entity.Upstream)
+				createIfNotExist := args.Get(2).(bool)
+				assert.Equal(t, tc.wantInput, input)
+				assert.True(t, createIfNotExist)
+			}).Return(tc.giveRet, tc.giveErr)
+
+			h := Handler{upstreamStore: upstreamStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.Update(ctx)
+			assert.Equal(t, tc.getCalled, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
+	}
+}
+
+func TestUpstream_Patch(t *testing.T) {
+	existUpstream := &entity.Upstream{
+		BaseInfo: entity.BaseInfo{
+			ID: "u1",
+		},
+		UpstreamDef: entity.UpstreamDef{
+			Name: "upstream1",
+			Timeout: map[string]interface{}{
+				"connect": 15,
+				"send":    15,
+				"read":    15,
+			},
+			Checks: map[string]interface{}{
+				"active": map[string]interface{}{
+					"timeout":   float64(5),
+					"http_path": "/status",
+					"host":      "foo.com",
+					"healthy": map[string]interface{}{
+						"interval":  float64(2),
+						"successes": float64(1),
+					},
+					"unhealthy": map[string]interface{}{
+						"interval":      float64(1),
+						"http_failures": float64(2),
+					},
+					"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+				},
+				"passive": map[string]interface{}{
+					"healthy": map[string]interface{}{
+						"http_statuses": []interface{}{float64(200), float64(201)},
+						"successes":     float64(3),
+					},
+					"unhealthy": map[string]interface{}{
+						"http_statuses": []interface{}{float64(500)},
+						"http_failures": 3,
+						"tcp_failures":  3,
+					},
+				},
+			},
+			Key: "server_addr",
+			Nodes: []interface{}{
+				map[string]interface{}{
+					"host":   "39.97.63.215",
+					"port":   float64(80),
+					"weight": float64(1),
+				},
+			},
+		},
+	}
+
+	patchUpstream := &entity.Upstream{
+		BaseInfo: entity.BaseInfo{
+			ID: "u1",
+		},
+		UpstreamDef: entity.UpstreamDef{
+			Name: "upstream2",
+			Timeout: map[string]interface{}{
+				"connect": float64(20),
+				"send":    float64(20),
+				"read":    float64(20),
+			},
+			Checks: map[string]interface{}{
+				"active": map[string]interface{}{
+					"timeout":   float64(5),
+					"http_path": "/status",
+					"host":      "foo.com",
+					"healthy": map[string]interface{}{
+						"interval":  float64(2),
+						"successes": float64(1),
+					},
+					"unhealthy": map[string]interface{}{
+						"interval":      float64(1),
+						"http_failures": float64(2),
+					},
+					"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+				},
+				"passive": map[string]interface{}{
+					"healthy": map[string]interface{}{
+						"http_statuses": []interface{}{float64(200), float64(201)},
+						"successes":     float64(3),
+					},
+					"unhealthy": map[string]interface{}{
+						"http_statuses": []interface{}{float64(500)},
+						"http_failures": 3,
+						"tcp_failures":  3,
+					},
+				},
+			},
+			Key: "server_addr2",
+			Nodes: []interface{}{
+				map[string]interface{}{
+					"host":   "39.97.63.215",
+					"port":   float64(80),
+					"weight": float64(1),
+				},
+			},
+		},
+	}
+	patchUpstreamBytes, err := json.Marshal(patchUpstream)
+	assert.Nil(t, err)
+
+	tests := []struct {
+		caseDesc  string
+		getCalled bool
+		giveInput *PatchInput
+		giveErr   error
+		giveRet   interface{}
+		wantInput *entity.Upstream
+		wantErr   error
+		wantRet   interface{}
+	}{
+		{
+			caseDesc: "patch success",
+			giveRet: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream2",
+					Timeout: map[string]interface{}{
+						"connect": float64(20),
+						"send":    float64(20),
+						"read":    float64(20),
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  float64(2),
+								"successes": float64(1),
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      float64(1),
+								"http_failures": float64(2),
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr2",
+					Nodes: []interface{}{
+						map[string]interface{}{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			giveInput: &PatchInput{
+				ID:      "u1",
+				SubPath: "",
+				Body:    patchUpstreamBytes,
+			},
+			wantInput: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream2",
+					Timeout: map[string]interface{}{
+						"connect": float64(20),
+						"send":    float64(20),
+						"read":    float64(20),
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  float64(2),
+								"successes": float64(1),
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      float64(1),
+								"http_failures": float64(2),
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr2",
+					Nodes: []interface{}{
+						map[string]interface{}{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			wantRet: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream2",
+					Timeout: map[string]interface{}{
+						"connect": float64(20),
+						"send":    float64(20),
+						"read":    float64(20),
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  float64(2),
+								"successes": float64(1),
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      float64(1),
+								"http_failures": float64(2),
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr2",
+					Nodes: []interface{}{
+						map[string]interface{}{
+							"host":   "39.97.63.215",
+							"port":   float64(80),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			getCalled: true,
+		},
+		{
+			caseDesc: "patch success by path",
+			giveInput: &PatchInput{
+				ID:      "u1",
+				SubPath: "/nodes",
+				Body:    []byte(`[{"host": "172.16.238.20","port": 1981,"weight": 1}]`),
+			},
+			giveRet: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": float64(20),
+						"send":    float64(20),
+						"read":    float64(20),
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr_patch",
+					Nodes: []interface{}{
+						map[string]interface{}{
+							"host":   "172.16.238.20",
+							"port":   float64(1981),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			wantInput: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": float64(15),
+						"send":    float64(15),
+						"read":    float64(15),
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  float64(2),
+								"successes": float64(1),
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      float64(1),
+								"http_failures": float64(2),
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr",
+					Nodes: []interface{}{
+						map[string]interface{}{
+							"host":   "172.16.238.20",
+							"port":   float64(1981),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			wantRet: &entity.Upstream{
+				BaseInfo: entity.BaseInfo{
+					ID: "u1",
+				},
+				UpstreamDef: entity.UpstreamDef{
+					Name: "upstream1",
+					Timeout: map[string]interface{}{
+						"connect": float64(20),
+						"send":    float64(20),
+						"read":    float64(20),
+					},
+					Checks: map[string]interface{}{
+						"active": map[string]interface{}{
+							"timeout":   float64(5),
+							"http_path": "/status",
+							"host":      "foo.com",
+							"healthy": map[string]interface{}{
+								"interval":  2,
+								"successes": 1,
+							},
+							"unhealthy": map[string]interface{}{
+								"interval":      1,
+								"http_failures": 2,
+							},
+							"req_headers": []interface{}{"User-Agent: curl/7.29.0"},
+						},
+						"passive": map[string]interface{}{
+							"healthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(200), float64(201)},
+								"successes":     float64(3),
+							},
+							"unhealthy": map[string]interface{}{
+								"http_statuses": []interface{}{float64(500)},
+								"http_failures": float64(3),
+								"tcp_failures":  float64(3),
+							},
+						},
+					},
+					Key: "server_addr_patch",
+					Nodes: []interface{}{
+						map[string]interface{}{
+							"host":   "172.16.238.20",
+							"port":   float64(1981),
+							"weight": float64(1),
+						},
+					},
+				},
+			},
+			getCalled: true,
+		},
+		{
+			caseDesc: "patch failed, path error",
+			giveInput: &PatchInput{
+				ID:      "u1",
+				SubPath: "error",
+				Body:    []byte("0"),
+			},
+			wantRet: handler.SpecCodeResponse(
+				errors.New("add operation does not apply: doc is missing path: \"error\": missing value")),
+			wantErr: errors.New("add operation does not apply: doc is missing path: \"error\": missing value"),
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := false
+
+			upstreamStore := &store.MockInterface{}
+			upstreamStore.On("Get", mock.Anything, mock.Anything).Return(existUpstream, nil)
+			upstreamStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				input := args.Get(1).(*entity.Upstream)
+				createIfNotExist := args.Get(2).(bool)
+				assert.Equal(t, tc.wantInput, input)
+				assert.False(t, createIfNotExist)
+			}).Return(tc.giveRet, tc.giveErr)
+
+			h := Handler{upstreamStore: upstreamStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.Patch(ctx)
+			assert.Equal(t, tc.getCalled, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			if tc.wantErr != nil && err != nil {
+				assert.Error(t, tc.wantErr.(error), err.Error())
+			} else {
+				assert.Equal(t, tc.wantErr, err)
 			}
-		}
-	}`
-	err = json.Unmarshal([]byte(reqBody), upstream2)
-	assert.Nil(t, err)
-	ctx.SetInput(upstream2)
-	ret, err = upstreamHandler.Update(ctx)
-	assert.Nil(t, err)
-	// check the returned value
-	objRet, ok = ret.(*entity.Upstream)
-	assert.True(t, ok)
-	assert.Equal(t, upstream2.ID, objRet.ID)
-
-	//list
-	listInput := &ListInput{}
-	reqBody = `{"page_size": 1, "page": 1}`
-	err = json.Unmarshal([]byte(reqBody), listInput)
-	assert.Nil(t, err)
-	ctx.SetInput(listInput)
-	retPage, err := upstreamHandler.List(ctx)
-	assert.Nil(t, err)
-	dataPage := retPage.(*store.ListOutput)
-	assert.Equal(t, len(dataPage.Rows), 1)
-
-	//delete test data
-	inputDel := &BatchDelete{}
-	reqBody = `{"ids": "1"}`
-	err = json.Unmarshal([]byte(reqBody), inputDel)
-	assert.Nil(t, err)
-	ctx.SetInput(inputDel)
-	_, err = upstreamHandler.BatchDelete(ctx)
-	assert.Nil(t, err)
-
+		})
+	}
 }
 
-func TestUpstream_Pass_Host(t *testing.T) {
-	//create
-	ctx := droplet.NewContext()
-	upstream := &entity.Upstream{}
-	reqBody := `{
-		"id": "2",
-		"nodes": [{
-			"host": "httpbin.org",
-			"port": 80,
-			"weight": 1
-		}],
-		"type": "roundrobin",
-		"pass_host": "node"
-	}`
-	err := json.Unmarshal([]byte(reqBody), upstream)
-	assert.Nil(t, err)
-	ctx.SetInput(upstream)
-	ret, err := upstreamHandler.Create(ctx)
-	assert.Nil(t, err)
-	objRet, ok := ret.(*entity.Upstream)
-	assert.True(t, ok)
-	assert.Equal(t, "2", objRet.ID)
+func TestUptreams_Delete(t *testing.T) {
+	tests := []struct {
+		caseDesc  string
+		giveInput *BatchDelete
+		giveErr   error
+		wantInput []string
+		wantErr   error
+		wantRet   interface{}
+	}{
+		{
+			caseDesc: "delete success",
+			giveInput: &BatchDelete{
+				IDs: "u1",
+			},
+			wantInput: []string{"u1"},
+		},
+		{
+			caseDesc: "batch delete success",
+			giveInput: &BatchDelete{
+				IDs: "u1,u2",
+			},
+			wantInput: []string{"u1", "u2"},
+		},
+		{
+			caseDesc: "delete failed",
+			giveInput: &BatchDelete{
+				IDs: "u1",
+			},
+			giveErr:   fmt.Errorf("delete error"),
+			wantInput: []string{"u1"},
+			wantRet:   handler.SpecCodeResponse(fmt.Errorf("delete error")),
+			wantErr:   fmt.Errorf("delete error"),
+		},
+	}
 
-	//sleep
-	time.Sleep(time.Duration(20) * time.Millisecond)
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := false
+			upstreamStore := &store.MockInterface{}
+			upstreamStore.On("BatchDelete", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+				input := args.Get(1).([]string)
+				assert.Equal(t, tc.wantInput, input)
+			}).Return(tc.giveErr)
 
-	//get
-	input := &GetInput{}
-	input.ID = "2"
-	ctx.SetInput(input)
-	ret, err = upstreamHandler.Get(ctx)
-	stored := ret.(*entity.Upstream)
-	assert.Nil(t, err)
-	assert.Equal(t, stored.ID, upstream.ID)
-
-	//delete test data
-	inputDel := &BatchDelete{}
-	reqBody = `{"ids": "2"}`
-	err = json.Unmarshal([]byte(reqBody), inputDel)
-	assert.Nil(t, err)
-	ctx.SetInput(inputDel)
-	_, err = upstreamHandler.BatchDelete(ctx)
-	assert.Nil(t, err)
-
+			h := Handler{upstreamStore: upstreamStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.BatchDelete(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
+	}
 }
 
-func TestUpstream_Patch_Update(t *testing.T) {
-	//create
-	ctx := droplet.NewContext()
-	upstream := &entity.Upstream{}
-	reqBody := `{
-			"id": "3",
-			"nodes": [{
-				"host": "172.16.238.20",
-				"port": 1980,
-				"weight": 1
-			}],
-			"type": "roundrobin"
-		}`
-	err := json.Unmarshal([]byte(reqBody), upstream)
-	assert.Nil(t, err)
-	ctx.SetInput(upstream)
-	ret, err := upstreamHandler.Create(ctx)
-	assert.Nil(t, err)
-	objRet, ok := ret.(*entity.Upstream)
-	assert.True(t, ok)
-	assert.Equal(t, "3", objRet.ID)
+func TestUpstream_Exist(t *testing.T) {
+	mockData := []*entity.Upstream{
+		{
+			BaseInfo: entity.BaseInfo{ID: "001", CreateTime: 1609742634},
+			UpstreamDef: entity.UpstreamDef{
+				Name: "upstream1",
+				Key:  "server_addr",
+				Nodes: []interface{}{
+					map[string]interface{}{
+						"host":   "39.97.63.215",
+						"port":   float64(80),
+						"weight": float64(1),
+					},
+				},
+			},
+		},
+		{
+			BaseInfo: entity.BaseInfo{ID: "002", CreateTime: 1609742635},
+			UpstreamDef: entity.UpstreamDef{
+				Name: "upstream2",
+				Key:  "server_addr2",
+				Nodes: []interface{}{
+					map[string]interface{}{
+						"host":   "39.97.63.216",
+						"port":   float64(80),
+						"weight": float64(1),
+					},
+				},
+			},
+		},
+		{
+			BaseInfo: entity.BaseInfo{ID: "003", CreateTime: 1609742636},
+			UpstreamDef: entity.UpstreamDef{
+				Name: "upstream3",
+				Key:  "server_addr3",
+				Nodes: []interface{}{
+					map[string]interface{}{
+						"host":   "39.97.63.217",
+						"port":   float64(80),
+						"weight": float64(1),
+					},
+				},
+			},
+		},
+	}
 
-	//sleep
-	time.Sleep(time.Duration(20) * time.Millisecond)
+	tests := []struct {
+		caseDesc  string
+		giveInput *ExistCheckInput
+		giveErr   error
+		getCalled bool
+		wantInput []string
+		wantErr   error
+		wantRet   interface{}
+	}{
+		{
+			caseDesc: "check upstream exist, excluded",
+			giveInput: &ExistCheckInput{
+				Name:    "upstream1",
+				Exclude: "001",
+			},
+			wantRet:   nil,
+			getCalled: true,
+		},
+		{
+			caseDesc: "check upstream exist, not excluded",
+			giveInput: &ExistCheckInput{
+				Name:    "upstream1",
+				Exclude: "002",
+			},
+			wantRet:   &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			wantErr:   consts.InvalidParam("Upstream name is reduplicate"),
+			getCalled: true,
+		},
+		{
+			caseDesc: "check upstream exist, not existed",
+			giveInput: &ExistCheckInput{
+				Name:    "upstream_test",
+				Exclude: "001",
+			},
+			wantRet:   nil,
+			wantErr:   nil,
+			getCalled: true,
+		},
+	}
 
-	reqBody1 := `{
-		"nodes": [{
-			"host": "172.16.238.20",
-			"port": 1981,
-			"weight": 1
-		}],
-		"type": "roundrobin"
-	}`
-	responesBody := `"nodes":[{"host":"172.16.238.20","port":1981,"weight":1}],"type":"roundrobin"}`
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := false
+			upstreamStore := &store.MockInterface{}
+			upstreamStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				var res []interface{}
+				for _, c := range mockData {
+					if input.Predicate(c) {
+						if input.Format != nil {
+							res = append(res, input.Format(c))
+						} else {
+							res = append(res, c)
+						}
+					}
+				}
+				return &store.ListOutput{
+					Rows:      res,
+					TotalSize: len(res),
+				}
+			}, nil)
 
-	input2 := &PatchInput{}
-	input2.ID = "3"
-	input2.SubPath = ""
-	input2.Body = []byte(reqBody1)
-	ctx.SetInput(input2)
-
-	ret2, err := upstreamHandler.Patch(ctx)
-	assert.Nil(t, err)
-	_ret2, err := json.Marshal(ret2)
-	assert.Nil(t, err)
-	isContains := strings.Contains(string(_ret2), responesBody)
-	assert.True(t, isContains)
-
-	//delete test data
-	inputDel2 := &BatchDelete{}
-	reqBody = `{"ids": "3"}`
-	err = json.Unmarshal([]byte(reqBody), inputDel2)
-	assert.Nil(t, err)
-	ctx.SetInput(inputDel2)
-	_, err = upstreamHandler.BatchDelete(ctx)
-	assert.Nil(t, err)
-
+			h := Handler{upstreamStore: upstreamStore}
+			ctx := droplet.NewContext()
+			ctx.SetInput(tc.giveInput)
+			ret, err := h.Exist(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
+	}
 }
 
+func TestUpstream_ListUpstreamNames(t *testing.T) {
+	mockData := []*entity.Upstream{
+		{
+			BaseInfo: entity.BaseInfo{ID: "001", CreateTime: 1609742634},
+			UpstreamDef: entity.UpstreamDef{
+				Name: "upstream1",
+				Key:  "server_addr",
+				Nodes: []interface{}{
+					map[string]interface{}{
+						"host":   "39.97.63.215",
+						"port":   float64(80),
+						"weight": float64(1),
+					},
+				},
+			},
+		},
+		{
+			BaseInfo: entity.BaseInfo{ID: "002", CreateTime: 1609742635},
+			UpstreamDef: entity.UpstreamDef{
+				Name: "upstream2",
+				Key:  "server_addr2",
+				Nodes: []interface{}{
+					map[string]interface{}{
+						"host":   "39.97.63.216",
+						"port":   float64(80),
+						"weight": float64(1),
+					},
+				},
+			},
+		},
+		{
+			BaseInfo: entity.BaseInfo{ID: "003", CreateTime: 1609742636},
+			UpstreamDef: entity.UpstreamDef{
+				Name: "upstream3",
+				Key:  "server_addr3",
+				Nodes: []interface{}{
+					map[string]interface{}{
+						"host":   "39.97.63.217",
+						"port":   float64(80),
+						"weight": float64(1),
+					},
+				},
+			},
+		},
+	}
+
+	tests := []struct {
+		caseDesc  string
+		giveData  []*entity.Upstream
+		giveErr   error
+		wantErr   error
+		wantInput store.ListInput
+		wantRet   *store.ListOutput
+		getCalled bool
+	}{
+		{
+			caseDesc: "get upstream list names",
+			wantRet: &store.ListOutput{
+				Rows: []interface{}{
+					&entity.UpstreamNameResponse{
+						ID:   "001",
+						Name: "upstream1",
+					},
+					&entity.UpstreamNameResponse{
+						ID:   "002",
+						Name: "upstream2",
+					},
+					&entity.UpstreamNameResponse{
+						ID:   "003",
+						Name: "upstream3",
+					},
+				},
+				TotalSize: 3,
+			},
+			getCalled: true,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := false
+			upstreamStore := &store.MockInterface{}
+			upstreamStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				var res []interface{}
+				for _, c := range mockData {
+					res = append(res, c)
+				}
+				return &store.ListOutput{
+					Rows:      res,
+					TotalSize: len(res),
+				}
+			}, nil)
+
+			h := Handler{upstreamStore: upstreamStore}
+			ctx := droplet.NewContext()
+			ret, err := h.listUpstreamNames(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
+	}
+
+	mocknilData := []*entity.Upstream{}
+
+	tests1 := []struct {
+		caseDesc  string
+		giveData  []*entity.Upstream
+		giveErr   error
+		wantErr   error
+		wantInput store.ListInput
+		wantRet   *store.ListOutput
+		getCalled bool
+	}{
+		{
+			caseDesc: "get upstream list names nil",
+			wantRet: &store.ListOutput{
+				Rows:      []interface{}{},
+				TotalSize: 0,
+			},
+			getCalled: true,
+		},
+	}
+
+	for _, tc := range tests1 {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			getCalled := false
+			upstreamStore := &store.MockInterface{}
+			upstreamStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				var res []interface{}
+				for _, c := range mocknilData {
+					res = append(res, c)
+				}
+				return &store.ListOutput{
+					Rows:      res,
+					TotalSize: len(res),
+				}
+			}, nil)
+
+			h := Handler{upstreamStore: upstreamStore}
+			ctx := droplet.NewContext()
+			ret, err := h.listUpstreamNames(ctx)
+			assert.True(t, getCalled)
+			assert.Equal(t, tc.wantRet, ret)
+			assert.Equal(t, tc.wantErr, err)
+		})
+	}
+}

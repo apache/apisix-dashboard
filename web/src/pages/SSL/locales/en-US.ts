@@ -34,6 +34,7 @@ export default {
 
   'page.ssl.notification.updateCertEnableStatusSuccessfully':
     'Update certificate enable status successfully',
+  'page.ssl.list': 'SSL List',
   'page.ssl.list.expirationTime': 'Expiration Time',
   'page.ssl.list.ifEnable': 'If Enable',
   'page.ssl.list.periodOfValidity': 'Period Of Validity',

@@ -21,7 +21,7 @@ import defaultSettings from '../../../config/defaultSettings';
 
 context('Online debug', () => {
   const data = {
-    uris: [
+    validUris: [
       'localhost:9000/get',
       '127.0.0.1:9000/get',
       'www.baidu.com/get',
@@ -35,7 +35,10 @@ context('Online debug', () => {
       'localhost:9000/get?search=v1,sd&number=-1',
       'localhost:9000/get?search=1+1',
       'localhost:9000/api/commands/submit.html#Requirements?test=apisix.com',
-      'localhost:9000/js6/main.jsp?sid=pARQZYHABxkSVdeMvXAAEtfJKbWQocOA&df=mail126_mailmaster#module=mbox.ListModule%7C%7B"filter"',
+      'localhost:9000/js6/main.jsp?sid=pARQZYHABxkSVdeMvXAAEtfJKbWQocOA&df=mail126_mailmaster#module=mbox.ListModule%7C%7B',
+    ],
+    invalidUrls: [
+      '000'
     ],
   };
 
@@ -53,13 +56,37 @@ context('Online debug', () => {
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
 
     // input uri with specified special characters
-    data.uris.forEach((uri) => {
+    data.validUris.forEach((uri) => {
       cy.get(this.domSelector.debugUri).clear();
       cy.get(this.domSelector.debugUri).type(uri);
       cy.contains(routeLocaleUS['page.route.button.send']).click({ force: true });
 
       // should not show the notification about input the valid request url
       cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('not.exist');
+    });
+  });
+
+  it('shoule not show the invalid url notification', function () {
+    cy.visit('/');
+    cy.contains(menuLocaleUS['menu.routes']).click();
+
+    // show online debug draw
+    cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
+
+    // click send without type debugUrl
+    cy.contains(routeLocaleUS['page.route.button.send']).click({ force: true });
+    cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('exist');
+    cy.get(this.domSelector.notificationCloseIcon).click();
+
+    // input invalid uris
+    data.invalidUrls.forEach((uri) => {
+      cy.get(this.domSelector.debugUri).clear();
+      cy.get(this.domSelector.debugUri).type(uri);
+      cy.contains(routeLocaleUS['page.route.button.send']).click({ force: true });
+
+      // should not show the notification about input the valid request url
+      cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('exist');
+      cy.get(this.domSelector.notificationCloseIcon).click();
     });
   });
 });
