@@ -341,6 +341,7 @@ fi
 check_logfile
 
 ./manager-api stop
+sleep 6
 clean_up
 
 # etcd prefix test
