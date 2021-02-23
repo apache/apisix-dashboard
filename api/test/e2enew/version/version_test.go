@@ -14,46 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package e2e
+package version
 
 import (
 	"net/http"
-	"testing"
+
+	"github.com/onsi/ginkgo"
+	"github.com/onsi/ginkgo/extensions/table"
+
+	"e2enew/base"
 )
 
-func TestVersion(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			Desc:         "get version",
-			Object:       ManagerApiExpect(t),
+var _ = ginkgo.Describe("Version", func() {
+	table.DescribeTable("version test",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("get version", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/tool/version",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   []string{"commit_hash", "\"version\""},
-		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc, t)
-	}
-}
-
-func TestVersionMatched(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			Desc:         "check version matched (not matched)",
-			Object:       ManagerApiExpect(t),
+		}),
+		table.Entry("check version matched (not matched)", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/tool/version_match",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody: []string{"\"code\":2000001",
 				"\"message\":\"The manager-api and apache apisix are mismatched.\"",
 				"\"matched\":false", "apisix_server1", "apisix_server2"},
-		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc, t)
-	}
-}
+		}),
+	)
+})
