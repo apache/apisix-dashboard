@@ -86,3 +86,19 @@ run:
 ```sh
 $ ./manager-api stop
 ```
+
+## Working directory
+
+the `output` directory mention above is the default working directory.
+
+You can move the entire directory to any path you want, and use the `-p` to specify it as the working directory.
+
+For example, you can move it to `/usr/local/apisix-dashboard/`
+
+```sh
+$ mv ./output/manager-api /usr/local/bin/
+
+$ mv ./output/ /usr/local/apisix-dashboard/
+
+$ manager-api -p /usr/local/apisix-dashboard/
+```
