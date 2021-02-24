@@ -14,18 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { useRef } from 'react';
 import { Button, Drawer, PageHeader } from 'antd';
 import { useIntl } from 'umi';
 import { LinkOutlined } from '@ant-design/icons';
+import CodeMirror from '@uiw/react-codemirror';
 
 type Props = {
-  visible: boolean
+  visible: boolean,
+  readonly: boolean
 };
 
-const RawDataEditor: React.FC<Props> = ({ visible }) => {
+const RawDataEditor: React.FC<Props> = ({ visible, readonly = true }) => {
   const { formatMessage } = useIntl();
-
+  const ref = useRef<any>(null);
+  
   return (
     <div>
       <Drawer
@@ -54,8 +57,25 @@ const RawDataEditor: React.FC<Props> = ({ visible }) => {
            </Button>,
           ]}
         />
+        <CodeMirror
+          ref={(codemirror) => {
+            ref.current = codemirror;
+            if (codemirror) {
+              // NOTE: for debug & test
+              window.codemirror = codemirror.editor;
+            }
+          }}
+          value={JSON.stringify({}, null, 2)}
+          options={{
+            mode: 'json-ld',
+            readOnly: readonly ? 'nocursor' : '',
+            lineWrapping: true,
+            lineNumbers: true,
+            showCursorWhenSelecting: true,
+            autofocus: true,
+          }}
+        />
       </Drawer>
-
     </div>
   );
 };
