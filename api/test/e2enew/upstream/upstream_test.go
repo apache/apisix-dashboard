@@ -17,22 +17,19 @@
 package upstream
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/onsi/ginkgo"
-	"github.com/onsi/ginkgo/extensions/table"
 	"github.com/stretchr/testify/assert"
 
 	"e2enew/base"
 )
 
 var _ = ginkgo.Describe("Upstream", func() {
-	table.DescribeTable("test upstream create",
-		func(tc base.HttpTestCase) {
-			base.RunTestCase(tc)
-		},
-		table.Entry("use upstream that not exist", base.HttpTestCase{
+	ginkgo.It("test upstream create", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -42,24 +39,34 @@ var _ = ginkgo.Describe("Upstream", func() {
 			 }`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
-		}),
-		table.Entry("create upstream", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/upstreams/1",
-			Body: `{
-				 "name": "upstream1",
-				 "nodes": [{
-					 "host": "172.16.238.20",
-					 "port": 1980,
-					 "weight": 1
-				 }],
-				 "type": "roundrobin"
-			 }`,
+		})
+	})
+
+	ginkgo.It("create upstream", func() {
+		t := ginkgo.GinkgoT()
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["name"] = "upstream1"
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1980,
+				"weight": 1,
+			},
+		}
+		createUpstreamBody["type"] = "roundrobin"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/1",
+			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("check upstream exists by name", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("check upstream exists by name", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/notexist/upstreams",
@@ -68,8 +75,10 @@ var _ = ginkgo.Describe("Upstream", func() {
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   "Upstream name is reduplicate",
 			Sleep:        base.SleepTime,
-		}),
-		table.Entry("upstream name list", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("upstream name list", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/names/upstreams",
@@ -77,8 +86,10 @@ var _ = ginkgo.Describe("Upstream", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"name":"upstream1"`,
 			Sleep:        base.SleepTime,
-		}),
-		table.Entry("check upstream exists by name (exclude it self)", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("check upstream exists by name (exclude it self)", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/notexist/upstreams",
@@ -86,8 +97,10 @@ var _ = ginkgo.Describe("Upstream", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
-		}),
-		table.Entry("create route using the upstream just created", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("create route using the upstream just created", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
@@ -98,96 +111,120 @@ var _ = ginkgo.Describe("Upstream", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
-		}),
-		table.Entry("hit the route just created", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("hit the route just created", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
-		}),
-		table.Entry("update upstream with domain", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/upstreams/1",
-			Body: `{
-				 "nodes": [{
-					 "host": "172.16.238.20",
-					 "port": 1981,
-					 "weight": 1
-				 }],
-				 "type": "roundrobin"
-			 }`,
+		})
+	})
+	ginkgo.It("update upstream with domain", func() {
+		t := ginkgo.GinkgoT()
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1981,
+				"weight": 1,
+			},
+		}
+		createUpstreamBody["type"] = "roundrobin"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/1",
+			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("hit the route using upstream 1", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("hit the route using upstream 1", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
-		}),
-		table.Entry("delete not exist upstream", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("delete not exist upstream", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/not-exist",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
-		}),
-		table.Entry("delete route", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("delete route", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("delete upstream", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("delete upstream", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("hit the route just deleted", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("hit the route just deleted", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        base.SleepTime,
-		}),
-	)
+		})
+	})
 })
 
 var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 	ginkgo.It("create chash upstream with key (remote_addr)", func() {
+		t := ginkgo.GinkgoT()
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1980,
+				"weight": 1,
+			},
+			{
+				"host":   base.UpstreamIp,
+				"port":   1981,
+				"weight": 1,
+			},
+			{
+				"host":   base.UpstreamIp,
+				"port":   1982,
+				"weight": 1,
+			},
+		}
+		createUpstreamBody["type"] = "chash"
+		createUpstreamBody["hash_on"] = "header"
+		createUpstreamBody["key"] = "remote_addr"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		assert.Nil(t, err)
 		base.RunTestCase(base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/upstreams/1",
-			Body: `{
-				 "nodes": [{
-					 "host": "172.16.238.20",
-					 "port": 1980,
-					 "weight": 1
-				 },
-				 {
-					 "host": "172.16.238.20",
-					 "port": 1981,
-					 "weight": 1
-				 },
-				 {
-					 "host": "172.16.238.20",
-					 "port": 1982,
-					 "weight": 1
-				 }],
-				 "type": "chash",
-				 "hash_on":"header",
-				 "key": "remote_addr"
-			 }`,
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/1",
+			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		})
@@ -210,8 +247,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 
 	ginkgo.It("hit routes(upstream weight 1)", func() {
 		t := ginkgo.GinkgoT()
-		//hit routes
-		basepath := "http://127.0.0.1:9080/"
+		basepath := base.APISIXHost
 		request, err := http.NewRequest("GET", basepath+"/server_port", nil)
 		assert.Nil(t, err)
 		request.Header.Add("Authorization", base.GetToken())
@@ -233,36 +269,39 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 	})
 
 	ginkgo.It("create chash upstream with key (remote_addr, weight equal 0 or 1)", func() {
+		t := ginkgo.GinkgoT()
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1980,
+				"weight": 1,
+			},
+			{
+				"host":   base.UpstreamIp,
+				"port":   1981,
+				"weight": 0,
+			},
+			{
+				"host":   base.UpstreamIp,
+				"port":   1982,
+				"weight": 0,
+			},
+		}
+		createUpstreamBody["type"] = "chash"
+		createUpstreamBody["hash_on"] = "header"
+		createUpstreamBody["key"] = "remote_addr"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		assert.Nil(t, err)
 		base.RunTestCase(base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/upstreams/1",
-			Body: `{
-				"nodes": [
-				{
-					"host": "172.16.238.20",
-					"port": 1980,
-					"weight": 1
-				},
-				{
-					"host": "172.16.238.20",
-					"port": 1981,
-					"weight": 0
-				},
-				{
-					"host": "172.16.238.20",
-					"port": 1982,
-					"weight": 0
-				}],
-				"type": "chash",
-				"hash_on":"header",
-				"key": "remote_addr"
-			}`,
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/1",
+			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		})
 	})
-
 	ginkgo.It("create route using the upstream just created", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
@@ -277,10 +316,9 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 			Sleep:        base.SleepTime,
 		})
 	})
-
 	ginkgo.It("hit routes(remote_addr, weight equal 0 or 1)", func() {
 		t := ginkgo.GinkgoT()
-		basepath := "http://127.0.0.1:9080/"
+		basepath := base.APISIXHost
 		request, err := http.NewRequest("GET", basepath+"/server_port", nil)
 		assert.Nil(t, err)
 		request.Header.Add("Authorization", base.GetToken())
@@ -297,26 +335,31 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 		assert.Equal(t, 18, count)
 	})
 	ginkgo.It("create chash upstream with key (remote_addr, all weight equal 0)", func() {
+		t := ginkgo.GinkgoT()
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1980,
+				"weight": 0,
+			},
+			{
+				"host":   base.UpstreamIp,
+				"port":   1982,
+				"weight": 0,
+			},
+		}
+		createUpstreamBody["type"] = "chash"
+		createUpstreamBody["hash_on"] = "header"
+		createUpstreamBody["key"] = "remote_addr"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		assert.Nil(t, err)
+
 		base.RunTestCase(base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/upstreams/1",
-			Body: `{
-				 "nodes": [
-				 {
-					 "host": "172.16.238.20",
-					 "port": 1980,
-					 "weight": 0
-				 },
-				 {
-					 "host": "172.16.238.20",
-					 "port": 1981,
-					 "weight": 0
-				 }],
-				 "type": "chash",
-				 "hash_on":"header",
-				 "key": "remote_addr"
-			 }`,
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/1",
+			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		})
@@ -367,7 +410,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
-			Path:         "/hello1",
+			Path:         "/server_port",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        base.SleepTime,
@@ -376,29 +419,33 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 })
 
 var _ = ginkgo.Describe("Upstream create via post", func() {
-	table.DescribeTable("test upstream create via post",
-		func(tc base.HttpTestCase) {
-			base.RunTestCase(tc)
-		},
-		table.Entry("create upstream via POST", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPost,
-			Path:   "/apisix/admin/upstreams",
-			Body: `{
-				 "id": "u1",
-				 "nodes": [{
-					 "host": "172.16.238.20",
-					 "port": 1980,
-					 "weight": 1
-				 }],
-				 "type": "roundrobin"
-			 }`,
+	ginkgo.It("create upstream via POST", func() {
+		t := ginkgo.GinkgoT()
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["id"] = "u1"
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1981,
+				"weight": 1,
+			},
+		}
+		createUpstreamBody["type"] = "roundrobin"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/upstreams",
+			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			// should return id and other request body content
 			ExpectBody: []string{"\"id\":\"u1\"", "\"type\":\"roundrobin\""},
-		}),
-		table.Entry("create route using the upstream just created", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("create route using the upstream just created", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
@@ -409,78 +456,108 @@ var _ = ginkgo.Describe("Upstream create via post", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
-		}),
-		table.Entry("hit the route just created", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("hit the route just created", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
-		}),
-		table.Entry("delete route", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("delete route", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("delete upstream", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("delete upstream", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		}),
-	)
+		})
+	})
+	ginkgo.It("hit the route just deleted", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        base.SleepTime,
+		})
+	})
 })
 
 var _ = ginkgo.Describe("Upstream update use patch method", func() {
-	table.DescribeTable("test upstream update use patch method",
-		func(tc base.HttpTestCase) {
-			base.RunTestCase(tc)
-		},
-		table.Entry("create upstream via POST", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPost,
-			Path:   "/apisix/admin/upstreams",
-			Body: `{
-				 "id": "u1",
-				 "nodes": [{
-					 "host": "172.16.238.20",
-					 "port": 1980,
-					 "weight": 1
-				 }],
-				 "type": "roundrobin"
-			 }`,
+	ginkgo.It("create upstream via POST", func() {
+		t := ginkgo.GinkgoT()
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["id"] = "u1"
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1981,
+				"weight": 1,
+			},
+		}
+		createUpstreamBody["type"] = "roundrobin"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/upstreams",
+			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   []string{"\"id\":\"u1\"", "\"type\":\"roundrobin\""},
-		}),
-		table.Entry("update upstream use patch method", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPatch,
-			Path:   "/apisix/admin/upstreams/u1",
-			Body: `{
-				 "nodes": [{
-					 "host": "172.16.238.20",
-					 "port": 1981,
-					 "weight": 1
-				 }],
-				 "type": "roundrobin"
-			 }`,
+			// should return id and other request body content
+			ExpectBody: []string{"\"id\":\"u1\"", "\"type\":\"roundrobin\""},
+		})
+	})
+	ginkgo.It("update upstream use patch method", func() {
+		t := ginkgo.GinkgoT()
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1981,
+				"weight": 1,
+			},
+		}
+		createUpstreamBody["type"] = "roundrobin"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPatch,
+			Path:         "/apisix/admin/upstreams/u1",
+			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("get upstream data", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("get upstream data", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "nodes\":[{\"host\":\"172.16.238.20\",\"port\":1981,\"weight\":1}],\"type\":\"roundrobin\"}",
-		}),
-		table.Entry("Update upstream using path parameter patch method", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("Upstream update use patch method", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPatch,
 			Path:   "/apisix/admin/upstreams/u1/nodes",
@@ -490,21 +567,25 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 				"Content-Type":  "text/plain",
 			},
 			ExpectStatus: http.StatusOK,
-		}),
-		table.Entry("get upstream data", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("get upstream data", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}",
-		}),
-		table.Entry("delete upstream", base.HttpTestCase{
+		})
+	})
+	ginkgo.It("delete upstream", func() {
+		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		}),
-	)
+		})
+	})
 })
