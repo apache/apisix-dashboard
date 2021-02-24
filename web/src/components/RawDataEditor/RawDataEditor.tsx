@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 import React, { useRef } from 'react';
-import { Button, Drawer, PageHeader } from 'antd';
+import { Button, Drawer, PageHeader, notification } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
 import CodeMirror from '@uiw/react-codemirror';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 type Props = {
   visible: boolean,
@@ -53,9 +54,21 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, data = {}, o
             <Button type="primary" onClick={() => { }} key={2}>
               Format
             </Button>,
-            <Button type="primary" onClick={() => { }} key={2}>
-              Copy
-           </Button>,
+            <CopyToClipboard text={JSON.stringify(data)} onCopy={(_: string, result: boolean) => {
+              if (!result) {
+                notification.error({
+                  message: 'Copy Failed',
+                });
+                return;
+              }
+              notification.success({
+                message: 'Copy Successfully',
+              });
+            }}>
+              <Button type="primary" key={2}>
+                Copy
+              </Button>
+            </CopyToClipboard>,
           ]}
         />
         <CodeMirror
