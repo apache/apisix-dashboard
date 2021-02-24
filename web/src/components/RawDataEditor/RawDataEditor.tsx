@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 import React, { useRef } from 'react';
-import { Button, Drawer, PageHeader, notification } from 'antd';
+import { Button, Drawer, PageHeader, Tooltip, notification } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
 import CodeMirror from '@uiw/react-codemirror';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useIntl } from 'umi';
 
 type Props = {
   visible: boolean,
@@ -30,6 +31,7 @@ type Props = {
 
 const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data = {}, onClose }) => {
   const ref = useRef<any>(null);
+  const { formatMessage } = useIntl();
 
   return (
     <div>
@@ -56,9 +58,11 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
             >
               Document
             </Button>,
-            <Button type="primary" onClick={() => { }} key={2}>
-              Format
-            </Button>,
+            <Tooltip placement="top" title={formatMessage({ id: 'component.rawDataEditor.tip' })}>
+              <Button type="primary" onClick={() => { }} key={2}>
+                Format
+            </Button>
+            </Tooltip>,
             <CopyToClipboard text={JSON.stringify(data)} onCopy={(_: string, result: boolean) => {
               if (!result) {
                 notification.error({
