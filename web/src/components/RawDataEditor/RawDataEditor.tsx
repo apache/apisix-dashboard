@@ -23,11 +23,12 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 type Props = {
   visible: boolean,
   readonly: boolean,
+  type: 'route' | 'service' | 'consumer' | 'upstream'
   data: any,
   onClose?: () => void;
 };
 
-const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, data = {}, onClose }) => {
+const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data = {}, onClose }) => {
   const ref = useRef<any>(null);
 
   return (
@@ -46,7 +47,11 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, data = {}, o
             <Button
               type="default"
               icon={<LinkOutlined />}
-              onClick={() => { }}
+              onClick={() => {
+                window.open(
+                  `https://github.com/apache/apisix/blob/master/doc/admin-api.md#${type}`,
+                );
+              }}
               key={1}
             >
               Document

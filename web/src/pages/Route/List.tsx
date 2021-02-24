@@ -457,6 +457,7 @@ const Page: React.FC = () => {
       />
       <RawDataEditor
         visible={rawDataEditorVisable}
+        type='route'
         readonly={true}
         data={rawData}
         onClose={() => { setRawDataEditorVisable(false) }}
