@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -23,12 +23,15 @@ import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 
 import { timestampToLocaleString } from '@/helpers';
+import { RawDataEditor } from '@/components/RawDataEditor';
 
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
+  const [rawDataEditorVisable, setRawDataEditorVisable] = useState(false);
+  const [rawData, setRawData] = useState({});
 
   const columns: ProColumns<ConsumerModule.ResEntity>[] = [
     {
@@ -58,6 +61,12 @@ const Page: React.FC = () => {
             onClick={() => history.push(`/consumer/${record.username}/edit`)}
           >
             {formatMessage({ id: 'component.global.edit' })}
+          </Button>
+          <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
+            setRawDataEditorVisable(!rawDataEditorVisable);
+            setRawData(record);
+          }}>
+            {formatMessage({ id: 'component.global.view' })}
           </Button>
           <Popconfirm
             title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
@@ -101,6 +110,13 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
         ]}
+      />
+      <RawDataEditor
+        visible={rawDataEditorVisable}
+        type='consumer'
+        readonly={true}
+        data={rawData}
+        onClose={() => { setRawDataEditorVisable(false) }}
       />
     </PageContainer>
   );
