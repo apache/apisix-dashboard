@@ -17,6 +17,7 @@
 package upstream
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"sort"
@@ -29,31 +30,38 @@ import (
 	"e2enew/base"
 )
 
+var createUpstreamBody map[string]interface{} = map[string]interface{}{
+	"nodes": []map[string]interface{}{
+		{
+			"host":   base.UpstreamIp,
+			"port":   1980,
+			"weight": 1,
+		},
+		{
+			"host":   base.UpstreamIp,
+			"port":   1981,
+			"weight": 1,
+		},
+		{
+			"host":   base.UpstreamIp,
+			"port":   1982,
+			"weight": 1,
+		},
+	},
+	"type": "chash",
+}
+
 var _ = ginkgo.Describe("Upstream chash query string", func() {
 	ginkgo.It("create chash upstream with key (query_string)", func() {
+		t := ginkgo.GinkgoT()
+		createUpstreamBody["key"] = "query_string"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		assert.Nil(t, err)
 		base.RunTestCase(base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/upstreams/1",
-			Body: `{
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1980,
-						"weight": 1
-					},
-					{
-						"host": "172.16.238.20",
-						"port": 1981,
-						"weight": 1
-					},
-					{
-						"host": "172.16.238.20",
-						"port": 1982,
-						"weight": 1
-					}],
-					"type": "chash",
-					"key": "query_string"
-				}`,
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/1",
+			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   []string{"\"id\":\"1\"", "\"key\":\"query_string\""},
@@ -76,7 +84,7 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 	ginkgo.It("hit routes(upstream query_string)", func() {
 		t := ginkgo.GinkgoT()
 		time.Sleep(time.Duration(500) * time.Millisecond)
-		basepath := "http://127.0.0.1:9080"
+		basepath := base.APISIXHost
 		res := map[string]int{}
 		for i := 0; i < 180; i++ {
 			url := basepath + "/server_port?var=2&var2=" + strconv.Itoa(i)
@@ -132,29 +140,15 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 
 var _ = ginkgo.Describe("Upstream chash query string", func() {
 	ginkgo.It("create chash upstream with key (arg_xxx)", func() {
+		t := ginkgo.GinkgoT()
+		createUpstreamBody["key"] = "arg_device_id"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		assert.Nil(t, err)
 		base.RunTestCase(base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPut,
-			Path:   "/apisix/admin/upstreams/1",
-			Body: `{
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1980,
-						"weight": 1
-					},
-					{
-						"host": "172.16.238.20",
-						"port": 1981,
-						"weight": 1
-					},
-					{
-						"host": "172.16.238.20",
-						"port": 1982,
-						"weight": 1
-					}],
-					"type": "chash",
-					"key": "arg_device_id"
-				}`,
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/1",
+			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   []string{"\"id\":\"1\"", "\"key\":\"arg_device_id\""},
@@ -177,7 +171,7 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 	ginkgo.It("hit routes(upstream arg_device_id)", func() {
 		t := ginkgo.GinkgoT()
 		time.Sleep(time.Duration(500) * time.Millisecond)
-		basepath := "http://127.0.0.1:9080"
+		basepath := base.APISIXHost
 		res := map[string]int{}
 		for i := 0; i <= 17; i++ {
 			url := basepath + "/server_port?device_id=" + strconv.Itoa(i)
@@ -230,4 +224,3 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 		})
 	})
 })
-
