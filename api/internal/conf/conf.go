@@ -68,6 +68,7 @@ type Etcd struct {
 	Username  string
 	Password  string
 	MTLS      *MTLS
+	Prefix    string
 }
 
 type Listen struct {
@@ -225,10 +226,16 @@ func initEtcdConfig(conf Etcd) {
 		endpoints = conf.Endpoints
 	}
 
+	prefix := "/apisix"
+	if len(conf.Prefix) > 0 {
+		prefix = conf.Prefix
+	}
+
 	ETCDConfig = &Etcd{
 		Endpoints: endpoints,
 		Username:  conf.Username,
 		Password:  conf.Password,
-		MTLS: conf.MTLS,
+		MTLS:      conf.MTLS,
+		Prefix:    prefix,
 	}
 }
