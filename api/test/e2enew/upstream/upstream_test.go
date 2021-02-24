@@ -154,7 +154,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 		table.Entry("hit the route just deleted", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
-			Path:         "/hello1",
+			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        base.SleepTime,
