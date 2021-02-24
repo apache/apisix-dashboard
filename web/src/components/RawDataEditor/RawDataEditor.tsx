@@ -16,26 +16,27 @@
  */
 import React, { useRef } from 'react';
 import { Button, Drawer, PageHeader } from 'antd';
-import { useIntl } from 'umi';
 import { LinkOutlined } from '@ant-design/icons';
 import CodeMirror from '@uiw/react-codemirror';
 
 type Props = {
   visible: boolean,
-  readonly: boolean
+  readonly: boolean,
+  data: any,
+  onClose?: () => void;
 };
 
-const RawDataEditor: React.FC<Props> = ({ visible, readonly = true }) => {
-  const { formatMessage } = useIntl();
+const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, data = {}, onClose }) => {
   const ref = useRef<any>(null);
-  
+
   return (
     <div>
       <Drawer
         title='Raw Data Editor'
         placement="right"
         width={700}
-        visible={true}
+        visible={visible}
+        onClose={onClose}
       >
         <PageHeader
           title=""
@@ -65,7 +66,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true }) => {
               window.codemirror = codemirror.editor;
             }
           }}
-          value={JSON.stringify({}, null, 2)}
+          value={JSON.stringify(data, null, 2)}
           options={{
             mode: 'json-ld',
             readOnly: readonly ? 'nocursor' : '',

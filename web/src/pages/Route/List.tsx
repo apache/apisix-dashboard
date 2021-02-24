@@ -73,7 +73,8 @@ const Page: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [uploadFileList, setUploadFileList] = useState<RcFile[]>([]);
   const [showImportModal, setShowImportModal] = useState(false);
-  const [rawDataEditorVisable, setRawDataEditor] = useState(false);
+  const [rawDataEditorVisable, setRawDataEditorVisable] = useState(false);
+  const [rawData, setRawData] = useState({});
 
   useEffect(() => {
     fetchLabelList().then(setLabelList);
@@ -380,7 +381,10 @@ const Page: React.FC = () => {
             <Button type="primary" onClick={() => history.push(`/routes/${record.id}/edit`)}>
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
-            <Button type="primary" onClick={() => { setRawDataEditor(!rawDataEditorVisable) }}>
+            <Button type="primary" onClick={() => {
+              setRawDataEditorVisable(!rawDataEditorVisable);
+              setRawData(record);
+            }}>
               {formatMessage({ id: 'component.global.view' })}
             </Button>
             <Popconfirm
@@ -453,6 +457,9 @@ const Page: React.FC = () => {
       />
       <RawDataEditor
         visible={rawDataEditorVisable}
+        readonly={true}
+        data={rawData}
+        onClose={() => { setRawDataEditorVisable(false) }}
       >
       </RawDataEditor>
       <Modal
