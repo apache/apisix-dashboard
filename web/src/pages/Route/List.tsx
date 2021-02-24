@@ -461,8 +461,7 @@ const Page: React.FC = () => {
         readonly={true}
         data={rawData}
         onClose={() => { setRawDataEditorVisable(false) }}
-      >
-      </RawDataEditor>
+      />
       <Modal
         title={formatMessage({ id: 'page.route.button.importOpenApi' })}
         visible={showImportModal}

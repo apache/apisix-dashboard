@@ -121,7 +121,7 @@ const Page: React.FC = () => {
         readonly={true}
         data={rawData}
         onClose={() => { setRawDataEditorVisable(false) }}
-      ></RawDataEditor>
+      />
     </PageContainer>
   );
 };
