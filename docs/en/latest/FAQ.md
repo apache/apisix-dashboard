@@ -17,6 +17,13 @@
 #
 -->
 
+---
+
+id: fqa
+title: FAQ
+
+---
+
 # FAQ
 
 ### 1. Vue.js version of the Dashboard

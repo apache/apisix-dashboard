@@ -17,6 +17,13 @@
 #
 -->
 
+---
+
+id: userguide
+title: User Guide
+
+---
+
 # User Guide
 
 The following are parts of the modules' snapshot.

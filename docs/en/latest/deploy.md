@@ -17,6 +17,13 @@
 #
 -->
 
+---
+
+id: deploy-with-source-codes
+title: Deploy with Source Codes
+
+---
+
 # Build and launch with source codes
 
 The Dashboard contains both `manager-api` and `web`, but `web` is _optional_.
