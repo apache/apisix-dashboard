@@ -547,21 +547,32 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 		})
 	})
 	ginkgo.It("get upstream data", func() {
+
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "nodes\":[{\"host\":\"172.16.238.20\",\"port\":1981,\"weight\":1}],\"type\":\"roundrobin\"}",
+			ExpectBody:   "nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1981,\"weight\":1}],\"type\":\"roundrobin\"}",
 		})
 	})
 	ginkgo.It("Upstream update use patch method", func() {
+		t := ginkgo.GinkgoT()
+		var nodes []map[string]interface{} = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1980,
+				"weight": 1,
+			},
+		}
+		_nodes, err := json.Marshal(nodes)
+		assert.Nil(t, err)
 		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPatch,
 			Path:   "/apisix/admin/upstreams/u1/nodes",
-			Body:   `[{"host":"172.16.238.20","port": 1980,"weight":1}]`,
+			Body:   string(_nodes),
 			Headers: map[string]string{
 				"Authorization": base.GetToken(),
 				"Content-Type":  "text/plain",
@@ -570,13 +581,14 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 		})
 	})
 	ginkgo.It("get upstream data", func() {
+
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "nodes\":[{\"host\":\"172.16.238.20\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}",
+			ExpectBody:   "nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}",
 		})
 	})
 	ginkgo.It("delete upstream", func() {
