@@ -92,9 +92,9 @@ context('Create and Delete Route', () => {
     cy.get(this.domSelector.nameSelector).type(name);
     cy.contains('Search').click();
     cy.contains(name).siblings().contains('View').click();
-    cy.get('.ant-drawer-content').should('be.visible');
+    cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get('.CodeMirror-scroll').within(() => {
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
       cy.contains('upstream').should("exist");
       cy.contains(name).should('exist');
     });
@@ -121,9 +121,9 @@ context('Create and Delete Route', () => {
 
     // test view
     cy.contains(newName).siblings().contains('View').click();
-    cy.get('.ant-drawer-content').should('be.visible');
+    cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get('.CodeMirror-scroll').within(() => {
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
       cy.contains('upstream').should("exist");
       cy.contains(newName).should('exist');
     });

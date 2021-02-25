@@ -47,9 +47,9 @@ context('create and delete service ', () => {
     cy.get(this.domSelector.nameSelector).type(this.data.serviceName);
     cy.contains('Search').click();
     cy.contains(this.data.serviceName).siblings().contains('View').click();
-    cy.get('.ant-drawer-content').should('be.visible');
+    cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get('.CodeMirror-scroll').within(() => {
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
       cy.contains('upstream').should("exist");
       cy.contains(this.data.serviceName).should('exist');
     });
@@ -77,9 +77,9 @@ context('create and delete service ', () => {
 
     // test view
     cy.contains(this.data.serviceName2).siblings().contains('View').click();
-    cy.get('.ant-drawer-content').should('be.visible');
+    cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get('.CodeMirror-scroll').within(() => {
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
       cy.contains('upstream').should('exist');
       cy.contains(this.data.serviceName2).should('exist');
     });

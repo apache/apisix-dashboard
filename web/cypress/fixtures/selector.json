@@ -60,5 +60,7 @@
 
   "errorExplain": ".ant-form-item-explain",
   "usernameInput": "#control-ref_username",
-  "passwordInput": "#control-ref_password"
+  "passwordInput": "#control-ref_password",
+  "drawer": ".ant-drawer-content",
+  "codemirrorScroll": ".CodeMirror-scroll"
 }

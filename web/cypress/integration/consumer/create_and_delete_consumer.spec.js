@@ -63,9 +63,9 @@ context('Create and Delete Consumer', () => {
     cy.get(this.domSelector.nameSelector).type(this.data.consumerName);
     cy.contains('Search').click();
     cy.contains(this.data.consumerName).siblings().contains('View').click();
-    cy.get('.ant-drawer-content').should('be.visible');
+    cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get('.CodeMirror-scroll').within(() => {
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
       cy.contains('plugins').should("exist");
       cy.contains(this.data.consumerName).should('exist');
     });
