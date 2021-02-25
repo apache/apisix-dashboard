@@ -43,7 +43,7 @@ This project includes `Manager API`, which will gradually replace `Admin API` in
 
 Note: Currently the Dashboard does not have complete coverage of Apache APISIX features, [visit here](https://github.com/apache/apisix-dashboard/milestones) to view the milestones.
 
-![architecture](./docs/en/latest/assets/images/architecture.png)
+![architecture](./docs/assets/images/architecture.png)
 
 ## Demo
 
