@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/stretchr/testify/assert"
@@ -247,6 +248,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 
 	ginkgo.It("hit routes(upstream weight 1)", func() {
 		t := ginkgo.GinkgoT()
+		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		request, err := http.NewRequest("GET", basepath+"/server_port", nil)
 		assert.Nil(t, err)
@@ -318,6 +320,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 	})
 	ginkgo.It("hit routes(remote_addr, weight equal 0 or 1)", func() {
 		t := ginkgo.GinkgoT()
+		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		request, err := http.NewRequest("GET", basepath+"/server_port", nil)
 		assert.Nil(t, err)
