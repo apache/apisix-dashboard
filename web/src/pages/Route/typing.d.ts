@@ -247,6 +247,7 @@ declare namespace RouteModule {
   };
   type DebugViewProps = {
     form: FormInstance;
+    name?: string;
   };
   type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'raw input' | 'form-data';
   type DebugDrawProps = {

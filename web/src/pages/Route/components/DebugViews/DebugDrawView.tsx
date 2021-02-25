@@ -272,13 +272,13 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         >
           <Tabs>
             <TabPane tab={formatMessage({ id: 'page.route.TabPane.queryParams' })} key="query">
-              <DebugParamsView form={queryForm} />
+              <DebugParamsView form={queryForm} name='queryForm'/>
             </TabPane>
             <TabPane tab={formatMessage({ id: 'page.route.TabPane.authentication' })} key="auth">
               <AuthenticationView form={authForm} />
             </TabPane>
             <TabPane tab={formatMessage({ id: 'page.route.TabPane.headerParams' })} key="header">
-              <DebugParamsView form={headerForm} />
+              <DebugParamsView form={headerForm} name='headerForm'/>
             </TabPane>
             {showBodyTab && (
               <TabPane tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })} key="body">
@@ -312,7 +312,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                 )}
                 <div style={{ marginTop: 16 }}>
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded] && (
-                    <DebugParamsView form={urlencodedForm} />
+                    <DebugParamsView form={urlencodedForm} name='urlencodedForm'/>
                   )}
 
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormData] && (

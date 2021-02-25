@@ -43,6 +43,9 @@ context('Online debug', () => {
     ],
     postUrl: `${defaultSettings.serveUrlMap[SERVE_ENV].split('//')[1]}/apisix/admin/import/routes`,
     uploadFile: '../../../api/test/testdata/import/default.json',
+    headerAuthorizationKey: 'Authorization',
+    token: localStorage.getItem('token'),
+    routeName: 'hello',
   };
 
   const domSelector = {
@@ -53,12 +56,16 @@ context('Online debug', () => {
     debugFormDataType0: '[data-cy=debug-formdata-type-0]',
     debugFormDataValue0: '#dynamic_form_data_item_params_0_value',
     debugFormDataFileButton0: '[data-cy=debug-upload-btn-0]',
+    codeMirrorCOde: '.CodeMirror-code',
+    headerDataKey0: '#headerForm_params_0_key',
+    headerDataValue0: '#headerForm_params_0_value',
   }
 
   beforeEach(() => {
     cy.login();
 
     cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
   });
 
   it('should not show the invalid url notification', function () {
@@ -67,7 +74,6 @@ context('Online debug', () => {
 
     // show online debug draw
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
-
     // input uri with specified special characters
     data.validUris.forEach((uri) => {
       cy.get(this.domSelector.debugUri).clear();
@@ -118,8 +124,9 @@ context('Online debug', () => {
     // change request protocol http
     cy.get(domSelector.debugProtocol).click();
     cy.contains('http://').click();
-
+    // set debug uri
     cy.get(this.domSelector.debugUri).type(data.postUrl);
+    // set request body
     cy.contains('Body Params').should('be.visible').click();
 
     cy.contains('form-data').should('be.visible').click();
@@ -137,8 +144,23 @@ context('Online debug', () => {
     // attach file
     cy.get(domSelector.debugFormDataValue0).attachFile(data.uploadFile);
 
+    // set header Authorization
+    cy.contains('Header Params').should('be.visible').click();
+    cy.get(domSelector.headerDataKey0).type(data.headerAuthorizationKey),
+    cy.get(domSelector.headerDataValue0).type(data.token);
+
     cy.contains(routeLocaleUS['page.route.button.send']).click();
-    // assert: send request ok
-    cy.get(this.domSelector.errorNotification).should('not.exist');
+    // assert: send request return
+    cy.get(domSelector.codeMirrorCOde).contains('data').should('be.visible');
+    cy.get(domSelector.codeMirrorCOde).contains('routes').should('be.visible');
+
+    // close debug drawer
+    cy.get(this.domSelector.drawerClose).click();
+
+    // refresh table and delete the route just created
+    cy.get(this.domSelector.refresh).click();
+    cy.contains(data.routeName).siblings().contains('Delete').click();
+    cy.contains('button', 'Confirm').click();
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
   })
 });

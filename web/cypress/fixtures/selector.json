@@ -63,5 +63,6 @@
   "usernameInput": "#control-ref_username",
   "passwordInput": "#control-ref_password",
   "drawer": ".ant-drawer-content",
-  "codemirrorScroll": ".CodeMirror-scroll"
+  "codemirrorScroll": ".CodeMirror-scroll",
+  "drawerClose": ".ant-drawer-close"
 }

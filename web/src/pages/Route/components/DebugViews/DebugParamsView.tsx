@@ -25,7 +25,7 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
   const { formatMessage } = useIntl();
 
   return (
-    <Form name="dynamic_form_nest_item" className={styles.routeDebugDraw} form={props.form}>
+    <Form name={props.name} className={styles.routeDebugDraw} form={props.form}>
       <Form.List name="params">
         {(fields, { add, remove }) => {
           return (
