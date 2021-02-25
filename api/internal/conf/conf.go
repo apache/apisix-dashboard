@@ -55,6 +55,7 @@ var (
 	ImportSizeLimit  = 10 * 1024 * 1024
 	PIDPath          = "/tmp/manager-api.pid"
 	AllowList        []string
+	Plugins          = map[string]bool{}
 )
 
 type MTLS struct {
@@ -111,6 +112,7 @@ type Authentication struct {
 type Config struct {
 	Conf           Conf
 	Authentication Authentication
+	Plugins        []string
 }
 
 // TODO: we should no longer use init() function after remove all handler's integration tests
@@ -187,6 +189,8 @@ func setConf() {
 
 		//auth
 		initAuthentication(config.Authentication)
+
+		initPlugins(config.Plugins)
 	}
 }
 
@@ -207,6 +211,12 @@ func initAuthentication(conf Authentication) {
 	// create user list
 	for _, item := range userList {
 		UserList[item.Username] = item
+	}
+}
+
+func initPlugins(plugins []string) {
+	for _, pluginName := range plugins {
+		Plugins[pluginName] = true
 	}
 }
 
