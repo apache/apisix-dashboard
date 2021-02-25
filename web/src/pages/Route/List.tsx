@@ -73,7 +73,7 @@ const Page: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [uploadFileList, setUploadFileList] = useState<RcFile[]>([]);
   const [showImportModal, setShowImportModal] = useState(false);
-  const [rawDataEditorVisable, setRawDataEditorVisable] = useState(false);
+  const [rawDataEditorVisible, setRawDataEditorVisible] = useState(false);
   const [rawData, setRawData] = useState({});
 
   useEffect(() => {
@@ -382,8 +382,8 @@ const Page: React.FC = () => {
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
             <Button type="primary" onClick={() => {
-              setRawDataEditorVisable(!rawDataEditorVisable);
               setRawData(record);
+              setRawDataEditorVisible(true);
             }}>
               {formatMessage({ id: 'component.global.view' })}
             </Button>
@@ -456,11 +456,11 @@ const Page: React.FC = () => {
         }}
       />
       <RawDataEditor
-        visible={rawDataEditorVisable}
+        visible={rawDataEditorVisible}
         type='route'
         readonly={true}
         data={rawData}
-        onClose={() => { setRawDataEditorVisable(false) }}
+        onClose={() => { setRawDataEditorVisible(false) }}
       />
       <Modal
         title={formatMessage({ id: 'page.route.button.importOpenApi' })}

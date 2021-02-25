@@ -25,7 +25,7 @@ type Props = {
   visible: boolean,
   readonly: boolean,
   type: 'route' | 'service' | 'consumer' | 'upstream'
-  data: any,
+  data: Record<string, any>,
   onClose?: () => void;
 };
 
@@ -34,9 +34,9 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
   const { formatMessage } = useIntl();
 
   return (
-    <div>
+    <>
       <Drawer
-        title='Raw Data Editor'
+        title={formatMessage({ id: 'component.rawDataEditor.title' })}
         placement="right"
         width={700}
         visible={visible}
@@ -44,7 +44,6 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
       >
         <PageHeader
           title=""
-          ghost={false}
           extra={[
             <Button
               type="default"
@@ -99,7 +98,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
           }}
         />
       </Drawer>
-    </div>
+    </>
   );
 };
 

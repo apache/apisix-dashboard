@@ -15,5 +15,6 @@
  * limitations under the License.
  */
 export default {
-  'component.rawDataEditor.tip': 'Editing is not currently supported',
+  'component.rawDataEditor.tip': "Don't support edit mode currently",
+  'component.rawDataEditor.title': 'Raw Data Editor',
 };

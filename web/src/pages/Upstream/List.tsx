@@ -29,7 +29,7 @@ import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
-  const [rawDataEditorVisable, setRawDataEditorVisable] = useState(false);
+  const [rawDataEditorVisible, setRawDataEditorVisible] = useState(false);
   const [rawData, setRawData] = useState({});
 
   const { formatMessage } = useIntl();
@@ -69,8 +69,8 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'page.upstream.list.edit' })}
           </Button>
           <Button type="primary" onClick={() => {
-            setRawDataEditorVisable(!rawDataEditorVisable);
             setRawData(record);
+            setRawDataEditorVisible(true);
           }}>
             {formatMessage({ id: 'component.global.view' })}
           </Button>
@@ -116,11 +116,11 @@ const Page: React.FC = () => {
         ]}
       />
       <RawDataEditor
-        visible={rawDataEditorVisable}
+        visible={rawDataEditorVisible}
         type='upstream'
         readonly={true}
         data={rawData}
-        onClose={() => { setRawDataEditorVisable(false) }}
+        onClose={() => { setRawDataEditorVisible(false) }}
       />
     </PageContainer>
   );

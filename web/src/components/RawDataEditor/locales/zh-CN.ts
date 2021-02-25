@@ -16,4 +16,5 @@
  */
 export default {
   'component.rawDataEditor.tip': '目前暂不支持编辑',
+  'component.rawDataEditor.title': '元数据编辑器',
 };
