@@ -25,7 +25,7 @@ jobs:
         with:
           go-version: '1.13'
       - name: check gofmt
-        working-directory: ./
+        working-directory: ./api
         run: |
           diffs=`gofmt -l .`
           if [[ -n $diffs ]]; then
