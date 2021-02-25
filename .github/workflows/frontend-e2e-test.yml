@@ -41,7 +41,9 @@ jobs:
 
       - name: Start manager-api
         working-directory: ./api
-        run: nohup go run ./cmd/manager &
+        run: |
+          sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./conf/conf.yaml
+          nohup go run ./cmd/manager &
 
       - name: Install front-end dependencies
         run: yarn install

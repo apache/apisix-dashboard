@@ -43,7 +43,7 @@ This project includes `Manager API`, which will gradually replace `Admin API` in
 
 Note: Currently the Dashboard does not have complete coverage of Apache APISIX features, [visit here](https://github.com/apache/apisix-dashboard/milestones) to view the milestones.
 
-![architecture](./docs/images/architecture.png)
+![architecture](./docs/assets/images/architecture.png)
 
 ## Demo
 
@@ -78,19 +78,19 @@ Password: admin
 
 Support the following ways currently.
 
-- [Source Codes](./docs/deploy.md)
-- [Docker](./docs/deploy-with-docker.md)
-- [RPM package（only for CentOS 7）](./docs/deploy-with-rpm.md)
+- [Source Codes](./docs/en/latest/deploy.md)
+- [Docker](./docs/en/latest/deploy-with-docker.md)
+- [RPM package（only for CentOS 7）](./docs/en/latest/deploy-with-rpm.md)
 
 ## Development
 
 Pull requests are encouraged and always welcome. [Pick an issue](https://github.com/apache/apisix-dashboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) and help us out!
 
-Please refer to the [Development Guide](./docs/develop.md).
+Please refer to the [Development Guide](./docs/en/latest/develop.md).
 
 ## User Guide
 
-Please refer to the [User Guide](./docs/USER_GUIDE.md).
+Please refer to the [User Guide](./docs/en/latest/USER_GUIDE.md).
 
 ## Contributing
 
@@ -98,7 +98,7 @@ Please refer to the [Contribution Guide](./CONTRIBUTING.md) for a more detailed 
 
 ## FAQ
 
-Please refer to the [FAQ](./docs/FAQ.md) for more known issues.
+Please refer to the [FAQ](./docs/en/latest/FAQ.md) for more known issues.
 
 ## License
 

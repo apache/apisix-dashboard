@@ -17,6 +17,13 @@
 #
 -->
 
+---
+
+id: deploy-with-docker
+title: Deploy with Docker
+
+---
+
 # Building and Launching with Docker
 
 **NOTE:** We support Docker Image, please visit [DockerHub](https://hub.docker.com/r/apache/apisix-dashboard) for more information. The following steps are for building Docker Image manually.

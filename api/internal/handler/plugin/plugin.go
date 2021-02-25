@@ -73,8 +73,11 @@ func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
 	if input.All {
 		var res []map[string]interface{}
 		list := plugins.Value().(map[string]interface{})
-		for name, conf := range list {
-			plugin := conf.(map[string]interface{})
+		for name, config := range list {
+			if res, ok := conf.Plugins[name]; !ok || !res {
+				continue
+			}
+			plugin := config.(map[string]interface{})
 			plugin["name"] = name
 			if _, ok := plugin["type"]; !ok {
 				plugin["type"] = "other"
@@ -87,9 +90,11 @@ func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
 	var ret []string
 	list := plugins.Map()
 	for pluginName := range list {
-		if pluginName != "serverless-post-function" && pluginName != "serverless-pre-function" {
-			ret = append(ret, pluginName)
+		if res, ok := conf.Plugins[pluginName]; !ok || !res {
+			continue
 		}
+
+		ret = append(ret, pluginName)
 	}
 
 	return ret, nil
