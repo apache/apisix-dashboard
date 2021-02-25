@@ -341,6 +341,76 @@ fi
 check_logfile
 
 ./manager-api stop
+sleep 6
+clean_up
+
+# etcd prefix test
+# disable etcd autentication
+resp=$(curl -L http://localhost:2379/v3/auth/authenticate -X POST -d '{"name": "root", "password": "root"}')
+etcd_token=$(echo ${resp}|grep -oE "token\".*\"(.*)\""|awk -F[:\"] '{print $4}')
+if [ -z "${etcd_token}" ]; then
+    echo "authenticate failed"
+    exit 1
+fi
+curl -L http://localhost:2379/v3/auth/disable -H "Authorization: ${etcd_token}" -X POST -d ''
+
+./manager-api &
+sleep 3
+
+resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}')
+token=$(echo "${resp}" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
+if [ -z "${token}" ]; then
+    echo "login failed"
+    exit 1
+fi
+# default etcd prefix value /apisix
+prefix=/apisix
+# add consumer by manager-api
+resp=$(curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/consumers -i -H "Content-Type: application/json" -H "Authorization: $token" -d '{"username":"etcd_prefix_test"}')
+# get consumer by etcd v3 api
+key_base64=`echo -n $prefix/consumers/etcd_prefix_test | base64`
+resp=$(curl -L http://localhost:2379/v3/kv/range -X POST -d '{"key": "'"${key_base64}"'"}')
+count=`echo $resp | grep -oE "count.*([0-9]+)" | awk -F\" '{print $3}'`
+if [ ! $count ] || [ $count -ne 1 ]; then
+    echo "consumer failed"
+    exit 1
+fi
+
+./manager-api stop
+sleep 6
+
+clean_up
+
+# modify etcd prefix config to /apisix-test
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" '1,$s/# prefix: \/apisix.*/prefix: \/apisix-test/g' conf/conf.yaml
+else
+  sed -i '1,$s/# prefix: \/apisix.*/prefix: \/apisix-test/g' conf/conf.yaml
+fi
+
+./manager-api &
+sleep 3
+
+resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}')
+token=$(echo "${resp}" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
+if [ -z "${token}" ]; then
+    echo "login failed"
+    exit 1
+fi
+# modified etcd prefix value /apisix-test
+prefix=/apisix-test
+# add consumer by manager-api
+resp=$(curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/consumers -i -H "Content-Type: application/json" -H "Authorization: $token" -d '{"username":"etcd_prefix_test"}')
+# get consumer by etcd v3 api
+key_base64=`echo -n $prefix/consumers/etcd_prefix_test | base64`
+resp=$(curl -L http://localhost:2379/v3/kv/range -X POST -d '{"key": "'"${key_base64}"'"}')
+count=`echo $resp | grep -oE "count.*([0-9]+)" | awk -F\" '{print $3}'`
+if [ ! $count ] || [ $count -ne 1 ]; then
+    echo "consumer failed"
+    exit 1
+fi
+
+./manager-api stop
 clean_up
 
 # mtls test
@@ -382,7 +452,9 @@ if [ "$respCode" != "0" ] || [ $respMessage != "\"\"" ]; then
     exit 1
 fi
 
+./manager-api stop
+sleep 6
+
 pkill -f etcd
 
-./manager-api stop
 clean_up

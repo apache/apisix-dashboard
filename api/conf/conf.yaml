@@ -32,7 +32,7 @@ conf:
       key_file: ""          # Path of your self-signed client side key
       cert_file: ""         # Path of your self-signed client side cert
       ca_file: ""           # Path of your self-signed ca cert, the CA is used to sign callers' certificates
-
+    # prefix: /apisix     # apisix config's prefix in etcd, /apisix by default
   log:
     error_log:
       level: warn       # supports levels, lower to higher: debug, info, warn, error, panic, fatal
