@@ -17,6 +17,13 @@
 #
 -->
 
+---
+
+id: development-guide
+title: Development Guide
+
+---
+
 # Development Guide
 
 The Dashboard contains both `manager-api` and `web` parts, so you need to start the development environment separately.
@@ -28,7 +35,7 @@ Before development, refer to this [guide](./deploy.md) to install dependencies.
 ## Clone the project
 
 ```sh
-$ git clone -b v2.2 https://github.com/apache/apisix-dashboard.git
+$ git clone -b v2.4 https://github.com/apache/apisix-dashboard.git
 ```
 
 ## Start developing

@@ -17,6 +17,7 @@
 package route_online_debug
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -25,12 +26,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/apisix/manager-api/internal/handler"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
+
+	"github.com/apisix/manager-api/internal/handler"
 )
 
 type Handler struct {
@@ -45,16 +47,17 @@ type ProtocolSupport interface {
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.POST("/apisix/admin/debug-request-forwarding", wgin.Wraps(DebugRequestForwarding,
-		wrapper.InputType(reflect.TypeOf(ParamsInput{}))))
+	r.POST("/apisix/admin/debug-request-forwarding", wgin.Wraps(h.DebugRequestForwarding,
+		wrapper.InputType(reflect.TypeOf(DebugOnlineInput{}))))
 }
 
-type ParamsInput struct {
-	URL             string              `json:"url,omitempty"`
-	RequestProtocol string              `json:"request_protocol,omitempty"`
-	BodyParams      string              `json:"body_params,omitempty"`
-	Method          string              `json:"method,omitempty"`
-	HeaderParams    map[string][]string `json:"header_params,omitempty"`
+type DebugOnlineInput struct {
+	URL             string `auto_read:"online_debug_url,header"`
+	RequestProtocol string `auto_read:"online_debug_request_protocol,header"`
+	Method          string `auto_read:"online_debug_method,header"`
+	HeaderParams    string `auto_read:"online_debug_header_params,header"`
+	ContentType     string `auto_read:"Content-Type,header"`
+	Body            []byte `auto_read:"@body"`
 }
 
 type Result struct {
@@ -63,66 +66,84 @@ type Result struct {
 	Data    interface{} `json:"data,omitempty"`
 }
 
-func DebugRequestForwarding(c droplet.Context) (interface{}, error) {
+func (h *Handler) DebugRequestForwarding(c droplet.Context) (interface{}, error) {
 	//TODO: other Protocols, e.g: grpc, websocket
-	paramsInput := c.Input().(*ParamsInput)
-	requestProtocol := paramsInput.RequestProtocol
-	if requestProtocol == "" {
-		requestProtocol = "http"
+	input := c.Input().(*DebugOnlineInput)
+	protocol := input.RequestProtocol
+	if protocol == "" {
+		protocol = "http"
 	}
 
 	protocolMap := make(map[string]ProtocolSupport)
 	protocolMap["http"] = &HTTPProtocolSupport{}
 	protocolMap["https"] = &HTTPProtocolSupport{}
 
-	if v, ok := protocolMap[requestProtocol]; ok {
-		return v.RequestForwarding(c)
-	} else {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			fmt.Errorf("Protocol unsupported %s, only http or https is allowed, but given %s", paramsInput.RequestProtocol, paramsInput.RequestProtocol)
+	if v, ok := protocolMap[protocol]; ok {
+		ret, err := v.RequestForwarding(c)
+		return ret, err
 	}
+
+	return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("protocol unspported %s", protocol)
 }
 
 type HTTPProtocolSupport struct {
 }
 
 func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{}, error) {
-	paramsInput := c.Input().(*ParamsInput)
-	bodyParams := paramsInput.BodyParams
-	client := &http.Client{}
+	input := c.Input().(*DebugOnlineInput)
+	url := input.URL
+	method := input.Method
+	body := input.Body
+	contentType := input.ContentType
 
+	if url == "" || method == "" {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("parameters error")
+	}
+
+	client := &http.Client{}
 	client.Timeout = 5 * time.Second
-	req, err := http.NewRequest(strings.ToUpper(paramsInput.Method), paramsInput.URL, strings.NewReader(bodyParams))
+
+	var tempMap map[string][]string
+	err := json.Unmarshal([]byte(input.HeaderParams), &tempMap)
+
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}
-	for k, v := range paramsInput.HeaderParams {
+
+	req, err := http.NewRequest(strings.ToUpper(method), url, bytes.NewReader(body))
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+	for k, v := range tempMap {
 		for _, v1 := range v {
 			req.Header.Add(k, v1)
 		}
 	}
+
 	resp, err := client.Do(req)
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}
+
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	_body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}
 	returnData := make(map[string]interface{})
 	result := &Result{}
-	err = json.Unmarshal(body, &returnData)
+	err = json.Unmarshal(_body, &returnData)
 	if err != nil {
 		result.Code = resp.StatusCode
 		result.Message = resp.Status
-		result.Data = string(body)
+		result.Data = string(_body)
 	} else {
 		result.Code = resp.StatusCode
 		result.Message = resp.Status
 		result.Data = returnData
-
 	}
 	return result, nil
 }

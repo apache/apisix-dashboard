@@ -40,6 +40,21 @@ context('create and delete service ', () => {
     cy.get(this.domSelector.notification).should('contain', this.data.createServiceSuccess);
   });
 
+  it('should view the service', function () {
+    cy.visit('/');
+    cy.contains('Service').click();
+
+    cy.get(this.domSelector.nameSelector).type(this.data.serviceName);
+    cy.contains('Search').click();
+    cy.contains(this.data.serviceName).siblings().contains('View').click();
+    cy.get(this.domSelector.drawer).should('be.visible');
+
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
+      cy.contains('upstream').should("exist");
+      cy.contains(this.data.serviceName).should('exist');
+    });
+  });
+
   it('should edit the service', function () {
     cy.visit('/');
     cy.contains('Service').click();
@@ -59,10 +74,20 @@ context('create and delete service ', () => {
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(this.domSelector.notification).should('contain', this.data.editServiceSuccess);
+
+    // test view
+    cy.contains(this.data.serviceName2).siblings().contains('View').click();
+    cy.get(this.domSelector.drawer).should('be.visible');
+
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
+      cy.contains('upstream').should('exist');
+      cy.contains(this.data.serviceName2).should('exist');
+    });
   });
 
   it('should delete the service', function () {
     // Confirm whether the edited data is saved.
+    cy.visit('/service/list');
     cy.get(this.domSelector.nameSelector).type(this.data.serviceName2);
     cy.contains('Search').click();
     cy.contains(this.data.serviceName2).siblings().contains('Edit').click();
@@ -76,3 +101,4 @@ context('create and delete service ', () => {
     cy.get(this.domSelector.notification).should('contain', this.data.deleteServiceSuccess);
   });
 });
+

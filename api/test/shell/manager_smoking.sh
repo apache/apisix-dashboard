@@ -32,7 +32,7 @@ while getopts "s:h:" opt
 do
    case "$opt" in
       s ) skip="$OPTARG" ;;
-      ? ) helpFunction ;; 
+      ? ) helpFunction ;;
    esac
 done
 
@@ -42,8 +42,8 @@ then
    helpFunction;
 fi
 
-if "$skip" 
-then 
+if "$skip"
+then
    echo "skip docker check"
 else
    # Version output

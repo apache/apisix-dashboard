@@ -17,6 +17,13 @@
 #
 -->
 
+---
+
+id: import-openapi-guide
+title: Import OpenAPI Guide
+
+---
+
 # Import OpenApi User Guide
 
 > The OpenAPI Specification (OAS) defines a standard, language-agnostic interface to RESTful APIs which allows both humans and computers to discover and understand the capabilities of the service without access to source code, documentation, or through network traffic inspection.
@@ -41,20 +48,20 @@ when we import routes from OAS3.0, some fields in OAS will be missed because the
 
 There are some fields required in APISIX Route but are not included in the properties of OAS3.0, we added some extended fields such as upstream, plugins, hosts and so on. All extensions start with x-apisix. See [reference](https://github.com/apache/apisix/blob/master/doc/admin-api.md#route) For more details of the APISIX Route Properties
 
-| Extended fields           | APISIX Route Properties          |
-| --------------------------| -------------------------------- |
-| x-apisix-plugins          | plugins                          |
-| x-apisix-script           | script                           |
-| x-apisix-upstream         | upstream                         |
-| x-apisix-service_protocol | service_protocol                 |
-| x-apisix-host             | host                             |
-| x-apisix-hosts            | hosts                            |
-| x-apisix-remote_addr      | remote_addr                      |
-| x-apisix-priority         | priority                         |
-| x-apisix-vars             | vars                             |
-| x-apisix-filter_func      | filter_func                      |
-| x-apisix-labels           | labels                           |
-| x-apisix-enable_websocket | enable_websocket                 |
-| x-apisix-status           | status                           |
-| x-apisix-create_time      | create_time                      |
-| x-apisix-update_time      | update_time                      |
+| Extended fields           | APISIX Route Properties |
+| ------------------------- | ----------------------- |
+| x-apisix-plugins          | plugins                 |
+| x-apisix-script           | script                  |
+| x-apisix-upstream         | upstream                |
+| x-apisix-service_protocol | service_protocol        |
+| x-apisix-host             | host                    |
+| x-apisix-hosts            | hosts                   |
+| x-apisix-remote_addr      | remote_addr             |
+| x-apisix-priority         | priority                |
+| x-apisix-vars             | vars                    |
+| x-apisix-filter_func      | filter_func             |
+| x-apisix-labels           | labels                  |
+| x-apisix-enable_websocket | enable_websocket        |
+| x-apisix-status           | status                  |
+| x-apisix-create_time      | create_time             |
+| x-apisix-update_time      | update_time             |

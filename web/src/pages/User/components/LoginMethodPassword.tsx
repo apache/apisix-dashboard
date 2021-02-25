@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React from 'react';
-import { Form, Input } from 'antd';
+import { Form, Input, Tooltip } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
 import { UserOutlined, LockTwoTone } from '@ant-design/icons';
 import { request, formatMessage } from 'umi';
@@ -67,6 +67,13 @@ const LoginMethodPassword: UserModule.LoginMethod = {
             placeholder={formatMessage({ id: 'component.user.loginMethodPassword.password' })}
             prefix={<LockTwoTone />}
           />
+        </Form.Item>
+        <Form.Item>
+          <Tooltip title={formatMessage({ id: 'component.user.loginMethodPassword.modificationMethod' })}>
+            <a href="https://github.com/apache/apisix-dashboard/blob/master/api/conf/conf.yaml#L53-L57">
+              {formatMessage({ id: 'component.user.loginMethodPassword.changeDefaultAccount' })}
+            </a>
+          </Tooltip>
         </Form.Item>
       </Form>
     );

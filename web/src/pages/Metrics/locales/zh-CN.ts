@@ -17,4 +17,5 @@
 export default {
   'page.metrics.empty.description.grafanaNotConfig': '您还未配置 Grafana',
   'page.metrics.button.grafanaConfig': '现在配置',
+  'page.metrics.tip': '使用浏览器 iframe 存储监控页访问地址，仅作用于本地。',
 };

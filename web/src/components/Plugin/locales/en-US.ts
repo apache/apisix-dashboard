@@ -14,23 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
-
-context('smoke test for plugin schema', () => {
-  beforeEach(() => {
-    cy.login();
-
-    cy.fixture('selector.json').as('selector');
-    cy.fixture('plugin-dataset.json').as('cases');
-  });
-
-  it('should visit plugin market', function () {
-    cy.visit('/');
-    cy.contains('Plugin').click();
-    cy.contains('Create').click();
-
-    cy.get('@cases').then((cases) => {
-      cy.configurePlugins(cases);
-    });
-  });
-});
+export default {
+  'component.plugin.tip1': 'NOTE: After customizing the plugin, you need to update schema.json.',
+  'component.plugin.tip2': 'How to update?',
+};
