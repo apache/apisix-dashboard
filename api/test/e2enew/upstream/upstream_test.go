@@ -29,7 +29,7 @@ import (
 )
 
 var _ = ginkgo.Describe("Upstream", func() {
-	ginkgo.It("test upstream create", func() {
+	ginkgo.It("test upstream create failed", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
@@ -43,7 +43,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 		})
 	})
 
-	ginkgo.It("create upstream", func() {
+	ginkgo.It("create upstream success", func() {
 		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["name"] = "upstream1"
@@ -124,38 +124,6 @@ var _ = ginkgo.Describe("Upstream", func() {
 			Sleep:        base.SleepTime,
 		})
 	})
-	ginkgo.It("update upstream with domain", func() {
-		t := ginkgo.GinkgoT()
-		createUpstreamBody := make(map[string]interface{})
-		createUpstreamBody["nodes"] = []map[string]interface{}{
-			{
-				"host":   base.UpstreamIp,
-				"port":   1981,
-				"weight": 1,
-			},
-		}
-		createUpstreamBody["type"] = "roundrobin"
-		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/upstreams/1",
-			Body:         string(_createUpstreamBody),
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		})
-	})
-	ginkgo.It("hit the route using upstream 1", func() {
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        base.SleepTime,
-		})
-	})
 	ginkgo.It("delete not exist upstream", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
@@ -188,6 +156,112 @@ var _ = ginkgo.Describe("Upstream", func() {
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        base.SleepTime,
+		})
+	})
+})
+
+var _ = ginkgo.Describe("Upstream update with domain", func() {
+	ginkgo.It("create upstream success", func() {
+		t := ginkgo.GinkgoT()
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["name"] = "upstream1"
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   base.UpstreamIp,
+				"port":   1980,
+				"weight": 1,
+			},
+		}
+		createUpstreamBody["type"] = "roundrobin"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/1",
+			Body:         string(_createUpstreamBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("create route using the upstream(use proxy rewriteproxy rewrite plugin)", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/1",
+			Body: `{
+				 "uri": "/get",
+				 "upstream_id": "1",
+				 "plugins": {
+					"proxy-rewrite": {
+						"uri": "/get",
+						"scheme": "https"
+					}
+				}
+			 }`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("update upstream with domain", func() {
+		t := ginkgo.GinkgoT()
+		createUpstreamBody := make(map[string]interface{})
+		createUpstreamBody["nodes"] = []map[string]interface{}{
+			{
+				"host":   "httpbin.org",
+				"port":   443,
+				"weight": 1,
+			},
+		}
+		createUpstreamBody["type"] = "roundrobin"
+		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/upstreams/1",
+			Body:         string(_createUpstreamBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("hit the route using upstream 1", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/get",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\n  \"url\": \"https://127.0.0.1/get\"\n}\n",
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("delete route", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("delete upstream", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("hit the route just deleted", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/get",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        base.SleepTime,
