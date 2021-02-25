@@ -3,9 +3,9 @@
   "docs": {
     "Getting Started": ["userguide", "import-openapi-guide", "api"],
     "Installation": [
+      "deploy-with-source-codes",
       "deploy-with-docker",
-      "deploy-with-rpm",
-      "deploy-with-source-codes"
+      "deploy-with-rpm"
     ],
     "Contributing": [
       "development-guide",
