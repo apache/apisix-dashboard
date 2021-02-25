@@ -91,6 +91,7 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 			Query:         "name=;select%20from%20sys",
 			ExpectStatus:  http.StatusForbidden,
 			ExpectHeaders: map[string]string{"X-VERSION": "1.0"},
+			Sleep:         base.SleepTime,
 		}),
 		table.Entry("update plugin config by patch", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
