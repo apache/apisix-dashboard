@@ -17,6 +17,13 @@
 #
 -->
 
+---
+
+id: frontend-e2e
+title: Frontend E2E
+
+---
+
 This project uses [Cypress](https://www.cypress.io/) as the front-end E2E test framework.
 
 1. To start the front-end project locally, please refer to [develop](./develop.md) web section.

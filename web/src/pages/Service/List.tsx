@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { history, useIntl } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
@@ -22,11 +22,14 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, notification, Popconfirm, Space } from 'antd';
 
+import { RawDataEditor } from '@/components/RawDataEditor';
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const { formatMessage } = useIntl();
+  const [rawDataEditorVisible, setRawDataEditorVisible] = useState(false);
+  const [rawData, setRawData] = useState({});
 
   const columns: ProColumns<ServiceModule.ResponseBody>[] = [
     {
@@ -53,9 +56,14 @@ const Page: React.FC = () => {
             <Button
               type="primary"
               onClick={() => history.push(`/service/${record.id}/edit`)}
-              style={{ marginRight: 10 }}
             >
               {formatMessage({ id: 'component.global.edit' })}
+            </Button>
+            <Button type="primary" onClick={() => {
+              setRawData(record);
+              setRawDataEditorVisible(true);
+            }}>
+              {formatMessage({ id: 'component.global.view' })}
             </Button>
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
@@ -100,6 +108,13 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
         ]}
+      />
+      <RawDataEditor
+        visible={rawDataEditorVisible}
+        type='service'
+        readonly={true}
+        data={rawData}
+        onClose={() => { setRawDataEditorVisible(false) }}
       />
     </PageHeaderWrapper>
   );

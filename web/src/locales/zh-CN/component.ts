@@ -28,6 +28,7 @@ export default {
   'component.global.add': '新建',
   'component.global.save': '保存',
   'component.global.edit': '编辑',
+  'component.global.view': '查看',
   'component.global.manage': '管理',
   'component.global.update': '更新',
   'component.global.get': '获取',
