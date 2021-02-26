@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
+	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
@@ -743,6 +744,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Files", func() {
 
 	ginkgo.It("verify the route just imported and delete data", func() {
 		t := ginkgo.GinkgoT()
+		time.Sleep(time.Duration(500) * time.Millisecond)
 		request, _ := http.NewRequest("GET", base.ManagerAPIHost+"/apisix/admin/routes", nil)
 		request.Header.Add("Authorization", base.GetToken())
 		resp, err := http.DefaultClient.Do(request)
