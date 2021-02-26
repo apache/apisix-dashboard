@@ -48,7 +48,7 @@ context('Online debug', () => {
     cy.fixture('selector.json').as('domSelector');
   });
 
-  it('shoule not show the invalid url notification', function () {
+  it('should not show the invalid url notification', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
 
@@ -66,7 +66,7 @@ context('Online debug', () => {
     });
   });
 
-  it('shoule not show the invalid url notification', function () {
+  it('should not show the invalid url notification', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
 

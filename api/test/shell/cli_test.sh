@@ -345,7 +345,7 @@ sleep 6
 clean_up
 
 # etcd prefix test
-# disable etcd autentication
+# disable etcd authentication
 resp=$(curl -L http://localhost:2379/v3/auth/authenticate -X POST -d '{"name": "root", "password": "root"}')
 etcd_token=$(echo ${resp}|grep -oE "token\".*\"(.*)\""|awk -F[:\"] '{print $4}')
 if [ -z "${etcd_token}" ]; then
@@ -439,7 +439,7 @@ sleep 3
 resp=$(curl http://127.0.0.1:9000/apisix/admin/user/login -H "Content-Type: application/json" -d '{"username":"admin", "password": "admin"}')
 token=$(echo "${resp}" | sed 's/{/\n/g' | sed 's/,/\n/g' | grep "token" | sed 's/:/\n/g' | sed '1d' | sed 's/}//g'  | sed 's/"//g')
 if [ -z "${token}" ]; then
-    echo "login failed(mTLS connetct to ETCD)"
+    echo "login failed(mTLS connect to ETCD)"
     exit 1
 fi
 
@@ -448,7 +448,7 @@ resp=$(curl -ig -XPUT http://127.0.0.1:9000/apisix/admin/consumers -i -H "Conten
 respCode=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "code" | sed 's/:/\n/g' | sed '1d')
 respMessage=$(echo "${resp}" | sed 's/{/\n/g'| sed 's/,/\n/g' | grep "message" | sed 's/:/\n/g' | sed '1d')
 if [ "$respCode" != "0" ] || [ $respMessage != "\"\"" ]; then
-    echo "verify writing data failed(mTLS connetct to ETCD)"
+    echo "verify writing data failed(mTLS connect to ETCD)"
     exit 1
 fi
 
