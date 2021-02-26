@@ -1,0 +1,18 @@
+{
+  "version": 2.4,
+  "docs": {
+    "Getting Started": ["userguide", "import-openapi-guide", "api"],
+    "Installation": [
+      "deploy-with-source-codes",
+      "deploy-with-docker",
+      "deploy-with-rpm"
+    ],
+    "Contributing": [
+      "development-guide",
+      "frontend-e2e",
+      "backend-e2e",
+      "i18n-guide"
+    ],
+    "FAQ": ["faq"]
+  }
+}

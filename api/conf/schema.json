@@ -78,6 +78,37 @@
 			"required": ["plugins"],
 			"type": "object"
 		},
+		"plugin_config": {
+			"additionalProperties": false,
+			"properties": {
+				"create_time": {
+					"type": "integer"
+				},
+				"desc": {
+					"maxLength": 256,
+					"type": "string"
+				},
+				"id": {
+					"anyOf": [{
+						"maxLength": 64,
+						"minLength": 1,
+						"pattern": "^[a-zA-Z0-9-_.]+$",
+						"type": "string"
+					}, {
+						"minimum": 1,
+						"type": "integer"
+					}]
+				},
+				"plugins": {
+					"type": "object"
+				},
+				"update_time": {
+					"type": "integer"
+				}
+			},
+			"required": ["id", "plugins"],
+			"type": "object"
+		},
 		"plugins": {
 			"items": {
 				"properties": {
@@ -168,6 +199,8 @@
 			"not": {
 				"anyOf": [{
 					"required": ["plugins", "script"]
+				}, {
+					"required": ["plugin_config_id", "script"]
 				}]
 			},
 			"properties": {
@@ -238,6 +271,17 @@
 					"maxLength": 100,
 					"minLength": 1,
 					"type": "string"
+				},
+				"plugin_config_id": {
+					"anyOf": [{
+						"maxLength": 64,
+						"minLength": 1,
+						"pattern": "^[a-zA-Z0-9-_.]+$",
+						"type": "string"
+					}, {
+						"minimum": 1,
+						"type": "integer"
+					}]
 				},
 				"plugins": {
 					"type": "object"
@@ -368,7 +412,7 @@
 													"uniqueItems": true
 												},
 												"interval": {
-													"default": 0,
+													"default": 1,
 													"minimum": 1,
 													"type": "integer"
 												},
@@ -435,7 +479,7 @@
 													"uniqueItems": true
 												},
 												"interval": {
-													"default": 0,
+													"default": 1,
 													"minimum": 1,
 													"type": "integer"
 												},
@@ -633,7 +677,7 @@
 							"enum": ["grpc", "grpcs", "http", "https"]
 						},
 						"service_name": {
-							"maxLength": 100,
+							"maxLength": 256,
 							"minLength": 1,
 							"type": "string"
 						},
@@ -798,7 +842,7 @@
 													"uniqueItems": true
 												},
 												"interval": {
-													"default": 0,
+													"default": 1,
 													"minimum": 1,
 													"type": "integer"
 												},
@@ -865,7 +909,7 @@
 													"uniqueItems": true
 												},
 												"interval": {
-													"default": 0,
+													"default": 1,
 													"minimum": 1,
 													"type": "integer"
 												},
@@ -1063,7 +1107,7 @@
 							"enum": ["grpc", "grpcs", "http", "https"]
 						},
 						"service_name": {
-							"maxLength": 100,
+							"maxLength": 256,
 							"minLength": 1,
 							"type": "string"
 						},
@@ -1308,7 +1352,7 @@
 													"uniqueItems": true
 												},
 												"interval": {
-													"default": 0,
+													"default": 1,
 													"minimum": 1,
 													"type": "integer"
 												},
@@ -1375,7 +1419,7 @@
 													"uniqueItems": true
 												},
 												"interval": {
-													"default": 0,
+													"default": 1,
 													"minimum": 1,
 													"type": "integer"
 												},
@@ -1573,7 +1617,7 @@
 							"enum": ["grpc", "grpcs", "http", "https"]
 						},
 						"service_name": {
-							"maxLength": 100,
+							"maxLength": 256,
 							"minLength": 1,
 							"type": "string"
 						},
@@ -1660,7 +1704,7 @@
 											"uniqueItems": true
 										},
 										"interval": {
-											"default": 0,
+											"default": 1,
 											"minimum": 1,
 											"type": "integer"
 										},
@@ -1727,7 +1771,7 @@
 											"uniqueItems": true
 										},
 										"interval": {
-											"default": 0,
+											"default": 1,
 											"minimum": 1,
 											"type": "integer"
 										},
@@ -1925,7 +1969,7 @@
 					"enum": ["grpc", "grpcs", "http", "https"]
 				},
 				"service_name": {
-					"maxLength": 100,
+					"maxLength": 256,
 					"minLength": 1,
 					"type": "string"
 				},
@@ -2336,6 +2380,32 @@
 			},
 			"version": 0.1
 		},
+		"dubbo-proxy": {
+			"priority": 507,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"method": {
+						"minLength": 1,
+						"type": "string"
+					},
+					"service_name": {
+						"minLength": 1,
+						"type": "string"
+					},
+					"service_version": {
+						"pattern": "^\\d+\\.\\d+\\.\\d+",
+						"type": "string"
+					}
+				},
+				"required": ["service_name", "service_version"],
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"echo": {
 			"priority": 412,
 			"schema": {
@@ -2375,6 +2445,129 @@
 						"type": "object"
 					}
 				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"error-log-logger": {
+			"metadata_schema": {
+				"properties": {
+					"batch_max_size": {
+						"default": 1000,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"buffer_duration": {
+						"default": 60,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"host": {
+						"pattern": "^\\*?[0-9a-zA-Z-._]+$",
+						"type": "string"
+					},
+					"inactive_timeout": {
+						"default": 3,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"keepalive": {
+						"default": 30,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"level": {
+						"default": "WARN",
+						"enum": ["ALERT", "CRIT", "DEBUG", "EMERG", "ERR", "ERROR", "INFO", "NOTICE", "STDERR", "WARN"],
+						"type": "string"
+					},
+					"max_retry_count": {
+						"default": 0,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"name": {
+						"default": "error-log-logger",
+						"type": "string"
+					},
+					"port": {
+						"minimum": 0,
+						"type": "integer"
+					},
+					"retry_delay": {
+						"default": 1,
+						"minimum": 0,
+						"type": "integer"
+					},
+					"timeout": {
+						"default": 3,
+						"minimum": 1,
+						"type": "integer"
+					},
+					"tls": {
+						"default": false,
+						"type": "boolean"
+					},
+					"tls_server_name": {
+						"type": "string"
+					}
+				},
+				"required": ["host", "port"],
+				"type": "object"
+			},
+			"priority": 1091,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"example-plugin": {
+			"metadata_schema": {
+				"additionalProperties": false,
+				"properties": {
+					"ikey": {
+						"minimum": 0,
+						"type": "number"
+					},
+					"skey": {
+						"type": "string"
+					}
+				},
+				"required": ["ikey", "skey"],
+				"type": "object"
+			},
+			"priority": 0,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"i": {
+						"minimum": 0,
+						"type": "number"
+					},
+					"ip": {
+						"type": "string"
+					},
+					"port": {
+						"type": "integer"
+					},
+					"s": {
+						"type": "string"
+					},
+					"t": {
+						"minItems": 1,
+						"type": "array"
+					}
+				},
+				"required": ["i"],
 				"type": "object"
 			},
 			"version": 0.1
@@ -2920,6 +3113,11 @@
 								"policy": {
 									"enum": ["redis"]
 								},
+								"redis_database": {
+									"default": 0,
+									"minimum": 0,
+									"type": "integer"
+								},
 								"redis_host": {
 									"minLength": 2,
 									"type": "string"
@@ -3034,6 +3232,20 @@
 			},
 			"version": 0.1
 		},
+		"log-rotate": {
+			"priority": 100,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"additionalProperties": false,
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"mqtt-proxy": {
 			"priority": 1000,
 			"schema": {
@@ -3061,6 +3273,20 @@
 					}
 				},
 				"required": ["protocol_level", "protocol_name", "upstream"],
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"node-status": {
+			"priority": 1000,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"additionalProperties": false,
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					}
+				},
 				"type": "object"
 			},
 			"version": 0.1
@@ -3514,6 +3740,46 @@
 			},
 			"version": 0.1
 		},
+		"skywalking": {
+			"metadata_schema": {
+				"additionalProperties": false,
+				"properties": {
+					"endpoint_addr": {
+						"default": "http://127.0.0.1:12800",
+						"type": "string"
+					},
+					"service_instance_name": {
+						"default": "APISIX Instance Name",
+						"description": "User Service Instance Name",
+						"type": "string"
+					},
+					"service_name": {
+						"default": "APISIX",
+						"description": "service name for skywalking",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"priority": -1100,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"additionalProperties": false,
+				"properties": {
+					"disable": {
+						"type": "boolean"
+					},
+					"sample_ratio": {
+						"default": 1,
+						"maximum": 1,
+						"minimum": 0.00001,
+						"type": "number"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"sls-logger": {
 			"priority": 406,
 			"schema": {
@@ -3834,7 +4100,7 @@
 																				"uniqueItems": true
 																			},
 																			"interval": {
-																				"default": 0,
+																				"default": 1,
 																				"minimum": 1,
 																				"type": "integer"
 																			},
@@ -3901,7 +4167,7 @@
 																				"uniqueItems": true
 																			},
 																			"interval": {
-																				"default": 0,
+																				"default": 1,
 																				"minimum": 1,
 																				"type": "integer"
 																			},
@@ -4099,7 +4365,7 @@
 														"enum": ["grpc", "grpcs", "http", "https"]
 													},
 													"service_name": {
-														"maxLength": 100,
+														"maxLength": 256,
 														"minLength": 1,
 														"type": "string"
 													},

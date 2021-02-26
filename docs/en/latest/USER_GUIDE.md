@@ -17,6 +17,13 @@
 #
 -->
 
+---
+
+id: userguide
+title: User Guide
+
+---
+
 # User Guide
 
 The following are parts of the modules' snapshot.
@@ -25,7 +32,7 @@ The following are parts of the modules' snapshot.
 
 We support the monitor page by referencing it in [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe). Before accessing [Grafana](https://grafana.com/), please Enable [`allow_embedding=true`](https://grafana.com/docs/grafana/latest/administration/configuration/#allow_embedding), which defaults to `false`. This causes the browser to fail to render Grafana pages properly due to security policies.
 
-![metrics-en](./images/metrics-en.png)
+![metrics-en](../../assets/images/metrics-en.png)
 
 ## Route
 
@@ -33,19 +40,19 @@ The Route module aims to control routes by UI instead of calling APIs.
 
 ### List
 
-![route-list](./images/route-list-en.png)
+![route-list](../../assets/images/route-list-en.png)
 
 ### Create
 
-![route-create-step1-en](./images/route-create-step1-en.png)
+![route-create-step1-en](../../assets/images/route-create-step1-en.png)
 
-![route-create-step2-en](./images/route-create-step2-en.png)
+![route-create-step2-en](../../assets/images/route-create-step2-en.png)
 
-![route-create-step3-en](./images/route-create-step3-en.png)
+![route-create-step3-en](../../assets/images/route-create-step3-en.png)
 
-![route-create-step4-en](./images/route-create-step4-en.png)
+![route-create-step4-en](../../assets/images/route-create-step4-en.png)
 
-![route-create-done-list-en](./images/route-create-done-list-en.png)
+![route-create-done-list-en](../../assets/images/route-create-done-list-en.png)
 
 ### Online debug
 
@@ -53,28 +60,28 @@ We can debug a route both published or offline with the online debug function, w
 
 1. Debug a published route
 
-![route-debug-published](./images/route-debug-published.png)
+![route-debug-published](../../assets/images/route-debug-published.png)
 
 2. Debug a offline route
 
-![route-debug-offline](./images/route-debug-offline.png)
+![route-debug-offline](../../assets/images/route-debug-offline.png)
 
 3. Debug a published route with query params
 
-![route-debug-query-params](./images/route-debug-query-params.png)
+![route-debug-query-params](../../assets/images/route-debug-query-params.png)
 
 4. Debug a published route with header params
 
-![route-debug-header-params](./images/route-debug-header-params.png)
+![route-debug-header-params](../../assets/images/route-debug-header-params.png)
 
 5. Debug a published route with body params
 
-![route-debug-body-params](./images/route-debug-body-params.png)
+![route-debug-body-params](../../assets/images/route-debug-body-params.png)
 
 6. Debug a published route with basic auth
 
-![route-debug-basic-auth](./images/route-debug-basic-auth.png)
+![route-debug-basic-auth](../../assets/images/route-debug-basic-auth.png)
 
 ## Setting
 
-![setting](./images/setting-en.png)
+![setting](../../assets/images/setting-en.png)

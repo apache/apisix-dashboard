@@ -24,6 +24,7 @@ import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/setting';
 import PluginOrchestration from '../components/PluginOrchestration/locales/en-US';
 import Plugin from '../components/Plugin/locales/en-US';
+import RawDataEditor from '../components/RawDataEditor/locales/en-US';
 
 export default {
   'navBar.lang': 'Languages',
@@ -40,4 +41,5 @@ export default {
   ...ActionBarEnUS,
   ...PluginOrchestration,
   ...Plugin,
+  ...RawDataEditor
 };

@@ -17,6 +17,13 @@
 #
 -->
 
+---
+
+id: fqa
+title: FAQ
+
+---
+
 # FAQ
 
 ### 1. Vue.js version of the Dashboard
@@ -36,8 +43,8 @@ If you are using Apache APISIX below v2.0, be aware that the data from the etcd 
 Since the Dashboard caches the jsonschema data of the plugins in Apache APISIX, you need to synchronize the data in the Dashboard after you create your custom plugins in Apache APISIX, which currently **only supports manual operation**. Please follow the following guide.
 
 1. Confirm that your APISIX is running and has enabled control API (enabled by default and only runs local access)
-Refer to the beginning in:
-https://github.com/apache/apisix/blob/master/doc/control-api.md
+   Refer to the beginning in:
+   https://github.com/apache/apisix/blob/master/doc/control-api.md
 
 2. Execute the following commands to export jsonchema on your APISIX server (if it is configured for non-local access, it does not need to be executed on your APISIX server, and the access IP and port should be modified accordingly)
 
@@ -60,11 +67,11 @@ We use [go-swagger](https://github.com/go-swagger/go-swagger) to generate Swagge
 2. Use the `go-swagger` tool to generate Swagger 2.0 documents.
 
 ```shell
-$ swagger generate spec -o ./docs/api/api.yaml --scan-models
+$ swagger generate spec -o ./docs/en/latest/api/api.yaml --scan-models
 ```
 
 3. Use the `swagger-markdown` tool to convert Swagger 2.0 documents into markdown documents.
 
 ```shell
-$ swagger-markdown -i ./docs/api/api.yaml
+$ swagger-markdown -i ./docs/en/latest/api/api.yaml
 ```
