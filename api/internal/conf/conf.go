@@ -55,6 +55,7 @@ var (
 	ImportSizeLimit  = 10 * 1024 * 1024
 	PIDPath          = "/tmp/manager-api.pid"
 	AllowList        []string
+	Plugins          = map[string]bool{}
 )
 
 type MTLS struct {
@@ -68,6 +69,7 @@ type Etcd struct {
 	Username  string
 	Password  string
 	MTLS      *MTLS
+	Prefix    string
 }
 
 type Listen struct {
@@ -110,6 +112,7 @@ type Authentication struct {
 type Config struct {
 	Conf           Conf
 	Authentication Authentication
+	Plugins        []string
 }
 
 // TODO: we should no longer use init() function after remove all handler's integration tests
@@ -186,6 +189,8 @@ func setConf() {
 
 		//auth
 		initAuthentication(config.Authentication)
+
+		initPlugins(config.Plugins)
 	}
 }
 
@@ -209,6 +214,12 @@ func initAuthentication(conf Authentication) {
 	}
 }
 
+func initPlugins(plugins []string) {
+	for _, pluginName := range plugins {
+		Plugins[pluginName] = true
+	}
+}
+
 func initSchema() {
 	filePath := WorkDir + "/conf/schema.json"
 	if schemaContent, err := ioutil.ReadFile(filePath); err != nil {
@@ -225,10 +236,16 @@ func initEtcdConfig(conf Etcd) {
 		endpoints = conf.Endpoints
 	}
 
+	prefix := "/apisix"
+	if len(conf.Prefix) > 0 {
+		prefix = conf.Prefix
+	}
+
 	ETCDConfig = &Etcd{
 		Endpoints: endpoints,
 		Username:  conf.Username,
 		Password:  conf.Password,
-		MTLS: conf.MTLS,
+		MTLS:      conf.MTLS,
+		Prefix:    prefix,
 	}
 }

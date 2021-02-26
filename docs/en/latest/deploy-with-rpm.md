@@ -17,6 +17,13 @@
 #
 -->
 
+---
+
+id: deploy-with-rpm
+title: Deploy with RPM
+
+---
+
 # Deploy with RPM
 
 **NOTE:** Only support CentOS 7 currently, for more information, please refer to [here](./deploy.md).
@@ -24,7 +31,7 @@
 ## Install from RPM
 
 ```sh
-$ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.4/apisix-dashboard-v2.4-1.x86_64.rpm
+$ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.4/apisix-dashboard-2.4-0.x86_64.rpm
 ```
 
 ## Run

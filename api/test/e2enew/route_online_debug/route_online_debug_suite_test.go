@@ -14,12 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
-import './commands';
-import '@cypress/code-coverage/support';
+package route_online_debug
 
-Cypress.on('uncaught:exception', () => {
-  // returning false here prevents Cypress from
-  // failing the test
-  return false;
-});
+import (
+	"testing"
+	"time"
+
+	"github.com/onsi/ginkgo"
+
+	"e2enew/base"
+)
+
+func TestRoute(t *testing.T) {
+	ginkgo.RunSpecs(t, "route online debug suite")
+}
+
+var _ = ginkgo.AfterSuite(func() {
+	base.CleanResource("routes")
+	base.CleanResource("consumers")
+	time.Sleep(base.SleepTime)
+})
+

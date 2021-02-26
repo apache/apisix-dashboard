@@ -18,11 +18,23 @@ package base
 
 import (
 	"bytes"
+	"encoding/json"
+	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
+	"net/url"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/stretchr/testify/assert"
 )
+
+type UploadFile struct {
+	Name     string
+	Filepath string
+}
 
 func HttpGet(url string, headers map[string]string) ([]byte, int, error) {
 	return httpRequest(http.MethodGet, url, headers, "")
@@ -91,4 +103,45 @@ func BatchTestServerPort(times int) map[string]int {
 	}
 
 	return res
+}
+
+func GetReader(reqParams map[string]string, contentType string, files []UploadFile) (io.Reader, string, error) {
+	if strings.Index(contentType, "json") > -1 {
+		bytesData, _ := json.Marshal(reqParams)
+		return bytes.NewReader(bytesData), contentType, nil
+	}
+	if files != nil {
+		body := &bytes.Buffer{}
+		writer := multipart.NewWriter(body)
+		for _, uploadFile := range files {
+			file, err := os.Open(uploadFile.Filepath)
+			if err != nil {
+				return nil, "", err
+			}
+			defer file.Close()
+			part, err := writer.CreateFormFile(uploadFile.Name, filepath.Base(uploadFile.Filepath))
+			if err != nil {
+				return nil, "", err
+			}
+			_, err = io.Copy(part, file)
+		}
+		for k, v := range reqParams {
+			if err := writer.WriteField(k, v); err != nil {
+				return nil, "", err
+			}
+		}
+		if err := writer.Close(); err != nil {
+			return nil, "", err
+		}
+		return body, writer.FormDataContentType(), nil
+	}
+
+	urlValues := url.Values{}
+	for key, val := range reqParams {
+		urlValues.Set(key, val)
+	}
+
+	reqBody := urlValues.Encode()
+
+	return strings.NewReader(reqBody), contentType, nil
 }

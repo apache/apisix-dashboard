@@ -14,19 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Popconfirm, Button, notification } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
+
+import { RawDataEditor } from '@/components/RawDataEditor';
 import { timestampToLocaleString } from '@/helpers';
 
 import { fetchList, remove } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
+  const [rawDataEditorVisible, setRawDataEditorVisible] = useState(false);
+  const [rawData, setRawData] = useState({});
 
   const { formatMessage } = useIntl();
 
@@ -63,6 +67,12 @@ const Page: React.FC = () => {
             onClick={() => history.push(`/upstream/${record.id}/edit`)}
           >
             {formatMessage({ id: 'page.upstream.list.edit' })}
+          </Button>
+          <Button type="primary" onClick={() => {
+            setRawData(record);
+            setRawDataEditorVisible(true);
+          }}>
+            {formatMessage({ id: 'component.global.view' })}
           </Button>
           <Popconfirm
             title={formatMessage({ id: 'page.upstream.list.confirm.delete' })}
@@ -104,6 +114,13 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
         ]}
+      />
+      <RawDataEditor
+        visible={rawDataEditorVisible}
+        type='upstream'
+        readonly={true}
+        data={rawData}
+        onClose={() => { setRawDataEditorVisible(false) }}
       />
     </PageContainer>
   );

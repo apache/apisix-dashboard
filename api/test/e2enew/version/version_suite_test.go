@@ -14,23 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
+package version
 
-context('smoke test for plugin schema', () => {
-  beforeEach(() => {
-    cy.login();
+import (
+	"testing"
 
-    cy.fixture('selector.json').as('selector');
-    cy.fixture('plugin-dataset.json').as('cases');
-  });
+	"github.com/onsi/ginkgo"
+)
 
-  it('should visit plugin market', function () {
-    cy.visit('/');
-    cy.contains('Plugin').click();
-    cy.contains('Create').click();
-
-    cy.get('@cases').then((cases) => {
-      cy.configurePlugins(cases);
-    });
-  });
-});
+func TestRoute(t *testing.T) {
+	ginkgo.RunSpecs(t, "version suite")
+}

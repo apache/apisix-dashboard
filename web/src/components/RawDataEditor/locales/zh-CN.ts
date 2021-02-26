@@ -14,12 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
-import './commands';
-import '@cypress/code-coverage/support';
-
-Cypress.on('uncaught:exception', () => {
-  // returning false here prevents Cypress from
-  // failing the test
-  return false;
-});
+export default {
+  'component.rawDataEditor.tip': '目前暂不支持编辑',
+  'component.rawDataEditor.title': '元数据编辑器',
+};

@@ -18,24 +18,20 @@
 
 context('Create and Delete Plugin List', () => {
   const timeout = 5000;
-  const data = {
-    name: 'hmac-auth',
-  };
 
   beforeEach(() => {
     cy.login();
 
-    cy.fixture('plugin-list.json').as('cases');
     cy.fixture('selector.json').as('domSelector');
     cy.fixture('data.json').as('data');
+    cy.fixture('plugin-dataset.json').as('cases');
   });
 
-  it('should create plugins', function () {
+  it('should visit plugin market', function () {
     cy.visit('/');
     cy.contains('Plugin').click();
     cy.contains('Create').click();
 
-    // add test plugins
     cy.get('@cases').then((cases) => {
       cy.configurePlugins(cases);
     });
@@ -43,27 +39,26 @@ context('Create and Delete Plugin List', () => {
 
   it('should edit the plugin', function () {
     cy.visit('/plugin/list');
+
     cy.get(this.domSelector.refresh).click();
-    cy.contains(data.name).should('exist').siblings().contains('Edit').click({
-      force: true,
-    });
+    cy.contains('Edit').click();
     cy.get(this.domSelector.codemirror)
       .first()
       .then(() => {
         cy.get(this.domSelector.disabledSwitcher).click();
         cy.contains('button', 'Submit').click();
       });
-    cy.contains(data.name).should('not.exist');
   });
 
   it('should delete plugin list', function () {
     cy.visit('/plugin/list');
 
-    cy.get(this.domSelector.deleteButton, { timeout }).each(function ($el) {
+    cy.get(this.domSelector.refresh).click();
+    cy.get(this.domSelector.deleteButton, { timeout }).should('exist').each(function ($el) {
       cy.wrap($el).click().click({ timeout });
       cy.contains('button', 'Confirm').click({ force: true });
       cy.get(this.domSelector.notification).should('contain', this.data.deletePluginSuccess);
-      cy.get(this.domSelector.notificationCloseIcon).click();
+      cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
     });
 
     // check if plugin list is empty
