@@ -26,7 +26,7 @@ module.exports = (on, config) => {
   on('task', {
     findFile(mask) {
       if (!mask) {
-        throw new Error('Missing a file mask to seach');
+        throw new Error('Missing a file mask to search');
       }
 
       return globby(mask).then((list) => {
