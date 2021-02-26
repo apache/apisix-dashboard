@@ -89,9 +89,9 @@ context('import and export routes', () => {
     cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).should('not.disabled');
     // click Export OpenAPI Button
     cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).click();
-    // after click enabled export button, popup confirm should appeare
+    // after click enabled export button, popup confirm should appear
     cy.contains(routeLocaleUS['page.route.exportRoutesTips']).should('exist');
-    // click Confirm button in the popup to download Json file(debault option)
+    // click Confirm button in the popup to download Json file(default option)
     cy.contains(componentLocaleUS['component.global.confirm']).click();
 
     // export 2 routes with type yaml
