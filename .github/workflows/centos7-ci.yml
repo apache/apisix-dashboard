@@ -24,42 +24,42 @@ jobs:
           ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
 
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-      with:
-        submodules: recursive
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
-    - name: Build rpm package
-      run: |
-        sudo gem install --no-document fpm
-        git clone https://github.com/api7/apisix-build-tools.git
-        cd apisix-build-tools
-        make package type=rpm app=dashboard version=master code_tag=master
-        ls ./output/
+      - name: Build rpm package
+        run: |
+          sudo gem install --no-document fpm
+          git clone https://github.com/api7/apisix-build-tools.git
+          cd apisix-build-tools
+          make package type=rpm app=dashboard version=master checkout=master
+          ls ./output/
 
-    - name: Run centos7 docker and mapping apisix into container
-      run: |
-        docker run -itd -v /home/runner/work/apisix-dashboard:/tmp/apisix-dashboard --name centos7Instance --net="host" docker.io/centos:7 /bin/bash
+      - name: Run centos7 docker and mapping apisix into container
+        run: |
+          docker run -itd -v /home/runner/work/apisix-dashboard:/tmp/apisix-dashboard --name centos7Instance --net="host" docker.io/centos:7 /bin/bash
 
-    - name: Run other docker containers for test
-      run: |
-        docker network create kafka-net --driver bridge
-        docker run --rm --name skywalking -d -p 1234:1234 -p 11800:11800 -p 12800:12800 apache/skywalking-oap-server
+      - name: Run other docker containers for test
+        run: |
+          docker network create kafka-net --driver bridge
+          docker run --rm --name skywalking -d -p 1234:1234 -p 11800:11800 -p 12800:12800 apache/skywalking-oap-server
 
-        #- name: Install dependencies
-        #  run: |
-        #    docker exec centos7Instance bash -c "cp -r /tmp/apisix-dashboard ./"
-        #    docker exec centos7Instance bash -c "cd apisix-dashboard && ./utils/centos7-ci.sh install_dependencies"
+          #- name: Install dependencies
+          #  run: |
+          #    docker exec centos7Instance bash -c "cp -r /tmp/apisix-dashboard ./"
+          #    docker exec centos7Instance bash -c "cd apisix-dashboard && ./utils/centos7-ci.sh install_dependencies"
 
-    - name: Install rpm package
-      run: |
-        docker exec centos7Instance bash -c "cd apisix-dashboard && rpm -iv --prefix=/apisix-dashboard ./apisix-build-tools/output/apisix-dashboard-master-0.x86_64.rpm"
+      - name: Install rpm package
+        run: |
+          docker exec centos7Instance bash -c "cd apisix-dashboard && rpm -iv --prefix=/apisix-dashboard ./apisix-build-tools/output/apisix-dashboard-master-0.x86_64.rpm"
 
-        # - name: run test cases
-        #   run: |
-        #     docker exec centos7Instance bash -c "cd apisix && ./utils/centos7-ci.sh run_case"
-    - name: Publish Artifact
-      uses: actions/upload-artifact@v2.2.2
-      with:
-        name: "rpm"
-        path: "rpm"
+          # - name: run test cases
+          #   run: |
+          #     docker exec centos7Instance bash -c "cd apisix && ./utils/centos7-ci.sh run_case"
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v2.2.2
+        with:
+          name: "rpm"
+          path: "rpm"
