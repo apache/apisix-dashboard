@@ -34,4 +34,3 @@ var _ = ginkgo.AfterSuite(func() {
 	base.CleanResource("upstreams")
 	time.Sleep(base.SleepTime)
 })
-
