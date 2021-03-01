@@ -1,3 +1,7 @@
+---
+title: API doc of Manager API.
+---
+
 <!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,15 +20,6 @@
 # limitations under the License.
 #
 -->
-
----
-
-id: api
-title: API Guide
-
----
-
-# API doc of Manager API.
 
 Manager API directly operates ETCD and provides data management for Apache APISIX, provides APIs for Front-end or other clients.
 
