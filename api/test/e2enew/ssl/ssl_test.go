@@ -68,7 +68,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 		}
 		_, err = http.Get("https://www.test2.com:9443")
 		assert.NotNil(t, err)
-		assert.EqualError(t, err, "Get \"https://www.test2.com:9443\": remote error: tls: internal error")
+		assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")
 		//create ssl fail - key and cert not match
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
@@ -166,7 +166,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		_, err := http.Get("https://www.test2.com:9443")
 		assert.NotNil(t, err)
-		assert.EqualError(t, err, "Get \"https://www.test2.com:9443\": remote error: tls: internal error")
+		assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")
 	})
 	ginkgo.It("enable SSL", func() {
 		base.RunTestCase(base.HttpTestCase{
