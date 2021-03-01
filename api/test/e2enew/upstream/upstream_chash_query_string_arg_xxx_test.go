@@ -92,14 +92,15 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 			assert.Nil(t, err)
 			resp, err := http.DefaultClient.Do(req)
 			assert.Nil(t, err)
+			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
+			assert.Nil(t, err)
 			body := string(respBody)
 			if _, ok := res[body]; !ok {
 				res[body] = 1
 			} else {
 				res[body]++
 			}
-			resp.Body.Close()
 		}
 		var counts []int
 		for _, value := range res {
@@ -179,14 +180,15 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 			assert.Nil(t, err)
 			resp, err := http.DefaultClient.Do(req)
 			assert.Nil(t, err)
+			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
+			assert.Nil(t, err)
 			body := string(respBody)
 			if _, ok := res[body]; !ok {
 				res[body] = 1
 			} else {
 				res[body]++
 			}
-			resp.Body.Close()
 		}
 		var counts []int
 		for _, value := range res {
