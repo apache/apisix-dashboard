@@ -102,10 +102,10 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 					"response-rewrite": {
 						"headers": {
 							"X-VERSION":"2.0"
-						},
-						"uri-blocker": {
-							"block_rules": ["none"]
 						}
+					},
+					"uri-blocker": {
+						"block_rules": ["none"]
 					}
 				}
 			}`,
