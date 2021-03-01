@@ -1,3 +1,7 @@
+---
+title: FAQ
+---
+
 <!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,15 +20,6 @@
 # limitations under the License.
 #
 -->
-
----
-
-id: fqa
-title: FAQ
-
----
-
-# FAQ
 
 ### 1. Vue.js version of the Dashboard
 
