@@ -56,6 +56,14 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
+		table.Entry("create plugin config", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Path:   "/apisix/admin/plugin_configs/1",
+			Method: http.MethodGet,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody: `"plugins":{"response-rewrite":{"headers":{"X-VERSION":"1.0"}},"uri-blocker":{"block_rules":["select.+(from|limit)","(?:(union(.*?)select))"]}}`,
+		}),
 		table.Entry("create route with the plugin config created before", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
