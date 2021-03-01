@@ -18,6 +18,7 @@
 package plugin_config
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"testing"
@@ -553,6 +554,7 @@ func TestPluginConfigs_Delete(t *testing.T) {
 		caseDesc  string
 		giveInput *BatchDelete
 		giveErr   error
+		listRet   *store.ListOutput
 		wantInput []string
 		wantErr   error
 		wantRet   interface{}
@@ -562,6 +564,10 @@ func TestPluginConfigs_Delete(t *testing.T) {
 			giveInput: &BatchDelete{
 				IDs: "1",
 			},
+			listRet: &store.ListOutput{
+				Rows:      []interface{}{},
+				TotalSize: 0,
+			},
 			wantInput: []string{"1"},
 		},
 		{
@@ -569,12 +575,44 @@ func TestPluginConfigs_Delete(t *testing.T) {
 			giveInput: &BatchDelete{
 				IDs: "1,s2",
 			},
+			listRet: &store.ListOutput{
+				Rows:      []interface{}{},
+				TotalSize: 0,
+			},
 			wantInput: []string{"1", "s2"},
 		},
+
+		{
+			caseDesc: "delete failed - being used by user",
+			giveInput: &BatchDelete{
+				IDs: "001,002",
+			},
+			giveErr: fmt.Errorf("delete failed"),
+			wantInput: []string{
+				"001",
+				"002",
+			},
+			listRet: &store.ListOutput{
+				Rows: []interface{}{
+					&entity.Route{BaseInfo: entity.BaseInfo{ID: "a"}},
+					&entity.Route{BaseInfo: entity.BaseInfo{ID: "b"}},
+				},
+				TotalSize: 2,
+			},
+			wantErr: errors.New("please disconnect the route (ID: a) with this plugin config first"),
+			wantRet: &data.SpecCodeResponse{
+				StatusCode: http.StatusBadRequest,
+			},
+		},
+
 		{
 			caseDesc: "delete failed",
 			giveInput: &BatchDelete{
 				IDs: "1",
+			},
+			listRet: &store.ListOutput{
+				Rows:      []interface{}{},
+				TotalSize: 0,
 			},
 			giveErr:   fmt.Errorf("delete error"),
 			wantInput: []string{"1"},
@@ -593,7 +631,12 @@ func TestPluginConfigs_Delete(t *testing.T) {
 				assert.Equal(t, tc.wantInput, input)
 			}).Return(tc.giveErr)
 
-			h := Handler{pluginConfigStore: pluginConfigStore}
+			mockRouteStore := &store.MockInterface{}
+			mockRouteStore.On("List", mock.Anything).Run(func(args mock.Arguments) {
+				getCalled = true
+			}).Return(tc.listRet, nil)
+
+			h := Handler{pluginConfigStore: pluginConfigStore, routeStore: mockRouteStore}
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 			ret, err := h.BatchDelete(ctx)

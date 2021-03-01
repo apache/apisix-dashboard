@@ -18,6 +18,7 @@ package plugin_config
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"reflect"
 	"strings"
@@ -37,11 +38,13 @@ import (
 
 type Handler struct {
 	pluginConfigStore store.Interface
+	routeStore        store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{
 		pluginConfigStore: store.GetStore(store.HubKeyPluginConfig),
+		routeStore:        store.GetStore(store.HubKeyRoute),
 	}, nil
 }
 
@@ -181,6 +184,31 @@ type BatchDelete struct {
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
 
+	IDs := strings.Split(input.IDs, ",")
+	IDMap := map[string]bool{}
+	for _, id := range IDs {
+		IDMap[id] = true
+	}
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			id := utils.InterfaceToString(obj.(*entity.Route).PluginConfigID)
+			if _, ok := IDMap[id]; ok {
+				return true
+			}
+			return false
+		},
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(ret.Rows) > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("please disconnect the route (ID: %s) with this plugin config first",
+				ret.Rows[0].(*entity.Route).ID)
+	}
+
 	if err := h.pluginConfigStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -202,25 +230,25 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 
 	stored, err := h.pluginConfigStore.Get(c.Context(), id)
 	if err != nil {
-		log.Warnf("%s", err)
+		log.Warnf("get stored data from etcd failed: %s", err)
 		return handler.SpecCodeResponse(err), err
 	}
 
 	res, err := utils.MergePatch(stored, subPath, reqBody)
 	if err != nil {
-		log.Warnf("%s", err)
+		log.Warnf("merge failed: %s", err)
 		return handler.SpecCodeResponse(err), err
 	}
 
 	var pluginConfig entity.PluginConfig
 	if err := json.Unmarshal(res, &pluginConfig); err != nil {
-		log.Warnf("%s", err)
+		log.Warnf("unmarshal to pluginConfig failed: %s", err)
 		return handler.SpecCodeResponse(err), err
 	}
 
 	ret, err := h.pluginConfigStore.Update(c.Context(), &pluginConfig, false)
 	if err != nil {
-		log.Warnf("%s", err)
+		log.Warnf("update failed: %s", err)
 		return handler.SpecCodeResponse(err), err
 	}
 

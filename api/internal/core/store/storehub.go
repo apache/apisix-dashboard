@@ -29,15 +29,15 @@ import (
 type HubKey string
 
 const (
-	HubKeyConsumer   HubKey = "consumer"
-	HubKeyRoute      HubKey = "route"
-	HubKeyService    HubKey = "service"
-	HubKeySsl        HubKey = "ssl"
-	HubKeyUpstream   HubKey = "upstream"
-	HubKeyScript     HubKey = "script"
-	HubKeyGlobalRule HubKey = "global_rule"
-	HubKeyServerInfo HubKey = "server_info"
-	HubKeyPluginConfig   HubKey = "plugin_config"
+	HubKeyConsumer     HubKey = "consumer"
+	HubKeyRoute        HubKey = "route"
+	HubKeyService      HubKey = "service"
+	HubKeySsl          HubKey = "ssl"
+	HubKeyUpstream     HubKey = "upstream"
+	HubKeyScript       HubKey = "script"
+	HubKeyGlobalRule   HubKey = "global_rule"
+	HubKeyServerInfo   HubKey = "server_info"
+	HubKeyPluginConfig HubKey = "plugin_config"
 )
 
 var (
