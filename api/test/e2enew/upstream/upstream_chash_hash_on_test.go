@@ -87,6 +87,7 @@ var _ = ginkgo.Describe("Upstream chash hash on custom header", func() {
 			req.Header.Add("custom_header", `custom-one`)
 			resp, err := http.DefaultClient.Do(req)
 			assert.Nil(t, err)
+			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
 			assert.Nil(t, err)
 			body := string(respBody)
@@ -95,7 +96,6 @@ var _ = ginkgo.Describe("Upstream chash hash on custom header", func() {
 			} else {
 				res[body]++
 			}
-			resp.Body.Close()
 		}
 		// it is possible to hit any one of upstreams, and only one will be hit
 		assert.Equal(t, true, res["1980"] == 4 || res["1981"] == 4)
@@ -175,6 +175,7 @@ var _ = ginkgo.Describe("Upstream chash hash on cookie", func() {
 			req.Header.Add("Cookie", `custom-cookie=cuscookie`)
 			resp, err := http.DefaultClient.Do(req)
 			assert.Nil(t, err)
+			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
 			assert.Nil(t, err)
 			body := string(respBody)
@@ -183,7 +184,6 @@ var _ = ginkgo.Describe("Upstream chash hash on cookie", func() {
 			} else {
 				res[body]++
 			}
-			resp.Body.Close()
 		}
 		// it is possible to hit any one of upstreams, and only one will be hit
 		assert.Equal(t, true, res["1980"] == 4 || res["1981"] == 4)
@@ -200,6 +200,7 @@ var _ = ginkgo.Describe("Upstream chash hash on cookie", func() {
 			req.Header.Add("Cookie", `miss-custom-cookie=cuscookie`)
 			resp, err := http.DefaultClient.Do(req)
 			assert.Nil(t, err)
+			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
 			assert.Nil(t, err)
 			body := string(respBody)
@@ -208,7 +209,6 @@ var _ = ginkgo.Describe("Upstream chash hash on cookie", func() {
 			} else {
 				res[body]++
 			}
-			resp.Body.Close()
 		}
 		// it is possible to hit any one of upstreams, and only one will be hit
 		assert.Equal(t, true, res["1980"] == 4 || res["1981"] == 4)
@@ -287,6 +287,7 @@ var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", fu
 			req.Header.Add("X-Sessionid", `chash_val_`+strconv.Itoa(i))
 			resp, err := http.DefaultClient.Do(req)
 			assert.Nil(t, err)
+			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
 			body := string(respBody)
 			if _, ok := res[body]; !ok {
@@ -294,7 +295,6 @@ var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", fu
 			} else {
 				res[body]++
 			}
-			resp.Body.Close()
 		}
 		// the X-Sessionid of each request is different, the weight of upstreams are the same, so these requests will be sent to each upstream equally
 		assert.Equal(t, true, res["1980"] == 8 && res["1981"] == 8)
@@ -394,6 +394,7 @@ var _ = ginkgo.Describe("Upstream chash hash on consumer", func() {
 			req.Header.Add("apikey", `auth-jack`)
 			resp, err := http.DefaultClient.Do(req)
 			assert.Nil(t, err)
+			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
 			assert.Nil(t, err)
 			body := string(respBody)
@@ -402,7 +403,6 @@ var _ = ginkgo.Describe("Upstream chash hash on consumer", func() {
 			} else {
 				res[body]++
 			}
-			resp.Body.Close()
 		}
 		// it is possible to hit any one of upstreams, and only one will be hit
 		assert.Equal(t, true, res["1980"] == 4 || res["1981"] == 4)
@@ -543,6 +543,7 @@ var _ = ginkgo.Describe("Upstream chash hash on vars", func() {
 			req, err := http.NewRequest("GET", url, nil)
 			resp, err := http.DefaultClient.Do(req)
 			assert.Nil(t, err)
+			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
 			body := string(respBody)
 			if _, ok := res[body]; !ok {
@@ -550,7 +551,6 @@ var _ = ginkgo.Describe("Upstream chash hash on vars", func() {
 			} else {
 				res[body]++
 			}
-			resp.Body.Close()
 		}
 		assert.True(t, res["1980"] == 9 && res["1981"] == 9)
 	})
