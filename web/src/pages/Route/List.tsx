@@ -426,6 +426,10 @@ const Page: React.FC = () => {
           resetText: formatMessage({ id: 'component.global.reset' }),
         }}
         toolBarRender={() => [
+          <Button type="primary" onClick={() => { }}>
+            <PlusOutlined />
+            {formatMessage({ id: 'page.route.pluginTemplateConfig' })}
+          </Button>,
           <Button type="primary" onClick={() => history.push(`/routes/create`)}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}

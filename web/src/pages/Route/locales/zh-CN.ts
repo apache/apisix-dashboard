@@ -41,6 +41,7 @@ export default {
   'page.route.published': '已发布',
   'page.route.unpublished': '未发布',
   'page.route.onlineDebug': '在线调试',
+  'page.route.pluginTemplateConfig': '插件模版配置',
   'page.route.service': '服务',
   'page.route.instructions': '说明',
   'page.route.import': '导入',
