@@ -1406,7 +1406,7 @@ func TestUpstream_Patch(t *testing.T) {
 	}
 }
 
-func TestUptreams_Delete(t *testing.T) {
+func TestUpstreams_Delete(t *testing.T) {
 	tests := []struct {
 		caseDesc  string
 		giveInput *BatchDelete

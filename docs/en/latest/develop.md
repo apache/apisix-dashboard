@@ -17,6 +17,13 @@
 #
 -->
 
+---
+
+id: development-guide
+title: Development Guide
+
+---
+
 # Development Guide
 
 The Dashboard contains both `manager-api` and `web` parts, so you need to start the development environment separately.

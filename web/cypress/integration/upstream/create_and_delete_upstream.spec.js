@@ -41,6 +41,22 @@ context('Create and Delete Upstream', () => {
     cy.url().should('contains', 'upstream/list');
   });
 
+  it('should view the (roundrobin) upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+
+    cy.get(this.domSelector.nameSelector).type(this.data.upstreamName);
+    cy.contains('Search').click();
+    cy.contains(this.data.upstreamName).siblings().contains('View').click();
+    cy.get('.ant-drawer-content').should('be.visible');
+
+    cy.get('.CodeMirror-scroll').within(() => {
+      cy.contains('nodes').should("exist");
+      cy.contains('roundrobin').should('exist');
+      cy.contains(this.data.upstreamName).should('exist');
+    });
+  });
+
   it('should delete the upstream', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
@@ -86,6 +102,22 @@ context('Create and Delete Upstream', () => {
     cy.contains('Submit').click();
     cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
     cy.url().should('contains', 'upstream/list');
+  });
+
+  it('should view the (chash) upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+
+    cy.get(this.domSelector.nameSelector).type(this.data.upstreamName);
+    cy.contains('Search').click();
+    cy.contains(this.data.upstreamName).siblings().contains('View').click();
+    cy.get(this.domSelector.drawer).should('be.visible');
+
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
+      cy.contains('nodes').should("exist");
+      cy.contains('chash').should('exist');
+      cy.contains(this.data.upstreamName).should('exist');
+    });
   });
 
   it('should delete the upstream', function () {

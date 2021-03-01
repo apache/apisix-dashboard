@@ -23,6 +23,8 @@ import (
 
 	"github.com/shiningrush/droplet"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/apisix/manager-api/internal/conf"
 )
 
 func TestPlugin(t *testing.T) {
@@ -58,7 +60,14 @@ func TestPlugin(t *testing.T) {
 			basicAuthConsumerSchema = string(consumerSchemaByte)
 			assert.Nil(t, err)
 		}
+
+		assert.Contains(t, conf.Plugins, plugin["name"])
 	}
+
+	assert.Contains(t, conf.Plugins, "server-info")
+	assert.Contains(t, conf.Plugins, "traffic-split")
+	assert.NotContains(t, conf.Plugins, "dubbo-proxy")
+
 	// plugin type
 	assert.ElementsMatch(t, []string{"basic-auth", "jwt-auth", "hmac-auth", "key-auth", "wolf-rbac"}, authPlugins)
 	// consumer schema
@@ -122,4 +131,13 @@ func TestPlugin(t *testing.T) {
 	ctx.SetInput(input)
 	val, _ = handler.Schema(ctx)
 	assert.NotNil(t, val)
+
+	// schema of dubbo-proxy
+	input = &GetInput{
+		Name: "dubbo-proxy",
+	}
+	ctx.SetInput(input)
+	val, err = handler.Schema(ctx)
+	assert.NotNil(t, val)
+	assert.Nil(t, err)
 }

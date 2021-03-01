@@ -14,31 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as globby from 'globby';
-
-/**
- * @type {Cypress.PluginConfig}
- */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-module.exports = (on, config) => {
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
-  on('task', {
-    findFile(mask) {
-      if (!mask) {
-        throw new Error('Missing a file mask to search');
-      }
-
-      return globby(mask).then((list) => {
-        if (!list.length) {
-          throw new Error(`Could not find files matching mask "${mask}"`);
-        }
-
-        return list[0];
-      });
-    },
-  });
-
-  require('@cypress/code-coverage/task')(on, config);
-  return config;
+export default {
+  'component.rawDataEditor.tip': '目前暂不支持编辑',
+  'component.rawDataEditor.title': '元数据编辑器',
 };
