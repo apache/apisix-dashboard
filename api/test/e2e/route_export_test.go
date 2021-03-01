@@ -318,7 +318,7 @@ func TestRoute_Export(t *testing.T) {
 			ExpectBody:   "{\"components\":{},\"info\":{\"title\":\"RoutesExport\",\"version\":\"3.0.0\"},\"openapi\":\"3.0.0\",\"paths\":{" + exportStrR2 + "," + exportStrR1 + "}}",
 		},
 		{
-			Desc:         "use the exportall inerface to export all routes",
+			Desc:         "use the exportall interface to export all routes",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/export/routes",
@@ -2448,7 +2448,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			Desc:         "use the exportall inerface to export all routes",
+			Desc:         "use the exportall interface to export all routes",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/export/routes/r1,r2,r3",
