@@ -259,11 +259,11 @@ const PluginDetail: React.FC<Props> = ({
               onClick={() => {
                 if (name.startsWith('serverless')) {
                   window.open(
-                    'https://github.com/apache/apisix/blob/master/doc/plugins/serverless.md',
+                    'https://apisix.apache.org/docs/apisix/plugins/serverless',
                   );
                 } else {
                   window.open(
-                    `https://github.com/apache/apisix/blob/master/doc/plugins/${name}.md`,
+                    `https://apisix.apache.org/docs/apisix/plugins/${name}`,
                   );
                 }
               }}
