@@ -102,6 +102,9 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 					"response-rewrite": {
 						"headers": {
 							"X-VERSION":"2.0"
+						},
+						"uri-blocker": {
+							"block_rules": ["none"]
 						}
 					}
 				}
@@ -150,14 +153,21 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 			ExpectHeaders: map[string]string{"X-VERSION": "3.0"},
 			Sleep:         base.SleepTime,
 		}),
+		table.Entry("delete route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
 		table.Entry("delete plugin config", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/plugin_configs/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
 		}),
-
 		table.Entry("make sure the plugin config has been deleted", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
@@ -166,13 +176,6 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"code":10001,"message":"data not found"`,
 			Sleep:        base.SleepTime,
-		}),
-		table.Entry("delete route", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
 		}),
 		table.Entry("make sure the route has been deleted", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
