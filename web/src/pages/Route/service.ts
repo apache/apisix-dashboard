@@ -92,7 +92,7 @@ export const fetchUpstreamItem = (sid: string) => {
 export const checkHostWithSSL = (hosts: string[]) =>
   request('/check_ssl_exists', {
     method: 'POST',
-    data: hosts,
+    data: { hosts },
   });
 
 export const fetchLabelList = () =>
