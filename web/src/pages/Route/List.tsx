@@ -426,7 +426,7 @@ const Page: React.FC = () => {
           resetText: formatMessage({ id: 'component.global.reset' }),
         }}
         toolBarRender={() => [
-          <Button type="primary" onClick={() => { }}>
+          <Button type="primary" onClick={() => { history.push('/pluginTemplate/list') }}>
             <PlusOutlined />
             {formatMessage({ id: 'page.route.pluginTemplateConfig' })}
           </Button>,

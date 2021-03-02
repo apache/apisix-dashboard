@@ -62,6 +62,7 @@ export default {
   'menu.editor.koni': '拓扑编辑器',
   'menu.metrics': '监控',
   'menu.routes': '路由',
+  'menu.pluginTemplate': '插件模板',
   'menu.ssl': '证书',
   'menu.upstream': '上游',
   'menu.consumer': '消费者',

@@ -100,6 +100,18 @@ const routes = [
     component: './Setting',
   },
   {
+    path: '/pluginTemplate/list',
+    component: './pluginTemplate/List',
+  },
+  {
+    path: '/pluginTemplate/Create',
+    component: './pluginTemplate/Create',
+  },
+  {
+    path: '/pluginTemplate/:pluginTemplateId/edit',
+    component: './pluginTemplate/Create',
+  },
+  {
     path: '/user/login',
     component: './User/Login',
     layout: false,
@@ -108,6 +120,10 @@ const routes = [
     path: '/user/logout',
     component: './User/Logout',
     layout: false,
+  },
+  {
+    path: '/user/logout',
+    component: './User/Logout',
   },
   {
     component: './404',
