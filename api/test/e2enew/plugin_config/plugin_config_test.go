@@ -82,12 +82,12 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 			ExpectStatus: http.StatusOK,
 		}),
 		table.Entry("get plugin config", base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Path:   "/apisix/admin/plugin_configs/1",
-			Method: http.MethodGet,
+			Object:       base.ManagerApiExpect(),
+			Path:         "/apisix/admin/plugin_configs/1",
+			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody: `"plugins":{"response-rewrite":{"headers":{"X-VERSION":"1.0"}},"uri-blocker":{"block_rules":["select.+(from|limit)","(?:(union(.*?)select))"]}}`,
+			ExpectBody:   `"plugins":{"response-rewrite":{"headers":{"X-VERSION":"1.0"}},"uri-blocker":{"block_rules":["select.+(from|limit)","(?:(union(.*?)select))"]}}`,
 		}),
 		table.Entry("search plugin_config list by label ", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
