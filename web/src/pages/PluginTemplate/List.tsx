@@ -19,7 +19,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import { Button, notification, Popconfirm, Space } from 'antd';
+import { Button, notification, Popconfirm, Space, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import { fetchList, remove } from './service';
@@ -36,10 +36,27 @@ const Page: React.FC = () => {
     ref.current?.reload();
   };
 
-  const columns: ProColumns<PluginModule.TransformedPlugin>[] = [
+  const columns: ProColumns<PluginTemplateModule.PluginTemplate>[] = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      hideInSearch: true,
+    },
     {
       title: formatMessage({ id: 'component.global.description' }),
       dataIndex: 'desc',
+    },
+    {
+      title: formatMessage({ id: 'component.global.labels' }),
+      dataIndex: 'labels',
+      render: (_, record) => {
+        return Object.keys(record.labels || {})
+          .map((item) => (
+            <Tag key={Math.random().toString(36).slice(2)}>
+              {item}:{record.labels[item]}
+            </Tag>
+          ));
+      }
     },
     {
       title: formatMessage({ id: 'component.global.operation' }),
@@ -83,7 +100,7 @@ const Page: React.FC = () => {
 
   return (
     <PageHeaderWrapper title={formatMessage({ id: 'page.plugin.list' })}>
-      <ProTable<PluginModule.TransformedPlugin>
+      <ProTable<PluginTemplateModule.PluginTemplate>
         actionRef={ref}
         rowKey="id"
         search={false}
