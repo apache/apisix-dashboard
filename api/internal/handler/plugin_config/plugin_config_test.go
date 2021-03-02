@@ -172,9 +172,9 @@ func TestPluginConfig_List(t *testing.T) {
 			},
 		},
 		{
-			caseDesc: "list plugin config with key 1",
+			caseDesc: "list plugin config with label",
 			giveInput: &ListInput{
-				Search: "1",
+				Label: "extra",
 				Pagination: store.Pagination{
 					PageSize:   10,
 					PageNumber: 10,
@@ -185,14 +185,64 @@ func TestPluginConfig_List(t *testing.T) {
 				PageNumber: 10,
 			},
 			giveData: []*entity.PluginConfig{
-				{Desc: "1"},
+				{
+					Desc: "1",
+					Labels: map[string]string{
+						"version": "v1",
+						"extra":   "t",
+					},
+				},
 				{Desc: "s2"},
 				{Desc: "test_plugin_config"},
 				{Desc: "plugin_config_test"},
 			},
 			wantRet: &store.ListOutput{
 				Rows: []interface{}{
-					&entity.PluginConfig{Desc: "1"},
+					&entity.PluginConfig{
+						Desc: "1",
+						Labels: map[string]string{
+							"version": "v1",
+							"extra":   "t",
+						},
+					},
+				},
+				TotalSize: 1,
+			},
+		},
+		{
+			caseDesc: "list plugin config with label (k:v)",
+			giveInput: &ListInput{
+				Label: "version:v1",
+				Pagination: store.Pagination{
+					PageSize:   10,
+					PageNumber: 10,
+				},
+			},
+			wantInput: store.ListInput{
+				PageSize:   10,
+				PageNumber: 10,
+			},
+			giveData: []*entity.PluginConfig{
+				{
+					Desc: "1",
+					Labels: map[string]string{
+						"version": "v1",
+						"build":   "16",
+					},
+				},
+				{Desc: "s2"},
+				{Desc: "test_plugin_config"},
+				{Desc: "plugin_config_test"},
+			},
+			wantRet: &store.ListOutput{
+				Rows: []interface{}{
+					&entity.PluginConfig{
+						Desc: "1",
+						Labels: map[string]string{
+							"version": "v1",
+							"build":   "16",
+						},
+					},
 				},
 				TotalSize: 1,
 			},
@@ -392,6 +442,9 @@ func TestPluginConfig_Patch(t *testing.T) {
 				"key":           "remote_addr",
 			},
 		},
+		Labels: map[string]string{
+			"version": "v1",
+		},
 		Desc: "desc",
 	}
 
@@ -425,6 +478,10 @@ func TestPluginConfig_Patch(t *testing.T) {
 							"key-auth":{
 								"key":"auth-one"
 							}
+						},
+						"labels":{
+							"version":"v1",
+							"build":"16"
 						}
 					}`),
 			},
@@ -445,6 +502,10 @@ func TestPluginConfig_Patch(t *testing.T) {
 					"key-auth": map[string]interface{}{
 						"key": "auth-one",
 					},
+				},
+				Labels: map[string]string{
+					"version": "v1",
+					"build":   "16",
 				},
 			},
 			pluginConfigInput: "1",
@@ -475,6 +536,9 @@ func TestPluginConfig_Patch(t *testing.T) {
 						"key":           "remote_addr",
 					},
 				},
+				Labels: map[string]string{
+					"version": "v1",
+				},
 			},
 			pluginConfigInput: "1",
 			pluginConfigRet:   existPluginConfig,
@@ -501,6 +565,9 @@ func TestPluginConfig_Patch(t *testing.T) {
 						"rejected_code": float64(503),
 						"key":           "remote_addr",
 					},
+				},
+				Labels: map[string]string{
+					"version": "v1",
 				},
 			},
 			pluginConfigInput: "1",

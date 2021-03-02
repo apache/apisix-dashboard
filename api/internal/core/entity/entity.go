@@ -264,4 +264,5 @@ type PluginConfig struct {
 	BaseInfo
 	Desc    string                 `json:"desc,omitempty" validate:"max=256"`
 	Plugins map[string]interface{} `json:"plugins"`
+	Labels  map[string]string      `json:"labels,omitempty"`
 }

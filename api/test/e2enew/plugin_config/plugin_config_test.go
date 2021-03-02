@@ -56,7 +56,7 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("create plugin config", base.HttpTestCase{
+		table.Entry("get plugin config", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Path:   "/apisix/admin/plugin_configs/1",
 			Method: http.MethodGet,

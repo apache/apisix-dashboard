@@ -84,6 +84,7 @@ func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 
 type ListInput struct {
 	Search string `auto_read:"search,query"`
+	Label  string `auto_read:"label,query"`
 	store.Pagination
 }
 
@@ -123,12 +124,22 @@ type ListInput struct {
 //       "$ref": "#/definitions/ApiError"
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
+	labelMap, err := utils.GenLabelMap(input.Label)
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("%s: \"%s\"", err.Error(), input.Label)
+	}
 
 	ret, err := h.pluginConfigStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
 			if input.Search != "" {
 				return strings.Contains(obj.(*entity.PluginConfig).Desc, input.Search)
 			}
+
+			if input.Label != "" && !utils.LabelContains(obj.(*entity.PluginConfig).Labels, labelMap) {
+				return false
+			}
+
 			return true
 		},
 		PageSize:   input.PageSize,
