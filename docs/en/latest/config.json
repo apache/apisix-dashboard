@@ -1,6 +1,6 @@
 {
   "version": 2.4,
-  "docs": [
+  "sidebar": [
     {
       "type": "category",
       "label": "Getting Started",
