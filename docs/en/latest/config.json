@@ -1,14 +1,24 @@
 {
   "version": 2.4,
-  "docs": {
-    "Getting Started": ["USER_GUIDE", "IMPORT_OPENAPI_USER_GUIDE", "api/api"],
-    "Installation": ["deploy-with", "deploy-with-docker", "deploy-with-rpm"],
-    "Contributing": [
-      "develop",
-      "front-end-e2e",
-      "back-end-e2e",
-      "I18N_USER_GUIDE"
-    ],
-    "FAQ": ["faq"]
-  }
+  "docs": [
+    {
+      "type": "category",
+      "label": "Getting Started",
+      "items": ["USER_GUIDE", "IMPORT_OPENAPI_USER_GUIDE", "api/api"]
+    },
+    {
+      "type": "category",
+      "label": "Installation",
+      "items": ["deploy", "deploy-with-docker", "deploy-with-rpm"]
+    },
+    {
+      "type": "category",
+      "label": "Contributing",
+      "items": ["develop", "I18N_USER_GUIDE", "front-end-e2e", "back-end-e2e"]
+    },
+    {
+      "type": "doc",
+      "id": "FAQ"
+    }
+  ]
 }
