@@ -1,3 +1,7 @@
+---
+title: Deploy with RPM
+---
+
 <!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,15 +20,6 @@
 # limitations under the License.
 #
 -->
-
----
-
-id: deploy-with-rpm
-title: Deploy with RPM
-
----
-
-# Deploy with RPM
 
 **NOTE:** Only support CentOS 7 currently, for more information, please refer to [here](./deploy.md).
 

@@ -1,3 +1,7 @@
+---
+title: i18n User Guide
+---
+
 <!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,15 +20,6 @@
 # limitations under the License.
 #
 -->
-
----
-
-id: i18n-guide
-title: i18n Guide
-
----
-
-# Apache APISIX Dashboard I18N User Guide
 
 The Apache APISIX Dashboard uses [@umijs/plugin-locale](https://umijs.org/plugins/plugin-locale) to solve the i18n issues, in order to make the i18n more clear and reasonable, we would recommend to obey the following rules
 

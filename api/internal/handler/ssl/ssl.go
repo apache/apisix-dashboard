@@ -445,7 +445,7 @@ func checkSniExists(rows []store.Row, sni string) bool {
 }
 
 type ExistCheckInput struct {
-	Body []byte `auto_read:"@body"`
+	Hosts []string
 }
 
 // swagger:operation POST /apisix/admin/check_ssl_exists checkSSLExist
@@ -456,16 +456,13 @@ type ExistCheckInput struct {
 // produces:
 // - application/json
 // parameters:
-// - name: cert
+// - name: hosts
 //   in: body
-//   description: cert of SSL
+//   description: hosts of Route
 //   required: true
-//   type: string
-// - name: key
-//   in: body
-//   description: key of SSL
-//   required: true
-//   type: string
+//   type: array
+//     items:
+//     type: string
 // responses:
 //   '0':
 //     description: SSL exists
@@ -477,11 +474,9 @@ type ExistCheckInput struct {
 //       "$ref": "#/definitions/ApiError"
 func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ExistCheckInput)
-	//temporary
-	reqBody := input.Body
-	var hosts []string
-	if err := json.Unmarshal(reqBody, &hosts); err != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+	if len(input.Hosts) == 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			consts.InvalidParam("hosts could not be empty")
 	}
 
 	ret, err := h.sslStore.List(c.Context(), store.ListInput{
@@ -491,10 +486,10 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 	})
 
 	if err != nil {
-		return nil, err
+		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}
 
-	for _, host := range hosts {
+	for _, host := range input.Hosts {
 		res := checkSniExists(toRows(ret), host)
 		if !res {
 			return &data.SpecCodeResponse{StatusCode: http.StatusNotFound},

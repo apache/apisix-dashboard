@@ -191,7 +191,7 @@ services:
         ipv4_address: 172.16.238.40
 
   skywalking:
-    image: apache/skywalking-oap-server
+    image: apache/skywalking-oap-server:8.3.0-es6
     restart: always
     ports:
       - '1234:1234/tcp'

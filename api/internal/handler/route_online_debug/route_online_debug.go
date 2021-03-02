@@ -83,7 +83,7 @@ func (h *Handler) DebugRequestForwarding(c droplet.Context) (interface{}, error)
 		return ret, err
 	}
 
-	return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("protocol unspported %s", protocol)
+	return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("protocol unsupported %s", protocol)
 }
 
 type HTTPProtocolSupport struct {

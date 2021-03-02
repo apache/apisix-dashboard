@@ -60,7 +60,7 @@ This release mainly improves basic features, bugfix and adds test cases.
 
 ### Test Case
 
-- Use ginkgo framwork to do backend E2E testing. [#1319](https://github.com/apache/apisix-dashboard/pull/1319)
+- Use ginkgo framework to do backend E2E testing. [#1319](https://github.com/apache/apisix-dashboard/pull/1319)
 - Add action to check the version for release. [#1418](https://github.com/apache/apisix-dashboard/pull/1418)
 - Add test for make build. [#1421](https://github.com/apache/apisix-dashboard/pull/1421)
 - Remove the etcd dependency in part of unit test. [#1169](https://github.com/apache/apisix-dashboard/pull/1469)
@@ -71,7 +71,7 @@ This release mainly improves basic features, bugfix and adds test cases.
 
 ### Doc
 
-- Doc: add document for introducing bakend e2e test. [#1381](https://github.com/apache/apisix-dashboard/pull/1381)
+- Doc: add document for introducing backend e2e test. [#1381](https://github.com/apache/apisix-dashboard/pull/1381)
 
 # 2.3.0
 
@@ -107,7 +107,7 @@ This release mainly improve basic features, bugfix and adds test cases.
 
 - Support access log for Manager API. [#994](https://github.com/apache/apisix-dashboard/pull/994)
 - Enhance error log for Manager API. [#977](https://github.com/apache/apisix-dashboard/pull/977)
-- Integrate with code-mirror to have a fallback to plugins's render issue. [#898](https://github.com/apache/apisix-dashboard/pull/898)
+- Integrate with code-mirror to have a fallback to plugins render issue. [#898](https://github.com/apache/apisix-dashboard/pull/898)
 - Support priority field in Route module. [#1006](https://github.com/apache/apisix-dashboard/pull/1006)
 - Add etcd basic auth support [#951](https://github.com/apache/apisix-dashboard/pull/951)
 
