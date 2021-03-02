@@ -31,3 +31,18 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
   });
 
 export const remove = (rid: string) => request(`/plugin_configs/${rid}`, { method: 'DELETE' });
+
+export const fetchItem = (id: string) =>
+  request<{ data: PluginTemplateModule.ResEntity }>(`/plugin_configs/${id}`);
+
+export const create = (data: PluginTemplateModule.Entity) =>
+  request('/plugin_configs', {
+    method: 'POST',
+    data,
+  });
+
+export const update = (id: string, data: PluginTemplateModule.Entity) =>
+  request(`/plugin_configs/${id}`, {
+    method: 'PATCH',
+    data,
+  });

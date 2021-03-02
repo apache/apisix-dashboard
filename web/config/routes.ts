@@ -108,7 +108,7 @@ const routes = [
     component: './pluginTemplate/Create',
   },
   {
-    path: '/pluginTemplate/:pluginTemplateId/edit',
+    path: '/pluginTemplate/:id/edit',
     component: './pluginTemplate/Create',
   },
   {

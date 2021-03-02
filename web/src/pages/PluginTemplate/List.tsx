@@ -36,7 +36,7 @@ const Page: React.FC = () => {
     ref.current?.reload();
   };
 
-  const columns: ProColumns<PluginTemplateModule.PluginTemplate>[] = [
+  const columns: ProColumns<PluginTemplateModule.ResEntity>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -100,7 +100,7 @@ const Page: React.FC = () => {
 
   return (
     <PageHeaderWrapper title={formatMessage({ id: 'page.plugin.list' })}>
-      <ProTable<PluginTemplateModule.PluginTemplate>
+      <ProTable<PluginTemplateModule.ResEntity>
         actionRef={ref}
         rowKey="id"
         search={false}

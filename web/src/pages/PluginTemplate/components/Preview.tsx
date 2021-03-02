@@ -14,16 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import React from 'react';
+import type { FormInstance } from 'antd/lib/form';
 
-declare namespace PluginTemplateModule {
-  type Entity = {
-    desc: string;
-    labels: Record<string, string>;
-    plugins: Record<string, any>;
-  };
+import PluginPage from '@/components/Plugin';
+import Step1 from './Step1';
 
-  type ResEntity = Entity & {
-    id: string;
-    update_time: string;
-  };
-}
+type Props = {
+  form1: FormInstance;
+  plugins: PluginComponent.Data;
+};
+
+const Page: React.FC<Props> = ({ form1, plugins }) => {
+  return (
+    <>
+      <Step1 form={form1} disabled />
+      <PluginPage initialData={plugins} readonly />
+    </>
+  );
+};
+
+export default Page;
