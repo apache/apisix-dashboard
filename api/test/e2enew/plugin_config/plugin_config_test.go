@@ -51,6 +51,31 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 					"uri-blocker": {
 						"block_rules": ["select.+(from|limit)", "(?:(union(.*?)select))"]
 					}
+				},
+				Labels: map[string]string{
+					"version": "v1",
+					"build":   "16",
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("create plugin config 2", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Path:   "/apisix/admin/plugin_configs/2",
+			Method: http.MethodPut,
+			Body: `{
+				"plugins": {
+					"response-rewrite": {
+						"headers": {
+							"X-VERSION":"22.0"
+						}
+					}
+				},
+				Labels: map[string]string{
+					"version": "v2",
+					"build":   "17",
+					"extra":   "test",
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -63,6 +88,26 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody: `"plugins":{"response-rewrite":{"headers":{"X-VERSION":"1.0"}},"uri-blocker":{"block_rules":["select.+(from|limit)","(?:(union(.*?)select))"]}}`,
+		}),
+		table.Entry("search plugin_config list by label ", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Path:         "/apisix/admin/plugin_configs",
+			Query:        "label=build:16",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"labels":{"build":"16","version":"v1"}`,
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("search plugin_config list by label (only key)", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Path:         "/apisix/admin/plugin_configs",
+			Query:        "label=extra",
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"labels":{"build":"17","extra":"test","version":"v2"}`,
+			Sleep:        base.SleepTime,
 		}),
 		table.Entry("create route with the plugin config created before", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
