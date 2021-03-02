@@ -1,3 +1,7 @@
+---
+title: Frontend E2E
+---
+
 <!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,13 +20,6 @@
 # limitations under the License.
 #
 -->
-
----
-
-id: frontend-e2e
-title: Frontend E2E
-
----
 
 This project uses [Cypress](https://www.cypress.io/) as the front-end E2E test framework.
 

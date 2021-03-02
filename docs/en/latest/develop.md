@@ -1,3 +1,7 @@
+---
+title: Development Guide
+---
+
 <!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,15 +20,6 @@
 # limitations under the License.
 #
 -->
-
----
-
-id: development-guide
-title: Development Guide
-
----
-
-# Development Guide
 
 The Dashboard contains both `manager-api` and `web` parts, so you need to start the development environment separately.
 

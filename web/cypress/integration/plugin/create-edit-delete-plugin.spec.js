@@ -24,7 +24,6 @@ context('Create and Delete Plugin List', () => {
 
     cy.fixture('selector.json').as('domSelector');
     cy.fixture('data.json').as('data');
-    cy.fixture('plugin-dataset.json').as('cases');
   });
 
   it('should visit plugin market', function () {
@@ -32,6 +31,7 @@ context('Create and Delete Plugin List', () => {
     cy.contains('Plugin').click();
     cy.contains('Create').click();
 
+    cy.fixture('plugin-dataset.json').as('cases');
     cy.get('@cases').then((cases) => {
       cy.configurePlugins(cases);
     });
