@@ -30,8 +30,9 @@ import {
   PROTOCOL_SUPPORTED,
   DEBUG_BODY_TYPE_SUPPORTED,
   DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED,
+  DebugBodyFormDataValueType,
 } from '../../constants';
-import { DebugParamsView, AuthenticationView } from '.';
+import { DebugParamsView, AuthenticationView, DebugFormDataView } from '.';
 import { debugRoute } from '../../service';
 import styles from './index.less';
 
@@ -45,7 +46,8 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const [requestProtocol, setRequestProtocol] = useState(PROTOCOL_SUPPORTED[0]);
   const [showBodyTab, setShowBodyTab] = useState(false);
   const [queryForm] = Form.useForm();
-  const [bodyForm] = Form.useForm();
+  const [urlencodedForm] = Form.useForm();
+  const [formDataForm] = Form.useForm();
   const [authForm] = Form.useForm();
   const [headerForm] = Form.useForm();
   const [responseCode, setResponseCode] = useState<string>();
@@ -61,12 +63,14 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   enum DebugBodyType {
     None = 0,
     FormUrlencoded,
+    FormData,
     RawInput,
   }
 
   const resetForms = () => {
     queryForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
-    bodyForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
+    urlencodedForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
+    formDataForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     headerForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     authForm.setFieldsValue(DEFAULT_DEBUG_AUTH_FORM_DATA);
     setResponseCode(`${formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })}`);
@@ -78,23 +82,41 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   }, []);
 
   const transformBodyParamsFormData = () => {
-    let transformDataForm: string[];
-    const formData: RouteModule.debugRequestParamsFormData[] = bodyForm.getFieldsValue().params;
     if (methodWithoutBody.includes(httpMethod)) {
       return undefined;
     }
+
     switch (bodyType) {
-      case 'x-www-form-urlencoded':
-        transformDataForm = (formData || [])
+      case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded]: {
+        let transformFormUrlencoded: string[] = [];
+        const FormUrlencodedData: RouteModule.debugRequestParamsFormData[] = urlencodedForm.getFieldsValue().params;
+
+        transformFormUrlencoded = (FormUrlencodedData || [])
           .filter((data) => data.check)
           .map((data) => {
             return `${data.key}=${data.value}`;
           });
 
-        return transformDataForm.join('&');
-      case 'raw input':
+        return transformFormUrlencoded.join('&');
+      }
+      case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput]:
         return bodyCodeMirrorRef.current.editor.getValue();
-      case 'none':
+      case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormData]: {
+        const transformFormData = new FormData();
+        const formDataData: RouteModule.debugRequestParamsFormData[] = formDataForm.getFieldsValue().params;
+
+        (formDataData || [])
+          .filter((data) => data.check)
+          .forEach((data) => {
+            if (data.type === DebugBodyFormDataValueType.File) {
+              transformFormData.append(data.key, data.value.originFileObj)
+            } else {
+              transformFormData.append(data.key, data.value)
+            }
+          })
+        return transformFormData;
+      }
+      case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.None]:
       default:
         return undefined;
     }
@@ -161,12 +183,12 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     setLoading(true);
     // TODO: grpc and websocket
     debugRoute({
-      url: `${requestProtocol}://${url}${urlQueryString && `?${urlQueryString}`}`,
-      request_protocol: requestProtocol,
-      method: httpMethod,
-      body_params: bodyFormData,
-      header_params: headerFormData,
-    })
+      // ...headerFormData,
+      online_debug_header_params: JSON.stringify(headerFormData),
+      online_debug_url: `${requestProtocol}://${url}${urlQueryString && `?${urlQueryString}`}`,
+      online_debug_request_protocol: requestProtocol,
+      online_debug_method: httpMethod,
+    }, bodyFormData)
       .then((req) => {
         setLoading(false);
         setResponseCode(JSON.stringify(req.data.data, null, 2));
@@ -187,6 +209,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         props.onClose();
       }}
       className={styles.routeDebugDraw}
+      data-cy='debug-draw'
     >
       <Card bordered={false}>
         <Input.Group compact>
@@ -198,6 +221,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
               setShowBodyTab(!(methodWithoutBody.indexOf(value) > -1));
             }}
             size="large"
+            data-cy='debug-method'
           >
             {HTTP_METHOD_OPTION_LIST.map((method) => {
               return (
@@ -214,6 +238,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
               setRequestProtocol(value);
             }}
             size="large"
+            data-cy='debug-protocol'
           >
             {PROTOCOL_SUPPORTED.map((protocol) => {
               return (
@@ -247,13 +272,13 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         >
           <Tabs>
             <TabPane tab={formatMessage({ id: 'page.route.TabPane.queryParams' })} key="query">
-              <DebugParamsView form={queryForm} />
+              <DebugParamsView form={queryForm} name='queryForm'/>
             </TabPane>
             <TabPane tab={formatMessage({ id: 'page.route.TabPane.authentication' })} key="auth">
               <AuthenticationView form={authForm} />
             </TabPane>
             <TabPane tab={formatMessage({ id: 'page.route.TabPane.headerParams' })} key="header">
-              <DebugParamsView form={headerForm} />
+              <DebugParamsView form={headerForm} name='headerForm'/>
             </TabPane>
             {showBodyTab && (
               <TabPane tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })} key="body">
@@ -287,7 +312,11 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                 )}
                 <div style={{ marginTop: 16 }}>
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded] && (
-                    <DebugParamsView form={bodyForm} />
+                    <DebugParamsView form={urlencodedForm} name='urlencodedForm'/>
+                  )}
+
+                  {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormData] && (
+                    <DebugFormDataView form={formDataForm} />
                   )}
 
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput] && (
