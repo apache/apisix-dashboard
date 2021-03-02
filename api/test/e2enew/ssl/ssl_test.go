@@ -57,6 +57,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 			"cert": string(testCert),
 			"key":  string(apisixKey),
 		})
+		assert.Nil(t, err)
 		// Before configuring SSL, make a HTTPS request
 		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 		http.DefaultTransport.(*http.Transport).DialContext = func(ctx context.Context, network, addr string) (net.Conn, error) {
