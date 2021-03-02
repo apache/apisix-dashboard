@@ -17,4 +17,6 @@
 export default {
   'component.plugin.tip1': '注意：自定义插件后（修改、新增、删除等），需更新 schema.json。',
   'component.plugin.tip2': '如何更新？',
+  "component.select.pluginTemplate": '选择插件模板',
+  'component.step.select.pluginTemplate.select.option': '手动配置'
 };

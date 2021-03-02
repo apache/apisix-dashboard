@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Anchor, Layout, Card, Button } from 'antd';
+import { Anchor, Layout, Card, Button, Form, Select } from 'antd';
 import { PanelSection } from '@api7-dashboard/ui';
 import { omit, orderBy } from 'lodash';
 import { useIntl } from 'umi';
 
 import PluginDetail from './PluginDetail';
-import { fetchList } from './service';
+import { fetchList, fetchPluginTemplateList } from './service';
 import { PLUGIN_ICON_LIST, PLUGIN_FILTER_LIST } from './data';
 import defaultPluginImg from '../../../public/static/default-plugin.png';
 
@@ -31,6 +31,7 @@ type Props = {
   initialData?: PluginComponent.Data;
   schemaType?: PluginComponent.Schema;
   referPage?: PluginComponent.ReferPage;
+  showSelector: boolean,
   onChange?: (data: PluginComponent.Data) => void;
 };
 
@@ -53,11 +54,13 @@ const PluginPage: React.FC<Props> = ({
   schemaType = 'route',
   referPage = '',
   type = 'scoped',
-  onChange = () => {},
+  showSelector = true,
+  onChange = () => { },
 }) => {
   const { formatMessage } = useIntl();
-
+  const [form] = Form.useForm();
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
+  const [pluginTemplateList, setPluginTemplateList] = useState<PluginTemplateModule.ResEntity[]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
   const [typeList, setTypeList] = useState<string[]>([]);
 
@@ -79,6 +82,9 @@ const PluginPage: React.FC<Props> = ({
       });
       setTypeList(categoryList.sort());
     });
+    fetchPluginTemplateList().then((data) => {
+      setPluginTemplateList(data);
+    })
   }, []);
 
   const PluginList = () => (
@@ -104,6 +110,44 @@ const PluginPage: React.FC<Props> = ({
         </Anchor>
       </Sider>
       <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
+        <Form>
+          {showSelector && (
+            <Form.Item
+              label={formatMessage({ id: 'component.select.pluginTemplate' })}
+              name="plugin_config_id"
+              shouldUpdate={(prev, next) => {
+                if (prev.plugin_config_id !== next.plugin_config_id) {
+                  const id = next.plugin_config_id;
+                  if (id) {
+                    form.setFieldsValue({
+                      plugin_config_id: id,
+                    });
+                  }
+                }
+                return prev.plugin_config_id !== next.plugin_config_id;
+              }}
+            >
+              <Select
+                data-cy="pluginTemplateSelector"
+                disabled={readonly}
+                onChange={(plugin_config_id) => {
+                }}
+              >
+                {[
+                  {
+                    name: formatMessage({ id: 'component.step.select.pluginTemplate.select.option' }),
+                    id: '',
+                  },
+                  ...pluginTemplateList,
+                ].map((item) => (
+                  <Select.Option value={item.id!} key={item.id}>
+                    {item.id}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
+        </Form>
         {typeList.map((typeItem) => {
           return (
             <PanelSection

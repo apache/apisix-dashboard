@@ -17,4 +17,6 @@
 export default {
   'component.plugin.tip1': 'NOTE: After customizing the plugin, you need to update schema.json.',
   'component.plugin.tip2': 'How to update?',
+  'component.select.pluginTemplate': 'Select PluginTemplate',
+  'component.step.select.pluginTemplate.select.option': 'Custom'
 };
