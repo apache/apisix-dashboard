@@ -39,7 +39,7 @@ Since the Dashboard caches the jsonschema data of the plugins in Apache APISIX, 
 
 1. Confirm that your APISIX is running and has enabled control API (enabled by default and only runs local access)
    Refer to the beginning in:
-   https://github.com/apache/apisix/blob/master/doc/control-api.md
+   https://github.com/apache/apisix/blob/master/docs/en/latest/control-api.md
 
 2. Execute the following commands to export jsonchema on your APISIX server (if it is configured for non-local access, it does not need to be executed on your APISIX server, and the access IP and port should be modified accordingly)
 
@@ -47,9 +47,9 @@ Since the Dashboard caches the jsonschema data of the plugins in Apache APISIX, 
 curl 127.0.0.1:9090/v1/schema > schema.json
 ```
 
-Refer to https://github.com/apache/apisix/blob/master/doc/control-api.md#get-v1schema
+Refer to https://github.com/apache/apisix/blob/master/docs/en/latest/control-api.md#get-v1schema
 
-3. Copy the exported `schema.json` to the `conf` directory in the Dashboard working directory (About working directory, please refer to https://github.com/apache/apisix-dashboard/blob/master/docs/deploy.md#working-directory)
+3. Copy the exported `schema.json` to the `conf` directory in the Dashboard working directory (About working directory, please refer to https://github.com/apache/apisix-dashboard/blob/master/docs/en/latest/deploy.md#working-directory)
 
 4. Restart the Manager API
 
