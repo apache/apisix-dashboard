@@ -53,3 +53,7 @@ jobs:
 
       - name: Report e2e coverage
         run: npx nyc report --reporter=text-summary
+
+      - name: Upload coverage to Codecov
+        run: |
+         bash <(curl -s https://codecov.io/bash) -f ./coverage/coverage-final.json -F frontend-e2e-test
