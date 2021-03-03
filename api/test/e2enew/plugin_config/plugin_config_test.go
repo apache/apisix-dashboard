@@ -72,7 +72,7 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 						}
 					}
 				},
-				"labels"": {
+				"labels": {
 					"version": "v2",
 					"build":   "17",
 					"extra":   "test"
