@@ -25,7 +25,7 @@
 
 <p align="center">
   <a href="https://apisix.apache.org/">Website</a> •
-  <a href="https://github.com/apache/apisix/tree/master/doc">Docs</a> •
+  <a href="https://github.com/apache/apisix/tree/master/docs">Docs</a> •
   <a href="https://twitter.com/apacheapisix">Twitter</a>
 </p>
 

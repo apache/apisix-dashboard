@@ -242,17 +242,14 @@ declare namespace RouteModule {
   type debugRequestParamsFormData = {
     check: boolean;
     key: string;
-    value: string;
+    value: any;
+    type?: string;
   };
   type DebugViewProps = {
     form: FormInstance;
+    name?: string;
   };
-  type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'raw input';
-  type DebugDodyViewProps = {
-    form: FormInstance;
-    changeBodyParamsType: (type: DebugBodyType) => void;
-    codeMirrorRef: any;
-  };
+  type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'raw input' | 'form-data';
   type DebugDrawProps = {
     visible: boolean;
     onClose: () => void;
