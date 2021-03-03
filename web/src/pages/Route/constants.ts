@@ -60,6 +60,7 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
 export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
   plugins: {},
   script: {},
+  plugin_config_id: ""
 };
 
 export const INIT_CHART = {

@@ -28,11 +28,12 @@ import defaultPluginImg from '../../../public/static/default-plugin.png';
 type Props = {
   readonly?: boolean;
   type?: 'global' | 'scoped';
-  initialData?: PluginComponent.Data;
+  initialData?: PluginComponent.Data,
+  plugin_config_id?: string,
   schemaType?: PluginComponent.Schema;
   referPage?: PluginComponent.ReferPage;
   showSelector?: boolean,
-  onChange?: (data: PluginComponent.Data) => void;
+  onChange?: (plugins: PluginComponent.Data, plugin_config_id?: string) => void;
 };
 
 const PanelSectionStyle = {
@@ -51,6 +52,7 @@ const NEVER_EXIST_PLUGIN_FLAG = 'NEVER_EXIST_PLUGIN_FLAG';
 const PluginPage: React.FC<Props> = ({
   readonly = false,
   initialData = {},
+  plugin_config_id = "",
   schemaType = 'route',
   referPage = '',
   type = 'scoped',
@@ -63,9 +65,11 @@ const PluginPage: React.FC<Props> = ({
   const [pluginTemplateList, setPluginTemplateList] = useState<PluginTemplateModule.ResEntity[]>([]);
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
   const [typeList, setTypeList] = useState<string[]>([]);
+  const [plugins, setPlugins] = useState({});
 
   const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join('');
   useEffect(() => {
+    setPlugins(initialData);
     fetchList().then((data) => {
       const filteredData = data.filter(
         (item) =>
@@ -84,6 +88,7 @@ const PluginPage: React.FC<Props> = ({
     });
     fetchPluginTemplateList().then((data) => {
       setPluginTemplateList(data);
+      form.setFieldsValue({ plugin_config_id })
     })
   }, []);
 
@@ -112,7 +117,7 @@ const PluginPage: React.FC<Props> = ({
       <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
         {showSelector && (
           <>
-            <Form>
+            <Form form={form}>
               <Form.Item
                 label={formatMessage({ id: 'component.select.pluginTemplate' })}
                 name="plugin_config_id"
@@ -132,11 +137,15 @@ const PluginPage: React.FC<Props> = ({
                   data-cy="pluginTemplateSelector"
                   disabled={readonly}
                   onChange={(plugin_config_id) => {
+                    form.setFieldsValue({
+                      plugin_config_id,
+                    });
+                    onChange(plugins, plugin_config_id as string);
                   }}
                 >
                   {[
                     {
-                      id:'',
+                      id: '',
                       desc: formatMessage({ id: 'component.step.select.pluginTemplate.select.option' }),
                     },
                     ...pluginTemplateList,
@@ -149,8 +158,8 @@ const PluginPage: React.FC<Props> = ({
               </Form.Item>
             </Form>
             <Alert message={<>
-              <p>{formatMessage({id:'component.plugin.pluginTemplate.tips1'})}</p>
-              <p>{formatMessage({id:'component.plugin.pluginTemplate.tips2'})}</p>
+              <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tips1' })}</p>
+              <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tips2' })}</p>
             </>} type="info" />
           </>
         )}
@@ -244,7 +253,8 @@ const PluginPage: React.FC<Props> = ({
         if (shouldDelete === true) {
           plugins = omit(plugins, name);
         }
-        onChange(plugins);
+        onChange(plugins, form.getFieldValue('plugin_config_id'));
+        setPlugins(plugins);
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}
     />

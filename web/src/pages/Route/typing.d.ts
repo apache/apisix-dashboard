@@ -34,6 +34,7 @@ declare namespace RouteModule {
     plugins: PluginPage.PluginData;
     //  TEMP
     script: any;
+    plugin_config_id?: string
   };
 
   type UpstreamHost = {
