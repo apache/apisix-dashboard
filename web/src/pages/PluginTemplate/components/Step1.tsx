@@ -14,10 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import { Form, Input } from 'antd';
+import React, { useState } from 'react';
+import { Button, Form, Input, Select, Tag } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
+import LabelsDrawer from '@/components/LabelsfDrawer';
+import { fetchLabelList } from '../service';
 
 const FORM_LAYOUT = {
   labelCol: {
@@ -34,7 +36,63 @@ type Props = {
 };
 
 const Step1: React.FC<Props> = ({ form, disabled }) => {
+  const [visible, setVisible] = useState(false);
   const { formatMessage } = useIntl();
+
+  const NormalLabelComponent = () => {
+    const field = 'custom_normal_labels';
+    const title = 'Label Manager';
+    return (
+      <React.Fragment>
+        <Form.Item label={formatMessage({ id: 'component.global.labels' })} name={field}>
+          <Select
+            mode="tags"
+            style={{ width: '100%' }}
+            placeholder="--"
+            disabled={disabled}
+            open={false}
+            bordered={false}
+            tagRender={(props) => {
+              const { value, closable, onClose } = props;
+              return (
+                <Tag closable={closable && !disabled} onClose={onClose} style={{ marginRight: 3 }}>
+                  {value}
+                </Tag>
+              );
+            }}
+          />
+        </Form.Item>
+        <Form.Item wrapperCol={{ span: 20, offset: 6 }} noStyle>
+          <Button type="dashed" disabled={disabled} onClick={() => setVisible(true)}>
+            {formatMessage({ id: 'component.global.manage' })}
+          </Button>
+        </Form.Item>
+        {visible && (
+          <Form.Item shouldUpdate noStyle>
+            {() => {
+              const labels = form.getFieldValue(field) || [];
+              return (
+                <LabelsDrawer
+                  title={title}
+                  actionName={field}
+                  dataSource={labels}
+                  disabled={disabled || false}
+                  onChange={({ data }) => {
+                    const labels = [...new Set([...(form.getFieldValue('custom_normal_labels') || []), ...data])]
+                    form.setFieldsValue({ ...form.getFieldsValue(), custom_normal_labels: labels })
+                  }}
+                  onClose={() => setVisible(false)}
+                  filterList={[]}
+                  fetchLabelList={fetchLabelList}
+                />
+              );
+            }}
+          </Form.Item>
+        )}
+      </React.Fragment>
+    );
+  };
+  
   return (
     <Form {...FORM_LAYOUT} form={form}>
       <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
@@ -45,6 +103,7 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
           disabled={disabled}
         />
       </Form.Item>
+      <NormalLabelComponent />
     </Form>
   );
 };

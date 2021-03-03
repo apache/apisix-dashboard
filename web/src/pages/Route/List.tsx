@@ -69,7 +69,7 @@ const Page: React.FC = () => {
     YAML,
   }
 
-  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
+  const [labelList, setLabelList] = useState<LabelList>({});
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [uploadFileList, setUploadFileList] = useState<RcFile[]>([]);
   const [showImportModal, setShowImportModal] = useState(false);

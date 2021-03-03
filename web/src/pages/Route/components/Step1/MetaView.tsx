@@ -27,7 +27,7 @@ import { fetchLabelList } from '../../service';
 const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit, onChange }) => {
   const { formatMessage } = useIntl();
   const [visible, setVisible] = useState(false);
-  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
+  const [labelList, setLabelList] = useState<LabelList>({});
 
   useEffect(() => {
     // TODO: use a better state name

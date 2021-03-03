@@ -25,6 +25,7 @@ import PluginPage from '@/components/Plugin';
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
 import { fetchItem, create, update, } from './service';
+import { transformLableValueToKeyValue } from '@/helpers';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
@@ -36,15 +37,24 @@ const Page: React.FC = (props) => {
     const { id } = (props as any).match.params;
     if (id) {
       fetchItem(id).then(({ data }) => {
-        const { desc, ...rest } = data;
-        form1.setFieldsValue({ id, desc });
+        const { desc, labels, ...rest } = data;
+        form1.setFieldsValue({
+          id, desc, custom_normal_labels: Object.keys(labels)
+            .map((key) => `${key}:${labels[key]}`)
+        });
         setPlugins(rest.plugins);
       });
     }
   }, []);
 
   const onSubmit = () => {
-    const data = { ...form1.getFieldsValue(), plugins } as PluginTemplateModule.Entity;
+    const { desc, custom_normal_labels } = form1.getFieldsValue();
+    const labels: Record<string, string> = {};
+    transformLableValueToKeyValue(custom_normal_labels || []).forEach(({ labelKey, labelValue }) => {
+      labels[labelKey] = labelValue;
+    });
+    const data = { desc, labels, plugins } as PluginTemplateModule.Entity;
+
     const { id } = (props as any).match.params;
     (id ? update(id, data) : create(data))
       .then(() => {
