@@ -14,19 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import { Button, notification, Popconfirm, Space, Tag } from 'antd';
+import { Button, notification, Popconfirm, Select, Space, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
-import { fetchList, remove } from './service';
+import { fetchList, remove, fetchLabelList } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
+  const [labelList, setLabelList] = useState<LabelList>({});
   const { formatMessage } = useIntl();
+
+  useEffect(() => {
+    fetchLabelList().then(setLabelList);
+  }, []);
 
   const handleTableActionSuccessResponse = (msgTip: string) => {
     notification.success({
@@ -56,7 +61,40 @@ const Page: React.FC = () => {
               {item}:{record.labels[item]}
             </Tag>
           ));
-      }
+      }, renderFormItem: (_, { type }) => {
+        if (type === 'form') {
+          return null;
+        }
+
+        return (
+          <Select
+            mode="tags"
+            style={{ width: '100%' }}
+            tagRender={(props) => {
+              const { value, closable, onClose } = props;
+              return (
+                <Tag closable={closable} onClose={onClose} style={{ marginRight: 3 }}>
+                  {value}
+                </Tag>
+              );
+            }}
+          >
+            {Object.keys(labelList)
+              .map((key) => {
+                return (
+                  <Select.OptGroup label={key} key={Math.random().toString(36).slice(2)}>
+                    {(labelList[key] || []).map((value: string) => (
+                      <Select.Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
+                        {' '}
+                        {value}{' '}
+                      </Select.Option>
+                    ))}
+                  </Select.OptGroup>
+                );
+              })}
+          </Select>
+        );
+      },
     },
     {
       title: formatMessage({ id: 'component.global.operation' }),
@@ -103,7 +141,6 @@ const Page: React.FC = () => {
       <ProTable<PluginTemplateModule.ResEntity>
         actionRef={ref}
         rowKey="id"
-        search={false}
         columns={columns}
         request={fetchList}
         toolBarRender={() => [

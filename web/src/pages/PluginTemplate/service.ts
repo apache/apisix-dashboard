@@ -15,11 +15,15 @@
  * limitations under the License.
  */
 import { request } from 'umi';
+import { transformLabelList } from '../Route/transform';
 
-export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
-  request('/plugin_configs', {
+export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
+  const { labels = [] } = res;
+
+  return request('/plugin_configs', {
     params: {
-      name: res.name,
+      desc: res.desc,
+      label: labels.join(','),
       page: current,
       page_size: pageSize,
     },
@@ -29,6 +33,7 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
       total: data.total_size,
     }
   });
+}
 
 export const remove = (rid: string) => request(`/plugin_configs/${rid}`, { method: 'DELETE' });
 
@@ -46,3 +51,8 @@ export const update = (id: string, data: PluginTemplateModule.Entity) =>
     method: 'PATCH',
     data,
   });
+
+export const fetchLabelList = () =>
+  request('/labels/plugin_config').then(
+    ({ data }) => transformLabelList(data.rows) as LabelList,
+  );
