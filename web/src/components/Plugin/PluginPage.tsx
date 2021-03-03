@@ -136,11 +136,11 @@ const PluginPage: React.FC<Props> = ({
                 <Select
                   data-cy="pluginTemplateSelector"
                   disabled={readonly}
-                  onChange={(plugin_config_id) => {
+                  onChange={(id) => {
                     form.setFieldsValue({
-                      plugin_config_id,
+                      plugin_config_id: id,
                     });
-                    onChange(plugins, plugin_config_id as string);
+                    onChange(plugins, id as string);
                   }}
                 >
                   {[
@@ -246,15 +246,15 @@ const PluginPage: React.FC<Props> = ({
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}
       onChange={({ codemirrorData, formData, shouldDelete }) => {
-        let plugins = {
+        let newPlugins = {
           ...initialData,
           [name]: { ...codemirrorData, disable: !formData.disable },
         };
         if (shouldDelete === true) {
-          plugins = omit(plugins, name);
+          newPlugins = omit(newPlugins, name);
         }
-        onChange(plugins, form.getFieldValue('plugin_config_id'));
-        setPlugins(plugins);
+        onChange(newPlugins, form.getFieldValue('plugin_config_id'));
+        setPlugins(newPlugins);
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}
     />

@@ -78,8 +78,8 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
                   dataSource={labels}
                   disabled={disabled || false}
                   onChange={({ data }) => {
-                    const labels = [...new Set([...(form.getFieldValue('custom_normal_labels') || []), ...data])]
-                    form.setFieldsValue({ ...form.getFieldsValue(), custom_normal_labels: labels })
+                    const handledLabels = [...new Set([...(form.getFieldValue('custom_normal_labels') || []), ...data])];
+                    form.setFieldsValue({ ...form.getFieldsValue(), custom_normal_labels: handledLabels });
                   }}
                   onClose={() => setVisible(false)}
                   filterList={[]}
