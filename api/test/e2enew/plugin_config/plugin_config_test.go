@@ -52,9 +52,9 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 						"block_rules": ["select.+(from|limit)", "(?:(union(.*?)select))"]
 					}
 				},
-				Labels: map[string]string{
+				"labels": {
 					"version": "v1",
-					"build":   "16",
+					"build":   "16"
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -72,10 +72,10 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 						}
 					}
 				},
-				Labels: map[string]string{
+				"labels"": {
 					"version": "v2",
 					"build":   "17",
-					"extra":   "test",
+					"extra":   "test"
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -88,6 +88,7 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"plugins":{"response-rewrite":{"headers":{"X-VERSION":"1.0"}},"uri-blocker":{"block_rules":["select.+(from|limit)","(?:(union(.*?)select))"]}}`,
+			Sleep:        base.SleepTime,
 		}),
 		table.Entry("search plugin_config list by label ", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
