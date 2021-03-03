@@ -91,6 +91,7 @@ declare namespace RouteModule {
     };
     upstream_id?: string;
     plugins: Record<string, any>;
+    plugin_config_id?: string;
     script: Record<string, any>;
     url?: string;
     enable_websocket?: boolean;

@@ -222,11 +222,12 @@ export const transformRouteData = (data: RouteModule.Body) => {
 
   const form2Data: RouteModule.Form2Data = upstream || { upstream_id };
 
-  const { plugins, script } = data;
+  const { plugins, script, plugin_config_id = '' } = data;
 
   const step3Data: RouteModule.Step3Data = {
     plugins,
     script,
+    plugin_config_id,
   };
 
   return {
