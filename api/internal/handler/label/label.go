@@ -38,11 +38,12 @@ import (
 )
 
 type Handler struct {
-	routeStore    store.Interface
-	serviceStore  store.Interface
-	upstreamStore store.Interface
-	sslStore      store.Interface
-	consumerStore store.Interface
+	routeStore        store.Interface
+	serviceStore      store.Interface
+	upstreamStore     store.Interface
+	sslStore          store.Interface
+	consumerStore     store.Interface
+	pluginConfigStore store.Interface
 }
 
 var _ json.Marshaler = Pair{}
@@ -59,11 +60,12 @@ func (p Pair) MarshalJSON() ([]byte, error) {
 
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{
-		routeStore:    store.GetStore(store.HubKeyRoute),
-		serviceStore:  store.GetStore(store.HubKeyService),
-		upstreamStore: store.GetStore(store.HubKeyUpstream),
-		sslStore:      store.GetStore(store.HubKeySsl),
-		consumerStore: store.GetStore(store.HubKeyConsumer),
+		routeStore:        store.GetStore(store.HubKeyRoute),
+		serviceStore:      store.GetStore(store.HubKeyService),
+		upstreamStore:     store.GetStore(store.HubKeyUpstream),
+		sslStore:          store.GetStore(store.HubKeySsl),
+		consumerStore:     store.GetStore(store.HubKeyConsumer),
+		pluginConfigStore: store.GetStore(store.HubKeyPluginConfig),
 	}, nil
 }
 
@@ -154,9 +156,11 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 		items = append(items, h.sslStore)
 	case "upstream":
 		items = append(items, h.upstreamStore)
+	case "plugin_config":
+		items = append(items, h.pluginConfigStore)
 	case "all":
 		items = append(items, h.routeStore, h.serviceStore, h.upstreamStore,
-			h.sslStore, h.consumerStore)
+			h.sslStore, h.consumerStore, h.pluginConfigStore)
 	}
 
 	predicate := func(obj interface{}) bool {
@@ -172,6 +176,8 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 		case *entity.Service:
 			ls = obj.Labels
 		case *entity.Upstream:
+			ls = obj.Labels
+		case *entity.PluginConfig:
 			ls = obj.Labels
 		default:
 			return false
