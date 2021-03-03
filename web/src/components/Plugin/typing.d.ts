@@ -30,5 +30,5 @@ declare namespace PluginComponent {
 
   type ReferPage = '' | 'route' | 'consumer' | 'service' | 'plugin';
 
-  type CodeMirrorMode = 'json' | 'yaml';
+  type CodeMirrorMode = 'Json' | 'Yaml';
 }

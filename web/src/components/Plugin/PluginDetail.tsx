@@ -89,14 +89,20 @@ const PluginDetail: React.FC<Props> = ({
   onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
+  enum codeMirrorModeList {
+    Json = 'Json',
+    Yaml = 'Yaml',
+  }
   const [form] = Form.useForm();
   const ref = useRef<any>(null);
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.type;
-  const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>('json');
+  const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
+    codeMirrorModeList.Json,
+  );
   const modeOptions = [
-    { label: 'Json', value: 'json' },
-    { label: 'Yaml', value: 'yaml' },
+    { label: codeMirrorModeList.Json, value: codeMirrorModeList.Json },
+    { label: codeMirrorModeList.Yaml, value: codeMirrorModeList.Yaml },
   ];
 
   useEffect(() => {
@@ -151,23 +157,40 @@ const PluginDetail: React.FC<Props> = ({
     });
   };
   const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
-    switch (value){
-      case 'javascript':
+    switch (value) {
+      case codeMirrorModeList.Json: {
+        let { data, error } = yaml2json(ref.current.editor.getValue(), true);
+
+        if (error) {
+          notification.error({
+            message: 'Invalid Yaml data',
+          });
+          return;
+        }
         ref.current.editor.setValue(
-          js_beautify(yaml2json(ref.current.editor.getValue(), true), {
+          js_beautify(data, {
             indent_size: 2,
           }),
         );
         break;
-      case 'yaml':
-        ref.current.editor.setValue(
-          json2yaml(ref.current.editor.getValue())
-        );
+      }
+      case codeMirrorModeList.Yaml: {
+        let { data, error } = json2yaml(ref.current.editor.getValue());
+
+        if (error) {
+          notification.error({
+            message: 'Invalid Json data',
+          });
+          return;
+        }
+        ref.current.editor.setValue(data);
         break;
-      default: break;
+      }
+      default:
+        break;
     }
-    setCodeMirrorMode(value)
-  }
+    setCodeMirrorMode(value);
+  };
   const formatCodes = () => {
     try {
       if (ref.current) {
@@ -223,9 +246,10 @@ const PluginDetail: React.FC<Props> = ({
                 type="primary"
                 onClick={() => {
                   try {
-                    const editorData = codeMirrorMode === 'javascript' ?
-                      JSON.parse(ref.current?.editor.getValue()) :
-                      yaml2json(ref.current?.editor.getValue(), false);
+                    const editorData =
+                      codeMirrorMode === codeMirrorModeList.Json
+                        ? JSON.parse(ref.current?.editor.getValue())
+                        : yaml2json(ref.current?.editor.getValue(), false);
                     validateData(name, editorData).then((value) => {
                       onChange({ formData: form.getFieldsValue(), codemirrorData: value });
                     });
@@ -283,22 +307,23 @@ const PluginDetail: React.FC<Props> = ({
               icon={<LinkOutlined />}
               onClick={() => {
                 if (name.startsWith('serverless')) {
-                  window.open(
-                    'https://apisix.apache.org/docs/apisix/plugins/serverless',
-                  );
+                  window.open('https://apisix.apache.org/docs/apisix/plugins/serverless');
                 } else {
-                  window.open(
-                    `https://apisix.apache.org/docs/apisix/plugins/${name}`,
-                  );
+                  window.open(`https://apisix.apache.org/docs/apisix/plugins/${name}`);
                 }
               }}
               key={1}
             >
               Document
             </Button>,
-            <Select defaultValue="javascript" options={modeOptions} onChange={(value: PluginComponent.CodeMirrorMode) => {
-              handleModeChange(value)
-            }}></Select>,
+            <Select
+              defaultValue={codeMirrorModeList.Json}
+              value={codeMirrorMode}
+              options={modeOptions}
+              onChange={(value: PluginComponent.CodeMirrorMode) => {
+                handleModeChange(value);
+              }}
+            ></Select>,
             <Button type="primary" onClick={formatCodes} key={3}>
               Format
             </Button>,

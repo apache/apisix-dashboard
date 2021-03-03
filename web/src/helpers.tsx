@@ -137,15 +137,38 @@ export const timestampToLocaleString = (timestamp: number) => {
  * Transform json string to yaml string
  * @param jsonStr
  */
-export const json2yaml = (jsonStr: string): string => {
-  return yaml.dump(JSON.parse(jsonStr))
-}
+export const json2yaml = (jsonStr: string): { data: string; error: boolean } => {
+  try {
+    return {
+      data: yaml.dump(JSON.parse(jsonStr)),
+      error: false,
+    };
+  } catch (err) {
+    return {
+      data: '',
+      error: true,
+    };
+  }
+};
 
 /**
  * Transform yaml string to json
  * @param yamlStr
  * @param returnString true for json string , false for json object
  */
-export const yaml2json = (yamlStr: string, returnString: boolean): string | Object => {
-  return returnString? JSON.stringify(YAML.parse(yamlStr)): YAML.parse(yamlStr);
-}
+export const yaml2json = (
+  yamlStr: string,
+  returnString: boolean,
+): { data: any; error: boolean } => {
+  try {
+    return {
+      data: returnString ? JSON.stringify(YAML.parse(yamlStr)) : YAML.parse(yamlStr),
+      error: false,
+    };
+  } catch (err) {
+    return {
+      data: '',
+      error: true,
+    };
+  }
+};
