@@ -178,6 +178,18 @@ func genConsumer(labels map[string]string) *entity.Consumer {
 	return &r
 }
 
+func genPluginConfig(labels map[string]string) *entity.PluginConfig {
+	r := entity.PluginConfig{
+		BaseInfo: entity.BaseInfo{
+			ID:         rand.Int(),
+			CreateTime: rand.Int63(),
+		},
+		Labels: labels,
+	}
+
+	return &r
+}
+
 func TestLabel(t *testing.T) {
 	m1 := map[string]string{
 		"label1": "value1",
@@ -189,7 +201,7 @@ func TestLabel(t *testing.T) {
 	}
 
 	// TODO: Test SSL after the ssl config bug fixed
-	types := []string{"route", "service", "upstream", "consumer"}
+	types := []string{"route", "service", "upstream", "consumer", "plugin_config"}
 
 	var giveData []interface{}
 	for _, typ := range types {
@@ -218,6 +230,11 @@ func TestLabel(t *testing.T) {
 			giveData = []interface{}{
 				genConsumer(m1),
 				genConsumer(m2),
+			}
+		case "plugin_config":
+			giveData = []interface{}{
+				genPluginConfig(m1),
+				genPluginConfig(m2),
 			}
 		}
 
@@ -271,6 +288,8 @@ func TestLabel(t *testing.T) {
 				handler.upstreamStore = genMockStore(t, tc.giveData)
 			case "consumer":
 				handler.consumerStore = genMockStore(t, tc.giveData)
+			case "plugin_config":
+				handler.pluginConfigStore = genMockStore(t, tc.giveData)
 			}
 
 			ctx := droplet.NewContext()
@@ -296,11 +315,12 @@ func TestLabel(t *testing.T) {
 	}
 
 	handler := Handler{
-		routeStore:    genMockStore(t, []interface{}{genRoute(m1)}),
-		sslStore:      genMockStore(t, []interface{}{genSSL(m2)}),
-		upstreamStore: genMockStore(t, []interface{}{genUpstream(m3)}),
-		consumerStore: genMockStore(t, []interface{}{genConsumer(m4)}),
-		serviceStore:  genMockStore(t, []interface{}{genService(m5)}),
+		routeStore:        genMockStore(t, []interface{}{genRoute(m1)}),
+		sslStore:          genMockStore(t, []interface{}{genSSL(m2)}),
+		upstreamStore:     genMockStore(t, []interface{}{genUpstream(m3)}),
+		consumerStore:     genMockStore(t, []interface{}{genConsumer(m4)}),
+		serviceStore:      genMockStore(t, []interface{}{genService(m5)}),
+		pluginConfigStore: genMockStore(t, []interface{}{genPluginConfig(m5)}),
 	}
 
 	var testCases []*testCase
