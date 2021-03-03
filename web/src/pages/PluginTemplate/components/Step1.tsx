@@ -92,7 +92,7 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
       </React.Fragment>
     );
   };
-  
+
   return (
     <Form {...FORM_LAYOUT} form={form}>
       <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
