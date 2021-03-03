@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package upstream
+package ssl
 
 import (
 	"testing"
@@ -26,12 +26,11 @@ import (
 )
 
 func TestRoute(t *testing.T) {
-	ginkgo.RunSpecs(t, "upstream suite")
+	ginkgo.RunSpecs(t, "ssl suite")
 }
 
 var _ = ginkgo.AfterSuite(func() {
+	base.CleanResource("ssl")
 	base.CleanResource("routes")
-	base.CleanResource("upstreams")
-	base.CleanResource("consumers")
 	time.Sleep(base.SleepTime)
 })

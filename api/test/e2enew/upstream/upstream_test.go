@@ -331,6 +331,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 		for i := 0; i < 18; i++ {
 			resp, err := http.DefaultClient.Do(request)
 			assert.Nil(t, err)
+			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
 			assert.Nil(t, err)
 			body := string(respBody)
@@ -339,7 +340,6 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 			} else {
 				res[body]++
 			}
-			resp.Body.Close()
 		}
 		assert.Equal(t, 18, res["1982"])
 	})
@@ -403,11 +403,12 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 		for i := 0; i <= 17; i++ {
 			resp, err := http.DefaultClient.Do(request)
 			assert.Nil(t, err)
+			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
+			assert.Nil(t, err)
 			if string(respBody) == "1980" {
 				count++
 			}
-			resp.Body.Close()
 		}
 		assert.Equal(t, 18, count)
 	})

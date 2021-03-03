@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package service
+package plugin_config
 
 import (
 	"encoding/json"
@@ -32,37 +32,38 @@ import (
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
-	serviceStore  store.Interface
-	upstreamStore store.Interface
+	pluginConfigStore store.Interface
+	routeStore        store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{
-		serviceStore:  store.GetStore(store.HubKeyService),
-		upstreamStore: store.GetStore(store.HubKeyUpstream),
+		pluginConfigStore: store.GetStore(store.HubKeyPluginConfig),
+		routeStore:        store.GetStore(store.HubKeyRoute),
 	}, nil
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.GET("/apisix/admin/services/:id", wgin.Wraps(h.Get,
+	r.GET("/apisix/admin/plugin_configs/:id", wgin.Wraps(h.Get,
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
-	r.GET("/apisix/admin/services", wgin.Wraps(h.List,
+	r.GET("/apisix/admin/plugin_configs", wgin.Wraps(h.List,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
-	r.POST("/apisix/admin/services", wgin.Wraps(h.Create,
-		wrapper.InputType(reflect.TypeOf(entity.Service{}))))
-	r.PUT("/apisix/admin/services", wgin.Wraps(h.Update,
+	r.POST("/apisix/admin/plugin_configs", wgin.Wraps(h.Create,
+		wrapper.InputType(reflect.TypeOf(entity.PluginConfig{}))))
+	r.PUT("/apisix/admin/plugin_configs", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
-	r.PUT("/apisix/admin/services/:id", wgin.Wraps(h.Update,
+	r.PUT("/apisix/admin/plugin_configs/:id", wgin.Wraps(h.Update,
 		wrapper.InputType(reflect.TypeOf(UpdateInput{}))))
-	r.PATCH("/apisix/admin/services/:id", wgin.Wraps(h.Patch,
+	r.PATCH("/apisix/admin/plugin_configs/:id", wgin.Wraps(h.Patch,
 		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
-	r.PATCH("/apisix/admin/services/:id/*path", wgin.Wraps(h.Patch,
+	r.PATCH("/apisix/admin/plugin_configs/:id/*path", wgin.Wraps(h.Patch,
 		wrapper.InputType(reflect.TypeOf(PatchInput{}))))
-	r.DELETE("/apisix/admin/services/:ids", wgin.Wraps(h.BatchDelete,
+	r.DELETE("/apisix/admin/plugin_configs/:ids", wgin.Wraps(h.BatchDelete,
 		wrapper.InputType(reflect.TypeOf(BatchDelete{}))))
 }
 
@@ -73,27 +74,23 @@ type GetInput struct {
 func (h *Handler) Get(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*GetInput)
 
-	r, err := h.serviceStore.Get(c.Context(), input.ID)
+	pluginConfig, err := h.pluginConfigStore.Get(c.Context(), input.ID)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	service := r.(*entity.Service)
-	if service.Upstream != nil && service.Upstream.Nodes != nil {
-		service.Upstream.Nodes = entity.NodesFormat(service.Upstream.Nodes)
-	}
-
-	return r, nil
+	return pluginConfig, nil
 }
 
 type ListInput struct {
-	Name string `auto_read:"name,query"`
+	Search string `auto_read:"search,query"`
+	Label  string `auto_read:"label,query"`
 	store.Pagination
 }
 
-// swagger:operation GET /apisix/admin/services getServiceList
+// swagger:operation GET /apisix/admin/plugin_configs getPluginConfigList
 //
-// Return the service list according to the specified page number and page size, and can search services by name.
+// Return the plugin_config list according to the specified page number and page size, and support search.
 //
 // ---
 // produces:
@@ -109,9 +106,9 @@ type ListInput struct {
 //   description: page size
 //   required: false
 //   type: integer
-// - name: name
+// - name: search
 //   in: query
-//   description: name of service
+//   description: search keyword
 //   required: false
 //   type: string
 // responses:
@@ -120,27 +117,30 @@ type ListInput struct {
 //     schema:
 //       type: array
 //       items:
-//         "$ref": "#/definitions/service"
+//         "$ref": "#/definitions/pluginConfig"
 //   default:
 //     description: unexpected error
 //     schema:
 //       "$ref": "#/definitions/ApiError"
 func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ListInput)
+	labelMap, err := utils.GenLabelMap(input.Label)
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("%s: \"%s\"", err.Error(), input.Label)
+	}
 
-	ret, err := h.serviceStore.List(c.Context(), store.ListInput{
+	ret, err := h.pluginConfigStore.List(c.Context(), store.ListInput{
 		Predicate: func(obj interface{}) bool {
-			if input.Name != "" {
-				return strings.Contains(obj.(*entity.Service).Name, input.Name)
+			if input.Search != "" {
+				return strings.Contains(obj.(*entity.PluginConfig).Desc, input.Search)
 			}
+
+			if input.Label != "" && !utils.LabelContains(obj.(*entity.PluginConfig).Labels, labelMap) {
+				return false
+			}
+
 			return true
-		},
-		Format: func(obj interface{}) interface{} {
-			service := obj.(*entity.Service)
-			if service.Upstream != nil && service.Upstream.Nodes != nil {
-				service.Upstream.Nodes = entity.NodesFormat(service.Upstream.Nodes)
-			}
-			return service
 		},
 		PageSize:   input.PageSize,
 		PageNumber: input.PageNumber,
@@ -153,21 +153,9 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 }
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*entity.Service)
+	input := c.Input().(*entity.PluginConfig)
 
-	if input.UpstreamID != nil {
-		upstreamID := utils.InterfaceToString(input.UpstreamID)
-		_, err := h.upstreamStore.Get(c.Context(), upstreamID)
-		if err != nil {
-			if err == data.ErrNotFound {
-				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-					fmt.Errorf("upstream id: %s not found", input.UpstreamID)
-			}
-			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
-		}
-	}
-
-	ret, err := h.serviceStore.Create(c.Context(), input)
+	ret, err := h.pluginConfigStore.Create(c.Context(), input)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -177,34 +165,22 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 
 type UpdateInput struct {
 	ID string `auto_read:"id,path"`
-	entity.Service
+	entity.PluginConfig
 }
 
 func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*UpdateInput)
 
 	// check if ID in body is equal ID in path
-	if err := handler.IDCompare(input.ID, input.Service.ID); err != nil {
+	if err := handler.IDCompare(input.ID, input.PluginConfig.ID); err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
 	if input.ID != "" {
-		input.Service.ID = input.ID
+		input.PluginConfig.ID = input.ID
 	}
 
-	if input.UpstreamID != nil {
-		upstreamID := utils.InterfaceToString(input.UpstreamID)
-		_, err := h.upstreamStore.Get(c.Context(), upstreamID)
-		if err != nil {
-			if err == data.ErrNotFound {
-				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-					fmt.Errorf("upstream id: %s not found", input.UpstreamID)
-			}
-			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
-		}
-	}
-
-	ret, err := h.serviceStore.Update(c.Context(), &input.Service, true)
+	ret, err := h.pluginConfigStore.Update(c.Context(), &input.PluginConfig, true)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
@@ -219,7 +195,32 @@ type BatchDelete struct {
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
 
-	if err := h.serviceStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
+	IDs := strings.Split(input.IDs, ",")
+	IDMap := map[string]bool{}
+	for _, id := range IDs {
+		IDMap[id] = true
+	}
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			id := utils.InterfaceToString(obj.(*entity.Route).PluginConfigID)
+			if _, ok := IDMap[id]; ok {
+				return true
+			}
+			return false
+		},
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(ret.Rows) > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("please disconnect the route (ID: %s) with this plugin config first",
+				ret.Rows[0].(*entity.Route).ID)
+	}
+
+	if err := h.pluginConfigStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
@@ -235,27 +236,30 @@ type PatchInput struct {
 func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*PatchInput)
 	reqBody := input.Body
-	ID := input.ID
+	id := input.ID
 	subPath := input.SubPath
 
-	stored, err := h.serviceStore.Get(c.Context(), ID)
+	stored, err := h.pluginConfigStore.Get(c.Context(), id)
 	if err != nil {
+		log.Warnf("get stored data from etcd failed: %s", err)
 		return handler.SpecCodeResponse(err), err
 	}
 
 	res, err := utils.MergePatch(stored, subPath, reqBody)
 	if err != nil {
+		log.Warnf("merge failed: %s", err)
 		return handler.SpecCodeResponse(err), err
 	}
 
-	var service entity.Service
-	err = json.Unmarshal(res, &service)
-	if err != nil {
+	var pluginConfig entity.PluginConfig
+	if err := json.Unmarshal(res, &pluginConfig); err != nil {
+		log.Warnf("unmarshal to pluginConfig failed: %s", err)
 		return handler.SpecCodeResponse(err), err
 	}
 
-	ret, err := h.serviceStore.Update(c.Context(), &service, false)
+	ret, err := h.pluginConfigStore.Update(c.Context(), &pluginConfig, false)
 	if err != nil {
+		log.Warnf("update failed: %s", err)
 		return handler.SpecCodeResponse(err), err
 	}
 

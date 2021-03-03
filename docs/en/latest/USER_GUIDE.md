@@ -1,3 +1,7 @@
+---
+title: User Guide
+---
+
 <!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,15 +20,6 @@
 # limitations under the License.
 #
 -->
-
----
-
-id: userguide
-title: User Guide
-
----
-
-# User Guide
 
 The following are parts of the modules' snapshot.
 

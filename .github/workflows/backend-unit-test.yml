@@ -27,7 +27,7 @@ jobs:
       - name: setup go
         uses: actions/setup-go@v2.1.3
         with:
-          go-version: '1.13'
+          go-version: "1.13"
 
       - name: run test
         run: |
@@ -36,7 +36,7 @@ jobs:
       - name: upload coverage profile
         working-directory: ./api
         run: |
-          bash <(curl -s https://codecov.io/bash)
+          bash <(curl -s https://codecov.io/bash) -F backend-unit-test
 
       - name: run with custom port
         working-directory: ./api

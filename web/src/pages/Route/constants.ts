@@ -96,6 +96,7 @@ export const DEFAULT_DEBUG_PARAM_FORM_DATA = {
     {
       check: false,
       key: '',
+      type: 'text',
       value: '',
     },
   ],
@@ -109,6 +110,7 @@ export const DEFAULT_DEBUG_AUTH_FORM_DATA = {
 export const DEBUG_BODY_TYPE_SUPPORTED: RouteModule.DebugBodyType[] = [
   'none',
   'x-www-form-urlencoded',
+  'form-data',
   'raw input',
 ];
 
@@ -120,3 +122,8 @@ export const DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED = [
 ];
 
 export const EXPORT_FILE_MIME_TYPE_SUPPORTED = ['application/json', 'application/x-yaml'];
+
+export enum DebugBodyFormDataValueType {
+  Text = 'Text',
+  File = 'File'
+}

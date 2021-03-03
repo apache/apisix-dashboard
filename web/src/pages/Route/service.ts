@@ -92,7 +92,7 @@ export const fetchUpstreamItem = (sid: string) => {
 export const checkHostWithSSL = (hosts: string[]) =>
   request('/check_ssl_exists', {
     method: 'POST',
-    data: hosts,
+    data: { hosts },
   });
 
 export const fetchLabelList = () =>
@@ -106,10 +106,11 @@ export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) 
     data: { status },
   });
 
-export const debugRoute = (data: RouteModule.debugRequest) => {
+export const debugRoute = (headers, data: RouteModule.debugRequest) => {
   return request('/debug-request-forwarding', {
     method: 'post',
     data,
+    headers,
   });
 };
 

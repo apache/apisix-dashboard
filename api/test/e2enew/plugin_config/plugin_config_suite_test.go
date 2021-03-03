@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package upstream
+package plugin_config
 
 import (
 	"testing"
@@ -25,13 +25,12 @@ import (
 	"e2enew/base"
 )
 
-func TestRoute(t *testing.T) {
-	ginkgo.RunSpecs(t, "upstream suite")
+func TestPluginConfig(t *testing.T) {
+	ginkgo.RunSpecs(t, "plugin config suite")
 }
 
 var _ = ginkgo.AfterSuite(func() {
+	base.CleanResource("plugin_configs")
 	base.CleanResource("routes")
-	base.CleanResource("upstreams")
-	base.CleanResource("consumers")
 	time.Sleep(base.SleepTime)
 })
