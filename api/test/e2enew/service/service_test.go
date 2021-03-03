@@ -73,6 +73,7 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Headers:    map[string]string{"Authorization": base.GetToken()},
 			ExpectCode: http.StatusOK,
 			ExpectBody: "\"name\":\"testservice\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1},{\"host\":\"" + base.UpstreamIp + "\",\"port\":1981,\"weight\":2},{\"host\":\"" + base.UpstreamIp + "\",\"port\":1982,\"weight\":3}],\"type\":\"roundrobin\"}",
+			Sleep:      base.SleepTime,
 		})
 	})
 	ginkgo.It("create route using the service just created", func() {
@@ -113,6 +114,7 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Path:         "/apisix/admin/services/s1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
 		})
 	})
 	ginkgo.It("hit the route just deleted", func() {
@@ -171,6 +173,7 @@ var _ = ginkgo.Describe("create service with plugin", func() {
 			Headers:    map[string]string{"Authorization": base.GetToken()},
 			ExpectCode: http.StatusOK,
 			ExpectBody: "\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}}",
+			Sleep:      base.SleepTime,
 		})
 	})
 	ginkgo.It("create route using the service just created", func() {
@@ -217,6 +220,7 @@ var _ = ginkgo.Describe("create service with plugin", func() {
 			Path:         "/apisix/admin/services/s1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
 		})
 	})
 	ginkgo.It("hit the route just deleted", func() {
@@ -286,6 +290,7 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 			Headers:    map[string]string{"Authorization": base.GetToken()},
 			ExpectCode: http.StatusOK,
 			ExpectBody: "\"name\":\"testservice\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
+			Sleep:      base.SleepTime,
 		})
 	})
 	ginkgo.It("create route using the service just created", func() {
@@ -328,6 +333,7 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 			Path:         "/apisix/admin/services/s2",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
 		})
 	})
 	ginkgo.It("hit the route just deleted", func() {
@@ -395,6 +401,7 @@ var _ = ginkgo.Describe("service update use patch method", func() {
 			Body:         string(_createServiceBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
 		})
 	})
 	ginkgo.It("get the service s5", func() {
@@ -405,6 +412,7 @@ var _ = ginkgo.Describe("service update use patch method", func() {
 			Headers:    map[string]string{"Authorization": base.GetToken()},
 			ExpectCode: http.StatusOK,
 			ExpectBody: "\"name\":\"testpatch\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1981,\"weight\":1}],\"type\":\"roundrobin\"}}",
+			Sleep:      base.SleepTime,
 		})
 	})
 	ginkgo.It("Update service using path parameter patch method", func() {
@@ -441,6 +449,7 @@ var _ = ginkgo.Describe("service update use patch method", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"name\":\"testpatch\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}}",
+			Sleep:        base.SleepTime,
 		})
 	})
 	ginkgo.It("delete service", func() {
