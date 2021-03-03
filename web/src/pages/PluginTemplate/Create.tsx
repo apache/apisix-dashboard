@@ -37,7 +37,7 @@ const Page: React.FC = (props) => {
     const { id } = (props as any).match.params;
     if (id) {
       fetchItem(id).then(({ data }) => {
-        const { desc, labels, ...rest } = data;
+        const { desc, labels = {}, ...rest } = data;
         form1.setFieldsValue({
           id, desc, custom_normal_labels: Object.keys(labels)
             .map((key) => `${key}:${labels[key]}`)
