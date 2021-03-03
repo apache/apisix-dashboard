@@ -106,6 +106,7 @@ export const transformStepData = ({
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
       data.remote_addrs?.filter(Boolean).length === 0 ? 'remote_addrs' : '',
+      step3DataCloned.plugin_config_id === '' ? 'plugin_config_id' : ''
     ]);
   }
 
