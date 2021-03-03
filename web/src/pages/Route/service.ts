@@ -21,8 +21,8 @@ import {
   transformStepData,
   transformRouteData,
   transformUpstreamNodes,
-  transformLabelList,
 } from './transform';
+import { transformLabelList } from '@/helpers';
 
 export const create = (data: RouteModule.RequestData) =>
   request(`/routes`, {

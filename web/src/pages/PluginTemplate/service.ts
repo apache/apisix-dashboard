@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 import { request } from 'umi';
-import { transformLabelList } from '../Route/transform';
+
+import { transformLabelList } from '@/helpers';
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
   const { labels = [] } = res;

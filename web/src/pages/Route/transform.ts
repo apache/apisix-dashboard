@@ -16,14 +16,7 @@
  */
 import { omit, pick, cloneDeep } from 'lodash';
 
-export const transformLableValueToKeyValue = (data: string[]) => {
-  return (data || []).map((item) => {
-    const index = item.indexOf(':');
-    const labelKey = item.substring(0, index);
-    const labelValue = item.substring(index + 1);
-    return { labelKey, labelValue, key: Math.random().toString(36).slice(2) };
-  });
-};
+import { transformLableValueToKeyValue } from '@/helpers';
 
 // Transform Route data then sent to API
 export const transformStepData = ({
@@ -128,10 +121,10 @@ export const transformStepData = ({
     'redirect',
     'vars',
     'plugins',
+    'labels',
     service_id.length !== 0 ? 'service_id' : '',
     form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
     data.remote_addrs?.filter(Boolean).length !== 0 ? 'remote_addrs' : '',
-    form1Data.custom_version_label.length !== 0 ? 'labels' : '',
   ]);
 };
 
@@ -236,25 +229,4 @@ export const transformRouteData = (data: RouteModule.Body) => {
     step3Data,
     advancedMatchingRules,
   };
-};
-
-export const transformLabelList = (data: RouteModule.ResponseLabelList) => {
-  if (!data) {
-    return {};
-  }
-  const transformData = {};
-  data.forEach((item) => {
-    const key = Object.keys(item)[0];
-    const value = item[key];
-    if (!transformData[key]) {
-      transformData[key] = [];
-      transformData[key].push(value);
-      return;
-    }
-
-    if (transformData[key] && !transformData[key][value]) {
-      transformData[key].push(value);
-    }
-  });
-  return transformData;
 };

@@ -21,7 +21,7 @@ import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
 import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
-import LabelsDrawer from './LabelsDrawer';
+import LabelsDrawer from '@/components/LabelsfDrawer';
 import { fetchLabelList } from '../../service';
 
 const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit, onChange }) => {
@@ -75,6 +75,8 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
                   disabled={disabled || false}
                   onChange={onChange}
                   onClose={() => setVisible(false)}
+                  filterList={["API_VERSION"]}
+                  fetchLabelList={fetchLabelList}
                 />
               );
             }}
