@@ -261,4 +261,3 @@ func (h *Handler) Patch(c droplet.Context) (interface{}, error) {
 
 	return ret, nil
 }
-

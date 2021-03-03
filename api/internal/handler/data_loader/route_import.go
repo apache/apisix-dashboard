@@ -58,10 +58,8 @@ func NewImportHandler() (handler.RouteRegister, error) {
 	}, nil
 }
 
-
 var regPathVar = regexp.MustCompile(`{[\w.]*}`)
 var regPathRepeat = regexp.MustCompile(`-APISIX-REPEAT-URI-[\d]*`)
-
 
 func (h *ImportHandler) ApplyRoute(r *gin.Engine) {
 	r.POST("/apisix/admin/import/routes", wgin.Wraps(h.Import,

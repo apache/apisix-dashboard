@@ -18,15 +18,16 @@ jobs:
       - name: setup go
         uses: actions/setup-go@v2.1.3
         with:
-          go-version: '1.13'
+          go-version: "1.13"
 
-      - name: Modify conf.yaml Configure for use by the manage-api cluster
+      - name: Modify conf.yaml
         run: |
           sed -i 's/127.0.0.1:2379/172.16.238.10:2379/' ./api/conf/conf.yaml
           sed -i 's/127.0.0.1/0.0.0.0/' ./api/conf/conf.yaml
           sed -i '/172.16.238.10:2379/a\      - 172.16.238.11:2379' ./api/conf/conf.yaml
           sed -i '/172.16.238.10:2379/a\      - 172.16.238.12:2379' ./api/conf/conf.yaml
           sed -i 's@127.0.0.0/24@0.0.0.0/0@' ./api/conf/conf.yaml
+          sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./api/conf/conf.yaml
 
       - name: download file Dockerfile-apisix
         working-directory: ./api/test/docker
@@ -74,8 +75,7 @@ jobs:
       - name: upload coverage profile
         working-directory: ./api/test/testdata
         run: |
-          bash <(curl -s https://codecov.io/bash) -f ./integrationcover.out
-
+          bash <(curl -s https://codecov.io/bash) -f ./integrationcover.out -F backend-e2e-test
 
   backend-e2e-test-ginkgo:
     runs-on: ubuntu-latest
@@ -86,7 +86,7 @@ jobs:
       - name: setup go
         uses: actions/setup-go@v2.1.3
         with:
-          go-version: '1.13'
+          go-version: "1.13"
 
       - name: Modify conf.yaml Configure for use by the manage-api cluster
         run: |
@@ -129,4 +129,4 @@ jobs:
       - name: upload coverage profile
         working-directory: ./api/test/testdata
         run: |
-          bash <(curl -s https://codecov.io/bash) -f ./integrationcover.out
+          bash <(curl -s https://codecov.io/bash) -f ./integrationcover.out -F backend-e2e-test-ginkgo

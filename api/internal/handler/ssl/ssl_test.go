@@ -814,7 +814,7 @@ func TestSSL_Exist(t *testing.T) {
 		{
 			caseDesc: "check SSL cert not exists for sni",
 			giveInput: &ExistCheckInput{
-				Body: []byte(`["www.route2.com"]`),
+				Hosts: []string{"www.route2.com"},
 			},
 			wantRet:   &data.SpecCodeResponse{StatusCode: http.StatusNotFound},
 			wantErr:   consts.InvalidParam("SSL cert not exists for sni：www.route2.com"),
@@ -823,7 +823,7 @@ func TestSSL_Exist(t *testing.T) {
 		{
 			caseDesc: "check SSL cert exists for sni",
 			giveInput: &ExistCheckInput{
-				Body: []byte(`["www.route.com"]`),
+				Hosts: []string{"www.route.com"},
 			},
 			wantRet:   nil,
 			getCalled: true,
@@ -831,7 +831,7 @@ func TestSSL_Exist(t *testing.T) {
 		{
 			caseDesc: "check SSL cert not exists for snis",
 			giveInput: &ExistCheckInput{
-				Body: []byte(`["test1.com","ssl_test2.com"]`),
+				Hosts: []string{"test1.com", "ssl_test2.com"},
 			},
 			wantRet:   &data.SpecCodeResponse{StatusCode: http.StatusNotFound},
 			wantErr:   consts.InvalidParam("SSL cert not exists for sni：test1.com"),
@@ -840,7 +840,7 @@ func TestSSL_Exist(t *testing.T) {
 		{
 			caseDesc: "check SSL cert exists for snis",
 			giveInput: &ExistCheckInput{
-				Body: []byte(`["ssl_test.com"]`),
+				Hosts: []string{"ssl_test.com"},
 			},
 			wantRet:   nil,
 			getCalled: true,

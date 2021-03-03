@@ -56,6 +56,21 @@ context('Create and Delete Consumer', () => {
     cy.get(this.domSelector.notification).should('contain', this.data.createConsumerSuccess);
   });
 
+  it('should view the consumer', function () {
+    cy.visit('/');
+    cy.contains('Consumer').click();
+
+    cy.get(this.domSelector.nameSelector).type(this.data.consumerName);
+    cy.contains('Search').click();
+    cy.contains(this.data.consumerName).siblings().contains('View').click();
+    cy.get(this.domSelector.drawer).should('be.visible');
+
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
+      cy.contains('plugins').should("exist");
+      cy.contains(this.data.consumerName).should('exist');
+    });
+  });
+
   it('delete the consumer', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
@@ -92,3 +107,4 @@ context('Create and Delete Consumer', () => {
     cy.get(this.domSelector.notification).should('contain', this.data.pluginErrorAlert);
   });
 });
+

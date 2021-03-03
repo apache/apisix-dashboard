@@ -19,14 +19,6 @@ declare namespace RouteModule {
 
   type VarPosition = 'arg' | 'http' | 'cookie';
 
-  type MatchingRule = {
-    position: VarPosition;
-    name: string;
-    operator: Operator;
-    value: string;
-    key: string;
-  };
-
   type RequestProtocol = 'https' | 'http' | 'websocket';
 
   type BaseData = {
@@ -153,13 +145,6 @@ declare namespace RouteModule {
     advancedMatchingRules: MatchingRule[];
   };
 
-  // step2
-  type UpstreamHeader = {
-    key: string;
-    header_name: string;
-    header_value: string;
-  };
-
   type Step2PassProps = {
     form: FormInstance;
     disabled?: boolean;
@@ -210,7 +195,6 @@ declare namespace RouteModule {
   };
 
   type ResponseBody = {
-    hosts: string[];
     id: string;
     methods: HttpMethod[];
     name: string;
@@ -258,17 +242,14 @@ declare namespace RouteModule {
   type debugRequestParamsFormData = {
     check: boolean;
     key: string;
-    value: string;
+    value: any;
+    type?: string;
   };
   type DebugViewProps = {
     form: FormInstance;
+    name?: string;
   };
-  type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'raw input';
-  type DebugDodyViewProps = {
-    form: FormInstance;
-    changeBodyParamsType: (type: DebugBodyType) => void;
-    codeMirrorRef: any;
-  };
+  type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'raw input' | 'form-data';
   type DebugDrawProps = {
     visible: boolean;
     onClose: () => void;

@@ -85,6 +85,21 @@ context('Create and Delete Route', () => {
     cy.url().should('contains', 'routes/list');
   });
 
+  it('should view the route', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+
+    cy.get(this.domSelector.nameSelector).type(name);
+    cy.contains('Search').click();
+    cy.contains(name).siblings().contains('View').click();
+    cy.get(this.domSelector.drawer).should('be.visible');
+
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
+      cy.contains('upstream').should("exist");
+      cy.contains(name).should('exist');
+    });
+  });
+
   it('should edit the route', function () {
     cy.visit('/');
     cy.contains('Route').click();
@@ -103,6 +118,15 @@ context('Create and Delete Route', () => {
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
     cy.contains(newName).siblings().should('contain', this.data.description2);
+
+    // test view
+    cy.contains(newName).siblings().contains('View').click();
+    cy.get(this.domSelector.drawer).should('be.visible');
+
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
+      cy.contains('upstream').should("exist");
+      cy.contains(newName).should('exist');
+    });
   });
 
   it('should delete the route', function () {
@@ -114,3 +138,4 @@ context('Create and Delete Route', () => {
     cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
   });
 });
+

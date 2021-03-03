@@ -77,7 +77,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     const [readonly, setReadonly] = useState(
       Boolean(form.getFieldValue('upstream_id')) || disabled,
     );
-    const [hidenForm, setHidenForm] = useState(false);
+    const [hiddenForm, setHiddenForm] = useState(false);
 
     const timeoutFields = [
       {
@@ -103,12 +103,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       const { upstream_id } = form.getFieldsValue();
 
       if (upstream_id === 'None') {
-        setHidenForm(true);
+        setHiddenForm(true);
         if (required) {
           requestAnimationFrame(() => {
             form.resetFields();
             form.setFieldsValue(DEFAULT_UPSTREAM);
-            setHidenForm(false);
+            setHiddenForm(false);
           });
         }
       } else {
@@ -120,7 +120,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         if (!required && !Object.keys(formData).length) {
           requestAnimationFrame(() => {
             form.setFieldsValue({ upstream_id: 'None' });
-            setHidenForm(true);
+            setHiddenForm(true);
           });
         }
       }
@@ -649,7 +649,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               disabled={disabled}
               onChange={(upstream_id) => {
                 setReadonly(Boolean(upstream_id));
-                setHidenForm(Boolean(upstream_id === 'None'));
+                setHiddenForm(Boolean(upstream_id === 'None'));
                 form.setFieldsValue(list.find((item) => item.id === upstream_id));
                 if (upstream_id === '') {
                   form.resetFields();
@@ -673,7 +673,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           </Form.Item>
         )}
 
-        {!hidenForm && (
+        {!hiddenForm && (
           <>
             <Form.Item
               label={formatMessage({ id: 'page.upstream.step.type' })}
