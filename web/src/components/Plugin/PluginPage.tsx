@@ -136,13 +136,13 @@ const PluginPage: React.FC<Props> = ({
                 >
                   {[
                     {
-                      name: formatMessage({ id: 'component.step.select.pluginTemplate.select.option' }),
-                      id: '',
+                      id:'',
+                      desc: formatMessage({ id: 'component.step.select.pluginTemplate.select.option' }),
                     },
                     ...pluginTemplateList,
                   ].map((item) => (
                     <Select.Option value={item.id!} key={item.id}>
-                      {item.id}
+                      {item.desc}
                     </Select.Option>
                   ))}
                 </Select>

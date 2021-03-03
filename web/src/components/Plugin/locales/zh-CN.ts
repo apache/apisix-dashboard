@@ -19,6 +19,6 @@ export default {
   'component.plugin.tip2': '如何更新？',
   "component.select.pluginTemplate": '选择插件模板',
   'component.step.select.pluginTemplate.select.option': '手动配置',
-  'component.plugin.pluginTemplate.tips1': '1.如果这个路由已经配置了 插件，那么 插件模板 里面的插件配置会合并进去。',
+  'component.plugin.pluginTemplate.tips1': '1.如果这个路由已经配置了插件，那么插件模板里面的插件配置会合并进去。',
   'component.plugin.pluginTemplate.tips2': '2.插件模板相同的插件会覆盖掉原有的插件。'
 };
