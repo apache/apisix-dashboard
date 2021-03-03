@@ -99,6 +99,20 @@
 						"type": "integer"
 					}]
 				},
+				"labels": {
+					"description": "key/value pairs to specify attributes",
+					"maxProperties": 16,
+					"patternProperties": {
+						".*": {
+							"description": "value of label",
+							"maxLength": 64,
+							"minLength": 1,
+							"pattern": "^\\S+$",
+							"type": "string"
+						}
+					},
+					"type": "object"
+				},
 				"plugins": {
 					"type": "object"
 				},
