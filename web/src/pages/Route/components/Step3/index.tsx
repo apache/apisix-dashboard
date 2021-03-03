@@ -86,6 +86,7 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
           initialData={plugins}
           schemaType="route"
           referPage="route"
+          showSelector
           onChange={(pluginsData) => onChange({ plugins: pluginsData, script: {} })}
         />
       )}

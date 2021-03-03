@@ -18,5 +18,7 @@ export default {
   'component.plugin.tip1': '注意：自定义插件后（修改、新增、删除等），需更新 schema.json。',
   'component.plugin.tip2': '如何更新？',
   "component.select.pluginTemplate": '选择插件模板',
-  'component.step.select.pluginTemplate.select.option': '手动配置'
+  'component.step.select.pluginTemplate.select.option': '手动配置',
+  'component.plugin.pluginTemplate.tips1': '1.如果这个路由已经配置了 插件，那么 插件模板 里面的插件配置会合并进去。',
+  'component.plugin.pluginTemplate.tips2': '2.插件模板相同的插件会覆盖掉原有的插件。'
 };

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Anchor, Layout, Card, Button, Form, Select } from 'antd';
+import { Anchor, Layout, Card, Button, Form, Select, Alert } from 'antd';
 import { PanelSection } from '@api7-dashboard/ui';
 import { omit, orderBy } from 'lodash';
 import { useIntl } from 'umi';
@@ -31,7 +31,7 @@ type Props = {
   initialData?: PluginComponent.Data;
   schemaType?: PluginComponent.Schema;
   referPage?: PluginComponent.ReferPage;
-  showSelector: boolean,
+  showSelector?: boolean,
   onChange?: (data: PluginComponent.Data) => void;
 };
 
@@ -54,7 +54,7 @@ const PluginPage: React.FC<Props> = ({
   schemaType = 'route',
   referPage = '',
   type = 'scoped',
-  showSelector = true,
+  showSelector = false,
   onChange = () => { },
 }) => {
   const { formatMessage } = useIntl();
@@ -110,44 +110,50 @@ const PluginPage: React.FC<Props> = ({
         </Anchor>
       </Sider>
       <Content style={{ padding: '0 10px', backgroundColor: '#fff', minHeight: 1400 }}>
-        <Form>
-          {showSelector && (
-            <Form.Item
-              label={formatMessage({ id: 'component.select.pluginTemplate' })}
-              name="plugin_config_id"
-              shouldUpdate={(prev, next) => {
-                if (prev.plugin_config_id !== next.plugin_config_id) {
-                  const id = next.plugin_config_id;
-                  if (id) {
-                    form.setFieldsValue({
-                      plugin_config_id: id,
-                    });
+        {showSelector && (
+          <>
+            <Form>
+              <Form.Item
+                label={formatMessage({ id: 'component.select.pluginTemplate' })}
+                name="plugin_config_id"
+                shouldUpdate={(prev, next) => {
+                  if (prev.plugin_config_id !== next.plugin_config_id) {
+                    const id = next.plugin_config_id;
+                    if (id) {
+                      form.setFieldsValue({
+                        plugin_config_id: id,
+                      });
+                    }
                   }
-                }
-                return prev.plugin_config_id !== next.plugin_config_id;
-              }}
-            >
-              <Select
-                data-cy="pluginTemplateSelector"
-                disabled={readonly}
-                onChange={(plugin_config_id) => {
+                  return prev.plugin_config_id !== next.plugin_config_id;
                 }}
               >
-                {[
-                  {
-                    name: formatMessage({ id: 'component.step.select.pluginTemplate.select.option' }),
-                    id: '',
-                  },
-                  ...pluginTemplateList,
-                ].map((item) => (
-                  <Select.Option value={item.id!} key={item.id}>
-                    {item.id}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          )}
-        </Form>
+                <Select
+                  data-cy="pluginTemplateSelector"
+                  disabled={readonly}
+                  onChange={(plugin_config_id) => {
+                  }}
+                >
+                  {[
+                    {
+                      name: formatMessage({ id: 'component.step.select.pluginTemplate.select.option' }),
+                      id: '',
+                    },
+                    ...pluginTemplateList,
+                  ].map((item) => (
+                    <Select.Option value={item.id!} key={item.id}>
+                      {item.id}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Form>
+            <Alert message={<>
+              <p>{formatMessage({id:'component.plugin.pluginTemplate.tips1'})}</p>
+              <p>{formatMessage({id:'component.plugin.pluginTemplate.tips2'})}</p>
+            </>} type="info" />
+          </>
+        )}
         {typeList.map((typeItem) => {
           return (
             <PanelSection
