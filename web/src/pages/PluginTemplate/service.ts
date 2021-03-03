@@ -23,7 +23,7 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
 
   return request('/plugin_configs', {
     params: {
-      desc: res.desc,
+      search: res.desc,
       label: labels.join(','),
       page: current,
       page_size: pageSize,
