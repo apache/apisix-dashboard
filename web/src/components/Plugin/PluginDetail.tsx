@@ -159,7 +159,7 @@ const PluginDetail: React.FC<Props> = ({
   const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
     switch (value) {
       case codeMirrorModeList.Json: {
-        let { data, error } = yaml2json(ref.current.editor.getValue(), true);
+        const { data: yamlData , error } = yaml2json(ref.current.editor.getValue(), true);
 
         if (error) {
           notification.error({
@@ -168,14 +168,14 @@ const PluginDetail: React.FC<Props> = ({
           return;
         }
         ref.current.editor.setValue(
-          js_beautify(data, {
+          js_beautify(yamlData, {
             indent_size: 2,
           }),
         );
         break;
       }
       case codeMirrorModeList.Yaml: {
-        let { data, error } = json2yaml(ref.current.editor.getValue());
+        const { data: jsonData, error } = json2yaml(ref.current.editor.getValue());
 
         if (error) {
           notification.error({
@@ -183,7 +183,7 @@ const PluginDetail: React.FC<Props> = ({
           });
           return;
         }
-        ref.current.editor.setValue(data);
+        ref.current.editor.setValue(jsonData);
         break;
       }
       default:
