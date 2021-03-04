@@ -85,8 +85,7 @@ const Page: React.FC = () => {
                   <Select.OptGroup label={key} key={Math.random().toString(36).slice(2)}>
                     {(labelList[key] || []).map((value: string) => (
                       <Select.Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
-                        {' '}
-                        {value}{' '}
+                        {value}
                       </Select.Option>
                     ))}
                   </Select.OptGroup>

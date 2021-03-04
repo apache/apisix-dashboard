@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import { Button, Form, Input, Select, Tag } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
+
 import LabelsDrawer from '@/components/LabelsfDrawer';
 import { fetchLabelList } from '../service';
 
@@ -62,7 +63,7 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
             }}
           />
         </Form.Item>
-        <Form.Item wrapperCol={{ span: 20, offset: 6 }} noStyle>
+        <Form.Item wrapperCol={{ offset: 2 }}>
           <Button type="dashed" disabled={disabled} onClick={() => setVisible(true)}>
             {formatMessage({ id: 'component.global.manage' })}
           </Button>
