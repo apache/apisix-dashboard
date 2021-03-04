@@ -52,7 +52,7 @@ context('Create PluginTemplate Binding To Route', () => {
   });
 
   it('should delete the pluginTemplate failure', function () {
-    cy.visit('pluginTemplate/list');
+    cy.visit('plugin-template/list');
     cy.get(this.domSelector.refresh).click();
 
     cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName);
@@ -83,7 +83,7 @@ context('Create PluginTemplate Binding To Route', () => {
   });
 
   it('should delete the pluginTemplate successfully', function () {
-    cy.visit('pluginTemplate/list');
+    cy.visit('plugin-template/list');
 
     cy.get(this.domSelector.refresh).click();
     cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName);

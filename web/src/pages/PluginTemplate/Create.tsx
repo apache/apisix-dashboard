@@ -21,11 +21,11 @@ import { history, useIntl } from 'umi';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/Plugin';
+import { transformLableValueToKeyValue } from '@/helpers';
 
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
 import { fetchItem, create, update, } from './service';
-import { transformLableValueToKeyValue } from '@/helpers';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
@@ -66,7 +66,7 @@ const Page: React.FC = (props) => {
               id: 'component.status.success',
             })}`,
         });
-        history.push('/pluginTemplate/list');
+        history.push('/plugin-template/list');
       })
       .catch(() => {
         setStep(3);

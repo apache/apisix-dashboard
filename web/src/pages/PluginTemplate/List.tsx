@@ -104,7 +104,7 @@ const Page: React.FC = () => {
             <Button
               type="primary"
               onClick={() => {
-                history.push(`/pluginTemplate/${record.id}/edit`)
+                history.push(`/plugin-template/${record.id}/edit`)
               }}
               style={{ marginRight: 10 }}
             >
@@ -147,7 +147,7 @@ const Page: React.FC = () => {
           resetText: formatMessage({ id: 'component.global.reset' }),
         }}
         toolBarRender={() => [
-          <Button type="primary" onClick={() => history.push('/pluginTemplate/create')}>
+          <Button type="primary" onClick={() => history.push('plugin-template/create')}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,

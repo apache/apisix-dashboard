@@ -100,15 +100,15 @@ const routes = [
     component: './Setting',
   },
   {
-    path: '/pluginTemplate/list',
+    path: '/plugin-template/list',
     component: './PluginTemplate/List',
   },
   {
-    path: '/pluginTemplate/create',
+    path: 'plugin-template/create',
     component: './PluginTemplate/Create',
   },
   {
-    path: '/pluginTemplate/:id/edit',
+    path: '/plugin-template/:id/edit',
     component: './PluginTemplate/Create',
   },
   {
@@ -120,10 +120,6 @@ const routes = [
     path: '/user/logout',
     component: './User/Logout',
     layout: false,
-  },
-  {
-    path: '/user/logout',
-    component: './User/Logout',
   },
   {
     component: './404',

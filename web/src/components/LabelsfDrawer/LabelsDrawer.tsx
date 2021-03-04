@@ -31,7 +31,7 @@ type Props = {
   onClose: () => void;
 } & Pick<RouteModule.Step1PassProps, 'onChange'>;
 
-const LabelList = (disabled: boolean, labelList: LabelList, filterList: string[]) => {
+const LabelList = (disabled: boolean, labelList: LabelList, filterList: string[] = []) => {
   const { formatMessage } = useIntl();
 
   const keyOptions = Object.keys(labelList || {})

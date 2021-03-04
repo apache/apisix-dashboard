@@ -51,7 +51,7 @@ context('Create Edit and Delete PluginTemplate', () => {
   });
 
   it('should edit the pluginTemplate', function () {
-    cy.visit('pluginTemplate/list');
+    cy.visit('plugin-template/list');
 
     cy.get(this.domSelector.refresh).click();
     cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName);
@@ -67,7 +67,7 @@ context('Create Edit and Delete PluginTemplate', () => {
   });
 
   it('should delete pluginTemplate', function () {
-    cy.visit('pluginTemplate/list');
+    cy.visit('plugin-template/list');
 
     cy.get(this.domSelector.refresh).click();
     cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName);

@@ -158,8 +158,8 @@ const PluginPage: React.FC<Props> = ({
               </Form.Item>
             </Form>
             <Alert message={<>
-              <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tips1' })}</p>
-              <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tips2' })}</p>
+              <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tip1' })}</p>
+              <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tip2' })}</p>
             </>} type="info" />
           </>
         )}
