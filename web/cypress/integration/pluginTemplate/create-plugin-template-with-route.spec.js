@@ -70,7 +70,7 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.contains('Search').click();
     cy.contains('test_route').siblings().contains('Edit').click();
 
-    cy.get('#redirectOption').click();
+    cy.contains('Forbidden').click();
     cy.contains('Custom').click();
     cy.get('#redirectURI').clear().type('123');
     cy.get('#ret_code').click();
