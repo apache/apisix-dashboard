@@ -17,6 +17,7 @@
 /* eslint-disable no-undef */
 
 context('Create Edit and Delete PluginTemplate', () => {
+  const timeout = 5000;
   beforeEach(() => {
     cy.login();
 
@@ -32,9 +33,13 @@ context('Create Edit and Delete PluginTemplate', () => {
 
     cy.get('#desc').type('test_plugin_template1');
     cy.contains('Next').click();
-    cy.contains('Enable').click({ force: true });
+    cy.contains('Enable').click({
+      force: true
+    });
     cy.focused(this.domSelector.drawer).should('exist');
-    cy.get(this.domSelector.drawer, { timeout }).within(() => {
+    cy.get(this.domSelector.drawer, {
+      timeout
+    }).within(() => {
       cy.get("#disable").click({
         force: true,
       });
