@@ -101,15 +101,15 @@ const routes = [
   },
   {
     path: '/pluginTemplate/list',
-    component: './pluginTemplate/List',
+    component: './PluginTemplate/List',
   },
   {
-    path: '/pluginTemplate/Create',
-    component: './pluginTemplate/Create',
+    path: '/pluginTemplate/create',
+    component: './PluginTemplate/Create',
   },
   {
     path: '/pluginTemplate/:id/edit',
-    component: './pluginTemplate/Create',
+    component: './PluginTemplate/Create',
   },
   {
     path: '/user/login',

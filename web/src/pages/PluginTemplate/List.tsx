@@ -148,7 +148,7 @@ const Page: React.FC = () => {
           resetText: formatMessage({ id: 'component.global.reset' }),
         }}
         toolBarRender={() => [
-          <Button type="primary" onClick={() => history.push('/pluginTemplate/Create')}>
+          <Button type="primary" onClick={() => history.push('/pluginTemplate/create')}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
