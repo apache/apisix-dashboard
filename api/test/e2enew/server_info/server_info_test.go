@@ -18,6 +18,7 @@ package server_info
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
@@ -28,6 +29,7 @@ import (
 var _ = ginkgo.Describe("server info test", func() {
 	table.DescribeTable("get server info",
 		func(tc base.HttpTestCase) {
+			time.Sleep(2 * time.Second)
 			base.RunTestCase(tc)
 		},
 		table.Entry("get server info(apisix-server1)", base.HttpTestCase{
@@ -37,7 +39,6 @@ var _ = ginkgo.Describe("server info test", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"hostname\":\"apisix_server1\"",
-			Sleep:        base.SleepTime * 15,
 		}),
 		table.Entry("get server info(apisix-server2)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
@@ -60,7 +61,6 @@ var _ = ginkgo.Describe("server info test", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"total_size\":2",
-			Sleep:        base.SleepTime * 15,
 		}),
 		table.Entry("list server info with hostname", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
@@ -81,9 +81,12 @@ var _ = ginkgo.Describe("server info test", func() {
 			ExpectBody:   "\"total_size\":1",
 		}),
 	)
+})
 
+var _ = ginkgo.Describe("server info test omitEmptyValue", func() {
 	table.DescribeTable("server info get omitEmptyValue",
 		func(tc base.HttpTestCase) {
+			time.Sleep(2 * time.Second)
 			base.RunTestCase(tc)
 		},
 		table.Entry("get server info", base.HttpTestCase{
@@ -93,7 +96,6 @@ var _ = ginkgo.Describe("server info test", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			UnexpectBody: []string{"\"create_time\":", "\"update_time\":"},
-			Sleep:        base.SleepTime * 15,
 		}),
 	)
 
@@ -109,7 +111,6 @@ var _ = ginkgo.Describe("server info test", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"total_size\":2",
 			UnexpectBody: []string{"\"create_time\":", "\"update_time\":"},
-			Sleep:        base.SleepTime * 15,
 		}),
 		table.Entry("list server info with hostname", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
