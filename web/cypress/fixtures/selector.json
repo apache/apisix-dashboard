@@ -64,5 +64,10 @@
   "passwordInput": "#control-ref_password",
   "drawer": ".ant-drawer-content",
   "codemirrorScroll": ".CodeMirror-scroll",
-  "drawerClose": ".ant-drawer-close"
+  "drawerClose": ".ant-drawer-close",
+  "descriptionSelector": "[title=Description]",
+  "customSelector": "[title=Custom]",
+  "errorAlertClose": ".anticon-close",
+  "redirectURIInput": "#redirectURI",
+  "redirectCodeSelector": "#ret_code"
 }

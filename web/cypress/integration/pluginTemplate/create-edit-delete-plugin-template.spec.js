@@ -31,7 +31,7 @@ context('Create Edit and Delete PluginTemplate', () => {
     cy.contains('Plugin Template Config').click();
     cy.contains('Create').click();
 
-    cy.get('#desc').type('test_plugin_template1');
+    cy.get(this.domSelector.description).type(this.data.pluginTemplateName);
     cy.contains('Next').click();
     cy.contains('Enable').click({
       force: true
@@ -40,45 +40,45 @@ context('Create Edit and Delete PluginTemplate', () => {
     cy.get(this.domSelector.drawer, {
       timeout
     }).within(() => {
-      cy.get("#disable").click({
+      cy.get(this.domSelector.disabledSwitcher).click({
         force: true,
       });
     });
     cy.contains('Submit').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(this.domSelector.notification).should('contain', 'Create Plugin Template Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.createPluginTemplateSuccess);
   });
 
   it('should edit the pluginTemplate', function () {
     cy.visit('pluginTemplate/list');
 
     cy.get(this.domSelector.refresh).click();
-    cy.get('[title=Description]').type('test_plugin_template1');
+    cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName);
     cy.contains('button', 'Search').click();
-    cy.contains('test_plugin_template1').siblings().contains('Edit').click();
+    cy.contains(this.data.pluginTemplateName).siblings().contains('Edit').click();
 
-    cy.get('#desc').clear().type('test_plugin_template2');
+    cy.get(this.domSelector.description).clear().type(this.data.pluginTemplateName2);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
 
-    cy.get(this.domSelector.notification).should('contain', 'Edit Plugin Template Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.editPluginTemplateSuccess);
   });
 
   it('should delete pluginTemplate', function () {
     cy.visit('pluginTemplate/list');
 
     cy.get(this.domSelector.refresh).click();
-    cy.get('[title=Description]').type('test_plugin_template1');
+    cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName);
     cy.contains('button', 'Search').click();
-    cy.get('.ant-empty').should('exist');
+    cy.get(this.domSelector.empty).should('exist');
 
     cy.contains('button', 'Reset').click();
-    cy.get('[title=Description]').type('test_plugin_template2');
+    cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName2);
     cy.contains('button', 'Search').click();
-    cy.contains('test_plugin_template2').siblings().contains('Delete').click();
+    cy.contains(this.data.pluginTemplateName2).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', 'Delete Plugin Template Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.deletePluginTemplateSuccess);
   });
 });

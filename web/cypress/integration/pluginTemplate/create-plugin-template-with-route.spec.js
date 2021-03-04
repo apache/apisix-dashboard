@@ -29,20 +29,20 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.contains('Route').click();
     cy.contains('Plugin Template Config').click();
     cy.contains('Create').click();
-    cy.get('#desc').type('test_plugin_template1');
+    cy.get(this.domSelector.description).type(this.data.pluginTemplateName);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(this.domSelector.notification).should('contain', 'Create Plugin Template Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.createPluginTemplateSuccess);
 
     cy.visit('routes/list');
     cy.contains('Create').click();
-    cy.get('#name').type('test_route');
+    cy.get(this.domSelector.name).type(this.data.routeName);
     cy.contains('Next').click();
-    cy.get('#nodes_0_host').type('127.0.0.1');
+    cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
     cy.contains('Next').click();
-    cy.get('[title=Custom]').click();
-    cy.contains('test_plugin_template1').click();
+    cy.get(this.domSelector.customSelector).click();
+    cy.contains(this.data.pluginTemplateName).click();
 
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -55,25 +55,25 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.visit('pluginTemplate/list');
     cy.get(this.domSelector.refresh).click();
 
-    cy.get('[title=Description]').type('test_plugin_template1');
+    cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName);
     cy.contains('button', 'Search').click();
-    cy.contains('test_plugin_template1').siblings().contains('Delete').click();
+    cy.contains(this.data.pluginTemplateName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', 'Request Error Code: 10000');
-    cy.get('.anticon-close').should('be.visible').click();
+    cy.get(this.domSelector.notification).should('contain', this.data.pluginTemplateErrorAlert);
+    cy.get(this.domSelector.errorAlertClose).should('be.visible').click();
   });
 
   it('should edit the route with pluginTemplate', function () {
     cy.visit('routes/list');
 
-    cy.get(this.domSelector.nameSelector).type('test_route');
+    cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
-    cy.contains('test_route').siblings().contains('Edit').click();
+    cy.contains(this.data.routeName).siblings().contains('Edit').click();
 
     cy.contains('Forbidden').click();
     cy.contains('Custom').click();
-    cy.get('#redirectURI').clear().type('123');
-    cy.get('#ret_code').click();
+    cy.get(this.domSelector.redirectURIInput).clear().type('123');
+    cy.get(this.domSelector.redirectCodeSelector).click();
     cy.contains('301(Permanent Redirect)').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -86,16 +86,16 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.visit('pluginTemplate/list');
 
     cy.get(this.domSelector.refresh).click();
-    cy.get('[title=Description]').type('test_plugin_template1');
+    cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName);
     cy.contains('button', 'Search').click();
-    cy.contains('test_plugin_template1').siblings().contains('Delete').click();
+    cy.contains(this.data.pluginTemplateName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', 'Delete Plugin Template Successfully');
+    cy.get(this.domSelector.notification).should('contain', this.data.deletePluginTemplateSuccess);
 
     cy.visit('/routes/list');
-    cy.get(this.domSelector.nameSelector).type('test_route');
+    cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
-    cy.contains('test_route').siblings().contains('Delete').click();
+    cy.contains(this.data.routeName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
   });
