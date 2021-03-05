@@ -468,10 +468,10 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 	})
 	ginkgo.It("create chash upstream u2", func() {
 		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/upstreams/u2",
-			Body:         `{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/u2",
+			Body: `{
 				"retries": 1,
 				"timeout": {
 					"connect":15,
