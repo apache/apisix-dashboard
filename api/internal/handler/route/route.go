@@ -307,6 +307,12 @@ func generateLuaCode(script map[string]interface{}) (string, error) {
 
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Route)
+	// check duplicate name
+	if err := h.checkDuplicateName(c, input.Name, ""); err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			consts.InvalidParam(err.Error())
+	}
+
 	//check depend
 	if input.ServiceID != nil {
 		serviceID := utils.InterfaceToString(input.ServiceID)
@@ -535,6 +541,28 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	return nil, nil
 }
 
+func (h *Handler) checkDuplicateName(c droplet.Context, name, exclude string) error {
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			r := obj.(*entity.Route)
+			if r.Name == name && r.ID != exclude {
+				return true
+			}
+
+			return false
+		},
+		PageSize:   0,
+		PageNumber: 0,
+	})
+	if err != nil {
+		return err
+	}
+	if ret.TotalSize > 0 {
+		return fmt.Errorf("Route name %s is reduplicate", name)
+	}
+	return nil
+}
+
 type ExistCheckInput struct {
 	Name    string `auto_read:"name,query"`
 	Exclude string `auto_read:"exclude,query"`
@@ -572,25 +600,9 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 	name := input.Name
 	exclude := input.Exclude
 
-	ret, err := h.routeStore.List(c.Context(), store.ListInput{
-		Predicate: func(obj interface{}) bool {
-			r := obj.(*entity.Route)
-			if r.Name == name && r.ID != exclude {
-				return true
-			}
-
-			return false
-		},
-		PageSize:   0,
-		PageNumber: 0,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	if ret.TotalSize > 0 {
+	if err := h.checkDuplicateName(c, name, exclude); err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			consts.InvalidParam("Route name is reduplicate")
+			consts.InvalidParam(err.Error())
 	}
 
 	return nil, nil

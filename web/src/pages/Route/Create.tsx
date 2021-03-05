@@ -88,7 +88,7 @@ const Page: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    if (props.route.path.indexOf('edit') !== -1) {
+    if (props.route.path.indexOf('edit') !== -1 || props.route.path.indexOf('duplicate') !== -1) {
       setupRoute(props.match.params.rid);
     } else {
       onReset();
@@ -233,7 +233,7 @@ const Page: React.FC<Props> = (props) => {
             redirectOption === 'forceHttps' && filterHosts.length !== 0
               ? checkHostWithSSL(hosts)
               : Promise.resolve(),
-            checkUniqueName(value.name, (props as any).match.params.rid || ''),
+            checkUniqueName(value.name, props.route.path.indexOf('edit') > 0 ? (props as any).match.params.rid : ''),
           ]).then(() => {
             setStep(nextStep);
           });
@@ -269,9 +269,9 @@ const Page: React.FC<Props> = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={(props as any).match.params.rid
-          ? formatMessage({ id: 'page.route.editRoute' })
-          : formatMessage({ id: 'page.route.createRoute' })}
+        title={`${
+          formatMessage({ id: `component.global.${props.route.path.split('/').slice(-1)[0]}`})
+        } ${formatMessage({ id: 'menu.routes' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>
