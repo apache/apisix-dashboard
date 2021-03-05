@@ -100,6 +100,18 @@ const routes = [
     component: './Setting',
   },
   {
+    path: '/plugin-template/list',
+    component: './PluginTemplate/List',
+  },
+  {
+    path: 'plugin-template/create',
+    component: './PluginTemplate/Create',
+  },
+  {
+    path: '/plugin-template/:id/edit',
+    component: './PluginTemplate/Create',
+  },
+  {
     path: '/user/login',
     component: './User/Login',
     layout: false,

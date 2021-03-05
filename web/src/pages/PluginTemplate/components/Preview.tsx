@@ -14,11 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-  'component.plugin.tip1': '注意：自定义插件后（修改、新增、删除等），需更新 schema.json。',
-  'component.plugin.tip2': '如何更新？',
-  "component.select.pluginTemplate": '选择插件模板',
-  'component.step.select.pluginTemplate.select.option': '手动配置',
-  'component.plugin.pluginTemplate.tip1': '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
-  'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。'
+import React from 'react';
+import type { FormInstance } from 'antd/lib/form';
+
+import PluginPage from '@/components/Plugin';
+import Step1 from './Step1';
+
+type Props = {
+  form1: FormInstance;
+  plugins: PluginComponent.Data;
 };
+
+const Page: React.FC<Props> = ({ form1, plugins }) => {
+  return (
+    <>
+      <Step1 form={form1} disabled />
+      <PluginPage initialData={plugins} readonly />
+    </>
+  );
+};
+
+export default Page;

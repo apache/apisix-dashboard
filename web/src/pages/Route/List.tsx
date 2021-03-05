@@ -69,7 +69,7 @@ const Page: React.FC = () => {
     YAML,
   }
 
-  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
+  const [labelList, setLabelList] = useState<LabelList>({});
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [uploadFileList, setUploadFileList] = useState<RcFile[]>([]);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -426,6 +426,10 @@ const Page: React.FC = () => {
           resetText: formatMessage({ id: 'component.global.reset' }),
         }}
         toolBarRender={() => [
+          <Button type="primary" onClick={() => { history.push('/plugin-template/list') }}>
+            <PlusOutlined />
+            {formatMessage({ id: 'page.route.pluginTemplateConfig' })}
+          </Button>,
           <Button type="primary" onClick={() => history.push(`/routes/create`)}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}

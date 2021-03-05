@@ -18,6 +18,7 @@ export default {
   'page.route.button.returnList': 'Goto List',
   'page.route.button.send': 'Send',
   'page.route.onlineDebug': 'Online Debug',
+  'page.route.pluginTemplateConfig': 'Plugin Template Config',
 
   'page.route.parameterPosition': 'Parameter Position',
   'page.route.httpRequestHeader': 'HTTP Request Header',
