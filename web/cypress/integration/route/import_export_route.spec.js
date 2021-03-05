@@ -42,6 +42,7 @@ context('import and export routes', () => {
     cy.login();
 
     cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
     cy.fixture('export-route-dataset.json').as('exportFile');
   });
   it('should create route1 and route2', function () {
@@ -129,8 +130,7 @@ context('import and export routes', () => {
         .click();
       cy.contains('button', componentLocaleUS['component.global.confirm']).click();
       cy.get(this.domSelector.notification).should(
-        'contain',
-        `${componentLocaleUS['component.global.delete']} ${menuLocaleUS['menu.routes']} ${componentLocaleUS['component.status.success']}`,
+        'contain', this.data.deleteRouteSuccess
       );
     }
   });
@@ -154,8 +154,7 @@ context('import and export routes', () => {
         cy.contains(componentLocaleUS['component.global.cancel']).click();
       } else {
         cy.get(this.domSelector.notification).should(
-          'contain',
-          `${routeLocaleUS['page.route.button.importOpenApi']} ${componentLocaleUS['component.status.success']}`,
+          'contain', 'Success'
         );
         cy.get(this.domSelector.notificationCloseIcon).click();
         // delete route just imported
