@@ -65,6 +65,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Path:         `/hello`,
 			Query:        "name=aaa",
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -75,6 +76,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Path:         `/hello`,
 			Query:        "name=bbb",
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -84,6 +86,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Method:       http.MethodGet,
 			Path:         `/hello`,
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -115,6 +118,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Headers:      map[string]string{"k": "header"},
 			Path:         `/hello`,
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -125,6 +129,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Headers:      map[string]string{"k": "jack"},
 			Path:         `/hello`,
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -134,6 +139,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Method:       http.MethodGet,
 			Path:         `/hello`,
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -164,6 +170,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Headers:      map[string]string{"Cookie": "_octo=GH1.1.572248189.1598928545; _device_id=2c1a1a52074e66a3a008e4b73c690500; logged_in=yes;"},
 			Path:         `/hello`,
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -174,6 +181,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Headers:      map[string]string{"Cookie": "jack"},
 			Path:         `/hello`,
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -183,6 +191,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Method:       http.MethodGet,
 			Path:         `/hello`,
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -193,6 +202,17 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("hit the route just delete", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Cookie": "_octo=GH1.1.572248189.1598928545; _device_id=2c1a1a52074e66a3a008e4b73c690500; logged_in=yes;"},
+			Path:         `/hello`,
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -230,6 +250,7 @@ var _ = ginkgo.Describe("test route with multiple vars (args, cookie and header)
 			Path:         `/hello`,
 			Query:        "name=aaa",
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -240,6 +261,7 @@ var _ = ginkgo.Describe("test route with multiple vars (args, cookie and header)
 			Headers:      map[string]string{"k": "header", "Cookie": "_octo=GH1.1.572248189.1598928545; _device_id=2c1a1a52074e66a3a008e4b73c690500; logged_in=yes;"},
 			Path:         `/hello`,
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -252,6 +274,7 @@ var _ = ginkgo.Describe("test route with multiple vars (args, cookie and header)
 			Path:         `/hello`,
 			Query:        "name=aaa",
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -263,10 +286,10 @@ var _ = ginkgo.Describe("test route with multiple vars (args, cookie and header)
 			Path:         `/hello`,
 			Query:        "name=aaa",
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
-
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
@@ -274,6 +297,18 @@ var _ = ginkgo.Describe("test route with multiple vars (args, cookie and header)
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("hit the route just delete", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"k": "header", "Cookie": "_octo=GH1.1.572248189.1598928545; _device_id=2c1a1a52074e66a3a008e4b73c690500; logged_in=yes;"},
+			Path:         `/hello`,
+			Query:        "name=aaa",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -300,15 +335,14 @@ var _ = ginkgo.Describe("test route with vars (args is digital)", func() {
 			ExpectStatus: http.StatusOK,
 		})
 	})
-
 	ginkgo.It("verify route", func() {
 		base.RunTestCase(base.HttpTestCase{
-
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         `/hello`,
 			Query:        "name=111",
 			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -319,6 +353,17 @@ var _ = ginkgo.Describe("test route with vars (args is digital)", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("hit route just delete", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         `/hello`,
+			Query:        "name=111",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
