@@ -1,3 +1,7 @@
+---
+title: Deploy with Source Codes
+---
+
 <!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,15 +20,6 @@
 # limitations under the License.
 #
 -->
-
----
-
-id: deploy-with-source-codes
-title: Deploy with Source Codes
-
----
-
-# Build and launch with source codes
 
 The Dashboard contains both `manager-api` and `web`, but `web` is _optional_.
 

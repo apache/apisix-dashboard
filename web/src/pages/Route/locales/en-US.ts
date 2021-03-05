@@ -41,6 +41,7 @@ export default {
   'page.route.input.placeholder.requestUrl': 'please input the valid request URL',
   'page.route.input.placeholder.paramKey': 'Param Key',
   'page.route.input.placeholder.paramValue': 'Param Value',
+  'page.route.input.placeholder.paramType': 'Param Type',
 
   'page.route.form.itemRulesRequiredMessage.parameterName':
     'Only letters and Numbers are supported, and can only begin with letters',

@@ -1,3 +1,7 @@
+---
+title: Backend E2E
+---
+
 <!--
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -17,13 +21,6 @@
 #
 -->
 
----
-
-id: backend-e2e
-title: Backend E2E
-
----
-
 This document describes how to use E2E test locally.
 
 ## Start with source code
@@ -32,7 +29,7 @@ This document describes how to use E2E test locally.
 
 2. To start the `manager-api` project locally, please refer to [develop](./develop.md) web section.
 
-3. To start the etcd locally, please refer to [etcd start](https://github.com/apache/apisix/blob/master/doc/install-dependencies.md) web section.
+3. To start the etcd locally, please refer to [etcd start](https://github.com/apache/apisix/blob/master/docs/en/latest/install-dependencies.md) web section.
 
 4. To start the `apisix` project locally, please refer to [apisix start](https://github.com/apache/apisix#get-started) web section.
 

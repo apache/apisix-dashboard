@@ -125,6 +125,28 @@ func TestLabel(t *testing.T) {
 			ExpectStatus: http.StatusOK,
 		},
 		{
+			Desc:   "create plugin_config",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/plugin_configs/1",
+			Body: `{
+				"plugins": {
+					"response-rewrite": {
+						"headers": {
+							"X-VERSION":"22.0"
+						}
+					}
+				},
+				"labels": {
+					"version": "v2",
+					"build":   "17",
+					"extra":   "test"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
 			Desc:         "get route label",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodGet,
@@ -160,6 +182,46 @@ func TestLabel(t *testing.T) {
 			Path:         "/apisix/admin/labels/service",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "{\"build\":\"16\"},{\"env\":\"production\"},{\"extra\":\"test\"},{\"version\":\"v2\"}",
+		},
+		{
+			Desc:         "get plugin_config label",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			Path:         "/apisix/admin/labels/plugin_config",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "{\"build\":\"17\"},{\"extra\":\"test\"},{\"version\":\"v2\"}",
+		},
+		{
+			Desc:   "update plugin_config",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/plugin_configs/1",
+			Body: `{
+				"plugins": {
+					"response-rewrite": {
+						"headers": {
+							"X-VERSION":"22.0"
+						}
+					}
+				},
+				"labels": {
+					"version": "v3",
+					"build":   "16",
+					"extra":   "test"
+				}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "get plugin_config label again to verify update",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			Path:         "/apisix/admin/labels/plugin_config",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "{\"build\":\"16\"},{\"extra\":\"test\"},{\"version\":\"v3\"}",
 		},
 		{
 			Desc:         "get all label",
@@ -299,6 +361,14 @@ func TestLabel(t *testing.T) {
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/u1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "delete plugin_config",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/plugin_configs/1",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},

@@ -55,6 +55,7 @@ export default {
   'page.route.input.placeholder.redirectCustom': '例如：/foo/index.html',
   'page.route.input.placeholder.requestUrl': '请输入合法的请求地址',
   'page.route.input.placeholder.paramKey': '参数名称',
+  'page.route.input.placeholder.paramType': '参数类型',
   'page.route.input.placeholder.paramValue': '参数值',
   // form
   'page.route.form.itemRulesRequiredMessage.parameterName': '仅支持字母和数字，且只能以字母开头',

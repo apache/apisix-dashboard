@@ -1390,5 +1390,22 @@
       }
     }
   ],
-  "mqtt-proxy": []
+  "mqtt-proxy": [],
+  "dubbo-proxy": [
+    {
+      "shouldValid": true,
+      "data": {
+        "service_name": "org.apache.dubbo.backend.DemoService",
+        "service_version": "0.0.0",
+        "method": "hello"
+      }
+    },
+    {
+      "shouldValid": false,
+      "data": {
+        "service_name": "org.apache.dubbo.backend.DemoService",
+        "method": "hello"
+      }
+    }
+  ]
 }

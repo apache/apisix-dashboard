@@ -86,6 +86,7 @@ type Route struct {
 	Script          interface{}            `json:"script,omitempty"`
 	ScriptID        interface{}            `json:"script_id,omitempty"` // For debug and optimization(cache), currently same as Route's ID
 	Plugins         map[string]interface{} `json:"plugins,omitempty"`
+	PluginConfigID  interface{}            `json:"plugin_config_id,omitempty"`
 	Upstream        *UpstreamDef           `json:"upstream,omitempty"`
 	ServiceID       interface{}            `json:"service_id,omitempty"`
 	UpstreamID      interface{}            `json:"upstream_id,omitempty"`
@@ -256,4 +257,12 @@ type ServerInfo struct {
 	EtcdVersion    string `json:"etcd_version,omitempty"`
 	Hostname       string `json:"hostname,omitempty"`
 	Version        string `json:"version,omitempty"`
+}
+
+// swagger:model GlobalPlugins
+type PluginConfig struct {
+	BaseInfo
+	Desc    string                 `json:"desc,omitempty" validate:"max=256"`
+	Plugins map[string]interface{} `json:"plugins"`
+	Labels  map[string]string      `json:"labels,omitempty"`
 }
