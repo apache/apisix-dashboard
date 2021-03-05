@@ -102,7 +102,7 @@ context('Create and Search Route', () => {
 
     // search one label
     cy.get(this.domSelector.refresh).click();
-    cy.get(this.domSelector.labelSelector).click();
+    cy.get(this.domSelector.labelSelect_0).click();
     cy.get(this.domSelector.dropdown).should('be.visible').within(() => {
       cy.contains(data.value0).click();
     });
