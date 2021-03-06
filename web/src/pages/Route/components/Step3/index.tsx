@@ -26,8 +26,9 @@ type Props = {
   data: {
     plugins: PluginComponent.Data;
     script: Record<string, any>;
+    plugin_config_id?: string;
   };
-  onChange: (data: { plugins: PluginComponent.Data; script: any }) => void;
+  onChange: (data: { plugins: PluginComponent.Data; script: any, plugin_config_id?: string; }) => void;
   readonly?: boolean;
   isForceHttps: boolean;
 };
@@ -35,7 +36,7 @@ type Props = {
 type Mode = 'NORMAL' | 'DRAW';
 
 const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps }) => {
-  const { plugins = {}, script = {} } = data;
+  const { plugins = {}, script = {}, plugin_config_id = '' } = data;
 
   // NOTE: Currently only compatible with chrome
   const disableDraw = !isChrome || isForceHttps;
@@ -84,9 +85,13 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
       {Boolean(mode === 'NORMAL') && (
         <PluginPage
           initialData={plugins}
+          plugin_config_id={plugin_config_id}
           schemaType="route"
           referPage="route"
-          onChange={(pluginsData) => onChange({ plugins: pluginsData, script: {} })}
+          showSelector
+          onChange={(pluginsData, id) => {
+            onChange({ plugins: pluginsData, script: {}, plugin_config_id: id })
+          }}
         />
       )}
       {Boolean(mode === 'DRAW') && (

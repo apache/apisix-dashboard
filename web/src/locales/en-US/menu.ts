@@ -65,6 +65,7 @@ export default {
   'menu.editor.koni': 'Koni Editor',
   'menu.metrics': 'Metrics',
   'menu.routes': 'Route',
+  'menu.pluginTemplate': 'Plugin Template',
   'menu.ssl': 'SSL',
   'menu.upstream': 'Upstream',
   'menu.consumer': 'Consumer',

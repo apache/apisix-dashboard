@@ -51,3 +51,9 @@ export const fetchSchema = async (
   }
   return cachedPluginSchema[schemaType][name];
 };
+
+export const fetchPluginTemplateList = () => {
+  return request<Res<ResListData<PluginTemplateModule.ResEntity>>>('/plugin_configs').then((data) => {
+    return data.data.rows;
+  });
+};

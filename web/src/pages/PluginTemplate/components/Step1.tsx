@@ -14,30 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
-import Form from 'antd/es/form';
-import { Input, Switch, Select, Button, Tag, AutoComplete } from 'antd';
+import React, { useState } from 'react';
+import { Button, Form, Input, Select, Tag } from 'antd';
+import type { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
-import { PanelSection } from '@api7-dashboard/ui';
 
-import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 import LabelsDrawer from '@/components/LabelsfDrawer';
-import { fetchLabelList } from '../../service';
+import { fetchLabelList } from '../service';
 
-const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit, onChange }) => {
-  const { formatMessage } = useIntl();
+const FORM_LAYOUT = {
+  labelCol: {
+    span: 2,
+  },
+  wrapperCol: {
+    span: 8,
+  },
+};
+
+type Props = {
+  form: FormInstance;
+  disabled?: boolean;
+};
+
+const Step1: React.FC<Props> = ({ form, disabled }) => {
   const [visible, setVisible] = useState(false);
-  const [labelList, setLabelList] = useState<LabelList>({});
-
-  useEffect(() => {
-    // TODO: use a better state name
-    fetchLabelList().then(setLabelList);
-  }, []);
+  const { formatMessage } = useIntl();
 
   const NormalLabelComponent = () => {
     const field = 'custom_normal_labels';
     const title = 'Label Manager';
-
     return (
       <React.Fragment>
         <Form.Item label={formatMessage({ id: 'component.global.labels' })} name={field}>
@@ -58,7 +63,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
             }}
           />
         </Form.Item>
-        <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+        <Form.Item wrapperCol={{ offset: 2 }}>
           <Button type="dashed" disabled={disabled} onClick={() => setVisible(true)}>
             {formatMessage({ id: 'component.global.manage' })}
           </Button>
@@ -73,9 +78,12 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
                   actionName={field}
                   dataSource={labels}
                   disabled={disabled || false}
-                  onChange={onChange}
+                  onChange={({ data }) => {
+                    const handledLabels = [...new Set([...(form.getFieldValue('custom_normal_labels') || []), ...data])];
+                    form.setFieldsValue({ ...form.getFieldsValue(), custom_normal_labels: handledLabels });
+                  }}
                   onClose={() => setVisible(false)}
-                  filterList={["API_VERSION"]}
+                  filterList={[]}
                   fetchLabelList={fetchLabelList}
                 />
               );
@@ -86,70 +94,19 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
     );
   };
 
-  const VersionLabelComponent = () => {
-    return (
-      <React.Fragment>
-        <Form.Item
-          label={formatMessage({ id: 'component.global.version' })}
-          name="custom_version_label"
-        >
-          <AutoComplete
-            options={(labelList.API_VERSION || []).map((item) => ({ value: item }))}
-            disabled={disabled}
-          />
-        </Form.Item>
-      </React.Fragment>
-    );
-  };
-
   return (
-    <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>
-      <Form.Item
-        label={formatMessage({ id: 'component.global.name' })}
-        name="name"
-        rules={[
-          {
-            required: true,
-            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
-              id: 'page.route.form.itemLabel.apiName',
-            })}`,
-          },
-          {
-            pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
-            message: formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' }),
-          },
-        ]}
-        extra={formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' })}
-      >
-        <Input
+    <Form {...FORM_LAYOUT} form={form}>
+      <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
+        <Input.TextArea
           placeholder={`${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
-            id: 'page.route.form.itemLabel.apiName',
+            id: 'component.global.description',
           })}`}
           disabled={disabled}
         />
       </Form.Item>
-
       <NormalLabelComponent />
-      <VersionLabelComponent />
-
-      <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
-        <Input.TextArea
-          placeholder={formatMessage({ id: 'component.global.input.placeholder.description' })}
-          disabled={disabled}
-          showCount
-          maxLength={256}
-        />
-      </Form.Item>
-
-      <Form.Item
-        label={formatMessage({ id: 'page.route.publish' })}
-        name="status"
-        valuePropName="checked"
-      >
-        <Switch disabled={isEdit} />
-      </Form.Item>
-    </PanelSection>
+    </Form>
   );
 };
 
-export default MetaView;
+export default Step1;

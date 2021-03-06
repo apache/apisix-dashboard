@@ -51,3 +51,6 @@ api/build-tools/apisix
 api/coverage.txt
 api/dag-to-lua/
 
+# frontend e2e test output
+web/.nyc_output
+web/coverage

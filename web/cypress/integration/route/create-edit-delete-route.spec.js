@@ -73,7 +73,9 @@ context('Create and Delete Route', () => {
 
     // config prometheus plugin
     cy.contains(this.domSelector.pluginCard, 'prometheus').within(() => {
-      cy.get('button').first().click();
+      cy.get('button').first().click({
+        force: true
+      });
     });
     cy.contains('button', 'Cancel').click();
     cy.contains('Next').click();
@@ -138,4 +140,3 @@ context('Create and Delete Route', () => {
     cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
   });
 });
-
