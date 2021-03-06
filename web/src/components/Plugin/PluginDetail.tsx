@@ -249,7 +249,7 @@ const PluginDetail: React.FC<Props> = ({
                     const editorData =
                       codeMirrorMode === codeMirrorModeList.Json
                         ? JSON.parse(ref.current?.editor.getValue())
-                        : yaml2json(ref.current?.editor.getValue(), false);
+                        : yaml2json(ref.current?.editor.getValue(), false).data;
                     validateData(name, editorData).then((value) => {
                       onChange({ formData: form.getFieldsValue(), codemirrorData: value });
                     });
@@ -323,6 +323,7 @@ const PluginDetail: React.FC<Props> = ({
               onChange={(value: PluginComponent.CodeMirrorMode) => {
                 handleModeChange(value);
               }}
+              data-cy='code-mirror-mode'
             ></Select>,
             <Button type="primary" onClick={formatCodes} key={3}>
               Format
