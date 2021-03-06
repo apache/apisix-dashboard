@@ -57,3 +57,8 @@ web/.nyc_output
 web/coverage
 web/cypress/screenshots/
 web/cypress/videos/
+web/cypress/downloads/
+
+# vim
+*.swp
+

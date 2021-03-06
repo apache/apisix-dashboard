@@ -153,6 +153,37 @@ context('Create and Delete Route', () => {
     });
   });
 
+  it('should duplicate the route', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+
+    cy.get(this.domSelector.nameSelector).type(newName);
+    cy.contains('Search').click();
+    cy.contains(newName).siblings().contains('Duplicate').click();
+
+    const duplicateNewName = `duplicateName${new Date().valueOf()}`;
+
+    cy.get(this.domSelector.name).clear().type(duplicateNewName);
+    cy.get(this.domSelector.description).clear().type(this.data.description2);
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+    cy.contains('Submit').click();
+    cy.contains(this.data.submitSuccess);
+    cy.contains('Goto List').click();
+    cy.url().should('contains', 'routes/list');
+    cy.contains(duplicateNewName).siblings().should('contain', this.data.description2);
+
+    // test view
+    cy.contains(duplicateNewName).siblings().contains('View').click();
+    cy.get(this.domSelector.drawer).should('be.visible');
+
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
+      cy.contains('upstream').should("exist");
+      cy.contains(duplicateNewName).should('exist');
+    });
+  });
+
   it('should delete the route', function () {
     cy.visit('/routes/list');
     cy.get(this.domSelector.nameSelector).type(newName);
