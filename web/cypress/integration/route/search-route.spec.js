@@ -99,6 +99,7 @@ context('Create and Search Route', () => {
   it('should search the route with labels', function () {
     cy.visit('/routes/list');
     // search one label
+    cy.contains(data.test0).should('exist');
     cy.get(this.domSelector.labelSelect_0).click({ timeout });
     cy.get(this.domSelector.dropdown).should('be.visible').within(() => {
       cy.contains(data.value0).click();

@@ -51,7 +51,7 @@
   "labels_0_labelKey": "#labels_0_labelKey",
   "labels_0_labelValue": "#labels_0_labelValue",
   "labelSelector": "[title=Labels]",
-  "labelSelect_0": "#rc_select_0",
+  "labelSelect_0": ".ant-select-selection-overflow",
 
   "pageContainer": ".ant-pro-page-container",
   "notificationMessage": ".ant-notification-notice-message",
