@@ -90,7 +90,6 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Sleep:        base.SleepTime,
 		})
 	})
-
 	ginkgo.It("update route with vars (header)", func() {
 		t := ginkgo.GinkgoT()
 		var createRouteBody map[string]interface{} = map[string]interface{}{
@@ -241,7 +240,6 @@ var _ = ginkgo.Describe("test route with multiple vars (args, cookie and header)
 			ExpectStatus: http.StatusOK,
 		})
 	})
-
 	ginkgo.It("hit the route with right parameters", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.APISIXExpect(),
