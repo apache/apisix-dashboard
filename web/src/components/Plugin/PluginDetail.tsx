@@ -46,7 +46,7 @@ type Props = {
   pluginList: PluginComponent.Meta[];
   readonly?: boolean;
   visible: boolean;
-  maskClosable: boolean;
+  maskClosable?: boolean;
   onClose?: () => void;
   onChange?: (data: any) => void;
 };
