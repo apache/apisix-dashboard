@@ -403,40 +403,9 @@ type ExistInput struct {
 	Name string `auto_read:"name,query"`
 }
 
-func toRows(list *store.ListOutput) []store.Row {
-	rows := make([]store.Row, list.TotalSize)
-	for i := range list.Rows {
-		rows[i] = list.Rows[i].(*entity.SSL)
-	}
-	return rows
-}
-
-func checkValueExists(rows []store.Row, field, value string) bool {
-	selector := store.Selector{
-		List:  rows,
-		Query: &store.Query{Filter: store.NewFilter([]string{field, value})},
-	}
-
-	list := selector.Filter().List
-
-	return len(list) > 0
-}
-
-func checkSniExists(rows []store.Row, sni string) bool {
-	if res := checkValueExists(rows, "sni", sni); res {
-		return true
-	}
-	if res := checkValueExists(rows, "snis", sni); res {
-		return true
-	}
-	//extensive domain
-	firstDot := strings.Index(sni, ".")
-	if firstDot > 0 && sni[0:1] != "*" {
-		sni = "*" + sni[firstDot:]
-		if res := checkValueExists(rows, "sni", sni); res {
-			return true
-		}
-		if res := checkValueExists(rows, "snis", sni); res {
+func inArray(key string, array []string) bool {
+	for _, item := range array {
+		if key == item {
 			return true
 		}
 	}
@@ -480,7 +449,34 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 	}
 
 	ret, err := h.sslStore.List(c.Context(), store.ListInput{
-		Predicate:  nil,
+		Predicate: func(obj interface{}) bool {
+			ssl := obj.(*entity.SSL)
+
+			for _, host := range input.Hosts {
+				if host == ssl.Sni {
+					return true
+				}
+
+				if inArray(host, ssl.Snis) {
+					return true
+				}
+
+				//extensive domain
+				firstDot := strings.Index(host, ".")
+				if firstDot > 0 && host[0:1] != "*" {
+					host = "*" + host[firstDot:]
+					if host == ssl.Sni {
+						return true
+					}
+
+					if inArray(host, ssl.Snis) {
+						return true
+					}
+				}
+			}
+
+			return false
+		},
 		PageSize:   0,
 		PageNumber: 0,
 	})
@@ -489,12 +485,9 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}
 
-	for _, host := range input.Hosts {
-		res := checkSniExists(toRows(ret), host)
-		if !res {
-			return &data.SpecCodeResponse{StatusCode: http.StatusNotFound},
-				consts.InvalidParam("SSL cert not exists for sni：" + host)
-		}
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusNotFound},
+			consts.InvalidParam("SSL cert not exists for sni：" + ret.Rows[0].(*entity.SSL).Sni)
 	}
 
 	return nil, nil

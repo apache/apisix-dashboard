@@ -35,6 +35,11 @@ import (
 	"github.com/apisix/manager-api/internal/utils/runtime"
 )
 
+type Pagination struct {
+	PageSize   int `json:"page_size" form:"page_size" auto_read:"page_size"`
+	PageNumber int `json:"page" form:"page" auto_read:"page"`
+}
+
 type Interface interface {
 	Get(ctx context.Context, key string) (interface{}, error)
 	List(ctx context.Context, input ListInput) (*ListOutput, error)
