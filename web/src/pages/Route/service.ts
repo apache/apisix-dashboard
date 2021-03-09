@@ -21,8 +21,8 @@ import {
   transformStepData,
   transformRouteData,
   transformUpstreamNodes,
-  transformLabelList,
 } from './transform';
+import { transformLabelList } from '@/helpers';
 
 export const create = (data: RouteModule.RequestData) =>
   request(`/routes`, {
@@ -97,7 +97,7 @@ export const checkHostWithSSL = (hosts: string[]) =>
 
 export const fetchLabelList = () =>
   request('/labels/route').then(
-    ({ data }) => transformLabelList(data.rows) as RouteModule.LabelList,
+    ({ data }) => transformLabelList(data.rows) as LabelList,
   );
 
 export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) =>

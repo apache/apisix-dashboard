@@ -34,6 +34,7 @@ declare namespace RouteModule {
     plugins: PluginPage.PluginData;
     //  TEMP
     script: any;
+    plugin_config_id?: string
   };
 
   type UpstreamHost = {
@@ -90,6 +91,7 @@ declare namespace RouteModule {
     };
     upstream_id?: string;
     plugins: Record<string, any>;
+    plugin_config_id?: string;
     script: Record<string, any>;
     url?: string;
     enable_websocket?: boolean;
@@ -101,16 +103,6 @@ declare namespace RouteModule {
     name: string;
     operator: Operator;
     value: string;
-    key: string;
-  };
-
-  type ResponseLabelList = Record<string, string>[];
-
-  type LabelList = Record<string, string[]>;
-
-  type LabelTableProps = {
-    labelKey: string;
-    labelValue: string;
     key: string;
   };
 

@@ -19,22 +19,23 @@ import { AutoComplete, Button, Col, Drawer, Form, notification, Row } from 'antd
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
-import { transformLableValueToKeyValue } from '../../transform';
-import { fetchLabelList } from '../../service';
+import { transformLableValueToKeyValue } from '../../helpers';
 
 type Props = {
   title?: string;
   actionName: string;
   dataSource: string[];
+  filterList?: string[],
+  fetchLabelList: any,
   disabled: boolean;
   onClose: () => void;
 } & Pick<RouteModule.Step1PassProps, 'onChange'>;
 
-const LabelList = (disabled: boolean, labelList: RouteModule.LabelList) => {
+const LabelList = (disabled: boolean, labelList: LabelList, filterList: string[] = []) => {
   const { formatMessage } = useIntl();
 
   const keyOptions = Object.keys(labelList || {})
-    .filter((item) => item !== 'API_VERSION')
+    .filter((item) => !filterList.includes(item))
     .map((item) => ({ value: item }));
   return (
     <Form.List name="labels">
@@ -116,14 +117,16 @@ const LabelsDrawer: React.FC<Props> = ({
   actionName = '',
   disabled = false,
   dataSource = [],
+  filterList = [],
+  fetchLabelList,
   onClose,
-  onChange = () => {},
+  onChange = () => { },
 }) => {
   const transformLabel = transformLableValueToKeyValue(dataSource);
 
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
-  const [labelList, setLabelList] = useState<RouteModule.LabelList>({});
+  const [labelList, setLabelList] = useState<LabelList>({});
   form.setFieldsValue({ labels: transformLabel });
 
   useEffect(() => {
@@ -172,7 +175,7 @@ const LabelsDrawer: React.FC<Props> = ({
       }
     >
       <Form form={form} layout="horizontal">
-        {LabelList(disabled, labelList || {})}
+        {LabelList(disabled, labelList || {}, filterList)}
       </Form>
     </Drawer>
   );

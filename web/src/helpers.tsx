@@ -130,3 +130,33 @@ export const timestampToLocaleString = (timestamp: number) => {
 
   return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
 };
+
+export const transformLableValueToKeyValue = (data: string[]) => {
+  return (data || []).map((item) => {
+    const index = item.indexOf(':');
+    const labelKey = item.substring(0, index);
+    const labelValue = item.substring(index + 1);
+    return { labelKey, labelValue, key: Math.random().toString(36).slice(2) };
+  });
+};
+
+export const transformLabelList = (data: ResponseLabelList) => {
+  if (!data) {
+    return {};
+  }
+  const transformData = {};
+  data.forEach((item) => {
+    const key = Object.keys(item)[0];
+    const value = item[key];
+    if (!transformData[key]) {
+      transformData[key] = [];
+      transformData[key].push(value);
+      return;
+    }
+
+    if (transformData[key] && !transformData[key][value]) {
+      transformData[key].push(value);
+    }
+  });
+  return transformData;
+};

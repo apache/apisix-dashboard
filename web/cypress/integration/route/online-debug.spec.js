@@ -151,8 +151,10 @@ context('Online debug', () => {
 
     cy.contains(routeLocaleUS['page.route.button.send']).click();
     // assert: send request return
-    cy.get(domSelector.codeMirrorCode).contains('data').should('be.visible');
-    cy.get(domSelector.codeMirrorCode).contains('routes').should('be.visible');
+    cy.get(domSelector.codeMirrorCode).within(() => {
+      cy.contains('data').should('be.visible');
+      cy.contains('routes').should('be.visible');
+    });
 
     // close debug drawer
     cy.get(this.domSelector.drawerClose).click();
