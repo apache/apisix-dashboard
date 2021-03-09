@@ -17,46 +17,36 @@
 package route
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/onsi/ginkgo"
-	"github.com/stretchr/testify/assert"
+	"github.com/onsi/ginkgo/extensions/table"
 
 	"e2enew/base"
 )
 
-var upstream map[string]interface{} = map[string]interface{}{
-	"type": "roundrobin",
-	"nodes": []map[string]interface{}{
-		{
-			"host":   base.UpstreamIp,
-			"port":   1980,
-			"weight": 1,
-		},
-	},
-}
-
 var _ = ginkgo.Describe("test route with valid uri uris", func() {
-	ginkgo.It("add route with valid uri", func() {
-		t := ginkgo.GinkgoT()
-		var createRouteBody map[string]interface{} = map[string]interface{}{
-			"uri":      "/hello",
-			"upstream": upstream,
-		}
-		_createRouteBody, err := json.Marshal(createRouteBody)
-		assert.Nil(t, err)
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/routes/r1",
-			Body:         string(_createRouteBody),
+	table.DescribeTable("test route with valid uri uris",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("add route with valid uri", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Path:   "/apisix/admin/routes/r1",
+			Method: http.MethodPut,
+			Body: `{
+				"uri": "/hello",
+				"upstream": {
+					"nodes": {
+						"` + base.UpstreamIp + `:1980": 1
+					},
+					"type": "roundrobin"
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		})
-	})
-	ginkgo.It("hit the route (r1)", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("hit the route (r1)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -64,20 +54,16 @@ var _ = ginkgo.Describe("test route with valid uri uris", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("delete the route (r1)", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("delete the route (r1)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("hit the route just delete", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("hit the route just delete", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -85,27 +71,24 @@ var _ = ginkgo.Describe("test route with valid uri uris", func() {
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("add route with valid uris", func() {
-		t := ginkgo.GinkgoT()
-		var createRouteBody map[string]interface{} = map[string]interface{}{
-			"uris":     []string{"/hello", "/status"},
-			"upstream": upstream,
-		}
-		_createRouteBody, err := json.Marshal(createRouteBody)
-		assert.Nil(t, err)
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/routes/r1",
-			Body:         string(_createRouteBody),
+		}),
+		table.Entry("add route with valid uris", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"uris": ["/hello","/status"],
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": {
+						"` + base.UpstreamIp + `:1980": 1
+					}
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		})
-	})
-	ginkgo.It("hit the route (/hello)", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("hit the route (/hello)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -113,10 +96,8 @@ var _ = ginkgo.Describe("test route with valid uri uris", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("hit the route (/status)", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("hit the route (/status)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/status",
@@ -124,20 +105,16 @@ var _ = ginkgo.Describe("test route with valid uri uris", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "ok",
 			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("delete route", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("delete the route (r1)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("hit the route just delete", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("hit the route just delete", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -145,6 +122,6 @@ var _ = ginkgo.Describe("test route with valid uri uris", func() {
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
-		})
-	})
+		}),
+	)
 })
