@@ -241,6 +241,7 @@ const PluginPage: React.FC<Props> = ({
       visible={name !== NEVER_EXIST_PLUGIN_FLAG}
       schemaType={schemaType}
       initialData={initialData}
+      maskClosable={false}
       pluginList={pluginList}
       onClose={() => {
         setName(NEVER_EXIST_PLUGIN_FLAG);

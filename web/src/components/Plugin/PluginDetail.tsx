@@ -46,6 +46,7 @@ type Props = {
   pluginList: PluginComponent.Meta[];
   readonly?: boolean;
   visible: boolean;
+  maskClosable?: boolean;
   onClose?: () => void;
   onChange?: (data: any) => void;
 };
@@ -83,6 +84,7 @@ const PluginDetail: React.FC<Props> = ({
   visible,
   pluginList = [],
   readonly = false,
+  maskClosable = true,
   initialData = {},
   onClose = () => {},
   onChange = () => {},
@@ -168,6 +170,7 @@ const PluginDetail: React.FC<Props> = ({
         visible={visible}
         placement="right"
         closable={false}
+        maskClosable={maskClosable}
         onClose={onClose}
         width={700}
         footer={
