@@ -17,47 +17,37 @@
 package route
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/onsi/ginkgo"
-	"github.com/stretchr/testify/assert"
+	"github.com/onsi/ginkgo/extensions/table"
 
 	"e2enew/base"
 )
 
-var upstream map[string]interface{} = map[string]interface{}{
-	"type": "roundrobin",
-	"nodes": []map[string]interface{}{
-		{
-			"host":   base.UpstreamIp,
-			"port":   1980,
-			"weight": 1,
+var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
+	table.DescribeTable("test route with valid remote_addr remote_addrs",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
 		},
-	},
-}
-
-var _ = ginkgo.Describe("test route with valid remote_addr remote_addrs", func() {
-	ginkgo.It("add route with valid remote_addr", func() {
-		t := ginkgo.GinkgoT()
-		var createRouteBody map[string]interface{} = map[string]interface{}{
-			"uri":         "/hello",
-			"remote_addr": "172.16.238.1",
-			"upstream":    upstream,
-		}
-		_createRouteBody, err := json.Marshal(createRouteBody)
-		assert.Nil(t, err)
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/routes/r1",
-			Body:         string(_createRouteBody),
+		table.Entry("add route with valid remote_addr", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"remote_addr": "172.16.238.1",
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": {
+						"` + base.UpstreamIp + `:1980": 1
+					}
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		})
-	})
-	ginkgo.It("verify route", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("verify route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -65,28 +55,25 @@ var _ = ginkgo.Describe("test route with valid remote_addr remote_addrs", func()
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("update route with valid remote_addr (CIDR)", func() {
-		t := ginkgo.GinkgoT()
-		var createRouteBody map[string]interface{} = map[string]interface{}{
-			"uri":         "/hello",
-			"remote_addr": "172.16.238.1/24",
-			"upstream":    upstream,
-		}
-		_createRouteBody, err := json.Marshal(createRouteBody)
-		assert.Nil(t, err)
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/routes/r1",
-			Body:         string(_createRouteBody),
+		}),
+		table.Entry("update route with valid remote_addr (CIDR)", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"remote_addr": "172.16.238.1/24",
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": {
+						"` + base.UpstreamIp + `:1980": 1
+					}
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		})
-	})
-	ginkgo.It("verify route", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("verify route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -94,28 +81,25 @@ var _ = ginkgo.Describe("test route with valid remote_addr remote_addrs", func()
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("update route with valid remote_addrs", func() {
-		t := ginkgo.GinkgoT()
-		var createRouteBody map[string]interface{} = map[string]interface{}{
-			"uri":          "/hello",
-			"remote_addrs": []string{"172.16.238.1", "192.168.0.2/24"},
-			"upstream":     upstream,
-		}
-		_createRouteBody, err := json.Marshal(createRouteBody)
-		assert.Nil(t, err)
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/routes/r1",
-			Body:         string(_createRouteBody),
+		}),
+		table.Entry("update route with valid remote_addrs", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"remote_addrs": ["172.16.238.1","192.168.0.2/24"],
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": {
+						"` + base.UpstreamIp + `:1980": 1
+					}
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		})
-	})
-	ginkgo.It("verify route", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("verify route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -123,28 +107,25 @@ var _ = ginkgo.Describe("test route with valid remote_addr remote_addrs", func()
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("update remote_addr to not be hit", func() {
-		t := ginkgo.GinkgoT()
-		var createRouteBody map[string]interface{} = map[string]interface{}{
-			"uri":         "/hello",
-			"remote_addr": "10.10.10.10",
-			"upstream":    upstream,
-		}
-		_createRouteBody, err := json.Marshal(createRouteBody)
-		assert.Nil(t, err)
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/routes/r1",
-			Body:         string(_createRouteBody),
+		}),
+		table.Entry("update remote_addr to not be hit", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"remote_addr": "10.10.10.10",
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": {
+						"` + base.UpstreamIp + `:1980": 1
+					}
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		})
-	})
-	ginkgo.It("verify route", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("verify route not found", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -152,28 +133,25 @@ var _ = ginkgo.Describe("test route with valid remote_addr remote_addrs", func()
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("update remote_addr to not be hit", func() {
-		t := ginkgo.GinkgoT()
-		var createRouteBody map[string]interface{} = map[string]interface{}{
-			"uri":          "/hello",
-			"remote_addrs": []string{"10.10.10.10", "11.11.11.1/24"},
-			"upstream":     upstream,
-		}
-		_createRouteBody, err := json.Marshal(createRouteBody)
-		assert.Nil(t, err)
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/routes/r1",
-			Body:         string(_createRouteBody),
+		}),
+		table.Entry("update remote_addrs to not be hit", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"uri": "/hello",
+				"remote_addrs": ["10.10.10.10","11.11.11.1/24"],
+				"upstream": {
+					"type": "roundrobin",
+					"nodes": {
+						"` + base.UpstreamIp + `:1980": 1
+					}
+				}
+			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		})
-	})
-	ginkgo.It("verify route", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("verify route not found", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -181,20 +159,16 @@ var _ = ginkgo.Describe("test route with valid remote_addr remote_addrs", func()
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("delete route", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("delete route", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("verify it again after deleting the route", func() {
-		base.RunTestCase(base.HttpTestCase{
+		}),
+		table.Entry("verify it again after deleting the route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
@@ -202,6 +176,6 @@ var _ = ginkgo.Describe("test route with valid remote_addr remote_addrs", func()
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
-		})
-	})
+		}),
+	)
 })
