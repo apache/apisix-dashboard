@@ -149,8 +149,8 @@ const Page: React.FC<Props> = (props) => {
         <Step3
           data={step3Data}
           isForceHttps={form1.getFieldValue('redirectOption') === 'forceHttps'}
-          onChange={({ plugins, script = INIT_CHART }) => {
-            setStep3Data({ plugins, script });
+          onChange={({ plugins, script = INIT_CHART, plugin_config_id }) => {
+            setStep3Data({ plugins, script, plugin_config_id });
             setChart(script);
           }}
         />
@@ -262,11 +262,10 @@ const Page: React.FC<Props> = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={`${
-          (props as any).match.params.rid
-            ? formatMessage({ id: 'component.global.edit' })
-            : formatMessage({ id: 'component.global.create' })
-        } ${formatMessage({ id: 'menu.routes' })}`}
+        title={`${(props as any).match.params.rid
+          ? formatMessage({ id: 'component.global.edit' })
+          : formatMessage({ id: 'component.global.create' })
+          } ${formatMessage({ id: 'menu.routes' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>

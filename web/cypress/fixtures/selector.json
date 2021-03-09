@@ -43,6 +43,7 @@
 
   "fileSelector": "[type=file]",
   "fileTypeRadio": "[type=radio]",
+  "fileSelectorClose": ".ant-modal-close",
 
   "debugUri": "#debugUri",
 
@@ -50,6 +51,7 @@
   "labels_0_labelKey": "#labels_0_labelKey",
   "labels_0_labelValue": "#labels_0_labelValue",
   "labelSelector": "[title=Labels]",
+  "labelSelect_0": ".ant-select-selection-overflow",
 
   "pageContainer": ".ant-pro-page-container",
   "notificationMessage": ".ant-notification-notice-message",
@@ -64,5 +66,10 @@
   "passwordInput": "#control-ref_password",
   "drawer": ".ant-drawer-content",
   "codemirrorScroll": ".CodeMirror-scroll",
-  "drawerClose": ".ant-drawer-close"
+  "drawerClose": ".ant-drawer-close",
+  "descriptionSelector": "[title=Description]",
+  "customSelector": "[title=Custom]",
+  "errorAlertClose": ".anticon-close",
+  "redirectURIInput": "#redirectURI",
+  "redirectCodeSelector": "#ret_code"
 }

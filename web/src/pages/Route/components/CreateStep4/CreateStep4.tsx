@@ -39,7 +39,7 @@ const style = {
 
 const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, upstreamRef, ...rest }) => {
   const { formatMessage } = useIntl();
-  const { plugins = {}, script = {} } = rest.step3Data;
+  const { plugins = {}, script = {}, plugin_config_id = '' } = rest.step3Data;
 
   return (
     <>
@@ -59,11 +59,9 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, upstreamRef, ...
           <h2 style={style}>
             {formatMessage({ id: 'component.global.steps.stepTitle.pluginConfig' })}
           </h2>
-          {Boolean(Object.keys(plugins).length !== 0) && (
-            <PluginPage initialData={rest.step3Data.plugins} readonly />
-          )}
+          {Boolean(Object.keys(plugins).length !== 0 || plugin_config_id !== '') && <PluginPage initialData={plugins} plugin_config_id={plugin_config_id} showSelector readonly />}
           {Boolean(Object.keys(script).length !== 0) && (
-            <PluginOrchestration data={rest.step3Data.script.chart} readonly onChange={() => {}} />
+            <PluginOrchestration data={rest.step3Data.script.chart} readonly onChange={() => { }} />
           )}
         </>
       )}

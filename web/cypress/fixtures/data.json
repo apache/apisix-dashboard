@@ -27,5 +27,11 @@
   "updateSuccessfully": "Update Configuration Successfully",
   "deleteSSLSuccess": "Remove target SSL successfully",
   "sslErrorAlert": "key and cert don't match",
-  "pluginErrorAlert": "Invalid plugin data"
+  "pluginErrorAlert": "Invalid plugin data",
+  "pluginTemplateName": "test_plugin_template1",
+  "pluginTemplateName2": "test_plugin_template2",
+  "createPluginTemplateSuccess": "Create Plugin Template Successfully",
+  "editPluginTemplateSuccess": "Edit Plugin Template Successfully",
+  "deletePluginTemplateSuccess": "Delete Plugin Template Successfully",
+  "pluginTemplateErrorAlert": "Request Error Code: 10000"
 }

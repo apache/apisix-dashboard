@@ -36,7 +36,9 @@ context('Create and Delete Consumer', () => {
 
     // plugin config
     cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
-      cy.get('button').first().click();
+      cy.get('button').click({
+        force: true
+      });
     });
 
     cy.get(this.domSelector.disabledSwitcher).click();
@@ -91,7 +93,9 @@ context('Create and Delete Consumer', () => {
 
     // plugin config
     cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
-      cy.get('button').first().click();
+      cy.get('button').click({
+        force: true
+      });
     });
     // edit codeMirror
     cy.get(this.domSelector.codeMirror)
@@ -107,4 +111,3 @@ context('Create and Delete Consumer', () => {
     cy.get(this.domSelector.notification).should('contain', this.data.pluginErrorAlert);
   });
 });
-
