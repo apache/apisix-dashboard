@@ -146,7 +146,7 @@ context('Online debug', () => {
 
     // set header Authorization
     cy.contains('Header Params').should('be.visible').click();
-    cy.get(domSelector.headerDataKey0).type(data.headerAuthorizationKey),
+    cy.get(domSelector.headerDataKey0).type(data.headerAuthorizationKey);
     cy.get(domSelector.headerDataValue0).type(data.token);
 
     cy.contains(routeLocaleUS['page.route.button.send']).click();
