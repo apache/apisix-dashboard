@@ -466,6 +466,41 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 			Sleep:        base.SleepTime,
 		})
 	})
+	ginkgo.It("create chash upstream u2", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/u2",
+			Body: `{
+				"retries": 1,
+				"timeout": {
+					"connect":15,
+					"send":15,
+					"read":15
+				},
+				"type":"roundrobin",
+				"scheme": "https",
+				"service_name": "USER-SERVICE",
+				"discovery_type": "eureka",
+				"name": "upstream-for-test",
+				"desc": "hello world"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+
+	ginkgo.It("get the upstream to verify config", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/upstreams/u2",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"type":"roundrobin","scheme":"https","discovery_type":"eureka"`,
+			Sleep:        base.SleepTime,
+		})
+	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
@@ -480,6 +515,15 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/upstreams/1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("delete upstream u2", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/u2",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		})

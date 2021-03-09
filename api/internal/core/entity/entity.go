@@ -157,20 +157,21 @@ type HealthChecker struct {
 }
 
 type UpstreamDef struct {
-	Nodes        interface{}       `json:"nodes,omitempty"`
-	Retries      int               `json:"retries,omitempty"`
-	Timeout      interface{}       `json:"timeout,omitempty"`
-	K8sInfo      interface{}       `json:"k8s_deployment_info,omitempty"`
-	Type         string            `json:"type,omitempty"`
-	Checks       interface{}       `json:"checks,omitempty"`
-	HashOn       string            `json:"hash_on,omitempty"`
-	Key          string            `json:"key,omitempty"`
-	PassHost     string            `json:"pass_host,omitempty"`
-	UpstreamHost string            `json:"upstream_host,omitempty"`
-	Name         string            `json:"name,omitempty"`
-	Desc         string            `json:"desc,omitempty"`
-	ServiceName  string            `json:"service_name,omitempty"`
-	Labels       map[string]string `json:"labels,omitempty"`
+	Nodes         interface{}       `json:"nodes,omitempty"`
+	Retries       int               `json:"retries,omitempty"`
+	Timeout       interface{}       `json:"timeout,omitempty"`
+	Type          string            `json:"type,omitempty"`
+	Checks        interface{}       `json:"checks,omitempty"`
+	HashOn        string            `json:"hash_on,omitempty"`
+	Key           string            `json:"key,omitempty"`
+	Scheme        string            `json:"scheme,omitempty"`
+	DiscoveryType string            `json:"discovery_type,omitempty"`
+	PassHost      string            `json:"pass_host,omitempty"`
+	UpstreamHost  string            `json:"upstream_host,omitempty"`
+	Name          string            `json:"name,omitempty"`
+	Desc          string            `json:"desc,omitempty"`
+	ServiceName   string            `json:"service_name,omitempty"`
+	Labels        map[string]string `json:"labels,omitempty"`
 }
 
 // swagger:model Upstream
