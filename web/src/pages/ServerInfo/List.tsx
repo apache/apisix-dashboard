@@ -111,7 +111,7 @@ const ServerInfo: React.FC = () => {
             <Form.Item style={{ marginBottom: 0, fontSize: '12px', color: '#00000073' }}>
               {formatMessage({ id: 'page.systemStatus.desc' })}&nbsp;
               <a
-                href="https://github.com/apache/apisix/blob/master/doc/plugins/server-info.md"
+                href="https://github.com/apache/apisix/blob/master/docs/en/latest/plugins/server-info.md"
                 target="_blank"
                 rel="noreferrer"
               >

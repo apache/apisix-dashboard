@@ -50,7 +50,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
               icon={<LinkOutlined />}
               onClick={() => {
                 window.open(
-                  `https://github.com/apache/apisix/blob/master/doc/admin-api.md#${type}`,
+                  `https://github.com/apache/apisix/blob/master/docs/en/latest/admin-api.md#${type}`,
                 );
               }}
               key={1}
