@@ -262,8 +262,8 @@ func initParallelism(choiceCores int) {
 	}
 	maxSupportedCores := runtime.NumCPU()
 
-	runtime.GOMAXPROCS(maxSupportedCores)
-	if choiceCores < maxSupportedCores {
-		runtime.GOMAXPROCS(choiceCores)
+	if choiceCores > maxSupportedCores {
+		choiceCores = maxSupportedCores
 	}
+	runtime.GOMAXPROCS(choiceCores)
 }
