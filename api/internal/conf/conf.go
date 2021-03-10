@@ -97,7 +97,7 @@ type Conf struct {
 	Listen    Listen
 	Log       Log
 	AllowList []string `yaml:"allow_list"`
-	MaxCpu    int `yaml:"max_cpu"`
+	MaxCpu    int      `yaml:"max_cpu"`
 }
 
 type User struct {
