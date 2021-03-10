@@ -25,7 +25,7 @@ import (
 )
 
 var _ = ginkgo.Describe("Healthy check", func() {
-	ginkgo.It("ping ", func() {
+	ginkgo.It("ping manager-api", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
