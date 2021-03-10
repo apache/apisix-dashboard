@@ -39,6 +39,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 		testKey         []byte
 		apisixKey       []byte
 		validBody       []byte
+		validBody2      []byte
 		invalidBody     []byte
 		createRouteBody []byte
 	)
@@ -59,6 +60,17 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 			"build":   "16",
 			"env":     "production",
 			"version": "v3",
+		},
+	})
+	assert.Nil(t, err)
+	validBody2, err = json.Marshal(map[string]interface{}{
+		"id":   "1",
+		"cert": string(testCert),
+		"key":  string(testKey),
+		"labels": map[string]string{
+			"build":   "16",
+			"env":     "production",
+			"version": "v2",
 		},
 	})
 	assert.Nil(t, err)
@@ -150,6 +162,24 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v3\"",
+		}),
+		table.Entry("update ssl", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/ssl/1",
+			Body:         string(validBody2),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("check ssl labels", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/ssl/1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"",
+			Sleep:        base.SleepTime,
 		}),
 		table.Entry("check host exist", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
