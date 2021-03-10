@@ -46,7 +46,6 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 	var err error
 	testCert, err = ioutil.ReadFile("../../certs/test2.crt")
 	assert.Nil(t, err)
-
 	testKey, err = ioutil.ReadFile("../../certs/test2.key")
 	assert.Nil(t, err)
 	apisixKey, err = ioutil.ReadFile("../../certs/apisix.key")
@@ -63,6 +62,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 		},
 	})
 	assert.Nil(t, err)
+
 	invalidBody, err = json.Marshal(map[string]string{
 		"id":   "1",
 		"cert": string(testCert),
