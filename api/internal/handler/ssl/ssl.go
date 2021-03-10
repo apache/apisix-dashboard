@@ -51,6 +51,35 @@ func NewHandler() (handler.RouteRegister, error) {
 	}, nil
 }
 
+func checkSniExists(rows []interface{}, sni string) bool {
+	for _, item := range rows {
+		ssl := item.(*entity.SSL)
+
+		if ssl.Sni == sni {
+			return true
+		}
+
+		if inArray(sni, ssl.Snis) {
+			return true
+		}
+
+		// Wildcard Domain
+		firstDot := strings.Index(sni, ".")
+		if firstDot > 0 && sni[0:1] != "*" {
+			wildcardDomain := "*" + sni[firstDot:]
+			if ssl.Sni == wildcardDomain {
+				return true
+			}
+
+			if inArray(wildcardDomain, ssl.Snis) {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.GET("/apisix/admin/ssl/:id", wgin.Wraps(h.Get,
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
@@ -449,34 +478,7 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 	}
 
 	ret, err := h.sslStore.List(c.Context(), store.ListInput{
-		Predicate: func(obj interface{}) bool {
-			ssl := obj.(*entity.SSL)
-
-			for _, host := range input.Hosts {
-				if host == ssl.Sni {
-					return true
-				}
-
-				if inArray(host, ssl.Snis) {
-					return true
-				}
-
-				//extensive domain
-				firstDot := strings.Index(host, ".")
-				if firstDot > 0 && host[0:1] != "*" {
-					host = "*" + host[firstDot:]
-					if host == ssl.Sni {
-						return true
-					}
-
-					if inArray(host, ssl.Snis) {
-						return true
-					}
-				}
-			}
-
-			return false
-		},
+		Predicate:  nil,
 		PageSize:   0,
 		PageNumber: 0,
 	})
@@ -485,9 +487,12 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}
 
-	if ret.TotalSize > 0 {
-		return &data.SpecCodeResponse{StatusCode: http.StatusNotFound},
-			consts.InvalidParam("SSL cert not exists for sni：" + ret.Rows[0].(*entity.SSL).Sni)
+	for _, host := range input.Hosts {
+		exist := checkSniExists(ret.Rows, host)
+		if !exist {
+			return &data.SpecCodeResponse{StatusCode: http.StatusNotFound},
+				consts.InvalidParam("SSL cert not exists for sni：" + host)
+		}
 	}
 
 	return nil, nil
