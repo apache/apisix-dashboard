@@ -257,7 +257,7 @@ func initEtcdConfig(conf Etcd) {
 
 // initialize parallelism settings
 func initParallelism(choiceCores int) {
-	if choiceCores < 0 {
+	if choiceCores < 1 {
 		return
 	}
 	maxSupportedCores := runtime.NumCPU()
