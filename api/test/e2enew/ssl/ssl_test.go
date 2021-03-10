@@ -100,7 +100,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 
 		_, err := http.Get("https://www.test2.com:9443")
 		assert.NotNil(t, err)
-		assert.EqualError(t, err, "Get \"https://www.test2.com:9443\": remote error: tls: internal error")
+		assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")
 	})
 
 	table.DescribeTable("test ssl basic", func(testCase base.HttpTestCase) {
@@ -211,7 +211,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		_, err := http.Get("https://www.test2.com:9443")
 		assert.NotNil(t, err)
-		assert.EqualError(t, err, "Get \"https://www.test2.com:9443\": remote error: tls: internal error")
+		assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")
 	})
 
 	table.DescribeTable("test ssl basic", func(testCase base.HttpTestCase) {
