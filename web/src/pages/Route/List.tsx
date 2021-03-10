@@ -494,7 +494,7 @@ const Page: React.FC = () => {
           <p>{formatMessage({ id: 'page.route.instructions' })}:</p>
           <p>
             <a
-              href="https://github.com/apache/apisix-dashboard/blob/master/docs/IMPORT_OPENAPI_USER_GUIDE.md"
+              href="https://apisix.apache.org/docs/dashboard/IMPORT_OPENAPI_USER_GUIDE"
               target="_blank"
             >
               1.{' '}
