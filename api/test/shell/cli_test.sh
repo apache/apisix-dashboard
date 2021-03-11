@@ -169,8 +169,6 @@ sleep 3
 ./manager-api stop
 sleep 6
 
-cat ${STDOUT}
-
 if [[ `grep -c "The manager-api is running successfully\!" ${STDOUT}` -ne '1' ]]; then
     echo "failed: the manager server didn't show started info"
     exit 1
