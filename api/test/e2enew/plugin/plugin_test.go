@@ -14,13 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ssl
+package plugin
 
 import (
-	"e2enew/base"
+	"net/http"
+
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
-	"net/http"
+
+	"e2enew/base"
 )
 
 var _ = ginkgo.Describe("Plugin Basic", func() {

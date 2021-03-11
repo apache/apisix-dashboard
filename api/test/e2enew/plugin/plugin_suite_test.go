@@ -14,13 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ssl
+package plugin
 
 import (
-	"github.com/onsi/ginkgo"
 	"testing"
+
+	"github.com/onsi/ginkgo"
 )
 
-func TestRoute(t *testing.T) {
+func TestPlugin(t *testing.T) {
 	ginkgo.RunSpecs(t, "plugin suite")
 }
