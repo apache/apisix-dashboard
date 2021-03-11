@@ -25,12 +25,11 @@ import (
 	"e2enew/base"
 )
 
-func TestRoute(t *testing.T) {
+func TestSSL(t *testing.T) {
 	ginkgo.RunSpecs(t, "ssl suite")
 }
 
 var _ = ginkgo.AfterSuite(func() {
 	base.CleanResource("ssl")
-	base.CleanResource("routes")
 	time.Sleep(base.SleepTime)
 })
