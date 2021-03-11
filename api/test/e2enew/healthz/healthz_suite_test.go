@@ -22,6 +22,6 @@ import (
 	"github.com/onsi/ginkgo"
 )
 
-func TestRoute(t *testing.T) {
+func TestHealthz(t *testing.T) {
 	ginkgo.RunSpecs(t, "healthz suite")
 }
