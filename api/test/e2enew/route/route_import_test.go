@@ -33,7 +33,9 @@ import (
 
 var _ = ginkgo.Describe("import default tests", func() {
 	path, err := filepath.Abs("../../testdata/import/default.yaml")
-	gomega.Expect(err).To(gomega.BeNil())
+	ginkgo.It("panics if filepath error", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+	})
 
 	headers := map[string]string{
 		"Authorization": base.GetToken(),
@@ -48,11 +50,13 @@ var _ = ginkgo.Describe("import default tests", func() {
 	time.Sleep(base.SleepTime)
 
 	respBody, _, err := base.HttpGet(base.ManagerAPIHost+"/apisix/admin/routes", headers)
-	gomega.Expect(err).To(gomega.BeNil())
+	ginkgo.It("panics if import routes request fails", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+	})
+
 	list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
 
 	var entries []table.TableEntry
-
 	for _, item := range list {
 		route := item.(map[string]interface{})
 		entries = append(entries,
@@ -110,7 +114,9 @@ var _ = ginkgo.Describe("import default tests", func() {
 
 var _ = ginkgo.Describe("import json tests", func() {
 	path, err := filepath.Abs("../../testdata/import/default.json")
-	gomega.Expect(err).To(gomega.BeNil())
+	ginkgo.It("panics if path error", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+	})
 
 	headers := map[string]string{
 		"Authorization": base.GetToken(),
@@ -125,11 +131,13 @@ var _ = ginkgo.Describe("import json tests", func() {
 	time.Sleep(base.SleepTime)
 
 	respBody, _, err := base.HttpGet(base.ManagerAPIHost+"/apisix/admin/routes", headers)
-	gomega.Expect(err).To(gomega.BeNil())
+	ginkgo.It("panics if import route fails", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+	})
+
 	list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
 
 	var entries []table.TableEntry
-
 	for _, item := range list {
 		route := item.(map[string]interface{})
 		entries = append(entries,
@@ -186,7 +194,9 @@ var _ = ginkgo.Describe("import json tests", func() {
 
 var _ = ginkgo.Describe("import tests with plugins", func() {
 	path, err := filepath.Abs("../../testdata/import/with-plugins.yaml")
-	gomega.Expect(err).To(gomega.BeNil())
+	ginkgo.It("panics if path error", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+	})
 
 	headers := map[string]string{
 		"Authorization": base.GetToken(),
@@ -201,7 +211,10 @@ var _ = ginkgo.Describe("import tests with plugins", func() {
 	time.Sleep(base.SleepTime)
 
 	respBody, _, err := base.HttpGet(base.ManagerAPIHost+"/apisix/admin/routes", headers)
-	gomega.Expect(err).To(gomega.BeNil())
+	ginkgo.It("panics if importing routes fail", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+	})
+
 	list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
 
 	var entries []table.TableEntry
@@ -284,7 +297,9 @@ var _ = ginkgo.Describe("import tests with plugins", func() {
 
 var _ = ginkgo.Describe("import tests with multi routes", func() {
 	path, err := filepath.Abs("../../testdata/import/multi-routes.yaml")
-	gomega.Expect(err).To(gomega.BeNil())
+	ginkgo.It("panics if path error", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+	})
 
 	headers := map[string]string{
 		"Authorization": base.GetToken(),
@@ -299,9 +314,14 @@ var _ = ginkgo.Describe("import tests with multi routes", func() {
 	time.Sleep(base.SleepTime)
 
 	respBody, _, err := base.HttpGet(base.ManagerAPIHost+"/apisix/admin/routes", headers)
-	gomega.Expect(err).To(gomega.BeNil())
+	ginkgo.It("panics if importing routes fail", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+	})
+
 	list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
-	gomega.Expect(list).Should(gomega.HaveLen(2))
+	ginkgo.It("panics if parsing response body fails", func() {
+		gomega.Expect(list).Should(gomega.HaveLen(2))
+	})
 
 	var entries []table.TableEntry
 	for _, item := range list {
@@ -474,22 +494,29 @@ var _ = ginkgo.Describe("import export route tests", func() {
 	}
 
 	body, status, err := base.HttpGet(base.ManagerAPIHost+"/apisix/admin/export/routes", headers)
-	gomega.Expect(err).To(gomega.BeNil())
-	gomega.Expect(status).To(gomega.Equal(http.StatusOK))
+	ginkgo.It("panics if first get routes request failed", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+		gomega.Expect(status).To(gomega.Equal(http.StatusOK))
+	})
 
 	content := gjson.Get(string(body), "data")
 	err = ioutil.WriteFile(tmpPath, []byte(content.Raw), 0644)
-	gomega.Expect(err).To(gomega.BeNil())
+	ginkgo.It("panics if write response to file failed", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+	})
 
 	// import routes (should failed -- duplicate)
 	files := []base.UploadFile{
 		{Name: "file", Filepath: tmpPath},
 	}
 	respBody, status, err := base.HttpPostFile(base.ManagerAPIHost+"/apisix/admin/import/routes", nil, files, headers)
-	gomega.Expect(err).To(gomega.BeNil())
-	gomega.Expect(status).To(gomega.Equal(http.StatusBadRequest))
 
-	gomega.Expect(strings.Contains(string(respBody), "duplicate")).To(gomega.BeTrue())
+	ginkgo.It("panics if import routes request failed", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+		gomega.Expect(status).To(gomega.Equal(http.StatusBadRequest))
+
+		gomega.Expect(strings.Contains(string(respBody), "duplicate")).To(gomega.BeTrue())
+	})
 	time.Sleep(base.SleepTime)
 
 	// delete routes
@@ -523,19 +550,26 @@ var _ = ginkgo.Describe("import export route tests", func() {
 	// import again
 	time.Sleep(base.SleepTime)
 	respBody, status, err = base.HttpPostFile(base.ManagerAPIHost+"/apisix/admin/import/routes", nil, files, headers)
-	gomega.Expect(err).To(gomega.BeNil())
-	gomega.Expect(status).To(gomega.Equal(http.StatusOK))
-	gomega.Expect(strings.Contains(string(respBody), `"data":{"paths":3,"routes":3}`)).To(gomega.BeTrue())
+	ginkgo.It("panics if reimport routes request failed", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+		gomega.Expect(status).To(gomega.Equal(http.StatusOK))
+		gomega.Expect(strings.Contains(string(respBody), `"data":{"paths":3,"routes":3}`)).To(gomega.BeTrue())
+	})
 	time.Sleep(base.SleepTime)
 
 	// sleep for data sync
 	time.Sleep(base.SleepTime)
 
-	respBody, _, err = base.HttpGet(base.ManagerAPIHost+"/apisix/admin/routes", headers)
-	gomega.Expect(err).To(gomega.BeNil())
-	list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
+	respBody, status, err = base.HttpGet(base.ManagerAPIHost+"/apisix/admin/routes", headers)
+	ginkgo.It("panics if get routes failed", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+		gomega.Expect(status).To(gomega.Equal(http.StatusOK))
+	})
 
-	gomega.Expect(list).Should(gomega.HaveLen(3))
+	list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
+	ginkgo.It("panics if get routes response parsing failed", func() {
+		gomega.Expect(list).Should(gomega.HaveLen(3))
+	})
 
 	var entries []table.TableEntry
 
