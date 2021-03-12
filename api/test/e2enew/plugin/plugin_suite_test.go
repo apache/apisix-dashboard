@@ -14,22 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ssl
+package plugin
 
 import (
 	"testing"
-	"time"
 
 	"github.com/onsi/ginkgo"
-
-	"e2enew/base"
 )
 
-func TestSSL(t *testing.T) {
-	ginkgo.RunSpecs(t, "ssl suite")
+func TestPlugin(t *testing.T) {
+	ginkgo.RunSpecs(t, "plugin suite")
 }
-
-var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("ssl")
-	time.Sleep(base.SleepTime)
-})

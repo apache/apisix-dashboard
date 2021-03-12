@@ -14,22 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ssl
+package healthz
 
 import (
-	"testing"
-	"time"
+	"net/http"
 
 	"github.com/onsi/ginkgo"
 
 	"e2enew/base"
 )
 
-func TestSSL(t *testing.T) {
-	ginkgo.RunSpecs(t, "ssl suite")
-}
-
-var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("ssl")
-	time.Sleep(base.SleepTime)
+var _ = ginkgo.Describe("Healthy check", func() {
+	ginkgo.It("ping manager-api", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/ping",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "pong",
+			Sleep:        base.SleepTime,
+		})
+	})
 })
