@@ -60,11 +60,12 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("create plugin config 2", base.HttpTestCase{
+		table.Entry("create plugin config by Post", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
-			Path:   "/apisix/admin/plugin_configs/2",
-			Method: http.MethodPut,
+			Path:   "/apisix/admin/plugin_configs",
+			Method: http.MethodPost,
 			Body: `{
+				"id": "2",
 				"plugins": {
 					"response-rewrite": {
 						"headers": {
