@@ -301,7 +301,7 @@ var _ = ginkgo.Describe("import tests with multi routes", func() {
 	respBody, _, err := base.HttpGet(base.ManagerAPIHost+"/apisix/admin/routes", headers)
 	gomega.Expect(err).To(gomega.BeNil())
 	list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
-	gomega.Expect(len(list)).To(gomega.Equal(2))
+	gomega.Expect(list).Should(gomega.HaveLen(2))
 
 	var entries []table.TableEntry
 	for _, item := range list {
@@ -535,7 +535,7 @@ var _ = ginkgo.Describe("import export route tests", func() {
 	gomega.Expect(err).To(gomega.BeNil())
 	list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
 
-	gomega.Expect(len(list)).To(gomega.Equal(3))
+	gomega.Expect(list).Should(gomega.HaveLen(3))
 
 	var entries []table.TableEntry
 

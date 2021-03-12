@@ -110,10 +110,8 @@ func HttpPostFile(url string, reqParams map[string]string, files []UploadFile, h
 	mustCheck(err)
 	httpRequest, _ := http.NewRequest("POST", url, requestBody)
 	httpRequest.Header.Add("Content-Type", newContentType)
-	if headers != nil {
-		for k, v := range headers {
-			httpRequest.Header.Add(k, v)
-		}
+	for k, v := range headers {
+		httpRequest.Header.Add(k, v)
 	}
 
 	httpClient := &http.Client{}
