@@ -38,7 +38,7 @@ export default {
   'page.upstream.step.create.node': 'Create Node',
   'page.upstream.step.pass-host': 'Pass Host',
   'page.upstream.step.pass-host.tips':
-    'When selecting node, there can only be ONE node in node list.',
+    'pass: Pass the client\'s host transparently to the upstream; node: Use the host configured in the node of upstream; rewrite: Use the value of the configuration upstream_host.',
   'page.upstream.step.pass-host.pass': 'pass',
   'page.upstream.step.pass-host.node': 'node',
   'page.upstream.step.pass-host.rewrite': 'rewrite',
