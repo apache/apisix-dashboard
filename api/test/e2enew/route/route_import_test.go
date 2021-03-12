@@ -28,7 +28,7 @@ import (
 	"github.com/onsi/gomega"
 	"github.com/tidwall/gjson"
 
-	"e2enew/base"
+	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
 var _ = ginkgo.Describe("import default tests", func() {
