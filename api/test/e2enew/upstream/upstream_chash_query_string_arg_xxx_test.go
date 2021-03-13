@@ -27,7 +27,7 @@ import (
 	"github.com/onsi/ginkgo"
 	"github.com/stretchr/testify/assert"
 
-	"e2enew/base"
+	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
 var createUpstreamBody map[string]interface{} = map[string]interface{}{

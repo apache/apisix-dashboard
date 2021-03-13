@@ -1,4 +1,4 @@
-module e2enew
+module github.com/apisix/manager-api/test/e2enew
 
 go 1.15
 

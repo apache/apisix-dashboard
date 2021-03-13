@@ -51,6 +51,35 @@ func NewHandler() (handler.RouteRegister, error) {
 	}, nil
 }
 
+func checkSniExists(rows []interface{}, sni string) bool {
+	for _, item := range rows {
+		ssl := item.(*entity.SSL)
+
+		if ssl.Sni == sni {
+			return true
+		}
+
+		if inArray(sni, ssl.Snis) {
+			return true
+		}
+
+		// Wildcard Domain
+		firstDot := strings.Index(sni, ".")
+		if firstDot > 0 && sni[0:1] != "*" {
+			wildcardDomain := "*" + sni[firstDot:]
+			if ssl.Sni == wildcardDomain {
+				return true
+			}
+
+			if inArray(wildcardDomain, ssl.Snis) {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.GET("/apisix/admin/ssl/:id", wgin.Wraps(h.Get,
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
@@ -403,40 +432,9 @@ type ExistInput struct {
 	Name string `auto_read:"name,query"`
 }
 
-func toRows(list *store.ListOutput) []store.Row {
-	rows := make([]store.Row, list.TotalSize)
-	for i := range list.Rows {
-		rows[i] = list.Rows[i].(*entity.SSL)
-	}
-	return rows
-}
-
-func checkValueExists(rows []store.Row, field, value string) bool {
-	selector := store.Selector{
-		List:  rows,
-		Query: &store.Query{Filter: store.NewFilter([]string{field, value})},
-	}
-
-	list := selector.Filter().List
-
-	return len(list) > 0
-}
-
-func checkSniExists(rows []store.Row, sni string) bool {
-	if res := checkValueExists(rows, "sni", sni); res {
-		return true
-	}
-	if res := checkValueExists(rows, "snis", sni); res {
-		return true
-	}
-	//extensive domain
-	firstDot := strings.Index(sni, ".")
-	if firstDot > 0 && sni[0:1] != "*" {
-		sni = "*" + sni[firstDot:]
-		if res := checkValueExists(rows, "sni", sni); res {
-			return true
-		}
-		if res := checkValueExists(rows, "snis", sni); res {
+func inArray(key string, array []string) bool {
+	for _, item := range array {
+		if key == item {
 			return true
 		}
 	}
@@ -490,8 +488,8 @@ func (h *Handler) Exist(c droplet.Context) (interface{}, error) {
 	}
 
 	for _, host := range input.Hosts {
-		res := checkSniExists(toRows(ret), host)
-		if !res {
+		exist := checkSniExists(ret.Rows, host)
+		if !exist {
 			return &data.SpecCodeResponse{StatusCode: http.StatusNotFound},
 				consts.InvalidParam("SSL cert not exists for sni：" + host)
 		}

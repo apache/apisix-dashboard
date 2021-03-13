@@ -14,23 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package plugin_config
+package plugin
 
 import (
 	"testing"
-	"time"
 
 	"github.com/onsi/ginkgo"
-
-	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-func TestPluginConfig(t *testing.T) {
-	ginkgo.RunSpecs(t, "plugin config suite")
+func TestPlugin(t *testing.T) {
+	ginkgo.RunSpecs(t, "plugin suite")
 }
-
-var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("plugin_configs")
-	base.CleanResource("routes")
-	time.Sleep(base.SleepTime)
-})
