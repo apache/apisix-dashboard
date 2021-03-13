@@ -14,13 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { history, useIntl } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, notification, Popconfirm, Space } from 'antd';
+import querystring from 'query-string'
 
 import { RawDataEditor } from '@/components/RawDataEditor';
 import { fetchList, remove } from './service';
@@ -30,6 +31,17 @@ const Page: React.FC = () => {
   const { formatMessage } = useIntl();
   const [rawDataEditorVisible, setRawDataEditorVisible] = useState(false);
   const [rawData, setRawData] = useState({});
+  const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
+
+  const savePageList = (page: number, pageSize?: number) => {
+    history.replace(`/service/list?page=${page}&pageSize=${pageSize}`);
+  };
+
+  useEffect(() => {
+    const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
+    setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
+    fetchList({ current: Number(page), pageSize: Number(pageSize) });
+  }, [location.search]);
 
   const columns: ProColumns<ServiceModule.ResponseBody>[] = [
     {
@@ -98,6 +110,11 @@ const Page: React.FC = () => {
         rowKey="id"
         columns={columns}
         request={fetchList}
+        pagination={{
+          onChange: (page, pageSize?) => savePageList(page, pageSize),
+          pageSize: paginationConfig.pageSize,
+          current: paginationConfig.current,
+        }}
         search={{
           searchText: formatMessage({ id: 'component.global.search' }),
           resetText: formatMessage({ id: 'component.global.reset' }),
