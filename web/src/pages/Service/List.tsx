@@ -41,7 +41,7 @@ const Page: React.FC = () => {
     const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
     setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
     fetchList({ current: Number(page), pageSize: Number(pageSize) });
-  }, [location.search]);
+  }, [window.location.search]);
 
   const columns: ProColumns<ServiceModule.ResponseBody>[] = [
     {
