@@ -180,7 +180,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
           <Radio value={URIRewriteType.KEEP}>
             {formatMessage({ id: 'page.route.radio.staySame' })}
           </Radio>
-          <Radio value={URIRewriteType.STATIC}>
+          <Radio data-cy='uri-static' value={URIRewriteType.STATIC}>
             {formatMessage({ id: 'page.route.radio.static' })}
           </Radio>
           <Radio value={URIRewriteType.REGEXP}>
@@ -204,10 +204,10 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
         <Radio.Group
           disabled={disabled}
         >
-          <Radio value={HostRewriteType.KEEP}>
+          <Radio data-cy='host-keep' value={HostRewriteType.KEEP}>
             {formatMessage({ id: 'page.route.radio.staySame' })}
           </Radio>
-          <Radio value={HostRewriteType.REWRITE}>
+          <Radio data-cy='host-static' value={HostRewriteType.REWRITE}>
             {formatMessage({ id: 'page.route.radio.static' })}
           </Radio>
         </Radio.Group>
@@ -277,7 +277,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
               </Form.Item>
             ))}
             <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-              <Button type="dashed" disabled={disabled} onClick={() => add()} icon={<PlusOutlined />}>
+              <Button data-cy='create-new-rewrite-header' type="dashed" disabled={disabled} onClick={() => add()} icon={<PlusOutlined />}>
                 {formatMessage({ id: 'component.global.create' })}
               </Button>
             </Form.Item>
