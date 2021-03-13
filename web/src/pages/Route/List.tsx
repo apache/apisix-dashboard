@@ -30,9 +30,11 @@ import {
   Upload,
   Modal,
   Divider,
+  Dropdown,
+  Menu,
 } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined } from '@ant-design/icons';
+import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined, DownOutlined  } from '@ant-design/icons';
 import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
 import moment from 'moment';
@@ -361,23 +363,6 @@ const Page: React.FC = () => {
                 {formatMessage({ id: 'page.route.publish' })}
               </Button>
             ) : null}
-            {record.status ? (
-              <Popconfirm
-                title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
-                onConfirm={() => {
-                  handlePublishOffline(record.id, RouteStatus.Offline);
-                }}
-                okButtonProps={{
-                  danger: true,
-                }}
-                okText={formatMessage({ id: 'component.global.confirm' })}
-                cancelText={formatMessage({ id: 'component.global.cancel' })}
-              >
-                <Button type="primary" danger disabled={Boolean(!record.status)}>
-                  {formatMessage({ id: 'page.route.offline' })}
-                </Button>
-              </Popconfirm>
-            ) : null}
             <Button type="primary" onClick={() => history.push(`/routes/${record.id}/edit`)}>
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
@@ -387,27 +372,56 @@ const Page: React.FC = () => {
             }}>
               {formatMessage({ id: 'component.global.view' })}
             </Button>
-            <Popconfirm
-              title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
-              onConfirm={() => {
-                remove(record.id!).then(() => {
-                  handleTableActionSuccessResponse(
-                    `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                      id: 'menu.routes',
-                    })} ${formatMessage({ id: 'component.status.success' })}`,
-                  );
-                });
-              }}
-              okButtonProps={{
-                danger: true,
-              }}
-              okText={formatMessage({ id: 'component.global.confirm' })}
-              cancelText={formatMessage({ id: 'component.global.cancel' })}
-            >
-              <Button type="primary" danger>
-                {formatMessage({ id: 'component.global.delete' })}
-              </Button>
-            </Popconfirm>
+            <Dropdown overlay={
+              <Menu>
+                {record.status ? (
+                  <Menu.Item>
+                    <Popconfirm
+                      title={formatMessage({ id: 'page.route.popconfirm.title.offline' })}
+                      onConfirm={() => {
+                        handlePublishOffline(record.id, RouteStatus.Offline);
+                      }}
+                      okButtonProps={{
+                        danger: true,
+                      }}
+                      okText={formatMessage({ id: 'component.global.confirm' })}
+                      cancelText={formatMessage({ id: 'component.global.cancel' })}
+                    >
+                      <Button type="primary" danger disabled={Boolean(!record.status)}>
+                        {formatMessage({ id: 'page.route.offline' })}
+                      </Button>
+                    </Popconfirm>
+                  </Menu.Item>
+                ) : null}
+                <Menu.Item>
+                  <Popconfirm
+                  title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
+                  onConfirm={() => {
+                    remove(record.id!).then(() => {
+                      handleTableActionSuccessResponse(
+                        `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                          id: 'menu.routes',
+                        })} ${formatMessage({ id: 'component.status.success' })}`,
+                      );
+                    });
+                  }}
+                  okButtonProps={{
+                    danger: true,
+                  }}
+                  okText={formatMessage({ id: 'component.global.confirm' })}
+                  cancelText={formatMessage({ id: 'component.global.cancel' })}
+                  >
+                    <Button type="primary" danger>
+                      {formatMessage({ id: 'component.global.delete' })}
+                    </Button>
+                  </Popconfirm>
+                </Menu.Item>
+            </Menu>
+            }>
+              <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+              {formatMessage({ id: 'component.global.manage' })} <DownOutlined />
+              </a>
+            </Dropdown>
           </Space>
         </>
       ),
