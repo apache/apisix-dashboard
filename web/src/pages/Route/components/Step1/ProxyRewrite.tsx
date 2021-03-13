@@ -226,7 +226,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
           
         }]}
       >
-        {(fields, { add, remove }, { errors }) => (
+        {(fields, { add, remove }) => (
           <>
             {fields.map((field, index) => (
               <Form.Item

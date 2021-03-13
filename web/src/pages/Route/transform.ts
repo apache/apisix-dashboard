@@ -23,6 +23,90 @@ import {
   HostRewriteType
 } from '@/pages/Route/constants';
 
+const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): RouteModule.ProxyRewrite => {
+  let omitFieldsList: string[] = ['kvHeaders'];
+  let headers: Record<string, string> = {};
+
+  if (data.scheme !== 'http' && data.scheme !== 'https') {
+    omitFieldsList = [
+      ...omitFieldsList,
+      'scheme',
+    ]
+  }
+
+  (data.kvHeaders || []).forEach((kvHeader) => {
+    if (kvHeader.key) {
+      // support value to be an empty string, which means remove a header
+      headers = {
+        ...headers,
+        [kvHeader.key]: kvHeader.value || '',
+      };
+    }
+  });
+
+  if(!isEmpty(headers)) {
+    return omit({
+      ...data,
+      headers,
+    }, omitFieldsList);
+  }
+
+  return omit(data, omitFieldsList);
+}
+
+const transformProxyRewrite2Formdata = (pluginsData: any) => {
+  const proxyRewriteData: RouteModule.ProxyRewrite= {
+    scheme: ShcemeRewrite.KEEP
+  };
+  let uriRewriteType = URIRewriteType.KEEP;
+  let hostRewriteType = HostRewriteType.KEEP;
+
+  if (pluginsData) {
+    if (pluginsData.uri && pluginsData.regex_uri) {
+      uriRewriteType = URIRewriteType.REGEXP
+    }
+
+    if (pluginsData.uri && !pluginsData.regex_uri) {
+      uriRewriteType = URIRewriteType.STATIC
+    }
+
+    if (pluginsData.host) {
+      hostRewriteType = HostRewriteType.REWRITE
+    }
+
+    Object.keys(pluginsData).forEach( key => {
+      switch (key) {
+        case 'scheme':
+          proxyRewriteData[key] = pluginsData[key] === ShcemeRewrite.HTTP || pluginsData[key] === ShcemeRewrite.HTTPS ? pluginsData[key] : ShcemeRewrite.KEEP;
+          break;
+        case 'uri':
+        case 'regex_uri':
+        case 'host':
+          proxyRewriteData[key] = pluginsData[key];
+          break;
+        case 'headers':
+          Object.keys(pluginsData[key]).forEach((headerKey) => {
+            proxyRewriteData.kvHeaders = [
+              ...(proxyRewriteData.kvHeaders || []),
+              {
+                key: headerKey,
+                value: pluginsData[key][headerKey]
+              }
+            ]
+          })
+          break;
+        default: break;
+      }
+    })
+  }
+
+  return {
+    proxyRewriteData,
+    uriRewriteType,
+    hostRewriteType,
+  }
+}
+
 // Transform Route data then sent to API
 export const transformStepData = ({
   form1Data,
@@ -33,8 +117,7 @@ export const transformStepData = ({
   const { custom_normal_labels, custom_version_label, service_id = ''} = form1Data;
 
   let redirect: RouteModule.Redirect = {};
-  let proxyRewriteFormData: RouteModule.ProxyRewrite = form1Data.proxyRewrite;
-  let proxyRewritePlugin: any = {};
+  const proxyRewriteFormData: RouteModule.ProxyRewrite = form1Data.proxyRewrite;
   const proxyRewriteConfig = transformProxyRewrite2Plugin(proxyRewriteFormData);
 
   const step3DataCloned = cloneDeep(step3Data);
@@ -233,12 +316,11 @@ export const transformRouteData = (data: RouteModule.Body) => {
 
   const proxyRewrite = data.plugins ? data.plugins['proxy-rewrite'] : {};
   const { proxyRewriteData, uriRewriteType, hostRewriteType } = transformProxyRewrite2Formdata(proxyRewrite);
-  form1Data['proxyRewrite'] = proxyRewriteData;
-  form1Data['URIRewriteType'] = uriRewriteType;
-  form1Data['hostRewriteType'] = hostRewriteType;
+  form1Data.proxyRewrite = proxyRewriteData;
+  form1Data.URIRewriteType = uriRewriteType;
+  form1Data.hostRewriteType = hostRewriteType;
 
 
-  /* const proxyRewritePlugin = data.plugins?['proxy-rewrite'] || {} */
   const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);
 
   if (upstream && Object.keys(upstream).length) {
@@ -283,87 +365,3 @@ export const transformLabelList = (data: ResponseLabelList) => {
   });
   return transformData;
 };
-
-const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): RouteModule.ProxyRewrite => {
-  let omitFieldsList:string[] = ['kvHeaders'];
-  let headers: Record<string, string> = {};
-
-  if (data.scheme !== 'http' && data.scheme !== 'https') {
-    omitFieldsList = [
-      ...omitFieldsList,
-      'scheme',
-    ]
-  }
-
-  (data.kvHeaders || []).forEach((kvHeader) => {
-    if (kvHeader.key) {
-      // support value to be an empty string, which means remove a header
-      headers = {
-        ...headers,
-        [kvHeader.key]: kvHeader.value || '',
-      };
-    }
-  });
-
-  if(!isEmpty(headers)) {
-    return omit({
-      ...data,
-      headers,
-    }, omitFieldsList);
-  }
-
-  return omit(data, omitFieldsList);
-}
-
-const transformProxyRewrite2Formdata = (pluginsData: any) => {
-  let proxyRewriteData = {
-    scheme: ShcemeRewrite.KEEP
-  };
-  let uriRewriteType = URIRewriteType.KEEP;
-  let hostRewriteType = HostRewriteType.KEEP;
-
-  if (pluginsData) {
-    if (pluginsData.uri && pluginsData.regex_uri) {
-      uriRewriteType = URIRewriteType.REGEXP
-    }
-
-    if (pluginsData.uri && !pluginsData.regex_uri) {
-      uriRewriteType = URIRewriteType.STATIC
-    }
-
-    if (pluginsData.host) {
-      hostRewriteType = HostRewriteType.REWRITE
-    }
-
-    Object.keys(pluginsData).forEach( key => {
-      switch (key) {
-        case 'scheme':
-          proxyRewriteData[key] = pluginsData[key] === ShcemeRewrite.HTTP || pluginsData[key] === ShcemeRewrite.HTTPS ? pluginsData[key] : ShcemeRewrite.KEEP;
-          break;
-        case 'uri':
-        case 'regex_uri':
-        case 'host':
-          proxyRewriteData[key] = pluginsData[key];
-          break;
-        case 'headers':
-          Object.keys(pluginsData[key]).forEach((headerKey) => {
-            proxyRewriteData['kvHeaders'] = [
-              ...(proxyRewriteData['kvHeaders'] || []),
-              {
-                key: headerKey,
-                value: pluginsData[key][headerKey]
-              }
-            ]
-          })
-          break;
-        default: break;
-      }
-    })
-  }
-
-  return {
-    proxyRewriteData,
-    uriRewriteType,
-    hostRewriteType,
-  }
-}

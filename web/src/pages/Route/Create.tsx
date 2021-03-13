@@ -42,13 +42,6 @@ type Props = {
 
 const Page: React.FC<Props> = (props) => {
   const { formatMessage } = useIntl();
-  enum CurrentCreateStep {
-    Step1 = 1,
-    Step2,
-    Step3,
-    Step4,
-    Step5,
-  }
 
   const STEP_HEADER_2 = [
     formatMessage({ id: 'page.route.steps.stepTitle.defineApiRequest' }),
