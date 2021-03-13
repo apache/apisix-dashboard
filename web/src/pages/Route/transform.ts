@@ -214,9 +214,9 @@ export const transformStepData = ({
   }
 
   if (Object.keys(redirect).length) {
-    data.plugins = { 
+    data.plugins = {
       ...data.plugins,
-      redirect 
+      redirect,
     };
   }
 

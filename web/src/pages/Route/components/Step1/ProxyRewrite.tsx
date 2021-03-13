@@ -220,11 +220,9 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
         }
       </Form.Item>
 
-      <Form.List 
+      <Form.List
         name={['proxyRewrite', 'kvHeaders']}
-        initialValue={[{
-          
-        }]}
+        initialValue={[{}]}
       >
         {(fields, { add, remove }) => (
           <>

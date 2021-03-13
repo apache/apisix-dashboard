@@ -145,7 +145,7 @@ declare namespace RouteModule {
     regex_uri?: string[];
     host?: string;
     kvHeaders?: Kvobject[];
-    headers?: Record<string,string>; 
+    headers?: Record<string,string>;
   }
 
   type AdvancedMatchingRules = {
