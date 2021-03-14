@@ -56,7 +56,6 @@ context('create route with proxy-rewrite plugin', () => {
 
     // show create page
     cy.contains(componentLocaleUS['component.global.create']).click();
-    
     cy.get(this.domSelector.name).type(this.data.routeName);
 
     // show requestOverride PanelSection
@@ -65,7 +64,6 @@ context('create route with proxy-rewrite plugin', () => {
     cy.get(domSelector.staticUri).click();
     cy.contains(routeLocaleUS['page.route.form.itemLabel.newPath']).should('be.visible');
     cy.get(domSelector.newUri).should('be.visible').type(data.rewriteUri);
-    
     // should show regexp and template after uriRewriteType regexp clicked
     cy.contains(routeLocaleUS['page.route.radio.regx']).click();
     cy.contains(routeLocaleUS['page.route.form.itemLabel.regx']).should('be.visible');
@@ -107,10 +105,8 @@ context('create route with proxy-rewrite plugin', () => {
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
     cy.contains(this.data.routeName).siblings().contains('Edit').click();
-    
     cy.get(this.domSelector.name).type(this.data.routeName);
 
-    
     cy.contains(routeLocaleUS['page.route.form.itemLabel.newPath']).should('be.visible');
     cy.get(domSelector.newUri).should('have.value',data.rewriteUri);
 
