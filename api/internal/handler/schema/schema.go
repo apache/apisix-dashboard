@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package plugin
+package schema
 
 import (
 	"reflect"
@@ -28,27 +28,40 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 )
 
-type Handler struct {
+type SchemaHandler struct {
 }
 
-func NewHandler() (handler.RouteRegister, error) {
-	return &Handler{}, nil
+func NewSchemaHandler() (handler.RouteRegister, error) {
+	return &SchemaHandler{}, nil
 }
 
-func (h *Handler) ApplyRoute(r *gin.Engine) {
-	r.GET("/apisix/admin/plugins", wgin.Wraps(h.Plugins,
-		wrapper.InputType(reflect.TypeOf(ListInput{}))))
-	r.GET("/apisix/admin/schema/plugins/:name", wgin.Wraps(h.Schema,
-		wrapper.InputType(reflect.TypeOf(GetInput{}))))
+func (h *SchemaHandler) ApplyRoute(r *gin.Engine) {
+	r.GET("/apisix/admin/schema/plugins/:name", wgin.Wraps(h.PluginSchema,
+		wrapper.InputType(reflect.TypeOf(PluginSchemaInput{}))))
+
+	r.GET("/apisix/admin/schemas/:resource", wgin.Wraps(h.Schema,
+		wrapper.InputType(reflect.TypeOf(SchemaInput{}))))
 }
 
-type GetInput struct {
+type SchemaInput struct {
+	Resource string `auto_read:"resource,path" validate:"required"`
+}
+
+func (h *SchemaHandler) Schema(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*SchemaInput)
+
+	ret := conf.Schema.Get("main." + input.Resource).Value()
+
+	return ret, nil
+}
+
+type PluginSchemaInput struct {
 	Name       string `auto_read:"name,path" validate:"required"`
 	SchemaType string `auto_read:"schema_type,query"`
 }
 
-func (h *Handler) Schema(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*GetInput)
+func (h *SchemaHandler) PluginSchema(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*PluginSchemaInput)
 
 	var ret interface{}
 	if input.SchemaType == "consumer" {
@@ -59,43 +72,5 @@ func (h *Handler) Schema(c droplet.Context) (interface{}, error) {
 	} else {
 		ret = conf.Schema.Get("plugins." + input.Name + ".schema").Value()
 	}
-	return ret, nil
-}
-
-type ListInput struct {
-	All bool `auto_read:"all,query"`
-}
-
-func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*ListInput)
-
-	plugins := conf.Schema.Get("plugins")
-	if input.All {
-		var res []map[string]interface{}
-		list := plugins.Value().(map[string]interface{})
-		for name, config := range list {
-			if res, ok := conf.Plugins[name]; !ok || !res {
-				continue
-			}
-			plugin := config.(map[string]interface{})
-			plugin["name"] = name
-			if _, ok := plugin["type"]; !ok {
-				plugin["type"] = "other"
-			}
-			res = append(res, plugin)
-		}
-		return res, nil
-	}
-
-	var ret []string
-	list := plugins.Map()
-	for pluginName := range list {
-		if res, ok := conf.Plugins[pluginName]; !ok || !res {
-			continue
-		}
-
-		ret = append(ret, pluginName)
-	}
-
 	return ret, nil
 }

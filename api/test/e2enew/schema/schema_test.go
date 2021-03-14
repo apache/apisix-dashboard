@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package plugin
+package schema
 
 import (
 	"net/http"
@@ -22,39 +22,14 @@ import (
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
 
-	"github.com/apisix/manager-api/test/e2enew/base"
+	"e2enew/base"
 )
 
-var _ = ginkgo.Describe("Plugin Basic", func() {
-	table.DescribeTable("test plugin basic", func(testCase base.HttpTestCase) {
-		base.RunTestCase(testCase)
-	},
-		table.Entry("get all plugins", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/plugins",
-			Query:        "all=true",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   []string{"request-id", "syslog", "echo", "proxy-mirror"},
-			Sleep:        base.SleepTime,
-		}),
-		table.Entry("get all plugins", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/plugins",
-			Query:        "all=false",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   []string{"request-id", "syslog", "echo", "proxy-mirror"},
-			Sleep:        base.SleepTime,
-		}),
-	)
-
+var _ = ginkgo.Describe("Schema Test", func() {
 	table.DescribeTable("test schema basic", func(testCase base.HttpTestCase) {
 		base.RunTestCase(testCase)
 	},
-		table.Entry("get consumer schema", base.HttpTestCase{
+		table.Entry("get consumer schema of plugin", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/schema/plugins/jwt-auth",
@@ -71,13 +46,23 @@ var _ = ginkgo.Describe("Plugin Basic", func() {
 				"\"required\":[\"key\"],\"type\":\"object\"}",
 			Sleep: base.SleepTime,
 		}),
-		table.Entry("get require-id plugin", base.HttpTestCase{
+		table.Entry("get schema of plugin `require-id`", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/admin/schema/plugins/jwt-auth",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "{\"$comment\":\"this is a mark for our injected plugin schema\",\"additionalProperties\":false,\"properties\":{\"disable\":{\"type\":\"boolean\"}},\"type\":\"object\"}",
+			Sleep:        base.SleepTime,
+		}),
+
+		table.Entry("get schema of consumer", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/schemas/consumer",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"properties":{"create_time":{"type":"integer"},"desc":{"maxLength":256,"type":"string"},"id":{"anyOf":[{"maxLength":64,"minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$","type":"string"},{"minimum":1,"type":"integer"}]},"labels":{"description":"key/value pairs to specify attributes","maxProperties":16,"patternProperties":{".*":{"description":"value of label","maxLength":64,"minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$","type":"string"}},"type":"object"},"plugins":{"type":"object"},"update_time":{"type":"integer"},"username":{"maxLength":32,"minLength":1,"pattern":"^[a-zA-Z0-9_]+$","type":"string"}}`,
 			Sleep:        base.SleepTime,
 		}),
 	)

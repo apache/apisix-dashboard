@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package plugin
+package schema
 
 import (
 	"encoding/json"
@@ -23,8 +23,6 @@ import (
 
 	"github.com/shiningrush/droplet"
 	"github.com/stretchr/testify/assert"
-
-	"github.com/apisix/manager-api/internal/conf"
 )
 
 func TestPlugin(t *testing.T) {
@@ -60,84 +58,9 @@ func TestPlugin(t *testing.T) {
 			basicAuthConsumerSchema = string(consumerSchemaByte)
 			assert.Nil(t, err)
 		}
-
-		assert.Contains(t, conf.Plugins, plugin["name"])
 	}
-
-	assert.Contains(t, conf.Plugins, "server-info")
-	assert.Contains(t, conf.Plugins, "traffic-split")
-	assert.NotContains(t, conf.Plugins, "dubbo-proxy")
-
 	// plugin type
 	assert.ElementsMatch(t, []string{"basic-auth", "jwt-auth", "hmac-auth", "key-auth", "wolf-rbac"}, authPlugins)
 	// consumer schema
 	assert.Equal(t, `{"additionalProperties":false,"properties":{"password":{"type":"string"},"username":{"type":"string"}},"required":["password","username"],"title":"work with consumer object","type":"object"}`, basicAuthConsumerSchema)
-
-	// schema
-	input := &GetInput{
-		Name: "limit-count",
-	}
-	ctx.SetInput(input)
-	val, _ := handler.Schema(ctx)
-	assert.NotNil(t, val)
-
-	// not exists
-	reqBody := `{
-	  "name": "not-exists"
-	}`
-	err = json.Unmarshal([]byte(reqBody), input)
-	assert.Nil(t, err)
-	ctx.SetInput(input)
-	val, _ = handler.Schema(ctx)
-	assert.Nil(t, val)
-
-	/*
-	 get plugin schema with schema_type: consumer
-	 plugin has consumer_schema
-	 return plugin`s consumer_schema
-	*/
-	reqBody = `{
-	 	"name": "jwt-auth",
-		"schema_type": "consumer"
-  	}`
-	json.Unmarshal([]byte(reqBody), input)
-	ctx.SetInput(input)
-	val, _ = handler.Schema(ctx)
-	assert.NotNil(t, val)
-
-	/*
-	 get plugin schema with schema_type: consumer
-	 plugin does not have consumer_schema
-	 return plugin`s schema
-	*/
-	reqBody = `{
-		"name": "limit-count",
-		"schema_type": "consumer"
-	}`
-	json.Unmarshal([]byte(reqBody), input)
-	ctx.SetInput(input)
-	val, _ = handler.Schema(ctx)
-	assert.NotNil(t, val)
-
-	/*
-	 get plugin schema with wrong schema_type: type,
-	 return plugin`s schema
-	*/
-	reqBody = `{
-		"name": "jwt-auth",
-		"schema_type": "type"
-  	}`
-	json.Unmarshal([]byte(reqBody), input)
-	ctx.SetInput(input)
-	val, _ = handler.Schema(ctx)
-	assert.NotNil(t, val)
-
-	// schema of dubbo-proxy
-	input = &GetInput{
-		Name: "dubbo-proxy",
-	}
-	ctx.SetInput(input)
-	val, err = handler.Schema(ctx)
-	assert.NotNil(t, val)
-	assert.Nil(t, err)
 }

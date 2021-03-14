@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package plugin
+package schema
 
 import (
 	"testing"
@@ -23,5 +23,5 @@ import (
 )
 
 func TestPlugin(t *testing.T) {
-	ginkgo.RunSpecs(t, "plugin suite")
+	ginkgo.RunSpecs(t, "schema suite")
 }
