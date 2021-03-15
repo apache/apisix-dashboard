@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect } from 'react';
+import React from 'react';
 import Form from 'antd/es/form';
 import { Button, Input, Radio, Row, Col } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
@@ -68,7 +68,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
                   case 0:
                     return (
                       <Form.Item
-                        label={formatMessage({ id: 'page.route.form.itemLabel.regx' })}
+                        label={formatMessage({ id: 'page.route.form.itemLabel.regex' })}
                         name={field.name}
                         key={field.name}
                         rules={[
@@ -76,14 +76,14 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
                             required: true,
                             message: `${formatMessage({
                               id: 'component.global.pleaseEnter',
-                            })} ${formatMessage({ id: 'page.route.form.itemLabel.regx' })}`,
+                            })} ${formatMessage({ id: 'page.route.form.itemLabel.regex' })}`,
                           },
                         ]}
                       >
                         <Input
                           placeholder={`${formatMessage({
                             id: 'component.global.pleaseEnter',
-                          })} ${formatMessage({ id: 'page.route.form.itemLabel.regx' })}`}
+                          })} ${formatMessage({ id: 'page.route.form.itemLabel.regex' })}`}
                           disabled={disabled}
                         />
                       </Form.Item>
@@ -153,8 +153,6 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
         return null;
     }
   };
-
-  useEffect(() => {}, []);
 
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.requestOverride' })}>

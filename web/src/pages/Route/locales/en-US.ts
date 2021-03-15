@@ -105,7 +105,7 @@ export default {
   'page.route.radio.staySame': 'Stay The Same',
   'page.route.form.itemLabel.newPath': 'New Path',
   'page.route.form.itemLabel.newHost': 'New Host',
-  'page.route.form.itemLabel.regx': 'Regexp',
+  'page.route.form.itemLabel.regex': 'Regexp',
   'page.route.form.itemLabel.template': 'Template',
   'page.route.form.itemLabel.uriRewriteType': 'URI Override',
   'page.route.form.itemLabel.hostRewriteType': 'Host Override',

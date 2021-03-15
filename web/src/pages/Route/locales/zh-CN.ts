@@ -120,7 +120,7 @@ export default {
   'page.route.radio.static': '静态改写',
   'page.route.radio.regx': '正则改写',
   // Need a better translation
-  'page.route.form.itemLabel.regx': '匹配正则表达式',
+  'page.route.form.itemLabel.regex': '匹配正则表达式',
   'page.route.form.itemLabel.template': '转发路径模版',
   'page.route.form.itemHelp.status': '路由创建后是否可以使用， 默认值为 false',
   'page.route.radio.staySame': '保持原样',

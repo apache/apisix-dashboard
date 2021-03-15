@@ -66,7 +66,7 @@ context('create route with proxy-rewrite plugin', () => {
     cy.get(domSelector.newUri).should('be.visible').type(data.rewriteUri);
     // should show regexp and template after uriRewriteType regexp clicked
     cy.contains(routeLocaleUS['page.route.radio.regx']).click();
-    cy.contains(routeLocaleUS['page.route.form.itemLabel.regx']).should('be.visible');
+    cy.contains(routeLocaleUS['page.route.form.itemLabel.regex']).should('be.visible');
     cy.get(domSelector.uriRewriteReg).should('be.visible');
     cy.contains(routeLocaleUS['page.route.form.itemLabel.template']).should('be.visible');
     cy.get(domSelector.uriRewriteTemp).should('be.visible');
