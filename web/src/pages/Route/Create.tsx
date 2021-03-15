@@ -18,12 +18,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, Steps, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
+import { isEmpty } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
 import { DEFAULT_UPSTREAM } from '@/components/Upstream';
 
 import { transformer as chartTransformer } from '@/components/PluginOrchestration';
 import { create, fetchItem, update, checkUniqueName, checkHostWithSSL } from './service';
+import { transformProxyRewrite2Plugin } from './transform';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
@@ -149,6 +151,7 @@ const Page: React.FC<Props> = (props) => {
         <Step3
           data={step3Data}
           isForceHttps={form1.getFieldValue('redirectOption') === 'forceHttps'}
+          isProxyEnable={getProxyrewriteEnable()}
           onChange={({ plugins, script = INIT_CHART, plugin_config_id }) => {
             setStep3Data({ plugins, script, plugin_config_id });
             setChart(script);
@@ -184,6 +187,10 @@ const Page: React.FC<Props> = (props) => {
     }
     return null;
   };
+
+  const getProxyrewriteEnable =() => {
+    return !isEmpty(transformProxyRewrite2Plugin(form1.getFieldValue('proxyRewrite')));
+  }
 
   const onStepChange = (nextStep: number) => {
     const onUpdateOrCreate = () => {

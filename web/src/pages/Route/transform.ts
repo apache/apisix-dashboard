@@ -23,7 +23,7 @@ import {
   HostRewriteType
 } from '@/pages/Route/constants';
 
-const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): RouteModule.ProxyRewrite => {
+export const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): RouteModule.ProxyRewrite => {
   let omitFieldsList: string[] = ['kvHeaders'];
   let headers: Record<string, string> = {};
 

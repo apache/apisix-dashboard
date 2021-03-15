@@ -141,4 +141,7 @@ export default {
   'page.route.list': 'Route List',
   'page.route.panelSection.title.requestOverride': 'Request Override',
   'page.route.form.itemLabel.headerRewrite': 'Header Override',
+  'page.route.tooltip.pluginOrchOnlySuportChrome': 'Plugin orchestration only supports Chrome.',
+  'page.route.tooltip.pluginOrchWithoutProxyRewrite': 'Plugin orchestration mode cannot be used when request override is configured in Step 1.',
+  'page.route.tooltip.pluginOrchWithoutRedirect': 'Plugin orchestration mode cannot be used when Redirect in Step 1 is selected to enable HTTPS.',
 };

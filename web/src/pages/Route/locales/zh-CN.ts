@@ -139,5 +139,8 @@ export default {
   'page.route.exportRoutesTips': '请选择导出文件的类型',
   'page.route.button.importOpenApi': '导入 OpenAPI',
   'page.route.button.selectFile': '请选择上传文件',
-  'page.route.list': '路由列表'
+  'page.route.list': '路由列表',
+  'page.route.tooltip.pluginOrchOnlySuportChrome': '插件编排仅支持 Chrome 浏览器。',
+  'page.route.tooltip.pluginOrchWithoutProxyRewrite': '当步骤一中 配置了 请求改写时，不可使用插件编排模式。',
+  'page.route.tooltip.pluginOrchWithoutRedirect': '当步骤一中 重定向 选择为 启用 HTTPS 时，不可使用插件编排模式。',
 };
