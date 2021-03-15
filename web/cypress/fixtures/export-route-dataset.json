@@ -46,8 +46,7 @@
             },
             "type": "roundrobin",
             "pass_host": "pass"
-          },
-          "x-apisix-vars": []
+          }
         }
       }
     }
@@ -99,8 +98,7 @@
             },
             "type": "roundrobin",
             "pass_host": "pass"
-          },
-          "x-apisix-vars": []
+          }
         }
       },
       "/{params}-APISIX-REPEAT-URI-2": {
@@ -151,8 +149,7 @@
             },
             "type": "roundrobin",
             "pass_host": "pass"
-          },
-          "x-apisix-vars": []
+          }
         }
       }
     }

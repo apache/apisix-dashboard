@@ -44,7 +44,6 @@ context('Online debug', () => {
     postUrl: `${defaultSettings.serveUrlMap[SERVE_ENV].split('//')[1]}/apisix/admin/import/routes`,
     uploadFile: '../../../api/test/testdata/import/default.json',
     headerAuthorizationKey: 'Authorization',
-    token: localStorage.getItem('token'),
     routeName: 'hello',
   };
 
@@ -112,6 +111,7 @@ context('Online debug', () => {
   it('should debug POST request with file successfully', function() {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
+    const currentToken = localStorage.getItem('token');
 
     // show online debug draw
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
@@ -146,8 +146,8 @@ context('Online debug', () => {
 
     // set header Authorization
     cy.contains('Header Params').should('be.visible').click();
-    cy.get(domSelector.headerDataKey0).type(data.headerAuthorizationKey),
-    cy.get(domSelector.headerDataValue0).type(data.token);
+    cy.get(domSelector.headerDataKey0).type(data.headerAuthorizationKey);
+    cy.get(domSelector.headerDataValue0).type(currentToken);
 
     cy.contains(routeLocaleUS['page.route.button.send']).click();
     // assert: send request return
