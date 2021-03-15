@@ -81,7 +81,7 @@ type Route struct {
 	Hosts           []string               `json:"hosts,omitempty"`
 	RemoteAddr      string                 `json:"remote_addr,omitempty"`
 	RemoteAddrs     []string               `json:"remote_addrs,omitempty"`
-	Vars            interface{}            `json:"vars,omitempty"`
+	Vars            []interface{}          `json:"vars,omitempty"`
 	FilterFunc      string                 `json:"filter_func,omitempty"`
 	Script          interface{}            `json:"script,omitempty"`
 	ScriptID        interface{}            `json:"script_id,omitempty"` // For debug and optimization(cache), currently same as Route's ID
