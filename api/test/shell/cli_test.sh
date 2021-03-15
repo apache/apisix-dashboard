@@ -269,6 +269,7 @@ if [ ! $code -eq 403 ]; then
 fi
 
 ./manager-api stop
+sleep 6
 clean_up
 
 
@@ -411,6 +412,7 @@ if [ ! $count ] || [ $count -ne 1 ]; then
 fi
 
 ./manager-api stop
+sleep 6
 clean_up
 
 # mtls test
