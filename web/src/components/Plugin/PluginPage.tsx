@@ -223,7 +223,7 @@ const PluginPage: React.FC<Props> = ({
         <br />
         {formatMessage({ id: 'component.plugin.tip1' })}
         <a
-          href="https://github.com/apache/apisix-dashboard/blob/master/docs/en/latest/FAQ.md#4-after-modifying-the-plugin-schema-or-creating-a-custom-plugin-in-apache-apisix-why-cant-i-find-it-on-the-dashboard"
+          href="https://apisix.apache.org/docs/dashboard/FAQ#4-after-modifying-the-plugin-schema-or-creating-a-custom-plugin-in-apache-apisix-why-cant-i-find-it-on-the-dashboard"
           target="_blank"
           rel="noreferrer"
         >

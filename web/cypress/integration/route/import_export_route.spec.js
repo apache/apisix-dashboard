@@ -159,7 +159,6 @@ context('import and export routes', () => {
         cy.get(this.domSelector.notification).should(
           'contain', 'Success'
         );
-        cy.get(this.domSelector.fileSelectorClose).click();
         cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
         // delete route just imported
         cy.reload();

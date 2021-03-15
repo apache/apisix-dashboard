@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Button,
   notification,
@@ -37,6 +37,7 @@ import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
 
 import { fetchSchema } from './service';
+import { json2yaml, yaml2json } from '../../helpers';
 
 type Props = {
   name: string;
@@ -90,10 +91,21 @@ const PluginDetail: React.FC<Props> = ({
   onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
+  enum codeMirrorModeList {
+    Json = 'Json',
+    Yaml = 'Yaml',
+  }
   const [form] = Form.useForm();
   const ref = useRef<any>(null);
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.type;
+  const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
+    codeMirrorModeList.Json,
+  );
+  const modeOptions = [
+    { label: codeMirrorModeList.Json, value: codeMirrorModeList.Json },
+    { label: codeMirrorModeList.Yaml, value: codeMirrorModeList.Yaml },
+  ];
 
   useEffect(() => {
     form.setFieldsValue({
@@ -146,7 +158,41 @@ const PluginDetail: React.FC<Props> = ({
       });
     });
   };
+  const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
+    switch (value) {
+      case codeMirrorModeList.Json: {
+        const { data: yamlData , error } = yaml2json(ref.current.editor.getValue(), true);
 
+        if (error) {
+          notification.error({
+            message: 'Invalid Yaml data',
+          });
+          return;
+        }
+        ref.current.editor.setValue(
+          js_beautify(yamlData, {
+            indent_size: 2,
+          }),
+        );
+        break;
+      }
+      case codeMirrorModeList.Yaml: {
+        const { data: jsonData, error } = json2yaml(ref.current.editor.getValue());
+
+        if (error) {
+          notification.error({
+            message: 'Invalid Json data',
+          });
+          return;
+        }
+        ref.current.editor.setValue(jsonData);
+        break;
+      }
+      default:
+        break;
+    }
+    setCodeMirrorMode(value);
+  };
   const formatCodes = () => {
     try {
       if (ref.current) {
@@ -203,7 +249,10 @@ const PluginDetail: React.FC<Props> = ({
                 type="primary"
                 onClick={() => {
                   try {
-                    const editorData = JSON.parse(ref.current?.editor.getValue());
+                    const editorData =
+                      codeMirrorMode === codeMirrorModeList.Json
+                        ? JSON.parse(ref.current?.editor.getValue())
+                        : yaml2json(ref.current?.editor.getValue(), false).data;
                     validateData(name, editorData).then((value) => {
                       onChange({ formData: form.getFieldsValue(), codemirrorData: value });
                     });
@@ -261,20 +310,25 @@ const PluginDetail: React.FC<Props> = ({
               icon={<LinkOutlined />}
               onClick={() => {
                 if (name.startsWith('serverless')) {
-                  window.open(
-                    'https://apisix.apache.org/docs/apisix/plugins/serverless',
-                  );
+                  window.open('https://apisix.apache.org/docs/apisix/plugins/serverless');
                 } else {
-                  window.open(
-                    `https://apisix.apache.org/docs/apisix/plugins/${name}`,
-                  );
+                  window.open(`https://apisix.apache.org/docs/apisix/plugins/${name}`);
                 }
               }}
               key={1}
             >
               Document
             </Button>,
-            <Button type="primary" onClick={formatCodes} key={2}>
+            <Select
+              defaultValue={codeMirrorModeList.Json}
+              value={codeMirrorMode}
+              options={modeOptions}
+              onChange={(value: PluginComponent.CodeMirrorMode) => {
+                handleModeChange(value);
+              }}
+              data-cy='code-mirror-mode'
+            ></Select>,
+            <Button type="primary" onClick={formatCodes} key={3}>
               Format
             </Button>,
           ]}
@@ -289,7 +343,7 @@ const PluginDetail: React.FC<Props> = ({
           }}
           value={JSON.stringify(data, null, 2)}
           options={{
-            mode: 'json-ld',
+            mode: codeMirrorMode,
             readOnly: readonly ? 'nocursor' : '',
             lineWrapping: true,
             lineNumbers: true,
