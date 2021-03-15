@@ -149,8 +149,7 @@
             },
             "type": "roundrobin",
             "pass_host": "pass"
-          },
-          "x-apisix-vars": []
+          }
         }
       }
     }
