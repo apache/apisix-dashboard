@@ -65,9 +65,11 @@ func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
 	var ret []string
 	list := plugins.Map()
 	for pluginName := range list {
-		if pluginName != "serverless-post-function" && pluginName != "serverless-pre-function" {
-			ret = append(ret, pluginName)
+		if res, ok := conf.Plugins[pluginName]; !ok || !res {
+			continue
 		}
+
+		ret = append(ret, pluginName)
 	}
 
 	return ret, nil

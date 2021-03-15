@@ -22,6 +22,6 @@ import (
 	"github.com/onsi/ginkgo"
 )
 
-func TestPlugin(t *testing.T) {
+func TestSchema(t *testing.T) {
 	ginkgo.RunSpecs(t, "schema suite")
 }
