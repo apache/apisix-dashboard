@@ -269,12 +269,11 @@ func CleanResource(resource string) {
 	for _, item := range list {
 		resourceObj := item.(map[string]interface{})
 		tc := HttpTestCase{
-			Desc:         "delete " + resource + "/" + resourceObj["id"].(string),
-			Object:       ManagerApiExpect(),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/" + resource + "/" + resourceObj["id"].(string),
-			Headers:      map[string]string{"Authorization": GetToken()},
-			ExpectStatus: http.StatusOK,
+			Desc:    "delete " + resource + "/" + resourceObj["id"].(string),
+			Object:  ManagerApiExpect(),
+			Method:  http.MethodDelete,
+			Path:    "/apisix/admin/" + resource + "/" + resourceObj["id"].(string),
+			Headers: map[string]string{"Authorization": GetToken()},
 		}
 		RunTestCase(tc)
 	}

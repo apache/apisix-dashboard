@@ -70,7 +70,7 @@ const LoginMethodPassword: UserModule.LoginMethod = {
         </Form.Item>
         <Form.Item>
           <Tooltip title={formatMessage({ id: 'component.user.loginMethodPassword.modificationMethod' })}>
-            <a href="https://github.com/apache/apisix-dashboard/blob/master/api/conf/conf.yaml#L53-L57">
+            <a href="https://github.com/apache/apisix-dashboard/blob/master/api/conf/conf.yaml#L53-L57" target="_blank">
               {formatMessage({ id: 'component.user.loginMethodPassword.changeDefaultAccount' })}
             </a>
           </Tooltip>

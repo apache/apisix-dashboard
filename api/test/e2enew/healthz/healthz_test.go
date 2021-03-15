@@ -14,23 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package plugin_config
+package healthz
 
 import (
-	"testing"
-	"time"
+	"net/http"
 
 	"github.com/onsi/ginkgo"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-func TestPluginConfig(t *testing.T) {
-	ginkgo.RunSpecs(t, "plugin config suite")
-}
-
-var _ = ginkgo.AfterSuite(func() {
-	base.CleanResource("plugin_configs")
-	base.CleanResource("routes")
-	time.Sleep(base.SleepTime)
+var _ = ginkgo.Describe("Healthy check", func() {
+	ginkgo.It("ping manager-api", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/ping",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "pong",
+			Sleep:        base.SleepTime,
+		})
+	})
 })

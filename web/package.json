@@ -54,8 +54,8 @@
     "@mrblenny/react-flow-chart": "^0.0.14",
     "@rjsf/antd": "2.2.0",
     "@rjsf/core": "2.2.0",
-    "@uiw/react-codemirror": "^3.0.5",
     "@types/js-yaml": "^4.0.0",
+    "@uiw/react-codemirror": "^3.0.5",
     "ajv": "^7.0.3",
     "ajv-formats": "^1.5.1",
     "antd": "^4.4.0",
@@ -82,7 +82,8 @@
     "umi-request": "^1.0.8",
     "url-regex-safe": "^1.0.2",
     "use-merge-value": "^1.0.1",
-    "uuid": "7.0.3"
+    "uuid": "7.0.3",
+    "yaml": "^1.10.0"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^2.0.2",
