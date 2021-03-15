@@ -106,7 +106,9 @@ context('Create Route with Upstream', () => {
     cy.visit('/routes/list');
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
-    cy.contains(this.data.routeName).siblings().contains('Delete').click();
+    // cy.contains(this.data.routeName).siblings().contains('Delete').click();
+    cy.contains('Manage').should('exist').click();
+    cy.contains('Delete').should('be.visible').click();
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
 

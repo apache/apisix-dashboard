@@ -112,7 +112,9 @@ context('Can select service_id skip upstream in route', () => {
 
     cy.visit('/');
     cy.contains('Route').click();
-    cy.contains(this.data.routeName).siblings().contains('Delete').click();
+    // cy.contains(this.data.routeName).siblings().contains('Delete').click();
+    cy.contains('Manage').should('exist').click();
+    cy.contains('Delete').should('be.visible').click();
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
   });
