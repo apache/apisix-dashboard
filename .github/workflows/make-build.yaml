@@ -41,7 +41,9 @@ jobs:
 
       - name: start dashboard
         working-directory: ./output
-        run: ./manager-api > ./api.log 2>&1 &
+        run: |
+          ./manager-api > ./api.log 2>&1 &
+          sleep 5
 
       - name: check
         run: api/test/shell/manager_smoking.sh -s true
