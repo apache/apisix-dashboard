@@ -247,7 +247,7 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 			fmt.Errorf("route: %s is using this service", ret.Rows[0].(*entity.Route).Name)
 	}
 
-	if err := h.serviceStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
+	if err := h.serviceStore.BatchDelete(c.Context(), ids); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
