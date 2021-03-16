@@ -110,6 +110,7 @@ const Page: React.FC = () => {
       schemaType="route"
       initialData={initialData}
       pluginList={pluginList}
+      maskClosable={false}
       onClose={() => {
         setVisible(false);
       }}

@@ -144,4 +144,7 @@ export default {
   'page.route.tooltip.pluginOrchOnlySuportChrome': 'Plugin orchestration only supports Chrome.',
   'page.route.tooltip.pluginOrchWithoutProxyRewrite': 'Plugin orchestration mode cannot be used when request override is configured in Step 1.',
   'page.route.tooltip.pluginOrchWithoutRedirect': 'Plugin orchestration mode cannot be used when Redirect in Step 1 is selected to enable HTTPS.',
+
+  'page.route.tabs.normalMode': 'Normal mode',
+  'page.route.tabs.orchestration': 'Plugin orchestration'
 };

@@ -143,4 +143,7 @@ export default {
   'page.route.tooltip.pluginOrchOnlySuportChrome': '插件编排仅支持 Chrome 浏览器。',
   'page.route.tooltip.pluginOrchWithoutProxyRewrite': '当步骤一中 配置了 请求改写时，不可使用插件编排模式。',
   'page.route.tooltip.pluginOrchWithoutRedirect': '当步骤一中 重定向 选择为 启用 HTTPS 时，不可使用插件编排模式。',
+
+  'page.route.tabs.normalMode': '普通模式',
+  'page.route.tabs.orchestration': '插件编排'
 };

@@ -37,7 +37,7 @@ export default {
   'page.upstream.step.type': '类型',
   'page.upstream.step.create.node': '创建节点',
   'page.upstream.step.pass-host': '传递域名',
-  'page.upstream.step.pass-host.tips': '当选择节点时，节点域名只能有一条数据。',
+  'page.upstream.step.pass-host.tips': '透传（pass）：将客户端的 host 透传给上游；节点（node）：使用 upstream node 中配置的 host；重写（rewrite）：使用配置项 upstream_host 的值',
   'page.upstream.step.pass-host.pass': '透传',
   'page.upstream.step.pass-host.node': '节点',
   'page.upstream.step.pass-host.rewrite': '重写',

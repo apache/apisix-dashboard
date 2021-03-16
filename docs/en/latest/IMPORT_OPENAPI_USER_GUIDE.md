@@ -41,7 +41,7 @@ when we import routes from OAS3.0, some fields in OAS will be missed because the
 
 ## Extended fields
 
-There are some fields required in APISIX Route but are not included in the properties of OAS3.0, we added some extended fields such as upstream, plugins, hosts and so on. All extensions start with x-apisix. See [reference](https://github.com/apache/apisix/blob/master/doc/admin-api.md#route) For more details of the APISIX Route Properties
+There are some fields required in APISIX Route but are not included in the properties of OAS3.0, we added some extended fields such as upstream, plugins, hosts and so on. All extensions start with x-apisix. See [reference](https://apisix.apache.org/docs/apisix/admin-api/#route) For more details of the APISIX Route Properties
 
 | Extended fields           | APISIX Route Properties |
 | ------------------------- | ----------------------- |

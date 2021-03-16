@@ -40,14 +40,13 @@
               }
             ],
             "timeout": {
-              "connect": 6000,
-              "read": 6000,
-              "send": 6000
+              "connect": 6,
+              "read": 6,
+              "send": 6
             },
             "type": "roundrobin",
             "pass_host": "pass"
-          },
-          "x-apisix-vars": []
+          }
         }
       }
     }
@@ -93,14 +92,13 @@
               }
             ],
             "timeout": {
-              "connect": 6000,
-              "read": 6000,
-              "send": 6000
+              "connect": 6,
+              "read": 6,
+              "send": 6
             },
             "type": "roundrobin",
             "pass_host": "pass"
-          },
-          "x-apisix-vars": []
+          }
         }
       },
       "/{params}-APISIX-REPEAT-URI-2": {
@@ -145,14 +143,13 @@
               }
             ],
             "timeout": {
-              "connect": 6000,
-              "read": 6000,
-              "send": 6000
+              "connect": 6,
+              "read": 6,
+              "send": 6
             },
             "type": "roundrobin",
             "pass_host": "pass"
-          },
-          "x-apisix-vars": []
+          }
         }
       }
     }

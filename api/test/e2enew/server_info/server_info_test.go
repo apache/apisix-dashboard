@@ -23,7 +23,7 @@ import (
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
 
-	"e2enew/base"
+	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
 var _ = ginkgo.Describe("server info test", func() {
