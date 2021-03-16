@@ -710,7 +710,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 <Select.Option value="node">
                   {formatMessage({ id: 'page.upstream.step.pass-host.node' })}
                 </Select.Option>
-                <Select.Option value="rewrite">
+                <Select.Option value="rewrite" disabled>
                   {formatMessage({ id: 'page.upstream.step.pass-host.rewrite' })}
                 </Select.Option>
               </Select>

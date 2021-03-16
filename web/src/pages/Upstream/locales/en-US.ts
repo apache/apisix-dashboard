@@ -39,7 +39,7 @@ export default {
   'page.upstream.step.pass-host': 'Host Transform',
   'page.upstream.step.pass-host.pass': 'Keep the same Host from client request',
   'page.upstream.step.pass-host.node': 'Use the domain or IP from Node List',
-  'page.upstream.step.pass-host.rewrite': 'Custom Host',
+  'page.upstream.step.pass-host.rewrite': 'Custom Host (Will be deprecated in the future)',
   'page.upstream.step.pass-host.upstream_host': 'Custom Host',
   'page.upstream.step.connect.timeout': 'Connect Timeout',
   'page.upstream.step.input.connect.timeout': 'Please input connect timeout',
