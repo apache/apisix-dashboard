@@ -49,7 +49,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.0.0",
     "@ant-design/pro-layout": "^6.0.0",
-    "@ant-design/pro-table": "2.6.3",
+    "@ant-design/pro-table": "2.30.1",
     "@api7-dashboard/ui": "^1.0.3",
     "@mrblenny/react-flow-chart": "^0.0.14",
     "@rjsf/antd": "2.2.0",
