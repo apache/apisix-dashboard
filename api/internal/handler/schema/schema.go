@@ -66,11 +66,11 @@ func (h *SchemaHandler) PluginSchema(c droplet.Context) (interface{}, error) {
 	var ret interface{}
 	if input.SchemaType == "consumer" {
 		ret = conf.Schema.Get("plugins." + input.Name + ".consumer_schema").Value()
-		if ret == nil {
-			ret = conf.Schema.Get("plugins." + input.Name + ".schema").Value()
-		}
-	} else {
+	}
+
+	if ret == nil {
 		ret = conf.Schema.Get("plugins." + input.Name + ".schema").Value()
 	}
+
 	return ret, nil
 }
