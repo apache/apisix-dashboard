@@ -1469,7 +1469,7 @@ func TestUpstreams_Delete(t *testing.T) {
 			routeMockErr: nil,
 			getCalled:    false,
 			wantRet:      &data.SpecCodeResponse{StatusCode: 400},
-			wantErr:      errors.New("route: route1 is using this service"),
+			wantErr:      errors.New("route: route1 is using this upstream"),
 		},
 		{
 			caseDesc: "delete failed, route list error",
