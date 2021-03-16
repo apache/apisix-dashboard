@@ -21,6 +21,8 @@ declare namespace RouteModule {
 
   type RequestProtocol = 'https' | 'http' | 'websocket';
 
+  type RequestMode = 'Normal' | 'RawData'
+
   type BaseData = {
     id?: number;
     name: string;

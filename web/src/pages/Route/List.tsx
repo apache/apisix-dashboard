@@ -41,6 +41,8 @@ import { saveAs } from 'file-saver';
 import { timestampToLocaleString } from '@/helpers';
 import type { RcFile } from 'antd/lib/upload';
 import {
+  update,
+  create,
   fetchList,
   remove,
   fetchLabelList,
@@ -73,12 +75,20 @@ const Page: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [uploadFileList, setUploadFileList] = useState<RcFile[]>([]);
   const [showImportModal, setShowImportModal] = useState(false);
-  const [rawDataEditorVisible, setRawDataEditorVisible] = useState(false);
-  const [rawData, setRawData] = useState({});
+  const [visible, setVisible] = useState(false);
+  const [rawData, setRawData] = useState<Record<string, any>>({});
+  const [id, setId] = useState('');
+  const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
 
   useEffect(() => {
     fetchLabelList().then(setLabelList);
   }, []);
+
+  useEffect(() => {
+    if (rawData.id) {
+      setId(rawData.id);
+    }
+  }, [rawData]);
 
   const rowSelection = {
     selectedRowKeys,
@@ -317,8 +327,8 @@ const Page: React.FC = () => {
           {record.status ? (
             <Tag color="green">{formatMessage({ id: 'page.route.published' })}</Tag>
           ) : (
-              <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
-            )}
+            <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
+          )}
         </>
       ),
       renderFormItem: (_, { type }) => {
@@ -383,7 +393,8 @@ const Page: React.FC = () => {
             </Button>
             <Button type="primary" onClick={() => {
               setRawData(record);
-              setRawDataEditorVisible(true);
+              setVisible(true);
+              setEditorMode('update');
             }}>
               {formatMessage({ id: 'component.global.view' })}
             </Button>
@@ -434,6 +445,14 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
+          <Button type="primary" onClick={() => {
+            setVisible(true);
+            setEditorMode('create');
+            setRawData({});
+          }}>
+            <PlusOutlined />
+            {formatMessage({ id: 'component.global.createWithEditor' })}
+          </Button>,
           <Button
             type="primary"
             onClick={() => {
@@ -460,11 +479,18 @@ const Page: React.FC = () => {
         }}
       />
       <RawDataEditor
-        visible={rawDataEditorVisible}
+        visible={visible}
         type='route'
-        readonly={true}
+        readonly={false}
         data={rawData}
-        onClose={() => { setRawDataEditorVisible(false) }}
+        onClose={() => { setVisible(false) }}
+        onSubmit={(data: any) => {
+          (editorMode === 'create' ? create(data, 'RawData') : update(id, data, 'RawData'))
+            .then(() => {
+              setVisible(false);
+              ref.current?.reload();
+            })
+        }}
       />
       <Modal
         title={formatMessage({ id: 'page.route.button.importOpenApi' })}
