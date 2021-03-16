@@ -80,9 +80,9 @@ export default {
   'page.upstream.step.input.healthyCheck.passive.tcp_failures': 'Please input TCP failures',
   'page.upstream.notificationMessage.enableHealthCheckFirst': 'Please enable health check first.',
 
-  'page.upstream.create.edit': 'Edit',
-  'page.upstream.create.create': 'Create',
-  'page.upstream.create.upstream.successfully': 'Upstream Successfully',
+  'page.upstream.create': 'Create Upstream',
+  'page.upstream.create.upstream.successfully': 'Create Upstream Successfully',
+  'page.upstream.edit.upstream.successfully': 'Update Upstream Successfully',
   'page.upstream.create.basic.info': 'Basic Information',
   'page.upstream.create.preview': 'Preview',
 

@@ -79,8 +79,7 @@ export default {
   'page.upstream.step.input.healthyCheck.passive.tcp_failures': '请输入tcp失败次数',
   'page.upstream.notificationMessage.enableHealthCheckFirst': '请先启用探活健康检查。',
 
-  'page.upstream.create.edit': '编辑',
-  'page.upstream.create.create': '创建',
+  'page.upstream.create': '创建上游',
   'page.upstream.create.upstream.successfully': '上游成功',
   'page.upstream.create.basic.info': '基础信息',
   'page.upstream.create.preview': '预览',
