@@ -55,7 +55,15 @@ var _ = ginkgo.Describe("Schema Test", func() {
 			ExpectBody:   "{\"$comment\":\"this is a mark for our injected plugin schema\",\"additionalProperties\":false,\"properties\":{\"disable\":{\"type\":\"boolean\"}},\"type\":\"object\"}",
 			Sleep:        base.SleepTime,
 		}),
-
+		table.Entry("get schema of non-existent plugin", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/schema/plugins/non-existent",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `schema of plugins non-existent not found`,
+			Sleep:        base.SleepTime,
+		}),
 		table.Entry("get schema of consumer", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
@@ -63,6 +71,15 @@ var _ = ginkgo.Describe("Schema Test", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"properties":{"create_time":{"type":"integer"},"desc":{"maxLength":256,"type":"string"},"id":{"anyOf":[{"maxLength":64,"minLength":1,"pattern":"^[a-zA-Z0-9-_.]+$","type":"string"},{"minimum":1,"type":"integer"}]},"labels":{"description":"key/value pairs to specify attributes","maxProperties":16,"patternProperties":{".*":{"description":"value of label","maxLength":64,"minLength":1,"pattern":"^\\S+$","type":"string"}},"type":"object"},"plugins":{"type":"object"},"update_time":{"type":"integer"},"username":{"maxLength":32,"minLength":1,"pattern":"^[a-zA-Z0-9_]+$","type":"string"}}`,
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("get schema of non-existent resources", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/schemas/non-existent",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `schema of non-existent not found`,
 			Sleep:        base.SleepTime,
 		}),
 	)

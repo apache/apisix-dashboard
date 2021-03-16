@@ -17,10 +17,13 @@
 package schema
 
 import (
+	"fmt"
+	"net/http"
 	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -52,6 +55,11 @@ func (h *SchemaHandler) Schema(c droplet.Context) (interface{}, error) {
 
 	ret := conf.Schema.Get("main." + input.Resource).Value()
 
+	if ret == nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusNotFound},
+			fmt.Errorf("schema of %s not found", input.Resource)
+	}
+
 	return ret, nil
 }
 
@@ -70,6 +78,11 @@ func (h *SchemaHandler) PluginSchema(c droplet.Context) (interface{}, error) {
 
 	if ret == nil {
 		ret = conf.Schema.Get("plugins." + input.Name + ".schema").Value()
+	}
+
+	if ret == nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusNotFound},
+			fmt.Errorf("schema of plugins %s not found", input.Name)
 	}
 
 	return ret, nil
