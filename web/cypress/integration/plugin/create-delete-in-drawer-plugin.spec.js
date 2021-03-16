@@ -45,7 +45,6 @@ context('Create and Delete Plugin List', () => {
       .then(() => {
         cy.get('.ant-drawer-footer').contains('button', 'Delete').click();
         cy.contains('button', 'Confirm').click({ force: true });
-        cy.get(this.domSelector.empty).should('be.visible');
       });
   });
 });
