@@ -95,6 +95,10 @@ const Page: React.FC<Props> = (props) => {
     }
   }, []);
 
+  const getProxyrewriteEnable =() => {
+    return !isEmpty(transformProxyRewrite2Plugin(form1.getFieldValue('proxyRewrite')));
+  }
+
   const renderStepList = () => {
     if (step === 1) {
       return (
@@ -187,10 +191,6 @@ const Page: React.FC<Props> = (props) => {
     }
     return null;
   };
-
-  const getProxyrewriteEnable =() => {
-    return !isEmpty(transformProxyRewrite2Plugin(form1.getFieldValue('proxyRewrite')));
-  }
 
   const onStepChange = (nextStep: number) => {
     const onUpdateOrCreate = () => {
