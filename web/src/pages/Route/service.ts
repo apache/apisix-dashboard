@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 import { request } from 'umi';
-import { pickBy, identity } from 'lodash';
+import { pickBy, identity, omit } from 'lodash';
+
+import { DELETE_FIELDS } from '@/constants'
 
 import {
   transformStepData,
@@ -33,7 +35,7 @@ export const create = (data: RouteModule.RequestData, mode?: RouteModule.Request
 export const update = (rid: string, data: RouteModule.RequestData, mode?: RouteModule.RequestMode) =>
   request(`/routes/${rid}`, {
     method: 'PUT',
-    data: mode === 'RawData' ? data : transformStepData(data),
+    data: mode === 'RawData' ? omit(data, DELETE_FIELDS) : transformStepData(data),
   });
 
 export const fetchItem = (rid: number) =>
