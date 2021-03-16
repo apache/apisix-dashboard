@@ -33,7 +33,7 @@ export default {
   'page.upstream.step.name.should.unique': 'Name should be unique',
   'page.upstream.step.input.upstream.name': 'Please input upstream name',
   'page.upstream.step.description': 'Description',
-  'page.upstream.step.input.description': 'Please input description',
+  'page.upstream.step.input.description': 'Please input upstream\'s description',
   'page.upstream.step.type': 'Type',
   'page.upstream.step.create.node': 'Create Node',
   'page.upstream.step.pass-host': 'Pass Host',

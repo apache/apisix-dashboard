@@ -62,7 +62,7 @@ type Props = {
   showSelector?: boolean;
   // FIXME: use proper typing
   ref?: any;
-  required: boolean;
+  required?: boolean;
 };
 
 const removeBtnStyle = {

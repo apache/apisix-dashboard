@@ -33,7 +33,7 @@ export default {
   'page.upstream.step.name.should.unique': '名称需全局唯一',
   'page.upstream.step.input.upstream.name': '请输入上游名称',
   'page.upstream.step.description': '描述',
-  'page.upstream.step.input.description': '请输入描述',
+  'page.upstream.step.input.description': '请输入上游信息描述',
   'page.upstream.step.type': '类型',
   'page.upstream.step.create.node': '创建节点',
   'page.upstream.step.pass-host': '传递域名',
