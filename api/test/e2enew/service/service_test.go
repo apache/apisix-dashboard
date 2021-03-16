@@ -82,9 +82,9 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-				"uri": "/server_port",
-				"service_id": "s1"
-			}`,
+ 				"uri": "/server_port",
+ 				"service_id": "s1"
+ 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
@@ -182,9 +182,9 @@ var _ = ginkgo.Describe("create service with plugin", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-				"uri": "/server_port",
-				"service_id": "s1"
-			}`,
+ 				"uri": "/server_port",
+ 				"service_id": "s1"
+ 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
@@ -299,9 +299,9 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-				"uri": "/hello",
-				"service_id": "s2"
-			}`,
+ 				"uri": "/hello",
+ 				"service_id": "s2"
+ 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
@@ -457,6 +457,83 @@ var _ = ginkgo.Describe("service update use patch method", func() {
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/services/s5",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+})
+
+var _ = ginkgo.Describe("test service delete", func() {
+	ginkgo.It("create service without plugin", func() {
+		t := ginkgo.GinkgoT()
+		var createServiceBody map[string]interface{} = map[string]interface{}{
+			"name": "testservice",
+			"upstream": map[string]interface{}{
+				"type": "roundrobin",
+				"nodes": []map[string]interface{}{
+					{
+						"host":   base.UpstreamIp,
+						"port":   1980,
+						"weight": 1,
+					},
+				},
+			},
+		}
+		_createServiceBody, err := json.Marshal(createServiceBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Desc:         "create service without plugin",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Body:         string(_createServiceBody),
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"name\":\"testservice\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}}",
+		})
+		base.RunTestCase(base.HttpTestCase{
+			Desc:   "create route use service",
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"id": "r1",
+				"name": "route1",
+				"uri": "/hello",
+				"upstream": {
+						"type": "roundrobin",
+						"nodes": {
+								"` + base.UpstreamIp + `:1980": 1
+						}
+				},
+				"service_id": "s1"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"service_id\":\"s1\"",
+		})
+		base.RunTestCase(base.HttpTestCase{
+			Desc:         "delete service failed",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "route: route1 is using this service",
+		})
+		base.RunTestCase(base.HttpTestCase{
+			Desc:         "delete route first",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+		base.RunTestCase(base.HttpTestCase{
+			Desc:         "delete service success",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		})
