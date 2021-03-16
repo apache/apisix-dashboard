@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -25,14 +25,22 @@ import { PlusOutlined } from '@ant-design/icons';
 import { RawDataEditor } from '@/components/RawDataEditor';
 import { timestampToLocaleString } from '@/helpers';
 
-import { fetchList, remove } from './service';
+import { fetchList, remove, create, update } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
-  const [rawDataEditorVisible, setRawDataEditorVisible] = useState(false);
-  const [rawData, setRawData] = useState({});
+  const [visible, setVisible] = useState(false);
+  const [rawData, setRawData] = useState<Record<string, any>>({});
+  const [id, setId] = useState('');
+  const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
 
   const { formatMessage } = useIntl();
+
+  useEffect(() => {
+    if (rawData.id) {
+      setId(rawData.id);
+    }
+  }, [rawData]);
 
   const columns: ProColumns<UpstreamModule.ResponseBody>[] = [
     {
@@ -70,7 +78,8 @@ const Page: React.FC = () => {
           </Button>
           <Button type="primary" onClick={() => {
             setRawData(record);
-            setRawDataEditorVisible(true);
+            setVisible(true);
+            setEditorMode('update');
           }}>
             {formatMessage({ id: 'component.global.view' })}
           </Button>
@@ -113,14 +122,29 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
+          <Button type="primary" onClick={() => {
+            setVisible(true);
+            setEditorMode('create');
+            setRawData({});
+          }}>
+            <PlusOutlined />
+            {formatMessage({ id: 'component.global.createWithEditor' })}
+          </Button>,
         ]}
       />
       <RawDataEditor
-        visible={rawDataEditorVisible}
+        visible={visible}
         type='upstream'
-        readonly={true}
+        readonly={false}
         data={rawData}
-        onClose={() => { setRawDataEditorVisible(false) }}
+        onClose={() => { setVisible(false) }}
+        onSubmit={(data: any) => {
+          (editorMode === 'create' ? create(data) : update(id, data))
+            .then(() => {
+              setVisible(false);
+              ref.current?.reload();
+            })
+        }}
       />
     </PageContainer>
   );
