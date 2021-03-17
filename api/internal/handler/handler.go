@@ -123,6 +123,8 @@ func NameExistCheck(ctx context.Context, stg store.Interface, resource, name str
 			case "upstream":
 				objID = obj.(*entity.Upstream).ID
 				objName = obj.(*entity.Upstream).Name
+			default:
+				panic("bad resource")
 			}
 
 			if excludeID != nil && objID == excludeID {
