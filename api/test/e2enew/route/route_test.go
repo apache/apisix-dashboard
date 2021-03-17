@@ -129,7 +129,7 @@ var _ = ginkgo.Describe("Route", func() {
 		table.Entry("hit route2", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
-			Path:         "/hello_",
+			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
 		}),
@@ -146,6 +146,22 @@ var _ = ginkgo.Describe("Route", func() {
 			Path:         "/apisix/admin/routes/r2",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("hit route1 that just deleted", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("hit route2 that just deleted", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}",
+			Sleep:        base.SleepTime,
 		}),
 	)
 })
