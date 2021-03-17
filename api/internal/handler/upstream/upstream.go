@@ -39,12 +39,14 @@ import (
 type Handler struct {
 	upstreamStore store.Interface
 	routeStore    store.Interface
+	serviceStore  store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{
 		upstreamStore: store.GetStore(store.HubKeyUpstream),
 		routeStore:    store.GetStore(store.HubKeyRoute),
+		serviceStore:  store.GetStore(store.HubKeyService),
 	}, nil
 }
 
@@ -222,6 +224,27 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	if ret.TotalSize > 0 {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
 			fmt.Errorf("route: %s is using this upstream", ret.Rows[0].(*entity.Route).Name)
+	}
+
+	ret, err = h.serviceStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			service := obj.(*entity.Service)
+			if _, exist := mp[utils.InterfaceToString(service.UpstreamID)]; exist {
+				return true
+			}
+
+			return false
+		},
+		PageSize:   0,
+		PageNumber: 0,
+	})
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("service: %s is using this upstream", ret.Rows[0].(*entity.Service).Name)
 	}
 
 	if err = h.upstreamStore.BatchDelete(c.Context(), ids); err != nil {

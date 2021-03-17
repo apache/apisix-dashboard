@@ -725,13 +725,13 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 	})
 })
 
-var _ = ginkgo.Describe("test route delete", func() {
-	table.DescribeTable("test route delete",
+var _ = ginkgo.Describe("test upstream delete (route is using)", func() {
+	table.DescribeTable("test upstream delete",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("create route without plugin", base.HttpTestCase{
-			Desc:    "create route without plugin",
+		table.Entry("create upstream without plugin", base.HttpTestCase{
+			Desc:    "create upstream without plugin",
 			Object:  base.ManagerApiExpect(),
 			Method:  http.MethodPut,
 			Path:    "/apisix/admin/upstreams/u1",
@@ -746,7 +746,7 @@ var _ = ginkgo.Describe("test route delete", func() {
 			ExpectBody:   "\"id\":\"u1\"",
 		}),
 		table.Entry("create route use upstream r1", base.HttpTestCase{
-			Desc:   "create route use route r1",
+			Desc:   "create route use upstream u1",
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -774,6 +774,67 @@ var _ = ginkgo.Describe("test route delete", func() {
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("delete upstream success", base.HttpTestCase{
+			Desc:         "delete upstream success",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/u1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}))
+})
+
+var _ = ginkgo.Describe("test upstream delete (service is using)", func() {
+	table.DescribeTable("test upstream delete",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("create upstream without plugin", base.HttpTestCase{
+			Desc:    "create upstream without plugin",
+			Object:  base.ManagerApiExpect(),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/upstreams/u1",
+			Headers: map[string]string{"Authorization": base.GetToken()},
+			Body: `{
+					"nodes": {
+						"172.16.238.20:1980": 1
+					},
+					"type": "roundrobin"
+				}`,
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"id\":\"u1\"",
+		}),
+		table.Entry("create service use upstream r1", base.HttpTestCase{
+			Desc:   "create service use upstream r1",
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/services/s1",
+			Body: `{
+				"id": "s1",
+				"name": "service1",
+				"upstream_id": "u1"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"upstream_id\":\"u1\"",
+		}),
+		table.Entry("delete upstream failed", base.HttpTestCase{
+			Desc:         "delete upstream failed",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/u1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "service: service1 is using this upstream",
+		}),
+		table.Entry("delete service first", base.HttpTestCase{
+			Desc:         "delete service first",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
