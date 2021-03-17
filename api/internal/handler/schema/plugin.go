@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package plugin
+package schema
 
 import (
 	"reflect"
@@ -38,28 +38,6 @@ func NewHandler() (handler.RouteRegister, error) {
 func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.GET("/apisix/admin/plugins", wgin.Wraps(h.Plugins,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
-	r.GET("/apisix/admin/schema/plugins/:name", wgin.Wraps(h.Schema,
-		wrapper.InputType(reflect.TypeOf(GetInput{}))))
-}
-
-type GetInput struct {
-	Name       string `auto_read:"name,path" validate:"required"`
-	SchemaType string `auto_read:"schema_type,query"`
-}
-
-func (h *Handler) Schema(c droplet.Context) (interface{}, error) {
-	input := c.Input().(*GetInput)
-
-	var ret interface{}
-	if input.SchemaType == "consumer" {
-		ret = conf.Schema.Get("plugins." + input.Name + ".consumer_schema").Value()
-		if ret == nil {
-			ret = conf.Schema.Get("plugins." + input.Name + ".schema").Value()
-		}
-	} else {
-		ret = conf.Schema.Get("plugins." + input.Name + ".schema").Value()
-	}
-	return ret, nil
 }
 
 type ListInput struct {
@@ -73,11 +51,8 @@ func (h *Handler) Plugins(c droplet.Context) (interface{}, error) {
 	if input.All {
 		var res []map[string]interface{}
 		list := plugins.Value().(map[string]interface{})
-		for name, config := range list {
-			if res, ok := conf.Plugins[name]; !ok || !res {
-				continue
-			}
-			plugin := config.(map[string]interface{})
+		for name, conf := range list {
+			plugin := conf.(map[string]interface{})
 			plugin["name"] = name
 			if _, ok := plugin["type"]; !ok {
 				plugin["type"] = "other"

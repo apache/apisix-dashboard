@@ -65,6 +65,7 @@ context('Online debug', () => {
 
     cy.fixture('selector.json').as('domSelector');
     cy.fixture('data.json').as('data');
+    cy.intercept('/apisix/admin/debug-request-forwarding').as('DebugAPI');
   });
 
   it('should not show the invalid url notification', function () {
@@ -150,6 +151,8 @@ context('Online debug', () => {
     cy.get(domSelector.headerDataValue0).type(currentToken);
 
     cy.contains(routeLocaleUS['page.route.button.send']).click();
+
+    cy.wait('@DebugAPI');
     // assert: send request return
     cy.get(domSelector.codeMirrorCode).within(() => {
       cy.contains('data').should('be.visible');
