@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useRef, useState } from 'react';
-import { Button, Drawer, PageHeader, Tooltip, notification, Space, Select } from 'antd';
+import { Button, Drawer, PageHeader, notification, Space, Select } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
 import CodeMirror from '@uiw/react-codemirror';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
