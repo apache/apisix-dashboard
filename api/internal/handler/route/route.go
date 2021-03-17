@@ -18,7 +18,6 @@ package route
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -381,18 +380,12 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 
 	// check name existed
-	ret, err := h.routeStore.List(c.Context(), store.ListInput{
-		Predicate: func(obj interface{}) bool {
-			return obj.(*entity.Route).Name == input.Name
-		},
-	})
+	ret, err := handler.NameExistCheck(c.Context(), h.routeStore, "route", input.Name, nil)
 	if err != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
-	}
-	if ret.TotalSize > 0 {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("route name is existed")
+		return ret, err
 	}
 
+	// create
 	res, err := h.routeStore.Create(c.Context(), input)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
@@ -504,25 +497,12 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	// check name existed
-	ret, err := h.routeStore.List(c.Context(), store.ListInput{
-		Predicate: func(obj interface{}) bool {
-			// exclude the route itself
-			if obj.(*entity.Route).ID == input.ID {
-				return false
-			}
-			if obj.(*entity.Route).Name == input.Name {
-				return true
-			}
-			return false
-		},
-	})
+	ret, err := handler.NameExistCheck(c.Context(), h.routeStore, "route", input.Name, input.ID)
 	if err != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
-	}
-	if ret.TotalSize > 0 {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("route name is existed")
+		return ret, err
 	}
 
+	// create
 	res, err := h.routeStore.Update(c.Context(), &input.Route, true)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err

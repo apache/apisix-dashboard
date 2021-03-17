@@ -18,7 +18,6 @@ package service
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -169,16 +168,9 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 
 	// check name existed
-	ret, err := h.serviceStore.List(c.Context(), store.ListInput{
-		Predicate: func(obj interface{}) bool {
-			return obj.(*entity.Service).Name == input.Name
-		},
-	})
+	ret, err := handler.NameExistCheck(c.Context(), h.serviceStore, "service", input.Name, nil)
 	if err != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
-	}
-	if ret.TotalSize > 0 {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("service name is existed")
+		return ret, err
 	}
 
 	// create
@@ -220,23 +212,9 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	// check name existed
-	ret, err := h.serviceStore.List(c.Context(), store.ListInput{
-		Predicate: func(obj interface{}) bool {
-			// exclude the service itself
-			if obj.(*entity.Service).ID == input.ID {
-				return false
-			}
-			if obj.(*entity.Service).Name == input.Name {
-				return true
-			}
-			return false
-		},
-	})
+	ret, err := handler.NameExistCheck(c.Context(), h.serviceStore, "service", input.Name, input.ID)
 	if err != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
-	}
-	if ret.TotalSize > 0 {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("service name is existed")
+		return ret, err
 	}
 
 	// update or create(if not exists)

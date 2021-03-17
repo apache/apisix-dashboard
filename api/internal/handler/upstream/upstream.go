@@ -18,7 +18,6 @@ package upstream
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 	"reflect"
 	"strings"
@@ -156,16 +155,9 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Upstream)
 
 	// check name existed
-	ret, err := h.upstreamStore.List(c.Context(), store.ListInput{
-		Predicate: func(obj interface{}) bool {
-			return obj.(*entity.Upstream).Name == input.Name
-		},
-	})
+	ret, err := handler.NameExistCheck(c.Context(), h.upstreamStore, "upstream", input.Name, nil)
 	if err != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
-	}
-	if ret.TotalSize > 0 {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("upstream name is existed")
+		return ret, err
 	}
 
 	// create
@@ -195,23 +187,9 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 	}
 
 	// check name existed
-	ret, err := h.upstreamStore.List(c.Context(), store.ListInput{
-		Predicate: func(obj interface{}) bool {
-			// exclude the route itself
-			if obj.(*entity.Upstream).ID == input.ID {
-				return false
-			}
-			if obj.(*entity.Upstream).Name == input.Name {
-				return true
-			}
-			return false
-		},
-	})
+	ret, err := handler.NameExistCheck(c.Context(), h.upstreamStore, "upstream", input.Name, input.ID)
 	if err != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
-	}
-	if ret.TotalSize > 0 {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("upstream name is existed")
+		return ret, err
 	}
 
 	res, err := h.upstreamStore.Update(c.Context(), &input.Upstream, true)
