@@ -83,9 +83,9 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
- 				"uri": "/server_port",
- 				"service_id": "s1"
- 			}`,
+				"uri": "/server_port",
+				"service_id": "s1"
+			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
@@ -183,9 +183,9 @@ var _ = ginkgo.Describe("create service with plugin", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
- 				"uri": "/server_port",
- 				"service_id": "s1"
- 			}`,
+				"uri": "/server_port",
+				"service_id": "s1"
+			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
@@ -300,9 +300,9 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
- 				"uri": "/hello",
- 				"service_id": "s2"
- 			}`,
+				"uri": "/hello",
+				"service_id": "s2"
+			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
@@ -534,6 +534,14 @@ var _ = ginkgo.Describe("test service delete", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
+		table.Entry("check route exist", base.HttpTestCase{
+			Desc:         "check route exist",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+		}),
 		table.Entry("delete service success", base.HttpTestCase{
 			Desc:         "delete service success",
 			Object:       base.ManagerApiExpect(),
@@ -541,5 +549,13 @@ var _ = ginkgo.Describe("test service delete", func() {
 			Path:         "/apisix/admin/services/s1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("check the service exist", base.HttpTestCase{
+			Desc:         "check the exist",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
 		}))
 })
