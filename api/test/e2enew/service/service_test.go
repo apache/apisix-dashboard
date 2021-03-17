@@ -109,11 +109,12 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Body:         string(_createServiceBody),
 			ExpectStatus: http.StatusBadRequest,
 			ExpectBody:   `service name is existed`,
-			Sleep: base.SleepTime,
+			Sleep:        base.SleepTime,
 		})
 	})
-	ginkgo.It("create service without plugin", func() {
+	ginkgo.It("update service failed, name existed", func() {
 		t := ginkgo.GinkgoT()
+		createServiceBody["name"] = "testservice2"
 		_createServiceBody, err := json.Marshal(createServiceBody)
 		assert.Nil(t, err)
 		base.RunTestCase(base.HttpTestCase{
@@ -122,8 +123,8 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Path:         "/apisix/admin/services/s1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			Body:         string(_createServiceBody),
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   []string{"\"id\":\"s1\"", "\"name\":\"testservice\""},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   `service name is existed`,
 		})
 	})
 	ginkgo.It("get the service s1", func() {
