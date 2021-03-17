@@ -38,10 +38,6 @@ context('import and export routes', () => {
     yamlMask: 'cypress/downloads/*.yaml',
   };
 
-  before(()=>{
-    cy.exec('etcdctl del / --prefix');
-  })
-
   beforeEach(() => {
     cy.login();
 
