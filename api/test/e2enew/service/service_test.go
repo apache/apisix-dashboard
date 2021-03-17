@@ -51,7 +51,6 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			},
 		},
 	}
-
 	ginkgo.It("create service without plugin", func() {
 		t := ginkgo.GinkgoT()
 		_createServiceBody, err := json.Marshal(createServiceBody)
@@ -159,6 +158,16 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("delete service2", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s2",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
