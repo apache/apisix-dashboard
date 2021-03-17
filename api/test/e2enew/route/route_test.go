@@ -116,7 +116,7 @@ var _ = ginkgo.Describe("Route", func() {
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusBadRequest,
+			ExpectStatus: http.StatusOK,
 		}),
 		table.Entry("hit route1", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
