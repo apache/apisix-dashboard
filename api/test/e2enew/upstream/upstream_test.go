@@ -777,6 +777,14 @@ var _ = ginkgo.Describe("test upstream delete (route is using)", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
+		table.Entry("check route exist", base.HttpTestCase{
+			Desc:         "check route exist",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+		}),
 		table.Entry("delete upstream success", base.HttpTestCase{
 			Desc:         "delete upstream success",
 			Object:       base.ManagerApiExpect(),
@@ -784,6 +792,14 @@ var _ = ginkgo.Describe("test upstream delete (route is using)", func() {
 			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("check upstream exist", base.HttpTestCase{
+			Desc:         "check upstream exist",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/upstreams/u1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
 		}))
 })
 
@@ -838,6 +854,14 @@ var _ = ginkgo.Describe("test upstream delete (service is using)", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
+		table.Entry("check service exist", base.HttpTestCase{
+			Desc:         "check service exist",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+		}),
 		table.Entry("delete upstream success", base.HttpTestCase{
 			Desc:         "delete upstream success",
 			Object:       base.ManagerApiExpect(),
@@ -845,5 +869,13 @@ var _ = ginkgo.Describe("test upstream delete (service is using)", func() {
 			Path:         "/apisix/admin/upstreams/u1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("check upstream exist", base.HttpTestCase{
+			Desc:         "check upstream exist",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/upstreams/u1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
 		}))
 })
