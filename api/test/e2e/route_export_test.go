@@ -2330,7 +2330,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			},
 			"/test-test-APISIX-REPEAT-URI-2": {
 				"get": {
-					"operationId": "route_allGET",
+					"operationId": "route_all2GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -2353,7 +2353,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			},
 			"/test-test-APISIX-REPEAT-URI-3": {
 				"get": {
-					"operationId": "route_allGET",
+					"operationId": "route_all3GET",
 					"requestBody": {},
 					"responses": {
 						"default": {

@@ -78,22 +78,7 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			Body:         string(_createServiceBody),
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   []string{"\"id\":\"s1\"", "\"name\":\"testservice\""},
-		})
-	})
-	ginkgo.It("create service2 success", func() {
-		t := ginkgo.GinkgoT()
-		createServiceBody["name"] = "testservice2"
-		_createServiceBody, err := json.Marshal(createServiceBody)
-		assert.Nil(t, err)
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/services/s2",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			Body:         string(_createServiceBody),
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   []string{"\"id\":\"s1\"", "\"name\":\"testservice\""},
+			ExpectBody:   []string{"\"id\":\"s2\"", "\"name\":\"testservice2\""},
 		})
 	})
 	ginkgo.It("create service failed, name existed", func() {
@@ -302,7 +287,7 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 		t := ginkgo.GinkgoT()
 		var createServiceBody map[string]interface{} = map[string]interface{}{
 			"id":   "s2",
-			"name": "testservice",
+			"name": "testservice22",
 			"desc": "testservice_desc",
 			"labels": map[string]interface{}{
 				"build":   "16",
@@ -351,7 +336,7 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 			Path:       "/apisix/admin/services/s2",
 			Headers:    map[string]string{"Authorization": base.GetToken()},
 			ExpectCode: http.StatusOK,
-			ExpectBody: "\"name\":\"testservice\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
+			ExpectBody: "\"name\":\"testservice22\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
 			Sleep:      base.SleepTime,
 		})
 	})
