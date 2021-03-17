@@ -28,31 +28,92 @@ import (
 )
 
 var _ = ginkgo.Describe("create service without plugin", func() {
-	ginkgo.It("create service without plugin", func() {
-		t := ginkgo.GinkgoT()
-		var createServiceBody map[string]interface{} = map[string]interface{}{
-			"name": "testservice",
-			"upstream": map[string]interface{}{
-				"type": "roundrobin",
-				"nodes": []map[string]interface{}{
-					{
-						"host":   base.UpstreamIp,
-						"port":   1980,
-						"weight": 1,
-					},
-					{
-						"host":   base.UpstreamIp,
-						"port":   1981,
-						"weight": 2,
-					},
-					{
-						"host":   base.UpstreamIp,
-						"port":   1982,
-						"weight": 3,
-					},
+	var createServiceBody map[string]interface{} = map[string]interface{}{
+		"name": "testservice",
+		"upstream": map[string]interface{}{
+			"type": "roundrobin",
+			"nodes": []map[string]interface{}{
+				{
+					"host":   base.UpstreamIp,
+					"port":   1980,
+					"weight": 1,
+				},
+				{
+					"host":   base.UpstreamIp,
+					"port":   1981,
+					"weight": 2,
+				},
+				{
+					"host":   base.UpstreamIp,
+					"port":   1982,
+					"weight": 3,
 				},
 			},
-		}
+		},
+	}
+
+	ginkgo.It("create service without plugin", func() {
+		t := ginkgo.GinkgoT()
+		_createServiceBody, err := json.Marshal(createServiceBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Body:         string(_createServiceBody),
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"s1\"", "\"name\":\"testservice\""},
+		})
+	})
+	ginkgo.It("create service2 success", func() {
+		t := ginkgo.GinkgoT()
+		createServiceBody["name"] = "testservice2"
+		_createServiceBody, err := json.Marshal(createServiceBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/services/s2",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Body:         string(_createServiceBody),
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"s1\"", "\"name\":\"testservice\""},
+		})
+	})
+	ginkgo.It("create service2 success", func() {
+		t := ginkgo.GinkgoT()
+		createServiceBody["name"] = "testservice2"
+		_createServiceBody, err := json.Marshal(createServiceBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/services/s2",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Body:         string(_createServiceBody),
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"s1\"", "\"name\":\"testservice\""},
+		})
+	})
+	ginkgo.It("create service failed, name existed", func() {
+		t := ginkgo.GinkgoT()
+		createServiceBody["name"] = "testservice2"
+		_createServiceBody, err := json.Marshal(createServiceBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/services",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Body:         string(_createServiceBody),
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   `service name is existed`,
+			Sleep: base.SleepTime,
+		})
+	})
+	ginkgo.It("create service without plugin", func() {
+		t := ginkgo.GinkgoT()
 		_createServiceBody, err := json.Marshal(createServiceBody)
 		assert.Nil(t, err)
 		base.RunTestCase(base.HttpTestCase{
