@@ -1408,15 +1408,17 @@ func TestUpstream_Patch(t *testing.T) {
 
 func TestUpstreams_Delete(t *testing.T) {
 	tests := []struct {
-		caseDesc      string
-		giveInput     *BatchDelete
-		giveErr       error
-		wantInput     []string
-		wantErr       error
-		wantRet       interface{}
-		routeMockData []*entity.Route
-		routeMockErr  error
-		getCalled     bool
+		caseDesc        string
+		giveInput       *BatchDelete
+		giveErr         error
+		wantInput       []string
+		wantErr         error
+		wantRet         interface{}
+		routeMockData   []*entity.Route
+		routeMockErr    error
+		serviceMockData []*entity.Service
+		serviceMockErr  error
+		getCalled       bool
 	}{
 		{
 			caseDesc: "delete success",
@@ -1483,6 +1485,38 @@ func TestUpstreams_Delete(t *testing.T) {
 			wantErr:       errors.New("route list error"),
 			getCalled:     false,
 		},
+		{
+			caseDesc: "delete failed, service is using",
+			giveInput: &BatchDelete{
+				IDs: "u1",
+			},
+			wantInput: []string{"s1"},
+			serviceMockData: []*entity.Service{
+				&entity.Service{
+					BaseInfo: entity.BaseInfo{
+						ID:         "s1",
+						CreateTime: 1609746531,
+					},
+					Name:       "service1",
+					UpstreamID: "u1",
+				},
+			},
+			serviceMockErr: nil,
+			getCalled:      false,
+			wantRet:        &data.SpecCodeResponse{StatusCode: 400},
+			wantErr:        errors.New("service: service1 is using this upstream"),
+		},
+		{
+			caseDesc: "delete failed, service list error",
+			giveInput: &BatchDelete{
+				IDs: "u1",
+			},
+			wantInput:      []string{"u1"},
+			serviceMockErr: errors.New("service list error"),
+			wantRet:        handler.SpecCodeResponse(errors.New("service list error")),
+			wantErr:        errors.New("service list error"),
+			getCalled:      false,
+		},
 	}
 
 	for _, tc := range tests {
@@ -1515,7 +1549,27 @@ func TestUpstreams_Delete(t *testing.T) {
 				}
 			}, tc.routeMockErr)
 
-			h := Handler{upstreamStore: upstreamStore, routeStore: routeStore}
+			serviceStore := &store.MockInterface{}
+			serviceStore.On("List", mock.Anything).Return(func(input store.ListInput) *store.ListOutput {
+				var returnData []interface{}
+				for _, c := range tc.serviceMockData {
+					if input.Predicate(c) {
+						if input.Format == nil {
+							returnData = append(returnData, c)
+							continue
+						}
+
+						returnData = append(returnData, input.Format(c))
+					}
+				}
+
+				return &store.ListOutput{
+					Rows:      returnData,
+					TotalSize: len(returnData),
+				}
+			}, tc.serviceMockErr)
+
+			h := Handler{upstreamStore: upstreamStore, routeStore: routeStore, serviceStore: serviceStore}
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 			ret, err := h.BatchDelete(ctx)
