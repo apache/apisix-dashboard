@@ -57,3 +57,9 @@ jobs:
       - name: Upload coverage to Codecov
         run: |
          bash <(curl -s https://codecov.io/bash) -f ./coverage/coverage-final.json -F frontend-e2e-test
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage-report
+          path: web/cypress
