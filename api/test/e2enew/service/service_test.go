@@ -92,7 +92,7 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			Body:         string(_createServiceBody),
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   `service name is existed`,
+			ExpectBody:   `service name exists`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -108,7 +108,7 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			Body:         string(_createServiceBody),
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   `service name is existed`,
+			ExpectBody:   `service name exists`,
 		})
 	})
 	ginkgo.It("get the service s1", func() {

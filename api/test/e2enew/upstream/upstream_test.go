@@ -109,7 +109,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   `upstream name is existed`,
+			ExpectBody:   `upstream name exists`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -134,7 +134,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   `upstream name is existed`,
+			ExpectBody:   `upstream name exists`,
 		})
 	})
 	ginkgo.It("update upstream success", func() {

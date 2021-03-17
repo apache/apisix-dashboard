@@ -35,7 +35,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-                                "name": "route1",
+				"name": "route1",
 				"uri": "/hello_",
 				"upstream": {
 					"nodes": {
@@ -52,7 +52,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r2",
 			Body: `{
-                                "name": "route2",
+				"name": "route2",
 				"uri": "/hello_",
 				"upstream": {
 					"nodes": {
@@ -69,7 +69,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Method: http.MethodPost,
 			Path:   "/apisix/admin/routes",
 			Body: `{
-                                "name": "route2",
+				"name": "route2",
 				"uri": "/hello_",
 				"upstream": {
 					"nodes": {
@@ -80,7 +80,7 @@ var _ = ginkgo.Describe("Route", func() {
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   `route name is existed`,
+			ExpectBody:   `route name exists`,
 			Sleep:        base.SleepTime,
 		}),
 		table.Entry("update route2 failed, name existed", base.HttpTestCase{
@@ -88,7 +88,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r2",
 			Body: `{
-                                "name": "route1",
+				"name": "route1",
 				"uri": "/hello_",
 				"upstream": {
 					"nodes": {
@@ -99,14 +99,14 @@ var _ = ginkgo.Describe("Route", func() {
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
-			ExpectBody:   `route name is existed`,
+			ExpectBody:   `route name exists`,
 		}),
 		table.Entry("update route2 success, name not change", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r2",
 			Body: `{
-                                "name": "route2",
+				"name": "route2",
 				"uri": "/hello",
 				"upstream": {
 					"nodes": {
