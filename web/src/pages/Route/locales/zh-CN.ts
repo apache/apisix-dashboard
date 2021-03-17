@@ -134,5 +134,8 @@ export default {
   'page.route.exportRoutesTips': '请选择导出文件的类型',
   'page.route.button.importOpenApi': '导入 OpenAPI',
   'page.route.button.selectFile': '请选择上传文件',
-  'page.route.list': '路由列表'
+  'page.route.list': '路由列表',
+
+  'page.route.tabs.normalMode': '普通模式',
+  'page.route.tabs.orchestration': '插件编排'
 };

@@ -150,7 +150,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       </>
     );
 
-    const TimeUnit = () => <span style={{ margin: '0 8px' }}>ms</span>;
+    const TimeUnit = () => <span style={{ margin: '0 8px' }}>s</span>;
     const NodeList = () => (
       <Form.List name="nodes">
         {(fields, { add, remove }) => (
