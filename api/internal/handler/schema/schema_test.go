@@ -19,6 +19,8 @@ package schema
 
 import (
 	"encoding/json"
+	"github.com/shiningrush/droplet/data"
+	"net/http"
 	"testing"
 
 	"github.com/shiningrush/droplet"
@@ -40,8 +42,8 @@ func TestSchema(t *testing.T) {
 	err := json.Unmarshal([]byte(reqBody), input)
 	assert.Nil(t, err)
 	ctx.SetInput(input)
-	val, _ := handler.Schema(ctx)
-	assert.Nil(t, val)
+	ret, _ := handler.Schema(ctx)
+	assert.Equal(t, http.StatusNotFound, ret.(*data.SpecCodeResponse).StatusCode)
 
 	// route
 	reqBody = `{
@@ -50,7 +52,7 @@ func TestSchema(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), input)
 	assert.Nil(t, err)
 	ctx.SetInput(input)
-	val, _ = handler.Schema(ctx)
+	val, _ := handler.Schema(ctx)
 	assert.NotNil(t, val)
 
 	// ----------- plugin schema  ----------
@@ -70,8 +72,8 @@ func TestSchema(t *testing.T) {
 	err = json.Unmarshal([]byte(reqBody), pluginInput)
 	assert.Nil(t, err)
 	ctx.SetInput(pluginInput)
-	val, _ = handler.PluginSchema(ctx)
-	assert.Nil(t, val)
+	res, _ := handler.PluginSchema(ctx)
+	assert.Equal(t, http.StatusNotFound, res.(*data.SpecCodeResponse).StatusCode)
 
 	/*
 	 get plugin schema with schema_type: consumer
