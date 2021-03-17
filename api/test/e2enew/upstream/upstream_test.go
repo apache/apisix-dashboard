@@ -91,7 +91,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 	ginkgo.It("create upstream failed, name existed", func() {
 		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
-		createUpstreamBody["name"] = "upstream1"
+		createUpstreamBody["name"] = "upstream2"
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
 				"host":   base.UpstreamIp,
@@ -116,7 +116,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 	ginkgo.It("update upstream failed, name existed", func() {
 		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
-		createUpstreamBody["name"] = "upstream2"
+		createUpstreamBody["name"] = "upstream1"
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
 				"host":   base.UpstreamIp,
@@ -130,7 +130,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
-			Path:         "/apisix/admin/upstreams/1",
+			Path:         "/apisix/admin/upstreams/2",
 			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
@@ -140,7 +140,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 	ginkgo.It("update upstream success", func() {
 		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
-		createUpstreamBody["name"] = "upstream11"
+		createUpstreamBody["name"] = "upstream22"
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
 				"host":   base.UpstreamIp,
@@ -154,7 +154,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
-			Path:         "/apisix/admin/upstreams/1",
+			Path:         "/apisix/admin/upstreams/2",
 			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
