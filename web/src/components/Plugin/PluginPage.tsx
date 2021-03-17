@@ -180,16 +180,21 @@ const PluginPage: React.FC<Props> = ({
                   key={item.name}
                   actions={[
                     <Button
-                      type={
+                      type='primary'
+                      danger= {
                         initialData[item.name] && !initialData[item.name].disable
-                          ? 'primary'
-                          : 'default'
+                          ? true
+                          : false
                       }
                       onClick={() => {
                         setName(item.name);
                       }}
                     >
-                      Enable
+                      {
+                        initialData[item.name] && !initialData[item.name].disable
+                          ? 'Disable'
+                          : 'Enable'
+                      }
                     </Button>,
                   ]}
                   title={[
