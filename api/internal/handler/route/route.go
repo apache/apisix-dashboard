@@ -18,6 +18,7 @@ package route
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -379,12 +380,25 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	ret, err := h.routeStore.Create(c.Context(), input)
+	// check name existed
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			return obj.(*entity.Route).Name == input.Name
+		},
+	})
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+	}
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("route name is existed")
+	}
+
+	res, err := h.routeStore.Create(c.Context(), input)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type UpdateInput struct {
@@ -489,12 +503,32 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	ret, err := h.routeStore.Update(c.Context(), &input.Route, true)
+	// check name existed
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			// exclude the route itself
+			if obj.(*entity.Route).ID == input.ID {
+				return false
+			}
+			if obj.(*entity.Route).Name == input.Name {
+				return true
+			}
+			return false
+		},
+	})
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+	}
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("route name is existed")
+	}
+
+	res, err := h.routeStore.Update(c.Context(), &input.Route, true)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type BatchDelete struct {

@@ -18,6 +18,7 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -167,12 +168,26 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	ret, err := h.serviceStore.Create(c.Context(), input)
+	// check name existed
+	ret, err := h.serviceStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			return obj.(*entity.Service).Name == input.Name
+		},
+	})
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+	}
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("service name is existed")
+	}
+
+	// create
+	res, err := h.serviceStore.Create(c.Context(), input)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type UpdateInput struct {
@@ -204,12 +219,33 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	ret, err := h.serviceStore.Update(c.Context(), &input.Service, true)
+	// check name existed
+	ret, err := h.serviceStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			// exclude the service itself
+			if obj.(*entity.Service).ID == input.ID {
+				return false
+			}
+			if obj.(*entity.Service).Name == input.Name {
+				return true
+			}
+			return false
+		},
+	})
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+	}
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, errors.New("service name is existed")
+	}
+
+	// update or create(if not exists)
+	res, err := h.serviceStore.Update(c.Context(), &input.Service, true)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type BatchDelete struct {
