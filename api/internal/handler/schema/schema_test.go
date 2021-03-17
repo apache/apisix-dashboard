@@ -19,11 +19,11 @@ package schema
 
 import (
 	"encoding/json"
-	"github.com/shiningrush/droplet/data"
 	"net/http"
 	"testing"
 
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
 )
 
