@@ -296,6 +296,7 @@ func TestService_Create(t *testing.T) {
 		upstreamInput string
 		upstreamRet   interface{}
 		upstreamErr   interface{}
+		nameExistRet  []interface{}
 	}{
 		{
 			caseDesc:  "create success",
@@ -394,6 +395,14 @@ func TestService_Create(t *testing.T) {
 				assert.Equal(t, tc.upstreamInput, id)
 			}).Return(tc.upstreamRet, tc.upstreamErr)
 
+			serviceStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				return &store.ListOutput{
+					Rows:      tc.nameExistRet,
+					TotalSize: len(tc.nameExistRet),
+				}
+			}, nil)
+
 			h := Handler{serviceStore: serviceStore, upstreamStore: upstreamStore}
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
@@ -418,6 +427,7 @@ func TestService_Update(t *testing.T) {
 		upstreamInput string
 		upstreamRet   interface{}
 		upstreamErr   interface{}
+		nameExistRet  []interface{}
 	}{
 		{
 			caseDesc:  "create success",
@@ -547,6 +557,14 @@ func TestService_Update(t *testing.T) {
 				id := args.Get(0).(string)
 				assert.Equal(t, tc.upstreamInput, id)
 			}).Return(tc.upstreamRet, tc.upstreamErr)
+
+			serviceStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				return &store.ListOutput{
+					Rows:      tc.nameExistRet,
+					TotalSize: len(tc.nameExistRet),
+				}
+			}, nil)
 
 			h := Handler{serviceStore: serviceStore, upstreamStore: upstreamStore}
 			ctx := droplet.NewContext()

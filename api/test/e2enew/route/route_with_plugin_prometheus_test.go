@@ -14,26 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package e2e
+package route
 
 import (
 	"net/http"
-	"testing"
+
+	"github.com/onsi/ginkgo"
+	"github.com/onsi/ginkgo/extensions/table"
+
+	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-func TestRoute_With_Plugin_Prometheus(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			Desc:         "make sure the route is not created ",
-			Object:       APISIXExpect(t),
+var _ = ginkgo.Describe("route with plugin prometheus", func() {
+	table.DescribeTable("test route with plugin prometheus",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("make sure the route is not created", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-		},
-		{
+		}),
+
+		table.Entry("create route with plugin prometheus", base.HttpTestCase{
 			Desc:   "create route",
-			Object: ManagerApiExpect(t),
+			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -43,36 +50,31 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 				},
 				"upstream": {
 					"type": "roundrobin",
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1981,
-						"weight": 1
-					}]
+					"nodes": {
+						"` + base.UpstreamIp + `:1982": 1
+					}
 				}
 			}`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "fetch the prometheus metric data",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("fetch the prometheus metric data", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/prometheus/metrics",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "apisix_etcd_reachable 1",
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "request from client (200)",
-			Object:       APISIXExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("request from client (200)", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-		},
-		{
-			Desc:   "create route that uri not exists in upstream",
-			Object: ManagerApiExpect(t),
+		}),
+		table.Entry("create route that uri not exists in upstream", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -82,62 +84,52 @@ func TestRoute_With_Plugin_Prometheus(t *testing.T) {
 				},
 				"upstream": {
 					"type": "roundrobin",
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1981,
-						"weight": 1
-					}]
+					"nodes": {
+						"` + base.UpstreamIp + `:1982": 1
+					}
 				}
 			}`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "request from client (404)",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("request from client (404)", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello-not-exists",
 			ExpectStatus: http.StatusNotFound,
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "verify the prometheus metric data (apisix_http_status 200)",
-			Object:       APISIXExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify the prometheus metric data (apisix_http_status 200)", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/prometheus/metrics",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `apisix_http_status{code="200",route="r1",matched_uri="/hello",matched_host="",service="",consumer=""`,
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "verify the prometheus metric data (apisix_http_status 404)",
-			Object:       APISIXExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify the prometheus metric data (apisix_http_status 404)", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/apisix/prometheus/metrics",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `apisix_http_status{code="404",route="r1",matched_uri="/hello-not-exists",matched_host="",service="",consumer=""`,
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "delete route",
-			Object:       ManagerApiExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("delete route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "make sure the route has been deleted",
-			Object:       APISIXExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("make sure the route deleted", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-			Sleep:        sleepTime,
-		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc, t)
-	}
-}
+			Sleep:        base.SleepTime,
+		}),
+	)
+})
