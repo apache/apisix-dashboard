@@ -828,7 +828,7 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 	})
 })
 
-var _ = ginkgo.Describe("test upstream delete (route is using)", func() {
+var _ = ginkgo.Describe("test upstream delete (route is in use)", func() {
 	table.DescribeTable("test upstream delete",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
@@ -906,7 +906,7 @@ var _ = ginkgo.Describe("test upstream delete (route is using)", func() {
 		}))
 })
 
-var _ = ginkgo.Describe("test upstream delete (service is using)", func() {
+var _ = ginkgo.Describe("test upstream delete (service is in use)", func() {
 	table.DescribeTable("test upstream delete",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
