@@ -67,7 +67,7 @@ export default {
   'page.route.form.itemLabel.priority': '优先级',
   'page.route.form.itemLabel.redirect': '重定向',
   'page.route.form.itemLabel.redirectCustom': '自定义重定向',
-  'page.route.form.itemLabel.uriRewriteType': '路径改写',
+  'page.route.form.itemLabel.URIRewriteType': '路径改写',
   'page.route.form.itemLabel.hostRewriteType': '域名改写',
   'page.route.form.itemLabel.headerRewrite': '请求头改写',
   'page.route.form.itemLabel.redirectURI': '重定向路径',
@@ -118,7 +118,7 @@ export default {
   'page.route.weight': '权重',
 
   'page.route.radio.static': '静态改写',
-  'page.route.radio.regx': '正则改写',
+  'page.route.radio.regex': '正则改写',
   // Need a better translation
   'page.route.form.itemLabel.regex': '匹配正则表达式',
   'page.route.form.itemLabel.template': '转发路径模版',

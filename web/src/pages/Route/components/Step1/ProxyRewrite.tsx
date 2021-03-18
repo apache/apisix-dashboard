@@ -24,9 +24,9 @@ import { PanelSection } from '@api7-dashboard/ui';
 import {
   FORM_ITEM_LAYOUT,
   FORM_ITEM_WITHOUT_LABEL,
-  ShcemeRewrite,
-  URIRewriteType,
-  HostRewriteType
+  SCHEME_REWRITE,
+  URI_REWRITE_TYPE,
+  HOST_REWRITE_TYPE
 } from '@/pages/Route/constants';
 
 const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) => {
@@ -34,7 +34,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
 
   const getUriRewriteItems = () => {
     switch (form.getFieldValue('URIRewriteType')) {
-      case URIRewriteType.STATIC:
+      case URI_REWRITE_TYPE.STATIC:
         return (
           <Form.Item
             label={formatMessage({ id: 'page.route.form.itemLabel.newPath' })}
@@ -56,7 +56,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
             />
           </Form.Item>
         );
-      case URIRewriteType.REGEXP:
+      case URI_REWRITE_TYPE.REGEXP:
         return (
           <Form.List
             name={['proxyRewrite', 'regex_uri']}
@@ -118,7 +118,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
             }
           </Form.List>
         );
-      case URIRewriteType.KEEP:
+      case URI_REWRITE_TYPE.KEEP:
       default:
         return null;
     }
@@ -126,7 +126,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
 
   const getHostRewriteItems = () => {
     switch (form.getFieldValue('hostRewriteType')) {
-      case HostRewriteType.REWRITE:
+      case HOST_REWRITE_TYPE.REWRITE:
         return (
           <Form.Item
             label={formatMessage({ id: 'page.route.form.itemLabel.newHost' })}
@@ -148,7 +148,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
             />
           </Form.Item>
         );
-      case HostRewriteType.KEEP:
+      case HOST_REWRITE_TYPE.KEEP:
       default:
         return null;
     }
@@ -161,28 +161,28 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
         name={['proxyRewrite', 'scheme']}
       >
         <Radio.Group disabled={disabled}>
-          <Radio value={ShcemeRewrite.KEEP}>
+          <Radio value={SCHEME_REWRITE.KEEP}>
             {formatMessage({ id: 'page.route.radio.staySame' })}
           </Radio>
-          <Radio value={ShcemeRewrite.HTTP}>{(ShcemeRewrite.HTTP).toLocaleUpperCase()}</Radio>
-          <Radio value={ShcemeRewrite.HTTPS}>{(ShcemeRewrite.HTTPS).toLocaleUpperCase()}</Radio>
+          <Radio value={SCHEME_REWRITE.HTTP}>{(SCHEME_REWRITE.HTTP).toLocaleUpperCase()}</Radio>
+          <Radio value={SCHEME_REWRITE.HTTPS}>{(SCHEME_REWRITE.HTTPS).toLocaleUpperCase()}</Radio>
         </Radio.Group>
       </Form.Item>
       <Form.Item
-        label={formatMessage({ id: 'page.route.form.itemLabel.uriRewriteType' })}
+        label={formatMessage({ id: 'page.route.form.itemLabel.URIRewriteType' })}
         name='URIRewriteType'
       >
         <Radio.Group
           disabled={disabled}
         >
-          <Radio value={URIRewriteType.KEEP}>
+          <Radio value={URI_REWRITE_TYPE.KEEP}>
             {formatMessage({ id: 'page.route.radio.staySame' })}
           </Radio>
-          <Radio data-cy='uri-static' value={URIRewriteType.STATIC}>
+          <Radio data-cy='uri-static' value={URI_REWRITE_TYPE.STATIC}>
             {formatMessage({ id: 'page.route.radio.static' })}
           </Radio>
-          <Radio value={URIRewriteType.REGEXP}>
-            {formatMessage({ id: 'page.route.radio.regx' })}
+          <Radio value={URI_REWRITE_TYPE.REGEXP}>
+            {formatMessage({ id: 'page.route.radio.regex' })}
           </Radio>
         </Radio.Group>
       </Form.Item>
@@ -202,10 +202,10 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
         <Radio.Group
           disabled={disabled}
         >
-          <Radio data-cy='host-keep' value={HostRewriteType.KEEP}>
+          <Radio data-cy='host-keep' value={HOST_REWRITE_TYPE.KEEP}>
             {formatMessage({ id: 'page.route.radio.staySame' })}
           </Radio>
-          <Radio data-cy='host-static' value={HostRewriteType.REWRITE}>
+          <Radio data-cy='host-static' value={HOST_REWRITE_TYPE.REWRITE}>
             {formatMessage({ id: 'page.route.radio.static' })}
           </Radio>
         </Radio.Group>

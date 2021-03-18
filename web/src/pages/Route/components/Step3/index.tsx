@@ -31,13 +31,13 @@ type Props = {
   };
   onChange: (data: { plugins: PluginComponent.Data; script: any, plugin_config_id?: string; }) => void;
   readonly?: boolean;
-  isForceHttps: boolean;
-  isProxyEnable: boolean;
+  isForceHttps?: boolean;
+  isProxyEnable?: boolean;
 };
 
 type Mode = 'NORMAL' | 'DRAW';
 
-const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps, isProxyEnable }) => {
+const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps = false, isProxyEnable = false }) => {
   const { formatMessage } = useIntl();
   const { plugins = {}, script = {}, plugin_config_id = '' } = data;
 

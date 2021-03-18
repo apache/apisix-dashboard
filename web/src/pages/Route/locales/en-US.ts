@@ -107,7 +107,7 @@ export default {
   'page.route.form.itemLabel.newHost': 'New Host',
   'page.route.form.itemLabel.regex': 'Regexp',
   'page.route.form.itemLabel.template': 'Template',
-  'page.route.form.itemLabel.uriRewriteType': 'URI Override',
+  'page.route.form.itemLabel.URIRewriteType': 'URI Override',
   'page.route.form.itemLabel.hostRewriteType': 'Host Override',
   'page.route.form.itemLabel.redirectURI': 'Redirect URI',
   'page.route.input.placeholder.newPath': 'For example: /foo/bar/index.html',
@@ -117,7 +117,7 @@ export default {
 
   'page.route.popconfirm.title.offline': 'Are you sure to offline this route?',
   'page.route.radio.static': 'Static',
-  'page.route.radio.regx': 'Regx',
+  'page.route.radio.regex': 'Regex',
   'page.route.form.itemLabel.from': 'From',
   'page.route.form.itemHelp.status':
     'Whether a route can be used after it is created, the default value is false.',

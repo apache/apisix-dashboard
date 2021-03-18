@@ -18,9 +18,9 @@ import { omit, pick, cloneDeep, isEmpty, unset } from 'lodash';
 
 import { transformLableValueToKeyValue } from '@/helpers';
 import {
-  ShcemeRewrite,
-  URIRewriteType,
-  HostRewriteType
+  SCHEME_REWRITE,
+  URI_REWRITE_TYPE,
+  HOST_REWRITE_TYPE
 } from '@/pages/Route/constants';
 
 export const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): RouteModule.ProxyRewrite => {
@@ -56,28 +56,28 @@ export const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): Ro
 
 const transformProxyRewrite2Formdata = (pluginsData: any) => {
   const proxyRewriteData: RouteModule.ProxyRewrite= {
-    scheme: ShcemeRewrite.KEEP
+    scheme: SCHEME_REWRITE.KEEP
   };
-  let uriRewriteType = URIRewriteType.KEEP;
-  let hostRewriteType = HostRewriteType.KEEP;
+  let URIRewriteType = URI_REWRITE_TYPE.KEEP;
+  let hostRewriteType = HOST_REWRITE_TYPE.KEEP;
 
   if (pluginsData) {
     if (pluginsData.uri && pluginsData.regex_uri) {
-      uriRewriteType = URIRewriteType.REGEXP
+      URIRewriteType = URI_REWRITE_TYPE.REGEXP
     }
 
     if (pluginsData.uri && !pluginsData.regex_uri) {
-      uriRewriteType = URIRewriteType.STATIC
+      URIRewriteType = URI_REWRITE_TYPE.STATIC
     }
 
     if (pluginsData.host) {
-      hostRewriteType = HostRewriteType.REWRITE
+      hostRewriteType = HOST_REWRITE_TYPE.REWRITE
     }
 
     Object.keys(pluginsData).forEach( key => {
       switch (key) {
         case 'scheme':
-          proxyRewriteData[key] = pluginsData[key] === ShcemeRewrite.HTTP || pluginsData[key] === ShcemeRewrite.HTTPS ? pluginsData[key] : ShcemeRewrite.KEEP;
+          proxyRewriteData[key] = pluginsData[key] === SCHEME_REWRITE.HTTP || pluginsData[key] === SCHEME_REWRITE.HTTPS ? pluginsData[key] : SCHEME_REWRITE.KEEP;
           break;
         case 'uri':
         case 'regex_uri':
@@ -102,7 +102,7 @@ const transformProxyRewrite2Formdata = (pluginsData: any) => {
 
   return {
     proxyRewriteData,
-    uriRewriteType,
+    URIRewriteType,
     hostRewriteType,
   }
 }
@@ -315,9 +315,9 @@ export const transformRouteData = (data: RouteModule.Body) => {
   }
 
   const proxyRewrite = data.plugins ? data.plugins['proxy-rewrite'] : {};
-  const { proxyRewriteData, uriRewriteType, hostRewriteType } = transformProxyRewrite2Formdata(proxyRewrite);
+  const { proxyRewriteData, URIRewriteType, hostRewriteType } = transformProxyRewrite2Formdata(proxyRewrite);
   form1Data.proxyRewrite = proxyRewriteData;
-  form1Data.URIRewriteType = uriRewriteType;
+  form1Data.URIRewriteType = URIRewriteType;
   form1Data.hostRewriteType = hostRewriteType;
 
 

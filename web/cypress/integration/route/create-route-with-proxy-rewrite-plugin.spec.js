@@ -60,12 +60,12 @@ context('create route with proxy-rewrite plugin', () => {
 
     // show requestOverride PanelSection
     cy.contains(routeLocaleUS['page.route.panelSection.title.requestOverride']).should('be.visible');
-    // should show newPath after the uriRewriteType static clicked
+    // should show newPath after the URIRewriteType static clicked
     cy.get(domSelector.staticUri).click();
     cy.contains(routeLocaleUS['page.route.form.itemLabel.newPath']).should('be.visible');
     cy.get(domSelector.newUri).should('be.visible').type(data.rewriteUri);
-    // should show regexp and template after uriRewriteType regexp clicked
-    cy.contains(routeLocaleUS['page.route.radio.regx']).click();
+    // should show regexp and template after URIRewriteType regexp clicked
+    cy.contains(routeLocaleUS['page.route.radio.regex']).click();
     cy.contains(routeLocaleUS['page.route.form.itemLabel.regex']).should('be.visible');
     cy.get(domSelector.uriRewriteReg).should('be.visible');
     cy.contains(routeLocaleUS['page.route.form.itemLabel.template']).should('be.visible');
