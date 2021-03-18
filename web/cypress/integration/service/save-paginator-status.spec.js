@@ -25,7 +25,7 @@ context('Save Paginator Status', () => {
     cy.fixture('data.json').as('data');
   });
 
-  it('should create test service', function () {
+  it('should create 11 test services', function () {
     cy.visit('/');
     cy.contains('Service').click();
 
@@ -40,31 +40,31 @@ context('Save Paginator Status', () => {
       cy.get(this.domSelector.notification).should('contain', this.data.createServiceSuccess);
       cy.get(this.domSelector.notificationCloseIcon).should('be.visible').click();
     }
-    cy.get('.ant-table-pagination-right').should('be.visible');
+    cy.get(this.domSelector.pageList).should('be.visible');
   });
 
-  it('should save paginator status', function () {
+  it('should save paginator\' status', function () {
     cy.visit('/');
     cy.contains('Service').click();
 
     // Test page status
-    cy.get('.ant-table-pagination-right').should('be.visible');
-    cy.get('.ant-pagination-item-2').click();
-    cy.get('.ant-pagination-item-2.ant-pagination-item-active').should('exist');
+    cy.get(this.domSelector.pageList).should('be.visible');
+    cy.get(this.domSelector.pageTwo).click();
+    cy.get(this.domSelector.pageTwoActived).should('exist');
     cy.location('href').should('include', 'page=2');
 
     cy.reload();
-    cy.get('.ant-pagination-item-2.ant-pagination-item-active').should('exist');
+    cy.get(this.domSelector.pageTwoActived).should('exist');
     cy.location('href').should('include', 'page=2');
 
     // Test pageSize status
-    cy.get('.ant-pagination-options').click();
+    cy.get(this.domSelector.paginationOptions).click();
     cy.contains('20 / page').should('be.visible').click();
-    cy.get('[title="20 / page"]').should('exist');
+    cy.get(this.domSelector.twentyPerPage).should('exist');
     cy.location('href').should('include', 'pageSize=20');
 
     cy.reload();
-    cy.get('[title="20 / page"]').should('exist');
+    cy.get(this.domSelector.twentyPerPage).should('exist');
     cy.location('href').should('include', 'pageSize=20');
   });
 

@@ -78,7 +78,7 @@ const Page: React.FC = () => {
   const [rawData, setRawData] = useState({});
   const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
 
-  const savePageList = (page: number, pageSize?: number) => {
+  const savePageList = (page = 1, pageSize = 10) => {
     history.replace(`/routes/list?page=${page}&pageSize=${pageSize}`);
   };
 

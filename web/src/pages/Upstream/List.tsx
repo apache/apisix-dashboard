@@ -36,7 +36,7 @@ const Page: React.FC = () => {
 
   const { formatMessage } = useIntl();
 
-  const savePageList = (page: number, pageSize?: number) => {
+  const savePageList = (page = 1, pageSize = 10) => {
     history.replace(`/upstream/list?page=${page}&pageSize=${pageSize}`);
   };
 

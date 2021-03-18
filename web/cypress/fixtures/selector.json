@@ -71,5 +71,12 @@
   "customSelector": "[title=Custom]",
   "notificationClose": ".anticon-close",
   "redirectURIInput": "#redirectURI",
-  "redirectCodeSelector": "#ret_code"
+  "redirectCodeSelector": "#ret_code",
+
+  "paginationOptions": ".ant-pagination-options",
+  "fiftyPerPage": "[title=\"50 / page\"]",
+  "twentyPerPage": "[title=\"20 / page\"]",
+  "pageList": ".ant-table-pagination-right",
+  "pageTwo": ".ant-pagination-item-2",
+  "pageTwoActived": ".ant-pagination-item-2.ant-pagination-item-active"
 }
