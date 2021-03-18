@@ -154,12 +154,19 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Upstream)
 
-	ret, err := h.upstreamStore.Create(c.Context(), input)
+	// check name existed
+	ret, err := handler.NameExistCheck(c.Context(), h.upstreamStore, "upstream", input.Name, nil)
+	if err != nil {
+		return ret, err
+	}
+
+	// create
+	res, err := h.upstreamStore.Create(c.Context(), input)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type UpdateInput struct {
@@ -179,12 +186,18 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		input.Upstream.ID = input.ID
 	}
 
-	ret, err := h.upstreamStore.Update(c.Context(), &input.Upstream, true)
+	// check name existed
+	ret, err := handler.NameExistCheck(c.Context(), h.upstreamStore, "upstream", input.Name, input.ID)
+	if err != nil {
+		return ret, err
+	}
+
+	res, err := h.upstreamStore.Update(c.Context(), &input.Upstream, true)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type BatchDelete struct {

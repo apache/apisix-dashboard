@@ -60,6 +60,7 @@ var _ = ginkgo.Describe("route with priority test", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r2",
 			Body: `{
+					"name": "route2",
 					"uri": "/server_port",
 					"methods": ["GET"],
 					"priority": 1,
