@@ -23,30 +23,32 @@ context('Test RawDataEditor', () => {
     cy.login();
 
     cy.fixture('rawDataEditor-dataset.json').as('dataset');
-    cy.fixture('selector.json').as('domSelectors');
+    cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
   });
 
   it('should create and update with rawDataEditor', function () {
     const menuList = ['Route', 'Service', 'Upstream', 'Consumer'];
+    const publicData = this.data;
     const dateset = this.dataset;
-    const domSelectors = this.domSelectors;
-    console.log('dateset: ', dateset);
+    const domSelector = this.domSelector;
     menuList.forEach(function (item) {
       cy.visit('/');
       cy.contains(item).click();
       cy.contains('Create with Editor').click();
       const data = dateset[item];
+      
       // create with editor
       cy.window().then(({ codemirror }) => {
         if (codemirror) {
           codemirror.setValue(JSON.stringify(data));
         }
-        cy.get(domSelectors.drawer).should('exist');
-        cy.get(domSelectors.drawer, { timeout }).within(() => {
+        cy.get(domSelector.drawer).should('exist');
+        cy.get(domSelector.drawer, { timeout }).within(() => {
           cy.contains('Submit').click({
             force: true,
           });
-          cy.get(domSelectors.drawer).should('not.exist');
+          cy.get(domSelector.drawer).should('not.exist');
         });
       });
 
@@ -66,17 +68,30 @@ context('Test RawDataEditor', () => {
             codemirror.setValue(JSON.stringify({ ...data, name: 'newName' }));
           }
         }
-        cy.get(domSelectors.drawer).should('exist');
-        cy.get(domSelectors.drawer, { timeout }).within(() => {
+        cy.get(domSelector.drawer).should('exist');
+        cy.get(domSelector.drawer, { timeout }).within(() => {
           cy.contains('Submit').click({
             force: true,
           });
-          cy.get(domSelectors.drawer).should('not.exist');
+          cy.get(domSelector.drawer).should('not.exist');
         });
       });
 
       cy.reload();
       cy.get('.ant-table-tbody').should('contain', item === 'Consumer' ? 'newDesc' : 'newName');
+
+      // delete resource
+      cy.contains(item === 'Consumer' ? 'newDesc' : 'newName')
+        .siblings()
+        .contains('Delete')
+        .click();
+      cy.contains('button', 'Confirm').click();
+
+      cy.get(domSelector.notification).should('contain', publicData[`delete${item}Success`]);
+      cy.get(domSelector.notificationClose).should('be.visible').click({
+        force: true,
+        multiple: true,
+      });
     });
   });
 });

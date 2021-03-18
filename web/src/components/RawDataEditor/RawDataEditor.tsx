@@ -112,7 +112,6 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
         onClose={onClose}
         footer={
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            {' '}
             <Button onClick={onClose} key={1}>
               {formatMessage({ id: 'component.global.cancel' })}
             </Button>
