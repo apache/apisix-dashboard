@@ -37,7 +37,7 @@ context('Test RawDataEditor', () => {
       cy.contains(item).click();
       cy.contains('Create with Editor').click();
       const data = dateset[item];
-      
+
       // create with editor
       cy.window().then(({ codemirror }) => {
         if (codemirror) {
