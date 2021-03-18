@@ -132,6 +132,7 @@ context('import and export routes', () => {
       cy.contains('button', componentLocaleUS['component.global.confirm']).click();
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
       cy.get(this.domSelector.notificationCloseIcon).click();
+      cy.reload();
     }
   });
 
