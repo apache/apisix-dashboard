@@ -17,11 +17,13 @@
 package server_info
 
 import (
+	"net/http"
 	"reflect"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
+	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
@@ -45,6 +47,8 @@ func (h *Handler) ApplyRoute(r *gin.Engine) {
 		wrapper.InputType(reflect.TypeOf(GetInput{}))))
 	r.GET("/apisix/admin/server_info", wgin.Wraps(h.List,
 		wrapper.InputType(reflect.TypeOf(ListInput{}))))
+	r.DELETE("/apisix/admin/server_info/:id", wgin.Wraps(h.Delete,
+		wrapper.InputType(reflect.TypeOf(DeleteInput{}))))
 }
 
 type GetInput struct {
@@ -86,4 +90,23 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 	}
 
 	return ret, nil
+}
+
+type DeleteInput struct {
+	ID string `auto_read:"id,path" validate:"required"`
+}
+
+func (h *Handler) Delete(c droplet.Context) (interface{}, error) {
+	input := c.Input().(*DeleteInput)
+
+	err := h.serverInfoStore.BatchDelete(c.Context(), []string{input.ID})
+
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	return &data.SpecCodeResponse{
+		StatusCode: http.StatusOK,
+		Response:   data.Response{Message: "Successful"},
+	}, nil
 }
