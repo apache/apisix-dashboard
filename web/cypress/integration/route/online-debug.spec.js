@@ -38,9 +38,7 @@ context('Online debug', () => {
       'localhost:9000/api/commands/submit.html#Requirements?test=apisix.com',
       'localhost:9000/js6/main.jsp?sid=pARQZYHABxkSVdeMvXAAEtfJKbWQocOA&df=mail126_mailmaster#module=mbox.ListModule%7C%7B',
     ],
-    invalidUrls: [
-      '000'
-    ],
+    invalidUrls: ['000'],
     postFileUrl: `${defaultSettings.serveUrlMap[SERVE_ENV].split('//')[1]}/apisix/admin/import/routes`,
     routeOptUrl: `${defaultSettings.serveUrlMap[SERVE_ENV].split('//')[1]}/apisix/admin/routes`,
     uploadFile: '../../../api/test/testdata/import/default.json',
@@ -57,7 +55,7 @@ context('Online debug', () => {
     debugFormDataType0: '[data-cy=debug-formdata-type-0]',
     debugFormDataValue0: '#dynamic_form_data_item_params_0_value',
     debugFormDataFileButton0: '[data-cy=debug-upload-btn-0]',
-    codeMirrorResp: '#codeMirror-response .CodeMirror-code',
+    codeMirrorResp: '#codeMirror-response',
     headerDataKey0: '#headerForm_params_0_key',
     headerDataValue0: '#headerForm_params_0_value',
     queryDataKey0: '#queryForm_params_0_key',
@@ -68,7 +66,7 @@ context('Online debug', () => {
     bodyTab: '#rc-tabs-0-tab-body',
     jwtAuth: '[data-cy=jwt-auth]',
     jwtTokenInput: '#authForm_Authorization',
-  }
+  };
 
   beforeEach(() => {
     cy.login();
@@ -76,6 +74,7 @@ context('Online debug', () => {
     cy.fixture('selector.json').as('domSelector');
     cy.fixture('data.json').as('data');
     cy.fixture('route-json-data.json').as('routeData');
+    cy.intercept('/apisix/admin/debug-request-forwarding').as('DebugAPI');
   });
 
   it('should not show the invalid url notification', function () {
@@ -121,7 +120,7 @@ context('Online debug', () => {
     });
   });
 
-  it('should debug POST request with file successfully', function() {
+  it('should debug POST request with file successfully', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
     const currentToken = localStorage.getItem('token');
@@ -163,11 +162,11 @@ context('Online debug', () => {
     cy.get(domSelector.headerDataValue0).type(currentToken);
 
     cy.contains(routeLocaleUS['page.route.button.send']).click();
+
+    cy.wait('@DebugAPI');
     // assert: send request return
-    cy.get(domSelector.codeMirrorResp).within(() => {
-      cy.contains('data').should('be.visible');
-      cy.contains('routes').should('be.visible');
-    });
+    cy.get(domSelector.codeMirrorResp).contains('data').should('be.visible');
+    cy.get(domSelector.codeMirrorResp).contains('routes').should('be.visible');
 
     // close debug drawer
     cy.get(this.domSelector.drawerClose).click();
@@ -193,7 +192,7 @@ context('Online debug', () => {
     cy.get(domSelector.jwtTokenInput).should('be.visible').type(currentToken);
 
     cy.contains(routeLocaleUS['page.route.button.send']).click();
-
+    cy.wait('@DebugAPI');
     cy.get(domSelector.codeMirrorResp).within(() => {
       cy.get('.cm-property').should(($property) => {
         $property.map((i, el) => {
@@ -207,7 +206,6 @@ context('Online debug', () => {
           }
         })
       })
-     
     });
   });
 
@@ -243,18 +241,24 @@ context('Online debug', () => {
         codeMirrorBody.setValue(JSON.stringify(this.routeData.debugPostJson));
       }
       cy.contains(routeLocaleUS['page.route.button.send']).click();
+      
     });
-
-    cy.get(domSelector.codeMirrorResp).within(() => {
-      cy.get('.cm-property').should(($property) => {
-        $property.map((i, el) => {
-          if (Cypress.$(el).text() === '"name"') {
-            const findRouteName = Cypress.$(el).next().text();
-            expect(findRouteName).to.equal(`"${this.routeData.debugPostJson.name}"`);
-          }
+    cy.wait('@DebugAPI');
+    cy.get(domSelector.codeMirrorResp).contains('code').should('be.visible');
+      cy.get(domSelector.codeMirrorResp).within(() => {
+        cy.get('.cm-property').should(($property) => {
+          $property.map((i, el) => {
+            if (Cypress.$(el).text() === '"name"') {
+              const findRouteName = Cypress.$(el).next().text();
+              expect(findRouteName).to.equal(`"${this.routeData.debugPostJson.name}"`);
+            }
+            if (Cypress.$(el).text() === '"data"') {
+              const data = Cypress.$(el).next().text();
+              expect(data).to.not.equal('null');
+            }
+          })
         })
-      })
-    });
+      });
   });
 
   it('should delete routes create for test cases successfully', function() {
@@ -268,5 +272,5 @@ context('Online debug', () => {
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
       cy.get(this.domSelector.notificationCloseIcon).click();
     }
-  })
+  });
 });
