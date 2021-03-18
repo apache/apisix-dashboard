@@ -64,3 +64,4 @@ jobs:
         with:
           name: cypress-report
           path: web/cypress/
+          retention-days: 5
