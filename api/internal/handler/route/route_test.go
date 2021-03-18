@@ -50,6 +50,7 @@ type testCase struct {
 	serviceErr   error
 	upstreamRet  interface{}
 	upstreamErr  error
+	nameExistRet []interface{}
 }
 
 var DagScript = `
@@ -968,6 +969,14 @@ func TestRoute_Create(t *testing.T) {
 				assert.Equal(t, tc.mockInput, route)
 			}).Return(tc.mockRet, tc.mockErr)
 
+			mStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				return &store.ListOutput{
+					Rows:      tc.nameExistRet,
+					TotalSize: len(tc.nameExistRet),
+				}
+			}, nil)
+
 			svcStore := &store.MockInterface{}
 			svcStore.On("Get", mock.Anything, mock.Anything).Return(tc.serviceRet, tc.serviceErr)
 
@@ -1210,6 +1219,14 @@ func TestRoute_Update(t *testing.T) {
 				assert.Equal(t, tc.mockInput, input)
 				assert.True(t, createIfNotExist)
 			}).Return(tc.mockRet, tc.mockErr)
+
+			routeStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				return &store.ListOutput{
+					Rows:      tc.nameExistRet,
+					TotalSize: len(tc.nameExistRet),
+				}
+			}, nil)
 
 			serviceStore := &store.MockInterface{}
 			serviceStore.On("Get", mock.Anything, mock.Anything).Return(tc.serviceRet, tc.serviceErr)
