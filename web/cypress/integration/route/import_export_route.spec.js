@@ -124,14 +124,14 @@ context('import and export routes', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
+    cy.get(this.domSelector.refresh).click();
+
     for (let i = 0; i < 2; i += 1) {
-      cy.contains(data[`route_name_${i}`])
-        .siblings()
-        .contains(componentLocaleUS['component.global.delete'])
-        .click();
-      cy.contains('button', componentLocaleUS['component.global.confirm']).click();
+      cy.contains(data[`route_name_${i}`]).siblings().contains('Delete').click();
+      cy.contains('button', 'Confirm').click();
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
-      cy.get(this.domSelector.notificationCloseIcon).click();
+      cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
+      cy.reload();
     }
   });
 
