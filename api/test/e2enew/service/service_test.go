@@ -573,6 +573,14 @@ var _ = ginkgo.Describe("test service delete", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"service_id\":\"s1\"",
 		}),
+		table.Entry("hit route on apisix", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		}),
 		table.Entry("delete service failed", base.HttpTestCase{
 			Desc:         "delete service failed",
 			Object:       base.ManagerApiExpect(),
