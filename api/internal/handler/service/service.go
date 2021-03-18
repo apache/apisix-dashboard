@@ -167,12 +167,19 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	ret, err := h.serviceStore.Create(c.Context(), input)
+	// check name existed
+	ret, err := handler.NameExistCheck(c.Context(), h.serviceStore, "service", input.Name, nil)
+	if err != nil {
+		return ret, err
+	}
+
+	// create
+	res, err := h.serviceStore.Create(c.Context(), input)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type UpdateInput struct {
@@ -204,12 +211,19 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	ret, err := h.serviceStore.Update(c.Context(), &input.Service, true)
+	// check name existed
+	ret, err := handler.NameExistCheck(c.Context(), h.serviceStore, "service", input.Name, input.ID)
+	if err != nil {
+		return ret, err
+	}
+
+	// update or create(if not exists)
+	res, err := h.serviceStore.Update(c.Context(), &input.Service, true)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type BatchDelete struct {

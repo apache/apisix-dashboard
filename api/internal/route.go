@@ -35,10 +35,10 @@ import (
 	"github.com/apisix/manager-api/internal/handler/global_rule"
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/label"
-	"github.com/apisix/manager-api/internal/handler/plugin"
 	"github.com/apisix/manager-api/internal/handler/plugin_config"
 	"github.com/apisix/manager-api/internal/handler/route"
 	"github.com/apisix/manager-api/internal/handler/route_online_debug"
+	"github.com/apisix/manager-api/internal/handler/schema"
 	"github.com/apisix/manager-api/internal/handler/server_info"
 	"github.com/apisix/manager-api/internal/handler/service"
 	"github.com/apisix/manager-api/internal/handler/ssl"
@@ -69,7 +69,8 @@ func SetUpRouter() *gin.Engine {
 		consumer.NewHandler,
 		upstream.NewHandler,
 		service.NewHandler,
-		plugin.NewHandler,
+		schema.NewHandler,
+		schema.NewSchemaHandler,
 		healthz.NewHandler,
 		authentication.NewHandler,
 		global_rule.NewHandler,

@@ -326,14 +326,15 @@ func TestUpstreams_List(t *testing.T) {
 
 func TestUpstream_Create(t *testing.T) {
 	tests := []struct {
-		caseDesc  string
-		getCalled bool
-		giveInput *entity.Upstream
-		giveRet   interface{}
-		giveErr   error
-		wantInput *entity.Upstream
-		wantErr   error
-		wantRet   interface{}
+		caseDesc     string
+		getCalled    bool
+		giveInput    *entity.Upstream
+		giveRet      interface{}
+		giveErr      error
+		wantInput    *entity.Upstream
+		wantErr      error
+		wantRet      interface{}
+		nameExistRet []interface{}
 	}{
 		{
 			caseDesc:  "create success",
@@ -648,6 +649,14 @@ func TestUpstream_Create(t *testing.T) {
 				assert.Equal(t, tc.wantInput, input)
 			}).Return(tc.giveRet, tc.giveErr)
 
+			upstreamStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				return &store.ListOutput{
+					Rows:      tc.nameExistRet,
+					TotalSize: len(tc.nameExistRet),
+				}
+			}, nil)
+
 			h := Handler{upstreamStore: upstreamStore}
 
 			ctx := droplet.NewContext()
@@ -662,14 +671,15 @@ func TestUpstream_Create(t *testing.T) {
 
 func TestUpstream_Update(t *testing.T) {
 	tests := []struct {
-		caseDesc  string
-		getCalled bool
-		giveInput *UpdateInput
-		giveErr   error
-		giveRet   interface{}
-		wantInput *entity.Upstream
-		wantErr   error
-		wantRet   interface{}
+		caseDesc     string
+		getCalled    bool
+		giveInput    *UpdateInput
+		giveErr      error
+		giveRet      interface{}
+		wantInput    *entity.Upstream
+		wantErr      error
+		wantRet      interface{}
+		nameExistRet []interface{}
 	}{
 		{
 			caseDesc:  "update success",
@@ -936,6 +946,14 @@ func TestUpstream_Update(t *testing.T) {
 				assert.Equal(t, tc.wantInput, input)
 				assert.True(t, createIfNotExist)
 			}).Return(tc.giveRet, tc.giveErr)
+
+			upstreamStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				return &store.ListOutput{
+					Rows:      tc.nameExistRet,
+					TotalSize: len(tc.nameExistRet),
+				}
+			}, nil)
 
 			h := Handler{upstreamStore: upstreamStore}
 			ctx := droplet.NewContext()

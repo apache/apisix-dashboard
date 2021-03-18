@@ -1124,6 +1124,7 @@ func TestRoute_Export(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/upstreams/5",
 			Body: `{
+				"name": "upstream5",
 				"nodes": [
 					{
 						"host": "172.16.238.20",
@@ -2329,7 +2330,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			},
 			"/test-test-APISIX-REPEAT-URI-2": {
 				"get": {
-					"operationId": "route_allGET",
+					"operationId": "route_all2GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -2352,7 +2353,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			},
 			"/test-test-APISIX-REPEAT-URI-3": {
 				"get": {
-					"operationId": "route_allGET",
+					"operationId": "route_all3GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -2408,7 +2409,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			Path:   "/apisix/admin/routes/r2",
 			Body: `{
 					"uris": ["/test-test"],
-					"name": "route_all",
+					"name": "route_all2",
 					"desc": "所有1",
 					"methods": ["GET"],
 					"hosts": ["test.com"],
@@ -2431,7 +2432,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			Path:   "/apisix/admin/routes/r3",
 			Body: `{
 					"uris": ["/test-test"],
-					"name": "route_all",
+					"name": "route_all3",
 					"desc": "所有2",
 					"methods": ["GET"],
 					"hosts": ["test.com"],
