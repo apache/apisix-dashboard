@@ -18,6 +18,7 @@ import React, { useState } from 'react';
 import { Radio, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { isChrome } from 'react-device-detect';
+import { useIntl } from 'umi';
 
 import PluginOrchestration from '@/components/PluginOrchestration';
 import PluginPage from '@/components/Plugin';
@@ -36,6 +37,7 @@ type Props = {
 type Mode = 'NORMAL' | 'DRAW';
 
 const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps }) => {
+  const { formatMessage } = useIntl();
   const { plugins = {}, script = {}, plugin_config_id = '' } = data;
 
   // NOTE: Currently only compatible with chrome
@@ -55,9 +57,11 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
           }}
           style={{ marginBottom: 10 }}
         >
-          <Radio.Button value="NORMAL">普通模式</Radio.Button>
+          <Radio.Button value="NORMAL">
+            { formatMessage({ id: 'page.route.tabs.normalMode' }) }
+          </Radio.Button>
           <Radio.Button value="DRAW" disabled={disableDraw}>
-            插件编排
+            { formatMessage({ id: 'page.route.tabs.orchestration' }) }
           </Radio.Button>
         </Radio.Group>
         {Boolean(disableDraw) && (

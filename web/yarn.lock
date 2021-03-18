@@ -68,29 +68,36 @@
     umi-utils "^1.5.1"
     yargs-parser "^20.0.0"
 
-"@ant-design/pro-field@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@ant-design/pro-field/-/pro-field-0.1.2.tgz#5b5d9eeb83b217ef5e92f26091e8e148b739b3a1"
-  integrity sha512-RMBpZymaMjYrG5C/+4/0AtXFbQntG/K40vDO2gcphUfkn6AYSou0MhGISAJERJpz9jptsMUFLLzldk45ZnHDxA==
-  dependencies:
-    "@ant-design/pro-provider" "0.0.6"
-    classnames "^2.2.6"
-    lodash.isequal "^4.5.0"
-    lodash.tonumber "^4.0.3"
-    moment "^2.27.0"
-
-"@ant-design/pro-form@1.0.0-beta.21":
-  version "1.0.0-beta.21"
-  resolved "https://registry.yarnpkg.com/@ant-design/pro-form/-/pro-form-1.0.0-beta.21.tgz#d3e3bfcbf6ed122e567a0b8ef0feaa2399b136b3"
-  integrity sha512-7rALO6lWOmY8HlgfOBrWoiG5VkTtYF90HjnFZwBsh/PVDty/jec6NhjmywBfkHIiD5myuJOFD/aZuv9lbQ9H9g==
+"@ant-design/pro-field@1.10.1":
+  version "1.10.1"
+  resolved "https://registry.npm.taobao.org/@ant-design/pro-field/download/@ant-design/pro-field-1.10.1.tgz#4d957812d0cffaef42ca753c147f34f56b6e0f7c"
+  integrity sha1-TZV4EtDP+u9CynU8FH809WtuD3w=
   dependencies:
     "@ant-design/icons" "^4.2.1"
-    "@ant-design/pro-field" "0.1.2"
-    "@ant-design/pro-provider" "0.0.6"
-    "@ant-design/pro-utils" "0.1.2"
+    "@ant-design/pro-provider" "1.4.5"
+    "@ant-design/pro-utils" "1.13.0"
     classnames "^2.2.6"
+    lodash.tonumber "^4.0.3"
+    moment "^2.27.0"
+    omit.js "^2.0.2"
+    rc-util "^5.4.0"
+    swr "^0.3.6"
+
+"@ant-design/pro-form@1.16.1":
+  version "1.16.1"
+  resolved "https://registry.npm.taobao.org/@ant-design/pro-form/download/@ant-design/pro-form-1.16.1.tgz#ac7aa6c36929894fcb1f534906f4295dff785e42"
+  integrity sha1-rHqmw2kpiU/LH1NJBvQpXf94XkI=
+  dependencies:
+    "@ant-design/icons" "^4.2.1"
+    "@ant-design/pro-field" "1.10.1"
+    "@ant-design/pro-provider" "1.4.5"
+    "@ant-design/pro-utils" "1.13.0"
+    "@umijs/use-params" "^1.0.2"
+    classnames "^2.2.6"
+    omit.js "^2.0.2"
     rc-resize-observer "^0.2.3"
-    use-media-antd-query "^1.0.2"
+    rc-util "^5.0.6"
+    use-media-antd-query "^1.0.6"
 
 "@ant-design/pro-layout@^6.0.0":
   version "6.14.0"
@@ -113,13 +120,6 @@
     use-url-search-params "^2.3.13"
     warning "^4.0.3"
 
-"@ant-design/pro-provider@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@ant-design/pro-provider/-/pro-provider-0.0.6.tgz#2fe9a05ceb6f76403994ddc507a13d14e551c4c2"
-  integrity sha512-xFo45aNFb9VKUiXtv1j5aoz6KPgcwW1/49wtKOcqqzavscPEAK14lQgff24oXe/Zy7awzoBc6fEq6wjOryWULg==
-  dependencies:
-    rc-util "^5.0.1"
-
 "@ant-design/pro-provider@1.4.4":
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/@ant-design/pro-provider/-/pro-provider-1.4.4.tgz#0e8d27810c767f17d23f3edd7ff4468f8dbd3649"
@@ -127,36 +127,30 @@
   dependencies:
     rc-util "^5.0.1"
 
-"@ant-design/pro-table@2.6.3":
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/@ant-design/pro-table/-/pro-table-2.6.3.tgz#c6e28078d0fb9fadc35052cdfe551925a191573c"
-  integrity sha512-MRfaLyEd5Ape0vriIz6YZYufDnl3r6v6CDYU9UMNzyDm/9DT0oEFYV2kpzNLVGB7LjF/1yLZXXi+XbjDg5St5A==
+"@ant-design/pro-provider@1.4.5":
+  version "1.4.5"
+  resolved "https://registry.npm.taobao.org/@ant-design/pro-provider/download/@ant-design/pro-provider-1.4.5.tgz?cache=0&sync_timestamp=1614517785914&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40ant-design%2Fpro-provider%2Fdownload%2F%40ant-design%2Fpro-provider-1.4.5.tgz#2e928017b26942f202d594c25c2a419510181504"
+  integrity sha1-LpKAF7JpQvIC1ZTCXCpBlRAYFQQ=
+  dependencies:
+    rc-util "^5.0.1"
+
+"@ant-design/pro-table@2.30.1":
+  version "2.30.1"
+  resolved "https://registry.npm.taobao.org/@ant-design/pro-table/download/@ant-design/pro-table-2.30.1.tgz#cd4dccadf95c7dadfe4aaaad39f8d59550b999b4"
+  integrity sha1-zU3Mrflcfa3+SqqtOfjVlVC5mbQ=
   dependencies:
     "@ant-design/icons" "^4.1.0"
-    "@ant-design/pro-field" "0.1.2"
-    "@ant-design/pro-form" "1.0.0-beta.21"
-    "@ant-design/pro-provider" "0.0.6"
-    "@ant-design/pro-utils" "0.1.2"
-    antd "^4.1.5"
+    "@ant-design/pro-field" "1.10.1"
+    "@ant-design/pro-form" "1.16.1"
+    "@ant-design/pro-provider" "1.4.5"
+    "@ant-design/pro-utils" "1.13.0"
     classnames "^2.2.6"
-    dnd-core "^10.0.2"
     moment "^2.24.0"
-    rc-resize-observer "^0.2.1"
+    omit.js "^2.0.2"
     rc-util "^5.0.1"
-    react-dnd "^10.0.2"
-    react-dnd-html5-backend "^10.0.2"
     unstated-next "^1.1.0"
     use-json-comparison "^1.0.5"
-    use-media-antd-query "1.0.2"
-
-"@ant-design/pro-utils@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@ant-design/pro-utils/-/pro-utils-0.1.2.tgz#b9e1115e97d1ba5ac946f2f77136758c8335114b"
-  integrity sha512-5O9k2asNFTuSh+YWACZJ25DuPurWPPhr3AyDx6Pvj5lxb8t/1yJmmWJluwmVLJ65A9oKgwiWU87NHWnsP2cSYw==
-  dependencies:
-    "@types/lodash.isequal" "^4.5.5"
-    lodash.isequal "^4.5.0"
-    rc-util "^5.0.6"
+    use-media-antd-query "1.0.6"
 
 "@ant-design/pro-utils@1.11.3":
   version "1.11.3"
@@ -165,6 +159,18 @@
   dependencies:
     "@ant-design/icons" "^4.3.0"
     "@ant-design/pro-provider" "1.4.4"
+    classnames "^2.2.6"
+    fast-deep-equal "^3.1.3"
+    moment "^2.27.0"
+    rc-util "^5.0.6"
+
+"@ant-design/pro-utils@1.13.0":
+  version "1.13.0"
+  resolved "https://registry.npm.taobao.org/@ant-design/pro-utils/download/@ant-design/pro-utils-1.13.0.tgz?cache=0&sync_timestamp=1614517786156&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40ant-design%2Fpro-utils%2Fdownload%2F%40ant-design%2Fpro-utils-1.13.0.tgz#f0862de5f59b585a4d9641354805db5c75d11d34"
+  integrity sha1-8IYt5fWbWFpNlkE1SAXbXHXRHTQ=
+  dependencies:
+    "@ant-design/icons" "^4.3.0"
+    "@ant-design/pro-provider" "1.4.5"
     classnames "^2.2.6"
     fast-deep-equal "^3.1.3"
     moment "^2.27.0"
@@ -2208,21 +2214,6 @@
   resolved "https://registry.yarnpkg.com/@qixian.cs/path-to-regexp/-/path-to-regexp-6.1.0.tgz#6b84ad01596332aba95fa29d2e70104698cd5c45"
   integrity sha512-2jIiLiVZB1jnY7IIRQKtoV8Gnr7XIhk4mC88ONGunZE3hYt5IHUG4BE/6+JiTBjjEWQLBeWnZB8hGpppkufiVw==
 
-"@react-dnd/asap@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@react-dnd/asap/-/asap-4.0.0.tgz#b300eeed83e9801f51bd66b0337c9a6f04548651"
-  integrity sha512-0XhqJSc6pPoNnf8DhdsPHtUhRzZALVzYMTzRwV4VI6DJNJ/5xxfL9OQUwb8IH5/2x7lSf7nAZrnzUD+16VyOVQ==
-
-"@react-dnd/invariant@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@react-dnd/invariant/-/invariant-2.0.0.tgz#09d2e81cd39e0e767d7da62df9325860f24e517e"
-  integrity sha512-xL4RCQBCBDJ+GRwKTFhGUW8GXa4yoDfJrPbLblc3U09ciS+9ZJXJ3Qrcs/x2IODOdIE5kQxvMmE2UKyqUictUw==
-
-"@react-dnd/shallowequal@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@react-dnd/shallowequal/-/shallowequal-2.0.0.tgz#a3031eb54129f2c66b2753f8404266ec7bf67f0a"
-  integrity sha512-Pc/AFTdwZwEKJxFJvlxrSmGe/di+aAOBn60sremrpLo6VI/6cmiUYNNwlI5KNYttg7uypzA3ILPMPgxB2GYZEg==
-
 "@rjsf/antd@2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@rjsf/antd/-/antd-2.2.0.tgz#0a92d67c877bf080008c187ea714de640e58425d"
@@ -2672,22 +2663,15 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
-"@types/lodash.isequal@^4.5.5":
-  version "4.5.5"
-  resolved "https://registry.yarnpkg.com/@types/lodash.isequal/-/lodash.isequal-4.5.5.tgz#4fed1b1b00bef79e305de0352d797e9bb816c8ff"
-  integrity sha512-4IKbinG7MGP131wRfceK6W4E/Qt3qssEFLF30LnJbjYiSfHGGRU/Io8YxXrZX109ir+iDETC8hw8QsDijukUVg==
-  dependencies:
-    "@types/lodash" "*"
-
-"@types/lodash@*", "@types/lodash@^4.14.144", "@types/lodash@^4.14.168":
-  version "4.14.168"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
-  integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
-
 "@types/lodash@4.14.167":
   version "4.14.167"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.167.tgz#ce7d78553e3c886d4ea643c37ec7edc20f16765e"
   integrity sha512-w7tQPjARrvdeBkX/Rwg95S592JwxqOjmms3zWQ0XZgSyxSLdzWaYH3vErBhdVS/lRBX7F8aBYcYJYTr5TMGOzw==
+
+"@types/lodash@^4.14.144", "@types/lodash@^4.14.168":
+  version "4.14.168"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
+  integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
 
 "@types/marked-terminal@^3.1.1":
   version "3.1.1"
@@ -3811,6 +3795,11 @@
     semver "6.3.0"
     sockjs "0.3.19"
 
+"@umijs/use-params@^1.0.2":
+  version "1.0.3"
+  resolved "https://registry.npm.taobao.org/@umijs/use-params/download/@umijs/use-params-1.0.3.tgz#d91d6be6846dc8765dfd81c53cee3953b33f1eb2"
+  integrity sha1-2R1r5oRtyHZd/YHFPO45U7M/HrI=
+
 "@umijs/utils@3.3.7", "@umijs/utils@^3.0.0-beta.12":
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/@umijs/utils/-/utils-3.3.7.tgz#33a5dcb86508428c96774f03191842ac299bbe22"
@@ -4262,7 +4251,7 @@ antd-mobile@^2.3.1:
     rmc-tabs "~1.2.0"
     rmc-tooltip "~1.0.0"
 
-antd@^4.1.2, antd@^4.1.3, antd@^4.1.5, antd@^4.4.0:
+antd@^4.1.2, antd@^4.1.3, antd@^4.4.0:
   version "4.12.2"
   resolved "https://registry.yarnpkg.com/antd/-/antd-4.12.2.tgz#3e00b21de418c94a358bf1fc064de15654a30161"
   integrity sha512-xB7sGg2qM/Sl3azjbc2RbJQ6cTr2Fos0AYZw2gTLLWtKhOyO3FUH7EBsL17GOkVnEDwMmBYtVXLhMgPM+e4gbA==
@@ -6517,11 +6506,6 @@ css-loader@3.6.0:
     schema-utils "^2.7.0"
     semver "^6.3.0"
 
-css-mediaquery@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/css-mediaquery/-/css-mediaquery-0.1.2.tgz#6a2c37344928618631c54bd33cedd301da18bea0"
-  integrity sha1-aiw3NEkoYYYxxUvTPO3TAdoYvqA=
-
 css-modules-typescript-loader@4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/css-modules-typescript-loader/-/css-modules-typescript-loader-4.0.1.tgz#0b818cf647fefd8f9fb3d4469374e69ab1e72742"
@@ -7043,6 +7027,11 @@ deps-sort@^2.0.0:
     subarg "^1.0.0"
     through2 "^2.0.0"
 
+dequal@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.npm.taobao.org/dequal/download/dequal-2.0.2.tgz#85ca22025e3a87e65ef75a7a437b35284a7e319d"
+  integrity sha1-hcoiAl46h+Ze91p6Q3s1KEp+MZ0=
+
 des.js@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/des.js/-/des.js-1.0.1.tgz#5382142e1bdc53f85d86d53e5f4aa7deb91e0843"
@@ -7146,15 +7135,6 @@ discontinuous-range@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/discontinuous-range/-/discontinuous-range-1.0.0.tgz#e38331f0844bba49b9a9cb71c771585aab1bc65a"
   integrity sha1-44Mx8IRLukm5qctxx3FYWqsbxlo=
-
-dnd-core@^10.0.2:
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/dnd-core/-/dnd-core-10.0.2.tgz#051dc119682ea1185622f954667670d3d5f6a574"
-  integrity sha512-PrxEjxF0+6Y1n1n1Z9hSWZ1tvnDXv9syL+BccV1r1RC08uWNsyetf8AnWmUF3NgYPwy0HKQJwTqGkZK+1NlaFA==
-  dependencies:
-    "@react-dnd/asap" "^4.0.0"
-    "@react-dnd/invariant" "^2.0.0"
-    redux "^4.0.4"
 
 doctrine@1.5.0:
   version "1.5.0"
@@ -9610,11 +9590,6 @@ human-signals@^1.1.1:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
-hyphenate-style-name@^1.0.0:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz#691879af8e220aea5750e8827db4ef62a54e361d"
-  integrity sha512-ygGZLjmXfPHj+ZWh6LwbC37l43MhfztxetbFCoYTM2VjkIUpeHgSNn7QIyVFj7YQ1Wl9Cbw5sholVJPzWvC2MQ==
-
 iconv-lite@0.4.24, iconv-lite@^0.4.24, iconv-lite@^0.4.8:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
@@ -11951,13 +11926,6 @@ marked@1.2.7:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/marked/-/marked-1.2.7.tgz#6e14b595581d2319cdcf033a24caaf41455a01fb"
   integrity sha512-No11hFYcXr/zkBvL6qFmAp1z6BKY3zqLMHny/JN/ey+al7qwCM2+CMBL9BOgqMxZU36fz4cCWfn2poWIf7QRXA==
-
-matchmediaquery@^0.3.0:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/matchmediaquery/-/matchmediaquery-0.3.1.tgz#8247edc47e499ebb7c58f62a9ff9ccf5b815c6d7"
-  integrity sha512-Hlk20WQHRIm9EE9luN1kjRjYXAQToHOIAHPJn9buxBwuhfTHoKUcX+lXBbxc85DVQfXYbEQ4HcwQdd128E3qHQ==
-  dependencies:
-    css-mediaquery "^0.1.2"
 
 mathml-tag-names@^2.0.1, mathml-tag-names@^2.1.3:
   version "2.1.3"
@@ -14599,7 +14567,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@15.x, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@15.x, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -15393,23 +15361,6 @@ react-device-detect@^1.12.1:
   dependencies:
     ua-parser-js "^0.7.23"
 
-react-dnd-html5-backend@^10.0.2:
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-10.0.2.tgz#15cb9d2b923f43576a136df854e288cb5969784c"
-  integrity sha512-ny17gUdInZ6PIGXdzfwPhoztRdNVVvjoJMdG80hkDBamJBeUPuNF2Wv4D3uoQJLjXssX1+i9PhBqc7EpogClwQ==
-  dependencies:
-    dnd-core "^10.0.2"
-
-react-dnd@^10.0.2:
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-10.0.2.tgz#a6ad8eb3d9f2c573031f7ce05012e5c767a0b1fc"
-  integrity sha512-SC2Ymvntynhoqtf5zaFhZscm9xenCoMofilxPdlwUlaelAzmbl9fw82C4ZJ//+lNm3kWAKXjGDZg2/aWjKEAtg==
-  dependencies:
-    "@react-dnd/shallowequal" "^2.0.0"
-    "@types/hoist-non-react-statics" "^3.3.1"
-    dnd-core "^10.0.2"
-    hoist-non-react-statics "^3.3.0"
-
 react-dom@16.x, react-dom@^16.8.6:
   version "16.14.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.14.0.tgz#7ad838ec29a777fb3c75c3a190f661cf92ab8b89"
@@ -15526,16 +15477,6 @@ react-resize-observer@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-resize-observer/-/react-resize-observer-1.1.1.tgz#641dfa2e0f4bd2549a8ab4bbbaf43b68f3dcaf76"
   integrity sha512-3R+90Hou90Mr3wJYc+unsySC8Pn91V4nmjO32NKvUvjphRUbq9HisyLg7bDyGBE7xlMrrM6Fax7iNQaFdc/FYA==
-
-react-responsive@^8.0.1:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/react-responsive/-/react-responsive-8.2.0.tgz#e0ffb306cfd8f38c9c12e26725b9e1245fa9debc"
-  integrity sha512-iagCqVrw4QSjhxKp3I/YK6+ODkWY6G+YPElvdYKiUUbywwh9Ds0M7r26Fj2/7dWFFbOpcGnJE6uE7aMck8j5Qg==
-  dependencies:
-    hyphenate-style-name "^1.0.0"
-    matchmediaquery "^0.3.0"
-    prop-types "^15.6.1"
-    shallow-equal "^1.1.0"
 
 react-router-config@5.1.1:
   version "5.1.1"
@@ -15773,7 +15714,7 @@ redux-saga@^0.16.0:
   resolved "https://registry.yarnpkg.com/redux-saga/-/redux-saga-0.16.2.tgz#993662e86bc945d8509ac2b8daba3a8c615cc971"
   integrity sha512-iIjKnRThI5sKPEASpUvySemjzwqwI13e3qP7oLub+FycCRDysLSAOwt958niZW6LhxfmS6Qm1BzbU70w/Koc4w==
 
-redux@^4.0.0, redux@^4.0.1, redux@^4.0.4:
+redux@^4.0.0, redux@^4.0.1:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.5.tgz#4db5de5816e17891de8a80c424232d06f051d93f"
   integrity sha512-VSz1uMAH24DM6MF72vcojpYPtrTUu3ByVWfPL1nPfVRb5mZVTve5GnNCUV53QM/BZ66xfWrm0CTWoM+Xlz8V1w==
@@ -16653,7 +16594,7 @@ shallow-clone@^0.1.2:
     lazy-cache "^0.2.3"
     mixin-object "^2.0.1"
 
-shallow-equal@^1.1.0, shallow-equal@^1.2.1:
+shallow-equal@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/shallow-equal/-/shallow-equal-1.2.1.tgz#4c16abfa56043aa20d050324efa68940b0da79da"
   integrity sha512-S4vJDjHHMBaiZuT9NPb616CSmLf618jawtv3sufLl6ivK8WocjAo58cXwbRV1cgqxH0Qbv+iUt6m05eqEa2IRA==
@@ -17811,6 +17752,13 @@ svgo@^1.0.0, svgo@^1.2.2:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
+swr@^0.3.6:
+  version "0.3.11"
+  resolved "https://registry.npm.taobao.org/swr/download/swr-0.3.11.tgz?cache=0&sync_timestamp=1612792596287&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fswr%2Fdownload%2Fswr-0.3.11.tgz#f7f50ed26c06afea4249482cec504768a2272664"
+  integrity sha1-9/UO0mwGr+pCSUgs7FBHaKInJmQ=
+  dependencies:
+    dequal "2.0.2"
+
 sylvanas@^0.4.0:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/sylvanas/-/sylvanas-0.4.4.tgz#27819537420eddfaebfbf0f74081a492402f6827"
@@ -18745,14 +18693,7 @@ use-json-comparison@^1.0.3, use-json-comparison@^1.0.5:
   resolved "https://registry.yarnpkg.com/use-json-comparison/-/use-json-comparison-1.0.5.tgz#d41a72d65fcf4cf72acc85c8f3980e2173809d63"
   integrity sha512-P/AgEKXphcN0L/8G5wLfbEz88mZQ9ayHS1OVESZaS2nxkN/msDWTGE8E1e9HXOWCZ9yoAfDrbVKAmTYpsYupFA==
 
-use-media-antd-query@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/use-media-antd-query/-/use-media-antd-query-1.0.2.tgz#cbda1bdfb99cd20b0121a361c3d1331ca499ba58"
-  integrity sha512-9exG6pzEtkwtJIM2loE5/lBdNeJHoX0/CYA8NVwC0UPaiCcpHKAEyj9sEa+dju7ERPaU0//gG8+Q6I7Jr265Eg==
-  dependencies:
-    react-responsive "^8.0.1"
-
-use-media-antd-query@^1.0.2, use-media-antd-query@^1.0.3:
+use-media-antd-query@1.0.6, use-media-antd-query@^1.0.3, use-media-antd-query@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/use-media-antd-query/-/use-media-antd-query-1.0.6.tgz#2395fc52a9bc810fa7360bff43eb84609eee1b2f"
   integrity sha512-uEP116w7LH2z4MatYM0UMKD0lI4awPtXh2WrbeUfG5mCS1UD9D7lZVz9QsRThTIButxNnx9LjPSBEBD8G3Z5BA==
