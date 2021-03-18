@@ -127,10 +127,11 @@ context('import and export routes', () => {
     cy.get(this.domSelector.refresh).click();
 
     for (let i = 0; i < 2; i += 1) {
-      cy.contains('Delete').should('be.visible').click();
+      cy.contains(data[`route_name_${i}`]).siblings().contains('Delete').click();
       cy.contains('button', 'Confirm').click();
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
       cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
+      cy.reload();
     }
   });
 
