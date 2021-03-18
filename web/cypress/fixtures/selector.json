@@ -69,7 +69,7 @@
   "drawerClose": ".ant-drawer-close",
   "descriptionSelector": "[title=Description]",
   "customSelector": "[title=Custom]",
-  "errorAlertClose": ".anticon-close",
+  "notificationClose": ".anticon-close",
   "redirectURIInput": "#redirectURI",
   "redirectCodeSelector": "#ret_code"
 }
