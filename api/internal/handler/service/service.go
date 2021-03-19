@@ -38,12 +38,14 @@ import (
 type Handler struct {
 	serviceStore  store.Interface
 	upstreamStore store.Interface
+	routeStore    store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{
 		serviceStore:  store.GetStore(store.HubKeyService),
 		upstreamStore: store.GetStore(store.HubKeyUpstream),
+		routeStore:    store.GetStore(store.HubKeyRoute),
 	}, nil
 }
 
@@ -232,8 +234,34 @@ type BatchDelete struct {
 
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
+	ids := strings.Split(input.IDs, ",")
+	mp := make(map[string]struct{})
+	for _, id := range ids {
+		mp[id] = struct{}{}
+	}
 
-	if err := h.serviceStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			route := obj.(*entity.Route)
+			if _, exist := mp[utils.InterfaceToString(route.ServiceID)]; exist {
+				return true
+			}
+
+			return false
+		},
+		PageSize:   0,
+		PageNumber: 0,
+	})
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("route: %s is using this service", ret.Rows[0].(*entity.Route).Name)
+	}
+
+	if err := h.serviceStore.BatchDelete(c.Context(), ids); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 

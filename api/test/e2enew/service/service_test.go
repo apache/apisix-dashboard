@@ -25,6 +25,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
+	"github.com/onsi/ginkgo/extensions/table"
 )
 
 var _ = ginkgo.Describe("create service without plugin", func() {
@@ -517,4 +518,108 @@ var _ = ginkgo.Describe("service update use patch method", func() {
 			ExpectStatus: http.StatusOK,
 		})
 	})
+})
+
+var _ = ginkgo.Describe("test service delete", func() {
+	t := ginkgo.GinkgoT()
+	var createServiceBody map[string]interface{} = map[string]interface{}{
+		"name": "testservice",
+		"upstream": map[string]interface{}{
+			"type": "roundrobin",
+			"nodes": []map[string]interface{}{
+				{
+					"host":   base.UpstreamIp,
+					"port":   1980,
+					"weight": 1,
+				},
+			},
+		},
+	}
+	_createServiceBody, err := json.Marshal(createServiceBody)
+	assert.Nil(t, err)
+
+	table.DescribeTable("test service delete",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("create service without plugin", base.HttpTestCase{
+			Desc:         "create service without plugin",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Body:         string(_createServiceBody),
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"name\":\"testservice\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}}",
+		}),
+		table.Entry("create route use service s1", base.HttpTestCase{
+			Desc:   "create route use service s1",
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"id": "r1",
+				"name": "route1",
+				"uri": "/hello",
+				"upstream": {
+						"type": "roundrobin",
+						"nodes": {
+								"` + base.UpstreamIp + `:1980": 1
+						}
+				},
+				"service_id": "s1"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"service_id\":\"s1\"",
+		}),
+		table.Entry("hit route on apisix", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("delete service failed", base.HttpTestCase{
+			Desc:         "delete service failed",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "route: route1 is using this service",
+		}),
+		table.Entry("delete route first", base.HttpTestCase{
+			Desc:         "delete route first",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("check route exist", base.HttpTestCase{
+			Desc:         "check route exist",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+		}),
+		table.Entry("delete service success", base.HttpTestCase{
+			Desc:         "delete service success",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("check the service exist", base.HttpTestCase{
+			Desc:         "check the exist",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+		}))
 })

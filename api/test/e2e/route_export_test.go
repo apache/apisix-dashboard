@@ -1219,6 +1219,15 @@ func TestRoute_Export(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
+			Desc:         "delete the service4",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s4",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
 			Desc:         "remove upstream4",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
@@ -1233,15 +1242,6 @@ func TestRoute_Export(t *testing.T) {
 			Path:         "/apisix/admin/upstreams/5",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "delete the service4",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/services/s4",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
 		},
 	}
 	for _, tc := range tests9 {
@@ -1391,14 +1391,6 @@ func TestRoute_Export(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			Desc:         "remove upstream6",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/upstreams/6",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
 			Desc:         "delete the service5",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
@@ -1406,6 +1398,14 @@ func TestRoute_Export(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "remove upstream6",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/6",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
 		},
 	}
 	for _, tc := range tests10 {

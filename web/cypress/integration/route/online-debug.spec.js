@@ -38,9 +38,7 @@ context('Online debug', () => {
       'localhost:9000/api/commands/submit.html#Requirements?test=apisix.com',
       'localhost:9000/js6/main.jsp?sid=pARQZYHABxkSVdeMvXAAEtfJKbWQocOA&df=mail126_mailmaster#module=mbox.ListModule%7C%7B',
     ],
-    invalidUrls: [
-      '000'
-    ],
+    invalidUrls: ['000'],
     postUrl: `${defaultSettings.serveUrlMap[SERVE_ENV].split('//')[1]}/apisix/admin/import/routes`,
     uploadFile: '../../../api/test/testdata/import/default.json',
     headerAuthorizationKey: 'Authorization',
@@ -58,7 +56,7 @@ context('Online debug', () => {
     codeMirrorCode: '.CodeMirror-code',
     headerDataKey0: '#headerForm_params_0_key',
     headerDataValue0: '#headerForm_params_0_value',
-  }
+  };
 
   beforeEach(() => {
     cy.login();
@@ -109,7 +107,7 @@ context('Online debug', () => {
     });
   });
 
-  it('should debug POST request with file successfully', function() {
+  it('should debug POST request with file successfully', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
     const currentToken = localStorage.getItem('token');
@@ -154,10 +152,8 @@ context('Online debug', () => {
 
     cy.wait('@DebugAPI');
     // assert: send request return
-    cy.get(domSelector.codeMirrorCode).within(() => {
-      cy.contains('data').should('be.visible');
-      cy.contains('routes').should('be.visible');
-    });
+    cy.get(domSelector.codeMirrorCode).contains('data').should('be.visible');
+    cy.get(domSelector.codeMirrorCode).contains('routes').should('be.visible');
 
     // close debug drawer
     cy.get(this.domSelector.drawerClose).click();
@@ -167,5 +163,5 @@ context('Online debug', () => {
     cy.contains(data.routeName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
-  })
+  });
 });
