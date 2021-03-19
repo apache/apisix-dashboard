@@ -38,12 +38,14 @@ import (
 type Handler struct {
 	serviceStore  store.Interface
 	upstreamStore store.Interface
+	routeStore    store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{
 		serviceStore:  store.GetStore(store.HubKeyService),
 		upstreamStore: store.GetStore(store.HubKeyUpstream),
+		routeStore:    store.GetStore(store.HubKeyRoute),
 	}, nil
 }
 
@@ -167,12 +169,19 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	ret, err := h.serviceStore.Create(c.Context(), input)
+	// check name existed
+	ret, err := handler.NameExistCheck(c.Context(), h.serviceStore, "service", input.Name, nil)
+	if err != nil {
+		return ret, err
+	}
+
+	// create
+	res, err := h.serviceStore.Create(c.Context(), input)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type UpdateInput struct {
@@ -204,12 +213,19 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	ret, err := h.serviceStore.Update(c.Context(), &input.Service, true)
+	// check name existed
+	ret, err := handler.NameExistCheck(c.Context(), h.serviceStore, "service", input.Name, input.ID)
+	if err != nil {
+		return ret, err
+	}
+
+	// update or create(if not exists)
+	res, err := h.serviceStore.Update(c.Context(), &input.Service, true)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type BatchDelete struct {
@@ -218,8 +234,34 @@ type BatchDelete struct {
 
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
+	ids := strings.Split(input.IDs, ",")
+	mp := make(map[string]struct{})
+	for _, id := range ids {
+		mp[id] = struct{}{}
+	}
 
-	if err := h.serviceStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			route := obj.(*entity.Route)
+			if _, exist := mp[utils.InterfaceToString(route.ServiceID)]; exist {
+				return true
+			}
+
+			return false
+		},
+		PageSize:   0,
+		PageNumber: 0,
+	})
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("route: %s is using this service", ret.Rows[0].(*entity.Route).Name)
+	}
+
+	if err := h.serviceStore.BatchDelete(c.Context(), ids); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
