@@ -21,8 +21,6 @@ import (
 	"path/filepath"
 
 	"github.com/gin-contrib/pprof"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 
@@ -55,8 +53,6 @@ func SetUpRouter() *gin.Engine {
 	}
 	r := gin.New()
 	logger := log.GetLogger(log.AccessLog)
-	store := cookie.NewStore([]byte("secret"))
-	r.Use(sessions.Sessions("session", store))
 	r.Use(filter.CORS(), filter.RequestId(), filter.IPFilter(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.RecoverHandler())
 	r.Use(static.Serve("/", static.LocalFile(filepath.Join(conf.WorkDir, conf.WebDir), false)))
 	r.NoRoute(func(c *gin.Context) {
