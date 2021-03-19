@@ -18,6 +18,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"testing"
@@ -819,12 +820,15 @@ func TestService_Patch(t *testing.T) {
 
 func TestServices_Delete(t *testing.T) {
 	tests := []struct {
-		caseDesc  string
-		giveInput *BatchDelete
-		giveErr   error
-		wantInput []string
-		wantErr   error
-		wantRet   interface{}
+		caseDesc      string
+		giveInput     *BatchDelete
+		giveErr       error
+		wantInput     []string
+		wantErr       error
+		wantRet       interface{}
+		routeMockData []*entity.Route
+		routeMockErr  error
+		getCalled     bool
 	}{
 		{
 			caseDesc: "delete success",
@@ -832,6 +836,7 @@ func TestServices_Delete(t *testing.T) {
 				IDs: "s1",
 			},
 			wantInput: []string{"s1"},
+			getCalled: true,
 		},
 		{
 			caseDesc: "batch delete success",
@@ -839,6 +844,7 @@ func TestServices_Delete(t *testing.T) {
 				IDs: "s1,s2",
 			},
 			wantInput: []string{"s1", "s2"},
+			getCalled: true,
 		},
 		{
 			caseDesc: "delete failed",
@@ -849,6 +855,45 @@ func TestServices_Delete(t *testing.T) {
 			wantInput: []string{"s1"},
 			wantRet:   handler.SpecCodeResponse(fmt.Errorf("delete error")),
 			wantErr:   fmt.Errorf("delete error"),
+			getCalled: true,
+		},
+		{
+			caseDesc: "delete failed, route is using",
+			giveInput: &BatchDelete{
+				IDs: "s1",
+			},
+			wantInput: []string{"s1"},
+			routeMockData: []*entity.Route{
+				&entity.Route{
+					BaseInfo: entity.BaseInfo{
+						ID:         "r1",
+						CreateTime: 1609746531,
+					},
+					Name:       "route1",
+					Desc:       "test_route",
+					UpstreamID: "u1",
+					ServiceID:  "s1",
+					Labels: map[string]string{
+						"version": "v1",
+					},
+				},
+			},
+			routeMockErr: nil,
+			getCalled:    false,
+			wantRet:      &data.SpecCodeResponse{StatusCode: 400},
+			wantErr:      errors.New("route: route1 is using this service"),
+		},
+		{
+			caseDesc: "delete failed, route list error",
+			giveInput: &BatchDelete{
+				IDs: "s1",
+			},
+			wantInput:     []string{"s1"},
+			routeMockData: nil,
+			routeMockErr:  errors.New("route list error"),
+			wantRet:       handler.SpecCodeResponse(errors.New("route list error")),
+			wantErr:       errors.New("route list error"),
+			getCalled:     false,
 		},
 	}
 
@@ -862,11 +907,31 @@ func TestServices_Delete(t *testing.T) {
 				assert.Equal(t, tc.wantInput, input)
 			}).Return(tc.giveErr)
 
-			h := Handler{serviceStore: serviceStore}
+			routeStore := &store.MockInterface{}
+			routeStore.On("List", mock.Anything).Return(func(input store.ListInput) *store.ListOutput {
+				var returnData []interface{}
+				for _, c := range tc.routeMockData {
+					if input.Predicate(c) {
+						if input.Format == nil {
+							returnData = append(returnData, c)
+							continue
+						}
+
+						returnData = append(returnData, input.Format(c))
+					}
+				}
+
+				return &store.ListOutput{
+					Rows:      returnData,
+					TotalSize: len(returnData),
+				}
+			}, tc.routeMockErr)
+
+			h := Handler{serviceStore: serviceStore, routeStore: routeStore}
 			ctx := droplet.NewContext()
 			ctx.SetInput(tc.giveInput)
 			ret, err := h.BatchDelete(ctx)
-			assert.True(t, getCalled)
+			assert.Equal(t, tc.getCalled, getCalled)
 			assert.Equal(t, tc.wantRet, ret)
 			assert.Equal(t, tc.wantErr, err)
 		})
