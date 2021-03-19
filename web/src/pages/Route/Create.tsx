@@ -95,7 +95,7 @@ const Page: React.FC<Props> = (props) => {
     }
   }, []);
 
-  const getProxyrewriteEnable =() => {
+  const getProxyRewriteEnable =() => {
     return !isEmpty(transformProxyRewrite2Plugin(form1.getFieldValue('proxyRewrite')));
   }
 
@@ -155,7 +155,7 @@ const Page: React.FC<Props> = (props) => {
         <Step3
           data={step3Data}
           isForceHttps={form1.getFieldValue('redirectOption') === 'forceHttps'}
-          isProxyEnable={getProxyrewriteEnable()}
+          isProxyEnable={getProxyRewriteEnable()}
           onChange={({ plugins, script = INIT_CHART, plugin_config_id }) => {
             setStep3Data({ plugins, script, plugin_config_id });
             setChart(script);
