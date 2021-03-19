@@ -134,5 +134,8 @@ export default {
   'page.route.exportRoutesTips': 'Please choose the type of file you want to export',
   'page.route.button.importOpenApi': 'Import OpenAPI',
   'page.route.button.selectFile': 'Please Select File',
-  'page.route.list': 'Route List'
+  'page.route.list': 'Route List',
+
+  'page.route.tabs.normalMode': 'Normal mode',
+  'page.route.tabs.orchestration': 'Plugin orchestration'
 };

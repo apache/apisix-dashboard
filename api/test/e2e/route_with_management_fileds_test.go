@@ -279,6 +279,7 @@ func TestRoute_search_by_label(t *testing.T) {
 			Path:   "/apisix/admin/routes/r2",
 			Method: http.MethodPut,
 			Body: `{
+					"name": "route2",
 					"uri": "/hello2",
 					"labels": {
 						"build":"17",
