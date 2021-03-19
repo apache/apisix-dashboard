@@ -1,14 +1,14 @@
 ---
-name: Bug report
-about: Create a bug report for the Apache APISIX Dashboard
+name: Bug Report
+about: Please use this template for reporting suspected bugs.
 labels: "bug"
 ---
 
-# Bug report
+## Issue description
+<!-- A clear and concise description of what the issue is. -->
 
-## Describe the bug
-
-A clear and concise description of what the bug is.
+## Expected behavior
+<!-- A clear and concise description of what you expected to happen. -->
 
 ## How to Reproduce
 
@@ -17,20 +17,17 @@ A clear and concise description of what the bug is.
 3. Scroll down to '....'
 4. See error
 
-## Expected behavior
-
-A clear and concise description of what you expected to happen.
-
 ## Screenshots
+<!-- Add screenshots to help explain your problem if applicable. -->
 
-Add screenshots to help explain your problem if applicable.
+## Environment
 
-## System information
-
-- OS: [e.g. macOS, Windows]
-- Browser (if applies) [e.g. Chrome, Safari, Edge]
-- Version: [e.g. 2.0-rc3]
+* apisix version (cmd: `apisix version`):
+* OS (cmd: `uname -a`):
+* OpenResty / Nginx version (cmd: `nginx -V` or `openresty -V`):
+* etcd version, if have (cmd: run `curl http://127.0.0.1:9090/v1/server_info` to get the info from server-info API):
+* apisix-dashboard version, if have:
+* Browser version, if have:
 
 ## Additional context
-
-Add any other context about the problem here.
+<!-- Do you want to solve this issue? or add any other context about the problem here. -->
