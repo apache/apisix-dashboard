@@ -48,7 +48,6 @@ context('Save Paginator Status', () => {
             pass_host: 'pass',
           },
           enable_websocket: true,
-          plugins: {},  
           name: `asd${i}`,
         }
       }).then((res) => {
