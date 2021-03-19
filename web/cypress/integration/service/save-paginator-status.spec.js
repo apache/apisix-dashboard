@@ -15,9 +15,13 @@
  * limitations under the License.
  */
 /* eslint-disable no-undef */
+import defaultSettings from '../../../config/defaultSettings';
 
 context('Save Paginator Status', () => {
   const timeout = 300;
+  const token = localStorage.getItem('token');
+  const { SERVE_ENV = 'dev' } = Cypress.env();
+
   beforeEach(() => {
     cy.login();
 
@@ -30,15 +34,26 @@ context('Save Paginator Status', () => {
     cy.contains('Service').click();
 
     for (let i = 0; i <= 10; i++) {
-      cy.contains('Create').click();
-      cy.get(this.domSelector.name).type(`${this.data.serviceName}&${i}`);
-      cy.get(this.domSelector.nodes_0_host).click();
-      cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
-      cy.contains('Next').click();
-      cy.contains('Next').click();
-      cy.contains('Submit').click();
-      cy.get(this.domSelector.notification).should('contain', this.data.createServiceSuccess);
-      cy.get(this.domSelector.notificationCloseIcon).should('be.visible').click();
+      cy.request({
+        method: 'POST',
+        url: `${defaultSettings.serveUrlMap[SERVE_ENV]}/apisix/admin/services`,
+        headers: {
+          Authorization: token,
+        },
+        body: {
+          upstream: {
+            nodes: {"39.97.63.215:80": 1},
+            timeout: {connect: 6, read: 6, send: 6},
+            type: 'roundrobin',
+            pass_host: 'pass',
+          },
+          enable_websocket: true,
+          plugins: {},  
+          name: `asd${i}`,
+        }
+      }).then((res) => {
+        expect(res.body.code).to.equal(0);
+      });
     }
     cy.get(this.domSelector.pageList).should('be.visible');
   });
