@@ -1124,6 +1124,7 @@ func TestRoute_Export(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/upstreams/5",
 			Body: `{
+				"name": "upstream5",
 				"nodes": [
 					{
 						"host": "172.16.238.20",
@@ -1218,6 +1219,15 @@ func TestRoute_Export(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
+			Desc:         "delete the service4",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s4",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
 			Desc:         "remove upstream4",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
@@ -1232,15 +1242,6 @@ func TestRoute_Export(t *testing.T) {
 			Path:         "/apisix/admin/upstreams/5",
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "delete the service4",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/services/s4",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
 		},
 	}
 	for _, tc := range tests9 {
@@ -1390,14 +1391,6 @@ func TestRoute_Export(t *testing.T) {
 			Sleep:        sleepTime,
 		},
 		{
-			Desc:         "remove upstream6",
-			Object:       ManagerApiExpect(t),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/upstreams/6",
-			Headers:      map[string]string{"Authorization": token},
-			ExpectStatus: http.StatusOK,
-		},
-		{
 			Desc:         "delete the service5",
 			Object:       ManagerApiExpect(t),
 			Method:       http.MethodDelete,
@@ -1405,6 +1398,14 @@ func TestRoute_Export(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "remove upstream6",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/upstreams/6",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
 		},
 	}
 	for _, tc := range tests10 {
@@ -2329,7 +2330,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			},
 			"/test-test-APISIX-REPEAT-URI-2": {
 				"get": {
-					"operationId": "route_allGET",
+					"operationId": "route_all2GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -2352,7 +2353,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			},
 			"/test-test-APISIX-REPEAT-URI-3": {
 				"get": {
-					"operationId": "route_allGET",
+					"operationId": "route_all3GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -2408,7 +2409,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			Path:   "/apisix/admin/routes/r2",
 			Body: `{
 					"uris": ["/test-test"],
-					"name": "route_all",
+					"name": "route_all2",
 					"desc": "所有1",
 					"methods": ["GET"],
 					"hosts": ["test.com"],
@@ -2431,7 +2432,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 			Path:   "/apisix/admin/routes/r3",
 			Body: `{
 					"uris": ["/test-test"],
-					"name": "route_all",
+					"name": "route_all3",
 					"desc": "所有2",
 					"methods": ["GET"],
 					"hosts": ["test.com"],
