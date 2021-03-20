@@ -19,6 +19,7 @@
 context('Create and Delete Route', () => {
   const name = `routeName${new Date().valueOf()}`;
   const newName = `newName${new Date().valueOf()}`;
+  const duplicateNewName = `duplicateName${new Date().valueOf()}`;
   const sleepTime = 100;
   const timeout = 5000;
 
@@ -161,8 +162,6 @@ context('Create and Delete Route', () => {
     cy.contains('Search').click();
     cy.contains(newName).siblings().contains('Duplicate').click();
 
-    const duplicateNewName = `duplicateName${new Date().valueOf()}`;
-
     cy.get(this.domSelector.name).clear().type(duplicateNewName);
     cy.get(this.domSelector.description).clear().type(this.data.description2);
     cy.contains('Next').click();
@@ -186,10 +185,12 @@ context('Create and Delete Route', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
-    cy.get(this.domSelector.nameSelector).type(newName);
-    cy.contains('Search').click();
-    cy.contains(newName).siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
+    [newName, duplicateNewName].forEach(function (routeName) {
+      cy.get(this.domSelector.nameSelector).type(routeName);
+      cy.contains('Search').click();
+      cy.contains(routeName).siblings().contains('Delete').click();
+      cy.contains('button', 'Confirm').click();
+      cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
+    });
   });
 });
