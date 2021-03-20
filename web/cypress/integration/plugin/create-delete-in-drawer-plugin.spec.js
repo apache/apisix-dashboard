@@ -39,13 +39,16 @@ context('Create and Delete Plugin List', () => {
   it('should delete the plugin in drawer', function () {
     cy.visit('/plugin/list');
     cy.get(this.domSelector.refresh).click();
-    cy.contains('Edit').click();
-    cy.get(this.domSelector.codemirror)
-      .first()
-      .then(() => {
-        cy.get('.ant-drawer-footer').contains('button', 'Delete').click();
-        cy.contains('button', 'Confirm').click({ force: true });
-        cy.get(this.domSelector.empty).should('be.visible');
+
+    cy.get('.ant-table-content').find('div:nth-child(1) > button.ant-btn-primary').each(function ($el) {
+      cy.wrap($el).click();
+      cy.get(this.domSelector.codemirror)
+        .first()
+        .then(() => {
+          cy.get('.ant-drawer-footer').contains('button', 'Delete').click();
+          cy.contains('button', 'Confirm').click({ force: true });
+        });
       });
+    cy.get(this.domSelector.empty).should('be.visible');
   });
 });
