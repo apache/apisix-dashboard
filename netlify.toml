@@ -1,11 +1,4 @@
 [[redirects]]
-  from = "/apisix/admin/"
-  to = "http://139.217.190.60/apisix/admin/"
-  status = 200
-  force = true
-  headers = {X-From = "Netlify"}
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/apisix/*"
+  to = "http://139.217.190.60/apisix/:splat"
   status = 200
