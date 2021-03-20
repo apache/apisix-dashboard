@@ -663,6 +663,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   name: formatMessage({ id: 'page.upstream.step.select.upstream.select.option' }),
                   id: '',
                 },
+                {
+                  name: formatMessage({ id: 'page.upstream.step.select.upstream.select.none' }),
+                },
                 ...list,
               ].map((item) => (
                 <Select.Option value={item.id!} key={item.id}>

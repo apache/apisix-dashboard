@@ -17,6 +17,7 @@
 export default {
   'page.upstream.step.select.upstream': 'Select Upstream',
   'page.upstream.step.select.upstream.select.option': 'Custom',
+  'page.upstream.step.select.upstream.select.none': 'None',
   'page.upstream.form.item-label.node.domain.or.ip': 'Node Domain/IP',
   'page.upstream.step.backend.server.domain.or.ip': 'Backend Server Domain Name/IP',
   'page.upstream.form.item.extra-message.node.domain.or.ip':
