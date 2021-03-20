@@ -61,7 +61,7 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.contains(this.data.pluginTemplateName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.pluginTemplateErrorAlert);
-    cy.get(this.domSelector.errorAlertClose).should('be.visible').click();
+    cy.get(this.domSelector.notificationClose).should('be.visible').click();
   });
 
   it('should edit the route with pluginTemplate', function () {
