@@ -48,7 +48,7 @@ context('Save Paginator Status', () => {
             pass_host: 'pass',
           },
           enable_websocket: true,
-          name: `asd${i}`,
+          name: `${this.data.serviceName}${i}`,
         }
       }).then((res) => {
         expect(res.body.code).to.equal(0);
