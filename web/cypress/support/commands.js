@@ -56,7 +56,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
         cy.contains(name)
           .parents(domSelectors.parents)
           .within(() => {
-            cy.contains('Enable').click({
+            cy.get('button').click({
               force: true,
             });
           });
