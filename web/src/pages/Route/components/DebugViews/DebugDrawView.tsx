@@ -211,7 +211,6 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     const queryFormData = transformHeaderAndQueryParamsFormData(queryForm.getFieldsValue().params);
     const bodyFormRelateData = transformBodyParamsFormData();
     const {bodyFormData, header: bodyFormHeader} = bodyFormRelateData;
-    
     const pureHeaderFormData = transformHeaderAndQueryParamsFormData(
       headerForm.getFieldsValue().params,
     );

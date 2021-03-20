@@ -241,7 +241,6 @@ context('Online debug', () => {
         codeMirrorBody.setValue(JSON.stringify(this.routeData.debugPostJson));
       }
       cy.contains(routeLocaleUS['page.route.button.send']).click();
-      
     });
     cy.wait('@DebugAPI');
     cy.get(domSelector.codeMirrorResp).contains('code').should('be.visible');
