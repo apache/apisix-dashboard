@@ -46,6 +46,7 @@ default.etcd
 api/build-tools/apisix
 /*.zip
 .githash
+.backup.yaml
 
 # backend unit test output
 api/coverage.txt
