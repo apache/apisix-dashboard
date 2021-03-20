@@ -99,6 +99,8 @@ etcd:
 
    ```sh
    cd /(Your apisix-dashboard folder path)/api/test/docker
+   # Download the apisix dockerfile
+   curl -o Dockerfile-apisix https://raw.githubusercontent.com/apache/apisix-docker/master/alpine/Dockerfile
    docker-compose up -d
    ```
 
@@ -113,23 +115,50 @@ etcd:
    ```
 
 4. Then you need to delete the image of the `manage-api`, rebuild the image of the `manage-api`, and start the cluster after the image is successfully built.
+   (Only if you have altered/added any core functionalities in `manager-api`, for simply adding/deleting a test case/file, rebuilding is not required).
 
+** For ease of access and to avoid the repetitive hassle for setting up the required configurations, we have provided a `setup.sh` script
+which is inside `api/test/docker` directory. You can directly run, delete and build services along with update and revert `conf.yaml` through the script.
+For more details, run
+
+```sh
+./setup.sh help
+```
+
+(If you are setting up the environment for the first time, please go with the described manual steps. It'll help you to get the idea of what's going on in the background).
 ## Start test
 
 1. After all the services are started, you can start the back-end E2E test.
 
 **NOTE:** Sometimes we need to delete the etcd store info. Otherwise, it will make the test failed.
 
-2. Enter the E2E folder and execute the command to test all E2E test files.
+ - Enter the E2E folder and execute the command to test all E2E test files.
 
    ```sh
     cd /(Your apisix-dashboard folder path)/api/test/e2e
     go test -v
    ```
 
-3. You can also do E2E test on a single file.
+ - You can also do E2E test on a single file.
 
    ```sh
     cd /(Your apisix-dashboard folder path)/api/test/e2e
     go test -v E2E-test-file.go base.go
    ```
+
+2. Currently, a lot of tests has been migrated to E2ENEW folder using the ginkgo testing framework for its ability to provide
+high expressiveness which makes reading and writing tests a pleasure.
+
+- Enter the E2ENEW folder and execute the command to run all the E2ENEW test suites recursively.
+
+   ```sh
+    cd /(Your apisix-dashboard folder path)/api/test/e2enew
+    ginkgo -r
+   ```
+
+- You can also run a single E2ENEW test suite using ginkgo.
+
+  ```sh
+   cd /(Your apisix-dashboard folder path)/api/test/e2enew/(path of the specific test suite)
+   ginkgo -r
+  ```
