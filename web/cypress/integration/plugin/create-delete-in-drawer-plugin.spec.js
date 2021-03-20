@@ -41,7 +41,7 @@ context('Create and Delete Plugin List', () => {
     cy.get(this.domSelector.refresh).click();
 
     cy.get('.ant-table-content').find('div:nth-child(1) > button.ant-btn-primary').each(function ($el) {
-      cy.wrap($el).click();
+      cy.wrap($el).click().click({ timeout });
       cy.get(this.domSelector.codemirror)
         .first()
         .then(() => {
