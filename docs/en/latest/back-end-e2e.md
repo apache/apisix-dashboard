@@ -82,18 +82,18 @@ This document describes how to use E2E test locally.
 
 1. [install docker-compose](https://docs.docker.com/compose/install/)
 
-**NOTE:** In order to run docker compose locally, please change the values of `listen.host` and `etcd.endpoints` within `./api/conf/conf.yaml` as follows:
+   **NOTE:** In order to run docker compose locally, please change the values of `listen.host` and `etcd.endpoints` within `./api/conf/conf.yaml` as follows:
 
-```sh
-listen:
-   host: 0.0.0.0
-   port: 9000
-etcd:
-   endpoints:
-     - 172.16.238.10:2379
-     - 172.16.238.11:2379
-     - 172.16.238.12:2379
-```
+   ```sh
+   listen:
+      host: 0.0.0.0
+      port: 9000
+   etcd:
+      endpoints:
+        - 172.16.238.10:2379
+        - 172.16.238.11:2379
+        - 172.16.238.12:2379
+   ```
 
 2. Use `docker-compose` to run services such as `manager-api`, `apisix`, `etcd` and `upstream-node`, run the command.
 
@@ -121,44 +121,44 @@ etcd:
 which is inside `api/test/docker` directory. You can directly run, delete and build services along with update and revert `conf.yaml` through the script.
 For more details, run
 
-```sh
-./setup.sh help
-```
+   ```sh
+   ./setup.sh help
+   ```
 
 (If you are setting up the environment for the first time, please go with the described manual steps. It'll help you to get the idea of what's going on in the background).
 ## Start test
 
 1. After all the services are started, you can start the back-end E2E test.
 
-**NOTE:** Sometimes we need to delete the etcd store info. Otherwise, it will make the test failed.
+   **NOTE:** Sometimes we need to delete the etcd store info. Otherwise, it will make the test failed.
 
- - Enter the E2E folder and execute the command to test all E2E test files.
+   - Enter the E2E folder and execute the command to test all E2E test files.
 
-   ```sh
-    cd /(Your apisix-dashboard folder path)/api/test/e2e
-    go test -v
-   ```
+     ```sh
+      cd /(Your apisix-dashboard folder path)/api/test/e2e
+      go test -v
+     ```
 
- - You can also do E2E test on a single file.
+    - You can also do E2E test on a single file.
 
-   ```sh
-    cd /(Your apisix-dashboard folder path)/api/test/e2e
-    go test -v E2E-test-file.go base.go
-   ```
+       ```sh
+        cd /(Your apisix-dashboard folder path)/api/test/e2e
+        go test -v E2E-test-file.go base.go
+       ```
 
 2. Currently, a lot of tests has been migrated to E2ENEW folder using the ginkgo testing framework for its ability to provide
 high expressiveness which makes reading and writing tests a pleasure.
 
-- Enter the E2ENEW folder and execute the command to run all the E2ENEW test suites recursively.
+   - Enter the E2ENEW folder and execute the command to run all the E2ENEW test suites recursively.
 
-   ```sh
-    cd /(Your apisix-dashboard folder path)/api/test/e2enew
-    ginkgo -r
-   ```
+     ```sh
+      cd /(Your apisix-dashboard folder path)/api/test/e2enew
+      ginkgo -r
+     ```
 
-- You can also run a single E2ENEW test suite using ginkgo.
+   - You can also run a single E2ENEW test suite using ginkgo.
 
-  ```sh
-   cd /(Your apisix-dashboard folder path)/api/test/e2enew/(path of the specific test suite)
-   ginkgo -r
-  ```
+     ```sh
+      cd /(Your apisix-dashboard folder path)/api/test/e2enew/(path of the specific test suite)
+      ginkgo -r
+     ```
