@@ -191,6 +191,6 @@ context('Create and Delete Route', () => {
       cy.contains(routeName).siblings().contains('Delete').click();
       cy.contains('button', 'Confirm').click();
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
-    });
+    }).bind(this);
   });
 });
