@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('create and delete service ', () => {
+context('Create and Delete Service ', () => {
   beforeEach(() => {
     cy.login();
 
@@ -50,7 +50,7 @@ context('create and delete service ', () => {
     cy.get(this.domSelector.drawer).should('be.visible');
 
     cy.get(this.domSelector.codemirrorScroll).within(() => {
-      cy.contains('upstream').should("exist");
+      cy.contains('upstream').should('exist');
       cy.contains(this.data.serviceName).should('exist');
     });
   });
@@ -65,7 +65,7 @@ context('create and delete service ', () => {
 
     // Confirm whether the created data is saved.
     cy.get(this.domSelector.nodes_0_host).should('value', this.data.ip1);
-    cy.get(this.domSelector.description).should('value', this.data.description)
+    cy.get(this.domSelector.description).should('value', this.data.description);
     cy.get(this.domSelector.name).clear().type(this.data.serviceName2);
     cy.get(this.domSelector.description).clear().type(this.data.description2);
     cy.get(this.domSelector.nodes_0_host).click();
@@ -101,4 +101,3 @@ context('create and delete service ', () => {
     cy.get(this.domSelector.notification).should('contain', this.data.deleteServiceSuccess);
   });
 });
-

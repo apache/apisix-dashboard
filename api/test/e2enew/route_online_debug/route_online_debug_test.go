@@ -156,6 +156,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Header_Params", func() {
 	ginkgo.It("create route with header params", func() {
 		t := ginkgo.GinkgoT()
 		var routeBody map[string]interface{} = map[string]interface{}{
+			"name":    "route1",
 			"uri":     "/hello",
 			"methods": []string{"GET"},
 			"vars": []interface{}{
@@ -193,7 +194,46 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Header_Params", func() {
 			Sleep:        base.SleepTime,
 		})
 	})
-	ginkgo.It("delete the route just created", func() {
+	ginkgo.It("online debug route with header params(add Content-type to header params to create route)", func() {
+		t := ginkgo.GinkgoT()
+		var routeBody map[string]interface{} = map[string]interface{}{
+			"name":     "route2",
+			"status":   1,
+			"uri":      "/hello_",
+			"methods":  []string{"GET"},
+			"upstream": upstream,
+		}
+		_reqRouteBody, err := json.Marshal(routeBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPost,
+			Path:   "/apisix/admin/debug-request-forwarding",
+			Body:   string(_reqRouteBody),
+			Headers: map[string]string{
+				"Authorization":                 base.GetToken(),
+				"online_debug_url":              base.ManagerAPIHost + `/apisix/admin/routes/r2`,
+				"online_debug_request_protocol": "http",
+				"online_debug_method":           http.MethodPut,
+				"Content-Type":                  "text/plain;charset=UTF-8",
+				"online_debug_header_params":    `{"Content-type":["application/json"],"Authorization":["` + base.GetToken() + `"]}`,
+			},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `{"code":200,"message":"200 OK"`,
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("hit the route (r2)", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world\n",
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("delete the route just created (r1)", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
@@ -202,11 +242,30 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Header_Params", func() {
 			ExpectStatus: http.StatusOK,
 		})
 	})
-	ginkgo.It("hit the route just deleted", func() {
+	ginkgo.It("delete the route just created (r2)", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r2",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+	})
+	ginkgo.It("hit the route just deleted (r1)", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("hit the route just deleted  (r2)", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        base.SleepTime,
