@@ -21,7 +21,168 @@ title: Backend Tests
 #
 -->
 
-This document describes how to write unit tests & e2e tests for the backend.
+This document provides the details of setting up the environment for running the tests locally with the guide for the writing unit & E2E tests for the backend.
+
+## Table of Contents
+
+- [Runing E2E Tests Locally](#runing-e2e-tests-locally)
+  - [Start with source code](#start-with-source-code)
+  - [Start with docker-compose](#start-with-docker-compose)
+  - [Start tests](#start-tests)
+- [Writing Unit & E2E (End to End) Tests](#writing-unit-&-e2e-(end-to-end)-tests)
+  - [Writing Unit Tests](#writing-unit-tests)
+  - [Writing E2E Tests](#writing-e2e-tests)
+
+## Runing E2E Tests Locally
+
+## Start with source code
+
+1. To run back end E2E test, please start the `manager-api`, `apisix`, `etcd` and `upstream-node` at first.
+
+2. To start the `manager-api` project locally, please refer to [develop](./develop.md) web section.
+
+3. To start the etcd locally, please refer to [etcd start](https://apisix.apache.org/docs/apisix/install-dependencies/) web section.
+
+4. To start the `apisix` project locally, please refer to [apisix start](https://github.com/apache/apisix#get-started) web section.
+
+5. To start the `upstream-node` locally, please install docker in the local environment and execute the command.
+
+   ```sh
+    docker run -d --name upstream -v /(Your apisix-dashboard folder path)/api/test/docker/upstream.conf:/etc/nginx/conf.d/default.conf:ro -p 80:80 -p 1980:1980 -p 1981:1981 -p 1982:1982 -p 1983:1983 -p 1984:1984 johz/upstream:v2.0
+   ```
+
+6. After all the services are started, you can start the back-end E2E test.
+
+7. The `upstream-node` IP is temporarily changed to the local IP address. After the test, it should be changed to GitHub upstream node IP. If the test case does not involve the upstream node, it does not need to be modified.
+
+   ```sh
+    # Local E2E test create route example
+    {
+        "uris": ["/test-test"],
+        "name": "route_all",
+        "desc": "test",
+        "methods": ["GET"],
+        "hosts": ["test.com"],
+        "status": 1,
+        "upstream": {
+            "nodes": {
+                # upstream node IP is required for local test
+                "(local ip):1981": 1
+            },
+            "type": "roundrobin"
+         }
+    }
+
+     # GitHub E2E test create route example
+    {
+        "uris": ["/test-test"],
+        "name": "route_all",
+        "desc": "test",
+        "methods": ["GET"],
+        "hosts": ["test.com"],
+        "status": 1,
+        "upstream": {
+            "nodes": {
+                "172.16.238.20:1981": 1
+            },
+            "type": "roundrobin"
+         }
+    }
+   ```
+
+[Back to TOC](#table-of-contents)
+
+## Start with docker-compose
+
+1. [install docker-compose](https://docs.docker.com/compose/install/)
+
+   **NOTE:** In order to run docker compose locally, please change the values of `listen.host` and `etcd.endpoints` within `./api/conf/conf.yaml` as follows:
+
+   ```sh
+   listen:
+      host: 0.0.0.0
+      port: 9000
+   etcd:
+      endpoints:
+        - 172.16.238.10:2379
+        - 172.16.238.11:2379
+        - 172.16.238.12:2379
+   ```
+
+2. Use `docker-compose` to run services such as `manager-api`, `apisix`, `etcd` and `upstream-node`, run the command.
+
+   ```sh
+   cd /(Your apisix-dashboard folder path)/api/test/docker
+   # Download the apisix dockerfile
+   curl -o Dockerfile-apisix https://raw.githubusercontent.com/apache/apisix-docker/master/alpine/Dockerfile
+   docker-compose up -d
+   ```
+
+3. When you use `docker-compose` to run the local E2E test and need to update the main code, you need to execute the command to close the cluster.
+
+   ```sh
+   cd /(Your apisix-dashboard folder path)/api/test/docker
+   # -v: Remove links to mount volumes and volumes
+   docker-compose  down -v
+   # If you don't want to remove the link between mount volume and volume, you can use
+   docker-compose stop [serviceName]
+   ```
+
+4. Then you need to delete the image of the `manage-api`, rebuild the image of the `manage-api`, and start the cluster after the image is successfully built.
+   (Only if you have altered/added any core functionalities in `manager-api`, for simply adding/deleting a test case/file, rebuilding is not required).
+
+** For ease of access and to avoid the repetitive hassle for setting up the required configurations, we have provided a `setup.sh` script
+which is inside `api/test/docker` directory. You can directly run, delete and build services along with update and revert `conf.yaml` through the script.
+For more details, run
+
+   ```sh
+   ./setup.sh help
+   ```
+
+(If you are setting up the environment for the first time, please go with the described manual steps. It'll help you to get the idea of what's going on in the background).
+
+[Back to TOC](#table-of-contents)
+
+## Start tests
+
+1. After all the services are started, you can start the back-end E2E test.
+
+   **NOTE:** Sometimes we need to delete the etcd store info. Otherwise, it will make the test failed.
+
+   - Enter the E2E folder and execute the command to test all E2E test files.
+
+     ```sh
+      cd /(Your apisix-dashboard folder path)/api/test/e2e
+      go test -v
+     ```
+
+   - You can also do E2E test on a single file.
+
+       ```sh
+        cd /(Your apisix-dashboard folder path)/api/test/e2e
+        go test -v E2E-test-file.go base.go
+       ```
+
+2. Currently, a lot of tests has been migrated to E2ENEW folder using the ginkgo testing framework for its ability to provide
+high expressiveness which makes reading and writing tests a pleasure.
+
+   - Enter the E2ENEW folder and execute the command to run all the E2ENEW test suites recursively.
+
+     ```sh
+      cd /(Your apisix-dashboard folder path)/api/test/e2enew
+      ginkgo -r
+     ```
+
+   - You can also run a single E2ENEW test suite using ginkgo.
+
+     ```sh
+      cd /(Your apisix-dashboard folder path)/api/test/e2enew/(path of the specific test suite)
+      ginkgo -r
+     ```
+
+[Back to TOC](#table-of-contents)
+
+## Writing Unit & E2E (End to End) Tests
 
 ## Writing Unit Tests
 
@@ -41,6 +202,8 @@ mStore.On("<exact methodname of the real method>", mock.Anything)
 
 You may tinker with the mentioned tests to get an idea of how it works or go through the [docs](https://pkg.go.dev/github.com/stretchr/testify/mock#pkg-index).
 
+[Back to TOC](#table-of-contents)
+
 ## Writing E2E Tests
 
 Currently, the backend of apisix-dashboard have two types of e2e tests. One is plain e2e, the other is e2enew, where in the first one, tests are written using Go's built-in, native testing package, for the later, the tests are grouped into test suites and are evaluated using [ginkgo](https://onsi.github.io/ginkgo/) - a testing framework which helps in writing more expressive tests such that reading and writing tests give a pleasant experience.
@@ -49,7 +212,7 @@ Currently, the backend of apisix-dashboard have two types of e2e tests. One is p
 
 For value assertion, we are using the [assert](https://pkg.go.dev/github.com/stretchr/testify@v1.7.0/assert) package by testify. It provides lots of easy to use functions for assertion where the first argument is   `*testing.T` object which you can obtain from the used framework for testing. For the built-in testing package, each test cases have this as the first argument of the test itself. For ginkgo `ginkgo.GinkgoT()` returns the mentioned object.
 
-If you are creating any test which requires making HTTP calls to any of the following node which involves `manager-api` or `apisix`, after setting up the environment (please refer [`backend-e2e.md`](./back-end-e2e.md) for the details), you can use the `HttpTestCase` struct which provides a nice interface to make the calls along with checking the response. Here's a brief description of the most used fields of the struct,
+If you are creating any test which requires making HTTP calls to any of the following node which involves `manager-api` or `apisix`, after setting up the environment (please refer [Runing E2E Tests Locally](#runing-e2e-tests-locally) for the details), you can use the `HttpTestCase` struct which provides a nice interface to make the calls along with checking the response. Here's a brief description of the most used fields of the struct,
 
 ```go
 type HttpTestCase struct {
@@ -96,3 +259,5 @@ Now coming back to writing e2e tests,
    - It is always recommended to use ginkgo's table-driven tests for running the independent `HttpTestCase` using `table.DescribeTable` and `table.Entry` [ [ref](https://pkg.go.dev/github.com/onsi/ginkgo/extensions/table) ].
 
    - FYI, internally ginkgo reduces each table entries to `It` block and run all the `It` blocks concurrently/parallelly. Ginkgo auto recovers from panics inside `It` blocks only, so always put your assertions inside `It` containers.
+
+[Back to TOC](#table-of-contents)
