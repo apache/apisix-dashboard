@@ -15,9 +15,6 @@
  * limitations under the License.
  */
 import { request } from 'umi';
-import { omit } from 'lodash';
-
-import { DELETE_FIELDS } from '@/constants';
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
   request('/consumers', {
@@ -43,7 +40,7 @@ export const create = (data: ConsumerModule.Entity) =>
 export const update = (username: string, data: ConsumerModule.Entity) =>
   request(`/consumers/${username}`, {
     method: 'PUT',
-    data: omit(data, DELETE_FIELDS),
+    data: data,
   });
 
 export const remove = (username: string) => request(`/consumers/${username}`, { method: 'DELETE' });

@@ -15,9 +15,6 @@
  * limitations under the License.
  */
 import { request } from 'umi';
-import { omit } from 'lodash';
-
-import { DELETE_FIELDS } from '@/constants';
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
   return request<Res<ResListData<UpstreamModule.RequestBody>>>('/upstreams', {
@@ -43,7 +40,7 @@ export const create = (data: UpstreamModule.RequestBody) =>
 export const update = (id: string, data: UpstreamModule.RequestBody) =>
   request(`/upstreams/${id}`, {
     method: 'PUT',
-    data: omit(data, DELETE_FIELDS),
+    data: data,
   });
 
 export const remove = (id: string) => request(`/upstreams/${id}`, { method: 'DELETE' });

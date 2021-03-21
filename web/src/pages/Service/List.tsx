@@ -22,7 +22,9 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, notification, Popconfirm, Space } from 'antd';
 import querystring from 'query-string'
+import { omit } from 'lodash';
 
+import { DELETE_FIELDS } from '@/constants';
 import { RawDataEditor } from '@/components/RawDataEditor';
 import { fetchList, remove, create, update } from './service';
 
@@ -34,12 +36,6 @@ const Page: React.FC = () => {
   const [id, setId] = useState('');
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
   const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
-
-  useEffect(() => {
-    if (rawData.id) {
-      setId(rawData.id);
-    }
-  }, [rawData]);
 
   const savePageList = (page = 1, pageSize = 10) => {
     history.replace(`/service/list?page=${page}&pageSize=${pageSize}`);
@@ -79,7 +75,8 @@ const Page: React.FC = () => {
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
             <Button type="primary" onClick={() => {
-              setRawData(record);
+              setId(record.id);
+              setRawData(omit(record, DELETE_FIELDS));
               setVisible(true);
               setEditorMode('update');
             }}>

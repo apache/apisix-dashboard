@@ -22,7 +22,9 @@ import { Popconfirm, Button, notification } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 import querystring from 'query-string'
+import { omit } from 'lodash';
 
+import { DELETE_FIELDS } from '@/constants';
 import { timestampToLocaleString } from '@/helpers';
 import { RawDataEditor } from '@/components/RawDataEditor';
 
@@ -45,12 +47,6 @@ const Page: React.FC = () => {
     const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
     setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
   }, [window.location.search]);
-
-  useEffect(() => {
-    if (rawData.id) {
-      setId(rawData.id);
-    }
-  }, [rawData]);
 
   const columns: ProColumns<ConsumerModule.ResEntity>[] = [
     {
@@ -82,7 +78,8 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'component.global.edit' })}
           </Button>
           <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
-            setRawData(record);
+            setId(record.id);
+            setRawData(omit(record, DELETE_FIELDS));
             setVisible(true);
             setEditorMode('update');
           }}>

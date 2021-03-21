@@ -38,7 +38,9 @@ import yaml from 'js-yaml';
 import moment from 'moment';
 import { saveAs } from 'file-saver';
 import querystring from 'query-string'
+import { omit } from 'lodash';
 
+import { DELETE_FIELDS } from '@/constants';
 import { timestampToLocaleString } from '@/helpers';
 import type { RcFile } from 'antd/lib/upload';
 import {
@@ -89,12 +91,6 @@ const Page: React.FC = () => {
   useEffect(() => {
     fetchLabelList().then(setLabelList);
   }, []);
-
-  useEffect(() => {
-    if (rawData.id) {
-      setId(rawData.id);
-    }
-  }, [rawData]);
 
   useEffect(() => {
     const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
@@ -403,7 +399,8 @@ const Page: React.FC = () => {
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
             <Button type="primary" onClick={() => {
-              setRawData(record);
+              setId(record.id);
+              setRawData(omit(record, DELETE_FIELDS));
               setVisible(true);
               setEditorMode('update');
             }}>

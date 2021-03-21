@@ -20,8 +20,11 @@ import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Popconfirm, Button, notification } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, ReconciliationFilled } from '@ant-design/icons';
 import querystring from 'query-string'
+import { omit } from 'lodash';
+
+import { DELETE_FIELDS } from '@/constants';
 
 import { RawDataEditor } from '@/components/RawDataEditor';
 import { timestampToLocaleString } from '@/helpers';
@@ -38,11 +41,6 @@ const Page: React.FC = () => {
 
   const { formatMessage } = useIntl();
 
-  useEffect(() => {
-    if (rawData.id) {
-      setId(rawData.id);
-    }
-  }, [rawData]);
 
   const savePageList = (page = 1, pageSize = 10) => {
     history.replace(`/upstream/list?page=${page}&pageSize=${pageSize}`);
@@ -88,7 +86,8 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'page.upstream.list.edit' })}
           </Button>
           <Button type="primary" onClick={() => {
-            setRawData(record);
+            setId(record.id);
+            setRawData(omit(record, DELETE_FIELDS));
             setVisible(true);
             setEditorMode('update');
           }}>
