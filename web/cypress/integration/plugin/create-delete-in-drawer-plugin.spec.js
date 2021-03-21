@@ -26,30 +26,30 @@ context('Create and Delete Plugin List', () => {
     cy.fixture('data.json').as('data');
   });
 
-  it('should visit plugin market', function () {
+  it('should visit plugin market and create plugin', function () {
     cy.visit('/');
     cy.contains('Plugin').click();
     cy.contains('Create').click();
-    cy.fixture('plugin-dataset.json').as('cases');
-    cy.get('@cases').then((cases) => {
-      cy.configurePlugins(cases);
+
+    cy.contains('basic-auth').parents('.ant-card-bordered').within(() => {
+      cy.get('button').click({ force: true });
     });
+
+    cy.get('.ant-drawer-content').should('be.visible').within(() => {
+      cy.get('#disable').click();
+      cy.get('.ant-switch-checked').should('exist');
+    });
+
+    cy.contains('button', 'Submit').click();
+    cy.get('.ant-drawer-content', { timeout }).should('not.exist');
   });
 
   it('should delete the plugin in drawer', function () {
     cy.visit('/plugin/list');
     cy.get(this.domSelector.refresh).click();
-    cy.get(this.domSelector.paginationOptions).click();
-    cy.contains('50 / page').should('be.visible').click();
-    cy.get(this.domSelector.fiftyPerPage).should('exist');
-    cy.location('href').should('include', 'pageSize=50');
-    cy.get('.ant-btn-primary', { timeout }).should('exist').each(function ($el) {
-      if ($el.text() === 'Edit') {
-        cy.wrap($el).click();
-        cy.get('.ant-drawer-footer').contains('button', 'Delete').click();
-        cy.contains('button', 'Confirm').click({ force: true });
-      }
-    });
+    cy.contains('button', 'Edit').click();
+    cy.get('.ant-drawer-footer').contains('button', 'Delete').click({ force: true });
+    cy.contains('button', 'Confirm').click({ force: true });
     cy.get(this.domSelector.empty).should('be.visible');
   });
 });
