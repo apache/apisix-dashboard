@@ -26,23 +26,28 @@ context('Create and Delete Plugin List', () => {
     cy.fixture('data.json').as('data');
   });
 
-  it('should visit plugin market', function () {
-    cy.visit('/');
-    cy.contains('Plugin').click();
-    cy.contains('Create').click();
-    cy.fixture('plugin-dataset.json').as('cases');
-    cy.get('@cases').then((cases) => {
-      cy.configurePlugins(cases);
-    });
-  });
+  // it('should visit plugin market', function () {
+  //   cy.visit('/');
+  //   cy.contains('Plugin').click();
+  //   cy.contains('Create').click();
+  //   cy.wait(3000);
+  //   cy.fixture('plugin-dataset.json').as('cases');
+  //   cy.get('@cases').then((cases) => {
+  //     cy.configurePlugins(cases);
+  //   });
+  // });
 
   it('should delete the plugin in drawer', function () {
     cy.visit('/plugin/list');
     cy.get(this.domSelector.refresh).click();
-    cy.get('.ant-btn-primary').each(function ($el) {
+    cy.get(this.domSelector.paginationOptions).click();
+    cy.contains('50 / page').should('be.visible').click();
+    cy.get(this.domSelector.fiftyPerPage).should('exist');
+    cy.location('href').should('include', 'pageSize=50');
+    cy.get('.ant-btn-primary').should('exist').each(function ($el) {
       if ($el.text() === 'Edit') {
         cy.wrap($el).click();
-        cy.get('.ant-drawer-footer').contains('button', 'Delete').click();
+        cy.get('.ant-drawer-footer').contains('button', 'Delete').click({ force: true });
         cy.contains('button', 'Confirm').click({ force: true });
       }
     });
