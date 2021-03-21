@@ -126,6 +126,7 @@ For more details, run
    ```
 
 (If you are setting up the environment for the first time, please go with the described manual steps. It'll help you to get the idea of what's going on in the background).
+
 ## Start test
 
 1. After all the services are started, you can start the back-end E2E test.
@@ -139,7 +140,7 @@ For more details, run
       go test -v
      ```
 
-    - You can also do E2E test on a single file.
+   - You can also do E2E test on a single file.
 
        ```sh
         cd /(Your apisix-dashboard folder path)/api/test/e2e

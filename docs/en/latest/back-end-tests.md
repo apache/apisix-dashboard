@@ -32,14 +32,14 @@ The `MockInterface` embeds `mock.Mock` object from [mock](https://pkg.go.dev/git
 ```go
 mStore := &store.MockInterface{}
 mStore.On("<exact methodname of the real method>", mock.Anything)
-      .Run(func(args mock.Arguments) { 
-      	    //arguements assertions or anything 
-      	    //gets executed before returning 
-      	})
+      .Run(func(args mock.Arguments) {
+           //arguements assertions or anything
+           //gets executed before returning
+       })
       .Return("<same return signature of the original method>")
 ```
-You may tinker with the mentioned tests to get an idea of how it works or go through the [docs](https://pkg.go.dev/github.com/stretchr/testify/mock#pkg-index).
 
+You may tinker with the mentioned tests to get an idea of how it works or go through the [docs](https://pkg.go.dev/github.com/stretchr/testify/mock#pkg-index).
 
 ## Writing E2E Tests
 
@@ -48,7 +48,6 @@ Currently, the backend of apisix-dashboard have two types of e2e tests. One is p
 **Slowly, we are migrating all of our e2e tests to e2enew. So it is always recommended to write any new tests using ginkgo unless some situation arises. In such cases, please discuss your concerns with the community.
 
 For value assertion, we are using the [assert](https://pkg.go.dev/github.com/stretchr/testify@v1.7.0/assert) package by testify. It provides lots of easy to use functions for assertion where the first argument is   `*testing.T` object which you can obtain from the used framework for testing. For the built-in testing package, each test cases have this as the first argument of the test itself. For ginkgo `ginkgo.GinkgoT()` returns the mentioned object.
-
 
 If you are creating any test which requires making HTTP calls to any of the following node which involves `manager-api` or `apisix`, after setting up the environment (please refer [`backend-e2e.md`](./back-end-e2e.md) for the details), you can use the `HttpTestCase` struct which provides a nice interface to make the calls along with checking the response. Here's a brief description of the most used fields of the struct,
 
@@ -74,6 +73,7 @@ Now to run a test use `RunTestCase(tc HttpTestCase)` or `testCaseCheck(tc HttpTe
 **NOTE:** Both e2e and e2enew provides standalone methods for making HTTP request for GET, POST, PUT, DELETE methods along with making a POST request with `multipart/form` data.
 
 Now coming back to writing e2e tests,
+
 1. Adding tests in `api/test/e2e` is dead simple.
    - Create a function starting with `Test`"\<FuncName\>" in a relevant file present in the directory or create a new one. Then write the necessary logic and check the result using assertion.
 
