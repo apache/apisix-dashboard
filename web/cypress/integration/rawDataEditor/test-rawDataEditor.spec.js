@@ -53,7 +53,6 @@ context('Test RawDataEditor', () => {
       });
 
       cy.reload();
-
       // update with editor
       cy.contains(item === 'Consumer' ? data.username : data.name)
         .siblings()
@@ -78,7 +77,7 @@ context('Test RawDataEditor', () => {
       });
 
       cy.reload();
-      cy.get('.ant-table-tbody').should('contain', item === 'Consumer' ? 'newDesc' : 'newName');
+      cy.get(domSelector.tableBody).should('contain', item === 'Consumer' ? 'newDesc' : 'newName');
 
       // delete resource
       cy.contains(item === 'Consumer' ? 'newDesc' : 'newName')

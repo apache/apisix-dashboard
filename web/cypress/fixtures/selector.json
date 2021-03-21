@@ -13,6 +13,7 @@
   "pluginCard": ".ant-card",
   "pageContent": ".ant-pro-page-container",
 
+  "tableBody":".ant-table-tbody",
   "tableCell": ".ant-table-cell",
   "empty": ".ant-empty-normal",
   "refresh": ".anticon-reload",
