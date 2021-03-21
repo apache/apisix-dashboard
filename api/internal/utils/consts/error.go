@@ -16,11 +16,31 @@
  */
 package consts
 
-import "github.com/shiningrush/droplet/data"
+import (
+	"errors"
+
+	"github.com/shiningrush/droplet/data"
+)
 
 const (
 	ErrBadRequest = 20001
 	ErrForbidden  = 20002
+)
+
+const (
+	UpstreamIDNotFound = "upstream id: %s not found"
+	ServiceIDNotFound  = "service id: %s not found"
+)
+
+var (
+	ErrorUsernamePassword         = errors.New("username or password error")
+	ErrorIDUsername               = errors.New("consumer's id and username must be a same value")
+	ErrorParameterID              = errors.New("Parameter IDs cannot be empty")
+	ErrorRouteData                = errors.New("Route data is empty, cannot be exported")
+	ErrorImportFile               = errors.New("empty or invalid imported file")
+	ErrorSSLCertificate           = errors.New("invalid certificate")
+	ErrorSSLCertificateResolution = errors.New("Certificate resolution failed")
+	ErrorSSLKeyAndCert            = errors.New("key and cert don't match")
 )
 
 var (

@@ -20,7 +20,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"path"
@@ -95,7 +94,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 
 	if len(swagger.Paths) < 1 {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			errors.New("empty or invalid imported file")
+			consts.ErrorImportFile
 	}
 
 	routes, err := OpenAPI3ToRoute(swagger)
@@ -116,7 +115,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 			if err != nil {
 				if err == data.ErrNotFound {
 					return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-						fmt.Errorf("service id: %s not found", route.ServiceID)
+						fmt.Errorf(consts.ServiceIDNotFound, route.ServiceID)
 				}
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 			}
@@ -126,7 +125,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 			if err != nil {
 				if err == data.ErrNotFound {
 					return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-						fmt.Errorf("upstream id: %s not found", route.UpstreamID)
+						fmt.Errorf(consts.UpstreamIDNotFound, route.UpstreamID)
 				}
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 			}
