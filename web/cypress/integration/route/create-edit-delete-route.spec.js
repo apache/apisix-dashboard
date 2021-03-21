@@ -20,6 +20,7 @@ context('Create and Delete Route', () => {
   const name = `routeName${new Date().valueOf()}`;
   const newName = `newName${new Date().valueOf()}`;
   const sleepTime = 100;
+  const timeout = 5000;
 
   beforeEach(() => {
     cy.login();
@@ -72,12 +73,25 @@ context('Create and Delete Route', () => {
     });
 
     // config prometheus plugin
-    cy.contains(this.domSelector.pluginCard, 'prometheus').within(() => {
-      cy.get('button').first().click({
-        force: true
-      });
+    cy.contains('prometheus').parents('.ant-card-bordered').within(() => {
+      cy.get('button').click({ force: true });
     });
-    cy.contains('button', 'Cancel').click();
+
+    cy.get('.ant-drawer-content').should('be.visible').within(() => {
+      cy.get('#disable').click();
+      cy.get('.ant-switch-checked').should('exist');
+    });
+
+    cy.contains('button', 'Submit').click();
+    cy.get('.ant-drawer-content', { timeout }).should('not.exist');
+
+    cy.contains('prometheus').parents('.ant-card-bordered').within(() => {
+      cy.get('button').click({ force: true });
+    });
+
+    cy.get('.ant-drawer-footer').contains('button', 'Delete').click({ force: true });
+    cy.contains('button', 'Confirm').click({ force: true });
+
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.contains(this.data.submitSuccess);

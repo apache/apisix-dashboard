@@ -17,6 +17,8 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Service ', () => {
+  const timeout = 5000;
+
   beforeEach(() => {
     cy.login();
 
@@ -35,6 +37,26 @@ context('Create and Delete Service ', () => {
     cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
 
     cy.contains('Next').click();
+
+    cy.contains('prometheus').parents('.ant-card-bordered').within(() => {
+      cy.get('button').click({ force: true });
+    });
+
+    cy.get('.ant-drawer-content').should('be.visible').within(() => {
+      cy.get('#disable').click();
+      cy.get('.ant-switch-checked').should('exist');
+    });
+
+    cy.contains('button', 'Submit').click();
+    cy.get('.ant-drawer-content', { timeout }).should('not.exist');
+
+    cy.contains('prometheus').parents('.ant-card-bordered').within(() => {
+      cy.get('button').click({ force: true });
+    });
+
+    cy.get('.ant-drawer-footer').contains('button', 'Delete').click({ force: true });
+    cy.contains('button', 'Confirm').click({ force: true });
+
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(this.domSelector.notification).should('contain', this.data.createServiceSuccess);
