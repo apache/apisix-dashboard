@@ -136,7 +136,7 @@ help() {
   echo -e ' build,\t-b\t rebuild all the images from dockerfile.'
   echo -e ' help,\t-h\t info about how to use this script.'
 
-  echo -e '\nFull documentation at <https://github.com/apache/apisix-dashboard/blob/master/docs/en/latest/back-end-e2e.md>'
+  echo -e '\nFull documentation at <https://github.com/apache/apisix-dashboard/blob/master/docs/en/latest/back-end-tests.md>'
 }
 
 give_up() {
