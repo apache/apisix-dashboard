@@ -43,10 +43,10 @@ context('Create and Delete Plugin List', () => {
     cy.contains('50 / page').should('be.visible').click();
     cy.get(this.domSelector.fiftyPerPage).should('exist');
     cy.location('href').should('include', 'pageSize=50');
-    cy.get('.ant-btn-primary').should('exist').each(function ($el) {
+    cy.get('.ant-btn-primary', { timeout }).should('exist').each(function ($el) {
       if ($el.text() === 'Edit') {
         cy.wrap($el).click();
-        cy.get('.ant-drawer-footer').contains('button', 'Delete').click({ force: true });
+        cy.get('.ant-drawer-footer').contains('button', 'Delete').click();
         cy.contains('button', 'Confirm').click({ force: true });
       }
     });
