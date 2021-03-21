@@ -26,16 +26,15 @@ context('Create and Delete Plugin List', () => {
     cy.fixture('data.json').as('data');
   });
 
-  // it('should visit plugin market', function () {
-  //   cy.visit('/');
-  //   cy.contains('Plugin').click();
-  //   cy.contains('Create').click();
-  //   cy.wait(3000);
-  //   cy.fixture('plugin-dataset.json').as('cases');
-  //   cy.get('@cases').then((cases) => {
-  //     cy.configurePlugins(cases);
-  //   });
-  // });
+  it('should visit plugin market', function () {
+    cy.visit('/');
+    cy.contains('Plugin').click();
+    cy.contains('Create').click();
+    cy.fixture('plugin-dataset.json').as('cases');
+    cy.get('@cases').then((cases) => {
+      cy.configurePlugins(cases);
+    });
+  });
 
   it('should delete the plugin in drawer', function () {
     cy.visit('/plugin/list');
