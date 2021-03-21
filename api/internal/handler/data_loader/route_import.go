@@ -115,7 +115,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 			if err != nil {
 				if err == data.ErrNotFound {
 					return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-						fmt.Errorf(consts.ServiceIDNotFound, route.ServiceID)
+						fmt.Errorf(consts.IDNotFound, "service", route.ServiceID)
 				}
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 			}
@@ -125,7 +125,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 			if err != nil {
 				if err == data.ErrNotFound {
 					return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-						fmt.Errorf(consts.UpstreamIDNotFound, route.UpstreamID)
+						fmt.Errorf(consts.IDNotFound, "upstream", route.UpstreamID)
 				}
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 			}

@@ -80,7 +80,7 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 		route, err := h.routeStore.Get(c.Context(), id)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return nil, fmt.Errorf(consts.UpstreamIDNotFound, id)
+				return nil, fmt.Errorf(consts.IDNotFound, "upstream", id)
 			}
 			return nil, err
 		}
@@ -159,7 +159,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 			service, err = h.serviceStore.Get(c.Context(), serviceID)
 			if err != nil {
 				if err == data.ErrNotFound {
-					return nil, fmt.Errorf(consts.ServiceIDNotFound, route.ServiceID)
+					return nil, fmt.Errorf(consts.IDNotFound, "service", route.ServiceID)
 				}
 				return nil, err
 			}
@@ -464,7 +464,7 @@ func (h *Handler) ParseRouteUpstream(c droplet.Context, route *entity.Route) (in
 		upstream, err := h.upstreamStore.Get(c.Context(), upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return nil, fmt.Errorf(consts.UpstreamIDNotFound, route.UpstreamID)
+				return nil, fmt.Errorf(consts.IDNotFound, "upstream", route.UpstreamID)
 			}
 			return nil, err
 		}
@@ -478,7 +478,7 @@ func (h *Handler) ParseRouteUpstream(c droplet.Context, route *entity.Route) (in
 			upstream, err := h.upstreamStore.Get(c.Context(), upstreamID)
 			if err != nil {
 				if err == data.ErrNotFound {
-					return nil, fmt.Errorf(consts.UpstreamIDNotFound, _service.UpstreamID)
+					return nil, fmt.Errorf(consts.IDNotFound, "upstream", _service.UpstreamID)
 				}
 				return nil, err
 			}

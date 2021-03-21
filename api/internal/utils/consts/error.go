@@ -28,19 +28,27 @@ const (
 )
 
 const (
-	UpstreamIDNotFound = "upstream id: %s not found"
-	ServiceIDNotFound  = "service id: %s not found"
+	// IDNotFound is the string use for can't find the cache by the id
+	IDNotFound = "%s id: %s not found"
 )
 
 var (
-	ErrorUsernamePassword         = errors.New("username or password error")
-	ErrorIDUsername               = errors.New("consumer's id and username must be a same value")
-	ErrorParameterID              = errors.New("Parameter IDs cannot be empty")
-	ErrorRouteData                = errors.New("Route data is empty, cannot be exported")
-	ErrorImportFile               = errors.New("empty or invalid imported file")
-	ErrorSSLCertificate           = errors.New("invalid certificate")
+	// ErrorUsernamePassword is the error means username or password is not correct
+	ErrorUsernamePassword = errors.New("username or password error")
+	// ErrorIDUsername is the error use for the input's id and username is different
+	ErrorIDUsername = errors.New("consumer's id and username must be a same value")
+	// ErrorParameterID is the error use for parameter ID is empty
+	ErrorParameterID = errors.New("Parameter IDs cannot be empty")
+	// ErrorRouteData is the error that the route data is empty
+	ErrorRouteData = errors.New("Route data is empty, cannot be exported")
+	// ErrorImportFile is the error that use for import a empty file
+	ErrorImportFile = errors.New("empty or invalid imported file")
+	// ErrorImportFile means the certificate is invalid
+	ErrorSSLCertificate = errors.New("invalid certificate")
+	// ErrorSSLCertificateResolution means the SSL certificate decode failed
 	ErrorSSLCertificateResolution = errors.New("Certificate resolution failed")
-	ErrorSSLKeyAndCert            = errors.New("key and cert don't match")
+	// ErrorSSLKeyAndCert means the SSL key and SSL certificate don't match
+	ErrorSSLKeyAndCert = errors.New("key and cert don't match")
 )
 
 var (
