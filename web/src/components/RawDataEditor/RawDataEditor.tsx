@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Drawer, PageHeader, notification, Space, Select } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
 import CodeMirror from '@uiw/react-codemirror';
@@ -38,12 +38,16 @@ enum codeMirrorModeList {
   Yaml = 'Yaml',
 }
 
-const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data = {}, onClose, onSubmit = () => { } }) => {
+const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data = {}, onClose = () => { }, onSubmit = () => { } }) => {
   const ref = useRef<any>(null);
   const { formatMessage } = useIntl();
   const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
     codeMirrorModeList.Json,
   );
+
+  useEffect(() => {
+    setCodeMirrorMode(codeMirrorModeList.Json);
+  }, [visible])
 
   const modeOptions = [
     { label: codeMirrorModeList.Json, value: codeMirrorModeList.Json },
