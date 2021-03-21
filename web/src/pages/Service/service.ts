@@ -44,7 +44,7 @@ export const create = (data: ServiceModule.Entity) =>
 export const update = (serviceId: string, data: ServiceModule.Entity) =>
   request(`/services/${serviceId}`, {
     method: 'PUT',
-    data: data
+    data,
   });
 
 export const remove = (serviceId: string) =>

@@ -40,7 +40,7 @@ export const create = (data: ConsumerModule.Entity) =>
 export const update = (username: string, data: ConsumerModule.Entity) =>
   request(`/consumers/${username}`, {
     method: 'PUT',
-    data: data,
+    data,
   });
 
 export const remove = (username: string) => request(`/consumers/${username}`, { method: 'DELETE' });

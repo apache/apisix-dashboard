@@ -40,7 +40,7 @@ export const create = (data: UpstreamModule.RequestBody) =>
 export const update = (id: string, data: UpstreamModule.RequestBody) =>
   request(`/upstreams/${id}`, {
     method: 'PUT',
-    data: data,
+    data,
   });
 
 export const remove = (id: string) => request(`/upstreams/${id}`, { method: 'DELETE' });

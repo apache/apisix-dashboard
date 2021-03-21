@@ -20,7 +20,7 @@ import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Popconfirm, Button, notification } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined, ReconciliationFilled } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import querystring from 'query-string'
 import { omit } from 'lodash';
 
