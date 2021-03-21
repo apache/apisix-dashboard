@@ -21,7 +21,7 @@ declare namespace RouteModule {
 
   type RequestProtocol = 'https' | 'http' | 'websocket';
 
-  type RequestMode = 'Normal' | 'RawData'
+  type RequestMode = 'Normal' | 'RawData';
 
   type BaseData = {
     id?: number;
@@ -147,7 +147,7 @@ declare namespace RouteModule {
     regex_uri?: string[];
     host?: string;
     kvHeaders?: Kvobject[];
-    headers?: Record<string,string>;
+    headers?: Record<string, string>;
   }
 
   type AdvancedMatchingRules = {

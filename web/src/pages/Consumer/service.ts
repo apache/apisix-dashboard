@@ -17,7 +17,7 @@
 import { request } from 'umi';
 import { omit } from 'lodash';
 
-import { DELETE_FIELDS } from '@/constants'
+import { DELETE_FIELDS } from '@/constants';
 
 export const fetchList = ({ current = 1, pageSize = 10, ...res }) =>
   request('/consumers', {

@@ -17,7 +17,7 @@
 import { request } from 'umi';
 import { pickBy, identity, omit } from 'lodash';
 
-import { DELETE_FIELDS } from '@/constants'
+import { DELETE_FIELDS } from '@/constants';
 
 import {
   transformStepData,
