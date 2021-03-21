@@ -21,6 +21,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Popconfirm, Button, notification } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
+import querystring from 'query-string'
 
 import { RawDataEditor } from '@/components/RawDataEditor';
 import { timestampToLocaleString } from '@/helpers';
@@ -33,6 +34,7 @@ const Page: React.FC = () => {
   const [rawData, setRawData] = useState<Record<string, any>>({});
   const [id, setId] = useState('');
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
+  const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
 
   const { formatMessage } = useIntl();
 
@@ -41,6 +43,15 @@ const Page: React.FC = () => {
       setId(rawData.id);
     }
   }, [rawData]);
+
+  const savePageList = (page = 1, pageSize = 10) => {
+    history.replace(`/upstream/list?page=${page}&pageSize=${pageSize}`);
+  };
+
+  useEffect(() => {
+    const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
+    setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
+  }, [window.location.search]);
 
   const columns: ProColumns<UpstreamModule.ResponseBody>[] = [
     {
@@ -113,6 +124,11 @@ const Page: React.FC = () => {
         columns={columns}
         rowKey="id"
         request={fetchList}
+        pagination={{
+          onChange: (page, pageSize?) => savePageList(page, pageSize),
+          pageSize: paginationConfig.pageSize,
+          current: paginationConfig.current,
+        }}
         search={{
           searchText: formatMessage({ id: 'component.global.search' }),
           resetText: formatMessage({ id: 'component.global.reset' }),

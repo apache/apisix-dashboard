@@ -118,7 +118,11 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	req.Header.Add("Content-Type", contentType)
 	for k, v := range tempMap {
 		for _, v1 := range v {
-			req.Header.Add(k, v1)
+			if !strings.EqualFold(k, "Content-Type") {
+				req.Header.Add(k, v1)
+			} else {
+				req.Header.Set(k, v1)
+			}
 		}
 	}
 

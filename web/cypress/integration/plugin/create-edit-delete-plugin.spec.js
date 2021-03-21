@@ -52,8 +52,12 @@ context('Create and Delete Plugin List', () => {
 
   it('should delete plugin list', function () {
     cy.visit('/plugin/list');
-
     cy.get(this.domSelector.refresh).click();
+    cy.get(this.domSelector.paginationOptions).click();
+    cy.contains('50 / page').should('be.visible').click();
+    cy.get(this.domSelector.fiftyPerPage).should('exist');
+    cy.location('href').should('include', 'pageSize=50');
+
     cy.get(this.domSelector.deleteButton, { timeout }).should('exist').each(function ($el) {
       cy.wrap($el).click().click({ timeout });
       cy.contains('button', 'Confirm').click({ force: true });
