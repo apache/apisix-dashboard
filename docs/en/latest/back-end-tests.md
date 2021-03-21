@@ -25,7 +25,7 @@ This document provides the details of setting up the environment for running the
 
 ## Table of Contents
 
-- [Runing E2E Tests Locally](#runing-e2e-tests-locally)
+- [Running E2E Tests Locally](#running-e2e-tests-locally)
   - [Start with source code](#start-with-source-code)
   - [Start with docker-compose](#start-with-docker-compose)
   - [Start tests](#start-tests)
@@ -33,7 +33,7 @@ This document provides the details of setting up the environment for running the
   - [Writing Unit Tests](#writing-unit-tests)
   - [Writing E2E Tests](#writing-e2e-tests)
 
-## Runing E2E Tests Locally
+## Running E2E Tests Locally
 
 ## Start with source code
 
@@ -212,7 +212,7 @@ Currently, the backend of apisix-dashboard have two types of e2e tests. One is p
 
 For value assertion, we are using the [assert](https://pkg.go.dev/github.com/stretchr/testify@v1.7.0/assert) package by testify. It provides lots of easy to use functions for assertion where the first argument is   `*testing.T` object which you can obtain from the used framework for testing. For the built-in testing package, each test cases have this as the first argument of the test itself. For ginkgo `ginkgo.GinkgoT()` returns the mentioned object.
 
-If you are creating any test which requires making HTTP calls to any of the following node which involves `manager-api` or `apisix`, after setting up the environment (please refer [Runing E2E Tests Locally](#runing-e2e-tests-locally) for the details), you can use the `HttpTestCase` struct which provides a nice interface to make the calls along with checking the response. Here's a brief description of the most used fields of the struct,
+If you are creating any test which requires making HTTP calls to any of the following node which involves `manager-api` or `apisix`, after setting up the environment (please refer [Running E2E Tests Locally](#running-e2e-tests-locally) for the details), you can use the `HttpTestCase` struct which provides a nice interface to make the calls along with checking the response. Here's a brief description of the most used fields of the struct,
 
 ```go
 type HttpTestCase struct {
