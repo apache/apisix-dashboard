@@ -85,7 +85,7 @@ Now coming back to writing e2e tests,
         mkdir <dirname> #inside e2enew
         cd <dirname>
         ginkgo bootstrap # Generates <dirname>_suite_test.go
-        #to add tests in seperate files
+        #to add tests in separate files
         ginkgo generate <testgroup> #Generates <testgroup>_test.go
      ```
 
@@ -93,6 +93,6 @@ Now coming back to writing e2e tests,
 
    - We use different ginkgo containers for writing tests which includes `Describe`, `It`, `AfterSuite`, `BeforeEach` etc. [ [ref](https://onsi.github.io/ginkgo/#structuring-your-specs) ]
 
-   - It is always recommended to use ginkgo's table-driven tests for running the independent `HttpTestCase` using `table.DescribeTable` and `table.Entry` [ [ref](https://pkg.go.dev/github.com/onsi/ginkgo/extensions/table) ]. 
+   - It is always recommended to use ginkgo's table-driven tests for running the independent `HttpTestCase` using `table.DescribeTable` and `table.Entry` [ [ref](https://pkg.go.dev/github.com/onsi/ginkgo/extensions/table) ].
 
    - FYI, internally ginkgo reduces each table entries to `It` block and run all the `It` blocks concurrently/parallelly. Ginkgo auto recovers from panics inside `It` blocks only, so always put your assertions inside `It` containers.
