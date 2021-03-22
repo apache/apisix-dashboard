@@ -42,7 +42,7 @@ const Step1: React.FC<Props> = ({ form, disabled, upstreamRef }) => {
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.name' })}
           name="name"
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: formatMessage({ id: 'page.upstream.step.name.should.unique' }) }]}
           extra={formatMessage({ id: 'page.upstream.step.name.should.unique' })}
         >
           <Input

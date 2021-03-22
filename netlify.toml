@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/apisix/*"
+  to = "http://139.217.190.60/apisix/:splat"
+  status = 200
