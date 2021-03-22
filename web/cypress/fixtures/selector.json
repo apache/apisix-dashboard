@@ -11,6 +11,7 @@
   "errorNotification:": ".ant-notification-notice-error",
 
   "pluginCard": ".ant-card",
+  "pluginCardBordered": ".ant-card-bordered",
   "pageContent": ".ant-pro-page-container",
 
   "tableBody":".ant-table-tbody",
@@ -19,6 +20,7 @@
   "refresh": ".anticon-reload",
   "codemirror": ".CodeMirror",
   "disabledSwitcher": "#disable",
+  "checkedSwitcher": ".ant-switch-checked",
   "deleteButton": ".ant-btn-dangerous",
 
   "name": "#name",
@@ -66,6 +68,7 @@
   "usernameInput": "#control-ref_username",
   "passwordInput": "#control-ref_password",
   "drawer": ".ant-drawer-content",
+  "drawerFooter": ".ant-drawer-footer",
   "codemirrorScroll": ".CodeMirror-scroll",
   "drawerClose": ".ant-drawer-close",
   "descriptionSelector": "[title=Description]",
