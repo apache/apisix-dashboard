@@ -18,7 +18,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Popconfirm, Button, notification } from 'antd';
+import { Popconfirm, Button, notification, Space } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
 import querystring from 'query-string'
@@ -77,10 +77,9 @@ const Page: React.FC = () => {
       valueType: 'option',
       hideInSearch: true,
       render: (_, record) => (
-        <>
+        <Space align="baseline">
           <Button
             type="primary"
-            style={{ marginRight: 10 }}
             onClick={() => history.push(`/upstream/${record.id}/edit`)}
           >
             {formatMessage({ id: 'page.upstream.list.edit' })}
@@ -111,7 +110,7 @@ const Page: React.FC = () => {
               {formatMessage({ id: 'page.upstream.list.delete' })}
             </Button>
           </Popconfirm>
-        </>
+        </Space>
       ),
     },
   ];
