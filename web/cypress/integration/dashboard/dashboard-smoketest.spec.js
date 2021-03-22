@@ -14,8 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-  'page.metrics.empty.description.grafanaNotConfig': '您还未配置 Grafana',
-  'page.metrics.button.grafanaConfig': '现在配置',
-  'page.metrics.tip': '使用浏览器 localStorage 存储监控页访问地址，仅作用于本地。',
-};
+/* eslint-disable no-undef */
+
+context('dashboard page smoke test', () => {
+  beforeEach(() => {
+    cy.login();
+
+    cy.fixture('selector.json').as('domSelector');
+  });
+
+  it('should visit dashboard page', function () {
+    cy.visit('/');
+    cy.contains('Dashboard').click();
+    cy.url().should('contains', '/dashboard');
+    cy.get(this.domSelector.pageContent)
+      .children()
+      .should('contain', 'Dashboard')
+      .and('contain', 'You have not configured Grafana')
+      .and('contain', 'Configure');
+  });
+});
