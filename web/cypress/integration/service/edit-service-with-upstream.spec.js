@@ -26,8 +26,8 @@ context('Edit Service with Upstream', () => {
 
   it('should create a test upstream', function () {
     cy.visit('/upstream/list');
+    cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
-
     cy.get(this.domSelector.name).type(this.data.upstreamName);
     cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
     cy.contains('Next').click();
@@ -38,6 +38,7 @@ context('Edit Service with Upstream', () => {
 
   it('should create a test service', function () {
     cy.visit('/service/list');
+    cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.get(this.domSelector.name).type(this.data.serviceName);
     cy.get(this.domSelector.description).type(this.data.description);
