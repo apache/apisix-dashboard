@@ -131,7 +131,22 @@ declare namespace RouteModule {
     status: number;
     enable_websocket?: boolean;
     service_id: string;
+    proxyRewrite: ProxyRewrite;
+    URIRewriteType: number;
+    hostRewriteType: number;
   };
+  type Kvobject = {
+    key: string;
+    value: string;
+  }
+  type ProxyRewrite = {
+    scheme?: 'keep' | 'http' | 'https';
+    uri?: string;
+    regex_uri?: string[];
+    host?: string;
+    kvHeaders?: Kvobject[];
+    headers?: Record<string,string>;
+  }
 
   type AdvancedMatchingRules = {
     advancedMatchingRules: MatchingRule[];

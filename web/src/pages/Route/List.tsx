@@ -37,6 +37,7 @@ import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
 import moment from 'moment';
 import { saveAs } from 'file-saver';
+import querystring from 'query-string'
 
 import { timestampToLocaleString } from '@/helpers';
 import type { RcFile } from 'antd/lib/upload';
@@ -75,10 +76,20 @@ const Page: React.FC = () => {
   const [showImportModal, setShowImportModal] = useState(false);
   const [rawDataEditorVisible, setRawDataEditorVisible] = useState(false);
   const [rawData, setRawData] = useState({});
+  const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
+
+  const savePageList = (page = 1, pageSize = 10) => {
+    history.replace(`/routes/list?page=${page}&pageSize=${pageSize}`);
+  };
 
   useEffect(() => {
     fetchLabelList().then(setLabelList);
   }, []);
+
+  useEffect(() => {
+    const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
+    setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
+  }, [window.location.search]);
 
   const rowSelection = {
     selectedRowKeys,
@@ -317,8 +328,8 @@ const Page: React.FC = () => {
           {record.status ? (
             <Tag color="green">{formatMessage({ id: 'page.route.published' })}</Tag>
           ) : (
-              <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
-            )}
+            <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
+          )}
         </>
       ),
       renderFormItem: (_, { type }) => {
@@ -421,6 +432,11 @@ const Page: React.FC = () => {
         rowKey="id"
         columns={columns}
         request={fetchList}
+        pagination={{
+          onChange: (page, pageSize?) => savePageList(page, pageSize),
+          pageSize: paginationConfig.pageSize,
+          current: paginationConfig.current,
+        }}
         search={{
           searchText: formatMessage({ id: 'component.global.search' }),
           resetText: formatMessage({ id: 'component.global.reset' }),
