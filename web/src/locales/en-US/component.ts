@@ -25,6 +25,7 @@ export default {
   'component.global.cancel': 'Cancel',
   'component.global.submit': 'Submit',
   'component.global.create': 'Create',
+  'component.global.createWithEditor': 'Create with Editor',
   'component.global.add': 'Add',
   'component.global.save': 'Save',
   'component.global.edit': 'Edit',

@@ -25,6 +25,7 @@ export default {
   'component.global.cancel': '取消',
   'component.global.submit': '提交',
   'component.global.create': '创建',
+  'component.global.createWithEditor': '使用编辑器创建',
   'component.global.add': '新建',
   'component.global.save': '保存',
   'component.global.edit': '编辑',

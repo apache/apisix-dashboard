@@ -22,6 +22,7 @@ import styles from '../../Create.less';
 import MetaView from './MetaView';
 import RequestConfigView from './RequestConfigView';
 import MatchingRulesView from './MatchingRulesView';
+import ProxyRewrite from './ProxyRewrite';
 
 const Step1: React.FC<RouteModule.Step1PassProps> = (props) => {
   return (
@@ -29,6 +30,7 @@ const Step1: React.FC<RouteModule.Step1PassProps> = (props) => {
       <Form {...FORM_ITEM_LAYOUT} form={props.form} layout="horizontal" className={styles.stepForm}>
         <MetaView {...props} />
         <RequestConfigView {...props} />
+        <ProxyRewrite {...props} />
       </Form>
       <MatchingRulesView {...props} />
     </>

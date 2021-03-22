@@ -645,6 +645,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             }}
           >
             <Select
+              showSearch
               data-cy="upstream_selector"
               disabled={disabled}
               onChange={(upstream_id) => {
@@ -656,6 +657,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   form.setFieldsValue(DEFAULT_UPSTREAM);
                 }
               }}
+              filterOption={(input, item) =>
+                item?.children.toLowerCase().includes(input.toLowerCase())
+              }
             >
               {Boolean(!required) && <Select.Option value={'None'}>None</Select.Option>}
               {[
