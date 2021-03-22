@@ -14,9 +14,6 @@
   "pluginCardBordered": ".ant-card-bordered",
   "pageContent": ".ant-pro-page-container",
 
-  "drawerContent": ".ant-drawer-content",
-  "drawerFooter": ".ant-drawer-footer",
-
   "tableCell": ".ant-table-cell",
   "empty": ".ant-empty-normal",
   "refresh": ".anticon-reload",
@@ -70,6 +67,7 @@
   "usernameInput": "#control-ref_username",
   "passwordInput": "#control-ref_password",
   "drawer": ".ant-drawer-content",
+  "drawerFooter": ".ant-drawer-footer",
   "codemirrorScroll": ".CodeMirror-scroll",
   "drawerClose": ".ant-drawer-close",
   "descriptionSelector": "[title=Description]",

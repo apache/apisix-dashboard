@@ -35,13 +35,13 @@ context('Delete Plugin List with the Drawer', () => {
       cy.get('button').click({ force: true });
     });
 
-    cy.get(this.domSelector.drawerContent).should('be.visible').within(() => {
+    cy.get(this.domSelector.drawer).should('be.visible').within(() => {
       cy.get(this.domSelector.disabledSwitcher).click();
       cy.get(this.domSelector.checkedSwitcher).should('exist');
     });
 
     cy.contains('button', 'Submit').click();
-    cy.get(this.domSelector.drawerContent, { timeout }).should('not.exist');
+    cy.get(this.domSelector.drawer, { timeout }).should('not.exist');
   });
 
   it('should delete the plugin with the drawer', function () {

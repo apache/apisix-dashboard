@@ -77,13 +77,13 @@ context('Create and Delete Route', () => {
       cy.get('button').click({ force: true });
     });
 
-    cy.get(this.domSelector.drawerContent).should('be.visible').within(() => {
+    cy.get(this.domSelector.drawer).should('be.visible').within(() => {
       cy.get(this.domSelector.disabledSwitcher).click();
       cy.get(this.domSelector.checkedSwitcher).should('exist');
     });
 
     cy.contains('button', 'Submit').click();
-    cy.get(this.domSelector.drawerContent, { timeout }).should('not.exist');
+    cy.get(this.domSelector.drawer, { timeout }).should('not.exist');
 
     cy.contains(this.data.basicAuthPlugin).parents(this.domSelector.pluginCardBordered).within(() => {
       cy.get('button').click({ force: true });
