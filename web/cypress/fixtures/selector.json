@@ -17,6 +17,7 @@
   "drawerContent": ".ant-drawer-content",
   "drawerFooter": ".ant-drawer-footer",
 
+  "tableBody":".ant-table-tbody",
   "tableCell": ".ant-table-cell",
   "empty": ".ant-empty-normal",
   "refresh": ".anticon-reload",
