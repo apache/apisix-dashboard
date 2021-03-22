@@ -34,21 +34,21 @@ const (
 
 var (
 	// ErrorUsernamePassword is the error means username or password is not correct
-	ErrorUsernamePassword = errors.New("username or password error")
+	ErrUsernamePassword = errors.New("username or password error")
 	// ErrorIDUsername is the error use for the input's id and username is different
-	ErrorIDUsername = errors.New("consumer's id and username must be a same value")
+	ErrIDUsername = errors.New("consumer's id and username must be a same value")
 	// ErrorParameterID is the error use for parameter ID is empty
-	ErrorParameterID = errors.New("Parameter IDs cannot be empty")
+	ErrParameterID = errors.New("Parameter IDs cannot be empty")
 	// ErrorRouteData is the error that the route data is empty
-	ErrorRouteData = errors.New("Route data is empty, cannot be exported")
+	ErrRouteData = errors.New("Route data is empty, cannot be exported")
 	// ErrorImportFile is the error that use for import a empty file
-	ErrorImportFile = errors.New("empty or invalid imported file")
+	ErrImportFile = errors.New("empty or invalid imported file")
 	// ErrorImportFile means the certificate is invalid
-	ErrorSSLCertificate = errors.New("invalid certificate")
+	ErrSSLCertificate = errors.New("invalid certificate")
 	// ErrorSSLCertificateResolution means the SSL certificate decode failed
-	ErrorSSLCertificateResolution = errors.New("Certificate resolution failed")
+	ErrSSLCertificateResolution = errors.New("Certificate resolution failed")
 	// ErrorSSLKeyAndCert means the SSL key and SSL certificate don't match
-	ErrorSSLKeyAndCert = errors.New("key and cert don't match")
+	ErrSSLKeyAndCert = errors.New("key and cert don't match")
 )
 
 var (
