@@ -275,7 +275,7 @@ Now coming back to writing e2enew tests,
 
    ```go
    var _ = ginkgo.Describe("<description about the tests>", func() {
-            table.DescribeTable("<logical group 1>", 
+            table.DescribeTable("<logical group 1>",
                func(tc base.HttpTestCase) {
                   base.RunTestCase(tc)
                },
@@ -286,11 +286,11 @@ Now coming back to writing e2enew tests,
                   //Fill the fields
                }),
             })
-            
+
             table.DescribeTable("<logical group 2>", func () {
                ...
             })
-         
+
          })
    ```
 
