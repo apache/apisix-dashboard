@@ -42,6 +42,7 @@ func TestGlobalRule(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				 "uri": "/hello",
 				 "upstream": {
 					 "type": "roundrobin",
@@ -101,6 +102,7 @@ func TestGlobalRule(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"response-rewrite": {

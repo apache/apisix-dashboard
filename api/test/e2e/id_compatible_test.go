@@ -51,6 +51,7 @@ func TestID_Using_Int(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"upstream_id": 1
 			}`,
@@ -85,6 +86,7 @@ func TestID_Using_Int(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"service_id": 1
 			}`,
@@ -184,6 +186,7 @@ func TestID_Using_String(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/2",
 			Body: `{
+				"name": "route2",
 				"uri": "/hello",
 				"upstream_id": "2"
 			}`,
@@ -266,6 +269,7 @@ func TestID_Crossing(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/3",
 			Body: `{
+				"name": "route3",
 				"uri": "/hello",
 				"upstream_id": 3
 			}`,
@@ -359,6 +363,7 @@ func TestID_Not_In_Body(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 					"type": "roundrobin",

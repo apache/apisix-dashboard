@@ -32,6 +32,7 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello_",
 				"service_id": "not-exists"
 			}`,
@@ -51,6 +52,7 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello_",
 				"upstream_id": "not-exists"
 			}`,
@@ -70,6 +72,7 @@ func TestRoute_Invalid_Service_And_Service(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello_",
 				"service_id": "not-exists-service",
 				"upstream_id": "not-exists-upstream"
@@ -136,6 +139,7 @@ func TestRoute_Create_Service(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/server_port",
 				"service_id": "200"
 			}`,
@@ -234,6 +238,7 @@ func TestRoute_Create_Upstream(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/server_port",
 				"upstream_id": "1"
 			}`,

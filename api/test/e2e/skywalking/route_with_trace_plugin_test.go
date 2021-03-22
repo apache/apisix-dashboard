@@ -44,6 +44,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"skywalking": {
@@ -94,6 +95,7 @@ func TestRoute_With_Plugin_Skywalking(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"skywalking": {

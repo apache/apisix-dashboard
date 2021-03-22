@@ -34,6 +34,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+					"name": "route1",
 					"uri": "/hello",
 					"name": "jack",
 					"desc": "config route with name and desc",
@@ -115,6 +116,7 @@ func TestRoute_with_name_desc(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+					"name": "route1",
 					"uri": "/hello",
 					"name": "new jack",
 					"desc": "new desc",
@@ -186,6 +188,7 @@ func TestRoute_with_label(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+					"name": "route1",
 					"uri": "/hello",
 					"labels": {
 						"build":"16",
@@ -255,6 +258,7 @@ func TestRoute_search_by_label(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+					"name": "route1",
 					"uri": "/hello",
 					"labels": {
 						"build":"16",
@@ -402,6 +406,7 @@ func TestRoute_With_Create_Time(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"create_time": 1608792721,
 				"upstream": {
@@ -420,6 +425,7 @@ func TestRoute_With_Create_Time(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"update_time": 1608792721,
 				"upstream": {
@@ -438,6 +444,7 @@ func TestRoute_With_Create_Time(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"create_time": 1608792721,
 				"update_time": 1608792721,

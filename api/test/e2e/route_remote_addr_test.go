@@ -29,6 +29,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+					"name": "route1",
 					"uri": "/hello",
 					"remote_addr": "127.0.0.",
 					"upstream": {
@@ -59,6 +60,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+					"name": "route1",
 					"uri": "/hello",
 					"remote_addr": "127.0.0.aa",
 					"upstream": {
@@ -89,6 +91,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+					"name": "route1",
 					"uri": "/hello",
 					"remote_addrs": ["127.0.0.1","192.168.0."],
 					"upstream": {
