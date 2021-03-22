@@ -83,11 +83,9 @@ const Page: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.lang}>
-
         <div className={styles.github} >
-          <a className="githubIcon" href="https://apisix.apache.org"><GithubOutlined /></a> 
+          <a target='_blank' className="githubIcon" href="https://apisix.apache.org"><GithubOutlined /></a>
         </div>
-        
         <SelectLang />
       </div>
       <div className={styles.content}>
