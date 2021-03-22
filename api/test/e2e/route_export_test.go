@@ -406,7 +406,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "GET",
+					"operationId": "route3GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -586,7 +586,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "GET",
+					"operationId": "route4GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -775,7 +775,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "GET",
+					"operationId": "route5GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -959,7 +959,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "GET",
+					"operationId": "route8GET",
 					"requestBody": {},
 					"responses": {
 						"default": {

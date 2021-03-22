@@ -543,6 +543,7 @@ func TestRoute_Create_via_POST(t *testing.T) {
 			Path:   "/apisix/admin/routes",
 			Body: `{
 				"id": "r1",
+				"name": "route1",
 				"uri": "/hello_",
 				"hosts": ["foo.com", "*.bar.com"],
 				"upstream": {
