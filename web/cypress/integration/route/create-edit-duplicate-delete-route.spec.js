@@ -154,6 +154,7 @@ context('Create and Delete Route', () => {
     });
   });
 
+
   it('should duplicate the route', function () {
     cy.visit('/');
     cy.contains('Route').click();
@@ -188,12 +189,11 @@ context('Create and Delete Route', () => {
     const { domSelector, data } = this;
     const routeNames = [newName, duplicateNewName];
     routeNames.forEach(function (routeName) {
-      cy.get(domSelector.nameSelector).type(routeName);
+      cy.get(domSelector.name).clear().type(routeName);
       cy.contains('Search').click();
       cy.contains(routeName).siblings().contains('Delete').click();
       cy.contains('button', 'Confirm').click();
       cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
     });
-
   });
 });
