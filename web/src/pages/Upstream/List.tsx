@@ -60,40 +60,38 @@ const Page: React.FC = () => {
       valueType: 'option',
       hideInSearch: true,
       render: (_, record) => (
-        <>
-          <Space align="baseline">
-            <Button
-              type="primary"
-              onClick={() => history.push(`/upstream/${record.id}/edit`)}
-            >
-              {formatMessage({ id: 'page.upstream.list.edit' })}
-            </Button>
-            <Button type="primary" onClick={() => {
-              setRawData(record);
-              setRawDataEditorVisible(true);
-            }}>
-              {formatMessage({ id: 'component.global.view' })}
-            </Button>
-            <Popconfirm
-              title={formatMessage({ id: 'page.upstream.list.confirm.delete' })}
-              okText={formatMessage({ id: 'page.upstream.list.confirm' })}
-              cancelText={formatMessage({ id: 'page.upstream.list.cancel' })}
-              onConfirm={() => {
-                remove(record.id!).then(() => {
-                  notification.success({
-                    message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
-                  });
-                  /* eslint-disable no-unused-expressions */
-                  ref.current?.reload();
+        <Space align="baseline">
+          <Button
+            type="primary"
+            onClick={() => history.push(`/upstream/${record.id}/edit`)}
+          >
+            {formatMessage({ id: 'page.upstream.list.edit' })}
+          </Button>
+          <Button type="primary" onClick={() => {
+            setRawData(record);
+            setRawDataEditorVisible(true);
+          }}>
+            {formatMessage({ id: 'component.global.view' })}
+          </Button>
+          <Popconfirm
+            title={formatMessage({ id: 'page.upstream.list.confirm.delete' })}
+            okText={formatMessage({ id: 'page.upstream.list.confirm' })}
+            cancelText={formatMessage({ id: 'page.upstream.list.cancel' })}
+            onConfirm={() => {
+              remove(record.id!).then(() => {
+                notification.success({
+                  message: formatMessage({ id: 'page.upstream.list.delete.successfully' }),
                 });
-              }}
-            >
-              <Button type="primary" danger>
-                {formatMessage({ id: 'page.upstream.list.delete' })}
-              </Button>
-            </Popconfirm>
-          </Space>
-        </>
+                /* eslint-disable no-unused-expressions */
+                ref.current?.reload();
+              });
+            }}
+          >
+            <Button type="primary" danger>
+              {formatMessage({ id: 'page.upstream.list.delete' })}
+            </Button>
+          </Popconfirm>
+        </Space>
       ),
     },
   ];
