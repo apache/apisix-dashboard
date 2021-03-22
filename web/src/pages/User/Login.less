@@ -30,14 +30,12 @@
   text-align: right;
 }
 
-.settings {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-  font-size: 16px;
-  vertical-align: middle;
-  cursor: pointer;
+a{
+  color: black;
+  
+  &:hover {
+    color: @primary-color;
+  }
 }
 
 .content {
@@ -74,6 +72,16 @@
   height: 60px;
   margin-right: 16px;
   vertical-align: top;
+}
+
+.github {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  font-size: 16px;
+  vertical-align: middle;
+  cursor: pointer;
 }
 
 .title {
