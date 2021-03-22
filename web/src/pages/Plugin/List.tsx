@@ -22,6 +22,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, Popconfirm, Space, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { omit } from 'lodash';
+import querystring from 'query-string'
 
 import PluginDetail from '@/components/Plugin/PluginDetail';
 
@@ -34,6 +35,11 @@ const Page: React.FC = () => {
   const [initialData, setInitialData] = useState({});
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [name, setName] = useState('');
+  const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
+
+  const savePageList = (page = 1, pageSize = 10) => {
+    history.replace(`/plugin/list?page=${page}&pageSize=${pageSize}`);
+  };
 
   useEffect(() => {
     fetchPluginList().then(setPluginList);
@@ -50,6 +56,11 @@ const Page: React.FC = () => {
       });
     }
   }, [name]);
+
+  useEffect(() => {
+    const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
+    setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
+  }, [window.location.search]);
 
   const columns: ProColumns<PluginModule.TransformedPlugin>[] = [
     {
@@ -142,6 +153,11 @@ const Page: React.FC = () => {
         search={false}
         columns={columns}
         request={fetchList}
+        pagination={{
+          onChange: (page, pageSize?) => savePageList(page, pageSize),
+          pageSize: paginationConfig.pageSize,
+          current: paginationConfig.current,
+        }}
         toolBarRender={() => [
           <Button type="primary" onClick={() => history.push('/plugin/market')}>
             <PlusOutlined />

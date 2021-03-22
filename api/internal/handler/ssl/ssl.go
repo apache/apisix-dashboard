@@ -21,7 +21,6 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"encoding/pem"
-	"errors"
 	"fmt"
 	"net/http"
 	"reflect"
@@ -330,23 +329,23 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 
 func ParseCert(crt, key string) (*entity.SSL, error) {
 	if crt == "" || key == "" {
-		return nil, errors.New("invalid certificate")
+		return nil, consts.ErrSSLCertificate
 	}
 
 	certDERBlock, _ := pem.Decode([]byte(crt))
 	if certDERBlock == nil {
-		return nil, errors.New("Certificate resolution failed")
+		return nil, consts.ErrSSLCertificateResolution
 	}
 	// match
 	_, err := tls.X509KeyPair([]byte(crt), []byte(key))
 	if err != nil {
-		return nil, errors.New("key and cert don't match")
+		return nil, consts.ErrSSLKeyAndCert
 	}
 
 	x509Cert, err := x509.ParseCertificate(certDERBlock.Bytes)
 
 	if err != nil {
-		return nil, errors.New("Certificate resolution failed")
+		return nil, consts.ErrSSLCertificateResolution
 	}
 
 	ssl := entity.SSL{}

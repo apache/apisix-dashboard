@@ -40,6 +40,21 @@ export const FORM_ITEM_WITHOUT_LABEL = {
   },
 };
 
+export enum SCHEME_REWRITE {
+  KEEP = 'keep',
+  HTTP = 'http',
+  HTTPS = 'https',
+}
+export enum URI_REWRITE_TYPE {
+  KEEP = 0,
+  STATIC,
+  REGEXP,
+}
+export enum HOST_REWRITE_TYPE {
+  KEEP = 0,
+  REWRITE,
+}
+
 export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   name: '',
   desc: '',
@@ -55,6 +70,12 @@ export const DEFAULT_STEP_1_DATA: RouteModule.Form1Data = {
   ret_code: 302,
   methods: HTTP_METHOD_OPTION_LIST,
   service_id: '',
+  proxyRewrite: {
+    scheme: 'keep',
+  },
+  URIRewriteType: URI_REWRITE_TYPE.KEEP,
+  hostRewriteType: HOST_REWRITE_TYPE.KEEP,
+
 };
 
 export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
