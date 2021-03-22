@@ -329,23 +329,23 @@ func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 
 func ParseCert(crt, key string) (*entity.SSL, error) {
 	if crt == "" || key == "" {
-		return nil, consts.ErrorSSLCertificate
+		return nil, consts.ErrSSLCertificate
 	}
 
 	certDERBlock, _ := pem.Decode([]byte(crt))
 	if certDERBlock == nil {
-		return nil, consts.ErrorSSLCertificateResolution
+		return nil, consts.ErrSSLCertificateResolution
 	}
 	// match
 	_, err := tls.X509KeyPair([]byte(crt), []byte(key))
 	if err != nil {
-		return nil, consts.ErrorSSLKeyAndCert
+		return nil, consts.ErrSSLKeyAndCert
 	}
 
 	x509Cert, err := x509.ParseCertificate(certDERBlock.Bytes)
 
 	if err != nil {
-		return nil, consts.ErrorSSLCertificateResolution
+		return nil, consts.ErrSSLCertificateResolution
 	}
 
 	ssl := entity.SSL{}

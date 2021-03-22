@@ -89,7 +89,7 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 
 	user := conf.UserList[username]
 	if username != user.Username || password != user.Password {
-		return nil, consts.ErrorUsernamePassword
+		return nil, consts.ErrUsernamePassword
 	}
 
 	// create JWT for session

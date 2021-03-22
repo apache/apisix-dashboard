@@ -94,7 +94,7 @@ func (h *ImportHandler) Import(c droplet.Context) (interface{}, error) {
 
 	if len(swagger.Paths) < 1 {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			consts.ErrorImportFile
+			consts.ErrImportFile
 	}
 
 	routes, err := OpenAPI3ToRoute(swagger)

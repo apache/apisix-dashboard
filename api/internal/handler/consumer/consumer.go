@@ -139,7 +139,7 @@ func (h *Handler) Set(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*SetInput)
 	if input.ID != nil && utils.InterfaceToString(input.ID) != input.Username {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			consts.ErrorIDUsername
+			consts.ErrIDUsername
 	}
 	if input.Username != "" {
 		input.Consumer.Username = input.Username

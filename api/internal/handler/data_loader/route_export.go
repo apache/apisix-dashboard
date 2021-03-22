@@ -70,7 +70,7 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ExportInput)
 
 	if input.IDs == "" {
-		return nil, consts.ErrorParameterID
+		return nil, consts.ErrParameterID
 	}
 
 	ids := strings.Split(input.IDs, ",")
@@ -114,7 +114,7 @@ func (h *Handler) ExportAllRoutes(c droplet.Context) (interface{}, error) {
 	routelist, err := h.routeStore.List(c.Context(), store.ListInput{})
 
 	if len(routelist.Rows) < 1 {
-		return nil, consts.ErrorRouteData
+		return nil, consts.ErrRouteData
 	}
 
 	if err != nil {
