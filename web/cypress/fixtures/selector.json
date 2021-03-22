@@ -11,13 +11,18 @@
   "errorNotification:": ".ant-notification-notice-error",
 
   "pluginCard": ".ant-card",
+  "pluginCardBordered": ".ant-card-bordered",
   "pageContent": ".ant-pro-page-container",
+
+  "drawerContent": ".ant-drawer-content",
+  "drawerFooter": ".ant-drawer-footer",
 
   "tableCell": ".ant-table-cell",
   "empty": ".ant-empty-normal",
   "refresh": ".anticon-reload",
   "codemirror": ".CodeMirror",
   "disabledSwitcher": "#disable",
+  "checkedSwitcher": ".ant-switch-checked",
   "deleteButton": ".ant-btn-dangerous",
 
   "name": "#name",
