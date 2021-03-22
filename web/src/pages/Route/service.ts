@@ -21,19 +21,19 @@ import {
   transformStepData,
   transformRouteData,
   transformUpstreamNodes,
-  transformLabelList,
 } from './transform';
+import { transformLabelList } from '@/helpers';
 
-export const create = (data: RouteModule.RequestData) =>
+export const create = (data: RouteModule.RequestData, mode?: RouteModule.RequestMode) =>
   request(`/routes`, {
     method: 'POST',
-    data: transformStepData(data),
+    data: mode === 'RawData' ? data : transformStepData(data),
   });
 
-export const update = (rid: number, data: RouteModule.RequestData) =>
+export const update = (rid: string, data: RouteModule.RequestData, mode?: RouteModule.RequestMode) =>
   request(`/routes/${rid}`, {
     method: 'PUT',
-    data: transformStepData(data),
+    data: mode === 'RawData' ? data : transformStepData(data),
   });
 
 export const fetchItem = (rid: number) =>
@@ -92,12 +92,12 @@ export const fetchUpstreamItem = (sid: string) => {
 export const checkHostWithSSL = (hosts: string[]) =>
   request('/check_ssl_exists', {
     method: 'POST',
-    data: hosts,
+    data: { hosts },
   });
 
 export const fetchLabelList = () =>
   request('/labels/route').then(
-    ({ data }) => transformLabelList(data.rows) as RouteModule.LabelList,
+    ({ data }) => transformLabelList(data.rows) as LabelList,
   );
 
 export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) =>
@@ -106,10 +106,11 @@ export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) 
     data: { status },
   });
 
-export const debugRoute = (data: RouteModule.debugRequest) => {
+export const debugRoute = (headers, data: RouteModule.debugRequest) => {
   return request('/debug-request-forwarding', {
     method: 'post',
     data,
+    headers,
   });
 };
 

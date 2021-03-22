@@ -81,11 +81,12 @@ type Route struct {
 	Hosts           []string               `json:"hosts,omitempty"`
 	RemoteAddr      string                 `json:"remote_addr,omitempty"`
 	RemoteAddrs     []string               `json:"remote_addrs,omitempty"`
-	Vars            interface{}            `json:"vars,omitempty"`
+	Vars            []interface{}          `json:"vars,omitempty"`
 	FilterFunc      string                 `json:"filter_func,omitempty"`
 	Script          interface{}            `json:"script,omitempty"`
 	ScriptID        interface{}            `json:"script_id,omitempty"` // For debug and optimization(cache), currently same as Route's ID
 	Plugins         map[string]interface{} `json:"plugins,omitempty"`
+	PluginConfigID  interface{}            `json:"plugin_config_id,omitempty"`
 	Upstream        *UpstreamDef           `json:"upstream,omitempty"`
 	ServiceID       interface{}            `json:"service_id,omitempty"`
 	UpstreamID      interface{}            `json:"upstream_id,omitempty"`
@@ -156,20 +157,21 @@ type HealthChecker struct {
 }
 
 type UpstreamDef struct {
-	Nodes        interface{}       `json:"nodes,omitempty"`
-	Retries      int               `json:"retries,omitempty"`
-	Timeout      interface{}       `json:"timeout,omitempty"`
-	K8sInfo      interface{}       `json:"k8s_deployment_info,omitempty"`
-	Type         string            `json:"type,omitempty"`
-	Checks       interface{}       `json:"checks,omitempty"`
-	HashOn       string            `json:"hash_on,omitempty"`
-	Key          string            `json:"key,omitempty"`
-	PassHost     string            `json:"pass_host,omitempty"`
-	UpstreamHost string            `json:"upstream_host,omitempty"`
-	Name         string            `json:"name,omitempty"`
-	Desc         string            `json:"desc,omitempty"`
-	ServiceName  string            `json:"service_name,omitempty"`
-	Labels       map[string]string `json:"labels,omitempty"`
+	Nodes         interface{}       `json:"nodes,omitempty"`
+	Retries       int               `json:"retries,omitempty"`
+	Timeout       interface{}       `json:"timeout,omitempty"`
+	Type          string            `json:"type,omitempty"`
+	Checks        interface{}       `json:"checks,omitempty"`
+	HashOn        string            `json:"hash_on,omitempty"`
+	Key           string            `json:"key,omitempty"`
+	Scheme        string            `json:"scheme,omitempty"`
+	DiscoveryType string            `json:"discovery_type,omitempty"`
+	PassHost      string            `json:"pass_host,omitempty"`
+	UpstreamHost  string            `json:"upstream_host,omitempty"`
+	Name          string            `json:"name,omitempty"`
+	Desc          string            `json:"desc,omitempty"`
+	ServiceName   string            `json:"service_name,omitempty"`
+	Labels        map[string]string `json:"labels,omitempty"`
 }
 
 // swagger:model Upstream
@@ -256,4 +258,12 @@ type ServerInfo struct {
 	EtcdVersion    string `json:"etcd_version,omitempty"`
 	Hostname       string `json:"hostname,omitempty"`
 	Version        string `json:"version,omitempty"`
+}
+
+// swagger:model GlobalPlugins
+type PluginConfig struct {
+	BaseInfo
+	Desc    string                 `json:"desc,omitempty" validate:"max=256"`
+	Plugins map[string]interface{} `json:"plugins"`
+	Labels  map[string]string      `json:"labels,omitempty"`
 }

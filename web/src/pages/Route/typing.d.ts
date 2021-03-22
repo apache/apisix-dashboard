@@ -21,6 +21,8 @@ declare namespace RouteModule {
 
   type RequestProtocol = 'https' | 'http' | 'websocket';
 
+  type RequestMode = 'Normal' | 'RawData';
+
   type BaseData = {
     id?: number;
     name: string;
@@ -34,6 +36,7 @@ declare namespace RouteModule {
     plugins: PluginPage.PluginData;
     //  TEMP
     script: any;
+    plugin_config_id?: string
   };
 
   type UpstreamHost = {
@@ -90,6 +93,7 @@ declare namespace RouteModule {
     };
     upstream_id?: string;
     plugins: Record<string, any>;
+    plugin_config_id?: string;
     script: Record<string, any>;
     url?: string;
     enable_websocket?: boolean;
@@ -101,16 +105,6 @@ declare namespace RouteModule {
     name: string;
     operator: Operator;
     value: string;
-    key: string;
-  };
-
-  type ResponseLabelList = Record<string, string>[];
-
-  type LabelList = Record<string, string[]>;
-
-  type LabelTableProps = {
-    labelKey: string;
-    labelValue: string;
     key: string;
   };
 
@@ -139,7 +133,22 @@ declare namespace RouteModule {
     status: number;
     enable_websocket?: boolean;
     service_id: string;
+    proxyRewrite: ProxyRewrite;
+    URIRewriteType: number;
+    hostRewriteType: number;
   };
+  type Kvobject = {
+    key: string;
+    value: string;
+  }
+  type ProxyRewrite = {
+    scheme?: 'keep' | 'http' | 'https';
+    uri?: string;
+    regex_uri?: string[];
+    host?: string;
+    kvHeaders?: Kvobject[];
+    headers?: Record<string, string>;
+  }
 
   type AdvancedMatchingRules = {
     advancedMatchingRules: MatchingRule[];
@@ -242,17 +251,14 @@ declare namespace RouteModule {
   type debugRequestParamsFormData = {
     check: boolean;
     key: string;
-    value: string;
+    value: any;
+    type?: string;
   };
   type DebugViewProps = {
     form: FormInstance;
+    name?: string;
   };
-  type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'raw input';
-  type DebugDodyViewProps = {
-    form: FormInstance;
-    changeBodyParamsType: (type: DebugBodyType) => void;
-    codeMirrorRef: any;
-  };
+  type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'raw input' | 'form-data';
   type DebugDrawProps = {
     visible: boolean;
     onClose: () => void;

@@ -21,8 +21,6 @@ import (
 	"path/filepath"
 
 	"github.com/gin-contrib/pprof"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 
@@ -35,9 +33,10 @@ import (
 	"github.com/apisix/manager-api/internal/handler/global_rule"
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/label"
-	"github.com/apisix/manager-api/internal/handler/plugin"
+	"github.com/apisix/manager-api/internal/handler/plugin_config"
 	"github.com/apisix/manager-api/internal/handler/route"
 	"github.com/apisix/manager-api/internal/handler/route_online_debug"
+	"github.com/apisix/manager-api/internal/handler/schema"
 	"github.com/apisix/manager-api/internal/handler/server_info"
 	"github.com/apisix/manager-api/internal/handler/service"
 	"github.com/apisix/manager-api/internal/handler/ssl"
@@ -54,8 +53,6 @@ func SetUpRouter() *gin.Engine {
 	}
 	r := gin.New()
 	logger := log.GetLogger(log.AccessLog)
-	store := cookie.NewStore([]byte("secret"))
-	r.Use(sessions.Sessions("session", store))
 	r.Use(filter.CORS(), filter.RequestId(), filter.IPFilter(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.RecoverHandler())
 	r.Use(static.Serve("/", static.LocalFile(filepath.Join(conf.WorkDir, conf.WebDir), false)))
 	r.NoRoute(func(c *gin.Context) {
@@ -68,7 +65,8 @@ func SetUpRouter() *gin.Engine {
 		consumer.NewHandler,
 		upstream.NewHandler,
 		service.NewHandler,
-		plugin.NewHandler,
+		schema.NewHandler,
+		schema.NewSchemaHandler,
 		healthz.NewHandler,
 		authentication.NewHandler,
 		global_rule.NewHandler,
@@ -78,6 +76,7 @@ func SetUpRouter() *gin.Engine {
 		data_loader.NewHandler,
 		data_loader.NewImportHandler,
 		tool.NewHandler,
+		plugin_config.NewHandler,
 	}
 
 	for i := range factories {

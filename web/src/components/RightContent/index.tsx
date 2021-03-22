@@ -58,16 +58,13 @@ const GlobalHeaderRight: React.FC = () => {
 
   return (
     <Space className={className}>
-      <Tooltip title="Documentation">
-        <span
-          className={styles.action}
-          onClick={() => {
-            window.location.href = 'https://github.com/apache/apisix';
-          }}
-        >
-          <QuestionCircleOutlined />
-        </span>
-      </Tooltip>
+      <a href="https://apisix.apache.org/docs/apisix/getting-started" target="_blank">
+        <Tooltip title="Documentation">
+          <span className={styles.action} >
+            <QuestionCircleOutlined />
+          </span>
+        </Tooltip>
+      </a>
       <Avatar />
       {REACT_APP_ENV && (
         <span>

@@ -22,7 +22,7 @@ import (
 
 	"github.com/onsi/ginkgo"
 
-	"e2enew/base"
+	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
 func TestRoute(t *testing.T) {
@@ -32,5 +32,6 @@ func TestRoute(t *testing.T) {
 var _ = ginkgo.AfterSuite(func() {
 	base.CleanResource("routes")
 	base.CleanResource("upstreams")
+	base.CleanResource("consumers")
 	time.Sleep(base.SleepTime)
 })

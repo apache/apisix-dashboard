@@ -18,6 +18,7 @@ export default {
   'page.route.button.returnList': 'Goto List',
   'page.route.button.send': 'Send',
   'page.route.onlineDebug': 'Online Debug',
+  'page.route.pluginTemplateConfig': 'Plugin Template Config',
 
   'page.route.parameterPosition': 'Parameter Position',
   'page.route.httpRequestHeader': 'HTTP Request Header',
@@ -41,6 +42,7 @@ export default {
   'page.route.input.placeholder.requestUrl': 'please input the valid request URL',
   'page.route.input.placeholder.paramKey': 'Param Key',
   'page.route.input.placeholder.paramValue': 'Param Value',
+  'page.route.input.placeholder.paramType': 'Param Type',
 
   'page.route.form.itemRulesRequiredMessage.parameterName':
     'Only letters and Numbers are supported, and can only begin with letters',
@@ -53,8 +55,8 @@ export default {
     'Maximum length 100, only letters, Numbers, _, and - are supported, and can only begin with letters',
 
   'page.route.panelSection.title.requestConfigBasicDefine': 'Request Basic Define',
-  'page.route.protocol': 'Protocol',
   'page.route.form.itemLabel.httpMethod': 'HTTP Method',
+  'page.route.form.itemLabel.scheme': 'Scheme',
   'page.route.form.itemLabel.priority': 'Priority',
   'page.route.form.itemLabel.redirect': 'Redirect',
   'page.route.select.option.enableHttps': 'Enable HTTPS',
@@ -102,7 +104,11 @@ export default {
   'page.route.weight': 'Weight',
   'page.route.radio.staySame': 'Stay The Same',
   'page.route.form.itemLabel.newPath': 'New Path',
-  'page.route.form.itemLabel.rewriteType': 'Request Path',
+  'page.route.form.itemLabel.newHost': 'New Host',
+  'page.route.form.itemLabel.regex': 'Regexp',
+  'page.route.form.itemLabel.template': 'Template',
+  'page.route.form.itemLabel.URIRewriteType': 'URI Override',
+  'page.route.form.itemLabel.hostRewriteType': 'Host Override',
   'page.route.form.itemLabel.redirectURI': 'Redirect URI',
   'page.route.input.placeholder.newPath': 'For example: /foo/bar/index.html',
 
@@ -111,7 +117,7 @@ export default {
 
   'page.route.popconfirm.title.offline': 'Are you sure to offline this route?',
   'page.route.radio.static': 'Static',
-  'page.route.radio.regx': 'Regx',
+  'page.route.radio.regex': 'Regex',
   'page.route.form.itemLabel.from': 'From',
   'page.route.form.itemHelp.status':
     'Whether a route can be used after it is created, the default value is false.',
@@ -132,5 +138,13 @@ export default {
   'page.route.exportRoutesTips': 'Please choose the type of file you want to export',
   'page.route.button.importOpenApi': 'Import OpenAPI',
   'page.route.button.selectFile': 'Please Select File',
-  'page.route.list': 'Route List'
+  'page.route.list': 'Route List',
+  'page.route.panelSection.title.requestOverride': 'Request Override',
+  'page.route.form.itemLabel.headerRewrite': 'Header Override',
+  'page.route.tooltip.pluginOrchOnlySuportChrome': 'Plugin orchestration only supports Chrome.',
+  'page.route.tooltip.pluginOrchWithoutProxyRewrite': 'Plugin orchestration mode cannot be used when request override is configured in Step 1.',
+  'page.route.tooltip.pluginOrchWithoutRedirect': 'Plugin orchestration mode cannot be used when Redirect in Step 1 is selected to enable HTTPS.',
+
+  'page.route.tabs.normalMode': 'Normal mode',
+  'page.route.tabs.orchestration': 'Plugin orchestration'
 };

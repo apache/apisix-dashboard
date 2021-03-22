@@ -97,17 +97,12 @@ context('Create and Search Route', () => {
   });
 
   it('should search the route with labels', function () {
-    cy.visit('/');
-    cy.contains('Route').click();
-
+    cy.visit('/routes/list');
     // search one label
-    cy.get(this.domSelector.refresh).click();
-    cy.get(this.domSelector.labelSelector).click();
-    cy.get(this.domSelector.dropdown).within(() => {
-      cy.contains(data.value0).click();
-    });
+    cy.contains(data.test0).should('exist');
+    cy.get(this.domSelector.labelSelect_0).click({ timeout });
+    cy.get(this.domSelector.dropdown).contains(data.value0).should('be.visible').click();
     cy.contains('Search').click();
-
     cy.contains(data.test0).siblings().should('contain', data.label0_value0);
     cy.contains(data.test1).should('not.exist');
     cy.contains(data.test2).should('not.exist');
@@ -117,8 +112,12 @@ context('Create and Search Route', () => {
     cy.visit('/routes/list');
     for (let i = 0; i < 3; i += 1) {
       cy.contains(`test${i}`).siblings().contains('Delete').click({ timeout });
-      cy.contains('button', 'Confirm').click({ timeout });
+      cy.contains('button', 'Confirm').should('be.visible').click({ timeout });
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
+      cy.get(this.domSelector.notificationClose).should('be.visible').click({
+        force: true,
+        multiple: true,
+      });
     }
   });
 });

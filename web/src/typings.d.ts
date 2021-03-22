@@ -69,3 +69,7 @@ type ResListData<T> = {
 };
 
 type HttpMethod = 'GET' | 'POST' | 'DELETE' | 'PUT' | 'OPTIONS' | 'HEAD' | 'PATCH';
+
+type ResponseLabelList = Record<string, string>[];
+
+type LabelList = Record<string, string[]>;

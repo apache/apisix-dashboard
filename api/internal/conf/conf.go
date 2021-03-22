@@ -22,6 +22,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"github.com/tidwall/gjson"
 	"gopkg.in/yaml.v2"
@@ -96,6 +97,7 @@ type Conf struct {
 	Listen    Listen
 	Log       Log
 	AllowList []string `yaml:"allow_list"`
+	MaxCpu    int      `yaml:"max_cpu"`
 }
 
 type User struct {
@@ -139,14 +141,14 @@ func setConf() {
 	if configurationContent, err := ioutil.ReadFile(filePath); err != nil {
 		panic(fmt.Sprintf("fail to read configuration: %s", filePath))
 	} else {
-		//configuration := gjson.ParseBytes(configurationContent)
+		// configuration := gjson.ParseBytes(configurationContent)
 		config := Config{}
 		err := yaml.Unmarshal(configurationContent, &config)
 		if err != nil {
 			log.Printf("conf: %s, error: %v", configurationContent, err)
 		}
 
-		//listen
+		// listen
 		if config.Conf.Listen.Port != 0 {
 			ServerPort = config.Conf.Listen.Port
 		}
@@ -160,7 +162,7 @@ func setConf() {
 			initEtcdConfig(config.Conf.Etcd)
 		}
 
-		//error log
+		// error log
 		if config.Conf.Log.ErrorLog.Level != "" {
 			ErrorLogLevel = config.Conf.Log.ErrorLog.Level
 		}
@@ -187,7 +189,10 @@ func setConf() {
 
 		AllowList = config.Conf.AllowList
 
-		//auth
+		// set degree of parallelism
+		initParallelism(config.Conf.MaxCpu)
+
+		// auth
 		initAuthentication(config.Authentication)
 
 		initPlugins(config.Plugins)
@@ -248,4 +253,17 @@ func initEtcdConfig(conf Etcd) {
 		MTLS:      conf.MTLS,
 		Prefix:    prefix,
 	}
+}
+
+// initialize parallelism settings
+func initParallelism(choiceCores int) {
+	if choiceCores < 1 {
+		return
+	}
+	maxSupportedCores := runtime.NumCPU()
+
+	if choiceCores > maxSupportedCores {
+		choiceCores = maxSupportedCores
+	}
+	runtime.GOMAXPROCS(choiceCores)
 }

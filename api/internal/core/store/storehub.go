@@ -29,14 +29,15 @@ import (
 type HubKey string
 
 const (
-	HubKeyConsumer   HubKey = "consumer"
-	HubKeyRoute      HubKey = "route"
-	HubKeyService    HubKey = "service"
-	HubKeySsl        HubKey = "ssl"
-	HubKeyUpstream   HubKey = "upstream"
-	HubKeyScript     HubKey = "script"
-	HubKeyGlobalRule HubKey = "global_rule"
-	HubKeyServerInfo HubKey = "server_info"
+	HubKeyConsumer     HubKey = "consumer"
+	HubKeyRoute        HubKey = "route"
+	HubKeyService      HubKey = "service"
+	HubKeySsl          HubKey = "ssl"
+	HubKeyUpstream     HubKey = "upstream"
+	HubKeyScript       HubKey = "script"
+	HubKeyGlobalRule   HubKey = "global_rule"
+	HubKeyServerInfo   HubKey = "server_info"
+	HubKeyPluginConfig HubKey = "plugin_config"
 )
 
 var (
@@ -171,6 +172,18 @@ func InitStores() error {
 		ObjType:  reflect.TypeOf(entity.ServerInfo{}),
 		KeyFunc: func(obj interface{}) string {
 			r := obj.(*entity.ServerInfo)
+			return utils.InterfaceToString(r.ID)
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	err = InitStore(HubKeyPluginConfig, GenericStoreOption{
+		BasePath: "/apisix/plugin_configs",
+		ObjType:  reflect.TypeOf(entity.PluginConfig{}),
+		KeyFunc: func(obj interface{}) string {
+			r := obj.(*entity.PluginConfig)
 			return utils.InterfaceToString(r.ID)
 		},
 	})
