@@ -58,7 +58,10 @@ web/coverage
 web/cypress/screenshots/
 web/cypress/videos/
 web/cypress/downloads/
+web/cypress/screenshots/
+web/cypress/videos/
 
 # vim
 *.swp
+*.swo
 
