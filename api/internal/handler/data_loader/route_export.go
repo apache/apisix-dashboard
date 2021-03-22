@@ -36,6 +36,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -69,7 +70,7 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ExportInput)
 
 	if input.IDs == "" {
-		return nil, fmt.Errorf("Parameter IDs cannot be empty")
+		return nil, consts.ErrParameterID
 	}
 
 	ids := strings.Split(input.IDs, ",")
@@ -79,7 +80,7 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 		route, err := h.routeStore.Get(c.Context(), id)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return nil, fmt.Errorf("route id: %s not found", id)
+				return nil, fmt.Errorf(consts.IDNotFound, "upstream", id)
 			}
 			return nil, err
 		}
@@ -113,7 +114,7 @@ func (h *Handler) ExportAllRoutes(c droplet.Context) (interface{}, error) {
 	routelist, err := h.routeStore.List(c.Context(), store.ListInput{})
 
 	if len(routelist.Rows) < 1 {
-		return nil, fmt.Errorf("Route data is empty, cannot be exported")
+		return nil, consts.ErrRouteData
 	}
 
 	if err != nil {
@@ -158,7 +159,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 			service, err = h.serviceStore.Get(c.Context(), serviceID)
 			if err != nil {
 				if err == data.ErrNotFound {
-					return nil, fmt.Errorf("service id: %s not found", route.ServiceID)
+					return nil, fmt.Errorf(consts.IDNotFound, "service", route.ServiceID)
 				}
 				return nil, err
 			}
@@ -463,7 +464,7 @@ func (h *Handler) ParseRouteUpstream(c droplet.Context, route *entity.Route) (in
 		upstream, err := h.upstreamStore.Get(c.Context(), upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return nil, fmt.Errorf("upstream id: %s not found", route.UpstreamID)
+				return nil, fmt.Errorf(consts.IDNotFound, "upstream", route.UpstreamID)
 			}
 			return nil, err
 		}
@@ -477,7 +478,7 @@ func (h *Handler) ParseRouteUpstream(c droplet.Context, route *entity.Route) (in
 			upstream, err := h.upstreamStore.Get(c.Context(), upstreamID)
 			if err != nil {
 				if err == data.ErrNotFound {
-					return nil, fmt.Errorf("upstream id: %s not found", _service.UpstreamID)
+					return nil, fmt.Errorf(consts.IDNotFound, "upstream", _service.UpstreamID)
 				}
 				return nil, err
 			}
