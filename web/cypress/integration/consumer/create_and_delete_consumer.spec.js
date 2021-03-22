@@ -59,8 +59,7 @@ context('Create and Delete Consumer', () => {
   });
 
   it('should view the consumer', function () {
-    cy.visit('/');
-    cy.contains('Consumer').click();
+    cy.visit('/consumer/list');
 
     cy.get(this.domSelector.nameSelector).type(this.data.consumerName);
     cy.contains('Search').click();
