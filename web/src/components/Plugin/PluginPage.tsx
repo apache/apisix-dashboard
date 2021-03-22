@@ -192,8 +192,8 @@ const PluginPage: React.FC<Props> = ({
                     >
                       {
                         initialData[item.name] && !initialData[item.name].disable
-                          ? 'Disable'
-                          : 'Enable'
+                          ? formatMessage({ id: 'component.plugin.disable' })
+                          : formatMessage({ id: 'component.plugin.enable' })
                       }
                     </Button>,
                   ]}
