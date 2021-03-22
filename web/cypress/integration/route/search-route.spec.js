@@ -111,7 +111,8 @@ context('Create and Search Route', () => {
   it('should delete the route', function () {
     cy.visit('/routes/list');
     for (let i = 0; i < 3; i += 1) {
-      cy.contains(`test${i}`).siblings().contains('Delete').click({ timeout });
+      cy.contains(`test${i}`).siblings().contains('Manage').click({ timeout });
+      cy.contains('Delete').should('be.visible').click();
       cy.contains('button', 'Confirm').should('be.visible').click({ timeout });
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
       cy.get(this.domSelector.notificationClose).should('be.visible').click({

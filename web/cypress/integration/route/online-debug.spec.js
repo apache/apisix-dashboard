@@ -266,7 +266,8 @@ context('Online debug', () => {
 
     const testRouteNames = [data.routeName, this.routeData.debugPostJson.name];
     for( let routeName in testRouteNames) {
-      cy.contains(`${testRouteNames[routeName]}`).siblings().contains('Delete').click();
+      cy.contains(`${testRouteNames[routeName]}`).siblings().contains('Manage').click();
+      cy.contains('Delete').should('be.visible').click();
       cy.contains('button', 'Confirm').click();
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
       cy.get(this.domSelector.notificationCloseIcon).click();

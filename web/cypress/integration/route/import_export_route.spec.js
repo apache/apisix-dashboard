@@ -159,8 +159,9 @@ context('import and export routes', () => {
         cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
         // delete route just imported
         cy.reload();
-        cy.get(this.domSelector.deleteButton).should('exist').click();
-        cy.contains('button', componentLocaleUS['component.global.confirm']).click({ force: true });
+        cy.contains('Manage').should('exist').click();
+        cy.contains('Delete').should('be.visible').click();
+        cy.contains('button', 'Confirm').click();
 
         // show delete successfully notification
         cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);

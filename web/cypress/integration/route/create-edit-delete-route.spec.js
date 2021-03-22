@@ -135,7 +135,8 @@ context('Create and Delete Route', () => {
     cy.visit('/routes/list');
     cy.get(this.domSelector.nameSelector).type(newName);
     cy.contains('Search').click();
-    cy.contains(newName).siblings().contains('Delete').click();
+    cy.contains(newName).siblings().contains('Manage').click();
+    cy.contains('Delete').should('be.visible').click();
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
   });
