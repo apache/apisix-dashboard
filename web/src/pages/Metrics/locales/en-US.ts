@@ -17,5 +17,5 @@
 export default {
   'page.metrics.empty.description.grafanaNotConfig': 'You have not configured Grafana',
   'page.metrics.button.grafanaConfig': 'Configure',
-  'page.metrics.tip': 'Use browser iframe to store monitor page URL, local only.',
+  'page.metrics.tip': 'Use browser localStorage to store monitor page URL, local only.',
 };

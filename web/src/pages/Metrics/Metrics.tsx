@@ -36,7 +36,7 @@ const Metrics: React.FC = () => {
     <PageHeaderWrapper
       title={
         <>
-          {formatMessage({ id: 'menu.metrics' })}&nbsp;
+          {formatMessage({ id: 'menu.dashboard' })}&nbsp;
           <Tooltip title={formatMessage({ id: 'page.metrics.tip' })}>
             <QuestionCircleOutlined />
           </Tooltip>

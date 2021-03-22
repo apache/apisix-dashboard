@@ -20,7 +20,7 @@ const routes = [
     component: './Metrics',
   },
   {
-    path: '/metrics',
+    path: '/dashboard',
     component: './Metrics',
   },
   {

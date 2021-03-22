@@ -25,11 +25,11 @@ context('metrics page smoke test', () => {
 
   it('should visit metrics page', function () {
     cy.visit('/');
-    cy.contains('Metrics').click();
-    cy.url().should('contains', '/metrics');
+    cy.contains('Dashboard').click();
+    cy.url().should('contains', '/dashboard');
     cy.get(this.domSelector.pageContent)
       .children()
-      .should('contain', 'Metrics')
+      .should('contain', 'Dashboard')
       .and('contain', 'You have not configured Grafana')
       .and('contain', 'Configure');
   });
