@@ -170,6 +170,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
       }}
       okText={formatMessage({ id: 'component.global.confirm' })}
       cancelText={formatMessage({ id: 'component.global.cancel' })}
+      maskClosable={false}
       destroyOnClose
     >
       <Form form={modalForm} layout="vertical">
