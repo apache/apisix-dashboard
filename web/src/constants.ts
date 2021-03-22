@@ -33,3 +33,5 @@ export const codeMessage = {
 };
 
 export const DEFAULT_GLOBAL_RULE_ID = '1';
+
+export const DELETE_FIELDS = ['id', 'create_time', 'update_time'];

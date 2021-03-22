@@ -24,16 +24,16 @@ import {
 } from './transform';
 import { transformLabelList } from '@/helpers';
 
-export const create = (data: RouteModule.RequestData) =>
+export const create = (data: RouteModule.RequestData, mode?: RouteModule.RequestMode) =>
   request(`/routes`, {
     method: 'POST',
-    data: transformStepData(data),
+    data: mode === 'RawData' ? data : transformStepData(data),
   });
 
-export const update = (rid: number, data: RouteModule.RequestData) =>
+export const update = (rid: string, data: RouteModule.RequestData, mode?: RouteModule.RequestMode) =>
   request(`/routes/${rid}`, {
     method: 'PUT',
-    data: transformStepData(data),
+    data: mode === 'RawData' ? data : transformStepData(data),
   });
 
 export const fetchItem = (rid: number) =>
