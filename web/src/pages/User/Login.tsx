@@ -25,6 +25,7 @@ import logo from '@/assets/logo.svg';
 import { getUrlQuery } from '@/helpers';
 import Footer from '@/components/Footer';
 import styles from './Login.less';
+import { GithubOutlined } from '@ant-design/icons';
 
 const Tab = Tabs.TabPane;
 
@@ -81,6 +82,9 @@ const Page: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.lang}>
+      <div className={styles.github} >
+          <a target="_blank" className="githubIcon" href="https://apisix.apache.org"><GithubOutlined /></a> 
+        </div>
         <SelectLang />
       </div>
       <div className={styles.content}>
