@@ -186,15 +186,15 @@ high expressiveness which makes reading and writing tests a pleasure.
 
 ## Writing Unit Tests
 
-Currently, all of the unit tests for `manager-api` have been written using Go's built-in testing package. There is nothing new about it. You can directly add tests in the existing `<module>_test.go` file or create a new one. There is one thing that needs to be addressed that is, since `manager-api` largely depends on handling data from etcd, in some cases, you need to write some feature that depends on storing & retrieval of information on and out of etcd. In such a scenario, you should write your unit tests using `store.MockInterface` instead of directly depending upon etcd.
+Currently, all the unit tests for `manager-api` have been written using Go's built-in testing package. There is nothing new about it. You can directly add tests in the existing `<module>_test.go` file or create a new one. There is one thing that needs to be addressed that is, since `manager-api` largely depends on handling data from etcd, in some cases, you need to write some feature that depends on storing & retrieval of information on and out of etcd. In such a scenario, you should write your unit tests using `store.MockInterface` instead of directly depending upon etcd.
 
-The `MockInterface` embeds `mock.Mock` object from [mock](https://pkg.go.dev/github.com/stretchr/testify/mock) package by testify. If helps in simulating function calls of an object with desired inputs as arguments and outputs as return values. Currently, all the unit tests in `route`, `service`, `ssl` and `upstream` handlers uses mock interface. For eg.
+The `MockInterface` embeds `mock.Mock` object from [mock](https://pkg.go.dev/github.com/stretchr/testify/mock) package by testify. If helps in simulating function calls of an object with desired inputs as arguments and outputs as return values. Currently, all the unit tests in `route`, `service`, `ssl` and `upstream` handlers uses mock interface. For e.g.
 
 ```go
 mStore := &store.MockInterface{}
 mStore.On("<exact methodname of the real method>", mock.Anything)
       .Run(func(args mock.Arguments) {
-           //arguements assertions or anything
+           //arguments assertions or anything
            //gets executed before returning
        })
       .Return("<same return signature of the original method>")
@@ -208,11 +208,11 @@ You may tinker with the mentioned tests to get an idea of how it works or go thr
 
 Currently, the backend of apisix-dashboard have two types of e2e tests. One is plain e2e, the other is e2enew, where in the first one, tests are written using Go's built-in, native testing package, for the later, the tests are grouped into test suites and are evaluated using [ginkgo](https://onsi.github.io/ginkgo/) - a testing framework which helps in writing more expressive tests such that reading and writing tests give a pleasant experience.
 
-**Slowly, we are migrating all of our e2e tests to e2enew. So it is always recommended to write any new tests using ginkgo unless some situation arises. In such cases, please discuss your concerns with the community.
+**Actively, we are migrating all of our e2e tests to e2enew module. So we are no more accepting tests inside e2e module, and any new tests must be added into the e2enew module by using ginkgo following the BDD style testing. If you have any query regarding it, please discuss your concerns with the community, we would be happy to address those.
 
-For value assertion, we are using the [assert](https://pkg.go.dev/github.com/stretchr/testify@v1.7.0/assert) package by testify. It provides lots of easy to use functions for assertion where the first argument is   `*testing.T` object which you can obtain from the used framework for testing. For the built-in testing package, each test cases have this as the first argument of the test itself. For ginkgo `ginkgo.GinkgoT()` returns the mentioned object.
+For value assertion, we are using the [assert](https://pkg.go.dev/github.com/stretchr/testify@v1.7.0/assert) package by testify. It provides lots of easy to use functions for assertion where the first argument is `*testing.T` object which can  be obtained from `ginkgo.GinkgoT()`.
 
-If you are creating any test which requires making HTTP calls to any of the following node which involves `manager-api` or `apisix`, after setting up the environment (please refer [Running E2E Tests Locally](#running-e2e-tests-locally) for the details), you can use the `HttpTestCase` struct which provides a nice interface to make the calls along with checking the response. Here's a brief description of the most used fields of the struct,
+If you are creating any test which requires making HTTP calls to any of the following node which involves `manager-api` or `apisix`, after setting up the environment (please refer [Running E2E Tests Locally](#running-e2e-tests-locally) for the details), you can use the `HttpTestCase` struct which provides a nice interface to make the calls along with performing necessary checks on the response. Here's a brief description of the most used fields of the struct,
 
 ```go
 type HttpTestCase struct {
@@ -231,33 +231,69 @@ type HttpTestCase struct {
 }
 ```
 
-Now to run a test use `RunTestCase(tc HttpTestCase)` or `testCaseCheck(tc HttpTestCase, t *testing.T)` for the `e2enew` or `e2e` respectively.
+Now to run a test use the `RunTestCase(tc HttpTestCase)` method which is provided into the base package inside the `e2enew` module.
 
-**NOTE:** Both e2e and e2enew provides standalone methods for making HTTP request for GET, POST, PUT, DELETE methods along with making a POST request with `multipart/form` data.
+**NOTE:** E2ENEW also provides standalone methods for making HTTP request for GET, POST, PUT, DELETE methods along with making a POST request with `multipart/form` data. The method signatures are stated below
 
-Now coming back to writing e2e tests,
+- `HttpGet(url string, headers map[string]string) ([]byte, int, error)`
+- `HttpPost(url string, headers map[string]string, reqBody string) ([]byte, int, error)`
+- `HttpPut(url string, headers map[string]string, reqBody string) ([]byte, int, error)`
+- `HttpDelete(url string, headers map[string]string) ([]byte, int, error)`
 
-1. Adding tests in `api/test/e2e` is dead simple.
-   - Create a function starting with `Test`"\<FuncName\>" in a relevant file present in the directory or create a new one. Then write the necessary logic and check the result using assertion.
+Now coming back to writing e2enew tests,
 
-2. adding tests  in `api/test/e2enew`, it's always recommended to go through the ginkgo [docs](https://onsi.github.io/ginkgo/) first.
+*If you are new to ginkgo it's always recommended going through the official [docs](https://onsi.github.io/ginkgo/) first.
 
-   - To create a new tests suite, create the new directory under `e2enew`. Then use
+- To create a new tests' suite, create the new directory under `e2enew` module. Then for the initial bootstrapping use,
 
-     ```sh
-        mkdir <dirname> #inside e2enew
-        cd <dirname>
-        ginkgo bootstrap # Generates <dirname>_suite_test.go
-        #to add tests in separate files
-        ginkgo generate <testgroup> #Generates <testgroup>_test.go
-     ```
+   ```sh
+      mkdir <dirname> #inside e2enew
+      cd <dirname>
+      ginkgo bootstrap # Generates <dirname>_suite_test.go
+      #to add tests in separate files
+      ginkgo generate <testgroup> #Generates <testgroup>_test.go
+   ```
 
-   - This can be done manually, however, grouping similar tests in specific test files is recommended. Try to separate tests in separate test files.
+- This can be done manually, however, grouping similar tests in specific test files is always recommended. Please try to separate tests in separate test files.
 
-   - We use different ginkgo containers for writing tests which includes `Describe`, `It`, `AfterSuite`, `BeforeEach` etc. [ [ref](https://onsi.github.io/ginkgo/#structuring-your-specs) ]
+- We use different ginkgo containers for writing tests which includes `Describe`, `It`, `AfterSuite`, `BeforeEach` etc. [ [ref](https://onsi.github.io/ginkgo/#structuring-your-specs) ]. For eg, adding a few logically similar tests inside an existing test suite may looks like
 
-   - It is always recommended to use ginkgo's table-driven tests for running the independent `HttpTestCase` using `table.DescribeTable` and `table.Entry` [ [ref](https://pkg.go.dev/github.com/onsi/ginkgo/extensions/table) ].
+   ```go
+   var _ = ginkgo.Describe("<description about the tests>", func() {
+            ginkgo.It("<test 1>", func() {
+               //Testing logic & assertions
+            })
+            ginkgo.It("<test 2>", func() {
+               //Testing logic & assertions
+            })
+         })
+   ```
 
-   - FYI, internally ginkgo reduces each table entries to `It` block and run all the `It` blocks concurrently/parallelly. Ginkgo auto recovers from panics inside `It` blocks only, so always put your assertions inside `It` containers.
+   here the `Describe` container is grouping similar tests through multiple `It` blocks by making extensive use of closures to give the syntax a high expressiveness.
+
+- Though depending upon the scenario, it is always recommended to use ginkgo's table-driven tests for running the independent `HttpTestCase` using `table.DescribeTable` and `table.Entry` [ [ref](https://pkg.go.dev/github.com/onsi/ginkgo/extensions/table) ]. For eg,
+
+   ```go
+   var _ = ginkgo.Describe("<description about the tests>", func() {
+            table.DescribeTable("<logical group 1>", 
+               func(tc base.HttpTestCase) {
+                  base.RunTestCase(tc)
+               },
+               table.Entry("<test 1>", base.HttpTestCase{
+                  //Fill the fields
+               }),
+               table.Entry("<test 2>", base.HttpTestCase{
+                  //Fill the fields
+               }),
+            })
+            
+            table.DescribeTable("<logical group 2>", func () {
+               ...
+            })
+         
+         })
+   ```
+
+- FYI, internally ginkgo reduces each table entries to `It` block and run all the `It` blocks concurrently/parallel. Ginkgo auto recovers from panics inside `It` blocks only, so always put your assertions inside `It` containers.
 
 [Back to TOC](#table-of-contents)
