@@ -36,6 +36,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				 "uri": "/hello",
 				 "upstream_id": "not-exists"
 			 }`,
@@ -201,6 +202,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				 "name": "route1",
 				 "uri": "/hello",
 				 "upstream_id": "1"
 			 }`,
@@ -297,6 +299,7 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				"name": "route1",
 				 "uri": "/get",
 				 "upstream_id": "1",
 				 "plugins": {
@@ -415,6 +418,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				"name": "route1",
 				 "uri": "/server_port",
 				 "upstream_id": "1"
 			 }`,
@@ -488,6 +492,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				"name": "route1",
 				"uri": "/server_port",
 				"upstream_id": "1"
 			}`,
@@ -552,6 +557,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				 "name": "route1",
 				 "uri": "/server_port",
 				 "upstream_id": "1"
 			 }`,
@@ -676,6 +682,7 @@ var _ = ginkgo.Describe("Upstream create via post", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				 "name": "route1",
 				 "uri": "/hello",
 				 "upstream_id": "u1"
 			 }`,
@@ -854,6 +861,7 @@ var _ = ginkgo.Describe("test upstream delete (route is in use)", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"id": "r1",
 				"name": "route1",
 				"uri": "/hello",

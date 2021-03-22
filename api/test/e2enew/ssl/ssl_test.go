@@ -83,6 +83,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 	assert.Nil(t, err)
 
 	tempBody := map[string]interface{}{
+		"name":  "route1",
 		"uri":   "/hello_",
 		"hosts": []string{"test2.com", "*.test2.com"},
 		"upstream": map[string]interface{}{

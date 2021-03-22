@@ -44,6 +44,7 @@ var _ = ginkgo.Describe("route with plugin prometheus", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"prometheus": {}
@@ -78,6 +79,7 @@ var _ = ginkgo.Describe("route with plugin prometheus", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello-not-exists",
 				"plugins": {
 					"prometheus": {}

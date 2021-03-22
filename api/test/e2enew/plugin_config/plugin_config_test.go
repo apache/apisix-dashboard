@@ -116,6 +116,7 @@ var _ = ginkgo.Describe("Plugin Config", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				 "name": "route1",
 				 "uri": "/hello",
 				 "plugin_config_id": "1",
 				 "upstream": {

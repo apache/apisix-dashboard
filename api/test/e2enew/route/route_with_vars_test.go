@@ -41,7 +41,8 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 	ginkgo.It("add route with vars (args)", func() {
 		t := ginkgo.GinkgoT()
 		var createRouteBody map[string]interface{} = map[string]interface{}{
-			"uri": "/hello",
+			"name": "route1",
+			"uri":  "/hello",
 			"vars": [][]string{
 				{"arg_name", "==", "aaa"},
 			},
@@ -93,7 +94,8 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 	ginkgo.It("update route with vars (header)", func() {
 		t := ginkgo.GinkgoT()
 		var createRouteBody map[string]interface{} = map[string]interface{}{
-			"uri": "/hello",
+			"name": "route1",
+			"uri":  "/hello",
 			"vars": [][]string{
 				{"http_k", "==", "header"},
 			},
@@ -145,7 +147,8 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 	ginkgo.It("update route with vars (cookie)", func() {
 		t := ginkgo.GinkgoT()
 		var createRouteBody map[string]interface{} = map[string]interface{}{
-			"uri": "/hello",
+			"name": "route1",
+			"uri":  "/hello",
 			"vars": [][]string{
 				{"http_cookie", "==", "_octo=GH1.1.572248189.1598928545; _device_id=2c1a1a52074e66a3a008e4b73c690500; logged_in=yes;"},
 			},
@@ -221,7 +224,8 @@ var _ = ginkgo.Describe("test route with multiple vars (args, cookie and header)
 	ginkgo.It("add route with multiple vars (args, cookie and header)", func() {
 		t := ginkgo.GinkgoT()
 		var createRouteBody map[string]interface{} = map[string]interface{}{
-			"uri": "/hello",
+			"name": "route1",
+			"uri":  "/hello",
 			"vars": [][]string{
 				{"http_cookie", "==", "_octo=GH1.1.572248189.1598928545; _device_id=2c1a1a52074e66a3a008e4b73c690500; logged_in=yes;"},
 				{"http_k", "==", "header"},
@@ -316,7 +320,8 @@ var _ = ginkgo.Describe("test route with vars (args is digital)", func() {
 	ginkgo.It("add route with vars (args is digital)", func() {
 		t := ginkgo.GinkgoT()
 		var createRouteBody map[string]interface{} = map[string]interface{}{
-			"uri": "/hello",
+			"name": "route1",
+			"uri":  "/hello",
 			"vars": [][]string{
 				{"arg_name", "==", "111"},
 			},

@@ -86,6 +86,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Query_Params", func() {
 	ginkgo.It("create route with query params", func() {
 		t := ginkgo.GinkgoT()
 		var routeBody map[string]interface{} = map[string]interface{}{
+			"name":    "route1",
 			"uri":     "/hello",
 			"methods": []string{"GET"},
 			"vars": []interface{}{
@@ -286,6 +287,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Body_Params", func() {
 	ginkgo.It("create route with method POST", func() {
 		t := ginkgo.GinkgoT()
 		var routeBody map[string]interface{} = map[string]interface{}{
+			"name":     "route1",
 			"uri":      "/hello",
 			"methods":  []string{"POST"},
 			"upstream": upstream,
@@ -357,7 +359,8 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Basic_Auth", func() {
 	ginkgo.It("create route enable basic-auth plugin", func() {
 		t := ginkgo.GinkgoT()
 		var routeBody map[string]interface{} = map[string]interface{}{
-			"uri": "/hello",
+			"name": "route1",
+			"uri":  "/hello",
 			"plugins": map[string]interface{}{
 				"basic-auth": map[string]interface{}{},
 			},
@@ -484,7 +487,8 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Key_Auth", func() {
 	ginkgo.It("create route enable key-auth plugin", func() {
 		t := ginkgo.GinkgoT()
 		var routeBody map[string]interface{} = map[string]interface{}{
-			"uri": "/hello",
+			"name": "route1",
+			"uri":  "/hello",
 			"plugins": map[string]interface{}{
 				"key-auth": map[string]interface{}{},
 			},
@@ -607,7 +611,8 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_JWT_Auth", func() {
 	ginkgo.It("create route enable jwt-auth plugin", func() {
 		t := ginkgo.GinkgoT()
 		var routeBody map[string]interface{} = map[string]interface{}{
-			"uri": "/hello",
+			"name": "route1",
+			"uri":  "/hello",
 			"plugins": map[string]interface{}{
 				"jwt-auth": map[string]interface{}{},
 			},
@@ -742,6 +747,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Files", func() {
 	ginkgo.It("create route enable basic-auth plugin", func() {
 		t := ginkgo.GinkgoT()
 		var routeBody map[string]interface{} = map[string]interface{}{
+			"name":     "route1",
 			"uri":      "/hello_",
 			"methods":  []string{"POST"},
 			"upstream": upstream,

@@ -67,6 +67,7 @@ var _ = ginkgo.Describe("Upstream chash hash on custom header", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				 "name": "route1",
 				 "uri": "/server_port",
 				 "upstream_id": "1"
 			 }`,
@@ -155,6 +156,7 @@ var _ = ginkgo.Describe("Upstream chash hash on cookie", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				 "name": "route1",
 				 "uri": "/server_port",
 				 "upstream_id": "1"
 			 }`,
@@ -268,6 +270,7 @@ var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", fu
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				 "name": "route1",
 				 "uri": "/server_port",
 				 "upstream_id": "1"
 			 }`,
@@ -371,6 +374,7 @@ var _ = ginkgo.Describe("Upstream chash hash on consumer", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				 "name": "route1",
 				 "uri": "/server_port",
 				 "plugins": {
 					"key-auth": {}
@@ -514,6 +518,7 @@ var _ = ginkgo.Describe("Upstream chash hash on vars", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				 "name": "route1",
 				 "uri": "/server_port",
 				 "upstream_id": "1"
 			 }`,
@@ -529,7 +534,7 @@ var _ = ginkgo.Describe("Upstream chash hash on vars", func() {
 			Path:         "/apisix/admin/routes/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"uri\":\"/server_port\",\"upstream_id\":\"1\"",
+			ExpectBody:   "\"uri\":\"/server_port\",\"name\":\"route1\",\"upstream_id\":\"1\"",
 			Sleep:        base.SleepTime,
 		})
 	})

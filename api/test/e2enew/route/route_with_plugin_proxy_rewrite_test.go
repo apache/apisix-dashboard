@@ -42,6 +42,7 @@ var _ = ginkgo.Describe("route with plugin proxy rewrite", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"proxy-rewrite": {
@@ -72,6 +73,7 @@ var _ = ginkgo.Describe("route with plugin proxy rewrite", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"proxy-rewrite": {
@@ -105,6 +107,7 @@ var _ = ginkgo.Describe("route with plugin proxy rewrite", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/test/*",
 				"plugins": {
 					"proxy-rewrite": {
@@ -134,6 +137,7 @@ var _ = ginkgo.Describe("route with plugin proxy rewrite", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"proxy-rewrite": {

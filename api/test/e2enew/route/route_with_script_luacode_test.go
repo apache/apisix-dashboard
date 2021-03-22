@@ -42,6 +42,7 @@ var _ = ginkgo.Describe("route with script lucacode", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 						"type": "roundrobin",
@@ -76,6 +77,7 @@ var _ = ginkgo.Describe("route with script lucacode", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 						"type": "roundrobin",
@@ -93,6 +95,7 @@ var _ = ginkgo.Describe("route with script lucacode", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 						"type": "roundrobin",
@@ -127,6 +130,7 @@ var _ = ginkgo.Describe("route with script lucacode", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 						"type": "roundrobin",
@@ -167,6 +171,7 @@ var _ = ginkgo.Describe("route with script id", func() {
 			Path:   "/apisix/admin/routes",
 			Body: `{
 				"id": "r1",
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 						"type": "roundrobin",
@@ -185,6 +190,7 @@ var _ = ginkgo.Describe("route with script id", func() {
 			Method: http.MethodPost,
 			Path:   "/apisix/admin/routes",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 						"type": "roundrobin",
@@ -204,6 +210,7 @@ var _ = ginkgo.Describe("route with script id", func() {
 			Path:   "/apisix/admin/routes",
 			Body: `{
 				"id": "r1",
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 						"type": "roundrobin",
@@ -222,6 +229,7 @@ var _ = ginkgo.Describe("route with script id", func() {
 			Path:   "/apisix/admin/routes",
 			Body: `{
 					"id": "r1",
+					"name": "route1",
 					"uri": "/hello",
 					"upstream": {
 						"type": "roundrobin",
@@ -257,6 +265,7 @@ var _ = ginkgo.Describe("route with script id", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 						"type": "roundrobin",
@@ -275,6 +284,7 @@ var _ = ginkgo.Describe("route with script id", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 						"type": "roundrobin",
@@ -293,6 +303,7 @@ var _ = ginkgo.Describe("route with script id", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 					"type": "roundrobin",

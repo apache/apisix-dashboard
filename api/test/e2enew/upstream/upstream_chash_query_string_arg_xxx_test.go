@@ -73,6 +73,7 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				"name": "route1",
 				"uri": "/server_port",
 				"upstream_id": "1"
 			}`,
@@ -161,6 +162,7 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				"name": "route1",
 				"uri": "/server_port",
 				"upstream_id": "1"
 			}`,

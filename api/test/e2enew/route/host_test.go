@@ -35,6 +35,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route1",
 				"uri": "/hello_",
 				"host": "$%$foo.com",
 				"upstream": {
@@ -52,6 +53,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello_",
 				"hosts": ["$%$foo.com", "*.bar.com"],
 				"upstream": {
@@ -69,6 +71,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello_",
 				"host": "github.com",
 				"hosts": ["foo.com", "*.bar.com"],
@@ -117,6 +120,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello_",
 				"hosts": ["foo.com", "*.bar.com"],
 				"upstream": {
@@ -134,6 +138,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route2",
 				"uri": 123456
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -191,6 +196,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"hosts": [],
 				"host": "test.com",
@@ -218,6 +224,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route2",
 				"uri": "/hello",
 				"hosts": [],
 				"upstream": {
@@ -243,6 +250,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route2",
 				"uri": "/hello",
 				"uris": [],
 				"upstream": {
@@ -261,6 +269,7 @@ var _ = ginkgo.Describe("Route", func() {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route2",
 				"uri": "/hello",
 				"remote_addrs": [],
 				"remote_addr": "0.0.0.0",
