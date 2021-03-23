@@ -17,7 +17,7 @@
 import React, { useEffect, useState } from 'react';
 import { Select, Empty, Form, Card } from 'antd';
 import { PageContainer } from '@ant-design/pro-layout';
-import { useIntl } from 'umi';
+import { useIntl, getIntl } from 'umi';
 import moment from 'moment';
 
 import { fetchInfoList, fetchVersion } from './service';
@@ -35,12 +35,13 @@ const ServerInfo: React.FC = () => {
 
   useEffect(() => {
     fetchInfoList().then((infoList) => {
+      const { locale } = getIntl();
       const list = infoList.map((item) => {
         return {
           ...item,
           boot_time: moment(item.boot_time * 1000).format('YYYY-MM-DD HH:mm:ss'),
           last_report_time: moment(item.last_report_time * 1000).format('YYYY-MM-DD HH:mm:ss'),
-          up_time: moment(item.boot_time * 1000).fromNow(true),
+          up_time: moment(item.boot_time * 1000).locale(locale).fromNow(true),
         };
       });
 
