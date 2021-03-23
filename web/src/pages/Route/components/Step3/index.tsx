@@ -71,13 +71,12 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
               placement="right"
               title={() => {
                 // NOTE: forceHttps do not support DRAW mode
-                // TODO: i18n
                 const titleArr: string[] = [];
                 if (!useSupportBrowser) {
-                  titleArr.push('插件编排仅支持 Chrome 浏览器。');
+                  titleArr.push(formatMessage({ id: 'page.route.tabs.orchestrationOnlySupportChrome' }));
                 }
                 if (isForceHttps) {
-                  titleArr.push('当步骤一中 重定向 选择为 启用 HTTPS 时，不可使用插件编排模式。');
+                  titleArr.push(formatMessage({ id: 'page.route.tabs.orchestrationNotSupportForceHttps' }));
                 }
                 return titleArr.map((item, index) => `${index + 1}.${item}`).join('');
               }}

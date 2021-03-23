@@ -139,5 +139,7 @@ export default {
   'page.route.list': '路由列表',
 
   'page.route.tabs.normalMode': '普通模式',
-  'page.route.tabs.orchestration': '插件编排'
+  'page.route.tabs.orchestration': '插件编排',
+  'page.route.tabs.orchestrationOnlySupportChrome': '插件编排仅支持 Chrome 浏览器',
+  'page.route.tabs.orchestrationNotSupportForceHttps': '当步骤一中 重定向 选择为 启用 HTTPS 时，不可使用插件编排模式。'
 };
