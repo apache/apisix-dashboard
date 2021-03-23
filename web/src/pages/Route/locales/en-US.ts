@@ -139,7 +139,5 @@ export default {
   'page.route.list': 'Route List',
 
   'page.route.tabs.normalMode': 'Normal mode',
-  'page.route.tabs.orchestration': 'Plugin orchestration',
-  'page.route.tabs.orchestrationOnlySupportChrome': 'Plugin orchestration only support Chrome',
-  'page.route.tabs.orchestrationNotSupportForceHttps': 'When redirect in step 1 is selected as enable HTTPS, plugin orchestration can not be used'
+  'page.route.tabs.orchestration': 'Plugin orchestration'
 };
