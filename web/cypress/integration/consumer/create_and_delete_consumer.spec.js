@@ -27,8 +27,8 @@ context('Create and Delete Consumer', () => {
   it('creates consumer with key-auth', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
+    cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
-
     // basic information
     cy.get(this.domSelector.username).type(this.data.consumerName);
     cy.get(this.domSelector.description).type(this.data.description);
@@ -59,8 +59,7 @@ context('Create and Delete Consumer', () => {
   });
 
   it('should view the consumer', function () {
-    cy.visit('/');
-    cy.contains('Consumer').click();
+    cy.visit('/consumer/list');
 
     cy.get(this.domSelector.nameSelector).type(this.data.consumerName);
     cy.contains('Search').click();
@@ -74,17 +73,14 @@ context('Create and Delete Consumer', () => {
   });
 
   it('delete the consumer', function () {
-    cy.visit('/');
-    cy.contains('Consumer').click();
-    cy.contains(this.data.consumerName).siblings().contains('Delete').click();
+    cy.visit('/consumer/list');
+    cy.contains(this.data.consumerName).should('be.visible').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.deleteConsumerSuccess);
   });
 
   it('creates consumer with wrong json', function () {
-    // go to consumer create page
-    cy.visit('/');
-    cy.contains('Consumer').click();
+    cy.visit('/consumer/list');
     cy.contains('Create').click();
     // basic information
     cy.get(this.domSelector.username).type(this.data.consumerName);

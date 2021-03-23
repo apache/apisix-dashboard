@@ -32,6 +32,7 @@ context('Create and Delete Route', () => {
   it('should create route', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.get(this.domSelector.name).type(name);
     cy.get(this.domSelector.description).type(this.data.description);
