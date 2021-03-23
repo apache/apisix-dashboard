@@ -44,6 +44,8 @@ export default {
   'page.route.service': '服务',
   'page.route.instructions': '说明',
   'page.route.import': '导入',
+  'page.route.createRoute': '创建路由',
+  'page.route.editRoute': '编辑路由',
 
   // button
   'page.route.button.returnList': '返回路由列表',

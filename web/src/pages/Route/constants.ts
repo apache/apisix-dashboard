@@ -26,17 +26,14 @@ export const HTTP_METHOD_OPTION_LIST: HttpMethod[] = [
 
 export const FORM_ITEM_LAYOUT = {
   labelCol: {
-    span: 6,
-  },
-  wrapperCol: {
-    span: 18,
-  },
+    span: 3,
+  }
 };
 
 export const FORM_ITEM_WITHOUT_LABEL = {
   wrapperCol: {
     xs: { span: 24, offset: 0 },
-    sm: { span: 20, offset: 6 },
+    sm: { span: 20, offset: 3 },
   },
 };
 

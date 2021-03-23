@@ -17,7 +17,7 @@
 import React, { useState } from 'react';
 import { Radio, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { isChrome } from 'react-device-detect';
+import { isChrome, isChromium, isEdgeChromium } from 'react-device-detect';
 import { useIntl } from 'umi';
 
 import PluginOrchestration from '@/components/PluginOrchestration';
@@ -42,7 +42,8 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
   const { plugins = {}, script = {}, plugin_config_id = '' } = data;
 
   // NOTE: Currently only compatible with chrome
-  const disableDraw = !isChrome || isForceHttps || isProxyEnable;
+  const useSupportBrowser = isChrome || isEdgeChromium || isChromium;
+  const disableDraw = !useSupportBrowser || isForceHttps || isProxyEnable;
 
   const type = Object.keys(script || {}).length === 0 || disableDraw ? 'NORMAL' : 'DRAW';
 
@@ -72,7 +73,7 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
               title={() => {
                 // NOTE: forceHttps do not support DRAW mode
                 const titleArr: string[] = [];
-                if (!isChrome) {
+                if (!useSupportBrowser) {
                   titleArr.push(formatMessage({id: 'page.route.tooltip.pluginOrchOnlySuportChrome'}));
                 }
                 if (isForceHttps) {
