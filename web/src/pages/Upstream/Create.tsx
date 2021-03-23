@@ -52,11 +52,10 @@ const Page: React.FC = (props) => {
       const { id } = (props as any).match.params;
       (id ? update(id, data) : create(data)).then(() => {
         notification.success({
-          message: `${
-            id
-              ? formatMessage({ id: 'page.upstream.create.edit' })
-              : formatMessage({ id: 'page.upstream.create.create' })
-          } ${formatMessage({ id: 'page.upstream.create.upstream.successfully' })}`,
+          message: `${id
+            ? formatMessage({ id: 'page.upstream.edit.upstream.successfully' })
+            : formatMessage({ id: 'page.upstream.create.upstream.successfully' })
+            }`,
         });
         history.replace('/upstream/list');
       });
@@ -77,7 +76,7 @@ const Page: React.FC = (props) => {
 
   return (
     <>
-      <PageContainer title={formatMessage({ id: 'page.upstream.create.create' })}>
+      <PageContainer title={formatMessage({ id: 'page.upstream.create' })}>
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
             <Steps.Step title={formatMessage({ id: 'page.upstream.create.basic.info' })} />

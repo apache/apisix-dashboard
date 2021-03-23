@@ -1,32 +1,23 @@
-Please answer these questions before submitting a pull request
+Please answer these questions before submitting a pull request, **or your PR will get closed**.
 
-- Why submit this pull request?
+**Why submit this pull request?**
+
 - [ ] Bugfix
 - [ ] New feature provided
 - [ ] Improve performance
 - [ ] Backport patches
 
-- Related issues
+**What changes will this PR take into?**
 
-___
-### Bugfix
-- Description
+Please update this section with detailed description.
 
-- How to fix?
+**Related issues**
 
-___
-### New feature or improvement
-- Describe the details and related test reports.
+fix/resolve #0001
 
-___
-### Please add the corresponding test cases if necessary.
+**Checklist:**
 
-___
-### Backport patches
-- Why need to backport?
-
-- Source branch
-
-- Related commits and pull requests
-
-- Target branch
+- [ ] Did you explain what problem does this PR solve? Or what new features have been added?
+- [ ] Have you added corresponding test cases?
+- [ ] Have you modified the corresponding document?
+- [ ] Is this PR backward compatible? If it is not backward compatible, please discuss on the mailing list first

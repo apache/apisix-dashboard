@@ -60,7 +60,6 @@ export default {
   'menu.editor.flow': '流程编辑器',
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
-  'menu.metrics': '监控',
   'menu.routes': '路由',
   'menu.pluginTemplate': '插件模板',
   'menu.ssl': '证书',
