@@ -19,6 +19,11 @@
     {
       "type": "doc",
       "id": "FAQ"
+    },
+    {
+      "type": "link",
+      "label": "CHANGELOG",
+      "href": "https://github.com/apache/apisix-dashboard/blob/master/CHANGELOG.md"
     }
   ]
 }
