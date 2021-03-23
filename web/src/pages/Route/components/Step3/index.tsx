@@ -31,18 +31,19 @@ type Props = {
   };
   onChange: (data: { plugins: PluginComponent.Data; script: any, plugin_config_id?: string; }) => void;
   readonly?: boolean;
-  isForceHttps: boolean;
+  isForceHttps?: boolean;
+  isProxyEnable?: boolean;
 };
 
 type Mode = 'NORMAL' | 'DRAW';
 
-const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps }) => {
+const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps = false, isProxyEnable = false }) => {
   const { formatMessage } = useIntl();
   const { plugins = {}, script = {}, plugin_config_id = '' } = data;
 
   // NOTE: Currently only compatible with chrome
   const useSupportBrowser = isChrome || isEdgeChromium || isChromium;
-  const disableDraw = !useSupportBrowser || isForceHttps;
+  const disableDraw = !useSupportBrowser || isForceHttps || isProxyEnable;
 
   const type = Object.keys(script || {}).length === 0 || disableDraw ? 'NORMAL' : 'DRAW';
 
@@ -73,10 +74,13 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
                 // NOTE: forceHttps do not support DRAW mode
                 const titleArr: string[] = [];
                 if (!useSupportBrowser) {
-                  titleArr.push('插件编排仅支持 Chrome 浏览器。');
+                  titleArr.push(formatMessage({id: 'page.route.tooltip.pluginOrchOnlySuportChrome'}));
                 }
                 if (isForceHttps) {
-                  titleArr.push('当步骤一中 重定向 选择为 启用 HTTPS 时，不可使用插件编排模式。');
+                  titleArr.push(formatMessage({id: 'page.route.tooltip.pluginOrchWithoutRedirect'}));
+                }
+                if (isProxyEnable) {
+                  titleArr.push(formatMessage({id: 'page.route.tooltip.pluginOrchWithoutProxyRewrite'}));
                 }
                 return titleArr.map((item, index) => `${index + 1}.${item}`).join('');
               }}
