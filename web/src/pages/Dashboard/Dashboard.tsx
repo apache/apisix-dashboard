@@ -22,7 +22,7 @@ import { history, useIntl } from 'umi';
 import { getGrafanaURL } from './service';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
-const Metrics: React.FC = () => {
+const Dashboard: React.FC = () => {
   const [grafanaURL, setGrafanaURL] = useState<string | undefined>();
   const { formatMessage } = useIntl();
 
@@ -36,8 +36,8 @@ const Metrics: React.FC = () => {
     <PageHeaderWrapper
       title={
         <>
-          {formatMessage({ id: 'menu.metrics' })}&nbsp;
-          <Tooltip title={formatMessage({ id: 'page.metrics.tip' })}>
+          {formatMessage({ id: 'menu.dashboard' })}&nbsp;
+          <Tooltip title={formatMessage({ id: 'page.dashboard.tip' })}>
             <QuestionCircleOutlined />
           </Tooltip>
         </>
@@ -52,7 +52,7 @@ const Metrics: React.FC = () => {
             }}
             description={
               <span>
-                {formatMessage({ id: 'page.metrics.empty.description.grafanaNotConfig' })}
+                {formatMessage({ id: 'page.dashboard.empty.description.grafanaNotConfig' })}
               </span>
             }
           >
@@ -64,13 +64,13 @@ const Metrics: React.FC = () => {
                 });
               }}
             >
-              {formatMessage({ id: 'page.metrics.button.grafanaConfig' })}
+              {formatMessage({ id: 'page.dashboard.button.grafanaConfig' })}
             </Button>
           </Empty>
         )}
         {grafanaURL && (
           <div>
-            <iframe title="metrics" src={grafanaURL} width="100%" height="860" frameBorder="0" />
+            <iframe title="dashboard" src={grafanaURL} width="100%" height="860" frameBorder="0" />
           </div>
         )}
       </Card>
@@ -78,4 +78,4 @@ const Metrics: React.FC = () => {
   );
 };
 
-export default Metrics;
+export default Dashboard;
