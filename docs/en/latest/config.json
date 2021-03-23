@@ -14,7 +14,7 @@
     {
       "type": "category",
       "label": "Contributing",
-      "items": ["develop", "I18N_USER_GUIDE", "front-end-e2e", "back-end-e2e"]
+      "items": ["develop", "I18N_USER_GUIDE", "front-end-e2e", "back-end-tests"]
     },
     {
       "type": "doc",

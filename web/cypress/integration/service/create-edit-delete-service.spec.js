@@ -17,6 +17,8 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Service ', () => {
+  const timeout = 5000;
+
   beforeEach(() => {
     cy.login();
 
@@ -35,6 +37,33 @@ context('Create and Delete Service ', () => {
     cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
 
     cy.contains('Next').click();
+
+    cy.contains(this.data.basicAuthPlugin).parents(this.domSelector.pluginCardBordered).within(() => {
+      cy.get('button').click({ force: true });
+    });
+
+    cy.get(this.domSelector.drawer).should('be.visible').within(() => {
+      cy.get(this.domSelector.disabledSwitcher).click();
+      cy.get(this.domSelector.checkedSwitcher).should('exist');
+    });
+
+    cy.contains('button', 'Submit').click();
+    cy.get(this.domSelector.drawer, { timeout }).should('not.exist');
+
+    cy.contains(this.data.basicAuthPlugin).parents(this.domSelector.pluginCardBordered).within(() => {
+      cy.get('button').click({ force: true });
+    });
+
+    cy.get(this.domSelector.drawerFooter).contains('button', 'Delete').click({ force: true });
+    cy.contains('button', 'Confirm').click({ force: true });
+
+    cy.contains(this.data.basicAuthPlugin).parents(this.domSelector.pluginCardBordered).within(() => {
+      cy.get('button').click({ force: true });
+    });
+
+    cy.get(this.domSelector.drawerFooter).contains('button', 'Delete').should('not.exist');
+    cy.contains('button', 'Cancel').click({ force: true });
+
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(this.domSelector.notification).should('contain', this.data.createServiceSuccess);
