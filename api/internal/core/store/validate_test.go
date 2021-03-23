@@ -147,6 +147,7 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	route := &entity.Route{}
 	reqBody := `{
 		"id": "1",
+		"name": "route1",
 		"methods": ["GET"],
 		"upstream": {
 		  "nodes": {
@@ -167,6 +168,7 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	route2 := &entity.Route{}
 	reqBody = `{
 		"id": "1",
+		"name": "route1",
 		"methods": ["GET"],
 		"upstream": {
 		  "nodes": {
@@ -187,6 +189,7 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	route3 := &entity.Route{}
 	reqBody = `{
 		"id": "1",
+		"name": "route1",
 		"methods": ["GET"],
 		"upstream": {
 		  "nodes": {
@@ -208,6 +211,7 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	route4 := &entity.Route{}
 	reqBody = `{
 		"id": "1",
+		"name": "route1",
 		"methods": ["GET"],
 		"upstream": {
 		  "nodes": {
@@ -229,6 +233,7 @@ func TestAPISIXJsonSchemaValidator_checkUpstream(t *testing.T) {
 	route5 := &entity.Route{}
 	reqBody = `{
 		"id": "1",
+		"name": "route1",
 		"methods": ["GET"],
 		"upstream": {
 		  "nodes": {
@@ -256,6 +261,7 @@ func TestAPISIXJsonSchemaValidator_Plugin(t *testing.T) {
 	route := &entity.Route{}
 	reqBody := `{
 		"id": "1",
+		"name": "route1",
 		"uri": "/hello",
 		"plugins": {
 			"prometheus": {
@@ -319,6 +325,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 			caseDesc: "correct remote_addr",
 			giveContent: `{
 				"id": "1",
+				"name": "route1",
 				"uri": "/*",
 				"upstream": {
 					"nodes": [{
@@ -335,6 +342,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 			caseDesc: "correct remote_addr (CIDR)",
 			giveContent: `{
 				"id": "1",
+				"name": "route1",
 				"uri": "/*",
 				"upstream": {
 					"nodes": [{
@@ -351,6 +359,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 			caseDesc: "invalid remote_addr",
 			giveContent: `{
 				"id": "1",
+				"name": "route1",
 				"uri": "/*",
 				"upstream": {
 					"nodes": [{
@@ -368,6 +377,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 			caseDesc: "correct remote_addrs",
 			giveContent: `{
 				"id": "1",
+				"name": "route1",
 				"uri": "/*",
 				"upstream": {
 					"nodes": [{
@@ -384,6 +394,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 			caseDesc: "invalid remote_addrs",
 			giveContent: `{
 				"id": "1",
+				"name": "route1",
 				"uri": "/*",
 				"upstream": {
 					"nodes": [{
@@ -401,6 +412,7 @@ func TestAPISIXJsonSchemaValidator_Route_checkRemoteAddr(t *testing.T) {
 			caseDesc: "invalid remote_addrs (an empty string item)",
 			giveContent: `{
 				"id": "1",
+				"name": "route1",
 				"uri": "/*",
 				"upstream": {
 					"nodes": [{
