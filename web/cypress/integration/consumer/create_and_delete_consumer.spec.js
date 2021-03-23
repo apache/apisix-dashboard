@@ -25,7 +25,8 @@ context('Create and Delete Consumer', () => {
   });
 
   it('creates consumer with key-auth', function () {
-    cy.visit('/consumer/list');
+    cy.visit('/');
+    cy.contains('Consumer').click();
     cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
     // basic information

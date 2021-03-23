@@ -26,7 +26,9 @@ context('Create Edit and Delete PluginTemplate', () => {
   });
 
   it('should create pluginTemplate', function () {
-    cy.visit('/routes/list');
+    cy.visit('/');
+    cy.contains('Route').click();
+    cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Plugin Template Config').should('be.visible').click();
     cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();

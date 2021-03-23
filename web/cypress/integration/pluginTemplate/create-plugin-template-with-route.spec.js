@@ -25,7 +25,9 @@ context('Create PluginTemplate Binding To Route', () => {
   });
 
   it('should create test pluginTemplate', function () {
-    cy.visit('/routes/list');
+    cy.visit('/');
+    cy.contains('Route').click();
+    cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Plugin Template Config').should('be.visible').click();
     cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
