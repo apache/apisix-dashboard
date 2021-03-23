@@ -20,7 +20,6 @@ import { Button, notification, Tabs } from 'antd';
 import { SelectLang } from '@@/plugin-locale/SelectLang';
 import { Link, useIntl, history } from 'umi';
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
-import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
 import type { UserModule } from '@/pages/User/typing';
 import logo from '@/assets/logo.svg';
 import { getUrlQuery } from '@/helpers';
@@ -32,7 +31,7 @@ const Tab = Tabs.TabPane;
 /**
  * Login Methods List
  */
-const loginMethods: UserModule.LoginMethod[] = [LoginMethodPassword, LoginMethodExample];
+const loginMethods: UserModule.LoginMethod[] = [LoginMethodPassword];
 
 /**
  * User Login Page
