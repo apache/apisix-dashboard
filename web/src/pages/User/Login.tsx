@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import logo from '@/assets/logo.svg';
+import { GithubOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
+import logo from '@/assets/logo.svg';
 import { Button, notification, Tabs } from 'antd';
 import { SelectLang } from '@@/plugin-locale/SelectLang';
 import { Link, useIntl, history } from 'umi';
@@ -25,7 +26,7 @@ import type { UserModule } from '@/pages/User/typing';
 import { getUrlQuery } from '@/helpers';
 import Footer from '@/components/Footer';
 import styles from './Login.less';
-import { GithubOutlined } from '@ant-design/icons';
+
 
 const Tab = Tabs.TabPane;
 
