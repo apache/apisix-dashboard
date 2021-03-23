@@ -37,10 +37,15 @@ import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
 import moment from 'moment';
 import { saveAs } from 'file-saver';
+import querystring from 'query-string'
+import { omit } from 'lodash';
 
+import { DELETE_FIELDS } from '@/constants';
 import { timestampToLocaleString } from '@/helpers';
 import type { RcFile } from 'antd/lib/upload';
 import {
+  update,
+  create,
   fetchList,
   remove,
   fetchLabelList,
@@ -73,12 +78,24 @@ const Page: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [uploadFileList, setUploadFileList] = useState<RcFile[]>([]);
   const [showImportModal, setShowImportModal] = useState(false);
-  const [rawDataEditorVisible, setRawDataEditorVisible] = useState(false);
-  const [rawData, setRawData] = useState({});
+  const [visible, setVisible] = useState(false);
+  const [rawData, setRawData] = useState<Record<string, any>>({});
+  const [id, setId] = useState('');
+  const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
+  const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
+
+  const savePageList = (page = 1, pageSize = 10) => {
+    history.replace(`/routes/list?page=${page}&pageSize=${pageSize}`);
+  };
 
   useEffect(() => {
     fetchLabelList().then(setLabelList);
   }, []);
+
+  useEffect(() => {
+    const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
+    setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
+  }, [window.location.search]);
 
   const rowSelection = {
     selectedRowKeys,
@@ -249,6 +266,7 @@ const Page: React.FC = () => {
           <Select
             mode="tags"
             style={{ width: '100%' }}
+            placeholder={formatMessage({ id: 'component.global.pleaseChoose' })}
             tagRender={(props) => {
               const { value, closable, onClose } = props;
               return (
@@ -290,7 +308,11 @@ const Page: React.FC = () => {
         }
 
         return (
-          <Select style={{ width: '100%' }} allowClear>
+          <Select
+            style={{ width: '100%' }}
+            placeholder={formatMessage({ id: 'component.global.pleaseChoose' })}
+            allowClear
+          >
             {Object.keys(labelList)
               .filter((item) => item === 'API_VERSION')
               .map((key) => {
@@ -317,8 +339,8 @@ const Page: React.FC = () => {
           {record.status ? (
             <Tag color="green">{formatMessage({ id: 'page.route.published' })}</Tag>
           ) : (
-              <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
-            )}
+            <Tag color="red">{formatMessage({ id: 'page.route.unpublished' })}</Tag>
+          )}
         </>
       ),
       renderFormItem: (_, { type }) => {
@@ -327,7 +349,13 @@ const Page: React.FC = () => {
         }
 
         return (
-          <Select style={{ width: '100%' }} allowClear>
+          <Select
+            style={{ width: '100%' }}
+            placeholder={
+              `${formatMessage({ id: 'page.route.unpublished' })}/${formatMessage({ id: 'page.route.published' })}`
+            }
+            allowClear
+          >
             <Option key={RouteStatus.Offline} value={RouteStatus.Offline}>
               {formatMessage({ id: 'page.route.unpublished' })}
             </Option>
@@ -382,8 +410,10 @@ const Page: React.FC = () => {
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
             <Button type="primary" onClick={() => {
-              setRawData(record);
-              setRawDataEditorVisible(true);
+              setId(record.id);
+              setRawData(omit(record, DELETE_FIELDS));
+              setVisible(true);
+              setEditorMode('update');
             }}>
               {formatMessage({ id: 'component.global.view' })}
             </Button>
@@ -421,6 +451,11 @@ const Page: React.FC = () => {
         rowKey="id"
         columns={columns}
         request={fetchList}
+        pagination={{
+          onChange: (page, pageSize?) => savePageList(page, pageSize),
+          pageSize: paginationConfig.pageSize,
+          current: paginationConfig.current,
+        }}
         search={{
           searchText: formatMessage({ id: 'component.global.search' }),
           resetText: formatMessage({ id: 'component.global.reset' }),
@@ -433,6 +468,14 @@ const Page: React.FC = () => {
           <Button type="primary" onClick={() => history.push(`/routes/create`)}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
+          </Button>,
+          <Button type="primary" onClick={() => {
+            setVisible(true);
+            setEditorMode('create');
+            setRawData({});
+          }}>
+            <PlusOutlined />
+            {formatMessage({ id: 'component.global.createWithEditor' })}
           </Button>,
           <Button
             type="primary"
@@ -460,11 +503,18 @@ const Page: React.FC = () => {
         }}
       />
       <RawDataEditor
-        visible={rawDataEditorVisible}
+        visible={visible}
         type='route'
-        readonly={true}
+        readonly={false}
         data={rawData}
-        onClose={() => { setRawDataEditorVisible(false) }}
+        onClose={() => { setVisible(false) }}
+        onSubmit={(data: any) => {
+          (editorMode === 'create' ? create(data, 'RawData') : update(id, data, 'RawData'))
+            .then(() => {
+              setVisible(false);
+              ref.current?.reload();
+            })
+        }}
       />
       <Modal
         title={formatMessage({ id: 'page.route.button.importOpenApi' })}
