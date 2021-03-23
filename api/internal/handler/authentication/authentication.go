@@ -17,7 +17,6 @@
 package authentication
 
 import (
-	"fmt"
 	"reflect"
 	"time"
 
@@ -29,6 +28,7 @@ import (
 
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/handler"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -89,7 +89,7 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 
 	user := conf.UserList[username]
 	if username != user.Username || password != user.Password {
-		return nil, fmt.Errorf("username or password error")
+		return nil, consts.ErrUsernamePassword
 	}
 
 	// create JWT for session

@@ -18,8 +18,6 @@ import React, { useState } from 'react';
 import { Button, notification, Tabs } from 'antd';
 import { SelectLang } from '@@/plugin-locale/SelectLang';
 import { Link, useIntl, history } from 'umi';
-import { SettingOutlined } from '@ant-design/icons';
-
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
 import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
 import type { UserModule } from '@/pages/User/typing';
@@ -43,9 +41,6 @@ const Page: React.FC = () => {
   const { formatMessage } = useIntl();
   const [loginMethod, setLoginMethod] = useState(loginMethods[0]);
 
-  const onSettingsClick = () => {
-    history.replace(`/settings?redirect=${encodeURIComponent(history.location.pathname)}`);
-  };
 
   const onTabChange = (activeKey: string) => {
     loginMethods.forEach((item, index) => {
@@ -86,9 +81,6 @@ const Page: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.lang}>
-        <div className={styles.settings} onClick={onSettingsClick}>
-          <SettingOutlined />
-        </div>
         <SelectLang />
       </div>
       <div className={styles.content}>

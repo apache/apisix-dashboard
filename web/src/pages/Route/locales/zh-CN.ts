@@ -32,7 +32,6 @@ export default {
   'page.route.path': '路径',
   'page.route.remoteAddrs': '客户端地址',
   'page.route.value': '参数值',
-  'page.route.protocol': '协议',
   'page.route.httpHeaderName': 'HTTP 请求头名称',
   'page.route.status': '状态',
   'page.route.groupName': '分组名称',
@@ -64,10 +63,13 @@ export default {
   'page.route.form.itemRulesPatternMessage.apiNameRule':
     '最大长度100，仅支持字母、数字、- 和 _，且只能以字母开头',
   'page.route.form.itemLabel.httpMethod': 'HTTP 方法',
+  'page.route.form.itemLabel.scheme': '协议',
   'page.route.form.itemLabel.priority': '优先级',
   'page.route.form.itemLabel.redirect': '重定向',
   'page.route.form.itemLabel.redirectCustom': '自定义重定向',
-  'page.route.form.itemLabel.rewriteType': '请求路径',
+  'page.route.form.itemLabel.URIRewriteType': '路径改写',
+  'page.route.form.itemLabel.hostRewriteType': '域名改写',
+  'page.route.form.itemLabel.headerRewrite': '请求头改写',
   'page.route.form.itemLabel.redirectURI': '重定向路径',
   'page.route.form.itemExtraMessage.domain': '域名或IP，支持泛域名，如：*.test.com',
   'page.route.form.itemRulesPatternMessage.domain':
@@ -115,13 +117,16 @@ export default {
   'page.route.portNumber': '端口号',
   'page.route.weight': '权重',
 
-  'page.route.radio.static': '静态重写',
-  'page.route.radio.regx': '正则重写',
-  'page.route.form.itemLabel.from': '原路径',
+  'page.route.radio.static': '静态改写',
+  'page.route.radio.regex': '正则改写',
+  // Need a better translation
+  'page.route.form.itemLabel.regex': '匹配正则表达式',
+  'page.route.form.itemLabel.template': '转发路径模版',
   'page.route.form.itemHelp.status': '路由创建后是否可以使用， 默认值为 false',
   'page.route.radio.staySame': '保持原样',
   'page.route.input.placeholder.newPath': '例如：/foo/bar/index.html',
-  'page.route.form.itemLabel.newPath': '新地址',
+  'page.route.form.itemLabel.newPath': '新路径',
+  'page.route.form.itemLabel.newHost': '新域名',
   'page.route.popconfirm.title.offline': '确定下线该路由吗？',
   'page.route.debug.showResultAfterSendRequest': '发送请求后在此查看响应结果',
   'page.route.TabPane.queryParams': '查询参数',
@@ -135,6 +140,9 @@ export default {
   'page.route.button.importOpenApi': '导入 OpenAPI',
   'page.route.button.selectFile': '请选择上传文件',
   'page.route.list': '路由列表',
+  'page.route.tooltip.pluginOrchOnlySuportChrome': '插件编排仅支持 Chrome 浏览器。',
+  'page.route.tooltip.pluginOrchWithoutProxyRewrite': '当步骤一中 配置了 请求改写时，不可使用插件编排模式。',
+  'page.route.tooltip.pluginOrchWithoutRedirect': '当步骤一中 重定向 选择为 启用 HTTPS 时，不可使用插件编排模式。',
 
   'page.route.tabs.normalMode': '普通模式',
   'page.route.tabs.orchestration': '插件编排'

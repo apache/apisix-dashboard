@@ -314,7 +314,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-					fmt.Errorf("service id: %s not found", input.ServiceID)
+					fmt.Errorf(consts.IDNotFound, "service", input.ServiceID)
 			}
 			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
@@ -419,7 +419,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-					fmt.Errorf("service id: %s not found", input.ServiceID)
+					fmt.Errorf(consts.IDNotFound, "service", input.ServiceID)
 			}
 			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}

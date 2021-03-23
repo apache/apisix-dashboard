@@ -14,25 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import { Popconfirm, Button, notification } from 'antd';
+import { Popconfirm, Button, notification, Space } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
+import querystring from 'query-string'
+import { omit } from 'lodash';
+
+import { DELETE_FIELDS } from '@/constants';
 
 import { RawDataEditor } from '@/components/RawDataEditor';
 import { timestampToLocaleString } from '@/helpers';
 
-import { fetchList, remove } from './service';
+import { fetchList, remove, create, update } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
-  const [rawDataEditorVisible, setRawDataEditorVisible] = useState(false);
-  const [rawData, setRawData] = useState({});
+  const [visible, setVisible] = useState(false);
+  const [rawData, setRawData] = useState<Record<string, any>>({});
+  const [id, setId] = useState('');
+  const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
+  const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
 
   const { formatMessage } = useIntl();
+
+
+  const savePageList = (page = 1, pageSize = 10) => {
+    history.replace(`/upstream/list?page=${page}&pageSize=${pageSize}`);
+  };
+
+  useEffect(() => {
+    const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
+    setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
+  }, [window.location.search]);
 
   const columns: ProColumns<UpstreamModule.ResponseBody>[] = [
     {
@@ -60,17 +77,18 @@ const Page: React.FC = () => {
       valueType: 'option',
       hideInSearch: true,
       render: (_, record) => (
-        <>
+        <Space align="baseline">
           <Button
             type="primary"
-            style={{ marginRight: 10 }}
             onClick={() => history.push(`/upstream/${record.id}/edit`)}
           >
             {formatMessage({ id: 'page.upstream.list.edit' })}
           </Button>
           <Button type="primary" onClick={() => {
-            setRawData(record);
-            setRawDataEditorVisible(true);
+            setId(record.id);
+            setRawData(omit(record, DELETE_FIELDS));
+            setVisible(true);
+            setEditorMode('update');
           }}>
             {formatMessage({ id: 'component.global.view' })}
           </Button>
@@ -92,7 +110,7 @@ const Page: React.FC = () => {
               {formatMessage({ id: 'page.upstream.list.delete' })}
             </Button>
           </Popconfirm>
-        </>
+        </Space>
       ),
     },
   ];
@@ -104,6 +122,11 @@ const Page: React.FC = () => {
         columns={columns}
         rowKey="id"
         request={fetchList}
+        pagination={{
+          onChange: (page, pageSize?) => savePageList(page, pageSize),
+          pageSize: paginationConfig.pageSize,
+          current: paginationConfig.current,
+        }}
         search={{
           searchText: formatMessage({ id: 'component.global.search' }),
           resetText: formatMessage({ id: 'component.global.reset' }),
@@ -113,14 +136,29 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
+          <Button type="primary" onClick={() => {
+            setVisible(true);
+            setEditorMode('create');
+            setRawData({});
+          }}>
+            <PlusOutlined />
+            {formatMessage({ id: 'component.global.createWithEditor' })}
+          </Button>,
         ]}
       />
       <RawDataEditor
-        visible={rawDataEditorVisible}
+        visible={visible}
         type='upstream'
-        readonly={true}
+        readonly={false}
         data={rawData}
-        onClose={() => { setRawDataEditorVisible(false) }}
+        onClose={() => { setVisible(false) }}
+        onSubmit={(data: any) => {
+          (editorMode === 'create' ? create(data) : update(id, data))
+            .then(() => {
+              setVisible(false);
+              ref.current?.reload();
+            })
+        }}
       />
     </PageContainer>
   );
