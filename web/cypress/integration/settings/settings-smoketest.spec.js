@@ -63,6 +63,6 @@ context('settings page smoke test', () => {
     cy.get(this.domSelector.notificationMessage).should('contain', this.data.updateSuccessfully);
     cy.intercept(data.validURL).as(data.fetchURL);
     cy.wait(data.fetch);
-    cy.get(this.domSelector.pageContainer).children().should('contain', 'Metrics');
+    cy.get(this.domSelector.pageContainer).children().should('contain', 'Dashboard');
   });
 });

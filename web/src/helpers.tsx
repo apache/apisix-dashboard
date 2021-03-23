@@ -28,8 +28,8 @@ import IconFont from './components/IconFont';
 export const getMenuData = (): MenuDataItem[] => {
   return [
     {
-      name: 'metrics',
-      path: '/metrics',
+      name: 'dashboard',
+      path: '/dashboard',
       icon: <IconFont name="icondashboard" />,
     },
     {
