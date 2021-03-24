@@ -29,6 +29,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+					 "name": "route1",
 					 "uri": "/hello",
 					 "methods": ["TEST"],
 					 "upstream": {
@@ -58,6 +59,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+					 "name": "route1",
 					 "uri": "/hello",
 					 "methods": ["GET"],
 					 "upstream": {
@@ -96,6 +98,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+					 "name": "route1",
 					 "uri": "/hello",
 					 "methods": ["GET", "POST", "PUT", "DELETE", "PATCH"],
 					 "upstream": {
@@ -177,6 +180,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+					 "name": "route1",
 					 "uri": "/hello",
 					 "methods": ["GET", "post"],
 					 "upstream": {
@@ -206,6 +210,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+					 "name": "route1",
 					 "uri": "/hello",
 					 "methods": ["GET"],
 					 "upstream": {
@@ -246,6 +251,7 @@ func TestRoute_with_methods(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+					 "name": "route1",
 					 "uri": "/hello",
 					 "methods": ["POST"],
 					 "upstream": {

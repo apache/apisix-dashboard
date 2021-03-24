@@ -58,6 +58,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/1",
 			Body: `{
+				"name": "route1",
 				"uri": "/server_port",
 				"upstream_id": "1"
 			}`,

@@ -37,6 +37,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"cors": {}
@@ -72,26 +73,27 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-			"uri": "/hello",
-				"plugins": {
-					"cors": {
-						"allow_origins": "http://sub.domain.com,http://sub2.domain.com",
-						"allow_methods": "GET,POST",
-						"allow_headers": "headr1,headr2",
-						"expose_headers": "ex-headr1,ex-headr2",
-						"max_age": 50,
-						"allow_credential": true
+				"name": "route1",
+				"uri": "/hello",
+					"plugins": {
+						"cors": {
+							"allow_origins": "http://sub.domain.com,http://sub2.domain.com",
+							"allow_methods": "GET,POST",
+							"allow_headers": "headr1,headr2",
+							"expose_headers": "ex-headr1,ex-headr2",
+							"max_age": 50,
+							"allow_credential": true
+						}
+					},
+					"upstream": {
+						"type": "roundrobin",
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1981,
+							"weight": 1
+						}]
 					}
-				},
-				"upstream": {
-					"type": "roundrobin",
-					"nodes": [{
-						"host": "172.16.238.20",
-						"port": 1981,
-						"weight": 1
-					}]
-				}
-			}`,
+				}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
@@ -158,6 +160,7 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"cors": {

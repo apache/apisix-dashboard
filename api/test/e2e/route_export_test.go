@@ -406,7 +406,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "GET",
+					"operationId": "route3GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -495,6 +495,7 @@ func TestRoute_Export(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r3",
 			Body: `{
+				"name": "route3",
 				"methods": ["GET"],
 				"uri": "/hello",
 				"service_id": "s1"
@@ -585,7 +586,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "GET",
+					"operationId": "route4GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -678,6 +679,7 @@ func TestRoute_Export(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r4",
 			Body: `{
+				"name": "route4",
 				"methods": ["GET"],
 				"uri": "/hello",
 				"service_id": "s2",
@@ -773,7 +775,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "GET",
+					"operationId": "route5GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -875,6 +877,7 @@ func TestRoute_Export(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r5",
 			Body: `{
+				"name": "route5",
 				"methods": ["GET"],
 				"uri": "/hello",
 				"service_id": "s3",
@@ -956,7 +959,7 @@ func TestRoute_Export(t *testing.T) {
 		"paths": {
 			"/hello": {
 				"get": {
-					"operationId": "GET",
+					"operationId": "route8GET",
 					"requestBody": {},
 					"responses": {
 						"default": {
@@ -1001,6 +1004,7 @@ func TestRoute_Export(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r8",
 			Body: `{
+				"name": "route8",
 				"methods": ["GET"],
 				"uri": "/hello",
 				"enable_websocket":false,
@@ -1429,6 +1433,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				 "uri": "/hello",
 				 "plugins": {
 					 "jwt-auth": {}
@@ -1631,6 +1636,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"jwt-auth": {}
@@ -1737,6 +1743,7 @@ func TestExportRoute_With_Auth_Plugin(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				 "uri": "/hello",
 				 "plugins": {
 					 "key-auth": {},

@@ -38,6 +38,7 @@ func TestRoute_With_Limit_Plugin(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"limit-count": {
@@ -134,6 +135,7 @@ func TestRoute_With_Limit_Plugin_By_Consumer(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"key-auth": {},
@@ -319,6 +321,7 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"limit-count": {
@@ -382,6 +385,7 @@ func TestRoute_With_Limit_Count_And_Disable(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"limit-count": {
