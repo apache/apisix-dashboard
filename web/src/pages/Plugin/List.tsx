@@ -15,14 +15,15 @@
  * limitations under the License.
  */
 import React, { useEffect, useRef, useState } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { PageContainer, PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, Popconfirm, Space, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { omit } from 'lodash';
-import querystring from 'query-string'
+import querystring from 'query-string';
+import CSS from 'csstype';
 
 import PluginDetail from '@/components/Plugin/PluginDetail';
 
@@ -61,6 +62,13 @@ const Page: React.FC = () => {
     const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
     setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
   }, [window.location.search]);
+
+  const enabledPlugin: CSS.Properties = {
+    color: 'black',
+    marginRight: '600px',
+    display: 'flex',
+    paddingTop: '12px'
+  }
 
   const columns: ProColumns<PluginModule.TransformedPlugin>[] = [
     {
@@ -159,6 +167,7 @@ const Page: React.FC = () => {
           current: paginationConfig.current,
         }}
         toolBarRender={() => [
+          <PageContainer style={enabledPlugin} title={formatMessage({ id: 'page.enabled.plugin' })} />,
           <Button type="primary" onClick={() => history.push('/plugin/market')}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
