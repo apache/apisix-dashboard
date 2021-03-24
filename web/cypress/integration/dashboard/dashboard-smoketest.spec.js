@@ -16,20 +16,20 @@
  */
 /* eslint-disable no-undef */
 
-context('metrics page smoke test', () => {
+context('dashboard page smoke test', () => {
   beforeEach(() => {
     cy.login();
 
     cy.fixture('selector.json').as('domSelector');
   });
 
-  it('should visit metrics page', function () {
+  it('should visit dashboard page', function () {
     cy.visit('/');
-    cy.contains('Metrics').click();
-    cy.url().should('contains', '/metrics');
+    cy.contains('Dashboard').click();
+    cy.url().should('contains', '/dashboard');
     cy.get(this.domSelector.pageContent)
       .children()
-      .should('contain', 'Metrics')
+      .should('contain', 'Dashboard')
       .and('contain', 'You have not configured Grafana')
       .and('contain', 'Configure');
   });
