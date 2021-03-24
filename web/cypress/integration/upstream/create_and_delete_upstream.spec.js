@@ -127,4 +127,52 @@ context('Create and Delete Upstream', () => {
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
   });
+
+  it('should create grpc upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+    cy.contains('Create').click();
+
+    cy.get(this.domSelector.name).type(this.data.upstreamName);
+    cy.get(this.domSelector.description).type(this.data.description);
+
+    // change upstream scheme to grpc
+    cy.get('#scheme').click();
+    cy.get(this.domSelector.upstreamType).within(() => {
+      cy.contains('grpc').click();
+    });
+    cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
+    cy.get(this.domSelector.nodes_0_port).clear().type('7000');
+
+    // next to finish
+    cy.contains('Next').click();
+    cy.contains('Submit').click();
+    cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
+    cy.url().should('contains', 'upstream/list');
+  });
+
+  it('should view the (grpc) upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+
+    cy.get(this.domSelector.nameSelector).type(this.data.upstreamName);
+    cy.contains('Search').click();
+    cy.contains(this.data.upstreamName).siblings().contains('View').click();
+    cy.get(this.domSelector.drawer).should('be.visible');
+
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
+      cy.contains('nodes').should("exist");
+      cy.contains('grpc').should('exist');
+      cy.contains(this.data.upstreamName).should('exist');
+    });
+  });
+
+  it('should delete the upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+    cy.contains(this.data.upstreamName).siblings().contains('Delete').click();
+    cy.contains('button', 'Confirm').click();
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
+  });
+
 });
