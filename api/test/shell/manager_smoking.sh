@@ -84,4 +84,3 @@ if [ ! $code -eq 200 ]; then
     echo "failed to create route"
     exit 1
 fi
-
