@@ -29,6 +29,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route1",
 				"uri": "/hello_",
 				"host": "$%$foo.com",
 				"upstream": {
@@ -47,6 +48,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello_",
 				"hosts": ["$%$foo.com", "*.bar.com"],
 				"upstream": {
@@ -65,6 +67,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello_",
 				"host": "github.com",
 				"hosts": ["foo.com", "*.bar.com"],
@@ -120,6 +123,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello_",
 				"hosts": ["foo.com", "*.bar.com"],
 				"upstream": {
@@ -139,6 +143,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": 123456
 			}`,
 			Headers:      map[string]string{"Authorization": token},
@@ -214,6 +219,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"methods": ["GET"],
 				"hosts": ["foo.com"],
@@ -245,6 +251,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"hosts": ["bar.com"],
 				"upstream": {
@@ -318,6 +325,7 @@ func TestRoute_Patch(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 					"nodes": {
@@ -409,6 +417,7 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"hosts": [],
 				"host": "test.com",
@@ -438,6 +447,7 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"hosts": [],
 				"upstream": {
@@ -465,6 +475,7 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"uris": [],
 				"upstream": {
@@ -484,6 +495,7 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"remote_addrs": [],
 				"remote_addr": "0.0.0.0",
@@ -531,6 +543,7 @@ func TestRoute_Create_via_POST(t *testing.T) {
 			Path:   "/apisix/admin/routes",
 			Body: `{
 				"id": "r1",
+				"name": "route1",
 				"uri": "/hello_",
 				"hosts": ["foo.com", "*.bar.com"],
 				"upstream": {

@@ -30,7 +30,15 @@
   text-align: right;
 }
 
-.settings {
+a {
+  color: black;
+
+  &:hover {
+    color: @primary-color;
+  }
+}
+
+.github {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -95,6 +103,7 @@
 .main {
   width: 368px;
   margin: 0 auto;
+
   @media screen and (max-width: @screen-sm) {
     width: 95%;
   }
