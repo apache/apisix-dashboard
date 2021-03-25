@@ -47,7 +47,7 @@ context('Delete Plugin List with the Drawer', () => {
   it('should delete the plugin with the drawer', function () {
     cy.visit('/plugin/list');
     cy.get(this.domSelector.refresh).click();
-    cy.contains('button', 'Edit').click();
+    cy.contains('button', 'Configure').click();
     cy.get(this.domSelector.drawerFooter).contains('button', 'Delete').click({ force: true });
     cy.contains('button', 'Confirm').click({ force: true });
     cy.get(this.domSelector.empty).should('be.visible');
