@@ -17,6 +17,7 @@
 import React from 'react';
 import { notification } from 'antd';
 import type { MenuDataItem } from '@ant-design/pro-layout';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import moment from 'moment';
 import YAML from 'yaml';
@@ -45,7 +46,7 @@ export const getMenuData = (): MenuDataItem[] => {
     {
       name: 'service',
       path: '/service/list',
-      icon: <IconFont name="iconconsumer" />,
+      icon: <IconFont name="iconservice" />,
     },
     {
       name: 'consumer',
@@ -55,7 +56,7 @@ export const getMenuData = (): MenuDataItem[] => {
     {
       name: 'plugin',
       path: '/plugin/list',
-      icon: <IconFont name="iconconsumer" />,
+      icon: <IconFont name="iconplugin" />,
     },
     {
       name: 'ssl',
@@ -65,7 +66,7 @@ export const getMenuData = (): MenuDataItem[] => {
     {
       name: 'serverinfo',
       path: '/serverinfo',
-      icon: <IconFont name="iconinfocircle" />,
+      icon: <InfoCircleOutlined />,
     },
   ];
 };

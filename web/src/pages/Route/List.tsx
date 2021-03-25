@@ -266,6 +266,7 @@ const Page: React.FC = () => {
           <Select
             mode="tags"
             style={{ width: '100%' }}
+            placeholder={formatMessage({ id: 'component.global.pleaseChoose' })}
             tagRender={(props) => {
               const { value, closable, onClose } = props;
               return (
@@ -307,7 +308,11 @@ const Page: React.FC = () => {
         }
 
         return (
-          <Select style={{ width: '100%' }} allowClear>
+          <Select
+            style={{ width: '100%' }}
+            placeholder={formatMessage({ id: 'component.global.pleaseChoose' })}
+            allowClear
+          >
             {Object.keys(labelList)
               .filter((item) => item === 'API_VERSION')
               .map((key) => {
@@ -344,7 +349,13 @@ const Page: React.FC = () => {
         }
 
         return (
-          <Select style={{ width: '100%' }} allowClear>
+          <Select
+            style={{ width: '100%' }}
+            placeholder={
+              `${formatMessage({ id: 'page.route.unpublished' })}/${formatMessage({ id: 'page.route.published' })}`
+            }
+            allowClear
+          >
             <Option key={RouteStatus.Offline} value={RouteStatus.Offline}>
               {formatMessage({ id: 'page.route.unpublished' })}
             </Option>

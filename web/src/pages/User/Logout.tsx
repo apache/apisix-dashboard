@@ -17,14 +17,13 @@
 import type React from 'react';
 
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
-import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
 import type { UserModule } from '@/pages/User/typing';
 import { getUrlQuery } from '@/helpers';
 
 /**
  * Login Methods List
  */
-const loginMethods: UserModule.LoginMethod[] = [LoginMethodPassword, LoginMethodExample];
+const loginMethods: UserModule.LoginMethod[] = [LoginMethodPassword];
 
 /**
  * User Logout Page

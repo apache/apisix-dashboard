@@ -129,6 +129,7 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/server_port",
 				"service_id": "s1"
 			}`,
@@ -239,6 +240,7 @@ var _ = ginkgo.Describe("create service with plugin", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/server_port",
 				"service_id": "s1"
 			}`,
@@ -356,6 +358,7 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"service_id": "s2"
 			}`,

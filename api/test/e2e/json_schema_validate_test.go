@@ -29,6 +29,7 @@ func TestSchema_not_exist_field(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route1",
                                 "uri": "/hello",
                                 "nonexistent": "test non-existent",
                                 "upstream": {
