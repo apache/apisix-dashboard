@@ -130,7 +130,7 @@ context('Create and Delete Route', () => {
 
     cy.get(this.domSelector.nameSelector).type(name);
     cy.contains('Search').click();
-    cy.contains(name).siblings().contains('Edit').click();
+    cy.contains(name).siblings().contains('Configure').click();
 
     cy.get(this.domSelector.name).clear().type(newName);
     cy.get(this.domSelector.description).clear().type(this.data.description2);

@@ -16,5 +16,5 @@
  */
 export default {
   'page.plugin.drawer.popconfirm.title.delete': '确定删除该插件吗？',
-  'page.plugin.list': '插件列表'
+  'page.plugin.list': '插件列表：已启用插件的列表'
 };

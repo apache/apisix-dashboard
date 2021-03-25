@@ -25,7 +25,7 @@ import (
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-var _ = ginkgo.Describe("Plugin List", func() {
+var _ = ginkgo.Describe("Plugin List: List of enabled plugins", func() {
 	table.DescribeTable("test plugin basic", func(testCase base.HttpTestCase) {
 		base.RunTestCase(testCase)
 	},

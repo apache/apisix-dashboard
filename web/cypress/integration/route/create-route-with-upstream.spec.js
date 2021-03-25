@@ -67,7 +67,7 @@ context('Create Route with Upstream', () => {
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
 
     cy.contains('Search').click();
-    cy.contains(this.data.routeName).siblings().contains('Edit').click();
+    cy.contains(this.data.routeName).siblings().contains('Configure').click();
 
     cy.get(this.domSelector.name).should('value', this.data.routeName);
     cy.contains('Next').click({ force: true });
@@ -95,7 +95,7 @@ context('Create Route with Upstream', () => {
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
 
-    cy.contains(this.data.routeName).siblings().contains('Edit').click();
+    cy.contains(this.data.routeName).siblings().contains('Configure').click();
     // ensure it has already changed to edit page
     cy.get(this.domSelector.name).should('value', this.data.routeName);
     cy.contains('Next').click({ force: true });
