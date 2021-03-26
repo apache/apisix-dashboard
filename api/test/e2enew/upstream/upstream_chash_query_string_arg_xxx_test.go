@@ -106,7 +106,7 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 			counts = append(counts, value)
 		}
 		sort.Ints(counts)
-		gomega.Expect(float64(counts[2]-counts[0])/float64(counts[1]) < 0.4).Should(gomega.BeTrue())
+		gomega.Expect(float64(counts[2]-counts[0]) / float64(counts[1])).Should(gomega.BeNumerically("<", 0.4))
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{
@@ -193,7 +193,7 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 			counts = append(counts, value)
 		}
 		sort.Ints(counts)
-		gomega.Expect(float64(counts[2]-counts[0])/float64(counts[1]) < 0.4).Should(gomega.BeTrue())
+		gomega.Expect(float64(counts[2]-counts[0]) / float64(counts[1])).Should(gomega.BeNumerically("<", 0.4))
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{

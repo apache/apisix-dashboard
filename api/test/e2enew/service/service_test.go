@@ -137,9 +137,9 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 	ginkgo.It("batch test /server_port api", func() {
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		res := base.BatchTestServerPort(18)
-		gomega.Expect(res["1980"] == 3).Should(gomega.BeTrue())
-		gomega.Expect(res["1981"] == 6).Should(gomega.BeTrue())
-		gomega.Expect(res["1982"] == 9).Should(gomega.BeTrue())
+		gomega.Expect(res["1980"]).Should(gomega.Equal(3))
+		gomega.Expect(res["1981"]).Should(gomega.Equal(6))
+		gomega.Expect(res["1982"]).Should(gomega.Equal(9))
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{
