@@ -68,5 +68,5 @@ export default {
   'menu.plugin': '插件',
   'menu.service': '服务',
   'menu.setting': '系统设置',
-  'menu.serverinfo': '系统状态',
+  'menu.serverinfo': '系统信息',
 };
