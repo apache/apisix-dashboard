@@ -87,6 +87,43 @@ var _ = ginkgo.Describe("route with methods", func() {
 			ExpectBody:   "hello world",
 			Sleep:        base.SleepTime,
 		}),
+		table.Entry("update same route path", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					 "name": "route1",
+					 "uri": "/hellohello",
+					 "methods": ["GET"],
+					 "upstream": {
+						 "type": "roundrobin",
+						 "nodes": [{
+							 "host": "172.16.238.20",
+							 "port": 1980,
+							 "weight": 1
+						 }]
+					 }
+				 }`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("verify old route updated", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify new update applied", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hellohello",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		}),
 		table.Entry("delete route", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
@@ -157,6 +194,51 @@ var _ = ginkgo.Describe("route with methods", func() {
 			Method:       http.MethodPatch,
 			Path:         "/hello",
 			Body:         `test=test`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("update route methods to GET only", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					 "name": "route1",
+					 "uri": "/hello",
+					 "methods": ["GET"],
+					 "upstream": {
+						 "type": "roundrobin",
+						 "nodes": [{
+							 "host": "172.16.238.20",
+							 "port": 1980,
+							 "weight": 1
+						 }]
+					 }
+				 }`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("verify post method isn't working now", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodPost,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify PUT method isn't working now", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodPut,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify route by GET only", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
