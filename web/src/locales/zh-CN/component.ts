@@ -23,7 +23,7 @@ export default {
   'component.global.confirm': '确认',
   'component.global.format': '格式',
   'component.global.document': '文档',
-  'component.global.enable': '使能够',
+  'component.global.enable': '启用',
   'component.global.scope': '范围',
   'component.global.data.editor': '资料编辑器',
   'component.global.delete': '删除',
