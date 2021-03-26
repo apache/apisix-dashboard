@@ -21,7 +21,7 @@ export default {
   'component.global.search': '查询',
   'component.global.reset': '重置',
   'component.global.confirm': '确认',
-  'component.global.format': '格式',
+  'component.global.format': '格式化',
   'component.global.document': '文档',
   'component.global.enable': '启用',
   'component.global.scope': '范围',
