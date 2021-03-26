@@ -27,8 +27,6 @@ import (
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-var t = ginkgo.GinkgoT()
-
 var _ = ginkgo.Describe("route with script lucacode", func() {
 	ginkgo.It("clean APISIX error log", func() {
 		base.CleanAPISIXErrorLog()
