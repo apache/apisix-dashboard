@@ -14,18 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package e2e
+package route
 
 import (
 	"net/http"
-	"testing"
+
+	"github.com/onsi/ginkgo"
+	"github.com/onsi/ginkgo/extensions/table"
+
+	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-func TestRoute_with_methods(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			Desc:   "add route with invalid method",
-			Object: ManagerApiExpect(t),
+var _ = ginkgo.Describe("route with methods", func() {
+	table.DescribeTable("test route with methods",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("add route with invalid method", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -41,21 +47,19 @@ func TestRoute_with_methods(t *testing.T) {
 						 }]
 					 }
 				 }`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
-		},
-		{
-			Desc:         "verify route",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("verify route", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:   "add route with valid method",
-			Object: ManagerApiExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("add route with valid method", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -71,30 +75,27 @@ func TestRoute_with_methods(t *testing.T) {
 						 }]
 					 }
 				 }`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "verify route",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("verify route", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "delete route",
-			Object:       ManagerApiExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("delete route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:   "add route with valid methods",
-			Object: ManagerApiExpect(t),
+		}),
+		table.Entry("add route with valid methods", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -110,73 +111,66 @@ func TestRoute_with_methods(t *testing.T) {
 						 }]
 					 }
 				 }`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "verify route by post",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("verify route by post", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodPost,
 			Path:         "/hello",
 			Body:         `test=test`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "verify route by put",
-			Object:       APISIXExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify route by put", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodPut,
 			Path:         "/hello",
 			Body:         `test=test`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "verify route by get",
-			Object:       APISIXExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify route by get", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "verify route by delete",
-			Object:       APISIXExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify route by delete", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "verify route by patch",
-			Object:       APISIXExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify route by patch", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodPatch,
 			Path:         "/hello",
 			Body:         `test=test`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "delete route",
-			Object:       ManagerApiExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("delete route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:   "add route with lower case methods",
-			Object: ManagerApiExpect(t),
+		}),
+		table.Entry("add route with lower case methods", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -192,21 +186,19 @@ func TestRoute_with_methods(t *testing.T) {
 						 }]
 					 }
 				}`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
-		},
-		{
-			Desc:         "verify route",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("verify route", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:   "add route with methods GET",
-			Object: ManagerApiExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("add route with methods GET", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -222,32 +214,29 @@ func TestRoute_with_methods(t *testing.T) {
 						 }]
 					 }
 				 }`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "verify route by get",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("verify route by get", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "verify route by post",
-			Object:       APISIXExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify route by post", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodPost,
 			Path:         "/hello",
 			Body:         `test=test`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:   "update route methods to POST",
-			Object: ManagerApiExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("update route methods to POST", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -263,41 +252,34 @@ func TestRoute_with_methods(t *testing.T) {
 						 }]
 					 }
 				 }`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "verify route by get",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("verify route by get", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "verify route by post",
-			Object:       APISIXExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify route by post", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodPost,
 			Path:         "/hello",
 			Body:         `test=test`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "delete route",
-			Object:       ManagerApiExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("delete route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
-		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc, t)
-	}
-}
+			Sleep:        base.SleepTime,
+		}),
+	)
+})
