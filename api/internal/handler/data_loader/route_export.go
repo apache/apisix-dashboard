@@ -234,7 +234,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 			return nil, err
 		}
 
-		if plugins != nil && len(plugins) > 0 {
+		if len(plugins) > 0 {
 			extensions["x-apisix-plugins"] = plugins
 		}
 
