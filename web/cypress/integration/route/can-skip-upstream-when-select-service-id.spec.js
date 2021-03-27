@@ -58,7 +58,7 @@ context('Can select service_id skip upstream in route', () => {
     cy.get(this.domSelector.name).type(this.data.routeName);
     cy.contains('Next').click();
     cy.get(this.domSelector.upstreamSelector).click();
-    cy.contains('None').should('exist');
+    cy.contains('None').should('not.exist');
 
     cy.contains('Previous').click();
     cy.contains('None').click();
@@ -89,7 +89,7 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains('None').click();
     cy.contains('Next').click();
     cy.get(this.domSelector.upstream_id).click();
-    cy.contains('None').should('exist');
+    cy.contains('None').should('not.exist');
     cy.contains(this.data.upstreamName).click();
     cy.contains('Next').click();
     cy.contains('Next').click();
