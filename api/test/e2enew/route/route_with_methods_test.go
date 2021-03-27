@@ -40,11 +40,9 @@ var _ = ginkgo.Describe("route with methods", func() {
 					 "methods": ["TEST"],
 					 "upstream": {
 						 "type": "roundrobin",
-						 "nodes": [{
-							 "host": "172.16.238.20",
-							 "port": 1980,
-							 "weight": 1
-						 }]
+						 "nodes": {
+							 "` + base.UpstreamIp + `:1980": 1
+						 }
 					 }
 				 }`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -68,11 +66,9 @@ var _ = ginkgo.Describe("route with methods", func() {
 					 "methods": ["GET"],
 					 "upstream": {
 						 "type": "roundrobin",
-						 "nodes": [{
-							 "host": "172.16.238.20",
-							 "port": 1980,
-							 "weight": 1
-						 }]
+						 "nodes": {
+							 "` + base.UpstreamIp + `:1980": 1
+						 }
 					 }
 				 }`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -97,11 +93,9 @@ var _ = ginkgo.Describe("route with methods", func() {
 					 "methods": ["GET"],
 					 "upstream": {
 						 "type": "roundrobin",
-						 "nodes": [{
-							 "host": "172.16.238.20",
-							 "port": 1980,
-							 "weight": 1
-						 }]
+						 "nodes": {
+							 "` + base.UpstreamIp + `:1980": 1
+						 }
 					 }
 				 }`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -141,11 +135,9 @@ var _ = ginkgo.Describe("route with methods", func() {
 					 "methods": ["GET", "POST", "PUT", "DELETE", "PATCH"],
 					 "upstream": {
 						 "type": "roundrobin",
-						 "nodes": [{
-							 "host": "172.16.238.20",
-							 "port": 1980,
-							 "weight": 1
-						 }]
+						 "nodes": {
+							 "` + base.UpstreamIp + `:1980": 1
+						 }
 					 }
 				 }`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -209,11 +201,9 @@ var _ = ginkgo.Describe("route with methods", func() {
 					 "methods": ["GET"],
 					 "upstream": {
 						 "type": "roundrobin",
-						 "nodes": [{
-							 "host": "172.16.238.20",
-							 "port": 1980,
-							 "weight": 1
-						 }]
+						 "nodes": {
+							 "` + base.UpstreamIp + `:1980": 1
+						 }
 					 }
 				 }`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -261,11 +251,9 @@ var _ = ginkgo.Describe("route with methods", func() {
 					 "methods": ["GET", "post"],
 					 "upstream": {
 						 "type": "roundrobin",
-						 "nodes": [{
-							 "host": "172.16.238.20",
-							 "port": 1980,
-							 "weight": 1
-						 }]
+						 "nodes": {
+							 "` + base.UpstreamIp + `:1980": 1
+						 }
 					 }
 				}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -289,11 +277,9 @@ var _ = ginkgo.Describe("route with methods", func() {
 					 "methods": ["GET"],
 					 "upstream": {
 						 "type": "roundrobin",
-						 "nodes": [{
-							 "host": "172.16.238.20",
-							 "port": 1980,
-							 "weight": 1
-						 }]
+						 "nodes": {
+							 "` + base.UpstreamIp + `:1980": 1
+						 }
 					 }
 				 }`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -327,11 +313,9 @@ var _ = ginkgo.Describe("route with methods", func() {
 					 "methods": ["POST"],
 					 "upstream": {
 						 "type": "roundrobin",
-						 "nodes": [{
-							 "host": "172.16.238.20",
-							 "port": 1980,
-							 "weight": 1
-						 }]
+						 "nodes": {
+							 "` + base.UpstreamIp + `:1980": 1
+						 }
 					 }
 				 }`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
