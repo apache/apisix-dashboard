@@ -116,6 +116,7 @@ func NewManagerAPICommand() *cobra.Command {
 
 			quit := make(chan os.Signal, 1)
 			signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+			defer signal.Stop(quit)
 
 			go func() {
 				if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
