@@ -44,7 +44,9 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                 <Row gutter={16} key={field.name}>
                   <Col span={1}>
                     <Form.Item
+                      {...field}
                       name={[field.name, 'check']}
+                      fieldKey={[field.fieldKey, 'check']}
                       style={{ textAlign: 'right' }}
                       valuePropName="checked"
                     >
@@ -52,7 +54,10 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item name={[field.name, 'key']}>
+                    <Form.Item
+                      {...field}
+                      name={[field.name, 'key']}
+                      fieldKey={[field.fieldKey, 'key']}>
                       <AutoComplete
                         onSearch={onSearch}
                         placeholder={formatMessage({ id: 'page.route.input.placeholder.paramKey' })}
@@ -75,7 +80,10 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item name={[field.name, 'value']}>
+                    <Form.Item
+                      {...field}
+                      name={[field.name, 'value']}
+                      fieldKey={[field.fieldKey, 'value']}>
                       <Input
                         placeholder={formatMessage({
                           id: 'page.route.input.placeholder.paramValue',
