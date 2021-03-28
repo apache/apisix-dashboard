@@ -62,7 +62,7 @@ type Props = {
   showSelector?: boolean;
   // FIXME: use proper typing
   ref?: any;
-  required: boolean;
+  required?: boolean;
 };
 
 const removeBtnStyle = {
@@ -706,7 +706,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             <Form.Item
               label={formatMessage({ id: 'page.upstream.step.pass-host' })}
               name="pass_host"
-              extra={formatMessage({ id: 'page.upstream.step.pass-host.tips' })}
             >
               <Select disabled={readonly}>
                 <Select.Option value="pass">
@@ -715,7 +714,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 <Select.Option value="node">
                   {formatMessage({ id: 'page.upstream.step.pass-host.node' })}
                 </Select.Option>
-                <Select.Option value="rewrite">
+                <Select.Option value="rewrite" disabled>
                   {formatMessage({ id: 'page.upstream.step.pass-host.rewrite' })}
                 </Select.Option>
               </Select>
@@ -732,8 +731,14 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                     <Form.Item
                       label={formatMessage({ id: 'page.upstream.step.pass-host.upstream_host' })}
                       name="upstream_host"
+                      rules={[
+                        {
+                          required: true,
+                          message: "",
+                        },
+                      ]}
                     >
-                      <Input disabled={readonly} />
+                      <Input disabled={readonly} placeholder={formatMessage({ id: `page.upstream.upstream_host.required` })} />
                     </Form.Item>
                   );
                 }

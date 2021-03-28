@@ -63,7 +63,6 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
-  'menu.metrics': 'Metrics',
   'menu.routes': 'Route',
   'menu.pluginTemplate': 'Plugin Template',
   'menu.ssl': 'SSL',

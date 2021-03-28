@@ -14,100 +14,98 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package e2e
+package route
 
 import (
 	"io/ioutil"
 	"net/http"
-	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/onsi/ginkgo"
+	"github.com/onsi/ginkgo/extensions/table"
+	"github.com/onsi/gomega"
+
+	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-func TestRoute_With_Plugin_Orchestration(t *testing.T) {
-	bytes, err := ioutil.ReadFile("../testdata/dag-conf.json")
-	assert.Nil(t, err)
+var _ = ginkgo.Describe("route with plugin orchestration", func() {
+	bytes, err := ioutil.ReadFile("../../testdata/dag-conf.json")
+	ginkgo.It("panics if readfile dag-conf.json error", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+	})
 	dagConf := string(bytes)
 
 	// invalid dag config that not specified root node
-	bytes, err = ioutil.ReadFile("../testdata/invalid-dag-conf.json")
-	assert.Nil(t, err)
+	bytes, err = ioutil.ReadFile("../../testdata/invalid-dag-conf.json")
+	ginkgo.It("panics if readfile invalid-dag-conf.json error", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+	})
 	invalidDagConf := string(bytes)
 
-	tests := []HttpTestCase{
-		{
-			Desc:         "make sure the route is not created",
-			Object:       APISIXExpect(t),
+	table.DescribeTable("test route with plugin orchestration",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("make sure the route is not created", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-		},
-		{
-			Desc:         "create route with invalid dag config",
-			Object:       ManagerApiExpect(t),
+		}),
+		table.Entry("create route with invalid dag config", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
 			Path:         "/apisix/admin/routes/r1",
 			Body:         invalidDagConf,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
-		},
-		{
-			Desc:         "make sure the route created failed",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("make sure the route created failed", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "create route with correct dag config",
-			Object:       ManagerApiExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("create route with correct dag config", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
 			Path:         "/apisix/admin/routes/r1",
 			Body:         dagConf,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "verify the route(should be blocked)",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("verify the route(should be blocked)", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			Query:        "t=root.exe",
 			ExpectStatus: http.StatusForbidden,
 			ExpectBody:   `blocked`,
-			Sleep:        sleepTime,
-		},
-		{
-			Desc:         "verify the route(should not be blocked)",
-			Object:       APISIXExpect(t),
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("verify the route(should not be blocked)", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `hello world`,
-		},
-		{
-			Desc:         "delete route",
-			Object:       ManagerApiExpect(t),
+		}),
+		table.Entry("delete route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "hit the route just deleted",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("hit the route just deleted", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-			Sleep:        sleepTime,
-		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc, t)
-	}
-}
+			Sleep:        base.SleepTime,
+		}),
+	)
+})

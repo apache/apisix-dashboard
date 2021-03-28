@@ -41,6 +41,7 @@ func TestRoute_With_Jwt_Plugin(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				 "name": "route1",
 				 "uri": "/hello",
 				 "plugins": {
 					 "jwt-auth": {}
@@ -211,6 +212,7 @@ func TestRoute_With_Jwt_Plugin(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"jwt-auth": {}

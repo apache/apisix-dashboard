@@ -35,6 +35,7 @@ var _ = ginkgo.Describe("test route with valid uri uris", func() {
 			Path:   "/apisix/admin/routes/r1",
 			Method: http.MethodPut,
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"upstream": {
 					"nodes": {
@@ -77,6 +78,7 @@ var _ = ginkgo.Describe("test route with valid uri uris", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uris": ["/hello","/status"],
 				"upstream": {
 					"type": "roundrobin",
