@@ -155,7 +155,6 @@ paths:
 ...
 ```
 
-
 ## Examples about how to config the OAS3.0 in different user scenarios
 
 ### config a basic published route
