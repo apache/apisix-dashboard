@@ -29,7 +29,7 @@ Apache APISIX Dashboard supports importing [OpenApi3.0](https://swagger.io/speci
 
 ## Extended fields
 
-There are some fields required in APISIX Route but are not included in the properties of OAS3.0, inorder to provide convenience for extending custom route entities based on OAS3.0, we added some extended fields such as upstream, plugins, hosts and so on. All extensions start with x-apisix. See [reference](https://apisix.apache.org/docs/apisix/admin-api/#route) For more details of the APISIX Route Properties
+There are some fields required in APISIX Route but are not included in the properties of OAS3.0, in order to provide convenience for extending custom route entities based on OAS3.0, we added some extended fields such as upstream, plugins, hosts and so on. All extensions start with x-apisix.
 
 | Extended fields           | APISIX Route Properties |
 | ------------------------- | ----------------------- |
@@ -48,296 +48,22 @@ There are some fields required in APISIX Route but are not included in the prope
 | x-apisix-service_id       | service_id              |
 | x-apisix-upstream_id      | upstream_id             |
 
-Here are some examples for how to config the OAS3.0 in different user scenarios.
+Please pay attention that we only extended the first level of the field, and the sub level fields will still keep the same. Just take `x-apisix-upstream` for an example.
 
-- **config a basic route**
+```yaml
+...
+# we add x-apisix-upstream as an extended field in OAS3.0 to stand for upstream
+x-apisix-upstream:
+  # the sub fields of x-apisix-upstream still keeps the same as upstream's sub fields
+  type: roundrobin
+  nodes:
+    - host: 172.16.238.20
+      port: 1980
+      weight: 1
+...
+```
 
-  _notice: we only extended the first level of the field, and the children level fields will still keep the same_
-
-  ```yaml
-  openapi: 3.0.0
-  info:
-    version: 1.0.0-oas3
-    description: test desc
-    license:
-      name: Apache License 2.0
-      url: 'http://www.apache.org/licenses/LICENSE-2.0'
-    title: test title
-  paths:
-    /hello: # route uri
-      get: # route method
-        description: hello world. # route desc
-        operationId: hello #route name
-        x-apisix-upstream:
-          type: roundrobin
-          nodes:
-            - host: 172.16.238.20
-              port: 1980
-              weight: 1
-        x-apisix-status: 1
-        responses:
-          '200':
-            description: list response
-          default:
-            description: unexpected error
-  ```
-
-- **config a route with plugins**
-
-  _notice: most plugins supported by extended field `x-apisix-plugins`_
-
-  ```yaml
-  openapi: 3.0.0
-  info:
-    version: 1.0.0-oas3
-    description: test desc
-    license:
-      name: Apache License 2.0
-      url: 'http://www.apache.org/licenses/LICENSE-2.0'
-    title: test title
-  paths:
-    /hello:
-      get:
-        description: hello world.
-        operationId: hello
-        x-apisix-upstream:
-          type: roundrobin
-          nodes:
-            - host: 172.16.238.20
-              port: 1980
-              weight: 1
-        x-apisix-plugins:
-          limit-count:
-            count: 2
-            time_window: 60
-            rejected_code: 503
-            key: remote_addr
-        responses:
-          '200':
-            description: list response
-          default:
-            description: unexpected error
-  ```
-
-- **config a route with parameters validation**
-
-  _notice: for plugin [request-validation](https://apisix.apache.org/docs/apisix/plugins/request-validation), we will use [Parameter Serialization](https://swagger.io/docs/specification/serialization/) for header parameters validation and [Describing Request Body](https://swagger.io/docs/specification/describing-request-body/) for body parameters validation in OAS3.0_
-
-
-  ```yaml
-  openapi: 3.0.0
-  info:
-    version: "1"
-    description: |-
-      test desc
-    license:
-      name: Apache License 2.0
-      url: http://www.apache.org/licenses/LICENSE-2.0
-    title: |-
-      test title
-  paths:
-    /hello:
-      post:
-        description: |-
-          hello world.
-        operationId: hello
-        x-apisix-upstream:
-          type: roundrobin
-          nodes:
-            - host: "172.16.238.20"
-              port: 1980
-              weight: 1
-        parameters:
-          - name: id
-            in: header
-            description: ID of pet to use
-            required: true
-            schema:
-              type: string
-            style: simple
-
-        requestBody:
-          content:
-            'application/x-www-form-urlencoded':
-              schema:
-                properties:
-                  name:
-                    description: Update pet's name
-                    type: string
-                  status:
-                    description: Updated status of the pet
-                    type: string
-                required:
-                  - status
-        responses:
-          200:
-            description: list response
-          default:
-            description: unexpected error
-  ```
-
-- **config a route with auth plugins**
-
-  _notice: for plugin [basic-auth](https://apisix.apache.org/docs/apisix/plugins/basic-auth)、[jwt-auth](https://apisix.apache.org/docs/apisix/plugins/jwt-auth) and [key-auth](https://apisix.apache.org/docs/apisix/plugins/key-auth) we will use [Authentication](https://swagger.io/docs/specification/authentication/) in OAS3.0_
-
-
-  ```yaml
-  components:
-    securitySchemes:
-      basicAuth:
-        type: http
-        scheme: basic
-      BearerAuth:
-        type: http
-        scheme: bearer
-        bearerFormat: JWT
-      ApiKeyAuth:
-        type: apiKey
-        in: header
-        name: X-API-Key
-  openapi: 3.0.0
-  info:
-    version: "1"
-    description: |-
-      test desc
-    license:
-      name: Apache License 2.0
-      url: http://www.apache.org/licenses/LICENSE-2.0
-    title: |-
-      test title
-  paths:
-    /hello:
-      post:
-        description: |-
-          hello world.
-        operationId: hello
-        x-apisix-upstream:
-          type: roundrobin
-          nodes:
-            - host: "172.16.238.20"
-              port: 1980
-              weight: 1
-        security:
-          - basicAuth: []
-          - ApiKeyAuth: []
-          - BearerAuth: []
-        responses:
-          200:
-            description: list response
-          default:
-            description: unexpected error
-  ```
-
-- **config a route with exist service or upstream**
-
-  _notice: if the `service_id` or `upstream_id` does not exist in APISIX, import route from the config file will get an error_
-
-  ```yaml
-  openapi: 3.0.0
-  info:
-    version: 1.0.0-oas3
-    description: test desc
-    license:
-      name: Apache License 2.0
-      url: 'http://www.apache.org/licenses/LICENSE-2.0'
-    title: test title
-  paths:
-    /hello:
-      get:
-        description: hello world.
-        operationId: hello
-        x-apisix-service_id: service1
-        responses:
-          '200':
-            description: list response
-          default:
-            description: unexpected error
-  ```
-
-- **config more than one route**
-
-  ```yaml
-  info:
-    title: RoutesExport
-    version: 3.0.0
-  openapi: 3.0.0
-  paths:
-    /get:
-      delete:
-        operationId: api1Delete
-        requestBody: {}
-        responses:
-          default:
-            description: ''
-        x-apisix-enableWebsocket: false
-        x-apisix-labels:
-          API_VERSION: v2
-          dev: test
-        x-apisix-plugins:
-          proxy-rewrite:
-            disable: false
-            scheme: https
-        x-apisix-priority: 0
-        x-apisix-status: 1
-        x-apisix-upstream:
-          nodes:
-            - host: httpbin.org
-              port: 443
-              weight: 1
-          type: roundrobin
-          pass_host: node
-        x-apisix-vars: []
-      get:
-        operationId: api1Get
-        requestBody: {}
-        responses:
-          default:
-            description: ''
-        x-apisix-enableWebsocket: false
-        x-apisix-labels:
-          API_VERSION: v2
-          dev: test
-        x-apisix-plugins:
-          proxy-rewrite:
-            disable: false
-            scheme: https
-        x-apisix-priority: 0
-        x-apisix-status: 1
-        x-apisix-upstream:
-          nodes:
-            - host: httpbin.org
-              port: 443
-              weight: 1
-          type: roundrobin
-          pass_host: node
-        x-apisix-vars: []
-    /post:
-      post:
-        operationId: test_post
-        requestBody: {}
-        responses:
-          default:
-            description: ''
-        security: []
-        x-apisix-enableWebsocket: false
-        x-apisix-labels:
-          API_VERSION: v1
-          version: v1
-        x-apisix-plugins:
-          proxy-rewrite:
-            disable: false
-            scheme: https
-        x-apisix-priority: 0
-        x-apisix-status: 1
-        x-apisix-upstream:
-          nodes:
-            - host: httpbin.org
-              port: 443
-              weight: 1
-          type: roundrobin
-          pass_host: node
-        x-apisix-vars: []
-  ```
+See [reference](https://apisix.apache.org/docs/apisix/admin-api/#route) for more details of the APISIX Route Properties
 
 ## OAS3.0 Compatibility
 
@@ -428,3 +154,297 @@ paths:
           description: unexpected error
 ...
 ```
+
+
+## Examples about how to config the OAS3.0 in different user scenarios
+
+### config a basic published route
+
+_notice: the default `status` of the imported route will be `unpublished`, which means the route can not be accessed, if you want to import a `published` route, you should add `x-apisix-status: 1` in you OAS3.0 file_
+
+```yaml
+openapi: 3.0.0
+info:
+  version: 1.0.0-oas3
+  description: test desc
+  license:
+    name: Apache License 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+  title: test title
+paths:
+  /hello: # route uri
+    get: # route method
+      description: hello world. # route desc
+      operationId: hello # route name
+      x-apisix-upstream: # route upstream
+        type: roundrobin
+        nodes:
+          - host: 172.16.238.20
+            port: 1980
+            weight: 1
+      x-apisix-status: 1 # the route will be published after imported
+      responses:
+        '200':
+          description: list response
+        default:
+          description: unexpected error
+```
+
+### config a route with plugins
+
+_notice: most plugins supported by extended field `x-apisix-plugins`_
+
+```yaml
+openapi: 3.0.0
+info:
+  version: 1.0.0-oas3
+  description: test desc
+  license:
+    name: Apache License 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+  title: test title
+paths:
+  /hello:
+    get:
+      description: hello world.
+      operationId: hello
+      x-apisix-upstream:
+        type: roundrobin
+        nodes:
+          - host: 172.16.238.20
+            port: 1980
+            weight: 1
+      x-apisix-plugins:
+        limit-count:
+          count: 2
+          time_window: 60
+          rejected_code: 503
+          key: remote_addr
+      responses:
+        '200':
+          description: list response
+        default:
+          description: unexpected error
+```
+
+### config a route with parameters validation
+
+_notice: for plugin [request-validation](https://apisix.apache.org/docs/apisix/plugins/request-validation), we will use [Parameter Serialization](https://swagger.io/docs/specification/serialization/) for header parameters validation and [Describing Request Body](https://swagger.io/docs/specification/describing-request-body/) for body parameters validation in OAS3.0_
+
+```yaml
+openapi: 3.0.0
+info:
+  version: "1"
+  description: |-
+    test desc
+  license:
+    name: Apache License 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  title: |-
+    test title
+paths:
+  /hello:
+    post:
+      description: |-
+        hello world.
+      operationId: hello
+      x-apisix-upstream:
+        type: roundrobin
+        nodes:
+          - host: "172.16.238.20"
+            port: 1980
+            weight: 1
+      parameters:
+        - name: id
+          in: header
+          description: ID of pet to use
+          required: true
+          schema:
+            type: string
+          style: simple
+
+      requestBody:
+        content:
+          'application/x-www-form-urlencoded':
+            schema:
+              properties:
+                name:
+                  description: Update pet's name
+                  type: string
+                status:
+                  description: Updated status of the pet
+                  type: string
+              required:
+                - status
+      responses:
+        200:
+          description: list response
+        default:
+          description: unexpected error
+```
+
+### config a route with auth plugins
+
+_notice: for plugin [basic-auth](https://apisix.apache.org/docs/apisix/plugins/basic-auth)、[jwt-auth](https://apisix.apache.org/docs/apisix/plugins/jwt-auth) and [key-auth](https://apisix.apache.org/docs/apisix/plugins/key-auth) we will use [Authentication](https://swagger.io/docs/specification/authentication/) in OAS3.0_
+
+```yaml
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+openapi: 3.0.0
+info:
+  version: "1"
+  description: |-
+    test desc
+  license:
+    name: Apache License 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  title: |-
+    test title
+paths:
+  /hello:
+    post:
+      description: |-
+        hello world.
+      operationId: hello
+      x-apisix-upstream:
+        type: roundrobin
+        nodes:
+          - host: "172.16.238.20"
+            port: 1980
+            weight: 1
+      security:
+        - basicAuth: []
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      responses:
+        200:
+          description: list response
+        default:
+          description: unexpected error
+```
+
+### config a route with exist service or upstream
+
+_notice: if the `service_id` or `upstream_id` does not exist in APISIX, import route from the config file will get an error_
+
+```yaml
+openapi: 3.0.0
+info:
+  version: 1.0.0-oas3
+  description: test desc
+  license:
+    name: Apache License 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+  title: test title
+paths:
+  /hello:
+    get:
+      description: hello world.
+      operationId: hello
+      x-apisix-service_id: service1
+      responses:
+        '200':
+          description: list response
+        default:
+          description: unexpected error
+```
+
+### config more than one route
+
+```yaml
+info:
+  title: RoutesExport
+  version: 3.0.0
+openapi: 3.0.0
+paths:
+  /get:
+    delete:
+      operationId: api1Delete
+      requestBody: {}
+      responses:
+        default:
+          description: ''
+      x-apisix-enableWebsocket: false
+      x-apisix-labels:
+        API_VERSION: v2
+        dev: test
+      x-apisix-plugins:
+        proxy-rewrite:
+          disable: false
+          scheme: https
+      x-apisix-priority: 0
+      x-apisix-status: 1
+      x-apisix-upstream:
+        nodes:
+          - host: httpbin.org
+            port: 443
+            weight: 1
+        type: roundrobin
+        pass_host: node
+      x-apisix-vars: []
+    get:
+      operationId: api1Get
+      requestBody: {}
+      responses:
+        default:
+          description: ''
+      x-apisix-enableWebsocket: false
+      x-apisix-labels:
+        API_VERSION: v2
+        dev: test
+      x-apisix-plugins:
+        proxy-rewrite:
+          disable: false
+          scheme: https
+      x-apisix-priority: 0
+      x-apisix-status: 1
+      x-apisix-upstream:
+        nodes:
+          - host: httpbin.org
+            port: 443
+            weight: 1
+        type: roundrobin
+        pass_host: node
+      x-apisix-vars: []
+  /post:
+    post:
+      operationId: test_post
+      requestBody: {}
+      responses:
+        default:
+          description: ''
+      security: []
+      x-apisix-enableWebsocket: false
+      x-apisix-labels:
+        API_VERSION: v1
+        version: v1
+      x-apisix-plugins:
+        proxy-rewrite:
+          disable: false
+          scheme: https
+      x-apisix-priority: 0
+      x-apisix-status: 1
+      x-apisix-upstream:
+        nodes:
+          - host: httpbin.org
+            port: 443
+            weight: 1
+        type: roundrobin
+        pass_host: node
+      x-apisix-vars: []
+```
+
+## FAQ
+
+1. What is the default strategy when import a duplicate route?
