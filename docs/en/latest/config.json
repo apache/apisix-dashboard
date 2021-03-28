@@ -3,7 +3,7 @@
   "sidebar": [
     {
       "type": "link",
-      "label": "Apisix Dashboard",
+      "label": "Apache Apisix Dashboard",
       "href": "https://apisix.apache.org/docs/dashboard/USER_GUIDE/"
     },
     {
