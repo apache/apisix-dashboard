@@ -89,7 +89,7 @@ var _ = ginkgo.Describe("route with methods", func() {
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					 "name": "route1",
-					 "uri": "/hellohello",
+					 "uri": "/hello_",
 					 "methods": ["GET"],
 					 "upstream": {
 						 "type": "roundrobin",
@@ -112,7 +112,7 @@ var _ = ginkgo.Describe("route with methods", func() {
 		table.Entry("verify new update applied", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
-			Path:         "/hellohello",
+			Path:         "/hello_",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   "hello world",
