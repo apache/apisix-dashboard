@@ -103,11 +103,12 @@ const (
 )
 
 var (
-	openApi      = "3.0.0"
-	title        = "RoutesExport"
-	service      interface{}
-	err          error
-	routeMethods []string
+	openApi         = "3.0.0"
+	title           = "RoutesExport"
+	service         interface{}
+	err             error
+	routeMethods    []string
+	_allHTTPMethods = []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodPatch, http.MethodHead, http.MethodConnect, http.MethodTrace, http.MethodOptions}
 )
 
 //ExportAllRoutes All routes can be directly exported without passing parameters
@@ -249,7 +250,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 		if route.Methods != nil && len(route.Methods) > 0 {
 			routeMethods = route.Methods
 		} else {
-			routeMethods = []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodPatch, http.MethodHead, http.MethodConnect, http.MethodTrace, http.MethodOptions}
+			routeMethods = _allHTTPMethods
 		}
 
 		for i := range routeMethods {
