@@ -76,7 +76,11 @@ const Page: React.FC = (props) => {
 
   return (
     <>
-      <PageContainer title={formatMessage({ id: 'page.upstream.create' })}>
+      <PageContainer
+        title={(props as any).match.params.id
+        ? formatMessage({ id: 'page.upstream.configure' })
+        : formatMessage({ id: 'page.upstream.create' })}
+      >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
             <Steps.Step title={formatMessage({ id: 'page.upstream.create.basic.info' })} />

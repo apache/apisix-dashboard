@@ -100,7 +100,7 @@ const Page: React.FC = (props) => {
     <>
       <PageContainer
         title={`${
-          (props as any).match.params.id
+          (props as any).match.params.username
             ? formatMessage({ id: 'component.global.edit' })
             : formatMessage({ id: 'component.global.create' })
         } ${formatMessage({ id: 'menu.consumer' })}`}

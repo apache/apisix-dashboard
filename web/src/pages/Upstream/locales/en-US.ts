@@ -80,6 +80,7 @@ export default {
   'page.upstream.upstream_host.required': 'Please input the custom Host',
 
   'page.upstream.create': 'Create Upstream',
+  'page.upstream.configure': 'Configure Upstream',
   'page.upstream.create.upstream.successfully': 'Create Upstream Successfully',
   'page.upstream.edit.upstream.successfully': 'Update Upstream Successfully',
   'page.upstream.create.basic.info': 'Basic Information',

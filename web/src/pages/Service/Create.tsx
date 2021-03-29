@@ -116,7 +116,7 @@ const Page: React.FC = (props) => {
     <>
       <PageHeaderWrapper
         title={`${
-          (props as any).match.params.rid
+          (props as any).match.params.serviceId
             ? formatMessage({ id: 'component.global.edit' })
             : formatMessage({ id: 'component.global.create' })
         } ${formatMessage({ id: 'menu.service' })}`}

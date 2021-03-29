@@ -20,6 +20,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import PluginPage from '@/components/Plugin';
 import { fetchList, createOrUpdate } from './service';
+import { formatMessage } from 'umi';
 
 const PluginMarket: React.FC = () => {
   const [initialData, setInitialData] = useState({});
@@ -39,7 +40,7 @@ const PluginMarket: React.FC = () => {
   }, []);
 
   return (
-    <PageHeaderWrapper title="Config Plugin">
+    <PageHeaderWrapper title={formatMessage({ id: 'page.plugin.market.config' })}>
       <Card bordered={false}>
         <PluginPage
           initialData={initialData}
