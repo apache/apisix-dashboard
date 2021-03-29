@@ -98,7 +98,6 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.visit('/routes/list');
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
-    // cy.contains(this.data.routeName).siblings().contains('Delete').click();
     cy.contains('Manage').should('exist').click();
     cy.contains('Delete').should('be.visible').click();
     cy.contains('button', 'Confirm').click();
