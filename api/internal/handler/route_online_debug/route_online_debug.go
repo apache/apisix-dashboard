@@ -62,7 +62,7 @@ type DebugOnlineInput struct {
 
 type Result struct {
 	Code    int         `json:"code,omitempty"`
-	Header  interface{}       `json:"header,omitempty"`
+	Header  interface{} `json:"header,omitempty"`
 	Message string      `json:"message,omitempty"`
 	Data    interface{} `json:"data,omitempty"`
 }
