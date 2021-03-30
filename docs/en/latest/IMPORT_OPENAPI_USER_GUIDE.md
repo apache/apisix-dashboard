@@ -155,9 +155,9 @@ paths:
 ...
 ```
 
-## Examples about how to config the OAS3.0 in different user scenarios
+## Examples about how to Configure the OAS3.0 in different user scenarios
 
-### config a basic published route
+### Configure a basic published route
 
 _notice: the default `status` of the imported route will be `unpublished`, which means the route can not be accessed, if you want to import a `published` route, you should add `x-apisix-status: 1` in you OAS3.0 file_
 
@@ -189,7 +189,7 @@ paths:
           description: unexpected error
 ```
 
-### config a route with plugins
+### configure a route with plugins
 
 _notice: most plugins supported by extended field `x-apisix-plugins`_
 
@@ -226,7 +226,7 @@ paths:
           description: unexpected error
 ```
 
-### config a route with parameters validation
+### configure a route with parameters validation
 
 _notice: for plugin [request-validation](https://apisix.apache.org/docs/apisix/plugins/request-validation), we will use [Parameter Serialization](https://swagger.io/docs/specification/serialization/) for header parameters validation and [Describing Request Body](https://swagger.io/docs/specification/describing-request-body/) for body parameters validation in OAS3.0_
 
@@ -282,7 +282,7 @@ paths:
           description: unexpected error
 ```
 
-### config a route with auth plugins
+### configure a route with auth plugins
 
 _notice: for plugin [basic-auth](https://apisix.apache.org/docs/apisix/plugins/basic-auth)、[jwt-auth](https://apisix.apache.org/docs/apisix/plugins/jwt-auth) and [key-auth](https://apisix.apache.org/docs/apisix/plugins/key-auth) we will use [Authentication](https://swagger.io/docs/specification/authentication/) in OAS3.0_
 
@@ -333,7 +333,7 @@ paths:
           description: unexpected error
 ```
 
-### config a route with exist service or upstream
+### configure a route with exist service or upstream
 
 _notice: if the `service_id` or `upstream_id` does not exist in APISIX, import route from the config file will get an error_
 
@@ -359,7 +359,7 @@ paths:
           description: unexpected error
 ```
 
-### config more than one route
+### configure more than one route
 
 ```yaml
 info:
