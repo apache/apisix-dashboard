@@ -20,7 +20,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 import PluginPage from '@/components/Plugin';
 import { fetchList, createOrUpdate } from './service';
-import { formatMessage } from 'umi';
+import { useIntl } from 'umi';
 
 const PluginMarket: React.FC = () => {
   const [initialData, setInitialData] = useState({});
@@ -38,6 +38,8 @@ const PluginMarket: React.FC = () => {
   useEffect(() => {
     initPageData();
   }, []);
+
+  const { formatMessage } = useIntl();
 
   return (
     <PageHeaderWrapper title={formatMessage({ id: 'page.plugin.market.config' })}>
