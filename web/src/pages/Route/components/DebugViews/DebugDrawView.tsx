@@ -51,6 +51,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const [authForm] = Form.useForm();
   const [headerForm] = Form.useForm();
   const [responseCode, setResponseCode] = useState<string>();
+  const [responseHeader, setResponseHeader] = useState<string>();
   const [loading, setLoading] = useState(false);
   const [codeMirrorHeight, setCodeMirrorHeight] = useState<number | string>(50);
   const bodyCodeMirrorRef = useRef<any>(null);
@@ -192,6 +193,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
       .then((req) => {
         setLoading(false);
         setResponseCode(JSON.stringify(req.data.data, null, 2));
+        setResponseHeader(JSON.stringify(req.data.header, null, 2));
         setCodeMirrorHeight('auto');
       })
       .catch(() => {
@@ -345,6 +347,23 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         </PanelSection>
         <PanelSection title={formatMessage({ id: 'page.route.PanelSection.title.responseResult' })}>
           <Tabs>
+          <TabPane tab={formatMessage({ id: 'page.route.TabPane.header' })} key="header">
+              <Spin tip="Loading..." spinning={loading}>
+                <CodeMirror
+                  value={responseHeader}
+                  height={codeMirrorHeight}
+                  options={{
+                    mode: 'json-ld',
+                    readOnly: 'nocursor',
+                    lineWrapping: true,
+                    lineNumbers: true,
+                    showCursorWhenSelecting: true,
+                    autofocus: true,
+                    scrollbarStyle: null,
+                  }}
+                />
+              </Spin>
+            </TabPane>
             <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="response">
               <Spin tip="Loading..." spinning={loading}>
                 <CodeMirror
