@@ -19,6 +19,7 @@
 
 # Table of Contents
 
+- [2.5.0](#250)
 - [2.4.0](#240)
 - [2.3.0](#230)
 - [2.2.0](#220)
@@ -27,6 +28,37 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+# 2.5.0
+
+This release mainly improves basic features, bugfix and adds test cases.
+
+`Manager API` 2.5 should be used with [Apache APISIX 2.4](https://github.com/apache/apisix/releases/tag/2.4). It is not recommended to use with other Apache APISIX versions.
+
+### Core
+
+- Feat: add rawDataEditor for route, consumer, upstream and service [#1505](https://github.com/apache/apisix-dashboard/pull/1505)
+- Feat: online debugging supports file transfer [#1465](https://github.com/apache/apisix-dashboard/pull/1465)
+- Feat: support etcd prefix as apisix does [#1477](https://github.com/apache/apisix-dashboard/pull/1477)
+- Feat: support changing number of executing cpu cores for manager api [#1569](https://github.com/apache/apisix-dashboard/pull/1569)
+- Feat: support plugin template config feature [#1540](https://github.com/apache/apisix-dashboard/pull/1540)
+- Feat: improve UI and UE ([#1491](https://github.com/apache/apisix-dashboard/pull/1491), [#1481](https://github.com/apache/apisix-dashboard/pull/1481), [#1479](https://github.com/apache/apisix-dashboard/pull/1479), [#1472](https://github.com/apache/apisix-dashboard/pull/1472), [#1604](https://github.com/apache/apisix-dashboard/pull/1604), [#1603](https://github.com/apache/apisix-dashboard/pull/1603), [#1589](https://github.com/apache/apisix-dashboard/pull/1589), [#1538](https://github.com/apache/apisix-dashboard/pull/1538), [#1580](https://github.com/apache/apisix-dashboard/pull/1580), [#1651](https://github.com/apache/apisix-dashboard/pull/1651), [#1634](https://github.com/apache/apisix-dashboard/pull/1634), [#1641](https://github.com/apache/apisix-dashboard/pull/1641))
+- Feat: support yaml to config plugin in plugin config page [#1490](https://github.com/apache/apisix-dashboard/pull/1490)
+
+### Bugfix
+
+- Fix: check name exists when creating or updating a resource [#1606](https://github.com/apache/apisix-dashboard/pull/1606)
+- Fix: cannot unmarshal array into go value of type [#1527](https://github.com/apache/apisix-dashboard/pull/1527)
+- Fix: change the appended Content-type data to overlay to ensure that the Content-type is unique [#1619](https://github.com/apache/apisix-dashboard/pull/1619)
+
+### Test Case
+
+- Test: add the create and delete plugin in drawer [#1597](https://github.com/apache/apisix-dashboard/pull/1597)
+- Test: write backend e2e with ginkgo ([#1501](https://github.com/apache/apisix-dashboard/pull/1501), [#1502](https://github.com/apache/apisix-dashboard/pull/1502), [#1504](https://github.com/apache/apisix-dashboard/pull/1504), [#1518](https://github.com/apache/apisix-dashboard/pull/1518), [#1526](https://github.com/apache/apisix-dashboard/pull/1526), [#1545](https://github.com/apache/apisix-dashboard/pull/1545), [#1550](https://github.com/apache/apisix-dashboard/pull/1550), [#1556](https://github.com/apache/apisix-dashboard/pull/1556), [#1560](https://github.com/apache/apisix-dashboard/pull/1560), [#1561](https://github.com/apache/apisix-dashboard/pull/1561), [#1570](https://github.com/apache/apisix-dashboard/pull/1570), [#1582](https://github.com/apache/apisix-dashboard/pull/1582), [#1593](https://github.com/apache/apisix-dashboard/pull/1593), [#1613](https://github.com/apache/apisix-dashboard/pull/1613))
+
+### Doc
+
+- Docs: Updating docs for backend tests [#1625](https://github.com/apache/apisix-dashboard/pull/1625)
 
 # 2.4.0
 
