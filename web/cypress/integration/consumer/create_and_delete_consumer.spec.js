@@ -27,8 +27,8 @@ context('Create and Delete Consumer', () => {
   it('creates consumer with key-auth', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
+    cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
-
     // basic information
     cy.get(this.domSelector.username).type(this.data.consumerName);
     cy.get(this.domSelector.description).type(this.data.description);
@@ -36,11 +36,11 @@ context('Create and Delete Consumer', () => {
 
     // plugin config
     cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
-      cy.get('button').click({
-        force: true
+      cy.contains('Enable').click({
+        force: true,
       });
     });
-
+    cy.focused(this.domSelector.drawer).should('exist');
     cy.get(this.domSelector.disabledSwitcher).click();
     // edit codemirror
     cy.get(this.domSelector.codeMirror)
@@ -59,8 +59,7 @@ context('Create and Delete Consumer', () => {
   });
 
   it('should view the consumer', function () {
-    cy.visit('/');
-    cy.contains('Consumer').click();
+    cy.visit('/consumer/list');
 
     cy.get(this.domSelector.nameSelector).type(this.data.consumerName);
     cy.contains('Search').click();
@@ -68,23 +67,20 @@ context('Create and Delete Consumer', () => {
     cy.get(this.domSelector.drawer).should('be.visible');
 
     cy.get(this.domSelector.codemirrorScroll).within(() => {
-      cy.contains('plugins').should("exist");
+      cy.contains('plugins').should('exist');
       cy.contains(this.data.consumerName).should('exist');
     });
   });
 
   it('delete the consumer', function () {
-    cy.visit('/');
-    cy.contains('Consumer').click();
-    cy.contains(this.data.consumerName).siblings().contains('Delete').click();
+    cy.visit('/consumer/list');
+    cy.contains(this.data.consumerName).should('be.visible').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.deleteConsumerSuccess);
   });
 
   it('creates consumer with wrong json', function () {
-    // go to consumer create page
-    cy.visit('/');
-    cy.contains('Consumer').click();
+    cy.visit('/consumer/list');
     cy.contains('Create').click();
     // basic information
     cy.get(this.domSelector.username).type(this.data.consumerName);
@@ -94,7 +90,7 @@ context('Create and Delete Consumer', () => {
     // plugin config
     cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
       cy.get('button').click({
-        force: true
+        force: true,
       });
     });
     // edit codeMirror

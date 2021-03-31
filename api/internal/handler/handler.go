@@ -35,6 +35,7 @@
 package handler
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"strings"
@@ -44,6 +45,8 @@ import (
 	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/middleware"
 
+	"github.com/apisix/manager-api/internal/core/entity"
+	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/utils"
 )
 
@@ -103,4 +106,44 @@ func IDCompare(idOnPath string, idOnBody interface{}) error {
 	}
 
 	return nil
+}
+
+func NameExistCheck(ctx context.Context, stg store.Interface, resource, name string, excludeID interface{}) (interface{}, error) {
+	ret, err := stg.List(ctx, store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			var objName string
+			var objID interface{}
+			switch resource {
+			case "route":
+				objID = obj.(*entity.Route).ID
+				objName = obj.(*entity.Route).Name
+			case "service":
+				objID = obj.(*entity.Service).ID
+				objName = obj.(*entity.Service).Name
+			case "upstream":
+				objID = obj.(*entity.Upstream).ID
+				objName = obj.(*entity.Upstream).Name
+			default:
+				panic("bad resource")
+			}
+
+			if excludeID != nil && objID == excludeID {
+				return false
+			}
+			if objName == name {
+				return true
+			}
+
+			return false
+		},
+	})
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+	}
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("%s name exists", resource)
+	}
+
+	return nil, nil
 }

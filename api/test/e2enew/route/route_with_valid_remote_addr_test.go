@@ -35,6 +35,7 @@ var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"remote_addr": "172.16.238.1",
 				"upstream": {
@@ -61,6 +62,7 @@ var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"remote_addr": "172.16.238.1/24",
 				"upstream": {
@@ -87,6 +89,7 @@ var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"remote_addrs": ["172.16.238.1","192.168.0.2/24"],
 				"upstream": {
@@ -113,6 +116,7 @@ var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"remote_addr": "10.10.10.10",
 				"upstream": {
@@ -139,6 +143,7 @@ var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"remote_addrs": ["10.10.10.10","11.11.11.1/24"],
 				"upstream": {

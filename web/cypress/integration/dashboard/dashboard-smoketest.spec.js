@@ -14,14 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package plugin
+/* eslint-disable no-undef */
 
-import (
-	"testing"
+context('dashboard page smoke test', () => {
+  beforeEach(() => {
+    cy.login();
 
-	"github.com/onsi/ginkgo"
-)
+    cy.fixture('selector.json').as('domSelector');
+  });
 
-func TestPlugin(t *testing.T) {
-	ginkgo.RunSpecs(t, "plugin suite")
-}
+  it('should visit dashboard page', function () {
+    cy.visit('/');
+    cy.contains('Dashboard').click();
+    cy.url().should('contains', '/dashboard');
+    cy.get(this.domSelector.pageContent)
+      .children()
+      .should('contain', 'Dashboard')
+      .and('contain', 'You have not configured Grafana')
+      .and('contain', 'Configure');
+  });
+});

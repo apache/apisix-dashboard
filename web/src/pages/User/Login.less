@@ -30,7 +30,15 @@
   text-align: right;
 }
 
-.settings {
+a {
+  color: black;
+
+  &:hover {
+    color: @primary-color;
+  }
+}
+
+.github {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -38,10 +46,6 @@
   font-size: 16px;
   vertical-align: middle;
   cursor: pointer;
-}
-
-.settings-icon {
-  font-size: 18px;
 }
 
 .content {
@@ -75,7 +79,7 @@
 }
 
 .logo {
-  height: 44px;
+  height: 60px;
   margin-right: 16px;
   vertical-align: top;
 }
@@ -90,7 +94,7 @@
 }
 
 .desc {
-  margin-top: 12px;
+  margin-top: 20px;
   margin-bottom: 40px;
   color: @text-color-secondary;
   font-size: @font-size-base;
@@ -99,6 +103,7 @@
 .main {
   width: 368px;
   margin: 0 auto;
+
   @media screen and (max-width: @screen-sm) {
     width: 95%;
   }

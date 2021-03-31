@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package plugin
+package schema
 
 import (
 	"net/http"
@@ -25,7 +25,7 @@ import (
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-var _ = ginkgo.Describe("Plugin Basic", func() {
+var _ = ginkgo.Describe("Plugin List", func() {
 	table.DescribeTable("test plugin basic", func(testCase base.HttpTestCase) {
 		base.RunTestCase(testCase)
 	},
@@ -47,37 +47,6 @@ var _ = ginkgo.Describe("Plugin Basic", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   []string{"request-id", "syslog", "echo", "proxy-mirror"},
-			Sleep:        base.SleepTime,
-		}),
-	)
-
-	table.DescribeTable("test schema basic", func(testCase base.HttpTestCase) {
-		base.RunTestCase(testCase)
-	},
-		table.Entry("get consumer schema", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/schema/plugins/jwt-auth",
-			Query:        "schema_type=consumer",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			ExpectBody: "{\"dependencies\":{\"algorithm\":{\"oneOf\":[{\"properties\":{\"algorithm\":" +
-				"{\"default\":\"HS256\",\"enum\":[\"HS256\",\"HS512\"]}}},{\"properties\":{\"algorithm\":" +
-				"{\"enum\":[\"RS256\"]},\"private_key\":{\"type\":\"string\"},\"public_key\":{\"type\":\"string\"}}," +
-				"\"required\":[\"private_key\",\"public_key\"]}]}},\"properties\":{\"algorithm\":{\"default\":" +
-				"\"HS256\",\"enum\":[\"HS256\",\"HS512\",\"RS256\"],\"type\":\"string\"},\"base64_secret\"" +
-				":{\"default\":false,\"type\":\"boolean\"},\"exp\":{\"default\":86400,\"minimum\":1,\"type\":" +
-				"\"integer\"},\"key\":{\"type\":\"string\"},\"secret\":{\"type\":\"string\"}}," +
-				"\"required\":[\"key\"],\"type\":\"object\"}",
-			Sleep: base.SleepTime,
-		}),
-		table.Entry("get require-id plugin", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/schema/plugins/jwt-auth",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "{\"$comment\":\"this is a mark for our injected plugin schema\",\"additionalProperties\":false,\"properties\":{\"disable\":{\"type\":\"boolean\"}},\"type\":\"object\"}",
 			Sleep:        base.SleepTime,
 		}),
 	)

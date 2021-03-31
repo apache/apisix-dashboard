@@ -213,6 +213,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"key-auth": {}
@@ -392,6 +393,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"plugins": {
 					"key-auth": {}

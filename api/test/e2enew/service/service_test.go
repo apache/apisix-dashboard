@@ -25,34 +25,35 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
+	"github.com/onsi/ginkgo/extensions/table"
 )
 
 var _ = ginkgo.Describe("create service without plugin", func() {
-	ginkgo.It("create service without plugin", func() {
-		t := ginkgo.GinkgoT()
-		var createServiceBody map[string]interface{} = map[string]interface{}{
-			"name": "testservice",
-			"upstream": map[string]interface{}{
-				"type": "roundrobin",
-				"nodes": []map[string]interface{}{
-					{
-						"host":   base.UpstreamIp,
-						"port":   1980,
-						"weight": 1,
-					},
-					{
-						"host":   base.UpstreamIp,
-						"port":   1981,
-						"weight": 2,
-					},
-					{
-						"host":   base.UpstreamIp,
-						"port":   1982,
-						"weight": 3,
-					},
+	var createServiceBody map[string]interface{} = map[string]interface{}{
+		"name": "testservice",
+		"upstream": map[string]interface{}{
+			"type": "roundrobin",
+			"nodes": []map[string]interface{}{
+				{
+					"host":   base.UpstreamIp,
+					"port":   1980,
+					"weight": 1,
+				},
+				{
+					"host":   base.UpstreamIp,
+					"port":   1981,
+					"weight": 2,
+				},
+				{
+					"host":   base.UpstreamIp,
+					"port":   1982,
+					"weight": 3,
 				},
 			},
-		}
+		},
+	}
+	ginkgo.It("create service without plugin", func() {
+		t := ginkgo.GinkgoT()
 		_createServiceBody, err := json.Marshal(createServiceBody)
 		assert.Nil(t, err)
 		base.RunTestCase(base.HttpTestCase{
@@ -63,6 +64,52 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Body:         string(_createServiceBody),
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   []string{"\"id\":\"s1\"", "\"name\":\"testservice\""},
+		})
+	})
+	ginkgo.It("create service2 success", func() {
+		t := ginkgo.GinkgoT()
+		createServiceBody["name"] = "testservice2"
+		_createServiceBody, err := json.Marshal(createServiceBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/services/s2",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Body:         string(_createServiceBody),
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{"\"id\":\"s2\"", "\"name\":\"testservice2\""},
+		})
+	})
+	ginkgo.It("create service failed, name existed", func() {
+		t := ginkgo.GinkgoT()
+		createServiceBody["name"] = "testservice2"
+		_createServiceBody, err := json.Marshal(createServiceBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPost,
+			Path:         "/apisix/admin/services",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Body:         string(_createServiceBody),
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   `service name exists`,
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("update service failed, name existed", func() {
+		t := ginkgo.GinkgoT()
+		createServiceBody["name"] = "testservice2"
+		_createServiceBody, err := json.Marshal(createServiceBody)
+		assert.Nil(t, err)
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Body:         string(_createServiceBody),
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   `service name exists`,
 		})
 	})
 	ginkgo.It("get the service s1", func() {
@@ -82,6 +129,7 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/server_port",
 				"service_id": "s1"
 			}`,
@@ -112,6 +160,16 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		})
+	})
+	ginkgo.It("delete service2", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s2",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
@@ -182,6 +240,7 @@ var _ = ginkgo.Describe("create service with plugin", func() {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/server_port",
 				"service_id": "s1"
 			}`,
@@ -240,7 +299,7 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 		t := ginkgo.GinkgoT()
 		var createServiceBody map[string]interface{} = map[string]interface{}{
 			"id":   "s2",
-			"name": "testservice",
+			"name": "testservice22",
 			"desc": "testservice_desc",
 			"labels": map[string]interface{}{
 				"build":   "16",
@@ -289,7 +348,7 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 			Path:       "/apisix/admin/services/s2",
 			Headers:    map[string]string{"Authorization": base.GetToken()},
 			ExpectCode: http.StatusOK,
-			ExpectBody: "\"name\":\"testservice\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
+			ExpectBody: "\"name\":\"testservice22\",\"desc\":\"testservice_desc\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"},\"plugins\":{\"limit-count\":{\"count\":100,\"key\":\"remote_addr\",\"rejected_code\":503,\"time_window\":60}},\"labels\":{\"build\":\"16\",\"env\":\"production\",\"version\":\"v2\"},\"enable_websocket\":true}",
 			Sleep:      base.SleepTime,
 		})
 	})
@@ -299,6 +358,7 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
+				"name": "route1",
 				"uri": "/hello",
 				"service_id": "s2"
 			}`,
@@ -461,4 +521,108 @@ var _ = ginkgo.Describe("service update use patch method", func() {
 			ExpectStatus: http.StatusOK,
 		})
 	})
+})
+
+var _ = ginkgo.Describe("test service delete", func() {
+	t := ginkgo.GinkgoT()
+	var createServiceBody map[string]interface{} = map[string]interface{}{
+		"name": "testservice",
+		"upstream": map[string]interface{}{
+			"type": "roundrobin",
+			"nodes": []map[string]interface{}{
+				{
+					"host":   base.UpstreamIp,
+					"port":   1980,
+					"weight": 1,
+				},
+			},
+		},
+	}
+	_createServiceBody, err := json.Marshal(createServiceBody)
+	assert.Nil(t, err)
+
+	table.DescribeTable("test service delete",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("create service without plugin", base.HttpTestCase{
+			Desc:         "create service without plugin",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Body:         string(_createServiceBody),
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"name\":\"testservice\",\"upstream\":{\"nodes\":[{\"host\":\"" + base.UpstreamIp + "\",\"port\":1980,\"weight\":1}],\"type\":\"roundrobin\"}}",
+		}),
+		table.Entry("create route use service s1", base.HttpTestCase{
+			Desc:   "create route use service s1",
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"id": "r1",
+				"name": "route1",
+				"uri": "/hello",
+				"upstream": {
+						"type": "roundrobin",
+						"nodes": {
+								"` + base.UpstreamIp + `:1980": 1
+						}
+				},
+				"service_id": "s1"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "\"service_id\":\"s1\"",
+		}),
+		table.Entry("hit route on apisix", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("delete service failed", base.HttpTestCase{
+			Desc:         "delete service failed",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusBadRequest,
+			ExpectBody:   "route: route1 is using this service",
+		}),
+		table.Entry("delete route first", base.HttpTestCase{
+			Desc:         "delete route first",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("check route exist", base.HttpTestCase{
+			Desc:         "check route exist",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+		}),
+		table.Entry("delete service success", base.HttpTestCase{
+			Desc:         "delete service success",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("check the service exist", base.HttpTestCase{
+			Desc:         "check the exist",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/services/s1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+		}))
 })

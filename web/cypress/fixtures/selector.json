@@ -11,13 +11,16 @@
   "errorNotification:": ".ant-notification-notice-error",
 
   "pluginCard": ".ant-card",
+  "pluginCardBordered": ".ant-card-bordered",
   "pageContent": ".ant-pro-page-container",
 
+  "tableBody":".ant-table-tbody",
   "tableCell": ".ant-table-cell",
   "empty": ".ant-empty-normal",
   "refresh": ".anticon-reload",
   "codemirror": ".CodeMirror",
   "disabledSwitcher": "#disable",
+  "checkedSwitcher": ".ant-switch-checked",
   "deleteButton": ".ant-btn-dangerous",
 
   "name": "#name",
@@ -65,11 +68,19 @@
   "usernameInput": "#control-ref_username",
   "passwordInput": "#control-ref_password",
   "drawer": ".ant-drawer-content",
+  "drawerFooter": ".ant-drawer-footer",
   "codemirrorScroll": ".CodeMirror-scroll",
   "drawerClose": ".ant-drawer-close",
   "descriptionSelector": "[title=Description]",
   "customSelector": "[title=Custom]",
-  "errorAlertClose": ".anticon-close",
+  "notificationClose": ".anticon-close",
   "redirectURIInput": "#redirectURI",
-  "redirectCodeSelector": "#ret_code"
+  "redirectCodeSelector": "#ret_code",
+
+  "paginationOptions": ".ant-pagination-options",
+  "fiftyPerPage": "[title=\"50 / page\"]",
+  "twentyPerPage": "[title=\"20 / page\"]",
+  "pageList": ".ant-table-pagination-right",
+  "pageTwo": ".ant-pagination-item-2",
+  "pageTwoActived": ".ant-pagination-item-2.ant-pagination-item-active"
 }

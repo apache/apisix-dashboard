@@ -27,7 +27,9 @@ context('Create PluginTemplate Binding To Route', () => {
   it('should create test pluginTemplate', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.contains('Plugin Template Config').click();
+    cy.get(this.domSelector.empty).should('be.visible');
+    cy.contains('Plugin Template Config').should('be.visible').click();
+    cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.get(this.domSelector.description).type(this.data.pluginTemplateName);
     cy.contains('Next').click();
@@ -61,7 +63,7 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.contains(this.data.pluginTemplateName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.pluginTemplateErrorAlert);
-    cy.get(this.domSelector.errorAlertClose).should('be.visible').click();
+    cy.get(this.domSelector.notificationClose).should('be.visible').click();
   });
 
   it('should edit the route with pluginTemplate', function () {

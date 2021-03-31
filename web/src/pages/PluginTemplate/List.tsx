@@ -21,13 +21,24 @@ import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, notification, Popconfirm, Select, Space, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import querystring from 'query-string'
 
 import { fetchList, remove, fetchLabelList } from './service';
 
 const Page: React.FC = () => {
   const ref = useRef<ActionType>();
   const [labelList, setLabelList] = useState<LabelList>({});
+  const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
   const { formatMessage } = useIntl();
+
+  const savePageList = (page = 1, pageSize = 10) => {
+    history.replace(`/plugin-template/list?page=${page}&pageSize=${pageSize}`);
+  };
+
+  useEffect(() => {
+    const { page = 1, pageSize = 10 } = querystring.parse(window.location.search);
+    setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
+  }, [window.location.search]);
 
   useEffect(() => {
     fetchLabelList().then(setLabelList);
@@ -142,6 +153,11 @@ const Page: React.FC = () => {
         rowKey="id"
         columns={columns}
         request={fetchList}
+        pagination={{
+          onChange: (page, pageSize?) => savePageList(page, pageSize),
+          pageSize: paginationConfig.pageSize,
+          current: paginationConfig.current,
+        }}
         search={{
           searchText: formatMessage({ id: 'component.global.search' }),
           resetText: formatMessage({ id: 'component.global.reset' }),

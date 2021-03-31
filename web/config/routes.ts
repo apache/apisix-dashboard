@@ -17,11 +17,11 @@
 const routes = [
   {
     path: '/',
-    component: './Metrics',
+    component: './Dashboard',
   },
   {
-    path: '/metrics',
-    component: './Metrics',
+    path: '/dashboard',
+    component: './Dashboard',
   },
   {
     path: '/serverinfo',

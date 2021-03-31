@@ -14,9 +14,98 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { omit, pick, cloneDeep } from 'lodash';
+import { omit, pick, cloneDeep, isEmpty, unset } from 'lodash';
 
 import { transformLableValueToKeyValue } from '@/helpers';
+import {
+  SCHEME_REWRITE,
+  URI_REWRITE_TYPE,
+  HOST_REWRITE_TYPE
+} from '@/pages/Route/constants';
+
+export const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): RouteModule.ProxyRewrite => {
+  let omitFieldsList: string[] = ['kvHeaders'];
+  let headers: Record<string, string> = {};
+
+  if (data.scheme !== 'http' && data.scheme !== 'https') {
+    omitFieldsList = [
+      ...omitFieldsList,
+      'scheme',
+    ]
+  }
+
+  (data.kvHeaders || []).forEach((kvHeader) => {
+    if (kvHeader.key) {
+      // support value to be an empty string, which means remove a header
+      headers = {
+        ...headers,
+        [kvHeader.key]: kvHeader.value || '',
+      };
+    }
+  });
+
+  if(!isEmpty(headers)) {
+    return omit({
+      ...data,
+      headers,
+    }, omitFieldsList);
+  }
+
+  return omit(data, omitFieldsList);
+}
+
+const transformProxyRewrite2Formdata = (pluginsData: any) => {
+  const proxyRewriteData: RouteModule.ProxyRewrite= {
+    scheme: SCHEME_REWRITE.KEEP
+  };
+  let URIRewriteType = URI_REWRITE_TYPE.KEEP;
+  let hostRewriteType = HOST_REWRITE_TYPE.KEEP;
+
+  if (pluginsData) {
+    if (pluginsData.uri && pluginsData.regex_uri) {
+      URIRewriteType = URI_REWRITE_TYPE.REGEXP
+    }
+
+    if (pluginsData.uri && !pluginsData.regex_uri) {
+      URIRewriteType = URI_REWRITE_TYPE.STATIC
+    }
+
+    if (pluginsData.host) {
+      hostRewriteType = HOST_REWRITE_TYPE.REWRITE
+    }
+
+    Object.keys(pluginsData).forEach( key => {
+      switch (key) {
+        case 'scheme':
+          proxyRewriteData[key] = pluginsData[key] === SCHEME_REWRITE.HTTP || pluginsData[key] === SCHEME_REWRITE.HTTPS ? pluginsData[key] : SCHEME_REWRITE.KEEP;
+          break;
+        case 'uri':
+        case 'regex_uri':
+        case 'host':
+          proxyRewriteData[key] = pluginsData[key];
+          break;
+        case 'headers':
+          Object.keys(pluginsData[key]).forEach((headerKey) => {
+            proxyRewriteData.kvHeaders = [
+              ...(proxyRewriteData.kvHeaders || []),
+              {
+                key: headerKey,
+                value: pluginsData[key][headerKey]
+              }
+            ]
+          })
+          break;
+        default: break;
+      }
+    })
+  }
+
+  return {
+    proxyRewriteData,
+    URIRewriteType,
+    hostRewriteType,
+  }
+}
 
 // Transform Route data then sent to API
 export const transformStepData = ({
@@ -25,9 +114,12 @@ export const transformStepData = ({
   advancedMatchingRules,
   step3Data,
 }: RouteModule.RequestData) => {
-  const { custom_normal_labels, custom_version_label, service_id = '' } = form1Data;
+  const { custom_normal_labels, custom_version_label, service_id = ''} = form1Data;
 
   let redirect: RouteModule.Redirect = {};
+  const proxyRewriteFormData: RouteModule.ProxyRewrite = form1Data.proxyRewrite;
+  const proxyRewriteConfig = transformProxyRewrite2Plugin(proxyRewriteFormData);
+
   const step3DataCloned = cloneDeep(step3Data);
   if (form1Data.redirectOption === 'disabled') {
     step3DataCloned.plugins = omit(step3Data.plugins, ['redirect']);
@@ -44,10 +136,11 @@ export const transformStepData = ({
   transformLableValueToKeyValue(custom_normal_labels).forEach(({ labelKey, labelValue }) => {
     labels[labelKey] = labelValue;
   });
+
+
   if (custom_version_label) {
     labels.API_VERSION = custom_version_label;
   }
-
   const data: Partial<RouteModule.Body> = {
     ...form1Data,
     labels,
@@ -69,7 +162,17 @@ export const transformStepData = ({
     }),
     // @ts-ignore
     methods: form1Data.methods.includes('ALL') ? [] : form1Data.methods,
+    status: Number(form1Data.status),
   };
+
+  if (!isEmpty(proxyRewriteConfig)){
+    if (Object.keys(data.plugins || {}).length === 0) {
+      data.plugins = {};
+    }
+    data.plugins!['proxy-rewrite'] = proxyRewriteConfig;
+  } else {
+    unset(data.plugins, ['proxy-rewrite']);
+  }
 
   if (Object.keys(redirect).length === 0 || redirect.http_to_https) {
     if (form2Data.upstream_id) {
@@ -84,9 +187,6 @@ export const transformStepData = ({
       }
       data.plugins!.redirect = redirect;
     }
-    if (data.status !== undefined) {
-      data.status = Number(data.status);
-    }
 
     // Remove some of the frontend custom variables
     return omit(data, [
@@ -99,6 +199,9 @@ export const transformStepData = ({
       'redirectURI',
       'ret_code',
       'redirectOption',
+      'URIRewriteType',
+      'hostRewriteType',
+      'proxyRewrite',
       service_id.length === 0 ? 'service_id' : '',
       form2Data.upstream_id === 'None' ? 'upstream_id' : '',
       !Object.keys(data.plugins || {}).length ? 'plugins' : '',
@@ -111,7 +214,10 @@ export const transformStepData = ({
   }
 
   if (Object.keys(redirect).length) {
-    data.plugins = { redirect };
+    data.plugins = {
+      ...data.plugins,
+      redirect,
+    };
   }
 
   return pick(data, [
@@ -208,6 +314,13 @@ export const transformRouteData = (data: RouteModule.Body) => {
     form1Data.redirectOption = 'disabled';
   }
 
+  const proxyRewrite = data.plugins ? data.plugins['proxy-rewrite'] : {};
+  const { proxyRewriteData, URIRewriteType, hostRewriteType } = transformProxyRewrite2Formdata(proxyRewrite);
+  form1Data.proxyRewrite = proxyRewriteData;
+  form1Data.URIRewriteType = URIRewriteType;
+  form1Data.hostRewriteType = hostRewriteType;
+
+
   const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);
 
   if (upstream && Object.keys(upstream).length) {
@@ -230,4 +343,25 @@ export const transformRouteData = (data: RouteModule.Body) => {
     step3Data,
     advancedMatchingRules,
   };
+};
+
+export const transformLabelList = (data: ResponseLabelList) => {
+  if (!data) {
+    return {};
+  }
+  const transformData = {};
+  data.forEach((item) => {
+    const key = Object.keys(item)[0];
+    const value = item[key];
+    if (!transformData[key]) {
+      transformData[key] = [];
+      transformData[key].push(value);
+      return;
+    }
+
+    if (transformData[key] && !transformData[key][value]) {
+      transformData[key].push(value);
+    }
+  });
+  return transformData;
 };

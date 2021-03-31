@@ -1269,7 +1269,6 @@ func TestExportRoutesCreateByRequestValidation(t *testing.T) {
 					"summary": "所有",
 					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["test.com"],
-					"x-apisix-plugins": {},
 					"x-apisix-priority": 0,
 					"x-apisix-status": 1
 				}
@@ -1300,6 +1299,7 @@ func TestExportRoutesCreateByJWTAuth(t *testing.T) {
 	input := &ExportInput{IDs: "1"}
 	r := `{
 		"uri": "/hello",
+		"methods": ["Get"],
 		"plugins": {
 			"jwt-auth": {}
 		},
@@ -1341,7 +1341,31 @@ func TestExportRoutesCreateByJWTAuth(t *testing.T) {
 		},
 		"openapi": "3.0.0",
 		"paths": {
-			"/hello": {}
+			"/hello": {
+				"get": {
+					"operationId": "GET",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"security": [{
+						"bearerAuth": [""]
+					}],
+					"x-apisix-enable_websocket": false,
+					"x-apisix-priority": 0,
+					"x-apisix-status": 0,
+					"x-apisix-upstream": {
+						"nodes": [{
+							"host": "172.16.238.20",
+							"port": 1980,
+							"weight": 1
+						}],
+						"type": "roundrobin"
+					}
+				}
+			}
 		}
 	}`
 
@@ -1366,7 +1390,7 @@ func TestExportRoutesCreateByJWTAuth(t *testing.T) {
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
 	assert.Nil(t, err)
-	assert.Equal(t, replaceStr(exportR), string(_ret))
+	assert.Equal(t, replaceStr(exportR), strings.Replace(string(_ret), " ", "", -1))
 	assert.NotNil(t, _ret)
 }
 
@@ -1375,6 +1399,7 @@ func TestExportRoutesCreateByKeyAuthAndBasicAuth(t *testing.T) {
 	input := &ExportInput{IDs: "1"}
 	r := `{
 		"uri": "/hello",
+		"methods": ["Get"],
 		"plugins": {
 			"key-auth": {},
 			"basic-auth": {}
@@ -1424,9 +1449,8 @@ func TestExportRoutesCreateByKeyAuthAndBasicAuth(t *testing.T) {
 		},
 		"openapi": "3.0.0",
 		"paths": {
-			"/hello": {}
-		}
-	}`
+			"/hello": {
+				"get": {`
 
 	var route *entity.Route
 	var consumer *entity.Consumer
@@ -1449,8 +1473,8 @@ func TestExportRoutesCreateByKeyAuthAndBasicAuth(t *testing.T) {
 	assert.Nil(t, err)
 	_ret, err := json.Marshal(ret)
 	assert.Nil(t, err)
-	assert.Equal(t, replaceStr(exportR), string(_ret))
 	assert.NotNil(t, _ret)
+	assert.Contains(t, strings.Replace(string(_ret), " ", "", -1), replaceStr(exportR))
 }
 
 // 14.Export all routes
@@ -1504,7 +1528,6 @@ func TestExportRoutesAll(t *testing.T) {
 					},
 					"x-apisix-enable_websocket": false,
 					"x-apisix-host": "*.bar.com",
-					"x-apisix-plugins": {},
 					"x-apisix-priority": 0,
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
@@ -1526,7 +1549,6 @@ func TestExportRoutesAll(t *testing.T) {
 					},
 					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["foo.com", "*.bar.com"],
-					"x-apisix-plugins": {},
 					"x-apisix-priority": 0,
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
@@ -1571,7 +1593,7 @@ func TestExportRoutesAll(t *testing.T) {
 	assert.Nil(t, err)
 	ret1, err := json.Marshal(ret)
 	assert.Nil(t, err)
-	assert.Equal(t, replaceStr(exportR1), string(ret1))
+	assert.Equal(t, replaceStr(exportR1), strings.Replace(string(ret1), " ", "", -1))
 	assert.NotNil(t, ret1)
 	assert.True(t, getCalled)
 }
@@ -1805,7 +1827,6 @@ func TestExportRoutesSameURI(t *testing.T) {
 					"summary": "所有",
 					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["test.com"],
-					"x-apisix-plugins": {},
 					"x-apisix-priority": 0,
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
@@ -1828,7 +1849,6 @@ func TestExportRoutesSameURI(t *testing.T) {
 					"summary": "所有1",
 					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["test.com"],
-					"x-apisix-plugins": {},
 					"x-apisix-priority": 0,
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
@@ -1851,7 +1871,6 @@ func TestExportRoutesSameURI(t *testing.T) {
 					"summary": "所有2",
 					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["test.com"],
-					"x-apisix-plugins": {},
 					"x-apisix-priority": 0,
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
@@ -1941,6 +1960,441 @@ func TestExportAllRoutesDataEmpty(t *testing.T) {
 	_, err := h.ExportAllRoutes(ctx)
 	assert.Equal(t, errors.New("Route data is empty, cannot be exported"), err)
 	assert.True(t, getCalled)
+}
+
+func TestExportRoutesMethodsFeildEmpty(t *testing.T) {
+	input := &ExportInput{IDs: "1"}
+	//*entity.Route
+	r1 := `{
+		"uris": ["/test-test"],
+		"name": "route",
+		"methods": [],
+		"hosts": ["test.com"],
+		"status": 1,
+		"upstream": {
+			"nodes": {
+				"172.16.238.20:1980": 1
+			},
+			"type": "roundrobin"
+		}
+}`
+
+	exportR1 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/test-test": {
+				"connect": {
+					"operationId": "routeCONNECT",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"delete": {
+					"operationId": "routeDELETE",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"get": {
+					"operationId": "routeGET",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"head": {
+					"operationId": "routeHEAD",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"options": {
+					"operationId": "routeOPTIONS",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"patch": {
+					"operationId": "routePATCH",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"post": {
+					"operationId": "routePOST",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"put": {
+					"operationId": "routePUT",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"trace": {
+					"operationId": "routeTRACE",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				}
+			}
+		}
+	}`
+	var route *entity.Route
+	err := json.Unmarshal([]byte(r1), &route)
+
+	mStore := &store.MockInterface{}
+	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+	}).Return(route, nil)
+	h := Handler{routeStore: mStore}
+	ctx := droplet.NewContext()
+	ctx.SetInput(input)
+
+	ret, err := h.ExportRoutes(ctx)
+	assert.Nil(t, err)
+	ret1, err := json.Marshal(ret)
+	assert.Nil(t, err)
+	assert.Equal(t, replaceStr(exportR1), strings.Replace(string(ret1), " ", "", -1))
+	assert.NotNil(t, ret1)
+}
+
+func TestExportRoutesMethodsFeildNil(t *testing.T) {
+	input := &ExportInput{IDs: "1"}
+	//*entity.Route
+	r1 := `{
+		"uris": ["/test-test"],
+		"name": "route",
+		"hosts": ["test.com"],
+		"status": 1,
+		"upstream": {
+			"nodes": {
+				"172.16.238.20:1980": 1
+			},
+			"type": "roundrobin"
+		}
+}`
+
+	exportR1 := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/test-test": {
+				"connect": {
+					"operationId": "routeCONNECT",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"delete": {
+					"operationId": "routeDELETE",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"get": {
+					"operationId": "routeGET",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"head": {
+					"operationId": "routeHEAD",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"options": {
+					"operationId": "routeOPTIONS",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"patch": {
+					"operationId": "routePATCH",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"post": {
+					"operationId": "routePOST",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"put": {
+					"operationId": "routePUT",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"trace": {
+					"operationId": "routeTRACE",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				}
+			}
+		}
+	}`
+	var route *entity.Route
+	err := json.Unmarshal([]byte(r1), &route)
+
+	mStore := &store.MockInterface{}
+	mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+	}).Return(route, nil)
+	h := Handler{routeStore: mStore}
+	ctx := droplet.NewContext()
+	ctx.SetInput(input)
+
+	ret, err := h.ExportRoutes(ctx)
+	assert.Nil(t, err)
+	ret1, err := json.Marshal(ret)
+	assert.Nil(t, err)
+	assert.Equal(t, replaceStr(exportR1), strings.Replace(string(ret1), " ", "", -1))
+	assert.NotNil(t, ret1)
 }
 
 func replaceStr(str string) string {

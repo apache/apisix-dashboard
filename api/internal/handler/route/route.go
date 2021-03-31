@@ -314,7 +314,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-					fmt.Errorf("service id: %s not found", input.ServiceID)
+					fmt.Errorf(consts.IDNotFound, "service", input.ServiceID)
 			}
 			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
@@ -379,12 +379,19 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	ret, err := h.routeStore.Create(c.Context(), input)
+	// check name existed
+	ret, err := handler.NameExistCheck(c.Context(), h.routeStore, "route", input.Name, nil)
+	if err != nil {
+		return ret, err
+	}
+
+	// create
+	res, err := h.routeStore.Create(c.Context(), input)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type UpdateInput struct {
@@ -412,7 +419,7 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		if err != nil {
 			if err == data.ErrNotFound {
 				return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-					fmt.Errorf("service id: %s not found", input.ServiceID)
+					fmt.Errorf(consts.IDNotFound, "service", input.ServiceID)
 			}
 			return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 		}
@@ -489,12 +496,19 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		}
 	}
 
-	ret, err := h.routeStore.Update(c.Context(), &input.Route, true)
+	// check name existed
+	ret, err := handler.NameExistCheck(c.Context(), h.routeStore, "route", input.Name, input.ID)
+	if err != nil {
+		return ret, err
+	}
+
+	// create
+	res, err := h.routeStore.Update(c.Context(), &input.Route, true)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type BatchDelete struct {

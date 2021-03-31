@@ -124,15 +124,14 @@ context('import and export routes', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
+    cy.get(this.domSelector.refresh).click();
+
     for (let i = 0; i < 2; i += 1) {
-      cy.contains(data[`route_name_${i}`])
-        .siblings()
-        .contains(componentLocaleUS['component.global.delete'])
-        .click();
-      cy.contains('button', componentLocaleUS['component.global.confirm']).click();
-      cy.get(this.domSelector.notification).should(
-        'contain', this.data.deleteRouteSuccess
-      );
+      cy.contains(data[`route_name_${i}`]).siblings().contains('Delete').click();
+      cy.contains('button', 'Confirm').click();
+      cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
+      cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
+      cy.reload();
     }
   });
 
@@ -156,9 +155,7 @@ context('import and export routes', () => {
         cy.contains(componentLocaleUS['component.global.cancel']).click();
         cy.get(this.domSelector.notificationCloseIcon).click();
       } else if (file !== 'import-error.txt') {
-        cy.get(this.domSelector.notification).should(
-          'contain', 'Success'
-        );
+        cy.get(this.domSelector.notification).should('contain', 'Success');
         cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
         // delete route just imported
         cy.reload();
@@ -166,9 +163,7 @@ context('import and export routes', () => {
         cy.contains('button', componentLocaleUS['component.global.confirm']).click({ force: true });
 
         // show delete successfully notification
-        cy.get(this.domSelector.notification).should(
-          'contain', this.data.deleteRouteSuccess
-        );
+        cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
         cy.get(this.domSelector.notificationCloseIcon).click();
       }
     });

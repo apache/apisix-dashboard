@@ -21,7 +21,7 @@ import { history, useIntl } from 'umi';
 
 import { getUrlQuery } from '@/helpers';
 import ActionBar from '@/components/ActionBar';
-import { getGrafanaURL } from '@/pages/Metrics/service';
+import { getGrafanaURL } from '@/pages/Dashboard/service';
 
 import { updateMonitorURL } from './service';
 

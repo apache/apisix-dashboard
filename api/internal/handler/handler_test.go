@@ -21,8 +21,12 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+
+	"github.com/apisix/manager-api/internal/core/store"
 )
 
 func TestSpecCodeResponse(t *testing.T) {
@@ -81,6 +85,61 @@ func TestIDCompare(t *testing.T) {
 		t.Run(c.desc, func(t *testing.T) {
 			err := IDCompare(c.idOnPath, c.idOnBody)
 			assert.Equal(t, c.wantError, err)
+		})
+	}
+}
+
+func TestNameExistCheck(t *testing.T) {
+	tests := []struct {
+		resource string
+		name     string
+		id       interface{}
+		mockErr  error
+		mockRet  []interface{}
+		wantErr  error
+		wantRet  interface{}
+		caseDesc string
+	}{
+		{
+			caseDesc: "normal, name not exists",
+			resource: "service",
+			name:     "test",
+		},
+		{
+			caseDesc: "get list error",
+			resource: "route",
+			name:     "test",
+			mockErr:  errors.New("test error"),
+			wantErr:  errors.New("test error"),
+			wantRet:  &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError},
+		},
+		{
+			caseDesc: "name exists",
+			resource: "upstream",
+			name:     "test",
+			mockRet:  []interface{}{"test"},
+			wantErr:  errors.New("upstream name exists"),
+			wantRet:  &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.caseDesc, func(t *testing.T) {
+			mStore := &store.MockInterface{}
+			mStore.On("List", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+			}).Return(func(input store.ListInput) *store.ListOutput {
+				return &store.ListOutput{
+					Rows:      tc.mockRet,
+					TotalSize: len(tc.mockRet),
+				}
+			}, tc.mockErr)
+
+			ctx := droplet.NewContext()
+			res, err := NameExistCheck(ctx.Context(), mStore, tc.resource, tc.name, tc.id)
+
+			if res != nil {
+				assert.Equal(t, tc.wantRet.(*data.SpecCodeResponse).StatusCode, res.(*data.SpecCodeResponse).StatusCode)
+			}
+			assert.Equal(t, tc.wantErr, err)
 		})
 	}
 }

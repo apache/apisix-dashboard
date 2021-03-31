@@ -17,7 +17,6 @@
 package consumer
 
 import (
-	"fmt"
 	"net/http"
 	"reflect"
 	"strings"
@@ -32,6 +31,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/utils"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -139,7 +139,7 @@ func (h *Handler) Set(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*SetInput)
 	if input.ID != nil && utils.InterfaceToString(input.ID) != input.Username {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			fmt.Errorf("consumer's id and username must be a same value")
+			consts.ErrIDUsername
 	}
 	if input.Username != "" {
 		input.Consumer.Username = input.Username

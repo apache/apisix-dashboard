@@ -14,14 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { GithubOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { Button, notification, Tabs } from 'antd';
 import { SelectLang } from '@@/plugin-locale/SelectLang';
 import { Link, useIntl, history } from 'umi';
-import { SettingOutlined } from '@ant-design/icons';
-
 import LoginMethodPassword from '@/pages/User/components/LoginMethodPassword';
-import LoginMethodExample from '@/pages/User/components/LoginMethodExample';
 import type { UserModule } from '@/pages/User/typing';
 import logo from '@/assets/logo.svg';
 import { getUrlQuery } from '@/helpers';
@@ -33,7 +31,7 @@ const Tab = Tabs.TabPane;
 /**
  * Login Methods List
  */
-const loginMethods: UserModule.LoginMethod[] = [LoginMethodPassword, LoginMethodExample];
+const loginMethods: UserModule.LoginMethod[] = [LoginMethodPassword];
 
 /**
  * User Login Page
@@ -43,9 +41,6 @@ const Page: React.FC = () => {
   const { formatMessage } = useIntl();
   const [loginMethod, setLoginMethod] = useState(loginMethods[0]);
 
-  const onSettingsClick = () => {
-    history.replace(`/settings?redirect=${encodeURIComponent(history.location.pathname)}`);
-  };
 
   const onTabChange = (activeKey: string) => {
     loginMethods.forEach((item, index) => {
@@ -86,8 +81,10 @@ const Page: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.lang}>
-        <div className={styles.settings} onClick={onSettingsClick}>
-          <SettingOutlined />
+        <div className={styles.github} >
+          <a target="_blank" href="https://apisix.apache.org">
+            <GithubOutlined />
+          </a>
         </div>
         <SelectLang />
       </div>

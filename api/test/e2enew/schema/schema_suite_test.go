@@ -14,8 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-  'page.metrics.empty.description.grafanaNotConfig': 'You have not configured Grafana',
-  'page.metrics.button.grafanaConfig': 'Configure',
-  'page.metrics.tip': 'Use browser iframe to store monitor page URL, local only.',
-};
+package schema
+
+import (
+	"testing"
+
+	"github.com/onsi/ginkgo"
+)
+
+func TestSchema(t *testing.T) {
+	ginkgo.RunSpecs(t, "schema suite")
+}

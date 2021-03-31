@@ -395,7 +395,7 @@ func TestRoute_export_import(t *testing.T) {
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
 					"uris": ["/test-test1"],
-					"name": "route_all",
+					"name": "route_all1",
 					"desc": "所有",
 					"methods": ["GET"],
 					"hosts": ["test.com"],
@@ -418,7 +418,7 @@ func TestRoute_export_import(t *testing.T) {
 			Path:   "/apisix/admin/routes/r2",
 			Body: `{
 					"uris": ["/test-test2"],
-					"name": "route_all",
+					"name": "route_all2",
 					"desc": "所有1",
 					"methods": ["GET"],
 					"hosts": ["test.com"],
@@ -441,7 +441,7 @@ func TestRoute_export_import(t *testing.T) {
 			Path:   "/apisix/admin/routes/r3",
 			Body: `{
 					"uris": ["/test-test3"],
-					"name": "route_all",
+					"name": "route_all3",
 					"desc": "所有2",
 					"methods": ["GET"],
 					"hosts": ["test.com"],

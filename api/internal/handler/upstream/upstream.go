@@ -18,6 +18,7 @@ package upstream
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"reflect"
 	"strings"
@@ -37,11 +38,15 @@ import (
 
 type Handler struct {
 	upstreamStore store.Interface
+	routeStore    store.Interface
+	serviceStore  store.Interface
 }
 
 func NewHandler() (handler.RouteRegister, error) {
 	return &Handler{
 		upstreamStore: store.GetStore(store.HubKeyUpstream),
+		routeStore:    store.GetStore(store.HubKeyRoute),
+		serviceStore:  store.GetStore(store.HubKeyService),
 	}, nil
 }
 
@@ -154,12 +159,19 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*entity.Upstream)
 
-	ret, err := h.upstreamStore.Create(c.Context(), input)
+	// check name existed
+	ret, err := handler.NameExistCheck(c.Context(), h.upstreamStore, "upstream", input.Name, nil)
+	if err != nil {
+		return ret, err
+	}
+
+	// create
+	res, err := h.upstreamStore.Create(c.Context(), input)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type UpdateInput struct {
@@ -179,12 +191,18 @@ func (h *Handler) Update(c droplet.Context) (interface{}, error) {
 		input.Upstream.ID = input.ID
 	}
 
-	ret, err := h.upstreamStore.Update(c.Context(), &input.Upstream, true)
+	// check name existed
+	ret, err := handler.NameExistCheck(c.Context(), h.upstreamStore, "upstream", input.Name, input.ID)
+	if err != nil {
+		return ret, err
+	}
+
+	res, err := h.upstreamStore.Update(c.Context(), &input.Upstream, true)
 	if err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 
-	return ret, nil
+	return res, nil
 }
 
 type BatchDelete struct {
@@ -194,7 +212,55 @@ type BatchDelete struct {
 func (h *Handler) BatchDelete(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*BatchDelete)
 
-	if err := h.upstreamStore.BatchDelete(c.Context(), strings.Split(input.IDs, ",")); err != nil {
+	ids := strings.Split(input.IDs, ",")
+	mp := make(map[string]struct{})
+	for _, id := range ids {
+		mp[id] = struct{}{}
+	}
+
+	ret, err := h.routeStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			route := obj.(*entity.Route)
+			if _, exist := mp[utils.InterfaceToString(route.UpstreamID)]; exist {
+				return true
+			}
+
+			return false
+		},
+		PageSize:   0,
+		PageNumber: 0,
+	})
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("route: %s is using this upstream", ret.Rows[0].(*entity.Route).Name)
+	}
+
+	ret, err = h.serviceStore.List(c.Context(), store.ListInput{
+		Predicate: func(obj interface{}) bool {
+			service := obj.(*entity.Service)
+			if _, exist := mp[utils.InterfaceToString(service.UpstreamID)]; exist {
+				return true
+			}
+
+			return false
+		},
+		PageSize:   0,
+		PageNumber: 0,
+	})
+	if err != nil {
+		return handler.SpecCodeResponse(err), err
+	}
+
+	if ret.TotalSize > 0 {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("service: %s is using this upstream", ret.Rows[0].(*entity.Service).Name)
+	}
+
+	if err = h.upstreamStore.BatchDelete(c.Context(), ids); err != nil {
 		return handler.SpecCodeResponse(err), err
 	}
 

@@ -14,23 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
-
-context('metrics page smoke test', () => {
-  beforeEach(() => {
-    cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-  });
-
-  it('should visit metrics page', function () {
-    cy.visit('/');
-    cy.contains('Metrics').click();
-    cy.url().should('contains', '/metrics');
-    cy.get(this.domSelector.pageContent)
-      .children()
-      .should('contain', 'Metrics')
-      .and('contain', 'You have not configured Grafana')
-      .and('contain', 'Configure');
-  });
-});
+export default {
+  'page.dashboard.empty.description.grafanaNotConfig': '您还未配置 Grafana',
+  'page.dashboard.button.grafanaConfig': '现在配置',
+  'page.dashboard.tip': '使用浏览器 localStorage 存储监控页访问地址，仅作用于本地。',
+};

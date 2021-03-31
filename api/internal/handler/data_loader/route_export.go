@@ -36,6 +36,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/log"
 	"github.com/apisix/manager-api/internal/utils"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -69,7 +70,7 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*ExportInput)
 
 	if input.IDs == "" {
-		return nil, fmt.Errorf("Parameter IDs cannot be empty")
+		return nil, consts.ErrParameterID
 	}
 
 	ids := strings.Split(input.IDs, ",")
@@ -79,7 +80,7 @@ func (h *Handler) ExportRoutes(c droplet.Context) (interface{}, error) {
 		route, err := h.routeStore.Get(c.Context(), id)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return nil, fmt.Errorf("route id: %s not found", id)
+				return nil, fmt.Errorf(consts.IDNotFound, "upstream", id)
 			}
 			return nil, err
 		}
@@ -102,10 +103,12 @@ const (
 )
 
 var (
-	openApi = "3.0.0"
-	title   = "RoutesExport"
-	service interface{}
-	err     error
+	openApi         = "3.0.0"
+	title           = "RoutesExport"
+	service         interface{}
+	err             error
+	routeMethods    []string
+	_allHTTPMethods = []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodPatch, http.MethodHead, http.MethodConnect, http.MethodTrace, http.MethodOptions}
 )
 
 //ExportAllRoutes All routes can be directly exported without passing parameters
@@ -113,7 +116,7 @@ func (h *Handler) ExportAllRoutes(c droplet.Context) (interface{}, error) {
 	routelist, err := h.routeStore.List(c.Context(), store.ListInput{})
 
 	if len(routelist.Rows) < 1 {
-		return nil, fmt.Errorf("Route data is empty, cannot be exported")
+		return nil, consts.ErrRouteData
 	}
 
 	if err != nil {
@@ -158,7 +161,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 			service, err = h.serviceStore.Get(c.Context(), serviceID)
 			if err != nil {
 				if err == data.ErrNotFound {
-					return nil, fmt.Errorf("service id: %s not found", route.ServiceID)
+					return nil, fmt.Errorf(consts.IDNotFound, "service", route.ServiceID)
 				}
 				return nil, err
 			}
@@ -232,7 +235,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 			return nil, err
 		}
 
-		if plugins != nil {
+		if len(plugins) > 0 {
 			extensions["x-apisix-plugins"] = plugins
 		}
 
@@ -244,8 +247,14 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 		path.RequestBody = &openapi3.RequestBodyRef{Value: requestBody}
 		path.Responses = openapi3.NewResponses()
 
-		for i := range route.Methods {
-			switch strings.ToUpper(route.Methods[i]) {
+		if route.Methods != nil && len(route.Methods) > 0 {
+			routeMethods = route.Methods
+		} else {
+			routeMethods = _allHTTPMethods
+		}
+
+		for i := range routeMethods {
+			switch strings.ToUpper(routeMethods[i]) {
 			case http.MethodGet:
 				pathItem.Get = ParsePathItem(path, http.MethodGet)
 			case http.MethodPost:
@@ -258,6 +267,12 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 				pathItem.Patch = ParsePathItem(path, http.MethodPatch)
 			case http.MethodHead:
 				pathItem.Head = ParsePathItem(path, http.MethodHead)
+			case http.MethodConnect:
+				pathItem.Connect = ParsePathItem(path, http.MethodConnect)
+			case http.MethodTrace:
+				pathItem.Trace = ParsePathItem(path, http.MethodTrace)
+			case http.MethodOptions:
+				pathItem.Options = ParsePathItem(path, http.MethodOptions)
 			}
 		}
 	}
@@ -463,7 +478,7 @@ func (h *Handler) ParseRouteUpstream(c droplet.Context, route *entity.Route) (in
 		upstream, err := h.upstreamStore.Get(c.Context(), upstreamID)
 		if err != nil {
 			if err == data.ErrNotFound {
-				return nil, fmt.Errorf("upstream id: %s not found", route.UpstreamID)
+				return nil, fmt.Errorf(consts.IDNotFound, "upstream", route.UpstreamID)
 			}
 			return nil, err
 		}
@@ -477,7 +492,7 @@ func (h *Handler) ParseRouteUpstream(c droplet.Context, route *entity.Route) (in
 			upstream, err := h.upstreamStore.Get(c.Context(), upstreamID)
 			if err != nil {
 				if err == data.ErrNotFound {
-					return nil, fmt.Errorf("upstream id: %s not found", _service.UpstreamID)
+					return nil, fmt.Errorf(consts.IDNotFound, "upstream", _service.UpstreamID)
 				}
 				return nil, err
 			}
