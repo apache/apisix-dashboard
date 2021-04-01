@@ -18,12 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     services:
       etcd:
-        image: 'bitnami/etcd:3.4.13'
+        image: bitnami/etcd:3.4.13
         ports:
-          - '2379:2379'
-          - '2380:2380'
+          - 2379:2379
+          - 2380:2380
         env:
-          ALLOW_NONE_AUTHENTICATION: 'yes'
+          ALLOW_NONE_AUTHENTICATION: yes
     steps:
       - name: Checkout
         uses: actions/checkout@v2
