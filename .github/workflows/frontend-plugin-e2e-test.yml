@@ -6,6 +6,8 @@ on:
   pull_request:
     branches:
       - master
+env: 
+  CYPRESS_CACHE_FOLDER: cypress/cache
 defaults:
   run:
     working-directory: web
