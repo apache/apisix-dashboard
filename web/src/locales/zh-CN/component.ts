@@ -21,11 +21,13 @@ export default {
   'component.global.search': '查询',
   'component.global.reset': '重置',
   'component.global.confirm': '确认',
+
   'component.global.format': '格式化',
   'component.global.document': '文档',
   'component.global.enable': '启用',
   'component.global.scope': '作用域',
   'component.global.data.editor': '元数据编辑器',
+
   'component.global.delete': '删除',
   'component.global.cancel': '取消',
   'component.global.submit': '提交',
@@ -33,7 +35,7 @@ export default {
   'component.global.createWithEditor': '使用编辑器创建',
   'component.global.add': '新建',
   'component.global.save': '保存',
-  'component.global.edit': '编辑',
+  'component.global.edit': '配置',
   'component.global.view': '查看',
   'component.global.manage': '管理',
   'component.global.update': '更新',
