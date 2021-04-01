@@ -134,7 +134,7 @@ context('Online debug', () => {
     cy.get(domSelector.headerDataKey0).click({ force: true });
     cy.get('.ant-select-item-option-content').contains('Accept').click();
     cy.get('.anticon-minus-circle').click()
-    
+
     // autocomplete should ingore case
     cy.get(domSelector.headerDataKey0).type('auth').click({ force: true });
     cy.get('.ant-select-item-option-content').contains('Authorization').click();
