@@ -43,13 +43,23 @@ jobs:
           sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./conf/conf.yaml
           nohup go run ./cmd/manager &
 
-      - uses: actions/cache@v2
+      - name: Cache node_modules
+        uses: actions/cache@v2
         id: yarn-cache
         with:
           path: '*/node_modules'
-          key: '${{ runner.os }}-yarn-${{ hashFiles(''**/yarn.lock'') }}'
+          key: '${{ runner.os }}-yarn-cache-${{ hashFiles(''**/yarn.lock'') }}'
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-yarn-cache
+
+      - name: Cache Cypress binary
+        uses: actions/cache@v2
+        id: cypress-binary-cache
+        with:
+          path: '*/cypress/cache'
+          key: cypress-${{ runner.os }}-cypress-cache-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            cypress-${{ runner.os }}-cypress-cache
 
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
@@ -72,5 +82,7 @@ jobs:
         if: always()
         with:
           name: cypress-report
-          path: web/cypress/
+          path: |
+           web/cypress/videos
+           web/cypress/screenshots
           retention-days: 5
