@@ -2,7 +2,7 @@
   "deletePluginSuccess": "Delete Plugin Successfully",
   "createUpstreamSuccess": "Create Upstream Successfully",
   "createServiceSuccess": "Create Service Successfully",
-  "editServiceSuccess": "Edit Service Successfully",
+  "editServiceSuccess": "Configure Service Successfully",
   "deleteServiceSuccess": "Delete Service Successfully",
   "deleteRouteSuccess": "Delete Route Successfully",
   "submitSuccess": "Submit Successfully",
@@ -32,7 +32,7 @@
   "pluginTemplateName": "test_plugin_template1",
   "pluginTemplateName2": "test_plugin_template2",
   "createPluginTemplateSuccess": "Create Plugin Template Successfully",
-  "editPluginTemplateSuccess": "Edit Plugin Template Successfully",
+  "editPluginTemplateSuccess": "Configure Plugin Template Successfully",
   "deletePluginTemplateSuccess": "Delete Plugin Template Successfully",
   "pluginTemplateErrorAlert": "Request Error Code: 10000"
 }
