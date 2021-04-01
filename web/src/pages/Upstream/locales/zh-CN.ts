@@ -80,11 +80,12 @@ export default {
   'page.upstream.upstream_host.required': '请输入自定义 Host 请求头',
 
   'page.upstream.create': '创建上游服务',
+  'page.upstream.configure': '配置上游',
   'page.upstream.create.upstream.successfully': '创建上游服务成功',
   'page.upstream.edit.upstream.successfully': '更新上游服务成功',
   'page.upstream.create.basic.info': '基础信息',
   'page.upstream.create.preview': '预览',
-
+  
   'page.upstream.list.name': '名称',
   'page.upstream.list.type': '类型',
   'page.upstream.list.description': '描述',
