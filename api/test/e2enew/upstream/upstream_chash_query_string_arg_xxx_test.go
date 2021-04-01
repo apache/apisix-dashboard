@@ -25,7 +25,7 @@ import (
 	"time"
 
 	"github.com/onsi/ginkgo"
-	"github.com/stretchr/testify/assert"
+	"github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
@@ -53,10 +53,9 @@ var createUpstreamBody map[string]interface{} = map[string]interface{}{
 
 var _ = ginkgo.Describe("Upstream chash query string", func() {
 	ginkgo.It("create chash upstream with key (query_string)", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody["key"] = "query_string"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -83,19 +82,18 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 		})
 	})
 	ginkgo.It("hit routes(upstream query_string)", func() {
-		t := ginkgo.GinkgoT()
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		res := map[string]int{}
 		for i := 0; i < 180; i++ {
 			url := basepath + "/server_port?var=2&var2=" + strconv.Itoa(i)
 			req, err := http.NewRequest("GET", url, nil)
-			assert.Nil(t, err)
+			gomega.Expect(err).To(gomega.BeNil())
 			resp, err := http.DefaultClient.Do(req)
-			assert.Nil(t, err)
+			gomega.Expect(err).To(gomega.BeNil())
 			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
-			assert.Nil(t, err)
+			gomega.Expect(err).To(gomega.BeNil())
 			body := string(respBody)
 			if _, ok := res[body]; !ok {
 				res[body] = 1
@@ -108,7 +106,7 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 			counts = append(counts, value)
 		}
 		sort.Ints(counts)
-		assert.True(t, float64(counts[2]-counts[0])/float64(counts[1]) < 0.4)
+		gomega.Expect(float64(counts[2]-counts[0]) / float64(counts[1])).Should(gomega.BeNumerically("<", 0.4))
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{
@@ -142,10 +140,9 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 
 var _ = ginkgo.Describe("Upstream chash query string", func() {
 	ginkgo.It("create chash upstream with key (arg_xxx)", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody["key"] = "arg_device_id"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -172,19 +169,18 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 		})
 	})
 	ginkgo.It("hit routes(upstream arg_device_id)", func() {
-		t := ginkgo.GinkgoT()
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		res := map[string]int{}
 		for i := 0; i <= 17; i++ {
 			url := basepath + "/server_port?device_id=" + strconv.Itoa(i)
 			req, err := http.NewRequest("GET", url, nil)
-			assert.Nil(t, err)
+			gomega.Expect(err).To(gomega.BeNil())
 			resp, err := http.DefaultClient.Do(req)
-			assert.Nil(t, err)
+			gomega.Expect(err).To(gomega.BeNil())
 			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
-			assert.Nil(t, err)
+			gomega.Expect(err).To(gomega.BeNil())
 			body := string(respBody)
 			if _, ok := res[body]; !ok {
 				res[body] = 1
@@ -197,7 +193,7 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 			counts = append(counts, value)
 		}
 		sort.Ints(counts)
-		assert.True(t, float64(counts[2]-counts[0])/float64(counts[1]) < 0.4)
+		gomega.Expect(float64(counts[2]-counts[0]) / float64(counts[1])).Should(gomega.BeNumerically("<", 0.4))
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{

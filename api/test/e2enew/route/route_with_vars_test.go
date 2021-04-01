@@ -21,7 +21,7 @@ import (
 	"net/http"
 
 	"github.com/onsi/ginkgo"
-	"github.com/stretchr/testify/assert"
+	"github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
@@ -39,7 +39,6 @@ var upstream map[string]interface{} = map[string]interface{}{
 
 var _ = ginkgo.Describe("test route with vars (args)", func() {
 	ginkgo.It("add route with vars (args)", func() {
-		t := ginkgo.GinkgoT()
 		var createRouteBody map[string]interface{} = map[string]interface{}{
 			"name": "route1",
 			"uri":  "/hello",
@@ -49,7 +48,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			"upstream": upstream,
 		}
 		_createRouteBody, err := json.Marshal(createRouteBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -92,7 +91,6 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 		})
 	})
 	ginkgo.It("update route with vars (header)", func() {
-		t := ginkgo.GinkgoT()
 		var createRouteBody map[string]interface{} = map[string]interface{}{
 			"name": "route1",
 			"uri":  "/hello",
@@ -102,7 +100,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			"upstream": upstream,
 		}
 		_createRouteBody, err := json.Marshal(createRouteBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -145,7 +143,6 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 		})
 	})
 	ginkgo.It("update route with vars (cookie)", func() {
-		t := ginkgo.GinkgoT()
 		var createRouteBody map[string]interface{} = map[string]interface{}{
 			"name": "route1",
 			"uri":  "/hello",
@@ -155,7 +152,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			"upstream": upstream,
 		}
 		_createRouteBody, err := json.Marshal(createRouteBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -222,7 +219,6 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 
 var _ = ginkgo.Describe("test route with multiple vars (args, cookie and header)", func() {
 	ginkgo.It("add route with multiple vars (args, cookie and header)", func() {
-		t := ginkgo.GinkgoT()
 		var createRouteBody map[string]interface{} = map[string]interface{}{
 			"name": "route1",
 			"uri":  "/hello",
@@ -234,7 +230,7 @@ var _ = ginkgo.Describe("test route with multiple vars (args, cookie and header)
 			"upstream": upstream,
 		}
 		_createRouteBody, err := json.Marshal(createRouteBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -318,7 +314,6 @@ var _ = ginkgo.Describe("test route with multiple vars (args, cookie and header)
 
 var _ = ginkgo.Describe("test route with vars (args is digital)", func() {
 	ginkgo.It("add route with vars (args is digital)", func() {
-		t := ginkgo.GinkgoT()
 		var createRouteBody map[string]interface{} = map[string]interface{}{
 			"name": "route1",
 			"uri":  "/hello",
@@ -328,7 +323,7 @@ var _ = ginkgo.Describe("test route with vars (args is digital)", func() {
 			"upstream": upstream,
 		}
 		_createRouteBody, err := json.Marshal(createRouteBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,

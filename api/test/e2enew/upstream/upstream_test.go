@@ -24,7 +24,7 @@ import (
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
-	"github.com/stretchr/testify/assert"
+	"github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
@@ -45,7 +45,6 @@ var _ = ginkgo.Describe("Upstream", func() {
 		})
 	})
 	ginkgo.It("create upstream success", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["name"] = "upstream1"
 		createUpstreamBody["nodes"] = []map[string]interface{}{
@@ -57,7 +56,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 		}
 		createUpstreamBody["type"] = "roundrobin"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -68,7 +67,6 @@ var _ = ginkgo.Describe("Upstream", func() {
 		})
 	})
 	ginkgo.It("create upstream2 success", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["name"] = "upstream2"
 		createUpstreamBody["nodes"] = []map[string]interface{}{
@@ -80,7 +78,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 		}
 		createUpstreamBody["type"] = "roundrobin"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -91,7 +89,6 @@ var _ = ginkgo.Describe("Upstream", func() {
 		})
 	})
 	ginkgo.It("create upstream failed, name existed", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["name"] = "upstream2"
 		createUpstreamBody["nodes"] = []map[string]interface{}{
@@ -103,7 +100,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 		}
 		createUpstreamBody["type"] = "roundrobin"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPost,
@@ -116,7 +113,6 @@ var _ = ginkgo.Describe("Upstream", func() {
 		})
 	})
 	ginkgo.It("update upstream failed, name existed", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["name"] = "upstream1"
 		createUpstreamBody["nodes"] = []map[string]interface{}{
@@ -128,7 +124,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 		}
 		createUpstreamBody["type"] = "roundrobin"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -140,7 +136,6 @@ var _ = ginkgo.Describe("Upstream", func() {
 		})
 	})
 	ginkgo.It("update upstream success", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["name"] = "upstream22"
 		createUpstreamBody["nodes"] = []map[string]interface{}{
@@ -152,7 +147,7 @@ var _ = ginkgo.Describe("Upstream", func() {
 		}
 		createUpstreamBody["type"] = "roundrobin"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -271,7 +266,6 @@ var _ = ginkgo.Describe("Upstream", func() {
 
 var _ = ginkgo.Describe("Upstream update with domain", func() {
 	ginkgo.It("create upstream success", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["name"] = "upstream1"
 		createUpstreamBody["nodes"] = []map[string]interface{}{
@@ -283,7 +277,7 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 		}
 		createUpstreamBody["type"] = "roundrobin"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -315,7 +309,6 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 		})
 	})
 	ginkgo.It("update upstream with domain", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
@@ -326,7 +319,7 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 		}
 		createUpstreamBody["type"] = "roundrobin"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -378,7 +371,6 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 
 var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 	ginkgo.It("create chash upstream with key (remote_addr)", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
@@ -401,7 +393,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 		createUpstreamBody["hash_on"] = "header"
 		createUpstreamBody["key"] = "remote_addr"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -429,19 +421,18 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 	})
 
 	ginkgo.It("hit routes(upstream weight 1)", func() {
-		t := ginkgo.GinkgoT()
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		request, err := http.NewRequest("GET", basepath+"/server_port", nil)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		request.Header.Add("Authorization", base.GetToken())
 		res := map[string]int{}
 		for i := 0; i < 18; i++ {
 			resp, err := http.DefaultClient.Do(request)
-			assert.Nil(t, err)
+			gomega.Expect(err).To(gomega.BeNil())
 			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
-			assert.Nil(t, err)
+			gomega.Expect(err).To(gomega.BeNil())
 			body := string(respBody)
 			if _, ok := res[body]; !ok {
 				res[body] = 1
@@ -449,11 +440,10 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 				res[body]++
 			}
 		}
-		assert.Equal(t, 18, res["1982"])
+		gomega.Expect(res["1982"]).Should(gomega.Equal(18))
 	})
 
 	ginkgo.It("create chash upstream with key (remote_addr, weight equal 0 or 1)", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
@@ -476,7 +466,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 		createUpstreamBody["hash_on"] = "header"
 		createUpstreamBody["key"] = "remote_addr"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -502,27 +492,25 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 		})
 	})
 	ginkgo.It("hit routes(remote_addr, weight equal 0 or 1)", func() {
-		t := ginkgo.GinkgoT()
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		request, err := http.NewRequest("GET", basepath+"/server_port", nil)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		request.Header.Add("Authorization", base.GetToken())
 		count := 0
 		for i := 0; i <= 17; i++ {
 			resp, err := http.DefaultClient.Do(request)
-			assert.Nil(t, err)
+			gomega.Expect(err).To(gomega.BeNil())
 			defer resp.Body.Close()
 			respBody, err := ioutil.ReadAll(resp.Body)
-			assert.Nil(t, err)
+			gomega.Expect(err).To(gomega.BeNil())
 			if string(respBody) == "1980" {
 				count++
 			}
 		}
-		assert.Equal(t, 18, count)
+		gomega.Expect(count).Should(gomega.Equal(18))
 	})
 	ginkgo.It("create chash upstream with key (remote_addr, all weight equal 0)", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
@@ -540,7 +528,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 		createUpstreamBody["hash_on"] = "header"
 		createUpstreamBody["key"] = "remote_addr"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
@@ -599,7 +587,6 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 			ExpectStatus: http.StatusOK,
 		})
 	})
-
 	ginkgo.It("get the upstream to verify config", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
@@ -652,7 +639,6 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 
 var _ = ginkgo.Describe("Upstream create via post", func() {
 	ginkgo.It("create upstream via POST", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["id"] = "u1"
 		createUpstreamBody["nodes"] = []map[string]interface{}{
@@ -664,7 +650,7 @@ var _ = ginkgo.Describe("Upstream create via post", func() {
 		}
 		createUpstreamBody["type"] = "roundrobin"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPost,
@@ -733,7 +719,6 @@ var _ = ginkgo.Describe("Upstream create via post", func() {
 
 var _ = ginkgo.Describe("Upstream update use patch method", func() {
 	ginkgo.It("create upstream via POST", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["id"] = "u1"
 		createUpstreamBody["nodes"] = []map[string]interface{}{
@@ -745,7 +730,7 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 		}
 		createUpstreamBody["type"] = "roundrobin"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPost,
@@ -758,7 +743,6 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 		})
 	})
 	ginkgo.It("update upstream use patch method", func() {
-		t := ginkgo.GinkgoT()
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
 			{
@@ -769,7 +753,7 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 		}
 		createUpstreamBody["type"] = "roundrobin"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPatch,
@@ -780,7 +764,6 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 		})
 	})
 	ginkgo.It("get upstream data", func() {
-
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodGet,
@@ -791,7 +774,6 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 		})
 	})
 	ginkgo.It("Upstream update use patch method", func() {
-		t := ginkgo.GinkgoT()
 		var nodes []map[string]interface{} = []map[string]interface{}{
 			{
 				"host":   base.UpstreamIp,
@@ -800,7 +782,7 @@ var _ = ginkgo.Describe("Upstream update use patch method", func() {
 			},
 		}
 		_nodes, err := json.Marshal(nodes)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPatch,
