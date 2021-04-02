@@ -84,6 +84,15 @@ func NewManagerAPICommand() *cobra.Command {
 				return nil
 			})
 
+			quit := make(chan os.Signal, 1)
+			signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+
+			defer func() {
+				utils.CloseAll()
+				log.Infof("The Manager API server exited")
+				signal.Stop(quit)
+			}()
+
 			droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
 				var newMws []droplet.Middleware
 				// default middleware order: resp_reshape, auto_input, traffic_log
@@ -114,9 +123,6 @@ func NewManagerAPICommand() *cobra.Command {
 
 			log.Infof("The Manager API is listening on %s", addr)
 
-			quit := make(chan os.Signal, 1)
-			signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-
 			go func() {
 				if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 					utils.CloseAll()
@@ -136,9 +142,6 @@ func NewManagerAPICommand() *cobra.Command {
 				log.Errorf("Shutting down server error: %s", err)
 			}
 
-			log.Infof("The Manager API server exited")
-
-			utils.CloseAll()
 			return nil
 		},
 	}
