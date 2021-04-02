@@ -73,7 +73,7 @@ $ swagger-markdown -i ./docs/en/latest/api/api.yaml
 ### 6. APISIX dashboard add grafana cross-domain problem
 Modifying the Grafana configuration:
 
-1. Allow anonymous access. enabled = true
+1. Enable anonymous access:
 ```shell
 # grep 'auth.anonymous' -A 3 defaults.ini
 [auth.anonymous]
