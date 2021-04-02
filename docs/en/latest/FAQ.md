@@ -70,7 +70,7 @@ $ swagger generate spec -o ./docs/en/latest/api/api.yaml --scan-models
 ```shell
 $ swagger-markdown -i ./docs/en/latest/api/api.yaml
 ```
-### 6. Apisix dashbord add grafana cross domain problem
+### 6. APISIX dashboard add grafana cross-domain problem
 Modifying the Grafana configuration:
 
 1. Allow anonymous access. enabled = true
