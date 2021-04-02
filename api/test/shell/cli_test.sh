@@ -174,7 +174,7 @@ if [[ `grep -c "The manager-api is running successfully\!" ${STDOUT}` -ne '1' ]]
     exit 1
 fi
 
-if [[ `grep -c "${VERSION}" ${STDOUT}` -ne '1' ]]; then
+if [[ `grep -c -w "${VERSION}" ${STDOUT}` -ne '1' ]]; then
     echo "failed: the manager server didn't show started info"
     exit 1
 fi

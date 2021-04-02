@@ -58,7 +58,7 @@ context('Edit Service with Upstream', () => {
 
     cy.get(this.domSelector.nameSearch).type(this.data.serviceName);
     cy.contains('Search').click();
-    cy.contains(this.data.serviceName).siblings().contains('Edit').click();
+    cy.contains(this.data.serviceName).siblings().contains('Configure').click();
 
     cy.get(this.domSelector.nodes_0_host).click({ force: true }).should('value', this.data.ip1);
     cy.get(this.domSelector.input).should('be.disabled');

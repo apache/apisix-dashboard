@@ -22,7 +22,7 @@ import (
 	"time"
 
 	"github.com/onsi/ginkgo"
-	"github.com/stretchr/testify/assert"
+	"github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
 	"github.com/onsi/ginkgo/extensions/table"
@@ -53,9 +53,8 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 		},
 	}
 	ginkgo.It("create service without plugin", func() {
-		t := ginkgo.GinkgoT()
 		_createServiceBody, err := json.Marshal(createServiceBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -67,10 +66,9 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 		})
 	})
 	ginkgo.It("create service2 success", func() {
-		t := ginkgo.GinkgoT()
 		createServiceBody["name"] = "testservice2"
 		_createServiceBody, err := json.Marshal(createServiceBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -82,10 +80,9 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 		})
 	})
 	ginkgo.It("create service failed, name existed", func() {
-		t := ginkgo.GinkgoT()
 		createServiceBody["name"] = "testservice2"
 		_createServiceBody, err := json.Marshal(createServiceBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPost,
@@ -98,10 +95,9 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 		})
 	})
 	ginkgo.It("update service failed, name existed", func() {
-		t := ginkgo.GinkgoT()
 		createServiceBody["name"] = "testservice2"
 		_createServiceBody, err := json.Marshal(createServiceBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -139,12 +135,11 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 		})
 	})
 	ginkgo.It("batch test /server_port api", func() {
-		t := ginkgo.GinkgoT()
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		res := base.BatchTestServerPort(18)
-		assert.True(t, res["1980"] == 3)
-		assert.True(t, res["1981"] == 6)
-		assert.True(t, res["1982"] == 9)
+		gomega.Expect(res["1980"]).Should(gomega.Equal(3))
+		gomega.Expect(res["1981"]).Should(gomega.Equal(6))
+		gomega.Expect(res["1982"]).Should(gomega.Equal(9))
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{
@@ -189,7 +184,6 @@ var _ = ginkgo.Describe("create service without plugin", func() {
 
 var _ = ginkgo.Describe("create service with plugin", func() {
 	ginkgo.It("create service without plugin", func() {
-		t := ginkgo.GinkgoT()
 		var createServiceBody map[string]interface{} = map[string]interface{}{
 			"name": "testservice",
 			"plugins": map[string]interface{}{
@@ -212,7 +206,7 @@ var _ = ginkgo.Describe("create service with plugin", func() {
 			},
 		}
 		_createServiceBody, err := json.Marshal(createServiceBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPut,
@@ -250,18 +244,17 @@ var _ = ginkgo.Describe("create service with plugin", func() {
 		})
 	})
 	ginkgo.It(" hit routes and check the response header", func() {
-		t := ginkgo.GinkgoT()
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		request, err := http.NewRequest("GET", basepath+"/server_port", nil)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		request.Header.Add("Authorization", base.GetToken())
 		resp, err := http.DefaultClient.Do(request)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		defer resp.Body.Close()
-		assert.Equal(t, 200, resp.StatusCode)
-		assert.Equal(t, "100", resp.Header["X-Ratelimit-Limit"][0])
-		assert.Equal(t, "99", resp.Header["X-Ratelimit-Remaining"][0])
+		gomega.Expect(resp.StatusCode).Should(gomega.Equal(200))
+		gomega.Expect(resp.Header["X-Ratelimit-Limit"][0]).Should(gomega.Equal("100"))
+		gomega.Expect(resp.Header["X-Ratelimit-Remaining"][0]).Should(gomega.Equal("99"))
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{
@@ -296,7 +289,6 @@ var _ = ginkgo.Describe("create service with plugin", func() {
 
 var _ = ginkgo.Describe("create service with all options via POST method", func() {
 	ginkgo.It("create service with all options via POST method", func() {
-		t := ginkgo.GinkgoT()
 		var createServiceBody map[string]interface{} = map[string]interface{}{
 			"id":   "s2",
 			"name": "testservice22",
@@ -329,7 +321,7 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 			},
 		}
 		_createServiceBody, err := json.Marshal(createServiceBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Desc:         "create service with all options via POST method",
 			Object:       base.ManagerApiExpect(),
@@ -410,7 +402,6 @@ var _ = ginkgo.Describe("create service with all options via POST method", func(
 
 var _ = ginkgo.Describe("service update use patch method", func() {
 	ginkgo.It("create service without plugin", func() {
-		t := ginkgo.GinkgoT()
 		var createServiceBody map[string]interface{} = map[string]interface{}{
 			"name": "testservice",
 			"upstream": map[string]interface{}{
@@ -425,7 +416,7 @@ var _ = ginkgo.Describe("service update use patch method", func() {
 			},
 		}
 		_createServiceBody, err := json.Marshal(createServiceBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Desc:         "create service without plugin",
 			Object:       base.ManagerApiExpect(),
@@ -438,7 +429,6 @@ var _ = ginkgo.Describe("service update use patch method", func() {
 		})
 	})
 	ginkgo.It("update service use patch method", func() {
-		t := ginkgo.GinkgoT()
 		var createServiceBody map[string]interface{} = map[string]interface{}{
 			"name": "testpatch",
 			"upstream": map[string]interface{}{
@@ -453,7 +443,7 @@ var _ = ginkgo.Describe("service update use patch method", func() {
 			},
 		}
 		_createServiceBody, err := json.Marshal(createServiceBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodPatch,
@@ -476,7 +466,6 @@ var _ = ginkgo.Describe("service update use patch method", func() {
 		})
 	})
 	ginkgo.It("Update service using path parameter patch method", func() {
-		t := ginkgo.GinkgoT()
 		var createUpstreamBody map[string]interface{} = map[string]interface{}{
 			"type": "roundrobin",
 			"nodes": []map[string]interface{}{
@@ -488,7 +477,7 @@ var _ = ginkgo.Describe("service update use patch method", func() {
 			},
 		}
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
-		assert.Nil(t, err)
+		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPatch,
@@ -524,7 +513,6 @@ var _ = ginkgo.Describe("service update use patch method", func() {
 })
 
 var _ = ginkgo.Describe("test service delete", func() {
-	t := ginkgo.GinkgoT()
 	var createServiceBody map[string]interface{} = map[string]interface{}{
 		"name": "testservice",
 		"upstream": map[string]interface{}{
@@ -539,7 +527,7 @@ var _ = ginkgo.Describe("test service delete", func() {
 		},
 	}
 	_createServiceBody, err := json.Marshal(createServiceBody)
-	assert.Nil(t, err)
+	gomega.Expect(err).To(gomega.BeNil())
 
 	table.DescribeTable("test service delete",
 		func(tc base.HttpTestCase) {

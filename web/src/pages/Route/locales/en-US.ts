@@ -37,7 +37,7 @@ export default {
   'page.route.instructions': 'Instructions',
   'page.route.import': 'Import',
   'page.route.createRoute': 'Create Route',
-  'page.route.editRoute': 'Edit Route',
+  'page.route.editRoute': 'Configure Route',
 
   'page.route.input.placeholder.parameterNameHttpHeader': 'Request header name, for example: HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': 'Parameter name, for example: id',

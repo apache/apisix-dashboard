@@ -104,7 +104,7 @@ context('create route with proxy-rewrite plugin', () => {
 
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
-    cy.contains(this.data.routeName).siblings().contains('Edit').click();
+    cy.contains(this.data.routeName).siblings().contains('Configure').click();
     cy.get(this.domSelector.name).type(this.data.routeName);
 
     cy.contains(routeLocaleUS['page.route.form.itemLabel.newPath']).should('be.visible');
