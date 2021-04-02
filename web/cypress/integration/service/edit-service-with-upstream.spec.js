@@ -38,7 +38,7 @@ context('Edit Service with Upstream', () => {
 
   it('should create a test service', function () {
     cy.visit('/');
-    cy.get(this.domSelector.empty).should('be.visible');
+    cy.get('.ant-empty').should('be.visible');
     cy.contains('Service').click();
     cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
