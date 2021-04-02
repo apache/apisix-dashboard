@@ -45,7 +45,7 @@ $ go env -w GOPROXY=https://goproxy.cn,direct
 ## Clone the project
 
 ```sh
-$ git clone -b v2.4 https://github.com/apache/apisix-dashboard.git
+$ git clone -b release/2.5 https://github.com/apache/apisix-dashboard.git
 ```
 
 ## Build

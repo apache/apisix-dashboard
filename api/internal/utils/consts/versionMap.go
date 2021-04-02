@@ -23,4 +23,5 @@ package consts
 var VersionMap = map[string]string{
 	"2.3": "2.2",
 	"2.4": "2.3",
+	"2.5": "2.4",
 }

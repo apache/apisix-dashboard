@@ -279,21 +279,21 @@ const PluginDetail: React.FC<Props> = ({
         </style>
 
         <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
-          <Form.Item label="Enable" valuePropName="checked" name="disable">
+          <Form.Item label={formatMessage({ id: 'component.global.enable' })} valuePropName="checked" name="disable">
             <Switch
               defaultChecked={initialData[name] && !initialData[name].disable}
               disabled={readonly}
             />
           </Form.Item>
           {type === 'global' && (
-            <Form.Item label="Scope" name="scope">
+            <Form.Item label={formatMessage({ id: 'component.global.scope' })} name="scope">
               <Select disabled>
                 <Select.Option value="global">Global</Select.Option>
               </Select>
             </Form.Item>
           )}
         </Form>
-        <Divider orientation="left">Data Editor</Divider>
+        <Divider orientation="left">{formatMessage({ id: 'component.global.data.editor' })}</Divider>
         <PageHeader
           title=""
           subTitle={
@@ -317,7 +317,7 @@ const PluginDetail: React.FC<Props> = ({
               }}
               key={1}
             >
-              Document
+              {formatMessage({ id: 'component.global.document' })}
             </Button>,
             <Select
               defaultValue={codeMirrorModeList.Json}
@@ -329,7 +329,7 @@ const PluginDetail: React.FC<Props> = ({
               data-cy='code-mirror-mode'
             ></Select>,
             <Button type="primary" onClick={formatCodes} key={3}>
-              Format
+              {formatMessage({ id: 'component.global.format' })}
             </Button>,
           ]}
         />

@@ -28,7 +28,6 @@
             }
           },
           "x-apisix-enable_websocket": false,
-          "x-apisix-plugins": {},
           "x-apisix-priority": 0,
           "x-apisix-status": 1,
           "x-apisix-upstream": {
@@ -80,7 +79,6 @@
             }
           },
           "x-apisix-enable_websocket": false,
-          "x-apisix-plugins": {},
           "x-apisix-priority": 0,
           "x-apisix-status": 1,
           "x-apisix-upstream": {
@@ -131,7 +129,6 @@
             }
           },
           "x-apisix-enable_websocket": false,
-          "x-apisix-plugins": {},
           "x-apisix-priority": 0,
           "x-apisix-status": 1,
           "x-apisix-upstream": {
