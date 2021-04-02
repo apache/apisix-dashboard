@@ -19,6 +19,7 @@
 context('Create and Delete Route', () => {
   const name = `routeName${new Date().valueOf()}`;
   const newName = `newName${new Date().valueOf()}`;
+  const duplicateNewName = `duplicateName${new Date().valueOf()}`;
   const sleepTime = 100;
   const timeout = 5000;
 
@@ -153,12 +154,46 @@ context('Create and Delete Route', () => {
     });
   });
 
-  it('should delete the route', function () {
-    cy.visit('/routes/list');
+
+  it('should duplicate the route', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+
     cy.get(this.domSelector.nameSelector).type(newName);
     cy.contains('Search').click();
-    cy.contains(newName).siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
+    cy.contains(newName).siblings().contains('Duplicate').click();
+
+    cy.get(this.domSelector.name).clear().type(duplicateNewName);
+    cy.get(this.domSelector.description).clear().type(this.data.description2);
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+    cy.contains('Submit').click();
+    cy.contains(this.data.submitSuccess);
+    cy.contains('Goto List').click();
+    cy.url().should('contains', 'routes/list');
+    cy.contains(duplicateNewName).siblings().should('contain', this.data.description2);
+
+    // test view
+    cy.contains(duplicateNewName).siblings().contains('View').click();
+    cy.get(this.domSelector.drawer).should('be.visible');
+
+    cy.get(this.domSelector.codemirrorScroll).within(() => {
+      cy.contains('upstream').should("exist");
+      cy.contains(duplicateNewName).should('exist');
+    });
+  });
+
+  it('should delete the route', function () {
+    cy.visit('/routes/list');
+    const { domSelector, data } = this;
+    const routeNames = [newName, duplicateNewName];
+    routeNames.forEach(function (routeName) {
+      cy.get(domSelector.name).clear().type(routeName);
+      cy.contains('Search').click();
+      cy.contains(routeName).siblings().contains('Delete').click();
+      cy.contains('button', 'Confirm').click();
+      cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
+    });
   });
 });

@@ -37,6 +37,7 @@ export default {
   'component.global.save': '保存',
   'component.global.edit': '配置',
   'component.global.view': '查看',
+  'component.global.duplicate': '复制',
   'component.global.manage': '管理',
   'component.global.update': '更新',
   'component.global.get': '获取',
