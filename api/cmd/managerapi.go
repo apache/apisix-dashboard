@@ -108,7 +108,9 @@ func NewManagerAPICommand() *cobra.Command {
 			}
 			if err := store.InitStores(); err != nil {
 				log.Errorf("init stores fail: %w", err)
-				panic(err)
+				fmt.Printf("%s\n", err)
+				utils.CloseAll()
+				os.Exit(1)
 			}
 
 			// routes
