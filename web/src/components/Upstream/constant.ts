@@ -23,4 +23,5 @@ export const DEFAULT_UPSTREAM = {
     send: 6,
     read: 6,
   },
+  retries: 0
 };

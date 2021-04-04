@@ -83,14 +83,17 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       {
         label: formatMessage({ id: 'page.upstream.step.connect.timeout' }),
         name: ['timeout', 'connect'],
+        desc: formatMessage({ id: 'page.upstream.step.connect.timeout.desc' })
       },
       {
         label: formatMessage({ id: 'page.upstream.step.send.timeout' }),
         name: ['timeout', 'send'],
+        desc: formatMessage({ id: 'page.upstream.step.send.timeout.desc' })
       },
       {
         label: formatMessage({ id: 'page.upstream.step.read.timeout' }),
         name: ['timeout', 'read'],
+        desc: formatMessage({ id: 'page.upstream.step.read.timeout.desc' })
       },
     ];
 
@@ -212,7 +215,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={4}>
+                  <Col span={5}>
                     <Form.Item
                       style={{ marginBottom: 0 }}
                       name={[field.name, 'weight']}
@@ -255,7 +258,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
     const ActiveHealthCheck = () => (
       <>
-        <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.timeout' })}>
+        <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.timeout' })} extra="主动健康检查的套接字的超时时间">
           <Form.Item name={['checks', 'active', 'timeout']} noStyle>
             <InputNumber disabled={readonly} />
           </Form.Item>
@@ -333,6 +336,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeInterval' })}
           required
+          extra="对健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对健康节点不进行主动健康检查。"
         >
           <Form.Item
             style={{ marginBottom: 0 }}
@@ -352,6 +356,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.successes' })}
           required
+          extra="主动健康检查的 HTTP 成功次数，默认值为0。若达到此值，表示上游服务目标节点是健康的。"
         >
           <Form.Item
             name={['checks', 'active', 'healthy', 'successes']}
@@ -373,6 +378,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeInterval' })}
           required
+          extra="对不健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对不健康节点不进行主动健康检查。"
         >
           <Form.Item
             name={['checks', 'active', 'unhealthy', 'interval']}
@@ -392,6 +398,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.http_failures' })}
           required
+          extra="主动健康检查的 HTTP 失败次数，默认值为0。若达到此值，表示上游服务目标节点是不健康的。"
         >
           <Form.Item
             name={['checks', 'active', 'unhealthy', 'http_failures']}
@@ -717,6 +724,16 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 </Select.Option>
               </Select>
             </Form.Item>
+
+            <Form.Item
+              label="重试次数"
+              name="retries"
+            >
+              <InputNumber
+                disabled={disabled}
+              />
+            </Form.Item>
+
             <Form.Item
               noStyle
               shouldUpdate={(prev, next) => {
@@ -744,8 +761,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               }}
             </Form.Item>
 
-            {timeoutFields.map(({ label, name }) => (
-              <Form.Item label={label} required key={label}>
+            {timeoutFields.map(({ label, name, desc = '' }) => (
+              <Form.Item label={label} required key={label} extra={desc}>
                 <Form.Item
                   name={name}
                   noStyle
