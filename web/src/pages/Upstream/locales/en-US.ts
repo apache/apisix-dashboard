@@ -17,13 +17,10 @@
 export default {
   'page.upstream.step.select.upstream': 'Select Upstream',
   'page.upstream.step.select.upstream.select.option': 'Custom',
-  'page.upstream.form.item-label.node.domain.or.ip': 'Node List',
-  'page.upstream.step.backend.server.domain.or.ip': 'Backend Server Domain/IP',
-  'page.upstream.form.item.extra-message.node.domain.or.ip':
-    'When using domain, it will analysis local: /etc/resolv.conf by default, if weight is 0, then fusing this node',
+  'page.upstream.form.item-label.node.domain.or.ip': 'Targets',
   'page.upstream.step.input.domain.name.or.ip': 'Please input domain or IP',
   'page.upstream.step.domain.name.or.ip.rule': 'Only letters, numbers and . are supported',
-  'page.upstream.step.domain.name.or.ip': 'Domain or IP',
+  'page.upstream.step.domain.name.or.ip': 'Hostname or IP',
   'page.upstream.step.input.port': 'Please input port number',
   'page.upstream.step.port': 'Port Number',
   'page.upstream.step.input.weight': 'Please input weight',
@@ -89,7 +86,7 @@ export default {
   'page.upstream.list.name': 'Name',
   'page.upstream.list.type': 'Type',
   'page.upstream.list.description': 'Description',
-  'page.upstream.list.edit.time': 'Configure Time',
+  'page.upstream.list.edit.time': 'Updated At',
   'page.upstream.list.operation': 'Operation',
   'page.upstream.list.edit': 'Configure',
   'page.upstream.list.confirm.delete': 'Are you sure to delete ?',
@@ -100,4 +97,8 @@ export default {
   'page.upstream.list': 'Upstream List',
   'page.upstream.list.input': 'Please input',
   'page.upstream.list.create': 'Create',
+
+  'page.upstream.type.roundrobin': 'Round Robin',
+  'page.upstream.type.chash': 'CHash',
+  'page.upstream.type.ewma': 'EWMA'
 };

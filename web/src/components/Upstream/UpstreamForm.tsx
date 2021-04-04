@@ -163,10 +163,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   index === 0 &&
                   formatMessage({ id: 'page.upstream.form.item-label.node.domain.or.ip' })
                 }
-                extra={
-                  index === 0 &&
-                  formatMessage({ id: 'page.upstream.form.item.extra-message.node.domain.or.ip' })
-                }
                 labelCol={{ span: index === 0 ? 3 : 0 }}
                 wrapperCol={{ offset: index === 0 ? 0 : 3 }}
               >
@@ -196,10 +192,11 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={2}>
+                  <Col span={4}>
                     <Form.Item
                       style={{ marginBottom: 0 }}
                       name={[field.name, 'port']}
+                      label={formatMessage({ id: 'page.upstream.step.port' })}
                       rules={[
                         {
                           required: true,
@@ -215,10 +212,11 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={2}>
+                  <Col span={4}>
                     <Form.Item
                       style={{ marginBottom: 0 }}
                       name={[field.name, 'weight']}
+                      label={formatMessage({ id: 'page.upstream.step.weight' })}
                       rules={[
                         {
                           required: true,
@@ -688,7 +686,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 {Object.entries(Type).map(([label, value]) => {
                   return (
                     <Select.Option value={value} key={value}>
-                      {label}
+                      {formatMessage({ id: `page.upstream.type.${label}` })}
                     </Select.Option>
                   );
                 })}

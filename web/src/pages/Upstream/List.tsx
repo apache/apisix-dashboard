@@ -136,12 +136,11 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
-          <Button type="primary" onClick={() => {
+          <Button type="default" onClick={() => {
             setVisible(true);
             setEditorMode('create');
             setRawData({});
           }}>
-            <PlusOutlined />
             {formatMessage({ id: 'component.global.createWithEditor' })}
           </Button>,
         ]}
