@@ -49,11 +49,9 @@ var _ = ginkgo.Describe("route with management fields", func() {
 					"desc": "config route with name and desc",
 					"upstream": {
 						"type": "roundrobin",
-						"nodes": [{
-							"host": "172.16.238.20",
-							"port": 1980,
-							"weight": 1
-						}]
+						"nodes": {
+							"` + base.UpstreamIp + `:1980": 1
+						}
 					}
 				}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -134,11 +132,9 @@ var _ = ginkgo.Describe("route with management fields", func() {
 					"desc": "new desc",
 					"upstream": {
 						"type": "roundrobin",
-						"nodes": [{
-							"host": "172.16.238.20",
-							"port": 1980,
-							"weight": 1
-						}]
+						"nodes": {
+							"` + base.UpstreamIp + `:1980": 1
+						}
 					}
 				}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -182,6 +178,17 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			ExpectStatus: http.StatusOK,
 		})
 	})
+
+	ginkgo.It("verify delete route (r1) success", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        base.SleepTime,
+		})
+	})
 })
 
 var _ = ginkgo.Describe("route with management fields", func() {
@@ -203,11 +210,9 @@ var _ = ginkgo.Describe("route with management fields", func() {
 					},
 					"upstream": {
 						"type": "roundrobin",
-						"nodes": [{
-							"host": "172.16.238.20",
-							"port": 1980,
-							"weight": 1
-						}]
+						"nodes": {
+							"` + base.UpstreamIp + `:1980": 1
+						}
 					}
 				}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -268,11 +273,9 @@ var _ = ginkgo.Describe("route with management fields", func() {
 					},
 					"upstream": {
 						"type": "roundrobin",
-						"nodes": [{
-							"host": "172.16.238.20",
-							"port": 1980,
-							"weight": 1
-						}]
+						"nodes": {
+							"` + base.UpstreamIp + `:1980": 1
+						}
 					}
 				}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -293,11 +296,9 @@ var _ = ginkgo.Describe("route with management fields", func() {
 					},
 					"upstream": {
 						"type": "roundrobin",
-						"nodes": [{
-							"host": "172.16.238.20",
-							"port": 1980,
-							"weight": 1
-						}]
+						"nodes": {
+							"` + base.UpstreamIp + `:1980": 1
+						}
 					}
 				}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -400,10 +401,10 @@ var _ = ginkgo.Describe("route with management fields", func() {
 				"uri": "/hello",
 				"create_time": 1608792721,
 				"upstream": {
+					"type": "roundrobin",
 					"nodes": {
-						"172.16.238.20:1980": 1
-					},
-					"type": "roundrobin"
+						"` + base.UpstreamIp + `:1980": 1
+					}
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -418,10 +419,10 @@ var _ = ginkgo.Describe("route with management fields", func() {
 				"uri": "/hello",
 				"update_time": 1608792721,
 				"upstream": {
+					"type": "roundrobin",
 					"nodes": {
-						"172.16.238.20:1980": 1
-					},
-					"type": "roundrobin"
+						"` + base.UpstreamIp + `:1980": 1
+					}
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -437,10 +438,10 @@ var _ = ginkgo.Describe("route with management fields", func() {
 				"create_time": 1608792721,
 				"update_time": 1608792721,
 				"upstream": {
+					"type": "roundrobin",
 					"nodes": {
-						"172.16.238.20:1980": 1
-					},
-					"type": "roundrobin"
+						"` + base.UpstreamIp + `:1980": 1
+					}
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
