@@ -158,18 +158,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       <Form.List name="nodes">
         {(fields, { add, remove }) => (
           <>
-            {fields.map((field, index) => (
-              <Form.Item
-                required
-                key={field.key}
-                label={
-                  index === 0 &&
-                  formatMessage({ id: 'page.upstream.form.item-label.node.domain.or.ip' })
-                }
-                labelCol={{ span: index === 0 ? 3 : 0 }}
-                wrapperCol={{ offset: index === 0 ? 0 : 3 }}
-              >
-                <Row style={{ marginBottom: 10 }} gutter={16}>
+            <Form.Item label={formatMessage({ id: 'page.upstream.form.item-label.node.domain.or.ip' })}>
+              {fields.map((field, index) => (
+                <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
                   <Col span={5}>
                     <Form.Item
                       style={{ marginBottom: 0 }}
@@ -210,7 +201,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       <InputNumber
                         placeholder={formatMessage({ id: 'page.upstream.step.port' })}
                         disabled={readonly}
-                        min={1}
+                        min={0}
                         max={65535}
                       />
                     </Form.Item>
@@ -236,13 +227,13 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                     </Form.Item>
                   </Col>
                   <Col style={removeBtnStyle}>
-                    {!readonly && fields.length > 1 && (
+                    {!readonly && (
                       <MinusCircleOutlined onClick={() => remove(field.name)} />
                     )}
                   </Col>
                 </Row>
-              </Form.Item>
-            ))}
+              ))}
+            </Form.Item>
             {!readonly && (
               <Form.Item wrapperCol={{ offset: 3 }}>
                 <Button type="dashed" onClick={add}>
@@ -258,15 +249,16 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
     const ActiveHealthCheck = () => (
       <>
-        <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.timeout' })} extra="主动健康检查的套接字的超时时间">
+        <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.timeout' })} tooltip="主动健康检查的套接字的超时时间">
           <Form.Item name={['checks', 'active', 'timeout']} noStyle>
-            <InputNumber disabled={readonly} />
+            <InputNumber disabled={readonly} min={0} />
           </Form.Item>
-          <span style={{ margin: '0 8px' }}>s</span>
+          <TimeUnit />
         </Form.Item>
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeHost' })}
           required
+          tooltip="进行主动健康检查时使用的 HTTP 请求主机名"
         >
           <Form.Item
             style={{ marginBottom: 0 }}
@@ -301,6 +293,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 id: 'page.upstream.step.input.healthyCheck.activePort',
               })}
               disabled={readonly}
+              min={0}
+              max={65535}
             />
           </Form.Item>
         </Form.Item>
@@ -308,6 +302,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.http_path' })}
           required
+          tooltip={formatMessage({
+            id: 'page.upstream.step.input.healthyCheck.active.http_path',
+          })}
         >
           <Form.Item
             name={['checks', 'active', 'http_path']}
@@ -315,16 +312,14 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             rules={[
               {
                 required: true,
-                message: formatMessage({
-                  id: 'page.upstream.step.input.healthyCheck.active.http_path',
-                }),
+                message: "请输入 HTTP 请求路径",
               },
             ]}
           >
             <Input
               disabled={readonly}
               placeholder={formatMessage({
-                id: 'page.upstream.step.input.healthyCheck.active.http_path',
+                id: '请输入 HTTP 请求路径',
               })}
             />
           </Form.Item>
@@ -336,7 +331,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeInterval' })}
           required
-          extra="对健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对健康节点不进行主动健康检查。"
+          tooltip="对健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对健康节点不进行主动健康检查。"
         >
           <Form.Item
             style={{ marginBottom: 0 }}
@@ -352,11 +347,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           >
             <InputNumber disabled={readonly} min={1} />
           </Form.Item>
+          <TimeUnit />
         </Form.Item>
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.successes' })}
           required
-          extra="主动健康检查的 HTTP 成功次数，默认值为0。若达到此值，表示上游服务目标节点是健康的。"
+          tooltip="主动健康检查的 HTTP 成功次数，默认值为0。若达到此值，表示上游服务目标节点是健康的。"
         >
           <Form.Item
             name={['checks', 'active', 'healthy', 'successes']}
@@ -378,7 +374,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeInterval' })}
           required
-          extra="对不健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对不健康节点不进行主动健康检查。"
+          tooltip="对不健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对不健康节点不进行主动健康检查。"
         >
           <Form.Item
             name={['checks', 'active', 'unhealthy', 'interval']}
@@ -394,11 +390,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           >
             <InputNumber disabled={readonly} min={1} />
           </Form.Item>
+          <TimeUnit />
         </Form.Item>
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.http_failures' })}
           required
-          extra="主动健康检查的 HTTP 失败次数，默认值为0。若达到此值，表示上游服务目标节点是不健康的。"
+          tooltip="主动健康检查的 HTTP 失败次数，默认值为0。若达到此值，表示上游服务目标节点是不健康的。"
         >
           <Form.Item
             name={['checks', 'active', 'unhealthy', 'http_failures']}
@@ -762,7 +759,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             </Form.Item>
 
             {timeoutFields.map(({ label, name, desc = '' }) => (
-              <Form.Item label={label} required key={label} extra={desc}>
+              <Form.Item label={label} required key={label} tooltip={desc}>
                 <Form.Item
                   name={name}
                   noStyle

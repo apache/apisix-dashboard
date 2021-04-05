@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react';
-import { Form, Input, InputNumber } from 'antd';
+import { Form, Input } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 
@@ -42,7 +42,7 @@ const Step1: React.FC<Props> = ({ form, disabled, upstreamRef }) => {
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.name' })}
           name="name"
-          rules={[{ required: true, message: formatMessage({ id: 'page.upstream.step.name.should.unique' }) }]}
+          rules={[{ required: true, message: formatMessage({ id: 'page.upstream.step.input.upstream.name' }) }]}
         >
           <Input
             placeholder={formatMessage({ id: 'page.upstream.step.input.upstream.name' })}

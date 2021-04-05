@@ -82,13 +82,12 @@ const Page: React.FC = (props) => {
           ? formatMessage({ id: 'page.upstream.configure' })
           : formatMessage({ id: 'page.upstream.create' })}
 
-        extra={[
+        extra={
           // TODO: support Document modal
           <Button type="default" disabled>
             <QuestionCircleOutlined />
             {formatMessage({ id: 'component.document' })}
-          </Button>
-        ]}
+          </Button>}
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
