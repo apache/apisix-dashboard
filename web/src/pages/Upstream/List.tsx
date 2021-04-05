@@ -116,7 +116,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageContainer title={formatMessage({ id: 'page.upstream.list' })}>
+    <PageContainer title={formatMessage({ id: 'page.upstream.list' })} content="上游服务即后端服务，我们可以对上游服务的多个目标节点进行负载均衡和健康检查。">
       <ProTable<UpstreamModule.ResponseBody>
         actionRef={ref}
         columns={columns}
