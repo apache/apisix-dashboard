@@ -461,6 +461,7 @@ sleep 6
 # make a dummy entry
 ./etcd-v3.4.14-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
 ./manager-api  2>man-api.err &
+sleep 4
 
 if [[ `cat man-api.err | grep -c "Error occurred while initializing logical store:  /apisix/routes"` -ne '1' ||
 `cat man-api.err | grep -c "json unmarshal failed"` -ne '1' ]];then
