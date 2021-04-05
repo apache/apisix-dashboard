@@ -66,7 +66,7 @@ type Props = {
 };
 
 const removeBtnStyle = {
-  marginLeft: -10,
+  marginLeft: 20,
   display: 'flex',
   alignItems: 'center',
 };
@@ -226,7 +226,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       />
                     </Form.Item>
                   </Col>
-                  <Col style={removeBtnStyle}>
+                  <Col style={{ ...removeBtnStyle, marginLeft: -25 }}>
                     {!readonly && (
                       <MinusCircleOutlined onClick={() => remove(field.name)} />
                     )}
@@ -334,6 +334,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           tooltip="对健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对健康节点不进行主动健康检查。"
         >
           <Form.Item
+            noStyle
             style={{ marginBottom: 0 }}
             name={['checks', 'active', 'healthy', 'interval']}
             rules={[
@@ -471,25 +472,20 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.List name={['checks', 'passive', 'healthy', 'http_statuses']}>
           {(fields, { add, remove }) => (
             <>
-              {fields.map((field, index) => (
-                <Form.Item
-                  required
-                  key={field.key}
-                  label={
-                    index === 0 &&
-                    formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })
-                  }
-                  labelCol={{ span: index === 0 ? 3 : 0 }}
-                  wrapperCol={{ offset: index === 0 ? 0 : 3 }}
-                >
-                  <Row style={{ marginBottom: 10 }}>
+              <Form.Item
+                required
+                label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
+                tooltip="当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表健康状态是由代理流量产生的。"
+              >
+                {fields.map((field, index) => (
+                  <Row style={{ marginBottom: 10 }} key={index}>
                     <Col span={2}>
                       <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
-                        <InputNumber disabled={readonly} />
+                        <InputNumber disabled={readonly} min={200} max={599} />
                       </Form.Item>
                     </Col>
                     <Col style={removeBtnStyle}>
-                      {!readonly && fields.length > 1 && (
+                      {!readonly && (
                         <MinusCircleOutlined
                           onClick={() => {
                             remove(field.name);
@@ -498,8 +494,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       )}
                     </Col>
                   </Row>
-                </Form.Item>
-              ))}
+                ))}
+              </Form.Item>
               {!readonly && (
                 <Form.Item wrapperCol={{ offset: 3 }}>
                   <Button type="dashed" onClick={() => add()}>
@@ -515,6 +511,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Form.List>
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.successes' })}
+          tooltip="通过被动健康检查观察到的正常代理流量的成功次数。如果达到该值，上游服务目标节点将被视为健康。"
           required
         >
           <Form.Item
@@ -537,21 +534,16 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.List name={['checks', 'passive', 'unhealthy', 'http_statuses']}>
           {(fields, { add, remove }) => (
             <>
-              {fields.map((field, index) => (
-                <Form.Item
-                  required
-                  key={field.key}
-                  label={
-                    index === 0 &&
-                    formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })
-                  }
-                  labelCol={{ span: index === 0 ? 3 : 0 }}
-                  wrapperCol={{ offset: index === 0 ? 0 : 3 }}
-                >
-                  <Row style={{ marginBottom: 10 }}>
+              <Form.Item
+                required
+                label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
+                tooltip="当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表不健康状态是由代理流量产生的。"
+              >
+                {fields.map((field, index) => (
+                  <Row style={{ marginBottom: 10 }} key={index}>
                     <Col span={2}>
                       <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
-                        <InputNumber disabled={readonly} max={599} />
+                        <InputNumber disabled={readonly} min={200} max={599} />
                       </Form.Item>
                     </Col>
                     <Col style={removeBtnStyle}>
@@ -564,8 +556,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       )}
                     </Col>
                   </Row>
-                </Form.Item>
-              ))}
+                ))}
+              </Form.Item>
               {!readonly && (
                 <Form.Item wrapperCol={{ offset: 3 }}>
                   <Button type="dashed" onClick={() => add()}>
@@ -582,6 +574,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.http_failures' })}
           required
+          tooltip="由被动健康检查所观察，代理流量中 HTTP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。"
         >
           <Form.Item
             name={['checks', 'passive', 'unhealthy', 'http_failures']}
@@ -601,6 +594,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.tcp_failures' })}
           required
+          tooltip="被动健康检查所观察到的代理流量中 TCP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。"
         >
           <Form.Item
             name={['checks', 'passive', 'unhealthy', 'tcp_failures']}
@@ -783,7 +777,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 {
                   label: formatMessage({ id: 'page.upstream.step.healthyCheck.active' }),
                   name: ['checks', 'active'],
-                  component: <ActiveHealthCheck />,
+                  component: (
+                    <>
+                      <ActiveHealthCheck />
+                      <Divider orientation="left" plain></Divider>
+                    </>
+                  ),
                 },
                 {
                   label: formatMessage({ id: 'page.upstream.step.healthyCheck.passive' }),
