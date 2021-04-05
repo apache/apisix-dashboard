@@ -258,7 +258,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeHost' })}
           required
-          tooltip="进行主动健康检查时使用的 HTTP 请求主机名"
+          tooltip={formatMessage({ id: 'page.upstream.checks.active.timeout.description' })}
         >
           <Form.Item
             style={{ marginBottom: 0 }}
@@ -312,15 +312,13 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             rules={[
               {
                 required: true,
-                message: "请输入 HTTP 请求路径",
+                message: formatMessage({ id: 'page.upstream.checks.active.http_path.placeholder' }),
               },
             ]}
           >
             <Input
               disabled={readonly}
-              placeholder={formatMessage({
-                id: '请输入 HTTP 请求路径',
-              })}
+              placeholder={formatMessage({ id: 'page.upstream.checks.active.http_path.placeholder' })}
             />
           </Form.Item>
         </Form.Item>
@@ -331,7 +329,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeInterval' })}
           required
-          tooltip="对健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对健康节点不进行主动健康检查。"
+          tooltip={formatMessage({ id: 'page.upstream.checks.active.healthy.interval.description' })}
         >
           <Form.Item
             noStyle
@@ -353,7 +351,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.successes' })}
           required
-          tooltip="主动健康检查的 HTTP 成功次数，默认值为0。若达到此值，表示上游服务目标节点是健康的。"
+          tooltip={formatMessage({ id: 'page.upstream.checks.active.healthy.successes.description' })}
         >
           <Form.Item
             name={['checks', 'active', 'healthy', 'successes']}
@@ -375,7 +373,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeInterval' })}
           required
-          tooltip="对不健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对不健康节点不进行主动健康检查。"
+          tooltip={formatMessage({ id: 'page.upstream.checks.active.unhealthy.interval.description' })}
         >
           <Form.Item
             name={['checks', 'active', 'unhealthy', 'interval']}
@@ -396,7 +394,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.http_failures' })}
           required
-          tooltip="主动健康检查的 HTTP 失败次数，默认值为0。若达到此值，表示上游服务目标节点是不健康的。"
+          tooltip={formatMessage({ id: 'page.upstream.checks.active.unhealthy.http_failures.description' })}
         >
           <Form.Item
             name={['checks', 'active', 'unhealthy', 'http_failures']}
@@ -475,7 +473,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               <Form.Item
                 required
                 label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
-                tooltip="当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表健康状态是由代理流量产生的。"
+                tooltip={formatMessage({ id: 'page.upstream.checks.passive.healthy.http_statuses.description' })}
               >
                 {fields.map((field, index) => (
                   <Row style={{ marginBottom: 10 }} key={index}>
@@ -511,7 +509,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Form.List>
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.successes' })}
-          tooltip="通过被动健康检查观察到的正常代理流量的成功次数。如果达到该值，上游服务目标节点将被视为健康。"
+          tooltip={formatMessage({ id: 'page.upstream.checks.passive.healthy.successes.description' })}
           required
         >
           <Form.Item
@@ -537,7 +535,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               <Form.Item
                 required
                 label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
-                tooltip="当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表不健康状态是由代理流量产生的。"
+                tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.http_statuses.description' })}
               >
                 {fields.map((field, index) => (
                   <Row style={{ marginBottom: 10 }} key={index}>
@@ -574,7 +572,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.http_failures' })}
           required
-          tooltip="由被动健康检查所观察，代理流量中 HTTP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。"
+          tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.http_failures.description' })}
         >
           <Form.Item
             name={['checks', 'passive', 'unhealthy', 'http_failures']}
@@ -594,7 +592,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.tcp_failures' })}
           required
-          tooltip="被动健康检查所观察到的代理流量中 TCP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。"
+          tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.tcp_failures.description' })}
         >
           <Form.Item
             name={['checks', 'passive', 'unhealthy', 'tcp_failures']}
@@ -717,7 +715,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             </Form.Item>
 
             <Form.Item
-              label="重试次数"
+              label={formatMessage({ id: 'page.upstream.retries' })}
               name="retries"
             >
               <InputNumber

@@ -74,8 +74,8 @@ export default {
   'page.upstream.step.healthyCheck.passive.create.http_statuses': '增加状态码',
   'page.upstream.step.healthyCheck.passive.http_statuses': '状态码',
   'page.upstream.step.input.healthyCheck.passive.http_statuses': '请输入状态码',
-  'page.upstream.step.healthyCheck.passive.tcp_failures': 'tcp失败次数',
-  'page.upstream.step.input.healthyCheck.passive.tcp_failures': '请输入tcp失败次数',
+  'page.upstream.step.healthyCheck.passive.tcp_failures': 'TCP 失败次数',
+  'page.upstream.step.input.healthyCheck.passive.tcp_failures': '请输入 TCP 失败次数',
   'page.upstream.notificationMessage.enableHealthCheckFirst': '请先启用探活健康检查。',
   'page.upstream.upstream_host.required': '请输入自定义 Host 请求头',
 
@@ -103,5 +103,21 @@ export default {
 
   'page.upstream.type.roundrobin': '轮询调度（Round Robin）',
   'page.upstream.type.chash': '一致性哈希（CHash）',
-  'page.upstream.type.ewma': '指数加权移动平均法（EWMA）'
+  'page.upstream.type.ewma': '指数加权移动平均法（EWMA）',
+
+  'page.upstream.list.content': '上游列表包含了已创建的上游服务（即后端服务），可以对上游服务的多个目标节点进行负载均衡和健康检查。',
+
+  'page.upstream.retries': '重试次数',
+
+  'page.upstream.checks.active.http_path.placeholder': '请输入 HTTP 请求路径',
+  'page.upstream.checks.active.timeout.description': '进行主动健康检查时使用的 HTTP 请求主机名',
+  'page.upstream.checks.active.healthy.interval.description': '对健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对健康节点不进行主动健康检查。',
+  'page.upstream.checks.active.healthy.successes.description': '主动健康检查的 HTTP 成功次数，默认值为0。若达到此值，表示上游服务目标节点是健康的。',
+  'page.upstream.checks.active.unhealthy.interval.description': '对不健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对不健康节点不进行主动健康检查。',
+  'page.upstream.checks.active.unhealthy.http_failures.description': '主动健康检查的 HTTP 失败次数，默认值为0。若达到此值，表示上游服务目标节点是不健康的。',
+  'page.upstream.checks.passive.healthy.http_statuses.description': '当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表健康状态是由代理流量产生的。',
+  'page.upstream.checks.passive.healthy.successes.description': '通过被动健康检查观察到的正常代理流量的成功次数。如果达到该值，上游服务目标节点将被视为健康。',
+  'page.upstream.checks.passive.unhealthy.http_statuses.description': '当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表不健康状态是由代理流量产生的。',
+  'page.upstream.checks.passive.unhealthy.http_failures.description': '由被动健康检查所观察，代理流量中 HTTP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。',
+  'page.upstream.checks.passive.unhealthy.tcp_failures.description': '被动健康检查所观察到的代理流量中 TCP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。'
 };
