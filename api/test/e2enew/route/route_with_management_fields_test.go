@@ -186,6 +186,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -249,6 +250,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		}),
 	)
@@ -382,6 +384,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 			Path:         "/hello",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
 			Sleep:        base.SleepTime,
 		}),
 	)
