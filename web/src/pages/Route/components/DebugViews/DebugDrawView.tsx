@@ -390,26 +390,9 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         </PanelSection>
         <PanelSection title={formatMessage({ id: 'page.route.PanelSection.title.responseResult' })}>
           <Tabs>
-          <TabPane tab={formatMessage({ id: 'page.route.TabPane.header' })} key="header">
-              <Spin tip="Loading..." spinning={loading}>
-                <CodeMirror
-                  value={responseHeader}
-                  height={codeMirrorHeight}
-                  options={{
-                    mode: 'json-ld',
-                    readOnly: 'nocursor',
-                    lineWrapping: true,
-                    lineNumbers: true,
-                    showCursorWhenSelecting: true,
-                    autofocus: true,
-                    scrollbarStyle: null,
-                  }}
-                />
-              </Spin>
-            </TabPane>
             <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="response">
               <Spin tip="Loading..." spinning={loading}>
-                <div id='codeMirror-response'> 
+                <div id='codeMirror-response'>
                   <CodeMirror
                     value={responseBody}
                     height={codeMirrorHeight}
@@ -424,6 +407,23 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                     }}
                   />
                 </div>
+              </Spin>
+            </TabPane>
+            <TabPane tab={formatMessage({ id: 'page.route.TabPane.header' })} key="header">
+              <Spin tip="Loading..." spinning={loading}>
+                <CodeMirror
+                  value={responseHeader}
+                  height={codeMirrorHeight}
+                  options={{
+                    mode: 'json-ld',
+                    readOnly: 'nocursor',
+                    lineWrapping: true,
+                    lineNumbers: true,
+                    showCursorWhenSelecting: true,
+                    autofocus: true,
+                    scrollbarStyle: null,
+                  }}
+                />
               </Spin>
             </TabPane>
           </Tabs>
