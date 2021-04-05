@@ -457,6 +457,18 @@ fi
 ./manager-api stop
 sleep 6
 
+# test manager-api output for bad data on etcd
+# make a dummy entry
+./etcd-v3.4.14-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
+out=$(./manager-api 2>&1 > /dev/null )
+if [[ `echo "${out}" | grep -c "Error occurred while initializing logical store:  /apisix/routes"` -ne '1' ||
+`echo "${out}" | grep -c "json unmarshal failed"` -ne '1' ]];then
+  echo "manager api failed to stream error on stderr for bad data"
+  exit 1
+fi
+# delete dummy entry
+./etcd-v3.4.14-linux-amd64/etcdctl del /apisix/routes/unique1
+
 pkill -f etcd
 
 clean_up
