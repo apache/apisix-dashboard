@@ -108,7 +108,7 @@ func NewManagerAPICommand() *cobra.Command {
 			}
 			if err := store.InitStores(); err != nil {
 				log.Errorf("init stores fail: %w", err)
-				fmt.Printf("%s\n", err)
+				fmt.Fprintf(os.Stderr, "%s\n", err)
 				utils.CloseAll()
 				os.Exit(1)
 			}

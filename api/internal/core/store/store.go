@@ -21,6 +21,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"reflect"
 	"sort"
 	"sync"
@@ -105,7 +106,7 @@ func (s *GenericStore) Init() error {
 		key := ret[i].Key[len(s.opt.BasePath)+1:]
 		objPtr, err := s.StringToObjPtr(ret[i].Value, key)
 		if err != nil {
-			fmt.Println("Error occurred while initializing logical store: ", s.opt.BasePath)
+			fmt.Fprintln(os.Stderr, "Error occurred while initializing logical store: ", s.opt.BasePath)
 			return err
 		}
 
