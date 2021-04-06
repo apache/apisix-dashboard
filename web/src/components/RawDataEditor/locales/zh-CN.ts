@@ -16,5 +16,5 @@
  */
 export default {
   'component.rawDataEditor.tip': '目前暂不支持编辑',
-  'component.rawDataEditor.title': 'CodeMirror',
+  'component.rawDataEditor.title': 'Raw Data Editor',
 };

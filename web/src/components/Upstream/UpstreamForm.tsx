@@ -778,7 +778,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   component: (
                     <>
                       <ActiveHealthCheck />
-                      <Divider orientation="left" plain></Divider>
+                      <Divider orientation="left" plain />
                     </>
                   ),
                 },

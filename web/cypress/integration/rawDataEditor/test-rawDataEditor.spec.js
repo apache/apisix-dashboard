@@ -35,7 +35,7 @@ context('Test RawDataEditor', () => {
     menuList.forEach(function (item) {
       cy.visit('/');
       cy.contains(item).click();
-      cy.contains('CodeMirror').click();
+      cy.contains('Raw Data Editor').click();
       const data = dateset[item];
 
       cy.window().then(({ codemirror }) => {

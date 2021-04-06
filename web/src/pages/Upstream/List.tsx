@@ -141,7 +141,7 @@ const Page: React.FC = () => {
             setEditorMode('create');
             setRawData({});
           }}>
-            {formatMessage({ id: 'component.global.createWithEditor' })}
+            {formatMessage({ id: 'component.global.data.editor' })}
           </Button>,
         ]}
       />
