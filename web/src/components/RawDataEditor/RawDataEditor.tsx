@@ -109,7 +109,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
   return (
     <>
       <Drawer
-        title={formatMessage({ id: 'component.rawDataEditor.title' })}
+        title={formatMessage({ id: 'component.global.data.editor' })}
         placement="right"
         width={700}
         visible={visible}
