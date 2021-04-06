@@ -73,7 +73,7 @@ const Page: React.FC = (props) => {
     const upstreamFormData = upstreamRef.current?.getData();
     if (!upstreamFormData.upstream_id) {
       data.upstream = upstreamFormData;
-    } else {
+    } else if (upstreamFormData.upstream_id !== 'None') {
       data.upstream_id = upstreamFormData.upstream_id;
     }
 
