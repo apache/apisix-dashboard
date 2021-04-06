@@ -25,7 +25,7 @@ export default {
   'component.global.document': '文档',
   'component.global.enable': '启用',
   'component.global.scope': '作用域',
-  'component.global.data.editor': '原始数据编辑器',
+  'component.global.data.editor': '数据编辑器',
   'component.global.delete': '删除',
   'component.global.cancel': '取消',
   'component.global.submit': '提交',
