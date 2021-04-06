@@ -460,8 +460,8 @@ sleep 6
 # test manager-api output for bad data on etcd
 # make a dummy entry
 ./etcd-v3.4.14-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
-sleep 1
-./manager-api  2>man-api.err &
+sleep 4
+./manager-api 2>man-api.err &
 sleep 4
 
 if [[ `cat man-api.err | grep -c "Error occurred while initializing logical store:  /apisix/routes"` -ne '1' ||
