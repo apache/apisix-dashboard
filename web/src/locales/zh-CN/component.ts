@@ -21,13 +21,11 @@ export default {
   'component.global.search': '查询',
   'component.global.reset': '重置',
   'component.global.confirm': '确认',
-
   'component.global.format': '格式化',
   'component.global.document': '文档',
   'component.global.enable': '启用',
   'component.global.scope': '作用域',
   'component.global.data.editor': '元数据编辑器',
-
   'component.global.delete': '删除',
   'component.global.cancel': '取消',
   'component.global.submit': '提交',
