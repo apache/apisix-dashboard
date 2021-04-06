@@ -141,7 +141,7 @@ context('Create and Delete Consumer', () => {
     const { domSelector, data } = this;
     const consumerNames = [data.consumerName, data.consumerName2];
     consumerNames.forEach(function (consumerName) {
-      cy.get(domSelector.name).clear().type(consumerName);
+      cy.get(domSelector.username).clear().type(consumerName);
       cy.contains('Search').click();
       cy.contains(consumerName).should('be.visible').siblings().contains('Delete').click();
       cy.contains('button', 'Confirm').click();
