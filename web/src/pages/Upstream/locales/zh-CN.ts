@@ -110,7 +110,8 @@ export default {
   'page.upstream.retries': '重试次数',
 
   'page.upstream.checks.active.http_path.placeholder': '请输入 HTTP 请求路径',
-  'page.upstream.checks.active.timeout.description': '进行主动健康检查时使用的 HTTP 请求主机名',
+  'page.upstream.checks.active.timeout.description': '主动健康检查的套接字的超时时间',
+  'page.upstream.checks.active.host.description': '进行主动健康检查时使用的 HTTP 请求主机名',
   'page.upstream.checks.active.healthy.interval.description': '对健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对健康节点不进行主动健康检查。',
   'page.upstream.checks.active.healthy.successes.description': '主动健康检查的 HTTP 成功次数，默认值为0。若达到此值，表示上游服务目标节点是健康的。',
   'page.upstream.checks.active.unhealthy.interval.description': '对不健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对不健康节点不进行主动健康检查。',

@@ -249,7 +249,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
     const ActiveHealthCheck = () => (
       <>
-        <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.timeout' })} tooltip="主动健康检查的套接字的超时时间">
+        <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.timeout' })} tooltip={formatMessage({ id: 'page.upstream.checks.active.timeout.description' })}>
           <Form.Item name={['checks', 'active', 'timeout']} noStyle>
             <InputNumber disabled={readonly} min={0} />
           </Form.Item>
@@ -258,7 +258,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeHost' })}
           required
-          tooltip={formatMessage({ id: 'page.upstream.checks.active.timeout.description' })}
+          tooltip={formatMessage({ id: 'page.upstream.checks.active.host.description' })}
         >
           <Form.Item
             style={{ marginBottom: 0 }}

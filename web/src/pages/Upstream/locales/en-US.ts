@@ -110,7 +110,8 @@ export default {
   'page.upstream.retries': 'Retries',
 
   'page.upstream.checks.active.http_path.placeholder': 'Please enter HTTP request path',
-  'page.upstream.checks.active.timeout.description': 'The hostname of the HTTP request used to perform the active health check',
+  'page.upstream.checks.active.timeout.description': 'Timeout for sockets with active health checks',
+  'page.upstream.checks.active.host.description': 'The hostname of the HTTP request used to perform the active health check',
   'page.upstream.checks.active.healthy.interval.description': 'The interval between active health checks for healthy upstream service target nodes. The default value is 0, which means no active health checks are performed for healthy nodes.',
   'page.upstream.checks.active.healthy.successes.description': 'The number of HTTP successes for the active health check, the default value is 0. If this value is reached, it means that the upstream service target node is healthy.',
   'page.upstream.checks.active.unhealthy.interval.description': 'The interval between active health checks for unhealthy upstream service target nodes. The default value is 0, which means no active health checks are performed for unhealthy nodes.',
