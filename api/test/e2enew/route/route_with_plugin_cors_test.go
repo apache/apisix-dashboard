@@ -14,26 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package e2e
+package route
 
 import (
 	"net/http"
-	"testing"
+
+	"github.com/onsi/ginkgo"
+	"github.com/onsi/ginkgo/extensions/table"
+
+	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-func TestRoute_With_Plugin_Cors(t *testing.T) {
-	tests := []HttpTestCase{
-		{
-			Desc:         "make sure the route is not created",
-			Object:       APISIXExpect(t),
+var _ = ginkgo.Describe("route with plugin cors", func() {
+	table.DescribeTable("test route with plugin cors",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("make sure the route is not created", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-		},
-		{
-			Desc:   "create route with cors default setting",
-			Object: ManagerApiExpect(t),
+		}),
+		table.Entry("create route with cors default setting", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -51,12 +56,11 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 					}]
 				}
 			}`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "verify route with cors default setting",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("verify route with cors default setting", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusOK,
@@ -65,11 +69,10 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 				"Access-Control-Allow-Methods": "*",
 			},
 			ExpectBody: "hello world",
-			Sleep:      sleepTime,
-		},
-		{
-			Desc:   "update route with specified setting",
-			Object: ManagerApiExpect(t),
+			Sleep:      base.SleepTime,
+		}),
+		table.Entry("update route with specified setting", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -94,12 +97,11 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 						}]
 					}
 				}`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:   "verify route with cors specified setting",
-			Object: APISIXExpect(t),
+		}),
+		table.Entry("verify route with cors specified setting", base.HttpTestCase{
+			Object: base.APISIXExpect(),
 			Method: http.MethodGet,
 			Path:   "/hello",
 			Headers: map[string]string{
@@ -115,11 +117,10 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 				"Access-Control-Max-Age":        "50",
 			},
 			ExpectBody: "hello world",
-			Sleep:      sleepTime,
-		},
-		{
-			Desc:   "verify route with cors specified no match origin",
-			Object: APISIXExpect(t),
+			Sleep:      base.SleepTime,
+		}),
+		table.Entry("verify route with cors specified no match origin", base.HttpTestCase{
+			Object: base.APISIXExpect(),
 			Method: http.MethodGet,
 			Path:   "/hello",
 			Headers: map[string]string{
@@ -134,11 +135,10 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 				"Access-Control-Max-Age":        "",
 			},
 			ExpectBody: "hello world",
-			Sleep:      sleepTime,
-		},
-		{
-			Desc:   "verify route with options method",
-			Object: APISIXExpect(t),
+			Sleep:      base.SleepTime,
+		}),
+		table.Entry("verify route with options method", base.HttpTestCase{
+			Object: base.APISIXExpect(),
 			Method: http.MethodOptions,
 			Headers: map[string]string{
 				"Origin": "http://sub2.domain.com",
@@ -153,10 +153,9 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 				"Access-Control-Max-Age":        "50",
 			},
 			ExpectBody: "",
-		},
-		{
-			Desc:   "update route with cors setting force wildcard",
-			Object: ManagerApiExpect(t),
+		}),
+		table.Entry("update route with cors setting force wildcard", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
@@ -179,12 +178,11 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 					}]
 				}
 			}`,
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:   "verify route with cors setting force wildcard",
-			Object: APISIXExpect(t),
+		}),
+		table.Entry("verify route with cors setting force wildcard", base.HttpTestCase{
+			Object: base.APISIXExpect(),
 			Method: http.MethodGet,
 			Path:   "/hello",
 			Headers: map[string]string{
@@ -204,29 +202,22 @@ func TestRoute_With_Plugin_Cors(t *testing.T) {
 				"Access-Control-Allow-Credentials": "",
 			},
 			ExpectBody: "hello world",
-			Sleep:      sleepTime,
-		},
-		{
-			Desc:         "delete route",
-			Object:       ManagerApiExpect(t),
+			Sleep:      base.SleepTime,
+		}),
+		table.Entry("delete route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": token},
+			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-		},
-		{
-			Desc:         "make sure the route deleted",
-			Object:       APISIXExpect(t),
+		}),
+		table.Entry("make sure the route deleted", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello",
 			ExpectStatus: http.StatusNotFound,
 			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
-			Sleep:        sleepTime,
-		},
-	}
-
-	for _, tc := range tests {
-		testCaseCheck(tc, t)
-	}
-
-}
+			Sleep:        base.SleepTime,
+		}),
+	)
+})

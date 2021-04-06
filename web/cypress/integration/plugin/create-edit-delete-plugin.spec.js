@@ -41,7 +41,7 @@ context('Create and Delete Plugin List', () => {
     cy.visit('/plugin/list');
 
     cy.get(this.domSelector.refresh).click();
-    cy.contains('Edit').click();
+    cy.contains('Configure').click();
     cy.get(this.domSelector.codemirror)
       .first()
       .then(() => {

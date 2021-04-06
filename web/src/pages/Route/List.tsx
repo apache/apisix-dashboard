@@ -402,6 +402,9 @@ const Page: React.FC = () => {
             }}>
               {formatMessage({ id: 'component.global.view' })}
             </Button>
+            <Button type="primary" onClick={() => history.push(`/routes/${record.id}/duplicate`)}>
+              {formatMessage({ id: 'component.global.duplicate' })}
+            </Button>
             <Dropdown overlay={
               <Menu>
                 {record.status ? (

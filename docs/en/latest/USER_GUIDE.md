@@ -23,11 +23,11 @@ title: User Guide
 
 The following are parts of the modules' snapshot.
 
-## Metrics
+## Dashboard
 
 We support the monitor page by referencing it in [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe). Before accessing [Grafana](https://grafana.com/), please Enable [`allow_embedding=true`](https://grafana.com/docs/grafana/latest/administration/configuration/#allow_embedding), which defaults to `false`. This causes the browser to fail to render Grafana pages properly due to security policies.
 
-![metrics-en](../../assets/images/metrics-en.png)
+![Dashboard-en](https://user-images.githubusercontent.com/40708551/112922395-0eed0380-912a-11eb-8c92-4c67d2bae4a8.png)
 
 ## Route
 
@@ -35,19 +35,19 @@ The Route module aims to control routes by UI instead of calling APIs.
 
 ### List
 
-![route-list](../../assets/images/route-list-en.png)
+![route-list](https://user-images.githubusercontent.com/40708551/112922389-0c8aa980-912a-11eb-8c45-b13192b3775d.png)
 
 ### Create
 
-![route-create-step1-en](../../assets/images/route-create-step1-en.png)
+![route-create-step1-en](https://user-images.githubusercontent.com/40708551/112922912-ef0a0f80-912a-11eb-9d33-63d7215f7cfd.png)
 
-![route-create-step2-en](../../assets/images/route-create-step2-en.png)
+![route-create-step2-en](https://user-images.githubusercontent.com/40708551/112923105-44462100-912b-11eb-8e1f-6548a6c28c35.png)
 
-![route-create-step3-en](../../assets/images/route-create-step3-en.png)
+![route-create-step3-en](https://user-images.githubusercontent.com/40708551/112923140-545e0080-912b-11eb-9aef-d26b2c564efe.png)
 
-![route-create-step4-en](../../assets/images/route-create-step4-en.png)
+![route-create-step4-en](https://user-images.githubusercontent.com/40708551/112923257-971fd880-912b-11eb-820c-1f2ca381304a.png)
 
-![route-create-done-list-en](../../assets/images/route-create-done-list-en.png)
+![route-create-done-list-en](https://user-images.githubusercontent.com/40708551/112923280-a0a94080-912b-11eb-8b83-3960778ecf8a.png)
 
 ### Online debug
 
@@ -59,7 +59,7 @@ We can debug a route both published or offline with the online debug function, w
 
 2. Debug a offline route
 
-![route-debug-offline](../../assets/images/route-debug-offline.png)
+![route-debug-offline](https://user-images.githubusercontent.com/40708551/112923419-e5cd7280-912b-11eb-8e7e-57c3c4fe31ef.png)
 
 3. Debug a published route with query params
 
@@ -79,4 +79,4 @@ We can debug a route both published or offline with the online debug function, w
 
 ## Setting
 
-![setting](../../assets/images/setting-en.png)
+![setting](https://user-images.githubusercontent.com/40708551/112923561-22996980-912c-11eb-926f-45177500eb65.png)

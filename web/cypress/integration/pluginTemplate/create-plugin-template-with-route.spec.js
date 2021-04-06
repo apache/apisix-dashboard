@@ -71,7 +71,7 @@ context('Create PluginTemplate Binding To Route', () => {
 
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
-    cy.contains(this.data.routeName).siblings().contains('Edit').click();
+    cy.contains(this.data.routeName).siblings().contains('Configure').click();
 
     cy.contains('Forbidden').click();
     cy.contains('Custom').click();

@@ -1433,8 +1433,9 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-				"name": "route1",
+				 "name": "route1",
 				 "uri": "/hello",
+				 "methods": ["GET"],
 				 "plugins": {
 					 "jwt-auth": {}
 				 },
@@ -1513,8 +1514,8 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 		},
 		"openapi": "3.0.0",
 		"paths": {
-			"/hello": {}
-		}`
+			"/hello": {
+				"get": {`
 	exportStrJWT = replaceStr(exportStrJWT)
 	// verify token and clean test data
 	tests = []HttpTestCase{
@@ -1594,8 +1595,8 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 		},
 		"openapi": "3.0.0",
 		"paths": {
-			"/hello": {}
-		}`
+			"/hello": {
+				"get": {`
 	exportStrJWTNoAlgorithm = replaceStr(exportStrJWTNoAlgorithm)
 
 	tests = []HttpTestCase{
@@ -1638,6 +1639,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 			Body: `{
 				"name": "route1",
 				"uri": "/hello",
+				"methods": ["GET"],
 				"plugins": {
 					"jwt-auth": {}
 				},
@@ -1743,8 +1745,9 @@ func TestExportRoute_With_Auth_Plugin(t *testing.T) {
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
 			Body: `{
-				"name": "route1",
+				 "name": "route1",
 				 "uri": "/hello",
+				 "methods": ["GET"],
 				 "plugins": {
 					 "key-auth": {},
 					 "basic-auth": {}
@@ -1820,9 +1823,8 @@ func TestExportRoute_With_Auth_Plugin(t *testing.T) {
 		},
 		"openapi": "3.0.0",
 		"paths": {
-			"/hello": {}
-		}
-	}`
+			"/hello": {
+				"get": {`
 
 	time.Sleep(sleepTime)
 
@@ -2216,7 +2218,6 @@ func TestRoute_Export_Request_Validation(t *testing.T) {
 					"summary": "所有",
 					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["test.com"],
-					"x-apisix-plugins": {},
 					"x-apisix-priority": 0,
 					"x-apisix-status": 1
 				}
@@ -2324,7 +2325,6 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"summary": "所有",
 					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["test.com"],
-					"x-apisix-plugins": {},
 					"x-apisix-priority": 0,
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
@@ -2347,7 +2347,6 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"summary": "所有1",
 					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["test.com"],
-					"x-apisix-plugins": {},
 					"x-apisix-priority": 0,
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
@@ -2370,7 +2369,6 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"summary": "所有2",
 					"x-apisix-enable_websocket": false,
 					"x-apisix-hosts": ["test.com"],
-					"x-apisix-plugins": {},
 					"x-apisix-priority": 0,
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
@@ -2491,6 +2489,499 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 		},
 		{
 			Desc:         "hit the route2 just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+}
+
+func TestRoute_Export_Methods_Feild_Empty(t *testing.T) {
+	exportStr := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/test-test": {
+				"connect": {
+					"operationId": "route_allCONNECT",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"delete": {
+					"operationId": "route_allDELETE",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"get": {
+					"operationId": "route_allGET",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"head": {
+					"operationId": "route_allHEAD",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"options": {
+					"operationId": "route_allOPTIONS",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"patch": {
+					"operationId": "route_allPATCH",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"post": {
+					"operationId": "route_allPOST",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"put": {
+					"operationId": "route_allPUT",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"trace": {
+					"operationId": "route_allTRACE",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"summary": "所有",
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				}
+			}
+		}
+	}`
+	exportStr = replaceStr(exportStr)
+
+	tests := []HttpTestCase{
+		{
+			Desc:   "Create a route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					"uris": ["/test-test"],
+					"name": "route_all",
+					"desc": "所有",
+					"methods": [],
+					"hosts": ["test.com"],
+					"status": 1,
+					"upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStr,
+		},
+		{
+			Desc:         "delete the route1 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route just deleted",
+			Object:       APISIXExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        sleepTime,
+		},
+	}
+	for _, tc := range tests {
+		testCaseCheck(tc, t)
+	}
+
+}
+
+func TestRoute_Export_Methods_Feild_Nil(t *testing.T) {
+	exportStr := `{
+		"components": {},
+		"info": {
+			"title": "RoutesExport",
+			"version": "3.0.0"
+		},
+		"openapi": "3.0.0",
+		"paths": {
+			"/test-test": {
+				"connect": {
+					"operationId": "route_allCONNECT",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"delete": {
+					"operationId": "route_allDELETE",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"get": {
+					"operationId": "route_allGET",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"head": {
+					"operationId": "route_allHEAD",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"options": {
+					"operationId": "route_allOPTIONS",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"patch": {
+					"operationId": "route_allPATCH",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"post": {
+					"operationId": "route_allPOST",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"put": {
+					"operationId": "route_allPUT",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				},
+				"trace": {
+					"operationId": "route_allTRACE",
+					"requestBody": {},
+					"responses": {
+						"default": {
+							"description": ""
+						}
+					},
+					"x-apisix-enable_websocket": false,
+					"x-apisix-hosts": ["test.com"],
+					"x-apisix-priority": 0,
+					"x-apisix-status": 1,
+					"x-apisix-upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+				}
+			}
+		}
+	}`
+	exportStr = replaceStr(exportStr)
+
+	tests := []HttpTestCase{
+		{
+			Desc:   "Create a route",
+			Object: ManagerApiExpect(t),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+					"uris": ["/test-test"],
+					"name": "route_all",
+					"hosts": ["test.com"],
+					"status": 1,
+					"upstream": {
+						"nodes": {
+							"172.16.238.20:1980": 1
+						},
+						"type": "roundrobin"
+					}
+			}`,
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			Sleep:        sleepTime,
+		},
+		{
+			Desc:         "export route",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/export/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   exportStr,
+		},
+		{
+			Desc:         "delete the route1 just created",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": token},
+			ExpectStatus: http.StatusOK,
+		},
+		{
+			Desc:         "hit the route just deleted",
 			Object:       APISIXExpect(t),
 			Method:       http.MethodGet,
 			Path:         "/hello",

@@ -84,7 +84,7 @@ context('Can select service_id skip upstream in route', () => {
 
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
-    cy.contains(this.data.routeName).siblings().contains('Edit').click();
+    cy.contains(this.data.routeName).siblings().contains('Configure').click();
     cy.get(this.domSelector.serviceSelector).click();
     cy.contains('None').click();
     cy.contains('Next').click();

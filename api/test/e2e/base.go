@@ -147,9 +147,6 @@ func BatchTestServerPort(t *testing.T, times int) map[string]int {
 	for i := 0; i < times; i++ {
 		client = &http.Client{}
 		resp, err = client.Do(req)
-		if err != nil {
-			fmt.Printf("err: %s", err)
-		}
 		assert.Nil(t, err)
 
 		bodyByte, err = ioutil.ReadAll(resp.Body)
