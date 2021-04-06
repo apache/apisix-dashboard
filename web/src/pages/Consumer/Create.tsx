@@ -32,13 +32,18 @@ const Page: React.FC = (props) => {
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
+  const isDuplicate = (props as any).route.path.split('/').slice(-1)[0] === 'duplicate';
 
   useEffect(() => {
     const { username } = (props as any).match.params;
     if (username) {
       fetchItem(username).then(({ data }) => {
         const { desc, ...rest } = data;
-        form1.setFieldsValue({ username, desc });
+        if (isDuplicate) {
+          form1.setFieldsValue({ username: '', desc });
+        } else {
+          form1.setFieldsValue({ username, desc });
+        }
         setPlugins(rest.plugins);
       });
     }
@@ -49,11 +54,11 @@ const Page: React.FC = (props) => {
   const onSubmit = () => {
     const data = { ...form1.getFieldsValue(), plugins } as ConsumerModule.Entity;
     const { username } = (props as any).match.params;
-    (username ? update(username, data) : create(data))
+    (username && !isDuplicate ? update(username, data) : create(data))
       .then(() => {
         notification.success({
           message: `${
-            username
+            username &&!isDuplicate
               ? formatMessage({ id: 'component.global.edit' })
               : formatMessage({ id: 'component.global.create' })
           } ${formatMessage({ id: 'menu.consumer' })} ${formatMessage({

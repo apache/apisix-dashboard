@@ -68,6 +68,10 @@ const routes = [
     component: './Upstream/Create',
   },
   {
+    path: '/upstream/:id/duplicate',
+    component: './Upstream/Create',
+  },
+  {
     path: '/consumer/list',
     component: './Consumer/List',
   },
@@ -77,6 +81,10 @@ const routes = [
   },
   {
     path: '/consumer/:username/edit',
+    component: './Consumer/Create',
+  },
+  {
+    path: '/consumer/:username/duplicate',
     component: './Consumer/Create',
   },
   {
@@ -97,6 +105,10 @@ const routes = [
   },
   {
     path: '/service/:serviceId/edit',
+    component: './Service/Create',
+  },
+  {
+    path: '/service/:serviceId/duplicate',
     component: './Service/Create',
   },
   {

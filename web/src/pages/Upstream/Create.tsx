@@ -30,6 +30,7 @@ const Page: React.FC = (props) => {
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
   const upstreamRef = useRef<any>();
+  const isDuplicate = (props as any).route.path.split('/').slice(-1)[0] === 'duplicate';
 
   useEffect(() => {
     const { id } = (props as any).match.params;
@@ -37,6 +38,11 @@ const Page: React.FC = (props) => {
     if (id) {
       fetchOne(id).then((data) => {
         form1.setFieldsValue(data.data);
+        if (isDuplicate) {
+          form1.setFieldsValue({
+            'name': ''
+          });
+        }
       });
     }
   }, []);
@@ -51,7 +57,7 @@ const Page: React.FC = (props) => {
       }
 
       const { id } = (props as any).match.params;
-      (id ? update(id, data) : create(data)).then(() => {
+      (id && !isDuplicate ? update(id, data) : create(data)).then(() => {
         notification.success({
           message: `${id
             ? formatMessage({ id: 'page.upstream.edit.upstream.successfully' })

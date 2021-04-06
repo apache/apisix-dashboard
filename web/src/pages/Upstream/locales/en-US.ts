@@ -88,6 +88,7 @@ export default {
   'page.upstream.list.edit.time': 'Updated At',
   'page.upstream.list.operation': 'Operation',
   'page.upstream.list.edit': 'Configure',
+  'page.upstream.list.duplicate': 'Duplicate',
   'page.upstream.list.confirm.delete': 'Are you sure to delete ?',
   'page.upstream.list.confirm': 'Confirm',
   'page.upstream.list.cancel': 'Cancel',

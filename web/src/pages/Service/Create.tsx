@@ -35,6 +35,7 @@ const Page: React.FC = (props) => {
   const [upstreamForm] = Form.useForm();
   const upstreamRef = useRef<any>();
   const [plugins, setPlugins] = useState<PluginComponent.Data>({});
+  const isDuplicate = (props as any).route.path.split('/').slice(-1)[0] === 'duplicate';
 
   const STEP_HEADER = [
     formatMessage({ id: 'page.service.steps.stepTitle.basicInformation' }),
@@ -59,6 +60,9 @@ const Page: React.FC = (props) => {
           upstreamForm.setFieldsValue(data.upstream);
         }
         form.setFieldsValue(omit(data, ['upstream_id', 'upstream', 'plugins']));
+        if (isDuplicate) {
+          form.setFieldsValue({ name: '' });
+        }
         setPlugins(data.plugins || {});
       });
     }
@@ -78,11 +82,11 @@ const Page: React.FC = (props) => {
     }
 
     const { serviceId } = (props as any).match.params;
-    (serviceId ? update(serviceId, data) : create(data))
+    (serviceId && !isDuplicate ? update(serviceId, data) : create(data))
       .then(() => {
         notification.success({
           message: `${
-            serviceId
+            serviceId && !isDuplicate
               ? formatMessage({ id: 'component.global.edit' })
               : formatMessage({ id: 'component.global.create' })
           } ${formatMessage({ id: 'menu.service' })} ${formatMessage({

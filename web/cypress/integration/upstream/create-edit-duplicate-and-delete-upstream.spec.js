@@ -57,10 +57,26 @@ context('Create and Delete Upstream', () => {
     });
   });
 
+  it('should edit the (roundrobin) upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+
+    cy.get(this.domSelector.nameSelector).type(this.data.upstreamName);
+    cy.contains('Search').click();
+    cy.contains(this.data.upstreamName).siblings().contains('Configure').click();
+    cy.get(this.domSelector.name).clear().type(this.data.upstreamName2);
+    cy.contains('Next').click();
+    cy.contains('Submit').click();
+    cy.get(this.domSelector.notification).should('contain', this.data.updateUpstreamSuccess);
+    cy.contains(this.data.updateUpstreamSuccess);
+    cy.url().should('contains', 'upstream/list');
+
+  });
+
   it('should delete the upstream', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.contains(this.data.upstreamName).siblings().contains('Delete').click();
+    cy.contains(this.data.upstreamName2).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
   });
@@ -120,10 +136,26 @@ context('Create and Delete Upstream', () => {
     });
   });
 
+  it('should duplicate the (chash) upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+
+    cy.get(this.domSelector.nameSelector).type(this.data.upstreamName);
+    cy.contains('Search').click();
+    cy.contains(this.data.upstreamName).siblings().contains('Duplicate').click();
+    cy.get(this.domSelector.name).clear().type(this.data.upstreamName2);
+    cy.contains('Next').click();
+    cy.contains('Submit').click();
+    cy.get(this.domSelector.notification).should('contain', this.data.updateUpstreamSuccess);
+    cy.contains(this.data.updateUpstreamSuccess);
+    cy.url().should('contains', 'upstream/list');
+
+  });
+
   it('should delete the upstream', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.contains(this.data.upstreamName).siblings().contains('Delete').click();
+    cy.contains(this.data.upstreamName2).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
   });

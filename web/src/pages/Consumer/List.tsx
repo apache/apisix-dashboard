@@ -85,6 +85,13 @@ const Page: React.FC = () => {
           }}>
             {formatMessage({ id: 'component.global.view' })}
           </Button>
+          <Button
+            type="primary"
+            style={{ marginRight: 10 }}
+            onClick={() => history.push(`/consumer/${record.username}/duplicate`)}
+          >
+            {formatMessage({ id: 'component.global.duplicate' })}
+          </Button>
           <Popconfirm
             title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
             okText={formatMessage({ id: 'component.global.confirm' })}

@@ -58,6 +58,70 @@ context('Create and Delete Consumer', () => {
     cy.get(this.domSelector.notification).should('contain', this.data.createConsumerSuccess);
   });
 
+  it('should edit the consumer', function () {
+    cy.visit('/consumer/list');
+
+    cy.contains('Search').click();
+    cy.get(this.domSelector.nameSelector).type(this.data.consumerName);
+    cy.contains(this.data.consumerName).siblings().contains('Configure').click();
+    cy.get(this.domSelector.description).clear().type(this.data.description2);
+    cy.contains('button', 'Next').click();
+    // plugin config
+    cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
+      cy.contains('Enable').click({
+        force: true,
+      });
+    });
+    cy.focused(this.domSelector.drawer).should('exist');
+    // edit codemirror
+    cy.get(this.domSelector.codeMirror)
+      .first()
+      .then((editor) => {
+        editor[0].CodeMirror.setValue(
+          JSON.stringify({
+            key: 'test',
+          }),
+        );
+        cy.contains('button', 'Submit').click();
+      });
+    cy.contains('button', 'Next').click();
+    cy.contains('button', 'Submit').click();
+    cy.get(this.domSelector.notification).should('contain', this.data.updateConsumerSuccess);
+
+  });
+
+  it('should duplicate the consumer', function () {
+    cy.visit('/consumer/list');
+
+    cy.contains('Search').click();
+    cy.get(this.domSelector.nameSelector).type(this.data.consumerName);
+    cy.contains(this.data.consumerName).siblings().contains('Duplicate').click();
+    cy.get(this.domSelector.username).type(this.data.consumerName2);
+    cy.contains('button', 'Next').click();
+    // plugin config
+    cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
+      cy.contains('Enable').click({
+        force: true,
+      });
+    });
+    cy.focused(this.domSelector.drawer).should('exist');
+    // edit codemirror
+    cy.get(this.domSelector.codeMirror)
+      .first()
+      .then((editor) => {
+        editor[0].CodeMirror.setValue(
+          JSON.stringify({
+            key: 'test',
+          }),
+        );
+        cy.contains('button', 'Submit').click();
+      });
+    cy.contains('button', 'Next').click();
+    cy.contains('button', 'Submit').click();
+    cy.get(this.domSelector.notification).should('contain', this.data.createConsumerSuccess);
+
+  });
+
   it('should view the consumer', function () {
     cy.visit('/consumer/list');
 
@@ -74,10 +138,17 @@ context('Create and Delete Consumer', () => {
 
   it('delete the consumer', function () {
     cy.visit('/consumer/list');
-    cy.contains(this.data.consumerName).should('be.visible').siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.deleteConsumerSuccess);
+    const { domSelector, data } = this;
+    const consumerNames = [data.consumerName, data.consumerName2];
+    consumerNames.forEach(function (consumerName) {
+      cy.get(domSelector.name).clear().type(consumerName);
+      cy.contains('Search').click();
+      cy.contains(consumerName).should('be.visible').siblings().contains('Delete').click();
+      cy.contains('button', 'Confirm').click();
+      cy.get(domSelector.notification).should('contain', data.deleteConsumerSuccess);
+    });
   });
+
 
   it('creates consumer with wrong json', function () {
     cy.visit('/consumer/list');
