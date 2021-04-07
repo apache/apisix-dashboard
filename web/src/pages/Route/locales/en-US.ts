@@ -52,7 +52,6 @@ export default {
   'page.route.panelSection.title.advancedMatchRule': 'Advanced Routing Matching Conditions',
 
   'page.route.panelSection.title.nameDescription': 'Name And Description',
-  'page.route.form.itemLabel.apiName': 'API Name',
   'page.route.form.itemRulesPatternMessage.apiNameRule':
     'Maximum length 100, only letters, Numbers, _, and - are supported, and can only begin with letters',
 
@@ -78,8 +77,7 @@ export default {
   'page.route.form.itemRulesPatternMessage.domain':
     'Only letters, numbers and * are supported. * can only be at the beginning, and only single * is supported',
   'page.route.form.itemExtraMessage1.path':
-    '1. Request path, for example: /foo/index.html, supports request path prefix /foo/* ;',
-  'page.route.form.itemExtraMessage2.path': '2. /* represents all paths',
+    'HTTP Request path, for example: /foo/index.html, supports request path prefix /foo/* ; /* represents all paths',
   'page.route.form.itemRulesPatternMessage.path': 'Begin with / , and * can only at the end',
   'page.route.form.itemRulesPatternMessage.remoteAddrs':
     'Please enter a valid IP address, for example: 192.168.1.101, 192.168.1.0/24, ::1, fe80::1, fe80::1/64',
@@ -124,7 +122,7 @@ export default {
   'page.route.form.itemHelp.status':
     'Whether a route can be used after it is created, the default value is false.',
 
-  'page.route.domainName': 'Domain Name',
+  'page.route.host': 'Host',
   'page.route.path': 'Path',
   'page.route.remoteAddrs': 'Remote Addrs',
   'page.route.PanelSection.title.defineRequestParams': 'Define Request Parameters',

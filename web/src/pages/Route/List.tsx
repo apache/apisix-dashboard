@@ -333,7 +333,7 @@ const Page: React.FC = () => {
       dataIndex: 'name',
     },
     {
-      title: formatMessage({ id: 'page.route.domainName' }),
+      title: formatMessage({ id: 'page.route.host' }),
       hideInSearch: true,
       render: (_, record) => {
         const list = record.hosts || (record.host && [record.host]) || [];

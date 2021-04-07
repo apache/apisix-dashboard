@@ -16,7 +16,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import Form from 'antd/es/form';
-import { Input, Switch, Select, Button, Tag, AutoComplete } from 'antd';
+import { Input, Switch, Select, Button, Tag, AutoComplete, Row, Col } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
@@ -30,17 +30,15 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
   const [labelList, setLabelList] = useState<LabelList>({});
 
   useEffect(() => {
-    // TODO: use a better state name
     fetchLabelList().then(setLabelList);
   }, []);
 
   const NormalLabelComponent = () => {
     const field = 'custom_normal_labels';
-    const title = 'Label Manager';
 
     return (
       <React.Fragment>
-        <Form.Item label={formatMessage({ id: 'component.global.labels' })} name={field}>
+        <Form.Item label={formatMessage({ id: 'component.global.labels' })} name={field} tooltip="为路由增加自定义标签，可用于路由分组。">
           <Select
             mode="tags"
             style={{ width: '100%' }}
@@ -69,7 +67,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
               const labels = form.getFieldValue(field) || [];
               return (
                 <LabelsDrawer
-                  title={title}
+                  title={formatMessage({ id: "component.label-manager" })}
                   actionName={field}
                   dataSource={labels}
                   disabled={disabled || false}
@@ -88,66 +86,97 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
 
   const VersionLabelComponent = () => {
     return (
-      <React.Fragment>
-        <Form.Item
-          label={formatMessage({ id: 'component.global.version' })}
-          name="custom_version_label"
-        >
-          <AutoComplete
-            options={(labelList.API_VERSION || []).map((item) => ({ value: item }))}
-            disabled={disabled}
-          />
-        </Form.Item>
-      </React.Fragment>
+      <Form.Item
+        label={formatMessage({ id: 'component.global.version' })} tooltip="路由的版本号，如 V1">
+        <Row>
+          <Col span={10}>
+            <Form.Item
+              noStyle
+              name="custom_version_label"
+            >
+              <AutoComplete
+                options={(labelList.API_VERSION || []).map((item) => ({ value: item }))}
+                disabled={disabled}
+                placeholder="请输入路由版本号"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form.Item>
     );
   };
 
+  const Name: React.FC = () => (
+    <Form.Item label={formatMessage({ id: 'component.global.name' })} tooltip={formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' })}>
+      <Row>
+        <Col span={10}>
+          <Form.Item
+            noStyle
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "请输入路由名称",
+              },
+              {
+                pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
+                message: formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' }),
+              },
+            ]}
+          >
+            <Input
+              placeholder="请输入路由名称"
+              disabled={disabled}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form.Item>
+  )
+
+  const Description: React.FC = () => (
+    <Form.Item label={formatMessage({ id: 'component.global.description' })} tooltip="路由的描述信息">
+      <Row>
+        <Col span={10}>
+          <Form.Item noStyle name="desc">
+            <Input.TextArea
+              placeholder={formatMessage({ id: 'component.global.input.placeholder.description' })}
+              disabled={disabled}
+              showCount
+              maxLength={256}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form.Item>
+  )
+
+  const Publish: React.FC = () => (
+    <Form.Item label={formatMessage({ id: 'page.route.publish' })} tooltip="用于控制路由创建后，是否立即发布到网关">
+      <Row>
+        <Col>
+          <Form.Item
+            noStyle
+            name="status"
+            valuePropName="checked"
+          >
+            <Switch disabled={isEdit} />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form.Item>
+  )
+
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>
-      <Form.Item
-        label={formatMessage({ id: 'component.global.name' })}
-        name="name"
-        rules={[
-          {
-            required: true,
-            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
-              id: 'page.route.form.itemLabel.apiName',
-            })}`,
-          },
-          {
-            pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
-            message: formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' }),
-          },
-        ]}
-        extra={formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' })}
-      >
-        <Input
-          placeholder={`${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
-            id: 'page.route.form.itemLabel.apiName',
-          })}`}
-          disabled={disabled}
-        />
-      </Form.Item>
+      <Name />
 
       <NormalLabelComponent />
       <VersionLabelComponent />
 
-      <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
-        <Input.TextArea
-          placeholder={formatMessage({ id: 'component.global.input.placeholder.description' })}
-          disabled={disabled}
-          showCount
-          maxLength={256}
-        />
-      </Form.Item>
+      <Description />
+      <Publish />
 
-      <Form.Item
-        label={formatMessage({ id: 'page.route.publish' })}
-        name="status"
-        valuePropName="checked"
-      >
-        <Switch disabled={isEdit} />
-      </Form.Item>
     </PanelSection>
   );
 };

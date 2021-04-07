@@ -28,7 +28,7 @@ export default {
   'page.route.regexMatch': '正则匹配',
   'page.route.in': 'IN',
   'page.route.rule': '规则',
-  'page.route.domainName': '域名',
+  'page.route.host': '域名',
   'page.route.path': '路径',
   'page.route.remoteAddrs': '客户端地址',
   'page.route.value': '参数值',
@@ -61,9 +61,8 @@ export default {
   'page.route.input.placeholder.paramValue': '参数值',
   // form
   'page.route.form.itemRulesRequiredMessage.parameterName': '仅支持字母和数字，且只能以字母开头',
-  'page.route.form.itemLabel.apiName': 'API 名称',
   'page.route.form.itemRulesPatternMessage.apiNameRule':
-    '最大长度100，仅支持字母、数字、- 和 _，且只能以字母开头',
+    '路由的名称，最大长度100，仅支持字母、数字、- 和 _，且只能以字母开头',
   'page.route.form.itemLabel.httpMethod': 'HTTP 方法',
   'page.route.form.itemLabel.scheme': '协议',
   'page.route.form.itemLabel.priority': '优先级',
@@ -73,15 +72,14 @@ export default {
   'page.route.form.itemLabel.hostRewriteType': '域名改写',
   'page.route.form.itemLabel.headerRewrite': '请求头改写',
   'page.route.form.itemLabel.redirectURI': '重定向路径',
-  'page.route.form.itemExtraMessage.domain': '域名或IP，支持泛域名，如：*.test.com',
+  'page.route.form.itemExtraMessage.domain': '路由匹配的域名列表。支持泛域名，如：*.test.com',
   'page.route.form.itemRulesPatternMessage.domain':
     '仅支持字母、数字和 * ，且 * 只能是在开头，支持单个 * ',
   'page.route.form.itemExtraMessage1.path':
-    '1. 请求路径，如 /foo/index.html，支持请求路径前缀 /foo/* ；',
-  'page.route.form.itemExtraMessage2.path': '2. /* 代表所有路径',
+    'HTTP 请求路径，如 /foo/index.html，支持请求路径前缀 /foo/*。/* 代表所有路径',
   'page.route.form.itemRulesPatternMessage.path': '以 / 开头，且 * 只能在最后',
   'page.route.form.itemExtraMessage1.remoteAddrs':
-    '客户端 IP，例如：192.168.1.101，192.168.1.0/24，::1，fe80::1，fe80::1/64',
+    '客户端与服务器握手时 IP，即客户端 IP，例如：192.168.1.101，192.168.1.0/24，::1，fe80::1，fe80::1/64',
   'page.route.form.itemRulesPatternMessage.remoteAddrs':
     '请输入合法的 IP 地址，例如：192.168.1.101，192.168.1.0/24，::1，fe80::1，fe80::1/64',
   'page.route.form.itemLabel.username': '用户名',
@@ -98,15 +96,15 @@ export default {
   'page.route.select.option.inputManually': '手动填写',
 
   // steps
-  'page.route.steps.stepTitle.defineApiRequest': '定义 API 请求',
-  'page.route.steps.stepTitle.defineApiBackendServe': '定义 API 后端服务',
+  'page.route.steps.stepTitle.defineApiRequest': '设置路由信息',
+  'page.route.steps.stepTitle.defineApiBackendServe': '设置上游服务',
 
   // panelSection
-  'page.route.panelSection.title.nameDescription': '名称及其描述',
+  'page.route.panelSection.title.nameDescription': '基本信息',
   'page.route.panelSection.title.httpOverrideRequestHeader': 'HTTP 请求头改写',
   'page.route.panelSection.title.requestOverride': '请求改写',
-  'page.route.panelSection.title.requestConfigBasicDefine': '请求基础定义',
-  'page.route.panelSection.title.advancedMatchRule': '高级路由匹配条件',
+  'page.route.panelSection.title.requestConfigBasicDefine': '匹配条件',
+  'page.route.panelSection.title.advancedMatchRule': '高级匹配条件',
   'page.route.PanelSection.title.defineRequestParams': '请求参数定义',
   'page.route.PanelSection.title.responseResult': '请求响应结果',
 
