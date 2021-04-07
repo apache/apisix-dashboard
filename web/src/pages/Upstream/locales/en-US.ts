@@ -33,7 +33,7 @@ export default {
   'page.upstream.step.input.description': 'Please enter upstream\'s description',
   'page.upstream.step.type': 'Algorithm',
   'page.upstream.step.create.node': 'Add Target',
-  'page.upstream.step.pass-host': 'Host Transform',
+  'page.upstream.step.pass-host': 'Hostname',
   'page.upstream.step.pass-host.pass': 'Keep the same Host from client request',
   'page.upstream.step.pass-host.node': 'Use the domain or IP from Node List',
   'page.upstream.step.pass-host.rewrite': 'Custom Host (Will be deprecated in the future)',
