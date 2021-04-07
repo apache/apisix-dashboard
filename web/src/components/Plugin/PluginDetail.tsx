@@ -100,7 +100,6 @@ const PluginDetail: React.FC<Props> = ({
   const [form] = Form.useForm();
   const [UIForm] = Form.useForm();
   const ref = useRef<any>(null);
-  const UIFormRef = useRef<any>(null);
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.type;
   const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
@@ -370,7 +369,7 @@ const PluginDetail: React.FC<Props> = ({
             </Button>,
           ]}
         />
-        {Boolean(codeMirrorMode === 'UIForm') && <PLUGIN_UI_FORM name={name} ref={UIFormRef} form={UIForm} />}
+        {Boolean(codeMirrorMode === 'UIForm') && <PLUGIN_UI_FORM name={name} form={UIForm} />}
         <div style={{ display: codeMirrorMode === 'UIForm' ? 'none' : 'unset' }}><CodeMirror
           ref={(codemirror) => {
             ref.current = codemirror;

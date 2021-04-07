@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { forwardRef, useImperativeHandle } from 'react';
+import React, { forwardRef } from 'react';
 import type { FormInstance } from 'antd/es/form';
 import { Form, Input } from 'antd';
 
@@ -24,10 +24,7 @@ type Props = {
 };
 
 const BasicAuth: React.FC<Props> = forwardRef(
-  ({ form }, ref) => {
-    useImperativeHandle(ref, () => ({
-      getData: () => form.getFieldsValue(),
-    }));
+  ({ form }) => {
     return (
       <Form
         form={form}

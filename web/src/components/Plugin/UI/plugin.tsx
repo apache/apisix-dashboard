@@ -19,21 +19,23 @@ import { FormInstance } from 'antd/es/form';
 
 import { default as BasicAuth } from './basic-auth'
 import { default as LimitConn } from './limit-conn'
+import { default as RefererRestriction } from './referer-restriction'
 
 type Props = {
   name: string,
-  ref: any,
   form: FormInstance
 }
 
-export const PLUGIN_UI_LIST = ['basic-auth', 'limit-conn'];
+export const PLUGIN_UI_LIST = ['basic-auth', 'limit-conn', 'referer-restriction'];
 
-export const PLUGIN_UI_FORM: React.FC<Props> = ({ name, ref, form }) => {
+export const PLUGIN_UI_FORM: React.FC<Props> = ({ name, form }) => {
   switch (name) {
     case 'limit-conn':
-      return <LimitConn ref={ref} form={form} />
+      return <LimitConn form={form} />
     case 'basic-auth':
-      return <BasicAuth ref={ref} form={form} />
+      return <BasicAuth form={form} />
+    case 'referer-restriction':
+      return <RefererRestriction form={form} />
     default:
       return <></>
   }
