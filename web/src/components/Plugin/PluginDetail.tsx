@@ -93,8 +93,8 @@ const PluginDetail: React.FC<Props> = ({
 }) => {
   const { formatMessage } = useIntl();
   enum codeMirrorModeList {
-    Json = 'Json',
-    Yaml = 'Yaml',
+    JSON = 'JSON',
+    YAML = 'YAML',
     UIForm = 'UIForm'
   }
   const [form] = Form.useForm();
@@ -168,8 +168,8 @@ const PluginDetail: React.FC<Props> = ({
   };
   const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
     switch (value) {
-      case codeMirrorModeList.Json: {
-        if (codeMirrorMode === 'Yaml') {
+      case codeMirrorModeList.JSON: {
+        if (codeMirrorMode === 'YAML') {
           const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
           if (error) {
             notification.error({
@@ -191,8 +191,8 @@ const PluginDetail: React.FC<Props> = ({
         }
         break;
       }
-      case codeMirrorModeList.Yaml: {
-        const { data: jsonData, error } = json2yaml(codeMirrorMode === 'Json' ? ref.current.editor.getValue() : JSON.stringify(UIForm.getFieldsValue()));
+      case codeMirrorModeList.YAML: {
+        const { data: jsonData, error } = json2yaml(codeMirrorMode === 'JSON' ? ref.current.editor.getValue() : JSON.stringify(UIForm.getFieldsValue()));
 
         if (error) {
           notification.error({
@@ -205,7 +205,7 @@ const PluginDetail: React.FC<Props> = ({
       }
 
       case codeMirrorModeList.UIForm: {
-        if (codeMirrorMode === 'Json') {
+        if (codeMirrorMode === 'JSON') {
           UIForm.setFieldsValue(ref.current.editor.getValue())
         } else {
           const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
@@ -282,9 +282,9 @@ const PluginDetail: React.FC<Props> = ({
                 onClick={() => {
                   try {
                     let editorData;
-                    if (codeMirrorMode === 'Json') {
+                    if (codeMirrorMode === 'JSON') {
                       editorData = JSON.parse(ref.current?.editor.getValue());
-                    } else if (codeMirrorMode === 'Yaml') {
+                    } else if (codeMirrorMode === 'YAML') {
                       yaml2json(ref.current?.editor.getValue(), false).data;
                     } else {
                       editorData = UIForm.getFieldsValue();
