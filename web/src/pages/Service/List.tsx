@@ -135,7 +135,7 @@ const Page: React.FC = () => {
             setRawData({});
           }}>
             <PlusOutlined />
-            {formatMessage({ id: 'component.global.createWithEditor' })}
+            {formatMessage({ id: 'component.global.data.editor' })}
           </Button>,
         ]}
       />

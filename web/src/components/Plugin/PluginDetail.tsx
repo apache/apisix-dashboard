@@ -87,24 +87,24 @@ const PluginDetail: React.FC<Props> = ({
   readonly = false,
   maskClosable = true,
   initialData = {},
-  onClose = () => {},
-  onChange = () => {},
+  onClose = () => { },
+  onChange = () => { },
 }) => {
   const { formatMessage } = useIntl();
   enum codeMirrorModeList {
-    Json = 'Json',
-    Yaml = 'Yaml',
+    JSON = 'JSON',
+    YAML = 'YAML',
   }
   const [form] = Form.useForm();
   const ref = useRef<any>(null);
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.type;
   const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
-    codeMirrorModeList.Json,
+    codeMirrorModeList.JSON,
   );
   const modeOptions = [
-    { label: codeMirrorModeList.Json, value: codeMirrorModeList.Json },
-    { label: codeMirrorModeList.Yaml, value: codeMirrorModeList.Yaml },
+    { label: codeMirrorModeList.JSON, value: codeMirrorModeList.JSON },
+    { label: codeMirrorModeList.YAML, value: codeMirrorModeList.YAML },
   ];
 
   useEffect(() => {
@@ -160,8 +160,8 @@ const PluginDetail: React.FC<Props> = ({
   };
   const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
     switch (value) {
-      case codeMirrorModeList.Json: {
-        const { data: yamlData , error } = yaml2json(ref.current.editor.getValue(), true);
+      case codeMirrorModeList.JSON: {
+        const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
 
         if (error) {
           notification.error({
@@ -176,7 +176,7 @@ const PluginDetail: React.FC<Props> = ({
         );
         break;
       }
-      case codeMirrorModeList.Yaml: {
+      case codeMirrorModeList.YAML: {
         const { data: jsonData, error } = json2yaml(ref.current.editor.getValue());
 
         if (error) {
@@ -250,7 +250,7 @@ const PluginDetail: React.FC<Props> = ({
                 onClick={() => {
                   try {
                     const editorData =
-                      codeMirrorMode === codeMirrorModeList.Json
+                      codeMirrorMode === codeMirrorModeList.JSON
                         ? JSON.parse(ref.current?.editor.getValue())
                         : yaml2json(ref.current?.editor.getValue(), false).data;
                     validateData(name, editorData).then((value) => {
@@ -320,7 +320,7 @@ const PluginDetail: React.FC<Props> = ({
               {formatMessage({ id: 'component.global.document' })}
             </Button>,
             <Select
-              defaultValue={codeMirrorModeList.Json}
+              defaultValue={codeMirrorModeList.JSON}
               value={codeMirrorMode}
               options={modeOptions}
               onChange={(value: PluginComponent.CodeMirrorMode) => {
@@ -338,6 +338,7 @@ const PluginDetail: React.FC<Props> = ({
             ref.current = codemirror;
             if (codemirror) {
               // NOTE: for debug & test
+              // @ts-ignore
               window.codemirror = codemirror.editor;
             }
           }}

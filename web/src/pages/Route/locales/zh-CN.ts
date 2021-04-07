@@ -116,7 +116,7 @@ export default {
   'page.route.form.itemLabel.domainNameOrIp': '域名/IP',
   'page.route.form.itemExtraMessage.domainNameOrIp': '使用域名时，默认解析本地：/etc/resolv.conf',
   'page.route.form.itemRulesPatternMessage.domainNameOrIp': '仅支持字母、数字和 . ',
-  'page.route.portNumber': '端口号',
+  'page.route.portNumber': '端口',
   'page.route.weight': '权重',
 
   'page.route.radio.static': '静态改写',
