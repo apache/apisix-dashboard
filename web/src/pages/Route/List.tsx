@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, ReactNode } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -179,7 +179,7 @@ const Page: React.FC = () => {
     });
   };
 
-  const toolbarMenus = () => {
+  const ListToolbar = () => {
     const tools = [
       {
         name: formatMessage({ id: 'page.route.pluginTemplateConfig' }),
@@ -212,7 +212,7 @@ const Page: React.FC = () => {
     ]
 
     return (
-      <Menu>
+      <Dropdown overlay={<Menu>
         {
           tools.map(item => (
             <Menu.Item key={item.name} onClick={item.onClick}>
@@ -221,7 +221,53 @@ const Page: React.FC = () => {
             </Menu.Item>
           ))
         }
-      </Menu>
+      </Menu>}>
+        <Button type="dashed">
+          <DownOutlined /> {formatMessage({ id: "menu.advanced-feature" })}
+        </Button>
+      </Dropdown>
+    )
+  }
+
+  const RecordActionDropdown: React.FC<{ record: any }> = ({ record }) => {
+    const tools: {
+      name: string;
+      onClick(): void;
+      icon?: ReactNode;
+    }[] = [
+        {
+          name: formatMessage({ id: 'component.global.view' }),
+          onClick: () => {
+            setId(record.id);
+            setRawData(omit(record, DELETE_FIELDS));
+            setVisible(true);
+            setEditorMode('update');
+          }
+        }, {
+          name: formatMessage({ id: 'component.global.duplicate' }),
+          onClick: () => {
+            history.push(`/routes/${record.id}/duplicate`)
+          }
+        }
+      ]
+
+    return (
+      <Dropdown overlay={
+        <Menu>
+          {
+            tools.map(item => (
+              <Menu.Item key={item.name} onClick={item.onClick}>
+                {item.icon && item.icon}
+                {item.name}
+              </Menu.Item>
+            ))
+          }
+        </Menu>
+      }>
+        <Button type="dashed">
+          更多
+        </Button>
+      </Dropdown>
     )
   }
 
@@ -457,17 +503,6 @@ const Page: React.FC = () => {
             <Button type="primary" onClick={() => history.push(`/routes/${record.id}/edit`)}>
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
-            <Button type="primary" onClick={() => {
-              setId(record.id);
-              setRawData(omit(record, DELETE_FIELDS));
-              setVisible(true);
-              setEditorMode('update');
-            }}>
-              {formatMessage({ id: 'component.global.view' })}
-            </Button>
-            <Button type="primary" onClick={() => history.push(`/routes/${record.id}/duplicate`)}>
-              {formatMessage({ id: 'component.global.duplicate' })}
-            </Button>
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
@@ -489,6 +524,7 @@ const Page: React.FC = () => {
                 {formatMessage({ id: 'component.global.delete' })}
               </Button>
             </Popconfirm>
+            <RecordActionDropdown record={record} />
           </Space>
         </>
       ),
@@ -516,11 +552,7 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
-          <Dropdown overlay={toolbarMenus}>
-            <Button type="dashed">
-              <DownOutlined /> {formatMessage({ id: "menu.advanced-feature" })}
-            </Button>
-          </Dropdown>
+          <ListToolbar />
         ]}
         rowSelection={rowSelection}
         footer={() => <ListFooter />}
