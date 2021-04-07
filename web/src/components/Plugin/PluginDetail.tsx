@@ -206,7 +206,7 @@ const PluginDetail: React.FC<Props> = ({
 
       case codeMirrorModeList.UIForm: {
         if (codeMirrorMode === 'JSON') {
-          UIForm.setFieldsValue(ref.current.editor.getValue())
+          UIForm.setFieldsValue(JSON.parse(ref.current.editor.getValue()));
         } else {
           const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
           if (error) {
