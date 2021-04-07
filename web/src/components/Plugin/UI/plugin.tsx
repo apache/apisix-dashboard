@@ -13,22 +13,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-declare namespace PluginComponent {
-  type Data = Record<string, any>;
+*/
+import { default as BasicAuth } from './basic-auth'
 
-  type Schema = '' | 'route' | 'consumer';
+export const PLUGIN_UI_LIST = ['basic-auth']
 
-  type Meta = {
-    name: string;
-    priority: number;
-    schema: Record<string, any>;
-    type: string;
-    version: number;
-    consumer_schema?: Record<string, any>;
-  };
+export const PLUGIN_UI_FORM = ({ name, ...props }) => {
 
-  type ReferPage = '' | 'route' | 'consumer' | 'service' | 'plugin';
-
-  type CodeMirrorMode = 'Json' | 'Yaml' | 'UIForm';
+  switch (name) {
+    case 'basic-auth':
+      return <BasicAuth {...props} />
+    default:
+      break;
+  }
 }
