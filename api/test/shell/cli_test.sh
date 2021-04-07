@@ -460,7 +460,12 @@ sleep 6
 # test manager-api output for bad data on etcd
 # make a dummy entry
 ./etcd-v3.4.14-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
-sleep 4
+sleep 6
+# for debugging purpose ------------
+./etcd-v3.4.14-linux-amd64/etcdctl get --keys-only --prefix /apisix/routes
+./etcd-v3.4.14-linux-amd64/etcdctl get /apisix/routes/unique1
+#-------------------------------
+
 ./manager-api 2>man-api.err &
 sleep 4
 
