@@ -97,7 +97,7 @@ const Page: React.FC = () => {
     setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
   }, [window.location.search]);
 
-  const rowSelection = {
+  const rowSelection: any = {
     selectedRowKeys,
     onChange: (currentSelectKeys: string[]) => {
       setSelectedRowKeys(currentSelectKeys);
@@ -529,7 +529,7 @@ const Page: React.FC = () => {
         }}
       >
         <Upload
-          fileList={uploadFileList}
+          fileList={uploadFileList as any}
           beforeUpload={(file) => {
             setUploadFileList([file]);
             return false;
