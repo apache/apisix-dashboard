@@ -14,16 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
+import React from 'react';
 import { default as BasicAuth } from './basic-auth'
+import { FormInstance } from 'antd/es/form';
 
-export const PLUGIN_UI_LIST = ['basic-auth']
+type Props = {
+  name: string,
+  ref: any,
+  form: FormInstance
+}
 
-export const PLUGIN_UI_FORM = ({ name, ...props }) => {
+export const PLUGIN_UI_LIST = ['basic-auth'];
 
+export const PLUGIN_UI_FORM: React.FC<Props> = ({ name, ref, form }) => {
   switch (name) {
     case 'basic-auth':
-      return <BasicAuth {...props} />
+      return <BasicAuth ref={ref} form={form} />
     default:
-      break;
+      return <></>
   }
 }
