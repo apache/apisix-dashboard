@@ -21,13 +21,14 @@ import { default as BasicAuth } from './basic-auth'
 import { default as LimitConn } from './limit-conn'
 import { default as RefererRestriction } from './referer-restriction'
 import { default as ProxyMirror } from './proxy-mirror'
+import { default as ApiBreaker } from './api-breaker'
 
 type Props = {
   name: string,
   form: FormInstance
 }
 
-export const PLUGIN_UI_LIST = ['basic-auth', 'limit-conn', 'referer-restriction', 'proxy-mirror'];
+export const PLUGIN_UI_LIST = ['basic-auth', 'limit-conn', 'referer-restriction', 'proxy-mirror', 'api-breaker'];
 
 export const PLUGIN_UI_FORM: React.FC<Props> = ({ name, form }) => {
   switch (name) {
@@ -39,6 +40,8 @@ export const PLUGIN_UI_FORM: React.FC<Props> = ({ name, form }) => {
       return <RefererRestriction form={form} />
     case 'proxy-mirror':
       return <ProxyMirror form={form} />
+    case 'api-breaker':
+      return <ApiBreaker form={form} />
     default:
       return <></>
   }
