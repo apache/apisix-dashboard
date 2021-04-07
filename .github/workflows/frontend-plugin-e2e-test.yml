@@ -1,5 +1,4 @@
-name: Frontend e2e test
-
+name: Frontend e2e test for plugin
 on:
   push:
     branches:
@@ -25,7 +24,6 @@ jobs:
           - 2380:2380
         env:
           ALLOW_NONE_AUTHENTICATION: yes
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -68,16 +66,7 @@ jobs:
         run: yarn
 
       - name: Start frontend then test
-        run: |
-          rm -rf cypress/integration/plugin
-          yarn test:e2e
-
-      - name: Report e2e coverage
-        run: npx nyc report --reporter=text-summary
-
-      - name: Upload coverage to Codecov
-        run: |
-          bash <(curl -s https://codecov.io/bash) -f ./coverage/coverage-final.json -F frontend-e2e-test
+        run: yarn test-plugin:e2e
 
       - name: Archive code coverage results
         uses: actions/upload-artifact@v2

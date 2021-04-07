@@ -104,11 +104,11 @@ const PluginDetail: React.FC<Props> = ({
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.type;
   const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
-    codeMirrorModeList.Json,
+    codeMirrorModeList.JSON,
   );
   const modeOptions = [
-    { label: codeMirrorModeList.Json, value: codeMirrorModeList.Json },
-    { label: codeMirrorModeList.Yaml, value: codeMirrorModeList.Yaml },
+    { label: codeMirrorModeList.JSON, value: codeMirrorModeList.JSON },
+    { label: codeMirrorModeList.YAML, value: codeMirrorModeList.YAML },
   ];
 
   if (PLUGIN_UI_LIST.includes(name)) {
@@ -316,21 +316,21 @@ const PluginDetail: React.FC<Props> = ({
         </style>
 
         <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
-          <Form.Item label="Enable" valuePropName="checked" name="disable">
+          <Form.Item label={formatMessage({ id: 'component.global.enable' })} valuePropName="checked" name="disable">
             <Switch
               defaultChecked={initialData[name] && !initialData[name].disable}
               disabled={readonly}
             />
           </Form.Item>
           {type === 'global' && (
-            <Form.Item label="Scope" name="scope">
+            <Form.Item label={formatMessage({ id: 'component.global.scope' })} name="scope">
               <Select disabled>
                 <Select.Option value="global">Global</Select.Option>
               </Select>
             </Form.Item>
           )}
         </Form>
-        <Divider orientation="left">Data Editor</Divider>
+        <Divider orientation="left">{formatMessage({ id: 'component.global.data.editor' })}</Divider>
         <PageHeader
           title=""
           subTitle={
@@ -354,10 +354,10 @@ const PluginDetail: React.FC<Props> = ({
               }}
               key={1}
             >
-              Document
+              {formatMessage({ id: 'component.global.document' })}
             </Button>,
             <Select
-              defaultValue={codeMirrorModeList.Json}
+              defaultValue={codeMirrorModeList.JSON}
               value={codeMirrorMode}
               options={modeOptions}
               onChange={(value: PluginComponent.CodeMirrorMode) => {
@@ -366,7 +366,7 @@ const PluginDetail: React.FC<Props> = ({
               data-cy='code-mirror-mode'
             ></Select>,
             <Button type="primary" onClick={formatCodes} key={3}>
-              Format
+              {formatMessage({ id: 'component.global.format' })}
             </Button>,
           ]}
         />
@@ -376,6 +376,7 @@ const PluginDetail: React.FC<Props> = ({
             ref.current = codemirror;
             if (codemirror) {
               // NOTE: for debug & test
+              // @ts-ignore
               window.codemirror = codemirror.editor;
             }
           }}

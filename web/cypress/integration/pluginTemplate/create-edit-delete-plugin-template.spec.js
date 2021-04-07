@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('Create Edit and Delete PluginTemplate', () => {
+context('Create Configure and Delete PluginTemplate', () => {
   const timeout = 5000;
   beforeEach(() => {
     cy.login();
@@ -57,7 +57,7 @@ context('Create Edit and Delete PluginTemplate', () => {
     cy.get(this.domSelector.refresh).click();
     cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName);
     cy.contains('button', 'Search').click();
-    cy.contains(this.data.pluginTemplateName).siblings().contains('Edit').click();
+    cy.contains(this.data.pluginTemplateName).siblings().contains('Configure').click();
 
     cy.get(this.domSelector.description).clear().type(this.data.pluginTemplateName2);
     cy.contains('Next').click();

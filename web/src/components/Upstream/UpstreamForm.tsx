@@ -66,7 +66,7 @@ type Props = {
 };
 
 const removeBtnStyle = {
-  marginLeft: -10,
+  marginLeft: 20,
   display: 'flex',
   alignItems: 'center',
 };
@@ -83,14 +83,17 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       {
         label: formatMessage({ id: 'page.upstream.step.connect.timeout' }),
         name: ['timeout', 'connect'],
+        desc: formatMessage({ id: 'page.upstream.step.connect.timeout.desc' })
       },
       {
         label: formatMessage({ id: 'page.upstream.step.send.timeout' }),
         name: ['timeout', 'send'],
+        desc: formatMessage({ id: 'page.upstream.step.send.timeout.desc' })
       },
       {
         label: formatMessage({ id: 'page.upstream.step.read.timeout' }),
         name: ['timeout', 'read'],
+        desc: formatMessage({ id: 'page.upstream.step.read.timeout.desc' })
       },
     ];
 
@@ -155,22 +158,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       <Form.List name="nodes">
         {(fields, { add, remove }) => (
           <>
-            {fields.map((field, index) => (
-              <Form.Item
-                required
-                key={field.key}
-                label={
-                  index === 0 &&
-                  formatMessage({ id: 'page.upstream.form.item-label.node.domain.or.ip' })
-                }
-                extra={
-                  index === 0 &&
-                  formatMessage({ id: 'page.upstream.form.item.extra-message.node.domain.or.ip' })
-                }
-                labelCol={{ span: index === 0 ? 3 : 0 }}
-                wrapperCol={{ offset: index === 0 ? 0 : 3 }}
-              >
-                <Row style={{ marginBottom: 10 }} gutter={16}>
+            <Form.Item label={formatMessage({ id: 'page.upstream.form.item-label.node.domain.or.ip' })}>
+              {fields.map((field, index) => (
+                <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
                   <Col span={5}>
                     <Form.Item
                       style={{ marginBottom: 0 }}
@@ -196,10 +186,11 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={2}>
+                  <Col span={4}>
                     <Form.Item
                       style={{ marginBottom: 0 }}
                       name={[field.name, 'port']}
+                      label={formatMessage({ id: 'page.upstream.step.port' })}
                       rules={[
                         {
                           required: true,
@@ -210,15 +201,16 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       <InputNumber
                         placeholder={formatMessage({ id: 'page.upstream.step.port' })}
                         disabled={readonly}
-                        min={1}
+                        min={0}
                         max={65535}
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={2}>
+                  <Col span={5}>
                     <Form.Item
                       style={{ marginBottom: 0 }}
                       name={[field.name, 'weight']}
+                      label={formatMessage({ id: 'page.upstream.step.weight' })}
                       rules={[
                         {
                           required: true,
@@ -234,14 +226,14 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       />
                     </Form.Item>
                   </Col>
-                  <Col style={removeBtnStyle}>
-                    {!readonly && fields.length > 1 && (
+                  <Col style={{ ...removeBtnStyle, marginLeft: -25 }}>
+                    {!readonly && (
                       <MinusCircleOutlined onClick={() => remove(field.name)} />
                     )}
                   </Col>
                 </Row>
-              </Form.Item>
-            ))}
+              ))}
+            </Form.Item>
             {!readonly && (
               <Form.Item wrapperCol={{ offset: 3 }}>
                 <Button type="dashed" onClick={add}>
@@ -257,15 +249,16 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
     const ActiveHealthCheck = () => (
       <>
-        <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.timeout' })}>
+        <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.timeout' })} tooltip={formatMessage({ id: 'page.upstream.checks.active.timeout.description' })}>
           <Form.Item name={['checks', 'active', 'timeout']} noStyle>
-            <InputNumber disabled={readonly} />
+            <InputNumber disabled={readonly} min={0} />
           </Form.Item>
-          <span style={{ margin: '0 8px' }}>s</span>
+          <TimeUnit />
         </Form.Item>
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeHost' })}
           required
+          tooltip={formatMessage({ id: 'page.upstream.checks.active.host.description' })}
         >
           <Form.Item
             style={{ marginBottom: 0 }}
@@ -300,6 +293,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 id: 'page.upstream.step.input.healthyCheck.activePort',
               })}
               disabled={readonly}
+              min={0}
+              max={65535}
             />
           </Form.Item>
         </Form.Item>
@@ -307,6 +302,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.http_path' })}
           required
+          tooltip={formatMessage({
+            id: 'page.upstream.step.input.healthyCheck.active.http_path',
+          })}
         >
           <Form.Item
             name={['checks', 'active', 'http_path']}
@@ -314,17 +312,13 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             rules={[
               {
                 required: true,
-                message: formatMessage({
-                  id: 'page.upstream.step.input.healthyCheck.active.http_path',
-                }),
+                message: formatMessage({ id: 'page.upstream.checks.active.http_path.placeholder' }),
               },
             ]}
           >
             <Input
               disabled={readonly}
-              placeholder={formatMessage({
-                id: 'page.upstream.step.input.healthyCheck.active.http_path',
-              })}
+              placeholder={formatMessage({ id: 'page.upstream.checks.active.http_path.placeholder' })}
             />
           </Form.Item>
         </Form.Item>
@@ -335,8 +329,10 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeInterval' })}
           required
+          tooltip={formatMessage({ id: 'page.upstream.checks.active.healthy.interval.description' })}
         >
           <Form.Item
+            noStyle
             style={{ marginBottom: 0 }}
             name={['checks', 'active', 'healthy', 'interval']}
             rules={[
@@ -350,10 +346,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           >
             <InputNumber disabled={readonly} min={1} />
           </Form.Item>
+          <TimeUnit />
         </Form.Item>
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.successes' })}
           required
+          tooltip={formatMessage({ id: 'page.upstream.checks.active.healthy.successes.description' })}
         >
           <Form.Item
             name={['checks', 'active', 'healthy', 'successes']}
@@ -375,6 +373,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeInterval' })}
           required
+          tooltip={formatMessage({ id: 'page.upstream.checks.active.unhealthy.interval.description' })}
         >
           <Form.Item
             name={['checks', 'active', 'unhealthy', 'interval']}
@@ -390,10 +389,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           >
             <InputNumber disabled={readonly} min={1} />
           </Form.Item>
+          <TimeUnit />
         </Form.Item>
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.http_failures' })}
           required
+          tooltip={formatMessage({ id: 'page.upstream.checks.active.unhealthy.http_failures.description' })}
         >
           <Form.Item
             name={['checks', 'active', 'unhealthy', 'http_failures']}
@@ -469,25 +470,20 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.List name={['checks', 'passive', 'healthy', 'http_statuses']}>
           {(fields, { add, remove }) => (
             <>
-              {fields.map((field, index) => (
-                <Form.Item
-                  required
-                  key={field.key}
-                  label={
-                    index === 0 &&
-                    formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })
-                  }
-                  labelCol={{ span: index === 0 ? 3 : 0 }}
-                  wrapperCol={{ offset: index === 0 ? 0 : 3 }}
-                >
-                  <Row style={{ marginBottom: 10 }}>
+              <Form.Item
+                required
+                label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
+                tooltip={formatMessage({ id: 'page.upstream.checks.passive.healthy.http_statuses.description' })}
+              >
+                {fields.map((field, index) => (
+                  <Row style={{ marginBottom: 10 }} key={index}>
                     <Col span={2}>
                       <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
-                        <InputNumber disabled={readonly} />
+                        <InputNumber disabled={readonly} min={200} max={599} />
                       </Form.Item>
                     </Col>
                     <Col style={removeBtnStyle}>
-                      {!readonly && fields.length > 1 && (
+                      {!readonly && (
                         <MinusCircleOutlined
                           onClick={() => {
                             remove(field.name);
@@ -496,8 +492,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       )}
                     </Col>
                   </Row>
-                </Form.Item>
-              ))}
+                ))}
+              </Form.Item>
               {!readonly && (
                 <Form.Item wrapperCol={{ offset: 3 }}>
                   <Button type="dashed" onClick={() => add()}>
@@ -513,6 +509,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Form.List>
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.successes' })}
+          tooltip={formatMessage({ id: 'page.upstream.checks.passive.healthy.successes.description' })}
           required
         >
           <Form.Item
@@ -535,21 +532,16 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.List name={['checks', 'passive', 'unhealthy', 'http_statuses']}>
           {(fields, { add, remove }) => (
             <>
-              {fields.map((field, index) => (
-                <Form.Item
-                  required
-                  key={field.key}
-                  label={
-                    index === 0 &&
-                    formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })
-                  }
-                  labelCol={{ span: index === 0 ? 3 : 0 }}
-                  wrapperCol={{ offset: index === 0 ? 0 : 3 }}
-                >
-                  <Row style={{ marginBottom: 10 }}>
+              <Form.Item
+                required
+                label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
+                tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.http_statuses.description' })}
+              >
+                {fields.map((field, index) => (
+                  <Row style={{ marginBottom: 10 }} key={index}>
                     <Col span={2}>
                       <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
-                        <InputNumber disabled={readonly} max={599} />
+                        <InputNumber disabled={readonly} min={200} max={599} />
                       </Form.Item>
                     </Col>
                     <Col style={removeBtnStyle}>
@@ -562,8 +554,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       )}
                     </Col>
                   </Row>
-                </Form.Item>
-              ))}
+                ))}
+              </Form.Item>
               {!readonly && (
                 <Form.Item wrapperCol={{ offset: 3 }}>
                   <Button type="dashed" onClick={() => add()}>
@@ -580,6 +572,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.http_failures' })}
           required
+          tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.http_failures.description' })}
         >
           <Form.Item
             name={['checks', 'passive', 'unhealthy', 'http_failures']}
@@ -599,6 +592,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.tcp_failures' })}
           required
+          tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.tcp_failures.description' })}
         >
           <Form.Item
             name={['checks', 'passive', 'unhealthy', 'tcp_failures']}
@@ -688,7 +682,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 {Object.entries(Type).map(([label, value]) => {
                   return (
                     <Select.Option value={value} key={value}>
-                      {label}
+                      {formatMessage({ id: `page.upstream.type.${label}` })}
                     </Select.Option>
                   );
                 })}
@@ -719,6 +713,16 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 </Select.Option>
               </Select>
             </Form.Item>
+
+            <Form.Item
+              label={formatMessage({ id: 'page.upstream.retries' })}
+              name="retries"
+            >
+              <InputNumber
+                disabled={disabled}
+              />
+            </Form.Item>
+
             <Form.Item
               noStyle
               shouldUpdate={(prev, next) => {
@@ -746,8 +750,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               }}
             </Form.Item>
 
-            {timeoutFields.map(({ label, name }) => (
-              <Form.Item label={label} required key={label}>
+            {timeoutFields.map(({ label, name, desc = '' }) => (
+              <Form.Item label={label} required key={label} tooltip={desc}>
                 <Form.Item
                   name={name}
                   noStyle
@@ -771,7 +775,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 {
                   label: formatMessage({ id: 'page.upstream.step.healthyCheck.active' }),
                   name: ['checks', 'active'],
-                  component: <ActiveHealthCheck />,
+                  component: (
+                    <>
+                      <ActiveHealthCheck />
+                      <Divider orientation="left" plain />
+                    </>
+                  ),
                 },
                 {
                   label: formatMessage({ id: 'page.upstream.step.healthyCheck.passive' }),

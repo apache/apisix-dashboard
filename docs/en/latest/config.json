@@ -2,6 +2,11 @@
   "version": 2.4,
   "sidebar": [
     {
+      "type": "link",
+      "label": "Apache APISIX Dashboard",
+      "href": "https://apisix.apache.org/docs/dashboard/USER_GUIDE/"
+    },
+    {
       "type": "category",
       "label": "Getting Started",
       "items": ["USER_GUIDE", "IMPORT_OPENAPI_USER_GUIDE", "api/api"]

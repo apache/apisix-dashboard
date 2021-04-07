@@ -20,6 +20,7 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -27,13 +28,12 @@ import (
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
-	"github.com/stretchr/testify/assert"
+	"github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
 var _ = ginkgo.Describe("SSL Basic", func() {
-	t := ginkgo.GinkgoT()
 	var (
 		testCert        []byte
 		testKey         []byte
@@ -46,11 +46,11 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 
 	var err error
 	testCert, err = ioutil.ReadFile("../../certs/test2.crt")
-	assert.Nil(t, err)
+	gomega.Expect(err).To(gomega.BeNil())
 	testKey, err = ioutil.ReadFile("../../certs/test2.key")
-	assert.Nil(t, err)
+	gomega.Expect(err).To(gomega.BeNil())
 	apisixKey, err = ioutil.ReadFile("../../certs/apisix.key")
-	assert.Nil(t, err)
+	gomega.Expect(err).To(gomega.BeNil())
 
 	validBody, err = json.Marshal(map[string]interface{}{
 		"id":   "1",
@@ -62,7 +62,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 			"version": "v3",
 		},
 	})
-	assert.Nil(t, err)
+	gomega.Expect(err).To(gomega.BeNil())
 	validBody2, err = json.Marshal(map[string]interface{}{
 		"id":   "1",
 		"cert": string(testCert),
@@ -73,14 +73,14 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 			"version": "v2",
 		},
 	})
-	assert.Nil(t, err)
+	gomega.Expect(err).To(gomega.BeNil())
 
 	invalidBody, err = json.Marshal(map[string]string{
 		"id":   "1",
 		"cert": string(testCert),
 		"key":  string(apisixKey),
 	})
-	assert.Nil(t, err)
+	gomega.Expect(err).To(gomega.BeNil())
 
 	tempBody := map[string]interface{}{
 		"name":  "route1",
@@ -98,7 +98,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 		},
 	}
 	createRouteBody, err = json.Marshal(tempBody)
-	assert.Nil(t, err)
+	gomega.Expect(err).To(gomega.BeNil())
 
 	ginkgo.It("without certificate", func() {
 		// Before configuring SSL, make a HTTPS request
@@ -112,8 +112,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 		}
 
 		_, err := http.Get("https://www.test2.com:9443")
-		assert.NotNil(t, err)
-		assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")
+		gomega.Expect(fmt.Sprintf("%s", err)).Should(gomega.Equal("Get https://www.test2.com:9443: remote error: tls: internal error"))
 	})
 
 	table.DescribeTable("test ssl basic", func(testCase base.HttpTestCase) {
@@ -241,8 +240,7 @@ var _ = ginkgo.Describe("SSL Basic", func() {
 		// try again after disable SSL, make a HTTPS request
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		_, err := http.Get("https://www.test2.com:9443")
-		assert.NotNil(t, err)
-		assert.EqualError(t, err, "Get https://www.test2.com:9443: remote error: tls: internal error")
+		gomega.Expect(fmt.Sprintf("%s", err)).Should(gomega.Equal("Get https://www.test2.com:9443: remote error: tls: internal error"))
 	})
 
 	table.DescribeTable("test ssl basic", func(testCase base.HttpTestCase) {

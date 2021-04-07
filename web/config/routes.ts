@@ -40,6 +40,10 @@ const routes = [
     component: './Route/Create',
   },
   {
+    path: '/routes/:rid/duplicate',
+    component: './Route/Create',
+  },
+  {
     path: '/ssl/:id/edit',
     component: './SSL/Create',
   },

@@ -417,6 +417,9 @@ const Page: React.FC = () => {
             }}>
               {formatMessage({ id: 'component.global.view' })}
             </Button>
+            <Button type="primary" onClick={() => history.push(`/routes/${record.id}/duplicate`)}>
+              {formatMessage({ id: 'component.global.duplicate' })}
+            </Button>
             <Popconfirm
               title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
               onConfirm={() => {
@@ -475,7 +478,7 @@ const Page: React.FC = () => {
             setRawData({});
           }}>
             <PlusOutlined />
-            {formatMessage({ id: 'component.global.createWithEditor' })}
+            {formatMessage({ id: 'component.global.data.editor' })}
           </Button>,
           <Button
             type="primary"
