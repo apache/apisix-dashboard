@@ -56,7 +56,6 @@ export default {
   'page.upstream.step.healthyCheck.active.timeout': '超时时间',
   'page.upstream.step.input.healthyCheck.active.timeout': '请输入超时时间',
   'page.upstream.step.healthyCheck.active.http_path': '路径',
-  'page.upstream.step.input.healthyCheck.active.http_path': '进行主动健康检查时使用的 HTTP 请求路径（默认为 /）',
   'page.upstream.step.healthyCheck.activePort': '端口',
   'page.upstream.step.input.healthyCheck.activePort': '端口',
   'page.upstream.step.healthyCheck.activeHost': '域名',
@@ -110,6 +109,7 @@ export default {
   'page.upstream.retries': '重试次数',
 
   'page.upstream.checks.active.http_path.placeholder': '请输入 HTTP 请求路径',
+  'page.upstream.step.input.healthyCheck.active.http_path': '进行主动健康检查时使用的 HTTP 请求路径（默认为 /）',
   'page.upstream.checks.active.timeout.description': '主动健康检查的套接字的超时时间',
   'page.upstream.checks.active.host.description': '进行主动健康检查时使用的 HTTP 请求主机名',
   'page.upstream.checks.active.healthy.interval.description': '对健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对健康节点不进行主动健康检查。',
