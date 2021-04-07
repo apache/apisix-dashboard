@@ -188,7 +188,7 @@ const Page: React.FC = () => {
           history.push('/plugin-template/list')
         }
       }, {
-        name: formatMessage({ id: 'component.global.createWithEditor' }),
+        name: formatMessage({ id: 'component.global.data.editor' }),
         icon: <PlusOutlined />,
         onClick: () => {
           setVisible(true);
@@ -247,6 +247,29 @@ const Page: React.FC = () => {
           name: formatMessage({ id: 'component.global.duplicate' }),
           onClick: () => {
             history.push(`/routes/${record.id}/duplicate`)
+          }
+        }, {
+          name: formatMessage({ id: 'component.global.delete' }),
+          onClick: () => {
+            Modal.confirm({
+              type: "warning",
+              title: formatMessage({ id: 'component.global.popconfirm.title.delete' }),
+              content: (
+                <>
+                  {formatMessage({ id: 'component.global.name' })} - {record.name}<br />
+                  ID - {record.id}
+                </>
+              ),
+              onOk: () => {
+                remove(record.id!).then(() => {
+                  handleTableActionSuccessResponse(
+                    `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                      id: 'menu.routes',
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
+                  );
+                });
+              }
+            })
           }
         }
       ]
@@ -503,27 +526,6 @@ const Page: React.FC = () => {
             <Button type="primary" onClick={() => history.push(`/routes/${record.id}/edit`)}>
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
-            <Popconfirm
-              title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
-              onConfirm={() => {
-                remove(record.id!).then(() => {
-                  handleTableActionSuccessResponse(
-                    `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                      id: 'menu.routes',
-                    })} ${formatMessage({ id: 'component.status.success' })}`,
-                  );
-                });
-              }}
-              okButtonProps={{
-                danger: true,
-              }}
-              okText={formatMessage({ id: 'component.global.confirm' })}
-              cancelText={formatMessage({ id: 'component.global.cancel' })}
-            >
-              <Button type="primary" danger>
-                {formatMessage({ id: 'component.global.delete' })}
-              </Button>
-            </Popconfirm>
             <RecordActionDropdown record={record} />
           </Space>
         </>
@@ -532,7 +534,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'page.route.list' })}>
+    <PageHeaderWrapper title={formatMessage({ id: 'page.route.list' })} content={formatMessage({ id: 'page.route.list.description' })}>
       <ProTable<RouteModule.ResponseBody>
         actionRef={ref}
         rowKey="id"

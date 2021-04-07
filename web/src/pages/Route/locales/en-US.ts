@@ -148,5 +148,7 @@ export default {
   'page.route.tooltip.pluginOrchWithoutRedirect': 'Plugin orchestration mode cannot be used when Redirect in Step 1 is selected to enable HTTPS.',
 
   'page.route.tabs.normalMode': 'Normal mode',
-  'page.route.tabs.orchestration': 'Plugin orchestration'
+  'page.route.tabs.orchestration': 'Plugin orchestration',
+
+  'page.route.list.description': 'A Route is the entry point of a request, which defines the matching rules between a client request and a service. A route can be associated with a service (Service), an upstream (Upstream), a service can correspond to a set of routes, and a route can correspond to an upstream object (a set of backend service nodes), so each request matching to a route will be proxied by the gateway to the route-bound upstream service.'
 };
