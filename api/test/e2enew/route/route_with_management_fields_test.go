@@ -54,7 +54,9 @@ var _ = ginkgo.Describe("route with management fields", func() {
 						}
 					}
 				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Headers: map[string]string{"Authorization": base.GetToken()},
+			ExpectBody: []string{`"code":0`, `"id":"r1"`, `"uri":"/hello"`, `"name":"jack"`,
+				`"upstream":{"nodes":{"` + base.UpstreamIp + `:1980":1},"type":"roundrobin"}`},
 			ExpectStatus: http.StatusOK,
 		}),
 		table.Entry("check route exists by name", base.HttpTestCase{
@@ -99,9 +101,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 		request, _ := http.NewRequest("GET", basepath+"/r1", nil)
 		request.Header.Add("Authorization", base.GetToken())
 		resp, err := http.DefaultClient.Do(request)
-		if err != nil {
-			return
-		}
+		gomega.Expect(err).Should(gomega.BeNil())
 		defer resp.Body.Close()
 		respBody, _ := ioutil.ReadAll(resp.Body)
 		createtime = gjson.Get(string(respBody), "data.create_time")
@@ -139,7 +139,9 @@ var _ = ginkgo.Describe("route with management fields", func() {
 				}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			Sleep:        time.Duration(2) * time.Second,
+			ExpectBody: []string{`"code":0`, `"id":"r1"`, `"uri":"/hello"`, `"name":"new jack"`,
+				`"upstream":{"nodes":{"` + base.UpstreamIp + `:1980":1},"type":"roundrobin"}`},
+			Sleep: time.Duration(2) * time.Second,
 		}),
 		table.Entry("access the route's uri (r1)", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
@@ -216,7 +218,10 @@ var _ = ginkgo.Describe("route with management fields", func() {
 						}
 					}
 				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Headers: map[string]string{"Authorization": base.GetToken()},
+			ExpectBody: []string{`"code":0`, `"id":"r1"`, `"uri":"/hello"`, `"name":"route1"`,
+				`"upstream":{"nodes":{"` + base.UpstreamIp + `:1980":1},"type":"roundrobin"}`,
+				`"labels":{"build":"16","env":"production","version":"v2"}`},
 			ExpectStatus: http.StatusOK,
 		}),
 		table.Entry("access the route's uri (r1)", base.HttpTestCase{
@@ -280,7 +285,10 @@ var _ = ginkgo.Describe("route with management fields", func() {
 						}
 					}
 				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Headers: map[string]string{"Authorization": base.GetToken()},
+			ExpectBody: []string{`"code":0`, `"id":"r1"`, `"uri":"/hello"`, `"name":"route1"`,
+				`"upstream":{"nodes":{"` + base.UpstreamIp + `:1980":1},"type":"roundrobin"}`,
+				`"labels":{"build":"16","env":"production","version":"v2"}`},
 			ExpectStatus: http.StatusOK,
 		}),
 		table.Entry("config route with labels (r2)", base.HttpTestCase{
@@ -303,7 +311,11 @@ var _ = ginkgo.Describe("route with management fields", func() {
 						}
 					}
 				}`,
-			Headers:      map[string]string{"Authorization": base.GetToken()},
+			Headers: map[string]string{"Authorization": base.GetToken()},
+			ExpectBody: []string{`"code":0`, `"id":"r2"`, `"uri":"/hello2"`, `"name":"route2"`,
+				`"upstream":{"nodes":{"` + base.UpstreamIp + `:1980":1},"type":"roundrobin"}`,
+				`"labels":{"build":"17","env":"dev","extra":"test","version":"v2"}`,
+			},
 			ExpectStatus: http.StatusOK,
 		}),
 		table.Entry("access the route's uri (r1)", base.HttpTestCase{
@@ -411,6 +423,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectBody:   `"message":"we don't accept create_time from client"`,
 			ExpectStatus: http.StatusBadRequest,
 		}),
 		table.Entry("create route with update_time", base.HttpTestCase{
@@ -429,6 +442,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectBody:   `"message":"we don't accept update_time from client"`,
 			ExpectStatus: http.StatusBadRequest,
 		}),
 		table.Entry("create route with create_time and update_time", base.HttpTestCase{
@@ -448,6 +462,7 @@ var _ = ginkgo.Describe("route with management fields", func() {
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectBody:   `"message":"we don't accept create_time from client"`,
 			ExpectStatus: http.StatusBadRequest,
 		}),
 		table.Entry("make sure the route not created", base.HttpTestCase{
