@@ -30,9 +30,11 @@ import {
   Upload,
   Modal,
   Divider,
+  Menu,
+  Dropdown,
 } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined } from '@ant-design/icons';
+import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined, DownOutlined } from '@ant-design/icons';
 import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
 import moment from 'moment';
@@ -176,6 +178,52 @@ const Page: React.FC = () => {
       setShowImportModal(false);
     });
   };
+
+  const toolbarMenus = () => {
+    const tools = [
+      {
+        name: formatMessage({ id: 'page.route.pluginTemplateConfig' }),
+        icon: <PlusOutlined />,
+        onClick: () => {
+          history.push('/plugin-template/list')
+        }
+      }, {
+        name: formatMessage({ id: 'component.global.createWithEditor' }),
+        icon: <PlusOutlined />,
+        onClick: () => {
+          setVisible(true);
+          setEditorMode('create');
+          setRawData({});
+        }
+      }, {
+        name: formatMessage({ id: 'page.route.button.importOpenApi' }),
+        icon: <ImportOutlined />,
+        onClick: () => {
+          setUploadFileList([]);
+          setShowImportModal(true);
+        }
+      }, {
+        name: formatMessage({ id: 'page.route.onlineDebug' }),
+        icon: <BugOutlined />,
+        onClick: () => {
+          setDebugDrawVisible(true)
+        }
+      }
+    ]
+
+    return (
+      <Menu>
+        {
+          tools.map(item => (
+            <Menu.Item key={item.name} onClick={item.onClick}>
+              {item.icon}
+              {item.name}
+            </Menu.Item>
+          ))
+        }
+      </Menu>
+    )
+  }
 
   const ListFooter: React.FC = () => {
     return (
@@ -464,36 +512,15 @@ const Page: React.FC = () => {
           resetText: formatMessage({ id: 'component.global.reset' }),
         }}
         toolBarRender={() => [
-          <Button type="primary" onClick={() => { history.push('/plugin-template/list') }}>
-            <PlusOutlined />
-            {formatMessage({ id: 'page.route.pluginTemplateConfig' })}
-          </Button>,
           <Button type="primary" onClick={() => history.push(`/routes/create`)}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
-          <Button type="primary" onClick={() => {
-            setVisible(true);
-            setEditorMode('create');
-            setRawData({});
-          }}>
-            <PlusOutlined />
-            {formatMessage({ id: 'component.global.createWithEditor' })}
-          </Button>,
-          <Button
-            type="primary"
-            onClick={() => {
-              setUploadFileList([]);
-              setShowImportModal(true);
-            }}
-          >
-            <ImportOutlined />
-            {formatMessage({ id: 'page.route.button.importOpenApi' })}
-          </Button>,
-          <Button type="primary" onClick={() => setDebugDrawVisible(true)}>
-            <BugOutlined />
-            {formatMessage({ id: 'page.route.onlineDebug' })}
-          </Button>,
+          <Dropdown overlay={toolbarMenus}>
+            <Button type="dashed">
+              <DownOutlined /> {formatMessage({ id: "menu.advanced-feature" })}
+            </Button>
+          </Dropdown>
         ]}
         rowSelection={rowSelection}
         footer={() => <ListFooter />}
