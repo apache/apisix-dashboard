@@ -38,7 +38,7 @@ const LimitConn: React.FC<Props> = forwardRef(
           required
           name="conn"
         >
-          <InputNumber min={0} required></InputNumber>
+          <InputNumber min={1} required></InputNumber>
         </Form.Item>
         <Form.Item
           label="burst"
@@ -52,7 +52,7 @@ const LimitConn: React.FC<Props> = forwardRef(
           required
           name="default_conn_delay"
         >
-          <InputNumber min={0} required></InputNumber>
+          <InputNumber min={1} required></InputNumber>
         </Form.Item>
 
         <Form.Item
