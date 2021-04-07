@@ -20,13 +20,14 @@ import { FormInstance } from 'antd/es/form';
 import { default as BasicAuth } from './basic-auth'
 import { default as LimitConn } from './limit-conn'
 import { default as RefererRestriction } from './referer-restriction'
+import { default as ProxyMirror } from './proxy-mirror'
 
 type Props = {
   name: string,
   form: FormInstance
 }
 
-export const PLUGIN_UI_LIST = ['basic-auth', 'limit-conn', 'referer-restriction'];
+export const PLUGIN_UI_LIST = ['basic-auth', 'limit-conn', 'referer-restriction', 'proxy-mirror'];
 
 export const PLUGIN_UI_FORM: React.FC<Props> = ({ name, form }) => {
   switch (name) {
@@ -36,6 +37,8 @@ export const PLUGIN_UI_FORM: React.FC<Props> = ({ name, form }) => {
       return <BasicAuth form={form} />
     case 'referer-restriction':
       return <RefererRestriction form={form} />
+    case 'proxy-mirror':
+      return <ProxyMirror form={form} />
     default:
       return <></>
   }
