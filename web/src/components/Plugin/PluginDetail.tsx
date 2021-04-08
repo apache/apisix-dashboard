@@ -119,10 +119,6 @@ const PluginDetail: React.FC<Props> = ({
       disable: initialData[name] && !initialData[name].disable,
       scope: 'global',
     });
-    if (PLUGIN_UI_LIST.includes(name)) {
-      setCodeMirrorMode(codeMirrorModeList.UIForm);
-      UIForm.setFieldsValue(initialData[name]);
-    };
   }, []);
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
