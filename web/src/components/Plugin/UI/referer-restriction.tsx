@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Form, Input, Button, Switch, Row } from 'antd';
+import { Form, Input, Button, Switch } from 'antd';
 import { useIntl } from 'umi';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
