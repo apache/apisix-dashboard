@@ -84,7 +84,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
               cy.get(domSelector.selectDropdown + " [label=JSON]" ).click();
             }
           });
-          
+
           cy.get(domSelector.drawer, { timeout }).within(() => {
             cy.contains('Submit').click({
               force: true,
