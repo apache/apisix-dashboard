@@ -16,13 +16,27 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Form, Input, Button, Switch } from 'antd';
+import { Form, Input, Button, Switch, Row } from 'antd';
 import { useIntl } from 'umi';
-import { FORM_ITEM_LAYOUT, FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 type Props = {
   form: FormInstance;
+};
+
+const FORM_ITEM_LAYOUT = {
+  labelCol: {
+    span: 5,
+  },
+  wrapperCol: {
+    span: 8
+  },
+};
+
+const FORM_ITEM_WITHOUT_LABEL = {
+  wrapperCol: {
+    span: 8, offset: 5
+  },
 };
 
 const RefererRestriction: React.FC<Props> = ({ form }) => {
@@ -30,7 +44,7 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
   return (
     <Form
       form={form}
-      labelCol={{ span: 5 }}
+      {...FORM_ITEM_LAYOUT}
       initialValues={{ whitelist: [''] }}
     >
       <Form.List name="whitelist" >
@@ -43,23 +57,19 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
                   label={index === 0 && 'whitelist'}
                   key={field.key}
                   required
-
+                  tooltip='List of hostname to whitelist. The hostname can be started with * as a wildcard.'
                 >
                   <Form.Item
                     {...field}
                     validateTrigger={['onChange', 'onBlur']}
                     required
                     noStyle
-
                   >
-                    <Input
-                      style={{ width: '60%' }}
-                    />
+                    <Input />
                   </Form.Item>
                   {fields.length > 1 ? (
                     <MinusCircleOutlined
                       className="dynamic-delete-button"
-                      style={{ margin: '0 8px' }}
                       onClick={() => {
                         remove(field.name);
                       }}
@@ -88,6 +98,7 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
         label="bypass_missing"
         name="bypass_missing"
         valuePropName="checked"
+        tooltip='Whether to bypass the check when the Referer header is missing or malformed.'
       >
         <Switch />
       </Form.Item>
