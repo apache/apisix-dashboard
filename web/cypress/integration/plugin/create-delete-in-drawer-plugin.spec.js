@@ -35,6 +35,14 @@ context('Delete Plugin List with the Drawer', () => {
       cy.get('button').click({ force: true });
     });
 
+    cy.get("[data-cy='code-mirror-mode']").invoke('text').then(text => {
+      if (text === 'UIForm') {
+        cy.get("[data-cy='code-mirror-mode']").click();
+        cy.get(".ant-select-dropdown").should('be.visible');
+        cy.get(".ant-select-dropdown [label=JSON]").click();
+      }
+    });
+
     cy.get(this.domSelector.drawer).should('be.visible').within(() => {
       cy.get(this.domSelector.disabledSwitcher).click();
       cy.get(this.domSelector.checkedSwitcher).should('exist');

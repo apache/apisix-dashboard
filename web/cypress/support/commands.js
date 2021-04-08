@@ -74,6 +74,15 @@ Cypress.Commands.add('configurePlugins', (cases) => {
             codemirror.setValue(JSON.stringify(data));
           }
           cy.get(domSelectors.drawer).should('exist');
+
+          cy.get("[data-cy='code-mirror-mode']").invoke('text').then(text => {
+            if (text === 'UIForm') {
+              cy.get("[data-cy='code-mirror-mode']").click();
+              cy.get(".ant-select-dropdown").should('be.visible');
+              cy.get(".ant-select-dropdown [label=JSON]").click();
+            }
+          });
+          
           cy.get(domSelectors.drawer, { timeout }).within(() => {
             cy.contains('Submit').click({
               force: true,
