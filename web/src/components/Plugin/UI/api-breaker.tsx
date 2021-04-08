@@ -27,10 +27,13 @@ type Props = {
 const FORM_ITEM_LAYOUT = {
   labelCol: {
     span: 7,
-  }
+  },
+  wrapperCol: {
+    span: 7
+  },
 };
 
-export const FORM_ITEM_WITHOUT_LABEL = {
+const FORM_ITEM_WITHOUT_LABEL = {
   wrapperCol: {
     sm: { span: 14, offset: 7 },
   },
@@ -49,6 +52,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         label="break_response_code"
         required
         name="break_response_code"
+        tooltip='Return error code when unhealthy'
       >
         <InputNumber min={200} max={599} required></InputNumber>
       </Form.Item>
@@ -57,6 +61,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         label="max_breaker_sec"
         name="max_breaker_sec"
         initialValue={300}
+        tooltip='Maximum breaker time(seconds)'
       >
         <InputNumber min={60}></InputNumber>
       </Form.Item>
@@ -69,13 +74,12 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
                 <Form.Item
                   {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   label={index === 0 && 'unhealthy.http_statuses'}
+                  tooltip='Status codes when unhealthy'
                   key={field.key}
-                  required
                 >
                   <Form.Item
                     {...field}
                     validateTrigger={['onChange', 'onBlur']}
-                    required
                     noStyle
                   >
                     <InputNumber min={500} max={599}></InputNumber>
@@ -113,6 +117,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         label="unhealthy.failures"
         name={['unhealthy', 'failures']}
         initialValue={3}
+        tooltip='Number of consecutive error requests that triggered an unhealthy state'
       >
         <InputNumber min={1}></InputNumber>
       </Form.Item>
@@ -125,13 +130,12 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
                 <Form.Item
                   {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   key={field.key}
-                  required
                   label={index === 0 && 'healthy.http_statuses'}
+                  tooltip='Status codes when healthy'
                 >
                   <Form.Item
                     {...field}
                     validateTrigger={['onChange', 'onBlur']}
-                    required
                     noStyle
                   >
                     <InputNumber min={200} max={499}></InputNumber>
@@ -169,6 +173,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         label="healthy.successes"
         name={['healthy', 'successes']}
         initialValue={3}
+        tooltip='Number of consecutive normal requests that trigger health status'
       >
         <InputNumber min={1}></InputNumber>
       </Form.Item>
