@@ -121,6 +121,7 @@ const PluginDetail: React.FC<Props> = ({
     });
     if (PLUGIN_UI_LIST.includes(name)) {
       setCodeMirrorMode(codeMirrorModeList.UIForm);
+      UIForm.setFieldsValue(initialData[name]);
     };
   }, []);
 
