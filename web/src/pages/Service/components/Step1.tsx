@@ -54,7 +54,7 @@ const Step1: React.FC<ServiceModule.Step1PassProps> = ({
       </Form>
       <UpstreamForm
         ref={upstreamRef}
-        required={false}
+        required
         form={upstreamForm}
         disabled={disabled}
         list={list}

@@ -661,9 +661,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 item?.children.toLowerCase().includes(input.toLowerCase())
               }
             >
-              {Boolean(!required) && <Select.Option value='None'>{
-                formatMessage({ id: 'page.upstream.step.select.upstream.select.none' })
-              }</Select.Option>}
               {[
                 {
                   name: formatMessage({ id: 'page.upstream.step.select.upstream.select.option' }),
@@ -675,6 +672,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   {item.name}
                 </Select.Option>
               ))}
+              {Boolean(!required) && <Select.Option value='None'>{
+                formatMessage({ id: 'page.upstream.step.select.upstream.select.none' })
+              }</Select.Option>}
             </Select>
           </Form.Item>
         )}
