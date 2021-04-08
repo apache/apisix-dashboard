@@ -14,21 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare namespace PluginComponent {
-  type Data = Record<string, any>;
+import React from 'react';
+import { FormInstance } from 'antd/es/form';
 
-  type Schema = '' | 'route' | 'consumer';
+import BasicAuth from './basic-auth'
 
-  type Meta = {
-    name: string;
-    priority: number;
-    schema: Record<string, any>;
-    type: string;
-    version: number;
-    consumer_schema?: Record<string, any>;
-  };
+type Props = {
+  name: string,
+  form: FormInstance
+}
 
-  type ReferPage = '' | 'route' | 'consumer' | 'service' | 'plugin';
+export const PLUGIN_UI_LIST = ['basic-auth',];
 
-  type CodeMirrorMode = 'JSON' | 'YAML'| 'UIForm';
+export const PluginForm: React.FC<Props> = ({ name, form }) => {
+  switch (name) {
+    case 'basic-auth':
+      return <BasicAuth form={form} />
+    default:
+      return null;
+  }
 }
