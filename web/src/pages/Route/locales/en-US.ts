@@ -162,4 +162,6 @@ export default {
   'page.route.configuration.path.placeholder': 'Please enter the HTTP request path',
   'page.route.configuration.remote_addrs.placeholder': 'Please enter the client address',
   'page.route.configuration.host.placeholder': 'Please enter the HTTP request hostname',
+
+  'page.route.service.none': 'None',
 };

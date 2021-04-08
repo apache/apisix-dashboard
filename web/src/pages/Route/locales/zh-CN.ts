@@ -161,4 +161,6 @@ export default {
   'page.route.configuration.path.placeholder': '请输入 HTTP 请求路径',
   'page.route.configuration.remote_addrs.placeholder': '请输入客户端地址',
   'page.route.configuration.host.placeholder': '请输入 HTTP 请求域名',
+
+  'page.route.service.none': '不绑定服务',
 };
