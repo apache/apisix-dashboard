@@ -23,7 +23,6 @@ import { PanelSection } from '@api7-dashboard/ui';
 
 import {
   HTTP_METHOD_OPTION_LIST,
-  FORM_ITEM_LAYOUT,
   FORM_ITEM_WITHOUT_LABEL,
 } from '@/pages/Route/constants';
 import { fetchServiceList } from '../../service';
@@ -74,7 +73,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                       noStyle
                     >
                       <Input
-                        placeholder="请输入 HTTP 请求域名"
+                        placeholder={formatMessage({ id: 'page.route.configuration.host.placeholder' })}
                         disabled={disabled}
                       />
                     </Form.Item>
@@ -134,7 +133,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                         {
                           required: true,
                           whitespace: true,
-                          message: "请输入有效的 HTTP 请求路径",
+                          message: formatMessage({ id: "page.route.configuration.path.rules.required.description" }),
                         },
                         {
                           pattern: new RegExp(/^\/[a-zA-Z0-9\-._~%!$&'()+,;=:@/]*\*?$/, 'g'),
@@ -146,7 +145,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                       noStyle
                     >
                       <Input
-                        placeholder="请输入 HTTP 请求路径"
+                        placeholder={formatMessage({ id: 'page.route.configuration.path.placeholder' })}
                         disabled={disabled}
                       />
                     </Form.Item>
@@ -212,7 +211,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                       noStyle
                     >
                       <Input
-                        placeholder="请输入客户端地址"
+                        placeholder={formatMessage({ id: 'page.route.configuration.remote_addrs.placeholder' })}
                         disabled={disabled}
                       />
                     </Form.Item>

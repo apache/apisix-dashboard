@@ -147,5 +147,18 @@ export default {
   'page.route.tabs.normalMode': '普通模式',
   'page.route.tabs.orchestration': '插件编排',
 
-  'page.route.list.description': '路由（Route）是请求的入口点，它定义了客户端请求与服务之间的匹配规则。路由可以与服务（Service）、上游（Upstream）关联，一个服务可对应一组路由，一个路由可以对应一个上游对象（一组后端服务节点），因此，每个匹配到路由的请求将被网关代理到路由绑定的上游服务中。'
+  'page.route.list.description': '路由（Route）是请求的入口点，它定义了客户端请求与服务之间的匹配规则。路由可以与服务（Service）、上游（Upstream）关联，一个服务可对应一组路由，一个路由可以对应一个上游对象（一组后端服务节点），因此，每个匹配到路由的请求将被网关代理到路由绑定的上游服务中。',
+
+  'page.route.configuration.name.rules.required.description': '请输入路由名称',
+  'page.route.configuration.name.placeholder': '请输入路由名称',
+  'page.route.configuration.desc.tooltip': '路由的描述信息',
+  'page.route.configuration.publish.tooltip': '用于控制路由创建后，是否立即发布到网关',
+  'page.route.configuration.version.placeholder': '请输入路由版本号',
+  'page.route.configuration.version.tooltip': '路由的版本号，如 V1',
+  'page.route.configuration.normal-labels.tooltip': '为路由增加自定义标签，可用于路由分组。',
+
+  'page.route.configuration.path.rules.required.description': '请输入有效的 HTTP 请求路径',
+  'page.route.configuration.path.placeholder': '请输入 HTTP 请求路径',
+  'page.route.configuration.remote_addrs.placeholder': '请输入客户端地址',
+  'page.route.configuration.host.placeholder': '请输入 HTTP 请求域名',
 };

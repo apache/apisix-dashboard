@@ -38,7 +38,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
 
     return (
       <React.Fragment>
-        <Form.Item label={formatMessage({ id: 'component.global.labels' })} name={field} tooltip="为路由增加自定义标签，可用于路由分组。">
+        <Form.Item label={formatMessage({ id: 'component.global.labels' })} name={field} tooltip={formatMessage({ id: 'page.route.configuration.normal-labels.tooltip' })}>
           <Select
             mode="tags"
             style={{ width: '100%' }}
@@ -87,7 +87,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
   const VersionLabelComponent = () => {
     return (
       <Form.Item
-        label={formatMessage({ id: 'component.global.version' })} tooltip="路由的版本号，如 V1">
+        label={formatMessage({ id: 'component.global.version' })} tooltip={formatMessage({ id: "page.route.configuration.version.tooltip" })}>
         <Row>
           <Col span={10}>
             <Form.Item
@@ -97,7 +97,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
               <AutoComplete
                 options={(labelList.API_VERSION || []).map((item) => ({ value: item }))}
                 disabled={disabled}
-                placeholder="请输入路由版本号"
+                placeholder={formatMessage({ id: "page.route.configuration.version.placeholder" })}
               />
             </Form.Item>
           </Col>
@@ -116,7 +116,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
             rules={[
               {
                 required: true,
-                message: "请输入路由名称",
+                message: formatMessage({ id: 'page.route.configuration.name.rules.required.description' }),
               },
               {
                 pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
@@ -125,7 +125,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
             ]}
           >
             <Input
-              placeholder="请输入路由名称"
+              placeholder={formatMessage({ id: 'page.route.configuration.name.placeholder' })}
               disabled={disabled}
             />
           </Form.Item>
@@ -135,7 +135,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
   )
 
   const Description: React.FC = () => (
-    <Form.Item label={formatMessage({ id: 'component.global.description' })} tooltip="路由的描述信息">
+    <Form.Item label={formatMessage({ id: 'component.global.description' })} tooltip="">
       <Row>
         <Col span={10}>
           <Form.Item noStyle name="desc">
@@ -152,7 +152,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
   )
 
   const Publish: React.FC = () => (
-    <Form.Item label={formatMessage({ id: 'page.route.publish' })} tooltip="用于控制路由创建后，是否立即发布到网关">
+    <Form.Item label={formatMessage({ id: 'page.route.publish' })} tooltip={formatMessage({ id: 'page.route.configuration.publish.tooltip' })}>
       <Row>
         <Col>
           <Form.Item
