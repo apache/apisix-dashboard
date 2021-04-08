@@ -116,7 +116,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageContainer title={formatMessage({ id: 'page.upstream.list' })}>
+    <PageContainer title={formatMessage({ id: 'page.upstream.list' })} content={formatMessage({ id: "page.upstream.list.content" })}>
       <ProTable<UpstreamModule.ResponseBody>
         actionRef={ref}
         columns={columns}
@@ -136,13 +136,12 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
-          <Button type="primary" onClick={() => {
+          <Button type="default" onClick={() => {
             setVisible(true);
             setEditorMode('create');
             setRawData({});
           }}>
-            <PlusOutlined />
-            {formatMessage({ id: 'component.global.createWithEditor' })}
+            {formatMessage({ id: 'component.global.data.editor' })}
           </Button>,
         ]}
       />

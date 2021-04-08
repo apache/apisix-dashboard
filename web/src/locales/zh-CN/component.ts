@@ -25,12 +25,11 @@ export default {
   'component.global.document': '文档',
   'component.global.enable': '启用',
   'component.global.scope': '作用域',
-  'component.global.data.editor': '元数据编辑器',
+  'component.global.data.editor': '数据编辑器',
   'component.global.delete': '删除',
   'component.global.cancel': '取消',
   'component.global.submit': '提交',
   'component.global.create': '创建',
-  'component.global.createWithEditor': '使用编辑器创建',
   'component.global.add': '新建',
   'component.global.save': '保存',
   'component.global.edit': '配置',
@@ -68,4 +67,6 @@ export default {
   // User component
   'component.user.loginByPassword': '账号密码登录',
   'component.user.login': '登录',
+
+  'component.document': '操作手册'
 };
