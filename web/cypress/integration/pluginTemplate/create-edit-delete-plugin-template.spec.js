@@ -40,9 +40,9 @@ context('Create Configure and Delete PluginTemplate', () => {
     });
     cy.focused(this.domSelector.drawer).should('exist');
 
-    cy.get("[data-cy='code-mirror-mode']").click();
-    cy.get('.ant-select-dropdown').should('be.visible');
-    cy.get(".ant-select-dropdown [label=JSON]").click();
+    cy.get(this.domSelector.codeMirrorMode).click();
+    cy.get(this.domSelector.selectDropdown).should('be.visible');
+    cy.get( this.domSelector.selectDropdown + " [label=JSON]" ).click();
     cy.get(this.domSelector.disabledSwitcher).click({
       force: true,
     });
