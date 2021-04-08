@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { forwardRef } from 'react';
+import React from 'react';
 import type { FormInstance } from 'antd/es/form';
 import { Form, Input, Button, Switch } from 'antd';
 import { useIntl } from 'umi';
@@ -25,77 +25,74 @@ type Props = {
   form: FormInstance;
 };
 
+const RefererRestriction: React.FC<Props> = ({ form }) => {
+  const { formatMessage } = useIntl()
+  return (
+    <Form
+      form={form}
+      labelCol={{ span: 5 }}
+      initialValues={{ whitelist: [''] }}
+    >
+      <Form.List name="whitelist" >
+        {(fields, { add, remove }) => {
+          return (
+            <div>
+              {fields.map((field, index) => (
+                <Form.Item
+                  {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
+                  label={index === 0 && 'whitelist'}
+                  key={field.key}
+                  required
 
-const RefererRestriction: React.FC<Props> = forwardRef(
-  ({ form }) => {
-    const { formatMessage } = useIntl()
-    return (
-      <Form
-        form={form}
-        labelCol={{ span: 5 }}
-        initialValues={{ whitelist: [''] }}
-      >
-        <Form.List name="whitelist" >
-          {(fields, { add, remove }) => {
-            return (
-              <div>
-                {fields.map((field, index) => (
+                >
                   <Form.Item
-                    {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-                    label={index === 0 && 'whitelist'}
-                    key={field.key}
+                    {...field}
+                    validateTrigger={['onChange', 'onBlur']}
                     required
+                    noStyle
 
                   >
-                    <Form.Item
-                      {...field}
-                      validateTrigger={['onChange', 'onBlur']}
-                      required
-                      noStyle
-
-                    >
-                      <Input
-                        style={{ width: '60%' }}
-                      />
-                    </Form.Item>
-                    {fields.length > 1 ? (
-                      <MinusCircleOutlined
-                        className="dynamic-delete-button"
-                        style={{ margin: '0 8px' }}
-                        onClick={() => {
-                          remove(field.name);
-                        }}
-                      />
-                    ) : null}
+                    <Input
+                      style={{ width: '60%' }}
+                    />
                   </Form.Item>
-                ))}
-                {
-                  <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-                    <Button
-                      type="dashed"
-                      data-cy="addHost"
+                  {fields.length > 1 ? (
+                    <MinusCircleOutlined
+                      className="dynamic-delete-button"
+                      style={{ margin: '0 8px' }}
                       onClick={() => {
-                        add();
+                        remove(field.name);
                       }}
-                    >
-                      <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
-                    </Button>
-                  </Form.Item>
-                }
-              </div>
-            );
-          }}
-        </Form.List>
-        <Form.Item
-          label="bypass_missing"
-          name="bypass_missing"
-          valuePropName="checked"
-        >
-          <Switch />
-        </Form.Item>
-      </Form>
-    );
-  },
-);
+                    />
+                  ) : null}
+                </Form.Item>
+              ))}
+              {
+                <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+                  <Button
+                    type="dashed"
+                    data-cy="addHost"
+                    onClick={() => {
+                      add();
+                    }}
+                  >
+                    <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
+                  </Button>
+                </Form.Item>
+              }
+            </div>
+          );
+        }}
+      </Form.List>
+      <Form.Item
+        label="bypass_missing"
+        name="bypass_missing"
+        valuePropName="checked"
+      >
+        <Switch />
+      </Form.Item>
+    </Form>
+  );
+}
 
 export default RefererRestriction;

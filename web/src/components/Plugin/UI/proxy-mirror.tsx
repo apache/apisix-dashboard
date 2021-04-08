@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { forwardRef } from 'react';
+import React from 'react';
 import type { FormInstance } from 'antd/es/form';
 import { Form, Input } from 'antd';
 
@@ -22,22 +22,20 @@ type Props = {
   form: FormInstance;
 };
 
-const ProxyMirror: React.FC<Props> = forwardRef(
-  ({ form }) => {
-    return (
-      <Form
-        form={form}
-        labelCol={{ span: 3 }}
+const ProxyMirror: React.FC<Props> = ({ form }) => {
+  return (
+    <Form
+      form={form}
+      labelCol={{ span: 3 }}
+    >
+      <Form.Item
+        label="host"
+        name="host"
       >
-        <Form.Item
-          label="host"
-          name="host"
-        >
-          <Input></Input>
-        </Form.Item>
-      </Form>
-    );
-  },
-);
+        <Input></Input>
+      </Form.Item>
+    </Form>
+  );
+}
 
 export default ProxyMirror;

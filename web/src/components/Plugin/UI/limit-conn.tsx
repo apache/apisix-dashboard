@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { forwardRef } from 'react';
+import React from 'react';
 import type { FormInstance } from 'antd/es/form';
 import { Form, InputNumber, Select } from 'antd';
 
@@ -23,56 +23,54 @@ type Props = {
   ref?: any;
 };
 
-const LimitConn: React.FC<Props> = forwardRef(
-  ({ form }) => {
-    return (
-      <Form
-        form={form}
-        labelCol={{ span: 5 }}
+const LimitConn: React.FC<Props> = ({ form }) => {
+  return (
+    <Form
+      form={form}
+      labelCol={{ span: 5 }}
+    >
+      <Form.Item
+        label="conn"
+        required
+        name="conn"
       >
-        <Form.Item
-          label="conn"
-          required
-          name="conn"
-        >
-          <InputNumber min={1} required></InputNumber>
-        </Form.Item>
-        <Form.Item
-          label="burst"
-          required
-          name="burst"
-        >
-          <InputNumber min={0} required></InputNumber>
-        </Form.Item>
-        <Form.Item
-          label="default_conn_delay"
-          required
-          name="default_conn_delay"
-        >
-          <InputNumber min={1} required></InputNumber>
-        </Form.Item>
+        <InputNumber min={1} required></InputNumber>
+      </Form.Item>
+      <Form.Item
+        label="burst"
+        required
+        name="burst"
+      >
+        <InputNumber min={0} required></InputNumber>
+      </Form.Item>
+      <Form.Item
+        label="default_conn_delay"
+        required
+        name="default_conn_delay"
+      >
+        <InputNumber min={1} required></InputNumber>
+      </Form.Item>
 
-        <Form.Item
-          label="key"
-          required
-          name="key"
-        >
-          <Select>
-            {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name"].map(item => {
-              return <Select.Option value={item}>{item}</Select.Option>
-            })}
-          </Select>
-        </Form.Item>
+      <Form.Item
+        label="key"
+        required
+        name="key"
+      >
+        <Select>
+          {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name"].map(item => {
+            return <Select.Option value={item}>{item}</Select.Option>
+          })}
+        </Select>
+      </Form.Item>
 
-        <Form.Item
-          label="rejected_code"
-          name="rejected_code"
-        >
-          <InputNumber min={200} max={509} required></InputNumber>
-        </Form.Item>
-      </Form>
-    );
-  },
-);
+      <Form.Item
+        label="rejected_code"
+        name="rejected_code"
+      >
+        <InputNumber min={200} max={509} required></InputNumber>
+      </Form.Item>
+    </Form>
+  );
+}
 
 export default LimitConn;
