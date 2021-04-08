@@ -23,11 +23,20 @@ type Props = {
   ref?: any;
 };
 
+export const FORM_ITEM_LAYOUT = {
+  labelCol: {
+    span: 4,
+  },
+  wrapperCol: {
+    span: 8
+  },
+};
+
 const BasicAuth: React.FC<Props> = ({ form }) => {
   return (
     <Form
       form={form}
-      labelCol={{ span: 3 }}
+      {...FORM_ITEM_LAYOUT}
     >
       <Form.Item
         label="username"
