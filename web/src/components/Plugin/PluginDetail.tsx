@@ -38,7 +38,7 @@ import addFormats from 'ajv-formats';
 
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
-import { PluginForm, PLUGIN_UI_LIST } from './UI'
+import { PluginForm, PLUGIN_UI_LIST } from './UI';
 
 type Props = {
   name: string;
@@ -111,7 +111,7 @@ const PluginDetail: React.FC<Props> = ({
   ];
 
   if (PLUGIN_UI_LIST.includes(name)) {
-    modeOptions.push({ label: codeMirrorModeList.UIForm, value: codeMirrorModeList.UIForm })
+    modeOptions.push({ label: codeMirrorModeList.UIForm, value: codeMirrorModeList.UIForm });
   }
 
   useEffect(() => {
@@ -172,7 +172,7 @@ const PluginDetail: React.FC<Props> = ({
   const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
     switch (value) {
       case codeMirrorModeList.JSON: {
-        if (codeMirrorMode === 'YAML') {
+        if (codeMirrorMode === codeMirrorModeList.YAML) {
           const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
           if (error) {
             notification.error({
@@ -195,7 +195,7 @@ const PluginDetail: React.FC<Props> = ({
         break;
       }
       case codeMirrorModeList.YAML: {
-        const { data: jsonData, error } = json2yaml(codeMirrorMode === 'JSON' ? ref.current.editor.getValue() : JSON.stringify(UIForm.getFieldsValue()));
+        const { data: jsonData, error } = json2yaml(codeMirrorMode === codeMirrorModeList.JSON ? ref.current.editor.getValue() : JSON.stringify(UIForm.getFieldsValue()));
 
         if (error) {
           notification.error({
@@ -208,7 +208,7 @@ const PluginDetail: React.FC<Props> = ({
       }
 
       case codeMirrorModeList.UIForm: {
-        if (codeMirrorMode === 'JSON') {
+        if (codeMirrorMode === codeMirrorModeList.JSON) {
           UIForm.setFieldsValue(JSON.parse(ref.current.editor.getValue()));
         } else {
           const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
@@ -285,9 +285,9 @@ const PluginDetail: React.FC<Props> = ({
                 onClick={() => {
                   try {
                     let editorData;
-                    if (codeMirrorMode === 'JSON') {
+                    if (codeMirrorMode === codeMirrorModeList.JSON) {
                       editorData = JSON.parse(ref.current?.editor.getValue());
-                    } else if (codeMirrorMode === 'YAML') {
+                    } else if (codeMirrorMode === codeMirrorModeList.YAML) {
                       editorData = yaml2json(ref.current?.editor.getValue(), false).data;
                     } else {
                       editorData = UIForm.getFieldsValue();
@@ -373,8 +373,8 @@ const PluginDetail: React.FC<Props> = ({
             </Button>,
           ]}
         />
-        {Boolean(codeMirrorMode === 'UIForm') && <PluginForm name={name} form={UIForm} />}
-        <div style={{ display: codeMirrorMode === 'UIForm' ? 'none' : 'unset' }}><CodeMirror
+        {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} />}
+        <div style={{ display: codeMirrorMode === codeMirrorModeList.UIForm ? 'none' : 'unset' }}><CodeMirror
           ref={(codemirror) => {
             ref.current = codemirror;
             if (codemirror) {

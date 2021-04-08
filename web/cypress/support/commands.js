@@ -42,7 +42,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
     switch: '#disable',
     close: '.anticon-close',
     selectDropdown: '.ant-select-dropdown',
-    codeMirrorMode:'[data-cy="code-mirror-mode"]'
+    codeMirrorMode: '[data-cy="code-mirror-mode"]'
   };
 
   cy.get(domSelector.name, { timeout }).then(function (cards) {
@@ -81,7 +81,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
             if (text === 'UIForm') {
               cy.get(domSelector.codeMirrorMode).click();
               cy.get(domSelector.selectDropdown).should('be.visible');
-              cy.get(domSelector.selectDropdown + " [label=JSON]" ).click();
+              cy.get(domSelector.selectDropdown + " [label=JSON]").click();
             }
           });
 

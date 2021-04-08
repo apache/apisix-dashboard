@@ -84,5 +84,5 @@
   "pageTwo": ".ant-pagination-item-2",
   "pageTwoActived": ".ant-pagination-item-2.ant-pagination-item-active",
   "selectDropdown": ".ant-select-dropdown",
-  "codeMirrorMode":"[data-cy='code-mirror-mode']"
+  "codeMirrorMode": "[data-cy='code-mirror-mode']"
 }
