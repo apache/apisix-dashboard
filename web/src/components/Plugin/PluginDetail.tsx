@@ -38,7 +38,7 @@ import addFormats from 'ajv-formats';
 
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
-import { PLUGIN_UI_FORM, PLUGIN_UI_LIST } from './UI'
+import { PluginForm, PLUGIN_UI_LIST } from './UI'
 
 type Props = {
   name: string;
@@ -284,7 +284,7 @@ const PluginDetail: React.FC<Props> = ({
                     if (codeMirrorMode === 'JSON') {
                       editorData = JSON.parse(ref.current?.editor.getValue());
                     } else if (codeMirrorMode === 'YAML') {
-                      yaml2json(ref.current?.editor.getValue(), false).data;
+                      editorData = yaml2json(ref.current?.editor.getValue(), false).data;
                     } else {
                       editorData = UIForm.getFieldsValue();
                     }
@@ -369,7 +369,7 @@ const PluginDetail: React.FC<Props> = ({
             </Button>,
           ]}
         />
-        {Boolean(codeMirrorMode === 'UIForm') && <PLUGIN_UI_FORM name={name} form={UIForm} />}
+        {Boolean(codeMirrorMode === 'UIForm') && <PluginForm name={name} form={UIForm} />}
         <div style={{ display: codeMirrorMode === 'UIForm' ? 'none' : 'unset' }}><CodeMirror
           ref={(codemirror) => {
             ref.current = codemirror;

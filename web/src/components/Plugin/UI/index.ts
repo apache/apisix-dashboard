@@ -14,4 +14,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { PLUGIN_UI_LIST, PLUGIN_UI_FORM } from './plugin';
+export { PLUGIN_UI_LIST, PluginForm } from './plugin';

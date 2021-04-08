@@ -17,11 +17,11 @@
 import React from 'react';
 import { FormInstance } from 'antd/es/form';
 
-import { default as BasicAuth } from './basic-auth'
-import { default as LimitConn } from './limit-conn'
-import { default as RefererRestriction } from './referer-restriction'
-import { default as ProxyMirror } from './proxy-mirror'
-import { default as ApiBreaker } from './api-breaker'
+import BasicAuth from './basic-auth'
+import LimitConn from './limit-conn'
+import RefererRestriction from './referer-restriction'
+import ProxyMirror from './proxy-mirror'
+import ApiBreaker from './api-breaker'
 
 type Props = {
   name: string,
@@ -30,7 +30,7 @@ type Props = {
 
 export const PLUGIN_UI_LIST = ['basic-auth', 'limit-conn', 'referer-restriction', 'proxy-mirror', 'api-breaker'];
 
-export const PLUGIN_UI_FORM: React.FC<Props> = ({ name, form }) => {
+export const PluginForm: React.FC<Props> = ({ name, form }) => {
   switch (name) {
     case 'limit-conn':
       return <LimitConn form={form} />
@@ -43,6 +43,6 @@ export const PLUGIN_UI_FORM: React.FC<Props> = ({ name, form }) => {
     case 'api-breaker':
       return <ApiBreaker form={form} />
     default:
-      return <></>
+      return null;
   }
 }

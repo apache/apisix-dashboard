@@ -22,8 +22,7 @@ import { FORM_ITEM_LAYOUT, FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constan
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 type Props = {
-  form
-  : FormInstance;
+  form: FormInstance;
 };
 
 
