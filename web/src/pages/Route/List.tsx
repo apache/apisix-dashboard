@@ -14,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useRef, useEffect, useState, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -85,6 +86,7 @@ const Page: React.FC = () => {
   const [id, setId] = useState('');
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
   const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
+  const [debugDrawVisible, setDebugDrawVisible] = useState(false);
 
   const savePageList = (page = 1, pageSize = 10) => {
     history.replace(`/routes/list?page=${page}&pageSize=${pageSize}`);
@@ -232,7 +234,7 @@ const Page: React.FC = () => {
   const RecordActionDropdown: React.FC<{ record: any }> = ({ record }) => {
     const tools: {
       name: string;
-      onClick(): void;
+      onClick: () => void;
       icon?: ReactNode;
     }[] = [
         {
@@ -324,8 +326,6 @@ const Page: React.FC = () => {
       </Popconfirm>
     );
   };
-
-  const [debugDrawVisible, setDebugDrawVisible] = useState(false);
 
   const columns: ProColumns<RouteModule.ResponseBody>[] = [
     {
