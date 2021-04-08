@@ -16,17 +16,34 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Form, InputNumber } from 'antd';
+import { Button, Form, InputNumber } from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { useIntl } from 'umi';
 
 type Props = {
   form: FormInstance;
 };
 
+const FORM_ITEM_LAYOUT = {
+  labelCol: {
+    span: 7,
+  }
+};
+
+export const FORM_ITEM_WITHOUT_LABEL = {
+  wrapperCol: {
+    sm: { span: 14, offset: 7 },
+  },
+};
+
 const ApiBreaker: React.FC<Props> = ({ form }) => {
+  const { formatMessage } = useIntl()
+
   return (
     <Form
       form={form}
-      labelCol={{ span: 6 }}
+      {...FORM_ITEM_LAYOUT}
+      initialValues={{ unhealthy: { http_statuses: [500] }, healthy: { http_statuses: [200] } }}
     >
       <Form.Item
         label="break_response_code"
@@ -35,6 +52,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
       >
         <InputNumber min={200} max={599} required></InputNumber>
       </Form.Item>
+
       <Form.Item
         label="max_breaker_sec"
         name="max_breaker_sec"
@@ -42,30 +60,114 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
       >
         <InputNumber min={60}></InputNumber>
       </Form.Item>
-      <Form.Item
-        label="unhealthy.http_statuses"
-        name="unhealthy.http_statuses"
-        initialValue={500}
-      >
-        <InputNumber min={500} max={599}></InputNumber>
-      </Form.Item>
+
+      <Form.List name={['unhealthy', 'http_statuses']}>
+        {(fields, { add, remove }) => {
+          return (
+            <div>
+              {fields.map((field, index) => (
+                <Form.Item
+                  {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
+                  label={index === 0 && 'unhealthy.http_statuses'}
+                  key={field.key}
+                  required
+                >
+                  <Form.Item
+                    {...field}
+                    validateTrigger={['onChange', 'onBlur']}
+                    required
+                    noStyle
+                  >
+                    <InputNumber min={500} max={599}></InputNumber>
+                  </Form.Item>
+                  {fields.length > 1 ? (
+                    <MinusCircleOutlined
+                      className="dynamic-delete-button"
+                      style={{ margin: '0 8px' }}
+                      onClick={() => {
+                        remove(field.name);
+                      }}
+                    />
+                  ) : null}
+                </Form.Item>
+              ))}
+              {
+                <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+                  <Button
+                    type="dashed"
+                    data-cy="addHost"
+                    onClick={() => {
+                      add();
+                    }}
+                  >
+                    <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
+                  </Button>
+                </Form.Item>
+              }
+            </div>
+          );
+        }}
+      </Form.List>
+
       <Form.Item
         label="unhealthy.failures"
-        name="unhealthy.failures"
+        name={['unhealthy', 'failures']}
         initialValue={3}
       >
         <InputNumber min={1}></InputNumber>
       </Form.Item>
-      <Form.Item
-        label="healthy.http_statuses"
-        name="healthy.http_statuses"
-        initialValue={200}
-      >
-        <InputNumber min={200} max={499}></InputNumber>
-      </Form.Item>
+
+      <Form.List name={['healthy', 'http_statuses']}>
+        {(fields, { add, remove }) => {
+          return (
+            <div>
+              {fields.map((field, index) => (
+                <Form.Item
+                  {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
+                  key={field.key}
+                  required
+                  label={index === 0 && 'healthy.http_statuses'}
+                >
+                  <Form.Item
+                    {...field}
+                    validateTrigger={['onChange', 'onBlur']}
+                    required
+                    noStyle
+                  >
+                    <InputNumber min={200} max={499}></InputNumber>
+                  </Form.Item>
+                  {fields.length > 1 ? (
+                    <MinusCircleOutlined
+                      className="dynamic-delete-button"
+                      style={{ margin: '0 8px' }}
+                      onClick={() => {
+                        remove(field.name);
+                      }}
+                    />
+                  ) : null}
+                </Form.Item>
+              ))}
+              {
+                <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+                  <Button
+                    type="dashed"
+                    data-cy="addHost"
+                    onClick={() => {
+                      add();
+                    }}
+                  >
+                    <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
+                  </Button>
+                </Form.Item>
+              }
+            </div>
+          );
+        }}
+      </Form.List>
+
       <Form.Item
         label="healthy.successes"
-        name="healthy.successes"
+        name={['healthy', 'successes']}
         initialValue={3}
       >
         <InputNumber min={1}></InputNumber>
