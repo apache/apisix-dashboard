@@ -22,17 +22,27 @@ type Props = {
   form: FormInstance;
 };
 
+const FORM_ITEM_LAYOUT = {
+  labelCol: {
+    span: 3,
+  },
+  wrapperCol: {
+    span: 10
+  },
+};
+
 const ProxyMirror: React.FC<Props> = ({ form }) => {
   return (
     <Form
       form={form}
-      labelCol={{ span: 3 }}
+      {...FORM_ITEM_LAYOUT}
     >
       <Form.Item
         label="host"
         name="host"
+        tooltip='Specify a mirror service address, e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)'
       >
-        <Input></Input>
+        <Input />
       </Form.Item>
     </Form>
   );

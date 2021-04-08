@@ -23,7 +23,7 @@ type Props = {
   ref?: any;
 };
 
-export const FORM_ITEM_LAYOUT = {
+const FORM_ITEM_LAYOUT = {
   labelCol: {
     span: 6,
   },
