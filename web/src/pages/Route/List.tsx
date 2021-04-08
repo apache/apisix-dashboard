@@ -288,7 +288,7 @@ const Page: React.FC = () => {
         </Menu>
       }>
         <Button type="dashed">
-          更多
+          {formatMessage({ id: "'menu.more'" })}
         </Button>
       </Dropdown>
     )
