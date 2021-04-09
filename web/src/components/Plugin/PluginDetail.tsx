@@ -95,7 +95,7 @@ const PluginDetail: React.FC<Props> = ({
   enum codeMirrorModeList {
     JSON = 'JSON',
     YAML = 'YAML',
-    UIForm = 'UIForm'
+    Form = 'Form'
   }
   const [form] = Form.useForm();
   const [UIForm] = Form.useForm();
@@ -111,7 +111,7 @@ const PluginDetail: React.FC<Props> = ({
   ];
 
   if (PLUGIN_UI_LIST.includes(name)) {
-    modeOptions.push({ label: codeMirrorModeList.UIForm, value: codeMirrorModeList.UIForm });
+    modeOptions.push({ label: codeMirrorModeList.Form, value: codeMirrorModeList.Form });
   }
 
   useEffect(() => {
@@ -120,7 +120,7 @@ const PluginDetail: React.FC<Props> = ({
       scope: 'global',
     });
     if (PLUGIN_UI_LIST.includes(name)) {
-      setCodeMirrorMode(codeMirrorModeList.UIForm);
+      setCodeMirrorMode(codeMirrorModeList.Form);
       UIForm.setFieldsValue(initialData[name]);
     };
   }, []);
@@ -207,7 +207,7 @@ const PluginDetail: React.FC<Props> = ({
         break;
       }
 
-      case codeMirrorModeList.UIForm: {
+      case codeMirrorModeList.Form: {
         if (codeMirrorMode === codeMirrorModeList.JSON) {
           UIForm.setFieldsValue(JSON.parse(ref.current.editor.getValue()));
         } else {
@@ -337,7 +337,7 @@ const PluginDetail: React.FC<Props> = ({
         <PageHeader
           title=""
           subTitle={
-            pluginType === 'auth' && schemaType !== 'consumer' && (codeMirrorMode !== codeMirrorModeList.UIForm) ? (
+            pluginType === 'auth' && schemaType !== 'consumer' && (codeMirrorMode !== codeMirrorModeList.Form) ? (
               <Alert message={formatMessage({ id: 'component.global.noConfigurationRequired' })} type="warning" />
             ) : null
           }
@@ -366,13 +366,13 @@ const PluginDetail: React.FC<Props> = ({
               }}
               data-cy='code-mirror-mode'
             ></Select>,
-            <Button type="primary" onClick={formatCodes} key={3}>
+            <Button type="primary" onClick={formatCodes} key={3} disabled={codeMirrorMode === codeMirrorModeList.Form}>
               {formatMessage({ id: 'component.global.format' })}
-            </Button>,
+            </Button>
           ]}
         />
-        {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === 'auth' && schemaType !== 'consumer')} />}
-        <div style={{ display: codeMirrorMode === codeMirrorModeList.UIForm ? 'none' : 'unset' }}><CodeMirror
+        {Boolean(codeMirrorMode === codeMirrorModeList.Form) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === 'auth' && schemaType !== 'consumer')} />}
+        <div style={{ display: codeMirrorMode === codeMirrorModeList.Form ? 'none' : 'unset' }}><CodeMirror
           ref={(codemirror) => {
             ref.current = codemirror;
             if (codemirror) {

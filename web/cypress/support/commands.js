@@ -79,7 +79,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           cy.get(domSelector.drawer).should('exist');
 
           cy.get(domSelector.codeMirrorMode).invoke('text').then(text => {
-            if (text === 'UIForm') {
+            if (text === 'Form') {
               cy.get(domSelector.codeMirrorMode).click();
               cy.get(domSelector.selectDropdown).should('be.visible');
               cy.get(domSelector.selectJSON).click();
