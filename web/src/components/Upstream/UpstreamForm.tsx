@@ -431,7 +431,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     const ActiveCheckUnhealthyTimeoutComponents: React.FC = () => (
       <Form.Item
         label="Timeouts"
-        tooltip="Timeouts"
+        required
       >
         <Form.Item
           name={['checks', 'active', 'unhealthy', 'timeouts']}
@@ -491,6 +491,49 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       </Form.List>
     )
 
+    const ActiveCheckUnhealthyHttpStatusesComponent: React.FC = () => (
+      <Form.List name={['checks', 'active', 'unhealthy', 'http_statuses']}>
+        {(fields, { add, remove }) => (
+          <>
+            <Form.Item
+              required
+              label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
+              style={{ marginBottom: 0 }}
+            >
+              {fields.map((field, index) => (
+                <Row style={{ marginBottom: 10 }} key={index}>
+                  <Col span={2}>
+                    <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
+                      <InputNumber disabled={readonly} min={200} max={599} />
+                    </Form.Item>
+                  </Col>
+                  <Col style={removeBtnStyle}>
+                    {!readonly && (
+                      <MinusCircleOutlined
+                        onClick={() => {
+                          remove(field.name);
+                        }}
+                      />
+                    )}
+                  </Col>
+                </Row>
+              ))}
+            </Form.Item>
+            {!readonly && (
+              <Form.Item wrapperCol={{ offset: 3 }}>
+                <Button type="dashed" onClick={() => add()}>
+                  <PlusOutlined />
+                  {formatMessage({
+                    id: 'component.global.add',
+                  })}
+                </Button>
+              </Form.Item>
+            )}
+          </>
+        )}
+      </Form.List>
+    )
+
     const ActiveHealthCheck = () => (
       <React.Fragment>
         <ActiveCheckTimeoutComponent />
@@ -503,15 +546,18 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Divider>
 
         <ActiveCheckHealthyIntervalComponent />
+        {/* TODO: HTTP Statuses */}
         <ActiveCheckHealthySuccessesComponent />
 
         <Divider orientation="left" plain>
           {formatMessage({ id: 'page.upstream.step.healthyCheck.unhealthyStatus' })}
         </Divider>
 
-        <ActiveCheckUnhealthyIntervalComponent />
-        <ActiveCheckUnhealthyHttpFailuresComponent />
         <ActiveCheckUnhealthyTimeoutComponents />
+        <ActiveCheckUnhealthyIntervalComponent />
+        <ActiveCheckUnhealthyHttpStatusesComponent />
+        <ActiveCheckUnhealthyHttpFailuresComponent />
+        {/* TODO: TCP Failures */}
 
         <ActiveCheckReqHeadersComponent />
       </React.Fragment>
@@ -672,6 +718,20 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       </Form.Item>
     )
 
+    const PassiveCheckUnhealthyTimeoutComponents: React.FC = () => (
+      <Form.Item
+        label="Timeouts"
+        required
+      >
+        <Form.Item
+          name={['checks', 'passive', 'unhealthy', 'timeouts']}
+          noStyle
+        >
+          <InputNumber disabled={readonly} min={1} max={254} />
+        </Form.Item>
+      </Form.Item>
+    )
+
     const InActiveHealthCheck = () => (
       <React.Fragment>
         <Divider orientation="left" plain>
@@ -685,9 +745,10 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           {formatMessage({ id: 'page.upstream.step.healthyCheck.unhealthyStatus' })}
         </Divider>
 
-        <PassiveCheckUnhealthyHttpStatusesComponent />
-        <PassiveCheckUnhealthyHttpFailuresComponent />
+        <PassiveCheckUnhealthyTimeoutComponents />
         <PassiveCheckUnhealthyTcpFailturesComponent />
+        <PassiveCheckUnhealthyHttpFailuresComponent />
+        <PassiveCheckUnhealthyHttpStatusesComponent />
       </React.Fragment>
     );
 
