@@ -72,5 +72,7 @@ export default {
   'component.user.loginByPassword': 'Username & Password',
   'component.user.login': 'Login',
 
-  'component.document': 'Document'
+  'component.document': 'Document',
+
+  'component.global.noConfigurationRequired': 'No configuration required',
 };

@@ -337,11 +337,9 @@ const PluginDetail: React.FC<Props> = ({
         <PageHeader
           title=""
           subTitle={
-            pluginType === 'auth' && schemaType !== 'consumer' ? (
-              <Alert message={`${name} does not require configuration`} type="warning" />
-            ) : (
-              <>Current plugin: {name}</>
-            )
+            pluginType === 'auth' && schemaType !== 'consumer' && (codeMirrorMode !== codeMirrorModeList.UIForm) ? (
+              <Alert message={formatMessage({ id: 'component.global.noConfigurationRequired' })} type="warning" />
+            ) : null
           }
           ghost={false}
           extra={[
@@ -373,7 +371,7 @@ const PluginDetail: React.FC<Props> = ({
             </Button>,
           ]}
         />
-        {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} />}
+        {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === 'auth' && schemaType !== 'consumer')} />}
         <div style={{ display: codeMirrorMode === codeMirrorModeList.UIForm ? 'none' : 'unset' }}><CodeMirror
           ref={(codemirror) => {
             ref.current = codemirror;
