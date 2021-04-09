@@ -83,3 +83,9 @@ export const DEFAULT_HEALTH_CHECK_PASSIVE = {
     http_failures: 5
   }
 }
+
+export const removeBtnStyle = {
+  marginLeft: 20,
+  display: 'flex',
+  alignItems: 'center',
+};

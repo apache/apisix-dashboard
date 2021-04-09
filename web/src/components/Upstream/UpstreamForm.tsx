@@ -14,8 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Divider, Form, Input, InputNumber, Row, Select, Switch } from 'antd';
+import { Divider, Form, Switch } from 'antd';
 import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { useIntl } from 'umi';
 import type { FormInstance } from 'antd/es/form';
@@ -23,36 +22,15 @@ import type { FormInstance } from 'antd/es/form';
 import { PanelSection } from '@api7-dashboard/ui';
 import { transformRequest } from '@/pages/Upstream/transform';
 import { DEFAULT_UPSTREAM } from './constant';
-
-enum Type {
-  roundrobin = 'roundrobin',
-  chash = 'chash',
-  ewma = 'ewma',
-  // TODO: new type
-  // least_conn = 'least_conn'
-}
-
-enum HashOn {
-  vars = 'vars',
-  header = 'header',
-  cookie = 'cookie',
-  consumer = 'consumer',
-  // TODO: new hash_on key
-  // vars_combinations = 'vars_combinations'
-}
-
-enum HashKey {
-  remote_addr = 'remote_addr',
-  host = 'host',
-  uri = 'uri',
-  server_name = 'server_name',
-  server_addr = 'server_addr',
-  request_uri = 'request_uri',
-  query_string = 'query_string',
-  remote_port = 'remote_port',
-  hostname = 'hostname',
-  arg_id = 'arg_id',
-}
+import PassiveCheck from './components/passive-check';
+import ActiveCheck from './components/active-check'
+import Nodes from './components/Nodes'
+import Scheme from './components/Scheme';
+import Timeout from './components/Timeout';
+import Type from './components/Type';
+import UpstreamSelector from './components/UpstreamSelector';
+import Retries from './components/Retries';
+import PassHost from './components/PassHost';
 
 type Upstream = {
   name?: string;
@@ -68,14 +46,6 @@ type Props = {
   ref?: any;
   required?: boolean;
 };
-
-const removeBtnStyle = {
-  marginLeft: 20,
-  display: 'flex',
-  alignItems: 'center',
-};
-
-const TimeUnit = () => <span style={{ margin: '0 8px' }}>s</span>;
 
 const UpstreamForm: React.FC<Props> = forwardRef(
   ({ form, disabled, list = [], showSelector, required = true }, ref) => {
@@ -136,767 +106,63 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       setReadonly(Boolean(upstream_id) || disabled);
     }, [list]);
 
-    const CHash = () => (
-      <>
-        <Form.Item label="Hash On" name="hash_on" rules={[{ required: true }]}>
-          <Select disabled={readonly}>
-            {Object.entries(HashOn).map(([label, value]) => (
-              <Select.Option value={value} key={value}>
-                {label}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item label="Key" name="key" rules={[{ required: true }]}>
-          <Select disabled={readonly}>
-            {Object.entries(HashKey).map(([label, value]) => (
-              <Select.Option value={value} key={value}>
-                {label}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-      </>
-    );
 
-    const NodeList = () => (
-      <Form.List name="nodes">
-        {(fields, { add, remove }) => (
-          <>
-            <Form.Item label={formatMessage({ id: 'page.upstream.form.item-label.node.domain.or.ip' })} style={{ marginBottom: 0 }}>
-              {fields.map((field, index) => (
-                <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
-                  <Col span={5}>
-                    <Form.Item
-                      style={{ marginBottom: 0 }}
-                      name={[field.name, 'host']}
-                      rules={[
-                        {
-                          required: true,
-                          message: formatMessage({
-                            id: 'page.upstream.step.input.domain.name.or.ip',
-                          }),
-                        },
-                        {
-                          pattern: new RegExp(
-                            /(^([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.(25[0-5]|1\d{2}|2[0-4]\d|[1-9]?\d)){3}$|^(?![0-9.]+$)([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+){0,}$)/,
-                            'g',
-                          ),
-                        },
-                      ]}
-                    >
-                      <Input
-                        placeholder={formatMessage({ id: 'page.upstream.step.domain.name.or.ip' })}
-                        disabled={readonly}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col span={4}>
-                    <Form.Item
-                      style={{ marginBottom: 0 }}
-                      name={[field.name, 'port']}
-                      label={formatMessage({ id: 'page.upstream.step.port' })}
-                      rules={[
-                        {
-                          required: true,
-                          message: formatMessage({ id: 'page.upstream.step.input.port' }),
-                        },
-                      ]}
-                    >
-                      <InputNumber
-                        placeholder={formatMessage({ id: 'page.upstream.step.port' })}
-                        disabled={readonly}
-                        min={1}
-                        max={65535}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col span={5}>
-                    <Form.Item
-                      style={{ marginBottom: 0 }}
-                      name={[field.name, 'weight']}
-                      label={formatMessage({ id: 'page.upstream.step.weight' })}
-                      rules={[
-                        {
-                          required: true,
-                          message: formatMessage({ id: 'page.upstream.step.input.weight' }),
-                        },
-                      ]}
-                    >
-                      <InputNumber
-                        placeholder={formatMessage({ id: 'page.upstream.step.weight' })}
-                        disabled={readonly}
-                        min={0}
-                        max={1000}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col style={{ ...removeBtnStyle, marginLeft: -50 }}>
-                    {!readonly && (
-                      <MinusCircleOutlined onClick={() => remove(field.name)} />
-                    )}
-                  </Col>
-                </Row>
-              ))}
-            </Form.Item>
-            {!readonly && (
-              <Form.Item wrapperCol={{ offset: 3 }}>
-                <Button type="dashed" onClick={add}>
-                  <PlusOutlined />
-                  {formatMessage({ id: 'component.global.add' })}
-                </Button>
-              </Form.Item>
-            )}
-          </>
-        )}
-      </Form.List>
-    );
-
-    const ActiveCheckTimeoutComponent: React.FC = () => (
-      <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.timeout' })} tooltip={formatMessage({ id: 'page.upstream.checks.active.timeout.description' })}>
-        <Form.Item name={['checks', 'active', 'timeout']} noStyle>
-          <InputNumber disabled={readonly} min={0} />
-        </Form.Item>
-        <TimeUnit />
-      </Form.Item>
-    )
-
-    const ActiveCheckHostComponent: React.FC = () => (
-      <Form.Item
-        label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeHost' })}
-        required
-        tooltip={formatMessage({ id: 'page.upstream.checks.active.host.description' })}
-      >
-        <Form.Item
-          style={{ marginBottom: 0 }}
-          name={['checks', 'active', 'host']}
-          rules={[
-            {
-              required: true,
-              message: formatMessage({ id: 'page.upstream.step.input.healthyCheck.activeHost' }),
-            },
-            {
-              pattern: new RegExp(
-                /(^([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.(25[0-5]|1\d{2}|2[0-4]\d|[1-9]?\d)){3}$|^(?![0-9.]+$)([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+){0,}$)/,
-                'g',
-              ),
-              message: formatMessage({ id: 'page.upstream.step.domain.name.or.ip.rule' }),
-            },
-          ]}
-        >
-          <Input
-            placeholder={formatMessage({
-              id: 'page.upstream.step.input.healthyCheck.activeHost',
-            })}
-            disabled={readonly}
-          />
-        </Form.Item>
-      </Form.Item>
-    )
-
-    const ActiveCheckPortComponent: React.FC = () => (
-      <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.activePort' })}>
-        <Form.Item name={['checks', 'active', 'port']} noStyle>
-          <InputNumber
-            placeholder={formatMessage({
-              id: 'page.upstream.step.input.healthyCheck.activePort',
-            })}
-            disabled={readonly}
-            min={1}
-            max={65535}
-          />
-        </Form.Item>
-      </Form.Item>
-    )
-
-    const ActiveHttpPathComponent: React.FC = () => (
-      <Form.Item
-        label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.http_path' })}
-        required
-        tooltip={formatMessage({
-          id: 'page.upstream.step.input.healthyCheck.active.http_path',
-        })}
-      >
-        <Form.Item
-          name={['checks', 'active', 'http_path']}
-          noStyle
-          rules={[
-            {
-              required: true,
-              message: formatMessage({ id: 'page.upstream.checks.active.http_path.placeholder' }),
-            },
-          ]}
-        >
-          <Input
-            disabled={readonly}
-            placeholder={formatMessage({ id: 'page.upstream.checks.active.http_path.placeholder' })}
-          />
-        </Form.Item>
-      </Form.Item>
-    )
-
-    const ActiveCheckHealthyIntervalComponent: React.FC = () => (
-      <Form.Item
-        label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeInterval' })}
-        required
-        tooltip={formatMessage({ id: 'page.upstream.checks.active.healthy.interval.description' })}
-      >
-        <Form.Item
-          noStyle
-          style={{ marginBottom: 0 }}
-          name={['checks', 'active', 'healthy', 'interval']}
-          rules={[
-            {
-              required: true,
-              message: formatMessage({
-                id: 'page.upstream.step.input.healthyCheck.activeInterval',
-              }),
-            },
-          ]}
-        >
-          <InputNumber disabled={readonly} min={1} />
-        </Form.Item>
-        <TimeUnit />
-      </Form.Item>
-    )
-
-    const ActiveCheckHealthySuccessesComponent: React.FC = () => (
-      <Form.Item
-        label={formatMessage({ id: 'page.upstream.step.healthyCheck.successes' })}
-        required
-        tooltip={formatMessage({ id: 'page.upstream.checks.active.healthy.successes.description' })}
-      >
-        <Form.Item
-          name={['checks', 'active', 'healthy', 'successes']}
-          noStyle
-          rules={[
-            {
-              required: true,
-              message: formatMessage({ id: 'page.upstream.step.input.healthyCheck.successes' }),
-            },
-          ]}
-        >
-          <InputNumber disabled={readonly} min={1} max={254} />
-        </Form.Item>
-      </Form.Item>
-    )
-
-    const ActiveCheckUnhealthyIntervalComponent: React.FC = () => (
-      <Form.Item
-        label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeInterval' })}
-        required
-        tooltip={formatMessage({ id: 'page.upstream.checks.active.unhealthy.interval.description' })}
-      >
-        <Form.Item
-          name={['checks', 'active', 'unhealthy', 'interval']}
-          noStyle
-          rules={[
-            {
-              required: true,
-              message: formatMessage({
-                id: 'page.upstream.step.input.healthyCheck.activeInterval',
-              }),
-            },
-          ]}
-        >
-          <InputNumber disabled={readonly} min={1} />
-        </Form.Item>
-        <TimeUnit />
-      </Form.Item>
-    )
-
-    const ActiveCheckUnhealthyHttpFailuresComponent: React.FC = () => (
-      <Form.Item
-        label={formatMessage({ id: 'page.upstream.step.healthyCheck.http_failures' })}
-        required
-        tooltip={formatMessage({ id: 'page.upstream.checks.active.unhealthy.http_failures.description' })}
-      >
-        <Form.Item
-          name={['checks', 'active', 'unhealthy', 'http_failures']}
-          noStyle
-          rules={[
-            {
-              required: true,
-              message: formatMessage({
-                id: 'page.upstream.step.input.healthyCheck.http_failures',
-              }),
-            },
-          ]}
-        >
-          <InputNumber disabled={readonly} min={1} max={254} />
-        </Form.Item>
-      </Form.Item>
-    )
-
-    const ActiveCheckUnhealthyTimeoutComponents: React.FC = () => (
-      <Form.Item
-        label="Timeouts"
-        required
-      >
-        <Form.Item
-          name={['checks', 'active', 'unhealthy', 'timeouts']}
-          noStyle
-        >
-          <InputNumber disabled={readonly} min={1} max={254} />
-        </Form.Item>
-      </Form.Item>
-    )
-
-    const ActiveCheckReqHeadersComponent: React.FC = () => (
-      <Form.List name={['checks', 'active', 'req_headers']}>
-        {(fields, { add, remove }) => (
-          <>
-            <Form.Item
-              label={
-                formatMessage({ id: 'page.upstream.step.healthyCheck.active.req_headers' })
-              }
-              style={{ marginBottom: 0 }}
-            >
-              {fields.map((field, index) => (
-                <Row style={{ marginBottom: 10 }} gutter={12} key={index}>
-                  <Col span={5}>
-                    <Form.Item noStyle name={[field.name]}>
-                      <Input
-                        placeholder={formatMessage({
-                          id: 'page.upstream.step.input.healthyCheck.active.req_headers',
-                        })}
-                        disabled={readonly}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col style={{ ...removeBtnStyle, marginLeft: 0 }}>
-                    {!readonly && fields.length > 1 && (
-                      <MinusCircleOutlined
-                        onClick={() => {
-                          remove(field.name);
-                        }}
-                      />
-                    )}
-                  </Col>
-                </Row>
-              ))}
-            </Form.Item>
-            {!readonly && (
-              <Form.Item wrapperCol={{ offset: 3 }}>
-                <Button type="dashed" onClick={() => add()}>
-                  <PlusOutlined />
-                  {formatMessage({
-                    id: 'component.global.add',
-                  })}
-                </Button>
-              </Form.Item>
-            )}
-          </>
-        )}
-      </Form.List>
-    )
-
-    const ActiveCheckUnhealthyHttpStatusesComponent: React.FC = () => (
-      <Form.List name={['checks', 'active', 'unhealthy', 'http_statuses']}>
-        {(fields, { add, remove }) => (
-          <>
-            <Form.Item
-              required
-              label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
-              style={{ marginBottom: 0 }}
-            >
-              {fields.map((field, index) => (
-                <Row style={{ marginBottom: 10 }} key={index}>
-                  <Col span={2}>
-                    <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
-                      <InputNumber disabled={readonly} min={200} max={599} />
-                    </Form.Item>
-                  </Col>
-                  <Col style={removeBtnStyle}>
-                    {!readonly && (
-                      <MinusCircleOutlined
-                        onClick={() => {
-                          remove(field.name);
-                        }}
-                      />
-                    )}
-                  </Col>
-                </Row>
-              ))}
-            </Form.Item>
-            {!readonly && (
-              <Form.Item wrapperCol={{ offset: 3 }}>
-                <Button type="dashed" onClick={() => add()}>
-                  <PlusOutlined />
-                  {formatMessage({
-                    id: 'component.global.add',
-                  })}
-                </Button>
-              </Form.Item>
-            )}
-          </>
-        )}
-      </Form.List>
-    )
 
     const ActiveHealthCheck = () => (
       <React.Fragment>
-        {/* TODO: type */}
-        <ActiveCheckTimeoutComponent />
+        <ActiveCheck.Type readonly={readonly} />
+        <ActiveCheck.Timeout readonly={readonly} />
         {/* TODO: concurrency */}
-        <ActiveCheckHostComponent />
-        <ActiveCheckPortComponent />
-        <ActiveHttpPathComponent />
+        <ActiveCheck.Host readonly={readonly} />
+        <ActiveCheck.Port readonly={readonly} />
+        <ActiveCheck.HttpPath readonly={readonly} />
         {/* TODO: https_verify_certificate */}
 
         <Divider orientation="left" plain>
           {formatMessage({ id: 'page.upstream.step.healthyCheck.healthy.status' })}
         </Divider>
 
-        <ActiveCheckHealthyIntervalComponent />
+        <ActiveCheck.Healthy.Interval readonly={readonly} />
         {/* TODO: HTTP Statuses */}
-        <ActiveCheckHealthySuccessesComponent />
+        <ActiveCheck.Healthy.Successes readonly={readonly} />
 
         <Divider orientation="left" plain>
           {formatMessage({ id: 'page.upstream.step.healthyCheck.unhealthyStatus' })}
         </Divider>
 
-        <ActiveCheckUnhealthyTimeoutComponents />
-        <ActiveCheckUnhealthyIntervalComponent />
-        <ActiveCheckUnhealthyHttpStatusesComponent />
-        <ActiveCheckUnhealthyHttpFailuresComponent />
+        <ActiveCheck.Unhealthy.Timeouts readonly={readonly} />
+        <ActiveCheck.Unhealthy.Interval readonly={readonly} />
+        <ActiveCheck.Unhealthy.HttpStatuses readonly={readonly} />
+        <ActiveCheck.Unhealthy.HttpFailures readonly={readonly} />
         {/* TODO: TCP Failures */}
 
         <Divider orientation="left" plain>Others</Divider>
 
-        <ActiveCheckReqHeadersComponent />
+        <ActiveCheck.ReqHeaders readonly={readonly} />
       </React.Fragment>
     );
 
-    const PassiveCheckHealthyHttpStatusesComponent: React.FC = () => (
-      <Form.List name={['checks', 'passive', 'healthy', 'http_statuses']}>
-        {(fields, { add, remove }) => (
-          <>
-            <Form.Item
-              required
-              label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
-              tooltip={formatMessage({ id: 'page.upstream.checks.passive.healthy.http_statuses.description' })}
-              style={{ marginBottom: 0 }}
-            >
-              {fields.map((field, index) => (
-                <Row style={{ marginBottom: 10 }} key={index}>
-                  <Col span={2}>
-                    <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
-                      <InputNumber disabled={readonly} min={200} max={599} />
-                    </Form.Item>
-                  </Col>
-                  <Col style={removeBtnStyle}>
-                    {!readonly && (
-                      <MinusCircleOutlined
-                        onClick={() => {
-                          remove(field.name);
-                        }}
-                      />
-                    )}
-                  </Col>
-                </Row>
-              ))}
-            </Form.Item>
-            {!readonly && (
-              <Form.Item wrapperCol={{ offset: 3 }}>
-                <Button type="dashed" onClick={() => add()}>
-                  <PlusOutlined />
-                  {formatMessage({
-                    id: 'component.global.add',
-                  })}
-                </Button>
-              </Form.Item>
-            )}
-          </>
-        )}
-      </Form.List>
-    )
-
-    const PassiveCheckHealthySuccessesComponent: React.FC = () => (
-      <Form.Item
-        label={formatMessage({ id: 'page.upstream.step.healthyCheck.successes' })}
-        tooltip={formatMessage({ id: 'page.upstream.checks.passive.healthy.successes.description' })}
-        required
-      >
-        <Form.Item
-          name={['checks', 'passive', 'healthy', 'successes']}
-          noStyle
-          rules={[
-            {
-              required: true,
-              message: formatMessage({ id: 'page.upstream.step.input.healthyCheck.successes' }),
-            },
-          ]}
-        >
-          <InputNumber disabled={readonly} min={1} max={254} />
-        </Form.Item>
-      </Form.Item>
-    )
-
-    const PassiveCheckUnhealthyHttpStatusesComponent: React.FC = () => (
-      <Form.List name={['checks', 'passive', 'unhealthy', 'http_statuses']}>
-        {(fields, { add, remove }) => (
-          <>
-            <Form.Item
-              required
-              label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
-              tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.http_statuses.description' })}
-              style={{ marginBottom: 0 }}
-            >
-              {fields.map((field, index) => (
-                <Row style={{ marginBottom: 10 }} key={index}>
-                  <Col span={2}>
-                    <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
-                      <InputNumber disabled={readonly} min={200} max={599} />
-                    </Form.Item>
-                  </Col>
-                  <Col style={removeBtnStyle}>
-                    {!readonly && fields.length > 1 && (
-                      <MinusCircleOutlined
-                        onClick={() => {
-                          remove(field.name);
-                        }}
-                      />
-                    )}
-                  </Col>
-                </Row>
-              ))}
-            </Form.Item>
-            {!readonly && (
-              <Form.Item wrapperCol={{ offset: 3 }}>
-                <Button type="dashed" onClick={() => add()}>
-                  <PlusOutlined />
-                  {formatMessage({
-                    id: 'component.global.add',
-                  })}
-                </Button>
-              </Form.Item>
-            )}
-          </>
-        )}
-      </Form.List>
-    )
-
-    const PassiveCheckUnhealthyHttpFailuresComponent: React.FC = () => (
-      <Form.Item
-        label={formatMessage({ id: 'page.upstream.step.healthyCheck.http_failures' })}
-        required
-        tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.http_failures.description' })}
-      >
-        <Form.Item
-          name={['checks', 'passive', 'unhealthy', 'http_failures']}
-          noStyle
-          rules={[
-            {
-              required: true,
-              message: formatMessage({
-                id: 'page.upstream.step.input.healthyCheck.http_failures',
-              }),
-            },
-          ]}
-        >
-          <InputNumber disabled={readonly} min={1} max={254} />
-        </Form.Item>
-      </Form.Item>
-    )
-
-    const PassiveCheckUnhealthyTcpFailturesComponent: React.FC = () => (
-      <Form.Item
-        label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.tcp_failures' })}
-        required
-        tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.tcp_failures.description' })}
-      >
-        <Form.Item
-          name={['checks', 'passive', 'unhealthy', 'tcp_failures']}
-          noStyle
-          rules={[
-            {
-              required: true,
-              message: formatMessage({
-                id: 'page.upstream.step.input.healthyCheck.passive.tcp_failures',
-              }),
-            },
-          ]}
-        >
-          <InputNumber disabled={readonly} min={1} max={254} />
-        </Form.Item>
-      </Form.Item>
-    )
-
-    const PassiveCheckUnhealthyTimeoutComponents: React.FC = () => (
-      <Form.Item
-        label="Timeouts"
-        required
-      >
-        <Form.Item
-          name={['checks', 'passive', 'unhealthy', 'timeouts']}
-          noStyle
-        >
-          <InputNumber disabled={readonly} min={1} max={254} />
-        </Form.Item>
-      </Form.Item>
-    )
-
     const InActiveHealthCheck = () => (
       <React.Fragment>
-        {/* TODO: type */}
+        <PassiveCheck.Type readonly={readonly} />
 
         <Divider orientation="left" plain>
           {formatMessage({ id: 'page.upstream.step.healthyCheck.healthy.status' })}
         </Divider>
 
-        <PassiveCheckHealthyHttpStatusesComponent />
-        <PassiveCheckHealthySuccessesComponent />
+        <PassiveCheck.Healthy.HttpStatuses readonly={readonly} />
+        <PassiveCheck.Healthy.Successes readonly={readonly} />
 
         <Divider orientation="left" plain>
           {formatMessage({ id: 'page.upstream.step.healthyCheck.unhealthyStatus' })}
         </Divider>
 
-        <PassiveCheckUnhealthyTimeoutComponents />
-        <PassiveCheckUnhealthyTcpFailturesComponent />
-        <PassiveCheckUnhealthyHttpFailuresComponent />
-        <PassiveCheckUnhealthyHttpStatusesComponent />
+        <PassiveCheck.Unhealthy.Timeouts readonly={readonly} />
+        <PassiveCheck.Unhealthy.TcpFailtures readonly={readonly} />
+        <PassiveCheck.Unhealthy.HttpFailures readonly={readonly} />
+        <PassiveCheck.Unhealthy.HttpStatuses readonly={readonly} />
       </React.Fragment>
     );
-
-
-    const SchemeComponent: React.FC = () => {
-      const options = [
-        {
-          label: "HTTP",
-          value: "http"
-        }, {
-          label: "HTTPs",
-          value: "https"
-        }, {
-          label: "gRPC",
-          value: "grpc"
-        }, {
-          label: "gRPCs",
-          value: "grpcs"
-        }
-      ]
-
-      return (
-        <Form.Item
-          label={formatMessage({ id: 'page.upstream.scheme' })}
-          name="scheme"
-          rules={[{ required: true }]}
-        >
-          <Select disabled={readonly}>
-            {options.map(item => {
-              return (
-                <Select.Option value={item.value} key={item.value}>
-                  {item.label}
-                </Select.Option>
-              );
-            })}
-          </Select>
-        </Form.Item>
-      )
-    }
-
-    const PassHostComponent: React.FC = () => {
-      const options = [
-        {
-          value: "pass",
-          label: formatMessage({ id: 'page.upstream.step.pass-host.pass' })
-        }, {
-          value: "node",
-          label: formatMessage({ id: 'page.upstream.step.pass-host.node' })
-        }, {
-          value: "rewrite",
-          label: formatMessage({ id: 'page.upstream.step.pass-host.rewrite' }),
-          disabled: true
-        }
-      ]
-
-      return (
-        <React.Fragment>
-          <Form.Item
-            label={formatMessage({ id: 'page.upstream.step.pass-host' })}
-            name="pass_host"
-          >
-            <Select disabled={readonly}>
-              {options.map(item => (
-                <Select.Option value={item.value} key={item.value} disabled={item.disabled}>
-                  {item.label}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            noStyle
-            shouldUpdate={(prev, next) => {
-              return prev.pass_host !== next.pass_host;
-            }}
-          >
-            {() => {
-              if (form.getFieldValue('pass_host') === 'rewrite') {
-                return (
-                  <Form.Item
-                    label={formatMessage({ id: 'page.upstream.step.pass-host.upstream_host' })}
-                    name="upstream_host"
-                    rules={[
-                      {
-                        required: true,
-                        message: "",
-                      },
-                    ]}
-                  >
-                    <Input disabled={readonly} placeholder={formatMessage({ id: `page.upstream.upstream_host.required` })} />
-                  </Form.Item>
-                );
-              }
-              return null;
-            }}
-          </Form.Item>
-        </React.Fragment>
-      )
-    }
-
-    const RetryComponent: React.FC = () => {
-      return (
-        <Form.Item
-          label={formatMessage({ id: 'page.upstream.retries' })}
-          name="retries"
-        >
-          <InputNumber
-            disabled={disabled}
-          />
-        </Form.Item>
-      )
-    }
-
-    const TypeComponent: React.FC = () => {
-      return (
-        <React.Fragment>
-          <Form.Item
-            label={formatMessage({ id: 'page.upstream.step.type' })}
-            name="type"
-            rules={[{ required: true }]}
-          >
-            <Select disabled={readonly}>
-              {Object.entries(Type).map(([label, value]) => {
-                return (
-                  <Select.Option value={value} key={value}>
-                    {formatMessage({ id: `page.upstream.type.${label}` })}
-                  </Select.Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-          <Form.Item shouldUpdate noStyle>
-            {() => {
-              if (form.getFieldValue('type') === 'chash') {
-                return <CHash />;
-              }
-              return null;
-            }}
-          </Form.Item>
-        </React.Fragment>
-      )
-    }
 
     const HealthCheckComponent = () => {
       const options = [
@@ -944,80 +210,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       )
     }
 
-    const UpstreamSelectorComponent: React.FC = () => (
-      <Form.Item
-        label={formatMessage({ id: 'page.upstream.step.select.upstream' })}
-        name="upstream_id"
-        shouldUpdate={(prev, next) => {
-          setReadonly(Boolean(next.upstream_id));
-          if (prev.upstream_id !== next.upstream_id) {
-            const id = next.upstream_id;
-            if (id) {
-              form.setFieldsValue(list.find((item) => item.id === id));
-              form.setFieldsValue({
-                upstream_id: id,
-              });
-            }
-          }
-          return prev.upstream_id !== next.upstream_id;
-        }}
-      >
-        <Select
-          showSearch
-          data-cy="upstream_selector"
-          disabled={disabled}
-          onChange={(upstream_id) => {
-            setReadonly(Boolean(upstream_id));
-            setHiddenForm(Boolean(upstream_id === 'None'));
-            form.setFieldsValue(list.find((item) => item.id === upstream_id));
-            if (upstream_id === '') {
-              form.resetFields();
-              form.setFieldsValue(DEFAULT_UPSTREAM);
-            }
-          }}
-          filterOption={(input, item) =>
-            item?.children.toLowerCase().includes(input.toLowerCase())
-          }
-        >
-          {Boolean(!required) && <Select.Option value={'None'}>None</Select.Option>}
-          {[
-            {
-              name: formatMessage({ id: 'page.upstream.step.select.upstream.select.option' }),
-              id: '',
-            },
-            ...list,
-          ].map((item) => (
-            <Select.Option value={item.id!} key={item.id}>
-              {item.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-    )
-
-    const TimeoutComponent: React.FC<{
-      label: string;
-      desc: string;
-      name: string[]
-    }> = ({ label, desc, name }) => {
-      return (
-        <Form.Item label={label} required tooltip={desc}>
-          <Form.Item
-            name={name}
-            noStyle
-            rules={[
-              {
-                required: true,
-                message: formatMessage({ id: `page.upstream.step.input.${name[1]}.timeout` }),
-              },
-            ]}
-          >
-            <InputNumber disabled={readonly} />
-          </Form.Item>
-          <TimeUnit />
-        </Form.Item>
-      )
-    }
 
     return (
       <Form
@@ -1028,19 +220,45 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         }}
       >
         {showSelector && (
-          <UpstreamSelectorComponent />
+          <UpstreamSelector
+            list={list}
+            disabled={disabled}
+            required={required}
+            shouldUpdate={(prev, next) => {
+              setReadonly(Boolean(next.upstream_id));
+              if (prev.upstream_id !== next.upstream_id) {
+                const id = next.upstream_id;
+                if (id) {
+                  form.setFieldsValue(list.find((item) => item.id === id));
+                  form.setFieldsValue({
+                    upstream_id: id,
+                  });
+                }
+              }
+              return prev.upstream_id !== next.upstream_id;
+            }}
+            onChange={(upstream_id) => {
+              setReadonly(Boolean(upstream_id));
+              setHiddenForm(Boolean(upstream_id === 'None'));
+              form.setFieldsValue(list.find((item) => item.id === upstream_id));
+              if (upstream_id === '') {
+                form.resetFields();
+                form.setFieldsValue(DEFAULT_UPSTREAM);
+              }
+            }}
+          />
         )}
 
         {!hiddenForm && (
           <React.Fragment>
-            <TypeComponent />
-            {NodeList()}
+            <Type form={form} readonly={readonly} />
+            <Nodes readonly={readonly} />
 
-            <PassHostComponent />
-            <RetryComponent />
-            <SchemeComponent />
+            <PassHost form={form} readonly={readonly} />
+            <Retries readonly={readonly} />
+            <Scheme readonly={readonly} />
             {timeoutFields.map((item, index) => (
-              <TimeoutComponent key={index} {...item} />
+              <Timeout key={index} {...item} readonly={readonly} />
             ))}
 
             {/* TODO: discovery_type */}
