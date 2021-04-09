@@ -52,7 +52,6 @@ export default {
   'page.route.panelSection.title.advancedMatchRule': 'Advanced Routing Matching Conditions',
 
   'page.route.panelSection.title.nameDescription': 'Name And Description',
-  'page.route.form.itemLabel.apiName': 'API Name',
   'page.route.form.itemRulesPatternMessage.apiNameRule':
     'Maximum length 100, only letters, Numbers, _, and - are supported, and can only begin with letters',
 
@@ -78,8 +77,7 @@ export default {
   'page.route.form.itemRulesPatternMessage.domain':
     'Only letters, numbers and * are supported. * can only be at the beginning, and only single * is supported',
   'page.route.form.itemExtraMessage1.path':
-    '1. Request path, for example: /foo/index.html, supports request path prefix /foo/* ;',
-  'page.route.form.itemExtraMessage2.path': '2. /* represents all paths',
+    'HTTP Request path, for example: /foo/index.html, supports request path prefix /foo/* ; /* represents all paths',
   'page.route.form.itemRulesPatternMessage.path': 'Begin with / , and * can only at the end',
   'page.route.form.itemRulesPatternMessage.remoteAddrs':
     'Please enter a valid IP address, for example: 192.168.1.101, 192.168.1.0/24, ::1, fe80::1, fe80::1/64',
@@ -124,7 +122,7 @@ export default {
   'page.route.form.itemHelp.status':
     'Whether a route can be used after it is created, the default value is false.',
 
-  'page.route.domainName': 'Domain Name',
+  'page.route.host': 'Host',
   'page.route.path': 'Path',
   'page.route.remoteAddrs': 'Remote Addrs',
   'page.route.PanelSection.title.defineRequestParams': 'Define Request Parameters',
@@ -149,5 +147,22 @@ export default {
   'page.route.tooltip.pluginOrchWithoutRedirect': 'Plugin orchestration mode cannot be used when Redirect in Step 1 is selected to enable HTTPS.',
 
   'page.route.tabs.normalMode': 'Normal mode',
-  'page.route.tabs.orchestration': 'Plugin orchestration'
+  'page.route.tabs.orchestration': 'Plugin orchestration',
+
+  'page.route.list.description': 'Route is the entry point of a request, which defines the matching rules between a client request and a service. A route can be associated with a service (Service), an upstream (Upstream), a service can correspond to a set of routes, and a route can correspond to an upstream object (a set of backend service nodes), so each request matching to a route will be proxied by the gateway to the route-bound upstream service.',
+
+  'page.route.configuration.name.rules.required.description': 'Please enter the route name',
+  'page.route.configuration.name.placeholder': 'Please enter the route name',
+  'page.route.configuration.desc.tooltip': 'Please enter the description of the route',
+  'page.route.configuration.publish.tooltip': 'Used to control whether a route is published to the gateway immediately after it is created',
+  'page.route.configuration.version.placeholder': 'Please enter the routing version number',
+  'page.route.configuration.version.tooltip': 'Version number of the route, e.g. V1',
+  'page.route.configuration.normal-labels.tooltip': 'Add custom labels to routes that can be used for route grouping.',
+
+  'page.route.configuration.path.rules.required.description': 'Please enter a valid HTTP request path',
+  'page.route.configuration.path.placeholder': 'Please enter the HTTP request path',
+  'page.route.configuration.remote_addrs.placeholder': 'Please enter the client address',
+  'page.route.configuration.host.placeholder': 'Please enter the HTTP request hostname',
+
+  'page.route.service.none': 'None',
 };

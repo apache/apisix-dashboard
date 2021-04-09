@@ -28,6 +28,7 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.visit('/');
     cy.contains('Route').click();
     cy.get(this.domSelector.empty).should('be.visible');
+    cy.contains('Advanced').should('be.visible').click();
     cy.contains('Plugin Template Config').should('be.visible').click();
     cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
@@ -37,8 +38,10 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.contains('Submit').click();
     cy.get(this.domSelector.notification).should('contain', this.data.createPluginTemplateSuccess);
 
-    cy.visit('routes/list');
+    cy.visit('/routes/list');
     cy.contains('Create').click();
+    cy.get(this.domSelector.empty).should('be.visible');
+    cy.get(this.domSelector.name).click();
     cy.get(this.domSelector.name).type(this.data.routeName);
     cy.contains('Next').click();
     cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
@@ -98,8 +101,11 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.visit('/routes/list');
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
-    cy.contains(this.data.routeName).siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
+    cy.contains(this.data.routeName).siblings().contains('More').click();
+    cy.contains('Delete').should('be.visible').click();
+    cy.get('.ant-modal-content').should('be.visible').within(() => {
+      cy.contains('OK').click();
+    });
     cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
   });
 });
