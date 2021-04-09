@@ -29,6 +29,7 @@ context('Create Configure and Delete PluginTemplate', () => {
     cy.visit('/');
     cy.contains('Route').click();
     cy.get(this.domSelector.empty).should('be.visible');
+    cy.contains('Advanced').should('be.visible').click();
     cy.contains('Plugin Template Config').should('be.visible').click();
     cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
