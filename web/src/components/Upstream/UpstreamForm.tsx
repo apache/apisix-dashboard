@@ -163,7 +163,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       <Form.List name="nodes">
         {(fields, { add, remove }) => (
           <>
-            <Form.Item label={formatMessage({ id: 'page.upstream.form.item-label.node.domain.or.ip' })}>
+            <Form.Item label={formatMessage({ id: 'page.upstream.form.item-label.node.domain.or.ip' })} style={{ marginBottom: 0 }}>
               {fields.map((field, index) => (
                 <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
                   <Col span={5}>
@@ -446,18 +446,16 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       <Form.List name={['checks', 'active', 'req_headers']}>
         {(fields, { add, remove }) => (
           <>
-            {fields.map((field, index) => (
-              <Form.Item
-                key={field.key}
-                label={
-                  index === 0 &&
-                  formatMessage({ id: 'page.upstream.step.healthyCheck.active.req_headers' })
-                }
-                wrapperCol={{ offset: index === 0 ? 0 : 3 }}
-              >
-                <Row style={{ marginBottom: 10 }} gutter={16}>
-                  <Col span={10}>
-                    <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
+            <Form.Item
+              label={
+                formatMessage({ id: 'page.upstream.step.healthyCheck.active.req_headers' })
+              }
+              style={{ marginBottom: 0 }}
+            >
+              {fields.map((field, index) => (
+                <Row style={{ marginBottom: 10 }} gutter={12} key={index}>
+                  <Col span={5}>
+                    <Form.Item noStyle name={[field.name]}>
                       <Input
                         placeholder={formatMessage({
                           id: 'page.upstream.step.input.healthyCheck.active.req_headers',
@@ -466,10 +464,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       />
                     </Form.Item>
                   </Col>
-                  <Col style={removeBtnStyle}>
+                  <Col style={{ ...removeBtnStyle, marginLeft: 0 }}>
                     {!readonly && fields.length > 1 && (
                       <MinusCircleOutlined
-                        style={{ margin: '0 8px' }}
                         onClick={() => {
                           remove(field.name);
                         }}
@@ -477,8 +474,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                     )}
                   </Col>
                 </Row>
-              </Form.Item>
-            ))}
+              ))}
+            </Form.Item>
             {!readonly && (
               <Form.Item wrapperCol={{ offset: 3 }}>
                 <Button type="dashed" onClick={() => add()}>
@@ -528,6 +525,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               required
               label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
               tooltip={formatMessage({ id: 'page.upstream.checks.passive.healthy.http_statuses.description' })}
+              style={{ marginBottom: 0 }}
             >
               {fields.map((field, index) => (
                 <Row style={{ marginBottom: 10 }} key={index}>
@@ -553,7 +551,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 <Button type="dashed" onClick={() => add()}>
                   <PlusOutlined />
                   {formatMessage({
-                    id: 'page.upstream.step.healthyCheck.passive.create.http_statuses',
+                    id: 'component.global.add',
                   })}
                 </Button>
               </Form.Item>
@@ -592,6 +590,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               required
               label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
               tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.http_statuses.description' })}
+              style={{ marginBottom: 0 }}
             >
               {fields.map((field, index) => (
                 <Row style={{ marginBottom: 10 }} key={index}>
@@ -617,7 +616,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 <Button type="dashed" onClick={() => add()}>
                   <PlusOutlined />
                   {formatMessage({
-                    id: 'page.upstream.step.healthyCheck.passive.create.http_statuses',
+                    id: 'component.global.add',
                   })}
                 </Button>
               </Form.Item>

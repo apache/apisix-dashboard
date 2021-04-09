@@ -70,7 +70,6 @@ export default {
   'page.upstream.step.healthyCheck.active.req_headers': '请求头',
   'page.upstream.step.input.healthyCheck.active.req_headers': '请输入请求头',
   'page.upstream.step.healthyCheck.passive': '被动检查',
-  'page.upstream.step.healthyCheck.passive.create.http_statuses': '增加状态码',
   'page.upstream.step.healthyCheck.passive.http_statuses': '状态码',
   'page.upstream.step.input.healthyCheck.passive.http_statuses': '请输入状态码',
   'page.upstream.step.healthyCheck.passive.tcp_failures': 'TCP 失败次数',

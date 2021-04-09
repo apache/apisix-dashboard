@@ -70,7 +70,6 @@ export default {
   'page.upstream.step.healthyCheck.active.req_headers': 'Request Headers',
   'page.upstream.step.input.healthyCheck.active.req_headers': 'Please enter request headers',
   'page.upstream.step.healthyCheck.passive': 'Passive',
-  'page.upstream.step.healthyCheck.passive.create.http_statuses': 'Add HTTP Status',
   'page.upstream.step.healthyCheck.passive.http_statuses': 'HTTP Status',
   'page.upstream.step.input.healthyCheck.passive.http_statuses': 'Please enter http status',
   'page.upstream.step.healthyCheck.passive.tcp_failures': 'TCP Failures',
