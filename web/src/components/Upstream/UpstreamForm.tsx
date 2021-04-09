@@ -536,10 +536,13 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
     const ActiveHealthCheck = () => (
       <React.Fragment>
+        {/* TODO: type */}
         <ActiveCheckTimeoutComponent />
+        {/* TODO: concurrency */}
         <ActiveCheckHostComponent />
         <ActiveCheckPortComponent />
         <ActiveHttpPathComponent />
+        {/* TODO: https_verify_certificate */}
 
         <Divider orientation="left" plain>
           {formatMessage({ id: 'page.upstream.step.healthyCheck.healthy.status' })}
@@ -558,6 +561,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <ActiveCheckUnhealthyHttpStatusesComponent />
         <ActiveCheckUnhealthyHttpFailuresComponent />
         {/* TODO: TCP Failures */}
+
+        <Divider orientation="left" plain>Others</Divider>
 
         <ActiveCheckReqHeadersComponent />
       </React.Fragment>
@@ -734,6 +739,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
     const InActiveHealthCheck = () => (
       <React.Fragment>
+        {/* TODO: type */}
+
         <Divider orientation="left" plain>
           {formatMessage({ id: 'page.upstream.step.healthyCheck.healthy.status' })}
         </Divider>
@@ -1035,6 +1042,9 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             {timeoutFields.map((item, index) => (
               <TimeoutComponent key={index} {...item} />
             ))}
+
+            {/* TODO: discovery_type */}
+            {/* TODO: service_name */}
 
             <HealthCheckComponent />
           </React.Fragment>
