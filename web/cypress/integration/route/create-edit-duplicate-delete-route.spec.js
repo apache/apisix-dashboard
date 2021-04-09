@@ -86,7 +86,7 @@ context('Create and Delete Route', () => {
 
     cy.get(this.domSelector.codeMirrorMode).click();
     cy.get(this.domSelector.selectDropdown).should('be.visible');
-    cy.get(this.domSelector.selectDropdown + " [label=JSON]").click();
+    cy.get(this.domSelector.selectJSON).click();
 
     cy.contains('button', 'Submit').click();
     cy.get(this.domSelector.drawer, { timeout }).should('not.exist');

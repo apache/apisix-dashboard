@@ -41,7 +41,7 @@ context('Delete Plugin List with the Drawer', () => {
       if (text === 'UIForm') {
         cy.get(this.domSelector.codeMirrorMode).click();
         cy.get(this.domSelector.selectDropdown).should('be.visible');
-        cy.get(this.domSelector.selectDropdown + " [label=JSON]").click();
+        cy.get(this.domSelector.selectJSON).click();
       }
     });
 
