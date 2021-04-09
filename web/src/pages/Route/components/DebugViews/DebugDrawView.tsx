@@ -75,7 +75,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     headerForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     authForm.setFieldsValue(DEFAULT_DEBUG_AUTH_FORM_DATA);
     setResponseBody(formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' }));
-    setResponseHeader(`${formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })}`);
+    setResponseHeader(formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' }));
     setBodyType(DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.None]);
   };
 
