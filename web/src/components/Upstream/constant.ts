@@ -23,42 +23,57 @@ export const DEFAULT_UPSTREAM = {
       weight: 1
     }
   ],
-  type: 'roundrobin',
+  retries: 0,
   timeout: {
     connect: 6,
     send: 6,
     read: 6,
   },
-  retries: 1
+  type: 'roundrobin',
+  checks: {},
+  hash_on: "vars",
 };
 
 // NOTE: checks.active
+// https://github.com/apache/apisix/blob/master/apisix/schema_def.lua#L40
 export const DEFAULT_HEALTH_CHECK_ACTIVE = {
-  timeout: 0,
-  http_path: '/',
-  host: '',
+  type: "http",
+  timeout: 1,
+  concurrency: 10,
+  host: "",
   port: 80,
+  http_path: "",
+  https_verify_certificate: true,
   healthy: {
     interval: 1,
-    successes: 1
+    http_statuses: [200, 302],
+    successes: 2
   },
   unhealthy: {
     interval: 1,
-    http_failures: 1,
-    req_headers: []
-  }
+    http_statuses: [429, 404, 500, 501, 502, 503, 504, 505],
+    http_failures: 5,
+    tcp_failures: 2,
+    timeouts: 3
+  },
+  req_headers: []
 }
 
 // NOTE: checks.passive
 export const DEFAULT_HEALTH_CHECK_PASSIVE = {
+  type: "http",
   healthy: {
-    http_statuses: [],
-    successes: 1
+    http_statuses: [
+      200, 201, 202, 203, 204, 205, 206, 207,
+      208, 226, 300, 301, 302, 303, 304, 305,
+      306, 307, 308
+    ],
+    successes: 5
   },
   unhealthy: {
-    http_statuses: [],
-    tcp_failures: 1,
-    timeouts: 1,
-    http_failures: 1
+    http_statuses: [429, 500, 503],
+    tcp_failures: 2,
+    timeouts: 7,
+    http_failures: 5
   }
 }
