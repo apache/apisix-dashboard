@@ -15,33 +15,37 @@
  * limitations under the License.
  */
 import React from 'react';
-import { FormInstance } from 'antd/es/form';
-import { Empty } from 'antd';
-import { useIntl } from 'umi';
-
-import BasicAuth from './basic-auth';
-import ProxyMirror from './proxy-mirror';
+import type { FormInstance } from 'antd/es/form';
+import { Form, Input } from 'antd';
 
 type Props = {
-  name: string,
-  form: FormInstance,
-  renderForm: boolean
+  form: FormInstance;
+};
+
+const FORM_ITEM_LAYOUT = {
+  labelCol: {
+    span: 3,
+  },
+  wrapperCol: {
+    span: 10
+  },
+};
+
+const ProxyMirror: React.FC<Props> = ({ form }) => {
+  return (
+    <Form
+      form={form}
+      {...FORM_ITEM_LAYOUT}
+    >
+      <Form.Item
+        label="host"
+        name="host"
+        tooltip='Specify a mirror service address, e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)'
+      >
+        <Input />
+      </Form.Item>
+    </Form>
+  );
 }
 
-export const PLUGIN_UI_LIST = ['basic-auth', 'proxy-mirror'];
-
-export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
-
-  const { formatMessage } = useIntl();
-
-  if (!renderForm) { return <Empty description={formatMessage({ id: 'component.global.noConfigurationRequired' })} /> };
-
-  switch (name) {
-    case 'basic-auth':
-      return <BasicAuth form={form} />
-    case 'proxy-mirror':
-      return <ProxyMirror form={form} />
-    default:
-      return null;
-  }
-}
+export default ProxyMirror;
