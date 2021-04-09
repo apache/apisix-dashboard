@@ -56,6 +56,7 @@ context('create route with proxy-rewrite plugin', () => {
 
     // show create page
     cy.contains(componentLocaleUS['component.global.create']).click();
+    cy.contains('Next').click().click();
     cy.get(this.domSelector.name).type(this.data.routeName);
 
     // show requestOverride PanelSection
@@ -105,6 +106,7 @@ context('create route with proxy-rewrite plugin', () => {
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
     cy.contains(this.data.routeName).siblings().contains('Configure').click();
+    cy.wait(500);
     cy.get(this.domSelector.name).type(this.data.routeName);
 
     cy.contains(routeLocaleUS['page.route.form.itemLabel.newPath']).should('be.visible');
@@ -132,8 +134,11 @@ context('create route with proxy-rewrite plugin', () => {
     cy.visit('/routes/list');
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
-    cy.contains(this.data.routeName).siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
+    cy.contains(this.data.routeName).siblings().contains('More').click();
+    cy.contains('Delete').click();
+    cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
+      cy.contains('OK').click();
+    });
     cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
   });
 });

@@ -22,7 +22,7 @@ import { PanelSection } from '@api7-dashboard/ui';
 const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   advancedMatchingRules,
   disabled,
-  onChange = () => {},
+  onChange = () => { },
 }) => {
   const [visible, setVisible] = useState(false);
   const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
@@ -139,28 +139,27 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
     disabled
       ? {}
       : {
-          title: formatMessage({ id: 'component.global.operation' }),
-          key: 'action',
-          render: (_: any, record: RouteModule.MatchingRule) => (
-            <Space size="middle">
-              <a onClick={() => handleEdit(record)}>
-                {formatMessage({ id: 'component.global.edit' })}
-              </a>
-              <a onClick={() => handleRemove(record.key)}>
-                {formatMessage({ id: 'component.global.delete' })}
-              </a>
-            </Space>
-          ),
-        },
+        title: formatMessage({ id: 'component.global.operation' }),
+        key: 'action',
+        render: (_: any, record: RouteModule.MatchingRule) => (
+          <Space size="middle">
+            <a onClick={() => handleEdit(record)}>
+              {formatMessage({ id: 'component.global.edit' })}
+            </a>
+            <a onClick={() => handleRemove(record.key)}>
+              {formatMessage({ id: 'component.global.delete' })}
+            </a>
+          </Space>
+        ),
+      },
   ].filter((item) => Object.keys(item).length);
 
   const renderModal = () => (
     <Modal
-      title={`${
-        mode === 'EDIT'
+      title={`${mode === 'EDIT'
           ? formatMessage({ id: 'component.global.edit' })
           : formatMessage({ id: 'component.global.create' })
-      } ${formatMessage({ id: 'page.route.rule' })}`}
+        } ${formatMessage({ id: 'page.route.rule' })}`}
       centered
       visible
       onOk={onOk}
@@ -277,7 +276,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
             marginBottom: 16,
           }}
         >
-          {formatMessage({ id: 'component.global.create' })}
+          {formatMessage({ id: 'component.global.add' })}
         </Button>
       )}
       <Table key="table" bordered dataSource={advancedMatchingRules} columns={columns} />
