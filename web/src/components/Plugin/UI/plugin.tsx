@@ -19,7 +19,8 @@ import { FormInstance } from 'antd/es/form';
 import { Empty } from 'antd';
 import { useIntl } from 'umi';
 
-import BasicAuth from './basic-auth'
+import BasicAuth from './basic-auth';
+import ApiBreaker from './api-breaker';
 
 type Props = {
   name: string,
@@ -27,7 +28,7 @@ type Props = {
   renderForm: boolean
 }
 
-export const PLUGIN_UI_LIST = ['basic-auth',];
+export const PLUGIN_UI_LIST = ['basic-auth', 'api-breaker'];
 
 export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
 
@@ -38,6 +39,8 @@ export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
   switch (name) {
     case 'basic-auth':
       return <BasicAuth form={form} />
+    case 'api-breaker':
+      return <ApiBreaker form={form} />
     default:
       return null;
   }
