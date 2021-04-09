@@ -35,6 +35,7 @@ context('Create and Delete Route', () => {
     cy.contains('Route').click();
     cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
+    cy.contains('Next').click().click();
     cy.get(this.domSelector.name).type(name);
     cy.get(this.domSelector.description).type(this.data.description);
 
@@ -48,7 +49,7 @@ context('Create and Delete Route', () => {
     cy.contains('Advanced Routing Matching Conditions')
       .parent()
       .siblings()
-      .contains('Create')
+      .contains('Add')
       .click();
 
     // create advanced routing matching conditions
@@ -120,7 +121,8 @@ context('Create and Delete Route', () => {
 
     cy.get(this.domSelector.nameSelector).type(name);
     cy.contains('Search').click();
-    cy.contains(name).siblings().contains('View').click();
+    cy.contains(name).siblings().contains('More').click();
+    cy.contains('View').click();
     cy.get(this.domSelector.drawer).should('be.visible');
 
     cy.get(this.domSelector.codemirrorScroll).within(() => {
@@ -137,6 +139,7 @@ context('Create and Delete Route', () => {
     cy.contains('Search').click();
     cy.contains(name).siblings().contains('Configure').click();
 
+    cy.wait(500);
     cy.get(this.domSelector.name).clear().type(newName);
     cy.get(this.domSelector.description).clear().type(this.data.description2);
     cy.contains('Next').click();
@@ -149,7 +152,8 @@ context('Create and Delete Route', () => {
     cy.contains(newName).siblings().should('contain', this.data.description2);
 
     // test view
-    cy.contains(newName).siblings().contains('View').click();
+    cy.contains(newName).siblings().contains('More').click();
+    cy.contains('View').click();
     cy.get(this.domSelector.drawer).should('be.visible');
 
     cy.get(this.domSelector.codemirrorScroll).within(() => {
@@ -165,8 +169,10 @@ context('Create and Delete Route', () => {
 
     cy.get(this.domSelector.nameSelector).type(newName);
     cy.contains('Search').click();
-    cy.contains(newName).siblings().contains('Duplicate').click();
+    cy.contains(newName).siblings().contains('More').click();
+    cy.contains('Duplicate').click();
 
+    cy.wait(500);
     cy.get(this.domSelector.name).clear().type(duplicateNewName);
     cy.get(this.domSelector.description).clear().type(this.data.description2);
     cy.contains('Next').click();
@@ -179,7 +185,8 @@ context('Create and Delete Route', () => {
     cy.contains(duplicateNewName).siblings().should('contain', this.data.description2);
 
     // test view
-    cy.contains(duplicateNewName).siblings().contains('View').click();
+    cy.contains(duplicateNewName).siblings().contains('More').click();
+    cy.contains('View').click();
     cy.get(this.domSelector.drawer).should('be.visible');
 
     cy.get(this.domSelector.codemirrorScroll).within(() => {
@@ -195,9 +202,13 @@ context('Create and Delete Route', () => {
     routeNames.forEach(function (routeName) {
       cy.get(domSelector.name).clear().type(routeName);
       cy.contains('Search').click();
-      cy.contains(routeName).siblings().contains('Delete').click();
-      cy.contains('button', 'Confirm').click();
+      cy.contains(routeName).siblings().contains('More').click();
+      cy.contains('Delete').click();
+      cy.get(domSelector.deleteAlert).should('be.visible').within(() => {
+        cy.contains('OK').click();
+      });
       cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
+      cy.get(domSelector.notificationCloseIcon).click();
     });
   });
 });

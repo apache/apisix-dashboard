@@ -41,9 +41,9 @@ export default {
   'component.global.edit.plugin': '配置插件',
   'component.global.loading': '加载中',
   'component.global.list': '列表',
-  'component.global.description': '描述',
+  'component.global.description': '描述信息',
   'component.global.labels': '标签',
-  'component.global.version': '版本',
+  'component.global.version': '路由版本',
   'component.global.operation': '操作',
   'component.status.success': '成功',
   'component.status.fail': '失败',
@@ -62,13 +62,14 @@ export default {
   'component.global.steps.stepTitle.pluginConfig': '插件配置',
   'component.global.input.ruleMessage.name': '仅支持字母、数字、- 和 _，且只能以字母开头',
   'component.global.form.itemExtraMessage.nameGloballyUnique': '名称需全局唯一',
-  'component.global.input.placeholder.description': '不超过 256 个字符',
+  'component.global.input.placeholder.description': '请输入路由描述（内容不超过 256 个字符）',
 
   // User component
   'component.user.loginByPassword': '账号密码登录',
   'component.user.login': '登录',
 
   'component.document': '操作手册',
+  'component.label-manager': '标签管理器',
 
   'component.global.noConfigurationRequired': '无需配置',
 };
