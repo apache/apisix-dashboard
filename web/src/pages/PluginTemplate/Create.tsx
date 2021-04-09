@@ -111,8 +111,8 @@ const Page: React.FC = (props) => {
             <PluginPage
               initialData={plugins}
               onChange={setPlugins}
-              schemaType="route"
               referPage="route"
+              schemaType="route"
              />
           )}
           {step === 3 && <Preview form1={form1} plugins={plugins} />}
