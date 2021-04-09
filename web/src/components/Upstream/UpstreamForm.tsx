@@ -231,7 +231,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                       />
                     </Form.Item>
                   </Col>
-                  <Col style={{ ...removeBtnStyle, marginLeft: -25 }}>
+                  <Col style={{ ...removeBtnStyle, marginLeft: -50 }}>
                     {!readonly && (
                       <MinusCircleOutlined onClick={() => remove(field.name)} />
                     )}
@@ -243,7 +243,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               <Form.Item wrapperCol={{ offset: 3 }}>
                 <Button type="dashed" onClick={add}>
                   <PlusOutlined />
-                  {formatMessage({ id: 'page.upstream.step.create.node' })}
+                  {formatMessage({ id: 'component.global.add' })}
                 </Button>
               </Form.Item>
             )}
@@ -481,7 +481,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                 <Button type="dashed" onClick={() => add()}>
                   <PlusOutlined />
                   {formatMessage({
-                    id: 'page.upstream.step.healthyCheck.active.create.req_headers',
+                    id: 'component.global.add',
                   })}
                 </Button>
               </Form.Item>
