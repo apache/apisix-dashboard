@@ -66,6 +66,16 @@ Cypress.Commands.add('configurePlugins', (cases) => {
 
         // NOTE: wait for the Drawer to appear on the DOM
         cy.focused(domSelector.drawer).should('exist');
+
+        cy.get(domSelector.codeMirrorMode).invoke('text').then(text => {
+          if (text === 'Form') {
+            cy.get(domSelector.codeMirrorMode).should('exist');
+            cy.get(domSelector.codeMirrorMode).click();
+            cy.get(domSelector.selectDropdown).should('be.visible');
+            cy.get(domSelector.selectJSON).click();
+          }
+        });
+        
         cy.get(domSelector.drawer, { timeout }).within(() => {
           cy.get(domSelector.switch).click({
             force: true,
@@ -77,14 +87,6 @@ Cypress.Commands.add('configurePlugins', (cases) => {
             codemirror.setValue(JSON.stringify(data));
           }
           cy.get(domSelector.drawer).should('exist');
-
-          cy.get(domSelector.codeMirrorMode).invoke('text').then(text => {
-            if (text === 'Form') {
-              cy.get(domSelector.codeMirrorMode).click();
-              cy.get(domSelector.selectDropdown).should('be.visible');
-              cy.get(domSelector.selectJSON).click();
-            }
-          });
 
           cy.get(domSelector.drawer, { timeout }).within(() => {
             cy.contains('Submit').click({
