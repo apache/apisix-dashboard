@@ -40,8 +40,8 @@ const BasicAuth: React.FC<Props> = ({ form }) => {
     >
       <Form.Item
         label="username"
-        required
         name="username"
+        required
       >
         <Input></Input>
       </Form.Item>
