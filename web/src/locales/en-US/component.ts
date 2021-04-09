@@ -25,12 +25,11 @@ export default {
   'component.global.document': 'Document',
   'component.global.enable': 'Enable',
   'component.global.scope': 'Scope',
-  'component.global.data.editor': 'Data Editor',
+  'component.global.data.editor': 'Raw Data Editor',
   'component.global.delete': 'Delete',
   'component.global.cancel': 'Cancel',
   'component.global.submit': 'Submit',
   'component.global.create': 'Create',
-  'component.global.createWithEditor': 'Create with Editor',
   'component.global.add': 'Add',
   'component.global.save': 'Save',
   'component.global.edit': 'Configure',
@@ -72,4 +71,6 @@ export default {
   // User component
   'component.user.loginByPassword': 'Username & Password',
   'component.user.login': 'Login',
+
+  'component.document': 'Document'
 };

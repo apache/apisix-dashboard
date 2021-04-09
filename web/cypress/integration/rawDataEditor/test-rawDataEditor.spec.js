@@ -35,10 +35,9 @@ context('Test RawDataEditor', () => {
     menuList.forEach(function (item) {
       cy.visit('/');
       cy.contains(item).click();
-      cy.contains('Create with Editor').click();
+      cy.contains('Raw Data Editor').click();
       const data = dateset[item];
 
-      // create with editor
       cy.window().then(({ codemirror }) => {
         if (codemirror) {
           codemirror.setValue(JSON.stringify(data));
