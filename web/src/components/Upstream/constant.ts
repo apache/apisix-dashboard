@@ -16,6 +16,8 @@
  */
 export const DEFAULT_UPSTREAM = {
   upstream_id: '',
+  // NOTE: the following fields are the default configurations
+  // https://github.com/apache/apisix/blob/master/apisix/schema_def.lua#L325
   nodes: [
     {
       host: '',
@@ -25,13 +27,17 @@ export const DEFAULT_UPSTREAM = {
   ],
   retries: 0,
   timeout: {
+    // TODO: > 0
     connect: 6,
     send: 6,
     read: 6,
   },
   type: 'roundrobin',
   checks: {},
-  hash_on: "vars",
+  scheme: "http",
+  pass_host: "pass",
+  name: "",
+  desc: ""
 };
 
 // NOTE: checks.active

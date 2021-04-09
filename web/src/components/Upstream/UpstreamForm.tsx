@@ -28,7 +28,8 @@ enum Type {
   roundrobin = 'roundrobin',
   chash = 'chash',
   ewma = 'ewma',
-  least_conn = 'least_conn'
+  // TODO: new type
+  // least_conn = 'least_conn'
 }
 
 enum HashOn {
@@ -36,7 +37,8 @@ enum HashOn {
   header = 'header',
   cookie = 'cookie',
   consumer = 'consumer',
-  vars_combinations = 'vars_combinations'
+  // TODO: new hash_on key
+  // vars_combinations = 'vars_combinations'
 }
 
 enum HashKey {
@@ -692,19 +694,33 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
 
     const SchemeComponent: React.FC = () => {
-      const options = ["grpc", "grpcs", "http", "https"]
+      const options = [
+        {
+          label: "HTTP",
+          value: "http"
+        }, {
+          label: "HTTPs",
+          value: "https"
+        }, {
+          label: "gRPC",
+          value: "grpc"
+        }, {
+          label: "gRPCs",
+          value: "grpcs"
+        }
+      ]
 
       return (
         <Form.Item
-          label="Scheme"
+          label={formatMessage({ id: 'page.upstream.scheme' })}
           name="scheme"
           rules={[{ required: true }]}
         >
           <Select disabled={readonly}>
             {options.map(item => {
               return (
-                <Select.Option value={item} key={item}>
-                  {item}
+                <Select.Option value={item.value} key={item.value}>
+                  {item.label}
                 </Select.Option>
               );
             })}
@@ -723,7 +739,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           label: formatMessage({ id: 'page.upstream.step.pass-host.node' })
         }, {
           value: "rewrite",
-          label: formatMessage({ id: 'page.upstream.step.pass-host.rewrite' })
+          label: formatMessage({ id: 'page.upstream.step.pass-host.rewrite' }),
+          disabled: true
         }
       ]
 
@@ -735,7 +752,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
           >
             <Select disabled={readonly}>
               {options.map(item => (
-                <Select.Option value={item.value} key={item.value}>
+                <Select.Option value={item.value} key={item.value} disabled={item.disabled}>
                   {item.label}
                 </Select.Option>
               ))}

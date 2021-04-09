@@ -120,5 +120,6 @@ export default {
   'page.upstream.checks.passive.healthy.successes.description': 'Number of successes to consider a target healthy',
   'page.upstream.checks.passive.unhealthy.http_statuses.description': 'Which HTTP statuses to consider a success',
   'page.upstream.checks.passive.unhealthy.http_failures.description': 'Number of HTTP failures to consider a target unhealthy',
-  'page.upstream.checks.passive.unhealthy.tcp_failures.description': 'Number of TCP failures to consider a target unhealthy'
+  'page.upstream.checks.passive.unhealthy.tcp_failures.description': 'Number of TCP failures to consider a target unhealthy',
+  'page.upstream.scheme': 'Scheme'
 };
