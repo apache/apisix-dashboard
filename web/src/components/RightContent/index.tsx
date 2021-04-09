@@ -42,8 +42,9 @@ const GlobalHeaderRight: React.FC = () => {
   const { initialState } = useModel('@@initialState');
 
   useEffect(() => {
-    if (localStorage.getItem('token'))
+    if (localStorage.getItem('token')) {
       fetchVersionMatch();
+    }
   }, []);
 
   if (!initialState || !initialState.settings) {
