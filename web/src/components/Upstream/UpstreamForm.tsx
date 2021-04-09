@@ -158,7 +158,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         </Divider>
 
         <PassiveCheck.Unhealthy.Timeouts readonly={readonly} />
-        <PassiveCheck.Unhealthy.TcpFailtures readonly={readonly} />
+        <PassiveCheck.Unhealthy.TcpFailures readonly={readonly} />
         <PassiveCheck.Unhealthy.HttpFailures readonly={readonly} />
         <PassiveCheck.Unhealthy.HttpStatuses readonly={readonly} />
       </React.Fragment>

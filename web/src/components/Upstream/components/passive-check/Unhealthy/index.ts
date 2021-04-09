@@ -16,12 +16,12 @@
  */
 import Timeouts from './Timeouts'
 import HttpFailures from './HttpFailures'
-import TcpFailtures from './TcpFailtures'
+import TcpFailures from './TcpFailures'
 import HttpStatuses from './HttpStatuses'
 
 export default {
   Timeouts,
   HttpFailures,
-  TcpFailtures,
+  TcpFailures,
   HttpStatuses
 }
