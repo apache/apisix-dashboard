@@ -69,5 +69,7 @@ export default {
   'component.user.login': '登录',
 
   'component.document': '操作手册',
-  'component.label-manager': '标签管理器'
+  'component.label-manager': '标签管理器',
+
+  'component.global.noConfigurationRequired': '无需配置',
 };

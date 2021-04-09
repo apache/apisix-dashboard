@@ -73,5 +73,7 @@ export default {
   'component.user.login': 'Login',
 
   'component.document': 'Document',
-  'component.label-manager': 'Label Manager'
+  'component.label-manager': 'Label Manager',
+
+  'component.global.noConfigurationRequired': 'No configuration required',
 };
