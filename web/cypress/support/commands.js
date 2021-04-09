@@ -73,11 +73,6 @@ Cypress.Commands.add('configurePlugins', (cases) => {
         });
 
         cy.window().then(({ codemirror }) => {
-          if (codemirror) {
-            codemirror.setValue(JSON.stringify(data));
-          }
-          cy.get(domSelector.drawer).should('exist');
-
           cy.get(domSelector.codeMirrorMode).invoke('text').then(text => {
             if (text === 'Form') {
               cy.get(domSelector.codeMirrorMode).click();
@@ -86,6 +81,10 @@ Cypress.Commands.add('configurePlugins', (cases) => {
             }
           });
 
+          if (codemirror) {
+            codemirror.setValue(JSON.stringify(data));
+          }
+          cy.get(domSelector.drawer).should('exist');
           cy.get(domSelector.drawer, { timeout }).within(() => {
             cy.contains('Submit').click({
               force: true,
