@@ -99,7 +99,6 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
                 <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                   <Button
                     type="dashed"
-                    data-cy="addHost"
                     onClick={() => {
                       add();
                     }}
@@ -155,7 +154,6 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
                 <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                   <Button
                     type="dashed"
-                    data-cy="addHost"
                     onClick={() => {
                       add();
                     }}
