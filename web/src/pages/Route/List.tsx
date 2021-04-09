@@ -290,6 +290,7 @@ const Page: React.FC = () => {
         </Menu>
       }>
         <Button type="dashed">
+          <DownOutlined />
           {formatMessage({ id: "menu.more" })}
         </Button>
       </Dropdown>
