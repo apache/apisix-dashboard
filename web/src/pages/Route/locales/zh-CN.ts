@@ -136,6 +136,7 @@ export default {
   'page.route.TabPane.headerParams': '请求头参数',
   'page.route.TabPane.authentication': '认证',
   'page.route.TabPane.response': '响应结果',
+  'page.route.TabPane.header': '响应请求头参数',
   'page.route.debugWithoutAuth': '当前请求不启用任何认证方式。',
   'page.route.button.exportOpenApi': '导出 OpenAPI',
   'page.route.exportRoutesTips': '请选择导出文件的类型',
