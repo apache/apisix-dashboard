@@ -69,6 +69,8 @@ Cypress.Commands.add('configurePlugins', (cases) => {
 
         cy.get(domSelector.codeMirrorMode).invoke('text').then(text => {
           if (text === 'Form') {
+            // FIXME: https://github.com/cypress-io/cypress/issues/7306
+            cy.wait(500);
             cy.get(domSelector.codeMirrorMode).should('be.visible');
             cy.get(domSelector.codeMirrorMode).click();
             cy.get(domSelector.selectDropdown).should('be.visible');
