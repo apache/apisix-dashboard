@@ -39,13 +39,14 @@ context('Create Configure and Delete PluginTemplate', () => {
       force: true
     });
     cy.focused(this.domSelector.drawer).should('exist');
-    cy.get(this.domSelector.drawer, {
-      timeout
-    }).within(() => {
-      cy.get(this.domSelector.disabledSwitcher).click({
-        force: true,
-      });
+
+    cy.get(this.domSelector.codeMirrorMode).click();
+    cy.get(this.domSelector.selectDropdown).should('be.visible');
+    cy.get(this.domSelector.selectJSON).click();
+    cy.get(this.domSelector.disabledSwitcher).click({
+      force: true,
     });
+
     cy.contains('Submit').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();

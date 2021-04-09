@@ -82,5 +82,8 @@
   "twentyPerPage": "[title=\"20 / page\"]",
   "pageList": ".ant-table-pagination-right",
   "pageTwo": ".ant-pagination-item-2",
-  "pageTwoActived": ".ant-pagination-item-2.ant-pagination-item-active"
+  "pageTwoActived": ".ant-pagination-item-2.ant-pagination-item-active",
+  "selectDropdown": ".ant-select-dropdown",
+  "codeMirrorMode": "[data-cy='code-mirror-mode']",
+  "selectJSON":".ant-select-dropdown [label=JSON]"
 }

@@ -68,5 +68,7 @@ export default {
   'component.user.loginByPassword': '账号密码登录',
   'component.user.login': '登录',
 
-  'component.document': '操作手册'
+  'component.document': '操作手册',
+
+  'component.global.noConfigurationRequired': '无需配置',
 };
