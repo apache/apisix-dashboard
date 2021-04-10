@@ -27,8 +27,8 @@ type Props = {
   list?: Upstream[];
   disabled?: boolean;
   required?: boolean;
-  shouldUpdate(prev: any, next: any): void;
-  onChange(id: string): void
+  shouldUpdate: (prev: any, next: any) => void;
+  onChange: (id: string) => void
 }
 
 const Component: React.FC<Props> = ({ shouldUpdate, onChange, list = [], disabled, required }) => {

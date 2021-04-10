@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React from 'react';
-import { FormInstance } from 'antd/es/form';
+import type { FormInstance } from 'antd/es/form';
 import { Empty } from 'antd';
 import { useIntl } from 'umi';
 

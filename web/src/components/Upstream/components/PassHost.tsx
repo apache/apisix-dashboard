@@ -17,7 +17,7 @@
 import React from 'react'
 import { Form, Input, Select } from 'antd'
 import { useIntl } from 'umi'
-import { FormInstance } from 'antd/lib/form'
+import type { FormInstance } from 'antd/lib/form'
 
 type Props = {
   form: FormInstance

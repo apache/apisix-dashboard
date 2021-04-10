@@ -17,7 +17,7 @@
 import React from 'react'
 import { Form, Select } from 'antd'
 import { useIntl } from 'umi'
-import { FormInstance } from 'antd/es/form'
+import type { FormInstance } from 'antd/es/form'
 
 enum Type {
   roundrobin = 'roundrobin',
