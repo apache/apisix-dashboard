@@ -27,13 +27,16 @@ type Props = {
 
 const FORM_ITEM_LAYOUT = {
   labelCol: {
-    span: 7,
-  }
+    span: 6,
+  },
+  wrapperCol: {
+    span: 8
+  },
 };
 
 export const FORM_ITEM_WITHOUT_LABEL = {
   wrapperCol: {
-    sm: { span: 18, offset: 7 },
+    sm: { span: 8, offset: 6 },
   },
 };
 
@@ -86,7 +89,7 @@ const Cors: React.FC<Props> = ({ form }) => {
         valuePropName="checked"
         initialValue={false}
       >
-        <Switch checkedChildren="开启" unCheckedChildren="关闭" />
+        <Switch />
       </Form.Item>
 
       <Form.List name={['allow_origins_by_regex']}>
@@ -95,7 +98,7 @@ const Cors: React.FC<Props> = ({ form }) => {
             <div>
               {fields.map((field, index) => (
                 <Form.Item
-                  {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
+                  {...(index === 1 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   label={index === 0 && 'allow_origins_by_regex'}
                   key={field.key}
                 >
