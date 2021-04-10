@@ -88,7 +88,7 @@ const Cors: React.FC<Props> = ({ form }) => {
         label="allow_credential"
         valuePropName="checked"
         initialValue={false}
-        extra="if you set this option to true, you can not use '*' for other options."
+        tooltip="if you set this option to true, you can not use '*' for other options."
       >
         <Switch />
       </Form.Item>
