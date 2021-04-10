@@ -166,6 +166,7 @@ context('Create and Delete Route', () => {
   it('should duplicate the route', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.reload();
 
     cy.get(this.domSelector.nameSelector).type(newName);
     cy.contains('Search').click();
