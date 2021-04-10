@@ -80,6 +80,7 @@ const Cors: React.FC<Props> = ({ form }) => {
         name="max_age"
         label="max_age"
         initialValue={5}
+        tooltip="Maximum number of seconds the results can be cached.. Within this time range, the browser will reuse the last check result. -1 means no cache."
       >
         <InputNumber></InputNumber>
       </Form.Item>
@@ -107,6 +108,7 @@ const Cors: React.FC<Props> = ({ form }) => {
                     {...field}
                     validateTrigger={['onChange', 'onBlur']}
                     noStyle
+                    tooltip="Use regex expressions to match which origin is allowed to enable CORS, for example, '.*.test.com' can use to match all subdomain of test.com"
                   >
                     <Input style={{ width: '80%' }} />
                   </Form.Item>
