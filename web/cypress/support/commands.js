@@ -75,7 +75,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
             cy.get(domSelector.selectJSON).click();
           }
         });
-        
+
         cy.get(domSelector.drawer, { timeout }).within(() => {
           cy.get(domSelector.switch).click({
             force: true,
