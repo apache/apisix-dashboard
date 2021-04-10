@@ -88,6 +88,7 @@ const Cors: React.FC<Props> = ({ form }) => {
         label="allow_credential"
         valuePropName="checked"
         initialValue={false}
+        extra="if you set this option to true, you can not use '*' for other options."
       >
         <Switch />
       </Form.Item>
@@ -98,20 +99,16 @@ const Cors: React.FC<Props> = ({ form }) => {
             <div>
               {fields.map((field, index) => (
                 <Form.Item
-                  {...(index === 1 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
+                  {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   label={index === 0 && 'allow_origins_by_regex'}
                   key={field.key}
                 >
                   <Form.Item
                     {...field}
                     validateTrigger={['onChange', 'onBlur']}
-                    required
                     noStyle
-
                   >
-                    <Input
-                      style={{ width: '80%' }}
-                    />
+                    <Input style={{ width: '80%' }} />
                   </Form.Item>
                   {fields.length > 1 ? (
                     <MinusCircleOutlined
