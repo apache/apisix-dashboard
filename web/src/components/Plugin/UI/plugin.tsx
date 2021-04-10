@@ -20,6 +20,7 @@ import { Empty } from 'antd';
 import { useIntl } from 'umi';
 
 import BasicAuth from './basic-auth'
+import FaultInjection from './fault-injection';
 
 type Props = {
   name: string,
@@ -27,7 +28,7 @@ type Props = {
   renderForm: boolean
 }
 
-export const PLUGIN_UI_LIST = ['basic-auth',];
+export const PLUGIN_UI_LIST = ['basic-auth', 'fault-injection'];
 
 export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
 
@@ -38,6 +39,8 @@ export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
   switch (name) {
     case 'basic-auth':
       return <BasicAuth form={form} />
+    case 'fault-injection':
+      return <FaultInjection form={form} />
     default:
       return null;
   }
