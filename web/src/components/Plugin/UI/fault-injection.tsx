@@ -1,6 +1,6 @@
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Button, Form, Input, InputNumber } from 'antd';
+import { Button, Form, Input, InputNumber, Select } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
@@ -79,7 +79,11 @@ const FaultInjection: React.FC<Props> = ({ form }) => {
                     validateTrigger={['onChange', 'onBlur']}
                     noStyle
                   >
-                    <Input style={{ width: '70%' }}></Input>
+                    <Select style={{ width: '70%' }}>
+                      {['==', '`~=', '>', '<', '~~', '~*', 'in', 'has', '!'].map((item, index) => {
+                        return <Select.Option value={item} key={index}>{item}</Select.Option>
+                      })}
+                    </Select>
                   </Form.Item>
                   {fields.length > 1 ? (
                     <MinusCircleOutlined
@@ -141,7 +145,11 @@ const FaultInjection: React.FC<Props> = ({ form }) => {
                     validateTrigger={['onChange', 'onBlur']}
                     noStyle
                   >
-                    <Input style={{ width: '70%' }}></Input>
+                    <Select style={{ width: '70%' }}>
+                      {['==', '`~=', '>', '<', '~~', '~*', 'in', 'has', '!'].map((item, index) => {
+                        return <Select.Option value={item} key={index}>{item}</Select.Option>
+                      })}
+                    </Select>
                   </Form.Item>
                   {fields.length > 1 ? (
                     <MinusCircleOutlined
