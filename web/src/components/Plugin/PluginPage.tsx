@@ -67,7 +67,6 @@ const PluginPage: React.FC<Props> = ({
   const [typeList, setTypeList] = useState<string[]>([]);
   const [plugins, setPlugins] = useState({});
 
-  const firstUpperCase = ([first, ...rest]: string) => first.toUpperCase() + rest.join('');
   useEffect(() => {
     setPlugins(initialData);
     fetchList().then((data) => {
@@ -80,11 +79,11 @@ const PluginPage: React.FC<Props> = ({
       setPluginList(filteredData);
       const categoryList: string[] = [];
       data.forEach((item) => {
-        if (!categoryList.includes(firstUpperCase(item.type))) {
-          categoryList.push(firstUpperCase(item.type));
+        if (!categoryList.includes(item.type)) {
+          categoryList.push(item.type);
         }
       });
-      setTypeList(categoryList.sort());
+      setTypeList(categoryList);
     });
     fetchPluginTemplateList().then((data) => {
       setPluginTemplateList(data);
@@ -109,7 +108,7 @@ const PluginPage: React.FC<Props> = ({
         <Anchor offsetTop={150}>
           {typeList.map((typeItem) => {
             return (
-              <Anchor.Link href={`#plugin-category-${typeItem}`} title={typeItem} key={typeItem} />
+              <Anchor.Link href={`#plugin-category-${typeItem}`} title={formatMessage({ id: `component.plugin.${typeItem}` })} key={typeItem} />
             );
           })}
         </Anchor>
@@ -166,7 +165,7 @@ const PluginPage: React.FC<Props> = ({
         {typeList.map((typeItem) => {
           return (
             <PanelSection
-              title={typeItem}
+              title={formatMessage({ id: `component.plugin.${typeItem}` })}
               key={typeItem}
               style={PanelSectionStyle}
               id={`plugin-category-${typeItem}`}

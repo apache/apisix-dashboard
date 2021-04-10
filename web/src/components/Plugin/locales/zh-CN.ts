@@ -21,4 +21,13 @@ export default {
   'component.step.select.pluginTemplate.select.option': '手动配置',
   'component.plugin.pluginTemplate.tip1': '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
   'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。',
+  'component.plugin.general': '通用',
+  'component.plugin.transformation': '转换',
+  'component.plugin.authentication': '认证',
+  'component.plugin.security': '安全',
+  'component.plugin.traffic': '流量',
+  'component.plugin.monitoring': '监控',
+  'component.plugin.loggers': '日志',
+  'component.plugin.protocol': '协议',
+  'component.plugin.other': '其它',
 };
