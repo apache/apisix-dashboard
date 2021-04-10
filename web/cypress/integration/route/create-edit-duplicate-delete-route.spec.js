@@ -139,7 +139,8 @@ context('Create and Delete Route', () => {
     cy.contains('Search').click();
     cy.contains(name).siblings().contains('Configure').click();
 
-    cy.wait(500);
+    // NOTE: make sure all components rerender done
+    cy.get('#status').should('have.class', 'ant-switch-checked');
     cy.get(this.domSelector.name).clear().type(newName);
     cy.get(this.domSelector.description).clear().type(this.data.description2);
     cy.contains('Next').click();
@@ -173,7 +174,8 @@ context('Create and Delete Route', () => {
     cy.contains(newName).siblings().contains('More').click();
     cy.contains('Duplicate').click();
 
-    cy.wait(500);
+    // NOTE: make sure all components rerender done
+    cy.get('#status').should('have.class', 'ant-switch-checked');
     cy.get(this.domSelector.name).clear().type(duplicateNewName);
     cy.get(this.domSelector.description).clear().type(this.data.description2);
     cy.contains('Next').click();
