@@ -142,7 +142,7 @@ func (h *Handler) Set(c droplet.Context) (interface{}, error) {
 	// Because the ID of consumer has been removed,
 	// `BaseInfo` is no longer embedded in consumer's struct,
 	// So we need to maintain create_time and update_time separately for consumer
-	savedConsumer, _ := h.consumerStore.Get(c.Context(), input.Username)
+	savedConsumer, _ := h.consumerStore.Get(c.Context(), input.Consumer.Username)
 	input.Consumer.CreateTime = time.Now().Unix()
 	input.Consumer.UpdateTime = time.Now().Unix()
 	if savedConsumer != nil {
