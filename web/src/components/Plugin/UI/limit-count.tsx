@@ -16,7 +16,7 @@
  */
 import React, { useState } from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Button, Form, Input, InputNumber, Select } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row, Select } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
 
@@ -37,8 +37,14 @@ const FORM_ITEM_LAYOUT = {
 
 const FORM_ITEM_WITHOUT_LABEL = {
   wrapperCol: {
-    span: 10, offset: 6,
+    span: 10, offset: 7,
   },
+};
+
+const removeBtnStyle = {
+  marginLeft: 20,
+  display: 'flex',
+  alignItems: 'center',
 };
 
 const RedisForm: React.FC = () => {
@@ -96,47 +102,50 @@ const RedisClusterForm: React.FC<Props> = ({ form }) => {
       >
         <Input />
       </Form.Item>
-      <Form.List name={['redis_cluster_nodes']}>
+      <Form.List name="redis_cluster_nodes">
         {(fields, { add, remove }) => {
           return (
             <div>
-              {fields.map((field, index) => (
-                <Form.Item
-                  {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-                  key={field.key}
-                  label={index === 0 && 'redis_cluster_nodes'}
-                  tooltip='When using redis-cluster policy，This property is a list of addresses of Redis cluster service nodes.'
+              <Form.Item
+                label='redis_cluster_nodes'
+                tooltip='When using redis-cluster policy，This property is a list of addresses of Redis cluster service nodes.'
+                style={{ marginBottom: 0 }}
+              >
+                {fields.map((field, index) => (
+                  <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
+                    <Col>
+                      <Form.Item
+                        {...field}
+                        validateTrigger={['onChange', 'onBlur']}
+                        noStyle
+                      >
+                        <Input />
+                      </Form.Item>
+                    </Col>
+                    <Col style={{ ...removeBtnStyle, marginLeft: -10 }}>
+                      {fields.length > 1 ? (
+                        <MinusCircleOutlined
+                          className="dynamic-delete-button"
+                          onClick={() => {
+                            remove(field.name);
+                          }}
+                        />
+                      ) : null}
+                    </Col>
+                  </Row>
+                ))}
+              </Form.Item>
+
+              <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+                <Button
+                  type="dashed"
+                  onClick={() => {
+                    add();
+                  }}
                 >
-                  <Form.Item
-                    {...field}
-                    validateTrigger={['onChange', 'onBlur']}
-                    noStyle
-                  >
-                    <Input />
-                  </Form.Item>
-                  {fields.length > 1 ? (
-                    <MinusCircleOutlined
-                      className="dynamic-delete-button"
-                      style={{ margin: '0 8px' }}
-                      onClick={() => {
-                        remove(field.name);
-                      }}
-                    />
-                  ) : null}
-                </Form.Item>
-              ))}
-              {
-                <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-                  <Button
-                    type="dashed"
-                    onClick={() => {
-                      add();
-                    }}
-                  >
-                    <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
-                  </Button>
-                </Form.Item>
-              }
+                  <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
+                </Button>
+              </Form.Item>
             </div>
           );
         }}
