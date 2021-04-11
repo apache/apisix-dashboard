@@ -46,7 +46,7 @@ const LimitConn: React.FC<Props> = ({ form }) => {
         name="conn"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.conn.tooltip' })}
       >
-        <InputNumber min={1} required></InputNumber>
+        <InputNumber min={1} required />
       </Form.Item>
       <Form.Item
         label="burst"
@@ -54,7 +54,7 @@ const LimitConn: React.FC<Props> = ({ form }) => {
         name="burst"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.burst.tooltip' })}
       >
-        <InputNumber min={0} required></InputNumber>
+        <InputNumber min={0} required />
       </Form.Item>
       <Form.Item
         label="default_conn_delay"
@@ -62,7 +62,7 @@ const LimitConn: React.FC<Props> = ({ form }) => {
         name="default_conn_delay"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.default_conn_delay.tooltip' })}
       >
-        <InputNumber step={0.001} min={0.001} required></InputNumber>
+        <InputNumber step={0.001} min={0.001} required />
       </Form.Item>
 
       <Form.Item
@@ -84,7 +84,7 @@ const LimitConn: React.FC<Props> = ({ form }) => {
         initialValue={503}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.rejected_code.tooltip' })}
       >
-        <InputNumber min={200} max={599} required></InputNumber>
+        <InputNumber min={200} max={599} required />
       </Form.Item>
     </Form>
   );
