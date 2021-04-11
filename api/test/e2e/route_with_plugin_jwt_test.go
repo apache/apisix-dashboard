@@ -17,7 +17,6 @@
 package e2e
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -100,12 +99,6 @@ func TestRoute_With_Jwt_Plugin(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, http.StatusOK, status)
 	jwtToken := string(body)
-
-
-	// sleep for process log
-	time.Sleep(1500 * time.Millisecond)
-	logContent := ReadAPISIXErrorLog(t)
-	fmt.Println("logContent:", logContent)
 
 	// sign jwt token with not exists key
 	body, status, err = httpGet("http://127.0.0.1:9080/apisix/plugin/jwt/sign?key=not-exist-key", nil)
