@@ -102,7 +102,7 @@ context('Create and delete consumer with limit-count plugin form', () => {
     });
     cy.get(this.domSelector.drawer).should('not.exist');
 
-    // config limit-count form with redisÎ policy
+    // config limit-count form with redis policy
     cy.contains(this.domSelector.pluginCard, 'limit-count').within(() => {
       cy.contains('Enable').click({
         force: true,

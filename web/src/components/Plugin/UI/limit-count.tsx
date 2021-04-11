@@ -187,7 +187,7 @@ const LimitCount: React.FC<Props> = ({ form }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.key.tooltip' })}
       >
         <Select>
-          {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name", "service_id"].map(item => (<Select.Option value={item}>{item}</Select.Option>))}
+          {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name", "service_id"].map(item => (<Select.Option value={item} key={item}>{item}</Select.Option>))}
         </Select>
       </Form.Item>
       <Form.Item
