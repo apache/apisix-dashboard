@@ -60,23 +60,23 @@ const FaultInjection: React.FC<Props> = ({ form }) => {
         name={['abort', 'http_status']}
         label='abort.http_status'
         required
-        tooltip='user-specified http code returned to the client.'
+        tooltip={formatMessage({ id: "component.pluginForm.fault-injection.abort.http_status.tooltip" })}
       >
-        <InputNumber min={200} required></InputNumber>
+        <InputNumber min={200} required />
       </Form.Item>
       <Form.Item
         name={['abort', 'percentage']}
         label='abort.percentage'
-        tooltip='percentage of requests to be aborted.'
+        tooltip={formatMessage({ id: "component.pluginForm.fault-injection.abort.percentage.tooltip" })}
       >
-        <InputNumber min={0} max={100}></InputNumber>
+        <InputNumber min={0} max={100} />
       </Form.Item>
       <Form.Item
         name={['abort', 'body']}
         label='abort.body'
-        tooltip='response data returned to the client. Nginx variable can be used inside.'
+        tooltip={formatMessage({ id: "component.pluginForm.fault-injection.abort.body.tooltip" })}
       >
-        <Input min={200}></Input>
+        <Input min={200} />
       </Form.Item>
 
       <Form.List name={['abort', 'vars']}>
@@ -87,7 +87,7 @@ const FaultInjection: React.FC<Props> = ({ form }) => {
                 <Form.Item
                   {...(index === 0 ? FORM_LIST_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   label={index === 0 && 'abort.vars'}
-                  tooltip='The rules for executing fault injection will only be executed when the rules are matched.'
+                  tooltip={formatMessage({ id: "component.pluginForm.fault-injection.abort.vars.tooltip" })}
                   key={field.key}
                 >
                   <Form.Item
@@ -133,16 +133,16 @@ const FaultInjection: React.FC<Props> = ({ form }) => {
         label="delay.duration"
         name={['delay', 'duration']}
         required
-        tooltip='delay time (can be decimal).'
+        tooltip={formatMessage({ id: "component.pluginForm.fault-injection.delay.duration.tooltip" })}
       >
-        <InputNumber required></InputNumber>
+        <InputNumber required />
       </Form.Item>
       <Form.Item
         label="delay.percentage"
         name={['delay', 'percentage']}
-        tooltip='percentage of requests to be delayed.'
+        tooltip={formatMessage({ id: "component.pluginForm.fault-injection.delay.percentage.tooltip" })}
       >
-        <InputNumber min={0} max={100}></InputNumber>
+        <InputNumber min={0} max={100} />
       </Form.Item>
 
       <Form.List name={['delay', 'vars']}>
@@ -154,7 +154,7 @@ const FaultInjection: React.FC<Props> = ({ form }) => {
                   {...(index === 0 ? FORM_LIST_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   key={field.key}
                   label={index === 0 && 'delay.vars'}
-                  tooltip='Execute the request delay rule, and the request will be delayed only after the rule matches.'
+                  tooltip={formatMessage({ id: "component.pluginForm.fault-injection.delay.vars.tooltip" })}
                 >
                   <Form.Item
                     {...field}

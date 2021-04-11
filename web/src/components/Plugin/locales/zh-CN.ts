@@ -21,4 +21,13 @@ export default {
   'component.step.select.pluginTemplate.select.option': '手动配置',
   'component.plugin.pluginTemplate.tip1': '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
   'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。',
+
+  // limit-conn
+  'component.pluginForm.fault-injection.abort.http_status.tooltip': '返回给客户端的 http 状态码。',
+  'component.pluginForm.fault-injection.abort.body.tooltip': '返回给客户端的响应数据。支持使用 Nginx 变量，如 client addr: $remote_addr。',
+  'component.pluginForm.fault-injection.abort.percentage.tooltip': '将被中断的请求占比。',
+  'component.pluginForm.fault-injection.abort.vars.tooltip': '执行故障注入的规则，当规则匹配通过后才会执行故障注。vars 是一个表达式的列表，来自 lua-resty-expr。',
+  'component.pluginForm.fault-injection.delay.duration.tooltip': '延迟时间，可以指定小数。',
+  'component.pluginForm.fault-injection.delay.percentage.tooltip': '将被延迟的请求占比。',
+  'component.pluginForm.fault-injection.delay.vars.tooltip': '执行请求延迟的规则，当规则匹配通过后才会延迟请求。vars 是一个表达式列表，来自 lua-resty-expr。',
 };
