@@ -62,7 +62,7 @@ const transformProxyRewrite2Formdata = (pluginsData: any) => {
   let hostRewriteType = HOST_REWRITE_TYPE.KEEP;
 
   if (pluginsData) {
-    if (pluginsData.uri && pluginsData.regex_uri) {
+    if (pluginsData.regex_uri) {
       URIRewriteType = URI_REWRITE_TYPE.REGEXP
     }
 

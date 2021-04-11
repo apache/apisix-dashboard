@@ -22,13 +22,22 @@ import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
 import {
-  FORM_ITEM_LAYOUT,
   FORM_ITEM_WITHOUT_LABEL,
   SCHEME_REWRITE,
   URI_REWRITE_TYPE,
   HOST_REWRITE_TYPE
 } from '@/pages/Route/constants';
 
+const removeBtnStyle = {
+  marginLeft: 20,
+  display: 'flex',
+  alignItems: 'center',
+};
+
+/**
+ * https://apisix.apache.org/docs/apisix/plugins/proxy-rewrite
+ * UI for ProxyRewrite plugin
+*/
 const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) => {
   const { formatMessage } = useIntl();
 
@@ -154,88 +163,137 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
     }
   };
 
-  return (
-    <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.requestOverride' })}>
+  const SchemeComponent: React.FC = () => {
+    const options = [
+      {
+        value: SCHEME_REWRITE.KEEP,
+        label: formatMessage({ id: 'page.route.radio.staySame' })
+      }, {
+        value: SCHEME_REWRITE.HTTP,
+        label: (SCHEME_REWRITE.HTTP).toLocaleUpperCase()
+      }, {
+        value: SCHEME_REWRITE.HTTPS,
+        label: (SCHEME_REWRITE.HTTPS).toLocaleUpperCase()
+      }
+    ]
+
+    return (
       <Form.Item
         label={formatMessage({ id: 'page.route.form.itemLabel.scheme' })}
         name={['proxyRewrite', 'scheme']}
       >
         <Radio.Group disabled={disabled}>
-          <Radio value={SCHEME_REWRITE.KEEP}>
-            {formatMessage({ id: 'page.route.radio.staySame' })}
-          </Radio>
-          <Radio value={SCHEME_REWRITE.HTTP}>{(SCHEME_REWRITE.HTTP).toLocaleUpperCase()}</Radio>
-          <Radio value={SCHEME_REWRITE.HTTPS}>{(SCHEME_REWRITE.HTTPS).toLocaleUpperCase()}</Radio>
-        </Radio.Group>
-      </Form.Item>
-      <Form.Item
-        label={formatMessage({ id: 'page.route.form.itemLabel.URIRewriteType' })}
-        name='URIRewriteType'
-      >
-        <Radio.Group
-          disabled={disabled}
-        >
-          <Radio value={URI_REWRITE_TYPE.KEEP}>
-            {formatMessage({ id: 'page.route.radio.staySame' })}
-          </Radio>
-          <Radio data-cy='uri-static' value={URI_REWRITE_TYPE.STATIC}>
-            {formatMessage({ id: 'page.route.radio.static' })}
-          </Radio>
-          <Radio value={URI_REWRITE_TYPE.REGEXP}>
-            {formatMessage({ id: 'page.route.radio.regex' })}
-          </Radio>
-        </Radio.Group>
-      </Form.Item>
-      <Form.Item shouldUpdate={
-        (prevValues, curValues) => prevValues.URIRewriteType !== curValues.URIRewriteType } noStyle>
-        {
-          () => {
-            return getUriRewriteItems()
+          {
+            options.map(item => (
+              <Radio value={item.value} key={item.value}>{item.label}</Radio>
+            ))
           }
-        }
-      </Form.Item>
-
-      <Form.Item
-        label={formatMessage({ id: 'page.route.form.itemLabel.hostRewriteType' })}
-        name='hostRewriteType'
-      >
-        <Radio.Group
-          disabled={disabled}
-        >
-          <Radio data-cy='host-keep' value={HOST_REWRITE_TYPE.KEEP}>
-            {formatMessage({ id: 'page.route.radio.staySame' })}
-          </Radio>
-          <Radio data-cy='host-static' value={HOST_REWRITE_TYPE.REWRITE}>
-            {formatMessage({ id: 'page.route.radio.static' })}
-          </Radio>
         </Radio.Group>
       </Form.Item>
-      <Form.Item shouldUpdate={(prevValues, curValues) => prevValues.hostRewriteType !== curValues.hostRewriteType} noStyle>
-        {
-          () =>{
-            return getHostRewriteItems();
-          }
-        }
-      </Form.Item>
+    )
+  }
 
+  const URIRewriteType: React.FC = () => {
+    const options = [
+      {
+        value: URI_REWRITE_TYPE.KEEP,
+        label: formatMessage({ id: 'page.route.radio.staySame' })
+      }, {
+        value: URI_REWRITE_TYPE.STATIC,
+        label: formatMessage({ id: 'page.route.radio.static' }),
+        dataCypress: 'uri-static'
+      }, {
+        value: URI_REWRITE_TYPE.REGEXP,
+        label: formatMessage({ id: 'page.route.radio.regex' })
+      }
+    ]
+
+    return (
+      <React.Fragment>
+        <Form.Item
+          label={formatMessage({ id: 'page.route.form.itemLabel.URIRewriteType' })}
+          name='URIRewriteType'
+        >
+          <Radio.Group
+            disabled={disabled}
+          >
+            {
+              options.map(item => (
+                <Radio data-cy={item.dataCypress} value={item.value} key={item.value}>
+                  {item.label}
+                </Radio>
+              ))
+            }
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item shouldUpdate={
+          (prevValues, curValues) => prevValues.URIRewriteType !== curValues.URIRewriteType} noStyle>
+          {
+            () => {
+              return getUriRewriteItems()
+            }
+          }
+        </Form.Item>
+      </React.Fragment>
+    )
+  }
+
+  const HostRewriteType: React.FC = () => {
+    const options = [
+      {
+        label: formatMessage({ id: 'page.route.radio.staySame' }),
+        value: HOST_REWRITE_TYPE.KEEP,
+        dataCypress: "host-keep"
+      }, {
+        label: formatMessage({ id: 'page.route.radio.static' }),
+        value: HOST_REWRITE_TYPE.REWRITE,
+        dataCypress: "host-static"
+      }
+    ]
+    return (
+      <React.Fragment>
+        <Form.Item
+          label={formatMessage({ id: 'page.route.form.itemLabel.hostRewriteType' })}
+          name='hostRewriteType'
+        >
+          <Radio.Group
+            disabled={disabled}
+          >
+            {
+              options.map(item => (
+                <Radio data-cy={item.dataCypress} value={item.value} key={item.value}>
+                  {item.label}
+                </Radio>
+              ))
+            }
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item shouldUpdate={(prevValues, curValues) => prevValues.hostRewriteType !== curValues.hostRewriteType} noStyle>
+          {
+            () => {
+              return getHostRewriteItems();
+            }
+          }
+        </Form.Item>
+      </React.Fragment>
+    )
+  }
+
+  const Headers: React.FC = () => {
+    return (
       <Form.List
         name={['proxyRewrite', 'kvHeaders']}
         initialValue={[{}]}
       >
         {(fields, { add, remove }) => (
           <>
-            {fields.map((field, index) => (
-              <Form.Item
-                {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-                label={
-                  index === 0
-                    ? formatMessage({ id: 'page.route.form.itemLabel.headerRewrite' })
-                    : ''
-                }
-                key={field.key}
-              >
-                <Row gutter={24} key={field.name}>
-                  <Col span={11}>
+            <Form.Item
+              label={formatMessage({ id: 'page.route.form.itemLabel.headerRewrite' })}
+              style={{ marginBottom: 0 }}
+            >
+              {fields.map((field, index) => (
+                <Row gutter={12} key={index} style={{ marginBottom: 10 }}>
+                  <Col span={5}>
                     <Form.Item
                       name={[field.name, 'key']}
                       fieldKey={[field.fieldKey, 'key']}
@@ -249,7 +307,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={11}>
+                  <Col span={5}>
                     <Form.Item
                       name={[field.name, 'value']}
                       fieldKey={[field.fieldKey, 'value']}
@@ -264,7 +322,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
                     </Form.Item>
                   </Col>
                   {!disabled && fields.length > 1 && (
-                    <Col>
+                    <Col style={{ ...removeBtnStyle, marginLeft: -5 }}>
                       <MinusCircleOutlined
                         className="dynamic-delete-button"
                         onClick={() => remove(field.name)}
@@ -272,16 +330,25 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
                     </Col>
                   )}
                 </Row>
-              </Form.Item>
-            ))}
+              ))}
+            </Form.Item>
             <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
               <Button data-cy='create-new-rewrite-header' type="dashed" disabled={disabled} onClick={() => add()} icon={<PlusOutlined />}>
-                {formatMessage({ id: 'component.global.create' })}
+                {formatMessage({ id: 'component.global.add' })}
               </Button>
             </Form.Item>
           </>
         )}
       </Form.List>
+    )
+  }
+
+  return (
+    <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.requestOverride' })}>
+      <SchemeComponent />
+      <URIRewriteType />
+      <HostRewriteType />
+      <Headers />
     </PanelSection>
   );
 };
