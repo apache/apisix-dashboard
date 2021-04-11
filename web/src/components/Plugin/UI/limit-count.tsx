@@ -91,7 +91,7 @@ const RedisForm: React.FC = () => {
   </>)
 }
 
-const RedisClusterForm: React.FC<Props> = ({ form }) => {
+const RedisClusterForm: React.FC<Props> = () => {
   const { formatMessage } = useIntl();
 
   return (
