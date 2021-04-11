@@ -108,7 +108,12 @@ const Page: React.FC = (props) => {
 
           {step === 1 && <Step1 form={form1} />}
           {step === 2 && (
-            <PluginPage initialData={plugins} onChange={setPlugins} schemaType="route" />
+            <PluginPage
+              initialData={plugins}
+              onChange={setPlugins}
+              referPage="route"
+              schemaType="route"
+             />
           )}
           {step === 3 && <Preview form1={form1} plugins={plugins} />}
         </Card>

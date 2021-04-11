@@ -59,7 +59,7 @@ context('Create and Delete Route', () => {
       cy.get(this.domSelector.name).type('modalName');
     });
     cy.get(this.domSelector.operator).click();
-    cy.contains('Equal').click();
+    cy.get('[title=Equal]').should('be.visible').click();
     cy.get(this.domSelector.value).type('value');
     cy.contains('Confirm').click();
 
@@ -139,7 +139,8 @@ context('Create and Delete Route', () => {
     cy.contains('Search').click();
     cy.contains(name).siblings().contains('Configure').click();
 
-    cy.wait(500);
+    // NOTE: make sure all components rerender done
+    cy.get('#status').should('have.class', 'ant-switch-checked');
     cy.get(this.domSelector.name).clear().type(newName);
     cy.get(this.domSelector.description).clear().type(this.data.description2);
     cy.contains('Next').click();
@@ -166,13 +167,15 @@ context('Create and Delete Route', () => {
   it('should duplicate the route', function () {
     cy.visit('/');
     cy.contains('Route').click();
+    cy.reload();
 
     cy.get(this.domSelector.nameSelector).type(newName);
     cy.contains('Search').click();
     cy.contains(newName).siblings().contains('More').click();
     cy.contains('Duplicate').click();
 
-    cy.wait(500);
+    // NOTE: make sure all components rerender done
+    cy.get('#status').should('have.class', 'ant-switch-checked');
     cy.get(this.domSelector.name).clear().type(duplicateNewName);
     cy.get(this.domSelector.description).clear().type(this.data.description2);
     cy.contains('Next').click();
