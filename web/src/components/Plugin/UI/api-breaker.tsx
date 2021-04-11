@@ -52,7 +52,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         label="break_response_code"
         required
         name="break_response_code"
-        tooltip='Return error code when unhealthy'
+        tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.break_response_code.tooltip' })}
       >
         <InputNumber min={200} max={599} required></InputNumber>
       </Form.Item>
@@ -61,7 +61,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         label="max_breaker_sec"
         name="max_breaker_sec"
         initialValue={300}
-        tooltip='Maximum breaker time(seconds)'
+        tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.max_breaker_sec.tooltip' })}
       >
         <InputNumber min={60}></InputNumber>
       </Form.Item>
@@ -74,7 +74,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
                 <Form.Item
                   {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   label={index === 0 && 'unhealthy.http_statuses'}
-                  tooltip='Status codes when unhealthy'
+                  tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.unhealthy.http_statuses.tooltip' })}
                   key={field.key}
                 >
                   <Form.Item
@@ -116,7 +116,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         label="unhealthy.failures"
         name={['unhealthy', 'failures']}
         initialValue={3}
-        tooltip='Number of consecutive error requests that triggered an unhealthy state'
+        tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.unhealthy.failures.tooltip' })}
       >
         <InputNumber min={1}></InputNumber>
       </Form.Item>
@@ -130,7 +130,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
                   {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   key={field.key}
                   label={index === 0 && 'healthy.http_statuses'}
-                  tooltip='Status codes when healthy'
+                  tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.healthy.http_statuses.tooltip' })}
                 >
                   <Form.Item
                     {...field}
@@ -171,11 +171,11 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         label="healthy.successes"
         name={['healthy', 'successes']}
         initialValue={3}
-        tooltip='Number of consecutive normal requests that trigger health status'
+        tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.healthy.successes.tooltip' })}
       >
         <InputNumber min={1}></InputNumber>
       </Form.Item>
-    </Form>
+    </Form >
   );
 }
 

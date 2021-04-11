@@ -21,4 +21,12 @@ export default {
   'component.step.select.pluginTemplate.select.option': '手动配置',
   'component.plugin.pluginTemplate.tip1': '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
   'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。',
+
+  // api-breaker
+  'component.pluginForm.api-breaker.break_response_code.tooltip': '不健康返回错误码。',
+  'component.pluginForm.api-breaker.max_breaker_sec.tooltip': '最大熔断持续时间。',
+  'component.pluginForm.api-breaker.unhealthy.http_statuses.tooltip': '不健康时候的状态码。',
+  'component.pluginForm.api-breaker.unhealthy.failures.tooltip': '触发不健康状态的连续错误请求次数。',
+  'component.pluginForm.api-breaker.healthy.http_statuses.tooltip': '健康时候的状态码。',
+  'component.pluginForm.api-breaker.healthy.successes.tooltip': '触发健康状态的连续正常请求次数。',
 };
