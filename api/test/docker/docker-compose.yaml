@@ -127,11 +127,12 @@ services:
 
   apisix:
     hostname: apisix_server1
-    build:
-      context: ../../
-      dockerfile: test/docker/Dockerfile-apisix
-      args:
-        - APISIX_VERSION=2.4
+    image: apache/apisix:2.4-alpine
+    # build:
+    #   context: ../../
+    #   dockerfile: test/docker/Dockerfile-apisix
+    #   args:
+    #     - APISIX_VERSION=2.4
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
@@ -152,11 +153,12 @@ services:
 
   apisix2:
     hostname: apisix_server2
-    build:
-      context: ../../
-      dockerfile: test/docker/Dockerfile-apisix
-      args:
-        - APISIX_VERSION=2.4
+    image: apache/apisix:2.4-alpine
+    # build:
+    #   context: ../../
+    #   dockerfile: test/docker/Dockerfile-apisix
+    #   args:
+    #     - APISIX_VERSION=2.4
     restart: always
     volumes:
       - ./apisix_config2.yaml:/usr/local/apisix/conf/config.yaml:ro
