@@ -21,4 +21,8 @@ export default {
   'component.step.select.pluginTemplate.select.option': 'Custom',
   'component.plugin.pluginTemplate.tip1': '1. When a route already have plugins field configured, the plugins in the plugin template will be merged into it.',
   'component.plugin.pluginTemplate.tip2': '2. The same plugin in the plugin template will override one in the plugins',
+
+  // referer-restriction
+  'component.pluginForm.referer-restriction.whitelist.tooltip': 'List of hostname to whitelist. The hostname can be started with * as a wildcard.',
+  'component.pluginForm.referer-restriction.bypass_missing.tooltip': 'Whether to bypass the check when the Referer header is missing or malformed.',
 };

@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Form, Input, Button, Switch } from 'antd';
+import { Form, Input, Button, Switch, Row, Col } from 'antd';
 import { useIntl } from 'umi';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
@@ -29,14 +29,20 @@ const FORM_ITEM_LAYOUT = {
     span: 5,
   },
   wrapperCol: {
-    span: 8
+    span: 18
   },
 };
 
 const FORM_ITEM_WITHOUT_LABEL = {
   wrapperCol: {
-    span: 8, offset: 5
+    span: 10, offset: 5
   },
+};
+
+const removeBtnStyle = {
+  marginLeft: 20,
+  display: 'flex',
+  alignItems: 'center',
 };
 
 const RefererRestriction: React.FC<Props> = ({ form }) => {
@@ -47,49 +53,51 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
       {...FORM_ITEM_LAYOUT}
       initialValues={{ whitelist: [''] }}
     >
-      <Form.List name="whitelist" >
+      <Form.List name="whitelist">
         {(fields, { add, remove }) => {
           return (
             <div>
-              {fields.map((field, index) => (
-                <Form.Item
-                  {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
-                  label={index === 0 && 'whitelist'}
-                  key={field.key}
-                  required
-                  tooltip='List of hostname to whitelist. The hostname can be started with * as a wildcard.'
+              <Form.Item
+                label='whitelist'
+                tooltip={formatMessage({ id: 'component.pluginForm.referer-restriction.whitelist.tooltip' })}
+                required
+                style={{ marginBottom: 0 }}
+              >
+                {fields.map((field, index) => (
+                  <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
+                    <Col span={10}>
+                      <Form.Item
+                        {...field}
+                        validateTrigger={['onChange', 'onBlur']}
+                        noStyle
+                        required
+                      >
+                        <Input />
+                      </Form.Item>
+                    </Col>
+                    <Col style={{ ...removeBtnStyle, marginLeft: -10 }}>
+                      {fields.length > 1 ? (
+                        <MinusCircleOutlined
+                          className="dynamic-delete-button"
+                          onClick={() => {
+                            remove(field.name);
+                          }}
+                        />
+                      ) : null}
+                    </Col>
+                  </Row>
+                ))}
+              </Form.Item>
+              <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+                <Button
+                  type="dashed"
+                  onClick={() => {
+                    add();
+                  }}
                 >
-                  <Form.Item
-                    {...field}
-                    validateTrigger={['onChange', 'onBlur']}
-                    required
-                    noStyle
-                  >
-                    <Input />
-                  </Form.Item>
-                  {fields.length > 1 ? (
-                    <MinusCircleOutlined
-                      className="dynamic-delete-button"
-                      onClick={() => {
-                        remove(field.name);
-                      }}
-                    />
-                  ) : null}
-                </Form.Item>
-              ))}
-              {
-                <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-                  <Button
-                    type="dashed"
-                    data-cy="addHost"
-                    onClick={() => {
-                      add();
-                    }}
-                  >
-                    <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
-                  </Button>
-                </Form.Item>
-              }
+                  <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
+                </Button>
+              </Form.Item>
             </div>
           );
         }}
@@ -98,7 +106,7 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
         label="bypass_missing"
         name="bypass_missing"
         valuePropName="checked"
-        tooltip='Whether to bypass the check when the Referer header is missing or malformed.'
+        tooltip={formatMessage({ id: 'component.pluginForm.referer-restriction.bypass_missing.tooltip' })}
       >
         <Switch />
       </Form.Item>

@@ -21,4 +21,8 @@ export default {
   'component.step.select.pluginTemplate.select.option': '手动配置',
   'component.plugin.pluginTemplate.tip1': '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
   'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。',
+
+  // referer-restriction
+  'component.pluginForm.referer-restriction.whitelist.tooltip': '域名列表。域名开头可以用\'*\'作为通配符。',
+  'component.pluginForm.referer-restriction.bypass_missing.tooltip': '当 Referer 不存在或格式有误时，是否绕过检查。',
 };
