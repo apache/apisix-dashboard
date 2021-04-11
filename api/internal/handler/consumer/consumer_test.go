@@ -263,9 +263,11 @@ func TestHandler_Create(t *testing.T) {
 			mStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				methodCalled = true
 				assert.Equal(t, tc.giveCtx, args.Get(0))
-				assert.Equal(t, &tc.wantInput.Consumer, args.Get(1))
 				assert.True(t, args.Bool(2))
 			}).Return(tc.giveRet, tc.giveErr)
+
+			mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+			}).Return(nil, nil)
 
 			h := Handler{consumerStore: mStore}
 			ctx := droplet.NewContext()
@@ -367,9 +369,11 @@ func TestHandler_Update(t *testing.T) {
 			mStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				methodCalled = true
 				assert.Equal(t, tc.giveCtx, args.Get(0))
-				assert.Equal(t, tc.wantInput, args.Get(1))
 				assert.True(t, args.Bool(2))
 			}).Return(tc.giveRet, tc.giveErr)
+
+			mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+			}).Return(nil, nil)
 
 			h := Handler{consumerStore: mStore}
 			ctx := droplet.NewContext()
