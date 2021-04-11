@@ -43,14 +43,14 @@ const LimitReq: React.FC<Props> = ({ form }) => {
         name="rate"
         required
       >
-        <InputNumber min={1} required></InputNumber>
+        <InputNumber min={1} required />
       </Form.Item>
       <Form.Item
         label="burst"
         name="burst"
         required
       >
-        <InputNumber min={0} required></InputNumber>
+        <InputNumber min={0} required />
       </Form.Item>
       <Form.Item
         label="key"
@@ -59,7 +59,7 @@ const LimitReq: React.FC<Props> = ({ form }) => {
       >
         <Select>
           {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name"].map(item => {
-            return <Select.Option value={item}>{item}</Select.Option>
+            return <Select.Option value={item} key={item}>{item}</Select.Option>
           })}
         </Select>
       </Form.Item>
@@ -68,7 +68,7 @@ const LimitReq: React.FC<Props> = ({ form }) => {
         name="rejected_code"
         initialValue={503}
       >
-        <InputNumber min={200} max={599}></InputNumber>
+        <InputNumber min={200} max={599} />
       </Form.Item>
     </Form>
   );
