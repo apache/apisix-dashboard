@@ -16,13 +16,14 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Button, Form, Input, InputNumber, Select, Switch } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row, Select, Switch } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from '@/.umi/plugin-locale/localeExports';
 
 type Props = {
   form: FormInstance;
   ref?: any;
+  disabled?: boolean;
 };
 
 const FORM_ITEM_LAYOUT = {
@@ -40,8 +41,40 @@ export const FORM_ITEM_WITHOUT_LABEL = {
   },
 };
 
-const Cors: React.FC<Props> = ({ form }) => {
+const Cors: React.FC<Props> = ({ form, disabled }) => {
   const { formatMessage } = useIntl();
+
+  const HTTPMethods: React.FC = () => (
+    <Form.Item
+      label="allow_methods"
+    >
+      <Row>
+        <Col span={10}>
+          <Form.Item
+            name="allow_methods"
+            initialValue="*"
+          >
+            <Select
+              mode="multiple"
+              optionLabelProp="label"
+              onChange={(value) => {
+                ((value as string[]).join(","));
+                if ((value as string[]).includes('*')) {
+                  form.setFieldsValue({
+                    allow_methods: ['*'],
+                  });
+                }
+              }}
+            >
+              {['*', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'CONNECT', 'TRACE'].map((item) => {
+                return <Select.Option value={item} key={item}>{item}</Select.Option>
+              })}
+            </Select>
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form.Item>
+  );
 
   return (
     <Form
@@ -55,20 +88,8 @@ const Cors: React.FC<Props> = ({ form }) => {
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        name="allow_methods"
-        label="allow_methods"
-        initialValue="*"
-      >
-        <Select
-          mode="multiple"
-          optionLabelProp="label"
-        >
-          {['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', '*'].map((item) => {
-            return <Select.Option value={item} key={item}>{item}</Select.Option>
-          })}
-        </Select>
-      </Form.Item>
+      <HTTPMethods />
+
       <Form.Item
         name="allow_headers"
         label="allow_headers"

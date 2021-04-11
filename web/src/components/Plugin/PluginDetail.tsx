@@ -121,9 +121,27 @@ const PluginDetail: React.FC<Props> = ({
     });
     if (PLUGIN_UI_LIST.includes(name)) {
       setCodeMirrorMode(codeMirrorModeList.UIForm);
-      UIForm.setFieldsValue(initialData[name]);
+      setUIFormData(initialData[name]);
     };
   }, []);
+
+  const getUIFormData = () => {
+    if (name === 'cors') {
+      const formData = UIForm.getFieldsValue();
+      const newMethods = formData.allow_methods.join(",");
+      return { ...formData, allow_methods: newMethods };
+    }
+    return UIForm.getFieldsValue();
+  };
+
+  const setUIFormData = (formData: any) => {
+    if (name === 'cors') {
+      const methods = (formData.allow_methods || '').length ? formData.allow_methods.split(",") : ["*"];
+      UIForm.setFieldsValue({ ...formData, allow_methods: methods });
+      return;
+    }
+    UIForm.setFieldsValue(formData);
+  }
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
     return fetchSchema(pluginName, schemaType).then((schema) => {
@@ -187,7 +205,7 @@ const PluginDetail: React.FC<Props> = ({
           );
         } else {
           ref.current.editor.setValue(
-            js_beautify(JSON.stringify(UIForm.getFieldsValue()), {
+            js_beautify(JSON.stringify(getUIFormData()), {
               indent_size: 2,
             }),
           );
@@ -195,7 +213,7 @@ const PluginDetail: React.FC<Props> = ({
         break;
       }
       case codeMirrorModeList.YAML: {
-        const { data: jsonData, error } = json2yaml(codeMirrorMode === codeMirrorModeList.JSON ? ref.current.editor.getValue() : JSON.stringify(UIForm.getFieldsValue()));
+        const { data: jsonData, error } = json2yaml(codeMirrorMode === codeMirrorModeList.JSON ? ref.current.editor.getValue() : JSON.stringify(getUIFormData()));
 
         if (error) {
           notification.error({
@@ -209,7 +227,7 @@ const PluginDetail: React.FC<Props> = ({
 
       case codeMirrorModeList.UIForm: {
         if (codeMirrorMode === codeMirrorModeList.JSON) {
-          UIForm.setFieldsValue(JSON.parse(ref.current.editor.getValue()));
+          setUIFormData(JSON.parse(ref.current.editor.getValue()));
         } else {
           const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
           if (error) {
@@ -218,7 +236,7 @@ const PluginDetail: React.FC<Props> = ({
             });
             return;
           }
-          UIForm.setFieldsValue(JSON.parse(yamlData));
+          setUIFormData(JSON.parse(yamlData));
         }
         break;
       }
@@ -290,7 +308,7 @@ const PluginDetail: React.FC<Props> = ({
                     } else if (codeMirrorMode === codeMirrorModeList.YAML) {
                       editorData = yaml2json(ref.current?.editor.getValue(), false).data;
                     } else {
-                      editorData = UIForm.getFieldsValue();
+                      editorData = getUIFormData();
                     }
 
                     validateData(name, editorData).then((value) => {
