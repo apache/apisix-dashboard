@@ -188,6 +188,14 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               <Form.Item label={label} name={name} valuePropName="checked" key={label}>
                 <Switch disabled={readonly} />
               </Form.Item>
+              <Form.Item shouldUpdate noStyle>
+                {() => {
+                  if (form.getFieldValue(name)) {
+                    return component;
+                  }
+                  return null;
+                }}
+              </Form.Item>
             </div>
           ))}
         </PanelSection>
