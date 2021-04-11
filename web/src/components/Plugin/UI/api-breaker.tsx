@@ -54,7 +54,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         name="break_response_code"
         tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.break_response_code.tooltip' })}
       >
-        <InputNumber min={200} max={599} required></InputNumber>
+        <InputNumber min={200} max={599} required />
       </Form.Item>
 
       <Form.Item
@@ -63,7 +63,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         initialValue={300}
         tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.max_breaker_sec.tooltip' })}
       >
-        <InputNumber min={60}></InputNumber>
+        <InputNumber min={60} />
       </Form.Item>
 
       <Form.List name={['unhealthy', 'http_statuses']}>
@@ -82,7 +82,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
                     validateTrigger={['onChange', 'onBlur']}
                     noStyle
                   >
-                    <InputNumber min={500} max={599}></InputNumber>
+                    <InputNumber min={500} max={599} />
                   </Form.Item>
                   {fields.length > 1 ? (
                     <MinusCircleOutlined
@@ -118,7 +118,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         initialValue={3}
         tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.unhealthy.failures.tooltip' })}
       >
-        <InputNumber min={1}></InputNumber>
+        <InputNumber min={1} />
       </Form.Item>
 
       <Form.List name={['healthy', 'http_statuses']}>
@@ -137,7 +137,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
                     validateTrigger={['onChange', 'onBlur']}
                     noStyle
                   >
-                    <InputNumber min={200} max={499}></InputNumber>
+                    <InputNumber min={200} max={499} />
                   </Form.Item>
                   {fields.length > 1 ? (
                     <MinusCircleOutlined
@@ -173,7 +173,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         initialValue={3}
         tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.healthy.successes.tooltip' })}
       >
-        <InputNumber min={1}></InputNumber>
+        <InputNumber min={1} />
       </Form.Item>
     </Form >
   );
