@@ -73,7 +73,7 @@ const LimitConn: React.FC<Props> = ({ form }) => {
       >
         <Select>
           {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name"].map(item => {
-            return <Select.Option value={item}>{item}</Select.Option>
+            return <Select.Option value={item} key={item}>{item}</Select.Option>
           })}
         </Select>
       </Form.Item>
