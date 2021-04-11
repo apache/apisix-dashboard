@@ -107,7 +107,8 @@ context('create route with proxy-rewrite plugin', () => {
     cy.contains('Search').click();
     cy.contains(this.data.routeName).siblings().contains('Configure').click();
 
-    cy.get('#status').should('have.class', 'ant-switch-checked')
+    // NOTE: make sure all components rerender done
+    cy.get('#status').should('have.class', 'ant-switch-checked');
     cy.get(this.domSelector.name).type(this.data.routeName);
 
     cy.contains(routeLocaleUS['page.route.form.itemLabel.newPath']).should('be.visible');
