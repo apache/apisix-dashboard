@@ -27,6 +27,8 @@ import {
   Alert,
   Space,
   Popconfirm,
+  Tooltip,
+  Input,
 } from 'antd';
 import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
@@ -105,13 +107,13 @@ const PluginDetail: React.FC<Props> = ({
   const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
     codeMirrorModeList.JSON,
   );
-  const modeOptions = [
+  const modeOptions: { label: string; value: string }[] = [
     { label: codeMirrorModeList.JSON, value: codeMirrorModeList.JSON },
     { label: codeMirrorModeList.YAML, value: codeMirrorModeList.YAML },
   ];
 
   if (PLUGIN_UI_LIST.includes(name)) {
-    modeOptions.push({ label: codeMirrorModeList.UIForm, value: codeMirrorModeList.UIForm });
+    modeOptions.push({ label: formatMessage({ id: 'component.plugin.form' }), value: codeMirrorModeList.UIForm });
   }
 
   useEffect(() => {
@@ -247,7 +249,7 @@ const PluginDetail: React.FC<Props> = ({
   return (
     <>
       <Drawer
-        title={`Plugin: ${name}`}
+        title={formatMessage({ id: 'component.plugin.editor' })}
         visible={visible}
         placement="right"
         closable={false}
@@ -315,10 +317,16 @@ const PluginDetail: React.FC<Props> = ({
           border: 1px solid rgb(235, 237, 240);
           margin-top:10px;
         }
+        .ant-input[disabled] {
+          color: #000;
+        }
       `}
         </style>
 
         <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
+          <Form.Item label={formatMessage({ id: 'component.global.name' })}>
+            <Input value={name} bordered={false} disabled />
+          </Form.Item>
           <Form.Item label={formatMessage({ id: 'component.global.enable' })} valuePropName="checked" name="disable">
             <Switch
               defaultChecked={initialData[name] && !initialData[name].disable}
@@ -328,7 +336,7 @@ const PluginDetail: React.FC<Props> = ({
           {type === 'global' && (
             <Form.Item label={formatMessage({ id: 'component.global.scope' })} name="scope">
               <Select disabled>
-                <Select.Option value="global">Global</Select.Option>
+                <Select.Option value="global">{formatMessage({ id: "other.global" })}</Select.Option>
               </Select>
             </Form.Item>
           )}
@@ -338,11 +346,26 @@ const PluginDetail: React.FC<Props> = ({
           title=""
           subTitle={
             pluginType === 'auth' && schemaType !== 'consumer' && (codeMirrorMode !== codeMirrorModeList.UIForm) ? (
-              <Alert message={formatMessage({ id: 'component.global.noConfigurationRequired' })} type="warning" />
+              <Alert message={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} type="warning" />
             ) : null
           }
           ghost={false}
           extra={[
+            <Select
+              defaultValue={codeMirrorModeList.JSON}
+              value={codeMirrorMode}
+              options={modeOptions}
+              onChange={(value: PluginComponent.CodeMirrorMode) => {
+                handleModeChange(value);
+              }}
+              data-cy='code-mirror-mode'
+              key={1}
+            ></Select>,
+            <Tooltip title={formatMessage({ id: "component.plugin.format-codes.disable" })} key={2}>
+              <Button type="primary" onClick={formatCodes} disabled={codeMirrorMode === codeMirrorModeList.UIForm}>
+                {formatMessage({ id: 'component.global.format' })}
+              </Button>
+            </Tooltip>,
             <Button
               type="default"
               icon={<LinkOutlined />}
@@ -353,21 +376,9 @@ const PluginDetail: React.FC<Props> = ({
                   window.open(`https://apisix.apache.org/docs/apisix/plugins/${name}`);
                 }
               }}
-              key={1}
+              key={3}
             >
               {formatMessage({ id: 'component.global.document' })}
-            </Button>,
-            <Select
-              defaultValue={codeMirrorModeList.JSON}
-              value={codeMirrorMode}
-              options={modeOptions}
-              onChange={(value: PluginComponent.CodeMirrorMode) => {
-                handleModeChange(value);
-              }}
-              data-cy='code-mirror-mode'
-            ></Select>,
-            <Button type="primary" onClick={formatCodes} key={3} disabled={codeMirrorMode === codeMirrorModeList.UIForm}>
-              {formatMessage({ id: 'component.global.format' })}
             </Button>
           ]}
         />

@@ -21,4 +21,8 @@ export default {
   'component.step.select.pluginTemplate.select.option': '手动配置',
   'component.plugin.pluginTemplate.tip1': '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
   'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。',
+  'component.plugin.form': '表单',
+  'component.plugin.format-codes.disable': '用于格式化 JSON 或 YAML 内容',
+  'component.plugin.editor': '插件配置',
+  'component.plugin.noConfigurationRequired': '本插件无需配置',
 };
