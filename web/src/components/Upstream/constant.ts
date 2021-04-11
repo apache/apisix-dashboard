@@ -27,7 +27,6 @@ export const DEFAULT_UPSTREAM = {
   ],
   retries: 0,
   timeout: {
-    // TODO: > 0
     connect: 6,
     send: 6,
     read: 6,

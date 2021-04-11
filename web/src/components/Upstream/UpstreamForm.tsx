@@ -112,18 +112,15 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       <React.Fragment>
         <ActiveCheck.Type readonly={readonly} />
         <ActiveCheck.Timeout readonly={readonly} />
-        {/* TODO: concurrency */}
         <ActiveCheck.Host readonly={readonly} />
         <ActiveCheck.Port readonly={readonly} />
         <ActiveCheck.HttpPath readonly={readonly} />
-        {/* TODO: https_verify_certificate */}
 
         <Divider orientation="left" plain>
           {formatMessage({ id: 'page.upstream.step.healthyCheck.healthy.status' })}
         </Divider>
 
         <ActiveCheck.Healthy.Interval readonly={readonly} />
-        {/* TODO: HTTP Statuses */}
         <ActiveCheck.Healthy.Successes readonly={readonly} />
 
         <Divider orientation="left" plain>
@@ -134,7 +131,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <ActiveCheck.Unhealthy.Interval readonly={readonly} />
         <ActiveCheck.Unhealthy.HttpStatuses readonly={readonly} />
         <ActiveCheck.Unhealthy.HttpFailures readonly={readonly} />
-        {/* TODO: TCP Failures */}
 
         <Divider orientation="left" plain>Others</Divider>
 
@@ -192,18 +188,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               <Form.Item label={label} name={name} valuePropName="checked" key={label}>
                 <Switch disabled={readonly} />
               </Form.Item>
-              <Form.Item shouldUpdate noStyle>
-                {() => {
-                  if (form.getFieldValue(name)) {
-                    if (name.includes("active")) {
-                      // TODO: 避免默认值被覆盖
-                      // form.setFieldsValue()
-                    }
-                    return component;
-                  }
-                  return null;
-                }}
-              </Form.Item>
             </div>
           ))}
         </PanelSection>
@@ -260,9 +244,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             {timeoutFields.map((item, index) => (
               <Timeout key={index} {...item} readonly={readonly} />
             ))}
-
-            {/* TODO: discovery_type */}
-            {/* TODO: service_name */}
 
             <HealthCheckComponent />
           </React.Fragment>
