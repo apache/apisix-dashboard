@@ -16,7 +16,9 @@
  */
 import React, { useState } from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Form, Input, InputNumber, Select } from 'antd';
+import { Button, Form, Input, InputNumber, Select } from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { useIntl } from 'umi';
 
 type Props = {
   form: FormInstance;
@@ -26,10 +28,16 @@ type PolicyProps = "local" | "redis" | "redis-cluster"
 
 const FORM_ITEM_LAYOUT = {
   labelCol: {
-    span: 5,
+    span: 7,
   },
   wrapperCol: {
     span: 10
+  },
+};
+
+const FORM_ITEM_WITHOUT_LABEL = {
+  wrapperCol: {
+    span: 10, offset: 6,
   },
 };
 
@@ -48,7 +56,7 @@ const RedisForm: React.FC = () => {
       name="redis_port"
       tooltip='When using the redis policy, this property specifies the port of the Redis server.'
     >
-      <InputNumber defaultValue={6379} min={1} />
+      <InputNumber min={1} />
     </Form.Item>
     <Form.Item
       label="redis_password"
@@ -63,30 +71,77 @@ const RedisForm: React.FC = () => {
       name="redis_database"
       tooltip='When using the redis policy, this property specifies the database you selected of the Redis server, and only for non Redis cluster mode (single instance mode or Redis public cloud service that provides single entry).'
     >
-      <InputNumber defaultValue={0} min={0} />
+      <InputNumber min={0} />
     </Form.Item>
     <Form.Item
       label="redis_timeout"
       name="redis_timeout"
       tooltip='When using the redis policy, this property specifies the timeout in milliseconds of any command submitted to the Redis server.'
     >
-      <InputNumber defaultValue={1000} />
+      <InputNumber />
     </Form.Item>
   </>)
 }
 
-const RedisClusterForm: React.FC = () => {
-  return (<>
-    <Form.Item
-      label="redis_cluster_name"
-      name="redis_cluster_name"
-      tooltip='When using redis-cluster policy, this property is the name of Redis cluster service nodes.'
-      required
-    >
-      <Input />
-    </Form.Item>
-    {/* TODO: redis_cluster_nodes field */}
-  </>)
+const RedisClusterForm: React.FC<Props> = ({ form }) => {
+  const { formatMessage } = useIntl();
+
+  return (
+    <>
+      <Form.Item
+        label="redis_cluster_name"
+        name="redis_cluster_name"
+        tooltip='When using redis-cluster policy, this property is the name of Redis cluster service nodes.'
+        required
+      >
+        <Input />
+      </Form.Item>
+      <Form.List name={['redis_cluster_nodes']}>
+        {(fields, { add, remove }) => {
+          return (
+            <div>
+              {fields.map((field, index) => (
+                <Form.Item
+                  {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
+                  key={field.key}
+                  label={index === 0 && 'redis_cluster_nodes'}
+                  tooltip='When using redis-cluster policy，This property is a list of addresses of Redis cluster service nodes.'
+                >
+                  <Form.Item
+                    {...field}
+                    validateTrigger={['onChange', 'onBlur']}
+                    noStyle
+                  >
+                    <Input />
+                  </Form.Item>
+                  {fields.length > 1 ? (
+                    <MinusCircleOutlined
+                      className="dynamic-delete-button"
+                      style={{ margin: '0 8px' }}
+                      onClick={() => {
+                        remove(field.name);
+                      }}
+                    />
+                  ) : null}
+                </Form.Item>
+              ))}
+              {
+                <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      add();
+                    }}
+                  >
+                    <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
+                  </Button>
+                </Form.Item>
+              }
+            </div>
+          );
+        }}
+      </Form.List>
+    </>)
 }
 
 const LimitCount: React.FC<Props> = ({ form }) => {
@@ -96,6 +151,7 @@ const LimitCount: React.FC<Props> = ({ form }) => {
     <Form
       form={form}
       {...FORM_ITEM_LAYOUT}
+      initialValues={{ key: 'remote_addr', redis_cluster_nodes: [''], policy, redis_port: 6379, redis_database: 0, redis_timeout: 1000 }}
     >
       <Form.Item
         label="count"
@@ -117,7 +173,7 @@ const LimitCount: React.FC<Props> = ({ form }) => {
         label="key"
         name="key"
       >
-        <Select defaultValue={'remote_addr'}>
+        <Select>
           {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name", "service_id"].map(item => (<Select.Option value={item}>{item}</Select.Option>))}
         </Select>
       </Form.Item>
@@ -132,12 +188,12 @@ const LimitCount: React.FC<Props> = ({ form }) => {
         label="policy"
         name="policy"
       >
-        <Select defaultValue={policy} onChange={setPoicy}>
+        <Select onChange={(e: PolicyProps) => { setPoicy(e) }}>
           {["local", "redis", "redis-cluster"].map(item => (<Select.Option value={item}>{item}</Select.Option>))}
         </Select>
       </Form.Item>
       { Boolean(policy === 'redis') && <RedisForm />}
-      { Boolean(policy === 'redis-cluster') && <RedisClusterForm />}
+      { Boolean(policy === 'redis-cluster') && <RedisClusterForm form={form} />}
     </Form>
   );
 }
