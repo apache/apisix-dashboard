@@ -17,6 +17,7 @@
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
 import { Form, Input } from 'antd';
+import { useIntl } from 'umi';
 
 type Props = {
   form: FormInstance;
@@ -24,7 +25,7 @@ type Props = {
 
 const FORM_ITEM_LAYOUT = {
   labelCol: {
-    span: 3,
+    span: 4,
   },
   wrapperCol: {
     span: 10
@@ -32,6 +33,8 @@ const FORM_ITEM_LAYOUT = {
 };
 
 const ProxyMirror: React.FC<Props> = ({ form }) => {
+  const { formatMessage } = useIntl();
+
   return (
     <Form
       form={form}
@@ -40,7 +43,7 @@ const ProxyMirror: React.FC<Props> = ({ form }) => {
       <Form.Item
         label="host"
         name="host"
-        tooltip='Specify a mirror service address, e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)'
+        tooltip={formatMessage({ id: 'component.pluginForm.proxy-mirror.host.tooltip' })}
       >
         <Input />
       </Form.Item>
