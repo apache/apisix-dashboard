@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Button, Form, Input, InputNumber, Switch } from 'antd';
+import { Button, Form, Input, InputNumber, Select, Switch } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useIntl } from '@/.umi/plugin-locale/localeExports';
 
@@ -51,45 +51,52 @@ const Cors: React.FC<Props> = ({ form }) => {
       <Form.Item
         name="allow_origins"
         label="allow_origins"
-        initialValue={"*"}
+        initialValue="*"
       >
-        <Input></Input>
+        <Input />
       </Form.Item>
       <Form.Item
         name="allow_methods"
         label="allow_methods"
-        initialValue={"*"}
+        initialValue="*"
       >
-        <Input></Input>
+        <Select
+          mode="multiple"
+          optionLabelProp="label"
+        >
+          {['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', '*'].map((item) => {
+            return <Select.Option value={item} key={item}>{item}</Select.Option>
+          })}
+        </Select>
       </Form.Item>
       <Form.Item
         name="allow_headers"
         label="allow_headers"
-        initialValue={"*"}
+        initialValue="*"
       >
-        <Input></Input>
+        <Input />
       </Form.Item>
       <Form.Item
         name="expose_headers"
         label="expose_headers"
-        initialValue={"*"}
+        initialValue="*"
       >
-        <Input></Input>
+        <Input />
       </Form.Item>
       <Form.Item
         name="max_age"
         label="max_age"
         initialValue={5}
-        tooltip="Maximum number of seconds the results can be cached.. Within this time range, the browser will reuse the last check result. -1 means no cache."
+        tooltip={formatMessage({ id: 'component.pluginForm.cors.max_age.tooltip' })}
       >
-        <InputNumber></InputNumber>
+        <InputNumber />
       </Form.Item>
       <Form.Item
         name="allow_credential"
         label="allow_credential"
         valuePropName="checked"
         initialValue={false}
-        tooltip="if you set this option to true, you can not use '*' for other options."
+        tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_credential.tooltip' })}
       >
         <Switch />
       </Form.Item>

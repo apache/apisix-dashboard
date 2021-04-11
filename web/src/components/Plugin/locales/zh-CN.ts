@@ -21,4 +21,6 @@ export default {
   'component.step.select.pluginTemplate.select.option': '手动配置',
   'component.plugin.pluginTemplate.tip1': '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
   'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。',
+  'component.pluginForm.cors.allow_credential.tooltip': '如果将此选项设置为 true，则其他选项不能使用 \"*\"。',
+  'component.pluginForm.cors.max_age.tooltip': '可以缓存结果的最大秒数。在此时间范围内，浏览器将重用上一个检查结果。-1表示没有缓存。',
 };
