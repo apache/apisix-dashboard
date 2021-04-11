@@ -3,6 +3,5 @@
   "viewportHeight": 1080,
   "baseUrl": "http://localhost:8000",
   "video": true,
-  "numTestsKeptInMemory": 0,
   "videoUploadOnPasses": false
 }
