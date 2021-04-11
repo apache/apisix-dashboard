@@ -96,8 +96,8 @@ const FaultInjection: React.FC<Props> = ({ form }) => {
                     noStyle
                   >
                     <Select style={{ width: '70%' }}>
-                      {['==', '`~=', '>', '<', '~~', '~*', 'in', 'has', '!'].map((item, index) => {
-                        return <Select.Option value={item} key={index}>{item}</Select.Option>
+                      {['==', '`~=', '>', '<', '~~', '~*', 'in', 'has', '!'].map((item) => {
+                        return <Select.Option value={item} key={item}>{item}</Select.Option>
                       })}
                     </Select>
                   </Form.Item>
@@ -162,8 +162,8 @@ const FaultInjection: React.FC<Props> = ({ form }) => {
                     noStyle
                   >
                     <Select style={{ width: '70%' }}>
-                      {['==', '`~=', '>', '<', '~~', '~*', 'in', 'has', '!'].map((item, index) => {
-                        return <Select.Option value={item} key={index}>{item}</Select.Option>
+                      {['==', '`~=', '>', '<', '~~', '~*', 'in', 'has', '!'].map((item) => {
+                        return <Select.Option value={item} key={item}>{item}</Select.Option>
                       })}
                     </Select>
                   </Form.Item>
