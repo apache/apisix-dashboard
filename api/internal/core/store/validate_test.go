@@ -92,26 +92,6 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 	err = validator.Validate(consumer)
 	assert.Nil(t, err)
 
-	consumer2 := &entity.Consumer{}
-	reqBody = `{
-		"username": "jack",
-		"plugins": {
-			"limit-count": {
-				"count": 2,
-				"time_window": 60,
-				"rejected_code": 503,
-				"key": "remote_addr"
-			}
-		},
-		"desc": "test description"
-	}`
-	err = json.Unmarshal([]byte(reqBody), consumer2)
-	assert.Nil(t, err)
-
-	err = validator.Validate(consumer2)
-	assert.NotNil(t, err)
-	assert.EqualError(t, err, "schema validate failed: id: Must validate at least one schema (anyOf)\nid: Invalid type. Expected: string, given: null")
-
 	//check nil obj
 	err = validator.Validate(nil)
 	assert.NotNil(t, err)
