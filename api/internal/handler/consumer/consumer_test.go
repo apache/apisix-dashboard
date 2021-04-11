@@ -195,9 +195,6 @@ func TestHandler_Create(t *testing.T) {
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
 			giveRet: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
 				Username: "name",
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{
@@ -207,9 +204,6 @@ func TestHandler_Create(t *testing.T) {
 			},
 			wantInput: &SetInput{
 				Consumer: entity.Consumer{
-					BaseInfo: entity.BaseInfo{
-						ID: "name",
-					},
 					Username: "name",
 					Plugins: map[string]interface{}{
 						"jwt-auth": map[string]interface{}{
@@ -219,9 +213,6 @@ func TestHandler_Create(t *testing.T) {
 				},
 			},
 			wantRet: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
 				Username: "name",
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{
@@ -249,9 +240,6 @@ func TestHandler_Create(t *testing.T) {
 			giveErr: fmt.Errorf("create failed"),
 			wantInput: &SetInput{
 				Consumer: entity.Consumer{
-					BaseInfo: entity.BaseInfo{
-						ID: "name",
-					},
 					Username: "name",
 					Plugins: map[string]interface{}{
 						"jwt-auth": map[string]interface{}{
@@ -317,9 +305,6 @@ func TestHandler_Update(t *testing.T) {
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
 			giveRet: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
 				Username: "name",
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{
@@ -328,9 +313,6 @@ func TestHandler_Update(t *testing.T) {
 				},
 			},
 			wantInput: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
 				Username: "name",
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{
@@ -339,9 +321,6 @@ func TestHandler_Update(t *testing.T) {
 				},
 			},
 			wantRet: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
 				Username: "name",
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{
@@ -366,9 +345,6 @@ func TestHandler_Update(t *testing.T) {
 			},
 			giveErr: fmt.Errorf("create failed"),
 			wantInput: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
 				Username: "name",
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{

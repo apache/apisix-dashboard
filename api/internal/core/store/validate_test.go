@@ -76,7 +76,6 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 
 	consumer := &entity.Consumer{}
 	reqBody := `{
-		"id": "jack",
 		"username": "jack",
 		"plugins": {
 		  "limit-count": {
@@ -95,17 +94,17 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 
 	consumer2 := &entity.Consumer{}
 	reqBody = `{
-      "username": "jack",
-      "plugins": {
-          "limit-count": {
-              "count": 2,
-              "time_window": 60,
-              "rejected_code": 503,
-              "key": "remote_addr"
-          }
-      },
-    "desc": "test description"
-  }`
+		"username": "jack",
+		"plugins": {
+			"limit-count": {
+				"count": 2,
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
+		},
+		"desc": "test description"
+	}`
 	err = json.Unmarshal([]byte(reqBody), consumer2)
 	assert.Nil(t, err)
 
@@ -121,17 +120,16 @@ func TestAPISIXJsonSchemaValidator_Validate(t *testing.T) {
 	//plugin schema fail
 	consumer3 := &entity.Consumer{}
 	reqBody = `{
-      "id": "jack",
-      "username": "jack",
-      "plugins": {
-          "limit-count": {
-              "time_window": 60,
-              "rejected_code": 503,
-              "key": "remote_addr"
-          }
-      },
-    "desc": "test description"
-  }`
+		"username": "jack",
+			"plugins": {
+			"limit-count": {
+				"time_window": 60,
+				"rejected_code": 503,
+				"key": "remote_addr"
+			}
+		},
+		"desc": "test description"
+	}`
 	err = json.Unmarshal([]byte(reqBody), consumer3)
 	assert.Nil(t, err)
 	err = validator.Validate(consumer3)
@@ -456,7 +454,6 @@ func TestAPISIXSchemaValidator_Validate(t *testing.T) {
 
 	// normal config, should pass
 	reqBody := `{
-		"id": "jack",
 		"username": "jack",
 		"plugins": {
 			"limit-count": {
