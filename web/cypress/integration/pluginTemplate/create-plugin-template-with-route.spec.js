@@ -40,8 +40,9 @@ context('Create PluginTemplate Binding To Route', () => {
 
     cy.visit('/routes/list');
     cy.contains('Create').click();
-    cy.get(this.domSelector.empty).should('be.visible');
-    cy.get(this.domSelector.name).click();
+
+    // NOTE: make sure all components rerender done
+    cy.contains('Next').click().click();
     cy.get(this.domSelector.name).type(this.data.routeName);
     cy.contains('Next').click();
     cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);

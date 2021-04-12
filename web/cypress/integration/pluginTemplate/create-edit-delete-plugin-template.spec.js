@@ -36,6 +36,10 @@ context('Create Configure and Delete PluginTemplate', () => {
 
     cy.get(this.domSelector.description).type(this.data.pluginTemplateName);
     cy.contains('Next').click();
+
+    // should not see proxy-rewrite plugin in the step2
+    cy.contains('proxy-rewrite').should('not.exist');
+
     cy.contains('Enable').click({
       force: true
     });
