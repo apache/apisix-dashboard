@@ -32,7 +32,7 @@ context('Create and Delete Consumer', () => {
     time: 2,
   }
 
-  it('creates consumer with proxy-mirror form', function () {
+  it('creates consumer with cors form', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
     cy.get(this.domSelector.empty).should('be.visible');
