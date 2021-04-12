@@ -76,6 +76,7 @@ const PluginPage: React.FC<Props> = ({
             PLUGIN_FILTER_LIST[item.name] && PLUGIN_FILTER_LIST[item.name].list.includes(referPage)
           ),
       );
+      console.log(filteredData)
       setPluginList(filteredData);
       const categoryList: string[] = [];
       data.forEach((item) => {
@@ -95,14 +96,18 @@ const PluginPage: React.FC<Props> = ({
     <>
       <style>
         {`
-      .ant-card-body .icon {
-          width: 5em;
-          height: 5em;
-          margin-right: 0;
-          overflow: hidden;
-          vertical-align: -0.15em;
-          fill: currentColor;
-        }`}
+          .ant-card-body .icon {
+            width: 5em;
+            height: 5em;
+            margin-right: 0;
+            overflow: hidden;
+            vertical-align: -0.15em;
+            fill: currentColor;
+          }
+          .ant-card-head {
+            padding: 0 20px;
+          }
+        `}
       </style>
       <Sider theme="light">
         <Anchor offsetTop={150}>
@@ -171,7 +176,7 @@ const PluginPage: React.FC<Props> = ({
               id={`plugin-category-${typeItem}`}
             >
               {orderBy(
-                pluginList.filter((item) => item.type === typeItem.toLowerCase()),
+                pluginList.filter((item) => item.type === typeItem.toLowerCase() && !item.hidden),
                 'name',
                 'asc',
               ).map((item) => (

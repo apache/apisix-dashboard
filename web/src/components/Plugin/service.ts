@@ -23,7 +23,8 @@ export const fetchList = () => {
   return request<Res<PluginComponent.Meta[]>>('/plugins?all=true').then((data) => {
     const typedData = data.data.map(item => ({
       ...item,
-      type: PLUGIN_LIST[item.name]?.type || "other"
+      type: PLUGIN_LIST[item.name]?.type || "other",
+      hidden: PLUGIN_LIST[item.name]?.hidden || false
     }));
 
     let finalList: PluginComponent.Meta[] = []

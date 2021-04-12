@@ -34,14 +34,13 @@ export const PLUGIN_FILTER_LIST: Record<string, { list: PluginComponent.ReferPag
 };
 
 export enum PluginType {
-  general = "general",
-  transformation = "transformation",
   authentication = "authentication",
   security = "security",
   traffic = "traffic",
+  serverless = "serverless",
+  transformation = "transformation",
   monitoring = "monitoring",
-  loggers = "loggers",
-  protocol = "protocol",
+  logging = "logging",
   other = "other"
 }
 
@@ -50,141 +49,145 @@ export enum PluginType {
 */
 export const PLUGIN_LIST = {
   "hmac-auth": {
-    "type": PluginType.authentication
+    type: PluginType.authentication
   },
   "serverless-post-function": {
-    "type": PluginType.general
+    type: PluginType.serverless
   },
   "mqtt-proxy": {
-    "type": PluginType.protocol
+    type: PluginType.other
   },
   "response-rewrite": {
-    "type": PluginType.transformation
+    type: PluginType.transformation
   },
   "basic-auth": {
-    "type": PluginType.authentication
+    type: PluginType.authentication
   },
   "error-log-logger": {
-    "type": PluginType.loggers
+    type: PluginType.logging
   },
   "fault-injection": {
-    "type": PluginType.transformation
+    type: PluginType.transformation
   },
   "limit-count": {
-    "type": PluginType.traffic
+    type: PluginType.traffic
   },
   "prometheus": {
-    "type": PluginType.monitoring
+    type: PluginType.monitoring
   },
   "proxy-rewrite": {
-    "type": PluginType.transformation
+    type: PluginType.transformation
   },
   "syslog": {
-    "type": PluginType.loggers
+    type: PluginType.logging
   },
   "traffic-split": {
-    "type": PluginType.traffic
+    type: PluginType.traffic
   },
   "jwt-auth": {
-    "type": PluginType.authentication
+    type: PluginType.authentication
   },
   "kafka-logger": {
-    "type": PluginType.loggers
+    type: PluginType.logging
   },
   "limit-conn": {
-    "type": PluginType.traffic
+    type: PluginType.traffic
   },
   "udp-logger": {
-    "type": PluginType.loggers
+    type: PluginType.logging
   },
   "zipkin": {
-    "type": PluginType.monitoring
+    type: PluginType.monitoring
   },
   "echo": {
-    "type": PluginType.general
+    type: PluginType.other,
+    hidden: true
   },
   "log-rotate": {
-    "type": PluginType.loggers
+    type: PluginType.logging
   },
   "serverless-pre-function": {
-    "type": PluginType.general
+    type: PluginType.serverless
   },
   "dubbo-proxy": {
-    "type": PluginType.protocol
+    type: PluginType.other
   },
   "node-status": {
-    "type": PluginType.monitoring
+    type: PluginType.monitoring
   },
   "referer-restriction": {
-    "type": PluginType.security
+    type: PluginType.security
   },
   "api-breaker": {
-    "type": PluginType.traffic
+    type: PluginType.traffic
   },
   "consumer-restriction": {
-    "type": PluginType.security
+    type: PluginType.security
   },
   "cors": {
-    "type": PluginType.security
+    type: PluginType.security
   },
   "limit-req": {
-    "type": PluginType.traffic
+    type: PluginType.traffic
   },
   "proxy-mirror": {
-    "type": PluginType.traffic
+    type: PluginType.traffic
   },
   "request-validation": {
-    "type": PluginType.traffic
+    type: PluginType.traffic
   },
   "example-plugin": {
-    "type": PluginType.other
+    type: PluginType.other,
+    hidden: true
   },
   "ip-restriction": {
-    "type": PluginType.security
+    type: PluginType.security
   },
   "key-auth": {
-    "type": PluginType.authentication
+    type: PluginType.authentication
   },
   "proxy-cache": {
-    "type": PluginType.traffic
+    type: PluginType.traffic
   },
   "redirect": {
-    "type": PluginType.general
+    type: PluginType.other,
+    hidden: true
   },
   "request-id": {
-    "type": PluginType.traffic
+    type: PluginType.traffic
   },
   "skywalking": {
-    "type": PluginType.monitoring
+    type: PluginType.monitoring
   },
   "batch-requests": {
-    "type": PluginType.general
+    type: PluginType.other
   },
   "http-logger": {
-    "type": PluginType.loggers
+    type: PluginType.logging
   },
   "openid-connect": {
-    "type": PluginType.authentication
+    type: PluginType.authentication
   },
   "sls-logger": {
-    "type": PluginType.loggers
+    type: PluginType.logging
   },
   "tcp-logger": {
-    "type": PluginType.loggers
+    type: PluginType.logging
   },
   "uri-blocker": {
-    "type": PluginType.security
+    type: PluginType.security
   },
   "wolf-rbac": {
-    "type": PluginType.authentication
+    type: PluginType.authentication
   },
   "authz-keycloak": {
-    "type": PluginType.authentication
+    type: PluginType.authentication
   },
   "grpc-transcode": {
-    "type": PluginType.transformation
+    type: PluginType.transformation
   },
   "server-info": {
-    "type": PluginType.general
+    type: PluginType.other,
+    hidden: true
   }
 }
