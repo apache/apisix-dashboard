@@ -84,15 +84,6 @@ BACKUP_FILE="${CONF_PATH}.backup.yaml"
 
 up() {
   set -e
-  if [ ! -f "Dockerfile-apisix" ]; then
-    echo "Downloading Dockerfile"
-    if ! curl --version &>/dev/null; then
-      give_up "The script depends on curl. Please proceed after the installation."
-    else
-      curl -o Dockerfile-apisix https://raw.githubusercontent.com/apache/apisix-docker/master/alpine/Dockerfile
-    fi
-  fi
-
   #creating backup of current config
   if [ ! -f "$BACKUP_FILE" ]; then
     cp "$YAML_FILE" "$BACKUP_FILE"
