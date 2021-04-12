@@ -32,7 +32,7 @@ var _ = ginkgo.Describe("route with plugin http logger", func() {
 		base.CleanAPISIXErrorLog()
 	})
 
-	table.DescribeTable("test route with log plugin",
+	table.DescribeTable("test route with http logger plugin",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
@@ -97,7 +97,7 @@ var _ = ginkgo.Describe("route with plugin http logger", func() {
 		base.CleanAPISIXErrorLog()
 	})
 
-	table.DescribeTable("test route with log plugin",
+	table.DescribeTable("test route for unreachable logger uri",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
@@ -156,7 +156,7 @@ var _ = ginkgo.Describe("route with plugin http logger", func() {
 	})
 
 	// todo: check disable http logger - Done
-	table.DescribeTable("test route with log plugin",
+	table.DescribeTable("rechecking logger after disabling plugin",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
@@ -201,7 +201,7 @@ var _ = ginkgo.Describe("route with plugin http logger", func() {
 		base.CleanAPISIXErrorLog()
 	})
 
-	table.DescribeTable("test route with log plugin",
+	table.DescribeTable("cleanup test data",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
