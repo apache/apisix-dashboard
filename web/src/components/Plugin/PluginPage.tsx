@@ -105,7 +105,7 @@ const PluginPage: React.FC<Props> = ({
             fill: currentColor;
           }
           .ant-card-head {
-            padding: 0 20px;
+            padding: 0;
           }
         `}
       </style>
