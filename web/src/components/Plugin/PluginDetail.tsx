@@ -114,17 +114,6 @@ const PluginDetail: React.FC<Props> = ({
     modeOptions.push({ label: codeMirrorModeList.UIForm, value: codeMirrorModeList.UIForm });
   }
 
-  useEffect(() => {
-    form.setFieldsValue({
-      disable: initialData[name] && !initialData[name].disable,
-      scope: 'global',
-    });
-    if (PLUGIN_UI_LIST.includes(name)) {
-      setCodeMirrorMode(codeMirrorModeList.UIForm);
-      setUIFormData(initialData[name]);
-    };
-  }, []);
-
   const getUIFormData = () => {
     if (name === 'cors') {
       const formData = UIForm.getFieldsValue();
@@ -141,7 +130,18 @@ const PluginDetail: React.FC<Props> = ({
       return;
     }
     UIForm.setFieldsValue(formData);
-  }
+  };
+
+  useEffect(() => {
+    form.setFieldsValue({
+      disable: initialData[name] && !initialData[name].disable,
+      scope: 'global',
+    });
+    if (PLUGIN_UI_LIST.includes(name)) {
+      setCodeMirrorMode(codeMirrorModeList.UIForm);
+      setUIFormData(initialData[name]);
+    };
+  }, []);
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
     return fetchSchema(pluginName, schemaType).then((schema) => {

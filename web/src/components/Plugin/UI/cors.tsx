@@ -23,7 +23,6 @@ import { useIntl } from '@/.umi/plugin-locale/localeExports';
 type Props = {
   form: FormInstance;
   ref?: any;
-  disabled?: boolean;
 };
 
 const FORM_ITEM_LAYOUT = {
@@ -41,7 +40,7 @@ export const FORM_ITEM_WITHOUT_LABEL = {
   },
 };
 
-const Cors: React.FC<Props> = ({ form, disabled }) => {
+const Cors: React.FC<Props> = ({ form }) => {
   const { formatMessage } = useIntl();
 
   const HTTPMethods: React.FC = () => (
