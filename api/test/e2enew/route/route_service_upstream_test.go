@@ -195,7 +195,7 @@ var _ = ginkgo.Describe("route create upstream", func() {
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/upstreams/1",
-			Body: `{				
+			Body: `{
 				"nodes":[
 					{
 						"host": "` + base.UpstreamIp + `",
