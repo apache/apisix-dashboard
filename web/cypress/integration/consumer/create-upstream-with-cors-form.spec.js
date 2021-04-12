@@ -66,7 +66,7 @@ context('Create and Delete Consumer', () => {
       });
     });
 
-    cy.focused(this.domSelector.drawer).should('exist');
+    cy.get(this.domSelector.drawer).should('be.visible');
 
     cy.get(selector.max_age).clear();
     // config proxy-mirror form
