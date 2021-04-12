@@ -14,31 +14,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import type { FormInstance } from 'antd/es/form';
-import { Empty } from 'antd';
-import { useIntl } from 'umi';
-
-import BasicAuth from './basic-auth'
+import React from 'react'
+import { Form, Select } from 'antd'
 
 type Props = {
-  name: string,
-  form: FormInstance,
-  renderForm: boolean
+  readonly?: boolean
 }
 
-export const PLUGIN_UI_LIST = ['basic-auth',];
+const PassiveCheckTypeComponent: React.FC<Props> = ({ readonly }) => {
+  const options = [
+    {
+      label: "HTTP",
+      value: "http"
+    }, {
+      label: "HTTPs",
+      value: "https"
+    }, {
+      label: "TCP",
+      value: "tcp"
+    }
+  ]
 
-export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
-
-  const { formatMessage } = useIntl();
-
-  if (!renderForm) { return <Empty description={formatMessage({ id: 'component.global.noConfigurationRequired' })} /> };
-
-  switch (name) {
-    case 'basic-auth':
-      return <BasicAuth form={form} />
-    default:
-      return null;
-  }
+  return (
+    <Form.Item
+      label="Type"
+      name={['checks', 'passive', 'type']}
+      rules={[{ required: true }]}
+    >
+      <Select disabled={readonly}>
+        {options.map(item => {
+          return (
+            <Select.Option value={item.value} key={item.value}>
+              {item.label}
+            </Select.Option>
+          );
+        })}
+      </Select>
+    </Form.Item>
+  )
 }
+
+export default PassiveCheckTypeComponent
