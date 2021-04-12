@@ -32,8 +32,7 @@ export default {
   'page.upstream.step.description': '描述',
   'page.upstream.step.input.description': '请输入上游服务的描述',
   'page.upstream.step.type': '负载均衡算法',
-  'page.upstream.step.create.node': '增加目标节点',
-  'page.upstream.step.pass-host': 'Host 转换',
+  'page.upstream.step.pass-host': 'Host 请求头',
   'page.upstream.step.pass-host.pass': '保持与客户端请求一致的 Host 请求头',
   'page.upstream.step.pass-host.node': '使用上游节点列表中的域名或 IP',
   'page.upstream.step.pass-host.rewrite': '自定义 Host 请求头（即将废弃）',
@@ -65,12 +64,10 @@ export default {
   'page.upstream.step.healthyCheck.successes': '成功次数',
   'page.upstream.step.input.healthyCheck.successes': '请输入成功次数',
   'page.upstream.step.healthyCheck.http_failures': '失败次数',
-  'page.upstream.step.healthyCheck.active.create.req_headers': '增加请求头',
   'page.upstream.step.input.healthyCheck.http_failures': '请输入失败次数',
   'page.upstream.step.healthyCheck.active.req_headers': '请求头',
   'page.upstream.step.input.healthyCheck.active.req_headers': '请输入请求头',
   'page.upstream.step.healthyCheck.passive': '被动检查',
-  'page.upstream.step.healthyCheck.passive.create.http_statuses': '增加状态码',
   'page.upstream.step.healthyCheck.passive.http_statuses': '状态码',
   'page.upstream.step.input.healthyCheck.passive.http_statuses': '请输入状态码',
   'page.upstream.step.healthyCheck.passive.tcp_failures': 'TCP 失败次数',
@@ -120,5 +117,6 @@ export default {
   'page.upstream.checks.passive.healthy.successes.description': '通过被动健康检查观察到的正常代理流量的成功次数。如果达到该值，上游服务目标节点将被视为健康。',
   'page.upstream.checks.passive.unhealthy.http_statuses.description': '当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表不健康状态是由代理流量产生的。',
   'page.upstream.checks.passive.unhealthy.http_failures.description': '由被动健康检查所观察，代理流量中 HTTP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。',
-  'page.upstream.checks.passive.unhealthy.tcp_failures.description': '被动健康检查所观察到的代理流量中 TCP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。'
+  'page.upstream.checks.passive.unhealthy.tcp_failures.description': '被动健康检查所观察到的代理流量中 TCP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。',
+  'page.upstream.scheme': '协议'
 };

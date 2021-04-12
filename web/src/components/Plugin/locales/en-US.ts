@@ -29,4 +29,9 @@ export default {
   'component.pluginForm.api-breaker.unhealthy.failures.tooltip': 'Number of consecutive error requests that triggered an unhealthy state.',
   'component.pluginForm.api-breaker.healthy.http_statuses.tooltip': 'Status codes when healthy.',
   'component.pluginForm.api-breaker.healthy.successes.tooltip': 'Number of consecutive normal requests that trigger health status.',
+
+  'component.plugin.form': 'Form',
+  'component.plugin.format-codes.disable': 'Format JSON or YAML data',
+  'component.plugin.editor': 'Plugin Editor',
+  'component.plugin.noConfigurationRequired': 'Doesn\'t need configuration',
 };

@@ -29,4 +29,9 @@ export default {
   'component.pluginForm.api-breaker.unhealthy.failures.tooltip': '触发不健康状态的连续错误请求次数。',
   'component.pluginForm.api-breaker.healthy.http_statuses.tooltip': '健康时候的状态码。',
   'component.pluginForm.api-breaker.healthy.successes.tooltip': '触发健康状态的连续正常请求次数。',
+
+  'component.plugin.form': '表单',
+  'component.plugin.format-codes.disable': '用于格式化 JSON 或 YAML 内容',
+  'component.plugin.editor': '插件配置',
+  'component.plugin.noConfigurationRequired': '本插件无需配置',
 };
