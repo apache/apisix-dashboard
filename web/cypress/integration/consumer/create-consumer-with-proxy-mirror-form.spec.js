@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('Create and Delete Consumer', () => {
+context('Create and delete consumer with proxy-mirror plugin form', () => {
   beforeEach(() => {
     cy.login();
 
@@ -25,15 +25,11 @@ context('Create and Delete Consumer', () => {
   });
 
   const selector = {
-    host: "#host"
+    host: "#host",
+    alert: "[role=alert]"
   }
 
-  const data = {
-    correctHost: 'http://127.0.0.1',
-    wrongHost: '127.0.0.1:1999'
-  }
-
-  it('creates consumer with proxy-mirror form', function () {
+  it('should create consumer with proxy-mirror form', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
     cy.get(this.domSelector.empty).should('be.visible');
@@ -71,16 +67,20 @@ context('Create and Delete Consumer', () => {
 
     cy.focused(this.domSelector.drawer).should('exist');
 
-    // config proxy-mirror form
-    cy.get(selector.host).type(data.wrongHost);
+    // config proxy-mirror form with wrong host
+    cy.get(selector.host).type('127.0.0.1:1999');
+    cy.get(selector.alert).contains('address needs to contain schema: http or https, not URI part');
     cy.get(this.domSelector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,
       });
     });
     cy.get(this.domSelector.notification).should('contain', 'Invalid plugin data');
+    cy.get(this.domSelector.notificationCloseIcon).click();
 
-    cy.get(selector.host).clear().type(data.correctHost);
+    // config proxy-mirror form with correct host
+    cy.get(selector.host).clear().type('http://127.0.0.1:1999');
+    cy.get(selector.alert).should('not.exist');
     cy.get(this.domSelector.disabledSwitcher).click();
     cy.get(this.domSelector.drawer).within(() => {
       cy.contains('Submit').click({
@@ -94,7 +94,7 @@ context('Create and Delete Consumer', () => {
     cy.get(this.domSelector.notification).should('contain', this.data.createConsumerSuccess);
   });
 
-  it('delete the consumer', function () {
+  it('should delete the consumer', function () {
     cy.visit('/consumer/list');
     cy.contains(this.data.consumerName).should('be.visible').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();

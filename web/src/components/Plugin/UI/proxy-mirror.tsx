@@ -49,9 +49,8 @@ const ProxyMirror: React.FC<Props> = ({ form }) => {
           {
             pattern: new RegExp(/^http(s)?:\/\/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:[0-9]{1,5})?$/, 'g'),
             message: formatMessage({ id: 'component.pluginForm.proxy-mirror.host.ruletip' }),
-          },
+          }
         ]}
-
       >
         <Input />
       </Form.Item>
