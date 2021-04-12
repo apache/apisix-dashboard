@@ -67,7 +67,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_Not_Exist", func() {
 				"online_debug_header_params":    `{"test":["test1"]}`,
 			},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `{"code":404,"message":"404 Not Found","data":{"error_msg":"404 Route Not Found"}}`,
+			ExpectBody:   `{"code":0,"message":"","data":{"code":404,"header":{"Connection":["keep-alive"],"Content-Type":["text/plain; charset=utf-8"]`,
 			Sleep:        base.SleepTime,
 		}),
 	)
@@ -118,7 +118,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Query_Params", func() {
 				"online_debug_header_params":    `{"test":["test1"]}`,
 			},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world`,
+			ExpectBody:   `{"code":0,"message":"","data":{"code":200,"header":{"Connection":["keep-alive"],"Content-Type":["application/octet-stream"],`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -189,7 +189,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Header_Params", func() {
 				"online_debug_header_params":    `{"test":["test1"],"version":["v2"]}`,
 			},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world`,
+			ExpectBody:   `{"code":0,"message":"","data":{"code":200,"header":{"Connection":["keep-alive"],"Content-Type":["application/octet-stream"],`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -217,7 +217,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Header_Params", func() {
 				"online_debug_header_params":    `{"Content-type":["application/json"],"Authorization":["` + base.GetToken() + `"]}`,
 			},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `{"code":200,"message":"200 OK"`,
+			ExpectBody:   `{"code":0,"message":"","data":{"code":200,"header":{"Access-Control-Allow-Credentials":["true"],"Access-Control-Allow-Headers":["Authorization"],"Access-Control-Allow-Methods":["*"],"Access-Control-Allow-Origin":["*"],"Content-Length":["296"],"Content-Type":["application/json"]`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -318,7 +318,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Body_Params", func() {
 				"online_debug_header_params":    `{"test":["test1"]}`,
 			},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world`,
+			ExpectBody:   `{"code":0,"message":"","data":{"code":200,"header":{"Connection":["keep-alive"],"Content-Type":["application/octet-stream"]`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -418,7 +418,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Basic_Auth", func() {
 				"online_debug_header_params":    `{"test":["test1"],"Authorization": ["Basic amFjazoxMjM0NTYKIA=="]}`,
 			},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world`,
+			ExpectBody:   `{"code":0,"message":"","data":{"code":200,"header":{"Connection":["keep-alive"],"Content-Type":["application/octet-stream"]`,
 		})
 	})
 	ginkgo.It("online debug without basic-auth", func() {
@@ -435,7 +435,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Basic_Auth", func() {
 				"online_debug_header_params":    `{"test":["test1"]}`,
 			},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `{"code":401,"message":"401 Unauthorized","data":{"message":"Missing authorization in request"}}`,
+			ExpectBody:   `{"code":0,"message":"","data":{"code":401,"header":{"Connection":["keep-alive"],"Content-Type":["text/plain; charset=utf-8"],`,
 		})
 	})
 	ginkgo.It("delete the route just created", func() {
@@ -542,7 +542,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Key_Auth", func() {
 				"online_debug_header_params":    `{"test":["test1"],"apikey":["user-key"]}`,
 			},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world`,
+			ExpectBody:   `{"code":0,"message":"","data":{"code":200,"header":{"Connection":["keep-alive"],"Content-Type":["application/octet-stream"],`,
 		})
 	})
 	ginkgo.It("online debug without key-auth", func() {
@@ -559,7 +559,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Key_Auth", func() {
 				"online_debug_header_params":    `{"test":["test1"]}`,
 			},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"data":{"code":401,"message":"401 Unauthorized","data":{"message":"Missing API key found in request"}}`,
+			ExpectBody:   `{"code":0,"message":"","data":{"code":401,"header":{"Connection":["keep-alive"],"Content-Type":["text/plain; charset=utf-8"]`,
 		})
 	})
 	ginkgo.It("delete the route just created", func() {
@@ -676,7 +676,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_JWT_Auth", func() {
 				"online_debug_header_params":    string(headerParams),
 			},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"data":{"code":200,"message":"200 OK","data":"hello world`,
+			ExpectBody:   `{"code":0,"message":"","data":{"code":200,"header":{"Connection":["keep-alive"],"Content-Type":["application/octet-stream"],`,
 		})
 	})
 	ginkgo.It("online debug without JWT-auth", func() {
@@ -693,7 +693,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_JWT_Auth", func() {
 				"online_debug_header_params":    `{"test":["test1"]}`,
 			},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   `"data":{"code":401,"message":"401 Unauthorized","data":{"message":"Missing JWT token in request"}}`,
+			ExpectBody:   `{"code":0,"message":"","data":{"code":401,"header":{"Connection":["keep-alive"],"Content-Type":["text/plain; charset=utf-8"],`,
 		})
 	})
 	ginkgo.It("delete the route just created", func() {

@@ -53,6 +53,7 @@ context('import and export routes', () => {
       cy.contains(menuLocaleUS['menu.routes']).click();
       cy.contains(componentLocaleUS['component.global.create']).click();
       // input name, click Next
+      cy.contains('Next').click().click();
       cy.get(this.domSelector.name).type(data[`route_name_${i}`]);
       //FIXME: only GET in methods
       cy.get('#methods').click();
@@ -127,8 +128,11 @@ context('import and export routes', () => {
     cy.get(this.domSelector.refresh).click();
 
     for (let i = 0; i < 2; i += 1) {
-      cy.contains(data[`route_name_${i}`]).siblings().contains('Delete').click();
-      cy.contains('button', 'Confirm').click();
+      cy.contains(data[`route_name_${i}`]).siblings().contains('More').click();
+      cy.contains('Delete').click();
+      cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
+        cy.contains('OK').click();
+      });
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
       cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
       cy.reload();
@@ -141,7 +145,9 @@ context('import and export routes', () => {
 
     data.uploadRouteFiles.forEach((file) => {
       // click import button
-      cy.contains(routeLocaleUS['page.route.button.importOpenApi']).click();
+      cy.get(this.domSelector.refresh).click();
+      cy.contains('Advanced').click();
+      cy.contains(routeLocaleUS['page.route.button.importOpenApi']).should('be.visible').click();
       // select file
       cy.get(this.domSelector.fileSelector).attachFile(file);
       // click submit
@@ -159,9 +165,11 @@ context('import and export routes', () => {
         cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
         // delete route just imported
         cy.reload();
-        cy.get(this.domSelector.deleteButton).should('exist').click();
-        cy.contains('button', componentLocaleUS['component.global.confirm']).click({ force: true });
-
+        cy.contains('More').click();
+        cy.contains('Delete').should('be.visible').click();
+        cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
+          cy.contains('OK').click();
+        });
         // show delete successfully notification
         cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
         cy.get(this.domSelector.notificationCloseIcon).click();

@@ -14,21 +14,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare namespace PluginComponent {
-  type Data = Record<string, any>;
-
-  type Schema = '' | 'route' | 'consumer';
-
-  type Meta = {
-    name: string;
-    priority: number;
-    schema: Record<string, any>;
-    type: string;
-    version: number;
-    consumer_schema?: Record<string, any>;
-  };
-
-  type ReferPage = '' | 'route' | 'consumer' | 'service' | 'plugin';
-
-  type CodeMirrorMode = 'JSON' | 'YAML'| 'Form';
-}
+export { PLUGIN_UI_LIST, PluginForm } from './plugin';

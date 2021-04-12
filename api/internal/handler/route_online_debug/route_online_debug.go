@@ -62,6 +62,7 @@ type DebugOnlineInput struct {
 
 type Result struct {
 	Code    int         `json:"code,omitempty"`
+	Header  interface{} `json:"header,omitempty"`
 	Message string      `json:"message,omitempty"`
 	Data    interface{} `json:"data,omitempty"`
 }
@@ -142,10 +143,12 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	err = json.Unmarshal(_body, &returnData)
 	if err != nil {
 		result.Code = resp.StatusCode
+		result.Header = resp.Header
 		result.Message = resp.Status
 		result.Data = string(_body)
 	} else {
 		result.Code = resp.StatusCode
+		result.Header = resp.Header
 		result.Message = resp.Status
 		result.Data = returnData
 	}

@@ -82,6 +82,8 @@ context('Online debug', () => {
     cy.contains(menuLocaleUS['menu.routes']).click();
 
     // show online debug draw
+    cy.get(this.domSelector.refresh).click();
+    cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
     cy.get(domSelector.debugDraw).should('be.visible');
     // input uri with specified special characters
@@ -100,6 +102,8 @@ context('Online debug', () => {
     cy.contains(menuLocaleUS['menu.routes']).click();
 
     // show online debug draw
+    cy.get(this.domSelector.refresh).click();
+    cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
     cy.get(domSelector.debugDraw).should('be.visible');
 
@@ -126,6 +130,8 @@ context('Online debug', () => {
     const currentToken = localStorage.getItem('token');
 
     // show online debug draw
+    cy.get(this.domSelector.refresh).click();
+    cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
     cy.get(domSelector.debugDraw).should('be.visible');
 
@@ -178,6 +184,8 @@ context('Online debug', () => {
     const currentToken = localStorage.getItem('token');
 
     // show online debug draw
+    cy.get(this.domSelector.refresh).click();
+    cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
     cy.get(domSelector.debugDraw).should('be.visible');
     // set debug uri
@@ -215,6 +223,8 @@ context('Online debug', () => {
     const currentToken = localStorage.getItem('token');
 
     // show online debug draw
+    cy.get(this.domSelector.refresh).click();
+    cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
     cy.get(domSelector.debugDraw).should('be.visible');
 
@@ -266,10 +276,14 @@ context('Online debug', () => {
 
     const testRouteNames = [data.routeName, this.routeData.debugPostJson.name];
     for( let routeName in testRouteNames) {
-      cy.contains(`${testRouteNames[routeName]}`).siblings().contains('Delete').click();
-      cy.contains('button', 'Confirm').click();
+      cy.contains(`${testRouteNames[routeName]}`).siblings().contains('More').click();
+      cy.contains('Delete').click({ force: true });
+      cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
+        cy.contains('OK').click();
+      });
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
       cy.get(this.domSelector.notificationCloseIcon).click();
+      cy.reload();
     }
   });
 });
