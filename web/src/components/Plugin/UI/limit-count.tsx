@@ -206,8 +206,13 @@ const LimitCount: React.FC<Props> = ({ form }) => {
           {["local", "redis", "redis-cluster"].map(item => (<Select.Option value={item}>{item}</Select.Option>))}
         </Select>
       </Form.Item>
-      { Boolean(policy === 'redis') && <RedisForm />}
-      { Boolean(policy === 'redis-cluster') && <RedisClusterForm form={form} />}
+      <Form.Item shouldUpdate={(prev, next) => prev.policy !== next.policy} style={{ display: 'none' }}>
+        {() => {
+          setPoicy(form.getFieldValue('policy'));
+        }}
+      </Form.Item>
+      {Boolean(policy === 'redis') && <RedisForm />}
+      {Boolean(policy === 'redis-cluster') && <RedisClusterForm form={form} />}
     </Form>
   );
 }
