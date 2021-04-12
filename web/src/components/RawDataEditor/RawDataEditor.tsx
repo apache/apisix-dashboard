@@ -34,29 +34,29 @@ type Props = {
 };
 
 enum codeMirrorModeList {
-  Json = 'Json',
-  Yaml = 'Yaml',
+  JSON = 'JSON',
+  YAML = 'YAML',
 }
 
 const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data = {}, onClose = () => { }, onSubmit = () => { } }) => {
   const ref = useRef<any>(null);
   const { formatMessage } = useIntl();
   const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
-    codeMirrorModeList.Json,
+    codeMirrorModeList.JSON,
   );
 
   useEffect(() => {
-    setCodeMirrorMode(codeMirrorModeList.Json);
+    setCodeMirrorMode(codeMirrorModeList.JSON);
   }, [visible])
 
   const modeOptions = [
-    { label: codeMirrorModeList.Json, value: codeMirrorModeList.Json },
-    { label: codeMirrorModeList.Yaml, value: codeMirrorModeList.Yaml },
+    { label: codeMirrorModeList.JSON, value: codeMirrorModeList.JSON },
+    { label: codeMirrorModeList.YAML, value: codeMirrorModeList.YAML },
   ];
 
   const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
     switch (value) {
-      case codeMirrorModeList.Json: {
+      case codeMirrorModeList.JSON: {
         const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
 
         if (error) {
@@ -72,12 +72,12 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
         );
         break;
       }
-      case codeMirrorModeList.Yaml: {
+      case codeMirrorModeList.YAML: {
         const { data: jsonData, error } = json2yaml(ref.current.editor.getValue());
 
         if (error) {
           notification.error({
-            message: 'Invalid Json data',
+            message: 'Invalid JSON data',
           });
           return;
         }
@@ -109,7 +109,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
   return (
     <>
       <Drawer
-        title={formatMessage({ id: 'component.rawDataEditor.title' })}
+        title={formatMessage({ id: 'component.global.data.editor' })}
         placement="right"
         width={700}
         visible={visible}
@@ -126,7 +126,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
                 onClick={() => {
                   try {
                     const editorData =
-                      codeMirrorMode === codeMirrorModeList.Json
+                      codeMirrorMode === codeMirrorModeList.JSON
                         ? JSON.parse(ref.current?.editor.getValue())
                         : yaml2json(ref.current?.editor.getValue(), false).data;
                     onSubmit(editorData);
@@ -146,20 +146,8 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
         <PageHeader
           title=""
           extra={[
-            <Button
-              type="default"
-              icon={<LinkOutlined />}
-              onClick={() => {
-                window.open(
-                  `https://apisix.apache.org/docs/apisix/admin-api#${type}`,
-                );
-              }}
-              key={1}
-            >
-              Document
-            </Button>,
             <Select
-              defaultValue={codeMirrorModeList.Json}
+              defaultValue={codeMirrorModeList.JSON}
               value={codeMirrorMode}
               options={modeOptions}
               onChange={(value: PluginComponent.CodeMirrorMode) => {
@@ -168,7 +156,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
               data-cy='code-mirror-mode'
             ></Select>,
             <Button type="primary" onClick={formatCodes} key={2}>
-              Format
+              {formatMessage({ id: 'component.global.format' })}
             </Button>,
             <CopyToClipboard text={JSON.stringify(data)} onCopy={(_: string, result: boolean) => {
               if (!result) {
@@ -182,9 +170,21 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
               });
             }}>
               <Button type="primary" key={2}>
-                Copy
+                {formatMessage({ id: 'component.global.copy' })}
               </Button>
             </CopyToClipboard>,
+            <Button
+              type="default"
+              icon={<LinkOutlined />}
+              onClick={() => {
+                window.open(
+                  `https://apisix.apache.org/docs/apisix/admin-api#${type}`,
+                );
+              }}
+              key={1}
+            >
+              {formatMessage({ id: 'component.global.document' })}
+            </Button>,
           ]}
         />
         <CodeMirror
@@ -192,6 +192,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
             ref.current = codemirror;
             if (codemirror) {
               // NOTE: for debug & test
+              // @ts-ignore
               window.codemirror = codemirror.editor;
             }
           }}

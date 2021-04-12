@@ -32,7 +32,17 @@ context('Delete Plugin List with the Drawer', () => {
     cy.contains('Create').click();
 
     cy.contains(this.data.basicAuthPlugin).parents(this.domSelector.pluginCardBordered).within(() => {
-      cy.get('button').click({ force: true });
+      cy.get('button').click({
+        force: true
+      });
+    });
+
+    cy.get(this.domSelector.codeMirrorMode).invoke('text').then(text => {
+      if (text === 'Form') {
+        cy.get(this.domSelector.codeMirrorMode).click();
+        cy.get(this.domSelector.selectDropdown).should('be.visible');
+        cy.get(this.domSelector.selectJSON).click();
+      }
     });
 
     cy.get(this.domSelector.drawer).should('be.visible').within(() => {
@@ -41,15 +51,21 @@ context('Delete Plugin List with the Drawer', () => {
     });
 
     cy.contains('button', 'Submit').click();
-    cy.get(this.domSelector.drawer, { timeout }).should('not.exist');
+    cy.get(this.domSelector.drawer, {
+      timeout
+    }).should('not.exist');
   });
 
   it('should delete the plugin with the drawer', function () {
     cy.visit('/plugin/list');
     cy.get(this.domSelector.refresh).click();
     cy.contains('button', 'Configure').click();
-    cy.get(this.domSelector.drawerFooter).contains('button', 'Delete').click({ force: true });
-    cy.contains('button', 'Confirm').click({ force: true });
+    cy.get(this.domSelector.drawerFooter).contains('button', 'Delete').click({
+      force: true
+    });
+    cy.contains('button', 'Confirm').click({
+      force: true
+    });
     cy.get(this.domSelector.empty).should('be.visible');
   });
 });

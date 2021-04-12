@@ -16,31 +16,31 @@
  */
 import React, { useEffect, useState } from 'react';
 import Form from 'antd/es/form';
-import { Input, Switch, Select, Button, Tag, AutoComplete } from 'antd';
+import { Input, Switch, Select, Button, Tag, AutoComplete, Row, Col } from 'antd';
 import { useIntl } from 'umi';
 import { PanelSection } from '@api7-dashboard/ui';
 
 import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 import LabelsDrawer from '@/components/LabelsfDrawer';
-import { fetchLabelList } from '../../service';
+import { fetchLabelList, fetchServiceList } from '../../service';
 
-const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit, onChange }) => {
+const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit, onChange = () => { } }) => {
   const { formatMessage } = useIntl();
   const [visible, setVisible] = useState(false);
   const [labelList, setLabelList] = useState<LabelList>({});
+  const [serviceList, setServiceList] = useState<ServiceModule.ResponseBody[]>([]);
 
   useEffect(() => {
-    // TODO: use a better state name
     fetchLabelList().then(setLabelList);
+    fetchServiceList().then(({ data }) => setServiceList(data));
   }, []);
 
   const NormalLabelComponent = () => {
     const field = 'custom_normal_labels';
-    const title = 'Label Manager';
 
     return (
       <React.Fragment>
-        <Form.Item label={formatMessage({ id: 'component.global.labels' })} name={field}>
+        <Form.Item label={formatMessage({ id: 'component.global.labels' })} name={field} tooltip={formatMessage({ id: 'page.route.configuration.normal-labels.tooltip' })}>
           <Select
             mode="tags"
             style={{ width: '100%' }}
@@ -69,7 +69,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
               const labels = form.getFieldValue(field) || [];
               return (
                 <LabelsDrawer
-                  title={title}
+                  title={formatMessage({ id: "component.label-manager" })}
                   actionName={field}
                   dataSource={labels}
                   disabled={disabled || false}
@@ -88,66 +88,241 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
 
   const VersionLabelComponent = () => {
     return (
-      <React.Fragment>
-        <Form.Item
-          label={formatMessage({ id: 'component.global.version' })}
-          name="custom_version_label"
-        >
-          <AutoComplete
-            options={(labelList.API_VERSION || []).map((item) => ({ value: item }))}
-            disabled={disabled}
-          />
-        </Form.Item>
-      </React.Fragment>
+      <Form.Item
+        label={formatMessage({ id: 'component.global.version' })} tooltip={formatMessage({ id: "page.route.configuration.version.tooltip" })}>
+        <Row>
+          <Col span={10}>
+            <Form.Item
+              noStyle
+              name="custom_version_label"
+            >
+              <AutoComplete
+                options={(labelList.API_VERSION || []).map((item) => ({ value: item }))}
+                disabled={disabled}
+                placeholder={formatMessage({ id: "page.route.configuration.version.placeholder" })}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form.Item>
     );
   };
 
+  const Name: React.FC = () => (
+    <Form.Item label={formatMessage({ id: 'component.global.name' })} tooltip={formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' })}>
+      <Row>
+        <Col span={10}>
+          <Form.Item
+            noStyle
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: formatMessage({ id: 'page.route.configuration.name.rules.required.description' }),
+              },
+              {
+                pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
+                message: formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' }),
+              },
+            ]}
+          >
+            <Input
+              placeholder={formatMessage({ id: 'page.route.configuration.name.placeholder' })}
+              disabled={disabled}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form.Item>
+  )
+
+  const Description: React.FC = () => (
+    <Form.Item label={formatMessage({ id: 'component.global.description' })} tooltip="路由描述信息">
+      <Row>
+        <Col span={10}>
+          <Form.Item noStyle name="desc">
+            <Input.TextArea
+              placeholder={formatMessage({ id: 'component.global.input.placeholder.description' })}
+              disabled={disabled}
+              showCount
+              maxLength={256}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form.Item>
+  )
+
+  const Publish: React.FC = () => (
+    <Form.Item label={formatMessage({ id: 'page.route.publish' })} tooltip={formatMessage({ id: 'page.route.configuration.publish.tooltip' })}>
+      <Row>
+        <Col>
+          <Form.Item
+            noStyle
+            name="status"
+            valuePropName="checked"
+          >
+            <Switch disabled={isEdit} />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form.Item>
+  )
+
+  const WebSocket: React.FC = () => (
+    <Form.Item label="WebSocket">
+      <Row>
+        <Col>
+          <Form.Item noStyle valuePropName="checked" name="enable_websocket">
+            <Switch disabled={disabled} />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form.Item>
+  )
+
+  const Redirect: React.FC = () => {
+    const list = [
+      {
+        value: "forceHttps",
+        label: formatMessage({ id: 'page.route.select.option.enableHttps' })
+      }, {
+        value: "customRedirect",
+        label: formatMessage({ id: 'page.route.select.option.configCustom' })
+      }, {
+        value: "disabled",
+        label: formatMessage({ id: 'page.route.select.option.forbidden' })
+      }
+    ]
+
+    return (
+      <Form.Item label={formatMessage({ id: 'page.route.form.itemLabel.redirect' })} tooltip="redirect 插件">
+        <Row>
+          <Col span={5}>
+            <Form.Item
+              name="redirectOption"
+              noStyle
+            >
+              <Select
+                disabled={disabled}
+                onChange={(parmas) => {
+                  onChange({ action: 'redirectOptionChange', data: parmas });
+                }}
+              >
+                {list.map(item => (
+                  <Select.Option value={item.value} key={item.value}>
+                    {item.label}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form.Item>
+    )
+  }
+
+  const CustomRedirect: React.FC = () => (
+    <Form.Item
+      noStyle
+      shouldUpdate={(prev, next) => {
+        if (prev.redirectOption !== next.redirectOption) {
+          onChange({ action: 'redirectOptionChange', data: next.redirectOption });
+        }
+        return prev.redirectOption !== next.redirectOption;
+      }}
+    >
+      {() => {
+        if (form.getFieldValue('redirectOption') === 'customRedirect') {
+          return (
+            <Form.Item
+              label={formatMessage({ id: 'page.route.form.itemLabel.redirectCustom' })}
+              required
+              style={{ marginBottom: 0 }}
+            >
+              <Row gutter={10}>
+                <Col span={5}>
+                  <Form.Item
+                    name="redirectURI"
+                    rules={[
+                      {
+                        required: true,
+                        message: `${formatMessage({
+                          id: 'component.global.pleaseEnter',
+                        })}${formatMessage({
+                          id: 'page.route.form.itemLabel.redirectURI',
+                        })}`,
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder={formatMessage({
+                        id: 'page.route.input.placeholder.redirectCustom',
+                      })}
+                      disabled={disabled}
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={5}>
+                  <Form.Item name="ret_code" rules={[{ required: true }]}>
+                    <Select disabled={disabled}>
+                      <Select.Option value={301}>
+                        {formatMessage({ id: 'page.route.select.option.redirect301' })}
+                      </Select.Option>
+                      <Select.Option value={302}>
+                        {formatMessage({ id: 'page.route.select.option.redirect302' })}
+                      </Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form.Item>
+          );
+        }
+        return null;
+      }}
+    </Form.Item>
+  )
+
+  const ServiceSelector: React.FC = () => (
+    <Form.Item label={formatMessage({ id: 'page.route.service' })} tooltip="绑定服务（Service）对象，以便复用其中的配置。">
+      <Row>
+        <Col span={5}>
+          <Form.Item noStyle name="service_id">
+            <Select disabled={disabled}>
+              {/* TODO: value === '' means  no service_id select, need to find a better way */}
+              <Select.Option value="" key={Math.random().toString(36).substring(7)}>
+                {formatMessage({ id: "page.route.service.none" })}
+              </Select.Option>
+              {serviceList.map((item) => {
+                return (
+                  <Select.Option value={item.id} key={item.id}>
+                    {item.name}
+                  </Select.Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form.Item>
+  )
+
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>
-      <Form.Item
-        label={formatMessage({ id: 'component.global.name' })}
-        name="name"
-        rules={[
-          {
-            required: true,
-            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
-              id: 'page.route.form.itemLabel.apiName',
-            })}`,
-          },
-          {
-            pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
-            message: formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' }),
-          },
-        ]}
-        extra={formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' })}
-      >
-        <Input
-          placeholder={`${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
-            id: 'page.route.form.itemLabel.apiName',
-          })}`}
-          disabled={disabled}
-        />
-      </Form.Item>
-
+      <Name />
       <NormalLabelComponent />
       <VersionLabelComponent />
 
-      <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
-        <Input.TextArea
-          placeholder={formatMessage({ id: 'component.global.input.placeholder.description' })}
-          disabled={disabled}
-          showCount
-          maxLength={256}
-        />
-      </Form.Item>
+      <Description />
 
-      <Form.Item
-        label={formatMessage({ id: 'page.route.publish' })}
-        name="status"
-        valuePropName="checked"
-      >
-        <Switch disabled={isEdit} />
-      </Form.Item>
+      <Redirect />
+      <CustomRedirect />
+
+      <ServiceSelector />
+
+      <WebSocket />
+      <Publish />
     </PanelSection>
   );
 };

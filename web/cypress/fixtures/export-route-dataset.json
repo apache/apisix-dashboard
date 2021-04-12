@@ -44,6 +44,7 @@
               "send": 6
             },
             "type": "roundrobin",
+            "scheme": "http",
             "pass_host": "pass"
           }
         }
@@ -95,6 +96,7 @@
               "send": 6
             },
             "type": "roundrobin",
+            "scheme": "http",
             "pass_host": "pass"
           }
         }
@@ -145,6 +147,7 @@
               "send": 6
             },
             "type": "roundrobin",
+            "scheme": "http",
             "pass_host": "pass"
           }
         }

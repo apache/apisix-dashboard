@@ -74,9 +74,9 @@ context('Create and Delete Upstream', () => {
     cy.get(this.domSelector.description).type(this.data.description);
 
     // change upstream type to chash, todo: optimize the search method
-    cy.get('[title=roundrobin]').click();
+    cy.get('[title="Round Robin"]').click();
     cy.get(this.domSelector.upstreamType).within(() => {
-      cy.contains('chash').click();
+      cy.contains('CHash').click();
     });
     cy.get('#hash_on').click();
     cy.get(this.domSelector.upstreamType).within(() => {
