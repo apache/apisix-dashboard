@@ -27,12 +27,20 @@ import (
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
-var _ = ginkgo.Describe("route invalid service and service", func() {
-	table.DescribeTable("test route invalid service and service",
+var _ = ginkgo.Describe("create route that not exists service or upstream", func() {
+	table.DescribeTable("test create route that not exists service or upstream",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
-		table.Entry("use service that not exist - dashboard", base.HttpTestCase{
+		table.Entry("make sure the route has not created", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("create route that not exists service", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -44,14 +52,15 @@ var _ = ginkgo.Describe("route invalid service and service", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
 		}),
-		table.Entry("hit invalid route on data plane", base.HttpTestCase{
+		table.Entry("verify not-exist route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("use upstream that not exist", base.HttpTestCase{
+		table.Entry("create route that not exists upstream", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -63,14 +72,15 @@ var _ = ginkgo.Describe("route invalid service and service", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
 		}),
-		table.Entry("hit invalid route on data plane", base.HttpTestCase{
+		table.Entry("verify not-exist route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("create service and upstream together at the same time", base.HttpTestCase{
+		table.Entry("create route that not exists service and upstream", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -83,18 +93,49 @@ var _ = ginkgo.Describe("route invalid service and service", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusBadRequest,
 		}),
-		table.Entry("hit invalid route on data plane", base.HttpTestCase{
+		table.Entry("verify not-exist route", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/hello_",
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("create service with not-exist upstream", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/services/100",
+			Body: `{
+				"upstream_id": "not-exists-upstream"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusBadRequest,
+		}),
+		table.Entry("create route with service(service with not exist upstream)", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"name": "route1",
+				"uri": "/hello_",
+				"service_id": "not-exists"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusBadRequest,
+		}),
+		table.Entry("verify not-exist route", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        base.SleepTime,
 		}),
 	)
 })
 
-var _ = ginkgo.Describe("route create service", func() {
-	table.DescribeTable("test route create service",
+var _ = ginkgo.Describe("route create with service", func() {
+	table.DescribeTable("test route create with service",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
 		},
@@ -103,6 +144,7 @@ var _ = ginkgo.Describe("route create service", func() {
 			Method:       http.MethodGet,
 			Path:         "/server_port",
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        base.SleepTime,
 		}),
 		table.Entry("create service", base.HttpTestCase{
@@ -177,11 +219,12 @@ var _ = ginkgo.Describe("route create service", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("hit deleted route", base.HttpTestCase{
+		table.Entry("make sure the route deleted", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		}),
 	)
 })
@@ -223,9 +266,10 @@ var _ = ginkgo.Describe("route create upstream", func() {
 			Method:       http.MethodGet,
 			Path:         "/server_port",
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 			Sleep:        base.SleepTime,
 		}),
-		table.Entry("create route using the service just created", base.HttpTestCase{
+		table.Entry("create route using the upstream just created", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
 			Method: http.MethodPut,
 			Path:   "/apisix/admin/routes/r1",
@@ -267,11 +311,115 @@ var _ = ginkgo.Describe("route create upstream", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		}),
-		table.Entry("hit deleted route", base.HttpTestCase{
+		table.Entry("make sure the route deleted", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
 			Method:       http.MethodGet,
 			Path:         "/server_port",
 			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+		}),
+	)
+})
+
+var _ = ginkgo.Describe("route create with service that contains upstream", func() {
+	table.DescribeTable("test route create with service that contains upstream",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("make sure the route has not created", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("create upstream", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/upstreams/1",
+			Body: `{
+				"nodes":[
+					{
+						"host": "` + base.UpstreamIp + `",
+						"port": 1980,
+						"weight": 1
+					},
+					{
+						"host": "` + base.UpstreamIp + `",
+						"port": 1981,
+						"weight": 1
+					},
+					{
+						"host": "` + base.UpstreamIp + `",
+						"port": 1982,
+						"weight": 1
+					}
+				],
+				"type": "roundrobin"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("create service", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/services/200",
+			Body: `{
+				"upstream_id": "1"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("create route using the service just created", base.HttpTestCase{
+			Object: base.ManagerApiExpect(),
+			Method: http.MethodPut,
+			Path:   "/apisix/admin/routes/r1",
+			Body: `{
+				"name": "route1",
+				"uri": "/server_port",
+				"service_id": "200"
+			}`,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
+		}),
+	)
+	ginkgo.It("batch test /server_port api", func() {
+		// sleep for etcd sync
+		time.Sleep(time.Duration(300) * time.Millisecond)
+
+		// batch test /server_port api
+		res := base.BatchTestServerPort(18)
+
+		gomega.Expect(res["1980"]).Should(gomega.Equal(6))
+		gomega.Expect(res["1981"]).Should(gomega.Equal(6))
+		gomega.Expect(res["1982"]).Should(gomega.Equal(6))
+	})
+	table.DescribeTable("delete route and service",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("delete route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/r1",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("remove service", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/services/200",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("make sure the route deleted", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/server_port",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   "{\"error_msg\":\"404 Route Not Found\"}\n",
 		}),
 	)
 })
