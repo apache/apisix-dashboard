@@ -33,7 +33,7 @@ export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
 
   const { formatMessage } = useIntl();
 
-  if (!renderForm) { return <Empty description={formatMessage({ id: 'component.global.noConfigurationRequired' })} /> };
+  if (!renderForm) { return <Empty style={{ marginTop: 100 }} description={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} /> };
 
   switch (name) {
     case 'basic-auth':
