@@ -49,8 +49,8 @@ context('Create and delete consumer with limit-count plugin form', () => {
     redis_host: '127.0.0.1',
     redis_password: 'redis_password',
     redis_cluster_name: 'redis_cluster_name',
-    redis_cluster_nodes_0: "redis.cluster1",
-    redis_cluster_nodes_1: "redis.cluster1",
+    redis_cluster_nodes_0: "127.0.0.1:5000",
+    redis_cluster_nodes_1: "127.0.0.1:5000",
   }
 
   it('should create consumer with limit-count form', function () {

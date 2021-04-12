@@ -21,7 +21,7 @@ export default {
   'component.step.select.pluginTemplate.select.option': 'Custom',
   'component.plugin.pluginTemplate.tip1': '1. When a route already have plugins field configured, the plugins in the plugin template will be merged into it.',
   'component.plugin.pluginTemplate.tip2': '2. The same plugin in the plugin template will override one in the plugins',
-  
+
   'component.plugin.form': 'Form',
   'component.plugin.format-codes.disable': 'Format JSON or YAML data',
   'component.plugin.editor': 'Plugin Editor',

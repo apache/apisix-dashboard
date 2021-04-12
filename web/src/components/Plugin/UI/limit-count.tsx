@@ -55,7 +55,7 @@ const RedisForm: React.FC = () => {
       label="redis_host"
       name="redis_host"
       tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_host.tooltip' })}
-      required
+      rules={[{ required: true, message: 'Please input redis_host' }]}
     >
       <Input />
     </Form.Item>
@@ -70,7 +70,7 @@ const RedisForm: React.FC = () => {
       label="redis_password"
       name="redis_password"
       tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_password.tooltip' })}
-      required
+      rules={[{ required: true, message: 'Please input redis_password' }]}
     >
       <Input />
     </Form.Item>
@@ -100,7 +100,7 @@ const RedisClusterForm: React.FC<Props> = () => {
         label="redis_cluster_name"
         name="redis_cluster_name"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_cluster_name.tooltip' })}
-        required
+        rules={[{ required: true, message: 'Please input redis_cluster_name' }]}
       >
         <Input />
       </Form.Item>
@@ -169,7 +169,7 @@ const LimitCount: React.FC<Props> = ({ form }) => {
         label="count"
         name="count"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.count.tooltip' })}
-        required
+        rules={[{ required: true, message: 'Please input count' }]}
       >
         <InputNumber min={1} />
       </Form.Item>
@@ -177,7 +177,7 @@ const LimitCount: React.FC<Props> = ({ form }) => {
         label="time_window"
         name="time_window"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.time_window.tooltip' })}
-        required
+        rules={[{ required: true, message: 'Please input time_window' }]}
       >
         <InputNumber min={1} />
       </Form.Item>
