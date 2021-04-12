@@ -248,7 +248,7 @@ func CleanAPISIXErrorLog() {
 	pwd := string(pwdByte)
 	pwd = strings.Replace(pwd, "\n", "", 1)
 	pwd = pwd[:strings.Index(pwd, "/e2e")]
-	cmdStr := "echo | sudo tee " + pwd+"/docker/apisix_logs/error.log"
+	cmdStr := "echo | sudo tee " + pwd + "/docker/apisix_logs/error.log"
 	cmd = exec.Command("bash", "-c", cmdStr)
 	_, err = cmd.Output()
 	if err != nil {
