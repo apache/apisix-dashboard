@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 import React from 'react';
-import { FormInstance } from 'antd/es/form';
+import type { FormInstance } from 'antd/es/form';
 import { Empty } from 'antd';
 import { useIntl } from 'umi';
 
 import BasicAuth from './basic-auth';
 import ProxyMirror from './proxy-mirror';
+import LimitConn from './limit-conn';
 
 type Props = {
   name: string,
@@ -28,19 +29,21 @@ type Props = {
   renderForm: boolean
 }
 
-export const PLUGIN_UI_LIST = ['basic-auth', 'proxy-mirror'];
+export const PLUGIN_UI_LIST = ['basic-auth', 'limit-conn', 'proxy-mirror'];
 
 export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
 
   const { formatMessage } = useIntl();
 
-  if (!renderForm) { return <Empty description={formatMessage({ id: 'component.global.noConfigurationRequired' })} /> };
+  if (!renderForm) { return <Empty style={{ marginTop: 100 }} description={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} /> };
 
   switch (name) {
     case 'basic-auth':
       return <BasicAuth form={form} />
     case 'proxy-mirror':
       return <ProxyMirror form={form} />
+    case 'limit-conn':
+      return <LimitConn form={form} />
     default:
       return null;
   }

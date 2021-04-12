@@ -146,18 +146,6 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
         <PageHeader
           title=""
           extra={[
-            <Button
-              type="default"
-              icon={<LinkOutlined />}
-              onClick={() => {
-                window.open(
-                  `https://apisix.apache.org/docs/apisix/admin-api#${type}`,
-                );
-              }}
-              key={1}
-            >
-              Document
-            </Button>,
             <Select
               defaultValue={codeMirrorModeList.JSON}
               value={codeMirrorMode}
@@ -168,7 +156,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
               data-cy='code-mirror-mode'
             ></Select>,
             <Button type="primary" onClick={formatCodes} key={2}>
-              Format
+              {formatMessage({ id: 'component.global.format' })}
             </Button>,
             <CopyToClipboard text={JSON.stringify(data)} onCopy={(_: string, result: boolean) => {
               if (!result) {
@@ -182,9 +170,21 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
               });
             }}>
               <Button type="primary" key={2}>
-                Copy
+                {formatMessage({ id: 'component.global.copy' })}
               </Button>
             </CopyToClipboard>,
+            <Button
+              type="default"
+              icon={<LinkOutlined />}
+              onClick={() => {
+                window.open(
+                  `https://apisix.apache.org/docs/apisix/admin-api#${type}`,
+                );
+              }}
+              key={1}
+            >
+              {formatMessage({ id: 'component.global.document' })}
+            </Button>,
           ]}
         />
         <CodeMirror
