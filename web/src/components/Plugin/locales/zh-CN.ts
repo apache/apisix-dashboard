@@ -21,7 +21,6 @@ export default {
   'component.step.select.pluginTemplate.select.option': '手动配置',
   'component.plugin.pluginTemplate.tip1': '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
   'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。',
-  'component.plugin.general': '通用',
   'component.plugin.transformation': '信息转换器',
   'component.plugin.authentication': '身份验证',
   'component.plugin.security': '安全防护',
@@ -29,7 +28,6 @@ export default {
   'component.plugin.serverless': '无服务器架构',
   'component.plugin.monitoring': '分析监控',
   'component.plugin.logging': '日志记录',
-  'component.plugin.protocol': '协议',
   'component.plugin.other': '其它',
 
   // limit-conn
