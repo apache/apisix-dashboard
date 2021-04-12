@@ -36,7 +36,7 @@ export default {
   'page.route.status': '状态',
   'page.route.groupName': '分组名称',
   'page.route.offline': '下线',
-  'page.route.publish': '是否发布',
+  'page.route.publish': '发布',
   'page.route.published': '已发布',
   'page.route.unpublished': '未发布',
   'page.route.onlineDebug': '在线调试',
