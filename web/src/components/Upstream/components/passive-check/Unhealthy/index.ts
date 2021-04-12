@@ -14,31 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import type { FormInstance } from 'antd/es/form';
-import { Empty } from 'antd';
-import { useIntl } from 'umi';
+import Timeouts from './Timeouts'
+import HttpFailures from './HttpFailures'
+import TcpFailures from './TcpFailures'
+import HttpStatuses from './HttpStatuses'
 
-import BasicAuth from './basic-auth'
-
-type Props = {
-  name: string,
-  form: FormInstance,
-  renderForm: boolean
-}
-
-export const PLUGIN_UI_LIST = ['basic-auth',];
-
-export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
-
-  const { formatMessage } = useIntl();
-
-  if (!renderForm) { return <Empty description={formatMessage({ id: 'component.global.noConfigurationRequired' })} /> };
-
-  switch (name) {
-    case 'basic-auth':
-      return <BasicAuth form={form} />
-    default:
-      return null;
-  }
+export default {
+  Timeouts,
+  HttpFailures,
+  TcpFailures,
+  HttpStatuses
 }
