@@ -25,6 +25,6 @@ export default {
   'page.consumer.updateTime': 'Update Time',
   'page.consumer.list': 'Consumer List',
   'page.consumer.description': 'Consumers are the consumers of Routes, e.g developers, end users, API calls, etc. When creating a consumer, you need to bind at least one Authentication plugin.',
-  'page.consumer.create-title': 'Create Consumer',
-  'page.consumer.configure-title': 'Configure Consumer',
+  'page.consumer.create': 'Create Consumer',
+  'page.consumer.configure': 'Configure Consumer',
 };

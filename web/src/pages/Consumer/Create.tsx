@@ -53,8 +53,8 @@ const Page: React.FC = (props) => {
       .then(() => {
         notification.success({
           message: `${username
-              ? formatMessage({ id: 'component.global.edit' })
-              : formatMessage({ id: 'component.global.create' })
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
             } ${formatMessage({ id: 'menu.consumer' })} ${formatMessage({
               id: 'component.status.success',
             })}`,
@@ -99,8 +99,8 @@ const Page: React.FC = (props) => {
     <>
       <PageContainer
         title={`${(props as any).match.params.username
-            ? formatMessage({ id: 'page.consumer.configure-title' })
-            : formatMessage({ id: 'page.consumer.create-title' })
+          ? formatMessage({ id: 'page.consumer.configure' })
+          : formatMessage({ id: 'page.consumer.create' })
           }`}
       >
         <Card bordered={false}>
