@@ -14,25 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Unhealthy from './Unhealthy'
-import Healthy from './Healthy'
+import React from 'react'
+import { Form, InputNumber } from 'antd'
+import { useIntl } from 'umi'
+import TimeUnit from '../TimeUnit'
 
-import Timeout from './Timeout'
-import Type from './Type'
-import ReqHeaders from './ReqHeaders'
-import Host from './Host'
-import Port from './Port'
-import HttpPath from './HttpPath'
-import Concurrency from './Concurrency'
-
-export default {
-  Unhealthy,
-  Healthy,
-  Timeout,
-  Type,
-  ReqHeaders,
-  Host,
-  Port,
-  HttpPath,
-  Concurrency
+type Props = {
+  readonly?: boolean
 }
+
+const ConcurrencyComponent: React.FC<Props> = ({ readonly }) => {
+  const { formatMessage } = useIntl()
+
+  return (
+    <Form.Item label="concurrency" tooltip="concurrency">
+      <Form.Item name={['checks', 'active', 'concurrency']} noStyle initialValue={10}>
+        <InputNumber disabled={readonly} min={0} />
+      </Form.Item>
+      <TimeUnit />
+    </Form.Item>
+  )
+}
+
+export default ConcurrencyComponent
