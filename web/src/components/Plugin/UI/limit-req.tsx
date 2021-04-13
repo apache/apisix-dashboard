@@ -17,6 +17,7 @@
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
 import { Form, InputNumber, Select } from 'antd';
+import { useIntl } from 'umi';
 
 type Props = {
   form: FormInstance;
@@ -33,6 +34,7 @@ export const FORM_ITEM_LAYOUT = {
 };
 
 const LimitReq: React.FC<Props> = ({ form }) => {
+  const { formatMessage } = useIntl();
   return (
     <Form
       form={form}
@@ -41,21 +43,33 @@ const LimitReq: React.FC<Props> = ({ form }) => {
       <Form.Item
         label="rate"
         name="rate"
-        required
+        rules={[{
+          required: true,
+          message: `${formatMessage({ id: 'component.global.pleaseEnter' })} rate`
+        }]}
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <InputNumber min={1} required />
       </Form.Item>
       <Form.Item
         label="burst"
         name="burst"
-        required
+        rules={[{
+          required: true,
+          message: `${formatMessage({ id: 'component.global.pleaseEnter' })} burst`
+        }]}
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <InputNumber min={0} required />
       </Form.Item>
       <Form.Item
         label="key"
-        required
         name="key"
+        rules={[{
+          required: true,
+          message: `${formatMessage({ id: 'component.global.pleaseChoose' })} key`
+        }]}
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <Select>
           {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name"].map(item => {
