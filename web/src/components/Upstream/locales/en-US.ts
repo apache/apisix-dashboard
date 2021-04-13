@@ -25,5 +25,9 @@ export default {
   'component.upstream.fields.checks.active.healthy.interval': 'Interval',
   'component.upstream.fields.checks.active.healthy.interval.tooltip': 'Interval between checks for healthy targets (in seconds)',
 
+  'component.upstream.fields.checks.active.healthy.successes': 'Successes',
+  'component.upstream.fields.checks.active.healthy.successes.tooltip': 'Number of successes to consider a target healthy',
+  'component.upstream.fields.checks.active.healthy.successes.required': 'Please enter successes number',
+
   'component.upstream.text.others': 'Others'
 }

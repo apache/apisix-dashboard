@@ -26,5 +26,9 @@ export default {
   'component.upstream.fields.checks.active.healthy.interval': '间隔时间',
   'component.upstream.fields.checks.active.healthy.interval.tooltip': '对健康的上游服务目标节点进行主动健康检查的间隔时间。若为 0，表示对健康节点不进行主动健康检查。',
 
+  'component.upstream.fields.checks.active.healthy.successes': '成功次数',
+  'component.upstream.fields.checks.active.healthy.successes.tooltip': '主动健康检查的 HTTP 成功次数，若达到此值，表示上游服务目标节点是健康的。',
+  'component.upstream.fields.checks.active.healthy.successes.required': '请输入成功次数',
+
   'component.upstream.text.others': '其它'
 }

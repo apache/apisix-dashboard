@@ -55,7 +55,6 @@ export default {
   'page.upstream.step.input.healthyCheck.active.timeout': 'Please enter timeout',
   'page.upstream.step.input.healthyCheck.activeInterval': 'Please enter interval',
   'page.upstream.step.healthyCheck.successes': 'Successes',
-  'page.upstream.step.input.healthyCheck.successes': 'Please enter successes',
   'page.upstream.step.healthyCheck.http_failures': 'HTTP Failures',
   'page.upstream.step.input.healthyCheck.http_failures': 'Please enter http failures',
   'page.upstream.step.healthyCheck.active.req_headers': 'Request Headers',
@@ -99,7 +98,6 @@ export default {
   'page.upstream.retries': 'Retries',
 
   'page.upstream.checks.active.timeout.description': 'Socket timeout for active checks (in seconds)',
-  'page.upstream.checks.active.healthy.successes.description': 'Number of successes to consider a target healthy',
   'page.upstream.checks.active.unhealthy.interval.description': 'Interval between checks for unhealthy targets (in seconds)',
   'page.upstream.checks.active.unhealthy.http_failures.description': 'Number of HTTP failures to consider a target unhealthy',
   'page.upstream.checks.passive.healthy.http_statuses.description': 'Which HTTP statuses to consider a failure',
