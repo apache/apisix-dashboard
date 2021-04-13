@@ -72,4 +72,5 @@ export default {
   'component.label-manager': '标签管理器',
 
   'component.global.noConfigurationRequired': '无需配置',
+  'component.global.copy': '复制'
 };
