@@ -102,6 +102,7 @@ func NewManagerAPICommand() *cobra.Command {
 				return newMws
 			}
 
+			fmt.Printf("DEBUG-ETCDCONFIG: %+v\n\n", *conf.ETCDConfig)
 			if err := storage.InitETCDClient(conf.ETCDConfig); err != nil {
 				log.Errorf("init etcd client fail: %w", err)
 				panic(err)

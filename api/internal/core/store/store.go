@@ -98,11 +98,13 @@ func NewGenericStore(opt GenericStoreOption) (*GenericStore, error) {
 func (s *GenericStore) Init() error {
 	lc, lcancel := context.WithTimeout(context.TODO(), 5*time.Second)
 	defer lcancel()
+	fmt.Println("DEBUG: Store Initiating... ", s.opt.BasePath)
 	ret, err := s.Stg.List(lc, s.opt.BasePath)
 	if err != nil {
 		return err
 	}
 	for i := range ret {
+		fmt.Printf("DEBUG-KV: %+v\n", ret[i])
 		key := ret[i].Key[len(s.opt.BasePath)+1:]
 		objPtr, err := s.StringToObjPtr(ret[i].Value, key)
 		if err != nil {
