@@ -27,10 +27,10 @@ const Component: React.FC<Props> = ({ readonly }) => {
 
   return (
     <Form.Item
-      label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.http_path' })}
+      label={formatMessage({ id: 'component.upstream.fields.checks.active.http_path' })}
       required
       tooltip={formatMessage({
-        id: 'page.upstream.step.input.healthyCheck.active.http_path',
+        id: 'component.upstream.fields.checks.active.http_path.tooltip',
       })}
     >
       <Form.Item
@@ -39,13 +39,14 @@ const Component: React.FC<Props> = ({ readonly }) => {
         rules={[
           {
             required: true,
-            message: formatMessage({ id: 'page.upstream.checks.active.http_path.placeholder' }),
+            message: formatMessage({ id: 'component.upstream.fields.checks.active.http_path.placeholder' }),
           },
         ]}
+        initialValue="/"
       >
         <Input
           disabled={readonly}
-          placeholder={formatMessage({ id: 'page.upstream.checks.active.http_path.placeholder' })}
+          placeholder={formatMessage({ id: 'component.upstream.fields.checks.active.http_path.placeholder' })}
         />
       </Form.Item>
     </Form.Item>

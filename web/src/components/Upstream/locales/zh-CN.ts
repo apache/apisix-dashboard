@@ -15,5 +15,9 @@ export default {
 
   'component.upstream.fields.checks.active.port': '端口号',
 
+  'component.upstream.fields.checks.active.http_path': '请求路径',
+  'component.upstream.fields.checks.active.http_path.tooltip': '向目标节点发出 HTTP GET 请求时应使用的路径。',
+  'component.upstream.fields.checks.active.http_path.placeholder': '请输入 HTTP 请求路径',
+
   'component.upstream.text.others': '其它'
 }

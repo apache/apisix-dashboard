@@ -15,5 +15,8 @@ export default {
 
   'component.upstream.fields.checks.active.port': 'Port',
 
+  'component.upstream.fields.checks.active.http_path': 'HTTP Path',
+  'component.upstream.fields.checks.active.http_path.tooltip': 'The path that should be used when issuing the HTTP GET request to the target. The default value is /.',
+
   'component.upstream.text.others': 'Others'
 }

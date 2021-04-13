@@ -53,7 +53,6 @@ export default {
   'page.upstream.step.healthyCheck.active': 'Active',
   'page.upstream.step.healthyCheck.active.timeout': 'Timeout',
   'page.upstream.step.input.healthyCheck.active.timeout': 'Please enter timeout',
-  'page.upstream.step.healthyCheck.active.http_path': 'HTTP Path',
   'page.upstream.step.healthyCheck.activeInterval': 'Interval',
   'page.upstream.step.input.healthyCheck.activeInterval': 'Please enter interval',
   'page.upstream.step.healthyCheck.successes': 'Successes',
@@ -100,8 +99,6 @@ export default {
 
   'page.upstream.retries': 'Retries',
 
-  'page.upstream.checks.active.http_path.placeholder': 'Please enter HTTP request path',
-  'page.upstream.step.input.healthyCheck.active.http_path': 'Path to use in GET HTTP request to run on active checks',
   'page.upstream.checks.active.timeout.description': 'Socket timeout for active checks (in seconds)',
   'page.upstream.checks.active.healthy.interval.description': 'Interval between checks for healthy targets (in seconds)',
   'page.upstream.checks.active.healthy.successes.description': 'Number of successes to consider a target healthy',
