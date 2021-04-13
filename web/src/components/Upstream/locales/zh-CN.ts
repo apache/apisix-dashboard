@@ -30,5 +30,8 @@ export default {
   'component.upstream.fields.checks.active.healthy.successes.tooltip': '主动健康检查的 HTTP 成功次数，若达到此值，表示上游服务目标节点是健康的。',
   'component.upstream.fields.checks.active.healthy.successes.required': '请输入成功次数',
 
+  'component.upstream.fields.checks.active.healthy.http_statuses': '状态码',
+  'component.upstream.fields.checks.active.healthy.http_statuses.tooltip': 'HTTP 状态码列表，当探针在主动健康检查中返回时，视为健康。',
+
   'component.upstream.text.others': '其它'
 }

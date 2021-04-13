@@ -126,6 +126,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
         <ActiveCheck.Healthy.Interval readonly={readonly} />
         <ActiveCheck.Healthy.Successes readonly={readonly} />
+        <ActiveCheck.Healthy.HttpStatuses readonly={readonly} />
 
         <Divider orientation="left" plain>
           {formatMessage({ id: 'page.upstream.step.healthyCheck.unhealthyStatus' })}
