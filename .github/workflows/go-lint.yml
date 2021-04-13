@@ -5,11 +5,13 @@ on:
       - master
     paths-ignore:
       - 'docs/**'
+      - 'web/**'
   pull_request:
     branches:
       - master
     paths-ignore:
       - 'docs/**'
+      - 'web/**'
 
 jobs:
   golangci:

@@ -1,3 +1,5 @@
+# Test make build command to see if ManagerAPI and Web are ok to build
+
 name: make build
 
 on:
