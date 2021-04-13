@@ -19,5 +19,8 @@ export default {
   'component.upstream.fields.checks.active.http_path': 'HTTP Path',
   'component.upstream.fields.checks.active.http_path.tooltip': 'The path that should be used when issuing the HTTP GET request to the target. The default value is /.',
 
+  'component.upstream.fields.checks.active.https_verify_certificate': 'Verify HTTPs Certificate',
+  'component.upstream.fields.checks.active.https_verify_certificate.tooltip': 'Whether to check the validity of the SSL certificate of the remote host when performing active health checks using HTTPS.',
+
   'component.upstream.text.others': 'Others'
 }

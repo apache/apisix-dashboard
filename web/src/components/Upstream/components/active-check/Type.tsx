@@ -41,7 +41,6 @@ const ActiveCheckTypeComponent: React.FC<Props> = ({ readonly }) => {
   return (
     <Form.Item
       label={formatMessage({ id: 'component.upstream.fields.checks.active.type' })}
-      required
       style={{ marginBottom: 0 }}
       tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.type.tooltip' })}
     >

@@ -112,6 +112,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     const ActiveHealthCheck = () => (
       <React.Fragment>
         <ActiveCheck.Type readonly={readonly} />
+        <ActiveCheck.HttpsVerifyCertificate readonly={readonly} />
         <ActiveCheck.Timeout readonly={readonly} />
         <ActiveCheck.Concurrency readonly={readonly} />
         <ActiveCheck.Host readonly={readonly} />

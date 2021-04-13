@@ -24,6 +24,7 @@ import Host from './Host'
 import Port from './Port'
 import HttpPath from './HttpPath'
 import Concurrency from './Concurrency'
+import HttpsVerifyCertificate from './HttpsVerifyCertificate'
 
 export default {
   Unhealthy,
@@ -34,5 +35,6 @@ export default {
   Host,
   Port,
   HttpPath,
-  Concurrency
+  Concurrency,
+  HttpsVerifyCertificate
 }

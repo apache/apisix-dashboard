@@ -20,5 +20,8 @@ export default {
   'component.upstream.fields.checks.active.http_path.tooltip': '向目标节点发出 HTTP GET 请求时应使用的路径。',
   'component.upstream.fields.checks.active.http_path.placeholder': '请输入 HTTP 请求路径',
 
+  'component.upstream.fields.checks.active.https_verify_certificate': '验证证书',
+  'component.upstream.fields.checks.active.https_verify_certificate.tooltip': '在使用 HTTPS 执行主动健康检查时，是否检查远程主机的 SSL 证书的有效性。',
+
   'component.upstream.text.others': '其它'
 }
