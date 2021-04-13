@@ -23,5 +23,8 @@ export default {
   'component.upstream.fields.checks.active.https_verify_certificate': '验证证书',
   'component.upstream.fields.checks.active.https_verify_certificate.tooltip': '在使用 HTTPS 执行主动健康检查时，是否检查远程主机的 SSL 证书的有效性。',
 
+  'component.upstream.fields.checks.active.healthy.interval': '间隔时间',
+  'component.upstream.fields.checks.active.healthy.interval.tooltip': '对健康的上游服务目标节点进行主动健康检查的间隔时间。若为 0，表示对健康节点不进行主动健康检查。',
+
   'component.upstream.text.others': '其它'
 }
