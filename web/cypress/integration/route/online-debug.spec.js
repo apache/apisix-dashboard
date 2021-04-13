@@ -124,6 +124,27 @@ context('Online debug', () => {
     });
   });
 
+  it('should autocomplete header',function () {
+    cy.visit('/');
+    cy.contains(menuLocaleUS['menu.routes']).click();
+    const currentToken = localStorage.getItem('token');
+
+    // show online debug draw
+    cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
+    cy.get(domSelector.debugDraw).should('be.visible');
+    cy.get(domSelector.headerTab).should('be.visible').click();
+
+    // show autocomplete
+    cy.get(domSelector.headerDataKey0).click({ force: true });
+    cy.get('.ant-select-item-option-content').contains('Accept').click();
+    cy.get('.anticon-minus-circle').click()
+
+    // autocomplete should ingore case
+    cy.get(domSelector.headerDataKey0).type('auth').click({ force: true });
+    cy.get('.ant-select-item-option-content').contains('Authorization').click();
+    cy.get(domSelector.headerDataValue0).type(currentToken);
+  })
+
   it('should debug POST request with file successfully', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
