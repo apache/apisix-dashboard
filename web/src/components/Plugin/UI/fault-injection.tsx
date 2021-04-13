@@ -59,7 +59,7 @@ const FaultInjection: React.FC<Props> = ({ form }) => {
       <Form.Item
         name={['abort', 'http_status']}
         label='abort.http_status'
-        rules={[{ required: true, message: 'Please input abort.http_status!' }]}
+        rules={[{ required: true, message: `${formatMessage({ id: 'component.pluginForm.fault-injection.abort.http_status.rules' })}` }]}
         tooltip={formatMessage({ id: "component.pluginForm.fault-injection.abort.http_status.tooltip" })}
       >
         <InputNumber min={200} required />
@@ -132,7 +132,7 @@ const FaultInjection: React.FC<Props> = ({ form }) => {
       <Form.Item
         label="delay.duration"
         name={['delay', 'duration']}
-        rules={[{ required: true, message: 'Please input delay.duration!' }]}
+        rules={[{ required: true, message: `${formatMessage({ id: 'component.pluginForm.fault-injection.delay.duration.rules' })}` }]}
         tooltip={formatMessage({ id: "component.pluginForm.fault-injection.delay.duration.tooltip" })}
       >
         <InputNumber required />
