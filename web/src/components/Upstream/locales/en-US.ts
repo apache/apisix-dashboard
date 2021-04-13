@@ -6,5 +6,10 @@ export default {
   'component.upstream.fields.checks.active.concurrency': 'Concurrency',
   'component.upstream.fields.checks.active.concurrency.tooltip': 'Number of targets to check concurrently in active health checks.',
 
+  'component.upstream.fields.checks.active.host': 'Host',
+  'component.upstream.fields.checks.active.host.required': 'Please enter the hostname',
+  'component.upstream.fields.checks.active.host.tooltip': 'The hostname of the HTTP request used to perform the active health check',
+  'component.upstream.fields.checks.active.host.scope': 'Only letters, numbers and . are supported',
+
   'component.upstream.text.others': 'Others'
 }
