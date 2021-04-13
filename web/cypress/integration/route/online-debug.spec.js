@@ -110,7 +110,7 @@ context('Online debug', () => {
     // click send without type debugUrl
     cy.contains(routeLocaleUS['page.route.button.send']).click({ force: true });
     cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('exist');
-    cy.get(this.domSelector.notificationCloseIcon).click();
+    cy.get(this.domSelector.notificationCloseIcon).click({ multiple: true });
 
     // input invalid uris
     data.invalidUrls.forEach((uri) => {
@@ -120,7 +120,7 @@ context('Online debug', () => {
 
       // should not show the notification about input the valid request url
       cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('exist');
-      cy.get(this.domSelector.notificationCloseIcon).click();
+      cy.get(this.domSelector.notificationCloseIcon).click({ multiple: true });
     });
   });
 
@@ -130,6 +130,7 @@ context('Online debug', () => {
     const currentToken = localStorage.getItem('token');
 
     // show online debug draw
+    cy.get(this.domSelector.refresh).click();
     cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
     cy.get(domSelector.debugDraw).should('be.visible');
@@ -304,7 +305,7 @@ context('Online debug', () => {
         cy.contains('OK').click();
       });
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
-      cy.get(this.domSelector.notificationCloseIcon).click();
+      cy.get(this.domSelector.notificationCloseIcon).click({ multiple: true });
       cy.reload();
     }
   });
