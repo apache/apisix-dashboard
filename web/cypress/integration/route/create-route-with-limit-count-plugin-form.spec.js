@@ -16,14 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('Create and delete consumer with limit-count plugin form', () => {
-  beforeEach(() => {
-    cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
-  });
-
+context('Create and delete route with limit-count form', () => {
   const selector = {
     count: '#count',
     time_window: '#time_window',
@@ -40,46 +33,34 @@ context('Create and delete consumer with limit-count plugin form', () => {
     redis_cluster_nodes_0: '#redis_cluster_nodes_0',
     redis_cluster_nodes_1: '#redis_cluster_nodes_1',
   }
+  beforeEach(() => {
+    cy.login();
 
-  it('should create consumer with limit-count form', function () {
+    cy.fixture('selector.json').as('domSelector');
+    cy.fixture('data.json').as('data');
+  });
+
+  it('should create route with limit-count form', function () {
     cy.visit('/');
-    cy.contains('Consumer').click();
+    cy.contains('Route').click();
     cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
-    // basic information
-    cy.get(this.domSelector.username).type(this.data.consumerName);
-    cy.get(this.domSelector.description).type(this.data.description);
+    cy.contains('Next').click().click();
+    cy.get(this.domSelector.name).type('routeName');
+    cy.get(this.domSelector.description).type('desc');
     cy.contains('Next').click();
 
-    // config auth plugin
-    cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
+    cy.get(this.domSelector.nodes_0_host).type('127.0.0.1');
+    cy.contains('Next').click();
+
+    // config limit-count form with local policy
+    cy.contains(this.domSelector.pluginCard, 'limit-count').within(() => {
       cy.contains('Enable').click({
         force: true,
       });
     });
     cy.focused(this.domSelector.drawer).should('exist');
     cy.get(this.domSelector.disabledSwitcher).click();
-    // edit codemirror
-    cy.get(this.domSelector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
-
-    cy.contains(this.domSelector.pluginCard, 'limit-count').within(() => {
-      cy.contains('Enable').click({
-        force: true,
-      });
-    });
-
-    cy.focused(this.domSelector.drawer).should('exist');
-
-    // config limit-count form with local policy
     cy.get(selector.count).type(1);
     cy.get(selector.time_window).type(1);
     cy.get(selector.rejected_code).type(500);
@@ -112,7 +93,6 @@ context('Create and delete consumer with limit-count plugin form', () => {
     });
     cy.get(this.domSelector.drawer).should('not.exist');
 
-
     // config limit-count form with redis policy
     cy.contains(this.domSelector.pluginCard, 'limit-count').within(() => {
       cy.contains('Enable').click({
@@ -134,17 +114,32 @@ context('Create and delete consumer with limit-count plugin form', () => {
         force: true,
       });
     });
-    cy.get(this.domSelector.drawer).should('not.exist');
 
+    cy.get(this.domSelector.drawer).should('not.exist');
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.createConsumerSuccess);
+    cy.contains(this.data.submitSuccess);
+
+    // back to route list page
+    cy.contains('Goto List').click();
+    cy.url().should('contains', 'routes/list');
   });
 
-  it('should delete the consumer', function () {
-    cy.visit('/consumer/list');
-    cy.contains(this.data.consumerName).should('be.visible').siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.deleteConsumerSuccess);
+  it('should delete the route', function () {
+    cy.visit('/routes/list');
+    const {
+      domSelector,
+      data
+    } = this;
+
+    cy.get(domSelector.name).clear().type('routeName');
+    cy.contains('Search').click();
+    cy.contains('routeName').siblings().contains('More').click();
+    cy.contains('Delete').click();
+    cy.get(domSelector.deleteAlert).should('be.visible').within(() => {
+      cy.contains('OK').click();
+    });
+    cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
+    cy.get(domSelector.notificationCloseIcon).click();
   });
 });
