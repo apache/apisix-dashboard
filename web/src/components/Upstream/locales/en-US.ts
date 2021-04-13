@@ -32,5 +32,8 @@ export default {
   'component.upstream.fields.checks.active.healthy.http_statuses': 'HTTP Statuses',
   'component.upstream.fields.checks.active.healthy.http_statuses.tooltip': 'An array of HTTP statuses to consider a success, indicating healthiness, when returned by a probe in active health checks.',
 
+  'component.upstream.fields.checks.active.unhealthy.timeouts': 'Timeouts',
+  'component.upstream.fields.checks.active.unhealthy.timeouts.tooltip': 'Number of timeouts in active probes to consider a target unhealthy.',
+
   'component.upstream.text.others': 'Others'
 }

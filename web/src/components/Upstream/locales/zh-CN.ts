@@ -33,5 +33,8 @@ export default {
   'component.upstream.fields.checks.active.healthy.http_statuses': '状态码',
   'component.upstream.fields.checks.active.healthy.http_statuses.tooltip': 'HTTP 状态码列表，当探针在主动健康检查中返回时，视为健康。',
 
+  'component.upstream.fields.checks.active.unhealthy.timeouts': '超时时间',
+  'component.upstream.fields.checks.active.unhealthy.timeouts.tooltip': '活动探针中认为目标不健康的超时次数。',
+
   'component.upstream.text.others': '其它'
 }
