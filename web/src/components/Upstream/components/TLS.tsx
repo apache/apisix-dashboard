@@ -54,7 +54,7 @@ const TLSComponent: React.FC<Props> = ({ form, readonly }) => {
                     label={formatMessage({ id: 'component.upstream.fields.tls.client_cert' })}
                     name={["tls", "client_cert"]}
                     required
-                    rules={[{ required: true, message: "" }]}
+                    rules={[{ required: true, message: "" }, { max: 64 * 1024 }, { min: 128 }]}
                   >
                     <Input.TextArea disabled={readonly} minLength={128} maxLength={64 * 1024} rows={5} placeholder="请输入客户端证书" />
                   </Form.Item>
@@ -62,7 +62,7 @@ const TLSComponent: React.FC<Props> = ({ form, readonly }) => {
                     label={formatMessage({ id: 'component.upstream.fields.tls.client_key' })}
                     name={["tls", "client_key"]}
                     required
-                    rules={[{ required: true, message: "" }]}
+                    rules={[{ required: true, message: "" }, { max: 64 * 1024 }, { min: 128 }]}
                   >
                     <Input.TextArea disabled={readonly} minLength={128} maxLength={64 * 1024} rows={5} placeholder="请输入客户端私钥" />
                   </Form.Item>
