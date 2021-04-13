@@ -32,7 +32,6 @@ export default {
   'page.upstream.step.description': 'Description',
   'page.upstream.step.input.description': 'Please enter upstream\'s description',
   'page.upstream.step.type': 'Algorithm',
-  'page.upstream.step.create.node': 'Add Target',
   'page.upstream.step.pass-host': 'Hostname',
   'page.upstream.step.pass-host.pass': 'Keep the same Host from client request',
   'page.upstream.step.pass-host.node': 'Use the domain or IP from Node List',
@@ -65,12 +64,10 @@ export default {
   'page.upstream.step.healthyCheck.successes': 'Successes',
   'page.upstream.step.input.healthyCheck.successes': 'Please enter successes',
   'page.upstream.step.healthyCheck.http_failures': 'HTTP Failures',
-  'page.upstream.step.healthyCheck.active.create.req_headers': 'Add Request Headers',
   'page.upstream.step.input.healthyCheck.http_failures': 'Please enter http failures',
   'page.upstream.step.healthyCheck.active.req_headers': 'Request Headers',
   'page.upstream.step.input.healthyCheck.active.req_headers': 'Please enter request headers',
   'page.upstream.step.healthyCheck.passive': 'Passive',
-  'page.upstream.step.healthyCheck.passive.create.http_statuses': 'Add HTTP Status',
   'page.upstream.step.healthyCheck.passive.http_statuses': 'HTTP Status',
   'page.upstream.step.input.healthyCheck.passive.http_statuses': 'Please enter http status',
   'page.upstream.step.healthyCheck.passive.tcp_failures': 'TCP Failures',
@@ -120,5 +117,6 @@ export default {
   'page.upstream.checks.passive.healthy.successes.description': 'Number of successes to consider a target healthy',
   'page.upstream.checks.passive.unhealthy.http_statuses.description': 'Which HTTP statuses to consider a success',
   'page.upstream.checks.passive.unhealthy.http_failures.description': 'Number of HTTP failures to consider a target unhealthy',
-  'page.upstream.checks.passive.unhealthy.tcp_failures.description': 'Number of TCP failures to consider a target unhealthy'
+  'page.upstream.checks.passive.unhealthy.tcp_failures.description': 'Number of TCP failures to consider a target unhealthy',
+  'page.upstream.scheme': 'Scheme'
 };
