@@ -29,9 +29,9 @@ const Component: React.FC<Props> = ({ readonly }) => {
       label={formatMessage({ id: 'component.upstream.fields.checks.active.host' })}
       required
       tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.host.tooltip' })}
+      style={{ marginBottom: 0 }}
     >
       <Form.Item
-        style={{ marginBottom: 0 }}
         name={['checks', 'active', 'host']}
         rules={[
           {
