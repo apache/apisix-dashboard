@@ -54,8 +54,6 @@ export default {
   'page.upstream.step.healthyCheck.active.timeout': 'Timeout',
   'page.upstream.step.input.healthyCheck.active.timeout': 'Please enter timeout',
   'page.upstream.step.healthyCheck.active.http_path': 'HTTP Path',
-  'page.upstream.step.healthyCheck.activePort': 'Port',
-  'page.upstream.step.input.healthyCheck.activePort': 'Port',
   'page.upstream.step.healthyCheck.activeInterval': 'Interval',
   'page.upstream.step.input.healthyCheck.activeInterval': 'Please enter interval',
   'page.upstream.step.healthyCheck.successes': 'Successes',

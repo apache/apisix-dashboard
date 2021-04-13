@@ -11,5 +11,7 @@ export default {
   'component.upstream.fields.checks.active.host.tooltip': 'The hostname of the HTTP request used to perform the active health check',
   'component.upstream.fields.checks.active.host.scope': 'Only letters, numbers and . are supported',
 
+  'component.upstream.fields.checks.active.port': 'Port',
+
   'component.upstream.text.others': 'Others'
 }

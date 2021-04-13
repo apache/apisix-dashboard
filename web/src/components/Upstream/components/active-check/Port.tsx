@@ -25,11 +25,11 @@ type Props = {
 const Component: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
   return (
-    <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.activePort' })}>
-      <Form.Item name={['checks', 'active', 'port']} noStyle>
+    <Form.Item label={formatMessage({ id: 'component.upstream.fields.checks.active.port' })}>
+      <Form.Item name={['checks', 'active', 'port']} noStyle initialValue={80}>
         <InputNumber
           placeholder={formatMessage({
-            id: 'page.upstream.step.input.healthyCheck.activePort',
+            id: 'component.upstream.fields.checks.active.port',
           })}
           disabled={readonly}
           min={1}
