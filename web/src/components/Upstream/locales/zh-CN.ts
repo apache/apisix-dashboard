@@ -5,7 +5,7 @@ export default {
   'component.upstream.fields.checks.active.type': '类型',
   'component.upstream.fields.checks.active.type.tooltip': '是使用 HTTP 或 HTTPS 进行主动健康检查，还是只尝试 TCP 连接。',
 
-  'component.upstream.fields.checks.active.concurrency': '并行检查数量',
+  'component.upstream.fields.checks.active.concurrency': '并行数量',
   'component.upstream.fields.checks.active.concurrency.tooltip': '在主动健康检查中同时检查的目标数量。',
 
   'component.upstream.fields.checks.active.host': '主机名',
