@@ -30,7 +30,6 @@ const Component: React.FC<Props> = ({ readonly }) => {
       label={formatMessage({ id: 'component.upstream.fields.checks.active.healthy.interval' })}
       required
       tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.healthy.interval.tooltip' })}
-      initialValue={1}
     >
       <Form.Item
         noStyle
@@ -44,6 +43,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
             }),
           },
         ]}
+        initialValue={1}
       >
         <InputNumber disabled={readonly} min={1} />
       </Form.Item>
