@@ -47,6 +47,7 @@ const LimitReq: React.FC<Props> = ({ form }) => {
           required: true,
           message: `${formatMessage({ id: 'component.global.pleaseEnter' })} rate`
         }]}
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.rate.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <InputNumber min={1} required />
@@ -58,6 +59,7 @@ const LimitReq: React.FC<Props> = ({ form }) => {
           required: true,
           message: `${formatMessage({ id: 'component.global.pleaseEnter' })} burst`
         }]}
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.burst.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <InputNumber min={0} required />
@@ -69,6 +71,7 @@ const LimitReq: React.FC<Props> = ({ form }) => {
           required: true,
           message: `${formatMessage({ id: 'component.global.pleaseChoose' })} key`
         }]}
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.key.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <Select>
@@ -81,6 +84,7 @@ const LimitReq: React.FC<Props> = ({ form }) => {
         label="rejected_code"
         name="rejected_code"
         initialValue={503}
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.rejected_code.tooltip' })}
       >
         <InputNumber min={200} max={599} />
       </Form.Item>
