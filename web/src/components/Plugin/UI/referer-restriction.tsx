@@ -69,12 +69,15 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
                     <Col span={10}>
                       <Form.Item
                         {...field}
-                        validateTrigger={['onChange', 'onBlur']}
+                        validateTrigger={['onChange', 'onBlur', 'onClick']}
                         noStyle
                         required
                         rules={[{
                           message: "",
                           pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g')
+                        }, {
+                          required: true,
+                          message: `${formatMessage({ id: 'component.global.pleaseEnter' })} whitelist`
                         }]}
                       >
                         <Input />
