@@ -19,8 +19,9 @@ import type { FormInstance } from 'antd/es/form';
 import { Empty } from 'antd';
 import { useIntl } from 'umi';
 
-import BasicAuth from './basic-auth';
 import ApiBreaker from './api-breaker';
+import BasicAuth from './basic-auth';
+import LimitConn from './limit-conn';
 
 type Props = {
   name: string,
@@ -28,7 +29,7 @@ type Props = {
   renderForm: boolean
 }
 
-export const PLUGIN_UI_LIST = ['basic-auth', 'api-breaker'];
+export const PLUGIN_UI_LIST = ['api-breaker', 'basic-auth', 'limit-conn'];
 
 export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
 
@@ -37,10 +38,14 @@ export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
   if (!renderForm) { return <Empty style={{ marginTop: 100 }} description={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} /> };
 
   switch (name) {
+    case 'api-breaker':
+      return <ApiBreaker form={form} />
     case 'basic-auth':
       return <BasicAuth form={form} />
     case 'api-breaker':
       return <ApiBreaker form={form} />
+    case 'limit-conn':
+      return <LimitConn form={form} />
     default:
       return null;
   }
