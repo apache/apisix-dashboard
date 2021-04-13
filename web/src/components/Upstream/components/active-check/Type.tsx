@@ -43,6 +43,7 @@ const ActiveCheckTypeComponent: React.FC<Props> = ({ readonly }) => {
       label={formatMessage({ id: 'component.upstream.fields.checks.active.type' })}
       required
       style={{ marginBottom: 0 }}
+      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.type.tooltip' })}
     >
       <Row>
         <Col span={5}>
