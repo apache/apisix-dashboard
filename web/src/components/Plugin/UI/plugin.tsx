@@ -21,6 +21,7 @@ import { useIntl } from 'umi';
 
 import BasicAuth from './basic-auth';
 import LimitCount from './limit-count';
+import LimitConn from './limit-conn';
 
 type Props = {
   name: string,
@@ -28,7 +29,7 @@ type Props = {
   renderForm: boolean
 }
 
-export const PLUGIN_UI_LIST = ['basic-auth', 'limit-count'];
+export const PLUGIN_UI_LIST = ['basic-auth', 'limit-conn', 'limit-count'];
 
 export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
 
@@ -41,6 +42,8 @@ export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
       return <BasicAuth form={form} />
     case 'limit-count':
       return <LimitCount form={form} />
+    case 'limit-conn':
+      return <LimitConn form={form} />
     default:
       return null;
   }

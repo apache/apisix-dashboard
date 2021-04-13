@@ -317,7 +317,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
               <AuthenticationView form={authForm} />
             </TabPane>
             <TabPane data-cy='header' tab={formatMessage({ id: 'page.route.TabPane.headerParams' })} key="header">
-              <DebugParamsView form={headerForm} name='headerForm'/>
+              <DebugParamsView form={headerForm} name='headerForm' inputType="header"/>
             </TabPane>
             {showBodyTab && (
               <TabPane data-cy='body' tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })} key="body">
