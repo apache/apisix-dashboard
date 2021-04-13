@@ -133,7 +133,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <ActiveCheck.Unhealthy.HttpStatuses readonly={readonly} />
         <ActiveCheck.Unhealthy.HttpFailures readonly={readonly} />
 
-        <Divider orientation="left" plain>Others</Divider>
+        <Divider orientation="left" plain>{formatMessage({ id: 'component.upstream.text.others' })}</Divider>
 
         <ActiveCheck.ReqHeaders readonly={readonly} />
       </React.Fragment>
