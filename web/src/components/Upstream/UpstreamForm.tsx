@@ -31,6 +31,7 @@ import Type from './components/Type';
 import UpstreamSelector from './components/UpstreamSelector';
 import Retries from './components/Retries';
 import PassHost from './components/PassHost';
+import TLSComponent from './components/TLS';
 
 type Upstream = {
   name?: string;
@@ -252,6 +253,11 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             {timeoutFields.map((item, index) => (
               <Timeout key={index} {...item} readonly={readonly} />
             ))}
+
+            <TLSComponent form={form} readonly={readonly} />
+
+            {/* discovery_type */}
+            {/* service_name */}
 
             <HealthCheckComponent />
           </React.Fragment>

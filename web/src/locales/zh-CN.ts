@@ -26,6 +26,7 @@ import settings from './zh-CN/setting';
 import PluginOrchestration from '../components/PluginOrchestration/locales/zh-CN';
 import Plugin from '../components/Plugin/locales/zh-CN';
 import RawDataEditor from '../components/RawDataEditor/locales/zh-CN';
+import UpstreamComponent from '../components/Upstream/locales/zh-CN'
 
 export default {
   'navBar.lang': '语言',
@@ -43,5 +44,6 @@ export default {
   ...ActionBarZhCN,
   ...PluginOrchestration,
   ...Plugin,
-  ...RawDataEditor
+  ...RawDataEditor,
+  ...UpstreamComponent
 };

@@ -24,6 +24,7 @@ export default {
   'component.global.format': 'Format',
   'component.global.document': 'Document',
   'component.global.enable': 'Enable',
+  'component.global.disable': 'Disable',
   'component.global.scope': 'Scope',
   'component.global.data.editor': 'Raw Data Editor',
   'component.global.delete': 'Delete',
