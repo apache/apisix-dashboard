@@ -60,7 +60,7 @@ const Component: React.FC<Props> = ({ shouldUpdate, onChange, list = [], disable
             {item.name}
           </Select.Option>
         ))}
-        <Select.Option value='None'>{
+        <Select.Option value={formatMessage({ id: 'page.upstream.step.select.upstream.select.none' })}>{
           formatMessage({ id: 'page.upstream.step.select.upstream.select.none' })
         }</Select.Option>
       </Select>
