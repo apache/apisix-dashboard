@@ -23,6 +23,7 @@ export default {
   'component.plugin.pluginTemplate.tip2': '2. The same plugin in the plugin template will override one in the plugins',
   // cors
   'component.pluginForm.cors.allow_origins.tooltip': 'Which Origins is allowed to enable CORS, format as：scheme://host:port, for example: https://somehost.com:8081. Multiple origin use , to split. When allow_credential is false, you can use * to indicate allow any origin. you also can allow all any origins forcefully using ** even already enable allow_credential, but it will bring some security risks.',
+  'component.pluginForm.cors.allow_origins.extra': 'For example: https://somehost.com:8081',
   'component.pluginForm.cors.allow_methods.tooltip': 'Which Method is allowed to enable CORS, such as: GET, POST etc. Multiple method use , to split. When allow_credential is false, you can use * to indicate allow all any method. You also can allow any method forcefully using ** even already enable allow_credential, but it will bring some security risks.',
   'component.pluginForm.cors.allow_headers.tooltip': 'Which headers are allowed to set in request when access cross-origin resource. Multiple value use , to split. When allow_credential is false, you can use * to indicate allow all request headers. You also can allow any header forcefully using ** even already enable allow_credential, but it will bring some security risks.',
   'component.pluginForm.cors.expose_headers.tooltip': '	Which headers are allowed to set in response when access cross-origin resource. Multiple value use , to split.',

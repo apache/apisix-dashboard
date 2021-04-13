@@ -27,7 +27,7 @@ type Props = {
 
 const FORM_ITEM_LAYOUT = {
   labelCol: {
-    span: 6,
+    span: 7,
   },
   wrapperCol: {
     span: 8
@@ -36,7 +36,7 @@ const FORM_ITEM_LAYOUT = {
 
 export const FORM_ITEM_WITHOUT_LABEL = {
   wrapperCol: {
-    sm: { span: 8, offset: 6 },
+    sm: { span: 8, offset: 7 },
   },
 };
 
@@ -83,6 +83,7 @@ const Cors: React.FC<Props> = ({ form }) => {
       initialValues={{ allow_origins_by_regex: [''] }}
     >
       <Form.Item
+        extra={formatMessage({ id: 'component.pluginForm.cors.allow_origins.extra' })}
         name="allow_origins"
         label="allow_origins"
         initialValue="*"
@@ -135,12 +136,12 @@ const Cors: React.FC<Props> = ({ form }) => {
                   {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   label={index === 0 && 'allow_origins_by_regex'}
                   key={field.key}
+                  tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_origins_by_regex.tooltip' })}
                 >
                   <Form.Item
                     {...field}
                     validateTrigger={['onChange', 'onBlur']}
                     noStyle
-                    tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_origins_by_regex.tooltip' })}
                   >
                     <Input style={{ width: '80%' }} />
                   </Form.Item>
