@@ -110,7 +110,7 @@ context('Online debug', () => {
     // click send without type debugUrl
     cy.contains(routeLocaleUS['page.route.button.send']).click({ force: true });
     cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('exist');
-    cy.get(this.domSelector.notificationCloseIcon).click();
+    cy.get(this.domSelector.notificationCloseIcon).click({ multiple: true });
 
     // input invalid uris
     data.invalidUrls.forEach((uri) => {
@@ -120,16 +120,18 @@ context('Online debug', () => {
 
       // should not show the notification about input the valid request url
       cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('exist');
-      cy.get(this.domSelector.notificationCloseIcon).click();
+      cy.get(this.domSelector.notificationCloseIcon).click({ multiple: true });
     });
   });
 
-  it('should autocomplete header',function () {
+  it('should autocomplete header', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
     const currentToken = localStorage.getItem('token');
 
     // show online debug draw
+    cy.get(this.domSelector.refresh).click();
+    cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
     cy.get(domSelector.debugDraw).should('be.visible');
     cy.get(domSelector.headerTab).should('be.visible').click();
@@ -199,7 +201,7 @@ context('Online debug', () => {
     cy.get(this.domSelector.drawerClose).click();
   });
 
-  it('should debug GET request with query parammeters and jwt auth successfully', function() {
+  it('should debug GET request with query parammeters and jwt auth successfully', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
     const currentToken = localStorage.getItem('token');
@@ -238,7 +240,7 @@ context('Online debug', () => {
     });
   });
 
-  it('should debug POST request with raw json successfully', function() {
+  it('should debug POST request with raw json successfully', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
     const currentToken = localStorage.getItem('token');
@@ -275,35 +277,35 @@ context('Online debug', () => {
     });
     cy.wait('@DebugAPI');
     cy.get(domSelector.codeMirrorResp).contains('code').should('be.visible');
-      cy.get(domSelector.codeMirrorResp).within(() => {
-        cy.get('.cm-property').should(($property) => {
-          $property.map((i, el) => {
-            if (Cypress.$(el).text() === '"name"') {
-              const findRouteName = Cypress.$(el).next().text();
-              expect(findRouteName).to.equal(`"${this.routeData.debugPostJson.name}"`);
-            }
-            if (Cypress.$(el).text() === '"data"') {
-              const data = Cypress.$(el).next().text();
-              expect(data).to.not.equal('null');
-            }
-          })
+    cy.get(domSelector.codeMirrorResp).within(() => {
+      cy.get('.cm-property').should(($property) => {
+        $property.map((i, el) => {
+          if (Cypress.$(el).text() === '"name"') {
+            const findRouteName = Cypress.$(el).next().text();
+            expect(findRouteName).to.equal(`"${this.routeData.debugPostJson.name}"`);
+          }
+          if (Cypress.$(el).text() === '"data"') {
+            const data = Cypress.$(el).next().text();
+            expect(data).to.not.equal('null');
+          }
         })
-      });
+      })
+    });
   });
 
-  it('should delete routes create for test cases successfully', function() {
+  it('should delete routes create for test cases successfully', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
 
     const testRouteNames = [data.routeName, this.routeData.debugPostJson.name];
-    for( let routeName in testRouteNames) {
+    for (let routeName in testRouteNames) {
       cy.contains(`${testRouteNames[routeName]}`).siblings().contains('More').click();
       cy.contains('Delete').click({ force: true });
       cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
         cy.contains('OK').click();
       });
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
-      cy.get(this.domSelector.notificationCloseIcon).click();
+      cy.get(this.domSelector.notificationCloseIcon).click({ multiple: true });
       cy.reload();
     }
   });
