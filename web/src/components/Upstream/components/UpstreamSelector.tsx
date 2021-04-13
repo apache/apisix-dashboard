@@ -49,7 +49,6 @@ const Component: React.FC<Props> = ({ shouldUpdate, onChange, list = [], disable
           item?.children.toLowerCase().includes(input.toLowerCase())
         }
       >
-        {Boolean(!required) && <Select.Option value={'None'}>None</Select.Option>}
         {[
           {
             name: formatMessage({ id: 'page.upstream.step.select.upstream.select.option' }),
@@ -61,6 +60,9 @@ const Component: React.FC<Props> = ({ shouldUpdate, onChange, list = [], disable
             {item.name}
           </Select.Option>
         ))}
+        <Select.Option value='None'>{
+          formatMessage({ id: 'page.upstream.step.select.upstream.select.none' })
+        }</Select.Option>
       </Select>
     </Form.Item>
   )
