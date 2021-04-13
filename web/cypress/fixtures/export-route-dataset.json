@@ -38,13 +38,13 @@
                 "weight": 1
               }
             ],
-            "retries": 1,
             "timeout": {
               "connect": 6,
               "read": 6,
               "send": 6
             },
             "type": "roundrobin",
+            "scheme": "http",
             "pass_host": "pass"
           }
         }
@@ -90,13 +90,13 @@
                 "weight": 1
               }
             ],
-            "retries": 1,
             "timeout": {
               "connect": 6,
               "read": 6,
               "send": 6
             },
             "type": "roundrobin",
+            "scheme": "http",
             "pass_host": "pass"
           }
         }
@@ -141,13 +141,13 @@
                 "weight": 1
               }
             ],
-            "retries": 1,
             "timeout": {
               "connect": 6,
               "read": 6,
               "send": 6
             },
             "type": "roundrobin",
+            "scheme": "http",
             "pass_host": "pass"
           }
         }
