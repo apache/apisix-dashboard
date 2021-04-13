@@ -24,7 +24,7 @@ export default {
   'component.upstream.fields.checks.active.https_verify_certificate.tooltip': '在使用 HTTPS 执行主动健康检查时，是否检查远程主机的 SSL 证书的有效性。',
 
   'component.upstream.fields.checks.active.healthy.interval': '间隔时间',
-  'component.upstream.fields.checks.active.healthy.interval.tooltip': '对健康的上游服务目标节点进行主动健康检查的间隔时间。若为 0，表示对健康节点不进行主动健康检查。',
+  'component.upstream.fields.checks.active.healthy.interval.tooltip': '对健康的上游服务目标节点进行主动健康检查的间隔时间（以秒为单位）。数值为0表示对健康节点不进行主动健康检查。',
 
   'component.upstream.fields.checks.active.healthy.successes': '成功次数',
   'component.upstream.fields.checks.active.healthy.successes.tooltip': '主动健康检查的 HTTP 成功次数，若达到此值，表示上游服务目标节点是健康的。',
@@ -35,6 +35,10 @@ export default {
 
   'component.upstream.fields.checks.active.unhealthy.timeouts': '超时时间',
   'component.upstream.fields.checks.active.unhealthy.timeouts.tooltip': '活动探针中认为目标不健康的超时次数。',
+
+  'component.upstream.fields.checks.active.unhealthy.interval': '间隔时间',
+  'component.upstream.fields.checks.active.unhealthy.interval.tooltip': '对不健康目标的主动健康检查之间的间隔（以秒为单位）。数值为0表示不应该对健康目标进行主动探查。',
+  'component.upstream.fields.checks.active.unhealthy.required': '请输入间隔时间',
 
   'component.upstream.text.others': '其它'
 }
