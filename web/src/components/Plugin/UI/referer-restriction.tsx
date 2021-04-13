@@ -58,6 +58,7 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
           return (
             <div>
               <Form.Item
+                extra={formatMessage({ id: 'component.pluginForm.referer-restriction.whitelist.tooltip' })}
                 label='whitelist'
                 tooltip={formatMessage({ id: 'component.pluginForm.referer-restriction.whitelist.tooltip' })}
                 required
@@ -71,6 +72,10 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
                         validateTrigger={['onChange', 'onBlur']}
                         noStyle
                         required
+                        rules={[{
+                          message: "",
+                          pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g')
+                        }]}
                       >
                         <Input />
                       </Form.Item>
@@ -103,14 +108,15 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
         }}
       </Form.List>
       <Form.Item
+        extra={formatMessage({ id: 'component.pluginForm.referer-restriction.bypass_missing.tooltip' })}
         label="bypass_missing"
         name="bypass_missing"
-        valuePropName="checked"
         tooltip={formatMessage({ id: 'component.pluginForm.referer-restriction.bypass_missing.tooltip' })}
+        valuePropName="checked"
       >
         <Switch />
       </Form.Item>
-    </Form>
+    </Form >
   );
 }
 
