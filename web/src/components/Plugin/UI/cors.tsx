@@ -46,12 +46,13 @@ const Cors: React.FC<Props> = ({ form }) => {
   const HTTPMethods: React.FC = () => (
     <Form.Item
       label="allow_methods"
+      tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_methods.tooltip' })}
     >
       <Row>
         <Col span={24}>
           <Form.Item
             name="allow_methods"
-            initialValue="*"
+            initialValue={["*"]}
           >
             <Select
               mode="multiple"
@@ -72,18 +73,20 @@ const Cors: React.FC<Props> = ({ form }) => {
           </Form.Item>
         </Col>
       </Row>
-    </Form.Item>
+    </Form.Item >
   );
 
   return (
     <Form
       form={form}
       {...FORM_ITEM_LAYOUT}
+      initialValues={{ allow_origins_by_regex: [''] }}
     >
       <Form.Item
         name="allow_origins"
         label="allow_origins"
         initialValue="*"
+        tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_origins.tooltip' })}
       >
         <Input />
       </Form.Item>
@@ -93,6 +96,7 @@ const Cors: React.FC<Props> = ({ form }) => {
         name="allow_headers"
         label="allow_headers"
         initialValue="*"
+        tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_headers.tooltip' })}
       >
         <Input />
       </Form.Item>
@@ -100,6 +104,7 @@ const Cors: React.FC<Props> = ({ form }) => {
         name="expose_headers"
         label="expose_headers"
         initialValue="*"
+        tooltip={formatMessage({ id: 'component.pluginForm.cors.expose_headers.tooltip' })}
       >
         <Input />
       </Form.Item>
@@ -135,7 +140,7 @@ const Cors: React.FC<Props> = ({ form }) => {
                     {...field}
                     validateTrigger={['onChange', 'onBlur']}
                     noStyle
-                    tooltip="Use regex expressions to match which origin is allowed to enable CORS, for example, '.*.test.com' can use to match all subdomain of test.com"
+                    tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_origins_by_regex.tooltip' })}
                   >
                     <Input style={{ width: '80%' }} />
                   </Form.Item>
@@ -154,7 +159,6 @@ const Cors: React.FC<Props> = ({ form }) => {
                 <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                   <Button
                     type="dashed"
-                    data-cy="addHost"
                     onClick={() => {
                       add();
                     }}
