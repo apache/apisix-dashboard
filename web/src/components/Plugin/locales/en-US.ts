@@ -45,6 +45,7 @@ export default {
   'component.pluginForm.limit-count.redis_password.tooltip': 'When using the redis policy, this property specifies the password of the Redis server.',
   'component.pluginForm.limit-count.redis_database.tooltip': 'When using the redis policy, this property specifies the database you selected of the Redis server, and only for non Redis cluster mode (single instance mode or Redis public cloud service that provides single entry).',
   'component.pluginForm.limit-count.redis_timeout.tooltip': 'When using the redis policy, this property specifies the timeout in milliseconds of any command submitted to the Redis server.',
-  'component.pluginForm.limit-count.redis_cluster_nodes.tooltip': 'When using redis-cluster policy，This property is a list of addresses of Redis cluster service nodes.',
+  'component.pluginForm.limit-count.redis_cluster_nodes.tooltip': 'When using redis-cluster policy，This property is a list of addresses of Redis cluster service nodes (at least two nodes).',
   'component.pluginForm.limit-count.redis_cluster_name.tooltip': 'When using redis-cluster policy, this property is the name of Redis cluster service nodes.',
+  'component.pluginForm.limit-count.atLeast2Characters.rule': 'Please enter at least 2 characters',
 };

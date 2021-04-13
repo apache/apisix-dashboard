@@ -55,7 +55,11 @@ const RedisForm: React.FC = () => {
       label="redis_host"
       name="redis_host"
       tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_host.tooltip' })}
-      rules={[{ required: true, message: 'Please input redis_host' }]}
+      rules={[
+        { required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_host` },
+        { min: 2, message: formatMessage({ id: 'component.pluginForm.limit-count.atLeast2Characters.rule' }) }
+      ]}
+      validateTrigger={['onChange', 'onBlur', 'onClick']}
     >
       <Input />
     </Form.Item>
@@ -70,7 +74,8 @@ const RedisForm: React.FC = () => {
       label="redis_password"
       name="redis_password"
       tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_password.tooltip' })}
-      rules={[{ required: true, message: 'Please input redis_password' }]}
+      rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_password` }]}
+      validateTrigger={['onChange', 'onBlur', 'onClick']}
     >
       <Input />
     </Form.Item>
@@ -99,8 +104,8 @@ const RedisClusterForm: React.FC<Props> = () => {
       <Form.Item
         label="redis_cluster_name"
         name="redis_cluster_name"
+        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_cluster_name` }]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_cluster_name.tooltip' })}
-        rules={[{ required: true, message: 'Please input redis_cluster_name' }]}
       >
         <Input />
       </Form.Item>
@@ -110,16 +115,18 @@ const RedisClusterForm: React.FC<Props> = () => {
             <div>
               <Form.Item
                 label='redis_cluster_nodes'
-                tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_cluster_nodes.tooltip' })}
                 style={{ marginBottom: 0 }}
+                required
+                tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_cluster_nodes.tooltip' })}
               >
                 {fields.map((field, index) => (
                   <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
                     <Col>
                       <Form.Item
                         {...field}
-                        validateTrigger={['onChange', 'onBlur']}
                         noStyle
+                        validateTrigger={['onChange', 'onBlur', 'onClick']}
+                        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_cluster_name` }, { min: 2, message: formatMessage({ id: 'component.pluginForm.limit-count.atLeast2Characters.rule' }) }]}
                       >
                         <Input />
                       </Form.Item>
@@ -163,21 +170,23 @@ const LimitCount: React.FC<Props> = ({ form }) => {
     <Form
       form={form}
       {...FORM_ITEM_LAYOUT}
-      initialValues={{ key: 'remote_addr', redis_cluster_nodes: [''], policy, redis_port: 6379, redis_database: 0, redis_timeout: 1000 }}
+      initialValues={{ key: 'remote_addr', redis_cluster_nodes: ['', ''], policy, redis_port: 6379, redis_database: 0, redis_timeout: 1000 }}
     >
       <Form.Item
         label="count"
         name="count"
+        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} count` }]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.count.tooltip' })}
-        rules={[{ required: true, message: 'Please input count' }]}
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <InputNumber min={1} />
       </Form.Item>
       <Form.Item
         label="time_window"
         name="time_window"
+        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} time_window` }]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.time_window.tooltip' })}
-        rules={[{ required: true, message: 'Please input time_window' }]}
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <InputNumber min={1} />
       </Form.Item>

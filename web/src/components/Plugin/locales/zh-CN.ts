@@ -45,6 +45,7 @@ export default {
   'component.pluginForm.limit-count.redis_password.tooltip': '当使用 redis 限速策略时，该属性是 Redis 服务节点的密码。',
   'component.pluginForm.limit-count.redis_database.tooltip': '当使用 redis 限速策略时，该属性是 Redis 服务节点中使用的 database，并且只针对非 Redis 集群模式（单实例模式或者提供单入口的 Redis 公有云服务）生效。',
   'component.pluginForm.limit-count.redis_timeout.tooltip': '当使用 redis 限速策略时，该属性是 Redis 服务节点以毫秒为单位的超时时间。',
-  'component.pluginForm.limit-count.redis_cluster_nodes.tooltip': '当使用 redis-cluster 限速策略时，该属性是 Redis 集群服务节点的地址列表。',
+  'component.pluginForm.limit-count.redis_cluster_nodes.tooltip': '当使用 redis-cluster 限速策略时，该属性是 Redis 集群服务节点的地址列表（至少需要两个地址）。',
   'component.pluginForm.limit-count.redis_cluster_name.tooltip': '当使用 redis-cluster 限速策略时，该属性是 Redis 集群服务节点的名称。',
+  'component.pluginForm.limit-count.atLeast2Characters.rule': '请至少输入 2 个字符',
 };
