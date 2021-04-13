@@ -48,7 +48,7 @@ const Cors: React.FC<Props> = ({ form }) => {
       label="allow_methods"
     >
       <Row>
-        <Col span={10}>
+        <Col span={24}>
           <Form.Item
             name="allow_methods"
             initialValue="*"

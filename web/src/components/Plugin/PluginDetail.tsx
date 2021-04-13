@@ -126,7 +126,7 @@ const PluginDetail: React.FC<Props> = ({
   };
 
   const setUIFormData = (formData: any) => {
-    if (name === 'cors') {
+    if (name === 'cors' && formData) {
       const methods = (formData.allow_methods || '').length ? formData.allow_methods.split(",") : ["*"];
       UIForm.setFieldsValue({ ...formData, allow_methods: methods });
       return;
