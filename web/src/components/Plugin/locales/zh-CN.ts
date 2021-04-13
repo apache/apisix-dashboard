@@ -22,7 +22,7 @@ export default {
   'component.plugin.pluginTemplate.tip1': '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
   'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。',
 
-  // proxxy-mirror
+  // proxy-mirror
   'component.pluginForm.proxy-mirror.host.tooltip': '指定镜像服务地址，例如：http://127.0.0.1:9797（地址中需要包含 schema ：http或https，不能包含 URI 部分）',
   'component.pluginForm.proxy-mirror.host.extra': '例如：http://127.0.0.1:9797（地址中需要包含 schema：http或https，不能包含 URI 部分）',
   'component.pluginForm.proxy-mirror.host.ruletip': '地址中需要包含 schema ：http或https，不能包含 URI 部分',
