@@ -128,7 +128,7 @@ context('Create and Delete Upstream', () => {
     cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
   });
 
-  it('should create grpc upstream', function () {
+  it('should create gRPC upstream', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
     cy.contains('Create').click();
@@ -137,10 +137,8 @@ context('Create and Delete Upstream', () => {
     cy.get(this.domSelector.description).type(this.data.description);
 
     // change upstream scheme to grpc
-    cy.get('#scheme').click();
-    cy.get(this.domSelector.upstreamType).within(() => {
-      cy.contains('grpc').click();
-    });
+    cy.get('#scheme').click({force: true});
+    cy.contains('gRPC').click();
     cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
     cy.get(this.domSelector.nodes_0_port).clear().type('7000');
 
@@ -151,7 +149,7 @@ context('Create and Delete Upstream', () => {
     cy.url().should('contains', 'upstream/list');
   });
 
-  it('should view the (grpc) upstream', function () {
+  it('should view the (gRPC) upstream', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
 
