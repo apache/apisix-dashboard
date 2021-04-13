@@ -456,15 +456,16 @@ fi
 
 ./manager-api stop
 sleep 6
+clean_up
 
 echo "DEBUG ======================================================================="
 # test manager-api output for bad data on etcd
 # make a dummy entry
-./etcd-v3.4.14-linux-amd64/etcdctl put --endpoints 127.0.0.1:3379 /apisix/routes/unique1 "{\"id\":}"
+./etcd-v3.4.14-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
 sleep 2
 # for debugging purpose ------------
-./etcd-v3.4.14-linux-amd64/etcdctl get --endpoints 127.0.0.1:3379 --keys-only --prefix /apisix/routes
-./etcd-v3.4.14-linux-amd64/etcdctl get --endpoints 127.0.0.1:3379 /apisix/routes/unique1
+./etcd-v3.4.14-linux-amd64/etcdctl get --keys-only --prefix /apisix/routes
+./etcd-v3.4.14-linux-amd64/etcdctl get /apisix/routes/unique1
 #-------------------------------
 
 ./manager-api 2>man-api.err &
@@ -478,7 +479,7 @@ if [[ `cat man-api.err | grep -c "Error occurred while initializing logical stor
   exit 1
 fi
 # delete dummy entry
-./etcd-v3.4.14-linux-amd64/etcdctl del --endpoints 127.0.0.1:3379 /apisix/routes/unique1
+./etcd-v3.4.14-linux-amd64/etcdctl del /apisix/routes/unique1
 # just to make sure
 ./manager-api stop
 sleep 6
