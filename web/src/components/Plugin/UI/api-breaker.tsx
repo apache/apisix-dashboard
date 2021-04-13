@@ -50,9 +50,13 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
     >
       <Form.Item
         label="break_response_code"
-        required
         name="break_response_code"
+        rules={[{
+          required: true,
+          message: `${formatMessage({ id: 'component.global.pleaseEnter' })} break_response_code`
+        }]}
         tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.break_response_code.tooltip' })}
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <InputNumber min={200} max={599} required />
       </Form.Item>
