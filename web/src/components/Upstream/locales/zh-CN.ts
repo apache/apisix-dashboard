@@ -26,6 +26,9 @@ export default {
   'component.upstream.fields.service_name.tooltip': '服务名称',
   'component.upstream.fields.service_name.placeholder': '请输入服务名称',
 
+  'component.upstream.fields.tls': 'TLS',
+  'component.upstream.fields.tls.tooltip': 'TLS 证书',
+
   'component.upstream.fields.checks.active.type': '类型',
   'component.upstream.fields.checks.active.type.tooltip': '是使用 HTTP 或 HTTPS 进行主动健康检查，还是只尝试 TCP 连接。',
 

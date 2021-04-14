@@ -31,8 +31,8 @@ const TLSComponent: React.FC<Props> = ({ form, readonly }) => {
   return (
     <React.Fragment>
       <Form.Item
-        label="启用 TLS"
-        tooltip="上游 TLS"
+        label={formatMessage({ id: 'component.upstream.fields.tls' })}
+        tooltip={formatMessage({ id: 'component.upstream.fields.tls.tooltip' })}
         style={{ marginBottom: 0 }}
       >
         <Row>

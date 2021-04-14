@@ -26,6 +26,9 @@ export default {
   'component.upstream.fields.service_name.tooltip': 'Service Name',
   'component.upstream.fields.service_name.placeholder': 'Please enter the service name',
 
+  'component.upstream.fields.tls': 'TLS',
+  'component.upstream.fields.tls.tooltip': 'TLS Certificate',
+
   'component.upstream.fields.checks.active.type': 'Type',
   'component.upstream.fields.checks.active.type.tooltip': 'Whether to perform active health checks using HTTP or HTTPS, or just attempt a TCP connection.',
 
