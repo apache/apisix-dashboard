@@ -76,7 +76,6 @@ const PluginPage: React.FC<Props> = ({
             PLUGIN_FILTER_LIST[item.name] && PLUGIN_FILTER_LIST[item.name].list.includes(referPage)
           ),
       );
-      console.log(filteredData)
       setPluginList(filteredData);
       const categoryList: string[] = [];
       data.forEach((item) => {
