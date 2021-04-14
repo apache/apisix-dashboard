@@ -18,6 +18,14 @@ export default {
   'component.upstream.fields.tls.client_key': 'Client Key',
   'component.upstream.fields.tls.client_cert': 'Client Cert',
 
+  'component.upstream.fields.discovery_type': 'Discovery Type',
+  'component.upstream.fields.discovery_type.tooltip': 'Discovery Type',
+  'component.upstream.fields.discovery_type.placeholder': 'Please enter the discovery type',
+
+  'component.upstream.fields.service_name': 'Service Name',
+  'component.upstream.fields.service_name.tooltip': 'Service Name',
+  'component.upstream.fields.service_name.placeholder': 'Please enter the service name',
+
   'component.upstream.fields.checks.active.type': 'Type',
   'component.upstream.fields.checks.active.type.tooltip': 'Whether to perform active health checks using HTTP or HTTPS, or just attempt a TCP connection.',
 
