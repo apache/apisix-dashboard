@@ -22,6 +22,14 @@ export default {
   'component.plugin.pluginTemplate.tip1': '1. When a route already have plugins field configured, the plugins in the plugin template will be merged into it.',
   'component.plugin.pluginTemplate.tip2': '2. The same plugin in the plugin template will override one in the plugins',
 
+  // api-breaker
+  'component.pluginForm.api-breaker.break_response_code.tooltip': 'Return error code when unhealthy.',
+  'component.pluginForm.api-breaker.max_breaker_sec.tooltip': 'Maximum breaker time(seconds).',
+  'component.pluginForm.api-breaker.unhealthy.http_statuses.tooltip': 'Status codes when unhealthy.',
+  'component.pluginForm.api-breaker.unhealthy.failures.tooltip': 'Number of consecutive error requests that triggered an unhealthy state.',
+  'component.pluginForm.api-breaker.healthy.http_statuses.tooltip': 'Status codes when healthy.',
+  'component.pluginForm.api-breaker.healthy.successes.tooltip': 'Number of consecutive normal requests that trigger health status.',
+
   // proxy-mirror
   'component.pluginForm.proxy-mirror.host.tooltip': 'Specify a mirror service address, e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)',
   'component.pluginForm.proxy-mirror.host.extra': 'e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)',
