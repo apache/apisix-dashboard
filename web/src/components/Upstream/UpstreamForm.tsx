@@ -221,9 +221,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       <Form
         form={form}
         labelCol={{ span: 3 }}
-        initialValues={{
-          pass_host: 'pass',
-        }}
       >
         {showSelector && (
           <UpstreamSelector
