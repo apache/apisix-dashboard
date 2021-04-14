@@ -54,8 +54,6 @@ export default {
   'page.upstream.step.healthyCheck.active.timeout': '超时时间',
   'page.upstream.step.input.healthyCheck.active.timeout': '请输入超时时间',
   'page.upstream.step.input.healthyCheck.activeInterval': '请输入间隔时间',
-  'page.upstream.step.healthyCheck.http_failures': '失败次数',
-  'page.upstream.step.input.healthyCheck.http_failures': '请输入失败次数',
   'page.upstream.step.healthyCheck.active.req_headers': '请求头',
   'page.upstream.step.input.healthyCheck.active.req_headers': '请输入请求头',
   'page.upstream.step.healthyCheck.passive': '被动检查',
@@ -98,7 +96,6 @@ export default {
 
   'page.upstream.checks.active.timeout.description': '主动健康检查的套接字的超时时间',
   'page.upstream.checks.active.unhealthy.interval.description': '对不健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对不健康节点不进行主动健康检查。',
-  'page.upstream.checks.active.unhealthy.http_failures.description': '主动健康检查的 HTTP 失败次数，默认值为0。若达到此值，表示上游服务目标节点是不健康的。',
   'page.upstream.checks.passive.healthy.http_statuses.description': '当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表健康状态是由代理流量产生的。',
   'page.upstream.checks.passive.healthy.successes.description': '通过被动健康检查观察到的正常代理流量的成功次数。如果达到该值，上游服务目标节点将被视为健康。',
   'page.upstream.checks.passive.unhealthy.http_statuses.description': '当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表不健康状态是由代理流量产生的。',

@@ -40,5 +40,13 @@ export default {
   'component.upstream.fields.checks.active.unhealthy.interval.tooltip': '对不健康目标的主动健康检查之间的间隔（以秒为单位）。数值为0表示不应该对健康目标进行主动探查。',
   'component.upstream.fields.checks.active.unhealthy.required': '请输入间隔时间',
 
+  'component.upstream.fields.checks.active.unhealthy.http_failures': 'HTTP 失败次数',
+  'component.upstream.fields.checks.active.unhealthy.http_failures.tooltip': '主动健康检查的 HTTP 失败次数，默认值为0。若达到此值，表示上游服务目标节点是不健康的。',
+  'component.upstream.fields.checks.active.unhealthy.http_failures.required': '请输入 HTTP 失败次数',
+
+  'component.upstream.fields.checks.active.unhealthy.tcp_failures': 'TCP 失败次数',
+  'component.upstream.fields.checks.active.unhealthy.tcp_failures.tooltip': '主动探测中 TCP 失败次数超过该值时，认为目标不健康。',
+  'component.upstream.fields.checks.active.unhealthy.tcp_failures.required': '请输入 TCP 失败次数',
+
   'component.upstream.text.others': '其它'
 }

@@ -136,7 +136,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <ActiveCheck.Unhealthy.Interval readonly={readonly} />
         <ActiveCheck.Unhealthy.HttpStatuses readonly={readonly} />
         <ActiveCheck.Unhealthy.HttpFailures readonly={readonly} />
-        {/* TCP Failures */}
+        <ActiveCheck.Unhealthy.TCPFailures readonly={readonly} />
 
         <Divider orientation="left" plain>{formatMessage({ id: 'component.upstream.text.others' })}</Divider>
 
