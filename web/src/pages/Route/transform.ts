@@ -44,7 +44,7 @@ export const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): Ro
     }
   });
 
-  if(!isEmpty(headers)) {
+  if (!isEmpty(headers)) {
     return omit({
       ...data,
       headers,
@@ -55,7 +55,7 @@ export const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): Ro
 }
 
 const transformProxyRewrite2Formdata = (pluginsData: any) => {
-  const proxyRewriteData: RouteModule.ProxyRewrite= {
+  const proxyRewriteData: RouteModule.ProxyRewrite = {
     scheme: SCHEME_REWRITE.KEEP
   };
   let URIRewriteType = URI_REWRITE_TYPE.KEEP;
@@ -74,7 +74,7 @@ const transformProxyRewrite2Formdata = (pluginsData: any) => {
       hostRewriteType = HOST_REWRITE_TYPE.REWRITE
     }
 
-    Object.keys(pluginsData).forEach( key => {
+    Object.keys(pluginsData).forEach(key => {
       switch (key) {
         case 'scheme':
           proxyRewriteData[key] = pluginsData[key] === SCHEME_REWRITE.HTTP || pluginsData[key] === SCHEME_REWRITE.HTTPS ? pluginsData[key] : SCHEME_REWRITE.KEEP;
@@ -114,7 +114,7 @@ export const transformStepData = ({
   advancedMatchingRules,
   step3Data,
 }: RouteModule.RequestData) => {
-  const { custom_normal_labels, custom_version_label, service_id = ''} = form1Data;
+  const { custom_normal_labels, custom_version_label, service_id = '' } = form1Data;
 
   let redirect: RouteModule.Redirect = {};
   const proxyRewriteFormData: RouteModule.ProxyRewrite = form1Data.proxyRewrite;
@@ -150,10 +150,10 @@ export const transformStepData = ({
       let key = '';
       switch (position) {
         case 'cookie':
-          key = `cookie_${name}`;
+          key = name;
           break;
         case 'http':
-          key = `http_${name}`;
+          key = name;
           break;
         default:
           key = `arg_${name}`;
@@ -165,7 +165,7 @@ export const transformStepData = ({
     status: Number(form1Data.status),
   };
 
-  if (!isEmpty(proxyRewriteConfig)){
+  if (!isEmpty(proxyRewriteConfig)) {
     if (Object.keys(data.plugins || {}).length === 0) {
       data.plugins = {};
     }
