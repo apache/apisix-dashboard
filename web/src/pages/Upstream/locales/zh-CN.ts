@@ -86,7 +86,7 @@ export default {
   'page.upstream.list.input': '请输入',
   'page.upstream.list.create': '创建',
 
-  'page.upstream.type.roundrobin': '轮询调度（Round Robin）',
+  'page.upstream.type.roundrobin': '带权轮询（Round Robin）',
   'page.upstream.type.chash': '一致性哈希（CHash）',
   'page.upstream.type.ewma': '指数加权移动平均法（EWMA）',
 

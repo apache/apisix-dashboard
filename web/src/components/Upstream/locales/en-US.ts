@@ -29,6 +29,12 @@ export default {
   'component.upstream.fields.tls': 'TLS',
   'component.upstream.fields.tls.tooltip': 'TLS Certificate',
 
+  'component.upstream.fields.hash_on': 'Hash on',
+  'component.upstream.fields.hash_on.tooltip': 'What to use as hashing input',
+
+  'component.upstream.fields.key': 'Key',
+  'component.upstream.fields.key.tooltip': 'Key as hashing input',
+
   'component.upstream.fields.checks.active.type': 'Type',
   'component.upstream.fields.checks.active.type.tooltip': 'Whether to perform active health checks using HTTP or HTTPS, or just attempt a TCP connection.',
 

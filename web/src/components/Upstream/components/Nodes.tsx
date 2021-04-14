@@ -29,7 +29,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
 
   return (
-    <Form.List name="nodes">
+    <Form.List name="nodes" initialValue={[{ host: undefined, port: undefined, weight: undefined }]}>
       {(fields, { add, remove }) => (
         <>
           <Form.Item label={formatMessage({ id: 'page.upstream.form.item-label.node.domain.or.ip' })} style={{ marginBottom: 0 }}>

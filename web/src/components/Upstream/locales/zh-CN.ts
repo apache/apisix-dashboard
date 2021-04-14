@@ -29,6 +29,12 @@ export default {
   'component.upstream.fields.tls': 'TLS',
   'component.upstream.fields.tls.tooltip': 'TLS 证书',
 
+  'component.upstream.fields.hash_on': '哈希位置',
+  'component.upstream.fields.hash_on.tooltip': '哈希的输入的位置（Hash On）',
+
+  'component.upstream.fields.key': 'Key',
+  'component.upstream.fields.key.tooltip': '哈希键（Hash Key）',
+
   'component.upstream.fields.checks.active.type': '类型',
   'component.upstream.fields.checks.active.type.tooltip': '是使用 HTTP 或 HTTPS 进行主动健康检查，还是只尝试 TCP 连接。',
 

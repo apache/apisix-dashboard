@@ -54,28 +54,31 @@ type Props = {
   form: FormInstance
 }
 
-const CHash: React.FC<Pick<Props, 'readonly'>> = ({ readonly }) => (
-  <>
-    <Form.Item label="Hash On" name="hash_on" rules={[{ required: true }]}>
-      <Select disabled={readonly}>
-        {Object.entries(HashOn).map(([label, value]) => (
-          <Select.Option value={value} key={value}>
-            {label}
-          </Select.Option>
-        ))}
-      </Select>
-    </Form.Item>
-    <Form.Item label="Key" name="key" rules={[{ required: true }]}>
-      <Select disabled={readonly}>
-        {Object.entries(HashKey).map(([label, value]) => (
-          <Select.Option value={value} key={value}>
-            {label}
-          </Select.Option>
-        ))}
-      </Select>
-    </Form.Item>
-  </>
-);
+const CHash: React.FC<Pick<Props, 'readonly'>> = ({ readonly }) => {
+  const { formatMessage } = useIntl()
+  return (
+    <React.Fragment>
+      <Form.Item name="hash_on" rules={[{ required: true }]} label={formatMessage({ id: 'component.upstream.fields.hash_on' })} tooltip={formatMessage({ id: 'component.upstream.fields.hash_on.tooltip' })} initialValue="vars">
+        <Select disabled={readonly}>
+          {Object.entries(HashOn).map(([label, value]) => (
+            <Select.Option value={value} key={value}>
+              {label}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+      <Form.Item name="key" rules={[{ required: true }]} label={formatMessage({ id: 'component.upstream.fields.key' })} tooltip={formatMessage({ id: 'component.upstream.fields.key.tooltip' })} initialValue="remote_addr">
+        <Select disabled={readonly}>
+          {Object.entries(HashKey).map(([label, value]) => (
+            <Select.Option value={value} key={value}>
+              {label}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+    </React.Fragment>
+  )
+};
 
 const Component: React.FC<Props> = ({ readonly, form }) => {
   const { formatMessage } = useIntl()
