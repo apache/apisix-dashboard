@@ -1,12 +1,18 @@
+# Test make build command to see if ManagerAPI and Web are ok to build
+
 name: make build
 
 on:
   push:
     branches:
       - master
+    paths-ignore:
+      - 'docs/**'
   pull_request:
     branches:
       - master
+    paths-ignore:
+      - 'docs/**'
 
 jobs:
   make-build-test:
