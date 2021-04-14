@@ -31,8 +31,6 @@ import UpstreamSelector from './components/UpstreamSelector';
 import Retries from './components/Retries';
 import PassHost from './components/PassHost';
 import TLSComponent from './components/TLS';
-import DiscoveryType from './components/DiscoveryType';
-import ServiceName from './components/ServiceName';
 
 type Upstream = {
   name?: string;
@@ -256,16 +254,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             ))}
 
             <TLSComponent form={form} readonly={readonly} />
-
-            {/*
-              * According to https://github.com/apache/apisix/blob/master/apisix/schema_def.lua#L410
-              * We have 2 cases that some fields are required:
-              * 1. nodes
-              * 2. discovery_type and service_name
-              */}
-
-            <DiscoveryType readonly={readonly} />
-            <ServiceName readonly={readonly} />
 
             <HealthCheckComponent />
           </React.Fragment>
