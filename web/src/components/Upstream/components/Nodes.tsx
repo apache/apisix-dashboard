@@ -60,7 +60,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
                     />
                   </Form.Item>
                 </Col>
-                <Col span={5}>
+                <Col span={4}>
                   <Form.Item
                     style={{ marginBottom: 0 }}
                     name={[field.name, 'port']}

@@ -46,8 +46,8 @@ export default {
   'component.upstream.fields.checks.active.host.tooltip': '进行主动健康检查时使用的 HTTP 请求主机名',
   'component.upstream.fields.checks.active.host.scope': '仅支持字母、数字和 . ',
 
-  'component.upstream.fields.checks.active.port': '端口号',
-  'component.upstream.fields.checks.active.port.required': '请输入端口号',
+  'component.upstream.fields.checks.active.port': '端口',
+  'component.upstream.fields.checks.active.port.required': '请输入端口',
 
   'component.upstream.fields.checks.active.http_path': '请求路径',
   'component.upstream.fields.checks.active.http_path.tooltip': '向目标节点发出 HTTP GET 请求时应使用的路径。',
