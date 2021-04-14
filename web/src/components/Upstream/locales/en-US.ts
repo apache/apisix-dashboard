@@ -46,4 +46,7 @@ export default {
   'component.upstream.fields.checks.passive.healthy.successes': 'Successes',
   'component.upstream.fields.checks.passive.healthy.successes.tooltip': 'Number of successes to consider a target healthy',
   'component.upstream.fields.checks.passive.healthy.successes.required': 'Please enter the successes number',
+
+  'component.upstream.fields.checks.passive.unhealthy.timeouts': 'Timeouts',
+  'component.upstream.fields.checks.passive.unhealthy.timeouts.tooltip': 'Number of timeouts in proxied traffic to consider a target unhealthy, as observed by passive health checks.',
 }

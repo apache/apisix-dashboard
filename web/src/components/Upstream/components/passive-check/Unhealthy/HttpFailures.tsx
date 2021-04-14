@@ -34,6 +34,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
       <Form.Item
         name={['checks', 'passive', 'unhealthy', 'http_failures']}
         noStyle
+        initialValue={2}
         rules={[
           {
             required: true,

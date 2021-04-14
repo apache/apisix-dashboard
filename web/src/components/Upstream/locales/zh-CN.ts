@@ -51,4 +51,7 @@ export default {
   'component.upstream.fields.checks.passive.healthy.successes': '成功次数',
   'component.upstream.fields.checks.passive.healthy.successes.tooltip': '通过被动健康检查观察到的正常代理流量的成功次数。如果达到该值，上游服务目标节点将被视为健康。',
   'component.upstream.fields.checks.passive.healthy.successes.required': '请输入成功次数',
+
+  'component.upstream.fields.checks.passive.unhealthy.timeouts': '超时时间',
+  'component.upstream.fields.checks.passive.unhealthy.timeouts.tooltip': '根据被动健康检查的观察，在代理中认为目标不健康的超时次数。',
 }

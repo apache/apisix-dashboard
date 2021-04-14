@@ -141,7 +141,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       </React.Fragment>
     );
 
-    const InActiveHealthCheck = () => (
+    const PassiveHealthCheck = () => (
       <React.Fragment>
         <PassiveCheck.Type readonly={readonly} />
 
@@ -198,7 +198,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
                   * When we use form.setFieldsValue to enable active check, error throws.
                   * We choose to alert users first, and need users to enable active check manually.
                   */
-                  return <InActiveHealthCheck />
+                  return <PassiveHealthCheck />
                 }
                 return null
               }
