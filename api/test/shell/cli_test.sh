@@ -458,20 +458,13 @@ fi
 sleep 6
 clean_up
 
-echo "DEBUG ======================================================================="
 # test manager-api output for bad data on etcd
 # make a dummy entry
 ./etcd-v3.4.14-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
 sleep 2
-# for debugging purpose ------------
-./etcd-v3.4.14-linux-amd64/etcdctl get --keys-only --prefix /apisix/routes
-./etcd-v3.4.14-linux-amd64/etcdctl get /apisix/routes/unique1
-#-------------------------------
 
 ./manager-api 2>man-api.err &
 sleep 4
-
-cat man-api.err
 
 if [[ `cat man-api.err | grep -c "Error occurred while initializing logical store:  /apisix/routes"` -ne '1' ||
 `cat man-api.err | grep -c "json unmarshal failed"` -ne '1' ]];then
