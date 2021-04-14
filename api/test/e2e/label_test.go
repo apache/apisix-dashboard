@@ -373,6 +373,16 @@ func TestLabel(t *testing.T) {
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
 		},
+		{
+			Desc:         "get route label(check empty response)",
+			Object:       ManagerApiExpect(t),
+			Method:       http.MethodGet,
+			Headers:      map[string]string{"Authorization": token},
+			Path:         "/apisix/admin/labels/route",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "{\"rows\":[],\"total_size\":0}",
+			Sleep:        sleepTime,
+		},
 	}
 
 	for _, tc := range tests {
