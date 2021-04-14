@@ -29,7 +29,6 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   const [namePlaceholder, setNamePlaceholder] = useState('');
   const [modalForm] = Form.useForm();
 
-  const [operator, setOperator] = useState("");
   const [operatorValueSample, setOperatorValueSample] = useState("")
 
   const { Option } = Select;
@@ -241,7 +240,6 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
             ]}
           >
             <Select onChange={(e: string) => {
-              setOperator(e)
               switch (e) {
                 case "IN":
                   setOperatorValueSample(formatMessage({ id: 'page.route.advanced-match.operator.sample.IN' }))
