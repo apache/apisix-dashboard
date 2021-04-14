@@ -88,6 +88,7 @@ export default {
   'page.upstream.type.roundrobin': '带权轮询（Round Robin）',
   'page.upstream.type.chash': '一致性哈希（CHash）',
   'page.upstream.type.ewma': '指数加权移动平均法（EWMA）',
+  'page.upstream.type.least_conn': '最小连接数（least_conn）',
 
   'page.upstream.list.content': '上游列表包含了已创建的上游服务（即后端服务），可以对上游服务的多个目标节点进行负载均衡和健康检查。',
 

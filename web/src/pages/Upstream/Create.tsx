@@ -21,6 +21,7 @@ import { history, useIntl } from 'umi';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import ActionBar from '@/components/ActionBar';
+import { transformUpstreamDataFromRequest } from '@/components/Upstream/service';
 
 import Step1 from './components/Step1';
 import { fetchOne, create, update } from './service';
@@ -36,24 +37,7 @@ const Page: React.FC = (props) => {
 
     if (id) {
       fetchOne(id).then(({ data }) => {
-        data.custom = {}
-
-        if (data.checks) {
-          data.custom.checks = {}
-
-          if (data.checks.active) {
-            data.custom.checks.active = true
-          }
-
-          if (data.checks.passive) {
-            data.custom.checks.passive = true
-          }
-        }
-
-        if (data.tls) {
-          data.custom.tls = "enable"
-        }
-        form1.setFieldsValue(data);
+        form1.setFieldsValue(transformUpstreamDataFromRequest(data));
       });
     }
   }, []);

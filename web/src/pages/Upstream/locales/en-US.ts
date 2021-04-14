@@ -88,6 +88,7 @@ export default {
   'page.upstream.type.roundrobin': 'Round Robin',
   'page.upstream.type.chash': 'CHash',
   'page.upstream.type.ewma': 'EWMA',
+  'page.upstream.type.least_conn': 'Least conn',
 
   'page.upstream.list.content': 'The upstream list contains the created upstream services (i.e., backend services) and allows load balancing and health checking of multiple target nodes of the upstream services.',
 

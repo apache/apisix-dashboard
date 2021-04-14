@@ -31,6 +31,7 @@ import UpstreamSelector from './components/UpstreamSelector';
 import Retries from './components/Retries';
 import PassHost from './components/PassHost';
 import TLSComponent from './components/TLS';
+import { transformUpstreamDataFromRequest } from './service';
 
 type Upstream = {
   name?: string;
@@ -92,7 +93,12 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       } else {
         if (upstream_id) {
           requestAnimationFrame(() => {
-            form.setFieldsValue(list.find((item) => item.id === upstream_id));
+            const targetData = list.find((item) => item.id === upstream_id) as UpstreamComponent.ResponseData
+            if (targetData) {
+              form.setFieldsValue(transformUpstreamDataFromRequest(targetData));
+            } else {
+              // TODO: 提示 upstream_id 找不到想要的数据
+            }
           });
         }
         if (!required && !Object.keys(formData).length) {
@@ -229,7 +235,10 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               if (prev.upstream_id !== next.upstream_id) {
                 const id = next.upstream_id;
                 if (id) {
-                  form.setFieldsValue(list.find((item) => item.id === id));
+                  const targetData = list.find((item) => item.id === id) as UpstreamComponent.ResponseData
+                  if (targetData) {
+                    form.setFieldsValue(transformUpstreamDataFromRequest(targetData));
+                  }
                   form.setFieldsValue({
                     upstream_id: id,
                   });
@@ -240,7 +249,10 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             onChange={(upstream_id) => {
               setReadonly(Boolean(upstream_id));
               setHiddenForm(Boolean(upstream_id === 'None'));
-              form.setFieldsValue(list.find((item) => item.id === upstream_id));
+              const targetData = list.find((item) => item.id === upstream_id) as UpstreamComponent.ResponseData
+              if (targetData) {
+                form.setFieldsValue(transformUpstreamDataFromRequest(targetData));
+              }
               if (upstream_id === '') {
                 form.resetFields();
               }

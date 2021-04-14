@@ -19,35 +19,7 @@ import { Form, Select } from 'antd'
 import { useIntl } from 'umi'
 import type { FormInstance } from 'antd/es/form'
 
-enum Type {
-  roundrobin = 'roundrobin',
-  chash = 'chash',
-  ewma = 'ewma',
-  // TODO: new type
-  // least_conn = 'least_conn'
-}
-
-enum HashOn {
-  vars = 'vars',
-  header = 'header',
-  cookie = 'cookie',
-  consumer = 'consumer',
-  // TODO: new hash_on key
-  // vars_combinations = 'vars_combinations'
-}
-
-enum HashKey {
-  remote_addr = 'remote_addr',
-  host = 'host',
-  uri = 'uri',
-  server_name = 'server_name',
-  server_addr = 'server_addr',
-  request_uri = 'request_uri',
-  query_string = 'query_string',
-  remote_port = 'remote_port',
-  hostname = 'hostname',
-  arg_id = 'arg_id',
-}
+import { HashOnEnum, CommonHashKeyEnum, AlgorithmEnum } from '../constant'
 
 type Props = {
   readonly?: boolean
@@ -60,7 +32,7 @@ const CHash: React.FC<Pick<Props, 'readonly'>> = ({ readonly }) => {
     <React.Fragment>
       <Form.Item name="hash_on" rules={[{ required: true }]} label={formatMessage({ id: 'component.upstream.fields.hash_on' })} tooltip={formatMessage({ id: 'component.upstream.fields.hash_on.tooltip' })} initialValue="vars">
         <Select disabled={readonly}>
-          {Object.entries(HashOn).map(([label, value]) => (
+          {Object.entries(HashOnEnum).map(([label, value]) => (
             <Select.Option value={value} key={value}>
               {label}
             </Select.Option>
@@ -69,7 +41,7 @@ const CHash: React.FC<Pick<Props, 'readonly'>> = ({ readonly }) => {
       </Form.Item>
       <Form.Item name="key" rules={[{ required: true }]} label={formatMessage({ id: 'component.upstream.fields.key' })} tooltip={formatMessage({ id: 'component.upstream.fields.key.tooltip' })} initialValue="remote_addr">
         <Select disabled={readonly}>
-          {Object.entries(HashKey).map(([label, value]) => (
+          {Object.entries(CommonHashKeyEnum).map(([label, value]) => (
             <Select.Option value={value} key={value}>
               {label}
             </Select.Option>
@@ -92,7 +64,7 @@ const Component: React.FC<Props> = ({ readonly, form }) => {
         initialValue="roundrobin"
       >
         <Select disabled={readonly}>
-          {Object.entries(Type).map(([label, value]) => {
+          {Object.entries(AlgorithmEnum).map(([label, value]) => {
             return (
               <Select.Option value={value} key={value}>
                 {formatMessage({ id: `page.upstream.type.${label}` })}
