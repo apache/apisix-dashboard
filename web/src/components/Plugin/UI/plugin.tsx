@@ -42,8 +42,6 @@ export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
       return <ApiBreaker form={form} />
     case 'basic-auth':
       return <BasicAuth form={form} />
-    case 'api-breaker':
-      return <ApiBreaker form={form} />
     case 'limit-conn':
       return <LimitConn form={form} />
     default:
