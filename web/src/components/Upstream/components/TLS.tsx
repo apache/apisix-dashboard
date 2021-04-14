@@ -23,8 +23,6 @@ type Props = {
   readonly?: boolean;
 }
 
-const CUSTOM_FIELD_KEY = "custom__enable_tls"
-
 const TLSComponent: React.FC<Props> = ({ form, readonly }) => {
   const { formatMessage } = useIntl()
 
@@ -38,12 +36,12 @@ const TLSComponent: React.FC<Props> = ({ form, readonly }) => {
         <Row>
           <Col span={5}>
             <Form.Item
-              name={CUSTOM_FIELD_KEY}
+              name={["custom", "tls"]}
               initialValue="disable"
             >
               <Select disabled={readonly}>
                 {
-                  ["enable", "disable"].map(item => (
+                  ["disable", "enable"].map(item => (
                     <Select.Option value={item} key={item}>
                       {formatMessage({ id: `component.global.${item}` })}
                     </Select.Option>
@@ -57,12 +55,12 @@ const TLSComponent: React.FC<Props> = ({ form, readonly }) => {
       <Form.Item
         noStyle
         shouldUpdate={(prev, next) => {
-          return prev[CUSTOM_FIELD_KEY] !== next[CUSTOM_FIELD_KEY]
+          return prev.custom.tls !== next.custom.tls
         }}
       >
         {
           () => {
-            if (form.getFieldValue(CUSTOM_FIELD_KEY) === 'enable') {
+            if (form.getFieldValue(["custom", "tls"]) === 'enable') {
               return (
                 <React.Fragment>
                   <Form.Item

@@ -38,7 +38,7 @@ type Props = {
   readonly?: boolean
 }
 
-const Component: React.FC<Props> = ({ readonly }) => {
+const Scheme: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
   return (
     <Form.Item
@@ -60,4 +60,4 @@ const Component: React.FC<Props> = ({ readonly }) => {
   )
 }
 
-export default Component
+export default Scheme

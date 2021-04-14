@@ -248,12 +248,23 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
             <PassHost form={form} readonly={readonly} />
             <Retries readonly={readonly} />
+
             <Scheme readonly={readonly} />
+            <Form.Item noStyle shouldUpdate={(prev, next) => prev.scheme !== next.scheme}>
+              {
+                () => {
+                  const scheme = form.getFieldValue("scheme") as string
+                  if (["https", "grpcs"].includes(scheme)) {
+                    return <TLSComponent form={form} readonly={readonly} />
+                  }
+                  return null
+                }
+              }
+            </Form.Item>
+
             {timeoutFields.map((item, index) => (
               <Timeout key={index} {...item} readonly={readonly} />
             ))}
-
-            <TLSComponent form={form} readonly={readonly} />
 
             <HealthCheckComponent />
           </React.Fragment>
