@@ -42,6 +42,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
             }),
           },
         ]}
+        initialValue={5}
       >
         <InputNumber disabled={readonly} min={1} max={254} />
       </Form.Item>
