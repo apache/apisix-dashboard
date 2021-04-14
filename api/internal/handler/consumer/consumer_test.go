@@ -112,8 +112,8 @@ func TestHandler_List(t *testing.T) {
 			},
 			wantRet: &store.ListOutput{
 				Rows: []interface{}{
-					&entity.Consumer{Username: "testUser"},
 					&entity.Consumer{Username: "iam-testUser"},
+					&entity.Consumer{Username: "testUser"},
 					&entity.Consumer{Username: "testUser-is-me"},
 				},
 				TotalSize: 3,
