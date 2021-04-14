@@ -35,8 +35,25 @@ const Page: React.FC = (props) => {
     const { id } = (props as any).match.params;
 
     if (id) {
-      fetchOne(id).then((data) => {
-        form1.setFieldsValue(data.data);
+      fetchOne(id).then(({ data }) => {
+        data.custom = {}
+
+        if (data.checks) {
+          data.custom.checks = {}
+
+          if (data.checks.active) {
+            data.custom.checks.active = true
+          }
+
+          if (data.checks.passive) {
+            data.custom.checks.passive = true
+          }
+        }
+
+        if (data.tls) {
+          data.custom.tls = "enable"
+        }
+        form1.setFieldsValue(data);
       });
     }
   }, []);

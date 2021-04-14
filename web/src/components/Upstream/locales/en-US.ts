@@ -58,6 +58,9 @@ export default {
   'component.upstream.fields.checks.active.https_verify_certificate': 'Verify HTTPs Certificate',
   'component.upstream.fields.checks.active.https_verify_certificate.tooltip': 'Whether to check the validity of the SSL certificate of the remote host when performing active health checks using HTTPS.',
 
+  'component.upstream.fields.checks.active.req_headers': 'Request Headers',
+  'component.upstream.fields.checks.active.req_headers.tooltip': 'Additional request headers, example: User-Agent: curl/7.29.0',
+
   'component.upstream.fields.checks.active.healthy.interval': 'Interval',
   'component.upstream.fields.checks.active.healthy.interval.tooltip': 'Interval between checks for healthy targets (in seconds)',
 

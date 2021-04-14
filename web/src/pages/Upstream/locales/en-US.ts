@@ -54,7 +54,6 @@ export default {
   'page.upstream.step.healthyCheck.active.timeout': 'Timeout',
   'page.upstream.step.input.healthyCheck.active.timeout': 'Please enter timeout',
   'page.upstream.step.input.healthyCheck.activeInterval': 'Please enter interval',
-  'page.upstream.step.healthyCheck.active.req_headers': 'Request Headers',
   'page.upstream.step.input.healthyCheck.active.req_headers': 'Please enter request headers',
   'page.upstream.step.healthyCheck.passive': 'Passive',
   'page.upstream.step.healthyCheck.passive.http_statuses': 'HTTP Status',

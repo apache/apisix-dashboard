@@ -54,7 +54,6 @@ export default {
   'page.upstream.step.healthyCheck.active.timeout': '超时时间',
   'page.upstream.step.input.healthyCheck.active.timeout': '请输入超时时间',
   'page.upstream.step.input.healthyCheck.activeInterval': '请输入间隔时间',
-  'page.upstream.step.healthyCheck.active.req_headers': '请求头',
   'page.upstream.step.input.healthyCheck.active.req_headers': '请输入请求头',
   'page.upstream.step.healthyCheck.passive': '被动检查',
   'page.upstream.step.healthyCheck.passive.http_statuses': '状态码',

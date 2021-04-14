@@ -34,8 +34,9 @@ const Component: React.FC<Props> = ({ readonly }) => {
         <>
           <Form.Item
             label={
-              formatMessage({ id: 'page.upstream.step.healthyCheck.active.req_headers' })
+              formatMessage({ id: 'component.upstream.fields.checks.active.req_headers' })
             }
+            tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.req_headers.tooltip' })}
             style={{ marginBottom: 0 }}
           >
             {fields.map((field, index) => (
