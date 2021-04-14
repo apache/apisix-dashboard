@@ -40,6 +40,5 @@ export const transformUpstreamDataFromRequest = (originData: UpstreamComponent.R
     data.custom.tls = "enable"
   }
 
-  console.log(data)
   return data
 }
