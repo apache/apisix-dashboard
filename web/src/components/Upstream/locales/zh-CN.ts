@@ -47,6 +47,4 @@ export default {
   'component.upstream.fields.checks.active.unhealthy.tcp_failures': 'TCP 失败次数',
   'component.upstream.fields.checks.active.unhealthy.tcp_failures.tooltip': '主动探测中 TCP 失败次数超过该值时，认为目标不健康。',
   'component.upstream.fields.checks.active.unhealthy.tcp_failures.required': '请输入 TCP 失败次数',
-
-  'component.upstream.text.others': '其它'
 }

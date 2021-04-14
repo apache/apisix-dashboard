@@ -119,6 +119,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <ActiveCheck.Host readonly={readonly} />
         <ActiveCheck.Port readonly={readonly} />
         <ActiveCheck.HttpPath readonly={readonly} />
+        <ActiveCheck.ReqHeaders readonly={readonly} />
 
         <Divider orientation="left" plain>
           {formatMessage({ id: 'page.upstream.step.healthyCheck.healthy.status' })}
@@ -137,10 +138,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <ActiveCheck.Unhealthy.HttpStatuses readonly={readonly} />
         <ActiveCheck.Unhealthy.HttpFailures readonly={readonly} />
         <ActiveCheck.Unhealthy.TCPFailures readonly={readonly} />
-
-        <Divider orientation="left" plain>{formatMessage({ id: 'component.upstream.text.others' })}</Divider>
-
-        <ActiveCheck.ReqHeaders readonly={readonly} />
       </React.Fragment>
     );
 
