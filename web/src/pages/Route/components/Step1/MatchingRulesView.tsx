@@ -30,6 +30,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   const [modalForm] = Form.useForm();
 
   const [operator, setOperator] = useState("");
+  const [operatorValueSample, setOperatorValueSample] = useState("")
 
   const { Option } = Select;
 
@@ -223,8 +224,9 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
               },
             ]}
             tooltip={formatMessage({ id: 'page.route.form.itemRulesRequiredMessage.parameterName' })}
+            extra={namePlaceholder}
           >
-            <Input placeholder={namePlaceholder} />
+            <Input />
           </Form.Item>
           <Form.Item
             label={formatMessage({ id: 'page.route.operationalCharacter' })}
@@ -240,8 +242,15 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
           >
             <Select onChange={(e: string) => {
               setOperator(e)
-              if (e === "IN") {
-                // TODO: add sampel of IN operator
+              switch (e) {
+                case "IN":
+                  setOperatorValueSample(formatMessage({ id: 'page.route.advanced-match.operator.sample.IN' }))
+                  break
+                case "~~":
+                  setOperatorValueSample(formatMessage({ id: 'page.route.advanced-match.operator.sample.~~' }))
+                  break
+                default:
+                  setOperatorValueSample("")
               }
             }}>
               <Option value="==">{formatMessage({ id: 'page.route.equal' })}</Option>
@@ -263,6 +272,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
                 })}`,
               },
             ]}
+            extra={operatorValueSample}
           >
             <Input />
           </Form.Item>

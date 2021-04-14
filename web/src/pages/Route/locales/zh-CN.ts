@@ -167,4 +167,7 @@ export default {
 
   'page.route.rule.create': '创建规则',
   'page.route.rule.edit': '编辑规则',
+
+  'page.route.advanced-match.operator.sample.IN': '请输入数组，示例：["1", "2"]',
+  'page.route.advanced-match.operator.sample.~~': '请输入正则表达式，示例：[a-z]+',
 };

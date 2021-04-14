@@ -168,4 +168,7 @@ export default {
 
   'page.route.rule.create': 'Create Rule',
   'page.route.rule.edit': 'Configure Rule',
+
+  'page.route.advanced-match.operator.sample.IN': 'Please enter an array, e.g ["1", "2"]',
+  'page.route.advanced-match.operator.sample.~~': 'Please enter a regular expression, e.g [a-z]+',
 };
