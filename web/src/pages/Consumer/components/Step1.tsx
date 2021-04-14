@@ -47,20 +47,15 @@ const Step1: React.FC<Props> = ({ form, disabled }) => {
             message: formatMessage({ id: 'page.consumer.form.itemRuleMessage.username' }),
           },
         ]}
-        extra={formatMessage({ id: 'page.consumer.form.itemExtraMessage.username' })}
       >
         <Input
-          placeholder={`${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
-            id: 'page.consumer.username',
-          })}`}
+          placeholder={formatMessage({ id: 'page.consumer.username.required' })}
           disabled={disabled || window.location.pathname.indexOf('edit') !== -1}
         />
       </Form.Item>
       <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
         <Input.TextArea
-          placeholder={`${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
-            id: 'component.global.description',
-          })}`}
+          placeholder={formatMessage({ id: 'component.global.description.required' })}
           disabled={disabled}
         />
       </Form.Item>

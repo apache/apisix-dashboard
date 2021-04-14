@@ -197,7 +197,7 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 		return subsetOf(reqLabels, ls)
 	}
 
-	var totalRet = new(store.ListOutput)
+	var totalRet = store.NewListOutput()
 	var existMap = make(map[string]struct{})
 	for _, item := range items {
 		ret, err := item.(store.Interface).List(c.Context(),

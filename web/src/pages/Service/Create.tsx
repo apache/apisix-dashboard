@@ -119,11 +119,9 @@ const Page: React.FC = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={`${
-          (props as any).match.params.serviceId
-            ? formatMessage({ id: 'component.global.edit' })
-            : formatMessage({ id: 'component.global.create' })
-        } ${formatMessage({ id: 'menu.service' })}`}
+        title={(props as any).match.params.serviceId
+          ? formatMessage({ id: 'page.service.configure' })
+          : formatMessage({ id: 'page.service.create' })}
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: '25px' }}>

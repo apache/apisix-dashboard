@@ -70,11 +70,6 @@ const Step: React.FC<Props> = ({ form }) => {
       <Form.Item
         label={formatMessage({ id: 'page.ssl.form.itemLabel.way' })}
         required
-        extra={
-          window.location.pathname.indexOf('edit') === -1
-            ? ''
-            : formatMessage({ id: 'page.ssl.form.itemExtraMessage.way' })
-        }
       >
         <Select
           placeholder={formatMessage({ id: 'page.ssl.select.placeholder.selectCreateWays' })}

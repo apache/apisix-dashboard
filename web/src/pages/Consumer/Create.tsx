@@ -104,11 +104,10 @@ const Page: React.FC = (props) => {
   return (
     <>
       <PageContainer
-        title={`${
-          (props as any).match.params.username
-            ? formatMessage({ id: 'component.global.edit' })
-            : formatMessage({ id: 'component.global.create' })
-        } ${formatMessage({ id: 'menu.consumer' })}`}
+        title={`${(props as any).match.params.username
+          ? formatMessage({ id: 'page.consumer.configure' })
+          : formatMessage({ id: 'page.consumer.create' })
+          }`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
