@@ -156,10 +156,9 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
 
   const renderModal = () => (
     <Modal
-      title={`${mode === 'EDIT'
-          ? formatMessage({ id: 'component.global.edit' })
-          : formatMessage({ id: 'component.global.create' })
-        } ${formatMessage({ id: 'page.route.rule' })}`}
+      title={mode === 'EDIT'
+        ? formatMessage({ id: 'page.route.rule.edit' })
+        : formatMessage({ id: 'page.route.rule.create' })}
       centered
       visible
       onOk={onOk}
@@ -220,7 +219,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
               message: formatMessage({ id: 'component.global.input.ruleMessage.name' }),
             },
           ]}
-          extra={formatMessage({ id: 'page.route.form.itemRulesRequiredMessage.parameterName' })}
+          tooltip={formatMessage({ id: 'page.route.form.itemRulesRequiredMessage.parameterName' })}
         >
           <Input placeholder={namePlaceholder} />
         </Form.Item>

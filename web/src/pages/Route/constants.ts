@@ -15,13 +15,8 @@
  * limitations under the License.
  */
 export const HTTP_METHOD_OPTION_LIST: HttpMethod[] = [
-  'GET',
-  'HEAD',
-  'POST',
-  'PUT',
-  'DELETE',
-  'OPTIONS',
-  'PATCH',
+  "GET", "POST", "PUT", "DELETE", "PATCH", "HEAD",
+  "OPTIONS", "CONNECT", "TRACE"
 ];
 
 export const FORM_ITEM_LAYOUT = {
