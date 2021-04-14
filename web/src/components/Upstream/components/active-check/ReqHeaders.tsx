@@ -51,7 +51,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
                   </Form.Item>
                 </Col>
                 <Col style={{ ...removeBtnStyle, marginLeft: 0 }}>
-                  {!readonly && fields.length > 1 && (
+                  {!readonly && fields.length > 0 && (
                     <MinusCircleOutlined
                       onClick={() => {
                         remove(field.name);
