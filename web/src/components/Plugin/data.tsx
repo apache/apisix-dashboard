@@ -134,7 +134,7 @@ export const PLUGIN_LIST = {
     type: PluginType.traffic
   },
   "request-validation": {
-    type: PluginType.traffic
+    type: PluginType.security
   },
   "example-plugin": {
     type: PluginType.other,
