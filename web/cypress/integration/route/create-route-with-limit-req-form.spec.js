@@ -65,7 +65,7 @@ context('Create and delete route with limit-req form', () => {
     cy.get(this.domSelector.notification).should('contain', 'Invalid plugin data');
     cy.get(this.domSelector.notificationCloseIcon).click();
 
-    // config limit-req form 
+    // config limit-req form
     cy.get(selector.rate).type(1);
     cy.get(selector.burst).type(0);
     cy.get(selector.key).click();
