@@ -111,7 +111,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageContainer title={formatMessage({ id: 'page.consumer.list' })}>
+    <PageContainer title={formatMessage({ id: 'page.consumer.list' })} content={formatMessage({ id: "page.consumer.description" })}>
       <ProTable<ConsumerModule.ResEntity>
         actionRef={ref}
         columns={columns}

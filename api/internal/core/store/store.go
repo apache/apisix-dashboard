@@ -163,6 +163,11 @@ type ListOutput struct {
 	TotalSize int           `json:"total_size"`
 }
 
+// NewListOutput returns JSON marshalling safe struct pointer for empty slice
+func NewListOutput() *ListOutput {
+	return &ListOutput{Rows: make([]interface{}, 0)}
+}
+
 var defLessFunc = func(i, j interface{}) bool {
 	iBase := i.(entity.BaseInfoGetter).GetBaseInfo()
 	jBase := j.(entity.BaseInfoGetter).GetBaseInfo()
