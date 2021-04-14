@@ -20,7 +20,7 @@ import { useIntl } from 'umi'
 
 import TimeUnit from './TimeUnit'
 
-const Component: React.FC<{
+const Timeout: React.FC<{
   label: string;
   desc: string;
   name: string[];
@@ -47,4 +47,4 @@ const Component: React.FC<{
   )
 }
 
-export default Component
+export default Timeout
