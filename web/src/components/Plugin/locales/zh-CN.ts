@@ -31,6 +31,11 @@ export default {
   'component.pluginForm.cors.allow_credential.tooltip': '是否允许跨域访问的请求方携带凭据（如 Cookie 等）。根据 CORS 规范，如果设置该选项为 true，那么将不能在其他选项中使用 * 。',
   'component.pluginForm.cors.allow_origins_by_regex.tooltip': '使用正则表达式数组来匹配允许跨域访问的 Origin, 如[".*.test.com"] 可以匹配任何test.com的子域名 * 。',
 
+  // proxy-mirror
+  'component.pluginForm.proxy-mirror.host.tooltip': '指定镜像服务地址，例如：http://127.0.0.1:9797（地址中需要包含 schema ：http或https，不能包含 URI 部分）',
+  'component.pluginForm.proxy-mirror.host.extra': '例如：http://127.0.0.1:9797（地址中需要包含 schema：http或https，不能包含 URI 部分）',
+  'component.pluginForm.proxy-mirror.host.ruletip': '地址中需要包含 schema ：http或https，不能包含 URI 部分',
+
   // limit-conn
   'component.pluginForm.limit-conn.conn.tooltip': '允许的最大并发请求数。超过 conn 的限制、但是低于 conn + burst 的请求，将被延迟处理。',
   'component.pluginForm.limit-conn.burst.tooltip': '允许被延迟处理的并发请求数。',

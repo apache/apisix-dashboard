@@ -31,6 +31,11 @@ export default {
   'component.pluginForm.cors.allow_credential.tooltip': 'If you set this option to true, you can not use \'*\' for other options.',
   'component.pluginForm.cors.allow_origins_by_regex.tooltip': 'Use regex expressions to match which origin is allowed to enable CORS, for example, [".*.test.com"] can use to match all subdomain of test.com.',
 
+  // proxy-mirror
+  'component.pluginForm.proxy-mirror.host.tooltip': 'Specify a mirror service address, e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)',
+  'component.pluginForm.proxy-mirror.host.extra': 'e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)',
+  'component.pluginForm.proxy-mirror.host.ruletip': 'address needs to contain schema: http or https, not URI part',
+
   // limit-conn
   'component.pluginForm.limit-conn.conn.tooltip': 'the maximum number of concurrent requests allowed. Requests exceeding this ratio (and below conn + burst) will get delayed(the latency seconds is configured by default_conn_delay) to conform to this threshold.',
   'component.pluginForm.limit-conn.burst.tooltip': 'the number of excessive concurrent requests (or connections) allowed to be delayed.',
