@@ -117,6 +117,17 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 			}
 			return true
 		},
+		Less: func(i, j interface{}) bool {
+			iBase := i.(*entity.Consumer)
+			jBase := j.(*entity.Consumer)
+			if iBase.CreateTime != jBase.CreateTime {
+				return iBase.CreateTime < jBase.CreateTime
+			}
+			if iBase.UpdateTime != jBase.UpdateTime {
+				return iBase.UpdateTime < jBase.UpdateTime
+			}
+			return iBase.Username < jBase.Username
+		},
 		PageSize:   input.PageSize,
 		PageNumber: input.PageNumber,
 	})
