@@ -42,6 +42,7 @@ export default {
   'component.global.loading': 'Loading',
   'component.global.list': 'List',
   'component.global.description': 'Description',
+  'component.global.description.required': 'Please enter the description',
   'component.global.labels': 'Labels',
   'component.global.version': 'Version',
   'component.global.operation': 'Operation',
