@@ -38,7 +38,9 @@ context('Create Route with Upstream', () => {
 
   it('should create route with upstream just created', function () {
     cy.visit('/');
-    cy.contains('Route').click();
+    cy.get('[role=menu]').should('be.visible').within(() => {
+      cy.contains('Route').click();
+    });
     cy.contains('Create').click();
 
     cy.contains('Next').click().click();
