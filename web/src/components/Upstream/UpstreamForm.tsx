@@ -108,8 +108,15 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     const ActiveHealthCheck = () => (
       <React.Fragment>
         <ActiveCheck.Type readonly={readonly} />
-        {/* TODO: Only show HttpsVerifyCertificate when using HTTPs type */}
-        <ActiveCheck.HttpsVerifyCertificate readonly={readonly} />
+        <Form.Item noStyle shouldUpdate={(prev, next) => prev.checks.active.type !== next.checks.active.type}>
+          {() => {
+            const type = form.getFieldValue(['checks', 'active', 'type'])
+            if (['https'].includes(type)) {
+              return <ActiveCheck.HttpsVerifyCertificate readonly={readonly} />
+            }
+            return null
+          }}
+        </Form.Item>
         <ActiveCheck.Timeout readonly={readonly} />
         <ActiveCheck.Concurrency readonly={readonly} />
         <ActiveCheck.Host readonly={readonly} />
