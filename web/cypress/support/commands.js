@@ -98,7 +98,6 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           if (codemirror) {
             codemirror.setValue(JSON.stringify(data));
           }
-          cy.get(domSelector.drawer).should('exist');
 
           cy.get(domSelector.drawer, { timeout }).within(() => {
             cy.contains('Submit').click({

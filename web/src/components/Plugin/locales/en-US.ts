@@ -41,6 +41,11 @@ export default {
   'component.pluginForm.limit-conn.default_conn_delay.tooltip': 'the latency seconds of request when concurrent requests exceeding conn but below (conn + burst).',
   'component.pluginForm.limit-conn.key.tooltip': 'to limit the concurrency level.For example, one can use the host name (or server zone) as the key so that we limit concurrency per host name. Otherwise, we can also use the client address as the key so that we can avoid a single client from flooding our service with too many parallel connections or requests.Now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
   'component.pluginForm.limit-conn.rejected_code.tooltip': 'returned when the request exceeds conn + burst will be rejected.',
+  // limit-req
+  'component.pluginForm.limit-req.rate.tooltip': 'The specified request rate (number per second) threshold. Requests exceeding this rate (and below burst) will get delayed to conform to the rate.',
+  'component.pluginForm.limit-req.burst.tooltip': 'The number of excessive requests per second allowed to be delayed. Requests exceeding this hard limit will get rejected immediately.',
+  'component.pluginForm.limit-req.key.tooltip': 'The user specified key to limit the rate, now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
+  'component.pluginForm.limit-req.rejected_code.tooltip': 'The HTTP status code returned when the request exceeds the threshold is rejected.',
 
   'component.plugin.form': 'Form',
   'component.plugin.format-codes.disable': 'Format JSON or YAML data',
