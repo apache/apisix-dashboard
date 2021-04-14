@@ -75,7 +75,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
           },
         ]}
       >
-        <Input.TextArea rows={6} disabled={mode !== 'EDIT'} />
+        <Input.TextArea rows={6} disabled={mode !== 'EDIT'} placeholder={formatMessage({ id: 'component.ssl.fields.cert.required' })} />
       </Form.Item>
       <Form.Item
         label={formatMessage({ id: 'page.ssl.form.itemLabel.privateKey' })}
@@ -93,7 +93,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ mode, form }) => {
           },
         ]}
       >
-        <Input.TextArea rows={6} disabled={mode !== 'EDIT'} />
+        <Input.TextArea rows={6} disabled={mode !== 'EDIT'} placeholder={formatMessage({ id: 'component.ssl.fields.key.required' })} />
       </Form.Item>
       {renderExpireTime()}
     </Form>
