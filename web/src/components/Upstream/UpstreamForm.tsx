@@ -164,43 +164,46 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     );
 
     const HealthCheckComponent = () => {
-      const options = [
-        {
-          label: formatMessage({ id: 'page.upstream.step.healthyCheck.active' }),
-          name: ['checks', 'active'],
-          component: (
-            <>
-              <ActiveHealthCheck />
-              <Divider orientation="left" plain />
-            </>
-          ),
-        },
-        {
-          label: formatMessage({ id: 'page.upstream.step.healthyCheck.passive' }),
-          name: ['checks', 'passive'],
-          component: <InActiveHealthCheck />,
-        },
-      ]
-
       return (
         <PanelSection
           title={formatMessage({ id: 'page.upstream.step.healthyCheck.healthy.check' })}
         >
-          {options.map(({ label, name, component }) => (
-            <div key={label}>
-              <Form.Item label={label} name={name} valuePropName="checked" key={label}>
-                <Switch disabled={readonly} />
-              </Form.Item>
-              <Form.Item shouldUpdate noStyle>
-                {() => {
-                  if (form.getFieldValue(name)) {
-                    return component;
-                  }
-                  return null;
-                }}
-              </Form.Item>
-            </div>
-          ))}
+          <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active' })} name={['custom', 'checks', 'active']} valuePropName="checked">
+            <Switch disabled={readonly} />
+          </Form.Item>
+          <Form.Item shouldUpdate noStyle>
+            {
+              () => {
+                const active = form.getFieldValue(['custom', 'checks', 'active'])
+                if (active) {
+                  return (
+                    <ActiveHealthCheck />
+                  )
+                }
+                return null
+              }
+            }
+          </Form.Item>
+          <Divider orientation="left" plain />
+          <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive' })} name={['custom', 'checks', 'passive']} valuePropName="checked">
+            <Switch disabled={readonly} />
+          </Form.Item>
+          <Form.Item shouldUpdate noStyle>
+            {
+              () => {
+                const passive = form.getFieldValue(['custom', 'checks', 'passive'])
+                if (passive) {
+                  /*
+                  * When enable passive check, we should enable active check, too.
+                  * When we use form.setFieldsValue to enable active check, error throws.
+                  * We choose to alert users first, and need users to enable active check manually.
+                  */
+                  return <InActiveHealthCheck />
+                }
+                return null
+              }
+            }
+          </Form.Item>
         </PanelSection>
       )
     }
