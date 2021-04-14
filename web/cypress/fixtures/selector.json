@@ -1,7 +1,6 @@
 {
   "codeMirror": ".CodeMirror",
   "username": "#username",
-
   "languageSwitcher": ".ant-space-align-center",
   "dropdown": ".rc-virtual-list",
   "notification": ".ant-notification-notice-message",
@@ -9,12 +8,10 @@
   "notificationCloseIcon": ".ant-notification-close-icon",
   "notificationDesc": ".ant-notification-notice-description",
   "errorNotification:": ".ant-notification-notice-error",
-
   "pluginCard": ".ant-card",
   "pluginCardBordered": ".ant-card-bordered",
   "pageContent": ".ant-pro-page-container",
-
-  "tableBody":".ant-table-tbody",
+  "tableBody": ".ant-table-tbody",
   "tableCell": ".ant-table-cell",
   "empty": ".ant-empty-normal",
   "refresh": ".anticon-reload",
@@ -22,16 +19,15 @@
   "disabledSwitcher": "#disable",
   "checkedSwitcher": ".ant-switch-checked",
   "deleteButton": ".ant-btn-dangerous",
-
   "name": "#name",
   "nodes_0_host": "#nodes_0_host",
   "nodes_0_port": "#nodes_0_port",
+  "nodes_0_weight": "#nodes_0_weight",
   "upstream_id": "#upstream_id",
   "input": ":input",
   "nameSelector": "[title=Name]",
   "serviceSelector": "[title=test_service]",
   "nameSearch": "[title=Name]",
-
   "description": "#desc",
   "upstreamSelector": "[data-cy=upstream_selector]",
   "addHost": "[data-cy=addHost]",
@@ -43,27 +39,21 @@
   "ruleCard": ".ant-modal",
   "operator": "#operator",
   "value": "#value",
-
   "fileSelector": "[type=file]",
   "fileTypeRadio": "[type=radio]",
   "fileSelectorClose": ".ant-modal-close",
-
   "debugUri": "#debugUri",
-
   "hosts_0": "#hosts_0",
   "labels_0_labelKey": "#labels_0_labelKey",
   "labels_0_labelValue": "#labels_0_labelValue",
   "labelSelector": "[title=Labels]",
   "labelSelect_0": ".ant-select-selection-overflow",
-
   "pageContainer": ".ant-pro-page-container",
   "notificationMessage": ".ant-notification-notice-message",
   "avatar": ".ant-space-align-center",
   "grafanaURL": "#grafanaURL",
   "explain": ".ant-form-item-explain",
-
   "upstreamType": ".ant-select-item-option-content",
-
   "errorExplain": ".ant-form-item-explain",
   "usernameInput": "#control-ref_username",
   "passwordInput": "#control-ref_password",
@@ -76,7 +66,6 @@
   "notificationClose": ".anticon-close",
   "redirectURIInput": "#redirectURI",
   "redirectCodeSelector": "#ret_code",
-
   "paginationOptions": ".ant-pagination-options",
   "fiftyPerPage": "[title=\"50 / page\"]",
   "twentyPerPage": "[title=\"20 / page\"]",
@@ -85,7 +74,6 @@
   "pageTwoActived": ".ant-pagination-item-2.ant-pagination-item-active",
   "selectDropdown": ".ant-select-dropdown",
   "codeMirrorMode": "[data-cy='code-mirror-mode']",
-  "selectJSON":".ant-select-dropdown [label=JSON]",
-
+  "selectJSON": ".ant-select-dropdown [label=JSON]",
   "deleteAlert": ".ant-modal-body"
 }
