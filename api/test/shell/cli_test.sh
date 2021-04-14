@@ -189,7 +189,7 @@ if [[ `grep -c "${LOGLEVEL}" ${STDOUT}` -ne '1' ]]; then
     exit 1
 fi
 
-if [[ `grep -c "${HOST}:${PORT}" ${STDOUT}` -ne '1' ]]; then
+if [[ `grep -c "Listen  : :${PORT}" ${STDOUT}` -ne '1' ]]; then
     echo "failed: the manager server didn't show started info"
     exit 1
 fi

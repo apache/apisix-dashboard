@@ -44,7 +44,7 @@ var (
 	ENV              string
 	Schema           gjson.Result
 	WorkDir          = "."
-	ServerHost       = "127.0.0.1"
+	ServerHost       = ""
 	ServerPort       = 80
 	ETCDConfig       *Etcd
 	ErrorLogLevel    = "warn"
