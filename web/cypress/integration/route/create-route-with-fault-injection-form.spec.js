@@ -53,7 +53,7 @@ context('Create and delete route with fault-injection form', () => {
       cy.get(this.domSelector.disabledSwitcher).click();
       cy.get(this.domSelector.checkedSwitcher).should('exist');
     });
-  
+
     // config fault-injection form
     cy.get(this.domSelector.drawer).within(() => {
       cy.contains('Submit').click({
