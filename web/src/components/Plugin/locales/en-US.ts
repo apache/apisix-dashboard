@@ -29,6 +29,12 @@ export default {
   'component.pluginForm.api-breaker.unhealthy.failures.tooltip': 'Number of consecutive error requests that triggered an unhealthy state.',
   'component.pluginForm.api-breaker.healthy.http_statuses.tooltip': 'Status codes when healthy.',
   'component.pluginForm.api-breaker.healthy.successes.tooltip': 'Number of consecutive normal requests that trigger health status.',
+
+  // proxy-mirror
+  'component.pluginForm.proxy-mirror.host.tooltip': 'Specify a mirror service address, e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)',
+  'component.pluginForm.proxy-mirror.host.extra': 'e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)',
+  'component.pluginForm.proxy-mirror.host.ruletip': 'address needs to contain schema: http or https, not URI part',
+
   // limit-conn
   'component.pluginForm.limit-conn.conn.tooltip': 'the maximum number of concurrent requests allowed. Requests exceeding this ratio (and below conn + burst) will get delayed(the latency seconds is configured by default_conn_delay) to conform to this threshold.',
   'component.pluginForm.limit-conn.burst.tooltip': 'the number of excessive concurrent requests (or connections) allowed to be delayed.',

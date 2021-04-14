@@ -66,6 +66,17 @@ Cypress.Commands.add('configurePlugins', (cases) => {
 
         // NOTE: wait for the Drawer to appear on the DOM
         cy.focused(domSelector.drawer).should('exist');
+
+        cy.get(domSelector.codeMirrorMode).invoke('text').then(text => {
+          if (text === 'Form') {
+            cy.wait(5000);
+            cy.get(domSelector.codeMirrorMode).should('be.visible');
+            cy.get(domSelector.codeMirrorMode).click();
+            cy.get(domSelector.selectDropdown).should('be.visible');
+            cy.get(domSelector.selectJSON).click();
+          }
+        });
+
         cy.get(domSelector.drawer, { timeout }).within(() => {
           cy.get(domSelector.switch).click({
             force: true,

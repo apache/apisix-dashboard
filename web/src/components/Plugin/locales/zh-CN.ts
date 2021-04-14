@@ -29,6 +29,12 @@ export default {
   'component.pluginForm.api-breaker.unhealthy.failures.tooltip': '触发不健康状态的连续错误请求次数。',
   'component.pluginForm.api-breaker.healthy.http_statuses.tooltip': '健康时候的状态码。',
   'component.pluginForm.api-breaker.healthy.successes.tooltip': '触发健康状态的连续正常请求次数。',
+
+  // proxy-mirror
+  'component.pluginForm.proxy-mirror.host.tooltip': '指定镜像服务地址，例如：http://127.0.0.1:9797（地址中需要包含 schema ：http或https，不能包含 URI 部分）',
+  'component.pluginForm.proxy-mirror.host.extra': '例如：http://127.0.0.1:9797（地址中需要包含 schema：http或https，不能包含 URI 部分）',
+  'component.pluginForm.proxy-mirror.host.ruletip': '地址中需要包含 schema ：http或https，不能包含 URI 部分',
+
   // limit-conn
   'component.pluginForm.limit-conn.conn.tooltip': '允许的最大并发请求数。超过 conn 的限制、但是低于 conn + burst 的请求，将被延迟处理。',
   'component.pluginForm.limit-conn.burst.tooltip': '允许被延迟处理的并发请求数。',
