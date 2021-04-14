@@ -22,6 +22,11 @@ export default {
   'component.plugin.pluginTemplate.tip1': '1. When a route already have plugins field configured, the plugins in the plugin template will be merged into it.',
   'component.plugin.pluginTemplate.tip2': '2. The same plugin in the plugin template will override one in the plugins',
 
+  // proxy-mirror
+  'component.pluginForm.proxy-mirror.host.tooltip': 'Specify a mirror service address, e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)',
+  'component.pluginForm.proxy-mirror.host.extra': 'e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)',
+  'component.pluginForm.proxy-mirror.host.ruletip': 'address needs to contain schema: http or https, not URI part',
+
   // limit-conn
   'component.pluginForm.limit-conn.conn.tooltip': 'the maximum number of concurrent requests allowed. Requests exceeding this ratio (and below conn + burst) will get delayed(the latency seconds is configured by default_conn_delay) to conform to this threshold.',
   'component.pluginForm.limit-conn.burst.tooltip': 'the number of excessive concurrent requests (or connections) allowed to be delayed.',

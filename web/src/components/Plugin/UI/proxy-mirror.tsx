@@ -16,35 +16,46 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Empty } from 'antd';
+import { Form, Input } from 'antd';
 import { useIntl } from 'umi';
 
-import BasicAuth from './basic-auth';
-import ProxyMirror from './proxy-mirror';
-import LimitConn from './limit-conn';
-
 type Props = {
-  name: string,
-  form: FormInstance,
-  renderForm: boolean
-}
+  form: FormInstance;
+};
 
-export const PLUGIN_UI_LIST = ['basic-auth', 'limit-conn', 'proxy-mirror'];
+const FORM_ITEM_LAYOUT = {
+  labelCol: {
+    span: 4,
+  },
+  wrapperCol: {
+    span: 10
+  },
+};
 
-export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
-
+const ProxyMirror: React.FC<Props> = ({ form }) => {
   const { formatMessage } = useIntl();
 
-  if (!renderForm) { return <Empty style={{ marginTop: 100 }} description={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} /> };
-
-  switch (name) {
-    case 'basic-auth':
-      return <BasicAuth form={form} />
-    case 'proxy-mirror':
-      return <ProxyMirror form={form} />
-    case 'limit-conn':
-      return <LimitConn form={form} />
-    default:
-      return null;
-  }
+  return (
+    <Form
+      form={form}
+      {...FORM_ITEM_LAYOUT}
+    >
+      <Form.Item
+        label="host"
+        name="host"
+        extra={formatMessage({ id: 'component.pluginForm.proxy-mirror.host.extra' })}
+        tooltip={formatMessage({ id: 'component.pluginForm.proxy-mirror.host.tooltip' })}
+        rules={[
+          {
+            pattern: new RegExp(/^http(s)?:\/\/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:[0-9]{1,5})?$/, 'g'),
+            message: formatMessage({ id: 'component.pluginForm.proxy-mirror.host.ruletip' }),
+          }
+        ]}
+      >
+        <Input />
+      </Form.Item>
+    </Form>
+  );
 }
+
+export default ProxyMirror;
