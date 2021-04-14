@@ -90,6 +90,8 @@ context('create route with proxy-rewrite plugin', () => {
 
     cy.contains('Next').click();
     cy.get(this.domSelector.nodes_0_host).type(this.data.host2);
+    cy.get(this.domSelector.nodes_0_port).type(this.data.port);
+    cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
     cy.contains('Next').click();
 
     // should not see proxy-rewrite plugin in the step3
