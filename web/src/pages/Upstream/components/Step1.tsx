@@ -19,7 +19,7 @@ import { Form, Input } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 
-import UpstreamForm, { DEFAULT_UPSTREAM } from '@/components/Upstream';
+import UpstreamForm from '@/components/Upstream';
 import { fetchList } from '../service';
 
 type Props = {
@@ -38,7 +38,7 @@ const Step1: React.FC<Props> = ({ form, disabled, upstreamRef }) => {
 
   return (
     <>
-      <Form labelCol={{ span: 3 }} form={form} initialValues={DEFAULT_UPSTREAM}>
+      <Form labelCol={{ span: 3 }} form={form}>
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.name' })}
           name="name"

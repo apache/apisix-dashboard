@@ -38,6 +38,7 @@ const Component: React.FC<{
             message: formatMessage({ id: `page.upstream.step.input.${name[1]}.timeout` }),
           },
         ]}
+        initialValue={6}
       >
         <InputNumber disabled={readonly} />
       </Form.Item>

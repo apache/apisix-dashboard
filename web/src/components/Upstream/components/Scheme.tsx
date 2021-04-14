@@ -45,6 +45,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
       label={formatMessage({ id: 'page.upstream.scheme' })}
       name="scheme"
       rules={[{ required: true }]}
+      initialValue="http"
     >
       <Select disabled={readonly}>
         {options.map(item => {

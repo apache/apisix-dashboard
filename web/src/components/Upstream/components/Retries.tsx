@@ -28,6 +28,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
     <Form.Item
       label={formatMessage({ id: 'page.upstream.retries' })}
       name="retries"
+      initialValue={0}
     >
       <InputNumber
         disabled={readonly}

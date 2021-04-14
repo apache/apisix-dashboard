@@ -86,6 +86,7 @@ const Component: React.FC<Props> = ({ readonly, form }) => {
         label={formatMessage({ id: 'page.upstream.step.type' })}
         name="type"
         rules={[{ required: true }]}
+        initialValue="roundrobin"
       >
         <Select disabled={readonly}>
           {Object.entries(Type).map(([label, value]) => {

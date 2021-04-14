@@ -21,7 +21,6 @@ import type { FormInstance } from 'antd/es/form';
 
 import { PanelSection } from '@api7-dashboard/ui';
 import { transformRequest } from '@/pages/Upstream/transform';
-import { DEFAULT_UPSTREAM } from './constant';
 import PassiveCheck from './components/passive-check';
 import ActiveCheck from './components/active-check'
 import Nodes from './components/Nodes'
@@ -89,7 +88,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         if (required) {
           requestAnimationFrame(() => {
             form.resetFields();
-            form.setFieldsValue(DEFAULT_UPSTREAM);
             setHiddenForm(false);
           });
         }
@@ -108,8 +106,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       }
       setReadonly(Boolean(upstream_id) || disabled);
     }, [list]);
-
-
 
     const ActiveHealthCheck = () => (
       <React.Fragment>
@@ -210,7 +206,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       )
     }
 
-
     return (
       <Form
         form={form}
@@ -243,7 +238,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
               form.setFieldsValue(list.find((item) => item.id === upstream_id));
               if (upstream_id === '') {
                 form.resetFields();
-                form.setFieldsValue(DEFAULT_UPSTREAM);
               }
             }}
           />
