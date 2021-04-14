@@ -1,0 +1,15 @@
+name: Cancel Previous Runs
+on: [push]
+jobs:
+  cancel:
+    name: 'Cancel Previous Runs'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.0
+        with:
+        # link to get workflow_id : https://api.github.com/repos/apache/apisix-dashboard/actions/workflows
+          workflow_id: 2342957,3146052,3146054,3255405,3256000,3313689,3315567,3377804,3397020,3490577,3584429,3584431,3584432,4186305,4186810,4191476,4263344,4997294,5189252,5189253,5550131,6154890,7338282,7965488
+          access_token: ${{ github.token }}
+
+
