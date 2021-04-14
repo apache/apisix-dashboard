@@ -92,8 +92,6 @@ export default {
 
   'page.upstream.list.content': 'The upstream list contains the created upstream services (i.e., backend services) and allows load balancing and health checking of multiple target nodes of the upstream services.',
 
-  'page.upstream.retries': 'Retries',
-
   'page.upstream.checks.active.timeout.description': 'Socket timeout for active checks (in seconds)',
   'page.upstream.checks.active.unhealthy.interval.description': 'Interval between checks for unhealthy targets (in seconds)',
   'page.upstream.checks.passive.healthy.http_statuses.description': 'Which HTTP statuses to consider a failure',

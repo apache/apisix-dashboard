@@ -26,9 +26,9 @@ const Component: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
   return (
     <Form.Item
-      label={formatMessage({ id: 'page.upstream.retries' })}
+      label={formatMessage({ id: 'component.upstream.fields.retries' })}
+      tooltip={formatMessage({ id: 'component.upstream.fields.retries.tooltip' })}
       name="retries"
-      initialValue={0}
     >
       <InputNumber
         disabled={readonly}

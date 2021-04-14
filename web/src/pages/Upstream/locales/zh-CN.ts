@@ -32,10 +32,10 @@ export default {
   'page.upstream.step.input.description': '请输入上游服务的描述',
   'page.upstream.step.type': '负载均衡算法',
   'page.upstream.step.pass-host': 'Host 请求头',
-  'page.upstream.step.pass-host.pass': '保持与客户端请求一致的 Host 请求头',
-  'page.upstream.step.pass-host.node': '使用上游节点列表中的域名或 IP',
+  'page.upstream.step.pass-host.pass': '保持与客户端请求一致的主机名',
+  'page.upstream.step.pass-host.node': '使用上游节点列表中的主机名或 IP',
   'page.upstream.step.pass-host.rewrite': '自定义 Host 请求头（即将废弃）',
-  'page.upstream.step.pass-host.upstream_host': '自定义 Host 请求头',
+  'page.upstream.step.pass-host.upstream_host': '自定义主机名',
   'page.upstream.step.connect.timeout': '连接超时',
   'page.upstream.step.connect.timeout.desc': '建立从请求到上游服务器的连接的超时时间',
   'page.upstream.step.input.connect.timeout': '请输入连接超时时间',
@@ -91,8 +91,6 @@ export default {
   'page.upstream.type.ewma': '指数加权移动平均法（EWMA）',
 
   'page.upstream.list.content': '上游列表包含了已创建的上游服务（即后端服务），可以对上游服务的多个目标节点进行负载均衡和健康检查。',
-
-  'page.upstream.retries': '重试次数',
 
   'page.upstream.checks.active.timeout.description': '主动健康检查的套接字的超时时间',
   'page.upstream.checks.active.unhealthy.interval.description': '对不健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对不健康节点不进行主动健康检查。',
