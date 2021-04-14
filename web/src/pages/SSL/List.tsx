@@ -108,7 +108,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'page.ssl.list' })}>
+    <PageHeaderWrapper title={formatMessage({ id: 'page.ssl.list' })} content={formatMessage({ id: 'component.ssl.description' })}>
       <ProTable<SSLModule.ResponseBody>
         rowKey="id"
         columns={columns}

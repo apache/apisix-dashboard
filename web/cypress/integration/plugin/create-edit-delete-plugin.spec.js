@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('Create and Delete Plugin List', () => {
+context('Enable and Delete Plugin List', () => {
   const timeout = 5000;
 
   beforeEach(() => {
@@ -29,7 +29,7 @@ context('Create and Delete Plugin List', () => {
   it('should visit plugin market', function () {
     cy.visit('/');
     cy.contains('Plugin').click();
-    cy.contains('Create').click();
+    cy.contains('Enable').click();
 
     cy.fixture('plugin-dataset.json').as('cases');
     cy.get('@cases').then((cases) => {
