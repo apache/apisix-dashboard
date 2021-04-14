@@ -26,8 +26,8 @@ const Component: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
   return (
     <Form.Item
-      label={formatMessage({ id: 'page.upstream.step.healthyCheck.successes' })}
-      tooltip={formatMessage({ id: 'page.upstream.checks.passive.healthy.successes.description' })}
+      label={formatMessage({ id: 'component.upstream.fields.checks.passive.healthy.successes' })}
+      tooltip={formatMessage({ id: 'component.upstream.fields.checks.passive.healthy.successes.tooltip' })}
       required
     >
       <Form.Item
@@ -36,7 +36,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
         rules={[
           {
             required: true,
-            message: formatMessage({ id: 'page.upstream.step.input.healthyCheck.successes' }),
+            message: formatMessage({ id: 'component.upstream.fields.checks.passive.healthy.successes.required' }),
           },
         ]}
       >

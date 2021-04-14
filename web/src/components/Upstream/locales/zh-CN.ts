@@ -47,4 +47,8 @@ export default {
   'component.upstream.fields.checks.active.unhealthy.tcp_failures': 'TCP 失败次数',
   'component.upstream.fields.checks.active.unhealthy.tcp_failures.tooltip': '主动探测中 TCP 失败次数超过该值时，认为目标不健康。',
   'component.upstream.fields.checks.active.unhealthy.tcp_failures.required': '请输入 TCP 失败次数',
+
+  'component.upstream.fields.checks.passive.healthy.successes': '成功次数',
+  'component.upstream.fields.checks.passive.healthy.successes.tooltip': '通过被动健康检查观察到的正常代理流量的成功次数。如果达到该值，上游服务目标节点将被视为健康。',
+  'component.upstream.fields.checks.passive.healthy.successes.required': '请输入成功次数',
 }

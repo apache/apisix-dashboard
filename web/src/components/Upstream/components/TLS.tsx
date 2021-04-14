@@ -41,7 +41,6 @@ const TLSComponent: React.FC<Props> = ({ form, readonly }) => {
       <Form.Item
         noStyle
         shouldUpdate={(prev, next) => {
-          console.log(prev, next)
           return prev[CUSTOM_FIELD_KEY] !== next[CUSTOM_FIELD_KEY]
         }}
       >

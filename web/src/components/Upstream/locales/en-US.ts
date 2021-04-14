@@ -42,4 +42,8 @@ export default {
   'component.upstream.fields.checks.active.unhealthy.interval': 'Interval',
   'component.upstream.fields.checks.active.unhealthy.interval.tooltip': 'Interval between active health checks for unhealthy targets (in seconds). A value of zero indicates that active probes for healthy targets should not be performed.',
   'component.upstream.fields.checks.active.unhealthy.required': 'Please enter the unhelthy interval',
+
+  'component.upstream.fields.checks.passive.healthy.successes': 'Successes',
+  'component.upstream.fields.checks.passive.healthy.successes.tooltip': 'Number of successes to consider a target healthy',
+  'component.upstream.fields.checks.passive.healthy.successes.required': 'Please enter the successes number',
 }
