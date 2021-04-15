@@ -25,7 +25,7 @@ export default {
   'component.plugin.security': '安全防护',
   'component.plugin.traffic': '流量控制',
   'component.plugin.serverless': '无服务器架构',
-  'component.plugin.monitoring': '分析监控',
+  'component.plugin.observability': '可观测性',
   'component.plugin.logging': '日志记录',
   'component.plugin.other': '其它',
 

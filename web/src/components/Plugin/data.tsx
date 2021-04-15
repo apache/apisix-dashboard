@@ -38,7 +38,7 @@ export enum PluginType {
   security = "security",
   traffic = "traffic",
   serverless = "serverless",
-  monitoring = "monitoring",
+  observability = "observability",
   logging = "logging",
   other = "other"
 }
@@ -73,7 +73,7 @@ export const PLUGIN_LIST = {
     type: PluginType.traffic
   },
   "prometheus": {
-    type: PluginType.monitoring
+    type: PluginType.observability
   },
   "proxy-rewrite": {
     type: PluginType.other
@@ -97,7 +97,7 @@ export const PLUGIN_LIST = {
     type: PluginType.logging
   },
   "zipkin": {
-    type: PluginType.monitoring
+    type: PluginType.observability
   },
   "echo": {
     type: PluginType.other,
@@ -157,10 +157,10 @@ export const PLUGIN_LIST = {
     hidden: true
   },
   "request-id": {
-    type: PluginType.monitoring
+    type: PluginType.observability
   },
   "skywalking": {
-    type: PluginType.monitoring
+    type: PluginType.observability
   },
   "batch-requests": {
     type: PluginType.other
