@@ -26,8 +26,6 @@ export default {
   'page.ssl.button.uploadCert': 'Upload Certificate',
 
   'page.ssl.form.itemLabel.way': 'Way',
-  'page.ssl.form.itemExtraMessage.way':
-    'The new certificate should contain the same about SNI as the current certificate',
   'page.ssl.select.placeholder.selectCreateWays': 'Please select create ways',
   'page.ssl.selectOption.input': 'Input',
   'page.ssl.upload': 'Upload',
@@ -41,4 +39,8 @@ export default {
   'page.ssl.steps.stepTitle.completeCertInfo': 'Complete Certificate Information',
   'component.ssl.removeSSLSuccess': 'Remove target SSL successfully',
   'component.ssl.removeSSLItemModalContent': 'You are going to remove this item!',
+
+  'component.ssl.description': 'The certificate is used by the gateway to process encrypted requests, which will be associated with the SNI and bound to the host name in the Route.',
+  'component.ssl.fields.cert.required': 'Please enter the certificate',
+  'component.ssl.fields.key.required': 'Please enter the key',
 };

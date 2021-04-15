@@ -15,52 +15,47 @@
  * limitations under the License.
  */
 import React from 'react';
+import type { FormInstance } from 'antd/es/form';
 import { Form, Input } from 'antd';
-import type { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
-
-const FORM_LAYOUT = {
-  labelCol: {
-    span: 2,
-  },
-  wrapperCol: {
-    span: 8,
-  },
-};
 
 type Props = {
   form: FormInstance;
-  disabled?: boolean;
 };
 
-const Step1: React.FC<Props> = ({ form, disabled }) => {
+const FORM_ITEM_LAYOUT = {
+  labelCol: {
+    span: 4,
+  },
+  wrapperCol: {
+    span: 10
+  },
+};
+
+const ProxyMirror: React.FC<Props> = ({ form }) => {
   const { formatMessage } = useIntl();
+
   return (
-    <Form {...FORM_LAYOUT} form={form}>
+    <Form
+      form={form}
+      {...FORM_ITEM_LAYOUT}
+    >
       <Form.Item
-        label={formatMessage({ id: 'page.consumer.username' })}
-        name="username"
+        label="host"
+        name="host"
+        extra={formatMessage({ id: 'component.pluginForm.proxy-mirror.host.extra' })}
+        tooltip={formatMessage({ id: 'component.pluginForm.proxy-mirror.host.tooltip' })}
         rules={[
-          { required: true },
           {
-            pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_]{0,100}$/, 'g'),
-            message: formatMessage({ id: 'page.consumer.form.itemRuleMessage.username' }),
-          },
+            pattern: new RegExp(/^http(s)?:\/\/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:[0-9]{1,5})?$/, 'g'),
+            message: formatMessage({ id: 'component.pluginForm.proxy-mirror.host.ruletip' }),
+          }
         ]}
       >
-        <Input
-          placeholder={formatMessage({ id: 'page.consumer.username.required' })}
-          disabled={disabled || window.location.pathname.indexOf('edit') !== -1}
-        />
-      </Form.Item>
-      <Form.Item label={formatMessage({ id: 'component.global.description' })} name="desc">
-        <Input.TextArea
-          placeholder={formatMessage({ id: 'component.global.description.required' })}
-          disabled={disabled}
-        />
+        <Input />
       </Form.Item>
     </Form>
   );
-};
+}
 
-export default Step1;
+export default ProxyMirror;
