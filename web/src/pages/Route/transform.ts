@@ -150,10 +150,10 @@ export const transformStepData = ({
       let key = '';
       switch (position) {
         case 'cookie':
-          key = name;
+          key = `cookie_${name}`;
           break;
         case 'http':
-          key = name;
+          key = `http_${name}`;
           break;
         default:
           key = `arg_${name}`;
