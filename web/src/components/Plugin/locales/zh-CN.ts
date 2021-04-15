@@ -31,6 +31,10 @@ export default {
   'component.pluginForm.cors.allow_credential.tooltip': '是否允许跨域访问的请求方携带凭据（如 Cookie 等）。根据 CORS 规范，如果设置该选项为 true，那么将不能在其他选项中使用 * 。',
   'component.pluginForm.cors.allow_origins_by_regex.tooltip': '使用正则表达式数组来匹配允许跨域访问的 Origin, 如[".*.test.com"] 可以匹配任何test.com的子域名 * 。',
 
+  // referer-restriction
+  'component.pluginForm.referer-restriction.whitelist.tooltip': '域名列表。域名开头可以用\'*\'作为通配符。',
+  'component.pluginForm.referer-restriction.bypass_missing.tooltip': '当 Referer 不存在或格式有误时，是否绕过检查。',
+
   // api-breaker
   'component.pluginForm.api-breaker.break_response_code.tooltip': '不健康返回错误码。',
   'component.pluginForm.api-breaker.max_breaker_sec.tooltip': '最大熔断持续时间。',

@@ -24,6 +24,7 @@ import LimitReq from './limit-req';
 import ApiBreaker from './api-breaker';
 import ProxyMirror from './proxy-mirror';
 import LimitConn from './limit-conn';
+import RefererRestriction from './referer-restriction';
 import Cors from './cors';
 
 type Props = {
@@ -32,7 +33,7 @@ type Props = {
   renderForm: boolean
 }
 
-export const PLUGIN_UI_LIST = ['api-breaker', 'basic-auth', 'limit-conn', 'cors', 'proxy-mirror', 'limit-req'];
+export const PLUGIN_UI_LIST = ['api-breaker', 'basic-auth', 'cors', 'limit-req', 'limit-conn', 'proxy-mirror', 'referer-restriction'];
 
 export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
 
@@ -53,6 +54,8 @@ export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
       return <ProxyMirror form={form} />
     case 'limit-conn':
       return <LimitConn form={form} />
+    case 'referer-restriction':
+      return <RefererRestriction form={form} />
     default:
       return null;
   }
