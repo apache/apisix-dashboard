@@ -272,10 +272,27 @@ var _ = ginkgo.Describe("route with jwt plugin", func() {
 		}),
 		table.Entry("after delete consumer verify it again", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodGet,
+			Path:         "/apisix/admin/consumers/jack",
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `"message":"data not found"`,
+			Sleep:        base.SleepTime,
+		}),
+		table.Entry("delete the route", base.HttpTestCase{
+			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+		}),
+		table.Entry("verify the deleted route", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        base.SleepTime,
 		}),
 	)
 })
