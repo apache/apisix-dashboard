@@ -105,7 +105,8 @@ export const PLUGIN_LIST = {
     hidden: true
   },
   "log-rotate": {
-    type: PluginType.logging
+    type: PluginType.logging,
+    hidden: true
   },
   "serverless-pre-function": {
     type: PluginType.serverless
@@ -115,13 +116,14 @@ export const PLUGIN_LIST = {
     hidden: true
   },
   "node-status": {
-    type: PluginType.other
+    type: PluginType.other,
+    hidden: true
   },
   "referer-restriction": {
     type: PluginType.security
   },
   "api-breaker": {
-    type: PluginType.traffic
+    type: PluginType.security,
   },
   "consumer-restriction": {
     type: PluginType.security
