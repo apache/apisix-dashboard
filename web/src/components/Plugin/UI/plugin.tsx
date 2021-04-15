@@ -24,6 +24,7 @@ import LimitReq from './limit-req';
 import ApiBreaker from './api-breaker';
 import ProxyMirror from './proxy-mirror';
 import LimitConn from './limit-conn';
+import Cors from './cors';
 
 type Props = {
   name: string,
@@ -31,7 +32,7 @@ type Props = {
   renderForm: boolean
 }
 
-export const PLUGIN_UI_LIST = ['api-breaker', 'basic-auth', 'limit-req', 'limit-conn', 'proxy-mirror'];
+export const PLUGIN_UI_LIST = ['api-breaker', 'basic-auth', 'limit-conn', 'cors', 'proxy-mirror', 'limit-req'];
 
 export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
 
@@ -44,6 +45,8 @@ export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
       return <ApiBreaker form={form} />
     case 'basic-auth':
       return <BasicAuth form={form} />
+    case 'cors':
+      return <Cors form={form} />
     case 'limit-req':
       return <LimitReq form={form} />
     case 'proxy-mirror':

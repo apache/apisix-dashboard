@@ -21,6 +21,15 @@ export default {
   'component.step.select.pluginTemplate.select.option': '手动配置',
   'component.plugin.pluginTemplate.tip1': '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
   'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。',
+  // cors
+  'component.pluginForm.cors.allow_origins.tooltip': '允许跨域访问的 Origin，格式如：scheme://host:port，比如: https://somehost.com:8081 。多个值使用 , 分割，allow_credential 为 false 时可以使用 * 来表示所有 Origin 均允许通过。你也可以在启用了 allow_credential 后使用 ** 强制允许所有 Origin 都通过，但请注意这样存在安全隐患。',
+  'component.pluginForm.cors.allow_origins.extra': '例如: https://somehost.com:8081',
+  'component.pluginForm.cors.allow_methods.tooltip': '允许跨域访问的 Method，比如: GET，POST等。多个值使用 , 分割，allow_credential 为 false 时可以使用 * 来表示所有 Origin 均允许通过。你也可以在启用了 allow_credential 后使用 ** 强制允许所有 Method 都通过，但请注意这样存在安全隐患。',
+  'component.pluginForm.cors.allow_headers.tooltip': '允许跨域访问时请求方携带哪些非 CORS规范 以外的 Header， 多个值使用 , 分割，allow_credential 为 false 时可以使用 * 来表示所 有 Header 均允许通过。你也可以在启用了 allow_credential 后使用 ** 强制允许所有 Method 都通过，但请注意这样存在安全隐患。',
+  'component.pluginForm.cors.expose_headers.tooltip': '允许跨域访问时响应方携带哪些非 CORS规范 以外的 Header， 多个值使用 , 分割。',
+  'component.pluginForm.cors.max_age.tooltip': '浏览器缓存 CORS 结果的最大时间，单位为秒，在这个时间范围内浏览器会复用上一次的检查结果，-1 表示不缓存。',
+  'component.pluginForm.cors.allow_credential.tooltip': '是否允许跨域访问的请求方携带凭据（如 Cookie 等）。根据 CORS 规范，如果设置该选项为 true，那么将不能在其他选项中使用 * 。',
+  'component.pluginForm.cors.allow_origins_by_regex.tooltip': '使用正则表达式数组来匹配允许跨域访问的 Origin, 如[".*.test.com"] 可以匹配任何test.com的子域名 * 。',
 
   // api-breaker
   'component.pluginForm.api-breaker.break_response_code.tooltip': '不健康返回错误码。',
