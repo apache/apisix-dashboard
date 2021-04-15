@@ -19,7 +19,8 @@ import type { FormInstance } from 'antd/es/form';
 import { Empty } from 'antd';
 import { useIntl } from 'umi';
 
-import BasicAuth from './basic-auth'
+import BasicAuth from './basic-auth';
+import LimitCount from './limit-count';
 import LimitReq from './limit-req';
 import ApiBreaker from './api-breaker';
 import ProxyMirror from './proxy-mirror';
@@ -33,7 +34,7 @@ type Props = {
   renderForm: boolean
 }
 
-export const PLUGIN_UI_LIST = ['api-breaker', 'basic-auth', 'cors', 'limit-req', 'limit-conn', 'proxy-mirror', 'referer-restriction'];
+export const PLUGIN_UI_LIST = ['api-breaker', 'basic-auth', 'cors', 'limit-req', 'limit-conn', 'proxy-mirror', 'referer-restriction', 'limit-count'];
 
 export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
 
@@ -46,6 +47,8 @@ export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
       return <ApiBreaker form={form} />
     case 'basic-auth':
       return <BasicAuth form={form} />
+    case 'limit-count':
+      return <LimitCount form={form} />
     case 'cors':
       return <Cors form={form} />
     case 'limit-req':

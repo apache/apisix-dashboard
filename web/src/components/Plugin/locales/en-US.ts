@@ -65,4 +65,19 @@ export default {
   'component.plugin.format-codes.disable': 'Format JSON or YAML data',
   'component.plugin.editor': 'Plugin Editor',
   'component.plugin.noConfigurationRequired': 'Doesn\'t need configuration',
+
+  // limit-count
+  'component.pluginForm.limit-count.count.tooltip': 'The specified number of requests threshold.',
+  'component.pluginForm.limit-count.time_window.tooltip': 'The time window in seconds before the request count is reset.',
+  'component.pluginForm.limit-count.key.tooltip': 'The user specified key to limit the count.Now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username) and "service_id".',
+  'component.pluginForm.limit-count.rejected_code.tooltip': 'The HTTP status code returned when the request exceeds the threshold is rejected, default 503.',
+  'component.pluginForm.limit-count.policy.tooltip': 'The rate-limiting policies to use for retrieving and incrementing the limits. Available values are local(the counters will be stored locally in-memory on the node) and redis(counters are stored on a Redis server and will be shared across the nodes, usually use it to do the global speed limit).',
+  'component.pluginForm.limit-count.redis_host.tooltip': 'When using the redis policy, this property specifies the address of the Redis server.',
+  'component.pluginForm.limit-count.redis_port.tooltip': 'When using the redis policy, this property specifies the port of the Redis server.',
+  'component.pluginForm.limit-count.redis_password.tooltip': 'When using the redis policy, this property specifies the password of the Redis server.',
+  'component.pluginForm.limit-count.redis_database.tooltip': 'When using the redis policy, this property specifies the database you selected of the Redis server, and only for non Redis cluster mode (single instance mode or Redis public cloud service that provides single entry).',
+  'component.pluginForm.limit-count.redis_timeout.tooltip': 'When using the redis policy, this property specifies the timeout in milliseconds of any command submitted to the Redis server.',
+  'component.pluginForm.limit-count.redis_cluster_nodes.tooltip': 'When using redis-cluster policy，This property is a list of addresses of Redis cluster service nodes (at least two nodes).',
+  'component.pluginForm.limit-count.redis_cluster_name.tooltip': 'When using redis-cluster policy, this property is the name of Redis cluster service nodes.',
+  'component.pluginForm.limit-count.atLeast2Characters.rule': 'Please enter at least 2 characters',
 };
