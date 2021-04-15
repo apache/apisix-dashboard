@@ -28,13 +28,14 @@ const Component: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
   return (
     <Form.Item
-      label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeInterval' })}
+      label={formatMessage({ id: 'component.upstream.fields.checks.active.unhealthy.interval' })}
       required
-      tooltip={formatMessage({ id: 'page.upstream.checks.active.unhealthy.interval.description' })}
+      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.unhealthy.interval.tooltip' })}
     >
       <Form.Item
         name={['checks', 'active', 'unhealthy', 'interval']}
         noStyle
+        initialValue={1}
         rules={[
           {
             required: true,

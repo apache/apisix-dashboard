@@ -18,10 +18,12 @@ import Timeouts from './Timeouts'
 import Interval from './Interval'
 import HttpStatuses from './HttpStatuses'
 import HttpFailures from './HttpFailures'
+import TCPFailures from './TCPFailures'
 
 export default {
   Timeouts,
   Interval,
   HttpStatuses,
-  HttpFailures
+  HttpFailures,
+  TCPFailures
 }

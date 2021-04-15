@@ -46,6 +46,7 @@ const Component: React.FC<Props> = ({ form, readonly }) => {
       <Form.Item
         label={formatMessage({ id: 'page.upstream.step.pass-host' })}
         name="pass_host"
+        initialValue="pass"
       >
         <Select disabled={readonly}>
           {options.map(item => (

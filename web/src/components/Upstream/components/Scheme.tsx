@@ -38,13 +38,14 @@ type Props = {
   readonly?: boolean
 }
 
-const Component: React.FC<Props> = ({ readonly }) => {
+const Scheme: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
   return (
     <Form.Item
       label={formatMessage({ id: 'page.upstream.scheme' })}
       name="scheme"
       rules={[{ required: true }]}
+      initialValue="http"
     >
       <Select disabled={readonly}>
         {options.map(item => {
@@ -59,4 +60,4 @@ const Component: React.FC<Props> = ({ readonly }) => {
   )
 }
 
-export default Component
+export default Scheme

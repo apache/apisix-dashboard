@@ -8,8 +8,8 @@
     "openapi": "3.0.0",
     "paths": {
       "/{params}": {
-        "get": {
-          "operationId": "route_name_0GET",
+        "post": {
+          "operationId": "route_name_0POST",
           "parameters": [
             {
               "description": "params in path",
@@ -60,8 +60,8 @@
     "openapi": "3.0.0",
     "paths": {
       "/{params}": {
-        "get": {
-          "operationId": "route_name_0GET",
+        "post": {
+          "operationId": "route_name_0POST",
           "parameters": [
             {
               "description": "params in path",
@@ -102,8 +102,8 @@
         }
       },
       "/{params}-APISIX-REPEAT-URI-2": {
-        "get": {
-          "operationId": "route_name_1GET",
+        "post": {
+          "operationId": "route_name_1POST",
           "parameters": [
             {
               "description": "params in path",

@@ -24,6 +24,7 @@ export default {
   'component.global.format': 'Format',
   'component.global.document': 'Document',
   'component.global.enable': 'Enable',
+  'component.global.disable': 'Disable',
   'component.global.scope': 'Scope',
   'component.global.data.editor': 'Raw Data Editor',
   'component.global.delete': 'Delete',
@@ -66,7 +67,7 @@ export default {
   'component.global.sendTimeout': 'Send Timeout',
   'component.global.receiveTimeout': 'Receive Timeout',
   'component.global.name': 'Name',
-  'component.global.updateTime': 'UpdateAt',
+  'component.global.updateTime': 'Update Time',
   'component.global.form.itemExtraMessage.nameGloballyUnique': 'Name should be globally unique',
   'component.global.input.placeholder.description': 'Please enter the description for this route, max 256 characters',
   // User component

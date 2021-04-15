@@ -27,9 +27,9 @@ const Component: React.FC<Props> = ({ readonly }) => {
 
   return (
     <Form.Item
-      label={formatMessage({ id: 'page.upstream.step.healthyCheck.successes' })}
+      label={formatMessage({ id: 'component.upstream.fields.checks.active.healthy.successes' })}
       required
-      tooltip={formatMessage({ id: 'page.upstream.checks.active.healthy.successes.description' })}
+      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.healthy.successes.tooltip' })}
     >
       <Form.Item
         name={['checks', 'active', 'healthy', 'successes']}
@@ -37,9 +37,10 @@ const Component: React.FC<Props> = ({ readonly }) => {
         rules={[
           {
             required: true,
-            message: formatMessage({ id: 'page.upstream.step.input.healthyCheck.successes' }),
+            message: formatMessage({ id: 'component.upstream.fields.checks.active.healthy.successes.required' }),
           },
         ]}
+        initialValue={2}
       >
         <InputNumber disabled={readonly} min={1} max={254} />
       </Form.Item>

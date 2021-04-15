@@ -27,18 +27,19 @@ const Component: React.FC<Props> = ({ readonly }) => {
 
   return (
     <Form.Item
-      label={formatMessage({ id: 'page.upstream.step.healthyCheck.http_failures' })}
+      label={formatMessage({ id: 'component.upstream.fields.checks.active.unhealthy.http_failures' })}
       required
       tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.http_failures.description' })}
     >
       <Form.Item
         name={['checks', 'passive', 'unhealthy', 'http_failures']}
         noStyle
+        initialValue={2}
         rules={[
           {
             required: true,
             message: formatMessage({
-              id: 'page.upstream.step.input.healthyCheck.http_failures',
+              id: 'component.upstream.fields.checks.active.unhealthy.http_failures.required',
             }),
           },
         ]}
