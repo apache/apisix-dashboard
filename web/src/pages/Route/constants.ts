@@ -180,6 +180,13 @@ export const DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED = [
   { name: 'XML', mode: 'xml' },
 ];
 
+export const DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED = [
+  { name: 'Json', mode: 'javascript' },
+  { name: 'XML', mode: 'xml' },
+  { name: 'HTML', mode: 'html' },
+  { name: 'Text', mode: 'apl' },
+];
+
 export const EXPORT_FILE_MIME_TYPE_SUPPORTED = ['application/json', 'application/x-yaml'];
 
 export enum DebugBodyFormDataValueType {

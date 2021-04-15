@@ -241,6 +241,14 @@ declare namespace RouteModule {
     body_params?: any;
     header_params?: any;
   };
+
+  type debugResponse ={
+    code: number,
+    message: string,
+    data: any,
+    header: Record<string, string[]>
+  }
+
   type authData = {
     authType: string;
     username?: string;
