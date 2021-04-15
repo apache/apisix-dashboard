@@ -18,8 +18,10 @@ package route_online_debug
 
 import (
 	"bytes"
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"reflect"
@@ -134,7 +136,17 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 
 	defer resp.Body.Close()
 
-	_body, err := ioutil.ReadAll(resp.Body)
+	// handle gzip content encoding
+	var reader io.ReadCloser
+	switch resp.Header.Get("Content-Encoding") {
+	case "gzip":
+		reader, err = gzip.NewReader(resp.Body)
+		defer reader.Close()
+	default:
+		reader = resp.Body
+	}
+
+	_body, err := ioutil.ReadAll(reader)
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}
