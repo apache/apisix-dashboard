@@ -30,6 +30,8 @@ context('Edit Service with Upstream', () => {
     cy.contains('Create').click();
     cy.get(this.domSelector.name).type(this.data.upstreamName);
     cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
+    cy.get(this.domSelector.nodes_0_port).clear().type('7000');
+    cy.get(this.domSelector.nodes_0_weight).clear().type(1);
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
@@ -66,6 +68,8 @@ context('Edit Service with Upstream', () => {
     cy.get(this.domSelector.upstreamSelector).click();
     cy.contains('Custom').click();
     cy.get(this.domSelector.nodes_0_host).should('not.be.disabled').clear().type(this.data.ip2);
+    cy.get(this.domSelector.nodes_0_port).type(this.data.port);
+    cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();

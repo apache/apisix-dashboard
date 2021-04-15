@@ -15,41 +15,26 @@
  * limitations under the License.
  */
 import React from 'react'
-import { Form, InputNumber } from 'antd'
+import { Form, Switch } from 'antd'
 import { useIntl } from 'umi'
-import TimeUnit from '../../TimeUnit'
 
 type Props = {
   readonly?: boolean
 }
 
-const Component: React.FC<Props> = ({ readonly }) => {
+const HttpsVerifyCertificateComponent: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
   return (
     <Form.Item
-      label={formatMessage({ id: 'component.upstream.fields.checks.active.healthy.interval' })}
-      required
-      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.healthy.interval.tooltip' })}
+      label={formatMessage({ id: 'component.upstream.fields.checks.active.https_verify_certificate' })}
+      name="https_verify_certificate"
+      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.https_verify_certificate.tooltip' })}
+      initialValue={true}
+      valuePropName="checked"
     >
-      <Form.Item
-        noStyle
-        style={{ marginBottom: 0 }}
-        name={['checks', 'active', 'healthy', 'interval']}
-        rules={[
-          {
-            required: true,
-            message: formatMessage({
-              id: 'page.upstream.step.input.healthyCheck.activeInterval',
-            }),
-          },
-        ]}
-        initialValue={1}
-      >
-        <InputNumber disabled={readonly} min={1} />
-      </Form.Item>
-      <TimeUnit />
+      <Switch disabled={readonly} />
     </Form.Item>
   )
 }
 
-export default Component
+export default HttpsVerifyCertificateComponent

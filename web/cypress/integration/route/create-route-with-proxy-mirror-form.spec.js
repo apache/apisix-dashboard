@@ -40,6 +40,8 @@ context('Create and delete route with proxy-mirror form', () => {
     cy.contains('Next').click();
 
     cy.get(this.domSelector.nodes_0_host).type('127.0.0.1');
+    cy.get(this.domSelector.nodes_0_port).clear().type(this.data.port);
+    cy.get(this.domSelector.nodes_0_weight).clear().type(this.data.weight);
     cy.contains('Next').click();
 
     // config proxy-mirror plugin
@@ -100,6 +102,6 @@ context('Create and delete route with proxy-mirror form', () => {
       cy.contains('OK').click();
     });
     cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
-    cy.get(domSelector.notificationCloseIcon).click();
+    cy.get(domSelector.notificationCloseIcon).click({ multiple: true });
   });
 });

@@ -65,6 +65,8 @@ context('Create and Delete Route', () => {
 
     cy.contains('Next').click();
     cy.get(this.domSelector.nodes_0_host).type(this.data.host2);
+    cy.get(this.domSelector.nodes_0_port).type(this.data.port);
+    cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
     cy.contains('Next').click();
 
     // redirect plugin should not display in route step3

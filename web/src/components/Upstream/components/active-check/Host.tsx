@@ -26,30 +26,30 @@ const Component: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
   return (
     <Form.Item
-      label={formatMessage({ id: 'page.upstream.step.healthyCheck.activeHost' })}
+      label={formatMessage({ id: 'component.upstream.fields.checks.active.host' })}
       required
-      tooltip={formatMessage({ id: 'page.upstream.checks.active.host.description' })}
+      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.host.tooltip' })}
+      style={{ marginBottom: 0 }}
     >
       <Form.Item
-        style={{ marginBottom: 0 }}
         name={['checks', 'active', 'host']}
         rules={[
           {
             required: true,
-            message: formatMessage({ id: 'page.upstream.step.input.healthyCheck.activeHost' }),
+            message: formatMessage({ id: 'component.upstream.fields.checks.active.host.required' }),
           },
           {
             pattern: new RegExp(
-              /(^([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.(25[0-5]|1\d{2}|2[0-4]\d|[1-9]?\d)){3}$|^(?![0-9.]+$)([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+){0,}$)/,
+              /^\\*?[0-9a-zA-Z-._]+$/,
               'g',
             ),
-            message: formatMessage({ id: 'page.upstream.step.domain.name.or.ip.rule' }),
+            message: formatMessage({ id: 'component.upstream.fields.checks.active.host.scope' }),
           },
         ]}
       >
         <Input
           placeholder={formatMessage({
-            id: 'page.upstream.step.input.healthyCheck.activeHost',
+            id: 'component.upstream.fields.checks.active.host.required',
           })}
           disabled={readonly}
         />

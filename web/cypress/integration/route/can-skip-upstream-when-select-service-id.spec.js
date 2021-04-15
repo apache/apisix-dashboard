@@ -31,6 +31,8 @@ context('Can select service_id skip upstream in route', () => {
 
     cy.get(this.domSelector.name).type(this.data.upstreamName);
     cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
+    cy.get(this.domSelector.nodes_0_port).clear().type('7000');
+    cy.get(this.domSelector.nodes_0_weight).clear().type(1);
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);

@@ -20,6 +20,8 @@
   "host1": "11.11.11.11",
   "host2": "12.12.12.12",
   "host3": "10.10.10.10",
+  "port": "80",
+  "weight": 1,
   "description": "desc_by_autotest",
   "description2": "description2",
   "grafanaAddress": "Grafana Address",

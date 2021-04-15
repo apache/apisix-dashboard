@@ -24,6 +24,7 @@ export default {
   'component.global.format': '格式化',
   'component.global.document': '文档',
   'component.global.enable': '启用',
+  'component.global.disable': '禁用',
   'component.global.scope': '作用域',
   'component.global.data.editor': '数据编辑器',
   'component.global.delete': '删除',

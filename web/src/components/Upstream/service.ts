@@ -14,27 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Unhealthy from './Unhealthy'
-import Healthy from './Healthy'
+import cloneDeep from 'lodash/cloneDeep'
 
-import Timeout from './Timeout'
-import Type from './Type'
-import ReqHeaders from './ReqHeaders'
-import Host from './Host'
-import Port from './Port'
-import HttpPath from './HttpPath'
-import Concurrency from './Concurrency'
-import HttpsVerifyCertificate from './HttpsVerifyCertificate'
+/**
+ * Because we have some `custom` field in Upstream Form, like custom.tls/custom.checks.active etc,
+ * we need to transform data that doesn't have `custom` field to data contains `custom` field
+*/
+export const transformUpstreamDataFromRequest = (originData: UpstreamComponent.ResponseData) => {
+  const data = cloneDeep(originData)
+  data.custom = {}
 
-export default {
-  Unhealthy,
-  Healthy,
-  Timeout,
-  Type,
-  ReqHeaders,
-  Host,
-  Port,
-  HttpPath,
-  Concurrency,
-  HttpsVerifyCertificate
+  if (data.checks) {
+    data.custom.checks = {}
+
+    if (data.checks.active) {
+      data.custom.checks.active = true
+    }
+
+    if (data.checks.passive) {
+      data.custom.checks.passive = true
+    }
+  }
+
+  if (data.tls) {
+    data.custom.tls = "enable"
+  }
+
+  return data
 }

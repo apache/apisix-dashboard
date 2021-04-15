@@ -14,42 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
 import { Form, InputNumber } from 'antd'
+import React from 'react'
 import { useIntl } from 'umi'
-import TimeUnit from '../../TimeUnit'
 
 type Props = {
   readonly?: boolean
 }
 
-const Component: React.FC<Props> = ({ readonly }) => {
+const TCPFailures: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
+
   return (
     <Form.Item
-      label={formatMessage({ id: 'component.upstream.fields.checks.active.healthy.interval' })}
+      label={formatMessage({ id: 'component.upstream.fields.checks.active.unhealthy.tcp_failures' })}
       required
-      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.healthy.interval.tooltip' })}
+      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.unhealthy.tcp_failures.tooltip' })}
     >
       <Form.Item
+        name={['checks', 'active', 'unhealthy', 'tcp_Failures']}
         noStyle
-        style={{ marginBottom: 0 }}
-        name={['checks', 'active', 'healthy', 'interval']}
         rules={[
           {
             required: true,
-            message: formatMessage({
-              id: 'page.upstream.step.input.healthyCheck.activeInterval',
-            }),
+            message: formatMessage({ id: 'component.upstream.fields.checks.active.unhealthy.tcp_failures.required' }),
           },
         ]}
-        initialValue={1}
+        initialValue={2}
       >
-        <InputNumber disabled={readonly} min={1} />
+        <InputNumber disabled={readonly} min={1} max={254} />
       </Form.Item>
-      <TimeUnit />
     </Form.Item>
   )
 }
 
-export default Component
+export default TCPFailures

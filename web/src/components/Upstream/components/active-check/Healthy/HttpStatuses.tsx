@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 import React from 'react'
-import { Form, Row, Col, InputNumber, Button } from 'antd'
+import { Form, Row, Col, Button, InputNumber } from 'antd'
 import { useIntl } from 'umi'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 
-import { removeBtnStyle } from '@/components/Upstream/constant'
+import { removeBtnStyle } from '@/components/Upstream'
 
 type Props = {
   readonly?: boolean
@@ -27,15 +27,16 @@ type Props = {
 
 const Component: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
+
   return (
-    <Form.List name={['checks', 'passive', 'unhealthy', 'http_statuses']} initialValue={[429, 500, 503]}>
+    <Form.List name={['checks', 'active', 'healthy', 'http_statuses']} initialValue={[200, 302]}>
       {(fields, { add, remove }) => (
         <>
           <Form.Item
             required
-            label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
-            tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.http_statuses.description' })}
+            label={formatMessage({ id: 'component.upstream.fields.checks.active.healthy.http_statuses' })}
             style={{ marginBottom: 0 }}
+            tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.healthy.http_statuses.tooltip' })}
           >
             {fields.map((field, index) => (
               <Row style={{ marginBottom: 10 }} key={index}>
@@ -45,7 +46,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
                   </Form.Item>
                 </Col>
                 <Col style={removeBtnStyle}>
-                  {!readonly && fields.length > 1 && (
+                  {!readonly && (
                     <MinusCircleOutlined
                       onClick={() => {
                         remove(field.name);
@@ -71,5 +72,4 @@ const Component: React.FC<Props> = ({ readonly }) => {
     </Form.List>
   )
 }
-
 export default Component
