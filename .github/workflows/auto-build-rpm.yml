@@ -28,7 +28,7 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v2
-      
+
     - name: Extract branch name
       if: ${{ startsWith(github.ref, 'refs/heads/release/') }}
       id: branch_env
@@ -37,7 +37,6 @@ jobs:
         echo "##[set-output name=version;]$(echo ${GITHUB_REF##*/})"
 
     - name: Build rpm package
-      #if: ${{ startsWith(github.ref, 'refs/heads/release/') }}
       run: |
         export VERSION=2.5
         sudo gem install --no-document fpm
@@ -50,7 +49,6 @@ jobs:
         docker run -itd -v $PWD:/apisix-dashboard --name centos7Instance --net="host" docker.io/centos:7 /bin/bash
 
     - name: Install rpm package
-      #if: ${{ startsWith(github.ref, 'refs/heads/release/') }}
       run: |
         export VERSION=2.5
         docker exec centos7Instance bash -c "cd apisix-dashboard && yum install -y ./apisix-build-tools/output/apisix-dashboard-${VERSION}-0.x86_64.rpm"
@@ -65,7 +63,6 @@ jobs:
         api/test/shell/manager_smoking.sh -s true
 
     - name: Publish Artifact
-      #if: ${{ startsWith(github.ref, 'refs/heads/release/') }}
       uses: actions/upload-artifact@v2.2.2
       with:
         name: "rpm"
