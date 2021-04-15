@@ -67,7 +67,7 @@ export default {
   'component.global.sendTimeout': 'Send Timeout',
   'component.global.receiveTimeout': 'Receive Timeout',
   'component.global.name': 'Name',
-  'component.global.updateTime': 'UpdateAt',
+  'component.global.updateTime': 'Update Time',
   'component.global.form.itemExtraMessage.nameGloballyUnique': 'Name should be globally unique',
   'component.global.input.placeholder.description': 'Please enter the description for this route, max 256 characters',
   // User component

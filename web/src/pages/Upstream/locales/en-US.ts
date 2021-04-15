@@ -73,7 +73,7 @@ export default {
   'page.upstream.list.name': 'Name',
   'page.upstream.list.type': 'Type',
   'page.upstream.list.description': 'Description',
-  'page.upstream.list.edit.time': 'Updated At',
+  'page.upstream.list.edit.time': 'Update Time',
   'page.upstream.list.operation': 'Operation',
   'page.upstream.list.edit': 'Configure',
   'page.upstream.list.confirm.delete': 'Are you sure to delete ?',
