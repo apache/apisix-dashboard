@@ -160,7 +160,7 @@ context('Online debug', () => {
 
     // change request method POST
     cy.get(domSelector.deubugMethod).click();
-    cy.contains('POST').click();
+    cy.get('[title=POST]').click();
 
     // change request protocol http
     cy.get(domSelector.debugProtocol).click();
@@ -253,7 +253,7 @@ context('Online debug', () => {
 
     // change request method POST
     cy.get(domSelector.deubugMethod).click();
-    cy.contains('POST').click();
+    cy.get('[title=POST]').click();
 
     // change request protocol http
     cy.get(domSelector.debugProtocol).click();
