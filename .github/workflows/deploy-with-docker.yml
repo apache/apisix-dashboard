@@ -28,6 +28,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
+          export APISIX_DASHBOARD_VERSION=${GITHUB_REF}
           docker build -t dashboard:ci . --build-arg APISIX_DASHBOARD_VERSION=master
 
       - name: Modify Config
