@@ -21,6 +21,19 @@ export default {
   'component.step.select.pluginTemplate.select.option': 'Custom',
   'component.plugin.pluginTemplate.tip1': '1. When a route already have plugins field configured, the plugins in the plugin template will be merged into it.',
   'component.plugin.pluginTemplate.tip2': '2. The same plugin in the plugin template will override one in the plugins',
+  // cors
+  'component.pluginForm.cors.allow_origins.tooltip': 'Which Origins is allowed to enable CORS, format as：scheme://host:port, for example: https://somehost.com:8081. Multiple origin use , to split. When allow_credential is false, you can use * to indicate allow any origin. you also can allow all any origins forcefully using ** even already enable allow_credential, but it will bring some security risks.',
+  'component.pluginForm.cors.allow_origins.extra': 'For example: https://somehost.com:8081',
+  'component.pluginForm.cors.allow_methods.tooltip': 'Which Method is allowed to enable CORS, such as: GET, POST etc. Multiple method use , to split. When allow_credential is false, you can use * to indicate allow all any method. You also can allow any method forcefully using ** even already enable allow_credential, but it will bring some security risks.',
+  'component.pluginForm.cors.allow_headers.tooltip': 'Which headers are allowed to set in request when access cross-origin resource. Multiple value use , to split. When allow_credential is false, you can use * to indicate allow all request headers. You also can allow any header forcefully using ** even already enable allow_credential, but it will bring some security risks.',
+  'component.pluginForm.cors.expose_headers.tooltip': '	Which headers are allowed to set in response when access cross-origin resource. Multiple value use , to split.',
+  'component.pluginForm.cors.max_age.tooltip': 'Maximum number of seconds the results can be cached.. Within this time range, the browser will reuse the last check result. -1 means no cache. Please note that the maximum value is depended on browser, please refer to MDN for details.',
+  'component.pluginForm.cors.allow_credential.tooltip': 'If you set this option to true, you can not use \'*\' for other options.',
+  'component.pluginForm.cors.allow_origins_by_regex.tooltip': 'Use regex expressions to match which origin is allowed to enable CORS, for example, [".*.test.com"] can use to match all subdomain of test.com.',
+
+  // referer-restriction
+  'component.pluginForm.referer-restriction.whitelist.tooltip': 'List of hostname to whitelist. The hostname can be started with * as a wildcard.',
+  'component.pluginForm.referer-restriction.bypass_missing.tooltip': 'Whether to bypass the check when the Referer header is missing or malformed.',
 
   // api-breaker
   'component.pluginForm.api-breaker.break_response_code.tooltip': 'Return error code when unhealthy.',
@@ -41,6 +54,7 @@ export default {
   'component.pluginForm.limit-conn.default_conn_delay.tooltip': 'the latency seconds of request when concurrent requests exceeding conn but below (conn + burst).',
   'component.pluginForm.limit-conn.key.tooltip': 'to limit the concurrency level.For example, one can use the host name (or server zone) as the key so that we limit concurrency per host name. Otherwise, we can also use the client address as the key so that we can avoid a single client from flooding our service with too many parallel connections or requests.Now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username).',
   'component.pluginForm.limit-conn.rejected_code.tooltip': 'returned when the request exceeds conn + burst will be rejected.',
+
   // limit-req
   'component.pluginForm.limit-req.rate.tooltip': 'The specified request rate (number per second) threshold. Requests exceeding this rate (and below burst) will get delayed to conform to the rate.',
   'component.pluginForm.limit-req.burst.tooltip': 'The number of excessive requests per second allowed to be delayed. Requests exceeding this hard limit will get rejected immediately.',
