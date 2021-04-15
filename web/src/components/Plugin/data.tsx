@@ -38,7 +38,6 @@ export enum PluginType {
   security = "security",
   traffic = "traffic",
   serverless = "serverless",
-  transformation = "transformation",
   monitoring = "monitoring",
   logging = "logging",
   other = "other"
