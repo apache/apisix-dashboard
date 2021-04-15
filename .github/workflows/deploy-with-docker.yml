@@ -33,7 +33,6 @@ jobs:
       - name: Modify Config
         run: |
           sed -i 's/127.0.0.1:2379/172.16.238.10:2379/' api/conf/conf.yaml
-          sed -i 's/host: 127.0.0.1/host: 0.0.0.0/' api/conf/conf.yaml
           sed -i 's@127.0.0.0/24@0.0.0.0/0@' ./api/conf/conf.yaml
 
       - name: Run Docker Compose
