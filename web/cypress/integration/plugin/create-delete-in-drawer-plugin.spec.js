@@ -26,10 +26,10 @@ context('Delete Plugin List with the Drawer', () => {
     cy.fixture('data.json').as('data');
   });
 
-  it('should visit plugin market and create plugin', function () {
+  it('should visit plugin market and enable plugin', function () {
     cy.visit('/');
     cy.contains('Plugin').click();
-    cy.contains('Create').click();
+    cy.contains('Enable').click();
 
     cy.contains(this.data.basicAuthPlugin).parents(this.domSelector.pluginCardBordered).within(() => {
       cy.get('button').click({

@@ -20,6 +20,9 @@ export const transformRequest = (
   formData: UpstreamModule.RequestBody,
 ): UpstreamModule.RequestBody | undefined | { upstream_id: string } => {
   let data = pickBy(formData, identity) as UpstreamModule.RequestBody;
+
+  data = omit(data, 'custom')
+
   const {
     type,
     hash_on,
@@ -30,6 +33,7 @@ export const transformRequest = (
     upstream_host,
     upstream_id,
   } = data;
+
   data.checks = pickBy(data.checks || {}, identity);
   if (data.checks.active) {
     data.checks.active = pickBy(

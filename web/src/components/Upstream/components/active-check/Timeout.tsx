@@ -28,7 +28,7 @@ const ActiveCheckTimeoutComponent: React.FC<Props> = ({ readonly }) => {
 
   return (
     <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.timeout' })} tooltip={formatMessage({ id: 'page.upstream.checks.active.timeout.description' })}>
-      <Form.Item name={['checks', 'active', 'timeout']} noStyle>
+      <Form.Item name={['checks', 'active', 'timeout']} noStyle initialValue={1}>
         <InputNumber disabled={readonly} min={0} />
       </Form.Item>
       <TimeUnit />
