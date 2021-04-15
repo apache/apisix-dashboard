@@ -59,7 +59,7 @@ context('Create and Delete Route', () => {
       cy.get(this.domSelector.name).type('modalName');
     });
     cy.get(this.domSelector.operator).click();
-    cy.get('[title=Equal]').should('be.visible').click();
+    cy.get('[title="Equal(==)"]').should('be.visible').click();
     cy.get(this.domSelector.value).type('value');
     cy.contains('Confirm').click();
 
