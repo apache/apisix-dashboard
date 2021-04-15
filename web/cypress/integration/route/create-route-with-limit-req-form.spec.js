@@ -42,6 +42,8 @@ context('Create and delete route with limit-req form', () => {
     cy.contains('Next').click();
 
     cy.get(this.domSelector.nodes_0_host).type('127.0.0.1');
+    cy.get(this.domSelector.nodes_0_port).clear().type(this.data.port);
+    cy.get(this.domSelector.nodes_0_weight).clear().type(this.data.weight);
     cy.contains('Next').click();
 
     // config limit-req plugin
