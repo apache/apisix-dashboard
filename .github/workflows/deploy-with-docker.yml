@@ -28,12 +28,13 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t dashboard:ci . --build-arg APISIX_DASHBOARD_VERSION=$(echo ${GITHUB_REF})
+          docker build -t dashboard:ci . --build-arg APISIX_DASHBOARD_VERSION=master
 
       - name: Modify Config
         run: |
           sed -i 's/127.0.0.1:2379/172.16.238.10:2379/' api/conf/conf.yaml
           sed -i 's@127.0.0.0/24@0.0.0.0/0@' ./api/conf/conf.yaml
+          sed -i '/port: 9000/i\    host: 0.0.0.0' ./api/conf/conf.yaml
           cat ./api/conf/conf.yaml
 
       - name: Run Docker Compose
