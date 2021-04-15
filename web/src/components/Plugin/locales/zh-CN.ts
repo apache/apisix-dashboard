@@ -29,6 +29,7 @@ export default {
   'component.plugin.monitoring': '分析监控',
   'component.plugin.logging': '日志记录',
   'component.plugin.other': '其它',
+
   // cors
   'component.pluginForm.cors.allow_origins.tooltip': '允许跨域访问的 Origin，格式如：scheme://host:port，比如: https://somehost.com:8081 。多个值使用 , 分割，allow_credential 为 false 时可以使用 * 来表示所有 Origin 均允许通过。你也可以在启用了 allow_credential 后使用 ** 强制允许所有 Origin 都通过，但请注意这样存在安全隐患。',
   'component.pluginForm.cors.allow_origins.extra': '例如: https://somehost.com:8081',

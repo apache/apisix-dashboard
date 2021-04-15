@@ -29,6 +29,7 @@ export default {
   'component.plugin.monitoring': 'Analytics & Monitoring',
   'component.plugin.logging': 'Logging',
   'component.plugin.other': 'Other',
+
   // cors
   'component.pluginForm.cors.allow_origins.tooltip': 'Which Origins is allowed to enable CORS, format as：scheme://host:port, for example: https://somehost.com:8081. Multiple origin use , to split. When allow_credential is false, you can use * to indicate allow any origin. you also can allow all any origins forcefully using ** even already enable allow_credential, but it will bring some security risks.',
   'component.pluginForm.cors.allow_origins.extra': 'For example: https://somehost.com:8081',
