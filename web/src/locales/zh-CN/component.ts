@@ -24,6 +24,7 @@ export default {
   'component.global.format': '格式化',
   'component.global.document': '文档',
   'component.global.enable': '启用',
+  'component.global.disable': '禁用',
   'component.global.scope': '作用域',
   'component.global.data.editor': '数据编辑器',
   'component.global.delete': '删除',
@@ -41,7 +42,8 @@ export default {
   'component.global.edit.plugin': '配置插件',
   'component.global.loading': '加载中',
   'component.global.list': '列表',
-  'component.global.description': '描述信息',
+  'component.global.description': '描述',
+  'component.global.description.required': '请输入描述信息',
   'component.global.labels': '标签',
   'component.global.version': '路由版本',
   'component.global.operation': '操作',
@@ -72,4 +74,5 @@ export default {
   'component.label-manager': '标签管理器',
 
   'component.global.noConfigurationRequired': '无需配置',
+  'component.global.copy': '复制'
 };

@@ -29,6 +29,8 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   const [namePlaceholder, setNamePlaceholder] = useState('');
   const [modalForm] = Form.useForm();
 
+  const [operatorValueSample, setOperatorValueSample] = useState("")
+
   const { Option } = Select;
 
   const { formatMessage } = useIntl();
@@ -154,114 +156,128 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
       },
   ].filter((item) => Object.keys(item).length);
 
-  const renderModal = () => (
-    <Modal
-      title={`${mode === 'EDIT'
-          ? formatMessage({ id: 'component.global.edit' })
-          : formatMessage({ id: 'component.global.create' })
-        } ${formatMessage({ id: 'page.route.rule' })}`}
-      centered
-      visible
-      onOk={onOk}
-      onCancel={() => {
-        setVisible(false);
-        modalForm.resetFields();
-      }}
-      okText={formatMessage({ id: 'component.global.confirm' })}
-      cancelText={formatMessage({ id: 'component.global.cancel' })}
-      maskClosable={false}
-      destroyOnClose
-    >
-      <Form form={modalForm} layout="vertical">
-        <Form.Item
-          label={formatMessage({ id: 'page.route.parameterPosition' })}
-          name="position"
-          rules={[
-            {
-              required: true,
-              message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
-                id: 'page.route.parameterPosition',
-              })}`,
-            },
-          ]}
-        >
-          <Select
-            onChange={(value) => {
-              if (value === 'http') {
-                setNamePlaceholder(
-                  formatMessage({ id: 'page.route.input.placeholder.parameterNameHttpHeader' }),
-                );
-              } else {
-                setNamePlaceholder(
-                  formatMessage({
-                    id: 'page.route.input.placeholder.parameterNameRequestParameter',
-                  }),
-                );
-              }
-            }}
+  const renderModal = () => {
+    return (
+      <Modal
+        title={mode === 'EDIT'
+          ? formatMessage({ id: 'page.route.rule.edit' })
+          : formatMessage({ id: 'page.route.rule.create' })}
+        centered
+        visible
+        onOk={onOk}
+        onCancel={() => {
+          setVisible(false);
+          modalForm.resetFields();
+        }}
+        okText={formatMessage({ id: 'component.global.confirm' })}
+        cancelText={formatMessage({ id: 'component.global.cancel' })}
+        maskClosable={false}
+        destroyOnClose
+      >
+        <Form form={modalForm} layout="vertical">
+          <Form.Item
+            label={formatMessage({ id: 'page.route.parameterPosition' })}
+            name="position"
+            rules={[
+              {
+                required: true,
+                message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+                  id: 'page.route.parameterPosition',
+                })}`,
+              },
+            ]}
           >
-            <Option value="http">{formatMessage({ id: 'page.route.httpRequestHeader' })}</Option>
-            <Option value="arg">{formatMessage({ id: 'page.route.requestParameter' })}</Option>
-            <Option value="cookie">Cookie</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          label={formatMessage({ id: 'page.route.parameterName' })}
-          name="name"
-          rules={[
-            {
-              required: true,
-              message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
-                id: 'page.route.parameterName',
-              })}`,
-            },
-            {
-              pattern: new RegExp(/^([a-zA-Z][a-zA-Z0-9_-]*$)/, 'g'),
-              message: formatMessage({ id: 'component.global.input.ruleMessage.name' }),
-            },
-          ]}
-          extra={formatMessage({ id: 'page.route.form.itemRulesRequiredMessage.parameterName' })}
-        >
-          <Input placeholder={namePlaceholder} />
-        </Form.Item>
-        <Form.Item
-          label={formatMessage({ id: 'page.route.operationalCharacter' })}
-          name="operator"
-          rules={[
-            {
-              required: true,
-              message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
-                id: 'page.route.operationalCharacter',
-              })}`,
-            },
-          ]}
-        >
-          <Select>
-            <Option value="==">{formatMessage({ id: 'page.route.equal' })}</Option>
-            <Option value="~=">{formatMessage({ id: 'page.route.unequal' })}</Option>
-            <Option value=">">{formatMessage({ id: 'page.route.greaterThan' })}</Option>
-            <Option value="<">{formatMessage({ id: 'page.route.lessThan' })}</Option>
-            <Option value="~~">{formatMessage({ id: 'page.route.regexMatch' })}</Option>
-            <Option value="IN">{formatMessage({ id: 'page.route.in' })}</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          label={formatMessage({ id: 'page.route.value' })}
-          name="value"
-          rules={[
-            {
-              required: true,
-              message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
-                id: 'page.route.value',
-              })}`,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
+            <Select
+              onChange={(value) => {
+                if (value === 'http') {
+                  setNamePlaceholder(
+                    formatMessage({ id: 'page.route.input.placeholder.parameterNameHttpHeader' }),
+                  );
+                } else {
+                  setNamePlaceholder(
+                    formatMessage({
+                      id: 'page.route.input.placeholder.parameterNameRequestParameter',
+                    }),
+                  );
+                }
+              }}
+            >
+              <Option value="http">{formatMessage({ id: 'page.route.httpRequestHeader' })}</Option>
+              <Option value="arg">{formatMessage({ id: 'page.route.requestParameter' })}</Option>
+              <Option value="cookie">Cookie</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label={formatMessage({ id: 'page.route.parameterName' })}
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+                  id: 'page.route.parameterName',
+                })}`,
+              },
+              {
+                pattern: new RegExp(/^([a-zA-Z][a-zA-Z0-9_-]*$)/, 'g'),
+                message: formatMessage({ id: 'component.global.input.ruleMessage.name' }),
+              },
+            ]}
+            tooltip={formatMessage({ id: 'page.route.form.itemRulesRequiredMessage.parameterName' })}
+            extra={namePlaceholder}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label={formatMessage({ id: 'page.route.operationalCharacter' })}
+            name="operator"
+            rules={[
+              {
+                required: true,
+                message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
+                  id: 'page.route.operationalCharacter',
+                })}`,
+              },
+            ]}
+          >
+            <Select onChange={(e: string) => {
+              switch (e) {
+                case "IN":
+                  setOperatorValueSample(formatMessage({ id: 'page.route.advanced-match.operator.sample.IN' }))
+                  break
+                case "~~":
+                  setOperatorValueSample(formatMessage({ id: 'page.route.advanced-match.operator.sample.~~' }))
+                  break
+                default:
+                  setOperatorValueSample("")
+              }
+            }}>
+              <Option value="==">{formatMessage({ id: 'page.route.equal' })}</Option>
+              <Option value="~=">{formatMessage({ id: 'page.route.unequal' })}</Option>
+              <Option value=">">{formatMessage({ id: 'page.route.greaterThan' })}</Option>
+              <Option value="<">{formatMessage({ id: 'page.route.lessThan' })}</Option>
+              <Option value="~~">{formatMessage({ id: 'page.route.regexMatch' })}</Option>
+              <Option value="IN">{formatMessage({ id: 'page.route.in' })}</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label={formatMessage({ id: 'page.route.value' })}
+            name="value"
+            rules={[
+              {
+                required: true,
+                message: `${formatMessage({ id: 'component.global.pleaseEnter' })} ${formatMessage({
+                  id: 'page.route.value',
+                })}`,
+              },
+            ]}
+            extra={operatorValueSample}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+    )
+  };
 
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.advancedMatchRule' })}>

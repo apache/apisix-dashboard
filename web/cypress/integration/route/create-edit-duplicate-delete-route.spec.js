@@ -59,12 +59,14 @@ context('Create and Delete Route', () => {
       cy.get(this.domSelector.name).type('modalName');
     });
     cy.get(this.domSelector.operator).click();
-    cy.get('[title=Equal]').should('be.visible').click();
+    cy.get('[title="Equal(==)"]').should('be.visible').click();
     cy.get(this.domSelector.value).type('value');
     cy.contains('Confirm').click();
 
     cy.contains('Next').click();
     cy.get(this.domSelector.nodes_0_host).type(this.data.host2);
+    cy.get(this.domSelector.nodes_0_port).type(this.data.port);
+    cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
     cy.contains('Next').click();
 
     // redirect plugin should not display in route step3

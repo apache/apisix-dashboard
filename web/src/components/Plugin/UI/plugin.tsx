@@ -15,11 +15,18 @@
  * limitations under the License.
  */
 import React from 'react';
-import { FormInstance } from 'antd/es/form';
+import type { FormInstance } from 'antd/es/form';
 import { Empty } from 'antd';
 import { useIntl } from 'umi';
 
-import BasicAuth from './basic-auth'
+import BasicAuth from './basic-auth';
+import LimitCount from './limit-count';
+import LimitReq from './limit-req';
+import ApiBreaker from './api-breaker';
+import ProxyMirror from './proxy-mirror';
+import LimitConn from './limit-conn';
+import RefererRestriction from './referer-restriction';
+import Cors from './cors';
 
 type Props = {
   name: string,
@@ -27,17 +34,31 @@ type Props = {
   renderForm: boolean
 }
 
-export const PLUGIN_UI_LIST = ['basic-auth',];
+export const PLUGIN_UI_LIST = ['api-breaker', 'basic-auth', 'cors', 'limit-req', 'limit-conn', 'proxy-mirror', 'referer-restriction', 'limit-count'];
 
 export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
 
   const { formatMessage } = useIntl();
 
-  if (!renderForm) { return <Empty description={formatMessage({ id: 'component.global.noConfigurationRequired' })} /> };
+  if (!renderForm) { return <Empty style={{ marginTop: 100 }} description={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} /> };
 
   switch (name) {
+    case 'api-breaker':
+      return <ApiBreaker form={form} />
     case 'basic-auth':
       return <BasicAuth form={form} />
+    case 'limit-count':
+      return <LimitCount form={form} />
+    case 'cors':
+      return <Cors form={form} />
+    case 'limit-req':
+      return <LimitReq form={form} />
+    case 'proxy-mirror':
+      return <ProxyMirror form={form} />
+    case 'limit-conn':
+      return <LimitConn form={form} />
+    case 'referer-restriction':
+      return <RefererRestriction form={form} />
     default:
       return null;
   }
