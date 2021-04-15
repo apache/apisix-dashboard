@@ -21,6 +21,7 @@ import { history, useIntl } from 'umi';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import ActionBar from '@/components/ActionBar';
+import { transformUpstreamDataFromRequest } from '@/components/Upstream/service';
 
 import Step1 from './components/Step1';
 import { fetchOne, create, update } from './service';
@@ -35,8 +36,8 @@ const Page: React.FC = (props) => {
     const { id } = (props as any).match.params;
 
     if (id) {
-      fetchOne(id).then((data) => {
-        form1.setFieldsValue(data.data);
+      fetchOne(id).then(({ data }) => {
+        form1.setFieldsValue(transformUpstreamDataFromRequest(data));
       });
     }
   }, []);

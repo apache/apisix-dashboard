@@ -79,6 +79,9 @@ declare namespace UpstreamModule {
     desc?: string;
     pass_host?: 'pass' | 'node' | 'rewrite';
     upstream_host: UpstreamHost[];
+
+    // Custom Fields that need to be omitted
+    custom?: {};
   };
 
   // TODO: typing

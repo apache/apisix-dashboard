@@ -24,7 +24,6 @@ export default {
   'page.ssl.button.uploadCert': '上传证书',
 
   'page.ssl.form.itemLabel.way': '方式',
-  'page.ssl.form.itemExtraMessage.way': '新证书所含 SNI 应与当前证书一致',
   'page.ssl.select.placeholder.selectCreateWays': '请选择创建方式',
   'page.ssl.selectOption.input': '输入',
   'page.ssl.upload': '上传',
@@ -37,4 +36,8 @@ export default {
   'page.ssl.steps.stepTitle.completeCertInfo': '完善证书信息',
   'component.ssl.removeSSLSuccess': '删除证书成功',
   'component.ssl.removeSSLItemModalContent': '确定要删除该证书吗？',
+
+  'component.ssl.description': '证书被网关用于处理加密请求，它将与 SNI 关联，并与路由中主机名绑定。',
+  'component.ssl.fields.cert.required': '请输入证书内容',
+  'component.ssl.fields.key.required': '请输入私钥内容',
 };

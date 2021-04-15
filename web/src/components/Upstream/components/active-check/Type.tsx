@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 import React from 'react'
-import { Form, Select } from 'antd'
+import { Form, Select, Row, Col } from 'antd'
+import { useIntl } from 'umi'
 
 type Props = {
   readonly?: boolean
@@ -35,21 +36,32 @@ const options = [
 ]
 
 const ActiveCheckTypeComponent: React.FC<Props> = ({ readonly }) => {
+  const { formatMessage } = useIntl()
+
   return (
     <Form.Item
-      label="Type"
-      name={['checks', 'active', 'type']}
-      rules={[{ required: true }]}
+      label={formatMessage({ id: 'component.upstream.fields.checks.active.type' })}
+      style={{ marginBottom: 0 }}
+      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.type.tooltip' })}
     >
-      <Select disabled={readonly}>
-        {options.map(item => {
-          return (
-            <Select.Option value={item.value} key={item.value}>
-              {item.label}
-            </Select.Option>
-          );
-        })}
-      </Select>
+      <Row>
+        <Col span={5}>
+          <Form.Item
+            name={['checks', 'active', 'type']}
+            initialValue="http"
+          >
+            <Select disabled={readonly}>
+              {options.map(item => {
+                return (
+                  <Select.Option value={item.value} key={item.value}>
+                    {item.label}
+                  </Select.Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+        </Col>
+      </Row>
     </Form.Item>
   )
 }

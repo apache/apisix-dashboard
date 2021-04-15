@@ -29,7 +29,9 @@ const Component: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
 
   return (
-    <Form.List name={['checks', 'passive', 'healthy', 'http_statuses']}>
+    <Form.List name={['checks', 'passive', 'healthy', 'http_statuses']} initialValue={[200, 201, 202, 203, 204, 205, 206, 207,
+      208, 226, 300, 301, 302, 303, 304, 305,
+      306, 307, 308]}>
       {(fields, { add, remove }) => (
         <>
           <Form.Item

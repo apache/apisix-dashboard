@@ -21,11 +21,11 @@ export default {
   'page.route.requestParameter': '请求参数',
   'page.route.parameterName': '参数名称',
   'page.route.operationalCharacter': '运算符',
-  'page.route.equal': '等于',
-  'page.route.unequal': '不等于',
-  'page.route.greaterThan': '大于',
-  'page.route.lessThan': '小于',
-  'page.route.regexMatch': '正则匹配',
+  'page.route.equal': '等于（==）',
+  'page.route.unequal': '不等于（~=）',
+  'page.route.greaterThan': '大于（>）',
+  'page.route.lessThan': '小于（<）',
+  'page.route.regexMatch': '正则匹配（～～）',
   'page.route.in': 'IN',
   'page.route.rule': '规则',
   'page.route.host': '域名',
@@ -52,7 +52,7 @@ export default {
   'page.route.button.send': '发送请求',
 
   // input
-  'page.route.input.placeholder.parameterNameHttpHeader': '请求头键名，例如：HOST',
+  'page.route.input.placeholder.parameterNameHttpHeader': '请求头名称，例如：HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': '参数名称，例如：id',
   'page.route.input.placeholder.redirectCustom': '例如：/foo/index.html',
   'page.route.input.placeholder.requestUrl': '请输入合法的请求地址',
@@ -164,4 +164,10 @@ export default {
   'page.route.configuration.host.placeholder': '请输入 HTTP 请求域名',
 
   'page.route.service.none': '不绑定服务',
+
+  'page.route.rule.create': '创建规则',
+  'page.route.rule.edit': '编辑规则',
+
+  'page.route.advanced-match.operator.sample.IN': '请输入数组，示例：["1", "2"]',
+  'page.route.advanced-match.operator.sample.~~': '请输入正则表达式，示例：[a-z]+',
 };
