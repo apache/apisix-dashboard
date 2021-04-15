@@ -55,10 +55,11 @@ export const PLUGIN_LIST = {
     type: PluginType.serverless
   },
   "mqtt-proxy": {
-    type: PluginType.other
+    type: PluginType.other,
+    hidden: true
   },
   "response-rewrite": {
-    type: PluginType.transformation
+    type: PluginType.other
   },
   "basic-auth": {
     type: PluginType.authentication
@@ -67,7 +68,7 @@ export const PLUGIN_LIST = {
     type: PluginType.logging
   },
   "fault-injection": {
-    type: PluginType.transformation
+    type: PluginType.security
   },
   "limit-count": {
     type: PluginType.traffic
@@ -76,7 +77,7 @@ export const PLUGIN_LIST = {
     type: PluginType.monitoring
   },
   "proxy-rewrite": {
-    type: PluginType.transformation
+    type: PluginType.other
   },
   "syslog": {
     type: PluginType.logging
@@ -110,10 +111,11 @@ export const PLUGIN_LIST = {
     type: PluginType.serverless
   },
   "dubbo-proxy": {
-    type: PluginType.other
+    type: PluginType.other,
+    hidden: true
   },
   "node-status": {
-    type: PluginType.monitoring
+    type: PluginType.other
   },
   "referer-restriction": {
     type: PluginType.security
@@ -131,7 +133,7 @@ export const PLUGIN_LIST = {
     type: PluginType.traffic
   },
   "proxy-mirror": {
-    type: PluginType.traffic
+    type: PluginType.other
   },
   "request-validation": {
     type: PluginType.security
@@ -147,14 +149,14 @@ export const PLUGIN_LIST = {
     type: PluginType.authentication
   },
   "proxy-cache": {
-    type: PluginType.traffic
+    type: PluginType.other
   },
   "redirect": {
     type: PluginType.other,
     hidden: true
   },
   "request-id": {
-    type: PluginType.traffic
+    type: PluginType.monitoring
   },
   "skywalking": {
     type: PluginType.monitoring
@@ -178,13 +180,13 @@ export const PLUGIN_LIST = {
     type: PluginType.security
   },
   "wolf-rbac": {
-    type: PluginType.authentication
+    type: PluginType.other
   },
   "authz-keycloak": {
     type: PluginType.authentication
   },
   "grpc-transcode": {
-    type: PluginType.transformation
+    type: PluginType.other
   },
   "server-info": {
     type: PluginType.other,
