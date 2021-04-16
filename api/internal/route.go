@@ -18,7 +18,6 @@ package internal
 
 import (
 	"embed"
-	"fmt"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"io/fs"
@@ -55,22 +54,15 @@ func SetUpRouter(StaticFiles embed.FS) *gin.Engine {
 	r := gin.New()
 	logger := log.GetLogger(log.AccessLog)
 	r.Use(filter.CORS(), filter.RequestId(), filter.IPFilter(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.RecoverHandler())
-	//r.Use(static.Serve("/", static.LocalFile(filepath.Join(conf.WorkDir, conf.WebDir), false)))
-	//r.NoRoute(func(c *gin.Context) {
-	//	c.File(fmt.Sprintf("%s/index.html", filepath.Join(conf.WorkDir, conf.WebDir)))
-	//})
 	filesystem := fs.FS(StaticFiles)
 	subtree, err := fs.Sub(filesystem, "html")
-	////ss , err := fs.Glob(filesystem,"html")
-	////fmt.Println(ss)
+
 	if err != nil {
-		panic(err)
+		log.Errorf("%s\n", err)
 	}
 	r.Use(serve("/", subtree))
-	//r.Use(static.Serve("/", static.LocalFile("./html", false)))
 	r.NoRoute(func(c *gin.Context) {
 		c.FileFromFS("index.html", http.FS(subtree))
-		//c.File(fmt.Sprintf("%s/index.html", "./html"))
 	})
 
 	factories := []handler.RegisterFactory{
@@ -106,20 +98,27 @@ func SetUpRouter(StaticFiles embed.FS) *gin.Engine {
 	return r
 }
 
+type spaFileSystem struct {
+	http.FileSystem
+}
+
+func (fs *spaFileSystem) Open(name string) (http.File, error) {
+	f, err := fs.FileSystem.Open(name)
+	//Default failsafe page
+	if err != nil {
+		return fs.FileSystem.Open("index.html")
+	}
+	return f, err
+}
+
 func serve(urlPrefix string, fss fs.FS) gin.HandlerFunc {
-	fileserver := http.FileServer(http.FS(fss))
+	fileserver := http.FileServer(&spaFileSystem{http.FS(fss)})
 	if urlPrefix != "" {
 		fileserver = http.StripPrefix(urlPrefix, fileserver)
 	}
 
 	return func(c *gin.Context) {
-		if c.Request.URL.Path=="/" || exists(urlPrefix, c.Request.URL.Path, &fss) {
-		fileserver.ServeHTTP(c.Writer, c.Request)
-		c.Abort()
-		}else if strings.HasPrefix(c.Request.URL.Path, "/user"){
-			fmt.Println("here")
-			c.Request.URL.Path = "/"
-			fmt.Println(c.Request.Referer())
+		if exists(urlPrefix, c.Request.URL.Path, &fss) || !strings.HasPrefix(c.Request.URL.Path, "/apisix") {
 			fileserver.ServeHTTP(c.Writer, c.Request)
 			c.Abort()
 		}
@@ -127,12 +126,11 @@ func serve(urlPrefix string, fss fs.FS) gin.HandlerFunc {
 }
 
 func exists(prefix string, filepath string, f *fs.FS) bool {
-	if strings.HasPrefix(filepath, "/apisix"){
+	if strings.HasPrefix(filepath, "/apisix") {
 		return false
 	}
 	if p := strings.TrimPrefix(filepath, prefix); len(p) < len(filepath) {
-		fmt.Println("check: ", p)
-		_, err :=fs.Stat(*f, p)
+		_, err := fs.Stat(*f, p)
 		if err != nil {
 			return false
 		}
