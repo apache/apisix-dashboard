@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React from 'react'
-import { Form, Input, Select } from 'antd'
+import { Form, Input, notification, Select } from 'antd'
 import { useIntl } from 'umi'
 import type { FormInstance } from 'antd/lib/form'
 
@@ -78,6 +78,14 @@ const Component: React.FC<Props> = ({ form, readonly }) => {
                 <Input disabled={readonly} placeholder={formatMessage({ id: `page.upstream.upstream_host.required` })} />
               </Form.Item>
             );
+          }
+
+          if (form.getFieldValue('pass_host') === 'node' && (form.getFieldValue('nodes') || []).length !== 1) {
+            notification.warning({
+              message: formatMessage({id: 'component.upstream.other.pass_host-with-multiple-nodes.title'}),
+              description: formatMessage({id: 'component.upstream.other.pass_host-with-multiple-nodes'})
+            })
+            form.setFieldsValue({pass_host: 'pass'})
           }
           return null;
         }}

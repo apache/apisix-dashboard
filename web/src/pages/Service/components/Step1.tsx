@@ -19,7 +19,7 @@ import { Form, Input } from 'antd';
 import { useIntl } from 'umi';
 
 import UpstreamForm from '@/components/Upstream';
-import { fetchUpstreamList } from '../service';
+import { fetchUpstreamList } from '@/components/Upstream/service';
 
 const FORM_LAYOUT = {
   labelCol: {
@@ -37,7 +37,7 @@ const Step1: React.FC<ServiceModule.Step1PassProps> = ({
   disabled,
 }) => {
   const { formatMessage } = useIntl();
-  const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
+  const [list, setList] = useState<UpstreamComponent.ResponseData[]>([]);
   useEffect(() => {
     fetchUpstreamList().then(({ data }) => setList(data));
   }, []);

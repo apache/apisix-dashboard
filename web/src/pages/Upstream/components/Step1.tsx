@@ -14,27 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Form, Input } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 
 import UpstreamForm from '@/components/Upstream';
-import { fetchList } from '../service';
 
 type Props = {
   form: FormInstance;
   disabled?: boolean;
   upstreamRef?: React.MutableRefObject<any>;
+  neverReadonly?: boolean;
 };
 
-const Step1: React.FC<Props> = ({ form, disabled, upstreamRef }) => {
+const Step1: React.FC<Props> = ({ form, disabled, upstreamRef, neverReadonly }) => {
   const { formatMessage } = useIntl();
-  const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
-
-  useEffect(() => {
-    fetchList({}).then(({ data }) => setList(data));
-  }, []);
 
   return (
     <>
@@ -56,7 +51,7 @@ const Step1: React.FC<Props> = ({ form, disabled, upstreamRef }) => {
           />
         </Form.Item>
       </Form>
-      <UpstreamForm ref={upstreamRef} form={form} disabled={disabled} list={list} />
+      <UpstreamForm ref={upstreamRef} form={form} disabled={disabled} neverReadonly={neverReadonly} />
     </>
   );
 };

@@ -74,18 +74,7 @@ declare namespace RouteModule {
     hosts: string[];
     remote_addrs: string[];
     vars: [string, Operator, string][];
-    upstream: {
-      upstream_id?: string;
-      type: 'roundrobin' | 'chash' | 'ewma';
-      hash_on?: string;
-      key?: string;
-      nodes: Record<string, number>;
-      timeout: {
-        connect: number;
-        send: number;
-        read: number;
-      };
-    };
+    upstream: UpstreamComponent.ResponseData;
     upstream_path?: {
       type?: string;
       from?: string;
@@ -161,23 +150,9 @@ declare namespace RouteModule {
     hasServiceId: boolean;
   };
 
-  type Form2Data = {
-    type: 'roundrobin' | 'chash' | 'ewma';
-    hash_on?: string;
-    key?: string;
-    upstreamPath?: string;
-    upstream_id?: string;
-    timeout: {
-      connect: number;
-      send: number;
-      read: number;
-    };
-    nodes: Record<string, number>;
-  };
-
   type RequestData = {
     form1Data: Form1Data;
-    form2Data: Form2Data;
+    form2Data: UpstreamComponent.ResponseData;
     step3Data: Step3Data;
     advancedMatchingRules: MatchingRule[];
   };
