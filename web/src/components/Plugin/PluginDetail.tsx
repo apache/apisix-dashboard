@@ -27,6 +27,8 @@ import {
   Alert,
   Space,
   Popconfirm,
+  Tooltip,
+  Input,
 } from 'antd';
 import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
@@ -38,6 +40,7 @@ import addFormats from 'ajv-formats';
 
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
+import { PluginForm, PLUGIN_UI_LIST } from './UI';
 
 type Props = {
   name: string;
@@ -94,24 +97,52 @@ const PluginDetail: React.FC<Props> = ({
   enum codeMirrorModeList {
     JSON = 'JSON',
     YAML = 'YAML',
+    UIForm = 'Form'
   }
   const [form] = Form.useForm();
+  const [UIForm] = Form.useForm();
   const ref = useRef<any>(null);
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.type;
   const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
     codeMirrorModeList.JSON,
   );
-  const modeOptions = [
+  const modeOptions: { label: string; value: string }[] = [
     { label: codeMirrorModeList.JSON, value: codeMirrorModeList.JSON },
     { label: codeMirrorModeList.YAML, value: codeMirrorModeList.YAML },
   ];
+
+  if (PLUGIN_UI_LIST.includes(name)) {
+    modeOptions.push({ label: formatMessage({ id: 'component.plugin.form' }), value: codeMirrorModeList.UIForm });
+  }
+
+  const getUIFormData = () => {
+    if (name === 'cors') {
+      const formData = UIForm.getFieldsValue();
+      const newMethods = formData.allow_methods.join(",");
+      return { ...formData, allow_methods: newMethods };
+    }
+    return UIForm.getFieldsValue();
+  };
+
+  const setUIFormData = (formData: any) => {
+    if (name === 'cors' && formData) {
+      const methods = (formData.allow_methods || '').length ? formData.allow_methods.split(",") : ["*"];
+      UIForm.setFieldsValue({ ...formData, allow_methods: methods });
+      return;
+    }
+    UIForm.setFieldsValue(formData);
+  };
 
   useEffect(() => {
     form.setFieldsValue({
       disable: initialData[name] && !initialData[name].disable,
       scope: 'global',
     });
+    if (PLUGIN_UI_LIST.includes(name)) {
+      setCodeMirrorMode(codeMirrorModeList.UIForm);
+      setUIFormData(initialData[name]);
+    };
   }, []);
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
@@ -161,23 +192,30 @@ const PluginDetail: React.FC<Props> = ({
   const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
     switch (value) {
       case codeMirrorModeList.JSON: {
-        const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
-
-        if (error) {
-          notification.error({
-            message: 'Invalid Yaml data',
-          });
-          return;
+        if (codeMirrorMode === codeMirrorModeList.YAML) {
+          const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
+          if (error) {
+            notification.error({
+              message: 'Invalid Yaml data',
+            });
+            return;
+          }
+          ref.current.editor.setValue(
+            js_beautify(yamlData, {
+              indent_size: 2,
+            }),
+          );
+        } else {
+          ref.current.editor.setValue(
+            js_beautify(JSON.stringify(getUIFormData()), {
+              indent_size: 2,
+            }),
+          );
         }
-        ref.current.editor.setValue(
-          js_beautify(yamlData, {
-            indent_size: 2,
-          }),
-        );
         break;
       }
       case codeMirrorModeList.YAML: {
-        const { data: jsonData, error } = json2yaml(ref.current.editor.getValue());
+        const { data: jsonData, error } = json2yaml(codeMirrorMode === codeMirrorModeList.JSON ? ref.current.editor.getValue() : JSON.stringify(getUIFormData()));
 
         if (error) {
           notification.error({
@@ -188,11 +226,28 @@ const PluginDetail: React.FC<Props> = ({
         ref.current.editor.setValue(jsonData);
         break;
       }
+
+      case codeMirrorModeList.UIForm: {
+        if (codeMirrorMode === codeMirrorModeList.JSON) {
+          setUIFormData(JSON.parse(ref.current.editor.getValue()));
+        } else {
+          const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
+          if (error) {
+            notification.error({
+              message: 'Invalid Yaml data',
+            });
+            return;
+          }
+          setUIFormData(JSON.parse(yamlData));
+        }
+        break;
+      }
       default:
         break;
     }
     setCodeMirrorMode(value);
   };
+
   const formatCodes = () => {
     try {
       if (ref.current) {
@@ -212,7 +267,7 @@ const PluginDetail: React.FC<Props> = ({
   return (
     <>
       <Drawer
-        title={`Plugin: ${name}`}
+        title={formatMessage({ id: 'component.plugin.editor' })}
         visible={visible}
         placement="right"
         closable={false}
@@ -249,10 +304,15 @@ const PluginDetail: React.FC<Props> = ({
                 type="primary"
                 onClick={() => {
                   try {
-                    const editorData =
-                      codeMirrorMode === codeMirrorModeList.JSON
-                        ? JSON.parse(ref.current?.editor.getValue())
-                        : yaml2json(ref.current?.editor.getValue(), false).data;
+                    let editorData;
+                    if (codeMirrorMode === codeMirrorModeList.JSON) {
+                      editorData = JSON.parse(ref.current?.editor.getValue());
+                    } else if (codeMirrorMode === codeMirrorModeList.YAML) {
+                      editorData = yaml2json(ref.current?.editor.getValue(), false).data;
+                    } else {
+                      editorData = getUIFormData();
+                    }
+
                     validateData(name, editorData).then((value) => {
                       onChange({ formData: form.getFieldsValue(), codemirrorData: value });
                     });
@@ -275,10 +335,16 @@ const PluginDetail: React.FC<Props> = ({
           border: 1px solid rgb(235, 237, 240);
           margin-top:10px;
         }
+        .ant-input[disabled] {
+          color: #000;
+        }
       `}
         </style>
 
         <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
+          <Form.Item label={formatMessage({ id: 'component.global.name' })}>
+            <Input value={name} bordered={false} disabled />
+          </Form.Item>
           <Form.Item label={formatMessage({ id: 'component.global.enable' })} valuePropName="checked" name="disable">
             <Switch
               defaultChecked={initialData[name] && !initialData[name].disable}
@@ -288,7 +354,7 @@ const PluginDetail: React.FC<Props> = ({
           {type === 'global' && (
             <Form.Item label={formatMessage({ id: 'component.global.scope' })} name="scope">
               <Select disabled>
-                <Select.Option value="global">Global</Select.Option>
+                <Select.Option value="global">{formatMessage({ id: "other.global" })}</Select.Option>
               </Select>
             </Form.Item>
           )}
@@ -297,14 +363,27 @@ const PluginDetail: React.FC<Props> = ({
         <PageHeader
           title=""
           subTitle={
-            pluginType === 'auth' && schemaType !== 'consumer' ? (
-              <Alert message={`${name} does not require configuration`} type="warning" />
-            ) : (
-              <>Current plugin: {name}</>
-            )
+            pluginType === 'auth' && schemaType !== 'consumer' && (codeMirrorMode !== codeMirrorModeList.UIForm) ? (
+              <Alert message={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} type="warning" />
+            ) : null
           }
           ghost={false}
           extra={[
+            <Select
+              defaultValue={codeMirrorModeList.JSON}
+              value={codeMirrorMode}
+              options={modeOptions}
+              onChange={(value: PluginComponent.CodeMirrorMode) => {
+                handleModeChange(value);
+              }}
+              data-cy='code-mirror-mode'
+              key={1}
+            ></Select>,
+            <Tooltip title={formatMessage({ id: "component.plugin.format-codes.disable" })} key={2}>
+              <Button type="primary" onClick={formatCodes} disabled={codeMirrorMode === codeMirrorModeList.UIForm}>
+                {formatMessage({ id: 'component.global.format' })}
+              </Button>
+            </Tooltip>,
             <Button
               type="default"
               icon={<LinkOutlined />}
@@ -315,25 +394,14 @@ const PluginDetail: React.FC<Props> = ({
                   window.open(`https://apisix.apache.org/docs/apisix/plugins/${name}`);
                 }
               }}
-              key={1}
+              key={3}
             >
               {formatMessage({ id: 'component.global.document' })}
-            </Button>,
-            <Select
-              defaultValue={codeMirrorModeList.JSON}
-              value={codeMirrorMode}
-              options={modeOptions}
-              onChange={(value: PluginComponent.CodeMirrorMode) => {
-                handleModeChange(value);
-              }}
-              data-cy='code-mirror-mode'
-            ></Select>,
-            <Button type="primary" onClick={formatCodes} key={3}>
-              {formatMessage({ id: 'component.global.format' })}
-            </Button>,
+            </Button>
           ]}
         />
-        <CodeMirror
+        {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === 'auth' && schemaType !== 'consumer')} />}
+        <div style={{ display: codeMirrorMode === codeMirrorModeList.UIForm ? 'none' : 'unset' }}><CodeMirror
           ref={(codemirror) => {
             ref.current = codemirror;
             if (codemirror) {
@@ -350,8 +418,8 @@ const PluginDetail: React.FC<Props> = ({
             lineNumbers: true,
             showCursorWhenSelecting: true,
             autofocus: true,
-          }}
-        />
+          }} />
+        </div>
       </Drawer>
     </>
   );

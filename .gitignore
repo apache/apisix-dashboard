@@ -42,11 +42,13 @@ build
 manager-api
 
 output
+apisix_logs
 default.etcd
 api/build-tools/apisix
 /*.zip
 .githash
 .backup.yaml
+Dockerfile-apisix
 
 # backend unit test output
 api/coverage.txt

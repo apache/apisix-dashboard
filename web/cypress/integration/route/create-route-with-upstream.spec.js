@@ -32,15 +32,20 @@ context('Create Route with Upstream', () => {
     cy.get(this.domSelector.name).type(this.data.upstreamName);
     cy.get(this.domSelector.description).type(this.data.description);
     cy.get(this.domSelector.nodes_0_host).type(this.data.host1);
+    cy.get(this.domSelector.nodes_0_port).type(this.data.port);
+    cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
     cy.contains('Next').click();
     cy.contains('Submit').click();
   });
 
   it('should create route with upstream just created', function () {
     cy.visit('/');
-    cy.contains('Route').click();
+    cy.get('[role=menu]').should('be.visible').within(() => {
+      cy.contains('Route').click();
+    });
     cy.contains('Create').click();
 
+    cy.contains('Next').click().click();
     cy.get(this.domSelector.name).type(this.data.routeName);
     cy.contains('Next').click();
     // should disable Upstream input boxes after selecting an existing upstream
@@ -53,6 +58,8 @@ context('Create Route with Upstream', () => {
     cy.get(this.domSelector.input).should('not.be.disabled');
 
     cy.get(this.domSelector.nodes_0_host).clear().type(this.data.ip1);
+    cy.get(this.domSelector.nodes_0_port).type(this.data.port);
+    cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -84,6 +91,8 @@ context('Create Route with Upstream', () => {
     cy.get(this.domSelector.input).should('not.be.disabled');
 
     cy.get(this.domSelector.nodes_0_host).clear().type(this.data.ip2);
+    cy.get(this.domSelector.nodes_0_port).type(this.data.port);
+    cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -106,8 +115,11 @@ context('Create Route with Upstream', () => {
     cy.visit('/routes/list');
     cy.get(this.domSelector.nameSelector).type(this.data.routeName);
     cy.contains('Search').click();
-    cy.contains(this.data.routeName).siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
+    cy.contains(this.data.routeName).siblings().contains('More').click();
+    cy.contains('Delete').click();
+    cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
+      cy.contains('OK').click();
+    });
     cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
 
     cy.visit('/');

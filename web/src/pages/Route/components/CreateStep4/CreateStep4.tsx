@@ -59,7 +59,7 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, upstreamRef, ...
           <h2 style={style}>
             {formatMessage({ id: 'component.global.steps.stepTitle.pluginConfig' })}
           </h2>
-          {Boolean(Object.keys(plugins).length !== 0 || plugin_config_id !== '') && <PluginPage initialData={plugins} plugin_config_id={plugin_config_id} showSelector readonly />}
+          {Boolean(Object.keys(plugins).length !== 0 || plugin_config_id !== '') && <PluginPage referPage = 'route' initialData={plugins} plugin_config_id={plugin_config_id} showSelector readonly />}
           {Boolean(Object.keys(script).length !== 0) && (
             <PluginOrchestration data={rest.step3Data.script.chart} readonly onChange={() => { }} />
           )}

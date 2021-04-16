@@ -17,9 +17,23 @@
 import { omit } from 'lodash';
 import { request } from 'umi';
 
+import { PLUGIN_LIST, PluginType } from './data';
+
 export const fetchList = () => {
   return request<Res<PluginComponent.Meta[]>>('/plugins?all=true').then((data) => {
-    return data.data;
+    const typedData = data.data.map(item => ({
+      ...item,
+      type: PLUGIN_LIST[item.name]?.type || "other",
+      hidden: PLUGIN_LIST[item.name]?.hidden || false
+    }));
+
+    let finalList: PluginComponent.Meta[] = []
+
+    Object.values(PluginType).forEach(type => {
+      finalList = finalList.concat(typedData.filter(item => item.type === type))
+    })
+
+    return finalList
   });
 };
 

@@ -14,15 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-import { Form, Input, Row, Col, Checkbox } from 'antd';
+import React, { useState } from 'react';
+import { Form, Input, Row, Col, Checkbox, AutoComplete } from 'antd';
 import { useIntl } from 'umi';
 import { MinusCircleOutlined } from '@ant-design/icons';
+import { HEADER_LIST } from '@/pages/Route/constants';
 
 import styles from './index.less';
 
+const { Option } = AutoComplete;
+
 const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
   const { formatMessage } = useIntl();
+
+  const allSelectOptions = props.inputType === "header" ? HEADER_LIST : []
+  const [result, setResult] = useState<string[]>(allSelectOptions);
+
+  const onSearch = (value: string) => {
+    setResult(allSelectOptions.filter((option) => option.toLowerCase().startsWith(value.toLowerCase())))
+  }
 
   return (
     <Form name={props.name} className={styles.routeDebugDraw} form={props.form}>
@@ -34,7 +44,9 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                 <Row gutter={16} key={field.name}>
                   <Col span={1}>
                     <Form.Item
+                      {...field}
                       name={[field.name, 'check']}
+                      fieldKey={[field.fieldKey, 'check']}
                       style={{ textAlign: 'right' }}
                       valuePropName="checked"
                     >
@@ -42,8 +54,12 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item name={[field.name, 'key']}>
-                      <Input
+                    <Form.Item
+                      {...field}
+                      name={[field.name, 'key']}
+                      fieldKey={[field.fieldKey, 'key']}>
+                      <AutoComplete
+                        onSearch={onSearch}
                         placeholder={formatMessage({ id: 'page.route.input.placeholder.paramKey' })}
                         onChange={() => {
                           // only last line key field input can trigger add new line event
@@ -54,12 +70,20 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                             prevData.params[index].check = true;
                             props.form.setFieldsValue(prevData);
                           }
-                        }}
-                      />
+                        }}>
+                        {result.map((value) => (
+                          <Option key={value} value={value}>
+                            {value}
+                          </Option>
+                        ))}
+                      </AutoComplete>
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item name={[field.name, 'value']}>
+                    <Form.Item
+                      {...field}
+                      name={[field.name, 'value']}
+                      fieldKey={[field.fieldKey, 'value']}>
                       <Input
                         placeholder={formatMessage({
                           id: 'page.route.input.placeholder.paramValue',

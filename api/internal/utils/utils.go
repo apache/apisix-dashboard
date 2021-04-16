@@ -39,7 +39,7 @@ func init() {
 	saltStr, ok := os.LookupEnv("FLAKE_SALT")
 	var salt uint16
 	if ok {
-		i, err := strconv.Atoi(saltStr)
+		i, err := strconv.ParseUint(saltStr, 10, 16)
 		if err != nil {
 			panic(err)
 		}

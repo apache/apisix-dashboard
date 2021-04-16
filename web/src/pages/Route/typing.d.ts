@@ -166,7 +166,7 @@ declare namespace RouteModule {
     hash_on?: string;
     key?: string;
     upstreamPath?: string;
-    upstream_id?: string | null;
+    upstream_id?: string;
     timeout: {
       connect: number;
       send: number;
@@ -257,6 +257,7 @@ declare namespace RouteModule {
   type DebugViewProps = {
     form: FormInstance;
     name?: string;
+    inputType?: 'param' | 'header';
   };
   type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'raw input' | 'form-data';
   type DebugDrawProps = {

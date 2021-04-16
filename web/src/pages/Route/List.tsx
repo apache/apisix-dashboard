@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import type { ReactNode } from 'react';
 import React, { useRef, useEffect, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
@@ -30,9 +31,11 @@ import {
   Upload,
   Modal,
   Divider,
+  Menu,
+  Dropdown,
 } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined } from '@ant-design/icons';
+import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined, DownOutlined } from '@ant-design/icons';
 import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
 import moment from 'moment';
@@ -83,6 +86,7 @@ const Page: React.FC = () => {
   const [id, setId] = useState('');
   const [editorMode, setEditorMode] = useState<'create' | 'update'>('create');
   const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
+  const [debugDrawVisible, setDebugDrawVisible] = useState(false);
 
   const savePageList = (page = 1, pageSize = 10) => {
     history.replace(`/routes/list?page=${page}&pageSize=${pageSize}`);
@@ -97,7 +101,7 @@ const Page: React.FC = () => {
     setPaginationConfig({ pageSize: Number(pageSize), current: Number(page) });
   }, [window.location.search]);
 
-  const rowSelection = {
+  const rowSelection: any = {
     selectedRowKeys,
     onChange: (currentSelectKeys: string[]) => {
       setSelectedRowKeys(currentSelectKeys);
@@ -177,6 +181,122 @@ const Page: React.FC = () => {
     });
   };
 
+  const ListToolbar = () => {
+    const tools = [
+      {
+        name: formatMessage({ id: 'page.route.pluginTemplateConfig' }),
+        icon: <PlusOutlined />,
+        onClick: () => {
+          history.push('/plugin-template/list')
+        }
+      }, {
+        name: formatMessage({ id: 'component.global.data.editor' }),
+        icon: <PlusOutlined />,
+        onClick: () => {
+          setVisible(true);
+          setEditorMode('create');
+          setRawData({});
+        }
+      }, {
+        name: formatMessage({ id: 'page.route.button.importOpenApi' }),
+        icon: <ImportOutlined />,
+        onClick: () => {
+          setUploadFileList([]);
+          setShowImportModal(true);
+        }
+      }, {
+        name: formatMessage({ id: 'page.route.onlineDebug' }),
+        icon: <BugOutlined />,
+        onClick: () => {
+          setDebugDrawVisible(true)
+        }
+      }
+    ]
+
+    return (
+      <Dropdown overlay={<Menu>
+        {
+          tools.map(item => (
+            <Menu.Item key={item.name} onClick={item.onClick}>
+              {item.icon}
+              {item.name}
+            </Menu.Item>
+          ))
+        }
+      </Menu>}>
+        <Button type="dashed">
+          <DownOutlined /> {formatMessage({ id: "menu.advanced-feature" })}
+        </Button>
+      </Dropdown>
+    )
+  }
+
+  const RecordActionDropdown: React.FC<{ record: any }> = ({ record }) => {
+    const tools: {
+      name: string;
+      onClick: () => void;
+      icon?: ReactNode;
+    }[] = [
+        {
+          name: formatMessage({ id: 'component.global.view' }),
+          onClick: () => {
+            setId(record.id);
+            setRawData(omit(record, DELETE_FIELDS));
+            setVisible(true);
+            setEditorMode('update');
+          }
+        }, {
+          name: formatMessage({ id: 'component.global.duplicate' }),
+          onClick: () => {
+            history.push(`/routes/${record.id}/duplicate`)
+          }
+        }, {
+          name: formatMessage({ id: 'component.global.delete' }),
+          onClick: () => {
+            Modal.confirm({
+              type: "warning",
+              title: formatMessage({ id: 'component.global.popconfirm.title.delete' }),
+              content: (
+                <>
+                  {formatMessage({ id: 'component.global.name' })} - {record.name}<br />
+                  ID - {record.id}
+                </>
+              ),
+              onOk: () => {
+                remove(record.id!).then(() => {
+                  handleTableActionSuccessResponse(
+                    `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                      id: 'menu.routes',
+                    })} ${formatMessage({ id: 'component.status.success' })}`,
+                  );
+                });
+              }
+            })
+          }
+        }
+      ]
+
+    return (
+      <Dropdown overlay={
+        <Menu>
+          {
+            tools.map(item => (
+              <Menu.Item key={item.name} onClick={item.onClick}>
+                {item.icon && item.icon}
+                {item.name}
+              </Menu.Item>
+            ))
+          }
+        </Menu>
+      }>
+        <Button type="dashed">
+          <DownOutlined />
+          {formatMessage({ id: "menu.more" })}
+        </Button>
+      </Dropdown>
+    )
+  }
+
   const ListFooter: React.FC = () => {
     return (
       <Popconfirm
@@ -208,15 +328,13 @@ const Page: React.FC = () => {
     );
   };
 
-  const [debugDrawVisible, setDebugDrawVisible] = useState(false);
-
   const columns: ProColumns<RouteModule.ResponseBody>[] = [
     {
       title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
     },
     {
-      title: formatMessage({ id: 'page.route.domainName' }),
+      title: formatMessage({ id: 'page.route.host' }),
       hideInSearch: true,
       render: (_, record) => {
         const list = record.hosts || (record.host && [record.host]) || [];
@@ -409,38 +527,7 @@ const Page: React.FC = () => {
             <Button type="primary" onClick={() => history.push(`/routes/${record.id}/edit`)}>
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
-            <Button type="primary" onClick={() => {
-              setId(record.id);
-              setRawData(omit(record, DELETE_FIELDS));
-              setVisible(true);
-              setEditorMode('update');
-            }}>
-              {formatMessage({ id: 'component.global.view' })}
-            </Button>
-            <Button type="primary" onClick={() => history.push(`/routes/${record.id}/duplicate`)}>
-              {formatMessage({ id: 'component.global.duplicate' })}
-            </Button>
-            <Popconfirm
-              title={formatMessage({ id: 'component.global.popconfirm.title.delete' })}
-              onConfirm={() => {
-                remove(record.id!).then(() => {
-                  handleTableActionSuccessResponse(
-                    `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                      id: 'menu.routes',
-                    })} ${formatMessage({ id: 'component.status.success' })}`,
-                  );
-                });
-              }}
-              okButtonProps={{
-                danger: true,
-              }}
-              okText={formatMessage({ id: 'component.global.confirm' })}
-              cancelText={formatMessage({ id: 'component.global.cancel' })}
-            >
-              <Button type="primary" danger>
-                {formatMessage({ id: 'component.global.delete' })}
-              </Button>
-            </Popconfirm>
+            <RecordActionDropdown record={record} />
           </Space>
         </>
       ),
@@ -448,7 +535,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'page.route.list' })}>
+    <PageHeaderWrapper title={formatMessage({ id: 'page.route.list' })} content={formatMessage({ id: 'page.route.list.description' })}>
       <ProTable<RouteModule.ResponseBody>
         actionRef={ref}
         rowKey="id"
@@ -464,36 +551,11 @@ const Page: React.FC = () => {
           resetText: formatMessage({ id: 'component.global.reset' }),
         }}
         toolBarRender={() => [
-          <Button type="primary" onClick={() => { history.push('/plugin-template/list') }}>
-            <PlusOutlined />
-            {formatMessage({ id: 'page.route.pluginTemplateConfig' })}
-          </Button>,
           <Button type="primary" onClick={() => history.push(`/routes/create`)}>
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
-          <Button type="primary" onClick={() => {
-            setVisible(true);
-            setEditorMode('create');
-            setRawData({});
-          }}>
-            <PlusOutlined />
-            {formatMessage({ id: 'component.global.data.editor' })}
-          </Button>,
-          <Button
-            type="primary"
-            onClick={() => {
-              setUploadFileList([]);
-              setShowImportModal(true);
-            }}
-          >
-            <ImportOutlined />
-            {formatMessage({ id: 'page.route.button.importOpenApi' })}
-          </Button>,
-          <Button type="primary" onClick={() => setDebugDrawVisible(true)}>
-            <BugOutlined />
-            {formatMessage({ id: 'page.route.onlineDebug' })}
-          </Button>,
+          <ListToolbar />
         ]}
         rowSelection={rowSelection}
         footer={() => <ListFooter />}
@@ -529,7 +591,7 @@ const Page: React.FC = () => {
         }}
       >
         <Upload
-          fileList={uploadFileList}
+          fileList={uploadFileList as any}
           beforeUpload={(file) => {
             setUploadFileList([file]);
             return false;

@@ -22,7 +22,6 @@ import { omit } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/Plugin';
-import { DEFAULT_UPSTREAM } from '@/components/Upstream';
 import Preview from './components/Preview';
 import Step1 from './components/Step1';
 import { create, update, fetchItem } from './service';
@@ -46,9 +45,6 @@ const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
 
   useEffect(() => {
-    // init upstream default value
-    upstreamForm.setFieldsValue(DEFAULT_UPSTREAM);
-
     const { serviceId } = (props as any).match.params;
     if (serviceId) {
       fetchItem(serviceId).then(({ data }) => {
@@ -81,13 +77,12 @@ const Page: React.FC = (props) => {
     (serviceId ? update(serviceId, data) : create(data))
       .then(() => {
         notification.success({
-          message: `${
-            serviceId
+          message: `${serviceId
               ? formatMessage({ id: 'component.global.edit' })
               : formatMessage({ id: 'component.global.create' })
-          } ${formatMessage({ id: 'menu.service' })} ${formatMessage({
-            id: 'component.status.success',
-          })}`,
+            } ${formatMessage({ id: 'menu.service' })} ${formatMessage({
+              id: 'component.status.success',
+            })}`,
         });
         history.push('/service/list');
       })
@@ -115,11 +110,9 @@ const Page: React.FC = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={`${
-          (props as any).match.params.serviceId
-            ? formatMessage({ id: 'component.global.edit' })
-            : formatMessage({ id: 'component.global.create' })
-        } ${formatMessage({ id: 'menu.service' })}`}
+        title={(props as any).match.params.serviceId
+          ? formatMessage({ id: 'page.service.configure' })
+          : formatMessage({ id: 'page.service.create' })}
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: '25px' }}>
