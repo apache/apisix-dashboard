@@ -35,7 +35,8 @@ screenshot
 .eslintcache
 
 build
-html/
+api/cmd/html/*
+!api/cmd/html/index.html
 
 /compose/**/*.log
 /compose/**/nginx.pid

@@ -36,7 +36,7 @@ help:
 ### build:		Build the Apache APISIX Dashboard, including web and manager-api
 .PHONY: build
 build: web-default api-default
-	api/build.sh && cd ./web && export CYPRESS_INSTALL_BINARY=0  && yarn install && yarn build  && mkdir -p ../output/logs
+	cd ./web && export CYPRESS_INSTALL_BINARY=0  && yarn install && yarn build && cd .. && cp -r output/html api/cmd && api/build.sh &&  mkdir -p output/logs
 
 
 .PHONY: web-default
