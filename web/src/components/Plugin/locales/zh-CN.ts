@@ -21,6 +21,14 @@ export default {
   'component.step.select.pluginTemplate.select.option': '手动配置',
   'component.plugin.pluginTemplate.tip1': '1. 若路由已配置插件，则插件模板数据将与已配置的插件数据合并。',
   'component.plugin.pluginTemplate.tip2': '2. 插件模板相同的插件会覆盖掉原有的插件。',
+  'component.plugin.authentication': '身份验证',
+  'component.plugin.security': '安全防护',
+  'component.plugin.traffic': '流量控制',
+  'component.plugin.serverless': '无服务器架构',
+  'component.plugin.observability': '可观测性',
+  'component.plugin.logging': '日志记录',
+  'component.plugin.other': '其它',
+
   // cors
   'component.pluginForm.cors.allow_origins.tooltip': '允许跨域访问的 Origin，格式如：scheme://host:port，比如: https://somehost.com:8081 。多个值使用 , 分割，allow_credential 为 false 时可以使用 * 来表示所有 Origin 均允许通过。你也可以在启用了 allow_credential 后使用 ** 强制允许所有 Origin 都通过，但请注意这样存在安全隐患。',
   'component.pluginForm.cors.allow_origins.extra': '例如: https://somehost.com:8081',
