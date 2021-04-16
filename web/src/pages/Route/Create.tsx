@@ -21,7 +21,6 @@ import { history, useIntl } from 'umi';
 import { isEmpty } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
-import { DEFAULT_UPSTREAM } from '@/components/Upstream';
 
 import { transformer as chartTransformer } from '@/components/PluginOrchestration';
 import { create, fetchItem, update, checkUniqueName, checkHostWithSSL } from './service';
@@ -83,7 +82,6 @@ const Page: React.FC<Props> = (props) => {
     setAdvancedMatchingRules([]);
     setStep3Data(DEFAULT_STEP_3_DATA);
     form1.setFieldsValue(DEFAULT_STEP_1_DATA);
-    form2.setFieldsValue(DEFAULT_UPSTREAM);
     setStep(1);
   };
 
@@ -95,7 +93,7 @@ const Page: React.FC<Props> = (props) => {
     }
   }, []);
 
-  const getProxyRewriteEnable =() => {
+  const getProxyRewriteEnable = () => {
     return !isEmpty(transformProxyRewrite2Plugin(form1.getFieldValue('proxyRewrite')));
   }
 
@@ -269,9 +267,8 @@ const Page: React.FC<Props> = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={`${
-          formatMessage({ id: `component.global.${props.route.path.split('/').slice(-1)[0]}`})
-        } ${formatMessage({ id: 'menu.routes' })}`}
+        title={`${formatMessage({ id: `component.global.${props.route.path.split('/').slice(-1)[0]}` })
+          } ${formatMessage({ id: 'menu.routes' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>

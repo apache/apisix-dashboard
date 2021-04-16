@@ -166,7 +166,7 @@ declare namespace RouteModule {
     hash_on?: string;
     key?: string;
     upstreamPath?: string;
-    upstream_id?: string | null;
+    upstream_id?: string;
     timeout: {
       connect: number;
       send: number;

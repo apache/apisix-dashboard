@@ -63,6 +63,8 @@ context('Create and Search Route', () => {
       cy.get(this.domSelector.nodes_0_host).type(this.data.host2, {
         timeout,
       });
+      cy.get(this.domSelector.nodes_0_port).type(this.data.port);
+      cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
       cy.contains('Next').click();
       cy.contains('Next').click();
       cy.contains('Submit').click();

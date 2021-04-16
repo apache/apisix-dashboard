@@ -27,9 +27,9 @@ const Component: React.FC<Props> = ({ readonly }) => {
 
   return (
     <Form.Item
-      label={formatMessage({ id: 'page.upstream.step.healthyCheck.http_failures' })}
+      label={formatMessage({ id: 'component.upstream.fields.checks.active.unhealthy.http_failures' })}
       required
-      tooltip={formatMessage({ id: 'page.upstream.checks.active.unhealthy.http_failures.description' })}
+      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.unhealthy.http_failures.tooltip' })}
     >
       <Form.Item
         name={['checks', 'active', 'unhealthy', 'http_failures']}
@@ -38,10 +38,11 @@ const Component: React.FC<Props> = ({ readonly }) => {
           {
             required: true,
             message: formatMessage({
-              id: 'page.upstream.step.input.healthyCheck.http_failures',
+              id: 'component.upstream.fields.checks.active.unhealthy.http_failures.required',
             }),
           },
         ]}
+        initialValue={5}
       >
         <InputNumber disabled={readonly} min={1} max={254} />
       </Form.Item>

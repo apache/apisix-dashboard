@@ -16,8 +16,10 @@
  */
 import Interval from './Interval'
 import Successes from './Successes'
+import HttpStatuses from './HttpStatuses'
 
 export default {
   Interval,
-  Successes
+  Successes,
+  HttpStatuses
 }
