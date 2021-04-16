@@ -40,8 +40,10 @@ context('Create Configure and Delete PluginTemplate', () => {
     // should not see proxy-rewrite plugin in the step2
     cy.contains('proxy-rewrite').should('not.exist');
 
-    cy.contains('Enable').click({
-      force: true
+    cy.contains(this.domSelector.pluginCard, 'basic-auth').within(() => {
+      cy.contains('Enable').click({
+        force: true,
+      });
     });
     cy.focused(this.domSelector.drawer).should('exist');
 

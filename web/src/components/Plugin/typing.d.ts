@@ -26,9 +26,10 @@ declare namespace PluginComponent {
     type: string;
     version: number;
     consumer_schema?: Record<string, any>;
+    hidden?: boolean;
   };
 
   type ReferPage = '' | 'route' | 'consumer' | 'service' | 'plugin';
 
-  type CodeMirrorMode = 'JSON' | 'YAML'| 'Form';
+  type CodeMirrorMode = 'JSON' | 'YAML' | 'Form';
 }
