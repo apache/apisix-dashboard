@@ -140,7 +140,10 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	var reader io.ReadCloser
 	switch resp.Header.Get("Content-Encoding") {
 	case "gzip":
-		reader, _ = gzip.NewReader(resp.Body)
+		reader, err = gzip.NewReader(resp.Body)
+		if err != nil {
+			return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+		}
 		defer reader.Close()
 	default:
 		reader = resp.Body
