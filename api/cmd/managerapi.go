@@ -18,6 +18,7 @@ package cmd
 
 import (
 	"context"
+	"embed"
 	"fmt"
 	"net/http"
 	"os"
@@ -43,6 +44,9 @@ var (
 	Version     string
 	GitHash     string
 )
+
+//go:embed html
+var StaticFiles embed.FS
 
 func printInfo() {
 	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
@@ -103,7 +107,7 @@ func NewManagerAPICommand() *cobra.Command {
 			}
 
 			// routes
-			r := internal.SetUpRouter()
+			r := internal.SetUpRouter(StaticFiles)
 			addr := fmt.Sprintf("%s:%d", conf.ServerHost, conf.ServerPort)
 			s := &http.Server{
 				Addr:         addr,

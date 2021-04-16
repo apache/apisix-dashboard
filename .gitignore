@@ -35,6 +35,7 @@ screenshot
 .eslintcache
 
 build
+html/
 
 /compose/**/*.log
 /compose/**/nginx.pid
