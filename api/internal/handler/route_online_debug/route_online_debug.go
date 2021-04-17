@@ -99,10 +99,6 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	body := input.Body
 	contentType := input.ContentType
 
-	if url == "" || method == "" {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("parameters error")
-	}
-
 	client := &http.Client{}
 	client.Timeout = 5 * time.Second
 
@@ -110,12 +106,12 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	err := json.Unmarshal([]byte(input.HeaderParams), &tempMap)
 
 	if err != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("can not get header")
 	}
 
 	req, err := http.NewRequest(strings.ToUpper(method), url, bytes.NewReader(body))
 	if err != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
 	req.Header.Add("Content-Type", contentType)
