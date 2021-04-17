@@ -41,7 +41,11 @@ jobs:
         sudo gem install --no-document fpm
         git clone https://github.com/api7/apisix-build-tools.git
         cd apisix-build-tools
-        make package type=rpm app=dashboard version=${VERSION} checkout=release/${VERSION}
+        export checkout=master
+        if [ "$VERSION" != "merge" && "$VERSION" != "master" ];then
+          export checkout=release/${VERSION}
+        fi
+        make package type=rpm app=dashboard version=${VERSION} checkout=${checkout}
 
     - name: Run centos7 docker and mapping apisix into container
       run: |
