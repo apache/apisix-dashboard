@@ -292,6 +292,7 @@ func TestHandler_Update(t *testing.T) {
 		wantInput  *entity.Consumer
 		wantRet    interface{}
 		wantCalled bool
+		getRet     interface{}
 	}{
 		{
 			caseDesc: "normal",
@@ -313,6 +314,7 @@ func TestHandler_Update(t *testing.T) {
 						"exp": 500,
 					},
 				},
+				CreateTime: 1618648423,
 			},
 			wantInput: &entity.Consumer{
 				Username: "name",
@@ -329,8 +331,14 @@ func TestHandler_Update(t *testing.T) {
 						"exp": 500,
 					},
 				},
+				CreateTime: 1618648423,
 			},
 			wantCalled: true,
+			getRet: &entity.Consumer{
+				Username:   "name",
+				CreateTime: 1618648423,
+				UpdateTime: 1618648423,
+			},
 		},
 		{
 			caseDesc: "store update failed",
@@ -373,7 +381,7 @@ func TestHandler_Update(t *testing.T) {
 			}).Return(tc.giveRet, tc.giveErr)
 
 			mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
-			}).Return(nil, nil)
+			}).Return(tc.getRet, nil)
 
 			h := Handler{consumerStore: mStore}
 			ctx := droplet.NewContext()
@@ -383,6 +391,10 @@ func TestHandler_Update(t *testing.T) {
 			assert.Equal(t, tc.wantCalled, methodCalled)
 			assert.Equal(t, tc.wantRet, ret)
 			assert.Equal(t, tc.wantErr, err)
+			if err == nil {
+				assert.Equal(t, tc.getRet.(*entity.Consumer).CreateTime, ret.(*entity.Consumer).CreateTime)
+				assert.NotEqual(t, tc.getRet.(*entity.Consumer).UpdateTime, ret.(*entity.Consumer).UpdateTime)
+			}
 		})
 	}
 }
