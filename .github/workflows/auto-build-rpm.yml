@@ -38,7 +38,7 @@ jobs:
 
     - name: Build rpm package
       run: |
-        export VERSION=2.5
+        export VERSION=${{ steps.branch_env.outputs.version }}
         sudo gem install --no-document fpm
         git clone https://github.com/api7/apisix-build-tools.git
         cd apisix-build-tools
@@ -50,7 +50,7 @@ jobs:
 
     - name: Install rpm package
       run: |
-        export VERSION=2.5
+        export VERSION=${{ steps.branch_env.outputs.version }}
         docker exec centos7Instance bash -c "cd apisix-dashboard && yum install -y ./apisix-build-tools/output/apisix-dashboard-${VERSION}-0.x86_64.rpm"
         docker logs centos7Instance
         # Dependencies are attached with rpm, so revert `make deps`
@@ -58,12 +58,10 @@ jobs:
 
     - name: Run test cases
       run: |
-        ls -l
-        pwd
         api/test/shell/manager_smoking.sh -s true
 
     - name: Publish Artifact
       uses: actions/upload-artifact@v2.2.2
       with:
         name: "rpm"
-        path: "./apisix-build-tools/output/apisix-dashboard-2.5-0.x86_64.rpm"
+        path: "./apisix-build-tools/output/apisix-dashboard-${{ steps.branch_env.outputs.version }}-0.x86_64.rpm"
