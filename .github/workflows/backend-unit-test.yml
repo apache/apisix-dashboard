@@ -33,7 +33,7 @@ jobs:
       - name: setup go
         uses: actions/setup-go@v2.1.3
         with:
-          go-version: "1.13"
+          go-version: "1.16"
 
       - name: run test
         run: |

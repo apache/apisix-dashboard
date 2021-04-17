@@ -24,7 +24,7 @@ jobs:
       - name: setup go
         uses: actions/setup-go@v2.1.3
         with:
-          go-version: "1.13"
+          go-version: "1.16"
           submodules: recursive
 
       - name: Modify conf.yaml
@@ -93,7 +93,7 @@ jobs:
       - name: setup go
         uses: actions/setup-go@v2.1.3
         with:
-          go-version: "1.13"
+          go-version: "1.16"
 
       - name: Modify conf.yaml Configure for use by the manage-api cluster
         run: |
