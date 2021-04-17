@@ -53,7 +53,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const [formDataForm] = Form.useForm();
   const [authForm] = Form.useForm();
   const [headerForm] = Form.useForm();
-  const [response, setResponse] = useState<RouteModule.debugResponse>()
+  const [response, setResponse] = useState<RouteModule.debugResponse | null>()
   const [loading, setLoading] = useState(false);
   const [codeMirrorHeight, setCodeMirrorHeight] = useState<number | string>(50);
   const bodyCodeMirrorRef = useRef<any>(null);
@@ -79,7 +79,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     formDataForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     headerForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     authForm.setFieldsValue(DEFAULT_DEBUG_AUTH_FORM_DATA);
-    setResponse(undefined);
+    setResponse(null);
     setBodyType(DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.None]);
   };
 
@@ -240,15 +240,15 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         setResponse(resp);
         const contentType=resp.header["Content-Type"];
         if (contentType == null || contentType.length !== 1) {
-          setResponseBodyCodeMirrorMode("Text");
+          setResponseBodyCodeMirrorMode("TEXT");
         } else if (contentType[0].toLowerCase().indexOf("json") !== -1) {
-          setResponseBodyCodeMirrorMode("Json");
+          setResponseBodyCodeMirrorMode("JSON");
         } else if (contentType[0].toLowerCase().indexOf("xml") !== -1) {
           setResponseBodyCodeMirrorMode("XML");
         } else if (contentType[0].toLowerCase().indexOf("html") !== -1) {
           setResponseBodyCodeMirrorMode("HTML");
         } else {
-          setResponseBodyCodeMirrorMode("Text");
+          setResponseBodyCodeMirrorMode("TEXT");
         }
         setCodeMirrorHeight('auto');
       })
@@ -436,7 +436,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                       message: formatMessage({ id: 'component.global.copySuccess' }),
                     });
                   }}>
-                  <Button type="text" disabled={response == null}>
+                  <Button type="text" disabled={!response}>
                     <CopyOutlined/>
                   </Button>
                 </CopyToClipboard>
