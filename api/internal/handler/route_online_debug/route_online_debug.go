@@ -99,8 +99,14 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	body := input.Body
 	contentType := input.ContentType
 
-	client := &http.Client{}
-	client.Timeout = 5 * time.Second
+	transport := http.DefaultTransport.(*http.Transport).Clone()
+	transport.DisableKeepAlives = true
+	transport.DisableCompression = true
+
+	client := &http.Client{
+		Transport: transport,
+		Timeout:   5 * time.Second,
+	}
 
 	var tempMap map[string][]string
 	err := json.Unmarshal([]byte(input.HeaderParams), &tempMap)
