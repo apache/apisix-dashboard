@@ -158,7 +158,11 @@ export const transformStepData = ({
         default:
           key = `arg_${name}`;
       }
-      return [key, operator, value];
+      let finalValue = value
+      if (operator === "IN") {
+        finalValue = JSON.parse(value as string)
+      }
+      return [key, operator, finalValue];
     }),
     // @ts-ignore
     methods: form1Data.methods.includes('ALL') ? [] : form1Data.methods,
@@ -236,14 +240,15 @@ export const transformStepData = ({
 };
 
 const transformVarsToRules = (
-  data: [string, RouteModule.Operator, string][] = [],
+  data: [string, RouteModule.Operator, string | any[]][] = [],
 ): RouteModule.MatchingRule[] =>
   data.map(([key, operator, value]) => {
     const [, position, name] = key.split(/^(cookie|http|arg)_/);
+    console.log({key, operator, value})
     return {
       position: position as RouteModule.VarPosition,
       name,
-      value,
+      value: typeof value === 'object' ? JSON.stringify(value) : value,
       operator,
       key: Math.random().toString(36).slice(2),
     };
