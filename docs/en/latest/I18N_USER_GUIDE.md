@@ -23,13 +23,13 @@ title: i18n User Guide
 
 The Apache APISIX Dashboard uses [@umijs/plugin-locale](https://umijs.org/plugins/plugin-locale) to solve the i18n issues, in order to make the i18n more clear and reasonable, we would recommend to obey the following rules
 
-## Location of locale configuration：
+## Location of locale configuration
 
 - Please put **the global locales** under `src/locales`.
 - Please put **each page's locale file** under `src/pages/$PAGE/locales` folder.
 - Please put **the Component's locale file** under `src/components/$COMPONENT/locales` folder, and we **MUST** import them manually
 
-## How to name the key for each locale filed：
+## How to name the key for each locale filed
 
 the key can be like this : [basicModule].[moduleName].[elementName].[...desc]
 
@@ -64,7 +64,6 @@ we have already defined many global keys, before you do i18n, you can refer to [
 
 ```js
 'page.route.form.itemRulesExtraMessage.parameterName': '仅支持字母和数字，且只能以字母开头',
-'page.route.form.itemLabel.apiName': 'API 名称',
 'page.route.form.itemRulesPatternMessage.apiNameRule': '最大长度100，仅支持字母、数字、- 和 _，且只能以字母开头',
 ```
 
@@ -101,7 +100,7 @@ we have already defined many global keys, before you do i18n, you can refer to [
 **Example:**
 
 ```js
-'page.route.steps.stepTitle.defineApiRequest': '定义 API 请求',
+'page.route.steps.stepTitle.defineApiRequest': '设置路由信息',
 ```
 
 - **Select**

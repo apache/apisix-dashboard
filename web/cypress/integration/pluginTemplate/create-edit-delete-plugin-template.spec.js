@@ -29,23 +29,31 @@ context('Create Configure and Delete PluginTemplate', () => {
     cy.visit('/');
     cy.contains('Route').click();
     cy.get(this.domSelector.empty).should('be.visible');
+    cy.contains('Advanced').should('be.visible').click();
     cy.contains('Plugin Template Config').should('be.visible').click();
     cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
 
     cy.get(this.domSelector.description).type(this.data.pluginTemplateName);
     cy.contains('Next').click();
-    cy.contains('Enable').click({
-      force: true
-    });
-    cy.focused(this.domSelector.drawer).should('exist');
-    cy.get(this.domSelector.drawer, {
-      timeout
-    }).within(() => {
-      cy.get(this.domSelector.disabledSwitcher).click({
+
+    // should not see proxy-rewrite plugin in the step2
+    cy.contains('proxy-rewrite').should('not.exist');
+
+    cy.contains(this.domSelector.pluginCard, 'basic-auth').within(() => {
+      cy.contains('Enable').click({
         force: true,
       });
     });
+    cy.focused(this.domSelector.drawer).should('exist');
+
+    cy.get(this.domSelector.codeMirrorMode).click();
+    cy.get(this.domSelector.selectDropdown).should('be.visible');
+    cy.get(this.domSelector.selectJSON).click();
+    cy.get(this.domSelector.disabledSwitcher).click({
+      force: true,
+    });
+
     cy.contains('Submit').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();

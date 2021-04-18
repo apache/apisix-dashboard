@@ -24,13 +24,13 @@ export default {
   'component.global.format': 'Format',
   'component.global.document': 'Document',
   'component.global.enable': 'Enable',
+  'component.global.disable': 'Disable',
   'component.global.scope': 'Scope',
-  'component.global.data.editor': 'Data Editor',
+  'component.global.data.editor': 'Raw Data Editor',
   'component.global.delete': 'Delete',
   'component.global.cancel': 'Cancel',
   'component.global.submit': 'Submit',
   'component.global.create': 'Create',
-  'component.global.createWithEditor': 'Create with Editor',
   'component.global.add': 'Add',
   'component.global.save': 'Save',
   'component.global.edit': 'Configure',
@@ -43,6 +43,7 @@ export default {
   'component.global.loading': 'Loading',
   'component.global.list': 'List',
   'component.global.description': 'Description',
+  'component.global.description.required': 'Please enter the description',
   'component.global.labels': 'Labels',
   'component.global.version': 'Version',
   'component.global.operation': 'Operation',
@@ -66,10 +67,16 @@ export default {
   'component.global.sendTimeout': 'Send Timeout',
   'component.global.receiveTimeout': 'Receive Timeout',
   'component.global.name': 'Name',
-  'component.global.updateTime': 'UpdateAt',
+  'component.global.updateTime': 'Update Time',
   'component.global.form.itemExtraMessage.nameGloballyUnique': 'Name should be globally unique',
-  'component.global.input.placeholder.description': 'Can not more than 256 characters',
+  'component.global.input.placeholder.description': 'Please enter the description for this route, max 256 characters',
   // User component
   'component.user.loginByPassword': 'Username & Password',
   'component.user.login': 'Login',
+
+  'component.document': 'Document',
+  'component.label-manager': 'Label Manager',
+
+  'component.global.noConfigurationRequired': 'No configuration required',
+  'component.global.copy': 'Copy'
 };

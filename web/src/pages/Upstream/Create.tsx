@@ -16,10 +16,12 @@
  */
 import React, { useState, useEffect, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Steps, notification, Form } from 'antd';
+import { Card, Steps, notification, Form, Button } from 'antd';
 import { history, useIntl } from 'umi';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 import ActionBar from '@/components/ActionBar';
+import { transformUpstreamDataFromRequest } from '@/components/Upstream/service';
 
 import Step1 from './components/Step1';
 import { fetchOne, create, update } from './service';
@@ -34,8 +36,8 @@ const Page: React.FC = (props) => {
     const { id } = (props as any).match.params;
 
     if (id) {
-      fetchOne(id).then((data) => {
-        form1.setFieldsValue(data.data);
+      fetchOne(id).then(({ data }) => {
+        form1.setFieldsValue(transformUpstreamDataFromRequest(data));
       });
     }
   }, []);
@@ -78,8 +80,15 @@ const Page: React.FC = (props) => {
     <>
       <PageContainer
         title={(props as any).match.params.id
-        ? formatMessage({ id: 'page.upstream.configure' })
-        : formatMessage({ id: 'page.upstream.create' })}
+          ? formatMessage({ id: 'page.upstream.configure' })
+          : formatMessage({ id: 'page.upstream.create' })}
+
+        extra={
+          // TODO: support Document modal
+          <Button type="default" disabled>
+            <QuestionCircleOutlined />
+            {formatMessage({ id: 'component.document' })}
+          </Button>}
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>

@@ -1,0 +1,70 @@
+name: Auto Build RPM
+
+on:
+  push:
+    branches: [master, 'release/**']
+    paths-ignore:
+      - 'docs/**'
+  pull_request:
+    branches: [master]
+    paths-ignore:
+      - 'docs/**'
+
+jobs:
+  auto_build_rpm:
+    name: auto build rpm package
+    runs-on: ubuntu-latest
+
+    services:
+      etcd:
+        image: bitnami/etcd:3.4.0
+        ports:
+          - 2379:2379
+          - 2380:2380
+        env:
+          ALLOW_NONE_AUTHENTICATION: yes
+          ETCD_ADVERTISE_CLIENT_URLS: http://0.0.0.0:2379
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Extract branch name
+        id: branch_env
+        shell: bash
+        run: |
+          echo "##[set-output name=version;]$(echo ${GITHUB_REF##*/})"
+
+      - name: Build rpm package
+        run: |
+          export VERSION=${{ steps.branch_env.outputs.version }}
+          sudo gem install --no-document fpm
+          git clone https://github.com/api7/apisix-build-tools.git
+          cd apisix-build-tools
+          export checkout=master
+          if [ "$VERSION" != "merge" && "$VERSION" != "master" ];then
+            export checkout=release/${VERSION}
+          fi
+          make package type=rpm app=dashboard version=${VERSION} checkout=${checkout}
+
+      - name: Run centos7 docker and mapping apisix into container
+        run: |
+          docker run -itd -v $PWD:/apisix-dashboard --name centos7Instance --net="host" docker.io/centos:7 /bin/bash
+
+      - name: Install rpm package
+        run: |
+          export VERSION=${{ steps.branch_env.outputs.version }}
+          docker exec centos7Instance bash -c "cd apisix-dashboard && yum install -y ./apisix-build-tools/output/apisix-dashboard-${VERSION}-0.x86_64.rpm"
+          docker logs centos7Instance
+          # Dependencies are attached with rpm, so revert `make deps`
+          docker exec centos7Instance bash -c "cd /usr/local/apisix/dashboard/ && nohup ./manager-api &"
+
+      - name: Run test cases
+        run: |
+          api/test/shell/manager_smoking.sh -s true
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v2.2.2
+        with:
+          name: "rpm"
+          path: "./apisix-build-tools/output/apisix-dashboard-${{ steps.branch_env.outputs.version }}-0.x86_64.rpm"
