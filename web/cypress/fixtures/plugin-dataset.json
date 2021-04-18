@@ -1265,7 +1265,7 @@
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "rules": [
           {
