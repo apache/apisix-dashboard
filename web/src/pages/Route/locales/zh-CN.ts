@@ -170,4 +170,7 @@ export default {
 
   'page.route.advanced-match.operator.sample.IN': '请输入数组，示例：["1", "2"]',
   'page.route.advanced-match.operator.sample.~~': '请输入正则表达式，示例：[a-z]+',
+
+  'page.route.fields.custom.redirectOption.tooltip': '在此配置 redirect 插件',
+  'page.route.fields.service_id.tooltip': '绑定服务（Service）对象，以便复用其中的配置。'
 };

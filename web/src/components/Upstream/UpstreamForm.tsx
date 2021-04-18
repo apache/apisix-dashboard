@@ -96,8 +96,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             const targetData = list.find((item) => item.id === upstream_id) as UpstreamComponent.ResponseData
             if (targetData) {
               form.setFieldsValue(transformUpstreamDataFromRequest(targetData));
-            } else {
-              // TODO: 提示 upstream_id 找不到想要的数据
             }
           });
         }

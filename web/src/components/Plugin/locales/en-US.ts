@@ -26,7 +26,6 @@ export default {
   'component.plugin.traffic': 'Traffic Control',
   'component.plugin.serverless': 'Serverless',
   'component.plugin.observability': 'Tracing & Metrics & Logging',
-  'component.plugin.logging': 'Logging',
   'component.plugin.other': 'Other',
 
   // cors
