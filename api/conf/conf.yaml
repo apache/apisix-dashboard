@@ -26,7 +26,7 @@ conf:
     - ::1               # In this example, access is allowed only for IPv4 network 127.0.0.1, and for IPv6 network ::1.
                         # It also support CIDR like 192.168.1.0/24 and 2001:0db8::/32
   etcd:
-    endpoints:          # supports defining multiple etcd host addresses for an etcd cluster
+    endpoints:            # supports defining multiple etcd host addresses for an etcd cluster
       - 127.0.0.1:2379
                           # yamllint disable rule:comments-indentation
                           # etcd basic auth info
@@ -36,7 +36,7 @@ conf:
       key_file: ""          # Path of your self-signed client side key
       cert_file: ""         # Path of your self-signed client side cert
       ca_file: ""           # Path of your self-signed ca cert, the CA is used to sign callers' certificates
-    # prefix: /apisix     # apisix config's prefix in etcd, /apisix by default
+    # prefix: /apisix       # apisix config's prefix in etcd, /apisix by default
   log:
     error_log:
       level: warn       # supports levels, lower to higher: debug, info, warn, error, panic, fatal
