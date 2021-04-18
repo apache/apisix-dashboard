@@ -100,7 +100,6 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	contentType := input.ContentType
 
 	transport := http.DefaultTransport.(*http.Transport).Clone()
-	transport.DisableKeepAlives = true
 	transport.DisableCompression = true
 
 	client := &http.Client{
