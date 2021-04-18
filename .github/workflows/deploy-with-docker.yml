@@ -34,8 +34,10 @@ jobs:
         run: |
           sed -i 's/127.0.0.1:2379/172.16.238.10:2379/' api/conf/conf.yaml
           sed -i 's@127.0.0.0/24@0.0.0.0/0@' ./api/conf/conf.yaml
+
+          # At present, the docker CI is still running the code of the master branch
+          # So we need to configure `listen.host` so that it can be accessed outside docker
           sed -i '/port: 9000/i\    host: 0.0.0.0' ./api/conf/conf.yaml
-          cat ./api/conf/conf.yaml
 
       - name: Run Docker Compose
         working-directory: ./api/test/docker-deploy
