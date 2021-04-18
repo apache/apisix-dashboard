@@ -90,5 +90,4 @@ export default {
   'component.pluginForm.limit-count.redis_cluster_nodes.tooltip': 'When using redis-cluster policy，This property is a list of addresses of Redis cluster service nodes (at least two nodes).',
   'component.pluginForm.limit-count.redis_cluster_name.tooltip': 'When using redis-cluster policy, this property is the name of Redis cluster service nodes.',
   'component.pluginForm.limit-count.atLeast2Characters.rule': 'Please enter at least 2 characters',
->>>>>>> upstream/master
 };

@@ -89,5 +89,4 @@ export default {
   'component.pluginForm.limit-count.redis_cluster_nodes.tooltip': '当使用 redis-cluster 限速策略时，该属性是 Redis 集群服务节点的地址列表（至少需要两个地址）。',
   'component.pluginForm.limit-count.redis_cluster_name.tooltip': '当使用 redis-cluster 限速策略时，该属性是 Redis 集群服务节点的名称。',
   'component.pluginForm.limit-count.atLeast2Characters.rule': '请至少输入 2 个字符',
->>>>>>> upstream/master
 };
