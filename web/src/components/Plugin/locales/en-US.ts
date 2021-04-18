@@ -53,7 +53,7 @@ export default {
 
   // proxy-mirror
   'component.pluginForm.proxy-mirror.host.tooltip': 'Specify a mirror service address, e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)',
-  'component.pluginForm.proxy-mirror.host.extra': 'e.g. http://127.0.0.1:9797 (address needs to contain schema: http or https, not URI part)',
+  'component.pluginForm.proxy-mirror.host.extra': 'e.g. http://127.0.0.1:9797',
   'component.pluginForm.proxy-mirror.host.ruletip': 'address needs to contain schema: http or https, not URI part',
 
   // limit-conn
