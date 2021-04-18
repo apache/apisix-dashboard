@@ -183,16 +183,17 @@ const PluginPage: React.FC<Props> = ({
                   key={item.name}
                   actions={[
                     <Button
-                      type={
-                        initialData[item.name] && !initialData[item.name].disable
-                          ? 'primary'
-                          : 'default'
-                      }
+                      type={initialData[item.name] && !initialData[item.name].disable ? 'primary' : 'default'}
+                      danger={initialData[item.name] && !initialData[item.name].disable}
                       onClick={() => {
                         setName(item.name);
                       }}
                     >
-                      Enable
+                      {
+                        initialData[item.name] && !initialData[item.name].disable
+                          ? formatMessage({ id: 'component.plugin.disable' })
+                          : formatMessage({ id: 'component.plugin.enable' })
+                      }
                     </Button>,
                   ]}
                   title={[

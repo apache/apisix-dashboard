@@ -57,7 +57,7 @@ context('Create and delete route with limit-count form', () => {
 
     // config limit-count form with local policy
     cy.contains(this.domSelector.pluginCard, 'limit-count').within(() => {
-      cy.contains('Enable').click({
+      cy.get('button').click({
         force: true,
       });
     });
@@ -75,7 +75,7 @@ context('Create and delete route with limit-count form', () => {
 
     // config limit-count form with redis policy
     cy.contains(this.domSelector.pluginCard, 'limit-count').within(() => {
-      cy.contains('Enable').click({
+      cy.get('button').click({
         force: true,
       });
     });
@@ -97,7 +97,7 @@ context('Create and delete route with limit-count form', () => {
 
     // config limit-count form with redis policy
     cy.contains(this.domSelector.pluginCard, 'limit-count').within(() => {
-      cy.contains('Enable').click({
+      cy.get('button').click({
         force: true,
       });
     });
