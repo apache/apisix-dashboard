@@ -14,22 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-declare namespace PluginComponent {
-  type Data = Record<string, any>;
+import React, { CSSProperties } from 'react';
+import { Divider, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
-  type Schema = '' | 'route' | 'consumer';
+const PanelSection: React.FC<{
+  title: string;
+  style?: CSSProperties;
+  id?: string;
+  tooltip?: string;
+}> = ({ title, style, id, children, tooltip }) => {
+  return (
+    <div id={id}>
+      <Divider orientation="left">
+        {title}
+        &nbsp;
+        {tooltip && <Tooltip title={tooltip}><QuestionCircleOutlined /></Tooltip>}
+      </Divider>
+      <div style={style}>{children}</div>
+    </div>
+  );
+};
 
-  type Meta = {
-    name: string;
-    priority: number;
-    schema: Record<string, any>;
-    type: string;
-    version: number;
-    consumer_schema?: Record<string, any>;
-    hidden?: boolean;
-  };
-
-  type ReferPage = '' | 'route' | 'consumer' | 'service' | 'plugin';
-
-  type CodeMirrorMode = 'JSON' | 'YAML' | 'Form';
-}
+export default PanelSection;

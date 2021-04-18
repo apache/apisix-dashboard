@@ -73,8 +73,8 @@ declare namespace RouteModule {
     host?: string;
     hosts: string[];
     remote_addrs: string[];
-    vars: [string, Operator, string][];
     upstream: UpstreamComponent.ResponseData;
+    vars: [string, Operator, string | any[]][];
     upstream_path?: {
       type?: string;
       from?: string;
@@ -93,7 +93,7 @@ declare namespace RouteModule {
     position: VarPosition;
     name: string;
     operator: Operator;
-    value: string;
+    value: string | any[];
     key: string;
   };
 

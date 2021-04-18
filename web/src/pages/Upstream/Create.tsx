@@ -44,6 +44,7 @@ const Page: React.FC = (props) => {
     form1.validateFields().then(() => {
       const data = upstreamRef.current?.getData();
       if (!data) {
+        notification.error({ message: formatMessage({id: 'page.upstream.other.configuration.invalid'}) });
         return;
       }
 

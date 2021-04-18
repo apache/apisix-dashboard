@@ -16,7 +16,9 @@
  */
 export default {
   'component.upstream.fields.tls.client_key': 'Client Key',
+  'component.upstream.fields.tls.client_key.required': 'Please enter the client key',
   'component.upstream.fields.tls.client_cert': 'Client Cert',
+  'component.upstream.fields.tls.client_cert.required': 'Please enter the client cert',
 
   'component.upstream.fields.discovery_type': 'Discovery Type',
   'component.upstream.fields.discovery_type.tooltip': 'Discovery Type',
