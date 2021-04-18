@@ -104,7 +104,7 @@ declare namespace RouteModule {
     position: VarPosition;
     name: string;
     operator: Operator;
-    value: string | Array<any>;
+    value: string | any[];
     key: string;
   };
 
