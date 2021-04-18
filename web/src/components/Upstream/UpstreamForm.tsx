@@ -19,7 +19,7 @@ import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'rea
 import { useIntl } from 'umi';
 import type { FormInstance } from 'antd/es/form';
 
-import { PanelSection } from '@api7-dashboard/ui';
+import PanelSection from '@/components/PanelSection';
 import { transformRequest } from '@/pages/Upstream/transform';
 import PassiveCheck from './components/passive-check';
 import ActiveCheck from './components/active-check'
@@ -96,8 +96,6 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             const targetData = list.find((item) => item.id === upstream_id) as UpstreamComponent.ResponseData
             if (targetData) {
               form.setFieldsValue(transformUpstreamDataFromRequest(targetData));
-            } else {
-              // TODO: 提示 upstream_id 找不到想要的数据
             }
           });
         }

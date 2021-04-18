@@ -28,7 +28,6 @@ export default {
   'component.plugin.traffic': '流量控制',
   'component.plugin.serverless': '无服务器架构',
   'component.plugin.observability': '可观测性',
-  'component.plugin.logging': '日志记录',
   'component.plugin.other': '其它',
 
   // cors

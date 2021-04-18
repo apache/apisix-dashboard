@@ -171,4 +171,11 @@ export default {
 
   'page.route.advanced-match.operator.sample.IN': 'Please enter an array, e.g ["1", "2"]',
   'page.route.advanced-match.operator.sample.~~': 'Please enter a regular expression, e.g [a-z]+',
+  'page.route.advanced-match.tooltip': 'It supports route matching through request headers, request parameters and cookies, and can be applied to scenarios such as grayscale publishing and blue-green testing.',
+
+  'page.route.fields.custom.redirectOption.tooltip': 'This is related to redirect plugin',
+  'page.route.fields.service_id.tooltip': 'Bind Service object to reuse their configuration.',
+
+  'page.route.fields.vars.invalid': 'Please check the advanced match condition configuration',
+  'page.route.fields.vars.in.invalid': 'When using the IN operator, enter the parameter values in array format.',
 };

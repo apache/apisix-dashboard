@@ -18,8 +18,8 @@ import React, { useEffect, useState } from 'react';
 import Form from 'antd/es/form';
 import { Input, Switch, Select, Button, Tag, AutoComplete, Row, Col } from 'antd';
 import { useIntl } from 'umi';
-import { PanelSection } from '@api7-dashboard/ui';
 
+import PanelSection from '@/components/PanelSection';
 import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 import LabelsDrawer from '@/components/LabelsfDrawer';
 import { fetchLabelList, fetchServiceList } from '../../service';
@@ -137,7 +137,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
   )
 
   const Description: React.FC = () => (
-    <Form.Item label={formatMessage({ id: 'component.global.description' })} tooltip="路由描述信息">
+    <Form.Item label={formatMessage({ id: 'component.global.description' })}>
       <Row>
         <Col span={10}>
           <Form.Item noStyle name="desc">
@@ -196,7 +196,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
     ]
 
     return (
-      <Form.Item label={formatMessage({ id: 'page.route.form.itemLabel.redirect' })} tooltip="redirect 插件">
+      <Form.Item label={formatMessage({ id: 'page.route.form.itemLabel.redirect' })} tooltip={formatMessage({ id: 'page.route.fields.custom.redirectOption.tooltip' })}>
         <Row>
           <Col span={5}>
             <Form.Item
@@ -285,7 +285,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
   )
 
   const ServiceSelector: React.FC = () => (
-    <Form.Item label={formatMessage({ id: 'page.route.service' })} tooltip="绑定服务（Service）对象，以便复用其中的配置。">
+    <Form.Item label={formatMessage({ id: 'page.route.service' })} tooltip={formatMessage({id: 'page.route.fields.service_id.tooltip'})}>
       <Row>
         <Col span={5}>
           <Form.Item noStyle name="service_id">

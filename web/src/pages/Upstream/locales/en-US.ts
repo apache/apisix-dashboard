@@ -98,5 +98,7 @@ export default {
   'page.upstream.checks.passive.unhealthy.http_statuses.description': 'Which HTTP statuses to consider a success',
   'page.upstream.checks.passive.unhealthy.http_failures.description': 'Number of HTTP failures to consider a target unhealthy',
   'page.upstream.checks.passive.unhealthy.tcp_failures.description': 'Number of TCP failures to consider a target unhealthy',
-  'page.upstream.scheme': 'Scheme'
+  'page.upstream.scheme': 'Scheme',
+
+  'page.upstream.other.configuration.invalid': 'Please check the Upstream configuration'
 };

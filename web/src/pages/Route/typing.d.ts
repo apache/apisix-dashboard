@@ -73,7 +73,7 @@ declare namespace RouteModule {
     host?: string;
     hosts: string[];
     remote_addrs: string[];
-    vars: [string, Operator, string][];
+    vars: [string, Operator, string | any[]][];
     upstream: {
       upstream_id?: string;
       type: 'roundrobin' | 'chash' | 'ewma';
@@ -104,7 +104,7 @@ declare namespace RouteModule {
     position: VarPosition;
     name: string;
     operator: Operator;
-    value: string;
+    value: string | any[];
     key: string;
   };
 

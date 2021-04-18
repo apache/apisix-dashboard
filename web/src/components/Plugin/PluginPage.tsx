@@ -16,10 +16,10 @@
  */
 import React, { useEffect, useState } from 'react';
 import { Anchor, Layout, Card, Button, Form, Select, Alert } from 'antd';
-import { PanelSection } from '@api7-dashboard/ui';
 import { omit, orderBy } from 'lodash';
 import { useIntl } from 'umi';
 
+import PanelSection from '@/components/PanelSection';
 import PluginDetail from './PluginDetail';
 import { fetchList, fetchPluginTemplateList } from './service';
 import { PLUGIN_ICON_LIST, PLUGIN_FILTER_LIST } from './data';

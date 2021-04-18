@@ -39,7 +39,6 @@ export enum PluginType {
   traffic = "traffic",
   serverless = "serverless",
   observability = "observability",
-  logging = "logging",
   other = "other"
 }
 
@@ -64,7 +63,7 @@ export const PLUGIN_LIST = {
     type: PluginType.authentication
   },
   "error-log-logger": {
-    type: PluginType.logging
+    type: PluginType.observability
   },
   "fault-injection": {
     type: PluginType.security
@@ -79,7 +78,7 @@ export const PLUGIN_LIST = {
     type: PluginType.other
   },
   "syslog": {
-    type: PluginType.logging
+    type: PluginType.observability
   },
   "traffic-split": {
     type: PluginType.traffic
@@ -88,13 +87,13 @@ export const PLUGIN_LIST = {
     type: PluginType.authentication
   },
   "kafka-logger": {
-    type: PluginType.logging
+    type: PluginType.observability
   },
   "limit-conn": {
     type: PluginType.traffic
   },
   "udp-logger": {
-    type: PluginType.logging
+    type: PluginType.observability
   },
   "zipkin": {
     type: PluginType.observability
@@ -104,7 +103,7 @@ export const PLUGIN_LIST = {
     hidden: true
   },
   "log-rotate": {
-    type: PluginType.logging,
+    type: PluginType.observability,
     hidden: true
   },
   "serverless-pre-function": {
@@ -166,16 +165,16 @@ export const PLUGIN_LIST = {
     type: PluginType.other
   },
   "http-logger": {
-    type: PluginType.logging
+    type: PluginType.observability
   },
   "openid-connect": {
     type: PluginType.authentication
   },
   "sls-logger": {
-    type: PluginType.logging
+    type: PluginType.observability
   },
   "tcp-logger": {
-    type: PluginType.logging
+    type: PluginType.observability
   },
   "uri-blocker": {
     type: PluginType.security
