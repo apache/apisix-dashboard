@@ -20,6 +20,12 @@ conf:
     port: 9000          # `manager api` listening port
   allow_list:           # If we don't set any IP list, then any IP access is allowed by default.
     - 127.0.0.0/24
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+    - ::1
+    - fe80::/10
+    - fd00::/8
   etcd:
     endpoints:          # supports defining multiple etcd host addresses for an etcd cluster
       - 127.0.0.1:2379
