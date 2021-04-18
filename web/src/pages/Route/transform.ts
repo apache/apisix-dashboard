@@ -244,7 +244,6 @@ const transformVarsToRules = (
 ): RouteModule.MatchingRule[] =>
   data.map(([key, operator, value]) => {
     const [, position, name] = key.split(/^(cookie|http|arg)_/);
-    console.log({key, operator, value})
     return {
       position: position as RouteModule.VarPosition,
       name,
