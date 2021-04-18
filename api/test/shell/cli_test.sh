@@ -254,7 +254,7 @@ clean_up
 if [[ $KERNEL = "Darwin" ]]; then
   sed -i "" 's@- 127.0.0.1 @- 10.0.0.1 @' conf/conf.yaml
 else
-  sed -i 's@- 127.0.0.1 @-10.0.0.1 @' conf/conf.yaml
+  sed -i 's@- 127.0.0.1 @- 10.0.0.1 @' conf/conf.yaml
 fi
 
 ./manager-api &
