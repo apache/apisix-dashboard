@@ -17,7 +17,8 @@
 import React, { useState } from 'react';
 import { Button, Table, Modal, Form, Select, Input, Space } from 'antd';
 import { useIntl } from 'umi';
-import { PanelSection } from '@api7-dashboard/ui';
+
+import PanelSection from '@/components/PanelSection';
 
 const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   advancedMatchingRules,
@@ -280,7 +281,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   };
 
   return (
-    <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.advancedMatchRule' })}>
+    <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.advancedMatchRule' })} tooltip={formatMessage({id: 'page.route.advanced-match.tooltip'})}>
       {!disabled && (
         <Button
           onClick={() => {

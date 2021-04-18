@@ -18,8 +18,8 @@ import React, { useEffect, useState } from 'react';
 import Form from 'antd/es/form';
 import { Input, Switch, Select, Button, Tag, AutoComplete, Row, Col } from 'antd';
 import { useIntl } from 'umi';
-import { PanelSection } from '@api7-dashboard/ui';
 
+import PanelSection from '@/components/PanelSection';
 import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 import LabelsDrawer from '@/components/LabelsfDrawer';
 import { fetchLabelList, fetchServiceList } from '../../service';
