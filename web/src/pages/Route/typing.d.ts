@@ -99,6 +99,7 @@ declare namespace RouteModule {
 
   type Step1PassProps = {
     form: FormInstance;
+    upstreamForm?: FormInstance;
     advancedMatchingRules: MatchingRule[];
     disabled?: boolean;
     isEdit?: boolean;

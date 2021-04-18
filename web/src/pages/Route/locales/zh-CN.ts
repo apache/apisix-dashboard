@@ -170,4 +170,6 @@ export default {
 
   'page.route.advanced-match.operator.sample.IN': '请输入数组，示例：["1", "2"]',
   'page.route.advanced-match.operator.sample.~~': '请输入正则表达式，示例：[a-z]+',
+  'page.route.fields.service_id.invalid': '请检查路由绑定的服务',
+  'page.route.fields.service_id.without-upstream': '如果不绑定服务，则必须设置上游服务（步骤 2）',
 };

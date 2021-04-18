@@ -171,4 +171,6 @@ export default {
 
   'page.route.advanced-match.operator.sample.IN': 'Please enter an array, e.g ["1", "2"]',
   'page.route.advanced-match.operator.sample.~~': 'Please enter a regular expression, e.g [a-z]+',
+  'page.route.fields.service_id.invalid': 'Please check the configuration of binding service',
+  'page.route.fields.service_id.without-upstream': 'If you do not bind the service, you must set the Upstream (Step 2)',
 };
