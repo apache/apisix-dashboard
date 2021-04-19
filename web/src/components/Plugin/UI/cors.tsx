@@ -58,7 +58,6 @@ const Cors: React.FC<Props> = ({ form }) => {
               mode="multiple"
               optionLabelProp="label"
               onChange={(value: string[]) => {
-                value.join(",")
                 if (value.includes('*')) {
                   form.setFieldsValue({
                     allow_methods: ['*'],
