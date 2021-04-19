@@ -30,6 +30,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: setup go
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.16'
+
       - name: download etcd
         working-directory: ./api
         run: |

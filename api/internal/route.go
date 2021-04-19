@@ -18,11 +18,12 @@ package internal
 
 import (
 	"embed"
-	"github.com/gin-contrib/pprof"
-	"github.com/gin-gonic/gin"
 	"io/fs"
 	"net/http"
 	"strings"
+
+	"github.com/gin-contrib/pprof"
+	"github.com/gin-gonic/gin"
 
 	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/filter"
@@ -61,9 +62,6 @@ func SetUpRouter(StaticFiles embed.FS) *gin.Engine {
 		log.Errorf("%s\n", err)
 	}
 	r.Use(serve("/", subtree))
-	r.NoRoute(func(c *gin.Context) {
-		c.FileFromFS("index.html", http.FS(subtree))
-	})
 
 	factories := []handler.RegisterFactory{
 		route.NewHandler,
@@ -111,18 +109,33 @@ func (fs *spaFileSystem) Open(name string) (http.File, error) {
 	return f, err
 }
 
+var HTMLBlackListRoutes = []string{
+	"/apisix",
+	"/ping",
+}
+
 func serve(urlPrefix string, fss fs.FS) gin.HandlerFunc {
 	fileserver := http.FileServer(&spaFileSystem{http.FS(fss)})
 	if urlPrefix != "" {
 		fileserver = http.StripPrefix(urlPrefix, fileserver)
 	}
-
 	return func(c *gin.Context) {
-		if exists(urlPrefix, c.Request.URL.Path, &fss) || !strings.HasPrefix(c.Request.URL.Path, "/apisix") {
+
+		if c.Request.Method == "GET" &&
+			(exists(urlPrefix, c.Request.URL.Path, &fss) || !isBlacklisted(c.Request.URL.Path)) {
 			fileserver.ServeHTTP(c.Writer, c.Request)
 			c.Abort()
 		}
 	}
+}
+
+func isBlacklisted(path string) bool {
+	for _, checkpath := range HTMLBlackListRoutes {
+		if strings.HasPrefix(path, checkpath) {
+			return true
+		}
+	}
+	return false
 }
 
 func exists(prefix string, filepath string, f *fs.FS) bool {
