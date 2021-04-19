@@ -17,21 +17,18 @@
 package consumer
 
 import (
-	"net/http"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet"
-	"github.com/shiningrush/droplet/data"
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/utils"
-	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 type Handler struct {
@@ -120,6 +117,17 @@ func (h *Handler) List(c droplet.Context) (interface{}, error) {
 			}
 			return true
 		},
+		Less: func(i, j interface{}) bool {
+			iBase := i.(*entity.Consumer)
+			jBase := j.(*entity.Consumer)
+			if iBase.CreateTime != jBase.CreateTime {
+				return iBase.CreateTime < jBase.CreateTime
+			}
+			if iBase.UpdateTime != jBase.UpdateTime {
+				return iBase.UpdateTime < jBase.UpdateTime
+			}
+			return iBase.Username < jBase.Username
+		},
 		PageSize:   input.PageSize,
 		PageNumber: input.PageNumber,
 	})
@@ -137,15 +145,20 @@ type SetInput struct {
 
 func (h *Handler) Set(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*SetInput)
-	if input.ID != nil && utils.InterfaceToString(input.ID) != input.Username {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
-			consts.ErrIDUsername
-	}
 	if input.Username != "" {
 		input.Consumer.Username = input.Username
 	}
-	input.Consumer.ID = input.Consumer.Username
 	ensurePluginsDefValue(input.Plugins)
+
+	// Because the ID of consumer has been removed,
+	// `BaseInfo` is no longer embedded in consumer's struct,
+	// So we need to maintain create_time and update_time separately for consumer
+	savedConsumer, _ := h.consumerStore.Get(c.Context(), input.Consumer.Username)
+	input.Consumer.CreateTime = time.Now().Unix()
+	input.Consumer.UpdateTime = time.Now().Unix()
+	if savedConsumer != nil {
+		input.Consumer.CreateTime = savedConsumer.(*entity.Consumer).CreateTime
+	}
 
 	ret, err := h.consumerStore.Update(c.Context(), &input.Consumer, true)
 	if err != nil {

@@ -10,17 +10,6 @@
 					"maxLength": 256,
 					"type": "string"
 				},
-				"id": {
-					"anyOf": [{
-						"maxLength": 64,
-						"minLength": 1,
-						"pattern": "^[a-zA-Z0-9-_.]+$",
-						"type": "string"
-					}, {
-						"minimum": 1,
-						"type": "integer"
-					}]
-				},
 				"labels": {
 					"description": "key/value pairs to specify attributes",
 					"maxProperties": 16,
@@ -147,6 +136,27 @@
 					"maxLength": 1048576,
 					"minLength": 1,
 					"type": "string"
+				},
+				"create_time": {
+					"type": "integer"
+				},
+				"desc": {
+					"maxLength": 256,
+					"type": "string"
+				},
+				"id": {
+					"anyOf": [{
+						"maxLength": 64,
+						"minLength": 1,
+						"pattern": "^[a-zA-Z0-9-_.]+$",
+						"type": "string"
+					}, {
+						"minimum": 1,
+						"type": "integer"
+					}]
+				},
+				"update_time": {
+					"type": "integer"
 				}
 			},
 			"required": ["content"],
@@ -595,10 +605,6 @@
 							"description": "discovery type",
 							"type": "string"
 						},
-						"enable_websocket": {
-							"description": "enable websocket for request",
-							"type": "boolean"
-						},
 						"hash_on": {
 							"default": "vars",
 							"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
@@ -662,6 +668,11 @@
 										"port": {
 											"description": "port of node",
 											"minimum": 1,
+											"type": "integer"
+										},
+										"priority": {
+											"default": 0,
+											"description": "priority of node",
 											"type": "integer"
 										},
 										"weight": {
@@ -754,12 +765,6 @@
 					"uniqueItems": true
 				},
 				"vars": {
-					"items": {
-						"description": "Nginx builtin variable name and value",
-						"maxItems": 4,
-						"minItems": 2,
-						"type": "array"
-					},
 					"type": "array"
 				}
 			},
@@ -1025,10 +1030,6 @@
 							"description": "discovery type",
 							"type": "string"
 						},
-						"enable_websocket": {
-							"description": "enable websocket for request",
-							"type": "boolean"
-						},
 						"hash_on": {
 							"default": "vars",
 							"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
@@ -1092,6 +1093,11 @@
 										"port": {
 											"description": "port of node",
 											"minimum": 1,
+											"type": "integer"
+										},
+										"priority": {
+											"default": 0,
+											"description": "priority of node",
 											"type": "integer"
 										},
 										"weight": {
@@ -1270,6 +1276,13 @@
 		},
 		"stream_route": {
 			"properties": {
+				"create_time": {
+					"type": "integer"
+				},
+				"desc": {
+					"maxLength": 256,
+					"type": "string"
+				},
 				"id": {
 					"anyOf": [{
 						"maxLength": 64,
@@ -1328,6 +1341,9 @@
 				},
 				"server_port": {
 					"description": "server port",
+					"type": "integer"
+				},
+				"update_time": {
 					"type": "integer"
 				},
 				"upstream": {
@@ -1535,10 +1551,6 @@
 							"description": "discovery type",
 							"type": "string"
 						},
-						"enable_websocket": {
-							"description": "enable websocket for request",
-							"type": "boolean"
-						},
 						"hash_on": {
 							"default": "vars",
 							"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
@@ -1602,6 +1614,11 @@
 										"port": {
 											"description": "port of node",
 											"minimum": 1,
+											"type": "integer"
+										},
+										"priority": {
+											"default": 0,
+											"description": "priority of node",
 											"type": "integer"
 										},
 										"weight": {
@@ -1887,10 +1904,6 @@
 					"description": "discovery type",
 					"type": "string"
 				},
-				"enable_websocket": {
-					"description": "enable websocket for request",
-					"type": "boolean"
-				},
 				"hash_on": {
 					"default": "vars",
 					"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
@@ -1954,6 +1967,11 @@
 								"port": {
 									"description": "port of node",
 									"minimum": 1,
+									"type": "integer"
+								},
+								"priority": {
+									"default": 0,
+									"description": "priority of node",
 									"type": "integer"
 								},
 								"weight": {
@@ -2297,54 +2315,59 @@
 			"priority": 2400,
 			"schema": {
 				"$comment": "this is a mark for our injected plugin schema",
-				"oneOf": [{
-					"properties": {
-						"blacklist": {
-							"items": {
-								"type": "string"
-							},
-							"minItems": 1,
-							"type": "array"
-						},
-						"rejected_code": {
-							"default": 403,
-							"minimum": 200,
-							"type": "integer"
-						},
-						"type": {
-							"default": "consumer_name",
-							"enum": ["consumer_name", "service_id"],
-							"type": "string"
-						}
-					},
-					"required": ["blacklist"],
-					"title": "blacklist"
+				"anyOf": [{
+					"required": ["blacklist"]
 				}, {
-					"properties": {
-						"rejected_code": {
-							"default": 403,
-							"minimum": 200,
-							"type": "integer"
-						},
-						"type": {
-							"default": "consumer_name",
-							"enum": ["consumer_name", "service_id"],
-							"type": "string"
-						},
-						"whitelist": {
-							"items": {
-								"type": "string"
-							},
-							"minItems": 1,
-							"type": "array"
-						}
-					},
-					"required": ["whitelist"],
-					"title": "whitelist"
+					"required": ["whitelist"]
+				}, {
+					"required": ["allowed_by_methods"]
 				}],
 				"properties": {
+					"allowed_by_methods": {
+						"items": {
+							"properties": {
+								"methods": {
+									"items": {
+										"enum": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
+										"type": "string"
+									},
+									"minItems": 1,
+									"type": "array"
+								},
+								"user": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"blacklist": {
+						"items": {
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
 					"disable": {
 						"type": "boolean"
+					},
+					"rejected_code": {
+						"default": 403,
+						"minimum": 200,
+						"type": "integer"
+					},
+					"type": {
+						"default": "consumer_name",
+						"enum": ["consumer_name", "service_id"],
+						"type": "string"
+					},
+					"whitelist": {
+						"items": {
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array"
 					}
 				},
 				"type": "object"
@@ -2375,6 +2398,17 @@
 						"default": "*",
 						"description": "you can use '*' to allow all origins when no credentials,'**' to allow forcefully(it will bring some security risks, be carefully),multiple origin use ',' to split. default: *.",
 						"type": "string"
+					},
+					"allow_origins_by_regex": {
+						"description": "you can use regex to allow specific origins when no credentials,for example use [.*\\.test.com] to allow a.test.com and b.test.com",
+						"items": {
+							"maxLength": 4096,
+							"minLength": 1,
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array",
+						"uniqueItems": true
 					},
 					"disable": {
 						"type": "boolean"
@@ -2608,6 +2642,9 @@
 								"type": "integer"
 							},
 							"vars": {
+								"items": {
+									"type": "array"
+								},
 								"maxItems": 20,
 								"type": "array"
 							}
@@ -2627,6 +2664,9 @@
 								"type": "integer"
 							},
 							"vars": {
+								"items": {
+									"type": "array"
+								},
 								"maxItems": 20,
 								"type": "array"
 							}
@@ -3682,6 +3722,9 @@
 						"maximum": 598,
 						"minimum": 200,
 						"type": "integer"
+					},
+					"vars": {
+						"type": "array"
 					}
 				},
 				"type": "object"
@@ -3761,6 +3804,9 @@
 					"endpoint_addr": {
 						"default": "http://127.0.0.1:12800",
 						"type": "string"
+					},
+					"report_interval": {
+						"type": "integer"
 					},
 					"service_instance_name": {
 						"default": "APISIX Instance Name",
@@ -4028,43 +4074,6 @@
 									"items": {
 										"properties": {
 											"vars": {
-												"items": {
-													"additionalItems": {
-														"anyOf": [{
-															"type": "string"
-														}, {
-															"type": "number"
-														}, {
-															"type": "boolean"
-														}, {
-															"items": {
-																"anyOf": [{
-																	"maxLength": 100,
-																	"minLength": 1,
-																	"type": "string"
-																}, {
-																	"type": "number"
-																}, {
-																	"type": "boolean"
-																}]
-															},
-															"type": "array",
-															"uniqueItems": true
-														}]
-													},
-													"items": [{
-														"maxLength": 100,
-														"minLength": 1,
-														"type": "string"
-													}, {
-														"maxLength": 2,
-														"minLength": 1,
-														"type": "string"
-													}],
-													"maxItems": 10,
-													"minItems": 0,
-													"type": "array"
-												},
 												"type": "array"
 											}
 										},
@@ -4283,10 +4292,6 @@
 														"description": "discovery type",
 														"type": "string"
 													},
-													"enable_websocket": {
-														"description": "enable websocket for request",
-														"type": "boolean"
-													},
 													"hash_on": {
 														"default": "vars",
 														"enum": ["consumer", "cookie", "header", "vars", "vars_combinations"],
@@ -4350,6 +4355,11 @@
 																	"port": {
 																		"description": "port of node",
 																		"minimum": 1,
+																		"type": "integer"
+																	},
+																	"priority": {
+																		"default": 0,
+																		"description": "priority of node",
 																		"type": "integer"
 																	},
 																	"weight": {
@@ -4578,6 +4588,10 @@
 						"default": "APISIX",
 						"description": "service name for zipkin reporter",
 						"type": "string"
+					},
+					"span_version": {
+						"default": 2,
+						"enum": [1, 2]
 					}
 				},
 				"required": ["endpoint", "sample_ratio"],

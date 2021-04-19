@@ -112,8 +112,8 @@ func TestHandler_List(t *testing.T) {
 			},
 			wantRet: &store.ListOutput{
 				Rows: []interface{}{
-					&entity.Consumer{Username: "testUser"},
 					&entity.Consumer{Username: "iam-testUser"},
+					&entity.Consumer{Username: "testUser"},
 					&entity.Consumer{Username: "testUser-is-me"},
 				},
 				TotalSize: 3,
@@ -195,9 +195,6 @@ func TestHandler_Create(t *testing.T) {
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
 			giveRet: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
 				Username: "name",
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{
@@ -207,9 +204,6 @@ func TestHandler_Create(t *testing.T) {
 			},
 			wantInput: &SetInput{
 				Consumer: entity.Consumer{
-					BaseInfo: entity.BaseInfo{
-						ID: "name",
-					},
 					Username: "name",
 					Plugins: map[string]interface{}{
 						"jwt-auth": map[string]interface{}{
@@ -219,9 +213,6 @@ func TestHandler_Create(t *testing.T) {
 				},
 			},
 			wantRet: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
 				Username: "name",
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{
@@ -249,9 +240,6 @@ func TestHandler_Create(t *testing.T) {
 			giveErr: fmt.Errorf("create failed"),
 			wantInput: &SetInput{
 				Consumer: entity.Consumer{
-					BaseInfo: entity.BaseInfo{
-						ID: "name",
-					},
 					Username: "name",
 					Plugins: map[string]interface{}{
 						"jwt-auth": map[string]interface{}{
@@ -275,9 +263,11 @@ func TestHandler_Create(t *testing.T) {
 			mStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				methodCalled = true
 				assert.Equal(t, tc.giveCtx, args.Get(0))
-				assert.Equal(t, &tc.wantInput.Consumer, args.Get(1))
 				assert.True(t, args.Bool(2))
 			}).Return(tc.giveRet, tc.giveErr)
+
+			mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+			}).Return(nil, nil)
 
 			h := Handler{consumerStore: mStore}
 			ctx := droplet.NewContext()
@@ -302,6 +292,7 @@ func TestHandler_Update(t *testing.T) {
 		wantInput  *entity.Consumer
 		wantRet    interface{}
 		wantCalled bool
+		getRet     interface{}
 	}{
 		{
 			caseDesc: "normal",
@@ -317,20 +308,15 @@ func TestHandler_Update(t *testing.T) {
 			},
 			giveCtx: context.WithValue(context.Background(), "test", "value"),
 			giveRet: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
 				Username: "name",
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{
 						"exp": 500,
 					},
 				},
+				CreateTime: 1618648423,
 			},
 			wantInput: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
 				Username: "name",
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{
@@ -339,17 +325,20 @@ func TestHandler_Update(t *testing.T) {
 				},
 			},
 			wantRet: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
 				Username: "name",
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{
 						"exp": 500,
 					},
 				},
+				CreateTime: 1618648423,
 			},
 			wantCalled: true,
+			getRet: &entity.Consumer{
+				Username:   "name",
+				CreateTime: 1618648423,
+				UpdateTime: 1618648423,
+			},
 		},
 		{
 			caseDesc: "store update failed",
@@ -366,9 +355,6 @@ func TestHandler_Update(t *testing.T) {
 			},
 			giveErr: fmt.Errorf("create failed"),
 			wantInput: &entity.Consumer{
-				BaseInfo: entity.BaseInfo{
-					ID: "name",
-				},
 				Username: "name",
 				Plugins: map[string]interface{}{
 					"jwt-auth": map[string]interface{}{
@@ -391,9 +377,11 @@ func TestHandler_Update(t *testing.T) {
 			mStore.On("Update", mock.Anything, mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 				methodCalled = true
 				assert.Equal(t, tc.giveCtx, args.Get(0))
-				assert.Equal(t, tc.wantInput, args.Get(1))
 				assert.True(t, args.Bool(2))
 			}).Return(tc.giveRet, tc.giveErr)
+
+			mStore.On("Get", mock.Anything).Run(func(args mock.Arguments) {
+			}).Return(tc.getRet, nil)
 
 			h := Handler{consumerStore: mStore}
 			ctx := droplet.NewContext()
@@ -403,6 +391,10 @@ func TestHandler_Update(t *testing.T) {
 			assert.Equal(t, tc.wantCalled, methodCalled)
 			assert.Equal(t, tc.wantRet, ret)
 			assert.Equal(t, tc.wantErr, err)
+			if err == nil {
+				assert.Equal(t, tc.getRet.(*entity.Consumer).CreateTime, ret.(*entity.Consumer).CreateTime)
+				assert.NotEqual(t, tc.getRet.(*entity.Consumer).UpdateTime, ret.(*entity.Consumer).UpdateTime)
+			}
 		})
 	}
 }

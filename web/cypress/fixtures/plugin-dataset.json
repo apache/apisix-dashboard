@@ -280,7 +280,7 @@
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "whitelist": ["jack1"],
         "blacklist": ["jack2"]
@@ -1265,7 +1265,7 @@
       }
     },
     {
-      "shouldValid": false,
+      "shouldValid": true,
       "data": {
         "rules": [
           {

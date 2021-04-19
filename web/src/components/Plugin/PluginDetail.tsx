@@ -285,6 +285,7 @@ const PluginDetail: React.FC<Props> = ({
                 title={formatMessage({ id: 'page.plugin.drawer.popconfirm.title.delete' })}
                 okText={formatMessage({ id: 'component.global.confirm' })}
                 cancelText={formatMessage({ id: 'component.global.cancel' })}
+                disabled={readonly}
                 onConfirm={() => {
                   onChange({
                     formData: form.getFieldsValue(),
@@ -294,13 +295,14 @@ const PluginDetail: React.FC<Props> = ({
                 }}
               >
                 {initialData[name] ? (
-                  <Button key={3} type="primary" danger>
+                  <Button key={3} type="primary" danger disabled={readonly}>
                     {formatMessage({ id: 'component.global.delete' })}
                   </Button>
                 ) : null}
               </Popconfirm>
               <Button
                 key={2}
+                disabled={readonly}
                 type="primary"
                 onClick={() => {
                   try {
