@@ -38,7 +38,7 @@ This release mainly improves UI and UE, bugfix and adds test cases.
 
 ### Core
 
-- Change: remove listen.host from api/conf/conf.yaml [#1767](https://github.com/apache/apisix-dashboard/pull/1767)  
+- Change: remove listen.host from api/conf/conf.yaml [#1767](https://github.com/apache/apisix-dashboard/pull/1767)
 - Change: remove ID of consumer [#1745](https://github.com/apache/apisix-dashboard/pull/1745)
 - Feat: Support duplicate one existing Route [#1558](https://github.com/apache/apisix-dashboard/pull/1558)
 - Feat: add response header in debug view [#1691](https://github.com/apache/apisix-dashboard/pull/1691)
@@ -52,7 +52,7 @@ This release mainly improves UI and UE, bugfix and adds test cases.
 - Feat: add limit-conn plugin form [#1728](https://github.com/apache/apisix-dashboard/pull/1728)
 - Feat: refactor upstream form module [#1726](https://github.com/apache/apisix-dashboard/pull/1726)
 - Feat: added types for Plugins [#1736](https://github.com/apache/apisix-dashboard/pull/1736)
-- Feat: support auto build rpm package for dashboard [#1766](https://github.com/apache/apisix-dashboard/pull/1766) 
+- Feat: support auto build rpm package for dashboard [#1766](https://github.com/apache/apisix-dashboard/pull/1766)
 - Feat: improve UI and UE ([#1674](https://github.com/apache/apisix-dashboard/pull/1674), [#1702](https://github.com/apache/apisix-dashboard/pull/1702), [#1707](https://github.com/apache/apisix-dashboard/pull/1707),[#1715](https://github.com/apache/apisix-dashboard/pull/1715), [#1723](https://github.com/apache/apisix-dashboard/pull/1723), [#1782](https://github.com/apache/apisix-dashboard/pull/1782), [#1610](https://github.com/apache/apisix-dashboard/pull/1610), [#1764](https://github.com/apache/apisix-dashboard/pull/1764), [#1735](https://github.com/apache/apisix-dashboard/pull/1735), [#1771](https://github.com/apache/apisix-dashboard/pull/1771), [#1748](https://github.com/apache/apisix-dashboard/pull/1748), [#1749](https://github.com/apache/apisix-dashboard/pull/1749), [#1751](https://github.com/apache/apisix-dashboard/pull/1751), [#1679](https://github.com/apache/apisix-dashboard/pull/1679), [#1750](https://github.com/apache/apisix-dashboard/pull/1750), [#1731](https://github.com/apache/apisix-dashboard/pull/1731), [#1747](https://github.com/apache/apisix-dashboard/pull/1747))
 
 ### Bugfix
