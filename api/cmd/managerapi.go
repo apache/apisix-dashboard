@@ -69,86 +69,102 @@ func NewManagerAPICommand() *cobra.Command {
 				os.Exit(0)
 			}
 
-			conf.InitConf()
-			log.InitLogger()
-
-			if err := utils.WritePID(conf.PIDPath); err != nil {
-				log.Errorf("failed to write pid: %s", err)
-				panic(err)
+			service, err := createService()
+			if err != nil {
+				return err
 			}
-			utils.AppendToClosers(func() error {
-				if err := os.Remove(conf.PIDPath); err != nil {
-					log.Errorf("failed to remove pid path: %s", err)
-					return err
-				}
-				return nil
-			})
-
-			droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
-				var newMws []droplet.Middleware
-				// default middleware order: resp_reshape, auto_input, traffic_log
-				// We should put err_transform at second to catch all error
-				newMws = append(newMws, mws[0], &handler.ErrorTransformMiddleware{}, &filter.AuthenticationMiddleware{})
-				newMws = append(newMws, mws[1:]...)
-				return newMws
-			}
-
-			if err := storage.InitETCDClient(conf.ETCDConfig); err != nil {
-				log.Errorf("init etcd client fail: %w", err)
-				panic(err)
-			}
-			if err := store.InitStores(); err != nil {
-				log.Errorf("init stores fail: %w", err)
-				panic(err)
-			}
-
-			// routes
-			r := internal.SetUpRouter()
-			addr := fmt.Sprintf("%s:%d", conf.ServerHost, conf.ServerPort)
-			s := &http.Server{
-				Addr:         addr,
-				Handler:      r,
-				ReadTimeout:  time.Duration(1000) * time.Millisecond,
-				WriteTimeout: time.Duration(5000) * time.Millisecond,
-			}
-
-			log.Infof("The Manager API is listening on %s", addr)
-
-			quit := make(chan os.Signal, 1)
-			signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-			defer signal.Stop(quit)
-
-			go func() {
-				if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-					utils.CloseAll()
-					log.Fatalf("listen and serv fail: %s", err)
-				}
-			}()
-
-			printInfo()
-
-			sig := <-quit
-			log.Infof("The Manager API server receive %s and start shutting down", sig.String())
-
-			ctx, cancel := context.WithTimeout(context.TODO(), 5*time.Second)
-			defer cancel()
-
-			if err := s.Shutdown(ctx); err != nil {
-				log.Errorf("Shutting down server error: %s", err)
-			}
-
-			log.Infof("The Manager API server exited")
-
-			utils.CloseAll()
-			return nil
+			status, err := service.manageService()
+			fmt.Printf("%s\n", status)
+			return err
 		},
 	}
 
 	cmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
 	cmd.PersistentFlags().BoolVarP(&showVersion, "version", "v", false, "show manager-api version")
+	cmd.PersistentFlags().BoolVarP(&ServiceState.startService, "start-service", "", false, "start manager-api service")
+	cmd.PersistentFlags().BoolVarP(&ServiceState.installService, "install-service", "i", false,
+		"install manager-api service, required before starting the service")
+	cmd.PersistentFlags().BoolVarP(&ServiceState.status, "status", "s", false, "status of manager-api service")
+	cmd.PersistentFlags().BoolVarP(&ServiceState.stopService, "stop-service", "", false, "stop manager-api service")
+	cmd.PersistentFlags().BoolVarP(&ServiceState.removeService, "remove-service", "", false, "remove manager-api service")
 
 	cmd.AddCommand(newStopCommand())
 	return cmd
+}
+
+func manageAPI() error {
+	conf.InitConf()
+	log.InitLogger()
+
+	if err := utils.WritePID(conf.PIDPath); err != nil {
+		log.Errorf("failed to write pid: %s", err)
+		panic(err)
+	}
+	utils.AppendToClosers(func() error {
+		if err := os.Remove(conf.PIDPath); err != nil {
+			log.Errorf("failed to remove pid path: %s", err)
+			return err
+		}
+		return nil
+	})
+
+	droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
+		var newMws []droplet.Middleware
+		// default middleware order: resp_reshape, auto_input, traffic_log
+		// We should put err_transform at second to catch all error
+		newMws = append(newMws, mws[0], &handler.ErrorTransformMiddleware{}, &filter.AuthenticationMiddleware{})
+		newMws = append(newMws, mws[1:]...)
+		return newMws
+	}
+
+	if err := storage.InitETCDClient(conf.ETCDConfig); err != nil {
+		log.Errorf("init etcd client fail: %w", err)
+		panic(err)
+	}
+	if err := store.InitStores(); err != nil {
+		log.Errorf("init stores fail: %w", err)
+		panic(err)
+	}
+
+	// routes
+	r := internal.SetUpRouter()
+	addr := fmt.Sprintf("%s:%d", conf.ServerHost, conf.ServerPort)
+	s := &http.Server{
+		Addr:         addr,
+		Handler:      r,
+		ReadTimeout:  time.Duration(1000) * time.Millisecond,
+		WriteTimeout: time.Duration(5000) * time.Millisecond,
+	}
+
+	log.Infof("The Manager API is listening on %s", addr)
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	defer signal.Stop(quit)
+
+	go func() {
+		if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			utils.CloseAll()
+			log.Fatalf("listen and serv fail: %s", err)
+		}
+	}()
+
+	printInfo()
+
+	sig := <-quit
+	log.Infof("The Manager API server receive %s and start shutting down", sig.String())
+
+	ctx, cancel := context.WithTimeout(context.TODO(), 5*time.Second)
+	defer cancel()
+
+	if err := s.Shutdown(ctx); err != nil {
+		log.Errorf("Shutting down server error: %s", err)
+	}
+
+	log.Infof("The Manager API server exited")
+
+	utils.CloseAll()
+	return nil
 }
 
 func newStopCommand() *cobra.Command {
