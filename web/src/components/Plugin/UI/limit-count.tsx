@@ -64,11 +64,12 @@ const RedisForm: React.FC = () => {
       <Input />
     </Form.Item>
     <Form.Item
+      initialValue={6379}
       label="redis_port"
       name="redis_port"
       tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_port.tooltip' })}
     >
-      <InputNumber min={1} />
+      <InputNumber min={1} max={65535} />
     </Form.Item>
     <Form.Item
       label="redis_password"
@@ -80,6 +81,7 @@ const RedisForm: React.FC = () => {
       <Input />
     </Form.Item>
     <Form.Item
+      initialValue={0}
       label="redis_database"
       name="redis_database"
       tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_database.tooltip' })}
@@ -87,16 +89,17 @@ const RedisForm: React.FC = () => {
       <InputNumber min={0} />
     </Form.Item>
     <Form.Item
+      initialValue={1000}
       label="redis_timeout"
       name="redis_timeout"
       tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_timeout.tooltip' })}
     >
-      <InputNumber />
+      <InputNumber min={1} />
     </Form.Item>
   </>)
 }
 
-const RedisClusterForm: React.FC<Props> = () => {
+const RedisClusterForm: React.FC = () => {
   const { formatMessage } = useIntl();
 
   return (
@@ -109,7 +112,7 @@ const RedisClusterForm: React.FC<Props> = () => {
       >
         <Input />
       </Form.Item>
-      <Form.List name="redis_cluster_nodes">
+      <Form.List name="redis_cluster_nodes" initialValue={['', '']}>
         {(fields, { add, remove }) => {
           return (
             <div>
@@ -159,6 +162,21 @@ const RedisClusterForm: React.FC<Props> = () => {
           );
         }}
       </Form.List>
+      <Form.Item
+        label="redis_password"
+        name="redis_password"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_password.tooltip' })}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        initialValue={1000}
+        label="redis_timeout"
+        name="redis_timeout"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_timeout.tooltip' })}
+      >
+        <InputNumber min={1} />
+      </Form.Item>
     </>)
 }
 
@@ -170,7 +188,6 @@ const LimitCount: React.FC<Props> = ({ form }) => {
     <Form
       form={form}
       {...FORM_ITEM_LAYOUT}
-      initialValues={{ key: 'remote_addr', redis_cluster_nodes: ['', ''], policy, redis_port: 6379, redis_database: 0, redis_timeout: 1000 }}
     >
       <Form.Item
         label="count"
@@ -191,6 +208,7 @@ const LimitCount: React.FC<Props> = ({ form }) => {
         <InputNumber min={1} />
       </Form.Item>
       <Form.Item
+        initialValue='remote_addr'
         label="key"
         name="key"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.key.tooltip' })}
@@ -200,6 +218,7 @@ const LimitCount: React.FC<Props> = ({ form }) => {
         </Select>
       </Form.Item>
       <Form.Item
+        initialValue={503}
         label="rejected_code"
         name="rejected_code"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.rejected_code.tooltip' })}
@@ -207,12 +226,13 @@ const LimitCount: React.FC<Props> = ({ form }) => {
         <InputNumber min={200} max={599} />
       </Form.Item>
       <Form.Item
+        initialValue={policy}
         label="policy"
         name="policy"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.policy.tooltip' })}
       >
         <Select onChange={(e: PolicyProps) => { setPoicy(e) }}>
-          {["local", "redis", "redis-cluster"].map(item => (<Select.Option value={item}>{item}</Select.Option>))}
+          {["local", "redis", "redis-cluster"].map(item => (<Select.Option value={item} key={item}>{item}</Select.Option>))}
         </Select>
       </Form.Item>
       <Form.Item shouldUpdate={(prev, next) => prev.policy !== next.policy} style={{ display: 'none' }}>
@@ -221,7 +241,7 @@ const LimitCount: React.FC<Props> = ({ form }) => {
         }}
       </Form.Item>
       {Boolean(policy === 'redis') && <RedisForm />}
-      {Boolean(policy === 'redis-cluster') && <RedisClusterForm form={form} />}
+      {Boolean(policy === 'redis-cluster') && <RedisClusterForm />}
     </Form>
   );
 }
