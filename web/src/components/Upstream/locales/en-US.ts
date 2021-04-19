@@ -16,7 +16,9 @@
  */
 export default {
   'component.upstream.fields.tls.client_key': 'Client Key',
+  'component.upstream.fields.tls.client_key.required': 'Please enter the client key',
   'component.upstream.fields.tls.client_cert': 'Client Cert',
+  'component.upstream.fields.tls.client_cert.required': 'Please enter the client cert',
 
   'component.upstream.fields.discovery_type': 'Discovery Type',
   'component.upstream.fields.discovery_type.tooltip': 'Discovery Type',
@@ -50,7 +52,6 @@ export default {
   'component.upstream.fields.checks.active.host.scope': 'Only letters, numbers and . are supported',
 
   'component.upstream.fields.checks.active.port': 'Port',
-  'component.upstream.fields.checks.active.port.required': 'Please enter the port',
 
   'component.upstream.fields.checks.active.http_path': 'HTTP Path',
   'component.upstream.fields.checks.active.http_path.tooltip': 'The path that should be used when issuing the HTTP GET request to the target. The default value is /.',
@@ -88,4 +89,10 @@ export default {
 
   'component.upstream.fields.checks.passive.unhealthy.timeouts': 'Timeouts',
   'component.upstream.fields.checks.passive.unhealthy.timeouts.tooltip': 'Number of timeouts in proxied traffic to consider a target unhealthy, as observed by passive health checks.',
+
+  'component.upstream.other.none': 'None',
+  'component.upstream.other.pass_host-with-multiple-nodes.title': 'Please check the target node configuration',
+  'component.upstream.other.pass_host-with-multiple-nodes': 'When using a host name or IP in the target node list, make sure there is only one target node',
+  'component.upstream.other.health-check.passive-only': 'When passive health check is enabled, active health check needs to be enabled at the same time.',
+  'component.upstream.other.health-check.invalid': 'Please check the health check configuration',
 }

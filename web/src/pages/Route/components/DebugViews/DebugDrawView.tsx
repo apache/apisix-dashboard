@@ -18,10 +18,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Input, Select, Card, Tabs, Form, Drawer, Spin, notification, Radio } from 'antd';
 import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
-import { PanelSection } from '@api7-dashboard/ui';
 import queryString from 'query-string';
 import Base64 from 'base-64';
 import urlRegexSafe from 'url-regex-safe';
+
+import PanelSection from '@/components/PanelSection';
 
 import {
   HTTP_METHOD_OPTION_LIST,

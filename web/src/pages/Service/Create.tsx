@@ -22,6 +22,7 @@ import { omit } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
 import PluginPage from '@/components/Plugin';
+import { convertToFormData } from '@/components/Upstream/service';
 import Preview from './components/Preview';
 import Step1 from './components/Step1';
 import { create, update, fetchItem } from './service';
@@ -48,11 +49,11 @@ const Page: React.FC = (props) => {
     const { serviceId } = (props as any).match.params;
     if (serviceId) {
       fetchItem(serviceId).then(({ data }) => {
-        if (data.upstream_id && data.upstream_id !== '') {
-          upstreamForm.setFieldsValue({ upstream_id: data.upstream_id });
+        if (data.upstream_id) {
+          upstreamForm.setFieldsValue({ upstream_id: data.upstream_id })
         }
         if (data.upstream) {
-          upstreamForm.setFieldsValue(data.upstream);
+          upstreamForm.setFieldsValue(convertToFormData(data.upstream))
         }
         form.setFieldsValue(omit(data, ['upstream_id', 'upstream', 'plugins']));
         setPlugins(data.plugins || {});
@@ -67,6 +68,9 @@ const Page: React.FC = (props) => {
     };
 
     const upstreamFormData = upstreamRef.current?.getData();
+    if (!upstreamFormData) {
+      return
+    }
     if (!upstreamFormData.upstream_id) {
       data.upstream = upstreamFormData;
     } else {
@@ -78,8 +82,8 @@ const Page: React.FC = (props) => {
       .then(() => {
         notification.success({
           message: `${serviceId
-              ? formatMessage({ id: 'component.global.edit' })
-              : formatMessage({ id: 'component.global.create' })
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
             } ${formatMessage({ id: 'menu.service' })} ${formatMessage({
               id: 'component.status.success',
             })}`,

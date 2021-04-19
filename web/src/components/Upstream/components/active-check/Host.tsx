@@ -27,17 +27,12 @@ const Component: React.FC<Props> = ({ readonly }) => {
   return (
     <Form.Item
       label={formatMessage({ id: 'component.upstream.fields.checks.active.host' })}
-      required
       tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.host.tooltip' })}
       style={{ marginBottom: 0 }}
     >
       <Form.Item
         name={['checks', 'active', 'host']}
         rules={[
-          {
-            required: true,
-            message: formatMessage({ id: 'component.upstream.fields.checks.active.host.required' }),
-          },
           {
             pattern: new RegExp(
               /^\\*?[0-9a-zA-Z-._]+$/,

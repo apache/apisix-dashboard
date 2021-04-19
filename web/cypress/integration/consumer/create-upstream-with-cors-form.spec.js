@@ -25,7 +25,8 @@ context('Create and Delete Consumer', () => {
   });
 
   const selector = {
-    max_age: "#max_age"
+    max_age: "#max_age",
+    allow_origins_by_regex: "#allow_origins_by_regex_0"
   }
 
   const data = {
@@ -44,7 +45,9 @@ context('Create and Delete Consumer', () => {
 
     // config auth plugin
     cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
-      cy.contains('Enable').click({ force: true });
+      cy.contains('Enable').click({
+        force: true
+      });
     });
     cy.focused(this.domSelector.drawer).should('exist');
     cy.get(this.domSelector.disabledSwitcher).click().should('have.class', 'ant-switch-checked');
@@ -69,7 +72,7 @@ context('Create and Delete Consumer', () => {
     cy.get(this.domSelector.drawer).should('be.visible');
 
     cy.get(selector.max_age).clear();
-    // config proxy-mirror form
+    // config cors form
     cy.get(this.domSelector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,
@@ -79,6 +82,7 @@ context('Create and Delete Consumer', () => {
     cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
 
     cy.get(selector.max_age).type(data.time);
+    cy.get(selector.allow_origins_by_regex).type('.*.test.com');
     cy.get(this.domSelector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,

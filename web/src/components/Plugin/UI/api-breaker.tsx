@@ -67,7 +67,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         initialValue={300}
         tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.max_breaker_sec.tooltip' })}
       >
-        <InputNumber min={60} />
+        <InputNumber min={3} />
       </Form.Item>
 
       <Form.List name={['unhealthy', 'http_statuses']}>

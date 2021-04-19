@@ -14,30 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, InputNumber } from 'antd'
-import { useIntl } from 'umi'
+import React, { CSSProperties } from 'react';
+import { Divider, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
-type Props = {
-  readonly?: boolean
-}
-
-const Component: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+const PanelSection: React.FC<{
+  title: string;
+  style?: CSSProperties;
+  id?: string;
+  tooltip?: string;
+}> = ({ title, style, id, children, tooltip }) => {
   return (
-    <Form.Item label={formatMessage({ id: 'component.upstream.fields.checks.active.port' })}>
-      <Form.Item name={['checks', 'active', 'port']} noStyle initialValue={80}>
-        <InputNumber
-          placeholder={formatMessage({
-            id: 'component.upstream.fields.checks.active.port',
-          })}
-          disabled={readonly}
-          min={1}
-          max={65535}
-        />
-      </Form.Item>
-    </Form.Item>
-  )
-}
+    <div id={id}>
+      <Divider orientation="left">
+        {title}
+        &nbsp;
+        {tooltip && <Tooltip title={tooltip}><QuestionCircleOutlined /></Tooltip>}
+      </Divider>
+      <div style={style}>{children}</div>
+    </div>
+  );
+};
 
-export default Component
+export default PanelSection;

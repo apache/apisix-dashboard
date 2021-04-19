@@ -57,9 +57,8 @@ const Cors: React.FC<Props> = ({ form }) => {
             <Select
               mode="multiple"
               optionLabelProp="label"
-              onChange={(value) => {
-                ((value as string[]).join(","));
-                if ((value as string[]).includes('*')) {
+              onChange={(value: string[]) => {
+                if (value.includes('*')) {
                   form.setFieldsValue({
                     allow_methods: ['*'],
                   });
@@ -80,7 +79,6 @@ const Cors: React.FC<Props> = ({ form }) => {
     <Form
       form={form}
       {...FORM_ITEM_LAYOUT}
-      initialValues={{ allow_origins_by_regex: [''] }}
     >
       <Form.Item
         extra={formatMessage({ id: 'component.pluginForm.cors.allow_origins.extra' })}
@@ -127,7 +125,7 @@ const Cors: React.FC<Props> = ({ form }) => {
         <Switch />
       </Form.Item>
 
-      <Form.List name={['allow_origins_by_regex']}>
+      <Form.List name='allow_origins_by_regex' initialValue={['']}>
         {(fields, { add, remove }) => {
           return (
             <div>
