@@ -16,7 +16,7 @@
 #
 
 conf:
-  listen:
+  listen:                 # yamllint disable rule:comments-indentation
     # host: 127.0.0.1     # the address on which the `Manager API` should listen.
                           # The default value is 0.0.0.0, if want to specify, please enable it.
                           # This value accepts IPv4, IPv6, and hostname.
