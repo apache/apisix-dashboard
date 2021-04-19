@@ -46,7 +46,7 @@ var (
 )
 
 //go:embed html
-var StaticFiles embed.FS
+var staticFiles embed.FS
 
 func printInfo() {
 	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
@@ -107,7 +107,7 @@ func NewManagerAPICommand() *cobra.Command {
 			}
 
 			// routes
-			r := internal.SetUpRouter(StaticFiles)
+			r := internal.SetUpRouter(staticFiles)
 			addr := fmt.Sprintf("%s:%d", conf.ServerHost, conf.ServerPort)
 			s := &http.Server{
 				Addr:         addr,

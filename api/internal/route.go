@@ -126,9 +126,6 @@ func serve(urlPrefix string, fss fs.FS) gin.HandlerFunc {
 }
 
 func exists(prefix string, filepath string, f *fs.FS) bool {
-	if strings.HasPrefix(filepath, "/apisix") {
-		return false
-	}
 	if p := strings.TrimPrefix(filepath, prefix); len(p) < len(filepath) {
 		_, err := fs.Stat(*f, p)
 		if err != nil {
