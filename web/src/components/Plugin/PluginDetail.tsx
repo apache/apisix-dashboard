@@ -41,6 +41,7 @@ import addFormats from 'ajv-formats';
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
 import { PluginForm, PLUGIN_UI_LIST } from './UI';
+import { PluginType } from './data';
 
 type Props = {
   name: string;
@@ -365,7 +366,7 @@ const PluginDetail: React.FC<Props> = ({
         <PageHeader
           title=""
           subTitle={
-            pluginType === 'auth' && schemaType !== 'consumer' && (codeMirrorMode !== codeMirrorModeList.UIForm) ? (
+            pluginType === PluginType.authentication && schemaType !== 'consumer' && (codeMirrorMode !== codeMirrorModeList.UIForm) ? (
               <Alert message={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} type="warning" />
             ) : null
           }
@@ -402,7 +403,7 @@ const PluginDetail: React.FC<Props> = ({
             </Button>
           ]}
         />
-        {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === 'auth' && schemaType !== 'consumer')} />}
+        {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === PluginType.authentication && schemaType !== 'consumer')} />}
         <div style={{ display: codeMirrorMode === codeMirrorModeList.UIForm ? 'none' : 'unset' }}><CodeMirror
           ref={(codemirror) => {
             ref.current = codemirror;
