@@ -61,7 +61,7 @@ context('Can select service_id skip upstream in route', () => {
     cy.get(this.domSelector.name).type(this.data.routeName);
     cy.contains('Next').click();
     cy.get(this.domSelector.upstreamSelector).click();
-    cy.contains('None').should('not.exist');
+    cy.get('.ant-select-item-option-disabled > .ant-select-item-option-content').contains('None');
 
     cy.contains('Previous').click();
     cy.wait(500);
@@ -91,9 +91,12 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains(this.data.routeName).siblings().contains('Configure').click();
     cy.get(this.domSelector.serviceSelector).click();
     cy.contains('None').click();
+    cy.get(this.domSelector.notification).should('contain', 'Please check the configuration of binding service');
+    cy.get(this.domSelector.notificationCloseIcon).click();
+
     cy.contains('Next').click();
-    cy.get(this.domSelector.upstream_id).click();
-    cy.contains('None').should('not.exist');
+    cy.wait(500);
+    cy.get('[data-cy=upstream_selector]').click();
     cy.contains(this.data.upstreamName).click();
     cy.contains('Next').click();
     cy.contains('Next').click();
@@ -101,13 +104,7 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains(this.data.submitSuccess);
   });
 
-  it('should delete upstream, service and route', function () {
-    cy.visit('/');
-    cy.contains('Service').click();
-    cy.contains(this.data.serviceName).siblings().contains('Delete').click();
-    cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.deleteServiceSuccess);
-
+  it('should delete route, service and upstream', function () {
     cy.visit('/');
     cy.contains('Route').click();
     cy.contains(this.data.routeName).siblings().contains('More').click();
@@ -115,7 +112,13 @@ context('Can select service_id skip upstream in route', () => {
     cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
       cy.contains('OK').click();
     });
+
     cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
+    cy.visit('/');
+    cy.contains('Service').click();
+    cy.contains(this.data.serviceName).siblings().contains('Delete').click();
+    cy.contains('button', 'Confirm').click();
+    cy.get(this.domSelector.notification).should('contain', this.data.deleteServiceSuccess);
 
     cy.visit('/');
     cy.contains('Upstream').click();

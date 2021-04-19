@@ -42,7 +42,7 @@ declare namespace UpstreamComponent {
   }
 
   type ResponseData = {
-    nodes: Node[];
+    nodes?: Node[];
     retries?: number;
     timeout?: Timeout;
     tls?: TLS;
@@ -61,6 +61,7 @@ declare namespace UpstreamComponent {
     desc?: string;
     service_name?: string;
     id?: string;
+    upstream_id?: string;
     // NOTE: custom field
     custom?: Record<string, any>;
   }

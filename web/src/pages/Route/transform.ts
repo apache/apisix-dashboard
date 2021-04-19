@@ -22,6 +22,7 @@ import {
   URI_REWRITE_TYPE,
   HOST_REWRITE_TYPE
 } from '@/pages/Route/constants';
+import { convertToFormData } from '@/components/Upstream/service';
 
 export const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): RouteModule.ProxyRewrite => {
   let omitFieldsList: string[] = ['kvHeaders'];
@@ -178,11 +179,16 @@ export const transformStepData = ({
     unset(data.plugins, ['proxy-rewrite']);
   }
 
-  if (Object.keys(redirect).length === 0 || redirect.http_to_https) {
+  if ((Object.keys(redirect).length === 0 || redirect.http_to_https) && form2Data) {
+    /**
+     * Due to convertToRequestData under the Upstream component,
+     * if upstream_id === Custom or None, it will be omitted.
+     * So upstream_id here mush be a valid Upstream ID from API.
+    */
     if (form2Data.upstream_id) {
-      data.upstream_id = form2Data.upstream_id;
+      data.upstream_id = form2Data.upstream_id
     } else {
-      data.upstream = form2Data;
+      data.upstream = form2Data
     }
 
     if (redirect.http_to_https) {
@@ -207,7 +213,6 @@ export const transformStepData = ({
       'hostRewriteType',
       'proxyRewrite',
       service_id.length === 0 ? 'service_id' : '',
-      form2Data.upstream_id === 'None' ? 'upstream_id' : '',
       !Object.keys(data.plugins || {}).length ? 'plugins' : '',
       !Object.keys(data.script || {}).length ? 'script' : '',
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
@@ -328,10 +333,10 @@ export const transformRouteData = (data: RouteModule.Body) => {
   const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);
 
   if (upstream && Object.keys(upstream).length) {
-    upstream.upstream_id = '';
+    upstream.upstream_id = 'Custom';
   }
 
-  const form2Data: RouteModule.Form2Data = upstream || { upstream_id };
+  const form2Data: UpstreamComponent.ResponseData = convertToFormData(upstream) || { upstream_id: upstream_id || 'None' };
 
   const { plugins, script, plugin_config_id = '' } = data;
 

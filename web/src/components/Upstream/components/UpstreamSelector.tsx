@@ -27,18 +27,16 @@ type Props = {
   list?: Upstream[];
   disabled?: boolean;
   required?: boolean;
-  shouldUpdate: (prev: any, next: any) => void;
   onChange: (id: string) => void
 }
 
-const Component: React.FC<Props> = ({ shouldUpdate, onChange, list = [], disabled, required }) => {
+const UpstreamSelector: React.FC<Props> = ({ onChange, list = [], disabled, required }) => {
   const { formatMessage } = useIntl()
 
   return (
     <Form.Item
       label={formatMessage({ id: 'page.upstream.step.select.upstream' })}
       name="upstream_id"
-      shouldUpdate={shouldUpdate as any}
     >
       <Select
         showSearch
@@ -49,11 +47,11 @@ const Component: React.FC<Props> = ({ shouldUpdate, onChange, list = [], disable
           item?.children.toLowerCase().includes(input.toLowerCase())
         }
       >
-        {Boolean(!required) && <Select.Option value={'None'}>None</Select.Option>}
+        <Select.Option value="None" disabled={required}>{formatMessage({id: 'component.upstream.other.none'})}</Select.Option>
         {[
           {
             name: formatMessage({ id: 'page.upstream.step.select.upstream.select.option' }),
-            id: '',
+            id: 'Custom',
           },
           ...list,
         ].map((item) => (
@@ -66,4 +64,4 @@ const Component: React.FC<Props> = ({ shouldUpdate, onChange, list = [], disable
   )
 }
 
-export default Component
+export default UpstreamSelector

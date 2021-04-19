@@ -73,19 +73,8 @@ declare namespace RouteModule {
     host?: string;
     hosts: string[];
     remote_addrs: string[];
+    upstream: UpstreamComponent.ResponseData;
     vars: [string, Operator, string | any[]][];
-    upstream: {
-      upstream_id?: string;
-      type: 'roundrobin' | 'chash' | 'ewma';
-      hash_on?: string;
-      key?: string;
-      nodes: Record<string, number>;
-      timeout: {
-        connect: number;
-        send: number;
-        read: number;
-      };
-    };
     upstream_path?: {
       type?: string;
       from?: string;
@@ -110,6 +99,7 @@ declare namespace RouteModule {
 
   type Step1PassProps = {
     form: FormInstance;
+    upstreamForm?: FormInstance;
     advancedMatchingRules: MatchingRule[];
     disabled?: boolean;
     isEdit?: boolean;
@@ -161,23 +151,9 @@ declare namespace RouteModule {
     hasServiceId: boolean;
   };
 
-  type Form2Data = {
-    type: 'roundrobin' | 'chash' | 'ewma';
-    hash_on?: string;
-    key?: string;
-    upstreamPath?: string;
-    upstream_id?: string;
-    timeout: {
-      connect: number;
-      send: number;
-      read: number;
-    };
-    nodes: Record<string, number>;
-  };
-
   type RequestData = {
     form1Data: Form1Data;
-    form2Data: Form2Data;
+    form2Data: UpstreamComponent.ResponseData;
     step3Data: Step3Data;
     advancedMatchingRules: MatchingRule[];
   };

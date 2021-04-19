@@ -34,7 +34,7 @@ export default {
   'page.upstream.step.type': '负载均衡算法',
   'page.upstream.step.pass-host': 'Host 请求头',
   'page.upstream.step.pass-host.pass': '保持与客户端请求一致的主机名',
-  'page.upstream.step.pass-host.node': '使用上游节点列表中的主机名或 IP',
+  'page.upstream.step.pass-host.node': '使用目标节点列表中的主机名或 IP',
   'page.upstream.step.pass-host.rewrite': '自定义 Host 请求头（即将废弃）',
   'page.upstream.step.pass-host.upstream_host': '自定义主机名',
   'page.upstream.step.connect.timeout': '连接超时',

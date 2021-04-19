@@ -102,6 +102,7 @@ const Page: React.FC<Props> = (props) => {
       return (
         <Step1
           form={form1}
+          upstreamForm={form2}
           advancedMatchingRules={advancedMatchingRules}
           onChange={({ action, data }) => {
             if (action === 'redirectOptionChange') {

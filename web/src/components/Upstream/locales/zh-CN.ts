@@ -52,7 +52,6 @@ export default {
   'component.upstream.fields.checks.active.host.scope': '仅支持字母、数字和 . ',
 
   'component.upstream.fields.checks.active.port': '端口',
-  'component.upstream.fields.checks.active.port.required': '请输入端口',
 
   'component.upstream.fields.checks.active.http_path': '请求路径',
   'component.upstream.fields.checks.active.http_path.tooltip': '向目标节点发出 HTTP GET 请求时应使用的路径。',
@@ -95,4 +94,10 @@ export default {
 
   'component.upstream.fields.checks.passive.unhealthy.timeouts': '超时时间',
   'component.upstream.fields.checks.passive.unhealthy.timeouts.tooltip': '根据被动健康检查的观察，在代理中认为目标不健康的超时次数。',
+
+  'component.upstream.other.none': '不选择（仅在绑定服务时可用）',
+  'component.upstream.other.pass_host-with-multiple-nodes.title': '请检查目标节点配置',
+  'component.upstream.other.pass_host-with-multiple-nodes': '当使用目标节点列表中的主机名或者 IP 时，请确认只有一个目标节点',
+  'component.upstream.other.health-check.passive-only': '启用被动健康检查时，需要同时启用主动健康检查。',
+  'component.upstream.other.health-check.invalid': '请检查健康检查配置',
 }

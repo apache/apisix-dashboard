@@ -16,7 +16,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import Form from 'antd/es/form';
-import { Input, Switch, Select, Button, Tag, AutoComplete, Row, Col } from 'antd';
+import { Input, Switch, Select, Button, Tag, AutoComplete, Row, Col, notification } from 'antd';
 import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
@@ -24,7 +24,7 @@ import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 import LabelsDrawer from '@/components/LabelsfDrawer';
 import { fetchLabelList, fetchServiceList } from '../../service';
 
-const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit, onChange = () => { } }) => {
+const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit, upstreamForm, onChange = () => { } }) => {
   const { formatMessage } = useIntl();
   const [visible, setVisible] = useState(false);
   const [labelList, setLabelList] = useState<LabelList>({});
@@ -285,27 +285,44 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
   )
 
   const ServiceSelector: React.FC = () => (
-    <Form.Item label={formatMessage({ id: 'page.route.service' })} tooltip={formatMessage({id: 'page.route.fields.service_id.tooltip'})}>
-      <Row>
-        <Col span={5}>
-          <Form.Item noStyle name="service_id">
-            <Select disabled={disabled}>
-              {/* TODO: value === '' means  no service_id select, need to find a better way */}
-              <Select.Option value="" key={Math.random().toString(36).substring(7)}>
-                {formatMessage({ id: "page.route.service.none" })}
-              </Select.Option>
-              {serviceList.map((item) => {
-                return (
-                  <Select.Option value={item.id} key={item.id}>
-                    {item.name}
-                  </Select.Option>
-                );
-              })}
-            </Select>
-          </Form.Item>
-        </Col>
-      </Row>
-    </Form.Item>
+    <React.Fragment>
+      <Form.Item label={formatMessage({ id: 'page.route.service' })} tooltip={formatMessage({ id: 'page.route.fields.service_id.tooltip' })}>
+        <Row>
+          <Col span={5}>
+            <Form.Item noStyle name="service_id">
+              <Select disabled={disabled}>
+                {/* TODO: value === '' means  no service_id select, need to find a better way */}
+                <Select.Option value="" key={Math.random().toString(36).substring(7)}>
+                  {formatMessage({ id: "page.route.service.none" })}
+                </Select.Option>
+                {serviceList.map((item) => {
+                  return (
+                    <Select.Option value={item.id} key={item.id}>
+                      {item.name}
+                    </Select.Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form.Item>
+      <Form.Item noStyle shouldUpdate={(prev, next) => {
+        if (next.service_id === '') {
+          const upstream_id = upstreamForm?.getFieldValue('upstream_id')
+          if (upstream_id === 'None') {
+            notification.warning({
+              message: formatMessage({ id: 'page.route.fields.service_id.invalid' }),
+              description: formatMessage({ id: 'page.route.fields.service_id.without-upstream' })
+            })
+            form.setFieldsValue({ service_id: prev.service_id })
+          }
+        }
+        return prev.service_id !== next.service_id
+      }}>
+        {() => null}
+      </Form.Item>
+    </React.Fragment>
   )
 
   return (

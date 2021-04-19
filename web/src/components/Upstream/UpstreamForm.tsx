@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Divider, Form, Switch } from 'antd';
+import { Divider, Form, notification, Switch } from 'antd';
 import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { useIntl } from 'umi';
 import type { FormInstance } from 'antd/es/form';
 
 import PanelSection from '@/components/PanelSection';
-import { transformRequest } from '@/pages/Upstream/transform';
 import PassiveCheck from './components/passive-check';
 import ActiveCheck from './components/active-check'
 import Nodes from './components/Nodes'
@@ -31,7 +30,7 @@ import UpstreamSelector from './components/UpstreamSelector';
 import Retries from './components/Retries';
 import PassHost from './components/PassHost';
 import TLSComponent from './components/TLS';
-import { transformUpstreamDataFromRequest } from './service';
+import { convertToRequestData } from './service';
 
 type Upstream = {
   name?: string;
@@ -46,14 +45,18 @@ type Props = {
   // FIXME: use proper typing
   ref?: any;
   required?: boolean;
+  neverReadonly?: boolean
 };
 
+/**
+ * UpstreamForm is used to reuse Upstream Form UI,
+ * before using this component, we need to execute the following command:
+ * form.setFieldsValue(convertToFormData(VALUE_FROM_API))
+*/
 const UpstreamForm: React.FC<Props> = forwardRef(
-  ({ form, disabled, list = [], showSelector, required = true }, ref) => {
+  ({ form, disabled = false, list = [], showSelector = false, required = true, neverReadonly = false }, ref) => {
     const { formatMessage } = useIntl();
-    const [readonly, setReadonly] = useState(
-      Boolean(form.getFieldValue('upstream_id')) || disabled,
-    );
+    const [readonly, setReadonly] = useState(false);
     const [hiddenForm, setHiddenForm] = useState(false);
 
     const timeoutFields = [
@@ -75,39 +78,58 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     ];
 
     useImperativeHandle(ref, () => ({
-      getData: () => transformRequest(form.getFieldsValue()),
+      getData: () => convertToRequestData(form.getFieldsValue()),
     }));
 
-    useEffect(() => {
-      const formData = transformRequest(form.getFieldsValue()) || {};
-      const { upstream_id } = form.getFieldsValue();
+    const resetForm = (upstream_id: string) => {
+      if (upstream_id === undefined) {
+        return
+      }
 
+      if (!neverReadonly) {
+        setReadonly(!["Custom", "None"].includes(upstream_id) || disabled);
+      }
+
+      /**
+       * upstream_id === None <==> required === false
+       * No need to bind Upstream object.
+       * When creating Route and binds with a Service, no need to configure Upstream in Route.
+      */
       if (upstream_id === 'None') {
         setHiddenForm(true);
-        if (required) {
-          requestAnimationFrame(() => {
-            form.resetFields();
-            setHiddenForm(false);
-          });
-        }
-      } else {
-        if (upstream_id) {
-          requestAnimationFrame(() => {
-            const targetData = list.find((item) => item.id === upstream_id) as UpstreamComponent.ResponseData
-            if (targetData) {
-              form.setFieldsValue(transformUpstreamDataFromRequest(targetData));
-            }
-          });
-        }
-        if (!required && !Object.keys(formData).length) {
-          requestAnimationFrame(() => {
-            form.setFieldsValue({ upstream_id: 'None' });
-            setHiddenForm(true);
-          });
-        }
+        form.resetFields()
+        form.setFieldsValue({ upstream_id: 'None' })
+        return
       }
-      setReadonly(Boolean(upstream_id) || disabled);
-    }, [list]);
+
+      setHiddenForm(false)
+
+      // NOTE: Use Ant Design's form object to set data automatically
+      if (upstream_id === "Custom") {
+        return
+      }
+
+      // NOTE: Set data from Upstream List (Upstream Selector)
+      if (list.length === 0) {
+        return
+      }
+      form.resetFields()
+      const targetData = list.find((item) => item.id === upstream_id) as UpstreamComponent.ResponseData
+      if (targetData) {
+        form.setFieldsValue(targetData);
+      }
+    }
+
+    /**
+     * upstream_id
+     * - None: No need to bind Upstream to a resource (e.g Service).
+     * - Custom: Users could input values on UpstreamForm
+     * - Upstream ID from API
+    */
+    useEffect(() => {
+      const upstream_id = form.getFieldValue('upstream_id');
+      resetForm(upstream_id)
+    }, [form.getFieldValue('upstream_id'), list]);
 
     const ActiveHealthCheck = () => (
       <React.Fragment>
@@ -192,19 +214,26 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             }
           </Form.Item>
           <Divider orientation="left" plain />
-          <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive' })} name={['custom', 'checks', 'passive']} valuePropName="checked">
+          <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive' })} name={['custom', 'checks', 'passive']} valuePropName="checked" tooltip={formatMessage({ id: 'component.upstream.other.health-check.passive-only' })}>
             <Switch disabled={readonly} />
           </Form.Item>
-          <Form.Item shouldUpdate noStyle>
+          <Form.Item shouldUpdate={(prev, next) => prev.custom?.checks?.passive !== next.custom?.checks?.passive} noStyle>
             {
               () => {
                 const passive = form.getFieldValue(['custom', 'checks', 'passive'])
+                const active = form.getFieldValue(['custom', 'checks', 'active'])
                 if (passive) {
                   /*
                   * When enable passive check, we should enable active check, too.
                   * When we use form.setFieldsValue to enable active check, error throws.
                   * We choose to alert users first, and need users to enable active check manually.
                   */
+                  if (!active) {
+                    notification.warn({
+                      message: formatMessage({ id: 'component.upstream.other.health-check.invalid' }),
+                      description: formatMessage({ id: 'component.upstream.other.health-check.passive-only' })
+                    })
+                  }
                   return <PassiveHealthCheck />
                 }
                 return null
@@ -225,32 +254,8 @@ const UpstreamForm: React.FC<Props> = forwardRef(
             list={list}
             disabled={disabled}
             required={required}
-            shouldUpdate={(prev, next) => {
-              setReadonly(Boolean(next.upstream_id));
-              if (prev.upstream_id !== next.upstream_id) {
-                const id = next.upstream_id;
-                if (id) {
-                  const targetData = list.find((item) => item.id === id) as UpstreamComponent.ResponseData
-                  if (targetData) {
-                    form.setFieldsValue(transformUpstreamDataFromRequest(targetData));
-                  }
-                  form.setFieldsValue({
-                    upstream_id: id,
-                  });
-                }
-              }
-              return prev.upstream_id !== next.upstream_id;
-            }}
-            onChange={(upstream_id) => {
-              setReadonly(Boolean(upstream_id));
-              setHiddenForm(Boolean(upstream_id === 'None'));
-              const targetData = list.find((item) => item.id === upstream_id) as UpstreamComponent.ResponseData
-              if (targetData) {
-                form.setFieldsValue(transformUpstreamDataFromRequest(targetData));
-              }
-              if (upstream_id === '') {
-                form.resetFields();
-              }
+            onChange={(nextUpstreamId) => {
+              resetForm(nextUpstreamId);
             }}
           />
         )}

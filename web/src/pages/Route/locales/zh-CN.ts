@@ -170,6 +170,8 @@ export default {
 
   'page.route.advanced-match.operator.sample.IN': '请输入数组，示例：["1", "2"]',
   'page.route.advanced-match.operator.sample.~~': '请输入正则表达式，示例：[a-z]+',
+  'page.route.fields.service_id.invalid': '请检查路由绑定的服务',
+  'page.route.fields.service_id.without-upstream': '如果不绑定服务，则必须设置上游服务（步骤 2）',
   'page.route.advanced-match.tooltip': '支持通过请求头，请求参数、Cookie 进行路由匹配，可应用于灰度发布，蓝绿测试等场景。',
 
   'page.route.fields.custom.redirectOption.tooltip': '在此配置 redirect 插件',
