@@ -19,6 +19,7 @@ export default {
   'page.upstream.step.select.upstream.select.option': 'Custom',
   'page.upstream.form.item-label.node.domain.or.ip': 'Targets',
   'page.upstream.step.input.domain.name.or.ip': 'Please enter domain or IP',
+  'page.upstream.step.valid.domain.name.or.ip': 'Please enter valid a domain or IP',
   'page.upstream.step.domain.name.or.ip': 'Hostname or IP',
   'page.upstream.step.input.port': 'Please enter port number',
   'page.upstream.step.port': 'Port',

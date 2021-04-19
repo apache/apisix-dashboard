@@ -20,6 +20,7 @@ export default {
   'page.upstream.form.item-label.node.domain.or.ip': '目标节点',
   'page.upstream.step.input.domain.name.or.ip': '请输入域名或 IP',
   'page.upstream.step.domain.name.or.ip': '主机名或 IP',
+  'page.upstream.step.valid.domain.name.or.ip': '请输入合法的域名或 IP',
   'page.upstream.step.input.port': '请输入',
   'page.upstream.step.port': '端口',
   'page.upstream.step.input.weight': '请输入权重',
