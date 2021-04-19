@@ -29,10 +29,9 @@ jobs:
       - name: Modify conf.yaml
         run: |
           sed -i 's/127.0.0.1:2379/172.16.238.10:2379/' ./api/conf/conf.yaml
-          sed -i 's/127.0.0.1/0.0.0.0/' ./api/conf/conf.yaml
+          sed -i 's@127.0.0.1@0.0.0.0/0@' ./api/conf/conf.yaml
           sed -i '/172.16.238.10:2379/a\      - 172.16.238.11:2379' ./api/conf/conf.yaml
           sed -i '/172.16.238.10:2379/a\      - 172.16.238.12:2379' ./api/conf/conf.yaml
-          sed -i 's@127.0.0.0/24@0.0.0.0/0@' ./api/conf/conf.yaml
           sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./api/conf/conf.yaml
 
       - name: download file Dockerfile-apisix
@@ -98,10 +97,9 @@ jobs:
       - name: Modify conf.yaml Configure for use by the manage-api cluster
         run: |
           sed -i 's/127.0.0.1:2379/172.16.238.10:2379/' ./api/conf/conf.yaml
-          sed -i 's/127.0.0.1/0.0.0.0/' ./api/conf/conf.yaml
+          sed -i 's@127.0.0.1@0.0.0.0/0@' ./api/conf/conf.yaml
           sed -i '/172.16.238.10:2379/a\      - 172.16.238.11:2379' ./api/conf/conf.yaml
           sed -i '/172.16.238.10:2379/a\      - 172.16.238.12:2379' ./api/conf/conf.yaml
-          sed -i 's@127.0.0.0/24@0.0.0.0/0@' ./api/conf/conf.yaml
 
       - name: download file Dockerfile-apisix
         working-directory: ./api/test/docker
