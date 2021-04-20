@@ -22,7 +22,6 @@ import { isEmpty } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
 
-import { transformer as chartTransformer } from '@/components/PluginOrchestration';
 import { create, fetchItem, update, checkUniqueName, checkHostWithSSL } from './service';
 import { transformProxyRewrite2Plugin } from './transform';
 import Step1 from './components/Step1';
@@ -76,6 +75,8 @@ const Page: React.FC<Props> = (props) => {
       setAdvancedMatchingRules(data.advancedMatchingRules);
       form2.setFieldsValue(data.form2Data);
       setStep3Data(data.step3Data);
+
+      setStep(3)
     });
 
   const onReset = () => {
@@ -212,7 +213,8 @@ const Page: React.FC<Props> = (props) => {
 
     const savePlugins = () => {
       if (Object.keys(chart.nodes || {}).length) {
-        const transformChart = chartTransformer(chart);
+        // TODO: Transform FlowGraph data
+        const transformChart = {};
         setStep3Data({ script: { ...transformChart, chart }, plugins: {} });
       } else {
         setStep3Data({ ...step3Data, script: {} });
@@ -278,7 +280,6 @@ const Page: React.FC<Props> = (props) => {
             ))}
           </Steps>
           {renderStepList()}
-          {/* NOTE: PluginOrchestration works unexpected when using <renderStepList/> */}
         </Card>
       </PageHeaderWrapper>
       <ActionBar step={step} lastStep={redirect ? 2 : 4} onChange={onStepChange} withResultView />

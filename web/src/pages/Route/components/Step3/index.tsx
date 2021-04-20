@@ -14,14 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Radio, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { isChrome, isChromium, isEdgeChromium } from 'react-device-detect';
 import { useIntl } from 'umi';
 
-import PluginOrchestration from '@/components/PluginOrchestration';
 import PluginPage from '@/components/Plugin';
+import PluginFlow from '@/components/PluginFlow';
+import { fetchList } from '@/components/Plugin/service';
 
 type Props = {
   data: {
@@ -47,7 +48,16 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
 
   const type = Object.keys(script || {}).length === 0 || disableDraw ? 'NORMAL' : 'DRAW';
 
-  const [mode, setMode] = useState<Mode>(type);
+  const [mode, setMode] = useState<Mode>("DRAW");
+
+  // NOTE: Not a good name, the allPlugins contains plugins schema & other infomation from API
+  const [allPlugins, setAllPlugins] = useState<PluginComponent.Meta[]>([])
+
+  useEffect(() => {
+    fetchList().then(data => {
+      setAllPlugins(data)
+    })
+  }, [])
 
   return (
     <>
@@ -102,13 +112,7 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
           }}
         />
       )}
-      {Boolean(mode === 'DRAW') && (
-        <PluginOrchestration
-          data={script?.chart}
-          onChange={(scriptData) => onChange({ plugins: {}, script: scriptData })}
-          readonly={readonly}
-        />
-      )}
+      {Boolean(mode === 'DRAW' && allPlugins.length) && (<PluginFlow plugins={allPlugins} />)}
     </>
   );
 };

@@ -273,6 +273,7 @@ const PluginDetail: React.FC<Props> = ({
         placement="right"
         closable={false}
         maskClosable={maskClosable}
+        destroyOnClose
         onClose={onClose}
         width={700}
         footer={

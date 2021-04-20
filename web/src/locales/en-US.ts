@@ -23,7 +23,6 @@ import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/setting';
 import other from './en-US/other'
-import PluginOrchestration from '../components/PluginOrchestration/locales/en-US';
 import Plugin from '../components/Plugin/locales/en-US';
 import RawDataEditor from '../components/RawDataEditor/locales/en-US';
 import UpstreamComponent from '../components/Upstream/locales/en-US'
@@ -42,7 +41,6 @@ export default {
   ...component,
   ...other,
   ...ActionBarEnUS,
-  ...PluginOrchestration,
   ...Plugin,
   ...RawDataEditor,
   ...UpstreamComponent

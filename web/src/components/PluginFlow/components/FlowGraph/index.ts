@@ -14,17 +14,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-  'page.siderBar.form.label.panelType.condition': 'Condition',
-  'page.siderBar.form.rule.panelType.condition': 'Please enter the condition of judgment',
-  'page.siderBar.form.label.panelType.plugin': 'Plugin Category',
-
-  'page.siderBar.button.submit': 'Save',
-  'page.siderBar.plugin': 'Plugin',
-  'page.siderBar.tips': 'Drag the required components to the panel',
-
-  'page.panel.condition.tips': 'Click here to configure',
-  'page.panel.condition.name': 'Condition',
-  'page.panel.plugin.tips': 'Click to configure the plugin',
-  'page.panel.plugin.name': 'Plugin Name',
-};
+export { default } from './FlowGraph'
