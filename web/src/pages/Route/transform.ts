@@ -218,7 +218,8 @@ export const transformStepData = ({
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
       data.remote_addrs?.filter(Boolean).length === 0 ? 'remote_addrs' : '',
-      step3DataCloned.plugin_config_id === '' ? 'plugin_config_id' : ''
+      step3DataCloned.plugin_config_id === '' ? 'plugin_config_id' : '',
+      data.vars?.length ? '' : 'vars',
     ]);
   }
 
@@ -235,9 +236,9 @@ export const transformStepData = ({
     'uris',
     'methods',
     'redirect',
-    'vars',
     'plugins',
     'labels',
+    data.vars?.length ? 'vars' : '',
     service_id.length !== 0 ? 'service_id' : '',
     form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
     data.remote_addrs?.filter(Boolean).length !== 0 ? 'remote_addrs' : '',
@@ -284,7 +285,7 @@ export const transformRouteData = (data: RouteModule.Body) => {
     hosts,
     host,
     remote_addrs,
-    vars,
+    vars = [],
     status,
     upstream,
     upstream_id,
