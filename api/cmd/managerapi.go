@@ -64,7 +64,7 @@ func NewManagerAPICommand() *cobra.Command {
 		var err error
 		service, err = createService()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "error occured while initializing service: %s", err)
+			fmt.Fprintf(os.Stderr, "error occurred while initializing service: %s", err)
 		}
 	})
 
