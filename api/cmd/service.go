@@ -55,27 +55,39 @@ func (service *Service) manageService() (string, error) {
 	if ServiceState.status {
 		return service.Status()
 	}
-	if ServiceState.installService {
-		if conf.WorkDir == "." {
-			dir, err := os.Getwd()
-			if err != nil {
-				return "proceed with --work-dir flag", err
-			}
-			conf.WorkDir = dir
-		}
-		return service.Install("-p", conf.WorkDir)
-	}
-	if ServiceState.startService {
-		return service.Start()
-	} else if ServiceState.stopService {
-		return service.Stop()
-	}
 	if ServiceState.removeService {
 		return service.Remove()
 	}
+	if conf.WorkDir == "." {
+		dir, err := os.Getwd()
+		if err != nil {
+			return "proceed with --work-dir flag", err
+		}
+		conf.WorkDir = dir
+	}
+	if ServiceState.installService {
+		return service.Install("-p", conf.WorkDir)
+	}
+	if ServiceState.startService {
+		iStatus, err := service.Install("-p", conf.WorkDir)
+		if err != nil {
+			if err != daemon.ErrAlreadyInstalled {
+				return iStatus, err
+			}
+			iStatus = ""
+		}
+		sStatus, err := service.Start()
+		if iStatus != "" {
+			sStatus = iStatus + "\n" + sStatus
+		}
+		return sStatus, err
+	} else if ServiceState.stopService {
+		return service.Stop()
+	}
+
 	err := manageAPI()
 	if err != nil {
-		return "Unable to start manager-api", err
+		return "Unable to start Manager API", err
 	}
 	return "The Manager API server exited", nil
 }
