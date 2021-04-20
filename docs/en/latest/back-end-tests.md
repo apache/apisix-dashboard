@@ -29,7 +29,7 @@ This document provides the details of setting up the environment for running the
   - [Start with source code](#start-with-source-code)
   - [Start with docker-compose](#start-with-docker-compose)
   - [Start tests](#start-tests)
-- [Writing Unit & E2E (End to End) Tests](#writing-unit-&-e2e-(end-to-end)-tests)
+- [Writing Unit & E2E (End to End) Tests](#writing-unit--e2e-end-to-end-tests)
   - [Writing Unit Tests](#writing-unit-tests)
   - [Writing E2E Tests](#writing-e2e-tests)
 
