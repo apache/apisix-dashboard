@@ -288,7 +288,7 @@ user login.
 | service_id       | object                      |             | No       |
 | service_protocol | string                      |             | No       |
 | update_time      | long                        |             | No       |
-| upstream         | [UpstreamDef](#UpstreamDef) |             | No       |
+| upstream         | [UpstreamDef](#upstreamdef) |             | No       |
 | upstream_id      | object                      |             | No       |
 | uri              | string                      |             | No       |
 | uris             | [ string ]                  |             | No       |
@@ -326,7 +326,7 @@ user login.
 | plugins          | object                      |             | No       |
 | script           | string                      |             | No       |
 | update_time      | long                        |             | No       |
-| upstream         | [UpstreamDef](#UpstreamDef) |             | No       |
+| upstream         | [UpstreamDef](#upstreamdef) |             | No       |
 | upstream_id      | object                      |             | No       |
 
 #### Upstream
