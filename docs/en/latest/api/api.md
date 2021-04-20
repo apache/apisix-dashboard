@@ -44,8 +44,8 @@ verify SSL cert and key.
 
 | Code    | Description       | Schema                |
 | ------- | ----------------- | --------------------- |
-| 0       | SSL verify passed | [ApiError](#ApiError) |
-| default | unexpected error  | [ApiError](#ApiError) |
+| 0       | SSL verify passed | [ApiError](#apierror) |
+| default | unexpected error  | [ApiError](#apierror) |
 
 ### /apisix/admin/check_ssl_exists
 
@@ -66,8 +66,8 @@ Check whether the SSL exists.
 
 | Code    | Description      | Schema                |
 | ------- | ---------------- | --------------------- |
-| 0       | SSL exists       | [ApiError](#ApiError) |
-| default | unexpected error | [ApiError](#ApiError) |
+| 0       | SSL exists       | [ApiError](#apierror) |
+| default | unexpected error | [ApiError](#apierror) |
 
 ### /apisix/admin/consumers
 
@@ -90,7 +90,7 @@ Return the consumer list according to the specified page number and page size, a
 | Code    | Description      | Schema                    |
 | ------- | ---------------- | ------------------------- |
 | 0       | list response    | [ [consumer](#consumer) ] |
-| default | unexpected error | [ApiError](#ApiError)     |
+| default | unexpected error | [ApiError](#apierror)     |
 
 ### /apisix/admin/notexist/routes
 
@@ -111,8 +111,8 @@ Return result of route exists checking by name and exclude id.
 
 | Code    | Description      | Schema                |
 | ------- | ---------------- | --------------------- |
-| 0       | route not exists | [ApiError](#ApiError) |
-| default | unexpected error | [ApiError](#ApiError) |
+| 0       | route not exists | [ApiError](#apierror) |
+| default | unexpected error | [ApiError](#apierror) |
 
 ### /apisix/admin/routes
 
@@ -137,7 +137,7 @@ Return the route list according to the specified page number and page size, and 
 | Code    | Description      | Schema                |
 | ------- | ---------------- | --------------------- |
 | 0       | list response    | [ [route](#route) ]   |
-| default | unexpected error | [ApiError](#ApiError) |
+| default | unexpected error | [ApiError](#apierror) |
 
 ### /apisix/admin/services
 
@@ -160,7 +160,7 @@ Return the service list according to the specified page number and page size, an
 | Code    | Description      | Schema                  |
 | ------- | ---------------- | ----------------------- |
 | 0       | list response    | [ [service](#service) ] |
-| default | unexpected error | [ApiError](#ApiError)   |
+| default | unexpected error | [ApiError](#apierror)   |
 
 ### /apisix/admin/ssl
 
@@ -183,7 +183,7 @@ Return the SSL list according to the specified page number and page size, and ca
 | Code    | Description      | Schema                |
 | ------- | ---------------- | --------------------- |
 | 0       | list response    | [ [ssl](#ssl) ]       |
-| default | unexpected error | [ApiError](#ApiError) |
+| default | unexpected error | [ApiError](#apierror) |
 
 ### /apisix/admin/upstreams
 
@@ -206,7 +206,7 @@ Return the upstream list according to the specified page number and page size, a
 | Code    | Description      | Schema                    |
 | ------- | ---------------- | ------------------------- |
 | 0       | list response    | [ [upstream](#upstream) ] |
-| default | unexpected error | [ApiError](#ApiError)     |
+| default | unexpected error | [ApiError](#apierror)     |
 
 ### /apisix/admin/user/login
 
@@ -227,8 +227,8 @@ user login.
 
 | Code    | Description      | Schema                |
 | ------- | ---------------- | --------------------- |
-| 0       | login success    | [ApiError](#ApiError) |
-| default | unexpected error | [ApiError](#ApiError) |
+| 0       | login success    | [ApiError](#apierror) |
+| default | unexpected error | [ApiError](#apierror) |
 
 ### Models
 
