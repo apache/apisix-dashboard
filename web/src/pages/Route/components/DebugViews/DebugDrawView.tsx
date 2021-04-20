@@ -15,12 +15,14 @@
  * limitations under the License.
  */
 import React, { useEffect, useState, useRef } from 'react';
-import { Input, Select, Card, Tabs, Form, Drawer, Spin, notification, Radio } from 'antd';
+import { Button, Card, Drawer, Form, Input, notification, Radio, Select, Spin, Tabs } from 'antd';
 import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import queryString from 'query-string';
 import Base64 from 'base-64';
 import urlRegexSafe from 'url-regex-safe';
+import CopyToClipboard from "react-copy-to-clipboard";
+import { CopyOutlined } from "@ant-design/icons";
 
 import PanelSection from '@/components/PanelSection';
 
@@ -31,6 +33,7 @@ import {
   PROTOCOL_SUPPORTED,
   DEBUG_BODY_TYPE_SUPPORTED,
   DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED,
+  DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED,
   DebugBodyFormDataValueType,
 } from '../../constants';
 import { DebugParamsView, AuthenticationView, DebugFormDataView } from '.';
@@ -51,13 +54,15 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const [formDataForm] = Form.useForm();
   const [authForm] = Form.useForm();
   const [headerForm] = Form.useForm();
-  const [responseBody, setResponseBody] = useState<string>();
-  const [responseHeader, setResponseHeader] = useState<string>();
+  const [response, setResponse] = useState<RouteModule.debugResponse | null>()
   const [loading, setLoading] = useState(false);
   const [codeMirrorHeight, setCodeMirrorHeight] = useState<number | string>(50);
   const bodyCodeMirrorRef = useRef<any>(null);
   const [bodyType, setBodyType] = useState('none');
   const methodWithoutBody = ['GET', 'HEAD'];
+  const [responseBodyCodeMirrorMode, setResponseBodyCodeMirrorMode] = useState(
+    DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode,
+  );
   const [bodyCodeMirrorMode, setBodyCodeMirrorMode] = useState(
     DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode,
   );
@@ -75,8 +80,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     formDataForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     headerForm.setFieldsValue(DEFAULT_DEBUG_PARAM_FORM_DATA);
     authForm.setFieldsValue(DEFAULT_DEBUG_AUTH_FORM_DATA);
-    setResponseBody(formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' }));
-    setResponseHeader(formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' }));
+    setResponse(null);
     setBodyType(DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.None]);
   };
 
@@ -230,8 +234,23 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     }, bodyFormData)
       .then((req) => {
         setLoading(false);
-        setResponseBody(JSON.stringify(req.data.data, null, 2));
-        setResponseHeader(JSON.stringify(req.data.header, null, 2));
+        const resp: RouteModule.debugResponse= req.data;
+        if (typeof (resp.data) !== 'string') {
+          resp.data = JSON.stringify(resp.data, null, 2);
+        }
+        setResponse(resp);
+        const contentType=resp.header["Content-Type"];
+        if (contentType == null || contentType.length !== 1) {
+          setResponseBodyCodeMirrorMode("TEXT");
+        } else if (contentType[0].toLowerCase().indexOf("json") !== -1) {
+          setResponseBodyCodeMirrorMode("JSON");
+        } else if (contentType[0].toLowerCase().indexOf("xml") !== -1) {
+          setResponseBodyCodeMirrorMode("XML");
+        } else if (contentType[0].toLowerCase().indexOf("html") !== -1) {
+          setResponseBodyCodeMirrorMode("HTML");
+        } else {
+          setResponseBodyCodeMirrorMode("TEXT");
+        }
         setCodeMirrorHeight('auto');
       })
       .catch(() => {
@@ -390,15 +409,44 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
           </Tabs>
         </PanelSection>
         <PanelSection title={formatMessage({ id: 'page.route.PanelSection.title.responseResult' })}>
-          <Tabs>
-            <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="response">
-              <Spin tip="Loading..." spinning={loading}>
-                <div id='codeMirror-response'>
+          <Spin tip="Loading..." spinning={loading}>
+            <Tabs tabBarExtraContent={
+              response ? response.message : formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })
+            }>
+              <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="response">
+                <Select
+                  disabled={response == null}
+                  value={responseBodyCodeMirrorMode}
+                  onSelect={(mode) => setResponseBodyCodeMirrorMode(mode as string)}>
+                  {
+                    DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED.map(mode => {
+                      return <Option value={mode.mode}>{mode.name}</Option>
+                    })
+                  }
+                </Select>
+                <CopyToClipboard
+                  text={response ? response.data : ""}
+                  onCopy={(_: string, result: boolean) => {
+                    if (!result) {
+                      notification.error({
+                        message: formatMessage({ id: 'component.global.copyFail' }),
+                      });
+                      return;
+                    }
+                    notification.success({
+                      message: formatMessage({ id: 'component.global.copySuccess' }),
+                    });
+                  }}>
+                  <Button type="text" disabled={!response}>
+                    <CopyOutlined/>
+                  </Button>
+                </CopyToClipboard>
+                <div id='codeMirror-response' style={{marginTop:16}}>
                   <CodeMirror
-                    value={responseBody}
+                    value={response ? response.data : ""}
                     height={codeMirrorHeight}
                     options={{
-                      mode: 'json-ld',
+                      mode: responseBodyCodeMirrorMode,
                       readOnly: 'nocursor',
                       lineWrapping: true,
                       lineNumbers: true,
@@ -408,26 +456,18 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                     }}
                   />
                 </div>
-              </Spin>
-            </TabPane>
-            <TabPane tab={formatMessage({ id: 'page.route.TabPane.header' })} key="header">
-              <Spin tip="Loading..." spinning={loading}>
-                <CodeMirror
-                  value={responseHeader}
-                  height={codeMirrorHeight}
-                  options={{
-                    mode: 'json-ld',
-                    readOnly: 'nocursor',
-                    lineWrapping: true,
-                    lineNumbers: true,
-                    showCursorWhenSelecting: true,
-                    autofocus: true,
-                    scrollbarStyle: null,
-                  }}
-                />
-              </Spin>
-            </TabPane>
-          </Tabs>
+              </TabPane>
+              <TabPane tab={formatMessage({ id: 'page.route.TabPane.header' })} key="header">
+                {response && Object.keys(response.header)
+                  .map(header => {
+                    return response.header[header].map(value => {
+                      return <div><b>{header}</b>: {value}</div>
+                    })
+                  })
+                }
+              </TabPane>
+            </Tabs>
+          </Spin>
         </PanelSection>
       </Card>
     </Drawer>
