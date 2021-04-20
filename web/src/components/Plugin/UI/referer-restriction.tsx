@@ -73,7 +73,9 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
                         noStyle
                         required
                         rules={[{
-                          message: "",
+                          message: formatMessage({
+                            id: 'page.route.form.itemRulesPatternMessage.domain',
+                          }),
                           pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g')
                         }, {
                           required: true,
