@@ -68,7 +68,6 @@ export const convertToRequestData = (
     type,
     hash_on,
     key,
-    k8s_deployment_info,
     nodes,
     pass_host,
     upstream_host,
@@ -81,14 +80,6 @@ export const convertToRequestData = (
   }
 
   data = omit(data, "upstream_id") as any
-
-  if (nodes && k8s_deployment_info) {
-    return undefined;
-  }
-
-  if (!nodes && !k8s_deployment_info) {
-    return undefined;
-  }
 
   if (type === 'chash') {
     if (!hash_on) {
@@ -112,15 +103,10 @@ export const convertToRequestData = (
     return undefined
   }
 
-  if (nodes) {
-    // NOTE: https://github.com/ant-design/ant-design/issues/27396
-    data.nodes = data.nodes?.map((item) => {
-      return pick(item, ['host', 'port', 'weight']);
-    });
-    return data;
-  }
-
-  return undefined;
+  data.nodes = nodes?.map((item) => {
+    return pick(item, ['host', 'port', 'weight']);
+  }) || [];
+  return data;
 };
 
 export const fetchUpstreamList = () => {
