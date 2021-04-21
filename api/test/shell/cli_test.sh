@@ -520,6 +520,24 @@ if [[ `echo $(sudo ./manager-api remove) | grep -c "OK"` -ne "1" ]]; then
   echo "error while removing the service"
   exit 1
 fi
+# test manager-api output for bad data on etcd
+# make a dummy entry
+./etcd-v3.4.14-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
+sleep 2
+
+./manager-api 2>man-api.err &
+sleep 4
+
+if [[ `cat man-api.err | grep -c "Error occurred while initializing logical store:  /apisix/routes"` -ne '1' ||
+`cat man-api.err | grep -c "json unmarshal failed"` -ne '1' ]];then
+  echo "manager api failed to stream error on stderr for bad data"
+  exit 1
+fi
+# delete dummy entry
+./etcd-v3.4.14-linux-amd64/etcdctl del /apisix/routes/unique1
+# just to make sure
+./manager-api stop
+sleep 6
 
 pkill -f etcd
 
