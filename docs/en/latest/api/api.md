@@ -21,10 +21,17 @@ title: API doc of Manager API.
 #
 -->
 
+## Description
+
 Manager API directly operates ETCD and provides data management for Apache APISIX, provides APIs for Front-end or other clients.
 
-**License:** [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+We could pass parameters to APIs to control APISIX Nodes. To have a better understanding about how it works, please see [README](https://github.com/apache/apisix-dashboard/blob/master/README.md).
 
+9000 is the default port on which the Manager API listens. You could take another port by modifying the [conf/conf.yaml](https://github.com/apache/apisix-dashboard/blob/master/api/conf/conf.yaml) file.
+
+## Authentication
+
+Before invoking other APIs, you need to log in first.
 
 
 ### /apisix/admin/user/login
@@ -42,6 +49,15 @@ user login
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
+
+
+##### Request Body
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| username | string | the username of your account | Yes |
+| password | string | the password of your account | Yes |
+
 
 ##### Responses
 
