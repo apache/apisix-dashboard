@@ -391,7 +391,7 @@ const PluginDetail: React.FC<Props> = ({
           <MonacoEditor
             value={content}
             onChange={setContent}
-            language={codeMirrorMode === "JSON" ? "json" : "yaml"}
+            language={codeMirrorMode.toLocaleLowerCase()}
             editorWillMount={editorWillMount}
             options={{
               scrollbar: {

@@ -47,10 +47,10 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
 
   useEffect(() => {
     switch (codeMirrorMode) {
-      case "JSON":
+      case codeMirrorModeList.JSON:
         setContent(JSON.stringify(data, null, 4));
         break;
-      case "YAML": {
+      case codeMirrorModeList.YAML: {
         const {data: yamlData} = json2yaml(JSON.stringify(data, null, 4));
         setContent(yamlData)
         break;
@@ -70,7 +70,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
 
   const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
     switch (value) {
-      case "JSON":
+      case codeMirrorModeList.JSON:
         setContent(c => {
           const {data:jsonData,error} = yaml2json(c, true);
           if (error){
@@ -80,7 +80,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
           return js_beautify(jsonData, {indent_size: 4});
         })
         break;
-      case "YAML":
+      case codeMirrorModeList.YAML:
         setContent(c => {
           const {data:yamlData,error} = json2yaml(c);
           if (error){
@@ -176,7 +176,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
         <MonacoEditor
           value={content}
           onChange={setContent}
-          language={codeMirrorMode === "JSON" ? "json" : "yaml"}
+          language={codeMirrorMode.toLocaleLowerCase()}
           options={{
             scrollbar:{
               vertical: 'hidden',
