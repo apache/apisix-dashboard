@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-loop-func */
-/* eslint-disable @typescript-eslint/no-invalid-this */
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -56,7 +54,7 @@ context('Create and Search Route', () => {
       // eslint-disable-next-line no-loop-func
       cy.get(this.domSelector.drawerBody).within(() => {
         cy.contains('Add').click().then(() => {
-          cy.get(this.domSelector.labels_0_labelKey).type(`label${i}`);
+        cy.get(this.domSelector.labels_0_labelKey).type(`label${i}`);
         cy.get(this.domSelector.labels_0_labelValue).type(`value${i}`);
         cy.contains('Confirm').click();
         });

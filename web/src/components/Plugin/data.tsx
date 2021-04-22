@@ -41,9 +41,22 @@ export const PLUGIN_ICON_LIST: Record<string, any> = {
   'limit-req': <IconFont name="iconlimit-req" />,
   'limit-count': <IconFont name="iconlimit-count" />,
   'traffic-split': <IconFont name="icontraffic-split" />,
-  'referer-restriction': <IconFont name="iconreferer-restriction" />,
   'serverless-post-function': <IconFont name="iconserverless-post-function" />,
   'serverless-pre-function': <IconFont name="iconserverless-pre-function" />,
+  'response-rewrite': <IconFont name="iconresponse-rewrite" />,
+  'proxy-rewrite': <IconFont name="iconproxy-rewrite" />,
+  'proxy-mirror': <IconFont name="iconproxy-mirror" />,
+  'proxy-cache': <IconFont name="iconproxy-cache" />,
+  'grpc-transcode': <IconFont name="icongrpc-transcode" />,
+  'batch-requests': <IconFont name="iconbatch-request" />,
+  'zipkin': <IconFont name="iconzipkin" />,
+  'udp-logger': <IconFont name="iconudp-logger" />,
+  'error-log-logger': <IconFont name="iconerror-logger" />,
+  'http-logger': <IconFont name="iconhttp-logger" />,
+  'request-id': <IconFont name="iconrequest-id" />,
+  'sls-logger': <IconFont name="iconsls-logger" />,
+  'syslog': <IconFont name="iconsys-logger" />,
+  'tcp-logger': <IconFont name="icontcp-logger" />,
 };
 
 // This list is used to filter out plugins that cannot be displayed in the plugins list.
