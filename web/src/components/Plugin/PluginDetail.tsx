@@ -14,24 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   Button,
-  notification,
-  PageHeader,
-  Switch,
-  Form,
-  Select,
   Divider,
   Drawer,
-  Alert,
-  Space,
-  Popconfirm,
-  Tooltip,
+  Form,
   Input,
+  notification,
+  PageHeader,
+  Popconfirm,
+  Select,
+  Space,
+  Switch,
 } from 'antd';
 import { useIntl } from 'umi';
-import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
 import { LinkOutlined } from '@ant-design/icons';
 import Ajv from 'ajv';
@@ -39,9 +37,11 @@ import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
 
 import { fetchSchema } from './service';
-import { json2yaml, yaml2json } from '../../helpers';
+import { json2yaml, yaml2json } from '@/helpers';
 import { PluginForm, PLUGIN_UI_LIST } from './UI';
 import { PluginType } from './data';
+import MonacoEditor from "react-monaco-editor";
+import type * as monacoEditor from "monaco-editor";
 
 type Props = {
   name: string;
@@ -102,9 +102,9 @@ const PluginDetail: React.FC<Props> = ({
   }
   const [form] = Form.useForm();
   const [UIForm] = Form.useForm();
-  const ref = useRef<any>(null);
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.type;
+  const [content, setContent] = useState(JSON.stringify(data, null, 4));
   const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
     codeMirrorModeList.JSON,
   );
@@ -143,7 +143,7 @@ const PluginDetail: React.FC<Props> = ({
     if (PLUGIN_UI_LIST.includes(name)) {
       setCodeMirrorMode(codeMirrorModeList.UIForm);
       setUIFormData(initialData[name]);
-    };
+    }
   }, []);
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
@@ -190,49 +190,53 @@ const PluginDetail: React.FC<Props> = ({
       });
     });
   };
+
+  const editorWillMount = (monaco: typeof monacoEditor) => {
+    fetchSchema(name, schemaType).then((schema)=> {
+      const schemaConfig = {
+        validate: true,
+        schemas: [
+          {
+            uri: `https://apisix.apache.org/`,
+            fileMatch: ['*'],
+            schema
+          }
+        ]
+      };
+      monaco.languages.json.jsonDefaults.setDiagnosticsOptions(schemaConfig);
+    })
+  }
+
   const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
     switch (value) {
       case codeMirrorModeList.JSON: {
         if (codeMirrorMode === codeMirrorModeList.YAML) {
-          const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
+          const { data: yamlData, error } = yaml2json(content, true);
           if (error) {
             notification.error({
               message: 'Invalid Yaml data',
             });
             return;
           }
-          ref.current.editor.setValue(
-            js_beautify(yamlData, {
-              indent_size: 2,
-            }),
-          );
+          setContent(js_beautify(yamlData, { indent_size: 4 }))
         } else {
-          ref.current.editor.setValue(
-            js_beautify(JSON.stringify(getUIFormData()), {
-              indent_size: 2,
-            }),
-          );
+          setContent(js_beautify(JSON.stringify(getUIFormData()), { indent_size: 4 }))
         }
         break;
       }
       case codeMirrorModeList.YAML: {
-        const { data: jsonData, error } = json2yaml(codeMirrorMode === codeMirrorModeList.JSON ? ref.current.editor.getValue() : JSON.stringify(getUIFormData()));
-
-        if (error) {
-          notification.error({
-            message: 'Invalid Json data',
-          });
-          return;
+        if (codeMirrorMode === codeMirrorModeList.JSON) {
+          setContent(c => json2yaml(c).data)
+        } else if (codeMirrorMode === codeMirrorModeList.UIForm) {
+          setContent(json2yaml(JSON.stringify(getUIFormData())).data)
         }
-        ref.current.editor.setValue(jsonData);
         break;
       }
-
       case codeMirrorModeList.UIForm: {
         if (codeMirrorMode === codeMirrorModeList.JSON) {
-          setUIFormData(JSON.parse(ref.current.editor.getValue()));
+          setUIFormData(JSON.parse(content));
         } else {
-          const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
+          const {data: yamlData, error} = yaml2json(content, true);
           if (error) {
             notification.error({
               message: 'Invalid Yaml data',
@@ -247,22 +251,6 @@ const PluginDetail: React.FC<Props> = ({
         break;
     }
     setCodeMirrorMode(value);
-  };
-
-  const formatCodes = () => {
-    try {
-      if (ref.current) {
-        ref.current.editor.setValue(
-          js_beautify(ref.current.editor.getValue(), {
-            indent_size: 2,
-          }),
-        );
-      }
-    } catch (error) {
-      notification.error({
-        message: 'Format failed',
-      });
-    }
   };
 
   return (
@@ -309,9 +297,9 @@ const PluginDetail: React.FC<Props> = ({
                   try {
                     let editorData;
                     if (codeMirrorMode === codeMirrorModeList.JSON) {
-                      editorData = JSON.parse(ref.current?.editor.getValue());
+                      editorData = JSON.parse(content)
                     } else if (codeMirrorMode === codeMirrorModeList.YAML) {
-                      editorData = yaml2json(ref.current?.editor.getValue(), false).data;
+                      editorData = yaml2json(content, false).data;
                     } else {
                       editorData = getUIFormData();
                     }
@@ -381,12 +369,7 @@ const PluginDetail: React.FC<Props> = ({
               }}
               data-cy='code-mirror-mode'
               key={1}
-            ></Select>,
-            <Tooltip title={formatMessage({ id: "component.plugin.format-codes.disable" })} key={2}>
-              <Button type="primary" onClick={formatCodes} disabled={codeMirrorMode === codeMirrorModeList.UIForm}>
-                {formatMessage({ id: 'component.global.format' })}
-              </Button>
-            </Tooltip>,
+            />,
             <Button
               type="default"
               icon={<LinkOutlined />}
@@ -404,24 +387,22 @@ const PluginDetail: React.FC<Props> = ({
           ]}
         />
         {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === PluginType.authentication && schemaType !== 'consumer')} />}
-        <div style={{ display: codeMirrorMode === codeMirrorModeList.UIForm ? 'none' : 'unset' }}><CodeMirror
-          ref={(codemirror) => {
-            ref.current = codemirror;
-            if (codemirror) {
-              // NOTE: for debug & test
-              // @ts-ignore
-              window.codemirror = codemirror.editor;
-            }
-          }}
-          value={JSON.stringify(data, null, 2)}
-          options={{
-            mode: codeMirrorMode,
-            readOnly: readonly ? 'nocursor' : '',
-            lineWrapping: true,
-            lineNumbers: true,
-            showCursorWhenSelecting: true,
-            autofocus: true,
-          }} />
+        <div style={{display: codeMirrorMode === codeMirrorModeList.UIForm ? 'none' : 'unset'}}>
+          <MonacoEditor
+            value={content}
+            onChange={setContent}
+            language={codeMirrorMode === "JSON" ? "json" : "yaml"}
+            editorWillMount={editorWillMount}
+            options={{
+              scrollbar: {
+                vertical: 'hidden',
+                horizontal: 'hidden',
+              },
+              wordWrap: "on",
+              minimap: {enabled: false},
+              readOnly: readonly,
+            }}
+          />
         </div>
       </Drawer>
     </>

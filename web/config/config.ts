@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 import { defineConfig } from 'umi';
+import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
@@ -23,6 +24,12 @@ import routes from './routes';
 const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
+  chainWebpack: (memo) => {
+    memo.plugin('monaco-editor-webpack-plugin').use(MonacoWebpackPlugin, [
+      { languages: ['json', 'yaml']}
+    ]);
+    return memo;
+  },
   hash: true,
   antd: {},
   dva: {

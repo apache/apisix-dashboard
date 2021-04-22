@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useRef, useState } from 'react';
-import { Button, Drawer, PageHeader, notification, Space, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Drawer, notification, PageHeader, Select, Space } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
-import CodeMirror from '@uiw/react-codemirror';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useIntl } from 'umi';
 import { js_beautify } from 'js-beautify';
 
-import { json2yaml, yaml2json } from '../../helpers';
+import { json2yaml, yaml2json } from '@/helpers';
+import MonacoEditor from "react-monaco-editor";
 
 type Props = {
   visible: boolean,
@@ -39,11 +39,25 @@ enum codeMirrorModeList {
 }
 
 const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data = {}, onClose = () => { }, onSubmit = () => { } }) => {
-  const ref = useRef<any>(null);
   const { formatMessage } = useIntl();
   const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
     codeMirrorModeList.JSON,
   );
+  const [content, setContent] = useState('')
+
+  useEffect(() => {
+    switch (codeMirrorMode) {
+      case "JSON":
+        setContent(JSON.stringify(data, null, 4));
+        break;
+      case "YAML": {
+        const {data: yamlData} = json2yaml(JSON.stringify(data, null, 4));
+        setContent(yamlData)
+        break;
+      }
+      default:
+    }
+  }, [data])
 
   useEffect(() => {
     setCodeMirrorMode(codeMirrorModeList.JSON);
@@ -56,54 +70,29 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
 
   const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
     switch (value) {
-      case codeMirrorModeList.JSON: {
-        const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
-
-        if (error) {
-          notification.error({
-            message: 'Invalid Yaml data',
-          });
-          return;
-        }
-        ref.current.editor.setValue(
-          js_beautify(yamlData, {
-            indent_size: 2,
-          }),
-        );
+      case "JSON":
+        setContent(c => {
+          const {data:jsonData,error} = yaml2json(c, true);
+          if (error){
+            notification.error({message: 'Invalid Yaml data'});
+            return c;
+          }
+          return js_beautify(jsonData, {indent_size: 4});
+        })
         break;
-      }
-      case codeMirrorModeList.YAML: {
-        const { data: jsonData, error } = json2yaml(ref.current.editor.getValue());
-
-        if (error) {
-          notification.error({
-            message: 'Invalid JSON data',
-          });
-          return;
-        }
-        ref.current.editor.setValue(jsonData);
+      case "YAML":
+        setContent(c => {
+          const {data:yamlData,error} = json2yaml(c);
+          if (error){
+            notification.error({message: 'Invalid Json data'});
+            return c;
+          }
+          return yamlData;
+        });
         break;
-      }
       default:
-        break;
     }
-    setCodeMirrorMode(value);
-  };
-
-  const formatCodes = () => {
-    try {
-      if (ref.current) {
-        ref.current.editor.setValue(
-          js_beautify(ref.current.editor.getValue(), {
-            indent_size: 2,
-          }),
-        );
-      }
-    } catch (error) {
-      notification.error({
-        message: 'Format failed',
-      });
-    }
+    setCodeMirrorMode(value)
   };
 
   return (
@@ -127,8 +116,8 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
                   try {
                     const editorData =
                       codeMirrorMode === codeMirrorModeList.JSON
-                        ? JSON.parse(ref.current?.editor.getValue())
-                        : yaml2json(ref.current?.editor.getValue(), false).data;
+                        ? content
+                        : yaml2json(content, false).data;
                     onSubmit(editorData);
                   } catch (error) {
                     notification.error({
@@ -155,10 +144,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
               }}
               data-cy='code-mirror-mode'
             />,
-            <Button type="primary" onClick={formatCodes} key={2}>
-              {formatMessage({ id: 'component.global.format' })}
-            </Button>,
-            <CopyToClipboard text={JSON.stringify(data)} onCopy={(_: string, result: boolean) => {
+            <CopyToClipboard text={content} onCopy={(_: string, result: boolean) => {
               if (!result) {
                 notification.error({
                   message: formatMessage({ id: 'component.global.copyFail' }),
@@ -187,23 +173,18 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
             </Button>,
           ]}
         />
-        <CodeMirror
-          ref={(codemirror) => {
-            ref.current = codemirror;
-            if (codemirror) {
-              // NOTE: for debug & test
-              // @ts-ignore
-              window.codemirror = codemirror.editor;
-            }
-          }}
-          value={JSON.stringify(data, null, 2)}
+        <MonacoEditor
+          value={content}
+          onChange={setContent}
+          language={codeMirrorMode === "JSON" ? "json" : "yaml"}
           options={{
-            mode: 'json-ld',
-            readOnly: readonly ? 'nocursor' : '',
-            lineWrapping: true,
-            lineNumbers: true,
-            showCursorWhenSelecting: true,
-            autofocus: true,
+            scrollbar:{
+              vertical: 'hidden',
+              horizontal: 'hidden',
+            },
+            wordWrap: "on",
+            minimap: {enabled: false},
+            readOnly: readonly,
           }}
         />
       </Drawer>
