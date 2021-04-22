@@ -37,13 +37,9 @@ Before invoking other APIs, you need to log in first.
 ### /apisix/admin/user/login
 
 #### POST
-##### Summary:
-
-user login
-
 ##### Description:
 
-
+User login
 
 ##### Parameters
 
@@ -63,41 +59,95 @@ user login
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | success | [universal_response_data](#universal_response_data) |
+| 200 | success | [Universal Response Data](#universal_response_data) |
+
+##### Responses Data
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| token | string | The token signed after user login. Other APIs need to carry the token for identity verification.|
 
 
+#### Example
+
+```shell
+# Create a route
+$ curl http://127.0.0.1:9000/apisix/admin/user/login -X POST -i -d '
+{
+    "username": "admin",
+    "password": "admin"
+}'
+
+HTTP/1.1 200 OK
+...
+
+{"code":0,"message":"","data":{"token":"token-returned-by-login-api"},"request_id":"cd53eef7-56e2-4a74-a91d-e48c6e0a0107"}
+
+```
+
+***Note: `token-returned-by-login-api` is a fake token, just to facilitate the following interface examples. In actual use, the content returned by the interface shall prevail.***
 
 ### /apisix/admin/server_info
 
 #### GET
-##### Summary:
-
-Get the list of server_info
-
 ##### Description:
 
-
+Get the list of APISIX server info
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| page | query |  | The current page number | string |
-| page_size | query |  | The number of data returned per page | string |
+| page | query | The current page number  | No | string |
+| page_size | query | The number of data returned per page | No | string |
 | hostname | query |  | No | string |
 
 ##### Responses
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | success | object |
+| 200 | success | [Universal Response List](#universal_response_data) |
+
+
+##### Responses Data
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| rows | string | A list of APISIX server info. |
+| total_size | string | Total size of APISIX servers. |
+
+### Example
+
+```shell
+curl http://127.0.0.1:9000/apisix/admin/server_info -i -H "Authorization: token-returned-by-login-api"
+{
+    "code": 0,
+    "message": "",
+    "data": {
+        "rows": [
+            {
+                "id": "4dcb6162-76e5-427d-9600-a1fcfbf73ef4",
+                "last_report_time": 1619061922,
+                "up_time": 69220,
+                "boot_time": 1618992702,
+                "etcd_version": "3.4.0",
+                "hostname": "chenjunxudeMacBook-Pro.local",
+                "version": "2.1-Enterprise-Edition"
+            }
+        ],
+        "total_size": 1
+    },
+    "request_id": "66af3c70-963a-4cc5-8977-b11f306fe484"
+}
+```
+
 
 ### /apisix/admin/server_info/{id}
 
 #### GET
 ##### Summary:
 
-Get the server info by id
+Get the APISIX server info by id
 
 ##### Description:
 
