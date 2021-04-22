@@ -28,7 +28,7 @@ type Service struct {
 	daemon.Daemon
 }
 
-var ServiceState struct {
+var serviceState struct {
 	startService   bool
 	stopService    bool
 	installService bool
@@ -52,10 +52,10 @@ func createService() (*Service, error) {
 }
 
 func (service *Service) manageService() (string, error) {
-	if ServiceState.status {
+	if serviceState.status {
 		return service.Status()
 	}
-	if ServiceState.removeService {
+	if serviceState.removeService {
 		return service.Remove()
 	}
 	if conf.WorkDir == "." {
@@ -65,10 +65,10 @@ func (service *Service) manageService() (string, error) {
 		}
 		conf.WorkDir = dir
 	}
-	if ServiceState.installService {
+	if serviceState.installService {
 		return service.Install("-p", conf.WorkDir)
 	}
-	if ServiceState.startService {
+	if serviceState.startService {
 		iStatus, err := service.Install("-p", conf.WorkDir)
 		if err != nil {
 			if err != daemon.ErrAlreadyInstalled {
@@ -81,7 +81,7 @@ func (service *Service) manageService() (string, error) {
 			sStatus = iStatus + "\n" + sStatus
 		}
 		return sStatus, err
-	} else if ServiceState.stopService {
+	} else if serviceState.stopService {
 		return service.Stop()
 	}
 

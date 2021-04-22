@@ -169,40 +169,43 @@ func newStartCommand() *cobra.Command {
 		Use:   "start",
 		Short: "start Apache APISIX Dashboard service",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			ServiceState.startService = true
+			serviceState.startService = true
 			status, err := service.manageService()
-			fmt.Printf("%s\n", status)
+			fmt.Println(status)
 			return err
 		},
 	}
 	return cmd
 }
+
 func newInstallCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "install",
-		Short: "reinstall Apache APISIX Dashboard service",
+		Short: "re-install Apache APISIX Dashboard service",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			ServiceState.installService = true
+			serviceState.installService = true
 			status, err := service.manageService()
-			fmt.Printf("%s\n", status)
+			fmt.Println(status)
 			return err
 		},
 	}
 	return cmd
 }
+
 func newStatusCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "status",
-		Short: "status of Apache APISIX Dashboard service",
+		Short: "inspect the status of Apache APISIX Dashboard service",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			ServiceState.status = true
+			serviceState.status = true
 			status, err := service.manageService()
-			fmt.Printf("%s\n", status)
+			fmt.Println(status)
 			return err
 		},
 	}
 	return cmd
 }
+
 func newStopCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "stop",
@@ -224,14 +227,15 @@ func newStopCommand() *cobra.Command {
 	}
 	return cmd
 }
+
 func newRemoveCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "remove",
 		Short: "remove Apache APISIX Dashboard service",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			ServiceState.removeService = true
+			serviceState.removeService = true
 			status, err := service.manageService()
-			fmt.Printf("%s\n", status)
+			fmt.Println(status)
 			return err
 		},
 	}
