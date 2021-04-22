@@ -67,7 +67,7 @@ export default {
   'page.upstream.create': 'Create Upstream',
   'page.upstream.configure': 'Configure Upstream',
   'page.upstream.create.upstream.successfully': 'Create Upstream Successfully',
-  'page.upstream.edit.upstream.successfully': 'Update Upstream Successfully',
+  'page.upstream.edit.upstream.successfully': 'Configure Upstream Successfully',
   'page.upstream.create.basic.info': 'Basic Information',
   'page.upstream.create.preview': 'Preview',
 

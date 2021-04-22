@@ -1,6 +1,7 @@
 {
   "deletePluginSuccess": "Delete Plugin Successfully",
   "createUpstreamSuccess": "Create Upstream Successfully",
+  "configureUpstreamSuccess": "Configure Upstream Successfully",
   "createServiceSuccess": "Create Service Successfully",
   "editServiceSuccess": "Configure Service Successfully",
   "deleteServiceSuccess": "Delete Service Successfully",

@@ -105,7 +105,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
                 </Col>
                 <Col style={{ ...removeBtnStyle, marginLeft: -50 }}>
                   {!readonly && (
-                    <MinusCircleOutlined onClick={() => remove(field.name)} />
+                    <MinusCircleOutlined data-cy={`upstream-node-minus-${index}`} onClick={() => remove(field.name)} />
                   )}
                 </Col>
               </Row>
