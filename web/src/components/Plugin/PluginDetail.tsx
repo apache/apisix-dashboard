@@ -388,7 +388,14 @@ const PluginDetail: React.FC<Props> = ({
         />
         {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === PluginType.authentication && schemaType !== 'consumer')} />}
         <div style={{display: codeMirrorMode === codeMirrorModeList.UIForm ? 'none' : 'unset'}}>
-          <MonacoEditor
+          <MonacoEditor          
+            ref={(codemirror) => {
+              if (codemirror) {
+                // NOTE: for debug & test
+                // @ts-ignore
+                window.codemirror = codemirror.editor;
+              }
+            }}
             value={content}
             onChange={setContent}
             language={codeMirrorMode.toLocaleLowerCase()}

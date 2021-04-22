@@ -174,6 +174,13 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
           ]}
         />
         <MonacoEditor
+          ref={(codemirror) => {
+            if (codemirror) {
+              // NOTE: for debug & test
+              // @ts-ignore
+              window.codemirror = codemirror.editor;
+            }
+          }}
           value={content}
           onChange={setContent}
           language={codeMirrorMode.toLocaleLowerCase()}
