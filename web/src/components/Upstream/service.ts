@@ -103,10 +103,14 @@ export const convertToRequestData = (
     return undefined
   }
 
-  data.nodes = nodes?.map((item) => {
-    return pick(item, ['host', 'port', 'weight']);
-  }) || [];
-  return data;
+  if (nodes) {
+    data.nodes = nodes?.map((item) => {
+      return pick(item, ['host', 'port', 'weight']);
+    });
+    return data;
+  }
+
+  return undefined;
 };
 
 export const fetchUpstreamList = () => {
