@@ -33,6 +33,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2.1.5
         with:
