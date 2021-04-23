@@ -108,6 +108,7 @@ export const convertToRequestData = (
    * when upstream_id === none, None === undefined
    */
   if (nodes) {
+    // NOTE: https://github.com/ant-design/ant-design/issues/27396
     data.nodes = nodes?.map((item) => {
       return pick(item, ['host', 'port', 'weight']);
     });
