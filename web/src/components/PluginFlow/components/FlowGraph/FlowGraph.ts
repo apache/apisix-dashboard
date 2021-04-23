@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Graph, Addon, FunctionExt, Model } from '@antv/x6'
+import { Graph, Addon, FunctionExt, Model, Cell } from '@antv/x6'
 import { formatMessage } from 'umi'
 
 import './shapes'
@@ -25,6 +25,11 @@ class FlowGraph {
   private static stencil: Addon.Stencil
   private static pluginTypeList: string[] = []
   private static plugins: PluginComponent.Meta[] = []
+  private static chart: {
+    cells: Cell.Properties[];
+  } = {
+      cells: []
+    }
 
   public static init(container: HTMLElement, plugins: PluginComponent.Meta[] = [], data?: Model.FromJSONData) {
     this.graph = new Graph({
@@ -253,6 +258,145 @@ class FlowGraph {
         graph.removeCells(cells)
       }
     })
+  }
+
+  private static getNextCell(id = '', position = '') {
+    const { cells = [] } = this.chart
+    const cell = cells.find(item => item.id === id)
+    if (!cell) {
+      return
+    }
+
+    if (!cell.ports) {
+      return undefined
+    }
+
+    const port = cell.ports.items.find((item: { group: string }) => item.group === position)
+    if (!port) {
+      return undefined
+    }
+
+    const targetCellId = cells.find(cell => cell.source?.port === port.id && cell.source?.cell === id)?.target.cell
+    const targetCell = cells.find(cell => cell.id === targetCellId)
+    return targetCell
+  }
+
+  private static getLeafList(id = '') {
+    let ids: string[] = []
+
+    const fn = (id: string) => {
+      const cell = this.getNextCell(id, "right")
+      if (!cell || !cell.id) {
+        return
+      }
+      ids = ids.concat(cell.id);
+      fn(cell.id)
+    }
+
+    fn(id)
+    return [id].concat(ids)
+  }
+
+  /**
+   * Convert Graph JSON Data to API Request Body Data
+  */
+  public static convertToData() {
+    this.chart = this.graph.toJSON()
+
+    const data: {
+      chart: Model.FromJSONData;
+      conf: Record<string, any>;
+      rule: Record<string, any>;
+    } = {
+      chart: this.chart,
+      conf: {},
+      rule: {
+        root: ""
+      }
+    }
+
+    const { cells = [] } = this.chart
+
+    cells.forEach(cell => {
+      const { shape, id } = cell
+      if (!id) {
+        return
+      }
+
+      if (shape === FlowGraphShape.plugin) {
+        if (cell.data) {
+          data.conf[id] = cell.data
+        } else {
+          console.error(id, "No data found")
+        }
+        data.rule[id] = []
+      }
+    })
+
+    const edgeCells = cells.filter(cell => cell.shape === 'edge')
+
+    const startCell = cells.find(cell => cell.shape === 'flow-chart-start-rect')
+    if (!startCell) {
+      console.error("Can't find the Start Node")
+      return
+    }
+
+    if (!startCell) {
+      console.error("Can't find the End Node")
+      return
+    }
+
+    const rootCell = cells.find(cell => cell.shape === 'edge' && cell.source.cell === startCell.id)
+    if (!rootCell) {
+      console.error("Can't find the Root Node")
+      return
+    }
+    data.rule.root = rootCell.target.cell
+
+    // Get the ID associated with each node, the relationship between nodes is in edgeCells.
+    edgeCells.forEach(edge => {
+      const sourceId = edge.source.cell
+      const targetId = edge.target.cell
+
+      data.rule[sourceId] = []
+
+      this.getLeafList(targetId).forEach(id => {
+        const cell = cells.find(item => item.id === id)
+        if (!cell) {
+          return
+        }
+
+        if (cell.shape === FlowGraphShape.condition) {
+          const nextCell = this.getNextCell(cell.id, "bottom");
+          if (!nextCell) {
+            return
+          }
+          data.rule[sourceId].push([cell.data, nextCell.id])
+        }
+
+        if (cell.shape === FlowGraphShape.plugin) {
+          data.rule[sourceId].push(['', cell.id])
+        }
+      })
+    })
+
+    // NOTE: Omit empty array, or API will throw error.
+    Object.entries(data.rule).forEach(([key, value]) => {
+      if (value.length === 0) {
+        delete data.rule[key]
+      }
+
+      if (key === 'root') {
+        return
+      }
+      const cell = cells.find(item => item.id === key)
+      if (cell?.shape !== FlowGraphShape.plugin) {
+        delete data.rule[key]
+      }
+    })
+
+    console.log(data.rule)
+    return data
   }
 }
 
