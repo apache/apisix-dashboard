@@ -58,17 +58,13 @@ context('Create and delete consumer with limit-conn plugin form', () => {
     });
     cy.focused(this.domSelector.drawer).should('exist');
     cy.get(this.domSelector.disabledSwitcher).click();
-    // edit codemirror
-    cy.get(this.domSelector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+    // edit
+    cy.window().then(({ codemirror }) => {
+      if (codemirror) {
+        codemirror.setValue(JSON.stringify({ key: 'test' }));
+      }
+      cy.contains('button', 'Submit').click();
+    });
 
     cy.contains(this.domSelector.pluginCard, 'limit-conn').within(() => {
       cy.contains('Enable').click({

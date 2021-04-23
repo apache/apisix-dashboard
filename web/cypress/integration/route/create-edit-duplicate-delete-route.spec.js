@@ -127,7 +127,7 @@ context('Create and Delete Route', () => {
     cy.contains('View').click();
     cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get(this.domSelector.codemirrorScroll).within(() => {
+    cy.get('.monaco-scrollable-element').within(() => {
       cy.contains('upstream').should("exist");
       cy.contains(name).should('exist');
     });
@@ -159,7 +159,7 @@ context('Create and Delete Route', () => {
     cy.contains('View').click();
     cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get(this.domSelector.codemirrorScroll).within(() => {
+    cy.get('.monaco-scrollable-element').within(() => {
       cy.contains('upstream').should("exist");
       cy.contains(newName).should('exist');
     });
@@ -194,7 +194,7 @@ context('Create and Delete Route', () => {
     cy.contains('View').click();
     cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get(this.domSelector.codemirrorScroll).within(() => {
+    cy.get('.monaco-scrollable-element').within(() => {
       cy.contains('upstream').should("exist");
       cy.contains(duplicateNewName).should('exist');
     });

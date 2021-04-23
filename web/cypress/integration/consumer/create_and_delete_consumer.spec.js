@@ -42,17 +42,14 @@ context('Create and Delete Consumer', () => {
     });
     cy.focused(this.domSelector.drawer).should('exist');
     cy.get(this.domSelector.disabledSwitcher).click();
-    // edit codemirror
-    cy.get(this.domSelector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+    // edit
+    cy.window().then(({ codemirror }) => {
+      if (codemirror) {
+        codemirror.setValue(JSON.stringify({ key: 'test' }));
+      }
+      cy.contains('button', 'Submit').click();
+    });
+
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
     cy.get(this.domSelector.notification).should('contain', this.data.createConsumerSuccess);
@@ -66,7 +63,7 @@ context('Create and Delete Consumer', () => {
     cy.contains(this.data.consumerName).siblings().contains('View').click();
     cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get(this.domSelector.codemirrorScroll).within(() => {
+    cy.get('.monaco-scrollable-element').within(() => {
       cy.contains('plugins').should('exist');
       cy.contains(this.data.consumerName).should('exist');
     });
@@ -93,17 +90,13 @@ context('Create and Delete Consumer', () => {
         force: true,
       });
     });
-    // edit codeMirror
-    cy.get(this.domSelector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key_not_exst: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+    // edit
+    cy.window().then(({ codemirror }) => {
+      if (codemirror) {
+        codemirror.setValue(JSON.stringify({ key_not_exst: 'test' }));
+      }
+      cy.contains('button', 'Submit').click();
+    });
     cy.get(this.domSelector.notification).should('contain', this.data.pluginErrorAlert);
   });
 });

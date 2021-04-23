@@ -51,17 +51,13 @@ context('Create and Delete Consumer', () => {
     });
     cy.focused(this.domSelector.drawer).should('exist');
     cy.get(this.domSelector.disabledSwitcher).click().should('have.class', 'ant-switch-checked');
-    // edit codemirror
-    cy.get(this.domSelector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+    // edit
+    cy.window().then(({ codemirror }) => {
+      if (codemirror) {
+        codemirror.setValue(JSON.stringify({ key: 'test' }));
+      }
+      cy.contains('button', 'Submit').click();
+    });
 
     cy.contains(this.domSelector.pluginCard, 'cors').within(() => {
       cy.contains('Enable').click({

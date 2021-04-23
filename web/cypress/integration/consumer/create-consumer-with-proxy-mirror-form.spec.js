@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('Create and delete consumer with proxy-mirror plugin form', () => {
+context.only('Create and delete consumer with proxy-mirror plugin form', () => {
   beforeEach(() => {
     cy.login();
 
@@ -47,17 +47,13 @@ context('Create and delete consumer with proxy-mirror plugin form', () => {
     });
     cy.focused(this.domSelector.drawer).should('exist');
     cy.get(this.domSelector.disabledSwitcher).click();
-    // edit codemirror
-    cy.get(this.domSelector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+    // edit
+    cy.window().then(({ codemirror }) => {
+      if (codemirror) {
+        codemirror.setValue(JSON.stringify({ key: 'test' }));
+      }
+      cy.contains('button', 'Submit').click();
+    });
 
     cy.contains(this.domSelector.pluginCard, 'proxy-mirror').within(() => {
       cy.contains('Enable').click({
@@ -80,7 +76,7 @@ context('Create and delete consumer with proxy-mirror plugin form', () => {
 
     // config proxy-mirror form with correct host
     cy.get(selector.host).clear().type('http://127.0.0.1:1999');
-    cy.get(selector.alert).should('not.exist');
+    cy.get(selector.alert).should('not.be.visible');
     cy.get(this.domSelector.disabledSwitcher).click();
     cy.get(this.domSelector.drawer).within(() => {
       cy.contains('Submit').click({

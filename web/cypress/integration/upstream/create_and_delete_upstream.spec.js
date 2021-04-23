@@ -51,7 +51,7 @@ context('Create and Delete Upstream', () => {
     cy.contains(this.data.upstreamName).siblings().contains('View').click();
     cy.get('.ant-drawer-content').should('be.visible');
 
-    cy.get('.CodeMirror-scroll').within(() => {
+    cy.get('.monaco-scrollable-element').within(() => {
       cy.contains('nodes').should("exist");
       cy.contains('roundrobin').should('exist');
       cy.contains(this.data.upstreamName).should('exist');
@@ -115,7 +115,7 @@ context('Create and Delete Upstream', () => {
     cy.contains(this.data.upstreamName).siblings().contains('View').click();
     cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get(this.domSelector.codemirrorScroll).within(() => {
+    cy.get('.monaco-scrollable-element').within(() => {
       cy.contains('nodes').should("exist");
       cy.contains('chash').should('exist');
       cy.contains(this.data.upstreamName).should('exist');
