@@ -54,9 +54,9 @@ context('Create and Search Route', () => {
       // eslint-disable-next-line no-loop-func
       cy.get(this.domSelector.drawerBody).within(() => {
         cy.contains('Add').click().then(() => {
-        cy.get(this.domSelector.labels_0_labelKey).type(`label${i}`);
-        cy.get(this.domSelector.labels_0_labelValue).type(`value${i}`);
-        cy.contains('Confirm').click();
+          cy.get(this.domSelector.labels_0_labelKey).type(`label${i}`);
+          cy.get(this.domSelector.labels_0_labelValue).type(`value${i}`);
+          cy.contains('Confirm').click();
         });
       });
 
