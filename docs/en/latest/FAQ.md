@@ -25,7 +25,7 @@ title: FAQ
 
 If you need a Vue.js build of the Apache APISIX Dashboard 1.0, use the [master-vue branch](https://github.com/apache/apisix-dashboard/tree/master-vue).
 
-### What are the differences between Dashboard version 2.0 and version 1.5?
+### 2. What are the differences between Dashboard version 2.0 and version 1.5?
 
 The 2.0 version of the dashboard removed MySQL from [version 1.5](https://github.com/apache/apisix-dashboard/tree/backup-1.5-latest) and will operate directly on etcd.
 
@@ -70,3 +70,7 @@ $ swagger generate spec -o ./docs/en/latest/api/api.yaml --scan-models
 ```shell
 $ swagger-markdown -i ./docs/en/latest/api/api.yaml
 ```
+
+### 6. What is the default strategy when import a duplicate route?
+
+Currently we reject import duplicate route, that is to say when you import a route which has the same attributes, all of the URI、Host、URIs、Host、RemoteAddrs、RemoteAddr、Priority、Vars and FilterFunc, as the existing route, you will get an error while importing a route from OAS3.0.
