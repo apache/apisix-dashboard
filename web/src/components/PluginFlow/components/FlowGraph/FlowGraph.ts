@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Graph, Addon, FunctionExt, Model, Cell } from '@antv/x6'
+import { Graph, Addon, FunctionExt, Model } from '@antv/x6'
 import { formatMessage } from 'umi'
+import { notification } from 'antd'
 
 import './shapes'
 import { DEFAULT_OPINIONS, DEFAULT_STENCIL_OPINIONS, FlowGraphEvent, FlowGraphShape } from '../../constants'
@@ -25,11 +26,6 @@ class FlowGraph {
   private static stencil: Addon.Stencil
   private static pluginTypeList: string[] = []
   private static plugins: PluginComponent.Meta[] = []
-  private static chart: {
-    cells: Cell.Properties[];
-  } = {
-      cells: []
-    }
 
   public static init(container: HTMLElement, plugins: PluginComponent.Meta[] = [], data?: Model.FromJSONData) {
     this.graph = new Graph({
@@ -261,7 +257,7 @@ class FlowGraph {
   }
 
   private static getNextCell(id = '', position = '') {
-    const { cells = [] } = this.chart
+    const { cells = [] } = this.graph.toJSON()
     const cell = cells.find(item => item.id === id)
     if (!cell) {
       return
@@ -301,21 +297,19 @@ class FlowGraph {
    * Convert Graph JSON Data to API Request Body Data
   */
   public static convertToData() {
-    this.chart = this.graph.toJSON()
-
     const data: {
       chart: Model.FromJSONData;
       conf: Record<string, any>;
       rule: Record<string, any>;
     } = {
-      chart: this.chart,
+      chart: {},
       conf: {},
       rule: {
         root: ""
       }
     }
 
-    const { cells = [] } = this.chart
+    const { cells = [] } = this.graph.toJSON()
 
     cells.forEach(cell => {
       const { shape, id } = cell
@@ -327,7 +321,10 @@ class FlowGraph {
         if (cell.data) {
           data.conf[id] = cell.data
         } else {
-          console.error(id, "No data found")
+          notification.warn({
+            message: "请检查节点配置",
+            description: `节点 ${id} 未配置数据`
+          })
         }
         data.rule[id] = []
       }
@@ -337,18 +334,24 @@ class FlowGraph {
 
     const startCell = cells.find(cell => cell.shape === 'flow-chart-start-rect')
     if (!startCell) {
-      console.error("Can't find the Start Node")
+      notification.warn({
+        message: "请绑定开始节点"
+      })
       return
     }
 
     if (!startCell) {
-      console.error("Can't find the End Node")
+      notification.warn({
+        message: "请绑定结束节点"
+      })
       return
     }
 
     const rootCell = cells.find(cell => cell.shape === 'edge' && cell.source.cell === startCell.id)
     if (!rootCell) {
-      console.error("Can't find the Root Node")
+      notification.warn({
+        message: "未能找到根节点"
+      })
       return
     }
     data.rule.root = rootCell.target.cell
