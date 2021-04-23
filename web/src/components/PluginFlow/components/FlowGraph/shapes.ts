@@ -21,7 +21,23 @@ import { DEFAULT_SHAPE_RECT_OPINIONS, FlowGraphShape } from '../../constants';
 
 export const FlowChartRect = Graph.registerNode(FlowGraphShape.base, DEFAULT_SHAPE_RECT_OPINIONS)
 
-export const FlowChartConditionRect = Graph.registerNode(FlowGraphShape.condition, DEFAULT_SHAPE_RECT_OPINIONS)
+export const FlowChartConditionRect = Graph.registerNode(FlowGraphShape.condition, {
+  ...DEFAULT_SHAPE_RECT_OPINIONS,
+  ports: {
+    ...DEFAULT_SHAPE_RECT_OPINIONS.ports,
+    items: [
+      {
+        group: 'top',
+      },
+      {
+        group: 'right',
+      },
+      {
+        group: 'bottom',
+      },
+    ],
+  }
+})
 
 export const FlowChartStartRect = Graph.registerNode(FlowGraphShape.start, {
   ...DEFAULT_SHAPE_RECT_OPINIONS,

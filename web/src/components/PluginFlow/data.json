@@ -12,7 +12,7 @@
           }
         }
       },
-      "id": "3fb7cc06-98fd-4f91-bd38-25cbfb9038c1",
+      "id": "1db10b31-6a2a-4c0b-902e-cd444246113f",
       "router": {
         "name": "manhattan"
       },
@@ -22,8 +22,8 @@
         "port": "d820f903-9364-44e8-a903-03ec8ff3bcfd"
       },
       "target": {
-        "cell": "664e586e-63ef-41ad-9755-575130c9aba5",
-        "port": "c2351050-7a20-4e04-b967-04075da954fc"
+        "cell": "562a3384-35da-41c9-ba09-8ee84105831c",
+        "port": "c16a0cda-23b6-4b99-85e9-c2c4fc84a8a6"
       }
     },
     {
@@ -38,18 +38,18 @@
           }
         }
       },
-      "id": "9bd304d4-55e9-48c3-8a54-aec5ec8ce342",
+      "id": "e93da1de-41f5-4f35-8c1c-39b77a0b4f03",
       "router": {
         "name": "manhattan"
       },
       "zIndex": 0,
       "source": {
-        "cell": "664e586e-63ef-41ad-9755-575130c9aba5",
-        "port": "ddc3a775-8ae6-4ab7-810d-8a140ad3bb1f"
+        "cell": "562a3384-35da-41c9-ba09-8ee84105831c",
+        "port": "15dc0ba2-6ba1-4dfc-a1f7-69be855bc065"
       },
       "target": {
-        "cell": "f1b5d57d-edd2-4467-9494-cdf04e410c11",
-        "port": "11a2d822-7c39-4cb7-90c1-c58c358bcad4"
+        "cell": "10dda382-0c5f-439c-a641-1704e67e2827",
+        "port": "169b017b-7fb6-4a1f-a3da-c69aec9b3c5e"
       }
     },
     {
@@ -64,18 +64,18 @@
           }
         }
       },
-      "id": "72db162e-4d0e-4b4d-adaa-c0007b6531d2",
+      "id": "796aa593-93ac-4366-b525-34df75e0200f",
       "router": {
         "name": "manhattan"
       },
       "zIndex": 0,
       "source": {
-        "cell": "f1b5d57d-edd2-4467-9494-cdf04e410c11",
-        "port": "d4e52c27-b957-44c0-bafc-dc373af004fc"
+        "cell": "10dda382-0c5f-439c-a641-1704e67e2827",
+        "port": "060ee56e-df38-4e21-ab4a-88fb38b88bad"
       },
       "target": {
-        "cell": "4c927ed1-5d17-4a45-8ded-a4376eb5bca9",
-        "port": "ee6e8928-a271-4aca-b0fe-d1756be81720"
+        "cell": "4fccf244-9884-407d-a000-6e9c9b8883f6",
+        "port": "61e4d31c-395d-43a2-b7f4-b75f6b12b443"
       }
     },
     {
@@ -90,18 +90,18 @@
           }
         }
       },
-      "id": "57460f57-77e9-4780-97a0-2e98ce33ac7e",
+      "id": "e6314e3b-7cec-411b-861b-93b33a548826",
       "router": {
         "name": "manhattan"
       },
       "zIndex": 0,
       "source": {
-        "cell": "f1b5d57d-edd2-4467-9494-cdf04e410c11",
-        "port": "1ab2d6e0-a544-42e6-b505-24f15c741d18"
+        "cell": "4fccf244-9884-407d-a000-6e9c9b8883f6",
+        "port": "edb85ed3-003d-47b9-8960-522b5a43e029"
       },
       "target": {
-        "cell": "5b42d184-6cab-446d-a710-13ea485bfaba",
-        "port": "59837004-f5b8-4bb5-b74a-3d3bf4a09964"
+        "cell": "f676ca30-effe-4654-b8cd-bb8bdcb8f005",
+        "port": "169b017b-7fb6-4a1f-a3da-c69aec9b3c5e"
       }
     },
     {
@@ -116,18 +116,18 @@
           }
         }
       },
-      "id": "0378ef9f-2a52-4351-aeb3-c179990a18be",
+      "id": "19717c19-e9ff-4529-b601-93e93314b38e",
       "router": {
         "name": "manhattan"
       },
       "zIndex": 0,
       "source": {
-        "cell": "4c927ed1-5d17-4a45-8ded-a4376eb5bca9",
-        "port": "f89ead11-4735-4274-8cfc-10310ac6bd10"
+        "cell": "f676ca30-effe-4654-b8cd-bb8bdcb8f005",
+        "port": "060ee56e-df38-4e21-ab4a-88fb38b88bad"
       },
       "target": {
-        "cell": "1aa785ae-4320-4205-9bd7-3c3287adfcf7",
-        "port": "2c8e9473-beb8-46c8-a439-1f07e1c922db"
+        "cell": "8bb4f4e7-f967-4f40-a46c-7d2246e439cf",
+        "port": "565a4b14-38ed-48ba-b770-8377b06ff455"
       }
     },
     {
@@ -142,24 +142,24 @@
           }
         }
       },
-      "id": "5ddf361b-9c71-4f78-9b4a-e434093b6105",
+      "id": "f9ecd729-e06a-4f26-bd65-4adb2c77b806",
       "router": {
         "name": "manhattan"
       },
       "zIndex": 0,
       "source": {
-        "cell": "5b42d184-6cab-446d-a710-13ea485bfaba",
-        "port": "43aaf292-7272-4c62-a265-ed09a97886a4"
+        "cell": "8bb4f4e7-f967-4f40-a46c-7d2246e439cf",
+        "port": "933eedd1-bbc0-4f5e-a07a-5f8c070a68d4"
       },
       "target": {
-        "cell": "1aa785ae-4320-4205-9bd7-3c3287adfcf7",
-        "port": "2c8e9473-beb8-46c8-a439-1f07e1c922db"
+        "cell": "b6c683e3-4a3b-43c6-94f5-15976bca7454",
+        "port": "5bc4aa48-9e0b-4a50-9142-910fc576b5c1"
       }
     },
     {
       "position": {
-        "x": 210,
-        "y": -10
+        "x": 320,
+        "y": 50
       },
       "size": {
         "width": 80,
@@ -252,8 +252,8 @@
     },
     {
       "position": {
-        "x": 150,
-        "y": 87.98780669118025
+        "x": 260,
+        "y": 138
       },
       "size": {
         "width": 200,
@@ -261,10 +261,10 @@
       },
       "attrs": {
         "text": {
-          "text": "api-breaker"
+          "text": "ip-restriction"
         },
         "title": {
-          "text": "api-breaker"
+          "text": "ip-restriction"
         }
       },
       "shape": "flow-chart-plugin-rect",
@@ -304,39 +304,29 @@
         "items": [
           {
             "group": "top",
-            "id": "c2351050-7a20-4e04-b967-04075da954fc"
+            "id": "c16a0cda-23b6-4b99-85e9-c2c4fc84a8a6"
           },
           {
             "group": "bottom",
-            "id": "ddc3a775-8ae6-4ab7-810d-8a140ad3bb1f"
+            "id": "15dc0ba2-6ba1-4dfc-a1f7-69be855bc065"
           }
         ]
       },
-      "id": "664e586e-63ef-41ad-9755-575130c9aba5",
-      "zIndex": 8,
+      "id": "562a3384-35da-41c9-ba09-8ee84105831c",
+      "zIndex": 19,
       "data": {
-        "break_response_code": 403,
-        "max_breaker_sec": 300,
-        "unhealthy": {
-          "http_statuses": [
-            500
-          ],
-          "failures": 3
-        },
-        "healthy": {
-          "http_statuses": [
-            200
-          ],
-          "successes": 3
-        },
+        "whitelist": [
+          "127.0.0.1",
+          "113.74.26.106/24"
+        ],
         "disable": false
       }
     },
     {
       "angle": 45,
       "position": {
-        "x": 221,
-        "y": 229.98780669118025
+        "x": 331,
+        "y": 250
       },
       "size": {
         "width": 58,
@@ -437,29 +427,26 @@
         "items": [
           {
             "group": "top",
-            "id": "11a2d822-7c39-4cb7-90c1-c58c358bcad4"
+            "id": "169b017b-7fb6-4a1f-a3da-c69aec9b3c5e"
           },
           {
             "group": "right",
-            "id": "1ab2d6e0-a544-42e6-b505-24f15c741d18"
+            "id": "88df8f43-674d-4202-88ba-7b118d21a94e"
           },
           {
             "group": "bottom",
-            "id": "d4e52c27-b957-44c0-bafc-dc373af004fc"
-          },
-          {
-            "group": "left",
-            "id": "1fdbcced-2362-4de9-b065-77a53f46cb89"
+            "id": "060ee56e-df38-4e21-ab4a-88fb38b88bad"
           }
         ]
       },
-      "id": "f1b5d57d-edd2-4467-9494-cdf04e410c11",
-      "zIndex": 10
+      "id": "10dda382-0c5f-439c-a641-1704e67e2827",
+      "zIndex": 20,
+      "data": "code == 403"
     },
     {
       "position": {
-        "x": 460,
-        "y": 380
+        "x": 260,
+        "y": 390
       },
       "size": {
         "width": 200,
@@ -467,10 +454,10 @@
       },
       "attrs": {
         "text": {
-          "text": "kafka-logger"
+          "text": "uri-blocker"
         },
         "title": {
-          "text": "kafka-logger"
+          "text": "uri-blocker"
         }
       },
       "shape": "flow-chart-plugin-rect",
@@ -510,21 +497,149 @@
         "items": [
           {
             "group": "top",
-            "id": "59837004-f5b8-4bb5-b74a-3d3bf4a09964"
+            "id": "61e4d31c-395d-43a2-b7f4-b75f6b12b443"
           },
           {
             "group": "bottom",
-            "id": "43aaf292-7272-4c62-a265-ed09a97886a4"
+            "id": "edb85ed3-003d-47b9-8960-522b5a43e029"
           }
         ]
       },
-      "id": "5b42d184-6cab-446d-a710-13ea485bfaba",
-      "zIndex": 12
+      "id": "4fccf244-9884-407d-a000-6e9c9b8883f6",
+      "zIndex": 21,
+      "data": {
+        "block_rules": [
+          "root.exe",
+          "root.m+"
+        ],
+        "disable": false
+      }
+    },
+    {
+      "angle": 45,
+      "position": {
+        "x": 331,
+        "y": 520
+      },
+      "size": {
+        "width": 58,
+        "height": 58
+      },
+      "attrs": {
+        "text": {
+          "textWrap": {
+            "text": "条件判断"
+          },
+          "transform": "rotate(-45deg)"
+        }
+      },
+      "shape": "flow-chart-condition-rect",
+      "ports": {
+        "groups": {
+          "top": {
+            "position": {
+              "name": "top",
+              "args": {
+                "dx": -26
+              }
+            },
+            "attrs": {
+              "circle": {
+                "r": 3,
+                "magnet": true,
+                "stroke": "#5F95FF",
+                "strokeWidth": 1,
+                "fill": "#fff",
+                "style": {
+                  "visibility": "hidden"
+                }
+              }
+            }
+          },
+          "right": {
+            "position": {
+              "name": "right",
+              "args": {
+                "dy": -26
+              }
+            },
+            "attrs": {
+              "circle": {
+                "r": 3,
+                "magnet": true,
+                "stroke": "#5F95FF",
+                "strokeWidth": 1,
+                "fill": "#fff",
+                "style": {
+                  "visibility": "hidden"
+                }
+              }
+            }
+          },
+          "bottom": {
+            "position": {
+              "name": "bottom",
+              "args": {
+                "dx": 26
+              }
+            },
+            "attrs": {
+              "circle": {
+                "r": 3,
+                "magnet": true,
+                "stroke": "#5F95FF",
+                "strokeWidth": 1,
+                "fill": "#fff",
+                "style": {
+                  "visibility": "hidden"
+                }
+              }
+            }
+          },
+          "left": {
+            "position": {
+              "name": "left",
+              "args": {
+                "dy": 26
+              }
+            },
+            "attrs": {
+              "circle": {
+                "r": 3,
+                "magnet": true,
+                "stroke": "#5F95FF",
+                "strokeWidth": 1,
+                "fill": "#fff",
+                "style": {
+                  "visibility": "hidden"
+                }
+              }
+            }
+          }
+        },
+        "items": [
+          {
+            "group": "top",
+            "id": "169b017b-7fb6-4a1f-a3da-c69aec9b3c5e"
+          },
+          {
+            "group": "right",
+            "id": "88df8f43-674d-4202-88ba-7b118d21a94e"
+          },
+          {
+            "group": "bottom",
+            "id": "060ee56e-df38-4e21-ab4a-88fb38b88bad"
+          }
+        ]
+      },
+      "id": "f676ca30-effe-4654-b8cd-bb8bdcb8f005",
+      "zIndex": 22,
+      "data": "code == 200"
     },
     {
       "position": {
-        "x": 140,
-        "y": 400
+        "x": 260,
+        "y": 650
       },
       "size": {
         "width": 200,
@@ -532,10 +647,10 @@
       },
       "attrs": {
         "text": {
-          "text": "fault-injection"
+          "text": "limit-req"
         },
         "title": {
-          "text": "fault-injection"
+          "text": "limit-req"
         }
       },
       "shape": "flow-chart-plugin-rect",
@@ -575,21 +690,28 @@
         "items": [
           {
             "group": "top",
-            "id": "ee6e8928-a271-4aca-b0fe-d1756be81720"
+            "id": "565a4b14-38ed-48ba-b770-8377b06ff455"
           },
           {
             "group": "bottom",
-            "id": "f89ead11-4735-4274-8cfc-10310ac6bd10"
+            "id": "933eedd1-bbc0-4f5e-a07a-5f8c070a68d4"
           }
         ]
       },
-      "id": "4c927ed1-5d17-4a45-8ded-a4376eb5bca9",
-      "zIndex": 13
+      "id": "8bb4f4e7-f967-4f40-a46c-7d2246e439cf",
+      "zIndex": 23,
+      "data": {
+        "rate": 400,
+        "burst": 200,
+        "key": "server_addr",
+        "rejected_code": 503,
+        "disable": false
+      }
     },
     {
       "position": {
-        "x": 380,
-        "y": 580
+        "x": 320,
+        "y": 775
       },
       "size": {
         "width": 80,
@@ -673,12 +795,12 @@
         "items": [
           {
             "group": "top",
-            "id": "2c8e9473-beb8-46c8-a439-1f07e1c922db"
+            "id": "5bc4aa48-9e0b-4a50-9142-910fc576b5c1"
           }
         ]
       },
-      "id": "1aa785ae-4320-4205-9bd7-3c3287adfcf7",
-      "zIndex": 14
+      "id": "b6c683e3-4a3b-43c6-94f5-15976bca7454",
+      "zIndex": 24
     }
   ]
 }
