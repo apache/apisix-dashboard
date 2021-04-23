@@ -103,6 +103,10 @@ export const convertToRequestData = (
     return undefined
   }
 
+  /**
+   * nodes will be [] or node list
+   * when upstream_id === none, None === undefined
+   */
   if (nodes) {
     data.nodes = nodes?.map((item) => {
       return pick(item, ['host', 'port', 'weight']);
