@@ -84,7 +84,7 @@ if (!rootCell) {
 }
 data.rule.root = rootCell.target.cell
 
-// 获取每个节点关联的 ID，节点之间关系存在 edgeCells 中。
+// Get the ID associated with each node, the relationship between nodes is in edgeCells.
 edgeCells.forEach(edge => {
   const sourceId = edge.source.cell
   const targetId = edge.target.cell
@@ -110,7 +110,7 @@ edgeCells.forEach(edge => {
   })
 })
 
-// NOTE: 从 rule 中移除无配置的 K/V，否则服务将报错。
+// NOTE: Omit empty array, or API will throw error.
 Object.entries(data.rule).forEach(([key, value]) => {
   if (value.length === 0) {
     delete data.rule[key]
