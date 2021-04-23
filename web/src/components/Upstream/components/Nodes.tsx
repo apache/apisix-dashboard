@@ -37,6 +37,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
               <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
                 <Col span={5}>
                   <Form.Item
+                    label={formatMessage({id: 'page.upstream.step.host'})}
                     style={{ marginBottom: 0 }}
                     name={[field.name, 'host']}
                     rules={[
