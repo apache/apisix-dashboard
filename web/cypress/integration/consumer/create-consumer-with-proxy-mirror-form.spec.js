@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context.only('Create and delete consumer with proxy-mirror plugin form', () => {
+context('Create and delete consumer with proxy-mirror plugin form', () => {
   beforeEach(() => {
     cy.login();
 
