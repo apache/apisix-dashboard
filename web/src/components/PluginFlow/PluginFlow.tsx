@@ -114,7 +114,6 @@ const PluginFlow: React.FC<Props> = ({ chart }) => {
     return () => {
       window.removeEventListener("resize", handleResize)
       sidebar?.removeEventListener('click', handleLeftSidebarResize)
-      return undefined
     }
   }, [plugins])
 

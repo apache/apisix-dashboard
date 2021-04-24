@@ -104,10 +104,10 @@ export const DEFAULT_OPINIONS: Partial<Graph.Options> = {
     enabled: true,
     findParent({ node }) {
       const bbox = node.getBBox()
-      return this.getNodes().filter((node) => {
-        const data = node.getData<any>()
+      return this.getNodes().filter((item) => {
+        const data = item.getData<any>()
         if (data && data.parent) {
-          const targetBBox = node.getBBox()
+          const targetBBox = item.getBBox()
           return bbox.isIntersectWithRect(targetBBox)
         }
         return false

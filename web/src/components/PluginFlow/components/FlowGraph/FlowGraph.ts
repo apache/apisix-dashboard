@@ -14,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Graph, Addon, FunctionExt, Model } from '@antv/x6'
+import { Graph, Addon, FunctionExt } from '@antv/x6'
+import type { Model, Cell } from '@antv/x6'
 import { formatMessage } from 'umi'
 import { notification } from 'antd'
 
@@ -181,6 +182,7 @@ class FlowGraph {
   }
 
   private static showPorts(ports: NodeListOf<SVGAElement>, show: boolean) {
+    // @ts-ignore
     for (let i = 0, len = ports.length; i < len; i = i + 1) {
       ports[i].style.visibility = show ? 'visible' : 'hidden'
     }
@@ -240,11 +242,11 @@ class FlowGraph {
     })
   }
 
-  private static getNextCell(id = '', position = '') {
+  private static getNextCell(id = '', position = ''): Cell.Properties | undefined {
     const { cells = [] } = this.graph.toJSON()
     const cell = cells.find(item => item.id === id)
     if (!cell) {
-      return
+      return undefined
     }
 
     if (!cell.ports) {
@@ -256,12 +258,12 @@ class FlowGraph {
       return undefined
     }
 
-    const targetCellId = cells.find(cell => cell.source?.port === port.id && cell.source?.cell === id)?.target.cell
-    const targetCell = cells.find(cell => cell.id === targetCellId)
+    const targetCellId = cells.find(item => item.source?.port === port.id && item.source?.cell === id)?.target.cell
+    const targetCell = cells.find(item => item.id === targetCellId)
     return targetCell
   }
 
-  private static getLeafList(id = '') {
+  private static getLeafList(currentId = '') {
     let ids: string[] = []
 
     const fn = (id: string) => {
@@ -273,14 +275,20 @@ class FlowGraph {
       fn(cell.id)
     }
 
-    fn(id)
-    return [id].concat(ids)
+    fn(currentId)
+    return [currentId].concat(ids)
   }
 
   /**
    * Convert Graph JSON Data to API Request Body Data
   */
-  public static convertToData(chart: typeof DEFAULT_PLUGIN_FLOW_DATA.chart | undefined = undefined) {
+  public static convertToData(chart: typeof DEFAULT_PLUGIN_FLOW_DATA.chart | undefined = undefined): {
+    chart: {
+      cells: Cell.Properties[];
+    };
+    conf: Record<string, any>;
+    rule: Record<string, any>;
+  } | undefined {
     const data = {
       ...DEFAULT_PLUGIN_FLOW_DATA,
       chart: chart || this.graph.toJSON()
