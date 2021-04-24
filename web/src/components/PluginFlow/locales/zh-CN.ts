@@ -35,6 +35,5 @@ export default {
   'component.plugin-flow.text.node': '节点',
   'component.plugin-flow.text.text': '文本',
   'component.plugin-flow.text.condition-without-configuration': '请检查条件判断元件的配置',
-  'component.plugin-flow.text.orchestration.alert.title': '注意事项',
-  'component.plugin-flow.text.orchestration.alert.description': '编排模式优先级高于普通模式，这将覆盖普通模式下的插件配置。但请放心，在您未提交最终数据前，网关中插件配置不会被修改。',
+  'component.plugin-flow.text.preview.readonly': '请注意：在当前页面，您在画布上地操作不会被保留。'
 }

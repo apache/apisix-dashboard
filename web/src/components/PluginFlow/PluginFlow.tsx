@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useEffect, useState } from 'react'
-import { Modal, Form, Input } from 'antd'
+import { Modal, Form, Input, Alert } from 'antd'
 import { Cell } from '@antv/x6'
 import { useIntl } from 'umi'
 
@@ -30,7 +30,8 @@ import { fetchList } from '../Plugin/service'
 type Props = {
   chart: {
     cells: Cell.Properties[];
-  }
+  };
+  readonly?: boolean;
 }
 
 type PluginProps = {
@@ -46,7 +47,7 @@ type ConditionProps = {
   data: string;
 }
 
-const PluginFlow: React.FC<Props> = ({ chart }) => {
+const PluginFlow: React.FC<Props> = ({ chart, readonly = false }) => {
   const { formatMessage } = useIntl()
 
   // NOTE: To prevent from graph is not initialized
@@ -112,6 +113,10 @@ const PluginFlow: React.FC<Props> = ({ chart }) => {
       setConditionProps(props)
     })
 
+    if (readonly) {
+      graph.disableKeyboard()
+    }
+
     window.addEventListener("resize", handleResize)
     sidebar?.addEventListener('click', handleLeftSidebarResize)
     return () => {
@@ -126,8 +131,9 @@ const PluginFlow: React.FC<Props> = ({ chart }) => {
 
   return (
     <React.Fragment>
+      {readonly && <Alert type="warning" message={formatMessage({ id: 'component.plugin-flow.text.preview.readonly' })} showIcon style={{ marginBottom: 20 }} />}
       <div className={styles.container}>
-        <div id="stencil" className={styles.stencil} />
+        <div id="stencil" className={styles.stencil} style={readonly ? { width: 0, height: 0 } : {}} />
         <div className={styles.panel}>
           <div className={styles.toolbar}>{isReady && <Toolbar />}</div>
           <div id="container" className={styles.flow}></div>
@@ -137,6 +143,7 @@ const PluginFlow: React.FC<Props> = ({ chart }) => {
       {
         pluginProps.visible && (
           <PluginDetail
+            readonly={readonly}
             schemaType="route"
             name={pluginProps.name}
             visible={pluginProps.visible}
@@ -171,10 +178,14 @@ const PluginFlow: React.FC<Props> = ({ chart }) => {
         onCancel={() => setConditionProps(DEFAULT_CONDITION_PROPS)}
         okText={formatMessage({ id: 'component.global.modal.confirm' })}
         cancelText={formatMessage({ id: 'component.global.modal.cancel' })}
+        okButtonProps={{
+          disabled: readonly
+        }}
       >
         <Form.Item label={formatMessage({ id: 'component.plugin-flow.text.condition' })} style={{ marginBottom: 0 }} tooltip={formatMessage({ id: 'component.plugin-flow.text.condition-rule.tooltip' })}>
           <Input
             value={conditionProps.data}
+            disabled={readonly}
             placeholder={formatMessage({ id: 'component.plugin-flow.text.condition.placeholder' })}
             onChange={e => {
               setConditionProps({

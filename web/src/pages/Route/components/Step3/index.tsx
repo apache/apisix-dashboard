@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
-import { Radio, Tooltip, Modal } from 'antd';
+import { Radio, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { isChrome, isChromium, isEdgeChromium } from 'react-device-detect';
 import { useIntl } from 'umi';
@@ -58,13 +58,6 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
         <Radio.Group
           value={mode}
           onChange={(e) => {
-            if (e.target.value === 'DRAW') {
-              Modal.warning({
-                title: formatMessage({ id: 'component.plugin-flow.text.orchestration.alert.title' }),
-                content: formatMessage({ id: 'component.plugin-flow.text.orchestration.alert.description' }),
-                okText: formatMessage({ id: 'component.global.modal.confirm' })
-              })
-            }
             setMode(e.target.value);
           }}
           style={{ marginBottom: 10 }}

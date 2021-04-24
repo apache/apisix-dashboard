@@ -19,6 +19,7 @@ import type { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 
 import PluginPage from '@/components/Plugin';
+import PluginFlow from '@/components/PluginFlow';
 import Step1 from '../Step1';
 import Step2 from '../Step2';
 
@@ -38,7 +39,7 @@ const style = {
 
 const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, upstreamRef, ...rest }) => {
   const { formatMessage } = useIntl();
-  const { plugins = {}, plugin_config_id = '' } = rest.step3Data;
+  const { plugins = {}, plugin_config_id = '', script = {} } = rest.step3Data;
 
   return (
     <>
@@ -58,8 +59,10 @@ const CreateStep4: React.FC<Props> = ({ form1, form2, redirect, upstreamRef, ...
           <h2 style={style}>
             {formatMessage({ id: 'component.global.steps.stepTitle.pluginConfig' })}
           </h2>
-          {Boolean(Object.keys(plugins).length !== 0 || plugin_config_id !== '') && <PluginPage referPage = 'route' initialData={plugins} plugin_config_id={plugin_config_id} showSelector readonly />}
-          {/* TODO: Add PluginFlow here */}
+          {Boolean(Object.keys(plugins).length !== 0 || plugin_config_id !== '') && <PluginPage referPage='route' initialData={plugins} plugin_config_id={plugin_config_id} showSelector readonly />}
+          {Boolean(Object.keys(script || {}).length !== 0) && (
+            <PluginFlow chart={script.chart} readonly />
+          )}
         </>
       )}
     </>
