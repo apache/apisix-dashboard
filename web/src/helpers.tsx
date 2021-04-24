@@ -73,9 +73,6 @@ export const getMenuData = (): MenuDataItem[] => {
 
 export const isLoginPage = () => window.location.pathname.indexOf('/user/login') !== -1;
 
-/**
- * 异常处理程序
- */
 export const errorHandler = (error: { response: Response; data: any }): Promise<Response> => {
   const { response } = error;
   if (error && response && response.status) {

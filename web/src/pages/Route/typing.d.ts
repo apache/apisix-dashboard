@@ -73,19 +73,8 @@ declare namespace RouteModule {
     host?: string;
     hosts: string[];
     remote_addrs: string[];
-    vars: [string, Operator, string][];
-    upstream: {
-      upstream_id?: string;
-      type: 'roundrobin' | 'chash' | 'ewma';
-      hash_on?: string;
-      key?: string;
-      nodes: Record<string, number>;
-      timeout: {
-        connect: number;
-        send: number;
-        read: number;
-      };
-    };
+    upstream: UpstreamComponent.ResponseData;
+    vars: [string, Operator, string | any[]][];
     upstream_path?: {
       type?: string;
       from?: string;
@@ -104,12 +93,13 @@ declare namespace RouteModule {
     position: VarPosition;
     name: string;
     operator: Operator;
-    value: string;
+    value: string | any[];
     key: string;
   };
 
   type Step1PassProps = {
     form: FormInstance;
+    upstreamForm?: FormInstance;
     advancedMatchingRules: MatchingRule[];
     disabled?: boolean;
     isEdit?: boolean;
@@ -161,23 +151,9 @@ declare namespace RouteModule {
     hasServiceId: boolean;
   };
 
-  type Form2Data = {
-    type: 'roundrobin' | 'chash' | 'ewma';
-    hash_on?: string;
-    key?: string;
-    upstreamPath?: string;
-    upstream_id?: string | null;
-    timeout: {
-      connect: number;
-      send: number;
-      read: number;
-    };
-    nodes: Record<string, number>;
-  };
-
   type RequestData = {
     form1Data: Form1Data;
-    form2Data: Form2Data;
+    form2Data: UpstreamComponent.ResponseData;
     step3Data: Step3Data;
     advancedMatchingRules: MatchingRule[];
   };
@@ -241,6 +217,14 @@ declare namespace RouteModule {
     body_params?: any;
     header_params?: any;
   };
+
+  type debugResponse ={
+    code: number,
+    message: string,
+    data: any,
+    header: Record<string, string[]>
+  }
+
   type authData = {
     authType: string;
     username?: string;

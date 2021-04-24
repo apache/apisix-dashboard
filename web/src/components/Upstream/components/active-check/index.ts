@@ -23,6 +23,8 @@ import ReqHeaders from './ReqHeaders'
 import Host from './Host'
 import Port from './Port'
 import HttpPath from './HttpPath'
+import Concurrency from './Concurrency'
+import HttpsVerifyCertificate from './HttpsVerifyCertificate'
 
 export default {
   Unhealthy,
@@ -32,5 +34,7 @@ export default {
   ReqHeaders,
   Host,
   Port,
-  HttpPath
+  HttpPath,
+  Concurrency,
+  HttpsVerifyCertificate
 }

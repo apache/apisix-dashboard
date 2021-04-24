@@ -154,19 +154,19 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
                 handleModeChange(value);
               }}
               data-cy='code-mirror-mode'
-            ></Select>,
+            />,
             <Button type="primary" onClick={formatCodes} key={2}>
               {formatMessage({ id: 'component.global.format' })}
             </Button>,
             <CopyToClipboard text={JSON.stringify(data)} onCopy={(_: string, result: boolean) => {
               if (!result) {
                 notification.error({
-                  message: 'Copy Failed',
+                  message: formatMessage({ id: 'component.global.copyFail' }),
                 });
                 return;
               }
               notification.success({
-                message: 'Copy Successfully',
+                message: formatMessage({ id: 'component.global.copySuccess' }),
               });
             }}>
               <Button type="primary" key={2}>

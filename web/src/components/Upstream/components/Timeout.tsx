@@ -20,7 +20,7 @@ import { useIntl } from 'umi'
 
 import TimeUnit from './TimeUnit'
 
-const Component: React.FC<{
+const Timeout: React.FC<{
   label: string;
   desc: string;
   name: string[];
@@ -38,6 +38,7 @@ const Component: React.FC<{
             message: formatMessage({ id: `page.upstream.step.input.${name[1]}.timeout` }),
           },
         ]}
+        initialValue={6}
       >
         <InputNumber disabled={readonly} />
       </Form.Item>
@@ -46,4 +47,4 @@ const Component: React.FC<{
   )
 }
 
-export default Component
+export default Timeout

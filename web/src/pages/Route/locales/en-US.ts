@@ -25,11 +25,11 @@ export default {
   'page.route.requestParameter': 'Request Parameter',
   'page.route.parameterName': 'Parameter Name',
   'page.route.operationalCharacter': 'Operational Character',
-  'page.route.equal': 'Equal',
-  'page.route.unequal': 'Unequal',
-  'page.route.greaterThan': 'Greater Than',
-  'page.route.lessThan': 'Less Than',
-  'page.route.regexMatch': 'Regex Match',
+  'page.route.equal': 'Equal(==)',
+  'page.route.unequal': 'Unequal(~=)',
+  'page.route.greaterThan': 'Greater Than(>)',
+  'page.route.lessThan': 'Less Than(<)',
+  'page.route.regexMatch': 'Regex Match(~~)',
   'page.route.in': 'IN',
   'page.route.rule': 'Rule',
   'page.route.httpHeaderName': 'HTTP Request Header Name',
@@ -165,4 +165,19 @@ export default {
   'page.route.configuration.host.placeholder': 'Please enter the HTTP request hostname',
 
   'page.route.service.none': 'None',
+
+  'page.route.rule.create': 'Create Rule',
+  'page.route.rule.edit': 'Configure Rule',
+
+  'page.route.advanced-match.operator.sample.IN': 'Please enter an array, e.g ["1", "2"]',
+  'page.route.advanced-match.operator.sample.~~': 'Please enter a regular expression, e.g [a-z]+',
+  'page.route.fields.service_id.invalid': 'Please check the configuration of binding service',
+  'page.route.fields.service_id.without-upstream': 'If you do not bind the service, you must set the Upstream (Step 2)',
+  'page.route.advanced-match.tooltip': 'It supports route matching through request headers, request parameters and cookies, and can be applied to scenarios such as grayscale publishing and blue-green testing.',
+
+  'page.route.fields.custom.redirectOption.tooltip': 'This is related to redirect plugin',
+  'page.route.fields.service_id.tooltip': 'Bind Service object to reuse their configuration.',
+
+  'page.route.fields.vars.invalid': 'Please check the advanced match condition configuration',
+  'page.route.fields.vars.in.invalid': 'When using the IN operator, enter the parameter values in array format.',
 };

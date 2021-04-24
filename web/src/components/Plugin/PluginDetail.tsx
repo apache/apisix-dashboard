@@ -41,6 +41,7 @@ import addFormats from 'ajv-formats';
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
 import { PluginForm, PLUGIN_UI_LIST } from './UI';
+import { PluginType } from './data';
 
 type Props = {
   name: string;
@@ -116,6 +117,24 @@ const PluginDetail: React.FC<Props> = ({
     modeOptions.push({ label: formatMessage({ id: 'component.plugin.form' }), value: codeMirrorModeList.UIForm });
   }
 
+  const getUIFormData = () => {
+    if (name === 'cors') {
+      const formData = UIForm.getFieldsValue();
+      const newMethods = formData.allow_methods.join(",");
+      return { ...formData, allow_methods: newMethods };
+    }
+    return UIForm.getFieldsValue();
+  };
+
+  const setUIFormData = (formData: any) => {
+    if (name === 'cors' && formData) {
+      const methods = (formData.allow_methods || '').length ? formData.allow_methods.split(",") : ["*"];
+      UIForm.setFieldsValue({ ...formData, allow_methods: methods });
+      return;
+    }
+    UIForm.setFieldsValue(formData);
+  };
+
   useEffect(() => {
     form.setFieldsValue({
       disable: initialData[name] && !initialData[name].disable,
@@ -123,7 +142,7 @@ const PluginDetail: React.FC<Props> = ({
     });
     if (PLUGIN_UI_LIST.includes(name)) {
       setCodeMirrorMode(codeMirrorModeList.UIForm);
-      UIForm.setFieldsValue(initialData[name]);
+      setUIFormData(initialData[name]);
     };
   }, []);
 
@@ -189,7 +208,7 @@ const PluginDetail: React.FC<Props> = ({
           );
         } else {
           ref.current.editor.setValue(
-            js_beautify(JSON.stringify(UIForm.getFieldsValue()), {
+            js_beautify(JSON.stringify(getUIFormData()), {
               indent_size: 2,
             }),
           );
@@ -197,7 +216,7 @@ const PluginDetail: React.FC<Props> = ({
         break;
       }
       case codeMirrorModeList.YAML: {
-        const { data: jsonData, error } = json2yaml(codeMirrorMode === codeMirrorModeList.JSON ? ref.current.editor.getValue() : JSON.stringify(UIForm.getFieldsValue()));
+        const { data: jsonData, error } = json2yaml(codeMirrorMode === codeMirrorModeList.JSON ? ref.current.editor.getValue() : JSON.stringify(getUIFormData()));
 
         if (error) {
           notification.error({
@@ -211,7 +230,7 @@ const PluginDetail: React.FC<Props> = ({
 
       case codeMirrorModeList.UIForm: {
         if (codeMirrorMode === codeMirrorModeList.JSON) {
-          UIForm.setFieldsValue(JSON.parse(ref.current.editor.getValue()));
+          setUIFormData(JSON.parse(ref.current.editor.getValue()));
         } else {
           const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
           if (error) {
@@ -220,7 +239,7 @@ const PluginDetail: React.FC<Props> = ({
             });
             return;
           }
-          UIForm.setFieldsValue(JSON.parse(yamlData));
+          setUIFormData(JSON.parse(yamlData));
         }
         break;
       }
@@ -267,6 +286,7 @@ const PluginDetail: React.FC<Props> = ({
                 title={formatMessage({ id: 'page.plugin.drawer.popconfirm.title.delete' })}
                 okText={formatMessage({ id: 'component.global.confirm' })}
                 cancelText={formatMessage({ id: 'component.global.cancel' })}
+                disabled={readonly}
                 onConfirm={() => {
                   onChange({
                     formData: form.getFieldsValue(),
@@ -276,13 +296,14 @@ const PluginDetail: React.FC<Props> = ({
                 }}
               >
                 {initialData[name] ? (
-                  <Button key={3} type="primary" danger>
+                  <Button key={3} type="primary" danger disabled={readonly}>
                     {formatMessage({ id: 'component.global.delete' })}
                   </Button>
                 ) : null}
               </Popconfirm>
               <Button
                 key={2}
+                disabled={readonly}
                 type="primary"
                 onClick={() => {
                   try {
@@ -292,7 +313,7 @@ const PluginDetail: React.FC<Props> = ({
                     } else if (codeMirrorMode === codeMirrorModeList.YAML) {
                       editorData = yaml2json(ref.current?.editor.getValue(), false).data;
                     } else {
-                      editorData = UIForm.getFieldsValue();
+                      editorData = getUIFormData();
                     }
 
                     validateData(name, editorData).then((value) => {
@@ -345,7 +366,7 @@ const PluginDetail: React.FC<Props> = ({
         <PageHeader
           title=""
           subTitle={
-            pluginType === 'auth' && schemaType !== 'consumer' && (codeMirrorMode !== codeMirrorModeList.UIForm) ? (
+            pluginType === PluginType.authentication && schemaType !== 'consumer' && (codeMirrorMode !== codeMirrorModeList.UIForm) ? (
               <Alert message={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} type="warning" />
             ) : null
           }
@@ -382,7 +403,7 @@ const PluginDetail: React.FC<Props> = ({
             </Button>
           ]}
         />
-        {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === 'auth' && schemaType !== 'consumer')} />}
+        {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === PluginType.authentication && schemaType !== 'consumer')} />}
         <div style={{ display: codeMirrorMode === codeMirrorModeList.UIForm ? 'none' : 'unset' }}><CodeMirror
           ref={(codemirror) => {
             ref.current = codemirror;

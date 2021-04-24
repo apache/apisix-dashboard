@@ -21,11 +21,11 @@ export default {
   'page.route.requestParameter': '请求参数',
   'page.route.parameterName': '参数名称',
   'page.route.operationalCharacter': '运算符',
-  'page.route.equal': '等于',
-  'page.route.unequal': '不等于',
-  'page.route.greaterThan': '大于',
-  'page.route.lessThan': '小于',
-  'page.route.regexMatch': '正则匹配',
+  'page.route.equal': '等于（==）',
+  'page.route.unequal': '不等于（~=）',
+  'page.route.greaterThan': '大于（>）',
+  'page.route.lessThan': '小于（<）',
+  'page.route.regexMatch': '正则匹配（～～）',
   'page.route.in': 'IN',
   'page.route.rule': '规则',
   'page.route.host': '域名',
@@ -52,7 +52,7 @@ export default {
   'page.route.button.send': '发送请求',
 
   // input
-  'page.route.input.placeholder.parameterNameHttpHeader': '请求头键名，例如：HOST',
+  'page.route.input.placeholder.parameterNameHttpHeader': '请求头名称，例如：HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': '参数名称，例如：id',
   'page.route.input.placeholder.redirectCustom': '例如：/foo/index.html',
   'page.route.input.placeholder.requestUrl': '请输入合法的请求地址',
@@ -164,4 +164,19 @@ export default {
   'page.route.configuration.host.placeholder': '请输入 HTTP 请求域名',
 
   'page.route.service.none': '不绑定服务',
+
+  'page.route.rule.create': '创建规则',
+  'page.route.rule.edit': '编辑规则',
+
+  'page.route.advanced-match.operator.sample.IN': '请输入数组，示例：["1", "2"]',
+  'page.route.advanced-match.operator.sample.~~': '请输入正则表达式，示例：[a-z]+',
+  'page.route.fields.service_id.invalid': '请检查路由绑定的服务',
+  'page.route.fields.service_id.without-upstream': '如果不绑定服务，则必须设置上游服务（步骤 2）',
+  'page.route.advanced-match.tooltip': '支持通过请求头，请求参数、Cookie 进行路由匹配，可应用于灰度发布，蓝绿测试等场景。',
+
+  'page.route.fields.custom.redirectOption.tooltip': '在此配置 redirect 插件',
+  'page.route.fields.service_id.tooltip': '绑定服务（Service）对象，以便复用其中的配置。',
+
+  'page.route.fields.vars.invalid': '请检查高级匹配条件配置',
+  'page.route.fields.vars.in.invalid': '使用 IN 操作符时，请输入数组格式的参数值。',
 };

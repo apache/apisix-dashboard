@@ -22,6 +22,7 @@ import {
   URI_REWRITE_TYPE,
   HOST_REWRITE_TYPE
 } from '@/pages/Route/constants';
+import { convertToFormData } from '@/components/Upstream/service';
 
 export const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): RouteModule.ProxyRewrite => {
   let omitFieldsList: string[] = ['kvHeaders'];
@@ -44,7 +45,7 @@ export const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): Ro
     }
   });
 
-  if(!isEmpty(headers)) {
+  if (!isEmpty(headers)) {
     return omit({
       ...data,
       headers,
@@ -55,7 +56,7 @@ export const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): Ro
 }
 
 const transformProxyRewrite2Formdata = (pluginsData: any) => {
-  const proxyRewriteData: RouteModule.ProxyRewrite= {
+  const proxyRewriteData: RouteModule.ProxyRewrite = {
     scheme: SCHEME_REWRITE.KEEP
   };
   let URIRewriteType = URI_REWRITE_TYPE.KEEP;
@@ -74,7 +75,7 @@ const transformProxyRewrite2Formdata = (pluginsData: any) => {
       hostRewriteType = HOST_REWRITE_TYPE.REWRITE
     }
 
-    Object.keys(pluginsData).forEach( key => {
+    Object.keys(pluginsData).forEach(key => {
       switch (key) {
         case 'scheme':
           proxyRewriteData[key] = pluginsData[key] === SCHEME_REWRITE.HTTP || pluginsData[key] === SCHEME_REWRITE.HTTPS ? pluginsData[key] : SCHEME_REWRITE.KEEP;
@@ -114,7 +115,7 @@ export const transformStepData = ({
   advancedMatchingRules,
   step3Data,
 }: RouteModule.RequestData) => {
-  const { custom_normal_labels, custom_version_label, service_id = ''} = form1Data;
+  const { custom_normal_labels, custom_version_label, service_id = '' } = form1Data;
 
   let redirect: RouteModule.Redirect = {};
   const proxyRewriteFormData: RouteModule.ProxyRewrite = form1Data.proxyRewrite;
@@ -158,14 +159,18 @@ export const transformStepData = ({
         default:
           key = `arg_${name}`;
       }
-      return [key, operator, value];
+      let finalValue = value
+      if (operator === "IN") {
+        finalValue = JSON.parse(value as string)
+      }
+      return [key, operator, finalValue];
     }),
     // @ts-ignore
     methods: form1Data.methods.includes('ALL') ? [] : form1Data.methods,
     status: Number(form1Data.status),
   };
 
-  if (!isEmpty(proxyRewriteConfig)){
+  if (!isEmpty(proxyRewriteConfig)) {
     if (Object.keys(data.plugins || {}).length === 0) {
       data.plugins = {};
     }
@@ -174,11 +179,16 @@ export const transformStepData = ({
     unset(data.plugins, ['proxy-rewrite']);
   }
 
-  if (Object.keys(redirect).length === 0 || redirect.http_to_https) {
+  if ((Object.keys(redirect).length === 0 || redirect.http_to_https) && form2Data) {
+    /**
+     * Due to convertToRequestData under the Upstream component,
+     * if upstream_id === Custom or None, it will be omitted.
+     * So upstream_id here mush be a valid Upstream ID from API.
+    */
     if (form2Data.upstream_id) {
-      data.upstream_id = form2Data.upstream_id;
+      data.upstream_id = form2Data.upstream_id
     } else {
-      data.upstream = form2Data;
+      data.upstream = form2Data
     }
 
     if (redirect.http_to_https) {
@@ -203,7 +213,6 @@ export const transformStepData = ({
       'hostRewriteType',
       'proxyRewrite',
       service_id.length === 0 ? 'service_id' : '',
-      form2Data.upstream_id === 'None' ? 'upstream_id' : '',
       !Object.keys(data.plugins || {}).length ? 'plugins' : '',
       !Object.keys(data.script || {}).length ? 'script' : '',
       form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
@@ -236,14 +245,14 @@ export const transformStepData = ({
 };
 
 const transformVarsToRules = (
-  data: [string, RouteModule.Operator, string][] = [],
+  data: [string, RouteModule.Operator, string | any[]][] = [],
 ): RouteModule.MatchingRule[] =>
   data.map(([key, operator, value]) => {
     const [, position, name] = key.split(/^(cookie|http|arg)_/);
     return {
       position: position as RouteModule.VarPosition,
       name,
-      value,
+      value: typeof value === 'object' ? JSON.stringify(value) : value,
       operator,
       key: Math.random().toString(36).slice(2),
     };
@@ -324,10 +333,10 @@ export const transformRouteData = (data: RouteModule.Body) => {
   const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);
 
   if (upstream && Object.keys(upstream).length) {
-    upstream.upstream_id = '';
+    upstream.upstream_id = 'Custom';
   }
 
-  const form2Data: RouteModule.Form2Data = upstream || { upstream_id };
+  const form2Data: UpstreamComponent.ResponseData = convertToFormData(upstream) || { upstream_id: upstream_id || 'None' };
 
   const { plugins, script, plugin_config_id = '' } = data;
 
