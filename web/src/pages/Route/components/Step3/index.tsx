@@ -23,6 +23,7 @@ import { useIntl } from 'umi';
 import PluginPage from '@/components/Plugin';
 import PluginFlow from '@/components/PluginFlow';
 import { DEFAULT_PLUGIN_FLOW_DATA } from '@/components/PluginFlow/constants';
+import FlowGraph from '@/components/PluginFlow/components/FlowGraph';
 
 type Props = {
   data: {
@@ -58,6 +59,11 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
         <Radio.Group
           value={mode}
           onChange={(e) => {
+            if (e.target.value === 'NORMAL') {
+              // NOTE: current is DRAW
+              onChange({ ...data, script: { chart: FlowGraph.graph.toJSON() } })
+            }
+
             setMode(e.target.value);
           }}
           style={{ marginBottom: 10 }}
@@ -102,7 +108,7 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
           referPage="route"
           showSelector
           onChange={(pluginsData, id) => {
-            onChange({ plugins: pluginsData, script: {}, plugin_config_id: id })
+            onChange({ ...data, plugins: pluginsData, plugin_config_id: id })
           }}
         />
       )}

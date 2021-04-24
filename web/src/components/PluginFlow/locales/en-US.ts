@@ -35,5 +35,7 @@ export default {
   'component.plugin-flow.text.node': 'Node',
   'component.plugin-flow.text.text': 'Text',
   'component.plugin-flow.text.condition-without-configuration': 'Please check all condition nodes\' data',
-  'component.plugin-flow.text.preview.readonly': 'NOTE: your actions on the following drawer will not be preserved.'
+  'component.plugin-flow.text.preview.readonly': 'NOTE: your actions on the following drawer will not be preserved.',
+  'component.plugin-flow.text.both-modes-exist': 'The orchestration mode configuration will override the normal mode configuration, are you sure to continue?',
+  'component.plugin-flow.text.both-modes-exist.title': 'Attention'
 }

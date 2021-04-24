@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, Steps, Form } from 'antd';
+import { Card, Steps, Form, Modal } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
 import { isEmpty } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
+import FlowGraph from '@/components/PluginFlow/components/FlowGraph';
 
 import { create, fetchItem, update, checkUniqueName, checkHostWithSSL } from './service';
 import { transformProxyRewrite2Plugin } from './transform';
@@ -31,7 +32,6 @@ import CreateStep4 from './components/CreateStep4';
 import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA } from './constants';
 import ResultView from './components/ResultView';
 import styles from './Create.less';
-import FlowGraph from '@/components/PluginFlow/components/FlowGraph';
 
 const { Step } = Steps;
 
@@ -190,7 +190,27 @@ const Page: React.FC<Props> = (props) => {
   };
 
   const savePlugins = () => {
-    if (FlowGraph.graph?.toJSON().cells.length) {
+    const isScriptConfigured = FlowGraph.graph?.toJSON().cells.length
+    const isPluginsConfigured = Object.keys(step3Data.plugins || {}).length
+
+    if (step === 3 && isScriptConfigured && isPluginsConfigured) {
+      Modal.confirm({
+        title: formatMessage({ id: 'component.plugin-flow.text.both-modes-exist.title' }),
+        content: formatMessage({ id: 'component.plugin-flow.text.both-modes-exist' }),
+        onOk: () => {
+          const data = FlowGraph.convertToData()
+          if (data) {
+            setStep3Data({ script: data, plugins: {} });
+            setStep(4)
+          }
+        },
+        okText: formatMessage({ id: 'component.global.modal.confirm' }),
+        cancelText: formatMessage({ id: 'component.global.modal.cancel' }),
+      })
+      return
+    }
+
+    if (isScriptConfigured) {
       const data = FlowGraph.convertToData()
       if (!data) {
         return false
@@ -239,13 +259,9 @@ const Page: React.FC<Props> = (props) => {
             setStep(nextStep);
           });
         });
-      } else {
-        const result = savePlugins()
-        if (!result) {
-          return
-        }
-        setStep(2);
       }
+
+      setStep(nextStep)
       return;
     }
 
