@@ -189,6 +189,19 @@ const Page: React.FC<Props> = (props) => {
     return null;
   };
 
+  const savePlugins = () => {
+    if (FlowGraph.graph.toJSON().cells.length) {
+      const data = FlowGraph.convertToData()
+      if (!data) {
+        return false
+      }
+      setStep3Data({ script: data, plugins: {} });
+    } else {
+      setStep3Data({ ...step3Data, script: {} });
+    }
+    return true
+  }
+
   const onStepChange = (nextStep: number) => {
     const onUpdateOrCreate = () => {
       const routeData = {
@@ -227,8 +240,11 @@ const Page: React.FC<Props> = (props) => {
           });
         });
       } else {
-        // TODO: Save Plugins
-        setStep(nextStep);
+        const result = savePlugins()
+        if (!result) {
+          return
+        }
+        setStep(2);
       }
       return;
     }
@@ -245,16 +261,10 @@ const Page: React.FC<Props> = (props) => {
     }
 
     if (nextStep === 4) {
-      if (FlowGraph.graph.toJSON().cells.length) {
-        const data = FlowGraph.convertToData()
-        if (!data) {
-          return
-        }
-        setStep3Data({ script: data, plugins: {} });
-      } else {
-        setStep3Data({ ...step3Data, script: {} });
+      const result = savePlugins()
+      if (!result) {
+        return
       }
-
       setStep(nextStep);
     }
 
