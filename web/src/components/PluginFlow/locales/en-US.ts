@@ -19,7 +19,7 @@ export default {
   'component.plugin-flow.text.condition': 'Rule',
   'component.plugin-flow.text.condition2': 'Condition',
   'component.plugin-flow.text.condition.placeholder': 'Please enter the rule',
-  'component.plugin-flow.text.plugin-without-data': 'Plugin without data',
+  'component.plugin-flow.text.without-data': 'Found node without configuration',
   'component.plugin-flow.text.plugin-without-data.description': 'Please condigure plugin: ',
   'component.plugin-flow.text.no-start-node': 'Please connect the start node',
   'component.plugin-flow.text.no-root-node': 'Root node not found',
@@ -34,4 +34,7 @@ export default {
   'component.plugin-flow.text.background': 'Background',
   'component.plugin-flow.text.node': 'Node',
   'component.plugin-flow.text.text': 'Text',
+  'component.plugin-flow.text.condition-without-configuration': 'Please check all condition nodes\' data',
+  'component.plugin-flow.text.orchestration.alert.title': 'Attention',
+  'component.plugin-flow.text.orchestration.alert.description': 'Orchestration mode has a higher priority than normal mode, which will override the plugin configuration in normal mode. However, please rest assured that the plugin configuration in the gateway will not be modified until you submit the final data.',
 }

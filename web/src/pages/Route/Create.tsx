@@ -190,7 +190,7 @@ const Page: React.FC<Props> = (props) => {
   };
 
   const savePlugins = () => {
-    if (FlowGraph.graph.toJSON().cells.length) {
+    if (FlowGraph.graph?.toJSON().cells.length) {
       const data = FlowGraph.convertToData()
       if (!data) {
         return false

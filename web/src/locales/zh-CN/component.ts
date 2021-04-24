@@ -76,5 +76,7 @@ export default {
   'component.global.noConfigurationRequired': '无需配置',
   'component.global.copy': '复制',
   'component.global.copySuccess': '复制成功',
-  'component.global.copyFail': '复制失败'
+  'component.global.copyFail': '复制失败',
+  'component.global.modal.confirm': '确定',
+  'component.global.modal.cancel': '取消',
 };

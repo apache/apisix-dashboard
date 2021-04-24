@@ -360,8 +360,17 @@ class FlowGraph {
     const invalidPluginCell = cells.find(item => item.shape === FlowGraphShape.plugin && !item.data)
     if (invalidPluginCell) {
       notification.warn({
-        message: formatMessage({ id: 'component.plugin-flow.text.plugin-without-data' }),
+        message: formatMessage({ id: 'component.plugin-flow.text.without-data' }),
         description: `${formatMessage({ id: 'component.plugin-flow.text.plugin-without-data.description' })}${invalidPluginCell.attrs?.text.text}`
+      })
+      return
+    }
+
+    const invalidConditionCell = cells.find(item => item.shape === FlowGraphShape.condition && !item.data)
+    if (invalidConditionCell) {
+      notification.warn({
+        message: formatMessage({ id: 'component.plugin-flow.text.without-data' }),
+        description: `${formatMessage({ id: 'component.plugin-flow.text.condition-without-configuration' })}`
       })
       return
     }

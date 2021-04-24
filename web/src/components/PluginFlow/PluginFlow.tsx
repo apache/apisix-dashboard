@@ -168,6 +168,9 @@ const PluginFlow: React.FC<Props> = ({ chart }) => {
           FlowGraph.setData(conditionProps.id, conditionProps.data);
           setConditionProps(DEFAULT_CONDITION_PROPS)
         }}
+        onCancel={() => setConditionProps(DEFAULT_CONDITION_PROPS)}
+        okText={formatMessage({ id: 'component.global.modal.confirm' })}
+        cancelText={formatMessage({ id: 'component.global.modal.cancel' })}
       >
         <Form.Item label={formatMessage({ id: 'component.plugin-flow.text.condition' })} style={{ marginBottom: 0 }} tooltip={formatMessage({ id: 'component.plugin-flow.text.condition-rule.tooltip' })}>
           <Input
