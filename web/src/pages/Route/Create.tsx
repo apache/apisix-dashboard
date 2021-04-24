@@ -227,7 +227,7 @@ const Page: React.FC<Props> = (props) => {
           });
         });
       } else {
-        // TODO: 进行插件数据地处理
+        // TODO: Save Plugins
         setStep(nextStep);
       }
       return;

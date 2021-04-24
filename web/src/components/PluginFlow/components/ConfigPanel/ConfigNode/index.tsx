@@ -24,6 +24,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Tabs, Row, Col, Input, Slider } from 'antd'
 import { Cell } from '@antv/x6'
+import { useIntl } from 'umi'
 
 import FlowGraph from '../../FlowGraph'
 
@@ -41,6 +42,7 @@ interface NodeAttrs {
 }
 
 export default function (props: IProps) {
+  const { formatMessage } = useIntl()
   const { id } = props
   const [attrs, setAttrs] = useState<NodeAttrs>({
     stroke: '#5F95FF',
@@ -106,7 +108,7 @@ export default function (props: IProps) {
 
   return (
     <Tabs defaultActiveKey="1">
-      <TabPane tab="节点" key="1">
+      <TabPane tab={formatMessage({ id: 'component.plugin-flow.text.node' })} key="1">
         <Row align="middle">
           <Col span={8}>Border Color</Col>
           <Col span={14}>
@@ -145,7 +147,7 @@ export default function (props: IProps) {
           </Col>
         </Row>
       </TabPane>
-      <TabPane tab="文本" key="2">
+      <TabPane tab={formatMessage({ id: 'component.plugin-flow.text.text' })} key="2">
         <Row align="middle">
           <Col span={8}>Font Size</Col>
           <Col span={12}>

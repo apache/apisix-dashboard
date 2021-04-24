@@ -169,7 +169,7 @@ const PluginFlow: React.FC<Props> = ({ chart }) => {
           setConditionProps(DEFAULT_CONDITION_PROPS)
         }}
       >
-        <Form.Item label={formatMessage({ id: 'component.plugin-flow.text.condition' })} style={{ marginBottom: 0 }} tooltip="节点的判断条件。例如：code == 503">
+        <Form.Item label={formatMessage({ id: 'component.plugin-flow.text.condition' })} style={{ marginBottom: 0 }} tooltip={formatMessage({ id: 'component.plugin-flow.text.condition-rule.tooltip' })}>
           <Input
             value={conditionProps.data}
             placeholder={formatMessage({ id: 'component.plugin-flow.text.condition.placeholder' })}

@@ -28,4 +28,10 @@ export default {
   'component.plugin-flow.text.nodes-area': '元件选择区',
   'component.plugin-flow.text.nodes.not-found': '无匹配元件',
   'component.plugin-flow.text.search-nodes.placeholder': '请输入插件名称',
+  'component.plugin-flow.text.condition-rule.tooltip': '节点的判断条件。例如：code == 503',
+  'component.plugin-flow.text.line': '线条',
+  'component.plugin-flow.text.grid': '网格',
+  'component.plugin-flow.text.background': '背景',
+  'component.plugin-flow.text.node': '节点',
+  'component.plugin-flow.text.text': '文本',
 }

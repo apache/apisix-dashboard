@@ -23,6 +23,7 @@
 */
 import React, { useEffect } from 'react'
 import { Tabs, Row, Col, Select, Slider, Input, Checkbox } from 'antd'
+import { useIntl } from 'umi'
 
 import FlowGraph from '../../FlowGraph'
 
@@ -64,6 +65,7 @@ const tryToJSON = (val: string) => {
 }
 
 export default function (props: IProps) {
+  const { formatMessage } = useIntl()
   const { attrs, setAttr } = props
 
   useEffect(() => {
@@ -137,7 +139,7 @@ export default function (props: IProps) {
 
   return (
     <Tabs defaultActiveKey="1">
-      <TabPane tab="网格" key="1">
+      <TabPane tab={formatMessage({ id: 'component.plugin-flow.text.grid' })} key="1">
         <Row align="middle">
           <Col span={10}>Grid Type</Col>
           <Col span={12}>
@@ -273,7 +275,7 @@ export default function (props: IProps) {
           </React.Fragment>
         )}
       </TabPane>
-      <TabPane tab="背景" key="2">
+      <TabPane tab={formatMessage({ id: 'component.plugin-flow.text.background' })} key="2">
         <Row align="middle">
           <Col span={6}>Color</Col>
           <Col span={14}>

@@ -24,6 +24,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Tabs, Row, Col, Input, Slider, Select } from 'antd'
 import { Cell, Edge } from '@antv/x6'
+import { useIntl } from 'umi'
 
 import FlowGraph from '../../FlowGraph'
 
@@ -39,6 +40,7 @@ interface EdgeAttrs {
 }
 
 export default function (props: IProps) {
+  const { formatMessage } = useIntl()
   const { id } = props
   const [attrs, setAttrs] = useState<EdgeAttrs>({
     stroke: '#5F95FF',
@@ -91,7 +93,7 @@ export default function (props: IProps) {
 
   return (
     <Tabs defaultActiveKey="1">
-      <TabPane tab="线条" key="1">
+      <TabPane tab={formatMessage({id: 'component.plugin-flow.text.line'})} key="1">
         <Row align="middle">
           <Col span={8}>Width</Col>
           <Col span={12}>
