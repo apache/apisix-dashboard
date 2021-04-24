@@ -56,7 +56,7 @@ class FlowGraph {
   private static generateGroups(): Addon.Stencil.Group[] {
     const otherGroupList = [{
       name: 'basic',
-      title: '通用元件',
+      title: formatMessage({id: 'component.plugin-flow.text.general'}),
       graphHeight: 104,
     }]
 
@@ -97,7 +97,7 @@ class FlowGraph {
         },
         text: {
           textWrap: {
-            text: '开始',
+            text: formatMessage({ id: 'component.plugin-flow.text.start-node' }),
           },
         },
       },
@@ -111,7 +111,7 @@ class FlowGraph {
       attrs: {
         text: {
           textWrap: {
-            text: '条件判断',
+            text: formatMessage({ id: 'component.plugin-flow.text.condition2' }),
           },
           transform: 'rotate(-45deg)',
         },
@@ -301,7 +301,7 @@ class FlowGraph {
     const startCell = cells.find(cell => cell.shape === FlowGraphShape.start)
     if (!startCell) {
       notification.warn({
-        message: "请绑定开始节点"
+        message: formatMessage({ id: 'component.plugin-flow.text.no-start-node' })
       })
       return
     }
@@ -309,7 +309,7 @@ class FlowGraph {
     const rootCell = cells.find(cell => cell.shape === 'edge' && cell.source.cell === startCell.id)
     if (!rootCell) {
       notification.warn({
-        message: "未能找到根节点"
+        message: formatMessage({ id: 'component.plugin-flow.text.no-root-node' })
       })
       return
     }
@@ -360,8 +360,8 @@ class FlowGraph {
     const invalidPluginCell = cells.find(item => item.shape === FlowGraphShape.plugin && !item.data)
     if (invalidPluginCell) {
       notification.warn({
-        message: "插件元件未配置",
-        description: `插件 ${invalidPluginCell.attrs?.text.text} 未配置`
+        message: formatMessage({ id: 'component.plugin-flow.text.plugin-without-data' }),
+        description: `${formatMessage({ id: 'component.plugin-flow.text.plugin-without-data.description' })}${invalidPluginCell.attrs?.text.text}`
       })
       return
     }

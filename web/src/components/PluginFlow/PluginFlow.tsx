@@ -17,6 +17,7 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Form, Input } from 'antd'
 import { Cell } from '@antv/x6'
+import { useIntl } from 'umi'
 
 import FlowGraph from './components/FlowGraph'
 import Toolbar from './components/Toolbar'
@@ -46,6 +47,8 @@ type ConditionProps = {
 }
 
 const PluginFlow: React.FC<Props> = ({ chart }) => {
+  const { formatMessage } = useIntl()
+
   // NOTE: To prevent from graph is not initialized
   const [isReady, setIsReady] = useState(false)
   const [plugins, setPlugins] = useState<PluginComponent.Meta[]>([])
@@ -160,16 +163,16 @@ const PluginFlow: React.FC<Props> = ({ chart }) => {
 
       <Modal
         visible={conditionProps.visible}
-        title="配置判断条件"
+        title={formatMessage({ id: 'component.plugin-flow.text.condition.required' })}
         onOk={() => {
           FlowGraph.setData(conditionProps.id, conditionProps.data);
           setConditionProps(DEFAULT_CONDITION_PROPS)
         }}
       >
-        <Form.Item label="判断条件" style={{ marginBottom: 0 }} tooltip="节点的判断条件。例如：code == 503">
+        <Form.Item label={formatMessage({ id: 'component.plugin-flow.text.condition' })} style={{ marginBottom: 0 }} tooltip="节点的判断条件。例如：code == 503">
           <Input
             value={conditionProps.data}
-            placeholder="请输入判断条件"
+            placeholder={formatMessage({ id: 'component.plugin-flow.text.condition.placeholder' })}
             onChange={e => {
               setConditionProps({
                 ...conditionProps,

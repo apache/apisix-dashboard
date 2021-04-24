@@ -16,6 +16,7 @@
  */
 import { Shape, Dom } from '@antv/x6'
 import type { Addon, Graph, Cell } from '@antv/x6'
+import { formatMessage } from '@/.umi/plugin-locale/localeExports'
 
 export const DEFAULT_STENCIL_WIDTH = 280
 export const DEFAULT_TOOLBAR_HEIGHT = 38
@@ -117,7 +118,7 @@ export const DEFAULT_OPINIONS: Partial<Graph.Options> = {
 }
 
 export const DEFAULT_STENCIL_OPINIONS: Partial<Addon.Stencil.Options> = {
-  title: '元件选择区',
+  title: formatMessage({ id: 'component.plugin-flow.text.nodes-area' }),
   stencilGraphWidth: DEFAULT_STENCIL_WIDTH,
   search: (cell, keyword) => {
     if (keyword) {
@@ -125,8 +126,8 @@ export const DEFAULT_STENCIL_OPINIONS: Partial<Addon.Stencil.Options> = {
     }
     return true
   },
-  notFoundText: '无匹配元件',
-  placeholder: '请输入插件元件名称',
+  notFoundText: formatMessage({ id: 'component.plugin-flow.text.nodes.not-found' }),
+  placeholder: formatMessage({ id: 'component.plugin-flow.text.search-nodes.placeholder' }),
   collapsable: true,
 }
 

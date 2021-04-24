@@ -24,6 +24,7 @@ import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/setting';
 import other from './en-US/other'
 import Plugin from '../components/Plugin/locales/en-US';
+import PluginFlow from '../components/PluginFlow/locales/en-US';
 import RawDataEditor from '../components/RawDataEditor/locales/en-US';
 import UpstreamComponent from '../components/Upstream/locales/en-US'
 
@@ -42,6 +43,7 @@ export default {
   ...other,
   ...ActionBarEnUS,
   ...Plugin,
+  ...PluginFlow,
   ...RawDataEditor,
   ...UpstreamComponent
 };

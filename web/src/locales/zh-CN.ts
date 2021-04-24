@@ -24,6 +24,7 @@ import other from './zh-CN/other'
 import settingDrawer from './zh-CN/settingDrawer';
 import settings from './zh-CN/setting';
 import Plugin from '../components/Plugin/locales/zh-CN';
+import PluginFlow from '../components/PluginFlow/locales/zh-CN';
 import RawDataEditor from '../components/RawDataEditor/locales/zh-CN';
 import UpstreamComponent from '../components/Upstream/locales/zh-CN'
 
@@ -42,6 +43,7 @@ export default {
   ...other,
   ...ActionBarZhCN,
   ...Plugin,
+  ...PluginFlow,
   ...RawDataEditor,
   ...UpstreamComponent
 };
