@@ -16,6 +16,7 @@
  */
 import React, { useEffect, useState } from 'react'
 import { Modal, Form, Input } from 'antd'
+import { Cell } from '@antv/x6'
 
 import FlowGraph from './components/FlowGraph'
 import Toolbar from './components/Toolbar'
@@ -23,11 +24,12 @@ import { DEFAULT_CONDITION_PROPS, DEFAULT_PLUGIN_PROPS, DEFAULT_STENCIL_WIDTH, D
 import styles from './style.less'
 import ConfigPanel from './components/ConfigPanel'
 import PluginDetail from '../Plugin/PluginDetail'
-
-const GRAPH_SAMPLE_DATA = require('./data.json')
+import { fetchList } from '../Plugin/service'
 
 type Props = {
-  plugins: PluginComponent.Meta[]
+  chart: {
+    cells: Cell.Properties[];
+  }
 }
 
 type PluginProps = {
@@ -43,9 +45,10 @@ type ConditionProps = {
   data: string;
 }
 
-const PluginFlow: React.FC<Props> = ({ plugins = [] }) => {
+const PluginFlow: React.FC<Props> = ({ chart }) => {
   // NOTE: To prevent from graph is not initialized
   const [isReady, setIsReady] = useState(false)
+  const [plugins, setPlugins] = useState<PluginComponent.Meta[]>([])
 
   const [pluginProps, setPluginProps] = useState<PluginProps>(DEFAULT_PLUGIN_PROPS)
   const [conditionProps, setConditionProps] = useState<ConditionProps>(DEFAULT_CONDITION_PROPS)
@@ -68,6 +71,10 @@ const PluginFlow: React.FC<Props> = ({ plugins = [] }) => {
   }
 
   useEffect(() => {
+    if (!plugins.length) {
+      return
+    }
+
     const container = document.getElementById("container")
     if (!container) {
       return
@@ -75,8 +82,8 @@ const PluginFlow: React.FC<Props> = ({ plugins = [] }) => {
 
     const sidebar = document.querySelector('.ant-pro-sider-collapsed-button')
 
-    const graph = FlowGraph.init(container, plugins, GRAPH_SAMPLE_DATA)
-      ; (window as any).graph = graph
+    const graph = FlowGraph.init(container, plugins, chart);
+    (window as any).graph = graph
     setIsReady(true)
 
     const stencilContainer = document.querySelector('#stencil') as HTMLElement
@@ -99,7 +106,6 @@ const PluginFlow: React.FC<Props> = ({ plugins = [] }) => {
 
     graph.on(FlowGraphEvent.PLUGIN_CHANGE, setPluginProps)
     graph.on(FlowGraphEvent.CONDITION_CHANGE, (props: ConditionProps) => {
-      console.log(props)
       setConditionProps(props)
     })
 
@@ -111,6 +117,10 @@ const PluginFlow: React.FC<Props> = ({ plugins = [] }) => {
       return undefined
     }
   }, [plugins])
+
+  useEffect(() => {
+    fetchList().then(data => setPlugins(data))
+  }, [])
 
   return (
     <React.Fragment>

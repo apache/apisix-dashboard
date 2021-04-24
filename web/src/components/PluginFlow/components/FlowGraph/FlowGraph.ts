@@ -19,7 +19,7 @@ import { formatMessage } from 'umi'
 import { notification } from 'antd'
 
 import './shapes'
-import { DEFAULT_OPINIONS, DEFAULT_STENCIL_OPINIONS, FlowGraphEvent, FlowGraphShape } from '../../constants'
+import { DEFAULT_OPINIONS, DEFAULT_PLUGIN_FLOW_DATA, DEFAULT_STENCIL_OPINIONS, FlowGraphEvent, FlowGraphShape } from '../../constants'
 
 class FlowGraph {
   public static graph: Graph
@@ -27,7 +27,7 @@ class FlowGraph {
   private static pluginTypeList: string[] = []
   private static plugins: PluginComponent.Meta[] = []
 
-  public static init(container: HTMLElement, plugins: PluginComponent.Meta[] = [], data?: Model.FromJSONData) {
+  public static init(container: HTMLElement, plugins: PluginComponent.Meta[] = [], chart: Model.FromJSONData) {
     this.graph = new Graph({
       container,
       ...DEFAULT_OPINIONS
@@ -38,7 +38,7 @@ class FlowGraph {
 
     this.initStencil()
     this.initShape()
-    this.initGraphShape(data)
+    this.initGraphShape(chart)
     this.initEvent()
     return this.graph
   }
@@ -56,7 +56,7 @@ class FlowGraph {
     const otherGroupList = [{
       name: 'basic',
       title: '通用元件',
-      graphHeight: 190,
+      graphHeight: 104,
     }]
 
     const pluginGroupList = this.pluginTypeList.map(item => {
@@ -97,21 +97,6 @@ class FlowGraph {
         text: {
           textWrap: {
             text: '开始',
-          },
-        },
-      },
-    })
-
-    const r2 = graph.createNode({
-      shape: FlowGraphShape.end,
-      attrs: {
-        body: {
-          rx: 24,
-          ry: 24,
-        },
-        text: {
-          textWrap: {
-            text: '结束',
           },
         },
       },
@@ -168,7 +153,7 @@ class FlowGraph {
       },
     })
 
-    this.stencil.load([r1, r2, r3], 'basic')
+    this.stencil.load([r1, r3], 'basic')
     this.pluginTypeList.forEach(type => {
       const plugins = this.plugins.filter(plugin => plugin.type === type).map(plugin => {
         return graph.createNode({
@@ -188,11 +173,11 @@ class FlowGraph {
     })
   }
 
-  private static initGraphShape(data?: Model.FromJSONData) {
-    if (!data) {
+  private static initGraphShape(chart: Model.FromJSONData) {
+    if (!chart) {
       return
     }
-    this.graph.fromJSON(data)
+    this.graph.fromJSON(chart)
   }
 
   private static showPorts(ports: NodeListOf<SVGAElement>, show: boolean) {
@@ -224,7 +209,6 @@ class FlowGraph {
     })
 
     graph.on('node:dblclick', ({ node }) => {
-      console.log(node.shape, node)
       if (node.shape === FlowGraphShape.plugin) {
         const name = node.getAttrByPath('text/text') as string
         if (!name) {
@@ -296,53 +280,20 @@ class FlowGraph {
   /**
    * Convert Graph JSON Data to API Request Body Data
   */
-  public static convertToData() {
-    const data: {
-      chart: Model.FromJSONData;
-      conf: Record<string, any>;
-      rule: Record<string, any>;
-    } = {
-      chart: {},
-      conf: {},
-      rule: {
-        root: ""
-      }
+  public static convertToData(chart: typeof DEFAULT_PLUGIN_FLOW_DATA.chart | undefined = undefined) {
+    const data = {
+      ...DEFAULT_PLUGIN_FLOW_DATA,
+      chart: chart || this.graph.toJSON()
     }
 
-    const { cells = [] } = this.graph.toJSON()
-
-    cells.forEach(cell => {
-      const { shape, id } = cell
-      if (!id) {
-        return
-      }
-
-      if (shape === FlowGraphShape.plugin) {
-        if (cell.data) {
-          data.conf[id] = cell.data
-        } else {
-          notification.warn({
-            message: "请检查节点配置",
-            description: `节点 ${id} 未配置数据`
-          })
-        }
-        data.rule[id] = []
-      }
-    })
+    const { cells = [] } = data.chart
 
     const edgeCells = cells.filter(cell => cell.shape === 'edge')
 
-    const startCell = cells.find(cell => cell.shape === 'flow-chart-start-rect')
+    const startCell = cells.find(cell => cell.shape === FlowGraphShape.start)
     if (!startCell) {
       notification.warn({
         message: "请绑定开始节点"
-      })
-      return
-    }
-
-    if (!startCell) {
-      notification.warn({
-        message: "请绑定结束节点"
       })
       return
     }
@@ -398,7 +349,19 @@ class FlowGraph {
       }
     })
 
-    console.log(data.rule)
+    const invalidPluginCell = cells.find(item => item.shape === FlowGraphShape.plugin && !item.data)
+    if (invalidPluginCell) {
+      notification.warn({
+        message: "插件元件未配置",
+        description: `插件 ${invalidPluginCell.attrs?.text.text} 未配置`
+      })
+      return
+    }
+
+    cells.filter(item => item.shape === FlowGraphShape.plugin && item.id).forEach(item => {
+      data.conf[item.id!] = item.data
+    })
+
     return data
   }
 }

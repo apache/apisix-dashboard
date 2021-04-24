@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 import { Shape, Dom } from '@antv/x6'
-import type { Addon, Graph } from '@antv/x6'
+import type { Addon, Graph, Cell } from '@antv/x6'
 
 export const DEFAULT_STENCIL_WIDTH = 280
 export const DEFAULT_TOOLBAR_HEIGHT = 38
@@ -277,4 +277,20 @@ export const DEFAULT_CONDITION_PROPS = {
   visible: false,
   id: '',
   data: ''
+}
+
+export const DEFAULT_PLUGIN_FLOW_DATA: {
+  chart: {
+    cells: Cell.Properties[];
+  };
+  conf: Record<string, any>;
+  rule: Record<string, any>;
+} = {
+  chart: {
+    cells: []
+  },
+  conf: {},
+  rule: {
+    root: ""
+  }
 }

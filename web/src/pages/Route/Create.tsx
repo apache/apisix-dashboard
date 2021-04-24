@@ -28,9 +28,10 @@ import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
 import CreateStep4 from './components/CreateStep4';
-import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA, INIT_CHART } from './constants';
+import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA } from './constants';
 import ResultView from './components/ResultView';
 import styles from './Create.less';
+import FlowGraph from '@/components/PluginFlow/components/FlowGraph';
 
 const { Step } = Steps;
 
@@ -67,7 +68,6 @@ const Page: React.FC<Props> = (props) => {
 
   const [step, setStep] = useState(1);
   const [stepHeader, setStepHeader] = useState(STEP_HEADER_4);
-  const [chart, setChart] = useState(INIT_CHART);
 
   const setupRoute = (rid: number) =>
     fetchItem(rid).then((data) => {
@@ -75,8 +75,6 @@ const Page: React.FC<Props> = (props) => {
       setAdvancedMatchingRules(data.advancedMatchingRules);
       form2.setFieldsValue(data.form2Data);
       setStep3Data(data.step3Data);
-
-      setStep(3)
     });
 
   const onReset = () => {
@@ -156,9 +154,8 @@ const Page: React.FC<Props> = (props) => {
           data={step3Data}
           isForceHttps={form1.getFieldValue('redirectOption') === 'forceHttps'}
           isProxyEnable={getProxyRewriteEnable()}
-          onChange={({ plugins, script = INIT_CHART, plugin_config_id }) => {
+          onChange={({ plugins, script = {}, plugin_config_id }) => {
             setStep3Data({ plugins, script, plugin_config_id });
-            setChart(script);
           }}
         />
       );
@@ -211,16 +208,6 @@ const Page: React.FC<Props> = (props) => {
       }
     };
 
-    const savePlugins = () => {
-      if (Object.keys(chart.nodes || {}).length) {
-        // TODO: Transform FlowGraph data
-        const transformChart = {};
-        setStep3Data({ script: { ...transformChart, chart }, plugins: {} });
-      } else {
-        setStep3Data({ ...step3Data, script: {} });
-      }
-    };
-
     if (nextStep === 1) {
       setStep(nextStep);
     }
@@ -240,7 +227,7 @@ const Page: React.FC<Props> = (props) => {
           });
         });
       } else {
-        savePlugins();
+        // TODO: 进行插件数据地处理
         setStep(nextStep);
       }
       return;
@@ -258,7 +245,16 @@ const Page: React.FC<Props> = (props) => {
     }
 
     if (nextStep === 4) {
-      savePlugins();
+      if (FlowGraph.graph.toJSON().cells.length) {
+        const data = FlowGraph.convertToData()
+        if (!data) {
+          return
+        }
+        setStep3Data({ script: data, plugins: {} });
+      } else {
+        setStep3Data({ ...step3Data, script: {} });
+      }
+
       setStep(nextStep);
     }
 
