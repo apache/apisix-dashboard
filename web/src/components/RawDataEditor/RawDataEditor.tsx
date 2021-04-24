@@ -116,7 +116,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
                   try {
                     const editorData =
                       codeMirrorMode === codeMirrorModeList.JSON
-                        ? content
+                        ? JSON.parse(content)
                         : yaml2json(content, false).data;
                     onSubmit(editorData);
                   } catch (error) {

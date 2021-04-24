@@ -73,7 +73,7 @@ context('Test RawDataEditor', () => {
           .siblings()
           .contains('View')
           .click();
-      };
+      }
 
       cy.window().then(({ codemirror }) => {
         if (codemirror) {
