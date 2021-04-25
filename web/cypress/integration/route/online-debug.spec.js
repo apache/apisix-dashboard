@@ -55,7 +55,7 @@ context('Online debug', () => {
     debugFormDataType0: '[data-cy=debug-formdata-type-0]',
     debugFormDataValue0: '#dynamic_form_data_item_params_0_value',
     debugFormDataFileButton0: '[data-cy=debug-upload-btn-0]',
-    codeMirrorResp: '#codeMirror-response',
+    monacoResp: '#monaco-response',
     headerDataKey0: '#headerForm_params_0_key',
     headerDataValue0: '#headerForm_params_0_value',
     queryDataKey0: '#queryForm_params_0_key',
@@ -194,8 +194,8 @@ context('Online debug', () => {
 
     cy.wait('@DebugAPI');
     // assert: send request return
-    cy.get(domSelector.codeMirrorResp).contains('data').should('be.visible');
-    cy.get(domSelector.codeMirrorResp).contains('routes').should('be.visible');
+    cy.get(domSelector.monacoResp).contains('data').should('be.visible');
+    cy.get(domSelector.monacoResp).contains('routes').should('be.visible');
 
     // close debug drawer
     cy.get(this.domSelector.drawerClose).click();
@@ -224,7 +224,7 @@ context('Online debug', () => {
 
     cy.contains(routeLocaleUS['page.route.button.send']).click();
     cy.wait('@DebugAPI');
-    cy.get(domSelector.codeMirrorResp).within(() => {
+    cy.get(domSelector.monacoResp).within(() => {
       cy.get('.cm-property').should(($property) => {
         $property.map((i, el) => {
           if (Cypress.$(el).text() === '"name"') {
@@ -269,15 +269,15 @@ context('Online debug', () => {
 
     cy.contains('raw input').should('be.visible').click();
 
-    cy.window().then(({ codeMirror }) => {
-      if (codeMirror) {
-        codeMirror.setValue(JSON.stringify(this.routeData.debugPostJson));
+    cy.window().then(({ monaco }) => {
+      if (monaco) {
+        monaco.setValue(JSON.stringify(this.routeData.debugPostJson));
       }
       cy.contains(routeLocaleUS['page.route.button.send']).click();
     });
     cy.wait('@DebugAPI');
-    cy.get(domSelector.codeMirrorResp).contains('code').should('be.visible');
-    cy.get(domSelector.codeMirrorResp).within(() => {
+    cy.get(domSelector.monacoResp).contains('code').should('be.visible');
+    cy.get(domSelector.monacoResp).within(() => {
       cy.get('.cm-property').should(($property) => {
         $property.map((i, el) => {
           if (Cypress.$(el).text() === '"name"') {

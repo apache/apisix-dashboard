@@ -59,9 +59,9 @@ context('Create and delete consumer with limit-conn plugin form', () => {
     cy.focused(this.domSelector.drawer).should('exist');
     cy.get(this.domSelector.disabledSwitcher).click();
     // edit
-    cy.window().then(({ codemirror }) => {
-      if (codemirror) {
-        codemirror.setValue(JSON.stringify({ key: 'test' }));
+    cy.window().then(({ monaco }) => {
+      if (monaco) {
+        monaco.setValue(JSON.stringify({ key: 'test' }));
       }
       cy.contains('button', 'Submit').click();
     });

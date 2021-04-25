@@ -45,9 +45,9 @@ context('Test RawDataEditor', () => {
 
       const data = dateset[item];
 
-      cy.window().then(({ codemirror }) => {
-        if (codemirror) {
-          codemirror.setValue(JSON.stringify(data));
+      cy.window().then(({ monaco }) => {
+        if (monaco) {
+          monaco.setValue(JSON.stringify(data));
         }
         cy.get(domSelector.drawer).should('exist');
         cy.get(domSelector.drawer, { timeout }).within(() => {
@@ -75,12 +75,12 @@ context('Test RawDataEditor', () => {
           .click();
       }
 
-      cy.window().then(({ codemirror }) => {
-        if (codemirror) {
+      cy.window().then(({ monaco }) => {
+        if (monaco) {
           if (item === 'Consumer') {
-            codemirror.setValue(JSON.stringify({ ...data, desc: 'newDesc' }));
+            monaco.setValue(JSON.stringify({ ...data, desc: 'newDesc' }));
           } else {
-            codemirror.setValue(JSON.stringify({ ...data, name: 'newName' }));
+            monaco.setValue(JSON.stringify({ ...data, name: 'newName' }));
           }
         }
         cy.get(domSelector.drawer).should('exist');

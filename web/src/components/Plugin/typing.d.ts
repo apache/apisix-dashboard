@@ -31,5 +31,5 @@ declare namespace PluginComponent {
 
   type ReferPage = '' | 'route' | 'consumer' | 'service' | 'plugin';
 
-  type CodeMirrorMode = 'JSON' | 'YAML' | 'Form';
+  type MonacoLanguage = 'JSON' | 'YAML' | 'Form';
 }

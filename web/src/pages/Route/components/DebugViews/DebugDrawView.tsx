@@ -26,9 +26,9 @@ import { CopyOutlined } from "@ant-design/icons";
 import PanelSection from '@/components/PanelSection';
 
 import {
-  DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED,
+  DEBUG_BODY_MODE_SUPPORTED,
   DEBUG_BODY_TYPE_SUPPORTED,
-  DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED,
+  DEBUG_RESPONSE_BODY_MODE_SUPPORTED,
   DebugBodyFormDataValueType,
   DEFAULT_DEBUG_AUTH_FORM_DATA,
   DEFAULT_DEBUG_PARAM_FORM_DATA,
@@ -61,11 +61,11 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const [height,setHeight]=useState(50)
   const [bodyType, setBodyType] = useState('none');
   const methodWithoutBody = ['GET', 'HEAD'];
-  const [responseBodyCodeMirrorMode, setResponseBodyCodeMirrorMode] = useState(
-    DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode,
+  const [responseBodyMode, setResponseBodyMode] = useState(
+    DEBUG_RESPONSE_BODY_MODE_SUPPORTED[0].mode,
   );
-  const [bodyCodeMirrorMode, setBodyCodeMirrorMode] = useState(
-    DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode,
+  const [bodyMode, setBodyCodeMode] = useState(
+    DEBUG_BODY_MODE_SUPPORTED[0].mode,
   );
 
   enum DebugBodyType {
@@ -115,14 +115,14 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
       }
       case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput]:{
         let contentType = [''];
-        switch (bodyCodeMirrorMode){
-          case DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode:
+        switch (bodyMode){
+          case DEBUG_BODY_MODE_SUPPORTED[0].mode:
             contentType = ['application/json;charset=UTF-8'];
             break;
-          case DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[1].mode:
+          case DEBUG_BODY_MODE_SUPPORTED[1].mode:
             contentType = ['text/plain;charset=UTF-8'];
             break;
-          case DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[2].mode:
+          case DEBUG_BODY_MODE_SUPPORTED[2].mode:
             contentType = ['application/xml;charset=UTF-8'];
             break;
           default: break;
@@ -242,15 +242,15 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         setResponse(resp);
         const contentType=resp.header["Content-Type"];
         if (contentType == null || contentType.length !== 1) {
-          setResponseBodyCodeMirrorMode("TEXT");
+          setResponseBodyMode("TEXT");
         } else if (contentType[0].toLowerCase().indexOf("json") !== -1) {
-          setResponseBodyCodeMirrorMode("JSON");
+          setResponseBodyMode("JSON");
         } else if (contentType[0].toLowerCase().indexOf("xml") !== -1) {
-          setResponseBodyCodeMirrorMode("XML");
+          setResponseBodyMode("XML");
         } else if (contentType[0].toLowerCase().indexOf("html") !== -1) {
-          setResponseBodyCodeMirrorMode("HTML");
+          setResponseBodyMode("HTML");
         } else {
-          setResponseBodyCodeMirrorMode("TEXT");
+          setResponseBodyMode("TEXT");
         }
       })
       .catch(() => {
@@ -369,12 +369,12 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                   <Select
                     size="small"
                     onChange={(value) => {
-                      setBodyCodeMirrorMode(value);
+                      setBodyCodeMode(value);
                     }}
                     style={{ width: 100 }}
-                    defaultValue={bodyCodeMirrorMode}
+                    defaultValue={bodyMode}
                   >
-                    {DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED.map((modeObj) => (
+                    {DEBUG_BODY_MODE_SUPPORTED.map((modeObj) => (
                       <Option key={modeObj.name} value={modeObj.mode}>
                         {modeObj.name}
                       </Option>
@@ -394,11 +394,11 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                     <Form>
                       <Form.Item>
                         <MonacoEditor
-                          ref={(codemirror) => {
-                            if (codemirror) {
+                          ref={(monaco) => {
+                            if (monaco) {
                               // NOTE: for debug & test
                               // @ts-ignore
-                              window.codeMirror = codemirror.editor;
+                              window.monaco = monaco.editor;
                             }
                           }}
                           value={body}
@@ -407,7 +407,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                           editorWillMount={(monaco) => {
                             monaco?.languages.json.jsonDefaults.setDiagnosticsOptions({validate: false});
                           }}
-                          language={bodyCodeMirrorMode}
+                          language={bodyMode}
                           options={{
                             scrollbar:{
                               vertical: 'hidden',
@@ -433,10 +433,10 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
               <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="response">
                 <Select
                   disabled={response == null}
-                  value={responseBodyCodeMirrorMode}
-                  onSelect={(mode) => setResponseBodyCodeMirrorMode(mode as string)}>
+                  value={responseBodyMode}
+                  onSelect={(mode) => setResponseBodyMode(mode as string)}>
                   {
-                    DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED.map(mode => {
+                    DEBUG_RESPONSE_BODY_MODE_SUPPORTED.map(mode => {
                       return <Option value={mode.mode}>{mode.name}</Option>
                     })
                   }
@@ -458,11 +458,11 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                     <CopyOutlined/>
                   </Button>
                 </CopyToClipboard>
-                <div id='codeMirror-response' style={{marginTop:16,flexGrow:1}}>
+                <div id='monaco-response' style={{marginTop:16,flexGrow:1}}>
                   <MonacoEditor
                     value={response ? response.data : ""}
                     height={height}
-                    language={responseBodyCodeMirrorMode.toLowerCase()}
+                    language={responseBodyMode.toLowerCase()}
                     editorDidMount={handleEditorMount}
                     editorWillMount={(monaco) => {
                       monaco?.languages.json.jsonDefaults.setDiagnosticsOptions({validate: false});

@@ -49,7 +49,7 @@ context('Create and Delete Service ', () => {
       cy.get(this.domSelector.checkedSwitcher).should('exist');
     });
 
-    cy.get(this.domSelector.codeMirrorMode).click();
+    cy.get(this.domSelector.monacoMode).click();
     cy.get(this.domSelector.selectDropdown).should('be.visible');
     cy.get(this.domSelector.selectJSON).click();
     cy.contains('button', 'Submit').click();

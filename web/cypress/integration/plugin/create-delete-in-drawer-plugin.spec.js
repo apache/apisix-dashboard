@@ -37,9 +37,9 @@ context('Delete Plugin List with the Drawer', () => {
       });
     });
 
-    cy.get(this.domSelector.codeMirrorMode).invoke('text').then(text => {
+    cy.get(this.domSelector.monacoMode).invoke('text').then(text => {
       if (text === 'Form') {
-        cy.get(this.domSelector.codeMirrorMode).click();
+        cy.get(this.domSelector.monacoMode).click();
         cy.get(this.domSelector.selectDropdown).should('be.visible');
         cy.get(this.domSelector.selectJSON).click();
       }

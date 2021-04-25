@@ -33,24 +33,24 @@ type Props = {
   onSubmit?: (data: Record<string, any>) => void;
 };
 
-enum codeMirrorModeList {
+enum monacoLanguageList {
   JSON = 'JSON',
   YAML = 'YAML',
 }
 
 const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data = {}, onClose = () => { }, onSubmit = () => { } }) => {
   const { formatMessage } = useIntl();
-  const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
-    codeMirrorModeList.JSON,
+  const [monacoLanguage, setMonacoLanguage] = useState<PluginComponent.MonacoLanguage>(
+    monacoLanguageList.JSON,
   );
   const [content, setContent] = useState('')
 
   useEffect(() => {
-    switch (codeMirrorMode) {
-      case codeMirrorModeList.JSON:
+    switch (monacoLanguage) {
+      case monacoLanguageList.JSON:
         setContent(JSON.stringify(data, null, 4));
         break;
-      case codeMirrorModeList.YAML: {
+      case monacoLanguageList.YAML: {
         const {data: yamlData} = json2yaml(JSON.stringify(data, null, 4));
         setContent(yamlData)
         break;
@@ -60,17 +60,17 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
   }, [data])
 
   useEffect(() => {
-    setCodeMirrorMode(codeMirrorModeList.JSON);
+    setMonacoLanguage(monacoLanguageList.JSON);
   }, [visible])
 
   const modeOptions = [
-    { label: codeMirrorModeList.JSON, value: codeMirrorModeList.JSON },
-    { label: codeMirrorModeList.YAML, value: codeMirrorModeList.YAML },
+    { label: monacoLanguageList.JSON, value: monacoLanguageList.JSON },
+    { label: monacoLanguageList.YAML, value: monacoLanguageList.YAML },
   ];
 
-  const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
+  const handleModeChange = (value: PluginComponent.MonacoLanguage) => {
     switch (value) {
-      case codeMirrorModeList.JSON:
+      case monacoLanguageList.JSON:
         setContent(c => {
           const {data:jsonData,error} = yaml2json(c, true);
           if (error){
@@ -80,7 +80,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
           return js_beautify(jsonData, {indent_size: 4});
         })
         break;
-      case codeMirrorModeList.YAML:
+      case monacoLanguageList.YAML:
         setContent(c => {
           const {data:yamlData,error} = json2yaml(c);
           if (error){
@@ -92,7 +92,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
         break;
       default:
     }
-    setCodeMirrorMode(value)
+    setMonacoLanguage(value)
   };
 
   return (
@@ -115,7 +115,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
                 onClick={() => {
                   try {
                     const editorData =
-                      codeMirrorMode === codeMirrorModeList.JSON
+                      monacoLanguage === monacoLanguageList.JSON
                         ? JSON.parse(content)
                         : yaml2json(content, false).data;
                     onSubmit(editorData);
@@ -136,13 +136,13 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
           title=""
           extra={[
             <Select
-              defaultValue={codeMirrorModeList.JSON}
-              value={codeMirrorMode}
+              defaultValue={monacoLanguageList.JSON}
+              value={monacoLanguage}
               options={modeOptions}
-              onChange={(value: PluginComponent.CodeMirrorMode) => {
+              onChange={(value: PluginComponent.MonacoLanguage) => {
                 handleModeChange(value);
               }}
-              data-cy='code-mirror-mode'
+              data-cy='monaco-language'
             />,
             <CopyToClipboard text={content} onCopy={(_: string, result: boolean) => {
               if (!result) {
@@ -174,11 +174,11 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
           ]}
         />
         <MonacoEditor
-          ref={(codemirror) => {
-            if (codemirror) {
+          ref={(monaco) => {
+            if (monaco) {
               // NOTE: for debug & test
               // @ts-ignore
-              window.codemirror = codemirror.editor;
+              window.monaco = monaco.editor;
             }
           }}
           value={content}
@@ -186,7 +186,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
           editorWillMount={(monaco)=>{
             monaco?.languages.json.jsonDefaults.setDiagnosticsOptions({ validate: false });
           }}
-          language={codeMirrorMode.toLocaleLowerCase()}
+          language={monacoLanguage.toLocaleLowerCase()}
           options={{
             scrollbar:{
               vertical: 'hidden',

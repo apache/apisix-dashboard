@@ -15,7 +15,6 @@
   "tableCell": ".ant-table-cell",
   "empty": ".ant-empty-normal",
   "refresh": ".anticon-reload",
-  "codemirror": ".CodeMirror",
   "disabledSwitcher": "#disable",
   "checkedSwitcher": ".ant-switch-checked",
   "deleteButton": ".ant-btn-dangerous",
@@ -59,7 +58,7 @@
   "passwordInput": "#control-ref_password",
   "drawer": ".ant-drawer-content",
   "drawerFooter": ".ant-drawer-footer",
-  "codemirrorScroll": ".CodeMirror-scroll",
+  "monacoScroll": ".monaco-scrollable-element",
   "drawerClose": ".ant-drawer-close",
   "descriptionSelector": "[title=Description]",
   "customSelector": "[title=Custom]",
@@ -73,7 +72,7 @@
   "pageTwo": ".ant-pagination-item-2",
   "pageTwoActived": ".ant-pagination-item-2.ant-pagination-item-active",
   "selectDropdown": ".ant-select-dropdown",
-  "codeMirrorMode": "[data-cy='code-mirror-mode']",
+  "monacoMode": "[data-cy='monaco-mode']",
   "selectJSON": ".ant-select-dropdown [label=JSON]",
   "deleteAlert": ".ant-modal-body"
 }

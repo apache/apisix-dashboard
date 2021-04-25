@@ -42,7 +42,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
     switch: '#disable',
     close: '.anticon-close',
     selectDropdown: '.ant-select-dropdown',
-    codeMirrorMode: '[data-cy="code-mirror-mode"]',
+    monacoMode: '[data-cy="monaco-mode"]',
     selectJSON: '.ant-select-dropdown [label=JSON]'
   };
 
@@ -67,11 +67,11 @@ Cypress.Commands.add('configurePlugins', (cases) => {
         // NOTE: wait for the Drawer to appear on the DOM
         cy.focused(domSelector.drawer).should('exist');
 
-        cy.get(domSelector.codeMirrorMode).invoke('text').then(text => {
+        cy.get(domSelector.monacoMode).invoke('text').then(text => {
           if (text === 'Form') {
             cy.wait(5000);
-            cy.get(domSelector.codeMirrorMode).should('be.visible');
-            cy.get(domSelector.codeMirrorMode).click();
+            cy.get(domSelector.monacoMode).should('be.visible');
+            cy.get(domSelector.monacoMode).click();
             cy.get(domSelector.selectDropdown).should('be.visible');
             cy.get(domSelector.selectJSON).click();
           }
@@ -83,20 +83,20 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           });
         });
 
-        cy.get(domSelector.codeMirrorMode).invoke('text').then(text => {
+        cy.get(domSelector.monacoMode).invoke('text').then(text => {
           if (text === 'Form') {
             // FIXME: https://github.com/cypress-io/cypress/issues/7306
             cy.wait(5000);
-            cy.get(domSelector.codeMirrorMode).should('be.visible');
-            cy.get(domSelector.codeMirrorMode).click();
+            cy.get(domSelector.monacoMode).should('be.visible');
+            cy.get(domSelector.monacoMode).click();
             cy.get(domSelector.selectDropdown).should('be.visible');
             cy.get(domSelector.selectJSON).click();
           }
         });
 
-        cy.window().then(({ codemirror }) => {
-          if (codemirror) {
-            codemirror.setValue(JSON.stringify(data));
+        cy.window().then(({ monaco }) => {
+          if (monaco) {
+            monaco.setValue(JSON.stringify(data));
           }
 
           cy.get(domSelector.drawer, { timeout }).within(() => {
