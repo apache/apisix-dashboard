@@ -21,6 +21,7 @@ export default {
   'page.upstream.step.input.domain.name.or.ip': 'Please enter domain or IP',
   'page.upstream.step.valid.domain.name.or.ip': 'Please enter valid a domain or IP',
   'page.upstream.step.domain.name.or.ip': 'Hostname or IP',
+  'page.upstream.step.host': 'Host',
   'page.upstream.step.input.port': 'Please enter port number',
   'page.upstream.step.port': 'Port',
   'page.upstream.step.input.weight': 'Please enter weight',
