@@ -46,6 +46,9 @@ var (
 	WorkDir          = "."
 	ServerHost       = "0.0.0.0"
 	ServerPort       = 80
+	SSLPort          = 443
+	SSLCert          string
+	SSLKey           string
 	ETCDConfig       *Etcd
 	ErrorLogLevel    = "warn"
 	ErrorLogPath     = "logs/error.log"
@@ -73,6 +76,12 @@ type Etcd struct {
 	Prefix    string
 }
 
+type SSL struct {
+	Port int
+	Cert string `yaml:"cert"`
+	Key  string `yaml:"key"`
+}
+
 type Listen struct {
 	Host string
 	Port int
@@ -95,6 +104,7 @@ type Log struct {
 type Conf struct {
 	Etcd      Etcd
 	Listen    Listen
+	SSL       SSL
 	Log       Log
 	AllowList []string `yaml:"allow_list"`
 	MaxCpu    int      `yaml:"max_cpu"`
@@ -152,9 +162,19 @@ func setConf() {
 		if config.Conf.Listen.Port != 0 {
 			ServerPort = config.Conf.Listen.Port
 		}
-
 		if config.Conf.Listen.Host != "" {
 			ServerHost = config.Conf.Listen.Host
+		}
+
+		// SSL
+		if config.Conf.SSL.Port != 0 {
+			SSLPort = config.Conf.SSL.Port
+		}
+		if config.Conf.SSL.Cert != "" {
+			SSLCert = config.Conf.SSL.Cert
+		}
+		if config.Conf.SSL.Key != "" {
+			SSLKey = config.Conf.SSL.Key
 		}
 
 		// for etcd

@@ -124,6 +124,24 @@ func NewManagerAPICommand() *cobra.Command {
 				}
 			}()
 
+			// HTTPS
+			if conf.SSLCert != "" && conf.SSLKey != "" {
+				addrSSL := fmt.Sprintf("%s:%d", conf.ServerHost, conf.SSLPort)
+				serverSSL := &http.Server{
+					Addr:         addrSSL,
+					Handler:      r,
+					ReadTimeout:  time.Duration(1000) * time.Millisecond,
+					WriteTimeout: time.Duration(5000) * time.Millisecond,
+				}
+				go func() {
+					err := serverSSL.ListenAndServeTLS(conf.SSLCert, conf.SSLKey)
+					if err != nil && err != http.ErrServerClosed {
+						utils.CloseAll()
+						log.Fatalf("listen and serv fail: %s", err)
+					}
+				}()
+			}
+
 			printInfo()
 
 			sig := <-quit
