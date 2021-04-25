@@ -458,7 +458,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                     <CopyOutlined/>
                   </Button>
                 </CopyToClipboard>
-                <div id='monaco-response' style={{marginTop:16,flexGrow:1}}>
+                <div id='monaco-response' style={{marginTop:16}}>
                   <MonacoEditor
                     value={response ? response.data : ""}
                     height={height}
