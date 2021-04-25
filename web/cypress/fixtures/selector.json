@@ -30,6 +30,7 @@
   "nameSearch": "[title=Name]",
   "description": "#desc",
   "upstreamSelector": "[data-cy=upstream_selector]",
+  "upstreamNodeMinus0": "[data-cy=upstream-node-minus-0]",
   "addHost": "[data-cy=addHost]",
   "hosts_1": "#hosts_1",
   "remoteHost": "#remote_addrs_0",
