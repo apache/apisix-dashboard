@@ -26,7 +26,7 @@ const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   chainWebpack: (memo) => {
     memo.plugin('monaco-editor-webpack-plugin').use(MonacoWebpackPlugin, [
-      { languages: ['json', 'yaml']}
+      { languages: ['html', 'json', 'xml', 'yaml']}
     ]);
     return memo;
   },

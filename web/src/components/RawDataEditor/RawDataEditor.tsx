@@ -183,6 +183,9 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
           }}
           value={content}
           onChange={setContent}
+          editorWillMount={(monaco)=>{
+            monaco?.languages.json.jsonDefaults.setDiagnosticsOptions({ validate: false });
+          }}
           language={codeMirrorMode.toLocaleLowerCase()}
           options={{
             scrollbar:{

@@ -269,9 +269,9 @@ context('Online debug', () => {
 
     cy.contains('raw input').should('be.visible').click();
 
-    cy.window().then(({ codeMirrorBody }) => {
-      if (codeMirrorBody) {
-        codeMirrorBody.setValue(JSON.stringify(this.routeData.debugPostJson));
+    cy.window().then(({ codeMirror }) => {
+      if (codeMirror) {
+        codeMirror.setValue(JSON.stringify(this.routeData.debugPostJson));
       }
       cy.contains(routeLocaleUS['page.route.button.send']).click();
     });

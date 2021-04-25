@@ -1291,13 +1291,6 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@7.13.10":
-  version "7.13.10"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.13.10.tgz#47d42a57b6095f4468da440388fdbad8bebf0d7d"
-  integrity sha512-4QPkjJq6Ns3V/RgpEahRk+AGfL0eO6RHHtTWoNNr5mO49G6B5+X6d6THgWEAvTrznU5xYpbAlVKRYcsCgh/Akw==
-  dependencies:
-    regenerator-runtime "^0.13.4"
-
 "@babel/runtime@7.3.1":
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.3.1.tgz#574b03e8e8a9898eaf4a872a92ea20b7846f6f2a"
@@ -2592,14 +2585,6 @@
   dependencies:
     "@typescript-eslint/types" "4.22.0"
     eslint-visitor-keys "^2.0.0"
-
-"@uiw/react-codemirror@^3.0.5":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/@uiw/react-codemirror/-/react-codemirror-3.0.6.tgz#62a2d2a9e970be07e091268adc71129a36d5ba2e"
-  integrity sha512-v0JT40Xl2w/dev8lXHzItCmq/Rtx8txFCTk4RrYWN0jWxT8AUIFPn8EH0yMWYtiEBYCtZ/lAKdDJIVHCoS63jw==
-  dependencies:
-    "@babel/runtime" "7.13.10"
-    codemirror "5.60.0"
 
 "@umijs/ast@3.4.11":
   version "3.4.11"
@@ -4983,11 +4968,6 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
-
-codemirror@5.60.0:
-  version "5.60.0"
-  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.60.0.tgz#00a8cfd287d5d8737ceb73987f04aee2fe5860da"
-  integrity sha512-AEL7LhFOlxPlCL8IdTcJDblJm8yrAGib7I+DErJPdZd4l6imx8IMgKK3RblVgBQqz3TZJR4oknQ03bz+uNjBYA==
 
 coffeeify@3.0.1:
   version "3.0.1"

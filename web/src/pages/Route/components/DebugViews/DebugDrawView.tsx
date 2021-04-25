@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Drawer, Form, Input, notification, Radio, Select, Spin, Tabs } from 'antd';
 import { useIntl } from 'umi';
-import CodeMirror from '@uiw/react-codemirror';
 import queryString from 'query-string';
 import Base64 from 'base-64';
 import urlRegexSafe from 'url-regex-safe';
@@ -27,18 +26,20 @@ import { CopyOutlined } from "@ant-design/icons";
 import PanelSection from '@/components/PanelSection';
 
 import {
-  HTTP_METHOD_OPTION_LIST,
-  DEFAULT_DEBUG_PARAM_FORM_DATA,
-  DEFAULT_DEBUG_AUTH_FORM_DATA,
-  PROTOCOL_SUPPORTED,
-  DEBUG_BODY_TYPE_SUPPORTED,
   DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED,
+  DEBUG_BODY_TYPE_SUPPORTED,
   DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED,
   DebugBodyFormDataValueType,
+  DEFAULT_DEBUG_AUTH_FORM_DATA,
+  DEFAULT_DEBUG_PARAM_FORM_DATA,
+  HTTP_METHOD_OPTION_LIST,
+  PROTOCOL_SUPPORTED,
 } from '../../constants';
-import { DebugParamsView, AuthenticationView, DebugFormDataView } from '.';
+import { AuthenticationView, DebugFormDataView, DebugParamsView } from '.';
 import { debugRoute } from '../../service';
 import styles from './index.less';
+import MonacoEditor from "react-monaco-editor";
+import type * as monacoEditor from "monaco-editor";
 
 const { Option } = Select;
 const { Search } = Input;
@@ -56,8 +57,8 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const [headerForm] = Form.useForm();
   const [response, setResponse] = useState<RouteModule.debugResponse | null>()
   const [loading, setLoading] = useState(false);
-  const [codeMirrorHeight, setCodeMirrorHeight] = useState<number | string>(50);
-  const bodyCodeMirrorRef = useRef<any>(null);
+  const [body, setBody] = useState('');
+  const [height,setHeight]=useState(50)
   const [bodyType, setBodyType] = useState('none');
   const methodWithoutBody = ['GET', 'HEAD'];
   const [responseBodyCodeMirrorMode, setResponseBodyCodeMirrorMode] = useState(
@@ -128,7 +129,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         }
 
         return {
-          bodyFormData: bodyCodeMirrorRef.current.editor.getValue(),
+          bodyFormData: body,
           header: {
             'Content-type': contentType
           }
@@ -251,12 +252,24 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         } else {
           setResponseBodyCodeMirrorMode("TEXT");
         }
-        setCodeMirrorHeight('auto');
       })
       .catch(() => {
         setLoading(false);
       });
   };
+
+  const handleEditorMount = (editor: monacoEditor.editor.IStandaloneCodeEditor, monaco: typeof monacoEditor) => {
+    editor.onDidChangeModelDecorations(() => {
+      if (!editor.getDomNode()) {
+        return;
+      }
+      const padding = 40;
+      const lineHeight = editor.getOption(monaco.editor.EditorOption.lineHeight);
+      const lineCount = editor.getModel()?.getLineCount() || 1;
+      setHeight(editor.getTopForLineNumber(lineCount + 1) + lineHeight + padding);
+    })
+  };
+
   return (
     <Drawer
       title={formatMessage({ id: 'page.route.onlineDebug' })}
@@ -321,7 +334,6 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             onChange={(e) => {
               if (e.currentTarget.value === '') {
                 resetForms();
-                setCodeMirrorHeight(50);
               }
             }}
           />
@@ -381,23 +393,28 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput] && (
                     <Form>
                       <Form.Item>
-                        <CodeMirror
+                        <MonacoEditor
                           ref={(codemirror) => {
-                            bodyCodeMirrorRef.current = codemirror;
                             if (codemirror) {
                               // NOTE: for debug & test
-                              window.codeMirrorBody = codemirror.editor;
+                              // @ts-ignore
+                              window.codeMirror = codemirror.editor;
                             }
                           }}
+                          value={body}
+                          onChange={setBody}
                           height={250}
+                          editorWillMount={(monaco) => {
+                            monaco?.languages.json.jsonDefaults.setDiagnosticsOptions({validate: false});
+                          }}
+                          language={bodyCodeMirrorMode}
                           options={{
-                            mode: bodyCodeMirrorMode,
-                            readOnly: '',
-                            lineWrapping: true,
-                            lineNumbers: true,
-                            showCursorWhenSelecting: true,
-                            autofocus: true,
-                            scrollbarStyle: null,
+                            scrollbar:{
+                              vertical: 'hidden',
+                              horizontal: 'hidden',
+                            },
+                            wordWrap: "on",
+                            minimap: {enabled: false},
                           }}
                         />
                       </Form.Item>
@@ -411,8 +428,8 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         <PanelSection title={formatMessage({ id: 'page.route.PanelSection.title.responseResult' })}>
           <Spin tip="Loading..." spinning={loading}>
             <Tabs tabBarExtraContent={
-              response ? response.message : formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })
-            }>
+                response ? response.message : formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })
+              }>
               <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="response">
                 <Select
                   disabled={response == null}
@@ -441,18 +458,24 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                     <CopyOutlined/>
                   </Button>
                 </CopyToClipboard>
-                <div id='codeMirror-response' style={{marginTop:16}}>
-                  <CodeMirror
+                <div id='codeMirror-response' style={{marginTop:16,flexGrow:1}}>
+                  <MonacoEditor
                     value={response ? response.data : ""}
-                    height={codeMirrorHeight}
+                    height={height}
+                    language={responseBodyCodeMirrorMode.toLowerCase()}
+                    editorDidMount={handleEditorMount}
+                    editorWillMount={(monaco) => {
+                      monaco?.languages.json.jsonDefaults.setDiagnosticsOptions({validate: false});
+                    }}
                     options={{
-                      mode: responseBodyCodeMirrorMode,
-                      readOnly: 'nocursor',
-                      lineWrapping: true,
-                      lineNumbers: true,
-                      showCursorWhenSelecting: true,
-                      autofocus: true,
-                      scrollbarStyle: null,
+                      automaticLayout:true,
+                      scrollbar:{
+                        vertical: 'hidden',
+                        horizontal: 'hidden',
+                      },
+                      wordWrap: "on",
+                      minimap: {enabled: false},
+                      readOnly: true,
                     }}
                   />
                 </div>

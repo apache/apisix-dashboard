@@ -175,16 +175,16 @@ export const DEBUG_BODY_TYPE_SUPPORTED: RouteModule.DebugBodyType[] = [
 
 // Note: codemirror mode: apl for text; javascript for json(need to format); xml for xml;
 export const DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED = [
-  { name: 'JSON', mode: 'javascript' },
-  { name: 'TEXT', mode: 'apl' },
+  { name: 'JSON', mode: 'json' },
+  { name: 'TEXT', mode: 'text' },
   { name: 'XML', mode: 'xml' },
 ];
 
 export const DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED = [
-  { name: 'JSON', mode: 'javascript' },
+  { name: 'JSON', mode: 'json' },
   { name: 'XML', mode: 'xml' },
   { name: 'HTML', mode: 'html' },
-  { name: 'TEXT', mode: 'apl' },
+  { name: 'TEXT', mode: 'text' },
 ];
 
 export const EXPORT_FILE_MIME_TYPE_SUPPORTED = ['application/json', 'application/x-yaml'];
