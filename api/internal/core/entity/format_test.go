@@ -151,3 +151,29 @@ func TestNodesFormat_empty_map(t *testing.T) {
 	jsonStr := string(res)
 	assert.Contains(t, jsonStr, `[]`)
 }
+
+func TestNodesFormat_no_nodes(t *testing.T) {
+	// route data saved in ETCD
+	routeStr := `{
+		"uris": ["/*"],
+		"upstream": {
+			"type": "roundrobin",
+			"service_name": "USER-SERVICE",
+			"discovery_type": "eureka"
+		}
+	}`
+
+	// bind struct
+	var route Route
+	err := json.Unmarshal([]byte(routeStr), &route)
+	assert.Nil(t, err)
+
+	// nodes format
+	nodes := NodesFormat(route.Upstream.Nodes)
+
+	// json encode for client
+	res, err := json.Marshal(nodes)
+	assert.Nil(t, err)
+	jsonStr := string(res)
+	assert.Contains(t, jsonStr, `null`)
+}
