@@ -1899,22 +1899,6 @@
   dependencies:
     extend "3.0.2"
 
-"@monaco-editor/loader@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@monaco-editor/loader/-/loader-1.0.1.tgz#7068c9b07bbc65387c0e7a4df6dac0a326155905"
-  integrity sha512-hycGOhLqLYjnD0A/FHs56covEQWnDFrSnm/qLKkB/yoeayQ7ju+Vaj4SdTojGrXeY6jhMDx59map0+Jqwquh1Q==
-  dependencies:
-    state-local "^1.0.6"
-
-"@monaco-editor/react@^4.1.2":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-4.1.2.tgz#545db1a05dd677ebf6d8608d1b797a7227118a8b"
-  integrity sha512-srIlPCtUio3mrxx3kCsz4KaJY3TkVIwx7aPf63VMOM7qxeURfDdAE5ujifnHdw07W6Q3Vmaa7Yd9zeG8VenjYA==
-  dependencies:
-    "@monaco-editor/loader" "^1.0.1"
-    prop-types "^15.7.2"
-    state-local "^1.0.7"
-
 "@mrblenny/react-flow-chart@^0.0.14":
   version "0.0.14"
   resolved "https://registry.yarnpkg.com/@mrblenny/react-flow-chart/-/react-flow-chart-0.0.14.tgz#be11d06345c7222b41f488b38011b109e48a04b3"
@@ -14453,11 +14437,6 @@ start-server-and-test@^1.11.5:
     lazy-ass "1.6.0"
     ps-tree "1.2.0"
     wait-on "5.3.0"
-
-state-local@^1.0.6, state-local@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/state-local/-/state-local-1.0.7.tgz#da50211d07f05748d53009bee46307a37db386d5"
-  integrity sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==
 
 state-toggle@^1.0.0:
   version "1.0.3"
