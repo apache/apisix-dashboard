@@ -63,7 +63,7 @@ context('Create and Delete Consumer', () => {
     cy.contains(this.data.consumerName).siblings().contains('View').click();
     cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get('.monaco-scrollable-element').within(() => {
+    cy.get(this.domSelector.monacoScroll).within(() => {
       cy.contains('plugins').should('exist');
       cy.contains(this.data.consumerName).should('exist');
     });

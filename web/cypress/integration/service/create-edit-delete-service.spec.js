@@ -83,7 +83,7 @@ context('Create and Delete Service ', () => {
     cy.contains(this.data.serviceName).siblings().contains('View').click();
     cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get('.monaco-scrollable-element').within(() => {
+    cy.get(this.domSelector.monacoScroll).within(() => {
       cy.contains('upstream').should('exist');
       cy.contains(this.data.serviceName).should('exist');
     });
@@ -113,7 +113,7 @@ context('Create and Delete Service ', () => {
     cy.contains(this.data.serviceName2).siblings().contains('View').click();
     cy.get(this.domSelector.drawer).should('be.visible');
 
-    cy.get('.monaco-scrollable-element').within(() => {
+    cy.get(this.domSelector.monacoScroll).within(() => {
       cy.contains('upstream').should('exist');
       cy.contains(this.data.serviceName2).should('exist');
     });
