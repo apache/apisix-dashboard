@@ -54,7 +54,7 @@ $ docker build -t apisix-dashboard:$tag . --build-arg APISIX_DASHBOARD_VERSION=m
 
 Before starting the container, the configuration file `conf.yaml` needs to be prepared inside the **host** to override the default [configuration file](../../../api/conf/conf.yaml) inside the container.
 
-Kindly note:
+**Kindly note:**
 
 - Only when `conf.listen.host` is `0.0.0.0` can the external network access the services within the container.
 - `conf.etcd.endpoints` must be able to access the `etcd` service within the container. For example: use `host.docker.internal:2379` so that the container can access `etcd` on the host network.
