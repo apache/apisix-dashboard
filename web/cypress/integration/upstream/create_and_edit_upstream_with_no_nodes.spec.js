@@ -51,7 +51,9 @@ context('Create and Delete Upstream', () => {
 
       cy.get(this.domSelector.upstreamNodeMinus0).should('not.exist');
       cy.contains('Next').click();
-      cy.contains('Submit').click();
+      cy.contains('Submit').click({
+        force: true,
+      });
 
       cy.get(this.domSelector.notification).should('contain', this.data.configureUpstreamSuccess);
       cy.url().should('contains', 'upstream/list');
