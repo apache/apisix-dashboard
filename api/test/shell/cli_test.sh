@@ -477,7 +477,7 @@ if [[ `echo $(sudo ./manager-api status) | grep -c "Service is stopped"` -ne "1"
   echo "error while stopping the service"
   exit 1
 fi
-# restarting the service
+# restart the service
 # 1 time OK for just for starting
 if [[ `echo $(sudo ./manager-api start) | grep -c "OK"` -ne "1" ]]; then
   echo "error while restarting the service"
