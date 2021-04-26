@@ -279,12 +279,12 @@ if [[ $KERNEL = "Darwin" ]]; then
   sed -i "" 's@# ssl:@ssl:@' conf/conf.yaml
   sed -i "" 's@#   port: 9001@  port: 9001@' conf/conf.yaml
   sed -i "" "s@#   cert: \"/tmp/cert/example.crt\"@  cert: \"$currentDir/test/certs/test2.crt\"@" conf/conf.yaml
-  sed -i "" "s@#   cert: \"/tmp/cert/example.key\"@  cert: \"$currentDir/test/certs/test2.key\"@" conf/conf.yaml
+  sed -i "" "s@#   key:  \"/tmp/cert/example.key\"@  cert: \"$currentDir/test/certs/test2.key\"@" conf/conf.yaml
 else
   sed -i 's@# ssl:@ssl:@' conf/conf.yaml
   sed -i 's@#   port: 9001@  port: 9001@' conf/conf.yaml
   sed -i "s@#   cert: \"/tmp/cert/example.crt\"@  cert: \"$currentDir/test/certs/test2.crt\"@" conf/conf.yaml
-  sed -i "s@#   cert: \"/tmp/cert/example.key\"@  cert: \"$currentDir/test/certs/test2.key\"@" conf/conf.yaml
+  sed -i "s@#   key:  \"/tmp/cert/example.key\"@  key: \"$currentDir/test/certs/test2.key\"@" conf/conf.yaml
 fi
 
 ./manager-api &
