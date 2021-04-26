@@ -15,14 +15,18 @@
 # limitations under the License.
 #
 
+# yamllint disable rule:comments-indentation
 conf:
-  listen:                 # yamllint disable rule:comments-indentation
+  listen:
     # host: 127.0.0.1     # the address on which the `Manager API` should listen.
                           # The default value is 0.0.0.0, if want to specify, please enable it.
                           # This value accepts IPv4, IPv6, and hostname.
     port: 9000            # The port on which the `Manager API` should listen.
+
   # ssl:
-  #   port: 9001       # The port on which the `Manager API` should listen for HTTPS.
+  #   host: 127.0.0.1     # the address on which the `Manager API` should listen for HTTPS.
+                          # The default value is 0.0.0.0, if want to specify, please enable it.
+  #   port: 9001            # The port on which the `Manager API` should listen for HTTPS.
   #   cert: "/tmp/cert/example.crt" # Path of your SSL cert.
   #   key:  "/tmp/cert/example.key"  # Path of your SSL key.
 

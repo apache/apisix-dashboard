@@ -46,6 +46,7 @@ var (
 	WorkDir          = "."
 	ServerHost       = "0.0.0.0"
 	ServerPort       = 80
+	SSLHost          = "0.0.0.0"
 	SSLPort          = 443
 	SSLCert          string
 	SSLKey           string
@@ -77,7 +78,8 @@ type Etcd struct {
 }
 
 type SSL struct {
-	Port int
+	Host string `yaml:"host"`
+	Port int    `yaml:"port"`
 	Cert string `yaml:"cert"`
 	Key  string `yaml:"key"`
 }
