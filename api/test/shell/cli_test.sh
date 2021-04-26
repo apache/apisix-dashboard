@@ -291,7 +291,7 @@ fi
 sleep 3
 
 # access by HTTPS
-code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} --resolve 'www.test2.com:9001:127.0.0.1' http://www.test2.com:9001)
+code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} --resolve 'www.test2.com:9001:127.0.0.1' https://www.test2.com:9001)
 if [ ! $code -eq 200 ]; then
     echo "failed: verify HTTPS failed"
     exit 1
