@@ -20,9 +20,11 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -130,7 +132,7 @@ func NewManagerAPICommand() *cobra.Command {
 
 			// HTTPS
 			if conf.SSLCert != "" && conf.SSLKey != "" {
-				addrSSL := fmt.Sprintf("%s:%d", conf.ServerHost, conf.SSLPort)
+				addrSSL := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.SSLPort))
 				serverSSL := &http.Server{
 					Addr:         addrSSL,
 					Handler:      r,
