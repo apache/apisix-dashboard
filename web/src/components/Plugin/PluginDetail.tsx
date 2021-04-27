@@ -53,7 +53,7 @@ type Props = {
   visible: boolean;
   maskClosable?: boolean;
   onClose?: () => void;
-  onChange?: (data: any) => void;
+  onChange?: (data: PluginComponent.PluginDetailValues) => void;
 };
 
 const ajv = new Ajv();
