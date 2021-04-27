@@ -35,13 +35,13 @@ import { LinkOutlined } from '@ant-design/icons';
 import Ajv from 'ajv';
 import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
+import MonacoEditor from "react-monaco-editor";
+import type * as monacoEditor from "monaco-editor";
 
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '@/helpers';
 import { PluginForm, PLUGIN_UI_LIST } from './UI';
 import { PluginType } from './data';
-import MonacoEditor from "react-monaco-editor";
-import type * as monacoEditor from "monaco-editor";
 
 type Props = {
   name: string;

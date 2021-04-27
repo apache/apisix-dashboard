@@ -22,6 +22,8 @@ import Base64 from 'base-64';
 import urlRegexSafe from 'url-regex-safe';
 import CopyToClipboard from "react-copy-to-clipboard";
 import { CopyOutlined } from "@ant-design/icons";
+import MonacoEditor from "react-monaco-editor";
+import type * as monacoEditor from "monaco-editor";
 
 import PanelSection from '@/components/PanelSection';
 
@@ -38,8 +40,6 @@ import {
 import { AuthenticationView, DebugFormDataView, DebugParamsView } from '.';
 import { debugRoute } from '../../service';
 import styles from './index.less';
-import MonacoEditor from "react-monaco-editor";
-import type * as monacoEditor from "monaco-editor";
 
 const { Option } = Select;
 const { Search } = Input;
@@ -428,8 +428,8 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         <PanelSection title={formatMessage({ id: 'page.route.PanelSection.title.responseResult' })}>
           <Spin tip="Loading..." spinning={loading}>
             <Tabs tabBarExtraContent={
-                response ? response.message : formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })
-              }>
+              response ? response.message : formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })
+            }>
               <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="response">
                 <Select
                   disabled={response == null}
