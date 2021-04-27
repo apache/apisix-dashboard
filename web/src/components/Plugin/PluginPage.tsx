@@ -258,7 +258,6 @@ const PluginPage: React.FC<Props> = ({
         if (shouldDelete === true) {
           newPlugins = omit(newPlugins, name);
         }
-        console.log(newPlugins);
         onChange(newPlugins, form.getFieldValue('plugin_config_id'));
         setPlugins(newPlugins);
         setName(NEVER_EXIST_PLUGIN_FLAG);
