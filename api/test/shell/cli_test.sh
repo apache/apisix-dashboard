@@ -457,6 +457,19 @@ fi
 ./manager-api stop
 sleep 6
 
+./manager-api &
+sleep 3
+
+# test the route online debug disable
+code=$(curl -k -i -m 20 -o /dev/null -s -XPOST -w %{http_code} -H "Authorization: $token" http://127.0.0.1:9000/apisix/admin/debug-request-forwarding -d "{}")
+if [ ! $code -eq 400 ]; then
+    echo "verify route online switch failed"
+    exit 1
+fi
+
+./manager-api stop
+sleep 6
+
 pkill -f etcd
 
 clean_up

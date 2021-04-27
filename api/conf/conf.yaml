@@ -25,6 +25,10 @@ conf:
     - 127.0.0.1           # The rules are checked in sequence until the first match is found.
     - ::1                 # In this example, access is allowed only for IPv4 network 127.0.0.1, and for IPv6 network ::1.
                           # It also support CIDR like 192.168.1.0/24 and 2001:0db8::/32
+
+  online_debug:
+    enable: false         # Enable route online debug if set to true.
+
   etcd:
     endpoints:            # supports defining multiple etcd host addresses for an etcd cluster
       - 127.0.0.1:2379

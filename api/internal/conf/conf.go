@@ -41,22 +41,23 @@ const (
 )
 
 var (
-	ENV              string
-	Schema           gjson.Result
-	WorkDir          = "."
-	ServerHost       = "0.0.0.0"
-	ServerPort       = 80
-	ETCDConfig       *Etcd
-	ErrorLogLevel    = "warn"
-	ErrorLogPath     = "logs/error.log"
-	AccessLogPath    = "logs/access.log"
-	UserList         = make(map[string]User, 2)
-	AuthConf         Authentication
-	SSLDefaultStatus = 1 //enable ssl by default
-	ImportSizeLimit  = 10 * 1024 * 1024
-	PIDPath          = "/tmp/manager-api.pid"
-	AllowList        []string
-	Plugins          = map[string]bool{}
+	ENV               string
+	Schema            gjson.Result
+	WorkDir           = "."
+	ServerHost        = "0.0.0.0"
+	ServerPort        = 80
+	ETCDConfig        *Etcd
+	ErrorLogLevel     = "warn"
+	ErrorLogPath      = "logs/error.log"
+	AccessLogPath     = "logs/access.log"
+	UserList          = make(map[string]User, 2)
+	AuthConf          Authentication
+	SSLDefaultStatus  = 1 //enable ssl by default
+	ImportSizeLimit   = 10 * 1024 * 1024
+	PIDPath           = "/tmp/manager-api.pid"
+	AllowList         []string
+	OnlineDebugConfig OnlineDebug
+	Plugins           = map[string]bool{}
 )
 
 type MTLS struct {
@@ -92,12 +93,17 @@ type Log struct {
 	AccessLog AccessLog `yaml:"access_log"`
 }
 
+type OnlineDebug struct {
+	Enable bool `yaml:"enable"`
+}
+
 type Conf struct {
-	Etcd      Etcd
-	Listen    Listen
-	Log       Log
-	AllowList []string `yaml:"allow_list"`
-	MaxCpu    int      `yaml:"max_cpu"`
+	Etcd        Etcd
+	Listen      Listen
+	OnlineDebug OnlineDebug `yaml:"online_debug"`
+	Log         Log
+	AllowList   []string `yaml:"allow_list"`
+	MaxCpu      int      `yaml:"max_cpu"`
 }
 
 type User struct {
@@ -188,6 +194,7 @@ func setConf() {
 		}
 
 		AllowList = config.Conf.AllowList
+		OnlineDebugConfig = config.Conf.OnlineDebug
 
 		// set degree of parallelism
 		initParallelism(config.Conf.MaxCpu)

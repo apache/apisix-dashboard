@@ -34,6 +34,7 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/handler"
 )
 
@@ -70,6 +71,11 @@ type Result struct {
 }
 
 func (h *Handler) DebugRequestForwarding(c droplet.Context) (interface{}, error) {
+	if !conf.OnlineDebugConfig.Enable {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("should enable the online debug in managerapi")
+	}
+
 	//TODO: other Protocols, e.g: grpc, websocket
 	input := c.Input().(*DebugOnlineInput)
 	protocol := input.RequestProtocol
