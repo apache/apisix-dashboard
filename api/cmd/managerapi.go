@@ -148,7 +148,7 @@ func NewManagerAPICommand() *cobra.Command {
 					err := serverSSL.ListenAndServeTLS(conf.SSLCert, conf.SSLKey)
 					if err != nil && err != http.ErrServerClosed {
 						utils.CloseAll()
-						log.Fatalf("listen and serv fail: %s", err)
+						log.Fatalf("listen and serve for HTTPS failed: %s", err)
 					}
 				}()
 			}
