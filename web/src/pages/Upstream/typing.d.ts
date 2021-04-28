@@ -68,7 +68,6 @@ declare namespace UpstreamModule {
     upstream_id: string;
     type: Type;
     nodes?: Node[];
-    k8s_deployment_info?: K8SDeploymentInfo;
     hash_on?: 'vars' | 'header' | 'cookie' | 'consumer';
     key?: string;
     checks?: HealthCheck;
