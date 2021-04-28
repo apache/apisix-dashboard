@@ -59,9 +59,6 @@ const UpstreamSelector: React.FC<Props> = ({ onChange, list = [], disabled, requ
             {item.name}
           </Select.Option>
         ))}
-        <Select.Option value={formatMessage({ id: 'page.upstream.step.select.upstream.select.none' })}>{
-          formatMessage({ id: 'page.upstream.step.select.upstream.select.none' })
-        }</Select.Option>
       </Select>
     </Form.Item>
   )

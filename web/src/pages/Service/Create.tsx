@@ -51,10 +51,12 @@ const Page: React.FC = (props) => {
       fetchItem(serviceId).then(({ data }) => {
         if (data.upstream_id) {
           upstreamForm.setFieldsValue({ upstream_id: data.upstream_id })
-        }
-        if (data.upstream) {
+        } else if (data.upstream) {
           upstreamForm.setFieldsValue(convertToFormData(data.upstream))
+        } else {
+          upstreamForm.setFieldsValue({ upstream_id: 'None' })
         }
+
         form.setFieldsValue(omit(data, ['upstream_id', 'upstream', 'plugins']));
         setPlugins(data.plugins || {});
       });
@@ -68,12 +70,9 @@ const Page: React.FC = (props) => {
     };
 
     const upstreamFormData = upstreamRef.current?.getData();
-    if (!upstreamFormData) {
-      return
-    }
-    if (!upstreamFormData.upstream_id) {
+    if (!upstreamFormData?.upstream_id) {
       data.upstream = upstreamFormData;
-    } else if (upstreamFormData.upstream_id !== 'None') {
+    } else {
       data.upstream_id = upstreamFormData.upstream_id;
     }
 
