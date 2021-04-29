@@ -18,10 +18,13 @@ package cmd
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -48,6 +51,9 @@ func printInfo() {
 	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
 	printVersion()
 	fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "Listen", conf.ServerHost, conf.ServerPort)
+	if conf.SSLCert != "" && conf.SSLKey != "" {
+		fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "HTTPS Listen", conf.SSLHost, conf.SSLPort)
+	}
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Loglevel", conf.ErrorLogLevel)
 	fmt.Fprintf(os.Stdout, "%-8s: %s\n\n", "Logfile", conf.ErrorLogPath)
 }
@@ -123,6 +129,29 @@ func NewManagerAPICommand() *cobra.Command {
 					log.Fatalf("listen and serv fail: %s", err)
 				}
 			}()
+
+			// HTTPS
+			if conf.SSLCert != "" && conf.SSLKey != "" {
+				addrSSL := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.SSLPort))
+				serverSSL := &http.Server{
+					Addr:         addrSSL,
+					Handler:      r,
+					ReadTimeout:  time.Duration(1000) * time.Millisecond,
+					WriteTimeout: time.Duration(5000) * time.Millisecond,
+					TLSConfig: &tls.Config{
+						// Causes servers to use Go's default ciphersuite preferences,
+						// which are tuned to avoid attacks. Does nothing on clients.
+						PreferServerCipherSuites: true,
+					},
+				}
+				go func() {
+					err := serverSSL.ListenAndServeTLS(conf.SSLCert, conf.SSLKey)
+					if err != nil && err != http.ErrServerClosed {
+						utils.CloseAll()
+						log.Fatalf("listen and serve for HTTPS failed: %s", err)
+					}
+				}()
+			}
 
 			printInfo()
 
