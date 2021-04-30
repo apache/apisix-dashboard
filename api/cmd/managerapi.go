@@ -110,6 +110,14 @@ func manageAPI() error {
 		}
 		return nil
 	})
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+
+	defer func() {
+		utils.CloseAll()
+		log.Infof("The Manager API server exited")
+		signal.Stop(quit)
+	}()
 
 	droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
 		var newMws []droplet.Middleware
@@ -126,12 +134,14 @@ func manageAPI() error {
 	}
 	if err := store.InitStores(); err != nil {
 		log.Errorf("init stores fail: %w", err)
-		panic(err)
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+		utils.CloseAll()
+		os.Exit(1)
 	}
 
 	// routes
 	r := internal.SetUpRouter()
-	addr := fmt.Sprintf("%s:%d", conf.ServerHost, conf.ServerPort)
+	addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
 	s := &http.Server{
 		Addr:         addr,
 		Handler:      r,
@@ -140,10 +150,6 @@ func manageAPI() error {
 	}
 
 	log.Infof("The Manager API is listening on %s", addr)
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	defer signal.Stop(quit)
 
 	go func() {
 		if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -187,9 +193,6 @@ func manageAPI() error {
 		log.Errorf("Shutting down server error: %s", err)
 	}
 
-	log.Infof("The Manager API server exited")
-
-	utils.CloseAll()
 	return nil
 }
 
