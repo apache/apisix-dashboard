@@ -38,3 +38,5 @@ Before you start, make sure the following dependencies are installed and running
 ```sh
 $ sudo nohup manager-api -p /usr/local/apisix/dashboard/ &
 ```
+
+Without changing the configuration, visit `http://127.0.0.1:9000` to use the dashboard with GUI, where the default username and password are `admin`.
