@@ -273,6 +273,35 @@ sleep 6
 clean_up
 
 
+# HTTPS test
+currentDir=$(pwd)
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" 's@# ssl:@ssl:@' conf/conf.yaml
+  sed -i "" 's@#   port: 9001@  port: 9001@' conf/conf.yaml
+  sed -i "" "s@#   cert: \"/tmp/cert/example.crt\"@  cert: \"$currentDir/test/certs/test2.crt\"@" conf/conf.yaml
+  sed -i "" "s@#   key:  \"/tmp/cert/example.key\"@  cert: \"$currentDir/test/certs/test2.key\"@" conf/conf.yaml
+else
+  sed -i 's@# ssl:@ssl:@' conf/conf.yaml
+  sed -i 's@#   port: 9001@  port: 9001@' conf/conf.yaml
+  sed -i "s@#   cert: \"/tmp/cert/example.crt\"@  cert: \"$currentDir/test/certs/test2.crt\"@" conf/conf.yaml
+  sed -i "s@#   key:  \"/tmp/cert/example.key\"@  key: \"$currentDir/test/certs/test2.key\"@" conf/conf.yaml
+fi
+
+./manager-api &
+sleep 3
+
+# access by HTTPS
+code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} --resolve 'www.test2.com:9001:127.0.0.1' https://www.test2.com:9001/apisix/admin/tool/version)
+if [ ! $code -eq 200 ]; then
+    echo "failed: verify HTTPS failed"
+    exit 1
+fi
+
+./manager-api stop
+sleep 6
+clean_up
+
+
 # etcd basic auth
 # add root user
 curl -L http://localhost:2379/v3/auth/user/add -d '{"name": "root", "password": "root"}'
