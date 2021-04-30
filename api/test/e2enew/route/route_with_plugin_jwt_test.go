@@ -53,10 +53,10 @@ var _ = ginkgo.Describe("route with jwt plugin", func() {
 					 "jwt-auth": {}
 				 },
 				 "upstream": {
-					 "type": "roundrobin",
+					"type": "roundrobin",
 					"nodes": {
-							"` + base.UpstreamIp + `:1981": 1
-						}
+						"` + base.UpstreamIp + `:1981": 1
+					}
 				 }
 			 }`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -87,7 +87,7 @@ var _ = ginkgo.Describe("route with jwt plugin", func() {
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   []string{`"code":0`, `"id":"jack"`, `"key":"user-key"`, `"secret":"my-secret-key"`},
+			ExpectBody:   []string{`"code":0`, `"username":"jack"`, `"key":"user-key"`, `"secret":"my-secret-key"`},
 		}),
 	)
 	ginkgo.It("sign jwt token", func() {
@@ -198,7 +198,7 @@ var _ = ginkgo.Describe("route with jwt plugin", func() {
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody: []string{`"code":0`, `"id":"consumer_1"`,
+			ExpectBody: []string{`"code":0`, `"username":"consumer_1"`,
 				`"jwt-auth":{"exp":86400,"key":"user-key","secret":"my-secret-key"}`},
 		}),
 		table.Entry("get the consumer", base.HttpTestCase{
@@ -223,8 +223,8 @@ var _ = ginkgo.Describe("route with jwt plugin", func() {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": {
-							"` + base.UpstreamIp + `:1980": 1
-						}
+						"` + base.UpstreamIp + `:1980": 1
+					}
 				}
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
@@ -237,7 +237,6 @@ var _ = ginkgo.Describe("route with jwt plugin", func() {
 		time.Sleep(base.SleepTime)
 
 		request, _ := http.NewRequest("GET", base.APISIXHost+"/apisix/plugin/jwt/sign?key=user-key", nil)
-		request.Header.Add("Authorization", base.GetToken())
 		resp, err := http.DefaultClient.Do(request)
 		gomega.Expect(err).To(gomega.BeNil())
 		defer resp.Body.Close()
