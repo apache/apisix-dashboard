@@ -111,7 +111,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageContainer title={formatMessage({ id: 'page.consumer.list' })}>
+    <PageContainer title={formatMessage({ id: 'page.consumer.list' })} content={formatMessage({ id: "page.consumer.description" })}>
       <ProTable<ConsumerModule.ResEntity>
         actionRef={ref}
         columns={columns}
@@ -137,7 +137,7 @@ const Page: React.FC = () => {
             setRawData({});
           }}>
             <PlusOutlined />
-            {formatMessage({ id: 'component.global.createWithEditor' })}
+            {formatMessage({ id: 'component.global.data.editor' })}
           </Button>,
         ]}
       />

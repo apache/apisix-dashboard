@@ -72,13 +72,6 @@ export const checkUniqueName = (name = '', exclude = '') =>
     ),
   });
 
-export const fetchUpstreamList = () => {
-  return request<Res<ResListData<UpstreamModule.RequestBody>>>('/upstreams').then(({ data }) => ({
-    data: data.rows,
-    total: data.total_size,
-  }));
-};
-
 export const fetchUpstreamItem = (sid: string) => {
   return request(`/upstreams/${sid}`).then(({ nodes, timeout, id }) => {
     return {
@@ -106,7 +99,7 @@ export const updateRouteStatus = (rid: string, status: RouteModule.RouteStatus) 
     data: { status },
   });
 
-export const debugRoute = (headers, data: RouteModule.debugRequest) => {
+export const debugRoute = (headers: any, data: RouteModule.debugRequest) => {
   return request('/debug-request-forwarding', {
     method: 'post',
     data,

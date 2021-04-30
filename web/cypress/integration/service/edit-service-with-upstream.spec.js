@@ -30,6 +30,8 @@ context('Edit Service with Upstream', () => {
     cy.contains('Create').click();
     cy.get(this.domSelector.name).type(this.data.upstreamName);
     cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
+    cy.get(this.domSelector.nodes_0_port).clear().type('7000');
+    cy.get(this.domSelector.nodes_0_weight).clear().type(1);
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
@@ -38,6 +40,7 @@ context('Edit Service with Upstream', () => {
 
   it('should create a test service', function () {
     cy.visit('/');
+    cy.get('.ant-empty').should('be.visible');
     cy.contains('Service').click();
     cy.get(this.domSelector.empty).should('be.visible');
     cy.contains('Create').click();
@@ -58,14 +61,19 @@ context('Edit Service with Upstream', () => {
 
     cy.get(this.domSelector.nameSearch).type(this.data.serviceName);
     cy.contains('Search').click();
-    cy.contains(this.data.serviceName).siblings().contains('Edit').click();
+    cy.contains(this.data.serviceName).siblings().contains('Configure').click();
 
-    cy.get(this.domSelector.nodes_0_host).click({ force: true }).should('value', this.data.ip1);
+    cy.wait(500);
+    cy.get(this.domSelector.nodes_0_host).click({
+      force: true
+    }).should('value', this.data.ip1);
     cy.get(this.domSelector.input).should('be.disabled');
 
     cy.get(this.domSelector.upstreamSelector).click();
-    cy.contains('Custom').click();
+    cy.contains('.ant-select-item-option-content', 'Custom').click();
     cy.get(this.domSelector.nodes_0_host).should('not.be.disabled').clear().type(this.data.ip2);
+    cy.get(this.domSelector.nodes_0_port).type(this.data.port);
+    cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();

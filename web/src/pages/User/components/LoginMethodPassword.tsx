@@ -102,10 +102,9 @@ const LoginMethodPassword: UserModule.LoginMethod = {
   submit: async ({ username, password }) => {
     if (username !== '' && password !== '') {
       try {
-        const result = await request('/apisix/admin/user/login', {
+        const result = await request('/user/login', {
           method: 'POST',
           requestType: 'json',
-          prefix: '',
           data: {
             username,
             password,

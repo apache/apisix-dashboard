@@ -19,6 +19,8 @@
 
 # Table of Contents
 
+- [2.6.0](#260)
+- [2.5.0](#250)
 - [2.4.0](#240)
 - [2.3.0](#230)
 - [2.2.0](#220)
@@ -27,6 +29,82 @@
 - [2.0.0](#200)
 - [1.5.0](#150)
 - [1.0.0](#100)
+
+# 2.6.0
+
+This release mainly improves UI and UE, bugfix and adds test cases.
+
+`Manager API` 2.6 should be used with [Apache APISIX 2.5](https://apisix.apache.org/downloads/). It is not recommended to use with other Apache APISIX versions.
+
+### Core
+
+- Change: remove listen.host from api/conf/conf.yaml [#1767](https://github.com/apache/apisix-dashboard/pull/1767)
+- Change: remove ID of consumer [#1745](https://github.com/apache/apisix-dashboard/pull/1745)
+- Feat: Support duplicate one existing Route [#1558](https://github.com/apache/apisix-dashboard/pull/1558)
+- Feat: add response header in debug view [#1691](https://github.com/apache/apisix-dashboard/pull/1691)
+- Feat: add basic-auth UI Form [#1718](https://github.com/apache/apisix-dashboard/pull/1718)
+- Feat: add limit-count plugin form [#1739](https://github.com/apache/apisix-dashboard/pull/1739)
+- Feat: add referer-restriction plugin form [#1727](https://github.com/apache/apisix-dashboard/pull/1727)
+- Feat: added cors plugin form [#1733](https://github.com/apache/apisix-dashboard/pull/1733)
+- Feat: added limit-req plugin form [#1732](https://github.com/apache/apisix-dashboard/pull/1732)
+- Feat: add api-breaker plugin form [#1730](https://github.com/apache/apisix-dashboard/pull/1730)
+- Feat: add proxy-mirror plugin form [#1725](https://github.com/apache/apisix-dashboard/pull/1725)
+- Feat: add limit-conn plugin form [#1728](https://github.com/apache/apisix-dashboard/pull/1728)
+- Feat: refactor upstream form module [#1726](https://github.com/apache/apisix-dashboard/pull/1726)
+- Feat: added types for Plugins [#1736](https://github.com/apache/apisix-dashboard/pull/1736)
+- Feat: support auto build rpm package for dashboard [#1766](https://github.com/apache/apisix-dashboard/pull/1766)
+- Feat: improve UI and UE ([#1674](https://github.com/apache/apisix-dashboard/pull/1674), [#1702](https://github.com/apache/apisix-dashboard/pull/1702), [#1707](https://github.com/apache/apisix-dashboard/pull/1707),[#1715](https://github.com/apache/apisix-dashboard/pull/1715), [#1723](https://github.com/apache/apisix-dashboard/pull/1723), [#1782](https://github.com/apache/apisix-dashboard/pull/1782), [#1610](https://github.com/apache/apisix-dashboard/pull/1610), [#1764](https://github.com/apache/apisix-dashboard/pull/1764), [#1735](https://github.com/apache/apisix-dashboard/pull/1735), [#1771](https://github.com/apache/apisix-dashboard/pull/1771), [#1748](https://github.com/apache/apisix-dashboard/pull/1748), [#1749](https://github.com/apache/apisix-dashboard/pull/1749), [#1751](https://github.com/apache/apisix-dashboard/pull/1751), [#1679](https://github.com/apache/apisix-dashboard/pull/1679), [#1750](https://github.com/apache/apisix-dashboard/pull/1750), [#1731](https://github.com/apache/apisix-dashboard/pull/1731), [#1747](https://github.com/apache/apisix-dashboard/pull/1747))
+
+### Bugfix
+
+- Fix: unable to export route with nil methods field [#1673](https://github.com/apache/apisix-dashboard/pull/1673)
+- Fix: incorrect conversion between integer types [#1753](https://github.com/apache/apisix-dashboard/pull/1753)
+- Fix: user login request should remove its own prefix option [#1701](https://github.com/apache/apisix-dashboard/pull/1701)
+- Fix: show correct health checker [#1784](https://github.com/apache/apisix-dashboard/pull/1784)
+
+### Test Case
+
+- Test: use gomega match assertion [#1678](https://github.com/apache/apisix-dashboard/pull/1678)
+- Test: updated cli_test.sh according reg ex [#1696](https://github.com/apache/apisix-dashboard/pull/1696)
+- Test: reduce FE e2e ci time [#1698](https://github.com/apache/apisix-dashboard/pull/1698) [#1762](https://github.com/apache/apisix-dashboard/pull/1762)
+- Test: adding a retry mechanism to FE testing [#1752](https://github.com/apache/apisix-dashboard/pull/1752)
+- Test: fix online debug test case [#1761](https://github.com/apache/apisix-dashboard/pull/1761)
+- Test: write backend e2e with ginkgo ([#1663](https://github.com/apache/apisix-dashboard/pull/1663), [#1677](https://github.com/apache/apisix-dashboard/pull/1677), [#1675](https://github.com/apache/apisix-dashboard/pull/1675), [#1676](https://github.com/apache/apisix-dashboard/pull/1676), [#1704](https://github.com/apache/apisix-dashboard/pull/1704), [#1755](https://github.com/apache/apisix-dashboard/pull/1755))
+
+### Doc
+
+- Docs: add more details and examples to import openapi guide [#1672](https://github.com/apache/apisix-dashboard/pull/1672)
+
+# 2.5.0
+
+This release mainly improves basic features, bugfix and adds test cases.
+
+`Manager API` 2.5 should be used with [Apache APISIX 2.4](https://github.com/apache/apisix/releases/tag/2.4). It is not recommended to use with other Apache APISIX versions.
+
+### Core
+
+- Feat: add rawDataEditor for route, consumer, upstream and service [#1505](https://github.com/apache/apisix-dashboard/pull/1505)
+- Feat: online debugging supports file transfer [#1465](https://github.com/apache/apisix-dashboard/pull/1465)
+- Feat: support etcd prefix as apisix does [#1477](https://github.com/apache/apisix-dashboard/pull/1477)
+- Feat: support changing number of executing cpu cores for manager api [#1569](https://github.com/apache/apisix-dashboard/pull/1569)
+- Feat: support plugin template config feature [#1540](https://github.com/apache/apisix-dashboard/pull/1540)
+- Feat: improve UI and UE ([#1491](https://github.com/apache/apisix-dashboard/pull/1491), [#1481](https://github.com/apache/apisix-dashboard/pull/1481), [#1479](https://github.com/apache/apisix-dashboard/pull/1479), [#1472](https://github.com/apache/apisix-dashboard/pull/1472), [#1604](https://github.com/apache/apisix-dashboard/pull/1604), [#1603](https://github.com/apache/apisix-dashboard/pull/1603), [#1589](https://github.com/apache/apisix-dashboard/pull/1589), [#1538](https://github.com/apache/apisix-dashboard/pull/1538), [#1580](https://github.com/apache/apisix-dashboard/pull/1580), [#1651](https://github.com/apache/apisix-dashboard/pull/1651), [#1634](https://github.com/apache/apisix-dashboard/pull/1634), [#1641](https://github.com/apache/apisix-dashboard/pull/1641))
+- Feat: support yaml to config plugin in plugin config page [#1490](https://github.com/apache/apisix-dashboard/pull/1490)
+
+### Bugfix
+
+- Fix: check name exists when creating or updating a resource [#1606](https://github.com/apache/apisix-dashboard/pull/1606)
+- Fix: cannot unmarshal array into go value of type [#1527](https://github.com/apache/apisix-dashboard/pull/1527)
+- Fix: change the appended Content-type data to overlay to ensure that the Content-type is unique [#1619](https://github.com/apache/apisix-dashboard/pull/1619)
+
+### Test Case
+
+- Test: add the create and delete plugin in drawer [#1597](https://github.com/apache/apisix-dashboard/pull/1597)
+- Test: write backend e2e with ginkgo ([#1501](https://github.com/apache/apisix-dashboard/pull/1501), [#1502](https://github.com/apache/apisix-dashboard/pull/1502), [#1504](https://github.com/apache/apisix-dashboard/pull/1504), [#1518](https://github.com/apache/apisix-dashboard/pull/1518), [#1526](https://github.com/apache/apisix-dashboard/pull/1526), [#1545](https://github.com/apache/apisix-dashboard/pull/1545), [#1550](https://github.com/apache/apisix-dashboard/pull/1550), [#1556](https://github.com/apache/apisix-dashboard/pull/1556), [#1560](https://github.com/apache/apisix-dashboard/pull/1560), [#1561](https://github.com/apache/apisix-dashboard/pull/1561), [#1570](https://github.com/apache/apisix-dashboard/pull/1570), [#1582](https://github.com/apache/apisix-dashboard/pull/1582), [#1593](https://github.com/apache/apisix-dashboard/pull/1593), [#1613](https://github.com/apache/apisix-dashboard/pull/1613))
+
+### Doc
+
+- Docs: Updating docs for backend tests [#1625](https://github.com/apache/apisix-dashboard/pull/1625)
 
 # 2.4.0
 

@@ -15,13 +15,8 @@
  * limitations under the License.
  */
 export const HTTP_METHOD_OPTION_LIST: HttpMethod[] = [
-  'GET',
-  'HEAD',
-  'POST',
-  'PUT',
-  'DELETE',
-  'OPTIONS',
-  'PATCH',
+  "GET", "POST", "PUT", "DELETE", "PATCH", "HEAD",
+  "OPTIONS", "CONNECT", "TRACE"
 ];
 
 export const FORM_ITEM_LAYOUT = {
@@ -90,22 +85,68 @@ export const INIT_CHART = {
   hovered: {},
 };
 
-export const HASH_KEY_LIST = [
-  'remote_addr',
-  'host',
-  'uri',
-  'server_name',
-  'server_addr',
-  'request_uri',
-  'query_string',
-  'remote_port',
-  'hostname',
-  'arg_id',
-];
-
-export const HASH_ON_LIST = ['vars', 'header', 'cookie', 'consumer'];
-
 export const AUTH_LIST = ['basic-auth', 'jwt-auth', 'key-auth'];
+
+export const HEADER_LIST = [
+  "A-IM",
+  "Accept",
+  "Accept-Charset",
+  "Accept-Datetime",
+  "Accept-Encoding",
+  "Accept-Language",
+  "Access-Control-Request-Method",
+  "Access-Control-Request-Headers",
+  "Allow",
+  "Authorization",
+  "Cache-Control",
+  "Connection",
+  "Content-Encoding",
+  "Content-Length",
+  "Content-MD5",
+  "Content-Type",
+  "Cookie",
+  "DNT",
+  "Date",
+  "Expect",
+  "Forwarded",
+  "From",
+  "Front-End-Https",
+  "Host",
+  "HTTP2-Settings",
+  "If-Match",
+  "If-Modified-Since",
+  "If-None-Match",
+  "If-Range",
+  "If-Unmodified-Since",
+  "Max-Forwards",
+  "Origin",
+  "Pragma",
+  "Prefer",
+  "Proxy-Authorization",
+  "Proxy-Connection",
+  "Range",
+  "Referer",
+  "Save-Data",
+  "TE",
+  "Trailer",
+  "Transfer-Encoding",
+  "Upgrade",
+  "Upgrade-Insecure-Requests",
+  "User-Agent",
+  "Via",
+  "Warning",
+  "X-ATT-DeviceId",
+  "X-Correlation-ID",
+  "X-Csrf-Token",
+  "X-Forwarded-For",
+  "X-Forwarded-Host",
+  "X-Forwarded-Proto",
+  "X-Http-Method-Override",
+  "X-Request-ID",
+  "X-Requested-With",
+  "X-UIDH",
+  "X-Wap-Profile",
+];
 
 export const PROTOCOL_SUPPORTED: RouteModule.debugRequest['request_protocol'][] = ['http', 'https'];
 
@@ -134,9 +175,16 @@ export const DEBUG_BODY_TYPE_SUPPORTED: RouteModule.DebugBodyType[] = [
 
 // Note: codemirror mode: apl for text; javascript for json(need to format); xml for xml;
 export const DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED = [
-  { name: 'Json', mode: 'javascript' },
-  { name: 'Text', mode: 'apl' },
+  { name: 'JSON', mode: 'javascript' },
+  { name: 'TEXT', mode: 'apl' },
   { name: 'XML', mode: 'xml' },
+];
+
+export const DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED = [
+  { name: 'JSON', mode: 'javascript' },
+  { name: 'XML', mode: 'xml' },
+  { name: 'HTML', mode: 'html' },
+  { name: 'TEXT', mode: 'apl' },
 ];
 
 export const EXPORT_FILE_MIME_TYPE_SUPPORTED = ['application/json', 'application/x-yaml'];

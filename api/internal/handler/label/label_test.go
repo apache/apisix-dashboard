@@ -167,10 +167,6 @@ func genUpstream(labels map[string]string) *entity.Upstream {
 
 func genConsumer(labels map[string]string) *entity.Consumer {
 	r := entity.Consumer{
-		BaseInfo: entity.BaseInfo{
-			ID:         rand.Int(),
-			CreateTime: rand.Int63(),
-		},
 		Username: "test",
 		Labels:   labels,
 	}

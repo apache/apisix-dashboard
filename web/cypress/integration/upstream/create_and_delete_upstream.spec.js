@@ -34,6 +34,7 @@ context('Create and Delete Upstream', () => {
 
     cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
     cy.get(this.domSelector.nodes_0_port).clear().type('7000');
+    cy.get(this.domSelector.nodes_0_weight).clear().type(1);
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
@@ -74,15 +75,15 @@ context('Create and Delete Upstream', () => {
     cy.get(this.domSelector.description).type(this.data.description);
 
     // change upstream type to chash, todo: optimize the search method
-    cy.get('[title=roundrobin]').click();
+    cy.get('[title="Round Robin"]').click();
     cy.get(this.domSelector.upstreamType).within(() => {
-      cy.contains('chash').click();
+      cy.contains('CHash').click();
     });
-    cy.get('#hash_on').click();
+    cy.get('#hash_on').click({ force: true });
     cy.get(this.domSelector.upstreamType).within(() => {
       cy.contains('vars').click();
     });
-    cy.get('#key').click();
+    cy.get('#key').click({ force: true });
     cy.get(this.domSelector.upstreamType).within(() => {
       cy.contains('remote_addr').click();
     });
@@ -90,6 +91,7 @@ context('Create and Delete Upstream', () => {
     // add first upstream node
     cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
     cy.get(this.domSelector.nodes_0_port).clear().type('7000');
+    cy.get(this.domSelector.nodes_0_weight).clear().type(1);
 
     // add second upstream node
     cy.get('.ant-btn-dashed').click();

@@ -35,6 +35,8 @@ context('Create and Delete Service ', () => {
     cy.get(this.domSelector.description).type(this.data.description);
     cy.get(this.domSelector.nodes_0_host).click();
     cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
+    cy.get(this.domSelector.nodes_0_port).clear().type('7000');
+    cy.get(this.domSelector.nodes_0_weight).clear().type(1);
 
     cy.contains('Next').click();
 
@@ -47,6 +49,9 @@ context('Create and Delete Service ', () => {
       cy.get(this.domSelector.checkedSwitcher).should('exist');
     });
 
+    cy.get(this.domSelector.codeMirrorMode).click();
+    cy.get(this.domSelector.selectDropdown).should('be.visible');
+    cy.get(this.domSelector.selectJSON).click();
     cy.contains('button', 'Submit').click();
     cy.get(this.domSelector.drawer, { timeout }).should('not.exist');
 
@@ -90,7 +95,7 @@ context('Create and Delete Service ', () => {
 
     cy.get(this.domSelector.nameSelector).type(this.data.serviceName);
     cy.contains('Search').click();
-    cy.contains(this.data.serviceName).siblings().contains('Edit').click();
+    cy.contains(this.data.serviceName).siblings().contains('Configure').click();
 
     // Confirm whether the created data is saved.
     cy.get(this.domSelector.nodes_0_host).should('value', this.data.ip1);
@@ -119,7 +124,7 @@ context('Create and Delete Service ', () => {
     cy.visit('/service/list');
     cy.get(this.domSelector.nameSelector).type(this.data.serviceName2);
     cy.contains('Search').click();
-    cy.contains(this.data.serviceName2).siblings().contains('Edit').click();
+    cy.contains(this.data.serviceName2).siblings().contains('Configure').click();
     cy.get(this.domSelector.nodes_0_host).should('value', this.data.ip2);
     cy.get(this.domSelector.description).should('value', this.data.description2);
 

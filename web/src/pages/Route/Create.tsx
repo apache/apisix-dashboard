@@ -21,7 +21,6 @@ import { history, useIntl } from 'umi';
 import { isEmpty } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
-import { DEFAULT_UPSTREAM } from '@/components/Upstream';
 
 import { transformer as chartTransformer } from '@/components/PluginOrchestration';
 import { create, fetchItem, update, checkUniqueName, checkHostWithSSL } from './service';
@@ -83,19 +82,18 @@ const Page: React.FC<Props> = (props) => {
     setAdvancedMatchingRules([]);
     setStep3Data(DEFAULT_STEP_3_DATA);
     form1.setFieldsValue(DEFAULT_STEP_1_DATA);
-    form2.setFieldsValue(DEFAULT_UPSTREAM);
     setStep(1);
   };
 
   useEffect(() => {
-    if (props.route.path.indexOf('edit') !== -1) {
+    if (props.route.path.indexOf('edit') !== -1 || props.route.path.indexOf('duplicate') !== -1) {
       setupRoute(props.match.params.rid);
     } else {
       onReset();
     }
   }, []);
 
-  const getProxyRewriteEnable =() => {
+  const getProxyRewriteEnable = () => {
     return !isEmpty(transformProxyRewrite2Plugin(form1.getFieldValue('proxyRewrite')));
   }
 
@@ -104,6 +102,7 @@ const Page: React.FC<Props> = (props) => {
       return (
         <Step1
           form={form1}
+          upstreamForm={form2}
           advancedMatchingRules={advancedMatchingRules}
           onChange={({ action, data }) => {
             if (action === 'redirectOptionChange') {
@@ -233,7 +232,7 @@ const Page: React.FC<Props> = (props) => {
             redirectOption === 'forceHttps' && filterHosts.length !== 0
               ? checkHostWithSSL(hosts)
               : Promise.resolve(),
-            checkUniqueName(value.name, (props as any).match.params.rid || ''),
+            checkUniqueName(value.name, props.route.path.indexOf('edit') > 0 ? (props as any).match.params.rid : ''),
           ]).then(() => {
             setStep(nextStep);
           });
@@ -269,9 +268,8 @@ const Page: React.FC<Props> = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={(props as any).match.params.rid
-          ? formatMessage({ id: 'page.route.editRoute' })
-          : formatMessage({ id: 'page.route.createRoute' })}
+        title={`${formatMessage({ id: `component.global.${props.route.path.split('/').slice(-1)[0]}` })
+          } ${formatMessage({ id: 'menu.routes' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>

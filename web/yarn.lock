@@ -185,11 +185,6 @@
     lodash "^4.17.15"
     resize-observer-polyfill "^1.5.0"
 
-"@api7-dashboard/ui@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@api7-dashboard/ui/-/ui-1.0.3.tgz#77011750bebee7bb6f6966ea0596c5576951e3ff"
-  integrity sha512-WSvcDBPcxmFb5b4nwUHlQ7J1IeA+buHs/if3wawSRU7imoUsuXb5BJ/39JPrOAoBmTjiuBOS6PChNGq4XUKCDg==
-
 "@babel/code-frame@7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0.tgz#06e2ab19bdb535385559aabb5ba59729482800f8"

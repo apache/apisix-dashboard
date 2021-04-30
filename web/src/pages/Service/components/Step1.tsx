@@ -19,7 +19,7 @@ import { Form, Input } from 'antd';
 import { useIntl } from 'umi';
 
 import UpstreamForm from '@/components/Upstream';
-import { fetchUpstreamList } from '../service';
+import { fetchUpstreamList } from '@/components/Upstream/service';
 
 const FORM_LAYOUT = {
   labelCol: {
@@ -37,7 +37,7 @@ const Step1: React.FC<ServiceModule.Step1PassProps> = ({
   disabled,
 }) => {
   const { formatMessage } = useIntl();
-  const [list, setList] = useState<UpstreamModule.RequestBody[]>([]);
+  const [list, setList] = useState<UpstreamComponent.ResponseData[]>([]);
   useEffect(() => {
     fetchUpstreamList().then(({ data }) => setList(data));
   }, []);
@@ -45,11 +45,16 @@ const Step1: React.FC<ServiceModule.Step1PassProps> = ({
   return (
     <>
       <Form {...FORM_LAYOUT} form={form}>
-        <Form.Item name="name" label={formatMessage({ id: 'component.global.name' })}>
-          <Input disabled={disabled} />
+        <Form.Item name="name" label={formatMessage({ id: 'component.global.name' })} required rules={[
+          {
+            required: true,
+            message: formatMessage({ id: 'page.service.fields.name.required' })
+          }
+        ]}>
+          <Input disabled={disabled} placeholder={formatMessage({ id: 'page.service.fields.name.required' })} />
         </Form.Item>
         <Form.Item name="desc" label={formatMessage({ id: 'component.global.description' })}>
-          <Input.TextArea disabled={disabled} />
+          <Input.TextArea disabled={disabled} placeholder={formatMessage({ id: 'component.global.description.required' })} />
         </Form.Item>
       </Form>
       <UpstreamForm

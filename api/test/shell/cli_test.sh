@@ -174,7 +174,7 @@ if [[ `grep -c "The manager-api is running successfully\!" ${STDOUT}` -ne '1' ]]
     exit 1
 fi
 
-if [[ `grep -c "${VERSION}" ${STDOUT}` -ne '1' ]]; then
+if [[ `grep -c -w "${VERSION}" ${STDOUT}` -ne '1' ]]; then
     echo "failed: the manager server didn't show started info"
     exit 1
 fi
@@ -189,7 +189,7 @@ if [[ `grep -c "${LOGLEVEL}" ${STDOUT}` -ne '1' ]]; then
     exit 1
 fi
 
-if [[ `grep -c "${HOST}:${PORT}" ${STDOUT}` -ne '1' ]]; then
+if [[ `grep -c "0.0.0.0:${PORT}" ${STDOUT}` -ne '1' ]]; then
     echo "failed: the manager server didn't show started info"
     exit 1
 fi
@@ -252,9 +252,9 @@ clean_up
 
 # set ip allowed list
 if [[ $KERNEL = "Darwin" ]]; then
-  sed -i "" 's@127.0.0.0/24@10.0.0.1@' conf/conf.yaml
+  sed -i "" 's@- 127.0.0.1 @- 10.0.0.1 @' conf/conf.yaml
 else
-  sed -i 's@127.0.0.0/24@10.0.0.1@' conf/conf.yaml
+  sed -i 's@- 127.0.0.1 @- 10.0.0.1 @' conf/conf.yaml
 fi
 
 ./manager-api &
@@ -265,6 +265,35 @@ curl http://127.0.0.1:9000
 code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} http://127.0.0.1:9000)
 if [ ! $code -eq 403 ]; then
     echo "failed: verify IP allowed list failed"
+    exit 1
+fi
+
+./manager-api stop
+sleep 6
+clean_up
+
+
+# HTTPS test
+currentDir=$(pwd)
+if [[ $KERNEL = "Darwin" ]]; then
+  sed -i "" 's@# ssl:@ssl:@' conf/conf.yaml
+  sed -i "" 's@#   port: 9001@  port: 9001@' conf/conf.yaml
+  sed -i "" "s@#   cert: \"/tmp/cert/example.crt\"@  cert: \"$currentDir/test/certs/test2.crt\"@" conf/conf.yaml
+  sed -i "" "s@#   key:  \"/tmp/cert/example.key\"@  cert: \"$currentDir/test/certs/test2.key\"@" conf/conf.yaml
+else
+  sed -i 's@# ssl:@ssl:@' conf/conf.yaml
+  sed -i 's@#   port: 9001@  port: 9001@' conf/conf.yaml
+  sed -i "s@#   cert: \"/tmp/cert/example.crt\"@  cert: \"$currentDir/test/certs/test2.crt\"@" conf/conf.yaml
+  sed -i "s@#   key:  \"/tmp/cert/example.key\"@  key: \"$currentDir/test/certs/test2.key\"@" conf/conf.yaml
+fi
+
+./manager-api &
+sleep 3
+
+# access by HTTPS
+code=$(curl -k -i -m 20 -o /dev/null -s -w %{http_code} --resolve 'www.test2.com:9001:127.0.0.1' https://www.test2.com:9001/apisix/admin/tool/version)
+if [ ! $code -eq 200 ]; then
+    echo "failed: verify HTTPS failed"
     exit 1
 fi
 

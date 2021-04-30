@@ -113,7 +113,7 @@ const LabelList = (disabled: boolean, labelList: LabelList, filterList: string[]
 };
 
 const LabelsDrawer: React.FC<Props> = ({
-  title = 'Label Manager',
+  title = "",
   actionName = '',
   disabled = false,
   dataSource = [],
@@ -135,7 +135,7 @@ const LabelsDrawer: React.FC<Props> = ({
 
   return (
     <Drawer
-      title={title}
+      title={title || formatMessage({ id: "component.label-manager" })}
       placement="right"
       width={512}
       visible

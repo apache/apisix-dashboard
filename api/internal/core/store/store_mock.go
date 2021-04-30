@@ -18,6 +18,7 @@ package store
 
 import (
 	"context"
+	"sort"
 
 	"github.com/stretchr/testify/mock"
 )
@@ -44,6 +45,15 @@ func (m *MockInterface) List(_ context.Context, input ListInput) (*ListOutput, e
 	} else {
 		r0 = ret.Get(0).(*ListOutput)
 	}
+
+	if input.Less == nil {
+		input.Less = defLessFunc
+	}
+
+	sort.Slice(r0.Rows, func(i, j int) bool {
+		return input.Less(r0.Rows[i], r0.Rows[j])
+	})
+
 	r1 = ret.Error(1)
 
 	return r0, r1
