@@ -36,14 +36,7 @@ context('Edit Service with not select Upstream', () => {
     cy.get(this.domSelector.nodes_0_weight).clear().type(1);
     cy.contains('Next').click();
     cy.contains('Next').click();
-    cy.get(this.domSelector.nodes_0_host).should('be.disabled','true');
-    cy.get(this.domSelector.nodes_0_port).should('be.disabled','true');
-    cy.get(this.domSelector.nodes_0_weight).should('be.disabled','true');
-    cy.get('#timeout_connect').should('be.disabled','true');
-    cy.get('#timeout_send').should('be.disabled','true');
-    cy.get('#timeout_read').should('be.disabled','true');
-    cy.get('#custom_checks_active').should('be.disabled','true');
-    cy.get('#custom_checks_passive').should('be.disabled','true');
+    cy.get(this.domSelector.input).should('be.disabled');
     cy.contains('Submit').click();
     cy.get(this.domSelector.notification).should('contain', this.data.createServiceSuccess);
   });
