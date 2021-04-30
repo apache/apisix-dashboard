@@ -52,7 +52,7 @@ $ docker build -t apisix-dashboard:$tag . --build-arg APISIX_DASHBOARD_VERSION=m
 
 1. Preparing configuration files
 
-Before starting the container, the configuration file `conf.yaml` needs to be prepared inside the **host** to override the default [configuration file](../api/conf/conf.yaml) inside the container.
+Before starting the container, the configuration file `conf.yaml` needs to be prepared inside the **host** to override the default [configuration file](./../../../../api/conf/conf.yaml) inside the container.
 
 Kindly note:
 
