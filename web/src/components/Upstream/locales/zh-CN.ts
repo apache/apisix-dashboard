@@ -38,7 +38,7 @@ export default {
   'component.upstream.fields.key.tooltip': '哈希键（Hash Key）',
 
   'component.upstream.fields.retries': '重试次数',
-  'component.upstream.fields.retries.tooltip': '重试机制将请求发到下一个上游节点。值为 0 表示禁用重试机制，留空表是使用可用后端节点的数量。',
+  'component.upstream.fields.retries.tooltip': '重试机制将请求发到下一个上游节点。值为 0 表示禁用重试机制，留空表示使用可用后端节点的数量。',
 
   'component.upstream.fields.checks.active.type': '类型',
   'component.upstream.fields.checks.active.type.tooltip': '是使用 HTTP 或 HTTPS 进行主动健康检查，还是只尝试 TCP 连接。',
