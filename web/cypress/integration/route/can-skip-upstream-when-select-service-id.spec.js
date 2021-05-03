@@ -75,7 +75,7 @@ context('Can select service_id skip upstream in route', () => {
     cy.get(this.domSelector.input).should('be.disabled');
 
     cy.contains(this.data.upstreamName).click();
-    cy.contains('None').click();
+    cy.contains('None').click({ force: true });
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
@@ -91,9 +91,6 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains(this.data.routeName).siblings().contains('Configure').click();
     cy.get(this.domSelector.serviceSelector).click();
     cy.contains('None').click();
-    cy.get(this.domSelector.notification).should('contain', 'Please check the configuration of binding service');
-    cy.get(this.domSelector.notificationCloseIcon).click();
-
     cy.contains('Next').click();
     cy.wait(500);
     cy.get('[data-cy=upstream_selector]').click();
