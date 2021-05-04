@@ -74,17 +74,17 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
         setContent(c => {
           const {data:jsonData,error} = yaml2json(c, true);
           if (error){
-            notification.error({message: 'Invalid Yaml data'});
+            notification.error({message: formatMessage({ id: 'component.rawDataEditor.invalidYaml' })});
             return c;
           }
-          return js_beautify(jsonData, {indent_size: 4});
+          return js_beautify(jsonData, {indent_size: 2});
         })
         break;
       case monacoLanguageList.YAML:
         setContent(c => {
           const {data:yamlData,error} = json2yaml(c);
           if (error){
-            notification.error({message: 'Invalid Json data'});
+            notification.error({message: formatMessage({ id: 'component.rawDataEditor.invalidJson' })});
             return c;
           }
           return yamlData;
@@ -120,9 +120,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
                         : yaml2json(content, false).data;
                     onSubmit(editorData);
                   } catch (error) {
-                    notification.error({
-                      message: 'Invalid JSON data',
-                    });
+                    notification.error({message: formatMessage({ id: 'component.rawDataEditor.invalidJson' })});
                   }
                 }}
               >
