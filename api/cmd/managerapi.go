@@ -101,7 +101,7 @@ func manageAPI() error {
 
 	if err := utils.WritePID(conf.PIDPath); err != nil {
 		log.Errorf("failed to write pid: %s", err)
-		panic(err)
+		return err
 	}
 	utils.AppendToClosers(func() error {
 		if err := os.Remove(conf.PIDPath); err != nil {
@@ -110,12 +110,16 @@ func manageAPI() error {
 		}
 		return nil
 	})
+
+	// Signal received to the process externally.
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	// For internal error handling across multiple goroutines.
+	errsig := make(chan error, 1)
 
 	defer func() {
 		utils.CloseAll()
-		log.Infof("The Manager API server exited")
+		fmt.Println("closer")
 		signal.Stop(quit)
 	}()
 
@@ -130,70 +134,84 @@ func manageAPI() error {
 
 	if err := storage.InitETCDClient(conf.ETCDConfig); err != nil {
 		log.Errorf("init etcd client fail: %w", err)
-		panic(err)
+		errsig <- err
 	}
 	if err := store.InitStores(); err != nil {
 		log.Errorf("init stores fail: %w", err)
-		fmt.Fprintf(os.Stderr, "%s\n", err)
-		utils.CloseAll()
-		os.Exit(1)
+		errsig <- err
 	}
 
-	// routes
-	r := internal.SetUpRouter()
-	addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
-	s := &http.Server{
-		Addr:         addr,
-		Handler:      r,
-		ReadTimeout:  time.Duration(1000) * time.Millisecond,
-		WriteTimeout: time.Duration(5000) * time.Millisecond,
-	}
-
-	log.Infof("The Manager API is listening on %s", addr)
-
-	go func() {
-		if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			utils.CloseAll()
-			log.Fatalf("listen and serv fail: %s", err)
-		}
-	}()
-
-	// HTTPS
-	if conf.SSLCert != "" && conf.SSLKey != "" {
-		addrSSL := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.SSLPort))
-		serverSSL := &http.Server{
-			Addr:         addrSSL,
+	var server, serverSSL *http.Server
+	if len(errsig) == 0 { // no error has occurred till now
+		// routes
+		r := internal.SetUpRouter()
+		addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
+		server = &http.Server{
+			Addr:         addr,
 			Handler:      r,
 			ReadTimeout:  time.Duration(1000) * time.Millisecond,
 			WriteTimeout: time.Duration(5000) * time.Millisecond,
-			TLSConfig: &tls.Config{
-				// Causes servers to use Go's default ciphersuite preferences,
-				// which are tuned to avoid attacks. Does nothing on clients.
-				PreferServerCipherSuites: true,
-			},
 		}
+
+		log.Infof("The Manager API is listening on %s", addr)
+
 		go func() {
-			err := serverSSL.ListenAndServeTLS(conf.SSLCert, conf.SSLKey)
-			if err != nil && err != http.ErrServerClosed {
-				utils.CloseAll()
-				log.Fatalf("listen and serve for HTTPS failed: %s", err)
+			if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+				log.Errorf("listen and serv fail: %s", err)
+				fmt.Println(err)
+				errsig <- err
 			}
 		}()
-	}
 
+		// HTTPS
+		if conf.SSLCert != "" && conf.SSLKey != "" {
+			addrSSL := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.SSLPort))
+			serverSSL = &http.Server{
+				Addr:         addrSSL,
+				Handler:      r,
+				ReadTimeout:  time.Duration(1000) * time.Millisecond,
+				WriteTimeout: time.Duration(5000) * time.Millisecond,
+				TLSConfig: &tls.Config{
+					// Causes servers to use Go's default ciphersuite preferences,
+					// which are tuned to avoid attacks. Does nothing on clients.
+					PreferServerCipherSuites: true,
+				},
+			}
+			go func() {
+				err := serverSSL.ListenAndServeTLS(conf.SSLCert, conf.SSLKey)
+				if err != nil && err != http.ErrServerClosed {
+					//utils.CloseAll()
+					log.Errorf("listen and serve for HTTPS failed: %s", err)
+					errsig <- err
+				}
+			}()
+		}
+	}
 	printInfo()
 
-	sig := <-quit
-	log.Infof("The Manager API server receive %s and start shutting down", sig.String())
+	select {
+	case err := <-errsig:
+		return err
 
-	ctx, cancel := context.WithTimeout(context.TODO(), 5*time.Second)
-	defer cancel()
+	case sig := <-quit:
+		log.Infof("The Manager API server receive %s and start shutting down", sig.String())
 
-	if err := s.Shutdown(ctx); err != nil {
-		log.Errorf("Shutting down server error: %s", err)
+		shutdownServer(server)
+		shutdownServer(serverSSL)
+		log.Infof("The Manager API server exited")
+		return nil
 	}
+}
 
-	return nil
+func shutdownServer(server *http.Server) {
+	if server != nil {
+		ctx, cancel := context.WithTimeout(context.TODO(), 5*time.Second)
+		defer cancel()
+
+		if err := server.Shutdown(ctx); err != nil {
+			log.Errorf("Shutting down server error: %s", err)
+		}
+	}
 }
 
 func newStartCommand() *cobra.Command {
