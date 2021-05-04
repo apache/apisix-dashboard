@@ -529,7 +529,7 @@ sleep 2
 sleep 4
 
 if [[ `cat man-api.err | grep -c "Error occurred while initializing logical store:  /apisix/routes"` -ne '1' ||
-`cat man-api.err | grep -c "json unmarshal failed"` -ne '1' ]];then
+`cat man-api.err | grep -c "Error: json unmarshal failed"` -ne '1' ]];then
   echo "manager api failed to stream error on stderr for bad data"
   exit 1
 fi
