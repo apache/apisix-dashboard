@@ -104,7 +104,7 @@ const PluginDetail: React.FC<Props> = ({
   const [UIForm] = Form.useForm();
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.type;
-  const [content, setContent] = useState(JSON.stringify(data, null, 4));
+  const [content, setContent] = useState(JSON.stringify(data, null, 2));
   const [monacoMode, setMonacoMode] = useState<PluginComponent.MonacoLanguage>(monacoModeList.JSON);
   const modeOptions: { label: string; value: string }[] = [
     { label: monacoModeList.JSON, value: monacoModeList.JSON },
@@ -201,6 +201,7 @@ const PluginDetail: React.FC<Props> = ({
           }
         ]
       };
+      monaco.editor.getModels().forEach(model => model.updateOptions({tabSize: 2}))
       monaco.languages.json.jsonDefaults.setDiagnosticsOptions(schemaConfig);
     })
   }
@@ -216,9 +217,9 @@ const PluginDetail: React.FC<Props> = ({
             });
             return;
           }
-          setContent(js_beautify(yamlData, { indent_size: 4 }))
+          setContent(js_beautify(yamlData, { indent_size: 2 }))
         } else {
-          setContent(js_beautify(JSON.stringify(getUIFormData()), { indent_size: 4 }))
+          setContent(js_beautify(JSON.stringify(getUIFormData()), { indent_size: 2 }))
         }
         break;
       }
