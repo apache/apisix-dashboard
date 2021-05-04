@@ -212,9 +212,7 @@ const PluginDetail: React.FC<Props> = ({
         if (monacoMode === monacoModeList.YAML) {
           const { data: yamlData, error } = yaml2json(content, true);
           if (error) {
-            notification.error({
-              message: 'Invalid Yaml data',
-            });
+            notification.error({ message: formatMessage({ id:'component.global.invalidYaml' }) });
             return;
           }
           setContent(js_beautify(yamlData, { indent_size: 2 }))
@@ -224,22 +222,22 @@ const PluginDetail: React.FC<Props> = ({
         break;
       }
       case monacoModeList.YAML: {
-        if (monacoMode === monacoModeList.JSON) {
-          setContent(c => json2yaml(c).data)
-        } else if (monacoMode === monacoModeList.UIForm) {
-          setContent(json2yaml(JSON.stringify(getUIFormData())).data)
+        const jsonData = monacoMode === monacoModeList.JSON ? content : JSON.stringify(getUIFormData());
+        const { data: yamlData, error } = json2yaml(jsonData);
+        if (error){
+          notification.error({ message: formatMessage({ id:'component.global.invalidJson' }) });
+          return;
         }
+        setContent(yamlData)
         break;
       }
       case monacoModeList.UIForm: {
         if (monacoMode === monacoModeList.JSON) {
           setUIFormData(JSON.parse(content));
         } else {
-          const {data: yamlData, error} = yaml2json(content, true);
+          const { data: yamlData, error } = yaml2json(content, true);
           if (error) {
-            notification.error({
-              message: 'Invalid Yaml data',
-            });
+            notification.error({ message: formatMessage({ id:'component.global.invalidYaml' }) });
             return;
           }
           setUIFormData(JSON.parse(yamlData));
@@ -307,9 +305,7 @@ const PluginDetail: React.FC<Props> = ({
                       onChange({ formData: form.getFieldsValue(), monacoData: value });
                     });
                   } catch (error) {
-                    notification.error({
-                      message: 'Invalid JSON data',
-                    });
+                    notification.error({ message: formatMessage({ id:'component.global.invalidJson' }) });
                   }
                 }}
               >

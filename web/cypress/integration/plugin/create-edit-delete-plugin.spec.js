@@ -42,7 +42,7 @@ context('Enable and Delete Plugin List', () => {
 
     cy.get(this.domSelector.refresh).click();
     cy.contains('Configure').click();
-    cy.get(this.domSelector.monacoScroll).should('be.visible');
+    cy.get(this.domSelector.monacoScroll).should('exist');
     cy.get(this.domSelector.disabledSwitcher).click();
     cy.contains('button', 'Submit').click();
   });

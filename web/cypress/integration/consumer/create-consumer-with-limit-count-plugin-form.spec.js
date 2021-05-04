@@ -59,7 +59,7 @@ context('Create and delete consumer with limit-count plugin form', () => {
     cy.focused(this.domSelector.drawer).should('exist');
     cy.get(this.domSelector.disabledSwitcher).click();
     // edit
-    cy.get(this.domSelector.monacoScroll).should('be.visible');
+    cy.get(this.domSelector.monacoScroll).should('exist');
     cy.window().then(({ monaco }) => {
       if (monaco) {
         monaco.setValue(JSON.stringify({ key: 'test' }));

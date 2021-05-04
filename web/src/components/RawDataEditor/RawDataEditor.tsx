@@ -74,7 +74,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
         setContent(c => {
           const {data:jsonData,error} = yaml2json(c, true);
           if (error){
-            notification.error({message: formatMessage({ id: 'component.rawDataEditor.invalidYaml' })});
+            notification.error({message: formatMessage({ id: 'component.global.invalidYaml' })});
             return c;
           }
           return js_beautify(jsonData, {indent_size: 2});
@@ -84,7 +84,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
         setContent(c => {
           const {data:yamlData,error} = json2yaml(c);
           if (error){
-            notification.error({message: formatMessage({ id: 'component.rawDataEditor.invalidJson' })});
+            notification.error({message: formatMessage({ id: 'component.global.invalidJson' })});
             return c;
           }
           return yamlData;
@@ -120,7 +120,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
                         : yaml2json(content, false).data;
                     onSubmit(editorData);
                   } catch (error) {
-                    notification.error({message: formatMessage({ id: 'component.rawDataEditor.invalidJson' })});
+                    notification.error({message: formatMessage({ id: 'component.global.invalidJson' })});
                   }
                 }}
               >

@@ -52,7 +52,7 @@ context('Create and Delete Consumer', () => {
     cy.focused(this.domSelector.drawer).should('exist');
     cy.get(this.domSelector.disabledSwitcher).click().should('have.class', 'ant-switch-checked');
     // edit
-    cy.get(this.domSelector.monacoScroll).should('be.visible');
+    cy.get(this.domSelector.monacoScroll).should('exist');
     cy.window().then(({ monaco }) => {
       if (monaco) {
         monaco.setValue(JSON.stringify({ key: 'test' }));

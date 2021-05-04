@@ -16,6 +16,4 @@
  */
 export default {
   'component.rawDataEditor.tip': '目前暂不支持编辑',
-  'component.rawDataEditor.invalidJson': "非法 Json 数据",
-  'component.rawDataEditor.invalidYaml': "非法 Yaml 数据",
 };
