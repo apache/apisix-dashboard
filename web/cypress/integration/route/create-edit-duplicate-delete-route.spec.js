@@ -64,7 +64,12 @@ context('Create and Delete Route', () => {
     cy.contains('Confirm').click();
 
     cy.contains('Next').click();
-    cy.get(this.domSelector.nodes_0_host).type(this.data.host2);
+    cy.get(this.domSelector.nodes_0_host).type('@');
+    cy.get(this.domSelector.schemaErrorMessage).should('exist');
+    cy.get(this.domSelector.nodes_0_host).clear().type('*1');
+    cy.get(this.domSelector.schemaErrorMessage).should('not.exist');
+
+    cy.get(this.domSelector.nodes_0_host).clear().type(this.data.host2);
     cy.get(this.domSelector.nodes_0_port).type(this.data.port);
     cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
     cy.contains('Next').click();
@@ -128,7 +133,8 @@ context('Create and Delete Route', () => {
     cy.get(this.domSelector.drawer).should('be.visible');
 
     cy.get(this.domSelector.codemirrorScroll).within(() => {
-      cy.contains('upstream').should("exist");
+      cy.contains('upstream').should('exist');
+      cy.contains('vars').should('exist')
       cy.contains(name).should('exist');
     });
   });
@@ -145,6 +151,11 @@ context('Create and Delete Route', () => {
     cy.get('#status').should('have.class', 'ant-switch-checked');
     cy.get(this.domSelector.name).clear().type(newName);
     cy.get(this.domSelector.description).clear().type(this.data.description2);
+    cy.get(this.domSelector.advancedMatchingTable).should('exist');
+    cy.get(this.domSelector.advancedMatchingTableOperation).within(() => {
+      cy.contains('Delete').click().should('not.exist');
+    });
+
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Next').click();
@@ -161,6 +172,7 @@ context('Create and Delete Route', () => {
 
     cy.get(this.domSelector.codemirrorScroll).within(() => {
       cy.contains('upstream').should("exist");
+      cy.contains('vars').should('not.exist');
       cy.contains(newName).should('exist');
     });
   });

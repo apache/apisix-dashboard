@@ -75,5 +75,8 @@
   "selectDropdown": ".ant-select-dropdown",
   "codeMirrorMode": "[data-cy='code-mirror-mode']",
   "selectJSON": ".ant-select-dropdown [label=JSON]",
-  "deleteAlert": ".ant-modal-body"
+  "deleteAlert": ".ant-modal-body",
+  "schemaErrorMessage": ".ant-form-item-explain.ant-form-item-explain-error",
+  "advancedMatchingTable": ".ant-table-row.ant-table-row-level-0",
+  "advancedMatchingTableOperation": ".ant-space"
 }
