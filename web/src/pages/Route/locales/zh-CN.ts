@@ -74,7 +74,7 @@ export default {
   'page.route.form.itemLabel.redirectURI': '重定向路径',
   'page.route.form.itemExtraMessage.domain': '路由匹配的域名列表。支持泛域名，如：*.test.com',
   'page.route.form.itemRulesPatternMessage.domain':
-    '仅支持字母、数字和 *，但 * 需要在开头位置。',
+    '仅支持字母、数字、-、_和 *，但 * 需要在开头位置。',
   'page.route.form.itemExtraMessage1.path':
     'HTTP 请求路径，如 /foo/index.html，支持请求路径前缀 /foo/*。/* 代表所有路径',
   'page.route.form.itemExtraMessage1.remoteAddrs':

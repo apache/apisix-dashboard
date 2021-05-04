@@ -75,7 +75,7 @@ export default {
   'page.route.form.itemExtraMessage.domain':
     'Domain Name or IP, support for generic Domain Name, for example: *.test.com',
   'page.route.form.itemRulesPatternMessage.domain':
-    'Only letters, numbers and * are supported, but * needs to be at the beginning.',
+    'Only letters, numbers, -,_ and * are supported, but * needs to be at the beginning.',
   'page.route.form.itemExtraMessage1.path':
     'HTTP Request path, for example: /foo/index.html, supports request path prefix /foo/* ; /* represents all paths',
   'page.route.form.itemRulesPatternMessage.remoteAddrs':
