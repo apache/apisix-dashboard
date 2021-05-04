@@ -27,7 +27,6 @@ context('Create and delete consumer with limit-count plugin form', () => {
   const selector = {
     count: '#count',
     time_window: '#time_window',
-    redis_timeout: '#time_window',
     key: '#key',
     rejected_code: '#rejected_code',
     policy: '#policy',
@@ -60,6 +59,7 @@ context('Create and delete consumer with limit-count plugin form', () => {
     cy.focused(this.domSelector.drawer).should('exist');
     cy.get(this.domSelector.disabledSwitcher).click();
     // edit
+    cy.get(this.domSelector.monacoScroll).should('be.visible');
     cy.window().then(({ monaco }) => {
       if (monaco) {
         monaco.setValue(JSON.stringify({ key: 'test' }));
