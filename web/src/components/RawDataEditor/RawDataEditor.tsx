@@ -48,10 +48,10 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
   useEffect(() => {
     switch (monacoLanguage) {
       case monacoLanguageList.JSON:
-        setContent(JSON.stringify(data, null, 4));
+        setContent(JSON.stringify(data, null, 2));
         break;
       case monacoLanguageList.YAML: {
-        const {data: yamlData} = json2yaml(JSON.stringify(data, null, 4));
+        const {data: yamlData} = json2yaml(JSON.stringify(data, null, 2));
         setContent(yamlData)
         break;
       }
