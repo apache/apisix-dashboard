@@ -83,7 +83,7 @@ const PluginFlow: React.FC<Props> = ({ chart, readonly = false }) => {
       return
     }
 
-    const sidebar = document.querySelector('.ant-pro-sider-collapsed-button')
+    const siderbarCollapsedButton = document.querySelector('.ant-pro-sider-collapsed-button')
 
     const graph = FlowGraph.init(container, plugins, chart);
     (window as any).graph = graph
@@ -117,10 +117,10 @@ const PluginFlow: React.FC<Props> = ({ chart, readonly = false }) => {
     }
 
     window.addEventListener("resize", handleResize)
-    sidebar?.addEventListener('click', handleLeftSidebarResize)
+    siderbarCollapsedButton?.addEventListener('click', handleLeftSidebarResize)
     return () => {
       window.removeEventListener("resize", handleResize)
-      sidebar?.removeEventListener('click', handleLeftSidebarResize)
+      siderbarCollapsedButton?.removeEventListener('click', handleLeftSidebarResize)
     }
   }, [plugins])
 
