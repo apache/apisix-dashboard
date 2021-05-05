@@ -204,8 +204,8 @@ const Page: React.FC<Props> = (props) => {
             setStep(4)
           }
         },
-        okText: formatMessage({ id: 'component.global.modal.confirm' }),
-        cancelText: formatMessage({ id: 'component.global.modal.cancel' }),
+        okText: formatMessage({ id: 'component.global.confirm' }),
+        cancelText: formatMessage({ id: 'component.global.cancel' }),
       })
       return
     }

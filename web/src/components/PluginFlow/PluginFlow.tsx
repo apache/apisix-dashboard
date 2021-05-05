@@ -175,8 +175,8 @@ const PluginFlow: React.FC<Props> = ({ chart, readonly = false }) => {
           setConditionProps(DEFAULT_CONDITION_PROPS)
         }}
         onCancel={() => setConditionProps(DEFAULT_CONDITION_PROPS)}
-        okText={formatMessage({ id: 'component.global.modal.confirm' })}
-        cancelText={formatMessage({ id: 'component.global.modal.cancel' })}
+        okText={formatMessage({ id: 'component.global.confirm' })}
+        cancelText={formatMessage({ id: 'component.global.cancel' })}
         okButtonProps={{
           disabled: readonly
         }}

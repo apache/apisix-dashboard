@@ -81,6 +81,4 @@ export default {
   'component.global.copy': 'Copy',
   'component.global.copySuccess': 'Copy Successfully ',
   'component.global.copyFail': 'Copy Failed',
-  'component.global.modal.confirm': 'OK',
-  'component.global.modal.cancel': 'Cancel',
 };
