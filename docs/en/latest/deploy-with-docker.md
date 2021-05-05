@@ -74,7 +74,7 @@ $ docker ps -a
 
 If the container `apisix-dashboard` is ok, visit `http://127.0.0.1:9000` to use the dashboard with GUI, where the default username and password are `admin`.
 
-4. Stop the Dashboard
+4. Stop
 
 ```sh
 $ docker stop apisix-dashboard
