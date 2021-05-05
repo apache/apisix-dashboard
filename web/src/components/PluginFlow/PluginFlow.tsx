@@ -146,6 +146,7 @@ const PluginFlow: React.FC<Props> = ({ chart, readonly = false }) => {
             name={pluginProps.name}
             visible={pluginProps.visible}
             pluginList={plugins}
+            isEnabled
             initialData={{
               // NOTE: We use {PluginName: data} because initialData is all plugins' data
               [pluginProps.name]: pluginProps.data

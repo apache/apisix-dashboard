@@ -56,7 +56,7 @@ class FlowGraph {
   private static generateGroups(): Addon.Stencil.Group[] {
     const otherGroupList = [{
       name: 'basic',
-      title: formatMessage({id: 'component.plugin-flow.text.general'}),
+      title: formatMessage({ id: 'component.plugin-flow.text.general' }),
       graphHeight: 104,
     }]
 
