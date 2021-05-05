@@ -86,7 +86,7 @@ const PluginFlow: React.FC<Props> = ({ chart, readonly = false }) => {
     const siderbarCollapsedButton = document.querySelector('.ant-pro-sider-collapsed-button')
 
     const graph = FlowGraph.init(container, plugins, chart);
-    (window as any).graph = graph
+    (window as any).graph = FlowGraph
     setIsReady(true)
 
     const stencilContainer = document.querySelector('#stencil') as HTMLElement
