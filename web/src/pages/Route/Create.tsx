@@ -75,6 +75,8 @@ const Page: React.FC<Props> = (props) => {
       setAdvancedMatchingRules(data.advancedMatchingRules);
       form2.setFieldsValue(data.form2Data);
       setStep3Data(data.step3Data);
+
+      setStep(3)
     });
 
   const onReset = () => {
@@ -259,9 +261,9 @@ const Page: React.FC<Props> = (props) => {
             setStep(nextStep);
           });
         });
+      } else {
+        setStep(nextStep)
       }
-
-      setStep(nextStep)
       return;
     }
 

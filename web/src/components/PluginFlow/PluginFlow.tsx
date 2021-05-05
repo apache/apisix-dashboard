@@ -23,7 +23,6 @@ import FlowGraph from './components/FlowGraph'
 import Toolbar from './components/Toolbar'
 import { DEFAULT_CONDITION_PROPS, DEFAULT_PLUGIN_PROPS, DEFAULT_STENCIL_WIDTH, DEFAULT_TOOLBAR_HEIGHT, FlowGraphEvent } from './constants'
 import styles from './style.less'
-import ConfigPanel from './components/ConfigPanel'
 import PluginDetail from '../Plugin/PluginDetail'
 import { fetchList } from '../Plugin/service'
 
@@ -126,7 +125,7 @@ const PluginFlow: React.FC<Props> = ({ chart, readonly = false }) => {
   }, [plugins])
 
   useEffect(() => {
-    fetchList().then(data => setPlugins(data))
+    fetchList().then(setPlugins)
   }, [])
 
   return (
@@ -138,7 +137,6 @@ const PluginFlow: React.FC<Props> = ({ chart, readonly = false }) => {
           <div className={styles.toolbar}>{isReady && <Toolbar />}</div>
           <div id="container" className={styles.flow}></div>
         </div>
-        <div className={styles.config}>{isReady && <ConfigPanel />}</div>
       </div>
       {
         pluginProps.visible && (

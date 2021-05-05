@@ -26,9 +26,6 @@ export const DEFAULT_OPINIONS: Partial<Graph.Options> = {
   scroller: true,
   width: 800,
   height: 600,
-  background: {
-    color: '#fffbe6'
-  },
   grid: {
     size: 10,
     visible: true,
