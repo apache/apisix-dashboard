@@ -28,10 +28,10 @@ context('Create and Delete Consumer', () => {
     disabledSwitcher: '#disable',
     codeMirror: '.CodeMirror',
     notification: '.ant-notification-notice-message',
-    rate: "#rate",
-    burst: "#burst",
+    rate: '#rate',
+    burst: '#burst',
     key: '#key',
-    remote_addr: "[title=remote_addr]"
+    remote_addr: '[title=remote_addr]'
   }
 
   const data = {

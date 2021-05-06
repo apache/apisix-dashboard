@@ -28,8 +28,8 @@ context('Create and delete consumer with proxy-mirror plugin form', () => {
     codeMirror: '.CodeMirror',
     notification: '.ant-notification-notice-message',
     notificationCloseIcon: '.ant-notification-close-icon',
-    host: "#host",
-    alert: "[role=alert]"
+    host: '#host',
+    alert: '[role=alert]'
   }
 
   const data = {
