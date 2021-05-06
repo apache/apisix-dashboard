@@ -190,7 +190,6 @@ declare namespace RouteModule {
     upstream: {
       checks: UpstreamModule.HealthCheck;
       create_time: number;
-      k8s_deployment_info: UpstreamModule.K8SDeploymentInfo;
       id: string;
       nodes: {
         port: number;
