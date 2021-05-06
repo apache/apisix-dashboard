@@ -17,14 +17,18 @@
 /* eslint-disable no-undef */
 
 context('Create and delete consumer with limit-conn plugin form', () => {
-  beforeEach(() => {
-    cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
-  });
 
   const selector = {
+    empty:'.ant-empty-normal',
+    username: '#username',
+    description: '#desc',
+    pluginCard: '.ant-card',
+    drawer: '.ant-drawer-content',
+    dropdown: '.rc-virtual-list',
+    disabledSwitcher: '#disable',
+    codeMirror: '.CodeMirror',
+    notification: '.ant-notification-notice-message',
+    selectDropdown: '.ant-select-dropdown',
     conn: '#conn',
     burst: '#burst',
     default_conn_delay: '#default_conn_delay',
@@ -34,32 +38,40 @@ context('Create and delete consumer with limit-conn plugin form', () => {
   }
 
   const data = {
+    consumerName: 'test_consumer',
+    description: 'desc_by_autotest',
+    createConsumerSuccess: 'Create Consumer Successfully',
+    deleteConsumerSuccess: 'Delete Consumer Successfully',
     conn: 1,
     burst: 0,
     default_conn_delay: 1,
     key: 'remote_addr',
   }
 
+  beforeEach(() => {
+    cy.login();
+  });
+
   it('creates consumer with limit-conn form', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.get(this.domSelector.empty).should('be.visible');
+    cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     // basic information
-    cy.get(this.domSelector.username).type(this.data.consumerName);
-    cy.get(this.domSelector.description).type(this.data.description);
+    cy.get(selector.username).type(data.consumerName);
+    cy.get(selector.description).type(data.description);
     cy.contains('Next').click();
 
     // config auth plugin
-    cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
+    cy.contains(selector.pluginCard, 'key-auth').within(() => {
       cy.contains('Enable').click({
         force: true,
       });
     });
-    cy.focused(this.domSelector.drawer).should('exist');
-    cy.get(this.domSelector.disabledSwitcher).click();
+    cy.focused(selector.drawer).should('exist');
+    cy.get(selector.disabledSwitcher).click();
     // edit codemirror
-    cy.get(this.domSelector.codeMirror)
+    cy.get(selector.codeMirror)
       .first()
       .then((editor) => {
         editor[0].CodeMirror.setValue(
@@ -70,40 +82,40 @@ context('Create and delete consumer with limit-conn plugin form', () => {
         cy.contains('button', 'Submit').click();
       });
 
-    cy.contains(this.domSelector.pluginCard, 'limit-conn').within(() => {
+    cy.contains(selector.pluginCard, 'limit-conn').within(() => {
       cy.contains('Enable').click({
         force: true,
       });
     });
 
-    cy.focused(this.domSelector.drawer).should('exist');
+    cy.focused(selector.drawer).should('exist');
 
     // config limit-conn form
     cy.get(selector.conn).type(data.conn);
     cy.get(selector.burst).type(data.burst);
     cy.get(selector.default_conn_delay).type(data.default_conn_delay);
     cy.get(selector.key).click();
-    cy.get(this.domSelector.selectDropdown).should('be.visible');
+    cy.get(selector.selectDropdown).should('be.visible');
     cy.get(selector.title).click({
       timeout: 5000,
     });
-    cy.get(this.domSelector.disabledSwitcher).click();
-    cy.get(this.domSelector.drawer).within(() => {
+    cy.get(selector.disabledSwitcher).click();
+    cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,
       });
     });
-    cy.get(this.domSelector.drawer).should('not.exist');
+    cy.get(selector.drawer).should('not.exist');
 
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.createConsumerSuccess);
+    cy.get(selector.notification).should('contain', data.createConsumerSuccess);
   });
 
   it('delete the consumer', function () {
     cy.visit('/consumer/list');
-    cy.contains(this.data.consumerName).should('be.visible').siblings().contains('Delete').click();
+    cy.contains(data.consumerName).should('be.visible').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.deleteConsumerSuccess);
+    cy.get(selector.notification).should('contain', data.deleteConsumerSuccess);
   });
 });
