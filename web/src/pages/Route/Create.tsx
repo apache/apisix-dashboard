@@ -72,10 +72,14 @@ const Page: React.FC<Props> = (props) => {
 
   const setupRoute = (rid: number) =>
     fetchItem(rid).then((data) => {
-      form1.setFieldsValue(data.form1Data);
-      setAdvancedMatchingRules(data.advancedMatchingRules);
-      form2.setFieldsValue(data.form2Data);
-      setStep3Data(data.step3Data);
+      const routeData = {...data};
+      if (props.route.path.indexOf('duplicate') !== -1) {
+        routeData.form1Data.name = "";
+      }
+      form1.setFieldsValue(routeData.form1Data);
+      setAdvancedMatchingRules(routeData.advancedMatchingRules);
+      form2.setFieldsValue(routeData.form2Data);
+      setStep3Data(routeData.step3Data);
     });
 
   const onReset = () => {
