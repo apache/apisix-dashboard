@@ -189,7 +189,7 @@ const Page: React.FC<Props> = (props) => {
     return null;
   };
 
-  const savePlugins = () => {
+  const savePlugins = (): boolean => {
     const isScriptConfigured = FlowGraph.graph?.toJSON().cells.length
     const isPluginsConfigured = Object.keys(step3Data.plugins || {}).length
 
@@ -207,7 +207,7 @@ const Page: React.FC<Props> = (props) => {
         okText: formatMessage({ id: 'component.global.confirm' }),
         cancelText: formatMessage({ id: 'component.global.cancel' }),
       })
-      return
+      return false
     }
 
     if (isScriptConfigured) {

@@ -182,8 +182,9 @@ class FlowGraph {
   }
 
   private static showPorts(ports: NodeListOf<SVGAElement>, show: boolean) {
-    // @ts-ignore
+    // eslint-disable-next-line
     for (let i = 0, len = ports.length; i < len; i = i + 1) {
+      // eslint-disable-next-line
       ports[i].style.visibility = show ? 'visible' : 'hidden'
     }
   }
@@ -382,6 +383,7 @@ class FlowGraph {
       }
     })
 
+    // eslint-disable-next-line
     return data
   }
 }

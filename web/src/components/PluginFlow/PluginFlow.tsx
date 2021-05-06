@@ -118,6 +118,7 @@ const PluginFlow: React.FC<Props> = ({ chart, readonly = false }) => {
 
     window.addEventListener("resize", handleResize)
     siderbarCollapsedButton?.addEventListener('click', handleLeftSidebarResize)
+    // eslint-disable-next-line
     return () => {
       window.removeEventListener("resize", handleResize)
       siderbarCollapsedButton?.removeEventListener('click', handleLeftSidebarResize)
