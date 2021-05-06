@@ -17,6 +17,29 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Consumer', () => {
+
+  const selector = {
+    empty:'.ant-empty-normal',
+    username: '#username',
+    description: '#desc',
+    pluginCard: '.ant-card',
+    drawer: '.ant-drawer-content',
+    disabledSwitcher: '#disable',
+    codeMirror: '.CodeMirror',
+    notification: '.ant-notification-notice-message',
+    nameSelector: '[title=Name]',
+    serviceSelector: '[title=test_service]',
+    codemirrorScroll: '.CodeMirror-scroll',
+  }
+
+  const data = {
+    consumerName: 'test_consumer',
+    description: 'desc_by_autotest',
+    createConsumerSuccess: 'Create Consumer Successfully',
+    deleteConsumerSuccess: 'Delete Consumer Successfully',
+    pluginErrorAlert: 'Invalid plugin data',
+  }
+
   beforeEach(() => {
     cy.login();
 
@@ -27,23 +50,23 @@ context('Create and Delete Consumer', () => {
   it('creates consumer with key-auth', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.get(this.domSelector.empty).should('be.visible');
+    cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     // basic information
-    cy.get(this.domSelector.username).type(this.data.consumerName);
-    cy.get(this.domSelector.description).type(this.data.description);
+    cy.get(selector.username).type(data.consumerName);
+    cy.get(selector.description).type(data.description);
     cy.contains('Next').click();
 
     // plugin config
-    cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
+    cy.contains(selector.pluginCard, 'key-auth').within(() => {
       cy.contains('Enable').click({
         force: true,
       });
     });
-    cy.focused(this.domSelector.drawer).should('exist');
-    cy.get(this.domSelector.disabledSwitcher).click();
+    cy.focused(selector.drawer).should('exist');
+    cy.get(selector.disabledSwitcher).click();
     // edit codemirror
-    cy.get(this.domSelector.codeMirror)
+    cy.get(selector.codeMirror)
       .first()
       .then((editor) => {
         editor[0].CodeMirror.setValue(
@@ -55,46 +78,46 @@ context('Create and Delete Consumer', () => {
       });
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.createConsumerSuccess);
+    cy.get(selector.notification).should('contain', data.createConsumerSuccess);
   });
 
   it('should view the consumer', function () {
     cy.visit('/consumer/list');
 
-    cy.get(this.domSelector.nameSelector).type(this.data.consumerName);
+    cy.get(selector.nameSelector).type(data.consumerName);
     cy.contains('Search').click();
-    cy.contains(this.data.consumerName).siblings().contains('View').click();
-    cy.get(this.domSelector.drawer).should('be.visible');
+    cy.contains(data.consumerName).siblings().contains('View').click();
+    cy.get(selector.drawer).should('be.visible');
 
-    cy.get(this.domSelector.codemirrorScroll).within(() => {
+    cy.get(selector.codemirrorScroll).within(() => {
       cy.contains('plugins').should('exist');
-      cy.contains(this.data.consumerName).should('exist');
+      cy.contains(data.consumerName).should('exist');
     });
   });
 
   it('delete the consumer', function () {
     cy.visit('/consumer/list');
-    cy.contains(this.data.consumerName).should('be.visible').siblings().contains('Delete').click();
+    cy.contains(data.consumerName).should('be.visible').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.deleteConsumerSuccess);
+    cy.get(selector.notification).should('contain', data.deleteConsumerSuccess);
   });
 
   it('creates consumer with wrong json', function () {
     cy.visit('/consumer/list');
     cy.contains('Create').click();
     // basic information
-    cy.get(this.domSelector.username).type(this.data.consumerName);
-    cy.get(this.domSelector.description).type(this.data.description);
+    cy.get(selector.username).type(data.consumerName);
+    cy.get(selector.description).type(data.description);
     cy.contains('Next').click();
 
     // plugin config
-    cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
+    cy.contains(selector.pluginCard, 'key-auth').within(() => {
       cy.get('button').click({
         force: true,
       });
     });
     // edit codeMirror
-    cy.get(this.domSelector.codeMirror)
+    cy.get(selector.codeMirror)
       .first()
       .then((editor) => {
         editor[0].CodeMirror.setValue(
@@ -104,6 +127,6 @@ context('Create and Delete Consumer', () => {
         );
         cy.contains('button', 'Submit').click();
       });
-    cy.get(this.domSelector.notification).should('contain', this.data.pluginErrorAlert);
+    cy.get(selector.notification).should('contain', data.pluginErrorAlert);
   });
 });
