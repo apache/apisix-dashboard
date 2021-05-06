@@ -17,42 +17,53 @@
 /* eslint-disable no-undef */
 
 context('Create and delete Consumer with referer-restriction form ', () => {
-  beforeEach(() => {
-    cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
-  });
 
   const selector = {
+    empty:'.ant-empty-normal',
+    username: '#username',
+    description: '#desc',
+    pluginCard: '.ant-card',
+    drawer: '.ant-drawer-content',
+    dropdown: '.rc-virtual-list',
+    disabledSwitcher: '#disable',
+    codeMirror: '.CodeMirror',
+    notification: '.ant-notification-notice-message',
     whitelist: "#whitelist_0",
     bypass_missing: "#bypass_missing",
   }
 
   const data = {
+    consumerName: 'test_consumer',
+    description: 'desc_by_autotest',
+    createConsumerSuccess: 'Create Consumer Successfully',
+    deleteConsumerSuccess: 'Delete Consumer Successfully',
     whitelist: 'yy.com',
   }
+
+  beforeEach(() => {
+    cy.login();
+  });
 
   it('creates consumer with referer-restriction form', function () {
     cy.visit('/');
     cy.contains('Consumer').click();
-    cy.get(this.domSelector.empty).should('be.visible');
+    cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     // basic information
-    cy.get(this.domSelector.username).type(this.data.consumerName);
-    cy.get(this.domSelector.description).type(this.data.description);
+    cy.get(selector.username).type(data.consumerName);
+    cy.get(selector.description).type(data.description);
     cy.contains('Next').click();
 
     // config auth plugin
-    cy.contains(this.domSelector.pluginCard, 'key-auth').within(() => {
+    cy.contains(selector.pluginCard, 'key-auth').within(() => {
       cy.contains('Enable').click({
         force: true,
       });
     });
-    cy.focused(this.domSelector.drawer).should('exist');
-    cy.get(this.domSelector.disabledSwitcher).click();
+    cy.focused(selector.drawer).should('exist');
+    cy.get(selector.disabledSwitcher).click();
     // edit codemirror
-    cy.get(this.domSelector.codeMirror)
+    cy.get(selector.codeMirror)
       .first()
       .then((editor) => {
         editor[0].CodeMirror.setValue(
@@ -63,34 +74,34 @@ context('Create and delete Consumer with referer-restriction form ', () => {
         cy.contains('button', 'Submit').click();
       });
 
-    cy.contains(this.domSelector.pluginCard, 'referer-restriction').within(() => {
+    cy.contains(selector.pluginCard, 'referer-restriction').within(() => {
       cy.contains('Enable').click({
         force: true,
       });
     });
 
-    cy.focused(this.domSelector.drawer).should('exist');
+    cy.focused(selector.drawer).should('exist');
 
     // config referer-restriction form
     cy.get(selector.whitelist).type(data.whitelist);
     cy.get(selector.bypass_missing).click();
-    cy.get(this.domSelector.drawer).within(() => {
+    cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,
       });
     });
 
-    cy.get(this.domSelector.drawer).should('not.exist');
+    cy.get(selector.drawer).should('not.exist');
 
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.createConsumerSuccess);
+    cy.get(selector.notification).should('contain', data.createConsumerSuccess);
   });
 
   it('delete the consumer', function () {
     cy.visit('/consumer/list');
-    cy.contains(this.data.consumerName).should('be.visible').siblings().contains('Delete').click();
+    cy.contains(data.consumerName).should('be.visible').siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.deleteConsumerSuccess);
+    cy.get(selector.notification).should('contain', data.deleteConsumerSuccess);
   });
 });
