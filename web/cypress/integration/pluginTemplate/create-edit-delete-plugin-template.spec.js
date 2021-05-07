@@ -17,76 +17,95 @@
 /* eslint-disable no-undef */
 
 context('Create Configure and Delete PluginTemplate', () => {
-  const timeout = 5000;
+
+  const selector = {
+    pluginCard: '.ant-card',
+    empty: '.ant-empty-normal',
+    description: '#desc',
+    drawer: '.ant-drawer-content',
+    codeMirrorMode: "[data-cy='code-mirror-mode']",
+    selectDropdown: '.ant-select-dropdown',
+    selectJSON: '.ant-select-dropdown [label=JSON]',
+    disabledSwitcher: '#disable',
+    notification: '.ant-notification-notice-message',
+    refresh: '.anticon-reload',
+    descriptionSelector: '[title=Description]',
+  };
+
+  const data = {
+    pluginTemplateName: 'test_plugin_template1',
+    pluginTemplateName2: 'test_plugin_template2',
+    createPluginTemplateSuccess: 'Create Plugin Template Successfully',
+    editPluginTemplateSuccess: 'Configure Plugin Template Successfully',
+    deletePluginTemplateSuccess: 'Delete Plugin Template Successfully',
+  };
+
   beforeEach(() => {
     cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
   });
 
   it('should create pluginTemplate', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.get(this.domSelector.empty).should('be.visible');
+    cy.get(selector.empty).should('be.visible');
     cy.contains('Advanced').should('be.visible').click();
     cy.contains('Plugin Template Config').should('be.visible').click();
-    cy.get(this.domSelector.empty).should('be.visible');
+    cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
 
-    cy.get(this.domSelector.description).type(this.data.pluginTemplateName);
+    cy.get(selector.description).type(data.pluginTemplateName);
     cy.contains('Next').click();
 
     // should not see proxy-rewrite plugin in the step2
     cy.contains('proxy-rewrite').should('not.exist');
 
-    cy.contains(this.domSelector.pluginCard, 'basic-auth').within(() => {
+    cy.contains(selector.pluginCard, 'basic-auth').within(() => {
       cy.get('button').click({
         force: true,
       });
     });
-    cy.focused(this.domSelector.drawer).should('exist');
+    cy.focused(selector.drawer).should('exist');
 
-    cy.get(this.domSelector.codeMirrorMode).click();
-    cy.get(this.domSelector.selectDropdown).should('be.visible');
-    cy.get(this.domSelector.selectJSON).click();
-    cy.get(this.domSelector.disabledSwitcher).click({
+    cy.get(selector.codeMirrorMode).click();
+    cy.get(selector.selectDropdown).should('be.visible');
+    cy.get(selector.selectJSON).click();
+    cy.get(selector.disabledSwitcher).click({
       force: true,
     });
 
     cy.contains('Submit').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.createPluginTemplateSuccess);
+    cy.get(selector.notification).should('contain', data.createPluginTemplateSuccess);
   });
 
   it('should edit the pluginTemplate', function () {
     cy.visit('plugin-template/list');
-    cy.get(this.domSelector.refresh).click();
-    cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName);
+    cy.get(selector.refresh).click();
+    cy.get(selector.descriptionSelector).type(data.pluginTemplateName);
     cy.contains('button', 'Search').click();
-    cy.contains(this.data.pluginTemplateName).siblings().contains('Configure').click();
+    cy.contains(data.pluginTemplateName).siblings().contains('Configure').click();
 
-    cy.get(this.domSelector.description).clear().type(this.data.pluginTemplateName2);
+    cy.get(selector.description).clear().type(data.pluginTemplateName2);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
 
-    cy.get(this.domSelector.notification).should('contain', this.data.editPluginTemplateSuccess);
+    cy.get(selector.notification).should('contain', data.editPluginTemplateSuccess);
   });
 
   it('should delete pluginTemplate', function () {
     cy.visit('plugin-template/list');
-    cy.get(this.domSelector.refresh).click();
-    cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName);
+    cy.get(selector.refresh).click();
+    cy.get(selector.descriptionSelector).type(data.pluginTemplateName);
     cy.contains('button', 'Search').click();
-    cy.get(this.domSelector.empty).should('exist');
+    cy.get(selector.empty).should('exist');
 
     cy.contains('button', 'Reset').click();
-    cy.get(this.domSelector.descriptionSelector).type(this.data.pluginTemplateName2);
+    cy.get(selector.descriptionSelector).type(data.pluginTemplateName2);
     cy.contains('button', 'Search').click();
-    cy.contains(this.data.pluginTemplateName2).siblings().contains('Delete').click();
+    cy.contains(data.pluginTemplateName2).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.deletePluginTemplateSuccess);
+    cy.get(selector.notification).should('contain', data.deletePluginTemplateSuccess);
   });
 });
