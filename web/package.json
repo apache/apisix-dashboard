@@ -89,6 +89,7 @@
     "yaml": "^1.10.0"
   },
   "devDependencies": {
+    "@4tw/cypress-drag-drop": "^1.6.0",
     "@ant-design/pro-cli": "^2.0.2",
     "@cypress/code-coverage": "^3.9.2",
     "@types/base-64": "^0.1.3",
