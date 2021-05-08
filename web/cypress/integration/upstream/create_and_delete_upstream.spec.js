@@ -42,9 +42,6 @@ context('Create and Delete Upstream', () => {
 
   beforeEach(() => {
     cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
   });
 
   it('should create upstream with default type (roundrobin)', function () {
