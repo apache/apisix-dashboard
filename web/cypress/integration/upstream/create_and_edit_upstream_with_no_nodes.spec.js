@@ -17,54 +17,66 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Upstream', () => {
-    beforeEach(() => {
-      cy.login();
+  const selector = {
+    name: '#name',
+    description: '#desc',
+    upstreamNodeMinus0: '[data-cy=upstream-node-minus-0]',
+    notification: '.ant-notification-notice-message',
+    nameSelector: '[title=Name]',
+  };
 
-      cy.fixture('selector.json').as('domSelector');
-      cy.fixture('data.json').as('data');
-    });
+  const data = {
+    upstreamName: 'test_upstream',
+    description: 'desc_by_autotest',
+    createUpstreamSuccess: 'Create Upstream Successfully',
+    configureUpstreamSuccess: 'Configure Upstream Successfully',
+    deleteUpstreamSuccess: 'Delete Upstream Successfully',
+  };
 
-    it('should create upstream with no nodes', function () {
-      cy.visit('/');
-      cy.contains('Upstream').click();
-      cy.contains('Create').click();
-
-      cy.get(this.domSelector.name).type(this.data.upstreamName);
-      cy.get(this.domSelector.description).type(this.data.description);
-
-      // delete all nodes
-      cy.get(this.domSelector.upstreamNodeMinus0).click();
-
-      cy.contains('Next').click();
-      cy.contains('Submit').click();
-      cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
-      cy.url().should('contains', 'upstream/list');
-    });
-
-    it('should configure the upstream with no nodes', function () {
-      cy.visit('/');
-      cy.contains('Upstream').click();
-
-      cy.get(this.domSelector.nameSelector).type(this.data.upstreamName);
-      cy.contains('Search').click();
-      cy.contains(this.data.upstreamName).siblings().contains('Configure').click();
-
-      cy.get(this.domSelector.upstreamNodeMinus0).should('not.exist');
-      cy.contains('Next').click();
-      cy.contains('Submit').click({
-        force: true,
-      });
-
-      cy.get(this.domSelector.notification).should('contain', this.data.configureUpstreamSuccess);
-      cy.url().should('contains', 'upstream/list');
-
-    });
-
-    it('should delete the upstream', function () {
-      cy.visit('/');
-      cy.contains('Upstream').click();
-      cy.contains(this.data.upstreamName).siblings().contains('Delete').click();
-      cy.contains('button', 'Confirm').click();
-      cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
-    });
+  beforeEach(() => {
+    cy.login();
   });
+
+  it('should create upstream with no nodes', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+    cy.contains('Create').click();
+
+    cy.get(selector.name).type(data.upstreamName);
+    cy.get(selector.description).type(data.description);
+
+    // delete all nodes
+    cy.get(selector.upstreamNodeMinus0).click();
+
+    cy.contains('Next').click();
+    cy.contains('Submit').click();
+    cy.get(selector.notification).should('contain', data.createUpstreamSuccess);
+    cy.url().should('contains', 'upstream/list');
+  });
+
+  it('should configure the upstream with no nodes', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+
+    cy.get(selector.nameSelector).type(data.upstreamName);
+    cy.contains('Search').click();
+    cy.contains(data.upstreamName).siblings().contains('Configure').click();
+
+    cy.get(selector.upstreamNodeMinus0).should('not.exist');
+    cy.contains('Next').click();
+    cy.contains('Submit').click({
+      force: true,
+    });
+
+    cy.get(selector.notification).should('contain', data.configureUpstreamSuccess);
+    cy.url().should('contains', 'upstream/list');
+  });
+
+  it('should delete the upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+    cy.contains(data.upstreamName).siblings().contains('Delete').click();
+    cy.contains('button', 'Confirm').click();
+    cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
+  });
+});
