@@ -18,57 +18,74 @@
 
 context('Create and delete route with cors form', () => {
   const selector = {
+    empty: '.ant-empty-normal',
+    name: '#name',
+    description: '#desc',
+    pluginCardBordered: '.ant-card-bordered',
+    disabledSwitcher: '#disable',
+    checkedSwitcher: '.ant-switch-checked',
+    drawer: '.ant-drawer-content',
+    nodes_0_host: '#nodes_0_host',
+    nodes_0_port: '#nodes_0_port',
+    nodes_0_weight: '#nodes_0_weight',
+    deleteAlert: '.ant-modal-body',
+    notificationCloseIcon: '.ant-notification-close-icon',
+    notification: '.ant-notification-notice-message',
     allow_credential: "#allow_credential",
     allow_origins_by_regex: "#allow_origins_by_regex_0"
   }
 
+  const data = {
+    deleteRouteSuccess: 'Delete Route Successfully',
+    submitSuccess: 'Submit Successfully',
+    port: '80',
+    weight: 1,
+  };
+
   beforeEach(() => {
     cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
   });
 
   it('should create route with cors form', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.get(this.domSelector.empty).should('be.visible');
+    cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.contains('Next').click().click();
-    cy.get(this.domSelector.name).type('routeName');
-    cy.get(this.domSelector.description).type('desc');
+    cy.get(selector.name).type('routeName');
+    cy.get(selector.description).type('desc');
     cy.contains('Next').click();
 
-    cy.get(this.domSelector.nodes_0_host).type('127.0.0.1');
-    cy.get(this.domSelector.nodes_0_port).clear().type(this.data.port);
-    cy.get(this.domSelector.nodes_0_weight).clear().type(this.data.weight);
+    cy.get(selector.nodes_0_host).type('127.0.0.1');
+    cy.get(selector.nodes_0_port).clear().type(data.port);
+    cy.get(selector.nodes_0_weight).clear().type(data.weight);
     cy.contains('Next').click();
 
     // config cors plugin
-    cy.contains('cors').parents(this.domSelector.pluginCardBordered).within(() => {
+    cy.contains('cors').parents(selector.pluginCardBordered).within(() => {
       cy.get('button').click({
         force: true
       });
     });
 
-    cy.get(this.domSelector.drawer).should('be.visible').within(() => {
-      cy.get(this.domSelector.disabledSwitcher).click();
-      cy.get(this.domSelector.checkedSwitcher).should('exist');
+    cy.get(selector.drawer).should('be.visible').within(() => {
+      cy.get(selector.disabledSwitcher).click();
+      cy.get(selector.checkedSwitcher).should('exist');
     });
 
     // config cors form
     cy.get(selector.allow_credential).click();
     cy.get(selector.allow_origins_by_regex).type('.*.test.com');
-    cy.get(this.domSelector.drawer).within(() => {
+    cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,
       });
     });
-    cy.get(this.domSelector.drawer).should('not.exist');
+    cy.get(selector.drawer).should('not.exist');
 
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
-    cy.contains(this.data.submitSuccess);
+    cy.contains(data.submitSuccess);
 
     // back to route list page
     cy.contains('Goto List').click();
@@ -77,19 +94,15 @@ context('Create and delete route with cors form', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
-    const {
-      domSelector,
-      data
-    } = this;
 
-    cy.get(domSelector.name).clear().type('routeName');
+    cy.get(selector.name).clear().type('routeName');
     cy.contains('Search').click();
     cy.contains('routeName').siblings().contains('More').click();
     cy.contains('Delete').click();
-    cy.get(domSelector.deleteAlert).should('be.visible').within(() => {
+    cy.get(selector.deleteAlert).should('be.visible').within(() => {
       cy.contains('OK').click();
     });
-    cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
-    cy.get(domSelector.notificationCloseIcon).click();
+    cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
+    cy.get(selector.notificationCloseIcon).click();
   });
 });
