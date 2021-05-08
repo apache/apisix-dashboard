@@ -21,33 +21,10 @@ import defaultSettings from '../../../config/defaultSettings';
 
 context('Online debug', () => {
   const { SERVE_ENV = 'dev' } = Cypress.env();
-  const data = {
-    validUris: [
-      'localhost:9000/get',
-      '127.0.0.1:9000/get',
-      'www.baidu.com/get',
-      'baidu.com/get',
-      'test-host.com/get',
-      'test-host.com/aBCdsf/defsdf456eweWQE',
-      'localhost:9000/deps-get',
-      'localhost:9000/deps.get',
-      'localhost:9000/deps_get',
-      'localhost:9000/get?search=1',
-      'localhost:9000/get?search=v1,sd&number=-1',
-      'localhost:9000/get?search=1+1',
-      'localhost:9000/api/commands/submit.html#Requirements?test=apisix.com',
-      'localhost:9000/js6/main.jsp?sid=pARQZYHABxkSVdeMvXAAEtfJKbWQocOA&df=mail126_mailmaster#module=mbox.ListModule%7C%7B',
-    ],
-    invalidUrls: ['000'],
-    postFileUrl: `${defaultSettings.serveUrlMap[SERVE_ENV].split('//')[1]}/apisix/admin/import/routes`,
-    routeOptUrl: `${defaultSettings.serveUrlMap[SERVE_ENV].split('//')[1]}/apisix/admin/routes`,
-    uploadFile: '../../../api/test/testdata/import/default.json',
-    headerAuthorizationKey: 'Authorization',
-    routeName: 'hello',
-    queryKey0: 'name',
-  };
 
-  const domSelector = {
+  const selector = {
+    refresh: '.anticon-reload',
+    debugUri: '#debugUri',
     debugDraw: '[data-cy=debug-draw]',
     deubugMethod: '[data-cy=debug-method]',
     debugProtocol: '[data-cy=debug-protocol]',
@@ -66,13 +43,44 @@ context('Online debug', () => {
     bodyTab: '#rc-tabs-0-tab-body',
     jwtAuth: '[data-cy=jwt-auth]',
     jwtTokenInput: '#authForm_Authorization',
+    drawerClose: '.ant-drawer-close',
+    notification: '.ant-notification-notice-message',
+    notificationCloseIcon: '.ant-notification-close-icon',
+    deleteAlert: '.ant-modal-body',
+  };
+
+  const data = {
+    deleteRouteSuccess: 'Delete Route Successfully',
+    validUris: [
+      'localhost:9000/get',
+      '127.0.0.1:9000/get',
+      'www.baidu.com/get',
+      'baidu.com/get',
+      'test-host.com/get',
+      'test-host.com/aBCdsf/defsdf456eweWQE',
+      'localhost:9000/deps-get',
+      'localhost:9000/deps.get',
+      'localhost:9000/deps_get',
+      'localhost:9000/get?search=1',
+      'localhost:9000/get?search=v1,sd&number=-1',
+      'localhost:9000/get?search=1+1',
+      'localhost:9000/api/commands/submit.html#Requirements?test=apisix.com',
+      'localhost:9000/js6/main.jsp?sid=pARQZYHABxkSVdeMvXAAEtfJKbWQocOA&df=mail126_mailmaster#module=mbox.ListModule%7C%7B',
+    ],
+    invalidUrls: ['000'],
+    postFileUrl: `${
+      defaultSettings.serveUrlMap[SERVE_ENV].split('//')[1]
+    }/apisix/admin/import/routes`,
+    routeOptUrl: `${defaultSettings.serveUrlMap[SERVE_ENV].split('//')[1]}/apisix/admin/routes`,
+    uploadFile: '../../../api/test/testdata/import/default.json',
+    headerAuthorizationKey: 'Authorization',
+    routeName: 'hello',
+    queryKey0: 'name',
   };
 
   beforeEach(() => {
     cy.login();
 
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
     cy.fixture('route-json-data.json').as('routeData');
     cy.intercept('/apisix/admin/debug-request-forwarding').as('DebugAPI');
   });
@@ -82,14 +90,14 @@ context('Online debug', () => {
     cy.contains(menuLocaleUS['menu.routes']).click();
 
     // show online debug draw
-    cy.get(this.domSelector.refresh).click();
+    cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
-    cy.get(domSelector.debugDraw).should('be.visible');
+    cy.get(selector.debugDraw).should('be.visible');
     // input uri with specified special characters
     data.validUris.forEach((uri) => {
-      cy.get(this.domSelector.debugUri).clear();
-      cy.get(this.domSelector.debugUri).type(uri);
+      cy.get(selector.debugUri).clear();
+      cy.get(selector.debugUri).type(uri);
       cy.contains(routeLocaleUS['page.route.button.send']).click({ force: true });
 
       // should not show the notification about input the valid request url
@@ -102,25 +110,25 @@ context('Online debug', () => {
     cy.contains(menuLocaleUS['menu.routes']).click();
 
     // show online debug draw
-    cy.get(this.domSelector.refresh).click();
+    cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
-    cy.get(domSelector.debugDraw).should('be.visible');
+    cy.get(selector.debugDraw).should('be.visible');
 
     // click send without type debugUrl
     cy.contains(routeLocaleUS['page.route.button.send']).click({ force: true });
     cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('exist');
-    cy.get(this.domSelector.notificationCloseIcon).click({ multiple: true });
+    cy.get(selector.notificationCloseIcon).click({ multiple: true });
 
     // input invalid uris
     data.invalidUrls.forEach((uri) => {
-      cy.get(this.domSelector.debugUri).clear();
-      cy.get(this.domSelector.debugUri).type(uri);
+      cy.get(selector.debugUri).clear();
+      cy.get(selector.debugUri).type(uri);
       cy.contains(routeLocaleUS['page.route.button.send']).click({ force: true });
 
       // should not show the notification about input the valid request url
       cy.contains(routeLocaleUS['page.route.input.placeholder.requestUrl']).should('exist');
-      cy.get(this.domSelector.notificationCloseIcon).click({ multiple: true });
+      cy.get(selector.notificationCloseIcon).click({ multiple: true });
     });
   });
 
@@ -130,22 +138,22 @@ context('Online debug', () => {
     const currentToken = localStorage.getItem('token');
 
     // show online debug draw
-    cy.get(this.domSelector.refresh).click();
+    cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
-    cy.get(domSelector.debugDraw).should('be.visible');
-    cy.get(domSelector.headerTab).should('be.visible').click();
+    cy.get(selector.debugDraw).should('be.visible');
+    cy.get(selector.headerTab).should('be.visible').click();
 
     // show autocomplete
-    cy.get(domSelector.headerDataKey0).click({ force: true });
+    cy.get(selector.headerDataKey0).click({ force: true });
     cy.get('.ant-select-item-option-content').contains('Accept').click();
-    cy.get('.anticon-minus-circle').click()
+    cy.get('.anticon-minus-circle').click();
 
     // autocomplete should ingore case
-    cy.get(domSelector.headerDataKey0).type('auth').click({ force: true });
+    cy.get(selector.headerDataKey0).type('auth').click({ force: true });
     cy.get('.ant-select-item-option-content').contains('Authorization').click();
-    cy.get(domSelector.headerDataValue0).type(currentToken);
-  })
+    cy.get(selector.headerDataValue0).type(currentToken);
+  });
 
   it('should debug POST request with file successfully', function () {
     cy.visit('/');
@@ -153,52 +161,52 @@ context('Online debug', () => {
     const currentToken = localStorage.getItem('token');
 
     // show online debug draw
-    cy.get(this.domSelector.refresh).click();
+    cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
-    cy.get(domSelector.debugDraw).should('be.visible');
+    cy.get(selector.debugDraw).should('be.visible');
 
     // change request method POST
-    cy.get(domSelector.deubugMethod).click();
+    cy.get(selector.deubugMethod).click();
     cy.get('[title=POST]').click();
 
     // change request protocol http
-    cy.get(domSelector.debugProtocol).click();
+    cy.get(selector.debugProtocol).click();
     cy.contains('http://').click();
     // set debug uri
-    cy.get(this.domSelector.debugUri).type(data.postFileUrl);
+    cy.get(selector.debugUri).type(data.postFileUrl);
     // set request body
-    cy.get(domSelector.bodyTab).should('be.visible').click();
+    cy.get(selector.bodyTab).should('be.visible').click();
 
     cy.contains('form-data').should('be.visible').click();
-    cy.get(domSelector.debugFormDataKey0).type('file');
+    cy.get(selector.debugFormDataKey0).type('file');
 
     // check change type
-    cy.get(domSelector.debugFormDataType0).click();
+    cy.get(selector.debugFormDataType0).click();
     cy.contains('Text').click();
     // assert: text input dom should be visible
-    cy.get(domSelector.debugFormDataValue0).should('be.visible');
-    cy.get(domSelector.debugFormDataType0).click();
+    cy.get(selector.debugFormDataValue0).should('be.visible');
+    cy.get(selector.debugFormDataType0).click();
     cy.contains('File').click();
     // assert: upload file button should be visible
-    cy.get(domSelector.debugFormDataFileButton0).should('be.visible');
+    cy.get(selector.debugFormDataFileButton0).should('be.visible');
     // attach file
-    cy.get(domSelector.debugFormDataValue0).attachFile(data.uploadFile);
+    cy.get(selector.debugFormDataValue0).attachFile(data.uploadFile);
 
     // set header Authorization
-    cy.get(domSelector.headerTab).should('be.visible').click();
-    cy.get(domSelector.headerDataKey0).type(data.headerAuthorizationKey);
-    cy.get(domSelector.headerDataValue0).type(currentToken);
+    cy.get(selector.headerTab).should('be.visible').click();
+    cy.get(selector.headerDataKey0).type(data.headerAuthorizationKey);
+    cy.get(selector.headerDataValue0).type(currentToken);
 
     cy.contains(routeLocaleUS['page.route.button.send']).click();
 
     cy.wait('@DebugAPI');
     // assert: send request return
-    cy.get(domSelector.codeMirrorResp).contains('data').should('be.visible');
-    cy.get(domSelector.codeMirrorResp).contains('routes').should('be.visible');
+    cy.get(selector.codeMirrorResp).contains('data').should('be.visible');
+    cy.get(selector.codeMirrorResp).contains('routes').should('be.visible');
 
     // close debug drawer
-    cy.get(this.domSelector.drawerClose).click();
+    cy.get(selector.drawerClose).click();
   });
 
   it('should debug GET request with query parammeters and jwt auth successfully', function () {
@@ -207,24 +215,24 @@ context('Online debug', () => {
     const currentToken = localStorage.getItem('token');
 
     // show online debug draw
-    cy.get(this.domSelector.refresh).click();
+    cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
-    cy.get(domSelector.debugDraw).should('be.visible');
+    cy.get(selector.debugDraw).should('be.visible');
     // set debug uri
-    cy.get(this.domSelector.debugUri).type(data.routeOptUrl);
-    cy.get(domSelector.bodyTab).should('not.exist');
+    cy.get(selector.debugUri).type(data.routeOptUrl);
+    cy.get(selector.bodyTab).should('not.exist');
     // set query param
-    cy.get(domSelector.queryDataKey0).type(data.queryKey0);
-    cy.get(domSelector.queryDataValue0).type(data.routeName);
+    cy.get(selector.queryDataKey0).type(data.queryKey0);
+    cy.get(selector.queryDataValue0).type(data.routeName);
     // set Authentication
-    cy.get(domSelector.authTab).should('be.visible').click();
-    cy.get(domSelector.jwtAuth).click();
-    cy.get(domSelector.jwtTokenInput).should('be.visible').type(currentToken);
+    cy.get(selector.authTab).should('be.visible').click();
+    cy.get(selector.jwtAuth).click();
+    cy.get(selector.jwtTokenInput).should('be.visible').type(currentToken);
 
     cy.contains(routeLocaleUS['page.route.button.send']).click();
     cy.wait('@DebugAPI');
-    cy.get(domSelector.codeMirrorResp).within(() => {
+    cy.get(selector.codeMirrorResp).within(() => {
       cy.get('.cm-property').should(($property) => {
         $property.map((i, el) => {
           if (Cypress.$(el).text() === '"name"') {
@@ -235,8 +243,8 @@ context('Online debug', () => {
             const findTotalNumber = Cypress.$(el).next().text();
             expect(findTotalNumber).to.equal('1');
           }
-        })
-      })
+        });
+      });
     });
   });
 
@@ -246,26 +254,26 @@ context('Online debug', () => {
     const currentToken = localStorage.getItem('token');
 
     // show online debug draw
-    cy.get(this.domSelector.refresh).click();
+    cy.get(selector.refresh).click();
     cy.contains('Advanced').click();
     cy.contains(routeLocaleUS['page.route.onlineDebug']).click();
-    cy.get(domSelector.debugDraw).should('be.visible');
+    cy.get(selector.debugDraw).should('be.visible');
 
     // change request method POST
-    cy.get(domSelector.deubugMethod).click();
+    cy.get(selector.deubugMethod).click();
     cy.get('[title=POST]').click();
 
     // change request protocol http
-    cy.get(domSelector.debugProtocol).click();
+    cy.get(selector.debugProtocol).click();
     cy.contains('http://').click();
     // set debug uri
-    cy.get(this.domSelector.debugUri).type(data.routeOptUrl);
+    cy.get(selector.debugUri).type(data.routeOptUrl);
     // set Authentication
-    cy.get(domSelector.authTab).should('be.visible').click();
-    cy.get(domSelector.jwtAuth).click();
-    cy.get(domSelector.jwtTokenInput).should('be.visible').type(currentToken);
+    cy.get(selector.authTab).should('be.visible').click();
+    cy.get(selector.jwtAuth).click();
+    cy.get(selector.jwtTokenInput).should('be.visible').type(currentToken);
 
-    cy.get(domSelector.bodyTab).should('be.visible').click();
+    cy.get(selector.bodyTab).should('be.visible').click();
 
     cy.contains('raw input').should('be.visible').click();
 
@@ -276,8 +284,8 @@ context('Online debug', () => {
       cy.contains(routeLocaleUS['page.route.button.send']).click();
     });
     cy.wait('@DebugAPI');
-    cy.get(domSelector.codeMirrorResp).contains('code').should('be.visible');
-    cy.get(domSelector.codeMirrorResp).within(() => {
+    cy.get(selector.codeMirrorResp).contains('code').should('be.visible');
+    cy.get(selector.codeMirrorResp).within(() => {
       cy.get('.cm-property').should(($property) => {
         $property.map((i, el) => {
           if (Cypress.$(el).text() === '"name"') {
@@ -288,8 +296,8 @@ context('Online debug', () => {
             const data = Cypress.$(el).next().text();
             expect(data).to.not.equal('null');
           }
-        })
-      })
+        });
+      });
     });
   });
 
@@ -301,11 +309,13 @@ context('Online debug', () => {
     for (let routeName in testRouteNames) {
       cy.contains(`${testRouteNames[routeName]}`).siblings().contains('More').click();
       cy.contains('Delete').click({ force: true });
-      cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
-        cy.contains('OK').click();
-      });
-      cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
-      cy.get(this.domSelector.notificationCloseIcon).click({ multiple: true });
+      cy.get(selector.deleteAlert)
+        .should('be.visible')
+        .within(() => {
+          cy.contains('OK').click();
+        });
+      cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
+      cy.get(selector.notificationCloseIcon).click({ multiple: true });
       cy.reload();
     }
   });
