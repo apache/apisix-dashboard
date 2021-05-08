@@ -111,18 +111,17 @@ context('Create and delete route with limit-req form', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
-    const { domSelector, data } = this;
 
-    cy.get(domSelector.name).clear().type('routeName');
+    cy.get(selector.name).clear().type('routeName');
     cy.contains('Search').click();
     cy.contains('routeName').siblings().contains('More').click();
     cy.contains('Delete').click();
-    cy.get(domSelector.deleteAlert)
+    cy.get(selector.deleteAlert)
       .should('be.visible')
       .within(() => {
         cy.contains('OK').click();
       });
-    cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
-    cy.get(domSelector.notificationCloseIcon).click();
+    cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
+    cy.get(selector.notificationCloseIcon).click();
   });
 });
