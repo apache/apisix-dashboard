@@ -36,6 +36,7 @@ context('Create and Delete Upstream', () => {
     cy.get(this.domSelector.nodes_0_port).clear().type('7000');
     cy.get(this.domSelector.nodes_0_weight).clear().type(1);
     cy.contains('Next').click();
+    cy.get(this.domSelector.input).should('be.disabled');
     cy.contains('Submit').click();
     cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
     cy.contains(this.data.createUpstreamSuccess);
