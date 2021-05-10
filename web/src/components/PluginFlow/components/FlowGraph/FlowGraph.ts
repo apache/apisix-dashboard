@@ -379,7 +379,10 @@ class FlowGraph {
     data.conf = {}
     cells.filter(item => item.shape === FlowGraphShape.plugin && item.id).forEach(item => {
       if (item.id) {
-        data.conf[item.id] = item.data
+        data.conf[item.id] = {
+          name: item.attrs?.text.text,
+          conf: item.data
+        }
       }
     })
 

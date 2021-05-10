@@ -104,9 +104,9 @@ context('Create and delete route with plugin orchestration', () => {
     cy.contains('Next').click();
     cy.contains('Submit').click();
 
-    // cy.contains('Submit Successfully');
-    // cy.contains('Goto List').click();
-    // cy.url().should('contains', 'routes/list');
+    cy.contains('Submit Successfully');
+    cy.contains('Goto List').click();
+    cy.url().should('contains', 'routes/list');
   });
 
   it('should delete the route', function () {
