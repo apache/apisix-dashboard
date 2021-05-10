@@ -205,7 +205,8 @@ func TestGenericStore_Init(t *testing.T) {
 					Value: `{"Field1":"demo2-f1", "Field2":"demo2-f2"}`,
 				},
 			},
-			wantErr:        fmt.Errorf("json unmarshal failed: invalid character ',' after object key"),
+			wantErr: fmt.Errorf("json unmarshal failed\n\tRelated Key:\t\tdemo1-f1\n\tError Description:\t" +
+				"invalid character ',' after object key"),
 			wantListCalled: true,
 		},
 	}

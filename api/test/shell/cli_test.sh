@@ -520,6 +520,59 @@ if [[ `echo $(sudo ./manager-api remove) | grep -c "OK"` -ne "1" ]]; then
   echo "error while removing the service"
   exit 1
 fi
+# test manager-api output for bad data on etcd
+# make a dummy entry
+./etcd-v3.4.14-linux-amd64/etcdctl put /apisix/routes/unique1 "{\"id\":}"
+sleep 2
+
+./manager-api 2>man-api.err &
+sleep 4
+
+if [[ `cat man-api.err | grep -c "Error occurred while initializing logical store:  /apisix/routes"` -ne '1' ||
+`cat man-api.err | grep -c "Error: json unmarshal failed"` -ne '1' ]];then
+  echo "manager api failed to stream error on stderr for bad data"
+  exit 1
+fi
+# delete dummy entry
+./etcd-v3.4.14-linux-amd64/etcdctl del /apisix/routes/unique1
+# just to make sure
+./manager-api stop
+sleep 6
+clean_up
+
+# run manager api as os service
+# 2 times OK for installing and starting
+if [[ `echo $(sudo ./manager-api start) | grep -o "OK" | wc -l` -ne "2" ]]; then
+  echo "error while initializing the service"
+  exit 1
+fi
+# check running status
+if [[ `echo $(sudo ./manager-api status) | grep -c "running..."` -ne "1" ]]; then
+  echo "error while starting the service"
+  exit 1
+fi
+# stop the service
+sudo ./manager-api stop
+sleep 2
+# recheck running status
+if [[ `echo $(sudo ./manager-api status) | grep -c "Service is stopped"` -ne "1" ]]; then
+  echo "error while stopping the service"
+  exit 1
+fi
+# restart the service
+# 1 time OK for just for starting
+if [[ `echo $(sudo ./manager-api start) | grep -c "OK"` -ne "1" ]]; then
+  echo "error while restarting the service"
+  exit 1
+fi
+# stop the service
+sudo ./manager-api stop
+sleep 2
+# remove the service
+if [[ `echo $(sudo ./manager-api remove) | grep -c "OK"` -ne "1" ]]; then
+  echo "error while removing the service"
+  exit 1
+fi
 
 pkill -f etcd
 
