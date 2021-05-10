@@ -23,6 +23,7 @@ import (
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
 	"github.com/onsi/gomega"
+	"github.com/tidwall/gjson"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
@@ -108,4 +109,64 @@ var _ = ginkgo.Describe("route with plugin orchestration", func() {
 			Sleep:        base.SleepTime,
 		}),
 	)
+
+	table.DescribeTable("test route with plugin orchestration (post method)",
+		func(tc base.HttpTestCase) {
+			base.RunTestCase(tc)
+		},
+		table.Entry("make sure the route is not created", base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+		}),
+	)
+
+	var routeID string
+	ginkgo.It("create route with correct dag config by post", func() {
+		resp, code, err := base.HttpPost(base.ManagerAPIHost+"/apisix/admin/routes",
+			map[string]string{"Authorization": base.GetToken()}, dagConf)
+		gomega.Expect(err).To(gomega.BeNil())
+		gomega.Expect(code).Should(gomega.Equal(200))
+		routeID = gjson.Get(string(resp), "data.id").String()
+	})
+
+	ginkgo.It("test the route with plugin orchestration", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Desc:         "verify the route (should be blocked)",
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			Query:        "t=root.exe",
+			ExpectStatus: http.StatusForbidden,
+			ExpectBody:   `blocked`,
+			Sleep:        base.SleepTime,
+		})
+		base.RunTestCase(base.HttpTestCase{
+			Desc:         "verify the route (should not be blocked)",
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `hello world`,
+		})
+		base.RunTestCase(base.HttpTestCase{
+			Desc:         "delete the route by routeID",
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodDelete,
+			Path:         "/apisix/admin/routes/" + routeID,
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+		})
+		base.RunTestCase(base.HttpTestCase{
+			Desc:         "make sure the route has been deleted",
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello",
+			ExpectStatus: http.StatusNotFound,
+			ExpectBody:   `{"error_msg":"404 Route Not Found"}`,
+			Sleep:        base.SleepTime,
+		})
+	})
 })
