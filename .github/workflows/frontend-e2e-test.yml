@@ -46,11 +46,13 @@ jobs:
         with:
           go-version: '1.13'
 
+      - name: Download dag-to-lua
+        run: make dag-lib
+
       - name: Start manager-api
         working-directory: ./api
         run: |
           sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./conf/conf.yaml
-          make dag-lib
           nohup go run ./cmd/manager &
 
       - name: Cache node_modules
