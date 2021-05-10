@@ -37,6 +37,7 @@ import { LinkOutlined } from '@ant-design/icons';
 import Ajv from 'ajv';
 import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
+import { compact, omit } from 'lodash';
 
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
@@ -121,6 +122,12 @@ const PluginDetail: React.FC<Props> = ({
     if (name === 'cors') {
       const formData = UIForm.getFieldsValue();
       const newMethods = formData.allow_methods.join(",");
+      const compactAllowRegex = compact(formData.allow_origins_by_regex);
+      // Note: default allow_origins_by_regex setted for UI is [''], but this is not allowed, omit it.
+      if (compactAllowRegex.length === 0) {
+        return omit({ ...formData, allow_methods: newMethods }, ['allow_origins_by_regex'])
+      }
+
       return { ...formData, allow_methods: newMethods };
     }
     return UIForm.getFieldsValue();
