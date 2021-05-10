@@ -36,6 +36,7 @@ context('Create and delete route with plugin orchestration', () => {
     canvasContainer: '#container',
     drawer: '.ant-drawer-content',
     deleteAlert: '.ant-modal-body',
+    codemirrorScroll: '.CodeMirror-scroll',
   };
 
   beforeEach(() => {
@@ -109,8 +110,16 @@ context('Create and delete route with plugin orchestration', () => {
     cy.url().should('contains', 'routes/list');
   });
 
-  it('should delete the route', function () {
+  it('should view and delete the route', function () {
     cy.visit('/routes/list');
+    cy.contains('routeName').siblings().contains('More').click();
+    cy.contains('View').click();
+    cy.get(selector.codemirrorScroll).within(() => {
+      cy.contains('script').should('exist');
+    });
+    cy.contains('Cancel').click();
+
+    // Delete the route
     cy.contains('routeName').siblings().contains('More').click();
     cy.contains('Delete').click();
     cy.get(selector.deleteAlert)
@@ -119,6 +128,5 @@ context('Create and delete route with plugin orchestration', () => {
         cy.contains('OK').click();
       });
     cy.get(selector.notification).should('contain', 'Delete Route Successfully');
-    cy.get(selector.notificationClose).click();
   });
 });
