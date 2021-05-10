@@ -50,6 +50,7 @@ jobs:
         working-directory: ./api
         run: |
           sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./conf/conf.yaml
+          make dag-lib
           nohup go run ./cmd/manager &
 
       - name: Cache node_modules
