@@ -338,7 +338,7 @@ func (h *Handler) Create(c droplet.Context) (interface{}, error) {
 	}
 
 	if input.Script != nil {
-		if input.ID == "" {
+		if utils.InterfaceToString(input.ID) == "" {
 			input.ID = utils.GetFlakeUidStr()
 		}
 		script := &entity.Script{}

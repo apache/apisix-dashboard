@@ -18,6 +18,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - uses: Azure/docker-login@v1
         if: ${{ github.event_name == 'push' }}

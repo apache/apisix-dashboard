@@ -46,7 +46,7 @@ func mapKV2Node(key string, val float64) (*Node, error) {
 }
 
 func NodesFormat(obj interface{}) interface{} {
-	var nodes []*Node
+	nodes := make([]*Node, 0)
 	switch objType := obj.(type) {
 	case map[string]float64:
 		log.Infof("nodes type: %v", objType)

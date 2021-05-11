@@ -18,8 +18,10 @@ package route_online_debug
 
 import (
 	"bytes"
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"reflect"
@@ -97,23 +99,24 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	body := input.Body
 	contentType := input.ContentType
 
-	if url == "" || method == "" {
-		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("parameters error")
-	}
+	transport := http.DefaultTransport.(*http.Transport).Clone()
+	transport.DisableCompression = true
 
-	client := &http.Client{}
-	client.Timeout = 5 * time.Second
+	client := &http.Client{
+		Transport: transport,
+		Timeout:   5 * time.Second,
+	}
 
 	var tempMap map[string][]string
 	err := json.Unmarshal([]byte(input.HeaderParams), &tempMap)
 
 	if err != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("can not get header")
 	}
 
 	req, err := http.NewRequest(strings.ToUpper(method), url, bytes.NewReader(body))
 	if err != nil {
-		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
 	req.Header.Add("Content-Type", contentType)
@@ -134,7 +137,20 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 
 	defer resp.Body.Close()
 
-	_body, err := ioutil.ReadAll(resp.Body)
+	// handle gzip content encoding
+	var reader io.ReadCloser
+	switch resp.Header.Get("Content-Encoding") {
+	case "gzip":
+		reader, err = gzip.NewReader(resp.Body)
+		if err != nil {
+			return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
+		}
+		defer reader.Close()
+	default:
+		reader = resp.Body
+	}
+
+	_body, err := ioutil.ReadAll(reader)
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}

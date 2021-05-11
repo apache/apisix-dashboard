@@ -76,15 +76,6 @@ export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
   plugin_config_id: ""
 };
 
-export const INIT_CHART = {
-  offset: { x: 55.71, y: 21.69 },
-  scale: 0.329,
-  nodes: {},
-  links: {},
-  selected: {},
-  hovered: {},
-};
-
 export const AUTH_LIST = ['basic-auth', 'jwt-auth', 'key-auth'];
 
 export const HEADER_LIST = [
@@ -175,9 +166,16 @@ export const DEBUG_BODY_TYPE_SUPPORTED: RouteModule.DebugBodyType[] = [
 
 // Note: codemirror mode: apl for text; javascript for json(need to format); xml for xml;
 export const DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED = [
-  { name: 'Json', mode: 'javascript' },
-  { name: 'Text', mode: 'apl' },
+  { name: 'JSON', mode: 'javascript' },
+  { name: 'TEXT', mode: 'apl' },
   { name: 'XML', mode: 'xml' },
+];
+
+export const DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED = [
+  { name: 'JSON', mode: 'javascript' },
+  { name: 'XML', mode: 'xml' },
+  { name: 'HTML', mode: 'html' },
+  { name: 'TEXT', mode: 'apl' },
 ];
 
 export const EXPORT_FILE_MIME_TYPE_SUPPORTED = ['application/json', 'application/x-yaml'];
