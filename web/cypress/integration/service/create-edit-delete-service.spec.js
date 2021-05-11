@@ -49,6 +49,8 @@ context('Create and Delete Service ', () => {
     description2: 'description2',
     editServiceSuccess: 'Configure Service Successfully',
     deleteServiceSuccess: 'Delete Service Successfully',
+    port0: '7000',
+    weight0: '1',
   };
 
   beforeEach(() => {
@@ -64,8 +66,8 @@ context('Create and Delete Service ', () => {
     cy.get(selector.description).type(data.description);
     cy.get(selector.nodes_0_host).click();
     cy.get(selector.nodes_0_host).type(data.ip1);
-    cy.get(selector.nodes_0_port).clear().type('7000');
-    cy.get(selector.nodes_0_weight).clear().type(1);
+    cy.get(selector.nodes_0_port).clear().type(data.port0);
+    cy.get(selector.nodes_0_weight).clear().type(data.weight0);
 
     cy.contains('Next').click();
 
