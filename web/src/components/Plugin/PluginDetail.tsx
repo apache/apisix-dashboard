@@ -53,6 +53,7 @@ type Props = {
   readonly?: boolean;
   visible: boolean;
   maskClosable?: boolean;
+  isEnabled?: boolean;
   onClose?: () => void;
   onChange?: (data: any) => void;
 };
@@ -91,6 +92,7 @@ const PluginDetail: React.FC<Props> = ({
   pluginList = [],
   readonly = false,
   maskClosable = true,
+  isEnabled = false,
   initialData = {},
   onClose = () => { },
   onChange = () => { },
@@ -144,7 +146,7 @@ const PluginDetail: React.FC<Props> = ({
 
   useEffect(() => {
     form.setFieldsValue({
-      disable: initialData[name] && !initialData[name].disable,
+      disable: isEnabled ? true : (initialData[name] && !initialData[name].disable),
       scope: 'global',
     });
     if (PLUGIN_UI_LIST.includes(name)) {
@@ -272,75 +274,77 @@ const PluginDetail: React.FC<Props> = ({
     }
   };
 
-  return (
-    <>
-      <Drawer
-        title={formatMessage({ id: 'component.plugin.editor' })}
-        visible={visible}
-        placement="right"
-        closable={false}
-        maskClosable={maskClosable}
-        onClose={onClose}
-        width={700}
-        footer={
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            {' '}
-            <Button onClick={onClose} key={1}>
-              {formatMessage({ id: 'component.global.cancel' })}
-            </Button>
-            <Space>
-              <Popconfirm
-                title={formatMessage({ id: 'page.plugin.drawer.popconfirm.title.delete' })}
-                okText={formatMessage({ id: 'component.global.confirm' })}
-                cancelText={formatMessage({ id: 'component.global.cancel' })}
-                disabled={readonly}
-                onConfirm={() => {
-                  onChange({
-                    formData: form.getFieldsValue(),
-                    codemirrorData: {},
-                    shouldDelete: true,
-                  });
-                }}
-              >
-                {initialData[name] ? (
-                  <Button key={3} type="primary" danger disabled={readonly}>
-                    {formatMessage({ id: 'component.global.delete' })}
-                  </Button>
-                ) : null}
-              </Popconfirm>
-              <Button
-                key={2}
-                disabled={readonly}
-                type="primary"
-                onClick={() => {
-                  try {
-                    let editorData;
-                    if (codeMirrorMode === codeMirrorModeList.JSON) {
-                      editorData = JSON.parse(ref.current?.editor.getValue());
-                    } else if (codeMirrorMode === codeMirrorModeList.YAML) {
-                      editorData = yaml2json(ref.current?.editor.getValue(), false).data;
-                    } else {
-                      editorData = getUIFormData();
-                    }
+  const isNoConfigurationRequired = pluginType === PluginType.authentication && schemaType !== 'consumer' && (codeMirrorMode !== codeMirrorModeList.UIForm)
 
-                    validateData(name, editorData).then((value) => {
-                      onChange({ formData: form.getFieldsValue(), codemirrorData: value });
-                    });
-                  } catch (error) {
-                    notification.error({
-                      message: 'Invalid JSON data',
-                    });
+  return (
+    <Drawer
+      title={formatMessage({ id: 'component.plugin.editor' })}
+      visible={visible}
+      placement="right"
+      closable={false}
+      maskClosable={maskClosable}
+      destroyOnClose
+      onClose={onClose}
+      width={700}
+      footer={
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {' '}
+          <Button onClick={onClose} key={1}>
+            {formatMessage({ id: 'component.global.cancel' })}
+          </Button>
+          <Space>
+            <Popconfirm
+              title={formatMessage({ id: 'page.plugin.drawer.popconfirm.title.delete' })}
+              okText={formatMessage({ id: 'component.global.confirm' })}
+              cancelText={formatMessage({ id: 'component.global.cancel' })}
+              disabled={readonly}
+              onConfirm={() => {
+                onChange({
+                  formData: form.getFieldsValue(),
+                  codemirrorData: {},
+                  shouldDelete: true,
+                });
+              }}
+            >
+              {initialData[name] ? (
+                <Button key={3} type="primary" danger disabled={readonly}>
+                  {formatMessage({ id: 'component.global.delete' })}
+                </Button>
+              ) : null}
+            </Popconfirm>
+            <Button
+              key={2}
+              disabled={readonly}
+              type="primary"
+              onClick={() => {
+                try {
+                  let editorData;
+                  if (codeMirrorMode === codeMirrorModeList.JSON) {
+                    editorData = JSON.parse(ref.current?.editor.getValue());
+                  } else if (codeMirrorMode === codeMirrorModeList.YAML) {
+                    editorData = yaml2json(ref.current?.editor.getValue(), false).data;
+                  } else {
+                    editorData = getUIFormData();
                   }
-                }}
-              >
-                {formatMessage({ id: 'component.global.submit' })}
-              </Button>
-            </Space>
-          </div>
-        }
-      >
-        <style>
-          {`
+
+                  validateData(name, editorData).then((value) => {
+                    onChange({ formData: form.getFieldsValue(), codemirrorData: value });
+                  });
+                } catch (error) {
+                  notification.error({
+                    message: 'Invalid JSON data',
+                  });
+                }
+              }}
+            >
+              {formatMessage({ id: 'component.global.submit' })}
+            </Button>
+          </Space>
+        </div>
+      }
+    >
+      <style>
+        {`
         .site-page-header {
           border: 1px solid rgb(235, 237, 240);
           margin-top:10px;
@@ -349,89 +353,88 @@ const PluginDetail: React.FC<Props> = ({
           color: #000;
         }
       `}
-        </style>
+      </style>
 
-        <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
-          <Form.Item label={formatMessage({ id: 'component.global.name' })}>
-            <Input value={name} bordered={false} disabled />
+      <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
+        <Form.Item label={formatMessage({ id: 'component.global.name' })}>
+          <Input value={name} bordered={false} disabled />
+        </Form.Item>
+        <Form.Item label={formatMessage({ id: 'component.global.enable' })} valuePropName="checked" name="disable">
+          <Switch
+            defaultChecked={isEnabled ? true : initialData[name] && !initialData[name].disable}
+            disabled={readonly || isEnabled}
+          />
+        </Form.Item>
+        {type === 'global' && (
+          <Form.Item label={formatMessage({ id: 'component.global.scope' })} name="scope">
+            <Select disabled>
+              <Select.Option value="global">{formatMessage({ id: "other.global" })}</Select.Option>
+            </Select>
           </Form.Item>
-          <Form.Item label={formatMessage({ id: 'component.global.enable' })} valuePropName="checked" name="disable">
-            <Switch
-              defaultChecked={initialData[name] && !initialData[name].disable}
-              disabled={readonly}
-            />
-          </Form.Item>
-          {type === 'global' && (
-            <Form.Item label={formatMessage({ id: 'component.global.scope' })} name="scope">
-              <Select disabled>
-                <Select.Option value="global">{formatMessage({ id: "other.global" })}</Select.Option>
-              </Select>
-            </Form.Item>
-          )}
-        </Form>
-        <Divider orientation="left">{formatMessage({ id: 'component.global.data.editor' })}</Divider>
-        <PageHeader
-          title=""
-          subTitle={
-            pluginType === PluginType.authentication && schemaType !== 'consumer' && (codeMirrorMode !== codeMirrorModeList.UIForm) ? (
-              <Alert message={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} type="warning" />
-            ) : null
-          }
-          ghost={false}
-          extra={[
-            <Select
-              defaultValue={codeMirrorModeList.JSON}
-              value={codeMirrorMode}
-              options={modeOptions}
-              onChange={(value: PluginComponent.CodeMirrorMode) => {
-                handleModeChange(value);
-              }}
-              data-cy='code-mirror-mode'
-              key={1}
-            ></Select>,
-            <Tooltip title={formatMessage({ id: "component.plugin.format-codes.disable" })} key={2}>
-              <Button type="primary" onClick={formatCodes} disabled={codeMirrorMode === codeMirrorModeList.UIForm}>
-                {formatMessage({ id: 'component.global.format' })}
-              </Button>
-            </Tooltip>,
-            <Button
-              type="default"
-              icon={<LinkOutlined />}
-              onClick={() => {
-                if (name.startsWith('serverless')) {
-                  window.open('https://apisix.apache.org/docs/apisix/plugins/serverless');
-                } else {
-                  window.open(`https://apisix.apache.org/docs/apisix/plugins/${name}`);
-                }
-              }}
-              key={3}
-            >
-              {formatMessage({ id: 'component.global.document' })}
+        )}
+      </Form>
+      <Divider orientation="left">{formatMessage({ id: 'component.global.data.editor' })}</Divider>
+      <PageHeader
+        title=""
+        subTitle={
+          isNoConfigurationRequired ? (
+            <Alert message={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} type="warning" />
+          ) : null
+        }
+        ghost={false}
+        extra={[
+          <Select
+            defaultValue={codeMirrorModeList.JSON}
+            value={codeMirrorMode}
+            options={modeOptions}
+            onChange={(value: PluginComponent.CodeMirrorMode) => {
+              handleModeChange(value);
+            }}
+            data-cy='code-mirror-mode'
+            key={1}
+          ></Select>,
+          <Tooltip title={formatMessage({ id: "component.plugin.format-codes.disable" })} key={2}>
+            <Button type="primary" onClick={formatCodes} disabled={codeMirrorMode === codeMirrorModeList.UIForm}>
+              {formatMessage({ id: 'component.global.format' })}
             </Button>
-          ]}
-        />
-        {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === PluginType.authentication && schemaType !== 'consumer')} />}
-        <div style={{ display: codeMirrorMode === codeMirrorModeList.UIForm ? 'none' : 'unset' }}><CodeMirror
-          ref={(codemirror) => {
-            ref.current = codemirror;
-            if (codemirror) {
-              // NOTE: for debug & test
-              // @ts-ignore
-              window.codemirror = codemirror.editor;
-            }
-          }}
-          value={JSON.stringify(data, null, 2)}
-          options={{
-            mode: codeMirrorMode,
-            readOnly: readonly ? 'nocursor' : '',
-            lineWrapping: true,
-            lineNumbers: true,
-            showCursorWhenSelecting: true,
-            autofocus: true,
-          }} />
-        </div>
-      </Drawer>
-    </>
+          </Tooltip>,
+          <Button
+            type="default"
+            icon={<LinkOutlined />}
+            onClick={() => {
+              if (name.startsWith('serverless')) {
+                window.open('https://apisix.apache.org/docs/apisix/plugins/serverless');
+              } else {
+                window.open(`https://apisix.apache.org/docs/apisix/plugins/${name}`);
+              }
+            }}
+            key={3}
+          >
+            {formatMessage({ id: 'component.global.document' })}
+          </Button>
+        ]}
+      />
+      {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === PluginType.authentication && schemaType !== 'consumer')} />}
+      <div style={{ display: codeMirrorMode === codeMirrorModeList.UIForm ? 'none' : 'unset' }}><CodeMirror
+        ref={(codemirror) => {
+          ref.current = codemirror;
+          if (codemirror) {
+            // NOTE: for debug & test
+            // @ts-ignore
+            window.codemirror = codemirror.editor;
+          }
+        }}
+        value={JSON.stringify(data, null, 2)}
+        options={{
+          mode: codeMirrorMode,
+          readOnly: (readonly || isNoConfigurationRequired) ? 'nocursor' : '',
+          lineWrapping: true,
+          lineNumbers: true,
+          showCursorWhenSelecting: true,
+          autofocus: true,
+        }} />
+      </div>
+    </Drawer>
   );
 };
 

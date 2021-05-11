@@ -19,7 +19,17 @@ import { request } from 'umi';
 
 import { PLUGIN_LIST, PluginType } from './data';
 
+const cached: {
+  list: PluginComponent.Meta[]
+} = {
+  list: []
+}
+
 export const fetchList = () => {
+  if (cached.list.length) {
+    return Promise.resolve(cached.list)
+  }
+
   return request<Res<PluginComponent.Meta[]>>('/plugins?all=true').then((data) => {
     const typedData = data.data.map(item => ({
       ...item,
@@ -32,6 +42,10 @@ export const fetchList = () => {
     Object.values(PluginType).forEach(type => {
       finalList = finalList.concat(typedData.filter(item => item.type === type))
     })
+
+    if (cached.list.length === 0) {
+      cached.list = finalList
+    }
 
     return finalList
   });

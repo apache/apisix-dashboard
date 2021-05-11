@@ -146,7 +146,7 @@ export default {
   'page.route.tooltip.pluginOrchWithoutRedirect': '当步骤一中 重定向 选择为 启用 HTTPS 时，不可使用插件编排模式。',
 
   'page.route.tabs.normalMode': '普通模式',
-  'page.route.tabs.orchestration': '插件编排',
+  'page.route.tabs.orchestration': '编排模式',
 
   'page.route.list.description': '路由（Route）是请求的入口点，它定义了客户端请求与服务之间的匹配规则。路由可以与服务（Service）、上游（Upstream）关联，一个服务可对应一组路由，一个路由可以对应一个上游对象（一组后端服务节点），因此，每个匹配到路由的请求将被网关代理到路由绑定的上游服务中。',
 
