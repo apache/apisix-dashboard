@@ -32,8 +32,7 @@ context('Login Test', () => {
     invalidPassword: 'invalidPassword',
     errorCode: 'Request Error Code: 10000',
     successMessage: 'Successfully',
-
-  }
+  };
 
   beforeEach(() => {
     // set default language
