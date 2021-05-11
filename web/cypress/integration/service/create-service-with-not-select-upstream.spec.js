@@ -26,6 +26,7 @@ context('Edit Service with not select Upstream', () => {
     input: ':input',
     notification: '.ant-notification-notice-message',
     nameSearch: '[title=Name]',
+    notificationCloseIcon: '.ant-notification-close-icon',
   };
 
   const data = {
@@ -38,6 +39,8 @@ context('Edit Service with not select Upstream', () => {
     description: 'desc_by_autotest',
     ip1: '127.0.0.1',
     ip2: '127.0.0.2',
+    port0: '7000',
+    weight0: '1',
   };
 
   beforeEach(() => {
@@ -52,8 +55,8 @@ context('Edit Service with not select Upstream', () => {
     cy.get(selector.description).type(data.description);
     cy.get(selector.nodes_0_host).click();
     cy.get(selector.nodes_0_host).type(data.ip1);
-    cy.get(selector.nodes_0_port).clear().type('7000');
-    cy.get(selector.nodes_0_weight).clear().type(1);
+    cy.get(selector.nodes_0_port).clear().type(data.port0);
+    cy.get(selector.nodes_0_weight).clear().type(data.weight0);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.get(selector.input).should('be.disabled');
@@ -85,5 +88,6 @@ context('Edit Service with not select Upstream', () => {
     cy.contains(data.serviceName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteServiceSuccess);
+    cy.get(selector.notificationCloseIcon).click();
   });
 });
