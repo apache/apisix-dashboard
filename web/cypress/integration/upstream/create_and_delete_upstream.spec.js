@@ -38,6 +38,10 @@ context('Create and Delete Upstream', () => {
     "ip1": "127.0.0.1",
     "createUpstreamSuccess": "Create Upstream Successfully",
     "deleteUpstreamSuccess": "Delete Upstream Successfully",
+    "port0": "7000",
+    "weight0": "2",
+    "port1": "7001",
+    "weight1": "2"
   }
 
   beforeEach(() => {
@@ -111,14 +115,14 @@ context('Create and Delete Upstream', () => {
 
     // add first upstream node
     cy.get(selector.nodes_0_host).type(data.ip1);
-    cy.get(selector.nodes_0_port).clear().type('7000');
-    cy.get(selector.nodes_0_weight).clear().type(1);
+    cy.get(selector.nodes_0_port).clear().type(data.port0);
+    cy.get(selector.nodes_0_weight).clear().type(data.weight0);
 
     // add second upstream node
     cy.get('.ant-btn-dashed').click();
     cy.get('#nodes_1_host').type(data.ip1);
-    cy.get('#nodes_1_port').clear().type('7001');
-    cy.get('#nodes_1_weight').clear().type('2');
+    cy.get('#nodes_1_port').clear().type(data.port1);
+    cy.get('#nodes_1_weight').clear().type(data.weight1);
 
     // next to finish
     cy.contains('Next').click();
