@@ -28,6 +28,7 @@ context('Can select service_id skip upstream in route', () => {
     nameSelector: '[title=Name]',
     serviceSelector: '[title=test_service]',
     deleteAlert: '.ant-modal-body',
+    notificationCloseIcon: '.ant-notification-close-icon',
   };
 
   const data = {
@@ -41,6 +42,8 @@ context('Can select service_id skip upstream in route', () => {
     deleteServiceSuccess: 'Delete Service Successfully',
     deleteRouteSuccess: 'Delete Route Successfully',
     ip1: '127.0.0.1',
+    port0: '7000',
+    weight0: '1',
   };
 
   beforeEach(() => {
@@ -54,8 +57,8 @@ context('Can select service_id skip upstream in route', () => {
 
     cy.get(selector.name).type(data.upstreamName);
     cy.get(selector.nodes_0_host).type(data.ip1);
-    cy.get(selector.nodes_0_port).clear().type('7000');
-    cy.get(selector.nodes_0_weight).clear().type(1);
+    cy.get(selector.nodes_0_port).clear().type(data.port0);
+    cy.get(selector.nodes_0_weight).clear().type(data.weight0);
     cy.contains('Next').click();
     cy.contains('Submit').click();
     cy.get(selector.notification).should('contain', data.createUpstreamSuccess);
@@ -147,5 +150,6 @@ context('Can select service_id skip upstream in route', () => {
     cy.contains(data.upstreamName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
     cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
+    cy.get(selector.notificationCloseIcon).click();
   });
 });
