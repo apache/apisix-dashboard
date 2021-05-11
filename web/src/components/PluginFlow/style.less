@@ -14,17 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export default {
-  'page.siderBar.form.label.panelType.condition': 'Condition',
-  'page.siderBar.form.rule.panelType.condition': 'Please enter the condition of judgment',
-  'page.siderBar.form.label.panelType.plugin': 'Plugin Category',
 
-  'page.siderBar.button.submit': 'Save',
-  'page.siderBar.plugin': 'Plugin',
-  'page.siderBar.tips': 'Drag the required components to the panel',
+.container {
+  display: flex;
+  height: calc(100% - 48px);
+}
 
-  'page.panel.condition.tips': 'Click here to configure',
-  'page.panel.condition.name': 'Condition',
-  'page.panel.plugin.tips': 'Click to configure the plugin',
-  'page.panel.plugin.name': 'Plugin Name',
-};
+.stencil {
+  position: relative;
+  // NOTE: constants.ts -> DEFAULT_STENCIL_WIDTH
+  width: 280px;
+  height: 400px;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.panel {
+  height: 100%;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  // NOTE: DEFAULT_TOOLBAR_HEIGHT
+  height: 38px;
+  background-color: #f7f9fb;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}

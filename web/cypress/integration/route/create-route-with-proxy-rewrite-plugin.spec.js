@@ -20,15 +20,14 @@ import componentLocaleUS from '../../../src/locales/en-US/component';
 import routeLocaleUS from '../../../src/pages/Route/locales/en-US';
 
 context('create route with proxy-rewrite plugin', () => {
-  const data = {
-    rewriteUri: '/get',
-    rewriteHeaderKey1: 'test1',
-    rewriteHeaderKey2: 'test2',
-    rewriteHeaderValue1: '1',
-    rewriteHeaderValue2: '2',
-  };
-
-  const domSelector = {
+  const selector = {
+    name: '#name',
+    nodes_0_host: '#nodes_0_host',
+    nodes_0_port: '#nodes_0_port',
+    nodes_0_weight: '#nodes_0_weight',
+    nameSelector: '[title=Name]',
+    deleteAlert: '.ant-modal-body',
+    notification: '.ant-notification-notice-message',
     staticUri: '[data-cy=uri-static]',
     staticHost: '[data-cy=host-static]',
     keepHost: '[data-cy=host-keep]',
@@ -41,13 +40,24 @@ context('create route with proxy-rewrite plugin', () => {
     rewriteHeaderValue1: '#proxyRewrite_kvHeaders_0_value',
     rewriteHeaderKey2: '#proxyRewrite_kvHeaders_1_key',
     rewriteHeaderValue2: '#proxyRewrite_kvHeaders_1_value',
-  }
+  };
+
+  const data = {
+    host2: '12.12.12.12',
+    port: '80',
+    weight: 1,
+    routeName: 'test_route',
+    submitSuccess: 'Submit Successfully',
+    deleteRouteSuccess: 'Delete Route Successfully',
+    rewriteUri: '/get',
+    rewriteHeaderKey1: 'test1',
+    rewriteHeaderKey2: 'test2',
+    rewriteHeaderValue1: '1',
+    rewriteHeaderValue2: '2',
+  };
 
   beforeEach(() => {
     cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
   });
 
   it('should create route with proxy-rewrite plugin', function () {
@@ -57,92 +67,96 @@ context('create route with proxy-rewrite plugin', () => {
     // show create page
     cy.contains(componentLocaleUS['component.global.create']).click();
     cy.contains('Next').click().click();
-    cy.get(this.domSelector.name).type(this.data.routeName);
+    cy.get(selector.name).type(data.routeName);
 
     // show requestOverride PanelSection
-    cy.contains(routeLocaleUS['page.route.panelSection.title.requestOverride']).should('be.visible');
+    cy.contains(routeLocaleUS['page.route.panelSection.title.requestOverride']).should(
+      'be.visible',
+    );
     // should show newPath after the URIRewriteType static clicked
-    cy.get(domSelector.staticUri).click();
+    cy.get(selector.staticUri).click();
     cy.contains(routeLocaleUS['page.route.form.itemLabel.newPath']).should('be.visible');
-    cy.get(domSelector.newUri).should('be.visible').type(data.rewriteUri);
+    cy.get(selector.newUri).should('be.visible').type(data.rewriteUri);
     // should show regexp and template after URIRewriteType regexp clicked
     cy.contains(routeLocaleUS['page.route.radio.regex']).click();
     cy.contains(routeLocaleUS['page.route.form.itemLabel.regex']).should('be.visible');
-    cy.get(domSelector.uriRewriteReg).should('be.visible');
+    cy.get(selector.uriRewriteReg).should('be.visible');
     cy.contains(routeLocaleUS['page.route.form.itemLabel.template']).should('be.visible');
-    cy.get(domSelector.uriRewriteTemp).should('be.visible');
+    cy.get(selector.uriRewriteTemp).should('be.visible');
 
-    cy.get(domSelector.staticUri).click();
+    cy.get(selector.staticUri).click();
 
     // should show newhost after static host clicked
-    cy.get(domSelector.staticHost).click();
+    cy.get(selector.staticHost).click();
     cy.contains(routeLocaleUS['page.route.form.itemLabel.newHost']).should('be.visible');
-    cy.get(domSelector.newHost).should('be.visible');
-    cy.get(domSelector.keepHost).click();
-    cy.get(domSelector.newHost).should('not.exist');
+    cy.get(selector.newHost).should('be.visible');
+    cy.get(selector.keepHost).click();
+    cy.get(selector.newHost).should('not.exist');
 
     // new header key value input after createNewRewriteHeader button clicked
-    cy.get(domSelector.buttonCreateNewRewriteHeader).click();
-    cy.get(domSelector.rewriteHeaderKey1).should('be.visible').type(data.rewriteHeaderKey1);
-    cy.get(domSelector.rewriteHeaderValue1).should('be.visible').type(data.rewriteHeaderValue1);
-    cy.get(domSelector.rewriteHeaderKey2).should('be.visible').type(data.rewriteHeaderKey2);
-    cy.get(domSelector.rewriteHeaderValue2).should('be.visible').type(data.rewriteHeaderValue2);
+    cy.get(selector.buttonCreateNewRewriteHeader).click();
+    cy.get(selector.rewriteHeaderKey1).should('be.visible').type(data.rewriteHeaderKey1);
+    cy.get(selector.rewriteHeaderValue1).should('be.visible').type(data.rewriteHeaderValue1);
+    cy.get(selector.rewriteHeaderKey2).should('be.visible').type(data.rewriteHeaderKey2);
+    cy.get(selector.rewriteHeaderValue2).should('be.visible').type(data.rewriteHeaderValue2);
 
     cy.contains('Next').click();
-    cy.get(this.domSelector.nodes_0_host).type(this.data.host2);
-    cy.get(this.domSelector.nodes_0_port).type(this.data.port);
-    cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
+    cy.get(selector.nodes_0_host).type(data.host2);
+    cy.get(selector.nodes_0_port).type(data.port);
+    cy.get(selector.nodes_0_weight).type(data.weight);
     cy.contains('Next').click();
 
     // should not see proxy-rewrite plugin in the step3
     cy.contains('proxy-rewrite').should('not.exist');
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.contains(this.data.submitSuccess).should('be.visible');
+    cy.contains(data.submitSuccess).should('be.visible');
   });
 
   it('should keep the same proxy-rewrite data in edit route page with the create data', function () {
     cy.visit('/');
     cy.contains(menuLocaleUS['menu.routes']).click();
 
-    cy.get(this.domSelector.nameSelector).type(this.data.routeName);
+    cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
-    cy.contains(this.data.routeName).siblings().contains('Configure').click();
+    cy.contains(data.routeName).siblings().contains('Configure').click();
 
     // NOTE: make sure all components rerender done
     cy.get('#status').should('have.class', 'ant-switch-checked');
-    cy.get(this.domSelector.name).type(this.data.routeName);
+    cy.get(selector.name).type(data.routeName);
 
     cy.contains(routeLocaleUS['page.route.form.itemLabel.newPath']).should('be.visible');
-    cy.get(domSelector.newUri).should('have.value',data.rewriteUri);
+    cy.get(selector.newUri).should('have.value', data.rewriteUri);
 
-    cy.get(domSelector.newHost).should('not.exist');
+    cy.get(selector.newHost).should('not.exist');
 
-    cy.get(domSelector.rewriteHeaderKey1).should('have.value', data.rewriteHeaderKey1);
-    cy.get(domSelector.rewriteHeaderValue1).should('have.value', data.rewriteHeaderValue1);
-    cy.get(domSelector.rewriteHeaderKey2).should('have.value', data.rewriteHeaderKey2);
-    cy.get(domSelector.rewriteHeaderValue2).should('have.value', data.rewriteHeaderValue2);
+    cy.get(selector.rewriteHeaderKey1).should('have.value', data.rewriteHeaderKey1);
+    cy.get(selector.rewriteHeaderValue1).should('have.value', data.rewriteHeaderValue1);
+    cy.get(selector.rewriteHeaderKey2).should('have.value', data.rewriteHeaderKey2);
+    cy.get(selector.rewriteHeaderValue2).should('have.value', data.rewriteHeaderValue2);
 
     cy.contains('Next').click();
-    cy.get(this.domSelector.nodes_0_host).should('have.value', this.data.host2);
+    cy.get(selector.nodes_0_host).should('have.value', data.host2);
     cy.contains('Next').click();
 
     // should not see proxy-rewrite plugin in the step3
     cy.contains('proxy-rewrite').should('not.exist');
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.contains(this.data.submitSuccess).should('be.visible');
+    cy.contains(data.submitSuccess).should('be.visible');
   });
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
-    cy.get(this.domSelector.nameSelector).type(this.data.routeName);
+    cy.get(selector.nameSelector).type(data.routeName);
     cy.contains('Search').click();
-    cy.contains(this.data.routeName).siblings().contains('More').click();
+    cy.contains(data.routeName).siblings().contains('More').click();
     cy.contains('Delete').click();
-    cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
-      cy.contains('OK').click();
-    });
-    cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
+    cy.get(selector.deleteAlert)
+      .should('be.visible')
+      .within(() => {
+        cy.contains('OK').click();
+      });
+    cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
   });
 });

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   Button,
@@ -29,20 +29,20 @@ import {
   Space,
   Switch,
 } from 'antd';
-import { useIntl } from 'umi';
-import { js_beautify } from 'js-beautify';
-import { LinkOutlined } from '@ant-design/icons';
+import {useIntl} from 'umi';
+import {js_beautify} from 'js-beautify';
+import {LinkOutlined} from '@ant-design/icons';
+import type {DefinedError} from 'ajv';
 import Ajv from 'ajv';
-import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
 import MonacoEditor from "react-monaco-editor";
 import type * as monacoEditor from "monaco-editor";
-import { compact, omit } from 'lodash';
+import {compact, omit} from 'lodash';
 
-import { fetchSchema } from './service';
-import { json2yaml, yaml2json } from '@/helpers';
-import { PluginForm, PLUGIN_UI_LIST } from './UI';
-import { PluginType } from './data';
+import {fetchSchema} from './service';
+import {json2yaml, yaml2json} from '@/helpers';
+import {PLUGIN_UI_LIST, PluginForm} from './UI';
+import {PluginType} from './data';
 
 type Props = {
   name: string;
@@ -53,6 +53,7 @@ type Props = {
   readonly?: boolean;
   visible: boolean;
   maskClosable?: boolean;
+  isEnabled?: boolean;
   onClose?: () => void;
   onChange?: (data: PluginComponent.PluginDetailValues) => void;
 };
@@ -91,6 +92,7 @@ const PluginDetail: React.FC<Props> = ({
   pluginList = [],
   readonly = false,
   maskClosable = true,
+  isEnabled = false,
   initialData = {},
   onClose = () => { },
   onChange = () => { },
@@ -142,7 +144,7 @@ const PluginDetail: React.FC<Props> = ({
 
   useEffect(() => {
     form.setFieldsValue({
-      disable: initialData[name] && !initialData[name].disable,
+      disable: isEnabled ? true : (initialData[name] && !initialData[name].disable),
       scope: 'global',
     });
     if (PLUGIN_UI_LIST.includes(name)) {
@@ -257,56 +259,58 @@ const PluginDetail: React.FC<Props> = ({
     setMonacoMode(value);
   };
 
+  const isNoConfigurationRequired = pluginType === PluginType.authentication && schemaType !== 'consumer' && (monacoMode !== monacoModeList.UIForm)
+
   return (
-    <>
-      <Drawer
-        title={formatMessage({ id: 'component.plugin.editor' })}
-        visible={visible}
-        placement="right"
-        closable={false}
-        maskClosable={maskClosable}
-        onClose={onClose}
-        width={700}
-        footer={
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            {' '}
-            <Button onClick={onClose} key={1}>
-              {formatMessage({ id: 'component.global.cancel' })}
-            </Button>
-            <Space>
-              <Popconfirm
-                title={formatMessage({ id: 'page.plugin.drawer.popconfirm.title.delete' })}
-                okText={formatMessage({ id: 'component.global.confirm' })}
-                cancelText={formatMessage({ id: 'component.global.cancel' })}
-                disabled={readonly}
-                onConfirm={() => {
-                  onChange({
-                    formData: form.getFieldsValue(),
-                    monacoData: {},
-                    shouldDelete: true,
-                  });
-                }}
-              >
-                {initialData[name] ? (
-                  <Button key={3} type="primary" danger disabled={readonly}>
-                    {formatMessage({ id: 'component.global.delete' })}
-                  </Button>
-                ) : null}
-              </Popconfirm>
-              <Button
-                key={2}
-                disabled={readonly}
-                type="primary"
-                onClick={() => {
-                  try {
-                    let editorData;
-                    if (monacoMode === monacoModeList.JSON) {
-                      editorData = JSON.parse(content)
-                    } else if (monacoMode === monacoModeList.YAML) {
-                      editorData = yaml2json(content, false).data;
-                    } else {
-                      editorData = getUIFormData();
-                    }
+    <Drawer
+      title={formatMessage({ id: 'component.plugin.editor' })}
+      visible={visible}
+      placement="right"
+      closable={false}
+      maskClosable={maskClosable}
+      destroyOnClose
+      onClose={onClose}
+      width={700}
+      footer={
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {' '}
+          <Button onClick={onClose} key={1}>
+            {formatMessage({ id: 'component.global.cancel' })}
+          </Button>
+          <Space>
+            <Popconfirm
+              title={formatMessage({ id: 'page.plugin.drawer.popconfirm.title.delete' })}
+              okText={formatMessage({ id: 'component.global.confirm' })}
+              cancelText={formatMessage({ id: 'component.global.cancel' })}
+              disabled={readonly}
+              onConfirm={() => {
+                onChange({
+                  formData: form.getFieldsValue(),
+                  monacoData: {},
+                  shouldDelete: true,
+                });
+              }}
+            >
+              {initialData[name] ? (
+                <Button key={3} type="primary" danger disabled={readonly}>
+                  {formatMessage({ id: 'component.global.delete' })}
+                </Button>
+              ) : null}
+            </Popconfirm>
+            <Button
+              key={2}
+              disabled={readonly}
+              type="primary"
+              onClick={() => {
+                try {
+                  let editorData;
+                  if (monacoMode === monacoModeList.JSON) {
+                    editorData = JSON.parse(content);
+                  } else if (monacoMode === monacoModeList.YAML) {
+                    editorData = yaml2json(content, false).data;
+                  } else {
+                    editorData = getUIFormData();
+                  }
 
                     validateData(name, editorData).then((value) => {
                       onChange({ formData: form.getFieldsValue(), monacoData: value });
@@ -322,99 +326,98 @@ const PluginDetail: React.FC<Props> = ({
           </div>
         }
       >
-        <style>
-          {`
-        .site-page-header {
-          border: 1px solid rgb(235, 237, 240);
-          margin-top:10px;
-        }
-        .ant-input[disabled] {
-          color: #000;
-        }
-      `}
-        </style>
+      <style>
+        {`
+      .site-page-header {
+        border: 1px solid rgb(235, 237, 240);
+        margin-top:10px;
+      }
+      .ant-input[disabled] {
+        color: #000;
+      }
+    `}
+      </style>
 
-        <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
-          <Form.Item label={formatMessage({ id: 'component.global.name' })}>
-            <Input value={name} bordered={false} disabled />
+      <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
+        <Form.Item label={formatMessage({ id: 'component.global.name' })}>
+          <Input value={name} bordered={false} disabled />
+        </Form.Item>
+        <Form.Item label={formatMessage({ id: 'component.global.enable' })} valuePropName="checked" name="disable">
+          <Switch
+            defaultChecked={isEnabled ? true : initialData[name] && !initialData[name].disable}
+            disabled={readonly || isEnabled}
+          />
+        </Form.Item>
+        {type === 'global' && (
+          <Form.Item label={formatMessage({ id: 'component.global.scope' })} name="scope">
+            <Select disabled>
+              <Select.Option value="global">{formatMessage({ id: "other.global" })}</Select.Option>
+            </Select>
           </Form.Item>
-          <Form.Item label={formatMessage({ id: 'component.global.enable' })} valuePropName="checked" name="disable">
-            <Switch
-              defaultChecked={initialData[name] && !initialData[name].disable}
-              disabled={readonly}
-            />
-          </Form.Item>
-          {type === 'global' && (
-            <Form.Item label={formatMessage({ id: 'component.global.scope' })} name="scope">
-              <Select disabled>
-                <Select.Option value="global">{formatMessage({ id: "other.global" })}</Select.Option>
-              </Select>
-            </Form.Item>
-          )}
-        </Form>
-        <Divider orientation="left">{formatMessage({ id: 'component.global.data.editor' })}</Divider>
-        <PageHeader
-          title=""
-          subTitle={
-            pluginType === PluginType.authentication && schemaType !== 'consumer' && (monacoMode !== monacoModeList.UIForm) ? (
-              <Alert message={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} type="warning" />
-            ) : null
-          }
-          ghost={false}
-          extra={[
-            <Select
-              defaultValue={monacoModeList.JSON}
-              value={monacoMode}
-              options={modeOptions}
-              onChange={(value: PluginComponent.MonacoLanguage) => {
-                handleModeChange(value);
-              }}
-              data-cy='monaco-mode'
-              key={1}
-            />,
-            <Button
-              type="default"
-              icon={<LinkOutlined />}
-              onClick={() => {
-                if (name.startsWith('serverless')) {
-                  window.open('https://apisix.apache.org/docs/apisix/plugins/serverless');
-                } else {
-                  window.open(`https://apisix.apache.org/docs/apisix/plugins/${name}`);
-                }
-              }}
-              key={3}
-            >
-              {formatMessage({ id: 'component.global.document' })}
-            </Button>
-          ]}
-        />
-        {Boolean(monacoMode === monacoModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === PluginType.authentication && schemaType !== 'consumer')} />}
-        <div style={{display: monacoMode === monacoModeList.UIForm ? 'none' : 'unset'}}>
-          <MonacoEditor
-            ref={(monaco) => {
-              if (monaco) {
-                // NOTE: for debug & test
-                // @ts-ignore
-                window.monaco = monaco.editor;
+        )}
+      </Form>
+      <Divider orientation="left">{formatMessage({ id: 'component.global.data.editor' })}</Divider>
+      <PageHeader
+        title=""
+        subTitle={
+          isNoConfigurationRequired ? (
+            <Alert message={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} type="warning" />
+          ) : null
+        }
+        ghost={false}
+        extra={[
+          <Select
+            defaultValue={monacoModeList.JSON}
+            value={monacoMode}
+            options={modeOptions}
+            onChange={(value: PluginComponent.CodeMirrorMode) => {
+              handleModeChange(value);
+            }}
+            data-cy='monaco-mode'
+            key={1}
+          />,
+          <Button
+            type="default"
+            icon={<LinkOutlined />}
+            onClick={() => {
+              if (name.startsWith('serverless')) {
+                window.open('https://apisix.apache.org/docs/apisix/plugins/serverless');
+              } else {
+                window.open(`https://apisix.apache.org/docs/apisix/plugins/${name}`);
               }
             }}
-            value={content}
-            onChange={setContent}
-            language={monacoMode.toLocaleLowerCase()}
-            editorWillMount={editorWillMount}
-            options={{
-              scrollbar: {
-                vertical: 'hidden',
-                horizontal: 'hidden',
-              },
-              wordWrap: "on",
-              minimap: {enabled: false},
-              readOnly: readonly,
-            }}
-          />
-        </div>
-      </Drawer>
-    </>
+            key={3}
+          >
+            {formatMessage({ id: 'component.global.document' })}
+          </Button>
+        ]}
+      />
+      {Boolean(monacoMode === monacoModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === PluginType.authentication && schemaType !== 'consumer')} />}
+      <div style={{ display: monacoMode === monacoModeList.UIForm ? 'none' : 'unset' }}>
+        <MonacoEditor
+          ref={(monaco) => {
+            if (monaco) {
+              // NOTE: for debug & test
+              // @ts-ignore
+              window.monaco = monaco.editor;
+            }
+          }}
+          value={content}
+          onChange={setContent}
+          language={monacoMode.toLocaleLowerCase()}
+          editorWillMount={editorWillMount}
+          options={{
+            scrollbar: {
+              vertical: 'hidden',
+              horizontal: 'hidden',
+            },
+            wordWrap: "on",
+            minimap: {enabled: false},
+            readOnly: readonly,
+          }}
+        />
+      </div>
+    </Drawer>
   );
 };
 
