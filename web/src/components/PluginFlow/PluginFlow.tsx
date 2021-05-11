@@ -155,12 +155,12 @@ const PluginFlow: React.FC<Props> = ({ chart, readonly = false }) => {
             onClose={() => {
               setPluginProps(DEFAULT_PLUGIN_PROPS)
             }}
-            onChange={({ formData, codemirrorData, shouldDelete }) => {
+            onChange={({ formData, monacoData, shouldDelete }) => {
               if (shouldDelete) {
                 FlowGraph.graph.removeCell(pluginProps.id)
               } else {
                 const disable = !formData.disable
-                FlowGraph.setData(pluginProps.id, { ...codemirrorData, disable })
+                FlowGraph.setData(pluginProps.id, { ...monacoData, disable })
               }
               setPluginProps(DEFAULT_PLUGIN_PROPS)
             }}
