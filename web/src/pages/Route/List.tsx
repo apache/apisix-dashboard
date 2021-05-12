@@ -332,6 +332,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
+      fixed: 'left',
     },
     {
       title: formatMessage({ id: 'page.route.host' }),
@@ -493,6 +494,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
+      fixed: 'right',
       hideInSearch: true,
       render: (_, record) => (
         <>
@@ -560,6 +562,7 @@ const Page: React.FC = () => {
         rowSelection={rowSelection}
         footer={() => <ListFooter />}
         tableAlertRender={false}
+        scroll={{ x: 1300 }}
       />
       <DebugDrawView
         visible={debugDrawVisible}
