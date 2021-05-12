@@ -58,7 +58,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const [response, setResponse] = useState<RouteModule.debugResponse | null>()
   const [loading, setLoading] = useState(false);
   const [body, setBody] = useState('');
-  const [height,setHeight]=useState(50)
+  const [height,setHeight] = useState(50)
   const [bodyType, setBodyType] = useState('none');
   const methodWithoutBody = ['GET', 'HEAD'];
   const [responseBodyMode, setResponseBodyMode] = useState(

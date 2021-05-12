@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Button,
@@ -29,20 +29,20 @@ import {
   Space,
   Switch,
 } from 'antd';
-import {useIntl} from 'umi';
-import {js_beautify} from 'js-beautify';
-import {LinkOutlined} from '@ant-design/icons';
-import type {DefinedError} from 'ajv';
+import { useIntl } from 'umi';
+import { js_beautify } from 'js-beautify';
+import { LinkOutlined } from '@ant-design/icons';
+import type { DefinedError } from 'ajv';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import MonacoEditor from "react-monaco-editor";
 import type * as monacoEditor from "monaco-editor";
-import {compact, omit} from 'lodash';
+import { compact, omit } from 'lodash';
 
-import {fetchSchema} from './service';
-import {json2yaml, yaml2json} from '@/helpers';
-import {PLUGIN_UI_LIST, PluginForm} from './UI';
-import {PluginType} from './data';
+import { fetchSchema } from './service';
+import { json2yaml, yaml2json } from '@/helpers';
+import { PLUGIN_UI_LIST, PluginForm } from './UI';
+import { PluginType } from './data';
 
 type Props = {
   name: string;
@@ -328,14 +328,14 @@ const PluginDetail: React.FC<Props> = ({
       >
       <style>
         {`
-      .site-page-header {
-        border: 1px solid rgb(235, 237, 240);
-        margin-top:10px;
-      }
-      .ant-input[disabled] {
-        color: #000;
-      }
-    `}
+        .site-page-header {
+          border: 1px solid rgb(235, 237, 240);
+          margin-top:10px;
+        }
+        .ant-input[disabled] {
+          color: #000;
+        }
+      `}
       </style>
 
       <Form {...FORM_ITEM_LAYOUT} style={{ marginTop: '10px' }} form={form}>
