@@ -21,6 +21,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"reflect"
 	"sort"
 	"sync"
@@ -105,6 +106,7 @@ func (s *GenericStore) Init() error {
 		key := ret[i].Key[len(s.opt.BasePath)+1:]
 		objPtr, err := s.StringToObjPtr(ret[i].Value, key)
 		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error occurred while initializing logical store: ", s.opt.BasePath)
 			return err
 		}
 
@@ -353,8 +355,8 @@ func (s *GenericStore) StringToObjPtr(str, key string) (interface{}, error) {
 	ret := objPtr.Interface()
 	err := json.Unmarshal([]byte(str), ret)
 	if err != nil {
-		log.Errorf("json marshal failed: %s", err)
-		return nil, fmt.Errorf("json unmarshal failed: %s", err)
+		log.Errorf("json unmarshal failed: %s", err)
+		return nil, fmt.Errorf("json unmarshal failed\n\tRelated Key:\t\t%s\n\tError Description:\t%s", key, err)
 	}
 
 	if setter, ok := ret.(entity.BaseInfoSetter); ok {

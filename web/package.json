@@ -52,7 +52,8 @@
     "@ant-design/icons": "^4.0.0",
     "@ant-design/pro-layout": "^6.0.0",
     "@ant-design/pro-table": "2.30.1",
-    "@mrblenny/react-flow-chart": "^0.0.14",
+    "@antv/x6": "^1.18.5",
+    "@antv/x6-react-components": "^1.1.7",
     "@rjsf/antd": "2.2.0",
     "@rjsf/core": "2.2.0",
     "@types/js-yaml": "^4.0.0",
@@ -88,6 +89,7 @@
     "yaml": "^1.10.0"
   },
   "devDependencies": {
+    "@4tw/cypress-drag-drop": "^1.6.0",
     "@ant-design/pro-cli": "^2.0.2",
     "@cypress/code-coverage": "^3.9.2",
     "@types/base-64": "^0.1.3",

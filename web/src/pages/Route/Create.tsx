@@ -15,21 +15,21 @@
  * limitations under the License.
  */
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, Steps, Form } from 'antd';
+import { Card, Steps, Form, Modal } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history, useIntl } from 'umi';
 import { isEmpty } from 'lodash';
 
 import ActionBar from '@/components/ActionBar';
+import FlowGraph from '@/components/PluginFlow/components/FlowGraph';
 
-import { transformer as chartTransformer } from '@/components/PluginOrchestration';
 import { create, fetchItem, update, checkUniqueName, checkHostWithSSL } from './service';
 import { transformProxyRewrite2Plugin } from './transform';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
 import CreateStep4 from './components/CreateStep4';
-import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA, INIT_CHART } from './constants';
+import { DEFAULT_STEP_1_DATA, DEFAULT_STEP_3_DATA } from './constants';
 import ResultView from './components/ResultView';
 import styles from './Create.less';
 
@@ -68,7 +68,6 @@ const Page: React.FC<Props> = (props) => {
 
   const [step, setStep] = useState(1);
   const [stepHeader, setStepHeader] = useState(STEP_HEADER_4);
-  const [chart, setChart] = useState(INIT_CHART);
 
   const setupRoute = (rid: number) =>
     fetchItem(rid).then((data) => {
@@ -159,9 +158,8 @@ const Page: React.FC<Props> = (props) => {
           data={step3Data}
           isForceHttps={form1.getFieldValue('redirectOption') === 'forceHttps'}
           isProxyEnable={getProxyRewriteEnable()}
-          onChange={({ plugins, script = INIT_CHART, plugin_config_id }) => {
+          onChange={({ plugins, script = {}, plugin_config_id }) => {
             setStep3Data({ plugins, script, plugin_config_id });
-            setChart(script);
           }}
         />
       );
@@ -195,6 +193,39 @@ const Page: React.FC<Props> = (props) => {
     return null;
   };
 
+  const savePlugins = (): boolean => {
+    const isScriptConfigured = FlowGraph.graph?.toJSON().cells.length
+    const isPluginsConfigured = Object.keys(step3Data.plugins || {}).length
+
+    if (step === 3 && isScriptConfigured && isPluginsConfigured) {
+      Modal.confirm({
+        title: formatMessage({ id: 'component.plugin-flow.text.both-modes-exist.title' }),
+        content: formatMessage({ id: 'component.plugin-flow.text.both-modes-exist' }),
+        onOk: () => {
+          const data = FlowGraph.convertToData()
+          if (data) {
+            setStep3Data({ script: data, plugins: {} });
+            setStep(4)
+          }
+        },
+        okText: formatMessage({ id: 'component.global.confirm' }),
+        cancelText: formatMessage({ id: 'component.global.cancel' }),
+      })
+      return false
+    }
+
+    if (isScriptConfigured) {
+      const data = FlowGraph.convertToData()
+      if (!data) {
+        return false
+      }
+      setStep3Data({ script: data, plugins: {} });
+    } else {
+      setStep3Data({ ...step3Data, script: {} });
+    }
+    return true
+  }
+
   const onStepChange = (nextStep: number) => {
     const onUpdateOrCreate = () => {
       const routeData = {
@@ -211,15 +242,6 @@ const Page: React.FC<Props> = (props) => {
         create(routeData).then(() => {
           setStep(5);
         });
-      }
-    };
-
-    const savePlugins = () => {
-      if (Object.keys(chart.nodes || {}).length) {
-        const transformChart = chartTransformer(chart);
-        setStep3Data({ script: { ...transformChart, chart }, plugins: {} });
-      } else {
-        setStep3Data({ ...step3Data, script: {} });
       }
     };
 
@@ -242,8 +264,7 @@ const Page: React.FC<Props> = (props) => {
           });
         });
       } else {
-        savePlugins();
-        setStep(nextStep);
+        setStep(nextStep)
       }
       return;
     }
@@ -260,7 +281,10 @@ const Page: React.FC<Props> = (props) => {
     }
 
     if (nextStep === 4) {
-      savePlugins();
+      const result = savePlugins()
+      if (!result) {
+        return
+      }
       setStep(nextStep);
     }
 
@@ -282,7 +306,6 @@ const Page: React.FC<Props> = (props) => {
             ))}
           </Steps>
           {renderStepList()}
-          {/* NOTE: PluginOrchestration works unexpected when using <renderStepList/> */}
         </Card>
       </PageHeaderWrapper>
       <ActionBar step={step} lastStep={redirect ? 2 : 4} onChange={onStepChange} withResultView />

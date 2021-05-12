@@ -101,7 +101,7 @@ func manageAPI() error {
 
 	if err := utils.WritePID(conf.PIDPath); err != nil {
 		log.Errorf("failed to write pid: %s", err)
-		panic(err)
+		return err
 	}
 	utils.AppendToClosers(func() error {
 		if err := os.Remove(conf.PIDPath); err != nil {
@@ -110,6 +110,15 @@ func manageAPI() error {
 		}
 		return nil
 	})
+
+	// Signal received to the process externally.
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+
+	defer func() {
+		utils.CloseAll()
+		signal.Stop(quit)
+	}()
 
 	droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
 		var newMws []droplet.Middleware
@@ -122,17 +131,21 @@ func manageAPI() error {
 
 	if err := storage.InitETCDClient(conf.ETCDConfig); err != nil {
 		log.Errorf("init etcd client fail: %w", err)
-		panic(err)
+		return err
 	}
 	if err := store.InitStores(); err != nil {
 		log.Errorf("init stores fail: %w", err)
-		panic(err)
+		return err
 	}
+
+	var server, serverSSL *http.Server
+	// For internal error handling across multiple goroutines.
+	errsig := make(chan error, 1)
 
 	// routes
 	r := internal.SetUpRouter()
-	addr := fmt.Sprintf("%s:%d", conf.ServerHost, conf.ServerPort)
-	s := &http.Server{
+	addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
+	server = &http.Server{
 		Addr:         addr,
 		Handler:      r,
 		ReadTimeout:  time.Duration(1000) * time.Millisecond,
@@ -141,21 +154,17 @@ func manageAPI() error {
 
 	log.Infof("The Manager API is listening on %s", addr)
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	defer signal.Stop(quit)
-
 	go func() {
-		if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			utils.CloseAll()
-			log.Fatalf("listen and serv fail: %s", err)
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Errorf("listen and serv fail: %s", err)
+			errsig <- err
 		}
 	}()
 
 	// HTTPS
 	if conf.SSLCert != "" && conf.SSLKey != "" {
 		addrSSL := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.SSLPort))
-		serverSSL := &http.Server{
+		serverSSL = &http.Server{
 			Addr:         addrSSL,
 			Handler:      r,
 			ReadTimeout:  time.Duration(1000) * time.Millisecond,
@@ -169,28 +178,37 @@ func manageAPI() error {
 		go func() {
 			err := serverSSL.ListenAndServeTLS(conf.SSLCert, conf.SSLKey)
 			if err != nil && err != http.ErrServerClosed {
-				utils.CloseAll()
-				log.Fatalf("listen and serve for HTTPS failed: %s", err)
+				log.Errorf("listen and serve for HTTPS failed: %s", err)
+				errsig <- err
 			}
 		}()
 	}
 
 	printInfo()
 
-	sig := <-quit
-	log.Infof("The Manager API server receive %s and start shutting down", sig.String())
+	select {
+	case err := <-errsig:
+		return err
 
-	ctx, cancel := context.WithTimeout(context.TODO(), 5*time.Second)
-	defer cancel()
+	case sig := <-quit:
+		log.Infof("The Manager API server receive %s and start shutting down", sig.String())
 
-	if err := s.Shutdown(ctx); err != nil {
-		log.Errorf("Shutting down server error: %s", err)
+		shutdownServer(server)
+		shutdownServer(serverSSL)
+		log.Infof("The Manager API server exited")
+		return nil
 	}
+}
 
-	log.Infof("The Manager API server exited")
+func shutdownServer(server *http.Server) {
+	if server != nil {
+		ctx, cancel := context.WithTimeout(context.TODO(), 5*time.Second)
+		defer cancel()
 
-	utils.CloseAll()
-	return nil
+		if err := server.Shutdown(ctx); err != nil {
+			log.Errorf("Shutting down server error: %s", err)
+		}
+	}
 }
 
 func newStartCommand() *cobra.Command {
