@@ -36,7 +36,7 @@ context('Create and delete route with plugin orchestration', () => {
     canvasContainer: '#container',
     drawer: '.ant-drawer-content',
     deleteAlert: '.ant-modal-body',
-    codemirrorScroll: '.CodeMirror-scroll',
+    monacoScroll: '.monaco-scrollable-element',
   };
 
   beforeEach(() => {
@@ -114,7 +114,7 @@ context('Create and delete route with plugin orchestration', () => {
     cy.visit('/routes/list');
     cy.contains('routeName').siblings().contains('More').click();
     cy.contains('View').click();
-    cy.get(selector.codemirrorScroll).within(() => {
+    cy.get(selector.monacoScroll).within(() => {
       cy.contains('script').should('exist');
     });
     cy.contains('Cancel').click();
