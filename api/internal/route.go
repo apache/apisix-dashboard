@@ -28,6 +28,7 @@ import (
 	"github.com/apisix/manager-api/internal/filter"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/handler/authentication"
+	migrate "github.com/apisix/manager-api/internal/handler/config_migrate"
 	"github.com/apisix/manager-api/internal/handler/consumer"
 	"github.com/apisix/manager-api/internal/handler/data_loader"
 	"github.com/apisix/manager-api/internal/handler/global_rule"
@@ -75,6 +76,7 @@ func SetUpRouter() *gin.Engine {
 		data_loader.NewImportHandler,
 		tool.NewHandler,
 		plugin_config.NewHandler,
+		migrate.NewHandler,
 	}
 
 	for i := range factories {

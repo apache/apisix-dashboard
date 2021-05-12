@@ -232,6 +232,12 @@ func (s *GenericStore) List(_ context.Context, input ListInput) (*ListOutput, er
 	return output, nil
 }
 
+func (s *GenericStore) Range(_ context.Context, f func(key string, obj interface{}) bool) {
+	s.cache.Range(func(key, value interface{}) bool {
+		return f(key.(string), value)
+	})
+}
+
 func (s *GenericStore) ingestValidate(obj interface{}) (err error) {
 	if s.opt.Validator != nil {
 		if err := s.opt.Validator.Validate(obj); err != nil {
