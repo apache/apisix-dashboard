@@ -370,9 +370,7 @@ const PluginDetail: React.FC<Props> = ({
             defaultValue={monacoModeList.JSON}
             value={monacoMode}
             options={modeOptions}
-            onChange={(value: PluginComponent.CodeMirrorMode) => {
-              handleModeChange(value);
-            }}
+            onChange={handleModeChange}
             data-cy='monaco-mode'
             key={1}
           />,

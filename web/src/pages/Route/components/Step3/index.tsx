@@ -17,7 +17,7 @@
 import React, { useState } from 'react';
 import { Radio, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { isChrome, isChromium, isEdgeChromium } from 'react-device-detect';
+import { isChrome, isChromium, isEdgeChromium, isElectron } from 'react-device-detect';
 import { useIntl } from 'umi';
 
 import PluginPage from '@/components/Plugin';
@@ -48,7 +48,7 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
   const { plugins = {}, script = DEFAULT_PLUGIN_FLOW_DATA, plugin_config_id = '' } = data;
 
   // NOTE: Currently only compatible with chrome
-  const useSupportBrowser = isChrome || isEdgeChromium || isChromium;
+  const useSupportBrowser = isChrome || isEdgeChromium || isChromium || isElectron;
   const disableDraw = !useSupportBrowser || isForceHttps || isProxyEnable;
 
   const [mode, setMode] = useState<Mode>(Object.keys(script.chart?.cells || {}).length === 0 || disableDraw ? 'NORMAL' : 'DRAW');
