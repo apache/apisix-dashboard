@@ -81,7 +81,7 @@
     "react-monaco-editor": "^0.43.0",
     "start-server-and-test": "^1.11.5",
     "styled-components": "^5.2.1",
-    "umi": "^3.1.2",
+    "umi": "^3.4.20",
     "umi-request": "^1.0.8",
     "url-regex-safe": "^1.0.2",
     "use-merge-value": "^1.0.1",
@@ -134,8 +134,7 @@
     "prettier": "^2.0.1",
     "pro-download": "1.0.1",
     "puppeteer-core": "^4.0.1",
-    "stylelint": "^13.0.0",
-    "webpack": "^5.35.0"
+    "stylelint": "^13.0.0"
   },
   "engines": {
     "node": ">=10.0.0"
