@@ -17,6 +17,8 @@
 export default {
   'page.upstream.step.select.upstream': 'Select Upstream',
   'page.upstream.step.select.upstream.select.option': 'Custom',
+  'page.upstream.step.select.upstream.select.none': 'None',
+  'page.upstream.step.backend.server.domain.or.ip': 'Backend Server Host/IP',
   'page.upstream.form.item-label.node.domain.or.ip': 'Targets',
   'page.upstream.step.input.domain.name.or.ip': 'Please enter domain or IP',
   'page.upstream.step.valid.domain.name.or.ip': 'Please enter valid a domain or IP',

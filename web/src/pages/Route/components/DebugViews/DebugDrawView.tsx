@@ -112,9 +112,9 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
           }
         }
       }
-      case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput]:{
+      case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput]: {
         let contentType = [''];
-        switch (bodyCodeMirrorMode){
+        switch (bodyCodeMirrorMode) {
           case DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode:
             contentType = ['application/json;charset=UTF-8'];
             break;
@@ -209,7 +209,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
 
   const handleDebug = (url: string) => {
     /* eslint-disable no-useless-escape */
-    if (!urlRegexSafe({exact: true, strict: false}).test(url)) {
+    if (!urlRegexSafe({ exact: true, strict: false }).test(url)) {
       notification.warning({
         message: formatMessage({ id: 'page.route.input.placeholder.requestUrl' }),
       });
@@ -217,7 +217,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     }
     const queryFormData = transformHeaderAndQueryParamsFormData(queryForm.getFieldsValue().params);
     const bodyFormRelateData = transformBodyParamsFormData();
-    const {bodyFormData, header: bodyFormHeader} = bodyFormRelateData;
+    const { bodyFormData, header: bodyFormHeader } = bodyFormRelateData;
     const pureHeaderFormData = transformHeaderAndQueryParamsFormData(
       headerForm.getFieldsValue().params,
     );
@@ -234,12 +234,12 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     }, bodyFormData)
       .then((req) => {
         setLoading(false);
-        const resp: RouteModule.debugResponse= req.data;
+        const resp: RouteModule.debugResponse = req.data;
         if (typeof (resp.data) !== 'string') {
           resp.data = JSON.stringify(resp.data, null, 2);
         }
         setResponse(resp);
-        const contentType=resp.header["Content-Type"];
+        const contentType = resp.header["Content-Type"];
         if (contentType == null || contentType.length !== 1) {
           setResponseBodyCodeMirrorMode("TEXT");
         } else if (contentType[0].toLowerCase().indexOf("json") !== -1) {
@@ -331,13 +331,13 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         >
           <Tabs>
             <TabPane data-cy='query' tab={formatMessage({ id: 'page.route.TabPane.queryParams' })} key="query">
-              <DebugParamsView form={queryForm} name='queryForm'/>
+              <DebugParamsView form={queryForm} name='queryForm' />
             </TabPane>
             <TabPane data-cy='auth' tab={formatMessage({ id: 'page.route.TabPane.authentication' })} key="auth">
               <AuthenticationView form={authForm} />
             </TabPane>
             <TabPane data-cy='header' tab={formatMessage({ id: 'page.route.TabPane.headerParams' })} key="header">
-              <DebugParamsView form={headerForm} name='headerForm' inputType="header"/>
+              <DebugParamsView form={headerForm} name='headerForm' inputType="header" />
             </TabPane>
             {showBodyTab && (
               <TabPane data-cy='body' tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })} key="body">
@@ -371,7 +371,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                 )}
                 <div style={{ marginTop: 16 }}>
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded] && (
-                    <DebugParamsView form={urlencodedForm} name='urlencodedForm'/>
+                    <DebugParamsView form={urlencodedForm} name='urlencodedForm' />
                   )}
 
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormData] && (
@@ -420,7 +420,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                   onSelect={(mode) => setResponseBodyCodeMirrorMode(mode as string)}>
                   {
                     DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED.map(mode => {
-                      return <Option value={mode.mode}>{mode.name}</Option>
+                      return <Option value={mode.mode} key={mode.mode}>{mode.name}</Option>
                     })
                   }
                 </Select>
@@ -438,10 +438,10 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                     });
                   }}>
                   <Button type="text" disabled={!response}>
-                    <CopyOutlined/>
+                    <CopyOutlined />
                   </Button>
                 </CopyToClipboard>
-                <div id='codeMirror-response' style={{marginTop:16}}>
+                <div id='codeMirror-response' style={{ marginTop: 16 }}>
                   <CodeMirror
                     value={response ? response.data : ""}
                     height={codeMirrorHeight}

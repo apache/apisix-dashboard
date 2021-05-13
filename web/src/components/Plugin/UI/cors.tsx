@@ -158,6 +158,7 @@ const Cors: React.FC<Props> = ({ form }) => {
                 <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                   <Button
                     type="dashed"
+                    data-cy="add-allow_origins_by_regex"
                     onClick={() => {
                       add();
                     }}

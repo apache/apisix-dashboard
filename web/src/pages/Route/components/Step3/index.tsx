@@ -20,13 +20,19 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { isChrome, isChromium, isEdgeChromium } from 'react-device-detect';
 import { useIntl } from 'umi';
 
-import PluginOrchestration from '@/components/PluginOrchestration';
 import PluginPage from '@/components/Plugin';
+import PluginFlow from '@/components/PluginFlow';
+import { DEFAULT_PLUGIN_FLOW_DATA } from '@/components/PluginFlow/constants';
+import FlowGraph from '@/components/PluginFlow/components/FlowGraph';
 
 type Props = {
   data: {
     plugins: PluginComponent.Data;
-    script: Record<string, any>;
+    script: {
+      chart: Record<string, any>;
+      rule: Record<string, any>;
+      conf: Record<string, any>;
+    };
     plugin_config_id?: string;
   };
   onChange: (data: { plugins: PluginComponent.Data; script: any, plugin_config_id?: string; }) => void;
@@ -39,15 +45,13 @@ type Mode = 'NORMAL' | 'DRAW';
 
 const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps = false, isProxyEnable = false }) => {
   const { formatMessage } = useIntl();
-  const { plugins = {}, script = {}, plugin_config_id = '' } = data;
+  const { plugins = {}, script = DEFAULT_PLUGIN_FLOW_DATA, plugin_config_id = '' } = data;
 
   // NOTE: Currently only compatible with chrome
   const useSupportBrowser = isChrome || isEdgeChromium || isChromium;
   const disableDraw = !useSupportBrowser || isForceHttps || isProxyEnable;
 
-  const type = Object.keys(script || {}).length === 0 || disableDraw ? 'NORMAL' : 'DRAW';
-
-  const [mode, setMode] = useState<Mode>(type);
+  const [mode, setMode] = useState<Mode>(Object.keys(script.chart?.cells || {}).length === 0 || disableDraw ? 'NORMAL' : 'DRAW');
 
   return (
     <>
@@ -55,15 +59,20 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
         <Radio.Group
           value={mode}
           onChange={(e) => {
+            if (e.target.value === 'NORMAL') {
+              // NOTE: current is DRAW
+              onChange({ ...data, script: { chart: FlowGraph.graph.toJSON() } })
+            }
+
             setMode(e.target.value);
           }}
           style={{ marginBottom: 10 }}
         >
           <Radio.Button value="NORMAL">
-            { formatMessage({ id: 'page.route.tabs.normalMode' }) }
+            {formatMessage({ id: 'page.route.tabs.normalMode' })}
           </Radio.Button>
           <Radio.Button value="DRAW" disabled={disableDraw}>
-            { formatMessage({ id: 'page.route.tabs.orchestration' }) }
+            {formatMessage({ id: 'page.route.tabs.orchestration' })}
           </Radio.Button>
         </Radio.Group>
         {Boolean(disableDraw) && (
@@ -74,13 +83,13 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
                 // NOTE: forceHttps do not support DRAW mode
                 const titleArr: string[] = [];
                 if (!useSupportBrowser) {
-                  titleArr.push(formatMessage({id: 'page.route.tooltip.pluginOrchOnlySuportChrome'}));
+                  titleArr.push(formatMessage({ id: 'page.route.tooltip.pluginOrchOnlySuportChrome' }));
                 }
                 if (isForceHttps) {
-                  titleArr.push(formatMessage({id: 'page.route.tooltip.pluginOrchWithoutRedirect'}));
+                  titleArr.push(formatMessage({ id: 'page.route.tooltip.pluginOrchWithoutRedirect' }));
                 }
                 if (isProxyEnable) {
-                  titleArr.push(formatMessage({id: 'page.route.tooltip.pluginOrchWithoutProxyRewrite'}));
+                  titleArr.push(formatMessage({ id: 'page.route.tooltip.pluginOrchWithoutProxyRewrite' }));
                 }
                 return titleArr.map((item, index) => `${index + 1}.${item}`).join('');
               }}
@@ -92,23 +101,18 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
       </div>
       {Boolean(mode === 'NORMAL') && (
         <PluginPage
+          readonly={readonly}
           initialData={plugins}
           plugin_config_id={plugin_config_id}
           schemaType="route"
           referPage="route"
           showSelector
           onChange={(pluginsData, id) => {
-            onChange({ plugins: pluginsData, script: {}, plugin_config_id: id })
+            onChange({ ...data, plugins: pluginsData, plugin_config_id: id })
           }}
         />
       )}
-      {Boolean(mode === 'DRAW') && (
-        <PluginOrchestration
-          data={script?.chart}
-          onChange={(scriptData) => onChange({ plugins: {}, script: scriptData })}
-          readonly={readonly}
-        />
-      )}
+      {Boolean(mode === 'DRAW') && (<PluginFlow chart={script.chart as any} />)}
     </>
   );
 };
