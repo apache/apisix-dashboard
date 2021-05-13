@@ -43,10 +43,10 @@ help:
 build: web-default api-default
 	cd ./web && export CYPRESS_INSTALL_BINARY=0  && yarn install && yarn build && cd .. && cp -r output/html api/cmd && api/build.sh &&  mkdir -p output/logs
 
-### api-build:		Build the Apache APISIX Dashboard, only manager-api
+### api-build:	Build the Apache APISIX Dashboard, only manager-api
 .PHONY: api-build
 api-build: api-default
-	api/build.sh && mkdir -p ../output/logs
+	rm -rf api/cmd/html && git checkout api/cmd/html/ && api/build.sh && mkdir -p ../output/logs
 
 .PHONY: web-default
 web-default:
@@ -62,11 +62,8 @@ ifeq ("$(wildcard $(GO_EXEC))", "")
 	@echo "ERROR: Need to install golang 1.16+ first"
 	exit 1
 endif
-	@if [ "${GO_MAJOR}" -lt "${REQUIRED_MIN_GO_MAJOR}" ] ; then \
-		echo "ERROR: Need to install golang 1.16+ first"; \
-		exit 1; \
-	fi
-	@if [ "${GO_MINOR}" -lt "${REQUIRED_MIN_GO_MINOR}" ] ; then \
+	@if [ "${GO_MAJOR}" -lt "${REQUIRED_MIN_GO_MAJOR}" ] || 
+	([ "${GO_MAJOR}" -eq "${REQUIRED_MIN_GO_MAJOR}"  ] && [ "${GO_MINOR}" -lt "${REQUIRED_MIN_GO_MINOR}" ]) ; then \
 		echo "ERROR: Need to install golang 1.16+ first"; \
 		exit 1; \
 	fi
