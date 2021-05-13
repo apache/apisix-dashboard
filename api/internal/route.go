@@ -57,7 +57,6 @@ func SetUpRouter(StaticFiles embed.FS) *gin.Engine {
 	r.Use(filter.CORS(), filter.RequestId(), filter.IPFilter(), filter.RequestLogHandler(logger), filter.SchemaCheck(), filter.RecoverHandler())
 	filesystem := fs.FS(StaticFiles)
 	subtree, err := fs.Sub(filesystem, "html")
-
 	if err != nil {
 		log.Errorf("%s\n", err)
 	}
