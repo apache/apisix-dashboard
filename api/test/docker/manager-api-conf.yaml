@@ -30,6 +30,10 @@ conf:
       level: warn                  # supports levels, lower to higher: debug, info, warn, error, panic, fatal
       file_path: logs/error.log    # supports relative path, absolute path, standard output
                                    # such as: logs/error.log, /tmp/logs/error.log, /dev/stdout, /dev/stderr
+  gateways:                        # host list of APISIX gateway, currently only used as a list of debuggable hosts
+    - "172.16.238.30:9080"         # not contains scheme part(eg http://)
+    - "172.16.238.40:9000"
+
 authentication:
   secret: secret             # secret for jwt token generation.
                              # *NOTE*: Highly recommended to modify this value to protect `manager api`.
