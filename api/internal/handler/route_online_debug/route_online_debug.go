@@ -20,10 +20,12 @@ import (
 	"bytes"
 	"compress/gzip"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"reflect"
 	"strings"
 	"time"
@@ -34,6 +36,7 @@ import (
 	"github.com/shiningrush/droplet/wrapper"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/handler"
 )
 
@@ -92,12 +95,47 @@ func (h *Handler) DebugRequestForwarding(c droplet.Context) (interface{}, error)
 type HTTPProtocolSupport struct {
 }
 
+func checkHost(host string) error {
+	if len(conf.Gateways) < 1 {
+		return errors.New("host list of APISIX gateways not configured")
+	}
+	for _, gatewayHost := range conf.Gateways {
+		if host == gatewayHost {
+			return nil
+		}
+	}
+
+	return errors.New("doesn't match any host of APISIX gateways")
+}
+
+func checkPath(path string) error {
+	if strings.HasPrefix(path, "/apisix/") {
+		return errors.New("the path is forbidden for debugging")
+	}
+	return nil
+}
+
 func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*DebugOnlineInput)
-	url := input.URL
-	method := input.Method
-	body := input.Body
-	contentType := input.ContentType
+	// parse debugging url
+	parsedURL, err := url.ParseRequestURI(input.URL)
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("parse debugging url failed: %s", err)
+	}
+
+	// check debugging host
+	err = checkHost(parsedURL.Host)
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("invalid debugging url: %s", err)
+	}
+	// check debugging path
+	err = checkPath(parsedURL.Path)
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
+			fmt.Errorf("invalid debugging url: %s", err)
+	}
 
 	transport := http.DefaultTransport.(*http.Transport).Clone()
 	transport.DisableCompression = true
@@ -108,18 +146,18 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	}
 
 	var tempMap map[string][]string
-	err := json.Unmarshal([]byte(input.HeaderParams), &tempMap)
+	err = json.Unmarshal([]byte(input.HeaderParams), &tempMap)
 
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("can not get header")
 	}
 
-	req, err := http.NewRequest(strings.ToUpper(method), url, bytes.NewReader(body))
+	req, err := http.NewRequest(strings.ToUpper(input.Method), input.URL, bytes.NewReader(input.Body))
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
+	req.Header.Add("Content-Type", input.ContentType)
 	for k, v := range tempMap {
 		for _, v1 := range v {
 			if !strings.EqualFold(k, "Content-Type") {

@@ -19,12 +19,17 @@ package route_online_debug
 
 import (
 	"compress/gzip"
+	"errors"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
+	"testing"
+
 	"github.com/shiningrush/droplet"
 	"github.com/shiningrush/droplet/data"
 	"github.com/stretchr/testify/assert"
-	"net/http"
-	"net/http/httptest"
-	"testing"
+
+	"github.com/apisix/manager-api/internal/conf"
 )
 
 var TestResponse = "test"
@@ -42,6 +47,9 @@ func mockServer() *httptest.Server {
 
 func TestHTTPProtocolSupport_RequestForwarding(t *testing.T) {
 	server := mockServer()
+	parsedURL, err := url.ParseRequestURI(server.URL)
+	assert.Nil(t, err)
+	conf.Gateways = append(conf.Gateways, parsedURL.Host)
 	defer server.Close()
 	var cases = []struct {
 		Desc   string
@@ -58,7 +66,7 @@ func TestHTTPProtocolSupport_RequestForwarding(t *testing.T) {
 		},
 		{
 			Desc:   "wrong url",
-			Input:  &DebugOnlineInput{URL: "grpc://localhost"},
+			Input:  &DebugOnlineInput{URL: "grpc://127.0.0.1:9080"},
 			Result: &data.SpecCodeResponse{StatusCode: http.StatusBadRequest},
 		},
 		{
@@ -94,4 +102,23 @@ func TestHTTPProtocolSupport_RequestForwarding(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestCheckHost(t *testing.T) {
+	err := checkHost("127.0.0.1:9080")
+	assert.Nil(t, err)
+
+	err = checkHost("github.com")
+	assert.Equal(t, err, errors.New("doesn't match any host of APISIX gateways"))
+}
+
+func TestCheckPath(t *testing.T) {
+	err := checkPath("/books/1")
+	assert.Nil(t, err)
+
+	err = checkPath("/test/apisix")
+	assert.Nil(t, err)
+
+	err = checkPath("/apisix/admin/routes")
+	assert.Equal(t, err, errors.New("the path is forbidden for debugging"))
 }

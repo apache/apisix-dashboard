@@ -24,6 +24,7 @@ import (
 	"github.com/shiningrush/droplet/data"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
+	"github.com/apisix/manager-api/internal/conf"
 	"github.com/apisix/manager-api/internal/core/entity"
 	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
@@ -59,6 +60,7 @@ func NewHandler() (handler.RouteRegister, error) {
 func (h *Handler) ApplyRoute(r *gin.Engine) {
 	r.GET("/apisix/admin/tool/version", wgin.Wraps(h.Version))
 	r.GET("/apisix/admin/tool/version_match", wgin.Wraps(h.VersionMatch))
+	r.GET("/apisix/admin/tool/gateways", wgin.Wraps(h.Gateways))
 }
 
 func (h *Handler) Version(_ droplet.Context) (interface{}, error) {
@@ -108,4 +110,8 @@ func (h *Handler) VersionMatch(c droplet.Context) (interface{}, error) {
 	}
 
 	return &output, nil
+}
+
+func (h *Handler) Gateways(_ droplet.Context) (interface{}, error) {
+	return conf.Gateways, nil
 }

@@ -61,6 +61,7 @@ var (
 	PIDPath          = "/tmp/manager-api.pid"
 	AllowList        []string
 	Plugins          = map[string]bool{}
+	Gateways         []string
 )
 
 type MTLS struct {
@@ -110,6 +111,7 @@ type Conf struct {
 	Log       Log
 	AllowList []string `yaml:"allow_list"`
 	MaxCpu    int      `yaml:"max_cpu"`
+	Gateways  []string `yaml:"gateways"`
 }
 
 type User struct {
@@ -210,6 +212,7 @@ func setConf() {
 		}
 
 		AllowList = config.Conf.AllowList
+		Gateways = config.Conf.Gateways
 
 		// set degree of parallelism
 		initParallelism(config.Conf.MaxCpu)

@@ -154,3 +154,12 @@ func TestTool_VersionMatch(t *testing.T) {
 		})
 	}
 }
+
+func TestTool_Gateways(t *testing.T) {
+	h := Handler{}
+	ctx := droplet.NewContext()
+
+	ret, err := h.Gateways(ctx)
+	assert.Nil(t, err)
+	assert.Equal(t, []string{"127.0.0.1:9080"}, ret)
+}
