@@ -40,6 +40,18 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 )
 
+var allowMethods = map[string]bool{
+	http.MethodGet:     true,
+	http.MethodHead:    true,
+	http.MethodPost:    true,
+	http.MethodPut:     true,
+	http.MethodPatch:   true,
+	http.MethodDelete:  true,
+	http.MethodConnect: true,
+	http.MethodOptions: true,
+	http.MethodTrace:   true,
+}
+
 type Handler struct {
 }
 
@@ -76,6 +88,7 @@ func (h *Handler) DebugRequestForwarding(c droplet.Context) (interface{}, error)
 	//TODO: other Protocols, e.g: grpc, websocket
 	input := c.Input().(*DebugOnlineInput)
 	protocol := input.RequestProtocol
+
 	if protocol == "" {
 		protocol = "http"
 	}
@@ -115,6 +128,13 @@ func checkPath(path string) error {
 	return nil
 }
 
+func checkMethod(method string) error {
+	if exists := allowMethods[strings.ToUpper(method)]; !exists {
+		return errors.New("the method is not allowed for debugging")
+	}
+	return nil
+}
+
 func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{}, error) {
 	input := c.Input().(*DebugOnlineInput)
 	// parse debugging url
@@ -137,6 +157,12 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 			fmt.Errorf("invalid debugging url: %s", err)
 	}
 
+	// check debugging method
+	err = checkMethod(input.Method)
+	if err != nil {
+		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, err
+	}
+
 	transport := http.DefaultTransport.(*http.Transport).Clone()
 	transport.DisableCompression = true
 
@@ -147,7 +173,6 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 
 	var tempMap map[string][]string
 	err = json.Unmarshal([]byte(input.HeaderParams), &tempMap)
-
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusBadRequest}, fmt.Errorf("can not get header")
 	}
@@ -172,7 +197,6 @@ func (h *HTTPProtocolSupport) RequestForwarding(c droplet.Context) (interface{},
 	if err != nil {
 		return &data.SpecCodeResponse{StatusCode: http.StatusInternalServerError}, err
 	}
-
 	defer resp.Body.Close()
 
 	// handle gzip content encoding
