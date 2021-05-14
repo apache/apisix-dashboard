@@ -34,7 +34,10 @@ func Export(ctx context.Context) ([]byte, error) {
 	exportData := NewAllData()
 	store.RangeStore(func(key store.HubKey, s *store.GenericStore) bool {
 		s.Range(ctx, func(_ string, obj interface{}) bool {
-			exportData.AddObj(obj)
+			err := exportData.AddObj(obj)
+			if err != nil {
+				return true
+			}
 			return true
 		})
 		return true
@@ -58,32 +61,40 @@ const (
 
 func Import(ctx context.Context, data []byte, mode ConflictMode) (*AllData, error) {
 	importData := NewAllData()
-	err := json.Unmarshal(data, &importData)
-	if err != nil {
-		return nil, err
+	e := json.Unmarshal(data, &importData)
+	if e != nil {
+		return nil, e
 	}
 	conflict, conflictData := isConflict(ctx, importData)
 	if conflict && mode == ModeReturn {
 		return conflictData, ErrConflict
 	}
-
+	var err error
 	store.RangeStore(func(key store.HubKey, s *store.GenericStore) bool {
 		importData.Range(key, func(i int, obj interface{}) bool {
-			_, err := s.CreateCheck(obj)
-			if err != nil {
+			_, e := s.CreateCheck(obj)
+			if e != nil {
 				switch mode {
 				case ModeSkip:
 					return true
 				case ModeOverwrite:
-					s.Update(ctx, obj, true)
+					_, e := s.Update(ctx, obj, true)
+					if e != nil {
+						err = e
+						return false
+					}
 				}
 			} else {
-				s.Create(ctx, obj)
+				_, e := s.Create(ctx, obj)
+				if err != nil {
+					err = e
+					return false
+				}
 			}
 			fmt.Printf("[%s]: %#v\n", key, obj)
 			return true
 		})
 		return true
 	})
-	return nil, nil
+	return nil, err
 }

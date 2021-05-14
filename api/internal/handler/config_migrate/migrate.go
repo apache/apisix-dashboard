@@ -31,6 +31,7 @@ import (
 	"hash/crc32"
 
 	"github.com/apisix/manager-api/internal/core/migrate"
+	"github.com/apisix/manager-api/internal/log"
 )
 
 const (
@@ -53,6 +54,7 @@ type ExportInput struct{}
 func (h *Handler) ExportConfig(c *gin.Context) {
 	data, err := migrate.Export(c)
 	if err != nil {
+		log.Errorf("Export: %s", err)
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -68,7 +70,10 @@ func (h *Handler) ExportConfig(c *gin.Context) {
 	c.Header("Content-Type", "application/octet-stream")
 	c.Header("Accept-Length", strconv.Itoa(len(fileBytes)))
 	c.Header("Content-Transfer-Encoding", "binary")
-	c.Writer.Write([]byte(fileBytes))
+	_, err = c.Writer.Write([]byte(fileBytes))
+	if err != nil {
+		log.Errorf("Write: %s", err)
+	}
 }
 
 type ImportInput struct {
@@ -115,6 +120,7 @@ func (h *Handler) ImportConfig(c *gin.Context) {
 	}
 	conflictData, err := migrate.Import(c, importData, mode)
 	if err != nil {
+		log.Errorf("Import: %s", err)
 		c.JSON(http.StatusOK, &data.BaseError{
 			Code:    consts.ErrBadRequest,
 			Message: "Config conflict",

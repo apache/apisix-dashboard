@@ -33,7 +33,10 @@ func isConflict(ctx context.Context, new *AllData) (bool, *AllData) {
 			_, err := s.CreateCheck(obj)
 			if err != nil {
 				isConflict = true
-				conflict.AddObj(obj)
+				err = conflict.AddObj(obj)
+				if err != nil {
+					return true
+				}
 			}
 			return true
 		})
