@@ -18,7 +18,6 @@ package migrate
 
 import (
 	"encoding/binary"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -76,11 +75,6 @@ func (h *Handler) ExportConfig(c *gin.Context) {
 	}
 }
 
-type ImportInput struct {
-	Data string `json:"data"`
-	Mode string `json:"mode"`
-}
-
 type ImportOutput struct {
 	ConflictItems *migrate.AllData
 }
@@ -93,7 +87,6 @@ var modeMap = map[string]migrate.ConflictMode{
 
 func (h *Handler) ImportConfig(c *gin.Context) {
 	paraMode := c.PostForm("mode")
-	fmt.Printf("mode:%s\n", paraMode)
 	mode := migrate.ModeReturn
 	if m, ok := modeMap[paraMode]; ok {
 		mode = m
