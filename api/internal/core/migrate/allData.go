@@ -32,7 +32,7 @@ type AllData struct {
 	Upstreams     []*entity.Upstream
 	Scripts       []*entity.Script
 	GlobalPlugins []*entity.GlobalPlugins
-	ServerInfos   []*entity.ServerInfo
+	// ServerInfos   []*entity.ServerInfo
 	PluginConfigs []*entity.PluginConfig
 }
 
@@ -45,7 +45,7 @@ func NewAllData() *AllData {
 		Upstreams:     make([]*entity.Upstream, 0),
 		Scripts:       make([]*entity.Script, 0),
 		GlobalPlugins: make([]*entity.GlobalPlugins, 0),
-		ServerInfos:   make([]*entity.ServerInfo, 0),
+		// ServerInfos:   make([]*entity.ServerInfo, 0),
 		PluginConfigs: make([]*entity.PluginConfig, 0),
 	}
 }
@@ -94,12 +94,12 @@ func (a *AllData) Range(key store.HubKey, f func(int, interface{}) bool) {
 				break
 			}
 		}
-	case store.HubKeyServerInfo:
-		for i, v := range a.ServerInfos {
-			if !f(i, v) {
-				break
-			}
-		}
+	// case store.HubKeyServerInfo:
+	// 	for i, v := range a.ServerInfos {
+	// 		if !f(i, v) {
+	// 			break
+	// 		}
+	// 	}
 	case store.HubKeyPluginConfig:
 		for i, v := range a.PluginConfigs {
 			if !f(i, v) {
@@ -126,8 +126,8 @@ func (a *AllData) AddObj(obj interface{}) error {
 		a.Scripts = append(a.Scripts, obj)
 	case *entity.GlobalPlugins:
 		a.GlobalPlugins = append(a.GlobalPlugins, obj)
-	case *entity.ServerInfo:
-		a.ServerInfos = append(a.ServerInfos, obj)
+	// case *entity.ServerInfo:
+	// 	a.ServerInfos = append(a.ServerInfos, obj)
 	case *entity.PluginConfig:
 		a.PluginConfigs = append(a.PluginConfigs, obj)
 	default:
