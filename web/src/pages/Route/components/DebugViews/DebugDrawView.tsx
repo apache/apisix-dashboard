@@ -82,7 +82,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   useEffect(() => {
     resetForms();
     getDebugTarget().then(resp => {
-      setRequestTargetList(resp.gateways)
+      setRequestTargetList(resp.data)
     })
   }, []);
 
