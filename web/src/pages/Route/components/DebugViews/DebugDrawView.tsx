@@ -15,40 +15,35 @@
  * limitations under the License.
  */
 import React, { useEffect, useState, useRef } from 'react';
-import { Button, Card, Drawer, Form, Input, notification, Radio, Select, Spin, Tabs } from 'antd';
+import { Button, Card, Drawer, Form, notification, Radio, Select, Spin, Tabs } from 'antd';
 import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import queryString from 'query-string';
 import Base64 from 'base-64';
-import urlRegexSafe from 'url-regex-safe';
 import CopyToClipboard from "react-copy-to-clipboard";
 import { CopyOutlined } from "@ant-design/icons";
 
 import PanelSection from '@/components/PanelSection';
 
 import {
-  HTTP_METHOD_OPTION_LIST,
   DEFAULT_DEBUG_PARAM_FORM_DATA,
   DEFAULT_DEBUG_AUTH_FORM_DATA,
-  PROTOCOL_SUPPORTED,
   DEBUG_BODY_TYPE_SUPPORTED,
   DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED,
   DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED,
   DebugBodyFormDataValueType,
 } from '../../constants';
-import { DebugParamsView, AuthenticationView, DebugFormDataView } from '.';
-import { debugRoute } from '../../service';
+import { DebugParamsView, AuthenticationView, DebugFormDataView, DebugTargetView } from '.';
+import { debugRoute, getDebugTarget } from '../../service';
 import styles from './index.less';
 
 const { Option } = Select;
-const { Search } = Input;
 const { TabPane } = Tabs;
 
 const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const { formatMessage } = useIntl();
-  const [httpMethod, setHttpMethod] = useState(HTTP_METHOD_OPTION_LIST[0]);
-  const [requestProtocol, setRequestProtocol] = useState(PROTOCOL_SUPPORTED[0]);
-  const [showBodyTab, setShowBodyTab] = useState(false);
+  const [requestTargetList, setRequestTargetList] = useState<string[]>([])
+  const [targetForm] = Form.useForm();
   const [queryForm] = Form.useForm();
   const [urlencodedForm] = Form.useForm();
   const [formDataForm] = Form.useForm();
@@ -86,10 +81,13 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
 
   useEffect(() => {
     resetForms();
+    getDebugTarget().then(resp => {
+      setRequestTargetList(resp.gateways)
+    })
   }, []);
 
   const transformBodyParamsFormData = () => {
-    if (methodWithoutBody.includes(httpMethod)) {
+    if (methodWithoutBody.includes(targetForm.getFieldValue('requestTarget'))) {
       return {
         bodyFormData: undefined,
       };
@@ -207,55 +205,56 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     }
   };
 
-  const handleDebug = (url: string) => {
-    /* eslint-disable no-useless-escape */
-    if (!urlRegexSafe({ exact: true, strict: false }).test(url)) {
-      notification.warning({
-        message: formatMessage({ id: 'page.route.input.placeholder.requestUrl' }),
-      });
-      return;
-    }
-    const queryFormData = transformHeaderAndQueryParamsFormData(queryForm.getFieldsValue().params);
-    const bodyFormRelateData = transformBodyParamsFormData();
-    const { bodyFormData, header: bodyFormHeader } = bodyFormRelateData;
-    const pureHeaderFormData = transformHeaderAndQueryParamsFormData(
-      headerForm.getFieldsValue().params,
-    );
-    const headerFormData = transformAuthFormData(authForm.getFieldsValue(), pureHeaderFormData, bodyFormHeader);
-    const urlQueryString = url.indexOf('?') === -1 ? `?${queryString.stringify(queryFormData)}` : `&${queryString.stringify(queryFormData)}`
+  const handleDebug = () => {
+    targetForm.validateFields().then((formValues) => {
+      const {method, requestTarget, path, protocol} = formValues;
+      const queryFormData = transformHeaderAndQueryParamsFormData(queryForm.getFieldsValue().params);
+      const bodyFormRelateData = transformBodyParamsFormData();
+      const { bodyFormData, header: bodyFormHeader } = bodyFormRelateData;
+      const pureHeaderFormData = transformHeaderAndQueryParamsFormData(
+        headerForm.getFieldsValue().params,
+      );
+      const headerFormData = transformAuthFormData(authForm.getFieldsValue(), pureHeaderFormData, bodyFormHeader);
+      const urlQueryString = requestTarget.indexOf('?') === -1 ? `?${queryString.stringify(queryFormData)}` : `&${queryString.stringify(queryFormData)}`
 
-    setLoading(true);
-    // TODO: grpc and websocket
-    debugRoute({
-      online_debug_header_params: JSON.stringify(headerFormData),
-      online_debug_url: `${requestProtocol}://${url}${urlQueryString}`,
-      online_debug_request_protocol: requestProtocol,
-      online_debug_method: httpMethod,
-    }, bodyFormData)
-      .then((req) => {
-        setLoading(false);
-        const resp: RouteModule.debugResponse = req.data;
-        if (typeof (resp.data) !== 'string') {
-          resp.data = JSON.stringify(resp.data, null, 2);
-        }
-        setResponse(resp);
-        const contentType = resp.header["Content-Type"];
-        if (contentType == null || contentType.length !== 1) {
-          setResponseBodyCodeMirrorMode("TEXT");
-        } else if (contentType[0].toLowerCase().indexOf("json") !== -1) {
-          setResponseBodyCodeMirrorMode("JSON");
-        } else if (contentType[0].toLowerCase().indexOf("xml") !== -1) {
-          setResponseBodyCodeMirrorMode("XML");
-        } else if (contentType[0].toLowerCase().indexOf("html") !== -1) {
-          setResponseBodyCodeMirrorMode("HTML");
-        } else {
-          setResponseBodyCodeMirrorMode("TEXT");
-        }
-        setCodeMirrorHeight('auto');
-      })
-      .catch(() => {
-        setLoading(false);
+      setLoading(true);
+      // TODO: grpc and websocket
+      debugRoute({
+        online_debug_header_params: JSON.stringify(headerFormData),
+        online_debug_url: `${protocol}://${requestTarget}${path}${urlQueryString}`,
+        online_debug_request_protocol: protocol,
+        online_debug_method: method,
+      }, bodyFormData)
+        .then((req) => {
+          setLoading(false);
+          const resp: RouteModule.debugResponse = req.data;
+          if (typeof (resp.data) !== 'string') {
+            resp.data = JSON.stringify(resp.data, null, 2);
+          }
+          setResponse(resp);
+          const contentType = resp.header["Content-Type"];
+          if (contentType == null || contentType.length !== 1) {
+            setResponseBodyCodeMirrorMode("TEXT");
+          } else if (contentType[0].toLowerCase().indexOf("json") !== -1) {
+            setResponseBodyCodeMirrorMode("JSON");
+          } else if (contentType[0].toLowerCase().indexOf("xml") !== -1) {
+            setResponseBodyCodeMirrorMode("XML");
+          } else if (contentType[0].toLowerCase().indexOf("html") !== -1) {
+            setResponseBodyCodeMirrorMode("HTML");
+          } else {
+            setResponseBodyCodeMirrorMode("TEXT");
+          }
+          setCodeMirrorHeight('auto');
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    })
+    .catch(error => {
+      notification.warning({
+        message: formatMessage({ id: 'page.route.debug.path.rules.required.description' }),
       });
+    })
   };
   return (
     <Drawer
@@ -271,61 +270,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
       data-cy='debug-draw'
     >
       <Card bordered={false}>
-        <Input.Group compact>
-          <Select
-            defaultValue={httpMethod}
-            style={{ width: '20%' }}
-            onChange={(value) => {
-              setHttpMethod(value);
-              setShowBodyTab(!(methodWithoutBody.indexOf(value) > -1));
-            }}
-            size="large"
-            data-cy='debug-method'
-          >
-            {HTTP_METHOD_OPTION_LIST.map((method) => {
-              return (
-                <Option key={method} value={method}>
-                  {method}
-                </Option>
-              );
-            })}
-          </Select>
-          <Select
-            defaultValue={requestProtocol}
-            style={{ width: '18%' }}
-            onChange={(value) => {
-              setRequestProtocol(value);
-            }}
-            size="large"
-            data-cy='debug-protocol'
-          >
-            {PROTOCOL_SUPPORTED.map((protocol) => {
-              return (
-                <Option key={protocol} value={protocol}>
-                  {`${protocol}://`}
-                </Option>
-              );
-            })}
-          </Select>
-          <Search
-            id="debugUri"
-            placeholder={formatMessage({ id: 'page.route.input.placeholder.requestUrl' })}
-            allowClear
-            enterButton={formatMessage({ id: 'page.route.button.send' })}
-            size="large"
-            style={{ width: '62%' }}
-            onSearch={handleDebug}
-            onPressEnter={(e) => {
-              handleDebug(e.currentTarget.value);
-            }}
-            onChange={(e) => {
-              if (e.currentTarget.value === '') {
-                resetForms();
-                setCodeMirrorHeight(50);
-              }
-            }}
-          />
-        </Input.Group>
+        <DebugTargetView form={targetForm} requestTargetList={requestTargetList}/>
         <PanelSection
           title={formatMessage({ id: 'page.route.PanelSection.title.defineRequestParams' })}
         >
@@ -339,7 +284,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             <TabPane data-cy='header' tab={formatMessage({ id: 'page.route.TabPane.headerParams' })} key="header">
               <DebugParamsView form={headerForm} name='headerForm' inputType="header" />
             </TabPane>
-            {showBodyTab && (
+            {methodWithoutBody.indexOf(targetForm.getFieldValue('requestTarget')) === -1 && (
               <TabPane data-cy='body' tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })} key="body">
                 <Radio.Group
                   onChange={(e) => {
@@ -408,6 +353,9 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             )}
           </Tabs>
         </PanelSection>
+        <Button type='primary' block onClick={handleDebug}>
+          {formatMessage({ id: 'page.route.button.send' })}
+        </Button>
         <PanelSection title={formatMessage({ id: 'page.route.PanelSection.title.responseResult' })}>
           <Spin tip="Loading..." spinning={loading}>
             <Tabs tabBarExtraContent={

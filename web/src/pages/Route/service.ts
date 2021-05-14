@@ -124,3 +124,11 @@ export const importRoutes = (formData: FormData) => {
     requestType: 'form',
   });
 };
+
+export const getDebugTarget = () => {
+  //return request('/debug-target');
+
+  return Promise.resolve({
+    gateways: ['192.168.1.145:9080','39f099478d014606a857007ad0d92a90-cn-hangzhou.alicloudapi.com']
+  });
+};

@@ -41,7 +41,6 @@ export default {
 
   'page.route.input.placeholder.parameterNameHttpHeader': 'Request header name, for example: HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': 'Parameter name, for example: id',
-  'page.route.input.placeholder.requestUrl': 'please input the valid request URL',
   'page.route.input.placeholder.paramKey': 'Param Key',
   'page.route.input.placeholder.paramValue': 'Param Value',
   'page.route.input.placeholder.paramType': 'Param Type',
@@ -79,6 +78,7 @@ export default {
   'page.route.form.itemExtraMessage1.path':
     'HTTP Request path, for example: /foo/index.html, supports request path prefix /foo/* ; /* represents all paths',
   'page.route.form.itemRulesPatternMessage.path': 'Begin with / , and * can only at the end',
+  'page.route.debug.path.rules.required.description': 'Please enter a valid HTTP request path, begin with /',
   'page.route.form.itemRulesPatternMessage.remoteAddrs':
     'Please enter a valid IP address, for example: 192.168.1.101, 192.168.1.0/24, ::1, fe80::1, fe80::1/64',
   'page.route.form.itemExtraMessage1.remoteAddrs':

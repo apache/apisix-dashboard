@@ -55,7 +55,6 @@ export default {
   'page.route.input.placeholder.parameterNameHttpHeader': '请求头名称，例如：HOST',
   'page.route.input.placeholder.parameterNameRequestParameter': '参数名称，例如：id',
   'page.route.input.placeholder.redirectCustom': '例如：/foo/index.html',
-  'page.route.input.placeholder.requestUrl': '请输入合法的请求地址',
   'page.route.input.placeholder.paramKey': '参数名称',
   'page.route.input.placeholder.paramType': '参数类型',
   'page.route.input.placeholder.paramValue': '参数值',
@@ -105,7 +104,7 @@ export default {
   'page.route.panelSection.title.requestOverride': '请求改写',
   'page.route.panelSection.title.requestConfigBasicDefine': '匹配条件',
   'page.route.panelSection.title.advancedMatchRule': '高级匹配条件',
-  'page.route.PanelSection.title.defineRequestParams': '请求参数定义',
+  'page.route.PanelSection.title.defineRequestParams': '定义请求参数',
   'page.route.PanelSection.title.responseResult': '请求响应结果',
 
   'page.route.httpAction': '行为',
@@ -159,6 +158,7 @@ export default {
   'page.route.configuration.normal-labels.tooltip': '为路由增加自定义标签，可用于路由分组。',
 
   'page.route.configuration.path.rules.required.description': '请输入有效的 HTTP 请求路径',
+  'page.route.debug.path.rules.required.description': '请输入有效的 HTTP 请求路径，以 / 开头',
   'page.route.configuration.path.placeholder': '请输入 HTTP 请求路径',
   'page.route.configuration.remote_addrs.placeholder': '请输入客户端地址',
   'page.route.configuration.host.placeholder': '请输入 HTTP 请求域名',
