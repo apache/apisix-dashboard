@@ -21,8 +21,10 @@ import PanelSection from '@/components/PanelSection';
 
 import { HTTP_METHOD_OPTION_LIST, PROTOCOL_SUPPORTED } from '../../constants';
 
-const DebugTargetView: React.FC<RouteModule.DebugViewProps> = (props) => {
+const DebugTargetView: React.FC<RouteModule.DebugTargetProps> = (props) => {
   const { formatMessage } = useIntl();
+  const methodWithoutBody = ['GET', 'HEAD'];
+
   return (
     <Form
       name="debug_target"
@@ -30,7 +32,7 @@ const DebugTargetView: React.FC<RouteModule.DebugViewProps> = (props) => {
       layout="inline"
       initialValues={{
         method: HTTP_METHOD_OPTION_LIST[0],
-        requestTarget: props.requestTargetList && props.requestTargetList[0],
+        requestTarget: props.requestTargetList[0],
         protocol: PROTOCOL_SUPPORTED[0],
       }}
     >
@@ -50,7 +52,7 @@ const DebugTargetView: React.FC<RouteModule.DebugViewProps> = (props) => {
             </Select>
           </Form.Item>
           <Form.Item name="requestTarget" noStyle>
-            <Select data-cy="debug-protocol" size="large" style={{ width: '70%' }} bordered={false}>
+            <Select size="large" style={{ width: '70%' }} bordered={false}>
               {props.requestTargetList?.map((requestTarget) => {
                 return (
                   <Select.Option key={requestTarget} value={requestTarget}>
@@ -67,10 +69,12 @@ const DebugTargetView: React.FC<RouteModule.DebugViewProps> = (props) => {
           title={formatMessage({ id: 'page.route.PanelSection.title.enterRequestPath' })}
         >
           <Form.Item name="method" noStyle>
-            <Select size="large" data-cy="debug-method" style={{ width: '30%' }} bordered={false}>
+            <Select size="large" data-cy="debug-method" style={{ width: '30%' }} bordered={false} onChange={(value: string) => {
+              props.setShowBodyTab(!(methodWithoutBody.indexOf(value) > -1));
+            }}>
               {HTTP_METHOD_OPTION_LIST.map((method) => {
                 return (
-                  <Select.Option key={method} value={method}>
+                  <Select.Option key={method} value={method} >
                     {method}
                   </Select.Option>
                 );
@@ -91,6 +95,7 @@ const DebugTargetView: React.FC<RouteModule.DebugViewProps> = (props) => {
             ]}
           >
             <Input
+              data-cy="debug-path"
               size="large"
               placeholder={formatMessage({ id: 'page.route.configuration.path.placeholder' })}
               allowClear

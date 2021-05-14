@@ -44,6 +44,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const { formatMessage } = useIntl();
   const [requestTargetList, setRequestTargetList] = useState<string[]>([]);
   const [targetForm] = Form.useForm();
+  const [showBodyTab, setShowBodyTab] = useState(false);
   const [queryForm] = Form.useForm();
   const [urlencodedForm] = Form.useForm();
   const [formDataForm] = Form.useForm();
@@ -54,7 +55,6 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const [codeMirrorHeight, setCodeMirrorHeight] = useState<number | string>(50);
   const bodyCodeMirrorRef = useRef<any>(null);
   const [bodyType, setBodyType] = useState('none');
-  const methodWithoutBody = ['GET', 'HEAD'];
   const [responseBodyCodeMirrorMode, setResponseBodyCodeMirrorMode] = useState(
     DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode,
   );
@@ -87,7 +87,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   }, []);
 
   const transformBodyParamsFormData = () => {
-    if (methodWithoutBody.includes(targetForm.getFieldValue('requestTarget'))) {
+    if (!showBodyTab) {
       return {
         bodyFormData: undefined,
       };
@@ -291,7 +291,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
       data-cy="debug-draw"
     >
       <Card bordered={false}>
-        <DebugTargetView form={targetForm} requestTargetList={requestTargetList} />
+        <DebugTargetView form={targetForm} requestTargetList={requestTargetList} setShowBodyTab={setShowBodyTab}/>
         <PanelSection
           title={formatMessage({ id: 'page.route.PanelSection.title.defineRequestParams' })}
         >
@@ -317,7 +317,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             >
               <DebugParamsView form={headerForm} name="headerForm" inputType="header" />
             </TabPane>
-            {methodWithoutBody.indexOf(targetForm.getFieldValue('requestTarget')) === -1 && (
+            {showBodyTab && (
               <TabPane
                 data-cy="body"
                 tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })}

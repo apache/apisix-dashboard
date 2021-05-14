@@ -241,8 +241,12 @@ declare namespace RouteModule {
     form: FormInstance;
     name?: string;
     inputType?: 'param' | 'header';
-    requestTargetList?: string[];
   };
+  type DebugTargetProps = {
+    form: FormInstance;
+    requestTargetList: string[];
+    setShowBodyTab: React.Dispatch<React.SetStateAction>;
+  }
   type DebugBodyType = 'none' | 'x-www-form-urlencoded' | 'raw input' | 'form-data';
   type DebugDrawProps = {
     visible: boolean;
