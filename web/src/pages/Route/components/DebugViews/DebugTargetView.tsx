@@ -24,30 +24,22 @@ import { HTTP_METHOD_OPTION_LIST, PROTOCOL_SUPPORTED } from '../../constants';
 const DebugTargetView: React.FC<RouteModule.DebugViewProps> = (props) => {
   const { formatMessage } = useIntl();
   return (
-    <Form 
-      name='debug_target' 
-      form={props.form} 
+    <Form
+      name="debug_target"
+      form={props.form}
       layout="inline"
       initialValues={{
         method: HTTP_METHOD_OPTION_LIST[0],
         requestTarget: props.requestTargetList && props.requestTargetList[0],
-        protocol: PROTOCOL_SUPPORTED[0]
+        protocol: PROTOCOL_SUPPORTED[0],
       }}
     >
-      <Input.Group >
+      <Input.Group>
         <PanelSection
-          title="选择请求地址"
+          title={formatMessage({ id: 'page.route.PanelSection.title.chooseRequestAddress' })}
         >
-          <Form.Item
-            name='protocol'
-            noStyle
-          >
-            <Select
-              size="large"
-              data-cy='debug-protocol'
-              style={{width: '30%'}}
-              bordered={false}
-            >
+          <Form.Item name="protocol" noStyle>
+            <Select size="large" data-cy="debug-protocol" style={{ width: '30%' }} bordered={false}>
               {PROTOCOL_SUPPORTED.map((protocol) => {
                 return (
                   <Select.Option key={protocol} value={protocol}>
@@ -57,16 +49,8 @@ const DebugTargetView: React.FC<RouteModule.DebugViewProps> = (props) => {
               })}
             </Select>
           </Form.Item>
-          <Form.Item 
-            name='requestTarget'
-            noStyle
-          >
-            <Select
-              data-cy='debug-protocol'
-              size='large'
-              style={{width: '70%'}}
-              bordered={false}
-            >
+          <Form.Item name="requestTarget" noStyle>
+            <Select data-cy="debug-protocol" size="large" style={{ width: '70%' }} bordered={false}>
               {props.requestTargetList?.map((requestTarget) => {
                 return (
                   <Select.Option key={requestTarget} value={requestTarget}>
@@ -80,18 +64,10 @@ const DebugTargetView: React.FC<RouteModule.DebugViewProps> = (props) => {
       </Input.Group>
       <Input.Group>
         <PanelSection
-          title="输入请求路径"
+          title={formatMessage({ id: 'page.route.PanelSection.title.enterRequestPath' })}
         >
-          <Form.Item
-            name='method'
-            noStyle
-          >
-            <Select
-              size='large'
-              data-cy='debug-method'
-              style={{width: '30%'}}
-              bordered={false}
-            >
+          <Form.Item name="method" noStyle>
+            <Select size="large" data-cy="debug-method" style={{ width: '30%' }} bordered={false}>
               {HTTP_METHOD_OPTION_LIST.map((method) => {
                 return (
                   <Select.Option key={method} value={method}>
@@ -101,8 +77,8 @@ const DebugTargetView: React.FC<RouteModule.DebugViewProps> = (props) => {
               })}
             </Select>
           </Form.Item>
-          <Form.Item 
-            name='path'
+          <Form.Item
+            name="path"
             noStyle
             rules={[
               {
@@ -114,11 +90,11 @@ const DebugTargetView: React.FC<RouteModule.DebugViewProps> = (props) => {
               },
             ]}
           >
-            <Input 
-              size='large'
+            <Input
+              size="large"
               placeholder={formatMessage({ id: 'page.route.configuration.path.placeholder' })}
               allowClear
-              style={{width: '70%'}}
+              style={{ width: '70%' }}
               bordered={false}
             />
           </Form.Item>

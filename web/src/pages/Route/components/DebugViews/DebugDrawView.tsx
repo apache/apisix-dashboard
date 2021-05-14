@@ -20,8 +20,8 @@ import { useIntl } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import queryString from 'query-string';
 import Base64 from 'base-64';
-import CopyToClipboard from "react-copy-to-clipboard";
-import { CopyOutlined } from "@ant-design/icons";
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { CopyOutlined } from '@ant-design/icons';
 
 import PanelSection from '@/components/PanelSection';
 
@@ -42,14 +42,14 @@ const { TabPane } = Tabs;
 
 const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const { formatMessage } = useIntl();
-  const [requestTargetList, setRequestTargetList] = useState<string[]>([])
+  const [requestTargetList, setRequestTargetList] = useState<string[]>([]);
   const [targetForm] = Form.useForm();
   const [queryForm] = Form.useForm();
   const [urlencodedForm] = Form.useForm();
   const [formDataForm] = Form.useForm();
   const [authForm] = Form.useForm();
   const [headerForm] = Form.useForm();
-  const [response, setResponse] = useState<RouteModule.debugResponse | null>()
+  const [response, setResponse] = useState<RouteModule.debugResponse | null>();
   const [loading, setLoading] = useState(false);
   const [codeMirrorHeight, setCodeMirrorHeight] = useState<number | string>(50);
   const bodyCodeMirrorRef = useRef<any>(null);
@@ -81,9 +81,9 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
 
   useEffect(() => {
     resetForms();
-    getDebugTarget().then(resp => {
-      setRequestTargetList(resp.data)
-    })
+    getDebugTarget().then((resp) => {
+      setRequestTargetList(resp.data);
+    });
   }, []);
 
   const transformBodyParamsFormData = () => {
@@ -96,7 +96,8 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     switch (bodyType) {
       case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded]: {
         let transformFormUrlencoded: string[] = [];
-        const FormUrlencodedData: RouteModule.debugRequestParamsFormData[] = urlencodedForm.getFieldsValue().params;
+        const FormUrlencodedData: RouteModule.debugRequestParamsFormData[] = urlencodedForm.getFieldsValue()
+          .params;
         transformFormUrlencoded = (FormUrlencodedData || [])
           .filter((data) => data && data.check)
           .map((data) => {
@@ -106,9 +107,9 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         return {
           bodyFormData: transformFormUrlencoded.join('&'),
           header: {
-            'Content-type': ['application/x-www-form-urlencoded;charset=UTF-8']
-          }
-        }
+            'Content-type': ['application/x-www-form-urlencoded;charset=UTF-8'],
+          },
+        };
       }
       case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput]: {
         let contentType = [''];
@@ -122,32 +123,34 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
           case DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[2].mode:
             contentType = ['application/xml;charset=UTF-8'];
             break;
-          default: break;
+          default:
+            break;
         }
 
         return {
           bodyFormData: bodyCodeMirrorRef.current.editor.getValue(),
           header: {
-            'Content-type': contentType
-          }
-        }
+            'Content-type': contentType,
+          },
+        };
       }
       case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormData]: {
         const transformFormData = new FormData();
-        const formDataData: RouteModule.debugRequestParamsFormData[] = formDataForm.getFieldsValue().params;
+        const formDataData: RouteModule.debugRequestParamsFormData[] = formDataForm.getFieldsValue()
+          .params;
 
         (formDataData || [])
           .filter((data) => data && data.check)
           .forEach((data) => {
             if (data.type === DebugBodyFormDataValueType.File) {
-              transformFormData.append(data.key, data.value.originFileObj)
+              transformFormData.append(data.key, data.value.originFileObj);
             } else {
-              transformFormData.append(data.key, data.value)
+              transformFormData.append(data.key, data.value);
             }
-          })
+          });
         return {
           bodyFormData: transformFormData,
-        }
+        };
       }
       case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.None]:
       default:
@@ -173,7 +176,11 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     return transformData;
   };
 
-  const transformAuthFormData = (formData: RouteModule.authData, userHeaderData: any, formHeaderData: any) => {
+  const transformAuthFormData = (
+    formData: RouteModule.authData,
+    userHeaderData: any,
+    formHeaderData: any,
+  ) => {
     const { authType } = formData;
 
     switch (authType) {
@@ -202,59 +209,73 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
     return {
       ...formHeaderData,
       ...userHeaderData,
-    }
+    };
   };
 
   const handleDebug = () => {
-    targetForm.validateFields().then((formValues) => {
-      const {method, requestTarget, path, protocol} = formValues;
-      const queryFormData = transformHeaderAndQueryParamsFormData(queryForm.getFieldsValue().params);
-      const bodyFormRelateData = transformBodyParamsFormData();
-      const { bodyFormData, header: bodyFormHeader } = bodyFormRelateData;
-      const pureHeaderFormData = transformHeaderAndQueryParamsFormData(
-        headerForm.getFieldsValue().params,
-      );
-      const headerFormData = transformAuthFormData(authForm.getFieldsValue(), pureHeaderFormData, bodyFormHeader);
-      const urlQueryString = requestTarget.indexOf('?') === -1 ? `?${queryString.stringify(queryFormData)}` : `&${queryString.stringify(queryFormData)}`
+    targetForm
+      .validateFields()
+      .then((formValues) => {
+        const { method, requestTarget, path, protocol } = formValues;
+        const queryFormData = transformHeaderAndQueryParamsFormData(
+          queryForm.getFieldsValue().params,
+        );
+        const bodyFormRelateData = transformBodyParamsFormData();
+        const { bodyFormData, header: bodyFormHeader } = bodyFormRelateData;
+        const pureHeaderFormData = transformHeaderAndQueryParamsFormData(
+          headerForm.getFieldsValue().params,
+        );
+        const headerFormData = transformAuthFormData(
+          authForm.getFieldsValue(),
+          pureHeaderFormData,
+          bodyFormHeader,
+        );
+        const urlQueryString =
+          requestTarget.indexOf('?') === -1
+            ? `?${queryString.stringify(queryFormData)}`
+            : `&${queryString.stringify(queryFormData)}`;
 
-      setLoading(true);
-      // TODO: grpc and websocket
-      debugRoute({
-        online_debug_header_params: JSON.stringify(headerFormData),
-        online_debug_url: `${protocol}://${requestTarget}${path}${urlQueryString}`,
-        online_debug_request_protocol: protocol,
-        online_debug_method: method,
-      }, bodyFormData)
-        .then((req) => {
-          setLoading(false);
-          const resp: RouteModule.debugResponse = req.data;
-          if (typeof (resp.data) !== 'string') {
-            resp.data = JSON.stringify(resp.data, null, 2);
-          }
-          setResponse(resp);
-          const contentType = resp.header["Content-Type"];
-          if (contentType == null || contentType.length !== 1) {
-            setResponseBodyCodeMirrorMode("TEXT");
-          } else if (contentType[0].toLowerCase().indexOf("json") !== -1) {
-            setResponseBodyCodeMirrorMode("JSON");
-          } else if (contentType[0].toLowerCase().indexOf("xml") !== -1) {
-            setResponseBodyCodeMirrorMode("XML");
-          } else if (contentType[0].toLowerCase().indexOf("html") !== -1) {
-            setResponseBodyCodeMirrorMode("HTML");
-          } else {
-            setResponseBodyCodeMirrorMode("TEXT");
-          }
-          setCodeMirrorHeight('auto');
-        })
-        .catch(() => {
-          setLoading(false);
+        setLoading(true);
+        // TODO: grpc and websocket
+        debugRoute(
+          {
+            online_debug_header_params: JSON.stringify(headerFormData),
+            online_debug_url: `${protocol}://${requestTarget}${path}${urlQueryString}`,
+            online_debug_request_protocol: protocol,
+            online_debug_method: method,
+          },
+          bodyFormData,
+        )
+          .then((req) => {
+            setLoading(false);
+            const resp: RouteModule.debugResponse = req.data;
+            if (typeof resp.data !== 'string') {
+              resp.data = JSON.stringify(resp.data, null, 2);
+            }
+            setResponse(resp);
+            const contentType = resp.header['Content-Type'];
+            if (contentType == null || contentType.length !== 1) {
+              setResponseBodyCodeMirrorMode('TEXT');
+            } else if (contentType[0].toLowerCase().indexOf('json') !== -1) {
+              setResponseBodyCodeMirrorMode('JSON');
+            } else if (contentType[0].toLowerCase().indexOf('xml') !== -1) {
+              setResponseBodyCodeMirrorMode('XML');
+            } else if (contentType[0].toLowerCase().indexOf('html') !== -1) {
+              setResponseBodyCodeMirrorMode('HTML');
+            } else {
+              setResponseBodyCodeMirrorMode('TEXT');
+            }
+            setCodeMirrorHeight('auto');
+          })
+          .catch(() => {
+            setLoading(false);
+          });
+      })
+      .catch(() => {
+        notification.warning({
+          message: formatMessage({ id: 'page.route.debug.path.rules.required.description' }),
         });
-    })
-    .catch(error => {
-      notification.warning({
-        message: formatMessage({ id: 'page.route.debug.path.rules.required.description' }),
       });
-    })
   };
   return (
     <Drawer
@@ -267,25 +288,41 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         props.onClose();
       }}
       className={styles.routeDebugDraw}
-      data-cy='debug-draw'
+      data-cy="debug-draw"
     >
       <Card bordered={false}>
-        <DebugTargetView form={targetForm} requestTargetList={requestTargetList}/>
+        <DebugTargetView form={targetForm} requestTargetList={requestTargetList} />
         <PanelSection
           title={formatMessage({ id: 'page.route.PanelSection.title.defineRequestParams' })}
         >
           <Tabs>
-            <TabPane data-cy='query' tab={formatMessage({ id: 'page.route.TabPane.queryParams' })} key="query">
-              <DebugParamsView form={queryForm} name='queryForm' />
+            <TabPane
+              data-cy="query"
+              tab={formatMessage({ id: 'page.route.TabPane.queryParams' })}
+              key="query"
+            >
+              <DebugParamsView form={queryForm} name="queryForm" />
             </TabPane>
-            <TabPane data-cy='auth' tab={formatMessage({ id: 'page.route.TabPane.authentication' })} key="auth">
+            <TabPane
+              data-cy="auth"
+              tab={formatMessage({ id: 'page.route.TabPane.authentication' })}
+              key="auth"
+            >
               <AuthenticationView form={authForm} />
             </TabPane>
-            <TabPane data-cy='header' tab={formatMessage({ id: 'page.route.TabPane.headerParams' })} key="header">
-              <DebugParamsView form={headerForm} name='headerForm' inputType="header" />
+            <TabPane
+              data-cy="header"
+              tab={formatMessage({ id: 'page.route.TabPane.headerParams' })}
+              key="header"
+            >
+              <DebugParamsView form={headerForm} name="headerForm" inputType="header" />
             </TabPane>
             {methodWithoutBody.indexOf(targetForm.getFieldValue('requestTarget')) === -1 && (
-              <TabPane data-cy='body' tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })} key="body">
+              <TabPane
+                data-cy="body"
+                tab={formatMessage({ id: 'page.route.TabPane.bodyParams' })}
+                key="body"
+              >
                 <Radio.Group
                   onChange={(e) => {
                     setBodyType(e.target.value);
@@ -316,7 +353,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                 )}
                 <div style={{ marginTop: 16 }}>
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormUrlencoded] && (
-                    <DebugParamsView form={urlencodedForm} name='urlencodedForm' />
+                    <DebugParamsView form={urlencodedForm} name="urlencodedForm" />
                   )}
 
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.FormData] && (
@@ -353,27 +390,34 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             )}
           </Tabs>
         </PanelSection>
-        <Button type='primary' block onClick={handleDebug}>
+        <Button type="primary" block onClick={handleDebug}>
           {formatMessage({ id: 'page.route.button.send' })}
         </Button>
         <PanelSection title={formatMessage({ id: 'page.route.PanelSection.title.responseResult' })}>
           <Spin tip="Loading..." spinning={loading}>
-            <Tabs tabBarExtraContent={
-              response ? response.message : formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })
-            }>
+            <Tabs
+              tabBarExtraContent={
+                response
+                  ? response.message
+                  : formatMessage({ id: 'page.route.debug.showResultAfterSendRequest' })
+              }
+            >
               <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="response">
                 <Select
                   disabled={response == null}
                   value={responseBodyCodeMirrorMode}
-                  onSelect={(mode) => setResponseBodyCodeMirrorMode(mode as string)}>
-                  {
-                    DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED.map(mode => {
-                      return <Option value={mode.mode} key={mode.mode}>{mode.name}</Option>
-                    })
-                  }
+                  onSelect={(mode) => setResponseBodyCodeMirrorMode(mode as string)}
+                >
+                  {DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED.map((mode) => {
+                    return (
+                      <Option value={mode.mode} key={mode.mode}>
+                        {mode.name}
+                      </Option>
+                    );
+                  })}
                 </Select>
                 <CopyToClipboard
-                  text={response ? response.data : ""}
+                  text={response ? response.data : ''}
                   onCopy={(_: string, result: boolean) => {
                     if (!result) {
                       notification.error({
@@ -384,14 +428,15 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                     notification.success({
                       message: formatMessage({ id: 'component.global.copySuccess' }),
                     });
-                  }}>
+                  }}
+                >
                   <Button type="text" disabled={!response}>
                     <CopyOutlined />
                   </Button>
                 </CopyToClipboard>
-                <div id='codeMirror-response' style={{ marginTop: 16 }}>
+                <div id="codeMirror-response" style={{ marginTop: 16 }}>
                   <CodeMirror
-                    value={response ? response.data : ""}
+                    value={response ? response.data : ''}
                     height={codeMirrorHeight}
                     options={{
                       mode: responseBodyCodeMirrorMode,
@@ -406,13 +451,16 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                 </div>
               </TabPane>
               <TabPane tab={formatMessage({ id: 'page.route.TabPane.header' })} key="header">
-                {response && Object.keys(response.header)
-                  .map(header => {
-                    return response.header[header].map(value => {
-                      return <div><b>{header}</b>: {value}</div>
-                    })
-                  })
-                }
+                {response &&
+                  Object.keys(response.header).map((header) => {
+                    return response.header[header].map((value) => {
+                      return (
+                        <div>
+                          <b>{header}</b>: {value}
+                        </div>
+                      );
+                    });
+                  })}
               </TabPane>
             </Tabs>
           </Spin>
