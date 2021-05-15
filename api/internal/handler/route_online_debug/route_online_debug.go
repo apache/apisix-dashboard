@@ -118,7 +118,7 @@ func checkHost(host string) error {
 		}
 	}
 
-	return errors.New("doesn't match any host of APISIX gateways")
+	return errors.New("doesn't match any host of APISIX gateways" + host + " : " + strings.Join(conf.Gateways, "-"))
 }
 
 func checkPath(path string) error {
