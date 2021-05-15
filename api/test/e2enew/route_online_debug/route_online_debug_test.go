@@ -367,7 +367,8 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Basic_Auth", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Body:         string(_reqRouteBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
+			//ExpectStatus: http.StatusOK,
+			ExpectBody: `"code":0`,
 			Sleep:        base.SleepTime,
 		})
 	})
