@@ -17,6 +17,8 @@
 export default {
   'page.upstream.step.select.upstream': '选择上游服务',
   'page.upstream.step.select.upstream.select.option': '手动填写',
+  'page.upstream.step.select.upstream.select.none': '无',
+  'page.upstream.step.backend.server.domain.or.ip': '后端服务域名或 IP',
   'page.upstream.form.item-label.node.domain.or.ip': '目标节点',
   'page.upstream.step.input.domain.name.or.ip': '请输入域名或 IP',
   'page.upstream.step.domain.name.or.ip': '主机名或 IP',

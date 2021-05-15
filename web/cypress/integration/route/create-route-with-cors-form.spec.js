@@ -19,7 +19,9 @@
 context('Create and delete route with cors form', () => {
   const selector = {
     allow_credential: "#allow_credential",
-    allow_origins_by_regex: "#allow_origins_by_regex_0"
+    allow_origins_by_regex0: "#allow_origins_by_regex_0",
+    allow_origins_by_regex1: "#allow_origins_by_regex_1",
+    addButton: "[data-cy=add-allow_origins_by_regex]",
   }
 
   beforeEach(() => {
@@ -58,7 +60,54 @@ context('Create and delete route with cors form', () => {
 
     // config cors form
     cy.get(selector.allow_credential).click();
-    cy.get(selector.allow_origins_by_regex).type('.*.test.com');
+    cy.get(selector.allow_origins_by_regex0).type('.*.test.com');
+    // add allow_origins_by_regex, assert new input and minus icons exist
+    cy.get(selector.addButton).click();
+    cy.get(selector.allow_origins_by_regex1).should('exist');
+    cy.get(selector.allow_origins_by_regex0).next().should('have.class', 'anticon-minus-circle');
+    cy.get(selector.allow_origins_by_regex1).type('foo.com').next().should('have.class', 'anticon-minus-circle');
+
+    cy.get(this.domSelector.drawer).within(() => {
+      cy.contains('Submit').click({
+        force: true,
+      });
+    });
+    cy.get(this.domSelector.drawer).should('not.exist');
+
+    cy.contains('button', 'Next').click();
+    cy.contains('button', 'Submit').click();
+    cy.contains(this.data.submitSuccess);
+
+    // back to route list page
+    cy.contains('Goto List').click();
+    cy.url().should('contains', 'routes/list');
+  });
+
+  it('should edit route with cors form no allow_origins_by_regex configured', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+    cy.get(this.domSelector.name).clear().type('routeName');
+    cy.contains('Search').click();
+    cy.contains('routeName').siblings().contains('Configure').click();
+    cy.get(this.domSelector.name).should('have.value','routeName');
+    cy.contains('Next').click();
+    cy.contains('Next').click();
+
+    // config cors plugin
+    cy.contains('cors').parents(this.domSelector.pluginCardBordered).within(() => {
+      cy.get('button').click({
+        force: true
+      });
+    });
+
+    cy.get(this.domSelector.drawer).should('be.visible').within(() => {
+      cy.get(this.domSelector.disabledSwitcher).click();
+      cy.get(this.domSelector.checkedSwitcher).should('exist');
+    });
+
+    // edit allow_origins_by_regex ''
+    cy.get(selector.allow_origins_by_regex0).clear();
+    cy.get(selector.allow_origins_by_regex1).next().click();
     cy.get(this.domSelector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,
@@ -90,6 +139,6 @@ context('Create and delete route with cors form', () => {
       cy.contains('OK').click();
     });
     cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
-    cy.get(domSelector.notificationCloseIcon).click();
+    cy.get(domSelector.notificationCloseIcon).click({ multiple: true});
   });
 });
