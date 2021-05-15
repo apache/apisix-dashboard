@@ -43,6 +43,7 @@ import (
 
 var (
 	configFile string
+	forceStart bool
 )
 
 var rootCmd = &cobra.Command{
@@ -65,6 +66,7 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "./conf/conf.yml", "config file")
 	rootCmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
+	rootCmd.PersistentFlags().BoolVarP(&forceStart, "force", "f", false, "force start manager-api")
 
 	rootCmd.AddCommand(
 		newVersionCommand(),
@@ -86,7 +88,7 @@ func manageAPI() error {
 	conf.InitConf()
 	log.InitLogger()
 
-	if err := utils.WritePID(conf.PIDPath); err != nil {
+	if err := utils.WritePID(conf.PIDPath, forceStart); err != nil {
 		log.Errorf("failed to write pid: %s", err)
 		return err
 	}
