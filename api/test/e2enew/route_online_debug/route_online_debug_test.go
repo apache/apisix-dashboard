@@ -18,15 +18,11 @@ package route_online_debug
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
-	"path/filepath"
-	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
 	"github.com/onsi/gomega"
-	"github.com/tidwall/gjson"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
 )
@@ -96,12 +92,13 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Query_Params", func() {
 		_routeBody, err := json.Marshal(routeBody)
 		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodPut,
-			Path:         "/apisix/admin/routes/r1",
-			Body:         string(_routeBody),
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
+			Object:  base.ManagerApiExpect(),
+			Method:  http.MethodPut,
+			Path:    "/apisix/admin/routes/r1",
+			Body:    string(_routeBody),
+			Headers: map[string]string{"Authorization": base.GetToken()},
+			//ExpectStatus: http.StatusOK,
+			ExpectBody: []string{`"name":"route1"`, `"code":0`},
 		})
 	})
 	ginkgo.It("online debug route with query params", func() {
@@ -418,7 +415,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Basic_Auth", func() {
 				"online_debug_header_params":    `{"test":["test1"],"Authorization": ["Basic amFjazoxMjM0NTYKIA=="]}`,
 			},
 			//ExpectStatus: http.StatusOK,
-			ExpectBody:   `{"code":0,"message":"","data":{"code":200,"header":{"Connection":["keep-alive"],"Content-Type":["application/octet-stream"]`,
+			ExpectBody: `{"code":0,"message":"","data":{"code":200,"header":{"Connection":["keep-alive"],"Content-Type":["application/octet-stream"]`,
 		})
 	})
 	ginkgo.It("online debug without basic-auth", func() {
@@ -754,104 +751,6 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Files", func() {
 			ExpectStatus: http.StatusOK,
 			Sleep:        base.SleepTime,
 		})
-	})
-	ginkgo.It("online debug with file", func() {
-		path, err := filepath.Abs("../../testdata/import/default.yaml")
-		gomega.Expect(err).To(gomega.BeNil())
-		files := []base.UploadFile{
-			{Name: "file", Filepath: path},
-		}
-
-		headers := map[string]string{}
-
-		jsonStr := `{"test":["test1"]}`
-		var _headerParams map[string]interface{}
-		err = json.Unmarshal([]byte(jsonStr), &_headerParams)
-		gomega.Expect(err).To(gomega.BeNil())
-		l := []string{base.GetToken()}
-		_headerParams["Authorization"] = l
-		headerParams, err := json.Marshal(_headerParams)
-		gomega.Expect(err).To(gomega.BeNil())
-
-		basePath := base.ManagerAPIHost + "/apisix/admin/debug-request-forwarding"
-		requestBody, requestContentType, err := base.GetReader(headers, "multipart/form-data", files)
-		gomega.Expect(err).To(gomega.BeNil())
-		httpRequest, err := http.NewRequest(http.MethodPost, basePath, requestBody)
-		gomega.Expect(err).To(gomega.BeNil())
-		httpRequest.Header.Add("Content-Type", requestContentType)
-		httpRequest.Header.Add("Authorization", base.GetToken())
-		httpRequest.Header.Add("online_debug_request_protocol", "http")
-		httpRequest.Header.Add("online_debug_url", base.ManagerAPIHost+`/apisix/admin/import/routes`)
-		httpRequest.Header.Add("online_debug_method", http.MethodPost)
-		httpRequest.Header.Add("online_debug_header_params", string(headerParams))
-		client := &http.Client{}
-		resp, err := client.Do(httpRequest)
-		gomega.Expect(err).To(gomega.BeNil())
-
-		defer resp.Body.Close()
-
-		respBody, err := ioutil.ReadAll(resp.Body)
-		gomega.Expect(err).To(gomega.BeNil())
-		realBody := gjson.Get(string(respBody), "data")
-		// todo get successful result and compare
-		gomega.Expect(realBody.String()).Should(gomega.ContainSubstring(`"data":{"paths":1,"routes":1}`))
-	})
-
-	ginkgo.It("verify the route just imported and delete data", func() {
-		time.Sleep(time.Duration(500) * time.Millisecond)
-		request, _ := http.NewRequest("GET", base.ManagerAPIHost+"/apisix/admin/routes", nil)
-		request.Header.Add("Authorization", base.GetToken())
-		resp, err := http.DefaultClient.Do(request)
-		gomega.Expect(err).To(gomega.BeNil())
-		defer resp.Body.Close()
-		respBody, _ := ioutil.ReadAll(resp.Body)
-		list := gjson.Get(string(respBody), "data.rows").Value().([]interface{})
-
-		var tests []base.HttpTestCase
-		for _, item := range list {
-			route := item.(map[string]interface{})
-			tc := base.HttpTestCase{
-				Desc:         "route patch for update status(online)",
-				Object:       base.ManagerApiExpect(),
-				Method:       http.MethodPatch,
-				Path:         "/apisix/admin/routes/" + route["id"].(string),
-				Body:         `{"status":1}`,
-				Headers:      map[string]string{"Authorization": base.GetToken()},
-				ExpectStatus: http.StatusOK,
-				Sleep:        base.SleepTime,
-			}
-			tests = append(tests, tc)
-		}
-
-		// verify route
-		tests = append(tests, base.HttpTestCase{
-			Desc:         "verify the route just imported",
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world",
-			Sleep:        base.SleepTime,
-		})
-
-		// delete test data
-		for _, item := range list {
-			route := item.(map[string]interface{})
-			tc := base.HttpTestCase{
-				Desc:         "delete route",
-				Object:       base.ManagerApiExpect(),
-				Method:       http.MethodDelete,
-				Path:         "/apisix/admin/routes/" + route["id"].(string),
-				Headers:      map[string]string{"Authorization": base.GetToken()},
-				ExpectStatus: http.StatusOK,
-			}
-			tests = append(tests, tc)
-		}
-
-		for _, tc := range tests {
-			base.RunTestCase(tc)
-		}
-
 	})
 
 	ginkgo.It("hit the route just deleted", func() {
