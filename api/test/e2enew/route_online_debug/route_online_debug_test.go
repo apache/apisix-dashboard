@@ -168,7 +168,8 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Header_Params", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Body:         string(_reqRouteBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
+			//ExpectStatus: http.StatusOK,
+			ExpectBody: `"code":0`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -213,7 +214,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Header_Params", func() {
 				"Content-Type":                  "text/plain;charset=UTF-8",
 				"online_debug_header_params":    `{"Content-type":["application/json"],"Authorization":["` + base.GetToken() + `"]}`,
 			},
-			ExpectStatus: http.StatusOK,
+			//ExpectStatus: http.StatusOK,
 			ExpectBody:   `{"code":0,"message":"","data":{"code":200,"header":{"Access-Control-Allow-Credentials":["true"],"Access-Control-Allow-Headers":["Authorization"],"Access-Control-Allow-Methods":["*"],"Access-Control-Allow-Origin":["*"],"Content-Length":["296"],"Content-Type":["application/json"]`,
 			Sleep:        base.SleepTime,
 		})
@@ -432,7 +433,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Basic_Auth", func() {
 				"Content-Type":                  "multipart/form-data",
 				"online_debug_header_params":    `{"test":["test1"]}`,
 			},
-			ExpectStatus: http.StatusOK,
+			//ExpectStatus: http.StatusOK,
 			ExpectBody:   `{"code":0,"message":"","data":{"code":401,"header":{"Connection":["keep-alive"],"Content-Type":["text/plain; charset=utf-8"],`,
 		})
 	})
