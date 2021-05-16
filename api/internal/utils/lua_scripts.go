@@ -33,7 +33,7 @@ func WriteLuaScripts(workDir string, luaScripts embed.FS) error {
 			}
 			return nil
 		}
-		f, err := os.OpenFile("./"+path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0664)
+		f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0664)
 		if err != nil {
 			return err
 		}
