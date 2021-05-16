@@ -37,6 +37,7 @@ screenshot
 build
 api/cmd/html/*
 !api/cmd/html/index.html
+api/cmd/dag-to-lua/*.lua
 
 /compose/**/*.log
 /compose/**/nginx.pid
