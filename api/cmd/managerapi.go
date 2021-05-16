@@ -18,8 +18,8 @@ package cmd
 
 import (
 	"context"
-	"embed"
 	"crypto/tls"
+	"embed"
 	"fmt"
 	"net"
 	"net/http"
@@ -51,6 +51,9 @@ var (
 
 //go:embed html
 var staticFiles embed.FS
+
+//go:embed dag-to-lua
+var luaScripts embed.FS
 
 func printInfo() {
 	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
@@ -106,6 +109,9 @@ func manageAPI() error {
 	if err := utils.WritePID(conf.PIDPath); err != nil {
 		log.Errorf("failed to write pid: %s", err)
 		return err
+	}
+	if err := utils.WriteLuaScripts(conf.WorkDir, luaScripts); err != nil {
+		log.Errorf("error while writing scripts: %s", err)
 	}
 	utils.AppendToClosers(func() error {
 		if err := os.Remove(conf.PIDPath); err != nil {
