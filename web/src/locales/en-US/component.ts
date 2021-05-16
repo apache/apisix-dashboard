@@ -84,4 +84,5 @@ export default {
 
   'component.global.invalidYaml': 'Invalid Yaml data',
   'component.global.invalidJson': 'Invalid Json data',
+
 };
