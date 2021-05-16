@@ -92,13 +92,13 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Query_Params", func() {
 		_routeBody, err := json.Marshal(routeBody)
 		gomega.Expect(err).To(gomega.BeNil())
 		base.RunTestCase(base.HttpTestCase{
-			Object:  base.ManagerApiExpect(),
-			Method:  http.MethodPut,
-			Path:    "/apisix/admin/routes/r1",
-			Body:    string(_routeBody),
-			Headers: map[string]string{"Authorization": base.GetToken()},
-			//ExpectStatus: http.StatusOK,
-			ExpectBody: []string{`"name":"route1"`, `"code":0`},
+			Object:       base.ManagerApiExpect(),
+			Method:       http.MethodPut,
+			Path:         "/apisix/admin/routes/r1",
+			Body:         string(_routeBody),
+			Headers:      map[string]string{"Authorization": base.GetToken()},
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   []string{`"name":"route1"`, `"code":0`},
 		})
 	})
 	ginkgo.It("online debug route with query params", func() {
@@ -168,8 +168,8 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Header_Params", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Body:         string(_reqRouteBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
-			//ExpectStatus: http.StatusOK,
-			ExpectBody: `"code":0`,
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"code":0`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -191,58 +191,11 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Header_Params", func() {
 			Sleep:        base.SleepTime,
 		})
 	})
-	ginkgo.It("online debug route with header params(add Content-type to header params to create route)", func() {
-		var routeBody map[string]interface{} = map[string]interface{}{
-			"name":     "route2",
-			"status":   1,
-			"uri":      "/hello_",
-			"methods":  []string{"GET"},
-			"upstream": upstream,
-		}
-		_reqRouteBody, err := json.Marshal(routeBody)
-		gomega.Expect(err).To(gomega.BeNil())
-		base.RunTestCase(base.HttpTestCase{
-			Object: base.ManagerApiExpect(),
-			Method: http.MethodPost,
-			Path:   "/apisix/admin/debug-request-forwarding",
-			Body:   string(_reqRouteBody),
-			Headers: map[string]string{
-				"Authorization":                 base.GetToken(),
-				"online_debug_url":              base.ManagerAPIHost + `/apisix/admin/routes/r2`,
-				"online_debug_request_protocol": "http",
-				"online_debug_method":           http.MethodPut,
-				"Content-Type":                  "text/plain;charset=UTF-8",
-				"online_debug_header_params":    `{"Content-type":["application/json"],"Authorization":["` + base.GetToken() + `"]}`,
-			},
-			//ExpectStatus: http.StatusOK,
-			ExpectBody:   `{"code":0,"message":"","data":{"code":200,"header":{"Access-Control-Allow-Credentials":["true"],"Access-Control-Allow-Headers":["Authorization"],"Access-Control-Allow-Methods":["*"],"Access-Control-Allow-Origin":["*"],"Content-Length":["296"],"Content-Type":["application/json"]`,
-			Sleep:        base.SleepTime,
-		})
-	})
-	ginkgo.It("hit the route (r2)", func() {
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.APISIXExpect(),
-			Method:       http.MethodGet,
-			Path:         "/hello_",
-			ExpectStatus: http.StatusOK,
-			ExpectBody:   "hello world\n",
-			Sleep:        base.SleepTime,
-		})
-	})
 	ginkgo.It("delete the route just created (r1)", func() {
 		base.RunTestCase(base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Method:       http.MethodDelete,
 			Path:         "/apisix/admin/routes/r1",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-		})
-	})
-	ginkgo.It("delete the route just created (r2)", func() {
-		base.RunTestCase(base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodDelete,
-			Path:         "/apisix/admin/routes/r2",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 		})
@@ -368,8 +321,8 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Basic_Auth", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Body:         string(_reqRouteBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
-			//ExpectStatus: http.StatusOK,
-			ExpectBody: `"code":0`,
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `"code":0`,
 			Sleep:        base.SleepTime,
 		})
 	})
@@ -416,8 +369,8 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Basic_Auth", func() {
 				"Content-Type":                  "multipart/form-data",
 				"online_debug_header_params":    `{"test":["test1"],"Authorization": ["Basic amFjazoxMjM0NTYKIA=="]}`,
 			},
-			//ExpectStatus: http.StatusOK,
-			ExpectBody: `{"code":0,"message":"","data":{"code":200,"header":{"Connection":["keep-alive"],"Content-Type":["application/octet-stream"]`,
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   `{"code":0,"message":"","data":{"code":200,"header":{"Connection":["keep-alive"],"Content-Type":["application/octet-stream"]`,
 		})
 	})
 	ginkgo.It("online debug without basic-auth", func() {
@@ -433,7 +386,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Basic_Auth", func() {
 				"Content-Type":                  "multipart/form-data",
 				"online_debug_header_params":    `{"test":["test1"]}`,
 			},
-			//ExpectStatus: http.StatusOK,
+			ExpectStatus: http.StatusOK,
 			ExpectBody:   `{"code":0,"message":"","data":{"code":401,"header":{"Connection":["keep-alive"],"Content-Type":["text/plain; charset=utf-8"],`,
 		})
 	})
