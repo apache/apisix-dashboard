@@ -207,13 +207,13 @@ context('Create and Delete Route', () => {
     routeNames.forEach(function (routeName) {
       cy.get(domSelector.name).clear().type(routeName);
       cy.contains('Search').click();
-      cy.contains(routeName).should('be.visible').siblings().contains('More').click();
+      cy.contains(routeName).siblings().contains('More').click();
       cy.contains('Delete').click();
       cy.get(domSelector.deleteAlert).should('be.visible').within(() => {
         cy.contains('OK').click();
       });
       cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
-      cy.get(domSelector.notificationCloseIcon).click();
+      cy.get(domSelector.notificationCloseIcon).click({multiple: true});
     });
   });
 });
