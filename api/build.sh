@@ -22,6 +22,9 @@ GITHASH=$(cat ./.githash 2> /dev/null || HASH="ref: HEAD"; while [[ $HASH == ref
 
 GOLDFLAGS="-X github.com/apisix/manager-api/internal/utils.version=${VERSION} -X github.com/apisix/manager-api/internal/utils.gitHash=${GITHASH}"
 
+# Ensuring clean state
+rm -rf api/cmd/dag-to-lua && git checkout  api/cmd/dag-to-lua
+
 # Enter dry-run mode
 if [ "$1" == "--dry-run" ]; then
     cd ./api && go run -ldflags "${GOLDFLAGS}" ./cmd/manager
@@ -32,13 +35,13 @@ set -x
 export ENV=local
 pwd=`pwd`
 
-rm -rf output && mkdir -p output/conf && mkdir -p output/dag-to-lua
+rm -rf output && mkdir -p output/conf && mkdir -p ./api/cmd/dag-to-lua
 
 # get dag-to-lua lib
 if [[ ! -f "dag-to-lua-1.1/lib/dag-to-lua.lua" ]]; then
     wget https://github.com/api7/dag-to-lua/archive/v1.1.tar.gz -P /tmp
     tar -zxvf /tmp/v1.1.tar.gz -C /tmp
-    cp -r /tmp/dag-to-lua-1.1/lib/* ./output/dag-to-lua
+   cp -r /tmp/dag-to-lua-1.1/lib/* ./api/cmd/dag-to-lua
 fi
 
 # build
