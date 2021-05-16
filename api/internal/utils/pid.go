@@ -30,16 +30,14 @@ func WritePID(filepath string) error {
 		return fmt.Errorf("instance of Manager API already running: a pid file exists in %s", filepath)
 	}
 	pid := os.Getpid()
-	f, err := os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC|os.O_CREATE, 0600)
+	f, err := os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
 
-	if _, err := f.WriteString(strconv.Itoa(pid)); err != nil {
-		return err
-	}
-	return nil
+	_, err = f.WriteString(strconv.Itoa(pid))
+	return err
 }
 
 // ReadPID reads the pid from the given file path.
