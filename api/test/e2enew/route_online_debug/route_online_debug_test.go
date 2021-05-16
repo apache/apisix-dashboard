@@ -737,7 +737,7 @@ var _ = ginkgo.Describe("Route_Online_Debug_Route_With_Files", func() {
 	})
 	ginkgo.It("create route enable basic-auth plugin", func() {
 		var routeBody map[string]interface{} = map[string]interface{}{
-			"name":     "route1",
+			"name":     "route2",
 			"uri":      "/hello_",
 			"methods":  []string{"POST"},
 			"upstream": upstream,
