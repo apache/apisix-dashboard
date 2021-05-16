@@ -23,7 +23,7 @@ GITHASH=$(cat ./.githash 2> /dev/null || HASH="ref: HEAD"; while [[ $HASH == ref
 GOLDFLAGS="-X github.com/apisix/manager-api/internal/utils.version=${VERSION} -X github.com/apisix/manager-api/internal/utils.gitHash=${GITHASH}"
 
 # Ensuring clean state
-rm -rf api/cmd/dag-to-lua && git checkout  api/cmd/dag-to-lua
+# rm -rf api/cmd/dag-to-lua && git checkout  api/cmd/dag-to-lua
 
 # Enter dry-run mode
 if [ "$1" == "--dry-run" ]; then

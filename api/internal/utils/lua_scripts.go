@@ -25,7 +25,7 @@ import (
 
 // WriteLuaScripts writes embedded lua scripts.
 func WriteLuaScripts(workDir string, luaScripts embed.FS) error {
-	return fs.WalkDir(luaScripts, "dag-to-lua", func(path string, d fs.DirEntry, err error) error {
+	return fs.WalkDir(luaScripts, "dag-to-lua", func(path string, d fs.DirEntry, _ error) error {
 		path = filepath.Join(workDir, path)
 		if d.IsDir() {
 			if _, err := os.Stat(path); os.IsNotExist(err) {
