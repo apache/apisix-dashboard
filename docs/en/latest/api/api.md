@@ -26,22 +26,34 @@ Manager API directly operates ETCD and provides data management for Apache APISI
 **License:** [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 ### /apisix/admin/migrate/export
+
 #### GET
+
 ##### Summary:
+
 Export a config file for migrate.
+
 ##### Parameters
-None
+
+None.
+
 ##### Responses
+
 A file for download.
 
 ### /apisix/admin/migrate/import
+
 ##### Summary:
+
 Import the config file for restore config.
+
 #### POST
+
 ##### Parameters (FORM)
+
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ------ |
-| mode | body(form) | import mode (return, skip or overwirte) | Yes      | string |
+| mode | body(form) | import mode (return, skip or overwrite) | Yes      | string |
 | file | body(form) | file to upload  | Yes      | string |
 
 ##### Responses
