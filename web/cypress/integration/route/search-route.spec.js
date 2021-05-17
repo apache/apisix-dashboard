@@ -18,7 +18,34 @@
 
 context('Create and Search Route', () => {
   const timeout = 500;
+
+  const selector = {
+    name: '#name',
+    description: '#desc',
+    hosts_0: '#hosts_0',
+    labels_0_labelKey: '#labels_0_labelKey',
+    labels_0_labelValue: '#labels_0_labelValue',
+    nodes_0_host: '#nodes_0_host',
+    nodes_0_port: '#nodes_0_port',
+    nodes_0_weight: '#nodes_0_weight',
+    nameSearch: '[title=Name]',
+    labelSelect_0: '.ant-select-selection-overflow',
+    dropdown: '.rc-virtual-list',
+    disabledSwitcher: '#disable',
+    checkedSwitcher: '.ant-switch-checked',
+    deleteAlert: '.ant-modal-body',
+    drawerBody: '.ant-drawer-wrapper-body',
+    notification: '.ant-notification-notice-message',
+    notificationClose: '.anticon-close',
+  };
+
   const data = {
+    host1: '11.11.11.11',
+    host2: '12.12.12.12',
+    port: '80',
+    weight: 1,
+    submitSuccess: 'Submit Successfully',
+    deleteRouteSuccess: 'Delete Route Successfully',
     test: 'test',
     test0: 'test0',
     test1: 'test1',
@@ -33,9 +60,6 @@ context('Create and Search Route', () => {
 
   beforeEach(() => {
     cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
   });
 
   it('should create route test1, test2, test3', function () {
@@ -44,32 +68,34 @@ context('Create and Search Route', () => {
     for (let i = 0; i < 3; i += 1) {
       cy.contains('Create').click();
       cy.contains('Next').click().click();
-      cy.get(this.domSelector.name).type(`test${i}`);
-      cy.get(this.domSelector.description).type(`desc${i}`);
-      cy.get(this.domSelector.hosts_0).type(this.data.host1);
+      cy.get(selector.name).type(`test${i}`);
+      cy.get(selector.description).type(`desc${i}`);
+      cy.get(selector.hosts_0).type(data.host1);
 
       // config label
       cy.contains('Manage').click();
 
       // eslint-disable-next-line no-loop-func
-      cy.get(this.domSelector.drawerBody).within(() => {
-        cy.contains('Add').click().then(() => {
-          cy.get(this.domSelector.labels_0_labelKey).type(`label${i}`);
-          cy.get(this.domSelector.labels_0_labelValue).type(`value${i}`);
-          cy.contains('Confirm').click();
-        });
+      cy.get(selector.drawerBody).within(() => {
+        cy.contains('Add')
+          .click()
+          .then(() => {
+            cy.get(selector.labels_0_labelKey).type(`label${i}`);
+            cy.get(selector.labels_0_labelValue).type(`value${i}`);
+            cy.contains('Confirm').click();
+          });
       });
 
       cy.contains('Next').click();
-      cy.get(this.domSelector.nodes_0_host).type(this.data.host2, {
+      cy.get(selector.nodes_0_host).type(data.host2, {
         timeout,
       });
-      cy.get(this.domSelector.nodes_0_port).type(this.data.port);
-      cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
+      cy.get(selector.nodes_0_port).type(data.port);
+      cy.get(selector.nodes_0_weight).type(data.weight);
       cy.contains('Next').click();
       cy.contains('Next').click();
       cy.contains('Submit').click();
-      cy.contains(this.data.submitSuccess);
+      cy.contains(data.submitSuccess);
       cy.contains('Goto List').click();
       cy.url().should('contains', 'routes/list');
     }
@@ -79,21 +105,21 @@ context('Create and Search Route', () => {
     cy.visit('/');
     cy.contains('Route').click();
     // full match
-    cy.get(this.domSelector.nameSearch).type(data.test1);
+    cy.get(selector.nameSearch).type(data.test1);
     cy.contains('Search').click();
     cy.contains(data.test1).siblings().should('contain', data.desc1);
     cy.contains(data.test0).should('not.exist');
     cy.contains(data.test2).should('not.exist');
     // partial match
     cy.reload();
-    cy.get(this.domSelector.nameSearch).type(data.test);
+    cy.get(selector.nameSearch).type(data.test);
     cy.contains('Search').click();
     cy.contains(data.test0).siblings().should('contain', data.desc0);
     cy.contains(data.test1).siblings().should('contain', data.desc1);
     cy.contains(data.test2).siblings().should('contain', data.desc2);
     // no match
     cy.reload();
-    cy.get(this.domSelector.nameSearch).type(data.testx);
+    cy.get(selector.nameSearch).type(data.testx);
     cy.contains('Search').click();
     cy.contains(data.test0).should('not.exist');
     cy.contains(data.test1).should('not.exist');
@@ -103,8 +129,8 @@ context('Create and Search Route', () => {
   it('should search the route with labels', function () {
     // search one label
     cy.reload();
-    cy.get(this.domSelector.labelSelect_0).click({ timeout });
-    cy.get(this.domSelector.dropdown).contains(data.value0).should('be.visible').click();
+    cy.get(selector.labelSelect_0).click({ timeout });
+    cy.get(selector.dropdown).contains(data.value0).should('be.visible').click();
     cy.contains('Search').click();
     cy.contains(data.test0).siblings().should('contain', data.label0_value0);
     cy.contains(data.test1).should('not.exist');
@@ -116,11 +142,13 @@ context('Create and Search Route', () => {
     for (let i = 0; i < 3; i += 1) {
       cy.contains(`test${i}`).siblings().contains('More').click({ timeout });
       cy.contains('Delete').should('be.visible').click({ timeout });
-      cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
-        cy.contains('OK').click();
-      });
-      cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
-      cy.get(this.domSelector.notificationClose).should('be.visible').click({
+      cy.get(selector.deleteAlert)
+        .should('be.visible')
+        .within(() => {
+          cy.contains('OK').click();
+        });
+      cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
+      cy.get(selector.notificationClose).should('be.visible').click({
         force: true,
         multiple: true,
       });
