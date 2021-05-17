@@ -48,7 +48,7 @@ var (
 	service     *Service
 )
 
-func printInfo() {
+func PrintInfo() {
 	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
 	printVersion()
 	fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "Listen", conf.ServerHost, conf.ServerPort)
@@ -184,7 +184,7 @@ func manageAPI() error {
 		}()
 	}
 
-	printInfo()
+	PrintInfo()
 
 	select {
 	case err := <-errsig:
