@@ -114,14 +114,13 @@ context('Create and Search Route', () => {
   it('should delete the route', function () {
     cy.visit('/routes/list');
     for (let i = 0; i < 3; i += 1) {
-      cy.contains(`test${i}`).siblings().contains('More').click({ timeout });
-      cy.contains('Delete').should('be.visible').click({ timeout });
+      cy.contains(`test${i}`).siblings().contains('More').click();
+      cy.contains('Delete').should('be.visible').click();
       cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
         cy.contains('OK').click();
       });
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
       cy.get(this.domSelector.notificationClose).should('be.visible').click({
-        force: true,
         multiple: true,
       });
     }
