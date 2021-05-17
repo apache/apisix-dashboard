@@ -142,6 +142,6 @@ context('Create and delete route with limit-count form', () => {
       cy.contains('OK').click();
     });
     cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
-    cy.get(domSelector.notificationCloseIcon).click();
+    cy.get(domSelector.notificationCloseIcon).click({multiple: true});
   });
 });

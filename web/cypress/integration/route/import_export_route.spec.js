@@ -136,7 +136,7 @@ context('import and export routes', () => {
         cy.contains('OK').click();
       });
       cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
-      cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
+      cy.get(this.domSelector.notificationCloseIcon).click({multiple: true}).should('not.exist');
       cy.reload();
     }
   });
