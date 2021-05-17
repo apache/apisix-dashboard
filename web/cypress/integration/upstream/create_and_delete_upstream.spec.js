@@ -17,11 +17,35 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Upstream', () => {
+
+  const selector = {
+    "name": "#name",
+    "nodes_0_host": "#nodes_0_host",
+    "nodes_0_port": "#nodes_0_port",
+    "nodes_0_weight": "#nodes_0_weight",
+    "input": ":input",
+    "notification": ".ant-notification-notice-message",
+    "nameSelector": "[title=Name]",
+    "upstreamType": ".ant-select-item-option-content",
+    "drawer": ".ant-drawer-content",
+    "codemirrorScroll": ".CodeMirror-scroll",
+    "description": "#desc",
+  }
+
+  const data = {
+    "upstreamName": "test_upstream",
+    "description": "desc_by_autotest",
+    "ip1": "127.0.0.1",
+    "createUpstreamSuccess": "Create Upstream Successfully",
+    "deleteUpstreamSuccess": "Delete Upstream Successfully",
+    "port0": "7000",
+    "weight0": "2",
+    "port1": "7001",
+    "weight1": "2"
+  }
+
   beforeEach(() => {
     cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
   });
 
   it('should create upstream with default type (roundrobin)', function () {
@@ -29,17 +53,17 @@ context('Create and Delete Upstream', () => {
     cy.contains('Upstream').click();
     cy.contains('Create').click();
 
-    cy.get(this.domSelector.name).type(this.data.upstreamName);
-    cy.get(this.domSelector.description).type(this.data.description);
+    cy.get(selector.name).type(data.upstreamName);
+    cy.get(selector.description).type(data.description);
 
-    cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
-    cy.get(this.domSelector.nodes_0_port).clear().type('7000');
-    cy.get(this.domSelector.nodes_0_weight).clear().type(1);
+    cy.get(selector.nodes_0_host).type(data.ip1);
+    cy.get(selector.nodes_0_port).clear().type('7000');
+    cy.get(selector.nodes_0_weight).clear().type(1);
     cy.contains('Next').click();
-    cy.get(this.domSelector.input).should('be.disabled');
+    cy.get(selector.input).should('be.disabled');
     cy.contains('Submit').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
-    cy.contains(this.data.createUpstreamSuccess);
+    cy.get(selector.notification).should('contain', data.createUpstreamSuccess);
+    cy.contains(data.createUpstreamSuccess);
     cy.url().should('contains', 'upstream/list');
   });
 
@@ -47,24 +71,24 @@ context('Create and Delete Upstream', () => {
     cy.visit('/');
     cy.contains('Upstream').click();
 
-    cy.get(this.domSelector.nameSelector).type(this.data.upstreamName);
+    cy.get(selector.nameSelector).type(data.upstreamName);
     cy.contains('Search').click();
-    cy.contains(this.data.upstreamName).siblings().contains('View').click();
+    cy.contains(data.upstreamName).siblings().contains('View').click();
     cy.get('.ant-drawer-content').should('be.visible');
 
     cy.get('.CodeMirror-scroll').within(() => {
       cy.contains('nodes').should("exist");
       cy.contains('roundrobin').should('exist');
-      cy.contains(this.data.upstreamName).should('exist');
+      cy.contains(data.upstreamName).should('exist');
     });
   });
 
   it('should delete the upstream', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.contains(this.data.upstreamName).siblings().contains('Delete').click();
+    cy.contains(data.upstreamName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
+    cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
   });
 
   it('should create chash upstream', function () {
@@ -72,38 +96,38 @@ context('Create and Delete Upstream', () => {
     cy.contains('Upstream').click();
     cy.contains('Create').click();
 
-    cy.get(this.domSelector.name).type(this.data.upstreamName);
-    cy.get(this.domSelector.description).type(this.data.description);
+    cy.get(selector.name).type(data.upstreamName);
+    cy.get(selector.description).type(data.description);
 
     // change upstream type to chash, todo: optimize the search method
     cy.get('[title="Round Robin"]').click();
-    cy.get(this.domSelector.upstreamType).within(() => {
+    cy.get(selector.upstreamType).within(() => {
       cy.contains('CHash').click();
     });
     cy.get('#hash_on').click({ force: true });
-    cy.get(this.domSelector.upstreamType).within(() => {
+    cy.get(selector.upstreamType).within(() => {
       cy.contains('vars').click();
     });
     cy.get('#key').click({ force: true });
-    cy.get(this.domSelector.upstreamType).within(() => {
+    cy.get(selector.upstreamType).within(() => {
       cy.contains('remote_addr').click();
     });
 
     // add first upstream node
-    cy.get(this.domSelector.nodes_0_host).type(this.data.ip1);
-    cy.get(this.domSelector.nodes_0_port).clear().type('7000');
-    cy.get(this.domSelector.nodes_0_weight).clear().type(1);
+    cy.get(selector.nodes_0_host).type(data.ip1);
+    cy.get(selector.nodes_0_port).clear().type(data.port0);
+    cy.get(selector.nodes_0_weight).clear().type(data.weight0);
 
     // add second upstream node
     cy.get('.ant-btn-dashed').click();
-    cy.get('#nodes_1_host').type(this.data.ip1);
-    cy.get('#nodes_1_port').clear().type('7001');
-    cy.get('#nodes_1_weight').clear().type('2');
+    cy.get('#nodes_1_host').type(data.ip1);
+    cy.get('#nodes_1_port').clear().type(data.port1);
+    cy.get('#nodes_1_weight').clear().type(data.weight1);
 
     // next to finish
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.createUpstreamSuccess);
+    cy.get(selector.notification).should('contain', data.createUpstreamSuccess);
     cy.url().should('contains', 'upstream/list');
   });
 
@@ -111,23 +135,23 @@ context('Create and Delete Upstream', () => {
     cy.visit('/');
     cy.contains('Upstream').click();
 
-    cy.get(this.domSelector.nameSelector).type(this.data.upstreamName);
+    cy.get(selector.nameSelector).type(data.upstreamName);
     cy.contains('Search').click();
-    cy.contains(this.data.upstreamName).siblings().contains('View').click();
-    cy.get(this.domSelector.drawer).should('be.visible');
+    cy.contains(data.upstreamName).siblings().contains('View').click();
+    cy.get(selector.drawer).should('be.visible');
 
-    cy.get(this.domSelector.codemirrorScroll).within(() => {
+    cy.get(selector.codemirrorScroll).within(() => {
       cy.contains('nodes').should("exist");
       cy.contains('chash').should('exist');
-      cy.contains(this.data.upstreamName).should('exist');
+      cy.contains(data.upstreamName).should('exist');
     });
   });
 
   it('should delete the upstream', function () {
     cy.visit('/');
     cy.contains('Upstream').click();
-    cy.contains(this.data.upstreamName).siblings().contains('Delete').click();
+    cy.contains(data.upstreamName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notification).should('contain', this.data.deleteUpstreamSuccess);
+    cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
   });
 });
