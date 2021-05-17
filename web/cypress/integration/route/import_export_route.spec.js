@@ -178,7 +178,7 @@ context('import and export routes', () => {
         cy.get(selector.notificationDesc).should('contain', data.importErrorMsg);
         // close modal
         cy.contains(componentLocaleUS['component.global.cancel']).click();
-        cy.get(selector.notificationCloseIcon).click();
+        cy.get(selector.notificationCloseIcon).click({multiple: true});
       } else if (file !== 'import-error.txt') {
         cy.get(selector.notification).should('contain', 'Success');
         cy.get(selector.notificationCloseIcon).click({multiple: true}).should('not.exist');
@@ -193,7 +193,7 @@ context('import and export routes', () => {
           });
         // show delete successfully notification
         cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
-        cy.get(selector.notificationCloseIcon).click();
+        cy.get(selector.notificationCloseIcon).click({multiple: true});
       }
     });
   });
