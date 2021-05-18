@@ -104,4 +104,4 @@ conf:
 
 Restart `manager-api`, all IPs can access `APISIX Dashboard`.
 
-Note: You can use this method in the exercise to allow all IPs to access your `APISIX Dashboard` instance, but it is not safe to use it in a production environment. In production, please only authorize specific IP addresses or address ranges to access your instance.
+Note: You can use this method in development and test environment to allow all IPs to access your `APISIX Dashboard` instance, but it is not safe to use it in a production environment. In production environment, please only authorize specific IP addresses or address ranges to access your instance.
