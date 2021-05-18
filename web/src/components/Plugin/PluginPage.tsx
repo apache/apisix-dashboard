@@ -16,10 +16,10 @@
  */
 import React, { useEffect, useState } from 'react';
 import { Anchor, Layout, Card, Button, Form, Select, Alert } from 'antd';
-import { PanelSection } from '@api7-dashboard/ui';
 import { omit, orderBy } from 'lodash';
 import { useIntl } from 'umi';
 
+import PanelSection from '@/components/PanelSection';
 import PluginDetail from './PluginDetail';
 import { fetchList, fetchPluginTemplateList } from './service';
 import { PLUGIN_ICON_LIST, PLUGIN_FILTER_LIST } from './data';
@@ -183,16 +183,17 @@ const PluginPage: React.FC<Props> = ({
                   key={item.name}
                   actions={[
                     <Button
-                      type={
-                        initialData[item.name] && !initialData[item.name].disable
-                          ? 'primary'
-                          : 'default'
-                      }
+                      type={initialData[item.name] && !initialData[item.name].disable ? 'primary' : 'default'}
+                      danger={initialData[item.name] && !initialData[item.name].disable}
                       onClick={() => {
                         setName(item.name);
                       }}
                     >
-                      Enable
+                      {
+                        initialData[item.name] && !initialData[item.name].disable
+                          ? formatMessage({ id: 'component.plugin.disable' })
+                          : formatMessage({ id: 'component.plugin.enable' })
+                      }
                     </Button>,
                   ]}
                   title={[

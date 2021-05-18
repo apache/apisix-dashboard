@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
-import { Button, Table, Modal, Form, Select, Input, Space } from 'antd';
+import { Button, Table, Modal, Form, Select, Input, Space, notification } from 'antd';
 import { useIntl } from 'umi';
-import { PanelSection } from '@api7-dashboard/ui';
+
+import PanelSection from '@/components/PanelSection';
 
 const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   advancedMatchingRules,
@@ -36,21 +37,32 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   const { formatMessage } = useIntl();
 
   const onOk = () => {
-    modalForm.validateFields().then((value) => {
+    modalForm.validateFields().then((value: RouteModule.MatchingRule) => {
+      if (value.operator === "IN") {
+        try {
+          JSON.parse(value.value as string)
+        } catch (error) {
+          notification.warning({
+            message: formatMessage({ id: 'page.route.fields.vars.invalid' }),
+            description: formatMessage({ id: 'page.route.fields.vars.in.invalid' })
+          })
+          return
+        }
+      }
       if (mode === 'EDIT') {
         const key = modalForm.getFieldValue('key');
         onChange({
           action: 'advancedMatchingRulesChange',
           data: advancedMatchingRules.map((rule) => {
             if (rule.key === key) {
-              return { ...(value as RouteModule.MatchingRule), key };
+              return { ...value, key };
             }
             return rule;
           }),
         });
       } else {
         const rule = {
-          ...(value as RouteModule.MatchingRule),
+          ...value,
           key: Math.random().toString(36).slice(2),
         };
         onChange({
@@ -280,7 +292,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   };
 
   return (
-    <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.advancedMatchRule' })}>
+    <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.advancedMatchRule' })} tooltip={formatMessage({id: 'page.route.advanced-match.tooltip'})}>
       {!disabled && (
         <Button
           onClick={() => {

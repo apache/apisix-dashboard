@@ -16,7 +16,9 @@
  */
 export default {
   'component.upstream.fields.tls.client_key': '客户端私钥',
+  'component.upstream.fields.tls.client_key.required': '请输入客户端私钥',
   'component.upstream.fields.tls.client_cert': '客户端证书',
+  'component.upstream.fields.tls.client_cert.required': '请输入客户端证书',
 
   'component.upstream.fields.discovery_type': '服务发现类型',
   'component.upstream.fields.discovery_type.tooltip': '服务发现类型',
@@ -36,7 +38,7 @@ export default {
   'component.upstream.fields.key.tooltip': '哈希键（Hash Key）',
 
   'component.upstream.fields.retries': '重试次数',
-  'component.upstream.fields.retries.tooltip': '重试机制将请求发到下一个上游节点。值为 0 表示禁用重试机制，留空表是使用可用后端节点的数量。',
+  'component.upstream.fields.retries.tooltip': '重试机制将请求发到下一个上游节点。值为 0 表示禁用重试机制，留空表示使用可用后端节点的数量。',
 
   'component.upstream.fields.checks.active.type': '类型',
   'component.upstream.fields.checks.active.type.tooltip': '是使用 HTTP 或 HTTPS 进行主动健康检查，还是只尝试 TCP 连接。',
@@ -50,7 +52,6 @@ export default {
   'component.upstream.fields.checks.active.host.scope': '仅支持字母、数字和 . ',
 
   'component.upstream.fields.checks.active.port': '端口',
-  'component.upstream.fields.checks.active.port.required': '请输入端口',
 
   'component.upstream.fields.checks.active.http_path': '请求路径',
   'component.upstream.fields.checks.active.http_path.tooltip': '向目标节点发出 HTTP GET 请求时应使用的路径。',
@@ -93,4 +94,10 @@ export default {
 
   'component.upstream.fields.checks.passive.unhealthy.timeouts': '超时时间',
   'component.upstream.fields.checks.passive.unhealthy.timeouts.tooltip': '根据被动健康检查的观察，在代理中认为目标不健康的超时次数。',
+
+  'component.upstream.other.none': '不选择（仅在绑定服务时可用）',
+  'component.upstream.other.pass_host-with-multiple-nodes.title': '请检查目标节点配置',
+  'component.upstream.other.pass_host-with-multiple-nodes': '当使用目标节点列表中的主机名或者 IP 时，请确认只有一个目标节点',
+  'component.upstream.other.health-check.passive-only': '启用被动健康检查时，需要同时启用主动健康检查。',
+  'component.upstream.other.health-check.invalid': '请检查健康检查配置',
 }

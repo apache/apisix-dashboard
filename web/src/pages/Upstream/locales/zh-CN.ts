@@ -17,9 +17,13 @@
 export default {
   'page.upstream.step.select.upstream': '选择上游服务',
   'page.upstream.step.select.upstream.select.option': '手动填写',
+  'page.upstream.step.select.upstream.select.none': '无',
+  'page.upstream.step.backend.server.domain.or.ip': '后端服务域名或 IP',
   'page.upstream.form.item-label.node.domain.or.ip': '目标节点',
   'page.upstream.step.input.domain.name.or.ip': '请输入域名或 IP',
   'page.upstream.step.domain.name.or.ip': '主机名或 IP',
+  'page.upstream.step.host': '主机名',
+  'page.upstream.step.valid.domain.name.or.ip': '请输入合法的域名或 IP',
   'page.upstream.step.input.port': '请输入',
   'page.upstream.step.port': '端口',
   'page.upstream.step.input.weight': '请输入权重',
@@ -33,7 +37,7 @@ export default {
   'page.upstream.step.type': '负载均衡算法',
   'page.upstream.step.pass-host': 'Host 请求头',
   'page.upstream.step.pass-host.pass': '保持与客户端请求一致的主机名',
-  'page.upstream.step.pass-host.node': '使用上游节点列表中的主机名或 IP',
+  'page.upstream.step.pass-host.node': '使用目标节点列表中的主机名或 IP',
   'page.upstream.step.pass-host.rewrite': '自定义 Host 请求头（即将废弃）',
   'page.upstream.step.pass-host.upstream_host': '自定义主机名',
   'page.upstream.step.connect.timeout': '连接超时',
@@ -98,5 +102,7 @@ export default {
   'page.upstream.checks.passive.unhealthy.http_statuses.description': '当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表不健康状态是由代理流量产生的。',
   'page.upstream.checks.passive.unhealthy.http_failures.description': '由被动健康检查所观察，代理流量中 HTTP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。',
   'page.upstream.checks.passive.unhealthy.tcp_failures.description': '被动健康检查所观察到的代理流量中 TCP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。',
-  'page.upstream.scheme': '协议'
+  'page.upstream.scheme': '协议',
+
+  'page.upstream.other.configuration.invalid': '请检查上游配置'
 };

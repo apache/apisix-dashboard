@@ -127,7 +127,7 @@ services:
 
   apisix:
     hostname: apisix_server1
-    image: apache/apisix:2.4-alpine
+    image: apache/apisix:2.5-alpine
     restart: always
     volumes:
       - ./apisix_config.yaml:/usr/local/apisix/conf/config.yaml:ro
@@ -148,7 +148,7 @@ services:
 
   apisix2:
     hostname: apisix_server2
-    image: apache/apisix:2.4-alpine
+    image: apache/apisix:2.5-alpine
     restart: always
     volumes:
       - ./apisix_config2.yaml:/usr/local/apisix/conf/config.yaml:ro

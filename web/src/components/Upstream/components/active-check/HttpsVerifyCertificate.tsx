@@ -27,7 +27,7 @@ const HttpsVerifyCertificateComponent: React.FC<Props> = ({ readonly }) => {
   return (
     <Form.Item
       label={formatMessage({ id: 'component.upstream.fields.checks.active.https_verify_certificate' })}
-      name="https_verify_certificate"
+      name={['checks', 'active', 'https_verify_certificate']}
       tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.https_verify_certificate.tooltip' })}
       initialValue={true}
       valuePropName="checked"

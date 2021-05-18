@@ -78,5 +78,7 @@ export default {
   'component.label-manager': 'Label Manager',
 
   'component.global.noConfigurationRequired': 'No configuration required',
-  'component.global.copy': 'Copy'
+  'component.global.copy': 'Copy',
+  'component.global.copySuccess': 'Copy Successfully ',
+  'component.global.copyFail': 'Copy Failed',
 };

@@ -28,7 +28,6 @@ const Component: React.FC<Props> = ({ readonly }) => {
   return (
     <Form.Item
       label={formatMessage({ id: 'component.upstream.fields.checks.active.http_path' })}
-      required
       tooltip={formatMessage({
         id: 'component.upstream.fields.checks.active.http_path.tooltip',
       })}
@@ -36,12 +35,6 @@ const Component: React.FC<Props> = ({ readonly }) => {
       <Form.Item
         name={['checks', 'active', 'http_path']}
         noStyle
-        rules={[
-          {
-            required: true,
-            message: formatMessage({ id: 'component.upstream.fields.checks.active.http_path.placeholder' }),
-          },
-        ]}
         initialValue="/"
       >
         <Input

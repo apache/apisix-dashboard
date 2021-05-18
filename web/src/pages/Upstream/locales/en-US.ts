@@ -17,9 +17,13 @@
 export default {
   'page.upstream.step.select.upstream': 'Select Upstream',
   'page.upstream.step.select.upstream.select.option': 'Custom',
+  'page.upstream.step.select.upstream.select.none': 'None',
+  'page.upstream.step.backend.server.domain.or.ip': 'Backend Server Host/IP',
   'page.upstream.form.item-label.node.domain.or.ip': 'Targets',
   'page.upstream.step.input.domain.name.or.ip': 'Please enter domain or IP',
+  'page.upstream.step.valid.domain.name.or.ip': 'Please enter valid a domain or IP',
   'page.upstream.step.domain.name.or.ip': 'Hostname or IP',
+  'page.upstream.step.host': 'Host',
   'page.upstream.step.input.port': 'Please enter port number',
   'page.upstream.step.port': 'Port',
   'page.upstream.step.input.weight': 'Please enter weight',
@@ -66,7 +70,7 @@ export default {
   'page.upstream.create': 'Create Upstream',
   'page.upstream.configure': 'Configure Upstream',
   'page.upstream.create.upstream.successfully': 'Create Upstream Successfully',
-  'page.upstream.edit.upstream.successfully': 'Update Upstream Successfully',
+  'page.upstream.edit.upstream.successfully': 'Configure Upstream Successfully',
   'page.upstream.create.basic.info': 'Basic Information',
   'page.upstream.create.preview': 'Preview',
 
@@ -98,5 +102,7 @@ export default {
   'page.upstream.checks.passive.unhealthy.http_statuses.description': 'Which HTTP statuses to consider a success',
   'page.upstream.checks.passive.unhealthy.http_failures.description': 'Number of HTTP failures to consider a target unhealthy',
   'page.upstream.checks.passive.unhealthy.tcp_failures.description': 'Number of TCP failures to consider a target unhealthy',
-  'page.upstream.scheme': 'Scheme'
+  'page.upstream.scheme': 'Scheme',
+
+  'page.upstream.other.configuration.invalid': 'Please check the Upstream configuration'
 };

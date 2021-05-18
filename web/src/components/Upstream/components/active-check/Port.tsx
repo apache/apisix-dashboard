@@ -25,8 +25,8 @@ type Props = {
 const Component: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
   return (
-    <Form.Item label={formatMessage({ id: 'component.upstream.fields.checks.active.port' })} required>
-      <Form.Item name={['checks', 'active', 'port']} noStyle initialValue={80} rules={[{ required: true, message: formatMessage({ id: "component.upstream.fields.checks.active.port.required" }) }]}>
+    <Form.Item label={formatMessage({ id: 'component.upstream.fields.checks.active.port' })}>
+      <Form.Item name={['checks', 'active', 'port']} noStyle initialValue={80}>
         <InputNumber
           placeholder={formatMessage({
             id: 'component.upstream.fields.checks.active.port',

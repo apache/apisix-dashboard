@@ -37,6 +37,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
               <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
                 <Col span={5}>
                   <Form.Item
+                    label={formatMessage({id: 'page.upstream.step.host'})}
                     style={{ marginBottom: 0 }}
                     name={[field.name, 'host']}
                     rules={[
@@ -51,6 +52,9 @@ const Component: React.FC<Props> = ({ readonly }) => {
                           /(^([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.(25[0-5]|1\d{2}|2[0-4]\d|[1-9]?\d)){3}$|^(?![0-9.]+$)([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+){0,}$)/,
                           'g',
                         ),
+                        message: formatMessage({
+                          id: 'page.upstream.step.valid.domain.name.or.ip',
+                        })
                       },
                     ]}
                   >
@@ -102,7 +106,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
                 </Col>
                 <Col style={{ ...removeBtnStyle, marginLeft: -50 }}>
                   {!readonly && (
-                    <MinusCircleOutlined onClick={() => remove(field.name)} />
+                    <MinusCircleOutlined data-cy={`upstream-node-minus-${index}`} onClick={() => remove(field.name)} />
                   )}
                 </Col>
               </Row>

@@ -20,53 +20,90 @@ context('Create and Delete Route', () => {
   const name = `routeName${new Date().valueOf()}`;
   const newName = `newName${new Date().valueOf()}`;
   const duplicateNewName = `duplicateName${new Date().valueOf()}`;
-  const sleepTime = 100;
   const timeout = 5000;
+
+  const selector = {
+    empty: '.ant-empty-normal',
+    name: '#name',
+    description: '#desc',
+    hosts_0: '#hosts_0',
+    hosts_1: '#hosts_1',
+    remoteHost: '#remote_addrs_0',
+    remoteAddress: '[data-cy=addRemoteAddr]',
+    address1: '#remote_addrs_1',
+    parameterPosition: '#position',
+    ruleCard: '.ant-modal',
+    operator: '#operator',
+    value: '#value',
+    nodes_0_host: '#nodes_0_host',
+    nodes_0_port: '#nodes_0_port',
+    nodes_0_weight: '#nodes_0_weight',
+    pluginCardBordered: '.ant-card-bordered',
+    disabledSwitcher: '#disable',
+    checkedSwitcher: '.ant-switch-checked',
+    drawer: '.ant-drawer-content',
+    selectDropdown: '.ant-select-dropdown',
+    codeMirrorMode: "[data-cy='code-mirror-mode']",
+    selectJSON: '.ant-select-dropdown [label=JSON]',
+    drawerFooter: '.ant-drawer-footer',
+    nameSelector: '[title=Name]',
+    codemirrorScroll: '.CodeMirror-scroll',
+    deleteAlert: '.ant-modal-body',
+    notificationCloseIcon: '.ant-notification-close-icon',
+    notification: '.ant-notification-notice-message',
+    addHost: '[data-cy=addHost]',
+  };
+
+  const data = {
+    description: 'desc_by_autotest',
+    host1: '11.11.11.11',
+    host2: '12.12.12.12',
+    host3: '10.10.10.10',
+    port: '80',
+    weight: 1,
+    basicAuthPlugin: 'basic-auth',
+    submitSuccess: 'Submit Successfully',
+    description2: 'description2',
+    deleteRouteSuccess: 'Delete Route Successfully',
+  };
 
   beforeEach(() => {
     cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
   });
 
   it('should create route', function () {
     cy.visit('/');
     cy.contains('Route').click();
-    cy.get(this.domSelector.empty).should('be.visible');
+    cy.get(selector.empty).should('be.visible');
     cy.contains('Create').click();
     cy.contains('Next').click().click();
-    cy.get(this.domSelector.name).type(name);
-    cy.get(this.domSelector.description).type(this.data.description);
+    cy.get(selector.name).type(name);
+    cy.get(selector.description).type(data.description);
 
     // input request basic define
-    cy.get(this.domSelector.hosts_0).type(this.data.host1);
-    cy.get(this.domSelector.addHost).click();
-    cy.get(this.domSelector.hosts_1).type(this.data.host2);
-    cy.get(this.domSelector.remoteHost).type(this.data.host2);
-    cy.get(this.domSelector.remoteAddress).click();
-    cy.get(this.domSelector.address1).type(this.data.host3);
-    cy.contains('Advanced Routing Matching Conditions')
-      .parent()
-      .siblings()
-      .contains('Add')
-      .click();
+    cy.get(selector.hosts_0).type(data.host1);
+    cy.get(selector.addHost).click();
+    cy.get(selector.hosts_1).type(data.host2);
+    cy.get(selector.remoteHost).type(data.host2);
+    cy.get(selector.remoteAddress).click();
+    cy.get(selector.address1).type(data.host3);
+    cy.contains('Advanced Routing Matching Conditions').parent().siblings().contains('Add').click();
 
     // create advanced routing matching conditions
-    cy.get(this.domSelector.parameterPosition).click();
+    cy.get(selector.parameterPosition).click();
     cy.contains('Cookie').click();
-    cy.get(this.domSelector.ruleCard).within(() => {
-      cy.get(this.domSelector.name).type('modalName');
+    cy.get(selector.ruleCard).within(() => {
+      cy.get(selector.name).type('modalName');
     });
-    cy.get(this.domSelector.operator).click();
+    cy.get(selector.operator).click();
     cy.get('[title="Equal(==)"]').should('be.visible').click();
-    cy.get(this.domSelector.value).type('value');
+    cy.get(selector.value).type('value');
     cy.contains('Confirm').click();
 
     cy.contains('Next').click();
-    cy.get(this.domSelector.nodes_0_host).type(this.data.host2);
-    cy.get(this.domSelector.nodes_0_port).type(this.data.port);
-    cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
+    cy.get(selector.nodes_0_host).type(data.host2);
+    cy.get(selector.nodes_0_port).type(data.port);
+    cy.get(selector.nodes_0_weight).type(data.weight);
     cy.contains('Next').click();
 
     // redirect plugin should not display in route step3
@@ -78,39 +115,47 @@ context('Create and Delete Route', () => {
     });
 
     // config basic auth plugin
-    cy.contains(this.data.basicAuthPlugin).parents(this.domSelector.pluginCardBordered).within(() => {
-      cy.get('button').click({ force: true });
-    });
+    cy.contains(data.basicAuthPlugin)
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({ force: true });
+      });
 
-    cy.get(this.domSelector.drawer).should('be.visible').within(() => {
-      cy.get(this.domSelector.disabledSwitcher).click();
-      cy.get(this.domSelector.checkedSwitcher).should('exist');
-    });
+    cy.get(selector.drawer)
+      .should('be.visible')
+      .within(() => {
+        cy.get(selector.disabledSwitcher).click();
+        cy.get(selector.checkedSwitcher).should('exist');
+      });
 
-    cy.get(this.domSelector.codeMirrorMode).click();
-    cy.get(this.domSelector.selectDropdown).should('be.visible');
-    cy.get(this.domSelector.selectJSON).click();
+    cy.get(selector.codeMirrorMode).click();
+    cy.get(selector.selectDropdown).should('be.visible');
+    cy.get(selector.selectJSON).click();
 
     cy.contains('button', 'Submit').click();
-    cy.get(this.domSelector.drawer, { timeout }).should('not.exist');
+    cy.get(selector.drawer, { timeout }).should('not.exist');
 
-    cy.contains(this.data.basicAuthPlugin).parents(this.domSelector.pluginCardBordered).within(() => {
-      cy.get('button').click({ force: true });
-    });
+    cy.contains(data.basicAuthPlugin)
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({ force: true });
+      });
 
-    cy.get(this.domSelector.drawerFooter).contains('button', 'Delete').click({ force: true });
+    cy.get(selector.drawerFooter).contains('button', 'Delete').click({ force: true });
     cy.contains('button', 'Confirm').click({ force: true });
 
-    cy.contains(this.data.basicAuthPlugin).parents(this.domSelector.pluginCardBordered).within(() => {
-      cy.get('button').click({ force: true });
-    });
+    cy.contains(data.basicAuthPlugin)
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({ force: true });
+      });
 
-    cy.get(this.domSelector.drawerFooter).contains('button', 'Delete').should('not.exist');
+    cy.get(selector.drawerFooter).contains('button', 'Delete').should('not.exist');
     cy.contains('button', 'Cancel').click({ force: true });
 
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.contains(this.data.submitSuccess);
+    cy.contains(data.submitSuccess);
 
     // back to route list page
     cy.contains('Goto List').click();
@@ -121,14 +166,14 @@ context('Create and Delete Route', () => {
     cy.visit('/');
     cy.contains('Route').click();
 
-    cy.get(this.domSelector.nameSelector).type(name);
+    cy.get(selector.nameSelector).type(name);
     cy.contains('Search').click();
     cy.contains(name).siblings().contains('More').click();
     cy.contains('View').click();
-    cy.get(this.domSelector.drawer).should('be.visible');
+    cy.get(selector.drawer).should('be.visible');
 
-    cy.get(this.domSelector.codemirrorScroll).within(() => {
-      cy.contains('upstream').should("exist");
+    cy.get(selector.codemirrorScroll).within(() => {
+      cy.contains('upstream').should('exist');
       cy.contains(name).should('exist');
     });
   });
@@ -137,83 +182,83 @@ context('Create and Delete Route', () => {
     cy.visit('/');
     cy.contains('Route').click();
 
-    cy.get(this.domSelector.nameSelector).type(name);
+    cy.get(selector.nameSelector).type(name);
     cy.contains('Search').click();
     cy.contains(name).siblings().contains('Configure').click();
 
     // NOTE: make sure all components rerender done
     cy.get('#status').should('have.class', 'ant-switch-checked');
-    cy.get(this.domSelector.name).clear().type(newName);
-    cy.get(this.domSelector.description).clear().type(this.data.description2);
+    cy.get(selector.name).clear().type(newName);
+    cy.get(selector.description).clear().type(data.description2);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.contains(this.data.submitSuccess);
+    cy.contains(data.submitSuccess);
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
-    cy.contains(newName).siblings().should('contain', this.data.description2);
+    cy.contains(newName).siblings().should('contain', data.description2);
 
     // test view
     cy.contains(newName).siblings().contains('More').click();
     cy.contains('View').click();
-    cy.get(this.domSelector.drawer).should('be.visible');
+    cy.get(selector.drawer).should('be.visible');
 
-    cy.get(this.domSelector.codemirrorScroll).within(() => {
-      cy.contains('upstream').should("exist");
+    cy.get(selector.codemirrorScroll).within(() => {
+      cy.contains('upstream').should('exist');
       cy.contains(newName).should('exist');
     });
   });
-
 
   it('should duplicate the route', function () {
     cy.visit('/');
     cy.contains('Route').click();
     cy.reload();
 
-    cy.get(this.domSelector.nameSelector).type(newName);
+    cy.get(selector.nameSelector).type(newName);
     cy.contains('Search').click();
     cy.contains(newName).siblings().contains('More').click();
     cy.contains('Duplicate').click();
 
     // NOTE: make sure all components rerender done
     cy.get('#status').should('have.class', 'ant-switch-checked');
-    cy.get(this.domSelector.name).clear().type(duplicateNewName);
-    cy.get(this.domSelector.description).clear().type(this.data.description2);
+    cy.get(selector.name).clear().type(duplicateNewName);
+    cy.get(selector.description).clear().type(data.description2);
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.contains(this.data.submitSuccess);
+    cy.contains(data.submitSuccess);
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
-    cy.contains(duplicateNewName).siblings().should('contain', this.data.description2);
+    cy.contains(duplicateNewName).siblings().should('contain', data.description2);
 
     // test view
     cy.contains(duplicateNewName).siblings().contains('More').click();
     cy.contains('View').click();
-    cy.get(this.domSelector.drawer).should('be.visible');
+    cy.get(selector.drawer).should('be.visible');
 
-    cy.get(this.domSelector.codemirrorScroll).within(() => {
-      cy.contains('upstream').should("exist");
+    cy.get(selector.codemirrorScroll).within(() => {
+      cy.contains('upstream').should('exist');
       cy.contains(duplicateNewName).should('exist');
     });
   });
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
-    const { domSelector, data } = this;
     const routeNames = [newName, duplicateNewName];
     routeNames.forEach(function (routeName) {
-      cy.get(domSelector.name).clear().type(routeName);
+      cy.get(selector.name).clear().type(routeName);
       cy.contains('Search').click();
       cy.contains(routeName).siblings().contains('More').click();
       cy.contains('Delete').click();
-      cy.get(domSelector.deleteAlert).should('be.visible').within(() => {
-        cy.contains('OK').click();
-      });
-      cy.get(domSelector.notification).should('contain', data.deleteRouteSuccess);
-      cy.get(domSelector.notificationCloseIcon).click();
+      cy.get(selector.deleteAlert)
+        .should('be.visible')
+        .within(() => {
+          cy.contains('OK').click();
+        });
+      cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
+      cy.get(selector.notificationCloseIcon).click();
     });
   });
 });

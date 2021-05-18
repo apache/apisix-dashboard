@@ -35,7 +35,7 @@ const options = [
   }
 ]
 
-const ActiveCheckTypeComponent: React.FC<Props> = ({ readonly }) => {
+const PassiveCheckTypeComponent: React.FC<Props> = ({ readonly }) => {
   const { formatMessage } = useIntl()
 
   return (
@@ -66,4 +66,4 @@ const ActiveCheckTypeComponent: React.FC<Props> = ({ readonly }) => {
   )
 }
 
-export default ActiveCheckTypeComponent
+export default PassiveCheckTypeComponent

@@ -146,7 +146,7 @@ export default {
   'page.route.tooltip.pluginOrchWithoutRedirect': '当步骤一中 重定向 选择为 启用 HTTPS 时，不可使用插件编排模式。',
 
   'page.route.tabs.normalMode': '普通模式',
-  'page.route.tabs.orchestration': '插件编排',
+  'page.route.tabs.orchestration': '编排模式',
 
   'page.route.list.description': '路由（Route）是请求的入口点，它定义了客户端请求与服务之间的匹配规则。路由可以与服务（Service）、上游（Upstream）关联，一个服务可对应一组路由，一个路由可以对应一个上游对象（一组后端服务节点），因此，每个匹配到路由的请求将被网关代理到路由绑定的上游服务中。',
 
@@ -170,4 +170,13 @@ export default {
 
   'page.route.advanced-match.operator.sample.IN': '请输入数组，示例：["1", "2"]',
   'page.route.advanced-match.operator.sample.~~': '请输入正则表达式，示例：[a-z]+',
+  'page.route.fields.service_id.invalid': '请检查路由绑定的服务',
+  'page.route.fields.service_id.without-upstream': '如果不绑定服务，则必须设置上游服务（步骤 2）',
+  'page.route.advanced-match.tooltip': '支持通过请求头，请求参数、Cookie 进行路由匹配，可应用于灰度发布，蓝绿测试等场景。',
+
+  'page.route.fields.custom.redirectOption.tooltip': '在此配置 redirect 插件',
+  'page.route.fields.service_id.tooltip': '绑定服务（Service）对象，以便复用其中的配置。',
+
+  'page.route.fields.vars.invalid': '请检查高级匹配条件配置',
+  'page.route.fields.vars.in.invalid': '使用 IN 操作符时，请输入数组格式的参数值。',
 };

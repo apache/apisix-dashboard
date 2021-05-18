@@ -17,6 +17,7 @@
 /* eslint-disable no-undef */
 import defaultSettings from '../../config/defaultSettings';
 import 'cypress-file-upload';
+import '@4tw/cypress-drag-drop';
 
 Cypress.Commands.add('login', () => {
   const { SERVE_ENV = 'dev' } = Cypress.env();
@@ -59,7 +60,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
         cy.contains(name)
           .parents(domSelector.parents)
           .within(() => {
-            cy.contains('Enable').click({
+            cy.get('button').click({
               force: true,
             });
           });

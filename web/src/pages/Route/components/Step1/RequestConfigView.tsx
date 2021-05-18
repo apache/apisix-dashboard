@@ -19,7 +19,8 @@ import Form from 'antd/es/form';
 import { Button, Input, Select, Row, Col, InputNumber } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
-import { PanelSection } from '@api7-dashboard/ui';
+
+import PanelSection from '@/components/PanelSection';
 
 import {
   HTTP_METHOD_OPTION_LIST,
