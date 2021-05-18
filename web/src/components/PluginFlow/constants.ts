@@ -16,7 +16,7 @@
  */
 import { Shape, Dom } from '@antv/x6'
 import type { Addon, Graph, Cell } from '@antv/x6'
-import { formatMessage } from '@/.umi/plugin-locale/localeExports'
+import { formatMessage } from 'umi'
 
 export const DEFAULT_STENCIL_WIDTH = 280
 export const DEFAULT_TOOLBAR_HEIGHT = 38

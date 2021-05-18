@@ -17,12 +17,19 @@
 /* eslint-disable no-undef */
 
 context('ssl smoke test', () => {
+  const selector = {
+    notificationMessage: '.ant-notification-notice-message',
+    notificationDesc: '.ant-notification-notice-description',
+  };
+
+  const data = {
+    deleteSSLSuccess: 'Remove target SSL successfully',
+    sslErrorAlert: "key and cert don't match",
+  };
+
   beforeEach(() => {
     cy.login();
-
     cy.fixture('certificate.json').as('certificate');
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
   });
 
   it('should set match certificate and key by input', function () {
@@ -48,7 +55,7 @@ context('ssl smoke test', () => {
     const sni = this.certificate.valid.sni;
     cy.contains(sni).parents().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(this.domSelector.notificationMessage).should('contain', this.data.deleteSSLSuccess);
+    cy.get(selector.notificationMessage).should('contain', data.deleteSSLSuccess);
   });
 
   it('should set unmatch certificate and key by input', function () {
@@ -63,6 +70,6 @@ context('ssl smoke test', () => {
     cy.get('#key').type(invalidKey);
 
     cy.contains('Next').click();
-    cy.get(this.domSelector.notificationDesc).should('contain', this.data.sslErrorAlert);
+    cy.get(selector.notificationDesc).should('contain', data.sslErrorAlert);
   });
 });

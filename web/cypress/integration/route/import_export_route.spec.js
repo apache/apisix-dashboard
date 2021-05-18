@@ -22,6 +22,20 @@ import routeLocaleUS from '../../../src/pages/Route/locales/en-US';
 import yaml from 'js-yaml';
 
 context('import and export routes', () => {
+  const selector = {
+    name: '#name',
+    description: '#desc',
+    nodes_0_host: '#nodes_0_host',
+    nodes_0_port: '#nodes_0_port',
+    nodes_0_weight: '#nodes_0_weight',
+    fileTypeRadio: '[type=radio]',
+    deleteAlert: '.ant-modal-body',
+    refresh: '.anticon-reload',
+    notification: '.ant-notification-notice-message',
+    notificationCloseIcon: '.ant-notification-close-icon',
+    fileSelector: '[type=file]',
+    notificationDesc: '.ant-notification-notice-description',
+  };
   const data = {
     route_name_0: 'route_name_0',
     route_name_1: 'route_name_1',
@@ -36,6 +50,9 @@ context('import and export routes', () => {
     // Note: export file's name will be end of a timestamp
     jsonMask: 'cypress/downloads/*.json',
     yamlMask: 'cypress/downloads/*.yaml',
+    port: '80',
+    weight: 1,
+    deleteRouteSuccess: 'Delete Route Successfully',
   };
 
   beforeEach(() => {
@@ -54,7 +71,7 @@ context('import and export routes', () => {
       cy.contains(componentLocaleUS['component.global.create']).click();
       // input name, click Next
       cy.contains('Next').click().click();
-      cy.get(this.domSelector.name).type(data[`route_name_${i}`]);
+      cy.get(selector.name).type(data[`route_name_${i}`]);
       //FIXME: only GET in methods
       cy.get('#methods').click();
       for (let i = 0; i < 7; i += 1) {
@@ -65,9 +82,9 @@ context('import and export routes', () => {
 
       cy.contains(actionBarUS['component.actionbar.button.nextStep']).click();
       // input nodes_0_host, click Next
-      cy.get(this.domSelector.nodes_0_host).type(data[`upstream_node0_host_${i}`]);
-      cy.get(this.domSelector.nodes_0_port).type(this.data.port);
-      cy.get(this.domSelector.nodes_0_weight).type(this.data.weight);
+      cy.get(selector.nodes_0_host).type(data[`upstream_node0_host_${i}`]);
+      cy.get(selector.nodes_0_port).type(data.port);
+      cy.get(selector.nodes_0_weight).type(data.weight);
       cy.contains(actionBarUS['component.actionbar.button.nextStep']).click();
       // do not config plugins, click Next
       cy.contains(actionBarUS['component.actionbar.button.nextStep']).click();
@@ -104,7 +121,7 @@ context('import and export routes', () => {
     cy.contains(routeLocaleUS['page.route.button.exportOpenApi']).click();
     cy.contains(routeLocaleUS['page.route.exportRoutesTips']).should('exist');
     // click Confirm button in the popup to download Yaml file
-    cy.get(this.domSelector.fileTypeRadio).check('1');
+    cy.get(selector.fileTypeRadio).check('1');
     cy.contains(componentLocaleUS['component.global.confirm']).click();
 
     cy.task('findFile', data.jsonMask).then((jsonFile) => {
@@ -127,16 +144,18 @@ context('import and export routes', () => {
 
   it('should delete the route', function () {
     cy.visit('/routes/list');
-    cy.get(this.domSelector.refresh).click();
+    cy.get(selector.refresh).click();
 
     for (let i = 0; i < 2; i += 1) {
       cy.contains(data[`route_name_${i}`]).siblings().contains('More').click();
       cy.contains('Delete').click();
-      cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
-        cy.contains('OK').click();
-      });
-      cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
-      cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
+      cy.get(selector.deleteAlert)
+        .should('be.visible')
+        .within(() => {
+          cy.contains('OK').click();
+        });
+      cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
+      cy.get(selector.notificationCloseIcon).click().should('not.exist');
       cy.reload();
     }
   });
@@ -147,34 +166,36 @@ context('import and export routes', () => {
 
     data.uploadRouteFiles.forEach((file) => {
       // click import button
-      cy.get(this.domSelector.refresh).click();
+      cy.get(selector.refresh).click();
       cy.contains('Advanced').click();
       cy.contains(routeLocaleUS['page.route.button.importOpenApi']).should('be.visible').click();
       // select file
-      cy.get(this.domSelector.fileSelector).attachFile(file);
+      cy.get(selector.fileSelector).attachFile(file);
       // click submit
       cy.contains(componentLocaleUS['component.global.confirm']).click();
 
       // show upload notification
       if (file === 'import-error.txt') {
         // show error msg
-        cy.get(this.domSelector.notificationDesc).should('contain', data.importErrorMsg);
+        cy.get(selector.notificationDesc).should('contain', data.importErrorMsg);
         // close modal
         cy.contains(componentLocaleUS['component.global.cancel']).click();
-        cy.get(this.domSelector.notificationCloseIcon).click();
+        cy.get(selector.notificationCloseIcon).click();
       } else if (file !== 'import-error.txt') {
-        cy.get(this.domSelector.notification).should('contain', 'Success');
-        cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
+        cy.get(selector.notification).should('contain', 'Success');
+        cy.get(selector.notificationCloseIcon).click().should('not.exist');
         // delete route just imported
         cy.reload();
         cy.contains('More').click();
         cy.contains('Delete').should('be.visible').click();
-        cy.get(this.domSelector.deleteAlert).should('be.visible').within(() => {
-          cy.contains('OK').click();
-        });
+        cy.get(selector.deleteAlert)
+          .should('be.visible')
+          .within(() => {
+            cy.contains('OK').click();
+          });
         // show delete successfully notification
-        cy.get(this.domSelector.notification).should('contain', this.data.deleteRouteSuccess);
-        cy.get(this.domSelector.notificationCloseIcon).click();
+        cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
+        cy.get(selector.notificationCloseIcon).click();
       }
     });
   });

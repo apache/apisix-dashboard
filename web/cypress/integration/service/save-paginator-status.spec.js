@@ -22,11 +22,24 @@ context('Save Paginator Status', () => {
   const token = localStorage.getItem('token');
   const { SERVE_ENV = 'dev' } = Cypress.env();
 
+  const selector = {
+    twentyPerPage: '[title="20 / page"]',
+    pageList: '.ant-table-pagination-right',
+    pageTwo: '.ant-pagination-item-2',
+    pageTwoActived: '.ant-pagination-item-2.ant-pagination-item-active',
+    paginationOptions: '.ant-pagination-options',
+    deleteButton: '.ant-btn-dangerous',
+    notification: '.ant-notification-notice-message',
+    notificationCloseIcon: '.ant-notification-close-icon',
+  };
+
+  const data = {
+    serviceName: 'test_service',
+    deleteServiceSuccess: 'Delete Service Successfully',
+  };
+
   beforeEach(() => {
     cy.login();
-
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
   });
 
   it('should create 11 test services', function () {
@@ -42,43 +55,43 @@ context('Save Paginator Status', () => {
         },
         body: {
           upstream: {
-            nodes: {"39.97.63.215:80": 1},
-            timeout: {connect: 6, read: 6, send: 6},
+            nodes: { '39.97.63.215:80': 1 },
+            timeout: { connect: 6, read: 6, send: 6 },
             type: 'roundrobin',
             pass_host: 'pass',
           },
           enable_websocket: true,
-          name: `${this.data.serviceName}${i}`,
-        }
+          name: `${data.serviceName}${i}`,
+        },
       }).then((res) => {
         expect(res.body.code).to.equal(0);
       });
     }
-    cy.get(this.domSelector.pageList).should('be.visible');
+    cy.get(selector.pageList).should('be.visible');
   });
 
-  it('should save paginator\' status', function () {
+  it("should save paginator' status", function () {
     cy.visit('/');
     cy.contains('Service').click();
 
     // Test page status
-    cy.get(this.domSelector.pageList).should('be.visible');
-    cy.get(this.domSelector.pageTwo).click();
-    cy.get(this.domSelector.pageTwoActived).should('exist');
+    cy.get(selector.pageList).should('be.visible');
+    cy.get(selector.pageTwo).click();
+    cy.get(selector.pageTwoActived).should('exist');
     cy.location('href').should('include', 'page=2');
 
     cy.reload();
-    cy.get(this.domSelector.pageTwoActived).should('exist');
+    cy.get(selector.pageTwoActived).should('exist');
     cy.location('href').should('include', 'page=2');
 
     // Test pageSize status
-    cy.get(this.domSelector.paginationOptions).click();
+    cy.get(selector.paginationOptions).click();
     cy.contains('20 / page').should('be.visible').click();
-    cy.get(this.domSelector.twentyPerPage).should('exist');
+    cy.get(selector.twentyPerPage).should('exist');
     cy.location('href').should('include', 'pageSize=20');
 
     cy.reload();
-    cy.get(this.domSelector.twentyPerPage).should('exist');
+    cy.get(selector.twentyPerPage).should('exist');
     cy.location('href').should('include', 'pageSize=20');
   });
 
@@ -86,13 +99,13 @@ context('Save Paginator Status', () => {
     cy.visit('/service/list?page=1&pageSize=20');
     cy.reload();
     cy.contains('Service List').should('be.visible');
-    cy.get(this.domSelector.deleteButton, { timeout: 300 })
+    cy.get(selector.deleteButton, { timeout: 300 })
       .should('exist')
       .each(function ($el) {
         cy.wrap($el).click().click({ timeout });
         cy.contains('button', 'Confirm').click({ force: true });
-        cy.get(this.domSelector.notification).should('contain', this.data.deleteServiceSuccess);
-        cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
+        cy.get(selector.notification).should('contain', data.deleteServiceSuccess);
+        cy.get(selector.notificationCloseIcon).click().should('not.exist');
       });
   });
 });
