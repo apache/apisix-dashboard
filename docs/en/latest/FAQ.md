@@ -83,7 +83,7 @@ conf:
     - 0.0.0.0/0
 ```
 
-1. Allow all IPv6 access
+2. Allow all IPv6 access
 
 By default, the IPv6 range of `::1` is allowed to access `APISIX Dashboard`. If you want to allow all IPv6 access, then just configure `conf.allow_list` in the configuration file of `conf/conf.yaml` as follows:
 
@@ -91,6 +91,15 @@ By default, the IPv6 range of `::1` is allowed to access `APISIX Dashboard`. If 
 conf:
   allow_list:
     - ::/0
+```
+
+3. Allow all IP access
+
+If you want to allow all IPs to access `APISIX Dashboard`, you only need to do the following configuration in the configuration file of `conf/conf.yaml`:
+
+```yaml
+conf:
+  allow_list:
 ```
 
 Restart `manager-api`, all IPs can access `APISIX Dashboard`.
