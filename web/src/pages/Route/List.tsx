@@ -204,12 +204,6 @@ const Page: React.FC = () => {
           setUploadFileList([]);
           setShowImportModal(true);
         }
-      }, {
-        name: formatMessage({ id: 'page.route.onlineDebug' }),
-        icon: <BugOutlined />,
-        onClick: () => {
-          setDebugDrawVisible(true)
-        }
       }
     ]
 
