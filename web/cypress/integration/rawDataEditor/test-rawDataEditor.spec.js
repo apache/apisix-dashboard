@@ -57,7 +57,7 @@ context('Test RawDataEditor', () => {
 
       cy.window().then(({ monaco }) => {
         if (monaco) {
-          monaco.setValue(JSON.stringify(data));
+          monaco.setValue(JSON.stringify(dataSetItem));
         }
         cy.get(selector.drawer).should('exist');
         cy.get(selector.drawer, { timeout }).within(() => {
@@ -88,9 +88,9 @@ context('Test RawDataEditor', () => {
       cy.window().then(({ monaco }) => {
         if (monaco) {
           if (item === 'Consumer') {
-            monaco.setValue(JSON.stringify({ ...data, desc: 'newDesc' }));
+            monaco.setValue(JSON.stringify({ ...dataSetItem, desc: 'newDesc' }));
           } else {
-            monaco.setValue(JSON.stringify({ ...data, name: 'newName' }));
+            monaco.setValue(JSON.stringify({ ...dataSetItem, name: 'newName' }));
           }
         }
         cy.get(selector.drawer).should('exist');
