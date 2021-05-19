@@ -95,7 +95,7 @@ context('Create and delete consumer with proxy-mirror plugin form', () => {
 
     // config proxy-mirror form with correct host
     cy.get(selector.host).clear().type('http://127.0.0.1:1999');
-    cy.get(selector.alert).should('not.exist');
+    cy.get(selector.alert).should('not.be.visible');
     cy.get(selector.disabledSwitcher).click();
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
