@@ -60,7 +60,7 @@ context('Create and delete consumer with api-breaker plugin form', () => {
     });
     cy.focused(selector.drawer).should('exist');
     cy.get(selector.disabledSwitcher).click();
-    // edit codemirror
+    // edit monaco
     cy.get(selector.monacoScroll).should('exist');
     cy.window().then(({ monaco }) => {
       if (monaco) {

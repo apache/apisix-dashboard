@@ -1,5 +1,4 @@
 {
-  "codeMirror": ".CodeMirror",
   "username": "#username",
   "languageSwitcher": ".ant-space-align-center",
   "dropdown": ".rc-virtual-list",

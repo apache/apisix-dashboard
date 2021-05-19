@@ -34,7 +34,6 @@ context('Create and Delete Service ', () => {
     selectDropdown: '.ant-select-dropdown',
     selectJSON: '.ant-select-dropdown [label=JSON]',
     drawerFooter: '.ant-drawer-footer',
-    codemirrorScroll: '.CodeMirror-scroll',
     notification: '.ant-notification-notice-message',
     nameSelector: '[title=Name]',
   };

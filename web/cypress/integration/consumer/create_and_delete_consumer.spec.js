@@ -25,11 +25,10 @@ context('Create and Delete Consumer', () => {
     pluginCard: '.ant-card',
     drawer: '.ant-drawer-content',
     disabledSwitcher: '#disable',
-    codeMirror: '.CodeMirror',
     notification: '.ant-notification-notice-message',
     nameSelector: '[title=Name]',
     serviceSelector: '[title=test_service]',
-    codemirrorScroll: '.CodeMirror-scroll',
+    monacoScroll: ".monaco-scrollable-element",
   }
 
   const data = {
