@@ -26,7 +26,7 @@ context('Create and delete consumer with limit-conn plugin form', () => {
     drawer: '.ant-drawer-content',
     dropdown: '.rc-virtual-list',
     disabledSwitcher: '#disable',
-    codeMirror: '.CodeMirror',
+    monacoScroll: ".monaco-scrollable-element",
     notification: '.ant-notification-notice-message',
     selectDropdown: '.ant-select-dropdown',
     conn: '#conn',
@@ -70,17 +70,15 @@ context('Create and delete consumer with limit-conn plugin form', () => {
     });
     cy.focused(selector.drawer).should('exist');
     cy.get(selector.disabledSwitcher).click();
-    // edit codemirror
-    cy.get(selector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+    // wait loading
+    cy.wait(5000);
+    cy.get(selector.monacoScroll).should('exist');
+    cy.window().then(({ monacoEditor }) => {
+      if (monacoEditor) {
+        monacoEditor.setValue(JSON.stringify({ key: 'test' }));
+      }
+      cy.contains('button', 'Submit').click();
+    });
 
     cy.contains(selector.pluginCard, 'limit-conn').within(() => {
       cy.contains('Enable').click({

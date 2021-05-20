@@ -26,7 +26,7 @@ context('Create and Delete Consumer', () => {
     drawer: '.ant-drawer-content',
     dropdown: '.rc-virtual-list',
     disabledSwitcher: '#disable',
-    codeMirror: '.CodeMirror',
+    monacoScroll: '.monaco-scrollable-element',
     notification: '.ant-notification-notice-message',
     rate: '#rate',
     burst: '#burst',
@@ -62,17 +62,15 @@ context('Create and Delete Consumer', () => {
     });
     cy.focused(selector.drawer).should('exist');
     cy.get(selector.disabledSwitcher).click().should('have.class', 'ant-switch-checked');
-    // edit codemirror
-    cy.get(selector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+    // wait loading
+    cy.wait(5000);
+    cy.get(selector.monacoScroll).should('exist');
+    cy.window().then(({ monacoEditor }) => {
+      if (monacoEditor) {
+        monacoEditor.setValue(JSON.stringify({ key: 'test' }));
+      }
+      cy.contains('button', 'Submit').click();
+    });
 
     cy.contains(selector.pluginCard, 'limit-req').within(() => {
       cy.contains('Enable').click({

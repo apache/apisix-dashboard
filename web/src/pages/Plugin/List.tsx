@@ -125,11 +125,11 @@ const Page: React.FC = () => {
       onClose={() => {
         setVisible(false);
       }}
-      onChange={({ formData, codemirrorData, shouldDelete }) => {
+      onChange={({ formData, monacoData, shouldDelete }) => {
         const disable = !formData.disable;
         let plugins = {
           ...initialData,
-          [name]: { ...codemirrorData, disable },
+          [name]: { ...monacoData, disable },
         };
         if (shouldDelete === true) {
           plugins = omit(plugins, name);

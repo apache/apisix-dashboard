@@ -25,11 +25,10 @@ context('Create and Delete Consumer', () => {
     pluginCard: '.ant-card',
     drawer: '.ant-drawer-content',
     disabledSwitcher: '#disable',
-    codeMirror: '.CodeMirror',
     notification: '.ant-notification-notice-message',
     nameSelector: '[title=Name]',
     serviceSelector: '[title=test_service]',
-    codemirrorScroll: '.CodeMirror-scroll',
+    monacoScroll: ".monaco-scrollable-element",
   }
 
   const data = {
@@ -65,17 +64,15 @@ context('Create and Delete Consumer', () => {
     });
     cy.focused(selector.drawer).should('exist');
     cy.get(selector.disabledSwitcher).click();
-    // edit codemirror
-    cy.get(selector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+    // wait loading
+    cy.wait(5000);
+    cy.get(selector.monacoScroll).should('exist');
+    cy.window().then(({ monacoEditor }) => {
+      if (monacoEditor) {
+        monacoEditor.setValue(JSON.stringify({ key: 'test' }));
+      }
+      cy.contains('button', 'Submit').click();
+    });
     cy.contains('button', 'Next').click();
     cy.contains('button', 'Submit').click();
     cy.get(selector.notification).should('contain', data.createConsumerSuccess);
@@ -89,7 +86,7 @@ context('Create and Delete Consumer', () => {
     cy.contains(data.consumerName).siblings().contains('View').click();
     cy.get(selector.drawer).should('be.visible');
 
-    cy.get(selector.codemirrorScroll).within(() => {
+    cy.get(selector.monacoScroll).within(() => {
       cy.contains('plugins').should('exist');
       cy.contains(data.consumerName).should('exist');
     });
@@ -116,17 +113,15 @@ context('Create and Delete Consumer', () => {
         force: true,
       });
     });
-    // edit codeMirror
-    cy.get(selector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key_not_exst: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+    // wait loading
+    cy.wait(5000);
+    cy.get(selector.monacoScroll).should('exist');
+    cy.window().then(({ monacoEditor }) => {
+      if (monacoEditor) {
+        monacoEditor.setValue(JSON.stringify({ key_not_exst: 'test' }));
+      }
+      cy.contains('button', 'Submit').click();
+    });
     cy.get(selector.notification).should('contain', data.pluginErrorAlert);
   });
 });

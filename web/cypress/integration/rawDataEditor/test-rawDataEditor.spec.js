@@ -54,10 +54,11 @@ context('Test RawDataEditor', () => {
       }
 
       const dataSetItem = dataset[item];
-
-      cy.window().then(({ codemirror }) => {
-        if (codemirror) {
-          codemirror.setValue(JSON.stringify(dataSetItem));
+      // wait loading
+      cy.wait(5000);
+      cy.window().then(({ monacoEditor }) => {
+        if (monacoEditor) {
+          monacoEditor.setValue(JSON.stringify(dataSetItem));
         }
         cy.get(selector.drawer).should('exist');
         cy.get(selector.drawer, { timeout }).within(() => {
@@ -85,12 +86,14 @@ context('Test RawDataEditor', () => {
           .click();
       }
 
-      cy.window().then(({ codemirror }) => {
-        if (codemirror) {
+      // wait loading
+      cy.wait(5000);
+      cy.window().then(({ monacoEditor }) => {
+        if (monacoEditor) {
           if (item === 'Consumer') {
-            codemirror.setValue(JSON.stringify({ ...dataSetItem, desc: 'newDesc' }));
+            monacoEditor.setValue(JSON.stringify({ ...dataSetItem, desc: 'newDesc' }));
           } else {
-            codemirror.setValue(JSON.stringify({ ...dataSetItem, name: 'newName' }));
+            monacoEditor.setValue(JSON.stringify({ ...dataSetItem, name: 'newName' }));
           }
         }
         cy.get(selector.drawer).should('exist');

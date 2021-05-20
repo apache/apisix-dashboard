@@ -23,7 +23,7 @@ context('Create Configure and Delete PluginTemplate', () => {
     empty: '.ant-empty-normal',
     description: '#desc',
     drawer: '.ant-drawer-content',
-    codeMirrorMode: "[data-cy='code-mirror-mode']",
+    monacoMode: "[data-cy='monaco-mode']",
     selectDropdown: '.ant-select-dropdown',
     selectJSON: '.ant-select-dropdown [label=JSON]',
     disabledSwitcher: '#disable',
@@ -66,7 +66,7 @@ context('Create Configure and Delete PluginTemplate', () => {
     });
     cy.focused(selector.drawer).should('exist');
 
-    cy.get(selector.codeMirrorMode).click();
+    cy.get(selector.monacoMode).click();
     cy.get(selector.selectDropdown).should('be.visible');
     cy.get(selector.selectJSON).click();
     cy.get(selector.disabledSwitcher).click({

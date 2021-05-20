@@ -26,7 +26,7 @@ context('Create and delete consumer with api-breaker plugin form', () => {
     pluginCard: '.ant-card',
     drawer: '.ant-drawer-content',
     disabledSwitcher: '#disable',
-    codeMirror: '.CodeMirror',
+    monacoScroll: ".monaco-scrollable-element",
     notification: '.ant-notification-notice-message',
   }
 
@@ -60,17 +60,15 @@ context('Create and delete consumer with api-breaker plugin form', () => {
     });
     cy.focused(selector.drawer).should('exist');
     cy.get(selector.disabledSwitcher).click();
-    // edit codemirror
-    cy.get(selector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+    // wait loading
+    cy.wait(5000);
+    cy.get(selector.monacoScroll).should('exist');
+    cy.window().then(({ monacoEditor }) => {
+      if (monacoEditor) {
+        monacoEditor.setValue(JSON.stringify({ key: 'test' }));
+      }
+      cy.contains('button', 'Submit').click();
+    });
 
     cy.contains(selector.pluginCard, 'api-breaker').within(() => {
       cy.contains('Enable').click({

@@ -42,12 +42,9 @@ context('Enable and Delete Plugin List', () => {
 
     cy.get(this.domSelector.refresh).click();
     cy.contains('Configure').click();
-    cy.get(this.domSelector.codemirror)
-      .first()
-      .then(() => {
-        cy.get(this.domSelector.disabledSwitcher).click();
-        cy.contains('button', 'Submit').click();
-      });
+    cy.get(this.domSelector.monacoScroll).should('exist');
+    cy.get(this.domSelector.disabledSwitcher).click();
+    cy.contains('button', 'Submit').click();
   });
 
   it('should delete plugin list', function () {

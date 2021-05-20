@@ -250,10 +250,10 @@ const PluginPage: React.FC<Props> = ({
       onClose={() => {
         setName(NEVER_EXIST_PLUGIN_FLAG);
       }}
-      onChange={({ codemirrorData, formData, shouldDelete }) => {
+      onChange={({ monacoData, formData, shouldDelete }) => {
         let newPlugins = {
           ...initialData,
-          [name]: { ...codemirrorData, disable: !formData.disable },
+          [name]: { ...monacoData, disable: !formData.disable },
         };
         if (shouldDelete === true) {
           newPlugins = omit(newPlugins, name);

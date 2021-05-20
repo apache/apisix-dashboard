@@ -28,7 +28,7 @@ context('Create and Delete Upstream', () => {
     "nameSelector": "[title=Name]",
     "upstreamType": ".ant-select-item-option-content",
     "drawer": ".ant-drawer-content",
-    "codemirrorScroll": ".CodeMirror-scroll",
+    "monacoScroll": ".monaco-scrollable-element",
     "description": "#desc",
   }
 
@@ -76,7 +76,7 @@ context('Create and Delete Upstream', () => {
     cy.contains(data.upstreamName).siblings().contains('View').click();
     cy.get('.ant-drawer-content').should('be.visible');
 
-    cy.get('.CodeMirror-scroll').within(() => {
+    cy.get(selector.monacoScroll).within(() => {
       cy.contains('nodes').should("exist");
       cy.contains('roundrobin').should('exist');
       cy.contains(data.upstreamName).should('exist');
@@ -140,7 +140,7 @@ context('Create and Delete Upstream', () => {
     cy.contains(data.upstreamName).siblings().contains('View').click();
     cy.get(selector.drawer).should('be.visible');
 
-    cy.get(selector.codemirrorScroll).within(() => {
+    cy.get(selector.monacoScroll).within(() => {
       cy.contains('nodes').should("exist");
       cy.contains('chash').should('exist');
       cy.contains(data.upstreamName).should('exist');

@@ -29,11 +29,11 @@ context('Create and Delete Service ', () => {
     disabledSwitcher: '#disable',
     drawer: '.ant-drawer-content',
     checkedSwitcher: '.ant-switch-checked',
-    codeMirrorMode: "[data-cy='code-mirror-mode']",
+    monacoScroll: ".monaco-scrollable-element",
+    monacoMode: "[data-cy='monaco-mode']",
     selectDropdown: '.ant-select-dropdown',
     selectJSON: '.ant-select-dropdown [label=JSON]',
     drawerFooter: '.ant-drawer-footer',
-    codemirrorScroll: '.CodeMirror-scroll',
     notification: '.ant-notification-notice-message',
     nameSelector: '[title=Name]',
   };
@@ -84,7 +84,7 @@ context('Create and Delete Service ', () => {
         cy.get(selector.checkedSwitcher).should('exist');
       });
 
-    cy.get(selector.codeMirrorMode).click();
+    cy.get(selector.monacoMode).click();
     cy.get(selector.selectDropdown).should('be.visible');
     cy.get(selector.selectJSON).click();
     cy.contains('button', 'Submit').click();
@@ -122,7 +122,7 @@ context('Create and Delete Service ', () => {
     cy.contains(data.serviceName).siblings().contains('View').click();
     cy.get(selector.drawer).should('be.visible');
 
-    cy.get(selector.codemirrorScroll).within(() => {
+    cy.get(selector.monacoScroll).within(() => {
       cy.contains('upstream').should('exist');
       cy.contains(data.serviceName).should('exist');
     });
@@ -152,7 +152,7 @@ context('Create and Delete Service ', () => {
     cy.contains(data.serviceName2).siblings().contains('View').click();
     cy.get(selector.drawer).should('be.visible');
 
-    cy.get(selector.codemirrorScroll).within(() => {
+    cy.get(selector.monacoScroll).within(() => {
       cy.contains('upstream').should('exist');
       cy.contains(data.serviceName2).should('exist');
     });
