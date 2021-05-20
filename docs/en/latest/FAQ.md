@@ -23,7 +23,7 @@ title: FAQ
 
 ### 1. Vue.js version of the Dashboard
 
-If you need a Vue.js build of the Apache APISIX Dashboard 1.0, use the [master-vue branch](https://github.com/apache/apisix-dashboard/tree/master-vue).
+If you need a `Vue.js` build of the Apache APISIX Dashboard 1.0, use the [master-vue branch](https://github.com/apache/apisix-dashboard/tree/master-vue).
 
 ### What are the differences between Dashboard version 2.0 and version 1.5?
 
