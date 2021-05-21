@@ -396,6 +396,7 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                       <Form.Item>
                         <Editor
                           value={body}
+                          language={bodyMode.toLowerCase()}
                           onChange={(text)=>{
                             if (text){
                               setBody(text);
