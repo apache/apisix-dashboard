@@ -60,8 +60,7 @@ web/coverage
 web/cypress/screenshots/
 web/cypress/videos/
 web/cypress/downloads/
-web/cypress/screenshots/
-web/cypress/videos/
+web/public/monaco-editor/
 
 # vim
 *.swp
