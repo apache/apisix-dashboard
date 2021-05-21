@@ -158,7 +158,7 @@ type HealthChecker struct {
 
 type UpstreamDef struct {
 	Nodes         interface{}            `json:"nodes,omitempty"`
-	Retries       *int                   `json:"retries,omitempty"`
+	Retries       int                    `json:"retries,omitempty"`
 	Timeout       interface{}            `json:"timeout,omitempty"`
 	Type          string                 `json:"type,omitempty"`
 	Checks        interface{}            `json:"checks,omitempty"`
