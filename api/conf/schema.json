@@ -2723,7 +2723,7 @@
 								"type": "integer"
 							},
 							"vars": {
-								"item": {
+								"items": {
 									"type": "array"
 								},
 								"maxItems": 20,
@@ -2745,7 +2745,7 @@
 								"type": "integer"
 							},
 							"vars": {
-								"item": {
+								"items": {
 									"type": "array"
 								},
 								"maxItems": 20,

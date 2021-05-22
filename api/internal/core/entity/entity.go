@@ -156,23 +156,28 @@ type HealthChecker struct {
 	Passive Passive `json:"passive,omitempty"`
 }
 
+type UpstreamTLS struct {
+	ClientCert string `json:"client_cert,omitempty"`
+	ClientKey  string `json:"client_key,omitempty"`
+}
+
 type UpstreamDef struct {
-	Nodes         interface{}            `json:"nodes,omitempty"`
-	Retries       int                    `json:"retries,omitempty"`
-	Timeout       interface{}            `json:"timeout,omitempty"`
-	Type          string                 `json:"type,omitempty"`
-	Checks        interface{}            `json:"checks,omitempty"`
-	HashOn        string                 `json:"hash_on,omitempty"`
-	Key           string                 `json:"key,omitempty"`
-	Scheme        string                 `json:"scheme,omitempty"`
-	DiscoveryType string                 `json:"discovery_type,omitempty"`
-	PassHost      string                 `json:"pass_host,omitempty"`
-	UpstreamHost  string                 `json:"upstream_host,omitempty"`
-	Name          string                 `json:"name,omitempty"`
-	Desc          string                 `json:"desc,omitempty"`
-	ServiceName   string                 `json:"service_name,omitempty"`
-	Labels        map[string]string      `json:"labels,omitempty"`
-	TLS           map[string]interface{} `json:"tls,omitempty"`
+	Nodes         interface{}       `json:"nodes,omitempty"`
+	Retries       int               `json:"retries,omitempty"`
+	Timeout       interface{}       `json:"timeout,omitempty"`
+	Type          string            `json:"type,omitempty"`
+	Checks        interface{}       `json:"checks,omitempty"`
+	HashOn        string            `json:"hash_on,omitempty"`
+	Key           string            `json:"key,omitempty"`
+	Scheme        string            `json:"scheme,omitempty"`
+	DiscoveryType string            `json:"discovery_type,omitempty"`
+	PassHost      string            `json:"pass_host,omitempty"`
+	UpstreamHost  string            `json:"upstream_host,omitempty"`
+	Name          string            `json:"name,omitempty"`
+	Desc          string            `json:"desc,omitempty"`
+	ServiceName   string            `json:"service_name,omitempty"`
+	Labels        map[string]string `json:"labels,omitempty"`
+	TLS           *UpstreamTLS      `json:"tls,omitempty"`
 }
 
 // swagger:model Upstream
@@ -206,21 +211,26 @@ type Consumer struct {
 	UpdateTime int64                  `json:"update_time,omitempty"`
 }
 
+type SSLClient struct {
+	CA    string `json:"ca,omitempty"`
+	Depth int    `json:"depth,omitempty"`
+}
+
 // swagger:model SSL
 type SSL struct {
 	BaseInfo
-	Cert          string                 `json:"cert,omitempty"`
-	Key           string                 `json:"key,omitempty"`
-	Sni           string                 `json:"sni,omitempty"`
-	Snis          []string               `json:"snis,omitempty"`
-	Certs         []string               `json:"certs,omitempty"`
-	Keys          []string               `json:"keys,omitempty"`
-	ExpTime       int64                  `json:"exptime,omitempty"`
-	Status        int                    `json:"status"`
-	ValidityStart int64                  `json:"validity_start,omitempty"`
-	ValidityEnd   int64                  `json:"validity_end,omitempty"`
-	Labels        map[string]string      `json:"labels,omitempty"`
-	Client        map[string]interface{} `json:"client,omitempty"`
+	Cert          string            `json:"cert,omitempty"`
+	Key           string            `json:"key,omitempty"`
+	Sni           string            `json:"sni,omitempty"`
+	Snis          []string          `json:"snis,omitempty"`
+	Certs         []string          `json:"certs,omitempty"`
+	Keys          []string          `json:"keys,omitempty"`
+	ExpTime       int64             `json:"exptime,omitempty"`
+	Status        int               `json:"status"`
+	ValidityStart int64             `json:"validity_start,omitempty"`
+	ValidityEnd   int64             `json:"validity_end,omitempty"`
+	Labels        map[string]string `json:"labels,omitempty"`
+	Client        *SSLClient        `json:"client,omitempty"`
 }
 
 // swagger:model Service
