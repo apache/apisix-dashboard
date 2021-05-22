@@ -164,7 +164,6 @@ export const DEBUG_BODY_TYPE_SUPPORTED: RouteModule.DebugBodyType[] = [
   'raw input',
 ];
 
-// Note: codemirror mode: apl for text; javascript for json(need to format); xml for xml;
 export const DEBUG_BODY_MODE_SUPPORTED = [
   { name: 'JSON', mode: 'json' },
   { name: 'TEXT', mode: 'text' },
@@ -175,7 +174,7 @@ export const DEBUG_RESPONSE_BODY_MODE_SUPPORTED = [
   { name: 'JSON', mode: 'json' },
   { name: 'XML', mode: 'xml' },
   { name: 'HTML', mode: 'html' },
-  { name: 'TEXT', mode: 'apl' },
+  { name: 'TEXT', mode: 'text' },
 ];
 
 export const EXPORT_FILE_MIME_TYPE_SUPPORTED = ['application/json', 'application/x-yaml'];
