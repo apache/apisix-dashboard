@@ -724,6 +724,22 @@
 							"required": ["connect", "read", "send"],
 							"type": "object"
 						},
+						"tls": {
+							"properties": {
+								"client_cert": {
+									"maxLength": 65536,
+									"minLength": 128,
+									"type": "string"
+								},
+								"client_key": {
+									"maxLength": 65536,
+									"minLength": 128,
+									"type": "string"
+								}
+							},
+							"required": ["client_cert", "client_key"],
+							"type": "object"
+						},
 						"type": {
 							"description": "algorithms of load balancing",
 							"enum": ["chash", "ewma", "least_conn", "roundrobin"],
@@ -1149,6 +1165,22 @@
 							"required": ["connect", "read", "send"],
 							"type": "object"
 						},
+						"tls": {
+							"properties": {
+								"client_cert": {
+									"maxLength": 65536,
+									"minLength": 128,
+									"type": "string"
+								},
+								"client_key": {
+									"maxLength": 65536,
+									"minLength": 128,
+									"type": "string"
+								}
+							},
+							"required": ["client_cert", "client_key"],
+							"type": "object"
+						},
 						"type": {
 							"description": "algorithms of load balancing",
 							"enum": ["chash", "ewma", "least_conn", "roundrobin"],
@@ -1198,6 +1230,22 @@
 						"type": "string"
 					},
 					"type": "array"
+				},
+				"client": {
+					"properties": {
+						"ca": {
+							"maxLength": 65536,
+							"minLength": 128,
+							"type": "string"
+						},
+						"depth": {
+							"default": 1,
+							"minimum": 0,
+							"type": "integer"
+						}
+					},
+					"required": ["ca"],
+					"type": "object"
 				},
 				"create_time": {
 					"type": "integer"
@@ -1670,6 +1718,22 @@
 							"required": ["connect", "read", "send"],
 							"type": "object"
 						},
+						"tls": {
+							"properties": {
+								"client_cert": {
+									"maxLength": 65536,
+									"minLength": 128,
+									"type": "string"
+								},
+								"client_key": {
+									"maxLength": 65536,
+									"minLength": 128,
+									"type": "string"
+								}
+							},
+							"required": ["client_cert", "client_key"],
+							"type": "object"
+						},
 						"type": {
 							"description": "algorithms of load balancing",
 							"enum": ["chash", "ewma", "least_conn", "roundrobin"],
@@ -2023,6 +2087,22 @@
 					"required": ["connect", "read", "send"],
 					"type": "object"
 				},
+				"tls": {
+					"properties": {
+						"client_cert": {
+							"maxLength": 65536,
+							"minLength": 128,
+							"type": "string"
+						},
+						"client_key": {
+							"maxLength": 65536,
+							"minLength": 128,
+							"type": "string"
+						}
+					},
+					"required": ["client_cert", "client_key"],
+					"type": "object"
+				},
 				"type": {
 					"description": "algorithms of load balancing",
 					"enum": ["chash", "ewma", "least_conn", "roundrobin"],
@@ -2328,6 +2408,7 @@
 							"properties": {
 								"methods": {
 									"items": {
+										"description": "HTTP method",
 										"enum": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
 										"type": "string"
 									},
@@ -3073,6 +3154,11 @@
 						"default": "kafka logger",
 						"type": "string"
 					},
+					"producer_type": {
+						"default": "async",
+						"enum": ["async", "sync"],
+						"type": "string"
+					},
 					"retry_delay": {
 						"default": 1,
 						"minimum": 0,
@@ -3107,6 +3193,10 @@
 				"properties": {
 					"disable": {
 						"type": "boolean"
+					},
+					"header": {
+						"default": "apikey",
+						"type": "string"
 					}
 				},
 				"type": "object"
@@ -3197,6 +3287,9 @@
 								"policy": {
 									"enum": ["redis-cluster"]
 								},
+								"redis_cluster_name": {
+									"type": "string"
+								},
 								"redis_cluster_nodes": {
 									"items": {
 										"maxLength": 100,
@@ -3216,7 +3309,7 @@
 									"type": "integer"
 								}
 							},
-							"required": ["redis_cluster_nodes"]
+							"required": ["redis_cluster_name", "redis_cluster_nodes"]
 						}]
 					}
 				},
@@ -3439,6 +3532,10 @@
 				"properties": {
 					"disable": {
 						"type": "boolean"
+					},
+					"prefer_name": {
+						"default": false,
+						"type": "boolean"
 					}
 				},
 				"type": "object"
@@ -3483,7 +3580,7 @@
 					"cache_method": {
 						"default": ["GET", "HEAD"],
 						"items": {
-							"description": "http method",
+							"description": "HTTP method",
 							"enum": ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"],
 							"type": "string"
 						},
@@ -3590,14 +3687,30 @@
 				"oneOf": [{
 					"required": ["uri"]
 				}, {
+					"required": ["regex_uri"]
+				}, {
 					"required": ["http_to_https"]
 				}],
 				"properties": {
 					"disable": {
 						"type": "boolean"
 					},
+					"encode_uri": {
+						"default": false,
+						"type": "boolean"
+					},
 					"http_to_https": {
 						"type": "boolean"
+					},
+					"regex_uri": {
+						"description": "params for generating new uri that substitute from client uri, first param is regular expression, the second one is uri template",
+						"items": {
+							"description": "regex uri",
+							"type": "string"
+						},
+						"maxItems": 2,
+						"minItems": 2,
+						"type": "array"
 					},
 					"ret_code": {
 						"default": 302,
@@ -4066,11 +4179,6 @@
 							"additionalProperties": false,
 							"properties": {
 								"match": {
-									"default": [{
-										"vars": [
-											[0, ">", "server_port"]
-										]
-									}],
 									"items": {
 										"properties": {
 											"vars": {
@@ -4409,6 +4517,22 @@
 															}
 														},
 														"required": ["connect", "read", "send"],
+														"type": "object"
+													},
+													"tls": {
+														"properties": {
+															"client_cert": {
+																"maxLength": 65536,
+																"minLength": 128,
+																"type": "string"
+															},
+															"client_key": {
+																"maxLength": 65536,
+																"minLength": 128,
+																"type": "string"
+															}
+														},
+														"required": ["client_cert", "client_key"],
 														"type": "object"
 													},
 													"type": {
