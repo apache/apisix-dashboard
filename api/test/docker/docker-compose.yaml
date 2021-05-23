@@ -145,6 +145,7 @@ services:
     ports:
       - '9080:9080/tcp'
       - '9090:9090/tcp'
+      - '9091:9091/tcp'
       - '9443:9443/tcp'
     networks:
       apisix_dashboard_e2e:

@@ -46,7 +46,6 @@ This release mainly bugfix and improves test cases for `Manager API`.
 ### Feature
 
 - Feat: add the service page upstream select option [#1633](https://github.com/apache/apisix-dashboard/pull/1633)
-- Chore: using curl command instead of wget [#1836](https://github.com/apache/apisix-dashboard/pull/1836)
 - Change: improve the Duplicate Route feature [#1833](https://github.com/apache/apisix-dashboard/pull/1833)
 
 ### Bugfix
@@ -57,7 +56,7 @@ This release mainly bugfix and improves test cases for `Manager API`.
 - Fix: when create the upstream, some properties can still be edited on the preview page bug [#1828](https://github.com/apache/apisix-dashboard/pull/1828)
 - Fix: default cors plugin formdata validation error [#1855](https://github.com/apache/apisix-dashboard/pull/1855)
 - Fix: generate a uid when post a route without id [#1883](https://github.com/apache/apisix-dashboard/pull/1883)
-- Fix: route page Protable [#1887](https://github.com/apache/apisix-dashboard/pull/1887)
+- Fix: route page Portable [#1887](https://github.com/apache/apisix-dashboard/pull/1887)
 - Fix: turn off online debug [#1903](https://github.com/apache/apisix-dashboard/pull/1903)
 - Fix: invalid import issues [#1899](https://github.com/apache/apisix-dashboard/pull/1899)
 - Fix: efficient error handling in manager-api including graceful shutdown, self contained methods. [#1814](https://github.com/apache/apisix-dashboard/pull/1814)
