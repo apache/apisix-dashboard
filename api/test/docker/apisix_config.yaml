@@ -96,7 +96,12 @@ plugin_attr:
     service_name: APISIX
     service_instance_name: "APISIX Instance Name"
     endpoint_addr: http://172.16.238.50:12800
-
   server-info:
     report_interval: 60
     report_ttl: 3600
+  prometheus:
+    export_uri: /apisix/prometheus/metrics
+    enable_export_server: true
+    export_addr:
+      ip: "0.0.0.0"
+      port: 9091
