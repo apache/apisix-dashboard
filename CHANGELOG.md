@@ -42,11 +42,8 @@ This release mainly bugfix and improves test cases for `Manager API`.
 - Feat: support HTTPS for Manager API [#1824](https://github.com/apache/apisix-dashboard/pull/1824)
 - Feat: run manager-api as an OS agnostic service [#1667](https://github.com/apache/apisix-dashboard/pull/1667)
 - Feat: refactor Plugin Orchestration [#1813](https://github.com/apache/apisix-dashboard/pull/1813)
-
-### Feature
-
 - Feat: add the service page upstream select option [#1633](https://github.com/apache/apisix-dashboard/pull/1633)
-- Change: improve the Duplicate Route feature [#1833](https://github.com/apache/apisix-dashboard/pull/1833)
+- Feat: improve the Duplicate Route feature [#1833](https://github.com/apache/apisix-dashboard/pull/1833)
 
 ### Bugfix
 
