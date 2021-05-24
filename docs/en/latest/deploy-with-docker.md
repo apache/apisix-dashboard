@@ -52,7 +52,7 @@ $ docker build -t apisix-dashboard:$tag . --build-arg APISIX_DASHBOARD_VERSION=m
 
 1. Preparing configuration files
 
-Before starting the container, the configuration file `conf.yaml` needs to be prepared inside the **host** to override the default [configuration file](../api/conf/conf.yaml) inside the container.
+Before starting the container, the configuration file `conf.yaml` needs to be prepared inside the **host** to override the default [configuration file](https://github.com/apache/apisix-dashboard/blob/master/api/conf/conf.yaml) inside the container.
 
 Kindly note:
 
@@ -74,7 +74,7 @@ $ docker ps -a
 
 If the container `apisix-dashboard` is ok, visit `http://127.0.0.1:9000` to use the dashboard with GUI, where the default username and password are `admin`.
 
-4. Stop the Dashboard
+4. Stop
 
 ```sh
 $ docker stop apisix-dashboard
