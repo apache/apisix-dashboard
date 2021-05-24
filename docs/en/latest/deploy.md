@@ -57,7 +57,7 @@ $ make build
 
 When the build is complete, the results are stored in the root `output` directory.
 
-Note: `make build` will build `manger-api` and `web`, use the `make help` command to see more commands.
+Note: `make build` will build `manager-api` and `web`, use the `make help` command to see more commands.
 
 ## Launch
 
@@ -89,9 +89,36 @@ run:
 $ ./manager-api stop
 ```
 
+### Optional
+
+6. Running `manager-api` as an OS service.
+
+Without clubbing `manager-api` with external command such as `nohup` (in Unix systems), we also provide a long term solution for running the program as an **operating system managed background service**. The feature is cross-platform, os agnostic and works on well known Linux, Windows and Mac OS distributions.
+
+**Note:** The `manager-api` as a service is listed by the name `apisix-dashboard` under the OS's service manager.
+
+`manager-api` provides a list of sub commands to start and manage the lifecycle of the background service.
+
+```sh
+# start Apache APISIX Dashboard service
+$ ./manager-api start
+
+# re-install Apache APISIX Dashboard service
+$ ./manager-api install
+
+# inspect the status of Apache APISIX Dashboard service
+$ ./manager-api status
+
+# stop Apache APISIX Dashboard service. stop can be used with or without service
+$ ./manager-api stop
+
+# remove Apache APISIX Dashboard service
+$ ./manager-api remove
+```
+
 ## Working directory
 
-the `output` directory mention above is the default working directory.
+The `output` directory mention above is the default working directory.
 
 You can move the entire directory to any path you want, and use the `-p` to specify it as the working directory.
 
