@@ -35,7 +35,7 @@ import {
   Dropdown,
 } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined, BugOutlined, ExportOutlined, ImportOutlined, DownOutlined } from '@ant-design/icons';
+import { PlusOutlined, ExportOutlined, ImportOutlined, DownOutlined } from '@ant-design/icons';
 import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
 import moment from 'moment';
@@ -204,12 +204,6 @@ const Page: React.FC = () => {
           setUploadFileList([]);
           setShowImportModal(true);
         }
-      }, {
-        name: formatMessage({ id: 'page.route.onlineDebug' }),
-        icon: <BugOutlined />,
-        onClick: () => {
-          setDebugDrawVisible(true)
-        }
       }
     ]
 
@@ -332,6 +326,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.name' }),
       dataIndex: 'name',
+      fixed: 'left',
     },
     {
       title: formatMessage({ id: 'page.route.host' }),
@@ -493,6 +488,7 @@ const Page: React.FC = () => {
     {
       title: formatMessage({ id: 'component.global.operation' }),
       valueType: 'option',
+      fixed: 'right',
       hideInSearch: true,
       render: (_, record) => (
         <>
@@ -560,6 +556,7 @@ const Page: React.FC = () => {
         rowSelection={rowSelection}
         footer={() => <ListFooter />}
         tableAlertRender={false}
+        scroll={{ x: 1300 }}
       />
       <DebugDrawView
         visible={debugDrawVisible}

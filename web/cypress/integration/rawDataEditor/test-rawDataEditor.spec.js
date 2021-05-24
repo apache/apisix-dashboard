@@ -19,19 +19,29 @@
 context('Test RawDataEditor', () => {
   const timeout = 1000;
 
+  const selector = {
+    notificationClose: '.anticon-close',
+    tableBody: '.ant-table-tbody',
+    drawer: '.ant-drawer-content',
+    notification: '.ant-notification-notice-message',
+  };
+
+  const data = {
+    deleteRouteSuccess: 'Delete Route Successfully',
+    deleteServiceSuccess: 'Delete Service Successfully',
+    deletePluginSuccess: 'Delete Plugin Successfully',
+    deleteUpstreamSuccess: 'Delete Upstream Successfully',
+    deleteConsumerSuccess: 'Delete Consumer Successfully',
+  };
+
   beforeEach(() => {
     cy.login();
-
     cy.fixture('rawDataEditor-dataset.json').as('dataset');
-    cy.fixture('selector.json').as('domSelector');
-    cy.fixture('data.json').as('data');
   });
 
   it('should create and update with rawDataEditor', function () {
     const menuList = ['Route', 'Service', 'Upstream', 'Consumer'];
-    const publicData = this.data;
-    const dateset = this.dataset;
-    const domSelector = this.domSelector;
+    const dataset = this.dataset;
     menuList.forEach(function (item) {
       cy.visit('/');
       cy.contains(item).click();
@@ -43,25 +53,25 @@ context('Test RawDataEditor', () => {
         cy.contains('Raw Data Editor').should('be.visible').click();
       }
 
-      const data = dateset[item];
+      const dataSetItem = dataset[item];
 
       cy.window().then(({ codemirror }) => {
         if (codemirror) {
-          codemirror.setValue(JSON.stringify(data));
+          codemirror.setValue(JSON.stringify(dataSetItem));
         }
-        cy.get(domSelector.drawer).should('exist');
-        cy.get(domSelector.drawer, { timeout }).within(() => {
+        cy.get(selector.drawer).should('exist');
+        cy.get(selector.drawer, { timeout }).within(() => {
           cy.contains('Submit').click({
             force: true,
           });
-          cy.get(domSelector.drawer).should('not.exist');
+          cy.get(selector.drawer).should('not.exist');
         });
       });
 
       cy.reload();
       if (item === 'Route') {
         // update with editor
-        cy.contains(item === 'Consumer' ? data.username : data.name)
+        cy.contains(item === 'Consumer' ? dataSetItem.username : dataSetItem.name)
           .siblings()
           .contains('More')
           .click();
@@ -69,32 +79,32 @@ context('Test RawDataEditor', () => {
         cy.contains('View').should('be.visible').click({ force: true });
       } else {
         // update with editor
-        cy.contains(item === 'Consumer' ? data.username : data.name)
+        cy.contains(item === 'Consumer' ? dataSetItem.username : dataSetItem.name)
           .siblings()
           .contains('View')
           .click();
-      };
+      }
 
       cy.window().then(({ codemirror }) => {
         if (codemirror) {
           if (item === 'Consumer') {
-            codemirror.setValue(JSON.stringify({ ...data, desc: 'newDesc' }));
+            codemirror.setValue(JSON.stringify({ ...dataSetItem, desc: 'newDesc' }));
           } else {
-            codemirror.setValue(JSON.stringify({ ...data, name: 'newName' }));
+            codemirror.setValue(JSON.stringify({ ...dataSetItem, name: 'newName' }));
           }
         }
-        cy.get(domSelector.drawer).should('exist');
-        cy.get(domSelector.drawer, { timeout }).within(() => {
+        cy.get(selector.drawer).should('exist');
+        cy.get(selector.drawer, { timeout }).within(() => {
           cy.contains('Submit').click({
             force: true,
           });
-          cy.get(domSelector.drawer).should('not.exist');
+          cy.get(selector.drawer).should('not.exist');
         });
       });
 
       if (item === 'Route') {
         cy.reload();
-        cy.get(domSelector.tableBody).should('contain', item === 'Consumer' ? 'newDesc' : 'newName');
+        cy.get(selector.tableBody).should('contain', item === 'Consumer' ? 'newDesc' : 'newName');
 
         cy.contains(item === 'Consumer' ? 'newDesc' : 'newName')
           .siblings()
@@ -102,12 +112,14 @@ context('Test RawDataEditor', () => {
           .click();
 
         cy.contains('Delete').should('be.visible').click();
-        cy.get('.ant-modal-content').should('be.visible').within(() => {
-          cy.contains('OK').click();
-        });
+        cy.get('.ant-modal-content')
+          .should('be.visible')
+          .within(() => {
+            cy.contains('OK').click();
+          });
       } else {
         cy.reload();
-        cy.get(domSelector.tableBody).should('contain', item === 'Consumer' ? 'newDesc' : 'newName');
+        cy.get(selector.tableBody).should('contain', item === 'Consumer' ? 'newDesc' : 'newName');
 
         cy.contains(item === 'Consumer' ? 'newDesc' : 'newName')
           .siblings()
@@ -116,8 +128,8 @@ context('Test RawDataEditor', () => {
         cy.contains('button', 'Confirm').click();
       }
 
-      cy.get(domSelector.notification).should('contain', publicData[`delete${item}Success`]);
-      cy.get(domSelector.notificationClose).should('be.visible').click({
+      cy.get(selector.notification).should('contain', data[`delete${item}Success`]);
+      cy.get(selector.notificationClose).should('be.visible').click({
         force: true,
         multiple: true,
       });

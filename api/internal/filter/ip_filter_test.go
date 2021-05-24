@@ -17,6 +17,7 @@
 package filter
 
 import (
+	"net/http/httptest"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -55,4 +56,22 @@ func TestIPFilter_Handle(t *testing.T) {
 	})
 	w = performRequest(r, "GET", "/test")
 	assert.Equal(t, 200, w.Code)
+
+	// should forbidden
+	conf.AllowList = []string{"127.0.0.1"}
+	r = gin.New()
+	r.Use(IPFilter())
+	r.GET("/test", func(c *gin.Context) {})
+
+	req := httptest.NewRequest("GET", "/test", nil)
+	req.Header.Set("X-Forwarded-For", "127.0.0.1")
+	w = httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+	assert.Equal(t, 403, w.Code)
+
+	req = httptest.NewRequest("GET", "/test", nil)
+	req.Header.Set("X-Real-Ip", "127.0.0.1")
+	w = httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+	assert.Equal(t, 403, w.Code)
 }

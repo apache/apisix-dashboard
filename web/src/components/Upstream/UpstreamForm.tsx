@@ -83,6 +83,7 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
     const resetForm = (upstream_id: string) => {
       if (upstream_id === undefined) {
+        setReadonly(disabled);
         return
       }
 

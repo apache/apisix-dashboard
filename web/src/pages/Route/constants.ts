@@ -76,15 +76,6 @@ export const DEFAULT_STEP_3_DATA: RouteModule.Step3Data = {
   plugin_config_id: ""
 };
 
-export const INIT_CHART = {
-  offset: { x: 55.71, y: 21.69 },
-  scale: 0.329,
-  nodes: {},
-  links: {},
-  selected: {},
-  hovered: {},
-};
-
 export const AUTH_LIST = ['basic-auth', 'jwt-auth', 'key-auth'];
 
 export const HEADER_LIST = [

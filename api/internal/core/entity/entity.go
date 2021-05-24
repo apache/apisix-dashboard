@@ -156,6 +156,11 @@ type HealthChecker struct {
 	Passive Passive `json:"passive,omitempty"`
 }
 
+type UpstreamTLS struct {
+	ClientCert string `json:"client_cert,omitempty"`
+	ClientKey  string `json:"client_key,omitempty"`
+}
+
 type UpstreamDef struct {
 	Nodes         interface{}       `json:"nodes,omitempty"`
 	Retries       int               `json:"retries,omitempty"`
@@ -172,6 +177,7 @@ type UpstreamDef struct {
 	Desc          string            `json:"desc,omitempty"`
 	ServiceName   string            `json:"service_name,omitempty"`
 	Labels        map[string]string `json:"labels,omitempty"`
+	TLS           *UpstreamTLS      `json:"tls,omitempty"`
 }
 
 // swagger:model Upstream
@@ -205,6 +211,11 @@ type Consumer struct {
 	UpdateTime int64                  `json:"update_time,omitempty"`
 }
 
+type SSLClient struct {
+	CA    string `json:"ca,omitempty"`
+	Depth int    `json:"depth,omitempty"`
+}
+
 // swagger:model SSL
 type SSL struct {
 	BaseInfo
@@ -219,6 +230,7 @@ type SSL struct {
 	ValidityStart int64             `json:"validity_start,omitempty"`
 	ValidityEnd   int64             `json:"validity_end,omitempty"`
 	Labels        map[string]string `json:"labels,omitempty"`
+	Client        *SSLClient        `json:"client,omitempty"`
 }
 
 // swagger:model Service

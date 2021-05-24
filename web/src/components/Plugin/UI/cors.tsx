@@ -18,7 +18,7 @@ import React from 'react';
 import type { FormInstance } from 'antd/es/form';
 import { Button, Col, Form, Input, InputNumber, Row, Select, Switch } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { useIntl } from '@/.umi/plugin-locale/localeExports';
+import { useIntl } from 'umi';
 
 type Props = {
   form: FormInstance;
@@ -158,6 +158,7 @@ const Cors: React.FC<Props> = ({ form }) => {
                 <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
                   <Button
                     type="dashed"
+                    data-cy="add-allow_origins_by_regex"
                     onClick={() => {
                       add();
                     }}

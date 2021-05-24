@@ -25,7 +25,7 @@ title: FAQ
 
 If you need a Vue.js build of the Apache APISIX Dashboard 1.0, use the [master-vue branch](https://github.com/apache/apisix-dashboard/tree/master-vue).
 
-### 2. What are the differences between Dashboard version 2.0 and version 1.5?
+### What are the differences between Dashboard version 2.0 and version 1.5?
 
 The 2.0 version of the dashboard removed MySQL from [version 1.5](https://github.com/apache/apisix-dashboard/tree/backup-1.5-latest) and will operate directly on etcd.
 
@@ -71,6 +71,41 @@ $ swagger generate spec -o ./docs/en/latest/api/api.yaml --scan-models
 $ swagger-markdown -i ./docs/en/latest/api/api.yaml
 ```
 
-### 6. What is the default strategy when import a duplicate route?
+### 6. How to allow all IPs to access APISIX Dashboard
+
+1. Allow all IPv4 access
+
+By default, the IPv4 range of `127.0.0.0/24` is allowed to access `APISIX Dashboard`. If you want to allow all IPv4 access, then just configure `conf.allow_list` in the configuration file of `conf/conf.yaml` as follows:
+
+```yaml
+conf:
+  allow_list:
+    - 0.0.0.0/0
+```
+
+2. Allow all IPv6 access
+
+By default, the IPv6 range of `::1` is allowed to access `APISIX Dashboard`. If you want to allow all IPv6 access, then just configure `conf.allow_list` in the configuration file of `conf/conf.yaml` as follows:
+
+```yaml
+conf:
+  allow_list:
+    - ::/0
+```
+
+3. Allow all IP access
+
+If you want to allow all IPs to access `APISIX Dashboard`, you only need to do the following configuration in the configuration file of `conf/conf.yaml`:
+
+```yaml
+conf:
+  allow_list:
+```
+
+Restart `manager-api`, all IPs can access `APISIX Dashboard`.
+
+Note: You can use this method in development and test environment to allow all IPs to access your `APISIX Dashboard` instance, but it is not safe to use it in a production environment. In production environment, please only authorize specific IP addresses or address ranges to access your instance.
+
+### 7. What is the default strategy when import a duplicate route?
 
 Currently we reject import duplicate route, that is to say when you import a route which has the same attributes, all of the URI、Host、URIs、Host、RemoteAddrs、RemoteAddr、Priority、Vars and FilterFunc, as the existing route, you will get an error while importing a route from OAS3.0.
