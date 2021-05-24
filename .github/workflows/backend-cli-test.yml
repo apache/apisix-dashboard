@@ -10,6 +10,7 @@ on:
   pull_request:
     branches:
       - master
+      - release/2.6
     paths-ignore:
       - 'docs/**'
       - 'web/**'
