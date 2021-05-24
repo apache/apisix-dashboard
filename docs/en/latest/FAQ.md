@@ -105,3 +105,7 @@ conf:
 Restart `manager-api`, all IPs can access `APISIX Dashboard`.
 
 Note: You can use this method in development and test environment to allow all IPs to access your `APISIX Dashboard` instance, but it is not safe to use it in a production environment. In production environment, please only authorize specific IP addresses or address ranges to access your instance.
+
+### 7. What is the default strategy when import a duplicate route?
+
+Currently we reject import duplicate route, that is to say when you import a route which has the same attributes, all of the URI、Host、URIs、Host、RemoteAddrs、RemoteAddr、Priority、Vars and FilterFunc, as the existing route, you will get an error while importing a route from OAS3.0.
