@@ -70,3 +70,38 @@ $ swagger generate spec -o ./docs/en/latest/api/api.yaml --scan-models
 ```shell
 $ swagger-markdown -i ./docs/en/latest/api/api.yaml
 ```
+
+### 6. How to allow all IPs to access APISIX Dashboard
+
+1. Allow all IPv4 access
+
+By default, the IPv4 range of `127.0.0.0/24` is allowed to access `APISIX Dashboard`. If you want to allow all IPv4 access, then just configure `conf.allow_list` in the configuration file of `conf/conf.yaml` as follows:
+
+```yaml
+conf:
+  allow_list:
+    - 0.0.0.0/0
+```
+
+2. Allow all IPv6 access
+
+By default, the IPv6 range of `::1` is allowed to access `APISIX Dashboard`. If you want to allow all IPv6 access, then just configure `conf.allow_list` in the configuration file of `conf/conf.yaml` as follows:
+
+```yaml
+conf:
+  allow_list:
+    - ::/0
+```
+
+3. Allow all IP access
+
+If you want to allow all IPs to access `APISIX Dashboard`, you only need to do the following configuration in the configuration file of `conf/conf.yaml`:
+
+```yaml
+conf:
+  allow_list:
+```
+
+Restart `manager-api`, all IPs can access `APISIX Dashboard`.
+
+Note: You can use this method in development and test environment to allow all IPs to access your `APISIX Dashboard` instance, but it is not safe to use it in a production environment. In production environment, please only authorize specific IP addresses or address ranges to access your instance.
