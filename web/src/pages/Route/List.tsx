@@ -343,6 +343,7 @@ const Page: React.FC = () => {
     },
     {
       title: formatMessage({ id: 'page.route.path' }),
+      dataIndex: 'uri',
       render: (_, record) => {
         const list = record.uris || (record.uri && [record.uri]) || [];
 
