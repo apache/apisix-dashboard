@@ -220,6 +220,7 @@ context('Create and Delete Route', () => {
     cy.get(selector.codemirrorScroll).within(() => {
       cy.contains('upstream').should('exist');
       cy.contains(newName).should('exist');
+      cy.contains('vars').should('not.exist');
     });
   });
 
