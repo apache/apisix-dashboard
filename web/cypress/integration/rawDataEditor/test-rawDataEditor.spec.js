@@ -55,7 +55,7 @@ context('Test RawDataEditor', () => {
 
       const dataSetItem = dataset[item];
       // wait loading
-      cy.wait(5000);
+      cy.get(selector.monacoScroll,{ timeout:5000 }).should('exist');
       cy.window().then(({ monacoEditor }) => {
         if (monacoEditor) {
           monacoEditor.setValue(JSON.stringify(dataSetItem));
@@ -87,7 +87,7 @@ context('Test RawDataEditor', () => {
       }
 
       // wait loading
-      cy.wait(5000);
+      cy.get(selector.monacoScroll,{ timeout:5000 }).should('exist');
       cy.window().then(({ monacoEditor }) => {
         if (monacoEditor) {
           if (item === 'Consumer') {
