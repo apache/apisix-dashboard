@@ -35,7 +35,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
         rules={[
           {
             pattern: new RegExp(
-              /^\\*?[0-9a-zA-Z-._]+$/,
+              /^\*?[0-9a-zA-Z-._]+$/,
               'g',
             ),
             message: formatMessage({ id: 'component.upstream.fields.checks.active.host.scope' }),

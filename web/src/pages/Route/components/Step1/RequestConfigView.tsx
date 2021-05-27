@@ -58,7 +58,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                       rules={[
                         {
                           // NOTE: https://github.com/apache/apisix/blob/master/apisix/schema_def.lua#L40
-                          pattern: new RegExp(/^\\*?[0-9a-zA-Z-._]+$/, 'g'),
+                          pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g'),
                           message: formatMessage({
                             id: 'page.route.form.itemRulesPatternMessage.domain',
                           }),
@@ -128,12 +128,6 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                           required: true,
                           whitespace: true,
                           message: formatMessage({ id: "page.route.configuration.path.rules.required.description" }),
-                        },
-                        {
-                          pattern: new RegExp(/^\/[a-zA-Z0-9\-._~%!$&'()+,;=:@/]*\*?$/, 'g'),
-                          message: formatMessage({
-                            id: 'page.route.form.itemRulesPatternMessage.path',
-                          }),
                         },
                       ]}
                       noStyle

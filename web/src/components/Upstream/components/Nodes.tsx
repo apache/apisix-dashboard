@@ -49,11 +49,11 @@ const Component: React.FC<Props> = ({ readonly }) => {
                       },
                       {
                         pattern: new RegExp(
-                          /(^([1-9]?\d|1\d{2}|2[0-4]\d|25[0-5])(\.(25[0-5]|1\d{2}|2[0-4]\d|[1-9]?\d)){3}$|^(?![0-9.]+$)([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+){0,}$)/,
+                          /^\*?[0-9a-zA-Z-._]+$/,
                           'g',
                         ),
                         message: formatMessage({
-                          id: 'page.upstream.step.valid.domain.name.or.ip',
+                          id: 'page.route.form.itemRulesPatternMessage.domain',
                         })
                       },
                     ]}

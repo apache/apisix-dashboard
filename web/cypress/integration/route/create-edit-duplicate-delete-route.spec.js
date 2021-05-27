@@ -52,6 +52,9 @@ context('Create and Delete Route', () => {
     notificationCloseIcon: '.ant-notification-close-icon',
     notification: '.ant-notification-notice-message',
     addHost: '[data-cy=addHost]',
+    schemaErrorMessage: ".ant-form-item-explain.ant-form-item-explain-error",
+    advancedMatchingTable: ".ant-table-row.ant-table-row-level-0",
+    advancedMatchingTableOperation: ".ant-space"
   };
 
   const data = {
@@ -59,6 +62,8 @@ context('Create and Delete Route', () => {
     host1: '11.11.11.11',
     host2: '12.12.12.12',
     host3: '10.10.10.10',
+    host4: '@',
+    host5: '*1',
     port: '80',
     weight: 1,
     basicAuthPlugin: 'basic-auth',
@@ -101,7 +106,11 @@ context('Create and Delete Route', () => {
     cy.contains('Confirm').click();
 
     cy.contains('Next').click();
-    cy.get(selector.nodes_0_host).type(data.host2);
+    cy.get(selector.nodes_0_host).type(data.host4);
+    cy.get(selector.schemaErrorMessage).should('exist');
+    cy.get(selector.nodes_0_host).clear().type(data.host5);
+    cy.get(selector.schemaErrorMessage).should('not.exist');
+    cy.get(selector.nodes_0_host).clear().type(data.host2);
     cy.get(selector.nodes_0_port).type(data.port);
     cy.get(selector.nodes_0_weight).type(data.weight);
     cy.contains('Next').click();
@@ -174,6 +183,7 @@ context('Create and Delete Route', () => {
 
     cy.get(selector.codemirrorScroll).within(() => {
       cy.contains('upstream').should('exist');
+      cy.contains('vars').should('exist')
       cy.contains(name).should('exist');
     });
   });
@@ -190,6 +200,11 @@ context('Create and Delete Route', () => {
     cy.get('#status').should('have.class', 'ant-switch-checked');
     cy.get(selector.name).clear().type(newName);
     cy.get(selector.description).clear().type(data.description2);
+    cy.get(selector.advancedMatchingTable).should('exist');
+    cy.get(selector.advancedMatchingTableOperation).within(() => {
+      cy.contains('Delete').click().should('not.exist');
+    });
+
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Next').click();
@@ -207,6 +222,7 @@ context('Create and Delete Route', () => {
     cy.get(selector.codemirrorScroll).within(() => {
       cy.contains('upstream').should('exist');
       cy.contains(newName).should('exist');
+      cy.contains('vars').should('not.exist');
     });
   });
 

@@ -74,10 +74,9 @@ export default {
   'page.route.form.itemLabel.redirectURI': '重定向路径',
   'page.route.form.itemExtraMessage.domain': '路由匹配的域名列表。支持泛域名，如：*.test.com',
   'page.route.form.itemRulesPatternMessage.domain':
-    '仅支持字母、数字和 * ，且 * 只能是在开头，支持单个 * ',
+    '仅支持字母、数字、-、_和 *，但 * 需要在开头位置。',
   'page.route.form.itemExtraMessage1.path':
     'HTTP 请求路径，如 /foo/index.html，支持请求路径前缀 /foo/*。/* 代表所有路径',
-  'page.route.form.itemRulesPatternMessage.path': '以 / 开头，且 * 只能在最后',
   'page.route.form.itemExtraMessage1.remoteAddrs':
     '客户端与服务器握手时 IP，即客户端 IP，例如：192.168.1.101，192.168.1.0/24，::1，fe80::1，fe80::1/64',
   'page.route.form.itemRulesPatternMessage.remoteAddrs':
@@ -113,7 +112,6 @@ export default {
 
   'page.route.form.itemLabel.domainNameOrIp': '域名/IP',
   'page.route.form.itemExtraMessage.domainNameOrIp': '使用域名时，默认解析本地：/etc/resolv.conf',
-  'page.route.form.itemRulesPatternMessage.domainNameOrIp': '仅支持字母、数字和 . ',
   'page.route.portNumber': '端口',
   'page.route.weight': '权重',
 

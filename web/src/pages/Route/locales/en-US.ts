@@ -75,10 +75,9 @@ export default {
   'page.route.form.itemExtraMessage.domain':
     'Domain Name or IP, support for generic Domain Name, for example: *.test.com',
   'page.route.form.itemRulesPatternMessage.domain':
-    'Only letters, numbers and * are supported. * can only be at the beginning, and only single * is supported',
+    'Only letters, numbers, -,_ and * are supported, but * needs to be at the beginning.',
   'page.route.form.itemExtraMessage1.path':
     'HTTP Request path, for example: /foo/index.html, supports request path prefix /foo/* ; /* represents all paths',
-  'page.route.form.itemRulesPatternMessage.path': 'Begin with / , and * can only at the end',
   'page.route.form.itemRulesPatternMessage.remoteAddrs':
     'Please enter a valid IP address, for example: 192.168.1.101, 192.168.1.0/24, ::1, fe80::1, fe80::1/64',
   'page.route.form.itemExtraMessage1.remoteAddrs':
@@ -98,8 +97,6 @@ export default {
   'page.route.form.itemLabel.domainNameOrIp': 'Domain Name/IP',
   'page.route.form.itemExtraMessage.domainNameOrIp':
     'When using Domain Name, it will analysis the local: /etc/resolv.conf by default',
-  'page.route.form.itemRulesPatternMessage.domainNameOrIp':
-    'Only letters, numbers and . are supported',
   'page.route.portNumber': 'Port Number',
   'page.route.weight': 'Weight',
   'page.route.radio.staySame': 'Stay The Same',
