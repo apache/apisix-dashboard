@@ -62,6 +62,8 @@ context('Create and Delete Route', () => {
     host1: '11.11.11.11',
     host2: '12.12.12.12',
     host3: '10.10.10.10',
+    host4: '@',
+    host5: '*1',
     port: '80',
     weight: 1,
     basicAuthPlugin: 'basic-auth',
@@ -104,9 +106,9 @@ context('Create and Delete Route', () => {
     cy.contains('Confirm').click();
 
     cy.contains('Next').click();
-    cy.get(selector.nodes_0_host).type('@');
+    cy.get(selector.nodes_0_host).type(data.host4);
     cy.get(selector.schemaErrorMessage).should('exist');
-    cy.get(selector.nodes_0_host).clear().type('*1');
+    cy.get(selector.nodes_0_host).clear().type(data.host5);
     cy.get(selector.schemaErrorMessage).should('not.exist');
     cy.get(selector.nodes_0_host).clear().type(data.host2);
     cy.get(selector.nodes_0_port).type(data.port);
