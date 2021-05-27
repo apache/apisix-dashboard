@@ -6401,6 +6401,11 @@ cypress-file-upload@^5.0.2:
   dependencies:
     mime "^2.5.0"
 
+cypress-wait-until@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.nlark.com/cypress-wait-until/download/cypress-wait-until-1.7.1.tgz#3789cd18affdbb848e3cfc1f918353c7ba1de6f8"
+  integrity sha1-N4nNGK/9u4SOPPwfkYNTx7od5vg=
+
 cypress@^6.3.0:
   version "6.8.0"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-6.8.0.tgz#8338f39212a8f71e91ff8c017a1b6e22d823d8c1"

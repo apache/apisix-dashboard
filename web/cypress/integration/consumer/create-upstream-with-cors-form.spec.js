@@ -68,11 +68,10 @@ context('Create and Delete Consumer', () => {
     cy.focused(selector.drawer).should('exist');
     cy.get(selector.disabledSwitcher).click().should('have.class', 'ant-switch-checked');
     // wait loading
-    cy.get(selector.monacoScroll,{ timeout:5000 }).should('exist');
+    cy.get(selector.monacoScroll,{ timeout:10000 }).should('exist');
+    cy.waitUntil(() => cy.window().then(win => win.monacoEditor !== null));
     cy.window().then(({ monacoEditor }) => {
-      if (monacoEditor) {
-        monacoEditor.setValue(JSON.stringify({ key: 'test' }));
-      }
+      monacoEditor.setValue(JSON.stringify({ key: 'test' }));
       cy.contains('button', 'Submit').click();
     });
 

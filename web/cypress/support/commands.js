@@ -18,6 +18,7 @@
 import defaultSettings from '../../config/defaultSettings';
 import 'cypress-file-upload';
 import '@4tw/cypress-drag-drop';
+import 'cypress-wait-until';
 
 Cypress.Commands.add('login', () => {
   const { SERVE_ENV = 'dev' } = Cypress.env();
