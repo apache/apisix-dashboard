@@ -96,7 +96,8 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           }
         });
         // wait loading
-        cy.wait(5000);
+        cy.get(selector.monacoScroll,{ timeout:10000 }).should('exist');
+        cy.waitUntil(() => cy.window().then(win => win.monacoEditor !== null));
         cy.window().then(({ monacoEditor }) => {
           if (monacoEditor) {
             monacoEditor.setValue(JSON.stringify(data));

@@ -70,7 +70,7 @@ context('Edit Service with not select Upstream', () => {
     cy.get(selector.nameSearch).type(data.serviceName);
     cy.contains('Search').click();
     cy.contains(data.serviceName).siblings().contains('Configure').click();
-    cy.wait(5000);
+    cy.wait(500);
     cy.get(selector.nodes_0_host).should('not.be.disabled').clear().type(data.ip2);
     cy.get(selector.nodes_0_port).type(data.port);
     cy.get(selector.nodes_0_weight).type(data.weight);
