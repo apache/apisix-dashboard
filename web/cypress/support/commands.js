@@ -95,13 +95,10 @@ Cypress.Commands.add('configurePlugins', (cases) => {
             cy.get(domSelector.selectJSON).click();
           }
         });
-        // wait loading
-        cy.get(selector.monacoScroll,{ timeout:10000 }).should('exist');
-        cy.waitUntil(() => cy.window().then(win => win.monacoEditor !== null));
-        cy.window().then(({ monacoEditor }) => {
-          if (monacoEditor) {
-            monacoEditor.setValue(JSON.stringify(data));
-          }
+        // edit monaco
+        cy.window().then((window) => {
+          cy.waitUntil(() => window.monacoEditor)
+            .then(() => window.monacoEditor.setValue(JSON.stringify(data)))
 
           cy.get(domSelector.drawer, { timeout }).within(() => {
             cy.contains('Submit').click({

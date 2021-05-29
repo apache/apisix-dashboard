@@ -26,7 +26,6 @@ context('Create and delete consumer with api-breaker plugin form', () => {
     pluginCard: '.ant-card',
     drawer: '.ant-drawer-content',
     disabledSwitcher: '#disable',
-    monacoScroll: ".monaco-scrollable-element",
     notification: '.ant-notification-notice-message',
   }
 
@@ -60,11 +59,11 @@ context('Create and delete consumer with api-breaker plugin form', () => {
     });
     cy.focused(selector.drawer).should('exist');
     cy.get(selector.disabledSwitcher).click();
-    // wait loading
-    cy.get(selector.monacoScroll,{ timeout:10000 }).should('exist');
-    cy.waitUntil(() => cy.window().then(win => win.monacoEditor !== null));
-    cy.window().then(({ monacoEditor }) => {
-      monacoEditor.setValue(JSON.stringify({ key: 'test' }));
+
+    // edit monaco
+    cy.window().then((window) => {
+      cy.waitUntil(() => window.monacoEditor)
+        .then(() => window.monacoEditor.setValue(JSON.stringify({ key: 'test' })));
       cy.contains('button', 'Submit').click();
     });
 

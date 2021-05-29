@@ -64,11 +64,11 @@ context('Create and Delete Consumer', () => {
     });
     cy.focused(selector.drawer).should('exist');
     cy.get(selector.disabledSwitcher).click();
-    // wait loading
-    cy.get(selector.monacoScroll,{ timeout:10000 }).should('exist');
-    cy.waitUntil(() => cy.window().then(win => win.monacoEditor !== null));
-    cy.window().then(({ monacoEditor }) => {
-      monacoEditor.setValue(JSON.stringify({ key: 'test' }));
+
+    // edit monaco
+    cy.window().then((window) => {
+      cy.waitUntil(() => window.monacoEditor)
+        .then(() => window.monacoEditor.setValue(JSON.stringify({ key: 'test' })));
       cy.contains('button', 'Submit').click();
     });
     cy.contains('button', 'Next').click();
@@ -111,11 +111,11 @@ context('Create and Delete Consumer', () => {
         force: true,
       });
     });
-    // wait loading
-    cy.get(selector.monacoScroll,{ timeout:10000 }).should('exist');
-    cy.waitUntil(() => cy.window().then(win => win.monacoEditor !== null));
-    cy.window().then(({ monacoEditor }) => {
-      monacoEditor.setValue(JSON.stringify({ key_not_exst: 'test' }));
+
+    // edit monaco
+    cy.window().then((window) => {
+      cy.waitUntil(() => window.monacoEditor)
+        .then(() => window.monacoEditor.setValue(JSON.stringify({ key_not_exst: 'test' })));
       cy.contains('button', 'Submit').click();
     });
     cy.get(selector.notification).should('contain', data.pluginErrorAlert);

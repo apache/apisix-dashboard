@@ -54,11 +54,11 @@ context('Test RawDataEditor', () => {
       }
 
       const dataSetItem = dataset[item];
-      // wait loading
-      cy.get(selector.monacoScroll,{ timeout:10000 }).should('exist');
-      cy.waitUntil(() => cy.window().then(win => win.monacoEditor !== null));
-      cy.window().then(({ monacoEditor }) => {
-        monacoEditor.setValue(JSON.stringify(dataSetItem));
+
+      // edit monaco
+      cy.window().then((window) => {
+        cy.waitUntil(() => window.monacoEditor)
+          .then(() => window.monacoEditor.setValue(JSON.stringify(dataSetItem)));
         cy.get(selector.drawer).should('exist');
         cy.get(selector.drawer, { timeout }).within(() => {
           cy.contains('Submit').click({
@@ -85,15 +85,16 @@ context('Test RawDataEditor', () => {
           .click();
       }
 
-      // wait loading
-      cy.get(selector.monacoScroll,{ timeout:10000 }).should('exist');
-      cy.waitUntil(() => cy.window().then(win => win.monacoEditor !== null));
-      cy.window().then(({ monacoEditor }) => {
-        if (item === 'Consumer') {
-          monacoEditor.setValue(JSON.stringify({ ...dataSetItem, desc: 'newDesc' }));
-        } else {
-          monacoEditor.setValue(JSON.stringify({ ...dataSetItem, name: 'newName' }));
-        }
+      // edit monaco
+      cy.window().then((window) => {
+        cy.waitUntil(() => window.monacoEditor)
+          .then(() => {
+            if (item === 'Consumer') {
+              window.monacoEditor.setValue(JSON.stringify({ ...dataSetItem, desc: 'newDesc' }));
+            } else {
+              window.monacoEditor.setValue(JSON.stringify({ ...dataSetItem, name: 'newName' }));
+            }
+          });
         cy.get(selector.drawer).should('exist');
         cy.get(selector.drawer, { timeout }).within(() => {
           cy.contains('Submit').click({
