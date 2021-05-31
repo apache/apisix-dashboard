@@ -266,7 +266,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
                 </Col>
                 <Col span={5}>
                   <Form.Item name="ret_code" rules={[{ required: true }]}>
-                    <Select disabled={disabled}>
+                    <Select disabled={disabled} data-cy='redirect_code'>
                       <Select.Option value={301}>
                         {formatMessage({ id: 'page.route.select.option.redirect301' })}
                       </Select.Option>
