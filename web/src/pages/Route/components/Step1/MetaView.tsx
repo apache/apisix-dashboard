@@ -309,7 +309,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
         </Row>
       </Form.Item>
       <Form.Item noStyle shouldUpdate={(prev, next) => {
-        // Notice: route with redirect plugin can be edit without service and upstream
+        // route with redirect plugin can be edit without service and upstream
         if (next.redirectOption === 'customRedirect') {
           return false;
         }
