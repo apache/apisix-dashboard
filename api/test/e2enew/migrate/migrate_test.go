@@ -34,6 +34,17 @@ const (
 	checksumLength = 4 // 4 bytes (uint32)
 )
 
+type AllData struct {
+	Counsumers    []interface{}
+	Routes        []interface{}
+	Services      []interface{}
+	SSLs          []interface{}
+	Upstreams     []interface{}
+	Scripts       []interface{}
+	GlobalPlugins []interface{}
+	PluginConfigs []interface{}
+}
+
 type response struct {
 	Code    int    `json:"Code"`
 	Message string `json:"Message"`
