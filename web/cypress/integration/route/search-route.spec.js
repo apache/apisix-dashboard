@@ -17,7 +17,7 @@
 /* eslint-disable no-undef */
 
 context('Create and Search Route', () => {
-  const timeout = 1000;
+  const timeout = 500;
 
   const selector = {
     name: '#name',
