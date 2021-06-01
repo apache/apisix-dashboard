@@ -125,9 +125,34 @@ context('Create and Search Route', () => {
     cy.contains(data.test2).should('not.exist');
   });
 
+  it('should search the route with path', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+    // full match
+    cy.get(selector.pathSearchInput).type(data.uris1);
+    cy.contains('Search').click();
+    cy.contains(data.uris1).should('contain', data.uris1);
+    cy.contains(data.uris0).should('not.exist');
+    cy.contains(data.uris2).should('not.exist');
+    // partial match
+    cy.get(selector.pathSearchInput).clear().type(data.uris);
+    cy.contains('Search').click();
+    cy.contains(data.uris0).should('contain', data.uris);
+    cy.contains(data.uris1).should('contain', data.uris);
+    cy.contains(data.uris2).should('contain', data.uris);
+    // no match
+    cy.get(selector.pathSearchInput).clear().type(data.urisx);
+    cy.contains('Search').click();
+    cy.contains(data.uris0).should('not.exist');
+    cy.contains(data.uris1).should('not.exist');
+    cy.contains(data.uris2).should('not.exist');
+  });
+
   it('should search the route with labels', function () {
     // search one label
-    cy.reload();
+    cy.visit('/');
+    cy.contains('Route').click();
+    cy.get(selector.expandSearch).click();
     cy.get(selector.labelSelect_0).click({ timeout });
     cy.get(selector.dropdown).contains(data.value0).should('be.visible').click();
     cy.contains('Search').click();
