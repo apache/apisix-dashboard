@@ -38,6 +38,7 @@ import addFormats from 'ajv-formats';
 import { compact, omit } from 'lodash';
 import type { Monaco } from "@monaco-editor/react";
 import Editor from "@monaco-editor/react";
+import type {languages} from "monaco-editor";
 
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
@@ -155,7 +156,7 @@ const PluginDetail: React.FC<Props> = ({
 
   const editorWillMount = (monaco: Monaco) => {
     fetchSchema(name, schemaType).then((schema)=> {
-      const schemaConfig = {
+      const schemaConfig: languages.json.DiagnosticsOptions = {
         validate: true,
         schemas: [
           {
@@ -164,7 +165,9 @@ const PluginDetail: React.FC<Props> = ({
             fileMatch: ['*'],
             schema
           }
-        ]
+        ],
+        trailingCommas: "error",
+        enableSchemaRequest: false
       };
       monaco.editor.getModels().forEach(model => model.updateOptions({tabSize: 2}))
       monaco.languages.json.jsonDefaults.setDiagnosticsOptions(schemaConfig);

@@ -187,7 +187,10 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
             window.monacoEditor = editor;
           }}
           beforeMount={(monaco)=>{
-            monaco?.languages.json.jsonDefaults.setDiagnosticsOptions({ validate: true });
+            monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+              validate: true,
+              trailingCommas: "error"
+            });
           }}
           language={monacoLanguage.toLocaleLowerCase()}
           options={{
