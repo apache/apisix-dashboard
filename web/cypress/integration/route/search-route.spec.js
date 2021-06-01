@@ -28,7 +28,8 @@ context('Create and Search Route', () => {
     nodes_0_host: '#nodes_0_host',
     nodes_0_port: '#nodes_0_port',
     nodes_0_weight: '#nodes_0_weight',
-    nameSearch: '[title=Name]',
+    nameSearchInput: '#name',
+    pathSearchInput: '#uri',
     labelSelect_0: '.ant-select-selection-overflow',
     dropdown: '.rc-virtual-list',
     disabledSwitcher: '#disable',
@@ -105,21 +106,19 @@ context('Create and Search Route', () => {
     cy.visit('/');
     cy.contains('Route').click();
     // full match
-    cy.get(selector.nameSearch).type(data.test1);
+    cy.get(selector.nameSearchInput).type(data.test1);
     cy.contains('Search').click();
     cy.contains(data.test1).siblings().should('contain', data.desc1);
     cy.contains(data.test0).should('not.exist');
     cy.contains(data.test2).should('not.exist');
     // partial match
-    cy.reload();
-    cy.get(selector.nameSearch).type(data.test);
+    cy.get(selector.nameSearchInput).clear().type(data.test);
     cy.contains('Search').click();
     cy.contains(data.test0).siblings().should('contain', data.desc0);
     cy.contains(data.test1).siblings().should('contain', data.desc1);
     cy.contains(data.test2).siblings().should('contain', data.desc2);
     // no match
-    cy.reload();
-    cy.get(selector.nameSearch).type(data.testx);
+    cy.get(selector.nameSearchInput).clear().type(data.testx);
     cy.contains('Search').click();
     cy.contains(data.test0).should('not.exist');
     cy.contains(data.test1).should('not.exist');
