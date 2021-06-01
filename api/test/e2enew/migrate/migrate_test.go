@@ -21,18 +21,25 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/json"
-	"fmt"
 	"hash/crc32"
 	"net/http"
 
 	"github.com/onsi/ginkgo"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
+	"github.com/onsi/gomega"
+)
+
+const (
+	checksumLength = 4 // 4 bytes (uint32)
 )
 
 type response struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+	Code    int    `json:"Code"`
+	Message string `json:"Message"`
+	Data    struct {
+		ConflictItems AllData `json:"ConflictItems"`
+	} `json:"Data"`
 }
 
 var _ = ginkgo.Describe("Migrate", func() {
@@ -44,11 +51,9 @@ var _ = ginkgo.Describe("Migrate", func() {
 		resp := req.Expect()
 		resp.Status(http.StatusOK)
 		exportData = []byte(resp.Body().Raw())
-		data := exportData[:len(exportData)-4]
-		checksum := binary.BigEndian.Uint32(exportData[len(exportData)-4:])
-		if checksum != crc32.ChecksumIEEE(data) {
-			ginkgo.Fail("Checksum not correct")
-		}
+		data := exportData[:len(exportData)-checksumLength]
+		checksum := binary.BigEndian.Uint32(exportData[len(exportData)-checksumLength:])
+		gomega.Expect(checksum).Should(gomega.Equal(crc32.ChecksumIEEE(data)))
 	})
 
 	ginkgo.It("import config conflict and return", func() {
@@ -60,12 +65,11 @@ var _ = ginkgo.Describe("Migrate", func() {
 		resp.Status(http.StatusOK)
 		rsp := &response{}
 		err := json.Unmarshal([]byte(resp.Body().Raw()), rsp)
-		if err != nil {
-			ginkgo.Fail("json unmarshal:" + err.Error())
-		}
-		if rsp.Code != 20001 {
-			ginkgo.Fail("code not 20001")
-		}
+		gomega.Expect(err).Should(gomega.BeNil())
+		gomega.Expect(rsp.Code).Should(gomega.Equal(20001))
+		gomega.Expect(len(rsp.Data.ConflictItems.Routes)).Should(gomega.Equal(1))
+		gomega.Expect(len(rsp.Data.ConflictItems.Upstreams)).Should(gomega.Equal(1))
+		gomega.Expect(len(rsp.Data.ConflictItems.Services)).Should(gomega.Equal(1))
 	})
 
 	ginkgo.It("import config conflict and skip", func() {
@@ -77,12 +81,8 @@ var _ = ginkgo.Describe("Migrate", func() {
 		resp.Status(http.StatusOK)
 		rsp := &response{}
 		err := json.Unmarshal([]byte(resp.Body().Raw()), rsp)
-		if err != nil {
-			ginkgo.Fail("json unmarshal:" + err.Error())
-		}
-		if rsp.Code != 0 {
-			ginkgo.Fail("code not 0")
-		}
+		gomega.Expect(err).Should(gomega.BeNil())
+		gomega.Expect(rsp.Code).Should(gomega.Equal(0))
 	})
 
 	ginkgo.It("import config conflict and overwrite", func() {
@@ -94,12 +94,8 @@ var _ = ginkgo.Describe("Migrate", func() {
 		resp.Status(http.StatusOK)
 		rsp := &response{}
 		err := json.Unmarshal([]byte(resp.Body().Raw()), rsp)
-		if err != nil {
-			ginkgo.Fail("json unmarshal:" + err.Error())
-		}
-		if rsp.Code != 0 {
-			ginkgo.Fail("code not 0")
-		}
+		gomega.Expect(err).Should(gomega.BeNil())
+		gomega.Expect(rsp.Code).Should(gomega.Equal(0))
 	})
 
 	ginkgo.It("delete all config", deleteConfigData)
@@ -123,12 +119,8 @@ var _ = ginkgo.Describe("Migrate", func() {
 		resp.Status(http.StatusOK)
 		rsp := &response{}
 		err := json.Unmarshal([]byte(resp.Body().Raw()), rsp)
-		if err != nil {
-			ginkgo.Fail("json unmarshal:" + err.Error())
-		}
-		if rsp.Code != 0 {
-			ginkgo.Fail("code not 0")
-		}
+		gomega.Expect(err).Should(gomega.BeNil())
+		gomega.Expect(rsp.Code).Should(gomega.Equal(0))
 	})
 
 	ginkgo.It("delete imported route success", func() {
@@ -178,17 +170,48 @@ func prepareConfigData() {
 			"type": "roundrobin"
 		}
 	}`)
-	if statusCode != http.StatusOK || err != nil {
-		panic(fmt.Sprintf("%d, %s", statusCode, err))
-	}
-	_, statusCode, err = base.HttpPut(base.ManagerAPIHost+"/apisix/admin/upstreams/1", headers, `{"name":"upstream1","nodes":[{"host":"172.16.238.20","port":1980,"weight":1}],"type":"roundrobin"}`)
-	if statusCode != http.StatusOK || err != nil {
-		panic(fmt.Sprintf("%d, %s", statusCode, err))
-	}
-	_, statusCode, err = base.HttpPut(base.ManagerAPIHost+"/apisix/admin/services/s1", headers, `{"name":"testservice","upstream":{"nodes":[{"host":"172.16.238.20","port":1980,"weight":1},{"host":"172.16.238.20","port":1981,"weight":2},{"host":"172.16.238.20","port":1982,"weight":3}],"type":"roundrobin"}}`)
-	if statusCode != http.StatusOK || err != nil {
-		panic(fmt.Sprintf("%d, %s", statusCode, err))
-	}
+	gomega.Expect(statusCode).Should(gomega.Equal(http.StatusOK))
+	gomega.Expect(err).Should(gomega.BeNil())
+
+	_, statusCode, err = base.HttpPut(base.ManagerAPIHost+"/apisix/admin/upstreams/1", headers, `{
+		"name": "upstream1",
+		"nodes": [
+			{
+				"host": "172.16.238.20",
+				"port": 1980,
+				"weight": 1
+			}
+		],
+		"type": "roundrobin"
+	}`)
+	gomega.Expect(statusCode).Should(gomega.Equal(http.StatusOK))
+	gomega.Expect(err).Should(gomega.BeNil())
+
+	_, statusCode, err = base.HttpPut(base.ManagerAPIHost+"/apisix/admin/services/s1", headers, `{
+  "name": "testservice",
+  "upstream": {
+    "nodes": [
+      {
+        "host": "172.16.238.20",
+        "port": 1980,
+        "weight": 1
+      },
+      {
+        "host": "172.16.238.20",
+        "port": 1981,
+        "weight": 2
+      },
+      {
+        "host": "172.16.238.20",
+        "port": 1982,
+        "weight": 3
+      }
+    ],
+    "type": "roundrobin"
+  }
+}`)
+	gomega.Expect(statusCode).Should(gomega.Equal(http.StatusOK))
+	gomega.Expect(err).Should(gomega.BeNil())
 }
 
 func deleteConfigData() {
@@ -197,17 +220,12 @@ func deleteConfigData() {
 		"Authorization": base.GetToken(),
 	}
 	_, statusCode, err := base.HttpDelete(base.ManagerAPIHost+"/apisix/admin/routes/r1", headers)
-	if statusCode != http.StatusOK || err != nil {
-		panic(fmt.Sprintf("%d, %s", statusCode, err))
-	}
+	gomega.Expect(statusCode).Should(gomega.Equal(http.StatusOK))
+	gomega.Expect(err).Should(gomega.BeNil())
 	_, statusCode, err = base.HttpDelete(base.ManagerAPIHost+"/apisix/admin/upstreams/1", headers)
-	if statusCode != http.StatusOK || err != nil {
-		panic(fmt.Sprintf("%d, %s", statusCode, err))
-	}
+	gomega.Expect(statusCode).Should(gomega.Equal(http.StatusOK))
+	gomega.Expect(err).Should(gomega.BeNil())
 	_, statusCode, err = base.HttpDelete(base.ManagerAPIHost+"/apisix/admin/services/s1", headers)
-	if statusCode != http.StatusOK || err != nil {
-		panic(fmt.Sprintf("%d, %s", statusCode, err))
-	}
+	gomega.Expect(statusCode).Should(gomega.Equal(http.StatusOK))
+	gomega.Expect(err).Should(gomega.BeNil())
 }
-
-const jsonConfig = `{"Counsumers":[],"Routes":[{"id":"r1","create_time":1620922236,"update_time":1620922236,"uri":"/hello_","name":"route1","upstream":{"nodes":{"127.0.0.1:1980":1},"type":"roundrobin"},"status":1}],"Services":[{"id":"s1","create_time":1620922236,"update_time":1620922236,"name":"testservice","upstream":{"nodes":[{"host":"172.16.238.20","port":1980,"weight":1},{"host":"172.16.238.20","port":1981,"weight":2},{"host":"172.16.238.20","port":1982,"weight":3}],"type":"roundrobin"}}],"SSLs":[],"Upstreams":[{"id":"1","create_time":1620922236,"update_time":1620922236,"nodes":[{"host":"172.16.238.20","port":1980,"weight":1}],"type":"roundrobin","name":"upstream1"}],"Scripts":[],"GlobalPlugins":[],"PluginConfigs":[]}`

@@ -21,6 +21,7 @@ import (
 	"context"
 
 	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/log"
 )
 
 func isConflict(ctx context.Context, new *AllData) (bool, *AllData) {
@@ -35,6 +36,7 @@ func isConflict(ctx context.Context, new *AllData) (bool, *AllData) {
 				isConflict = true
 				err = conflict.AddObj(obj)
 				if err != nil {
+					log.Errorf("Add obj to conflict list failed:%s", err)
 					return true
 				}
 			}

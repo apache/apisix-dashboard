@@ -18,16 +18,14 @@ package migrate
 
 import (
 	"encoding/binary"
+	"hash/crc32"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/utils/consts"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet/data"
-
-	"hash/crc32"
 
 	"github.com/apisix/manager-api/internal/core/migrate"
 	"github.com/apisix/manager-api/internal/log"
@@ -35,6 +33,7 @@ import (
 
 const (
 	exportFileName = "apisix-config.bak"
+	checksumLength = 4 // 4 bytes (uint32)
 )
 
 type Handler struct{}
@@ -60,14 +59,13 @@ func (h *Handler) ExportConfig(c *gin.Context) {
 	// To check file integrity
 	// Add 4 byte(uint32) checksum at the end of file.
 	checksumUint32 := crc32.ChecksumIEEE(data)
-	checksum := make([]byte, 4)
+	checksum := make([]byte, checksumLength)
 	binary.BigEndian.PutUint32(checksum, checksumUint32)
 	fileBytes := append(data, checksum...)
 
 	c.Writer.WriteHeader(http.StatusOK)
 	c.Header("Content-Disposition", "attachment; filename="+exportFileName)
 	c.Header("Content-Type", "application/octet-stream")
-	c.Header("Accept-Length", strconv.Itoa(len(fileBytes)))
 	c.Header("Content-Transfer-Encoding", "binary")
 	_, err = c.Writer.Write([]byte(fileBytes))
 	if err != nil {
@@ -113,7 +111,7 @@ func (h *Handler) ImportConfig(c *gin.Context) {
 	}
 	conflictData, err := migrate.Import(c, importData, mode)
 	if err != nil {
-		log.Errorf("Import: %s", err)
+		log.Errorf("Import failed: %s", err)
 		c.JSON(http.StatusOK, &data.BaseError{
 			Code:    consts.ErrBadRequest,
 			Message: "Config conflict",

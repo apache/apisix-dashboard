@@ -21,9 +21,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 
 	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/log"
 )
 
 var (
@@ -36,6 +36,7 @@ func Export(ctx context.Context) ([]byte, error) {
 		s.Range(ctx, func(_ string, obj interface{}) bool {
 			err := exportData.AddObj(obj)
 			if err != nil {
+				log.Errorf("Add obj to export list failed:%s", err)
 				return true
 			}
 			return true
@@ -91,7 +92,6 @@ func Import(ctx context.Context, data []byte, mode ConflictMode) (*AllData, erro
 					return false
 				}
 			}
-			fmt.Printf("[%s]: %#v\n", key, obj)
 			return true
 		})
 		return true
