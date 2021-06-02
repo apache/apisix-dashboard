@@ -23,12 +23,14 @@ context('Create and Search Route', () => {
     name: '#name',
     description: '#desc',
     hosts_0: '#hosts_0',
+    uris_0: '#uris_0',
     labels_0_labelKey: '#labels_0_labelKey',
     labels_0_labelValue: '#labels_0_labelValue',
     nodes_0_host: '#nodes_0_host',
     nodes_0_port: '#nodes_0_port',
     nodes_0_weight: '#nodes_0_weight',
     nameSearch: '[title=Name]',
+    pathSearch: '[title=Path]',
     labelSelect_0: '.ant-select-selection-overflow',
     dropdown: '.rc-virtual-list',
     disabledSwitcher: '#disable',
@@ -37,6 +39,7 @@ context('Create and Search Route', () => {
     drawerBody: '.ant-drawer-wrapper-body',
     notification: '.ant-notification-notice-message',
     notificationClose: '.anticon-close',
+    expandSearch: '.ant-pro-form-collapse-button'
   };
 
   const data = {
@@ -44,6 +47,11 @@ context('Create and Search Route', () => {
     host2: '12.12.12.12',
     port: '80',
     weight: 1,
+    uris: '/get',
+    uris0: '/get0',
+    uris1: '/get1',
+    uris2: '/get2',
+    urisx: '/getx',
     submitSuccess: 'Submit Successfully',
     deleteRouteSuccess: 'Delete Route Successfully',
     test: 'test',
@@ -71,6 +79,7 @@ context('Create and Search Route', () => {
       cy.get(selector.name).type(`test${i}`);
       cy.get(selector.description).type(`desc${i}`);
       cy.get(selector.hosts_0).type(data.host1);
+      cy.get(selector.uris_0).clear().type(`/get${i}`);
 
       // config label
       cy.contains('Manage').click();
@@ -126,9 +135,35 @@ context('Create and Search Route', () => {
     cy.contains(data.test2).should('not.exist');
   });
 
+  it('should search the route with path', function () {
+    cy.visit('/');
+    cy.contains('Route').click();
+    // full match
+    cy.get(selector.pathSearch).type(data.uris1);
+    cy.contains('Search').click();
+    cy.contains(data.uris1).should('contain', data.uris1);
+    cy.contains(data.uris0).should('not.exist');
+    cy.contains(data.uris2).should('not.exist');
+    // partial match
+    cy.reload();
+    cy.get(selector.pathSearch).type(data.uris);
+    cy.contains('Search').click();
+    cy.contains(data.uris0).should('contain', data.uris);
+    cy.contains(data.uris1).should('contain', data.uris);
+    cy.contains(data.uris2).should('contain', data.uris);
+    // no match
+    cy.reload();
+    cy.get(selector.pathSearch).type(data.urisx);
+    cy.contains('Search').click();
+    cy.contains(data.uris0).should('not.exist');
+    cy.contains(data.uris1).should('not.exist');
+    cy.contains(data.uris2).should('not.exist');
+  });
+
   it('should search the route with labels', function () {
     // search one label
     cy.reload();
+    cy.get(selector.expandSearch).click();
     cy.get(selector.labelSelect_0).click({ timeout });
     cy.get(selector.dropdown).contains(data.value0).should('be.visible').click();
     cy.contains('Search').click();
