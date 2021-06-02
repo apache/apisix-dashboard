@@ -206,8 +206,8 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
               <Select
                 disabled={disabled}
                 data-cy='route-redirect'
-                onChange={(parmas) => {
-                  onChange({ action: 'redirectOptionChange', data: parmas });
+                onChange={(params) => {
+                  onChange({ action: 'redirectOptionChange', data: params });
                 }}
               >
                 {list.map(item => (
