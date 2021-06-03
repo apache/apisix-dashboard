@@ -31,10 +31,10 @@ var (
 )
 
 func Export(ctx context.Context) ([]byte, error) {
-	exportData := NewAllData()
+	exportData := newAllData()
 	store.RangeStore(func(key store.HubKey, s *store.GenericStore) bool {
 		s.Range(ctx, func(_ string, obj interface{}) bool {
-			err := exportData.AddObj(obj)
+			err := exportData.Add(obj)
 			if err != nil {
 				log.Errorf("Add obj to export list failed:%s", err)
 				return true
@@ -60,19 +60,18 @@ const (
 	ModeSkip
 )
 
-func Import(ctx context.Context, data []byte, mode ConflictMode) (*AllData, error) {
-	importData := NewAllData()
-	e := json.Unmarshal(data, &importData)
-	if e != nil {
-		return nil, e
+func Import(ctx context.Context, data []byte, mode ConflictMode) (*DataSet, error) {
+	importData := newAllData()
+	err := json.Unmarshal(data, &importData)
+	if err != nil {
+		return nil, err
 	}
 	conflict, conflictData := isConflict(ctx, importData)
 	if conflict && mode == ModeReturn {
 		return conflictData, ErrConflict
 	}
-	var err error
 	store.RangeStore(func(key store.HubKey, s *store.GenericStore) bool {
-		importData.Range(key, func(i int, obj interface{}) bool {
+		importData.rangeData(key, func(i int, obj interface{}) bool {
 			_, e := s.CreateCheck(obj)
 			if e != nil {
 				switch mode {

@@ -24,7 +24,7 @@ import (
 	"github.com/apisix/manager-api/internal/core/store"
 )
 
-type AllData struct {
+type DataSet struct {
 	Counsumers    []*entity.Consumer
 	Routes        []*entity.Route
 	Services      []*entity.Service
@@ -36,8 +36,8 @@ type AllData struct {
 	PluginConfigs []*entity.PluginConfig
 }
 
-func NewAllData() *AllData {
-	return &AllData{
+func newAllData() *DataSet {
+	return &DataSet{
 		Counsumers:    make([]*entity.Consumer, 0),
 		Routes:        make([]*entity.Route, 0),
 		Services:      make([]*entity.Service, 0),
@@ -50,7 +50,7 @@ func NewAllData() *AllData {
 	}
 }
 
-func (a *AllData) Range(key store.HubKey, f func(int, interface{}) bool) {
+func (a *DataSet) rangeData(key store.HubKey, f func(int, interface{}) bool) {
 	switch key {
 	case store.HubKeyConsumer:
 		for i, v := range a.Counsumers {
@@ -109,7 +109,7 @@ func (a *AllData) Range(key store.HubKey, f func(int, interface{}) bool) {
 	}
 }
 
-func (a *AllData) AddObj(obj interface{}) error {
+func (a *DataSet) Add(obj interface{}) error {
 	var err error = nil
 	switch obj := obj.(type) {
 	case *entity.Consumer:

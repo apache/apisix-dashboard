@@ -24,17 +24,17 @@ import (
 	"github.com/apisix/manager-api/internal/log"
 )
 
-func isConflict(ctx context.Context, new *AllData) (bool, *AllData) {
+func isConflict(ctx context.Context, new *DataSet) (bool, *DataSet) {
 	isConflict := false
-	conflict := NewAllData()
+	conflict := newAllData()
 	store.RangeStore(func(key store.HubKey, s *store.GenericStore) bool {
-		new.Range(key, func(i int, obj interface{}) bool {
+		new.rangeData(key, func(i int, obj interface{}) bool {
 			// Only check key of store conflict for now.
 			// TODO: Maybe check name of some entiries.
 			_, err := s.CreateCheck(obj)
 			if err != nil {
 				isConflict = true
-				err = conflict.AddObj(obj)
+				err = conflict.Add(obj)
 				if err != nil {
 					log.Errorf("Add obj to conflict list failed:%s", err)
 					return true

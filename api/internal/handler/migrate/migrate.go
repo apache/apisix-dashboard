@@ -74,7 +74,7 @@ func (h *Handler) ExportConfig(c *gin.Context) {
 }
 
 type ImportOutput struct {
-	ConflictItems *migrate.AllData
+	ConflictItems *migrate.DataSet
 }
 
 var modeMap = map[string]migrate.ConflictMode{
@@ -111,12 +111,20 @@ func (h *Handler) ImportConfig(c *gin.Context) {
 	}
 	conflictData, err := migrate.Import(c, importData, mode)
 	if err != nil {
-		log.Errorf("Import failed: %s", err)
-		c.JSON(http.StatusOK, &data.BaseError{
-			Code:    consts.ErrBadRequest,
-			Message: "Config conflict",
-			Data:    ImportOutput{ConflictItems: conflictData},
-		})
+		if err == migrate.ErrConflict {
+			c.JSON(http.StatusOK, &data.BaseError{
+				Code:    consts.ErrBadRequest,
+				Message: "Config conflict",
+				Data:    ImportOutput{ConflictItems: conflictData},
+			})
+		} else {
+			log.Errorf("Import failed: %s", err)
+			c.JSON(http.StatusOK, &data.BaseError{
+				Code:    consts.ErrBadRequest,
+				Message: err.Error(),
+				Data:    ImportOutput{ConflictItems: conflictData},
+			})
+		}
 		return
 	}
 	c.JSON(http.StatusOK, &data.Response{
