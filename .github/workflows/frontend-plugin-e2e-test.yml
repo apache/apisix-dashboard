@@ -10,6 +10,11 @@ on:
       - master
     paths-ignore:
       - 'docs/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   CYPRESS_CACHE_FOLDER: cypress/cache
 defaults:
