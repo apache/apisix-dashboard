@@ -14,6 +14,10 @@ on:
       - 'docs/**'
       - 'web/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   backend-e2e-test:
     runs-on: ubuntu-latest
