@@ -52,7 +52,7 @@ clean_logfile() {
 trap clean_up EXIT
 
 export GO111MODULE=on
-go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/internal/utils.version=${VERSION} -X github.com/apisix/manager-api/internal/utils.gitHash=${GITHASH}" ./cmd/manager
+go build -o ./manager-api -ldflags "-X github.com/apisix/manager-api/internal/utils.version=${VERSION} -X github.com/apisix/manager-api/internal/utils.gitHash=${GITHASH}" ./main.go
 
 # default level: warn, path: logs/error.log
 
@@ -223,7 +223,7 @@ sleep 6
 
 cat ${logfile}
 
-if [[ `grep -c "cmd/managerapi.go" ${logfile}` -ne '1' ]]; then
+if [[ `grep -c "cmd/root.go" ${logfile}` -ne '1' ]]; then
     echo "failed: failed to write the correct caller"
     exit 1
 fi
