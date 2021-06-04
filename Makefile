@@ -80,7 +80,7 @@ api-run: api-default
 
 ### api-stop:		Stop the manager-api
 api-stop:
-	cd api && go run -ldflags "${GOLDFLAGS}" ./cmd/manager stop
+	cd api && go run -ldflags "${GOLDFLAGS}" ./main.go stop
 
 ### go-lint:		Lint Go source codes
 .PHONY: go-lint

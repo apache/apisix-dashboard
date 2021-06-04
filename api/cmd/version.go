@@ -26,8 +26,8 @@ import (
 )
 
 var (
-	Version string
-	GitHash string
+	Version     string
+	GitHash     string
 	showVersion bool
 )
 

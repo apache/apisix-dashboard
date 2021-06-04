@@ -50,7 +50,7 @@ jobs:
           export GO111MOUDULE=on
           export APISIX_CONF_PATH=$PWD/conf
           sed -i 's/9000/8088/' conf/conf.yaml
-          go build -o ./manager-api ./cmd/manager
+          go build -o ./manager-api ./main.go
           ./manager-api > ./api.log 2>&1 &
           sleep 2
           cat ./api.log

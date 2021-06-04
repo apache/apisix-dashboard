@@ -33,6 +33,6 @@ var startCmd = &cobra.Command{
 	},
 }
 
-func init()  {
+func init() {
 	rootCmd.AddCommand(startCmd)
 }
