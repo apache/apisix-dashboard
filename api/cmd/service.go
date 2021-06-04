@@ -20,8 +20,9 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/apisix/manager-api/internal/conf"
 	"github.com/takama/daemon"
+
+	"github.com/apisix/manager-api/internal/conf"
 )
 
 type Service struct {

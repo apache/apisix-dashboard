@@ -14,17 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package main
+package cmd
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/apisix/manager-api/cmd"
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	if err := cmd.NewManagerAPICommand().Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-	}
+var stopCmd = &cobra.Command{
+	Use:   "stop",
+	Short: "stop Apache APISIX Dashboard service/program",
+	Run: func(cmd *cobra.Command, args []string) {
+		/*pid, err := utils.ReadPID(conf.PIDPath)
+		if err != nil {
+			if syscall.ENOENT.Error() != err.Error() {
+				fmt.Fprintf(os.Stderr, "failed to get manager-api pid: %s\n", err)
+			} else {
+				fmt.Fprintf(os.Stderr, "pid path %s not found, is manager-api running?\n", conf.PIDPath)
+			}
+			return
+		}
+		if err := syscall.Kill(pid, syscall.SIGINT); err != nil {
+			fmt.Fprintf(os.Stderr, "failed to kill manager-api: %s", err)
+		}*/
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(stopCmd)
 }
