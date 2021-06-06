@@ -109,6 +109,17 @@ var _ = ginkgo.Describe("Migrate", func() {
 		gomega.Expect(rsp.Code).Should(gomega.Equal(0))
 	})
 
+	ginkgo.It("request hit route r1", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		})
+	})
+
 	ginkgo.It("delete all config", deleteConfigData)
 
 	ginkgo.It("delete imported route failed", func() {
@@ -118,6 +129,16 @@ var _ = ginkgo.Describe("Migrate", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusNotFound,
+		})
+	})
+
+	ginkgo.It("request route r1 not found", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			ExpectStatus: http.StatusNotFound,
+			Sleep:        base.SleepTime,
 		})
 	})
 
@@ -132,6 +153,17 @@ var _ = ginkgo.Describe("Migrate", func() {
 		err := json.Unmarshal([]byte(resp.Body().Raw()), rsp)
 		gomega.Expect(err).Should(gomega.BeNil())
 		gomega.Expect(rsp.Code).Should(gomega.Equal(0))
+	})
+
+	ginkgo.It("request hit route r1", func() {
+		base.RunTestCase(base.HttpTestCase{
+			Object:       base.APISIXExpect(),
+			Method:       http.MethodGet,
+			Path:         "/hello_",
+			ExpectStatus: http.StatusOK,
+			ExpectBody:   "hello world",
+			Sleep:        base.SleepTime,
+		})
 	})
 
 	ginkgo.It("delete imported route success", func() {
@@ -176,7 +208,7 @@ func prepareConfigData() {
 		"uri": "/hello_",
 		"upstream": {
 			"nodes": {
-				"127.0.0.1:1980": 1
+				"`+base.UpstreamIp+`:1980": 1
 			},
 			"type": "roundrobin"
 		}
@@ -188,7 +220,7 @@ func prepareConfigData() {
 		"name": "upstream1",
 		"nodes": [
 			{
-				"host": "172.16.238.20",
+				"host": "`+base.UpstreamIp+`",
 				"port": 1980,
 				"weight": 1
 			}
@@ -203,17 +235,17 @@ func prepareConfigData() {
   "upstream": {
     "nodes": [
       {
-        "host": "172.16.238.20",
+        "host": "`+base.UpstreamIp+`",
         "port": 1980,
         "weight": 1
       },
       {
-        "host": "172.16.238.20",
+        "host": "`+base.UpstreamIp+`",
         "port": 1981,
         "weight": 2
       },
       {
-        "host": "172.16.238.20",
+        "host": "`+base.UpstreamIp+`",
         "port": 1982,
         "weight": 3
       }
