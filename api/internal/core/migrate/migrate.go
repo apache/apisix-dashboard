@@ -31,7 +31,7 @@ var (
 )
 
 func Export(ctx context.Context) ([]byte, error) {
-	exportData := newAllData()
+	exportData := newDataSet()
 	store.RangeStore(func(key store.HubKey, s *store.GenericStore) bool {
 		s.Range(ctx, func(_ string, obj interface{}) bool {
 			err := exportData.Add(obj)
@@ -61,7 +61,7 @@ const (
 )
 
 func Import(ctx context.Context, data []byte, mode ConflictMode) (*DataSet, error) {
-	importData := newAllData()
+	importData := newDataSet()
 	err := json.Unmarshal(data, &importData)
 	if err != nil {
 		return nil, err

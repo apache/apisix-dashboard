@@ -26,7 +26,7 @@ import (
 
 func isConflict(ctx context.Context, new *DataSet) (bool, *DataSet) {
 	isConflict := false
-	conflict := newAllData()
+	conflictedData := newDataSet()
 	store.RangeStore(func(key store.HubKey, s *store.GenericStore) bool {
 		new.rangeData(key, func(i int, obj interface{}) bool {
 			// Only check key of store conflict for now.
@@ -34,7 +34,7 @@ func isConflict(ctx context.Context, new *DataSet) (bool, *DataSet) {
 			_, err := s.CreateCheck(obj)
 			if err != nil {
 				isConflict = true
-				err = conflict.Add(obj)
+				err = conflictedData.Add(obj)
 				if err != nil {
 					log.Errorf("Add obj to conflict list failed:%s", err)
 					return true
@@ -44,5 +44,5 @@ func isConflict(ctx context.Context, new *DataSet) (bool, *DataSet) {
 		})
 		return true
 	})
-	return isConflict, conflict
+	return isConflict, conflictedData
 }

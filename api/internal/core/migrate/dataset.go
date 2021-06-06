@@ -35,7 +35,7 @@ type DataSet struct {
 	PluginConfigs []*entity.PluginConfig
 }
 
-func newAllData() *DataSet {
+func newDataSet() *DataSet {
 	return &DataSet{
 		Counsumers:    make([]*entity.Consumer, 0),
 		Routes:        make([]*entity.Route, 0),
