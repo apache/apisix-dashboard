@@ -24,7 +24,6 @@
 [![DockerHub](https://img.shields.io/docker/pulls/apache/apisix-dashboard.svg)](https://hub.docker.com/r/apache/apisix-dashboard)
 [![Cypress.io](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)](https://www.cypress.io/)
 
-
 <p align="center">
   <a href="https://apisix.apache.org/">Website</a> •
   <a href="https://github.com/apache/apisix/tree/master/docs">Docs</a> •
