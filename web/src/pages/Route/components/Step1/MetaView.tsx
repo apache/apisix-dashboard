@@ -205,8 +205,9 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
             >
               <Select
                 disabled={disabled}
-                onChange={(parmas) => {
-                  onChange({ action: 'redirectOptionChange', data: parmas });
+                data-cy='route-redirect'
+                onChange={(params) => {
+                  onChange({ action: 'redirectOptionChange', data: params });
                 }}
               >
                 {list.map(item => (
@@ -265,7 +266,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
                 </Col>
                 <Col span={5}>
                   <Form.Item name="ret_code" rules={[{ required: true }]}>
-                    <Select disabled={disabled}>
+                    <Select disabled={disabled} data-cy='redirect_code'>
                       <Select.Option value={301}>
                         {formatMessage({ id: 'page.route.select.option.redirect301' })}
                       </Select.Option>
@@ -308,6 +309,10 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
         </Row>
       </Form.Item>
       <Form.Item noStyle shouldUpdate={(prev, next) => {
+        // route with redirect plugin can be edit without service and upstream
+        if (next.redirectOption === 'customRedirect') {
+          return false;
+        }
         if (next.service_id === '') {
           const upstream_id = upstreamForm?.getFieldValue('upstream_id')
           if (upstream_id === 'None') {
@@ -315,7 +320,6 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
               message: formatMessage({ id: 'page.route.fields.service_id.invalid' }),
               description: formatMessage({ id: 'page.route.fields.service_id.without-upstream' })
             })
-            form.setFieldsValue({ service_id: prev.service_id })
           }
         }
         return prev.service_id !== next.service_id
