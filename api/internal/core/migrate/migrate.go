@@ -66,7 +66,7 @@ func Import(ctx context.Context, data []byte, mode ConflictMode) (*DataSet, erro
 	if err != nil {
 		return nil, err
 	}
-	conflict, conflictData := isConflict(ctx, importData)
+	conflict, conflictData := isConflicted(ctx, importData)
 	if conflict && mode == ModeReturn {
 		return conflictData, ErrConflict
 	}

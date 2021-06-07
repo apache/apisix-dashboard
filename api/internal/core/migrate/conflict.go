@@ -24,7 +24,7 @@ import (
 	"github.com/apisix/manager-api/internal/log"
 )
 
-func isConflict(ctx context.Context, new *DataSet) (bool, *DataSet) {
+func isConflicted(ctx context.Context, new *DataSet) (bool, *DataSet) {
 	isConflict := false
 	conflictedData := newDataSet()
 	store.RangeStore(func(key store.HubKey, s *store.GenericStore) bool {

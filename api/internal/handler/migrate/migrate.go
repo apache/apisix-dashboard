@@ -22,13 +22,13 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/apisix/manager-api/internal/handler"
-	"github.com/apisix/manager-api/internal/utils/consts"
 	"github.com/gin-gonic/gin"
 	"github.com/shiningrush/droplet/data"
 
 	"github.com/apisix/manager-api/internal/core/migrate"
+	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/log"
+	"github.com/apisix/manager-api/internal/utils/consts"
 )
 
 const (

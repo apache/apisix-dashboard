@@ -25,9 +25,9 @@ import (
 	"net/http"
 
 	"github.com/onsi/ginkgo"
+	"github.com/onsi/gomega"
 
 	"github.com/apisix/manager-api/test/e2enew/base"
-	"github.com/onsi/gomega"
 )
 
 const (
