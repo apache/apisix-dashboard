@@ -33,6 +33,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler/global_rule"
 	"github.com/apisix/manager-api/internal/handler/healthz"
 	"github.com/apisix/manager-api/internal/handler/label"
+	"github.com/apisix/manager-api/internal/handler/migrate"
 	"github.com/apisix/manager-api/internal/handler/plugin_config"
 	"github.com/apisix/manager-api/internal/handler/route"
 	"github.com/apisix/manager-api/internal/handler/schema"
@@ -75,6 +76,7 @@ func SetUpRouter() *gin.Engine {
 		data_loader.NewImportHandler,
 		tool.NewHandler,
 		plugin_config.NewHandler,
+		migrate.NewHandler,
 	}
 
 	for i := range factories {
