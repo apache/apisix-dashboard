@@ -194,8 +194,8 @@ if [[ `grep -c "0.0.0.0:${PORT}" ${STDOUT}` -ne '1' ]]; then
     exit 1
 fi
 
-# test -v command
-out=$(./manager-api -v 2>&1 || true)
+# test version command
+out=$(./manager-api version 2>&1 || true)
 if [[ `echo $out | grep -c $VERSION` -ne '1' ]]; then
     echo "failed: the manager server didn't show version info"
     exit 1
