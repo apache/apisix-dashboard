@@ -49,10 +49,6 @@ var rootCmd = &cobra.Command{
 	Use:   "manager-api [flags]",
 	Short: "Apache APISIX Manager API",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if showVersion {
-			printVersion()
-			os.Exit(0)
-		}
 		err := manageAPI()
 		return err
 	},
@@ -69,6 +65,15 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "./conf/conf.yml", "config file")
 	rootCmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
+
+	rootCmd.AddCommand(
+		newVersionCommand(),
+		newInstallCommand(),
+		newRemoveCommand(),
+		newStartCommand(),
+		newStopCommand(),
+		newStatusCommand(),
+	)
 }
 
 func Execute() {

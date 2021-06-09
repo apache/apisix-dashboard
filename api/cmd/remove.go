@@ -22,17 +22,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var removeCmd = &cobra.Command{
-	Use:   "remove",
-	Short: "remove Apache APISIX Dashboard service",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		serviceState.removeService = true
-		status, err := service.manageService()
-		fmt.Println(status)
-		return err
-	},
-}
-
-func init() {
-	rootCmd.AddCommand(removeCmd)
+func newRemoveCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "remove",
+		Short: "remove Apache APISIX Dashboard service",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			serviceState.removeService = true
+			status, err := service.manageService()
+			fmt.Println(status)
+			return err
+		},
+	}
 }

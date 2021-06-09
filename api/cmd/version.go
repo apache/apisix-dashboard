@@ -25,28 +25,18 @@ import (
 	"github.com/apisix/manager-api/internal/utils"
 )
 
-var (
-	Version     string
-	GitHash     string
-	showVersion bool
-)
-
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "show manager-api version",
-	Run: func(cmd *cobra.Command, args []string) {
-		printVersion()
-	},
-}
-
-func init() {
-	rootCmd.AddCommand(versionCmd)
-
-	rootCmd.PersistentFlags().BoolVarP(&showVersion, "version", "v", false, "show manager-api version")
+func newVersionCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "version",
+		Short: "show manager-api version",
+		Run: func(cmd *cobra.Command, args []string) {
+			printVersion()
+		},
+	}
 }
 
 func printVersion() {
-	GitHash, Version = utils.GetHashAndVersion()
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Version", Version)
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "GitHash", GitHash)
+	gitHash, version := utils.GetHashAndVersion()
+	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Version", version)
+	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "GitHash", gitHash)
 }

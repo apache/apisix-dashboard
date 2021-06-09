@@ -24,17 +24,15 @@ import (
 
 var service *Service
 
-var installCmd = &cobra.Command{
-	Use:   "install",
-	Short: "re-install Apache APISIX Dashboard service",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		serviceState.installService = true
-		status, err := service.manageService()
-		fmt.Println(status)
-		return err
-	},
-}
-
-func init() {
-	rootCmd.AddCommand(installCmd)
+func newInstallCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "install",
+		Short: "re-install Apache APISIX Dashboard service",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			serviceState.installService = true
+			status, err := service.manageService()
+			fmt.Println(status)
+			return err
+		},
+	}
 }

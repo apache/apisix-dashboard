@@ -22,17 +22,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var startCmd = &cobra.Command{
-	Use:   "start",
-	Short: "start Apache APISIX Dashboard service",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		serviceState.startService = true
-		status, err := service.manageService()
-		fmt.Println(status)
-		return err
-	},
-}
-
-func init() {
-	rootCmd.AddCommand(startCmd)
+func newStartCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "start",
+		Short: "start Apache APISIX Dashboard service",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			serviceState.startService = true
+			status, err := service.manageService()
+			fmt.Println(status)
+			return err
+		},
+	}
 }
