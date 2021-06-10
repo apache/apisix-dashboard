@@ -7,7 +7,7 @@ replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 replace github.com/coreos/bbolt => go.etcd.io/bbolt v1.3.5
 
 require (
-	github.com/coreos/bbolt v0.0.0-00010101000000-000000000000 // indirect
+	github.com/coreos/bbolt v1.3.2 // indirect
 	github.com/coreos/etcd v3.3.25+incompatible // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
@@ -17,12 +17,12 @@ require (
 	github.com/evanphx/json-patch/v5 v5.1.0
 	github.com/getkin/kin-openapi v0.33.0
 	github.com/gin-contrib/pprof v1.3.0
-	github.com/gin-contrib/sessions v0.0.3
 	github.com/gin-contrib/static v0.0.0-20200916080430-d45d9a37d28e
 	github.com/gin-gonic/gin v1.6.3
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/google/uuid v1.1.2 // indirect
+	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/jonboulle/clockwork v0.2.2 // indirect
@@ -33,6 +33,7 @@ require (
 	github.com/sirupsen/logrus v1.7.0 // indirect
 	github.com/sony/sonyflake v1.0.0
 	github.com/spf13/cobra v0.0.3
+	github.com/spf13/pflag v1.0.3 // indirect
 	github.com/stretchr/testify v1.6.1
 	github.com/takama/daemon v1.0.0
 	github.com/tidwall/gjson v1.6.7

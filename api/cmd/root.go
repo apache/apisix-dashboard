@@ -42,30 +42,19 @@ import (
 )
 
 var (
-	showVersion bool
-	Version     string
-	GitHash     string
-	service     *Service
+	configFile string
 )
 
-func printInfo() {
-	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
-	printVersion()
-	fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "Listen", conf.ServerHost, conf.ServerPort)
-	if conf.SSLCert != "" && conf.SSLKey != "" {
-		fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "HTTPS Listen", conf.SSLHost, conf.SSLPort)
-	}
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Loglevel", conf.ErrorLogLevel)
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n\n", "Logfile", conf.ErrorLogPath)
+var rootCmd = &cobra.Command{
+	Use:   "manager-api [flags]",
+	Short: "Apache APISIX Manager API",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		err := manageAPI()
+		return err
+	},
 }
 
-func printVersion() {
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Version", Version)
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "GitHash", GitHash)
-}
-
-// NewManagerAPICommand creates the manager-api command.
-func NewManagerAPICommand() *cobra.Command {
+func init() {
 	cobra.OnInitialize(func() {
 		var err error
 		service, err = createService()
@@ -74,25 +63,23 @@ func NewManagerAPICommand() *cobra.Command {
 		}
 	})
 
-	cmd := &cobra.Command{
-		Use:   "manager-api [flags]",
-		Short: "APISIX Manager API",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			GitHash, Version = utils.GetHashAndVersion()
-			if showVersion {
-				printVersion()
-				os.Exit(0)
-			}
-			err := manageAPI()
-			return err
-		},
+	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "./conf/conf.yml", "config file")
+	rootCmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
+
+	rootCmd.AddCommand(
+		newVersionCommand(),
+		newInstallCommand(),
+		newRemoveCommand(),
+		newStartCommand(),
+		newStopCommand(),
+		newStatusCommand(),
+	)
+}
+
+func Execute() {
+	if err := rootCmd.Execute(); err != nil {
+		_, _ = fmt.Fprintln(os.Stderr, err.Error())
 	}
-
-	cmd.PersistentFlags().StringVarP(&conf.WorkDir, "work-dir", "p", ".", "current work directory")
-	cmd.PersistentFlags().BoolVarP(&showVersion, "version", "v", false, "show manager-api version")
-
-	cmd.AddCommand(newStartCommand(), newInstallCommand(), newStatusCommand(), newStopCommand(), newRemoveCommand())
-	return cmd
 }
 
 func manageAPI() error {
@@ -211,80 +198,13 @@ func shutdownServer(server *http.Server) {
 	}
 }
 
-func newStartCommand() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "start",
-		Short: "start Apache APISIX Dashboard service",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			serviceState.startService = true
-			status, err := service.manageService()
-			fmt.Println(status)
-			return err
-		},
+func printInfo() {
+	fmt.Fprint(os.Stdout, "The manager-api is running successfully!\n\n")
+	printVersion()
+	fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "Listen", conf.ServerHost, conf.ServerPort)
+	if conf.SSLCert != "" && conf.SSLKey != "" {
+		fmt.Fprintf(os.Stdout, "%-8s: %s:%d\n", "HTTPS Listen", conf.SSLHost, conf.SSLPort)
 	}
-	return cmd
-}
-
-func newInstallCommand() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "install",
-		Short: "re-install Apache APISIX Dashboard service",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			serviceState.installService = true
-			status, err := service.manageService()
-			fmt.Println(status)
-			return err
-		},
-	}
-	return cmd
-}
-
-func newStatusCommand() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "status",
-		Short: "inspect the status of Apache APISIX Dashboard service",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			serviceState.status = true
-			status, err := service.manageService()
-			fmt.Println(status)
-			return err
-		},
-	}
-	return cmd
-}
-
-func newStopCommand() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "stop",
-		Short: "stop Apache APISIX Dashboard service/program",
-		Run: func(cmd *cobra.Command, args []string) {
-			pid, err := utils.ReadPID(conf.PIDPath)
-			if err != nil {
-				if syscall.ENOENT.Error() != err.Error() {
-					fmt.Fprintf(os.Stderr, "failed to get manager-api pid: %s\n", err)
-				} else {
-					fmt.Fprintf(os.Stderr, "pid path %s not found, is manager-api running?\n", conf.PIDPath)
-				}
-				return
-			}
-			if err := syscall.Kill(pid, syscall.SIGINT); err != nil {
-				fmt.Fprintf(os.Stderr, "failed to kill manager-api: %s", err)
-			}
-		},
-	}
-	return cmd
-}
-
-func newRemoveCommand() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "remove",
-		Short: "remove Apache APISIX Dashboard service",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			serviceState.removeService = true
-			status, err := service.manageService()
-			fmt.Println(status)
-			return err
-		},
-	}
-	return cmd
+	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Loglevel", conf.ErrorLogLevel)
+	fmt.Fprintf(os.Stdout, "%-8s: %s\n\n", "Logfile", conf.ErrorLogPath)
 }

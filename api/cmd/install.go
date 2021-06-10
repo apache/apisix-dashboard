@@ -14,17 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package main
+package cmd
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/apisix/manager-api/cmd"
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	if err := cmd.NewManagerAPICommand().Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
+var service *Service
+
+func newInstallCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "install",
+		Short: "re-install Apache APISIX Dashboard service",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			serviceState.installService = true
+			status, err := service.manageService()
+			fmt.Println(status)
+			return err
+		},
 	}
 }

@@ -57,7 +57,7 @@ jobs:
         working-directory: ./api
         run: |
           sed -i 's@# - dubbo-proxy@- dubbo-proxy@' ./conf/conf.yaml
-          nohup go run ./cmd/manager &
+          nohup go run ./main.go &
 
       - name: Cache node_modules
         uses: actions/cache@v2.1.6
