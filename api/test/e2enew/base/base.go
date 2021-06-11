@@ -41,6 +41,7 @@ var (
 	APISIXInternalUrl      = "http://172.16.238.30:9080"
 	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
 	ManagerAPIHost         = "http://127.0.0.1:9000"
+	PrometheusExporter     = "http://127.0.0.1:9091"
 )
 
 func GetToken() string {
@@ -77,6 +78,11 @@ func ManagerApiExpect() *httpexpect.Expect {
 func APISIXExpect() *httpexpect.Expect {
 	t := getTestingHandle()
 	return httpexpect.New(t, APISIXHost)
+}
+
+func PrometheusExporterExpect() *httpexpect.Expect {
+	t := getTestingHandle()
+	return httpexpect.New(t, PrometheusExporter)
 }
 
 func APISIXHTTPSExpect() *httpexpect.Expect {

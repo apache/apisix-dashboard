@@ -2701,6 +2701,84 @@
 			},
 			"version": 0.1
 		},
+		"ext-plugin-post-req": {
+			"priority": -3000,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"conf": {
+						"items": {
+							"properties": {
+								"name": {
+									"maxLength": 128,
+									"minLength": 1,
+									"type": "string"
+								},
+								"value": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"extra_info": {
+						"items": {
+							"maxLength": 64,
+							"minLength": 1,
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
+		"ext-plugin-pre-req": {
+			"priority": 12000,
+			"schema": {
+				"$comment": "this is a mark for our injected plugin schema",
+				"properties": {
+					"conf": {
+						"items": {
+							"properties": {
+								"name": {
+									"maxLength": 128,
+									"minLength": 1,
+									"type": "string"
+								},
+								"value": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						},
+						"minItems": 1,
+						"type": "array"
+					},
+					"disable": {
+						"type": "boolean"
+					},
+					"extra_info": {
+						"items": {
+							"maxLength": 64,
+							"minLength": 1,
+							"type": "string"
+						},
+						"minItems": 1,
+						"type": "array"
+					}
+				},
+				"type": "object"
+			},
+			"version": 0.1
+		},
 		"fault-injection": {
 			"priority": 11000,
 			"schema": {
