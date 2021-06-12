@@ -45,19 +45,19 @@ Note: `Manager API` 2.7 should be used with [Apache APISIX 2.6](https://apisix.a
 - Feat: refactor Plugin Orchestration [#1813](https://github.com/apache/apisix-dashboard/pull/1813)
 - Feat: add the service page upstream select option [#1633](https://github.com/apache/apisix-dashboard/pull/1633)
 - Feat: improve the Duplicate Route feature [#1833](https://github.com/apache/apisix-dashboard/pull/1833)
+- Feat: add api of config migrate, export and import [#1893](https://github.com/apache/apisix-dashboard/pull/1893)
 
 ### Bugfix
 
 - Fix: can not configure upstream with no nodes [#1812](https://github.com/apache/apisix-dashboard/pull/1812)
 - Fix: add missing label in nodes component [#1823](https://github.com/apache/apisix-dashboard/pull/1823)
-- Fix: use remote address instead of client ip [#1831](https://github.com/apache/apisix-dashboard/pull/1831)
 - Fix: when create the upstream, some properties can still be edited on the preview page bug [#1828](https://github.com/apache/apisix-dashboard/pull/1828)
 - Fix: default cors plugin formdata validation error [#1855](https://github.com/apache/apisix-dashboard/pull/1855)
 - Fix: generate a uid when post a route without id [#1883](https://github.com/apache/apisix-dashboard/pull/1883)
 - Fix: route page Portable [#1887](https://github.com/apache/apisix-dashboard/pull/1887)
-- Fix: turn off online debug [#1903](https://github.com/apache/apisix-dashboard/pull/1903)
 - Fix: invalid import issues [#1899](https://github.com/apache/apisix-dashboard/pull/1899)
 - Fix: efficient error handling in manager-api including graceful shutdown, self contained methods. [#1814](https://github.com/apache/apisix-dashboard/pull/1814)
+- Fix: regex & omit vars when no value [#1921](https://github.com/apache/apisix-dashboard/pull/1921)
 
 ### Test Case
 
