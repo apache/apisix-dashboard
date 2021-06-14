@@ -60,13 +60,13 @@ context('Create and Delete Consumer', () => {
       cy.contains('Enable').click({ force: true });
     });
     cy.focused(selector.drawer).should('exist');
+    cy.get('.view-zones').should('exist');
 
     // edit monaco
     cy.get(selector.disabledSwitcher).click().should('have.class', 'ant-switch-checked');
-      cy.window().then((window) => {
-        cy.waitUntil(() => window.monacoEditor)
-          .then(() => window.monacoEditor.setValue(JSON.stringify({ key: 'test' })));
-        cy.contains('button', 'Submit').click();
+    cy.window().then((window) => {
+      window.monacoEditor.setValue(JSON.stringify({ key: 'test' }));
+      cy.contains('button', 'Submit').click();
     });
 
     cy.contains(selector.pluginCard, 'limit-req').within(() => {

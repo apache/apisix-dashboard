@@ -60,12 +60,12 @@ context('Create and delete Consumer with referer-restriction form ', () => {
       });
     });
     cy.focused(selector.drawer).should('exist');
+    cy.get('.view-zones').should('exist');
     cy.get(selector.disabledSwitcher).click();
 
     // edit monaco
     cy.window().then((window) => {
-      cy.waitUntil(() => window.monacoEditor)
-        .then(() => window.monacoEditor.setValue(JSON.stringify({ key: 'test' })));
+      window.monacoEditor.setValue(JSON.stringify({ key: 'test' }));
       cy.contains('button', 'Submit').click();
     });
 

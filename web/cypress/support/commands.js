@@ -18,7 +18,6 @@
 import defaultSettings from '../../config/defaultSettings';
 import 'cypress-file-upload';
 import '@4tw/cypress-drag-drop';
-import 'cypress-wait-until';
 
 Cypress.Commands.add('login', () => {
   const { SERVE_ENV = 'dev' } = Cypress.env();
@@ -96,9 +95,9 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           }
         });
         // edit monaco
+        cy.get('.view-zones').should('exist');
         cy.window().then((window) => {
-          cy.waitUntil(() => window.monacoEditor)
-            .then(() => window.monacoEditor.setValue(JSON.stringify(data)))
+          window.monacoEditor.setValue(JSON.stringify(data));
 
           cy.get(domSelector.drawer, { timeout }).within(() => {
             cy.contains('Submit').click({
