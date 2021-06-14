@@ -31,7 +31,8 @@ context('Create and delete consumer with proxy-mirror plugin form', () => {
     max_age: '#max_age',
     allow_origins_by_regex: '#allow_origins_by_regex_0',
     host: '#host',
-    alert: '[role=alert]'
+    alert: '[role=alert]',
+    monacoViewZones: '.view-zones'
   }
 
   const data = {
@@ -63,7 +64,7 @@ context('Create and delete consumer with proxy-mirror plugin form', () => {
       });
     });
     cy.focused(selector.drawer).should('exist');
-    cy.get('.view-zones').should('exist');
+    cy.get(selector.monacoViewZones).should('exist');
     cy.get(selector.disabledSwitcher).click();
 
     // edit monaco

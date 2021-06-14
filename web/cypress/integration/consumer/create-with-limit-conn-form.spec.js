@@ -33,7 +33,8 @@ context('Create and delete consumer with limit-conn plugin form', () => {
     default_conn_delay: '#default_conn_delay',
     key: '#key',
     rejected_code: '#rejected_code',
-    title: '[title="remote_addr"]'
+    title: '[title="remote_addr"]',
+    monacoViewZones: '.view-zones'
   }
 
   const data = {
@@ -68,7 +69,7 @@ context('Create and delete consumer with limit-conn plugin form', () => {
       });
     });
     cy.focused(selector.drawer).should('exist');
-    cy.get('.view-zones').should('exist');
+    cy.get(selector.monacoViewZones).should('exist');
     cy.get(selector.disabledSwitcher).click();
 
     // edit monaco

@@ -30,7 +30,8 @@ context('Create and Delete Consumer', () => {
     rate: '#rate',
     burst: '#burst',
     key: '#key',
-    remote_addr: '[title=remote_addr]'
+    remote_addr: '[title=remote_addr]',
+    monacoViewZones: '.view-zones'
   }
 
   const data = {
@@ -60,7 +61,7 @@ context('Create and Delete Consumer', () => {
       cy.contains('Enable').click({ force: true });
     });
     cy.focused(selector.drawer).should('exist');
-    cy.get('.view-zones').should('exist');
+    cy.get(selector.monacoViewZones).should('exist');
 
     // edit monaco
     cy.get(selector.disabledSwitcher).click().should('have.class', 'ant-switch-checked');

@@ -27,6 +27,7 @@ context('Create and delete consumer with api-breaker plugin form', () => {
     drawer: '.ant-drawer-content',
     disabledSwitcher: '#disable',
     notification: '.ant-notification-notice-message',
+    monacoViewZones: '.view-zones'
   }
 
   const data = {
@@ -58,7 +59,7 @@ context('Create and delete consumer with api-breaker plugin form', () => {
       });
     });
     cy.focused(selector.drawer).should('exist');
-    cy.get('.view-zones').should('exist');
+    cy.get(selector.monacoViewZones).should('exist');
     cy.get(selector.disabledSwitcher).click();
 
     // edit monaco

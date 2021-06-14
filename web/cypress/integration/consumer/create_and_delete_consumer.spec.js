@@ -37,6 +37,7 @@ context('Create and Delete Consumer', () => {
     createConsumerSuccess: 'Create Consumer Successfully',
     deleteConsumerSuccess: 'Delete Consumer Successfully',
     pluginErrorAlert: 'Invalid plugin data',
+    monacoViewZones: '.view-zones'
   }
 
   beforeEach(() => {
@@ -66,7 +67,7 @@ context('Create and Delete Consumer', () => {
     cy.get(selector.disabledSwitcher).click();
 
     // edit monaco
-    cy.get('.view-zones').should('exist');
+    cy.get(selector.monacoViewZones).should('exist').click({ force: true });
     cy.window().then((window) => {
       window.monacoEditor.setValue(JSON.stringify({ key: 'test' }));
       cy.contains('button', 'Submit').click();
@@ -113,7 +114,7 @@ context('Create and Delete Consumer', () => {
     });
 
     // edit monaco
-    cy.get('.view-zones').should('exist');
+    cy.get(selector.monacoViewZones).should('exist').click({ force: true });
     cy.window().then((window) => {
       window.monacoEditor.setValue(JSON.stringify({ key_not_exist: 'test' }));
       cy.contains('button', 'Submit').click();

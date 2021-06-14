@@ -44,7 +44,8 @@ Cypress.Commands.add('configurePlugins', (cases) => {
     close: '.anticon-close',
     selectDropdown: '.ant-select-dropdown',
     monacoMode: '[data-cy="monaco-mode"]',
-    selectJSON: '.ant-select-dropdown [label=JSON]'
+    selectJSON: '.ant-select-dropdown [label=JSON]',
+    monacoViewZones: '.view-zones'
   };
 
   cy.get(domSelector.name, { timeout }).then(function (cards) {
@@ -95,7 +96,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           }
         });
         // edit monaco
-        cy.get('.view-zones').should('exist');
+        cy.get(domSelector.monacoViewZones).should('exist').click({ force: true });
         cy.window().then((window) => {
           window.monacoEditor.setValue(JSON.stringify(data));
 

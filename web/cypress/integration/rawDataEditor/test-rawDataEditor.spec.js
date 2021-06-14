@@ -24,6 +24,7 @@ context('Test RawDataEditor', () => {
     tableBody: '.ant-table-tbody',
     drawer: '.ant-drawer-content',
     notification: '.ant-notification-notice-message',
+    monacoViewZones: '.view-zones'
   };
 
   const data = {
@@ -55,7 +56,7 @@ context('Test RawDataEditor', () => {
 
       const dataSetItem = dataset[item];
 
-      cy.get('.view-zones').should('exist');
+      cy.get(selector.monacoViewZones).should('exist').click({ force: true });
       // edit monaco
       cy.window().then((window) => {
         window.monacoEditor.setValue(JSON.stringify(dataSetItem));
@@ -85,13 +86,13 @@ context('Test RawDataEditor', () => {
           .click();
       }
 
-      cy.get('.view-zones').should('exist');
+      cy.get(selector.monacoViewZones).should('exist').click({ force: true });
       // edit monaco
-      cy.window().then(({monacoEditor}) => {
+      cy.window().then((window) => {
         if (item === 'Consumer') {
-          monacoEditor.setValue(JSON.stringify({ ...dataSetItem, desc: 'newDesc' }));
+          window.monacoEditor.setValue(JSON.stringify({ ...dataSetItem, desc: 'newDesc' }));
         } else {
-          monacoEditor.setValue(JSON.stringify({ ...dataSetItem, name: 'newName' }));
+          window.monacoEditor.setValue(JSON.stringify({ ...dataSetItem, name: 'newName' }));
         }
         cy.get(selector.drawer).should('exist');
         cy.get(selector.drawer, { timeout }).within(() => {

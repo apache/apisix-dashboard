@@ -33,7 +33,8 @@ context('Create and Delete Consumer', () => {
     key: '#key',
     remote_addr: '[title=remote_addr]',
     max_age: '#max_age',
-    allow_origins_by_regex: '#allow_origins_by_regex_0'
+    allow_origins_by_regex: '#allow_origins_by_regex_0',
+    monacoViewZones: '.view-zones'
   }
 
   const data = {
@@ -65,7 +66,7 @@ context('Create and Delete Consumer', () => {
       });
     });
     cy.focused(selector.drawer).should('exist');
-    cy.get('.view-zones').should('exist');
+    cy.get(selector.monacoViewZones).should('exist');
     cy.get(selector.disabledSwitcher).click().should('have.class', 'ant-switch-checked');
 
     // edit monaco

@@ -39,6 +39,7 @@ context('Create and delete consumer with limit-count plugin form', () => {
     redis_cluster_name: '#redis_cluster_name',
     redis_cluster_nodes_0: '#redis_cluster_nodes_0',
     redis_cluster_nodes_1: '#redis_cluster_nodes_1',
+    monacoViewZones: '.view-zones'
   }
 
   const data = {
@@ -69,7 +70,7 @@ context('Create and delete consumer with limit-count plugin form', () => {
       });
     });
     cy.focused(selector.drawer).should('exist');
-    cy.get('.view-zones').should('exist');
+    cy.get(selector.monacoViewZones).should('exist');
     cy.get(selector.disabledSwitcher).click();
 
     // edit monaco

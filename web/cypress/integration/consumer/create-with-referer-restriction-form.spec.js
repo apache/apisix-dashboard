@@ -29,6 +29,7 @@ context('Create and delete Consumer with referer-restriction form ', () => {
     notification: '.ant-notification-notice-message',
     whitelist: "#whitelist_0",
     bypass_missing: "#bypass_missing",
+    monacoViewZones: '.view-zones'
   }
 
   const data = {
@@ -60,7 +61,7 @@ context('Create and delete Consumer with referer-restriction form ', () => {
       });
     });
     cy.focused(selector.drawer).should('exist');
-    cy.get('.view-zones').should('exist');
+    cy.get(selector.monacoViewZones).should('exist');
     cy.get(selector.disabledSwitcher).click();
 
     // edit monaco
