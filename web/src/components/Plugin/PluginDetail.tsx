@@ -154,6 +154,14 @@ const PluginDetail: React.FC<Props> = ({
     }
   }, []);
 
+  const formatYaml = (yaml: string): string => {
+    const json=yaml2json(yaml,true)
+    if (json.error){
+      return yaml
+    }
+    return json2yaml(json.data).data;
+  }
+
   const editorWillMount = (monaco: Monaco) => {
     fetchSchema(name, schemaType).then((schema)=> {
       const schemaConfig: languages.json.DiagnosticsOptions = {
@@ -169,7 +177,16 @@ const PluginDetail: React.FC<Props> = ({
         trailingCommas: "error",
         enableSchemaRequest: false
       };
-      monaco.editor.getModels().forEach(model => model.updateOptions({tabSize: 2}))
+      const yamlFormatProvider: languages.DocumentFormattingEditProvider = {
+        provideDocumentFormattingEdits(model) {
+          return [{
+            text: formatYaml(model.getValue()),
+            range: model.getFullModelRange()
+          }];
+        }
+      };
+      monaco.languages.registerDocumentFormattingEditProvider("yaml",yamlFormatProvider);
+      monaco.editor.getModels().forEach(model => model.updateOptions({tabSize: 2}));
       monaco.languages.json.jsonDefaults.setDiagnosticsOptions(schemaConfig);
     })
   }

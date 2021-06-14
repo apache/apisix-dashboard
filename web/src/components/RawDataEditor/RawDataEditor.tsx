@@ -20,7 +20,9 @@ import { LinkOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useIntl } from 'umi';
 import { js_beautify } from 'js-beautify';
+import type {Monaco} from "@monaco-editor/react";
 import Editor from "@monaco-editor/react";
+import type {languages} from "monaco-editor";
 
 import { json2yaml, yaml2json } from '../../helpers';
 
@@ -95,6 +97,30 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
     }
     setMonacoLanguage(value)
   };
+
+  const formatYaml = (yaml: string): string=> {
+    const json=yaml2json(yaml,true)
+    if (json.error){
+      return yaml;
+    }
+    return json2yaml(json.data).data;
+  }
+
+  const editorWillMount = (monaco: Monaco) => {
+    const yamlFormatProvider: languages.DocumentFormattingEditProvider = {
+      provideDocumentFormattingEdits(model) {
+        return [{
+          text: formatYaml(model.getValue()),
+          range: model.getFullModelRange()
+        }];
+      }
+    };
+    monaco.languages.registerDocumentFormattingEditProvider("yaml",yamlFormatProvider);
+    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      validate: true,
+      trailingCommas: "error",
+    });
+  }
 
   return (
     <>
@@ -186,12 +212,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
             // @ts-ignore
             window.monacoEditor = editor;
           }}
-          beforeMount={(monaco)=>{
-            monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-              validate: true,
-              trailingCommas: "error"
-            });
-          }}
+          beforeMount={editorWillMount}
           language={monacoLanguage.toLocaleLowerCase()}
           options={{
             scrollbar:{
