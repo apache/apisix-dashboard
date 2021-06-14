@@ -29,6 +29,7 @@ context('Create and Delete Consumer', () => {
     nameSelector: '[title=Name]',
     serviceSelector: '[title=test_service]',
     monacoScroll: ".monaco-scrollable-element",
+    monacoViewZones: '.view-zones'
   }
 
   const data = {
@@ -36,8 +37,7 @@ context('Create and Delete Consumer', () => {
     description: 'desc_by_autotest',
     createConsumerSuccess: 'Create Consumer Successfully',
     deleteConsumerSuccess: 'Delete Consumer Successfully',
-    pluginErrorAlert: 'Invalid plugin data',
-    monacoViewZones: '.view-zones'
+    pluginErrorAlert: 'Invalid plugin data'
   }
 
   beforeEach(() => {
