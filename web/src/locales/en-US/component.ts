@@ -81,4 +81,7 @@ export default {
   'component.global.copy': 'Copy',
   'component.global.copySuccess': 'Copy Successfully ',
   'component.global.copyFail': 'Copy Failed',
+
+  'component.global.invalidYaml': 'Invalid Yaml data',
+  'component.global.invalidJson': 'Invalid Json data',
 };

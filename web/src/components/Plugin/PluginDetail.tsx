@@ -14,30 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   Button,
-  notification,
-  PageHeader,
-  Switch,
-  Form,
-  Select,
   Divider,
   Drawer,
-  Alert,
-  Space,
-  Popconfirm,
-  Tooltip,
+  Form,
   Input,
+  notification,
+  PageHeader,
+  Popconfirm,
+  Select,
+  Space,
+  Switch,
 } from 'antd';
 import { useIntl } from 'umi';
-import CodeMirror from '@uiw/react-codemirror';
 import { js_beautify } from 'js-beautify';
 import { LinkOutlined } from '@ant-design/icons';
 import Ajv from 'ajv';
 import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
 import { compact, omit } from 'lodash';
+import type { Monaco } from "@monaco-editor/react";
+import Editor from "@monaco-editor/react";
+import type {languages} from "monaco-editor";
 
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
@@ -55,7 +56,7 @@ type Props = {
   maskClosable?: boolean;
   isEnabled?: boolean;
   onClose?: () => void;
-  onChange?: (data: any) => void;
+  onChange?: (data: PluginComponent.PluginDetailValues) => void;
 };
 
 const ajv = new Ajv();
@@ -98,26 +99,24 @@ const PluginDetail: React.FC<Props> = ({
   onChange = () => { },
 }) => {
   const { formatMessage } = useIntl();
-  enum codeMirrorModeList {
+  enum monacoModeList {
     JSON = 'JSON',
     YAML = 'YAML',
     UIForm = 'Form'
   }
   const [form] = Form.useForm();
   const [UIForm] = Form.useForm();
-  const ref = useRef<any>(null);
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.type;
-  const [codeMirrorMode, setCodeMirrorMode] = useState<PluginComponent.CodeMirrorMode>(
-    codeMirrorModeList.JSON,
-  );
+  const [content, setContent] = useState<string>(JSON.stringify(data, null, 2));
+  const [monacoMode, setMonacoMode] = useState<PluginComponent.MonacoLanguage>(monacoModeList.JSON);
   const modeOptions: { label: string; value: string }[] = [
-    { label: codeMirrorModeList.JSON, value: codeMirrorModeList.JSON },
-    { label: codeMirrorModeList.YAML, value: codeMirrorModeList.YAML },
+    { label: monacoModeList.JSON, value: monacoModeList.JSON },
+    { label: monacoModeList.YAML, value: monacoModeList.YAML },
   ];
 
   if (PLUGIN_UI_LIST.includes(name)) {
-    modeOptions.push({ label: formatMessage({ id: 'component.plugin.form' }), value: codeMirrorModeList.UIForm });
+    modeOptions.push({ label: formatMessage({ id: 'component.plugin.form' }), value: monacoModeList.UIForm });
   }
 
   const getUIFormData = () => {
@@ -150,10 +149,47 @@ const PluginDetail: React.FC<Props> = ({
       scope: 'global',
     });
     if (PLUGIN_UI_LIST.includes(name)) {
-      setCodeMirrorMode(codeMirrorModeList.UIForm);
+      setMonacoMode(monacoModeList.UIForm);
       setUIFormData(initialData[name]);
-    };
+    }
   }, []);
+
+  const formatYaml = (yaml: string): string => {
+    const json=yaml2json(yaml,true)
+    if (json.error){
+      return yaml
+    }
+    return json2yaml(json.data).data;
+  }
+
+  const editorWillMount = (monaco: Monaco) => {
+    fetchSchema(name, schemaType).then((schema)=> {
+      const schemaConfig: languages.json.DiagnosticsOptions = {
+        validate: true,
+        schemas: [
+          {
+            // useless placeholder
+            uri: `https://apisix.apache.org/`,
+            fileMatch: ['*'],
+            schema
+          }
+        ],
+        trailingCommas: "error",
+        enableSchemaRequest: false
+      };
+      const yamlFormatProvider: languages.DocumentFormattingEditProvider = {
+        provideDocumentFormattingEdits(model) {
+          return [{
+            text: formatYaml(model.getValue()),
+            range: model.getFullModelRange()
+          }];
+        }
+      };
+      monaco.languages.registerDocumentFormattingEditProvider("yaml",yamlFormatProvider);
+      monaco.editor.getModels().forEach(model => model.updateOptions({tabSize: 2}));
+      monaco.languages.json.jsonDefaults.setDiagnosticsOptions(schemaConfig);
+    })
+  }
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
     return fetchSchema(pluginName, schemaType).then((schema) => {
@@ -199,53 +235,40 @@ const PluginDetail: React.FC<Props> = ({
       });
     });
   };
-  const handleModeChange = (value: PluginComponent.CodeMirrorMode) => {
+
+  const handleModeChange = (value: PluginComponent.MonacoLanguage) => {
     switch (value) {
-      case codeMirrorModeList.JSON: {
-        if (codeMirrorMode === codeMirrorModeList.YAML) {
-          const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
+      case monacoModeList.JSON: {
+        if (monacoMode === monacoModeList.YAML) {
+          const { data: yamlData, error } = yaml2json(content, true);
           if (error) {
-            notification.error({
-              message: 'Invalid Yaml data',
-            });
+            notification.error({message: formatMessage({id: 'component.global.invalidYaml'})});
             return;
           }
-          ref.current.editor.setValue(
-            js_beautify(yamlData, {
-              indent_size: 2,
-            }),
-          );
+          setContent(js_beautify(yamlData, { indent_size: 2 }))
         } else {
-          ref.current.editor.setValue(
-            js_beautify(JSON.stringify(getUIFormData()), {
-              indent_size: 2,
-            }),
-          );
+          setContent(js_beautify(JSON.stringify(getUIFormData()), { indent_size: 2 }))
         }
         break;
       }
-      case codeMirrorModeList.YAML: {
-        const { data: jsonData, error } = json2yaml(codeMirrorMode === codeMirrorModeList.JSON ? ref.current.editor.getValue() : JSON.stringify(getUIFormData()));
-
-        if (error) {
-          notification.error({
-            message: 'Invalid Json data',
-          });
+      case monacoModeList.YAML: {
+        const jsonData = monacoMode === monacoModeList.JSON ? content : JSON.stringify(getUIFormData());
+        const { data: yamlData, error } = json2yaml(jsonData);
+        if (error){
+          notification.error({ message: formatMessage({ id:'component.global.invalidJson' }) });
           return;
         }
-        ref.current.editor.setValue(jsonData);
+        setContent(yamlData);
         break;
       }
 
-      case codeMirrorModeList.UIForm: {
-        if (codeMirrorMode === codeMirrorModeList.JSON) {
-          setUIFormData(JSON.parse(ref.current.editor.getValue()));
+      case monacoModeList.UIForm: {
+        if (monacoMode === monacoModeList.JSON) {
+          setUIFormData(JSON.parse(content));
         } else {
-          const { data: yamlData, error } = yaml2json(ref.current.editor.getValue(), true);
+          const { data: yamlData, error } = yaml2json(content, true);
           if (error) {
-            notification.error({
-              message: 'Invalid Yaml data',
-            });
+            notification.error({ message: formatMessage({ id:'component.global.invalidYaml' }) });
             return;
           }
           setUIFormData(JSON.parse(yamlData));
@@ -255,26 +278,10 @@ const PluginDetail: React.FC<Props> = ({
       default:
         break;
     }
-    setCodeMirrorMode(value);
+    setMonacoMode(value);
   };
 
-  const formatCodes = () => {
-    try {
-      if (ref.current) {
-        ref.current.editor.setValue(
-          js_beautify(ref.current.editor.getValue(), {
-            indent_size: 2,
-          }),
-        );
-      }
-    } catch (error) {
-      notification.error({
-        message: 'Format failed',
-      });
-    }
-  };
-
-  const isNoConfigurationRequired = pluginType === PluginType.authentication && schemaType !== 'consumer' && (codeMirrorMode !== codeMirrorModeList.UIForm)
+  const isNoConfigurationRequired = pluginType === PluginType.authentication && schemaType !== 'consumer' && (monacoMode !== monacoModeList.UIForm);
 
   return (
     <Drawer
@@ -301,7 +308,7 @@ const PluginDetail: React.FC<Props> = ({
               onConfirm={() => {
                 onChange({
                   formData: form.getFieldsValue(),
-                  codemirrorData: {},
+                  monacoData: {},
                   shouldDelete: true,
                 });
               }}
@@ -319,21 +326,19 @@ const PluginDetail: React.FC<Props> = ({
               onClick={() => {
                 try {
                   let editorData;
-                  if (codeMirrorMode === codeMirrorModeList.JSON) {
-                    editorData = JSON.parse(ref.current?.editor.getValue());
-                  } else if (codeMirrorMode === codeMirrorModeList.YAML) {
-                    editorData = yaml2json(ref.current?.editor.getValue(), false).data;
+                  if (monacoMode === monacoModeList.JSON) {
+                    editorData = JSON.parse(content);
+                  } else if (monacoMode === monacoModeList.YAML) {
+                    editorData = yaml2json(content, false).data;
                   } else {
                     editorData = getUIFormData();
                   }
 
                   validateData(name, editorData).then((value) => {
-                    onChange({ formData: form.getFieldsValue(), codemirrorData: value });
+                    onChange({ formData: form.getFieldsValue(), monacoData: value });
                   });
                 } catch (error) {
-                  notification.error({
-                    message: 'Invalid JSON data',
-                  });
+                  notification.error({ message: formatMessage({ id:'component.global.invalidJson' }) });
                 }
               }}
             >
@@ -384,20 +389,13 @@ const PluginDetail: React.FC<Props> = ({
         ghost={false}
         extra={[
           <Select
-            defaultValue={codeMirrorModeList.JSON}
-            value={codeMirrorMode}
+            defaultValue={monacoModeList.JSON}
+            value={monacoMode}
             options={modeOptions}
-            onChange={(value: PluginComponent.CodeMirrorMode) => {
-              handleModeChange(value);
-            }}
-            data-cy='code-mirror-mode'
+            onChange={handleModeChange}
+            data-cy='monaco-mode'
             key={1}
-          ></Select>,
-          <Tooltip title={formatMessage({ id: "component.plugin.format-codes.disable" })} key={2}>
-            <Button type="primary" onClick={formatCodes} disabled={codeMirrorMode === codeMirrorModeList.UIForm}>
-              {formatMessage({ id: 'component.global.format' })}
-            </Button>
-          </Tooltip>,
+          />,
           <Button
             type="default"
             icon={<LinkOutlined />}
@@ -414,25 +412,34 @@ const PluginDetail: React.FC<Props> = ({
           </Button>
         ]}
       />
-      {Boolean(codeMirrorMode === codeMirrorModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === PluginType.authentication && schemaType !== 'consumer')} />}
-      <div style={{ display: codeMirrorMode === codeMirrorModeList.UIForm ? 'none' : 'unset' }}><CodeMirror
-        ref={(codemirror) => {
-          ref.current = codemirror;
-          if (codemirror) {
+      {Boolean(monacoMode === monacoModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === PluginType.authentication && schemaType !== 'consumer')} />}
+      <div style={{ display: monacoMode === monacoModeList.UIForm ? 'none' : 'unset' }}>
+        <Editor
+          value={content}
+          onChange={text=>{
+            if (text) {
+              setContent(text);
+            } else {
+              setContent('');
+            }
+          }}
+          language={monacoMode.toLocaleLowerCase()}
+          onMount={(editor)=>{
             // NOTE: for debug & test
             // @ts-ignore
-            window.codemirror = codemirror.editor;
-          }
-        }}
-        value={JSON.stringify(data, null, 2)}
-        options={{
-          mode: codeMirrorMode,
-          readOnly: (readonly || isNoConfigurationRequired) ? 'nocursor' : '',
-          lineWrapping: true,
-          lineNumbers: true,
-          showCursorWhenSelecting: true,
-          autofocus: true,
-        }} />
+            window.monacoEditor = editor;
+          }}
+          beforeMount={editorWillMount}
+          options={{
+            scrollbar: {
+              vertical: 'hidden',
+              horizontal: 'hidden',
+            },
+            wordWrap: "on",
+            minimap: {enabled: false},
+            readOnly: readonly,
+          }}
+        />
       </div>
     </Drawer>
   );

@@ -18,7 +18,16 @@ import { Button, message, notification } from 'antd';
 
 import React from 'react';
 import { formatMessage } from 'umi';
+import { loader } from '@monaco-editor/react';
+import { getLocale } from 'umi';
+
 import defaultSettings from '../config/defaultSettings';
+
+// see https://github.com/suren-atoyan/monaco-react/issues/168
+loader.config({ paths: { vs: '/monaco-editor/min/vs' } });
+if (getLocale() === 'zh-CN'){
+  loader.config({ "vs/nls": { availableLanguages: { "*": 'zh-cn' } } });
+}
 
 const { pwa } = defaultSettings;
 // if pwa is true

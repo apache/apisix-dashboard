@@ -23,7 +23,7 @@ context('Delete Plugin List with the Drawer', () => {
     pluginCardBordered: '.ant-card-bordered',
     drawer: '.ant-drawer-content',
     selectDropdown: '.ant-select-dropdown',
-    codeMirrorMode: "[data-cy='code-mirror-mode']",
+    monacoMode: "[data-cy='monaco-mode']",
     selectJSON: '.ant-select-dropdown [label=JSON]',
     drawerFooter: '.ant-drawer-footer',
     disabledSwitcher: '#disable',
@@ -51,9 +51,9 @@ context('Delete Plugin List with the Drawer', () => {
       });
     });
 
-    cy.get(selector.codeMirrorMode).invoke('text').then(text => {
+    cy.get(selector.monacoMode).invoke('text').then(text => {
       if (text === 'Form') {
-        cy.get(selector.codeMirrorMode).click();
+        cy.get(selector.monacoMode).click();
         cy.get(selector.selectDropdown).should('be.visible');
         cy.get(selector.selectJSON).click();
       }

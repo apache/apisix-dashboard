@@ -26,13 +26,13 @@ context('Create and delete consumer with proxy-mirror plugin form', () => {
     drawer: '.ant-drawer-content',
     dropdown: '.rc-virtual-list',
     disabledSwitcher: '#disable',
-    codeMirror: '.CodeMirror',
     notification: '.ant-notification-notice-message',
     notificationCloseIcon: '.ant-notification-close-icon',
     max_age: '#max_age',
     allow_origins_by_regex: '#allow_origins_by_regex_0',
     host: '#host',
-    alert: '[role=alert]'
+    alert: '[role=alert]',
+    monacoViewZones: '.view-zones'
   }
 
   const data = {
@@ -64,18 +64,14 @@ context('Create and delete consumer with proxy-mirror plugin form', () => {
       });
     });
     cy.focused(selector.drawer).should('exist');
+    cy.get(selector.monacoViewZones).should('exist');
     cy.get(selector.disabledSwitcher).click();
-    // edit codemirror
-    cy.get(selector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+
+    // edit monaco
+    cy.window().then((window) => {
+      window.monacoEditor.setValue(JSON.stringify({ key: 'test' }));
+      cy.contains('button', 'Submit').click();
+    });
 
     cy.contains(selector.pluginCard, 'proxy-mirror').within(() => {
       cy.contains('Enable').click({
@@ -98,7 +94,7 @@ context('Create and delete consumer with proxy-mirror plugin form', () => {
 
     // config proxy-mirror form with correct host
     cy.get(selector.host).clear().type('http://127.0.0.1:1999');
-    cy.get(selector.alert).should('not.exist');
+    cy.get(selector.alert).should('not.be.visible');
     cy.get(selector.disabledSwitcher).click();
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({

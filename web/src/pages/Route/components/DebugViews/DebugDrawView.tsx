@@ -14,29 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Drawer, Form, Input, notification, Radio, Select, Spin, Tabs } from 'antd';
 import { useIntl } from 'umi';
-import CodeMirror from '@uiw/react-codemirror';
 import queryString from 'query-string';
 import Base64 from 'base-64';
 import urlRegexSafe from 'url-regex-safe';
 import CopyToClipboard from "react-copy-to-clipboard";
 import { CopyOutlined } from "@ant-design/icons";
+import type * as monacoEditor from "monaco-editor";
+import type { Monaco } from "@monaco-editor/react";
+import Editor from "@monaco-editor/react";
 
 import PanelSection from '@/components/PanelSection';
 
 import {
-  HTTP_METHOD_OPTION_LIST,
-  DEFAULT_DEBUG_PARAM_FORM_DATA,
-  DEFAULT_DEBUG_AUTH_FORM_DATA,
-  PROTOCOL_SUPPORTED,
+  DEBUG_BODY_MODE_SUPPORTED,
   DEBUG_BODY_TYPE_SUPPORTED,
-  DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED,
-  DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED,
+  DEBUG_RESPONSE_BODY_MODE_SUPPORTED,
   DebugBodyFormDataValueType,
+  DEFAULT_DEBUG_AUTH_FORM_DATA,
+  DEFAULT_DEBUG_PARAM_FORM_DATA,
+  HTTP_METHOD_OPTION_LIST,
+  PROTOCOL_SUPPORTED,
 } from '../../constants';
-import { DebugParamsView, AuthenticationView, DebugFormDataView } from '.';
+import { AuthenticationView, DebugFormDataView, DebugParamsView } from '.';
 import { debugRoute } from '../../service';
 import styles from './index.less';
 
@@ -56,15 +58,15 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
   const [headerForm] = Form.useForm();
   const [response, setResponse] = useState<RouteModule.debugResponse | null>()
   const [loading, setLoading] = useState(false);
-  const [codeMirrorHeight, setCodeMirrorHeight] = useState<number | string>(50);
-  const bodyCodeMirrorRef = useRef<any>(null);
+  const [body, setBody] = useState('');
+  const [height,setHeight] = useState(50);
   const [bodyType, setBodyType] = useState('none');
   const methodWithoutBody = ['GET', 'HEAD'];
-  const [responseBodyCodeMirrorMode, setResponseBodyCodeMirrorMode] = useState(
-    DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode,
+  const [responseBodyMode, setResponseBodyMode] = useState(
+    DEBUG_RESPONSE_BODY_MODE_SUPPORTED[0].mode,
   );
-  const [bodyCodeMirrorMode, setBodyCodeMirrorMode] = useState(
-    DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode,
+  const [bodyMode, setBodyCodeMode] = useState(
+    DEBUG_BODY_MODE_SUPPORTED[0].mode,
   );
 
   enum DebugBodyType {
@@ -114,21 +116,21 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
       }
       case DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput]: {
         let contentType = [''];
-        switch (bodyCodeMirrorMode) {
-          case DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[0].mode:
+        switch (bodyMode) {
+          case DEBUG_BODY_MODE_SUPPORTED[0].mode:
             contentType = ['application/json;charset=UTF-8'];
             break;
-          case DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[1].mode:
+          case DEBUG_BODY_MODE_SUPPORTED[1].mode:
             contentType = ['text/plain;charset=UTF-8'];
             break;
-          case DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED[2].mode:
+          case DEBUG_BODY_MODE_SUPPORTED[2].mode:
             contentType = ['application/xml;charset=UTF-8'];
             break;
           default: break;
         }
 
         return {
-          bodyFormData: bodyCodeMirrorRef.current.editor.getValue(),
+          bodyFormData: body,
           header: {
             'Content-type': contentType
           }
@@ -241,22 +243,34 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
         setResponse(resp);
         const contentType = resp.header["Content-Type"];
         if (contentType == null || contentType.length !== 1) {
-          setResponseBodyCodeMirrorMode("TEXT");
+          setResponseBodyMode("TEXT");
         } else if (contentType[0].toLowerCase().indexOf("json") !== -1) {
-          setResponseBodyCodeMirrorMode("JSON");
+          setResponseBodyMode("JSON");
         } else if (contentType[0].toLowerCase().indexOf("xml") !== -1) {
-          setResponseBodyCodeMirrorMode("XML");
+          setResponseBodyMode("XML");
         } else if (contentType[0].toLowerCase().indexOf("html") !== -1) {
-          setResponseBodyCodeMirrorMode("HTML");
+          setResponseBodyMode("HTML");
         } else {
-          setResponseBodyCodeMirrorMode("TEXT");
+          setResponseBodyMode("TEXT");
         }
-        setCodeMirrorHeight('auto');
       })
       .catch(() => {
         setLoading(false);
       });
   };
+
+  const handleEditorMount = (editor: monacoEditor.editor.IStandaloneCodeEditor, monaco: Monaco) => {
+    editor.onDidChangeModelDecorations(() => {
+      if (!editor.getDomNode()) {
+        return;
+      }
+      const padding = 40;
+      const lineHeight = editor.getOption(monaco.editor.EditorOption.lineHeight);
+      const lineCount = editor.getModel()?.getLineCount() || 1;
+      setHeight(editor.getTopForLineNumber(lineCount + 1) + lineHeight + padding);
+    })
+  };
+
   return (
     <Drawer
       title={formatMessage({ id: 'page.route.onlineDebug' })}
@@ -321,7 +335,6 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
             onChange={(e) => {
               if (e.currentTarget.value === '') {
                 resetForms();
-                setCodeMirrorHeight(50);
               }
             }}
           />
@@ -357,12 +370,12 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                   <Select
                     size="small"
                     onChange={(value) => {
-                      setBodyCodeMirrorMode(value);
+                      setBodyCodeMode(value);
                     }}
                     style={{ width: 100 }}
-                    defaultValue={bodyCodeMirrorMode}
+                    defaultValue={bodyMode}
                   >
-                    {DEBUG_BODY_CODEMIRROR_MODE_SUPPORTED.map((modeObj) => (
+                    {DEBUG_BODY_MODE_SUPPORTED.map((modeObj) => (
                       <Option key={modeObj.name} value={modeObj.mode}>
                         {modeObj.name}
                       </Option>
@@ -381,23 +394,27 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                   {bodyType === DEBUG_BODY_TYPE_SUPPORTED[DebugBodyType.RawInput] && (
                     <Form>
                       <Form.Item>
-                        <CodeMirror
-                          ref={(codemirror) => {
-                            bodyCodeMirrorRef.current = codemirror;
-                            if (codemirror) {
-                              // NOTE: for debug & test
-                              window.codeMirrorBody = codemirror.editor;
+                        <Editor
+                          value={body}
+                          language={bodyMode.toLowerCase()}
+                          onChange={(text)=>{
+                            if (text){
+                              setBody(text);
+                            } else {
+                              setBody('');
                             }
                           }}
                           height={250}
+                          beforeMount={(monaco) => {
+                            monaco?.languages.json.jsonDefaults.setDiagnosticsOptions({validate: false});
+                          }}
                           options={{
-                            mode: bodyCodeMirrorMode,
-                            readOnly: '',
-                            lineWrapping: true,
-                            lineNumbers: true,
-                            showCursorWhenSelecting: true,
-                            autofocus: true,
-                            scrollbarStyle: null,
+                            scrollbar:{
+                              vertical: 'hidden',
+                              horizontal: 'hidden',
+                            },
+                            wordWrap: "on",
+                            minimap: {enabled: false},
                           }}
                         />
                       </Form.Item>
@@ -416,10 +433,10 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
               <TabPane tab={formatMessage({ id: 'page.route.TabPane.response' })} key="response">
                 <Select
                   disabled={response == null}
-                  value={responseBodyCodeMirrorMode}
-                  onSelect={(mode) => setResponseBodyCodeMirrorMode(mode as string)}>
+                  value={responseBodyMode}
+                  onSelect={(mode) => setResponseBodyMode(mode as string)}>
                   {
-                    DEBUG_RESPONSE_BODY_CODEMIRROR_MODE_SUPPORTED.map(mode => {
+                    DEBUG_RESPONSE_BODY_MODE_SUPPORTED.map(mode => {
                       return <Option value={mode.mode} key={mode.mode}>{mode.name}</Option>
                     })
                   }
@@ -441,18 +458,24 @@ const DebugDrawView: React.FC<RouteModule.DebugDrawProps> = (props) => {
                     <CopyOutlined />
                   </Button>
                 </CopyToClipboard>
-                <div id='codeMirror-response' style={{ marginTop: 16 }}>
-                  <CodeMirror
+                <div id='monaco-response' style={{ marginTop: 16 }}>
+                  <Editor
                     value={response ? response.data : ""}
-                    height={codeMirrorHeight}
+                    height={height}
+                    language={responseBodyMode.toLowerCase()}
+                    onMount={handleEditorMount}
+                    beforeMount={(monaco) => {
+                      monaco?.languages.json.jsonDefaults.setDiagnosticsOptions({validate: false});
+                    }}
                     options={{
-                      mode: responseBodyCodeMirrorMode,
-                      readOnly: 'nocursor',
-                      lineWrapping: true,
-                      lineNumbers: true,
-                      showCursorWhenSelecting: true,
-                      autofocus: true,
-                      scrollbarStyle: null,
+                      automaticLayout:true,
+                      scrollbar:{
+                        vertical: 'hidden',
+                        horizontal: 'hidden',
+                      },
+                      wordWrap: "on",
+                      minimap: {enabled: false},
+                      readOnly: true,
                     }}
                   />
                 </div>

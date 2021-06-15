@@ -77,4 +77,7 @@ export default {
   'component.global.copy': '复制',
   'component.global.copySuccess': '复制成功',
   'component.global.copyFail': '复制失败',
+
+  'component.global.invalidYaml': '无效的 Yaml 数据',
+  'component.global.invalidJson': '无效的 Json 数据',
 };

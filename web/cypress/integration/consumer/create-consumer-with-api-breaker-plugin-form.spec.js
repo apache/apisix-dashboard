@@ -26,8 +26,8 @@ context('Create and delete consumer with api-breaker plugin form', () => {
     pluginCard: '.ant-card',
     drawer: '.ant-drawer-content',
     disabledSwitcher: '#disable',
-    codeMirror: '.CodeMirror',
     notification: '.ant-notification-notice-message',
+    monacoViewZones: '.view-zones'
   }
 
   const data = {
@@ -59,18 +59,14 @@ context('Create and delete consumer with api-breaker plugin form', () => {
       });
     });
     cy.focused(selector.drawer).should('exist');
+    cy.get(selector.monacoViewZones).should('exist');
     cy.get(selector.disabledSwitcher).click();
-    // edit codemirror
-    cy.get(selector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+
+    // edit monaco
+    cy.window().then((window) => {
+      window.monacoEditor.setValue(JSON.stringify({ key: 'test' }));
+      cy.contains('button', 'Submit').click();
+    });
 
     cy.contains(selector.pluginCard, 'api-breaker').within(() => {
       cy.contains('Enable').click({

@@ -26,7 +26,6 @@ context('Create and Delete Consumer', () => {
     drawer: '.ant-drawer-content',
     dropdown: '.rc-virtual-list',
     disabledSwitcher: '#disable',
-    codeMirror: '.CodeMirror',
     notification: '.ant-notification-notice-message',
     notificationCloseIcon: '.ant-notification-close-icon',
     rate: '#rate',
@@ -34,7 +33,8 @@ context('Create and Delete Consumer', () => {
     key: '#key',
     remote_addr: '[title=remote_addr]',
     max_age: '#max_age',
-    allow_origins_by_regex: '#allow_origins_by_regex_0'
+    allow_origins_by_regex: '#allow_origins_by_regex_0',
+    monacoViewZones: '.view-zones'
   }
 
   const data = {
@@ -66,18 +66,15 @@ context('Create and Delete Consumer', () => {
       });
     });
     cy.focused(selector.drawer).should('exist');
+    cy.get(selector.monacoViewZones).should('exist');
     cy.get(selector.disabledSwitcher).click().should('have.class', 'ant-switch-checked');
-    // edit codemirror
-    cy.get(selector.codeMirror)
-      .first()
-      .then((editor) => {
-        editor[0].CodeMirror.setValue(
-          JSON.stringify({
-            key: 'test',
-          }),
-        );
-        cy.contains('button', 'Submit').click();
-      });
+
+    // edit monaco
+    cy.window().then((window) => {
+      window.monacoEditor.setValue(JSON.stringify({ key: 'test' }));
+
+      cy.contains('button', 'Submit').click();
+    });
 
     cy.contains(selector.pluginCard, 'cors').within(() => {
       cy.contains('Enable').click({

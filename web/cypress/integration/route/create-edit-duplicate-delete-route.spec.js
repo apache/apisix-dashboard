@@ -43,11 +43,11 @@ context('Create and Delete Route', () => {
     checkedSwitcher: '.ant-switch-checked',
     drawer: '.ant-drawer-content',
     selectDropdown: '.ant-select-dropdown',
-    codeMirrorMode: "[data-cy='code-mirror-mode']",
+    monacoMode: "[data-cy='monaco-mode']",
     selectJSON: '.ant-select-dropdown [label=JSON]',
     drawerFooter: '.ant-drawer-footer',
     nameSelector: '[title=Name]',
-    codemirrorScroll: '.CodeMirror-scroll',
+    monacoScroll: ".monaco-scrollable-element",
     deleteAlert: '.ant-modal-body',
     notificationCloseIcon: '.ant-notification-close-icon',
     notification: '.ant-notification-notice-message',
@@ -137,7 +137,7 @@ context('Create and Delete Route', () => {
         cy.get(selector.checkedSwitcher).should('exist');
       });
 
-    cy.get(selector.codeMirrorMode).click();
+    cy.get(selector.monacoMode).click();
     cy.get(selector.selectDropdown).should('be.visible');
     cy.get(selector.selectJSON).click();
 
@@ -181,7 +181,7 @@ context('Create and Delete Route', () => {
     cy.contains('View').click();
     cy.get(selector.drawer).should('be.visible');
 
-    cy.get(selector.codemirrorScroll).within(() => {
+    cy.get(selector.monacoScroll).within(() => {
       cy.contains('upstream').should('exist');
       cy.contains('vars').should('exist')
       cy.contains(name).should('exist');
@@ -219,7 +219,7 @@ context('Create and Delete Route', () => {
     cy.contains('View').click();
     cy.get(selector.drawer).should('be.visible');
 
-    cy.get(selector.codemirrorScroll).within(() => {
+    cy.get(selector.monacoScroll).within(() => {
       cy.contains('upstream').should('exist');
       cy.contains(newName).should('exist');
       cy.contains('vars').should('not.exist');
@@ -254,7 +254,7 @@ context('Create and Delete Route', () => {
     cy.contains('View').click();
     cy.get(selector.drawer).should('be.visible');
 
-    cy.get(selector.codemirrorScroll).within(() => {
+    cy.get(selector.monacoScroll).within(() => {
       cy.contains('upstream').should('exist');
       cy.contains(duplicateNewName).should('exist');
     });
