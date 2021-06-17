@@ -64,7 +64,7 @@ jobs:
           api/test/shell/manager_smoking.sh -s true
 
       - name: Publish Artifact
-        uses: actions/upload-artifact@v2.2.3
+        uses: actions/upload-artifact@v2.2.4
         with:
           name: "rpm"
           path: "./apisix-build-tools/output/apisix-dashboard-${{ steps.branch_env.outputs.version }}-0.x86_64.rpm"
