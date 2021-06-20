@@ -27,7 +27,7 @@ The following are parts of the modules' snapshot.
 
 We support the monitor page by referencing it in [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe). Before accessing [Grafana](https://grafana.com/), please Enable [`allow_embedding=true`](https://grafana.com/docs/grafana/latest/administration/configuration/#allow_embedding), which defaults to `false`. This causes the browser to fail to render Grafana pages properly due to security policies.
 
-![metrics-en](../../assets/images/metrics-en.png)
+![metrics-en](https://user-images.githubusercontent.com/48355572/122654587-33291100-d16a-11eb-8c39-735e02ee9768.png)
 
 ## Route
 
@@ -39,13 +39,13 @@ The Route module aims to control routes by UI instead of calling APIs.
 
 ### Create
 
-![route-create-step1-en](../../assets/images/route-create-step1-en.png)
+![route-create-step1-en](https://user-images.githubusercontent.com/48355572/122654608-505ddf80-d16a-11eb-957d-333e23b90ec2.png)
 
-![route-create-step2-en](../../assets/images/route-create-step2-en.png)
+![route-create-step2-en](https://user-images.githubusercontent.com/48355572/122654628-6e2b4480-d16a-11eb-9272-1460c60af3f0.png)
 
-![route-create-step3-en](../../assets/images/route-create-step3-en.png)
+![route-create-step3-en](https://user-images.githubusercontent.com/48355572/122654650-813e1480-d16a-11eb-8dcd-5866db1f793b.png)
 
-![route-create-step4-en](../../assets/images/route-create-step4-en.png)
+![route-create-step4-en](https://user-images.githubusercontent.com/48355572/122654659-90bd5d80-d16a-11eb-8d36-8a0fd8ef2a00.png)
 
 ![route-create-done-list-en](../../assets/images/route-create-done-list-en.png)
 
@@ -59,7 +59,7 @@ We can debug a route both published or offline with the online debug function, w
 
 2. Debug a offline route
 
-![route-debug-offline](../../assets/images/route-debug-offline.png)
+![route-debug-offline](https://user-images.githubusercontent.com/48355572/122654680-b8acc100-d16a-11eb-92bc-75336fff32b8.png)
 
 3. Debug a published route with query params
 
@@ -79,4 +79,4 @@ We can debug a route both published or offline with the online debug function, w
 
 ## Setting
 
-![setting](../../assets/images/setting-en.png)
+![setting](https://user-images.githubusercontent.com/48355572/122654699-d67a2600-d16a-11eb-989b-05ff577e1039.png)
