@@ -41,7 +41,7 @@ func InitLogger() {
 }
 
 func GetLogger(logType Type) *zap.SugaredLogger {
-	zap.RegisterSink("winfile", newWinFileSink)
+	_ = zap.RegisterSink("winfile", newWinFileSink)
 
 	writeSyncer := fileWriter(logType)
 	encoder := getEncoder(logType)
