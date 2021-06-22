@@ -23,7 +23,6 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	"strings"
 
 	"github.com/tidwall/gjson"
 	"gopkg.in/yaml.v2"
@@ -192,7 +191,7 @@ func setConf() {
 		if config.Conf.Log.ErrorLog.FilePath != "" {
 			ErrorLogPath = config.Conf.Log.ErrorLog.FilePath
 		}
-		if !strings.HasPrefix(ErrorLogPath, "winfile") && !filepath.IsAbs(ErrorLogPath) {
+		if !filepath.IsAbs(ErrorLogPath) {
 			ErrorLogPath, err = filepath.Abs(filepath.Join(WorkDir, ErrorLogPath))
 			if err != nil {
 				panic(err)
@@ -203,11 +202,17 @@ func setConf() {
 		if config.Conf.Log.AccessLog.FilePath != "" {
 			AccessLogPath = config.Conf.Log.AccessLog.FilePath
 		}
-		if !strings.HasPrefix(ErrorLogPath, "winfile") && !filepath.IsAbs(AccessLogPath) {
+		if !filepath.IsAbs(AccessLogPath) {
 			AccessLogPath, err = filepath.Abs(filepath.Join(WorkDir, AccessLogPath))
 			if err != nil {
 				panic(err)
 			}
+		}
+
+		// compatible with Windows
+		if runtime.GOOS == "windows" {
+			ErrorLogPath = `winfile:///` + ErrorLogPath
+			AccessLogPath = `winfile:///` + AccessLogPath
 		}
 
 		AllowList = config.Conf.AllowList
