@@ -32,6 +32,7 @@ import (
 )
 
 func (s *server) setupHTTPServer() {
+	// orchestrator
 	droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
 		var newMws []droplet.Middleware
 		// default middleware order: resp_reshape, auto_input, traffic_log
@@ -43,6 +44,8 @@ func (s *server) setupHTTPServer() {
 
 	// routes
 	r := internal.SetUpRouter()
+
+	// HTTP
 	addr := net.JoinHostPort(conf.ServerHost, strconv.Itoa(conf.ServerPort))
 	s.server = &http.Server{
 		Addr:         addr,
