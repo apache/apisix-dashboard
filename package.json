@@ -1,8 +1,0 @@
-{
-  "devDependencies": {
-    "husky": "^6.0.0"
-  },
-  "scripts": {
-    "prepare": "cd .. && husky install web/.husky"
-  }
-}
