@@ -83,18 +83,22 @@ func manageAPI() error {
 		return err
 	}
 
-	err = s.Start()
-	if err != nil {
-		return err
-	}
+	// start Manager API server
+	errSig := make(chan error, 5)
+	s.Start(errSig)
 
 	// Signal received to the process externally.
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	sig := <-quit
 
-	log.Infof("The Manager API server receive %s and start shutting down", sig.String())
-	s.Stop()
-	log.Infof("The Manager API server exited")
+	select {
+	case sig := <-quit:
+		log.Infof("The Manager API server receive %s and start shutting down", sig.String())
+		s.Stop()
+		log.Infof("The Manager API server exited")
+	case err := <-errSig:
+		log.Errorf("The Manager API server start failed: %s", err.Error())
+		return err
+	}
 	return nil
 }

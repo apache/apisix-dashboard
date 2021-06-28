@@ -44,29 +44,29 @@ func NewServer(options *Options) (*server, error) {
 	return &server{options: options}, nil
 }
 
-func (s *server) Start() error {
+func (s *server) Start(errSig chan error) {
 	// initialize server
 	err := s.init()
 	if err != nil {
-		return err
+		errSig <- err
+		return
 	}
 
 	// write daemon pid file
 	err = s.writePID()
 	if err != nil {
-		return err
+		errSig <- err
+		return
 	}
 
 	// print server info to stdout
 	s.printInfo()
 
-	// For internal error handling across multiple goroutines.
-	errSig := make(chan error, 1)
-
 	// start HTTP server
 	log.Infof("The Manager API is listening on %s", s.server.Addr)
 	go func() {
-		if err := s.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		err := s.server.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
 			log.Errorf("listen and serv fail: %s", err)
 			errSig <- err
 		}
@@ -81,14 +81,6 @@ func (s *server) Start() error {
 				errSig <- err
 			}
 		}()
-	}
-
-	// handle HTTP(s) server error
-	select {
-	case err := <-errSig:
-		return err
-	default:
-		return nil
 	}
 }
 
