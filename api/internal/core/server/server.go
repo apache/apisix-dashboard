@@ -107,7 +107,7 @@ func (s *server) init() error {
 	}
 
 	log.Info("Initialize Manager API server")
-	s.setupHTTPServer()
+	s.setupAPI()
 
 	return nil
 }

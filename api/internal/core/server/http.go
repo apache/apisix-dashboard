@@ -31,7 +31,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler"
 )
 
-func (s *server) setupHTTPServer() {
+func (s *server) setupAPI() {
 	// orchestrator
 	droplet.Option.Orchestrator = func(mws []droplet.Middleware) []droplet.Middleware {
 		var newMws []droplet.Middleware
