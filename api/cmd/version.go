@@ -17,9 +17,6 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/apisix/manager-api/internal/utils"
@@ -30,13 +27,7 @@ func newVersionCommand() *cobra.Command {
 		Use:   "version",
 		Short: "show manager-api version",
 		Run: func(cmd *cobra.Command, args []string) {
-			printVersion()
+			utils.PrintVersion()
 		},
 	}
-}
-
-func printVersion() {
-	gitHash, version := utils.GetHashAndVersion()
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Version", version)
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "GitHash", gitHash)
 }
