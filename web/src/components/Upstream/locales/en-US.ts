@@ -79,6 +79,10 @@ export default {
   'component.upstream.fields.checks.active.unhealthy.http_failures.tooltip': 'Number of HTTP failures to consider a target unhealthy',
   'component.upstream.fields.checks.active.unhealthy.http_failures.required': 'Please enter the HTTP failures',
 
+  'component.upstream.fields.checks.active.unhealthy.tcp_failures': 'TCP Failures',
+  'component.upstream.fields.checks.active.unhealthy.tcp_failures.tooltip': 'Number of TCP failures to consider a target unhealthy',
+  'component.upstream.fields.checks.active.unhealthy.tcp_failures.required': 'Please enter the TCP Failures',
+
   'component.upstream.fields.checks.active.unhealthy.interval': 'Interval',
   'component.upstream.fields.checks.active.unhealthy.interval.tooltip': 'Interval between active health checks for unhealthy targets (in seconds). A value of zero indicates that active probes for healthy targets should not be performed.',
   'component.upstream.fields.checks.active.unhealthy.required': 'Please enter the unhelthy interval',
