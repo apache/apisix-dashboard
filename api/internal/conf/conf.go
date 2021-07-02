@@ -145,8 +145,7 @@ func InitConf() {
 	}
 
 	setupConfig()
-
-	setEnvironment()
+	setupEnv()
 	initSchema()
 }
 
@@ -195,7 +194,7 @@ func setupConfig() {
 		SSLKey = config.Conf.SSL.Key
 	}
 
-	// for etcd
+	// ETCD Storage
 	if len(config.Conf.Etcd.Endpoints) > 0 {
 		initEtcdConfig(config.Conf.Etcd)
 	}
@@ -243,13 +242,14 @@ func setupConfig() {
 	// set degree of parallelism
 	initParallelism(config.Conf.MaxCpu)
 
-	// auth
+	// set authentication
 	initAuthentication(config.Authentication)
 
+	// set plugin
 	initPlugins(config.Plugins)
 }
 
-func setEnvironment() {
+func setupEnv() {
 	ENV = EnvPROD
 	if env := os.Getenv("ENV"); env != "" {
 		ENV = env
