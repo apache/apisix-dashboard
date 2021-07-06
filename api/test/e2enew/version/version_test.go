@@ -17,7 +17,6 @@
 package version
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/onsi/ginkgo"
@@ -45,8 +44,7 @@ var _ = ginkgo.Describe("Version", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody: []string{"\"code\":2000001",
-				fmt.Sprintf("\"message\":\"The manager-api and apache apisix are mismatched. The version "+
-					"of Dashboard is %s and should be used with APISIX %s\"", "version1", "version2"),
+				"\"message\":\"The manager-api and apache apisix are mismatched.\"",
 				"\"matched\":false", "apisix_server1", "apisix_server2"},
 		}),
 	)
