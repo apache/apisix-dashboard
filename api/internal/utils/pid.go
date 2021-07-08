@@ -25,9 +25,12 @@ import (
 )
 
 // WritePID write pid to the given file path.
-func WritePID(filepath string) error {
-	if _, err := os.Stat(filepath); err == nil {
-		return fmt.Errorf("instance of Manager API already running: a pid file exists in %s", filepath)
+func WritePID(filepath string, forceStart bool) error {
+	if pid, err := ReadPID(filepath); err == nil {
+		if !forceStart {
+			return fmt.Errorf("Instance of Manager API maybe running with a pid %d. If not, please run Manager API with '-f' or '--force' flag\n", pid)
+		}
+		fmt.Printf("Force starting new instance. Another instance of Manager API maybe running with pid %d\n", pid)
 	}
 	pid := os.Getpid()
 	f, err := os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC|os.O_CREATE, 0600)

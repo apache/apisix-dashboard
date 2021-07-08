@@ -14,26 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package utils
+package server
 
 import (
-	"fmt"
-	"os"
+	"github.com/apisix/manager-api/internal/conf"
+	"github.com/apisix/manager-api/internal/core/storage"
+	"github.com/apisix/manager-api/internal/core/store"
+	"github.com/apisix/manager-api/internal/log"
 )
 
-var (
-	gitHash string
-	version string
-)
-
-// GetHashAndVersion get the hash and version
-func GetHashAndVersion() (string, string) {
-	return gitHash, version
-}
-
-// PrintVersion print version and git hash to stdout
-func PrintVersion() {
-	gitHash, version := GetHashAndVersion()
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "Version", version)
-	fmt.Fprintf(os.Stdout, "%-8s: %s\n", "GitHash", gitHash)
+func (s *server) setupStore() error {
+	if err := storage.InitETCDClient(conf.ETCDConfig); err != nil {
+		log.Errorf("init etcd client fail: %w", err)
+		return err
+	}
+	if err := store.InitStores(); err != nil {
+		log.Errorf("init stores fail: %w", err)
+		return err
+	}
+	return nil
 }

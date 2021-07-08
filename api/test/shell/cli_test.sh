@@ -223,7 +223,7 @@ sleep 6
 
 cat ${logfile}
 
-if [[ `grep -c "cmd/root.go" ${logfile}` -ne '1' ]]; then
+if [[ `grep -c "server/store.go" ${logfile}` -ne '1' ]]; then
     echo "failed: failed to write the correct caller"
     exit 1
 fi
