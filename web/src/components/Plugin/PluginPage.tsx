@@ -225,7 +225,7 @@ const PluginPage: React.FC<Props> = ({
           );
         })}
         <br />
-        {formatMessage({ id: 'component.plugin.tip1' })}
+        {formatMessage({ id: 'component.plugin.tip1' })}&nbsp;
         <a
           href="https://apisix.apache.org/docs/dashboard/FAQ#4-after-modifying-the-plugin-schema-or-creating-a-custom-plugin-in-apache-apisix-why-cant-i-find-it-on-the-dashboard"
           target="_blank"
