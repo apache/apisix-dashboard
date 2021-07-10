@@ -44,7 +44,6 @@ const RequestId: React.FC<Props> = ({ form }) => {
                 name="header_name"
                 initialValue="X-Request-Id"
                 rules={[{
-                    required: false,
                     message: `${formatMessage({ id: 'component.global.pleaseEnter' })} header_name`
                 }]}
                 tooltip={formatMessage({ id: 'component.pluginForm.request-id.heade_name.tooltip' })}
@@ -55,10 +54,6 @@ const RequestId: React.FC<Props> = ({ form }) => {
             <Form.Item
                 label="include_in_response"
                 name="include_in_response"
-                rules={[{
-                    required: false,
-                    message: `${formatMessage({ id: 'component.global.pleaseEnter' })} include_in_response`
-                }]}
                 tooltip={formatMessage({ id: 'component.pluginForm.request-id.include_in_response.tooltip' })}
                 valuePropName="checked"
             >
