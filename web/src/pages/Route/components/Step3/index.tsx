@@ -83,7 +83,7 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
                 // NOTE: forceHttps do not support DRAW mode
                 const titleArr: string[] = [];
                 if (!useSupportBrowser) {
-                  titleArr.push(formatMessage({ id: 'page.route.tooltip.pluginOrchOnlySuportChrome' }));
+                  titleArr.push(formatMessage({ id: 'page.route.tooltip.pluginOrchOnlySupportChrome' }));
                 }
                 if (isForceHttps) {
                   titleArr.push(formatMessage({ id: 'page.route.tooltip.pluginOrchWithoutRedirect' }));
