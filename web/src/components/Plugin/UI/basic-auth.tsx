@@ -20,6 +20,7 @@ import { Form, Input } from 'antd';
 
 type Props = {
   form: FormInstance;
+  schema: Record<string, any> | undefined;
   ref?: any;
 };
 
@@ -32,7 +33,7 @@ export const FORM_ITEM_LAYOUT = {
   },
 };
 
-const BasicAuth: React.FC<Props> = ({ form }) => {
+const BasicAuth: React.FC<Props> = ({ form, schema }) => {
   return (
     <Form
       form={form}
