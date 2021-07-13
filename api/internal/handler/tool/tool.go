@@ -105,7 +105,7 @@ func (h *Handler) VersionMatch(c droplet.Context) (interface{}, error) {
 			Data: &output,
 			Code: 2000001,
 			Message: fmt.Sprintf("The Manager-api and Apache APISIX are mismatched. "+
-				"The version of Dashboard is %s and should be used with Apache APISIX %s",
+				"The version of Dashboard is %s, and should be used with Apache APISIX %s.",
 				version, matchedVersion),
 		}}, nil
 	}
