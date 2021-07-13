@@ -115,7 +115,7 @@ func TestTool_VersionMatch(t *testing.T) {
 						},
 					},
 					Code:    2000001,
-					Message: "The Manager-api and Apache APISIX are mismatched. The version of Dashboard is  and should be used with Apache APISIX ",
+					Message: "The Manager-api and Apache APISIX are mismatched. The version of Dashboard is , and should be used with Apache APISIX .",
 				}},
 			},
 		}
