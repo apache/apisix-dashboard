@@ -70,7 +70,7 @@ context('Create and Search Route', () => {
     cy.login();
   });
 
-  it('should create route test1, test2, test3', function () {
+  it('should create route test0, test1, test2', function () {
     cy.visit('/');
     cy.contains('Route').click();
     for (let i = 0; i < 3; i += 1) {
