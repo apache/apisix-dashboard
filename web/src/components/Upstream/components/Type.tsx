@@ -47,7 +47,7 @@ const CHash: React.FC<Pick<Props, 'readonly'>> = ({ readonly }) => {
       <Form.Item name="key" rules={[{ required: true }]}
                  label={formatMessage({ id: 'component.upstream.fields.key' })}
                  tooltip={formatMessage({ id: 'component.upstream.fields.key.tooltip' })} initialValue="remote_addr">
-        <AutoComplete onSearch={handleSearch}>
+        <AutoComplete disabled={readonly} onSearch={handleSearch}>
           {Object.entries(CommonHashKeyEnum)
             .filter((([label, value]) => label.startsWith(keySearchWord) || value.startsWith(keySearchWord)))
             .map(([label, value]) => (
