@@ -156,8 +156,11 @@ export const transformStepData = ({
         case 'http':
           key = `http_${name}`;
           break;
-        default:
+        case 'arg':
           key = `arg_${name}`;
+          break;
+        default:
+          key = `${name}`;
       }
       let finalValue = value
       if (operator === "IN") {
@@ -249,7 +252,14 @@ const transformVarsToRules = (
   data: [string, RouteModule.Operator, string | any[]][] = [],
 ): RouteModule.MatchingRule[] =>
   data.map(([key, operator, value]) => {
-    const [, position, name] = key.split(/^(cookie|http|arg)_/);
+    var position, name;
+    const regex = new RegExp('^(cookie|http|arg)_.+');
+    if (regex.test(key)) {
+      [, position, name] = key.split(/^(cookie|http|arg)_/);
+    }else {
+      position = "buildin";
+      name = key;
+    }
     return {
       position: position as RouteModule.VarPosition,
       name,

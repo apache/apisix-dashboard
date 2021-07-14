@@ -19,6 +19,7 @@ export default {
   'page.route.parameterPosition': '参数位置',
   'page.route.httpRequestHeader': 'HTTP 请求头',
   'page.route.requestParameter': '请求参数',
+  'page.route.buildinParameter': '内置参数',
   'page.route.parameterName': '参数名称',
   'page.route.operationalCharacter': '运算符',
   'page.route.equal': '等于（==）',
