@@ -17,6 +17,7 @@
 package tool
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -101,9 +102,11 @@ func (h *Handler) VersionMatch(c droplet.Context) (interface{}, error) {
 	} else {
 		// TODO: move this to utils
 		return &data.SpecCodeResponse{StatusCode: http.StatusOK, Response: data.Response{
-			Data:    &output,
-			Code:    2000001,
-			Message: "The manager-api and apache apisix are mismatched.",
+			Data: &output,
+			Code: 2000001,
+			Message: fmt.Sprintf("The Manager API and Apache APISIX are mismatched. "+
+				"The version of Manager API is %s, and should be used with Apache APISIX %s.",
+				version, matchedVersion),
 		}}, nil
 	}
 
