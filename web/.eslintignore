@@ -2,3 +2,4 @@
 /scripts
 /config
 .history
+.eslintrc.js
