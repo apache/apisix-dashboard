@@ -303,7 +303,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
                       <Input
                         placeholder={`${formatMessage({
                           id: 'component.global.pleaseEnter',
-                        })}${formatMessage({ id: 'page.route.parameterName' })}`}
+                        })} ${formatMessage({ id: 'page.route.parameterName' })}`}
                         disabled={disabled}
                       />
                     </Form.Item>
@@ -317,7 +317,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
                       <Input
                         placeholder={`${formatMessage({
                           id: 'component.global.pleaseEnter',
-                        })}${formatMessage({ id: 'page.route.value' })}`}
+                        })} ${formatMessage({ id: 'page.route.value' })}`}
                         disabled={disabled}
                       />
                     </Form.Item>

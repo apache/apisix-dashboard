@@ -48,7 +48,7 @@ export default {
 
   'page.route.form.itemRulesRequiredMessage.parameterName':
     'Only letters and Numbers are supported, and can only begin with letters',
-  'page.route.value': 'Value',
+  'page.route.value': 'Parameter Value',
   'page.route.panelSection.title.advancedMatchRule': 'Advanced Routing Matching Conditions',
 
   'page.route.panelSection.title.nameDescription': 'Name And Description',
@@ -139,7 +139,7 @@ export default {
   'page.route.list': 'Route List',
   'page.route.panelSection.title.requestOverride': 'Request Override',
   'page.route.form.itemLabel.headerRewrite': 'Header Override',
-  'page.route.tooltip.pluginOrchOnlySuportChrome': 'Plugin orchestration only supports Chrome.',
+  'page.route.tooltip.pluginOrchOnlySupportChrome': 'Plugin orchestration only supports Chrome.',
   'page.route.tooltip.pluginOrchWithoutProxyRewrite': 'Plugin orchestration mode cannot be used when request override is configured in Step 1.',
   'page.route.tooltip.pluginOrchWithoutRedirect': 'Plugin orchestration mode cannot be used when Redirect in Step 1 is selected to enable HTTPS.',
 
