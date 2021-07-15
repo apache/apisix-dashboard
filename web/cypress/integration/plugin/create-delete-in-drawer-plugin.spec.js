@@ -70,6 +70,23 @@ context('Delete Plugin List with the Drawer', () => {
     }).should('not.exist');
   });
 
+  it('should verify openid-connect and authz-keycloak plugin need to configure', function () {
+    cy.visit('/');
+    cy.contains('Plugin').click();
+    cy.contains('Enable').click();
+    ['openid-connect', 'authz-keycloak'].forEach((plugin) => {
+      cy.contains(plugin).parents(selector.pluginCardBordered).within(() => {
+        cy.get('button').click({
+          force: true
+        });
+      });
+      cy.get(selector.drawer).should('be.visible').within(() => {
+        cy.contains('.ant-alert-warning', 'Doesn\'t need configuration').should('not.exist');
+        cy.contains('button', 'Cancel').click();
+      });
+    })
+  })
+
   it('should delete the plugin with the drawer', function () {
     cy.visit('/plugin/list');
     cy.get(selector.refresh).click();

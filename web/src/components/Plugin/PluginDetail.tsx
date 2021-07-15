@@ -43,7 +43,6 @@ import type {languages} from "monaco-editor";
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
 import { PluginForm, PLUGIN_UI_LIST } from './UI';
-import { PluginType } from './data';
 
 type Props = {
   name: string;
@@ -107,7 +106,7 @@ const PluginDetail: React.FC<Props> = ({
   const [form] = Form.useForm();
   const [UIForm] = Form.useForm();
   const data = initialData[name] || {};
-  const pluginType = pluginList.find((item) => item.name === name)?.type;
+  const pluginType = pluginList.find((item) => item.name === name)?.originType;
   const [content, setContent] = useState<string>(JSON.stringify(data, null, 2));
   const [monacoMode, setMonacoMode] = useState<PluginComponent.MonacoLanguage>(monacoModeList.JSON);
   const modeOptions: { label: string; value: string }[] = [
@@ -281,7 +280,7 @@ const PluginDetail: React.FC<Props> = ({
     setMonacoMode(value);
   };
 
-  const isNoConfigurationRequired = pluginType === PluginType.authentication && schemaType !== 'consumer' && (monacoMode !== monacoModeList.UIForm);
+  const isNoConfigurationRequired = pluginType === 'auth' && schemaType !== 'consumer' && (monacoMode !== monacoModeList.UIForm);
 
   return (
     <Drawer
@@ -412,7 +411,7 @@ const PluginDetail: React.FC<Props> = ({
           </Button>
         ]}
       />
-      {Boolean(monacoMode === monacoModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === PluginType.authentication && schemaType !== 'consumer')} />}
+      {Boolean(monacoMode === monacoModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === 'auth' && schemaType !== 'consumer')} />}
       <div style={{ display: monacoMode === monacoModeList.UIForm ? 'none' : 'unset' }}>
         <Editor
           value={content}
