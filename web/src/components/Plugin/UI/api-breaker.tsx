@@ -22,6 +22,7 @@ import { useIntl } from 'umi';
 
 type Props = {
   form: FormInstance;
+  schema: Record<string, any> | undefined;
 };
 
 const FORM_ITEM_LAYOUT = {
@@ -39,14 +40,20 @@ const FORM_ITEM_WITHOUT_LABEL = {
   },
 };
 
-const ApiBreaker: React.FC<Props> = ({ form }) => {
+const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl()
-
+  const propertires = schema?.properties
+  const un_http_statuses = propertires.unhealthy.properties.http_statuses
+  const un_http_default = Array(un_http_statuses.minItems).join(".").split(".")
+  un_http_default[0] = un_http_statuses.default
+  const {http_statuses} = propertires.healthy.properties
+  const http_default = Array(http_statuses.minItems).join(".").split(".")
+  http_default[0] = http_statuses.default
   return (
     <Form
       form={form}
       {...FORM_ITEM_LAYOUT}
-      initialValues={{ unhealthy: { http_statuses: [500] }, healthy: { http_statuses: [200] } }}
+      initialValues={{ unhealthy: { http_statuses: un_http_default }, healthy: { http_statuses: http_default } }}
     >
       <Form.Item
         label="break_response_code"
@@ -58,16 +65,16 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.break_response_code.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
-        <InputNumber min={200} max={599} required />
+        <InputNumber min={propertires.break_response_code.minimum} max={propertires.break_response_code.maximum} required />
       </Form.Item>
 
       <Form.Item
         label="max_breaker_sec"
         name="max_breaker_sec"
-        initialValue={300}
+        initialValue={propertires.max_breaker_sec.default}
         tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.max_breaker_sec.tooltip' })}
       >
-        <InputNumber min={3} />
+        <InputNumber min={propertires.max_breaker_sec.minimum} />
       </Form.Item>
 
       <Form.List name={['unhealthy', 'http_statuses']}>
@@ -86,7 +93,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
                     validateTrigger={['onChange', 'onBlur']}
                     noStyle
                   >
-                    <InputNumber min={500} max={599} />
+                    <InputNumber min={un_http_statuses.items.minimum} max={un_http_statuses.items.maximum} />
                   </Form.Item>
                   {fields.length > 1 ? (
                     <MinusCircleOutlined
@@ -119,10 +126,10 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
       <Form.Item
         label="unhealthy.failures"
         name={['unhealthy', 'failures']}
-        initialValue={3}
+        initialValue={propertires.unhealthy.properties.failures.default}
         tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.unhealthy.failures.tooltip' })}
       >
-        <InputNumber min={1} />
+        <InputNumber min={propertires.unhealthy.properties.failures.minimum} />
       </Form.Item>
 
       <Form.List name={['healthy', 'http_statuses']}>
@@ -141,7 +148,7 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
                     validateTrigger={['onChange', 'onBlur']}
                     noStyle
                   >
-                    <InputNumber min={200} max={499} />
+                    <InputNumber min={http_statuses.items.minimum} max={http_statuses.items.maximum} />
                   </Form.Item>
                   {fields.length > 1 ? (
                     <MinusCircleOutlined
@@ -174,10 +181,10 @@ const ApiBreaker: React.FC<Props> = ({ form }) => {
       <Form.Item
         label="healthy.successes"
         name={['healthy', 'successes']}
-        initialValue={3}
+        initialValue={propertires.healthy.properties.successes.default}
         tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.healthy.successes.tooltip' })}
       >
-        <InputNumber min={1} />
+        <InputNumber min={propertires.healthy.properties.successes.minimum} />
       </Form.Item>
     </Form >
   );
