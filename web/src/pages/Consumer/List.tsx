@@ -78,7 +78,7 @@ const Page: React.FC = () => {
             {formatMessage({ id: 'component.global.edit' })}
           </Button>
           <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
-            setId(record.id);
+            setId(record.username);
             setRawData(omit(record, DELETE_FIELDS));
             setVisible(true);
             setEditorMode('update');
