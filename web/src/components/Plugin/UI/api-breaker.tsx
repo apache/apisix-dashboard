@@ -53,7 +53,7 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
     <Form
       form={form}
       {...FORM_ITEM_LAYOUT}
-      initialValues={{ unhealthy: { http_statuses: un_http_default }, healthy: { http_statuses: http_default } }}
+      initialValues={{ unhealthy: { http_statuses: un_http_default[0] }, healthy: { http_statuses: http_default[0] } }}
     >
       <Form.Item
         label="break_response_code"
