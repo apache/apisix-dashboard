@@ -44,16 +44,14 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl()
   const propertires = schema?.properties
   const un_http_statuses = propertires.unhealthy.properties.http_statuses
-  const un_http_default = Array(un_http_statuses.minItems).join(".").split(".")
-  un_http_default[0] = un_http_statuses.default
+  const un_http_default = un_http_statuses.default
   const {http_statuses} = propertires.healthy.properties
-  const http_default = Array(http_statuses.minItems).join(".").split(".")
-  http_default[0] = http_statuses.default
+  const http_default = http_statuses.default
   return (
     <Form
       form={form}
       {...FORM_ITEM_LAYOUT}
-      initialValues={{ unhealthy: { http_statuses: un_http_default[0] }, healthy: { http_statuses: http_default[0] } }}
+      initialValues={{ unhealthy: { http_statuses: un_http_default }, healthy: { http_statuses: http_default } }}
     >
       <Form.Item
         label="break_response_code"
