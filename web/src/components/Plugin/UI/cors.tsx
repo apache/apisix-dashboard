@@ -22,6 +22,7 @@ import { useIntl } from 'umi';
 
 type Props = {
   form: FormInstance;
+  schema: Record<string, any> | undefined;
   ref?: any;
 };
 
@@ -40,8 +41,11 @@ export const FORM_ITEM_WITHOUT_LABEL = {
   },
 };
 
-const Cors: React.FC<Props> = ({ form }) => {
+const Cors: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
+  const properties = schema?.properties
+  const { maxLength } = properties.allow_origins_by_regex.items
+  const regexInit = Array(properties.allow_origins_by_regex.minItems).join(".").split(".")
 
   const HTTPMethods: React.FC = () => (
     <Form.Item
@@ -110,7 +114,7 @@ const Cors: React.FC<Props> = ({ form }) => {
       <Form.Item
         name="max_age"
         label="max_age"
-        initialValue={5}
+        initialValue={properties.max_age.default}
         tooltip={formatMessage({ id: 'component.pluginForm.cors.max_age.tooltip' })}
       >
         <InputNumber />
@@ -119,13 +123,13 @@ const Cors: React.FC<Props> = ({ form }) => {
         name="allow_credential"
         label="allow_credential"
         valuePropName="checked"
-        initialValue={false}
+        initialValue={properties.allow_credential.default}
         tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_credential.tooltip' })}
       >
         <Switch />
       </Form.Item>
 
-      <Form.List name='allow_origins_by_regex' initialValue={['']}>
+      <Form.List name='allow_origins_by_regex' initialValue={regexInit}>
         {(fields, { add, remove }) => {
           return (
             <div>
@@ -156,7 +160,7 @@ const Cors: React.FC<Props> = ({ form }) => {
               ))}
               {
                 <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-                  <Button
+                  {fields.length < maxLength? (<Button
                     type="dashed"
                     data-cy="add-allow_origins_by_regex"
                     onClick={() => {
@@ -164,7 +168,7 @@ const Cors: React.FC<Props> = ({ form }) => {
                     }}
                   >
                     <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
-                  </Button>
+                  </Button>): null}
                 </Form.Item>
               }
             </div>
