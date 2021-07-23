@@ -45,7 +45,7 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
   const propertires = schema?.properties
   const un_http_statuses = propertires.unhealthy.properties.http_statuses
   const un_http_default = un_http_statuses.default
-  const {http_statuses} = propertires.healthy.properties
+  const { http_statuses } = propertires.healthy.properties
   const http_default = http_statuses.default
   return (
     <Form
