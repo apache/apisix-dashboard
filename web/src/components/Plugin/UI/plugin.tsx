@@ -53,7 +53,7 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
     case 'cors':
       return <Cors form={form} />
     case 'limit-req':
-      return <LimitReq form={form} />
+      return <LimitReq form={form} schema={schema} />
     case 'proxy-mirror':
       return <ProxyMirror form={form} />
     case 'limit-conn':
