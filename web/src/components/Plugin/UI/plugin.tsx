@@ -30,13 +30,14 @@ import Cors from './cors';
 
 type Props = {
   name: string,
+  schema: Record<string, any> | undefined,
   form: FormInstance,
   renderForm: boolean
 }
 
 export const PLUGIN_UI_LIST = ['api-breaker', 'basic-auth', 'cors', 'limit-req', 'limit-conn', 'proxy-mirror', 'referer-restriction', 'limit-count'];
 
-export const PluginForm: React.FC<Props> = ({ name, renderForm, form }) => {
+export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) => {
 
   const { formatMessage } = useIntl();
 
