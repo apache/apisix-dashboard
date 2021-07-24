@@ -44,8 +44,9 @@ export const FORM_ITEM_WITHOUT_LABEL = {
 const Cors: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
   const properties = schema?.properties
-  const { maxLength } = properties.allow_origins_by_regex.items
-  const regexInit = Array(properties.allow_origins_by_regex.minItems).join(".").split(".")
+  const regexPro = properties.allow_origins_by_regex
+  const { minLength, maxLength } = regexPro.items
+  const regexInit = Array(regexPro.minItems).join('.').split('.')
 
   const HTTPMethods: React.FC = () => (
     <Form.Item
@@ -56,7 +57,7 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
         <Col span={24}>
           <Form.Item
             name="allow_methods"
-            initialValue={["*"]}
+            initialValue={[properties.allow_methods.default]}
           >
             <Select
               mode="multiple"
@@ -88,7 +89,7 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
         extra={formatMessage({ id: 'component.pluginForm.cors.allow_origins.extra' })}
         name="allow_origins"
         label="allow_origins"
-        initialValue="*"
+        initialValue={properties.allow_origins.default}
         tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_origins.tooltip' })}
       >
         <Input />
@@ -98,7 +99,7 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
       <Form.Item
         name="allow_headers"
         label="allow_headers"
-        initialValue="*"
+        initialValue={properties.allow_headers.default}
         tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_headers.tooltip' })}
       >
         <Input />
@@ -106,7 +107,7 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
       <Form.Item
         name="expose_headers"
         label="expose_headers"
-        initialValue="*"
+        initialValue={properties.expose_headers.default}
         tooltip={formatMessage({ id: 'component.pluginForm.cors.expose_headers.tooltip' })}
       >
         <Input />
@@ -147,7 +148,7 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
                   >
                     <Input style={{ width: '80%' }} />
                   </Form.Item>
-                  {fields.length > 1 ? (
+                  {fields.length > minLength ? (
                     <MinusCircleOutlined
                       className="dynamic-delete-button"
                       style={{ margin: '0 8px' }}
