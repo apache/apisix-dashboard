@@ -25,7 +25,7 @@ title: FAQ
 
 If you need a Vue.js build of the Apache APISIX Dashboard 1.0, use the [master-vue branch](https://github.com/apache/apisix-dashboard/tree/master-vue).
 
-### What are the differences between Dashboard version 2.0 and version 1.5?
+### 2. What are the differences between Dashboard version 2.0 and version 1.5?
 
 The 2.0 version of the dashboard removed MySQL from [version 1.5](https://github.com/apache/apisix-dashboard/tree/backup-1.5-latest) and will operate directly on etcd.
 

@@ -95,6 +95,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
                         message: formatMessage({ id: 'page.upstream.step.input.weight' }),
                       },
                     ]}
+                    initialValue={1}
                   >
                     <InputNumber
                       placeholder={formatMessage({ id: 'page.upstream.step.weight' })}
