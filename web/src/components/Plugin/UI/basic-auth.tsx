@@ -20,6 +20,7 @@ import { Form, Input } from 'antd';
 
 type Props = {
   form: FormInstance;
+  schema: Record<string, any> | undefined;
   ref?: any;
 };
 
