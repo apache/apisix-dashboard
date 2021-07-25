@@ -59,7 +59,7 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
     case 'limit-conn':
       return <LimitConn form={form} />
     case 'referer-restriction':
-      return <RefererRestriction form={form} />
+      return <RefererRestriction form={form} schema={schema} />
     default:
       return null;
   }

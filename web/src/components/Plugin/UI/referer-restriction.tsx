@@ -22,6 +22,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 type Props = {
   form: FormInstance;
+  schema: Record<string, any> | undefined;
 };
 
 const FORM_ITEM_LAYOUT = {
@@ -45,13 +46,16 @@ const removeBtnStyle = {
   alignItems: 'center',
 };
 
-const RefererRestriction: React.FC<Props> = ({ form }) => {
+const RefererRestriction: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl()
+  const properties = schema?.properties
+  const whiteMinLen = properties.whitelist.minItems
+  const whiteInit = Array(whiteMinLen).join('.').split('.')
   return (
     <Form
       form={form}
       {...FORM_ITEM_LAYOUT}
-      initialValues={{ whitelist: [''] }}
+      initialValues={{ whitelist: whiteInit }}
     >
       <Form.List name="whitelist">
         {(fields, { add, remove }) => {
@@ -76,7 +80,7 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
                           message: formatMessage({
                             id: 'page.route.form.itemRulesPatternMessage.domain',
                           }),
-                          pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g')
+                          pattern: new RegExp(`${properties.whitelist.items.pattern}`, 'g')
                         }, {
                           required: true,
                           message: `${formatMessage({ id: 'component.global.pleaseEnter' })} whitelist`
@@ -86,7 +90,7 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
                       </Form.Item>
                     </Col>
                     <Col style={{ ...removeBtnStyle, marginLeft: -10 }}>
-                      {fields.length > 1 ? (
+                      {fields.length > whiteMinLen ? (
                         <MinusCircleOutlined
                           className="dynamic-delete-button"
                           onClick={() => {
@@ -119,7 +123,7 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.referer-restriction.bypass_missing.tooltip' })}
         valuePropName="checked"
       >
-        <Switch />
+        <Switch defaultChecked={properties.bypass_missing.default} />
       </Form.Item>
     </Form >
   );
