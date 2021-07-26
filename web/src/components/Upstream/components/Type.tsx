@@ -28,7 +28,7 @@ type Props = {
 
 const CHash: React.FC<Pick<Props, 'readonly'>> = ({ readonly }) => {
   const { formatMessage } = useIntl()
-  const [keySearchWord, setKeySearchWord] = useState<string>('');
+  const [keySearchWord, setKeySearchWord] = useState('');
 
   const handleSearch = (search: string) => {
     setKeySearchWord(search);
