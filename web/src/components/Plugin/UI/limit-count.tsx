@@ -195,7 +195,7 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
   const [policy, setPoicy] = useState<PolicyProps>(propertires.policy.default);
   const { formatMessage } = useIntl()
   const dependSchema = schema?.dependencies.policy.oneOf;
-  
+
   return (
     <Form
       form={form}
