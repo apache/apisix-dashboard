@@ -148,7 +148,7 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
                   >
                     <Input style={{ width: '80%' }} />
                   </Form.Item>
-                  {fields.length > minLength ? (
+                  {fields.length > minLength &&
                     <MinusCircleOutlined
                       className="dynamic-delete-button"
                       style={{ margin: '0 8px' }}
@@ -156,12 +156,12 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
                         remove(field.name);
                       }}
                     />
-                  ) : null}
+                  }
                 </Form.Item>
               ))}
               {
                 <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-                  {fields.length < maxLength? (<Button
+                  {fields.length < maxLength && <Button
                     type="dashed"
                     data-cy="add-allow_origins_by_regex"
                     onClick={() => {
@@ -169,7 +169,7 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
                     }}
                   >
                     <PlusOutlined /> {formatMessage({ id: 'component.global.create' })}
-                  </Button>): null}
+                  </Button>}
                 </Form.Item>
               }
             </div>
