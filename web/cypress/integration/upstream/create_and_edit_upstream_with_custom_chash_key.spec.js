@@ -16,7 +16,7 @@
  */
 /* eslint-disable no-undef */
 
-context('Create and Edit Service with Custom CHash Key Upstream', () => {
+context('Create and Delete Upstream With Custom CHash Key', () => {
   const selector = {
     name: '#name',
     description: '#desc',
@@ -27,35 +27,34 @@ context('Create and Edit Service with Custom CHash Key Upstream', () => {
     hashPosition: ".ant-select-item-option-content",
     chash_key: '#key',
     notification: '.ant-notification-notice-message',
-    nameSearch: '[title=Name]',
-    notificationCloseIcon: '.ant-notification-close-icon',
+    nameSelector: '[title=Name]',
   };
 
   const data = {
-    serviceName: 'chash-service',
-    createServiceSuccess: 'Create Service Successfully',
-    deleteServiceSuccess: 'Delete Service Successfully',
-    editServiceSuccess: 'Configure Service Successfully',
-    port: '80',
-    weight: 1,
+    upstreamName: 'test_upstream',
     description: 'desc_by_autotest',
-    ip1: '127.0.0.1',
-    port0: '7000',
-    weight0: '1',
     custom_key: 'custom_key',
     new_key: 'new_key',
+    ip: '127.0.0.1',
+    port: '7000',
+    weight: '1',
+    createUpstreamSuccess: 'Create Upstream Successfully',
+    configureUpstreamSuccess: 'Configure Upstream Successfully',
+    deleteUpstreamSuccess: 'Delete Upstream Successfully',
   };
 
   beforeEach(() => {
     cy.login();
   });
 
-  it('should create a service with custom CHash key Upstream', function () {
+  it('should create upstream with custom chash key', function () {
     cy.visit('/');
-    cy.contains('Service').click();
+    cy.contains('Upstream').click();
     cy.contains('Create').click();
-    cy.get(selector.name).type(data.serviceName);
+
+    cy.get(selector.name).type(data.upstreamName);
     cy.get(selector.description).type(data.description);
+
     cy.get('[title="Round Robin"]').click();
     cy.get(selector.upstreamType).within(() => {
       cy.contains('CHash').click();
@@ -65,39 +64,43 @@ context('Create and Edit Service with Custom CHash Key Upstream', () => {
       cy.contains('cookie').click();
     });
     cy.get('[value="remote_addr"]').click();
-    cy.get('[value="remote_addr"]').clear().type('custom_key');
+    cy.get('[value="remote_addr"]').clear().type(data.custom_key);
     cy.get(selector.nodes_0_host).click();
-    cy.get(selector.nodes_0_host).type(data.ip1);
-    cy.get(selector.nodes_0_port).clear().type(data.port0);
-    cy.get(selector.nodes_0_weight).clear().type(data.weight0);
-    cy.contains('Next').click();
+    cy.get(selector.nodes_0_host).type(data.ip);
+    cy.get(selector.nodes_0_port).clear().type(data.port);
+    cy.get(selector.nodes_0_weight).clear().type(data.weight);
+
     cy.contains('Next').click();
     cy.contains('Submit').click();
-    cy.get(selector.notification).should('contain', data.createServiceSuccess);
+    cy.get(selector.notification).should('contain', data.createUpstreamSuccess);
+    cy.url().should('contains', 'upstream/list');
   });
 
-  it('should edit the service', function () {
-    cy.visit('/service/list');
+  it('should configure the upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
 
-    cy.get(selector.nameSearch).type(data.serviceName);
+    cy.get(selector.nameSelector).type(data.upstreamName);
     cy.contains('Search').click();
-    cy.contains(data.serviceName).siblings().contains('Configure').click();
+    cy.contains(data.upstreamName).siblings().contains('Configure').click();
+
     cy.get(selector.chash_key).should('value', data.custom_key);
     cy.get(selector.chash_key).clear().type(data.new_key);
+
     cy.contains('Next').click();
-    cy.contains('Next').click();
-    cy.contains('Submit').click();
-    cy.get(selector.notification).should('contain', data.editServiceSuccess);
+    cy.contains('Submit').click({
+      force: true,
+    });
+
+    cy.get(selector.notification).should('contain', data.configureUpstreamSuccess);
+    cy.url().should('contains', 'upstream/list');
   });
 
-
-  it('should delete this service', function () {
-    cy.visit('/service/list');
-    cy.get(selector.nameSearch).type(data.serviceName);
-    cy.contains('Search').click();
-    cy.contains(data.serviceName).siblings().contains('Delete').click();
+  it('should delete the upstream', function () {
+    cy.visit('/');
+    cy.contains('Upstream').click();
+    cy.contains(data.upstreamName).siblings().contains('Delete').click();
     cy.contains('button', 'Confirm').click();
-    cy.get(selector.notification).should('contain', data.deleteServiceSuccess);
-    cy.get(selector.notificationCloseIcon).click();
+    cy.get(selector.notification).should('contain', data.deleteUpstreamSuccess);
   });
 });
