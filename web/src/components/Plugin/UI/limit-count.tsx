@@ -145,28 +145,28 @@ const RedisClusterForm: React.FC <FormsProps> = ({ schema }) => {
                       </Form.Item>
                     </Col>
                     <Col style={{ ...removeBtnStyle, marginLeft: -10 }}>
-                      {fields.length > minLength ? (
+                      {fields.length > minLength &&
                         <MinusCircleOutlined
                           className="dynamic-delete-button"
                           onClick={() => {
                             remove(field.name);
                           }}
                         />
-                      ) : null}
+                      }
                     </Col>
                   </Row>
                 ))}
               </Form.Item>
 
               <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-                {fields.length < maxLength?(<Button
+                {fields.length < maxLength && <Button
                   type="dashed"
                   onClick={() => {
                     add();
                   }}
                 >
                   <PlusOutlined /> {formatMessage({ id: 'component.global.add' })}
-                </Button>):null}
+                </Button>}
               </Form.Item>
             </div>
           );
