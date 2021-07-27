@@ -49,8 +49,8 @@ const removeBtnStyle = {
 const RefererRestriction: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl()
   const properties = schema?.properties
-  const whiteMinLen = properties.whitelist.minItems
-  const whiteInit = Array(whiteMinLen).join('.').split('.')
+  const allowListMinLength = properties.whitelist.minItems
+  const whiteInit = Array(allowListMinLength).join('.').split('.')
   return (
     <Form
       form={form}
@@ -90,14 +90,14 @@ const RefererRestriction: React.FC<Props> = ({ form, schema }) => {
                       </Form.Item>
                     </Col>
                     <Col style={{ ...removeBtnStyle, marginLeft: -10 }}>
-                      {fields.length > whiteMinLen ? (
+                      {fields.length > allowListMinLength &&
                         <MinusCircleOutlined
                           className="dynamic-delete-button"
                           onClick={() => {
                             remove(field.name);
                           }}
                         />
-                      ) : null}
+                      }
                     </Col>
                   </Row>
                 ))}
