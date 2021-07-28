@@ -19,6 +19,10 @@
 context('Create and Edit Route With Custom CHash Key Upstream', () => {
   const selector = {
     name: '#name',
+    menu: '[role=menu]',
+    roundRobinSelect: '[title="Round Robin"]',
+    varSelect: '[title="vars"]',
+    defaultCHashKey: '[value="remote_addr"]',
     upstreamType: ".ant-select-item-option-content",
     hashPosition: ".ant-select-item-option-content",
     nodes_0_host: '#nodes_0_host',
@@ -48,7 +52,7 @@ context('Create and Edit Route With Custom CHash Key Upstream', () => {
 
   it('should create route with custom chash key Upstream', function () {
     cy.visit('/');
-    cy.get('[role=menu]')
+    cy.get(selector.menu)
       .should('be.visible')
       .within(() => {
         cy.contains('Route').click();
@@ -59,16 +63,16 @@ context('Create and Edit Route With Custom CHash Key Upstream', () => {
     cy.get(selector.name).type(data.routeName);
     cy.contains('Next').click();
 
-    cy.get('[title="Round Robin"]').click();
+    cy.get(selector.roundRobinSelect).click();
     cy.get(selector.upstreamType).within(() => {
       cy.contains('CHash').click();
     });
-    cy.get('[title="vars"]').click();
+    cy.get(selector.varSelect).click();
     cy.get(selector.hashPosition).within(() => {
       cy.contains('cookie').click();
     });
-    cy.get('[value="remote_addr"]').click();
-    cy.get('[value="remote_addr"]').clear().type(data.custom_key);
+    cy.get(selector.defaultCHashKey).click();
+    cy.get(selector.defaultCHashKey).clear().type(data.custom_key);
     cy.get(selector.nodes_0_host).click();
     cy.get(selector.nodes_0_host).type(data.ip);
     cy.get(selector.nodes_0_port).clear().type(data.port);

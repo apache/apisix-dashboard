@@ -20,6 +20,9 @@ context('Create and Delete Upstream With Custom CHash Key', () => {
   const selector = {
     name: '#name',
     description: '#desc',
+    roundRobinSelect: '[title="Round Robin"]',
+    varSelect: '[title="vars"]',
+    defaultCHashKey: '[value="remote_addr"]',
     nodes_0_host: '#nodes_0_host',
     nodes_0_port: '#nodes_0_port',
     nodes_0_weight: '#nodes_0_weight',
@@ -55,16 +58,16 @@ context('Create and Delete Upstream With Custom CHash Key', () => {
     cy.get(selector.name).type(data.upstreamName);
     cy.get(selector.description).type(data.description);
 
-    cy.get('[title="Round Robin"]').click();
+    cy.get(selector.roundRobinSelect).click();
     cy.get(selector.upstreamType).within(() => {
       cy.contains('CHash').click();
     });
-    cy.get('[title="vars"]').click();
+    cy.get(selector.varSelect).click();
     cy.get(selector.hashPosition).within(() => {
       cy.contains('cookie').click();
     });
-    cy.get('[value="remote_addr"]').click();
-    cy.get('[value="remote_addr"]').clear().type(data.custom_key);
+    cy.get(selector.defaultCHashKey).click();
+    cy.get(selector.defaultCHashKey).clear().type(data.custom_key);
     cy.get(selector.nodes_0_host).click();
     cy.get(selector.nodes_0_host).type(data.ip);
     cy.get(selector.nodes_0_port).clear().type(data.port);
