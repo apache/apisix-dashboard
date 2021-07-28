@@ -87,22 +87,39 @@ func (h *Handler) userLogin(c droplet.Context) (interface{}, error) {
 	username := input.Username
 	password := input.Password
 
-	user := conf.UserList[username]
-	if username != user.Username || password != user.Password {
+	users := conf.UserList[conf.UserTypeLocal]
+
+	loginSuccess := false
+	for _, user := range users {
+		if username == user.GetID() {
+			ok, err := user.Valid(map[string]interface{}{
+				"password": password,
+			})
+			if !ok && err != nil {
+				return nil, err
+			}
+
+			loginSuccess = true
+		}
+	}
+
+	if loginSuccess {
+		// create JWT for session
+		claims := jwt.StandardClaims{
+			Audience:  "local",
+			Subject:   username,
+			IssuedAt:  time.Now().Unix(),
+			ExpiresAt: time.Now().Add(time.Second * time.Duration(conf.AuthConf.ExpireTime)).Unix(),
+		}
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+		signedToken, _ := token.SignedString([]byte(conf.AuthConf.Secret))
+
+		// output token
+		return &UserSession{
+			Token: signedToken,
+		}, nil
+	} else {
+		// user not exist
 		return nil, consts.ErrUsernamePassword
 	}
-
-	// create JWT for session
-	claims := jwt.StandardClaims{
-		Subject:   username,
-		IssuedAt:  time.Now().Unix(),
-		ExpiresAt: time.Now().Add(time.Second * time.Duration(conf.AuthConf.ExpireTime)).Unix(),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, _ := token.SignedString([]byte(conf.AuthConf.Secret))
-
-	// output token
-	return &UserSession{
-		Token: signedToken,
-	}, nil
 }

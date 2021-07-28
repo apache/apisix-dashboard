@@ -90,7 +90,17 @@ func (mw *AuthenticationMiddleware) Handle(ctx droplet.Context) error {
 		return nil
 	}
 
-	if _, ok := conf.UserList[claims.Subject]; !ok {
+	userExist := false
+	switch conf.UserType(claims.Audience) {
+	case conf.UserTypeLocal:
+		for _, item := range conf.UserList[conf.UserTypeLocal] {
+			if claims.Subject == item.GetID() {
+				userExist = true
+			}
+		}
+	}
+
+	if !userExist {
 		log.Warnf("user not exists by token claims subject %s", claims.Subject)
 		ctx.SetOutput(&data.SpecCodeResponse{StatusCode: http.StatusUnauthorized, Response: response})
 		return nil
