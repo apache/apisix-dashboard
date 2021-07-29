@@ -78,7 +78,6 @@ context('Create and Edit Route With Custom CHash Key Upstream', () => {
     cy.get(selector.nodes_0_port).clear().type(data.port);
     cy.get(selector.nodes_0_weight).clear().type(data.weight);
 
-
     cy.contains('Next').click();
     cy.contains('Next').click();
     cy.contains('Submit').click();
