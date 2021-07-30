@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, Select } from 'antd'
+import React, { useState } from 'react'
+import { AutoComplete, Form, Select } from 'antd'
 import { useIntl } from 'umi'
 import type { FormInstance } from 'antd/es/form'
 
@@ -28,6 +28,11 @@ type Props = {
 
 const CHash: React.FC<Pick<Props, 'readonly'>> = ({ readonly }) => {
   const { formatMessage } = useIntl()
+  const [keySearchWord, setKeySearchWord] = useState('');
+
+  const handleSearch = (search: string) => {
+    setKeySearchWord(search);
+  };
   return (
     <React.Fragment>
       <Form.Item name="hash_on" rules={[{ required: true }]} label={formatMessage({ id: 'component.upstream.fields.hash_on' })} tooltip={formatMessage({ id: 'component.upstream.fields.hash_on.tooltip' })} initialValue="vars">
@@ -39,14 +44,18 @@ const CHash: React.FC<Pick<Props, 'readonly'>> = ({ readonly }) => {
           ))}
         </Select>
       </Form.Item>
-      <Form.Item name="key" rules={[{ required: true }]} label={formatMessage({ id: 'component.upstream.fields.key' })} tooltip={formatMessage({ id: 'component.upstream.fields.key.tooltip' })} initialValue="remote_addr">
-        <Select disabled={readonly}>
-          {Object.entries(CommonHashKeyEnum).map(([label, value]) => (
-            <Select.Option value={value} key={value}>
-              {label}
-            </Select.Option>
-          ))}
-        </Select>
+      <Form.Item name="key" rules={[{ required: true }]}
+                 label={formatMessage({ id: 'component.upstream.fields.key' })}
+                 tooltip={formatMessage({ id: 'component.upstream.fields.key.tooltip' })} initialValue="remote_addr">
+        <AutoComplete disabled={readonly} onSearch={handleSearch}>
+          {Object.entries(CommonHashKeyEnum)
+            .filter((([label, value]) => label.startsWith(keySearchWord) || value.startsWith(keySearchWord)))
+            .map(([label, value]) => (
+              <Select.Option value={value} key={value}>
+                {label}
+              </Select.Option>
+            ))}
+        </AutoComplete>
       </Form.Item>
     </React.Fragment>
   )
