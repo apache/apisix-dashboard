@@ -19,12 +19,22 @@ package migrate_test
 
 import (
 	"testing"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	"github.com/apisix/manager-api/test/e2enew/base"
 )
 
 func TestMigrate(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Migrate Suite")
 }
+
+var _ = AfterSuite(func() {
+	base.CleanResource("routes")
+	base.CleanResource("upstreams")
+	base.CleanResource("consumers")
+	time.Sleep(base.SleepTime)
+})
