@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Form, InputNumber, Select } from 'antd';
+import { Form, InputNumber, Select, Switch } from 'antd';
 import { useIntl } from 'umi';
 
 type Props = {
@@ -29,24 +29,23 @@ export const FORM_ITEM_LAYOUT = {
     span: 4,
   },
   wrapperCol: {
-    span: 8
+    span: 8,
   },
 };
 
 const LimitReq: React.FC<Props> = ({ form }) => {
   const { formatMessage } = useIntl();
   return (
-    <Form
-      form={form}
-      {...FORM_ITEM_LAYOUT}
-    >
+    <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
         label="rate"
         name="rate"
-        rules={[{
-          required: true,
-          message: `${formatMessage({ id: 'component.global.pleaseEnter' })} rate`
-        }]}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} rate`,
+          },
+        ]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.rate.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
@@ -55,10 +54,12 @@ const LimitReq: React.FC<Props> = ({ form }) => {
       <Form.Item
         label="burst"
         name="burst"
-        rules={[{
-          required: true,
-          message: `${formatMessage({ id: 'component.global.pleaseEnter' })} burst`
-        }]}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} burst`,
+          },
+        ]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.burst.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
@@ -67,16 +68,28 @@ const LimitReq: React.FC<Props> = ({ form }) => {
       <Form.Item
         label="key"
         name="key"
-        rules={[{
-          required: true,
-          message: `${formatMessage({ id: 'component.global.pleaseChoose' })} key`
-        }]}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseChoose' })} key`,
+          },
+        ]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.key.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <Select>
-          {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name"].map(item => {
-            return <Select.Option value={item} key={item}>{item}</Select.Option>
+          {[
+            'remote_addr',
+            'server_addr',
+            'http_x_real_ip',
+            'http_x_forwarded_for',
+            'consumer_name',
+          ].map((item) => {
+            return (
+              <Select.Option value={item} key={item}>
+                {item}
+              </Select.Option>
+            );
           })}
         </Select>
       </Form.Item>
@@ -88,8 +101,16 @@ const LimitReq: React.FC<Props> = ({ form }) => {
       >
         <InputNumber min={200} max={599} />
       </Form.Item>
+      <Form.Item
+        label="nodelay"
+        name="nodelay"
+        valuePropName="checked"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.nodelay.tooltip' })}
+      >
+        <Switch defaultChecked={false} />
+      </Form.Item>
     </Form>
   );
-}
+};
 
 export default LimitReq;
