@@ -834,7 +834,7 @@ var _ = ginkgo.Describe("test upstream delete (route is in use)", func() {
 					},
 					"type": "roundrobin"
 				}`,
-			//ExpectStatus: http.StatusOK,
+			ExpectStatus: http.StatusOK,
 			ExpectBody:   "\"id\":\"u1\"",
 		}),
 		table.Entry("create route use upstream r1", base.HttpTestCase{
