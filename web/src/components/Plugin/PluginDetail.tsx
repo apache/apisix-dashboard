@@ -107,6 +107,7 @@ const PluginDetail: React.FC<Props> = ({
   const [UIForm] = Form.useForm();
   const data = initialData[name] || {};
   const pluginType = pluginList.find((item) => item.name === name)?.originType;
+  const pluginSchema = pluginList.find((item) => item.name === name)?.schema;
   const [content, setContent] = useState<string>(JSON.stringify(data, null, 2));
   const [monacoMode, setMonacoMode] = useState<PluginComponent.MonacoLanguage>(monacoModeList.JSON);
   const modeOptions: { label: string; value: string }[] = [
@@ -411,7 +412,7 @@ const PluginDetail: React.FC<Props> = ({
           </Button>
         ]}
       />
-      {Boolean(monacoMode === monacoModeList.UIForm) && <PluginForm name={name} form={UIForm} renderForm={!(pluginType === 'auth' && schemaType !== 'consumer')} />}
+      {Boolean(monacoMode === monacoModeList.UIForm) && <PluginForm name={name} schema={pluginSchema} form={UIForm} renderForm={!(pluginType === 'auth' && schemaType !== 'consumer')} />}
       <div style={{ display: monacoMode === monacoModeList.UIForm ? 'none' : 'unset' }}>
         <Editor
           value={content}
