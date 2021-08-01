@@ -55,7 +55,7 @@ jobs:
           minikube cache add managerapi -v 7 --alsologtostderr
           kubectl apply -f ../kompomse
 
-      - name: run test
+      - name: run e2e test
         working-directory: ./api/test/e2e
         run: |
           export CHAOS_TEST=true
@@ -64,8 +64,14 @@ jobs:
       - name: install ginkgo cli
         run: go get github.com/onsi/ginkgo/ginkgo
 
-      - name: run test
+      - name: run e2enew test
         working-directory: ./api/test/e2enew
         run: |
           export CHAOS_TEST=true
           ginkgo -r
+
+      # Debug via SSH if previous steps failed
+      - name: Set up tmate session
+        if: ${{ failure() }}
+        uses: ./.github/actions/action-tmate
+        timeout-minutes: 15
