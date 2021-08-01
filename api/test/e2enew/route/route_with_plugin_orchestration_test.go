@@ -19,6 +19,8 @@ package route
 import (
 	"io/ioutil"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
@@ -41,6 +43,11 @@ var _ = ginkgo.Describe("route with plugin orchestration", func() {
 		gomega.Expect(err).To(gomega.BeNil())
 	})
 	invalidDagConf := string(bytes)
+
+	if os.Getenv("CHAOS_TEST") != "" {
+		dagConf = strings.Replace(dagConf, "172.16.238.20", base.UpstreamIp, 1)
+		invalidDagConf = strings.Replace(invalidDagConf, "172.16.238.20", base.UpstreamIp, 1)
+	}
 
 	table.DescribeTable("test route with plugin orchestration",
 		func(tc base.HttpTestCase) {

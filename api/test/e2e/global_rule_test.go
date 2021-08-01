@@ -47,7 +47,7 @@ func TestGlobalRule(t *testing.T) {
 				 "upstream": {
 					 "type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1981,
 						"weight": 1
 					}]
@@ -114,7 +114,7 @@ func TestGlobalRule(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1981,
 						"weight": 1
 					}]
@@ -339,8 +339,9 @@ func TestGlobalRule_with_createtime_updatetime(t *testing.T) {
 	assert.True(t, createtime.Int() >= time.Now().Unix()-1 && createtime.Int() <= time.Now().Unix()+1)
 	assert.True(t, updatetime.Int() >= time.Now().Unix()-1 && updatetime.Int() <= time.Now().Unix()+1)
 
-	// wait 1 second so the update_time should be different
-	time.Sleep(time.Duration(1) * time.Second)
+	// wait 2 second so the update_time should be different
+	// and etcd sync could have some time in k8s
+	time.Sleep(time.Duration(2) * time.Second)
 
 	tests = []HttpTestCase{
 		{

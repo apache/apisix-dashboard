@@ -19,6 +19,7 @@ package route
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
@@ -201,7 +202,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			Sleep:        base.SleepTime,
+			Sleep:        time.Second,
 		})
 	})
 	ginkgo.It("hit the route just delete", func() {

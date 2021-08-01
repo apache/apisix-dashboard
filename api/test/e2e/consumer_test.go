@@ -221,7 +221,7 @@ func TestConsumer_with_key_auth(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -401,7 +401,7 @@ func TestConsumer_add_consumer_with_labels(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -477,8 +477,9 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
 
-	// wait 1 second so the update_time should be different
-	time.Sleep(time.Duration(1) * time.Second)
+	// wait 2 second so the update_time should be different
+	// and etcd sync could have some time in k8s
+	time.Sleep(time.Duration(2) * time.Second)
 
 	tests = []HttpTestCase{
 		{

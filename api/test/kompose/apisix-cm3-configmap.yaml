@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  access.log: ""
+  error.log: ""
+  nginx.pid: |
+    1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: apisix
+  name: apisix-cm3

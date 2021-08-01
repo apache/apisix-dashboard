@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes configMap --build local --push-image=false --out ../kompose
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: managerapi
+  name: managerapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: managerapi
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes configMap --build local --push-image=false --out ../kompose
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/apisix-dashboard-e2e: "true"
+        io.kompose.service: managerapi
+    spec:
+      containers:
+        - image: managerapi
+          imagePullPolicy: IfNotPresent
+          name: managerapi
+          ports:
+            - containerPort: 9000
+          resources: {}
+          volumeMounts:
+            - mountPath: /go/manager-api/conf/conf.yaml
+              name: managerapi-cm0
+              readOnly: true
+              subPath: conf.yaml
+            - mountPath: /go/manager-api/testdata
+              name: managerapi-cm1
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: conf.yaml
+                path: conf.yaml
+            name: managerapi-cm0
+          name: managerapi-cm0
+        - configMap:
+            name: managerapi-cm1
+          name: managerapi-cm1
+status: {}

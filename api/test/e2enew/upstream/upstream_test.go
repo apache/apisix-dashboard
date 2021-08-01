@@ -421,7 +421,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 	})
 
 	ginkgo.It("hit routes(upstream weight 1)", func() {
-		time.Sleep(time.Duration(500) * time.Millisecond)
+		time.Sleep(time.Second)
 		basepath := base.APISIXHost
 		request, err := http.NewRequest("GET", basepath+"/server_port", nil)
 		gomega.Expect(err).To(gomega.BeNil())
@@ -830,7 +830,7 @@ var _ = ginkgo.Describe("test upstream delete (route is in use)", func() {
 			Headers: map[string]string{"Authorization": base.GetToken()},
 			Body: `{
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + base.UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}`,
@@ -909,7 +909,7 @@ var _ = ginkgo.Describe("test upstream delete (service is in use)", func() {
 			Headers: map[string]string{"Authorization": base.GetToken()},
 			Body: `{
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + base.UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}`,

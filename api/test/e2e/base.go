@@ -24,6 +24,7 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
+	"os"
 	"os/exec"
 	"reflect"
 	"strings"
@@ -39,11 +40,19 @@ var (
 	token string
 	Token string
 
+	UpstreamIp             = "172.16.238.20"
 	APISIXHost             = "http://127.0.0.1:9080"
 	APISIXInternalUrl      = "http://172.16.238.30:9080"
 	APISIXSingleWorkerHost = "http://127.0.0.1:9081"
 	ManagerAPIHost         = "http://127.0.0.1:9000"
 )
+
+func init() {
+	if os.Getenv("CHAOS_TEST") != "" {
+		UpstreamIp = "upstream.default.svc.cluster.local"
+		APISIXInternalUrl = APISIXHost
+	}
+}
 
 func init() {
 	//login to get auth token

@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes configMap --build local --push-image=false --out ../kompose
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: apisix2
+  name: apisix2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: apisix2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes configMap --build local --push-image=false --out ../kompose
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/apisix-dashboard-e2e: "true"
+        io.kompose.service: apisix2
+    spec:
+      containers:
+        - image: apache/apisix:2.6-alpine
+          name: apisix2
+          ports:
+            - containerPort: 9080
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/local/apisix/conf/config.yaml
+              name: apisix2-cm0
+              readOnly: true
+              subPath: config.yaml
+            - mountPath: /usr/local/apisix/certs/apisix.crt
+              name: apisix2-cm1
+              readOnly: true
+              subPath: apisix.crt
+            - mountPath: /usr/local/apisix/certs/apisix.key
+              name: apisix2-cm2
+              readOnly: true
+              subPath: apisix.key
+      hostname: apisix-server2
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            items:
+              - key: apisix_config2.yaml
+                path: config.yaml
+            name: apisix2-cm0
+          name: apisix2-cm0
+        - configMap:
+            items:
+              - key: apisix.crt
+                path: apisix.crt
+            name: apisix2-cm1
+          name: apisix2-cm1
+        - configMap:
+            items:
+              - key: apisix.key
+                path: apisix.key
+            name: apisix2-cm2
+          name: apisix2-cm2
+status: {}

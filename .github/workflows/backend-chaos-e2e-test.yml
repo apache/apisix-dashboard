@@ -1,0 +1,71 @@
+name: Backend E2E Test
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'docs/**'
+      - 'web/**'
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - 'docs/**'
+      - 'web/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-e2e-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: setup go
+        uses: actions/setup-go@v2.1.3
+        with:
+          go-version: "1.13"
+          submodules: recursive
+
+      - name: Creating minikube cluster
+        run: |
+          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+          sudo dpkg -i --force-architecture minikube_latest_amd64.deb
+          minikube start
+
+      - name: Deploy etcd with Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm install etcd bitnami/etcd --set replicaCount=3 --set auth.rbac.enabled=false
+          kubectl wait pods -l app.kubernetes.io/instance=etcd --for=condition=Ready --timeout=300s --all
+
+      - name: run docker compose
+        working-directory: ./api/test/docker
+        run: |
+          docker build -t managerapi -f Dockerfile
+          minikube cache add managerapi -v 7 --alsologtostderr
+          kubectl apply -f ../kompomse
+
+      - name: run test
+        working-directory: ./api/test/e2e
+        run: |
+          export CHAOS_TEST=true
+          go test -v
+
+      - name: install ginkgo cli
+        run: go get github.com/onsi/ginkgo/ginkgo
+
+      - name: run test
+        working-directory: ./api/test/e2enew
+        run: |
+          export CHAOS_TEST=true
+          ginkgo -r

@@ -18,6 +18,7 @@ package route
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
@@ -26,6 +27,10 @@ import (
 )
 
 var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
+	remote_addr := "172.16.238.1"
+	if os.Getenv("CHAOS_TEST") != "" {
+		remote_addr = "127.0.0.1"
+	}
 	table.DescribeTable("test route with valid remote_addr remote_addrs",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
@@ -37,7 +42,7 @@ var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
 			Body: `{
 				"name": "route1",
 				"uri": "/hello",
-				"remote_addr": "172.16.238.1",
+				"remote_addr": "` + remote_addr + `",
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": {
@@ -64,7 +69,7 @@ var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
 			Body: `{
 				"name": "route1",
 				"uri": "/hello",
-				"remote_addr": "172.16.238.1/24",
+				"remote_addr": "` + remote_addr + `/24",
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": {
@@ -91,7 +96,7 @@ var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
 			Body: `{
 				"name": "route1",
 				"uri": "/hello",
-				"remote_addrs": ["172.16.238.1","192.168.0.2/24"],
+				"remote_addrs": ["` + remote_addr + `","192.168.0.2/24"],
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": {

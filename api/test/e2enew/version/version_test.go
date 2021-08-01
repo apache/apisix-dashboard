@@ -45,7 +45,7 @@ var _ = ginkgo.Describe("Version", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody: []string{"\"code\":2000001",
 				"\"message\":\"The manager-api and apache apisix are mismatched.\"",
-				"\"matched\":false", "apisix_server1", "apisix_server2"},
+				"\"matched\":false", "apisix-server1", "apisix-server2"},
 		}),
 	)
 })

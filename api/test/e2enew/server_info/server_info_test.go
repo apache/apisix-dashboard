@@ -38,7 +38,7 @@ var _ = ginkgo.Describe("server info test", func() {
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"hostname\":\"apisix_server1\"",
+			ExpectBody:   "\"hostname\":\"apisix-server1\"",
 		}),
 		table.Entry("get server info(apisix-server2)", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
@@ -46,7 +46,7 @@ var _ = ginkgo.Describe("server info test", func() {
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			ExpectBody:   "\"hostname\":\"apisix_server2\"",
+			ExpectBody:   "\"hostname\":\"apisix-server2\"",
 		}),
 	)
 
@@ -65,7 +65,7 @@ var _ = ginkgo.Describe("server info test", func() {
 		table.Entry("list server info with hostname", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Path:         "/apisix/admin/server_info",
-			Query:        "hostname=apisix_",
+			Query:        "hostname=apisix-",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
@@ -74,7 +74,7 @@ var _ = ginkgo.Describe("server info test", func() {
 		table.Entry("list server info with hostname", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Path:         "/apisix/admin/server_info",
-			Query:        "hostname=apisix_server2",
+			Query:        "hostname=apisix-server2",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
@@ -115,7 +115,7 @@ var _ = ginkgo.Describe("server info test omitEmptyValue", func() {
 		table.Entry("list server info with hostname", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
 			Path:         "/apisix/admin/server_info",
-			Query:        "hostname=apisix_",
+			Query:        "hostname=apisix-",
 			Method:       http.MethodGet,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,

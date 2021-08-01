@@ -18,6 +18,7 @@ package upstream
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -217,6 +218,7 @@ var _ = ginkgo.Describe("Upstream chash hash on cookie", func() {
 			Path:         "/apisix/admin/routes/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        time.Second,
 		})
 	})
 	ginkgo.It("delete upstream", func() {
@@ -274,7 +276,7 @@ var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", fu
 		})
 	})
 	ginkgo.It("hit routes(upstream hash_on (X-Sessionid)", func() {
-		time.Sleep(time.Duration(500) * time.Millisecond)
+		time.Sleep(time.Second)
 		basepath := base.APISIXHost
 		res := map[string]int{}
 		for i := 0; i <= 15; i++ {
@@ -293,7 +295,8 @@ var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", fu
 			}
 		}
 		// the X-Sessionid of each request is different, the weight of upstreams are the same, so these requests will be sent to each upstream equally
-		gomega.Expect(res["1980"] == 8 && res["1981"] == 8).Should(gomega.BeTrue())
+		gomega.Expect(res["1980"]).Should(gomega.Equal(8))
+		gomega.Expect(res["1981"]).Should(gomega.Equal(8))
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{
@@ -302,6 +305,7 @@ var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", fu
 			Path:         "/apisix/admin/routes/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
 		})
 	})
 	ginkgo.It("delete upstream", func() {
@@ -527,7 +531,7 @@ var _ = ginkgo.Describe("Upstream chash hash on vars", func() {
 		})
 	})
 	ginkgo.It("hit routes(upstream hash_on (var))", func() {
-		time.Sleep(time.Duration(500) * time.Millisecond)
+		time.Sleep(time.Second)
 		basepath := base.APISIXHost
 		res := map[string]int{}
 		for i := 0; i <= 17; i++ {
@@ -540,11 +544,14 @@ var _ = ginkgo.Describe("Upstream chash hash on vars", func() {
 			body := string(respBody)
 			if _, ok := res[body]; !ok {
 				res[body] = 1
+				fmt.Println(body, res[body])
 			} else {
 				res[body]++
+				fmt.Println(body, res[body])
 			}
 		}
-		gomega.Expect(res["1980"] == 9 && res["1981"] == 9).Should(gomega.BeTrue())
+		gomega.Expect(res["1980"]).Should(gomega.Equal(9))
+		gomega.Expect(res["1981"]).Should(gomega.Equal(9))
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{
