@@ -1,4 +1,4 @@
-name: Backend E2E Test
+name: Backend Chaos Test
 
 on:
   push:
@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  backend-e2e-test:
+  backend-chaos-test:
     runs-on: ubuntu-latest
 
     steps:
