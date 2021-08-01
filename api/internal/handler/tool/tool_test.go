@@ -115,7 +115,7 @@ func TestTool_VersionMatch(t *testing.T) {
 						},
 					},
 					Code:    2000001,
-					Message: "The manager-api and apache apisix are mismatched.",
+					Message: "The Manager API and Apache APISIX are mismatched. The version of Manager API is , and should be used with Apache APISIX .",
 				}},
 			},
 		}
