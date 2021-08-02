@@ -57,15 +57,15 @@ jobs:
           docker build -t managerapi -f Dockerfile ../..
           minikube cache add managerapi -v 7 --alsologtostderr
           kubectl apply -f ../kompose
-          ../chaos/utils.sh port_forward
-          ps -ef | grep '[p]ort-forward'
 
       - name: run e2e test
         working-directory: ./api/test/e2e
         run: |
+          ../chaos/utils.sh port_forward
           ps -ef | grep '[p]ort-forward'
           export CHAOS_TEST=true
           go test -v
+          ps -ef | grep '[p]ort-forward'
 
       - name: install ginkgo cli
         run: go get github.com/onsi/ginkgo/ginkgo
