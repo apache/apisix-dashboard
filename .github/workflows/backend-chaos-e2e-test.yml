@@ -58,10 +58,12 @@ jobs:
           minikube cache add managerapi -v 7 --alsologtostderr
           kubectl apply -f ../kompose
           ../chaos/utils.sh port_forward
+          ps -ef | grep '[p]ort-forward'
 
       - name: run e2e test
         working-directory: ./api/test/e2e
         run: |
+          ps -ef | grep '[p]ort-forward'
           export CHAOS_TEST=true
           go test -v
 
