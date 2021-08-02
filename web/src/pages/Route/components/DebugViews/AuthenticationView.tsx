@@ -108,7 +108,7 @@ const AuthenticationView: React.FC<RouteModule.DebugViewProps> = (props) => {
               onChange={(event) => {
                 const currentValue = event.target.value;
                 setAuthType(currentValue);
-                props.form.setFieldsValue({ authType: currentValue });
+                props.form.setFieldsValue({ autyType: currentValue });
               }}
             >
               <Radio value="none">None</Radio>
