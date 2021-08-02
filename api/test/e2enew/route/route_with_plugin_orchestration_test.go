@@ -19,7 +19,6 @@ package route
 import (
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/onsi/ginkgo"
@@ -44,7 +43,7 @@ var _ = ginkgo.Describe("route with plugin orchestration", func() {
 	})
 	invalidDagConf := string(bytes)
 
-	if os.Getenv("CHAOS_TEST") != "" {
+	if base.ChaosTest {
 		dagConf = strings.Replace(dagConf, "172.16.238.20", base.UpstreamIp, 1)
 		invalidDagConf = strings.Replace(invalidDagConf, "172.16.238.20", base.UpstreamIp, 1)
 	}

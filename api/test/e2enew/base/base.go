@@ -256,7 +256,7 @@ func RunTestCase(tc HttpTestCase) {
 
 func ReadAPISIXErrorLog() string {
 	t := getTestingHandle()
-	if os.Getenv("CHAOS_TEST") != "" {
+	if ChaosTest {
 		logContent, err := ReadAPISIXErrorLogFromK8S()
 		assert.Nil(t, err)
 		return logContent
@@ -316,7 +316,7 @@ func ReadAPISIXErrorLogFromK8S() (string, error) {
 }
 
 func CleanAPISIXErrorLog() {
-	if os.Getenv("CHAOS_TEST") != "" {
+	if ChaosTest {
 		errorLogSinceTime = time.Now()
 		return
 	}

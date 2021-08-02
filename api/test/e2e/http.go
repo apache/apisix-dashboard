@@ -92,7 +92,7 @@ func getReader(reqParams map[string]string, contentType string, files []UploadFi
 		if err := writer.Close(); err != nil {
 			panic(err)
 		}
-		if os.Getenv("CHAOS_TEST") != "" {
+		if chaosTest {
 			bodyStr := body.String()
 			bodyStr = strings.Replace(bodyStr, "172.16.238.20", UpstreamIp, 1)
 			body.Reset()

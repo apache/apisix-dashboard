@@ -478,7 +478,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	updatetime := gjson.Get(string(respBody), "data.update_time")
 
 	// wait 2 second so the update_time should be different
-	// and etcd sync could have some time in k8s
+	// and etcd sync need some more time in k8s
 	time.Sleep(time.Duration(2) * time.Second)
 
 	tests = []HttpTestCase{

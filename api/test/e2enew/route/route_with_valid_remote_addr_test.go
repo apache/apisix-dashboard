@@ -18,7 +18,6 @@ package route
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
@@ -28,7 +27,7 @@ import (
 
 var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
 	remote_addr := "172.16.238.1"
-	if os.Getenv("CHAOS_TEST") != "" {
+	if base.ChaosTest {
 		remote_addr = "127.0.0.1"
 	}
 	table.DescribeTable("test route with valid remote_addr remote_addrs",
