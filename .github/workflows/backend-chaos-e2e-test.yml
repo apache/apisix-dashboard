@@ -43,15 +43,15 @@ jobs:
 
       - name: ls
         run: |
-          ls .github
-          ls .github/actions
+          ls ./.github/actions/action-tmate
 
       - name: Deploy etcd with Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm install etcd bitnami/etcd --set replicaCount=3 --set auth.rbac.enabled=false
-          sleep 1
+          sleep 2
+          kubectl get pods
           kubectl describe pods
           kubectl wait pods -l app.kubernetes.io/instance=etcd --for=condition=Ready --timeout=300s --all
 
