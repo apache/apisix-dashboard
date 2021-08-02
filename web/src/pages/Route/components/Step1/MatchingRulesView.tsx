@@ -275,10 +275,6 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
                     );
                     break;
                   case '~~':
-                    setOperatorValueSample(
-                      formatMessage({ id: 'page.route.advanced-match.operator.sample.~~' }),
-                    );
-                    break;
                   case '~*':
                     setOperatorValueSample(
                       formatMessage({ id: 'page.route.advanced-match.operator.sample.~~' }),
