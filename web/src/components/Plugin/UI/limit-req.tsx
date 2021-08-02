@@ -21,6 +21,7 @@ import { useIntl } from 'umi';
 
 type Props = {
   form: FormInstance;
+  schema: Record<string, any> | undefined;
   ref?: any;
 };
 
@@ -33,8 +34,9 @@ export const FORM_ITEM_LAYOUT = {
   },
 };
 
-const LimitReq: React.FC<Props> = ({ form }) => {
+const LimitReq: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
+  const propertires = schema?.properties;
   return (
     <Form
       form={form}
@@ -50,7 +52,7 @@ const LimitReq: React.FC<Props> = ({ form }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.rate.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
-        <InputNumber min={1} required />
+        <InputNumber min={propertires.rate.exclusiveMinimum} required />
       </Form.Item>
       <Form.Item
         label="burst"
@@ -62,7 +64,7 @@ const LimitReq: React.FC<Props> = ({ form }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.burst.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
-        <InputNumber min={0} required />
+        <InputNumber min={propertires.burst.minimum} required />
       </Form.Item>
       <Form.Item
         label="key"
@@ -75,7 +77,7 @@ const LimitReq: React.FC<Props> = ({ form }) => {
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <Select>
-          {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name"].map(item => {
+          {propertires.key.enum.map((item: string) => {
             return <Select.Option value={item} key={item}>{item}</Select.Option>
           })}
         </Select>
@@ -83,10 +85,10 @@ const LimitReq: React.FC<Props> = ({ form }) => {
       <Form.Item
         label="rejected_code"
         name="rejected_code"
-        initialValue={503}
+        initialValue={propertires.rejected_code.default}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.rejected_code.tooltip' })}
       >
-        <InputNumber min={200} max={599} />
+        <InputNumber min={propertires.rejected_code.minimum} max={propertires.rejected_code.maximum} />
       </Form.Item>
     </Form>
   );
