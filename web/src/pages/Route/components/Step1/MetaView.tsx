@@ -109,7 +109,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
   };
 
   const Name: React.FC = () => (
-    <Form.Item label={formatMessage({ id: 'component.global.name' })} tooltip={formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' })}>
+    <Form.Item label={formatMessage({ id: 'component.global.name' })} required tooltip={formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' })}>
       <Row>
         <Col span={10}>
           <Form.Item
