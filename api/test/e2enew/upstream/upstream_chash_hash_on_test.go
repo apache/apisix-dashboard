@@ -18,7 +18,6 @@ package upstream
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -276,10 +275,14 @@ var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", fu
 		})
 	})
 	ginkgo.It("hit routes(upstream hash_on (X-Sessionid)", func() {
-		time.Sleep(time.Second)
+		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		res := map[string]int{}
-		for i := 0; i <= 15; i++ {
+		times := 15
+		if base.ChaosTest {
+			times = 31
+		}
+		for i := 0; i <= times; i++ {
 			url := basepath + "/server_port"
 			req, err := http.NewRequest("GET", url, nil)
 			req.Header.Add("X-Sessionid", `chash_val_`+strconv.Itoa(i))
@@ -295,8 +298,8 @@ var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", fu
 			}
 		}
 		// the X-Sessionid of each request is different, the weight of upstreams are the same, so these requests will be sent to each upstream equally
-		gomega.Expect(res["1980"]).Should(gomega.Equal(8))
-		gomega.Expect(res["1981"]).Should(gomega.Equal(8))
+		gomega.Expect(res["1980"]).Should(gomega.Equal(times/2 + 1))
+		gomega.Expect(res["1981"]).Should(gomega.Equal(times/2 + 1))
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{
@@ -305,7 +308,7 @@ var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", fu
 			Path:         "/apisix/admin/routes/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			Sleep:        base.SleepTime,
+			Sleep:        time.Second,
 		})
 	})
 	ginkgo.It("delete upstream", func() {
@@ -534,7 +537,11 @@ var _ = ginkgo.Describe("Upstream chash hash on vars", func() {
 		time.Sleep(time.Second)
 		basepath := base.APISIXHost
 		res := map[string]int{}
-		for i := 0; i <= 17; i++ {
+		times := 17
+		if base.ChaosTest {
+			times = 109
+		}
+		for i := 0; i <= times; i++ {
 			url := basepath + "/server_port?device_id=" + strconv.Itoa(i)
 			req, err := http.NewRequest("GET", url, nil)
 			resp, err := http.DefaultClient.Do(req)
@@ -544,14 +551,12 @@ var _ = ginkgo.Describe("Upstream chash hash on vars", func() {
 			body := string(respBody)
 			if _, ok := res[body]; !ok {
 				res[body] = 1
-				fmt.Println(body, res[body])
 			} else {
 				res[body]++
-				fmt.Println(body, res[body])
 			}
 		}
-		gomega.Expect(res["1980"]).Should(gomega.Equal(9))
-		gomega.Expect(res["1981"]).Should(gomega.Equal(9))
+		gomega.Expect(res["1980"]).Should(gomega.Equal(times/2 + 1))
+		gomega.Expect(res["1981"]).Should(gomega.Equal(times/2 + 1))
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{

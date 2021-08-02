@@ -41,15 +41,14 @@ jobs:
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
           sudo dpkg -i --force-architecture minikube_latest_amd64.deb
           minikube start
+          kubectl wait pods -n kube-system --for=condition=Ready --timeout=300s --all
 
       - name: Deploy etcd with Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm install etcd bitnami/etcd --set replicaCount=3 --set auth.rbac.enabled=false
-          sleep 2
           kubectl get pods --all-namespaces
-          kubectl describe pods
           kubectl wait pods -l app.kubernetes.io/instance=etcd --for=condition=Ready --timeout=300s --all
 
       - name: run docker compose

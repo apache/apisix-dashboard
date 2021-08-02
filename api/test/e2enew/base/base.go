@@ -47,6 +47,7 @@ import (
 var (
 	token             string
 	errorLogSinceTime time.Time
+	ChaosTest         bool
 
 	UpstreamIp             = "172.16.238.20"
 	APISIXHost             = "http://127.0.0.1:9080"
@@ -60,6 +61,7 @@ func init() {
 	if os.Getenv("CHAOS_TEST") != "" {
 		UpstreamIp = "upstream.default.svc.cluster.local"
 		APISIXInternalUrl = APISIXHost
+		ChaosTest = true
 	}
 }
 

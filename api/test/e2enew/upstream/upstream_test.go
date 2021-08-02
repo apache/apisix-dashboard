@@ -474,6 +474,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 			Body:         string(_createUpstreamBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        base.SleepTime,
 		})
 	})
 	ginkgo.It("create route using the upstream just created", func() {

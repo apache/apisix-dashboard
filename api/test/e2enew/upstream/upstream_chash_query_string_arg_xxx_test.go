@@ -172,7 +172,11 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		res := map[string]int{}
-		for i := 0; i <= 17; i++ {
+		times := 17
+		if base.ChaosTest {
+			times = 26
+		}
+		for i := 0; i <= times; i++ {
 			url := basepath + "/server_port?device_id=" + strconv.Itoa(i)
 			req, err := http.NewRequest("GET", url, nil)
 			gomega.Expect(err).To(gomega.BeNil())
