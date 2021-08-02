@@ -61,7 +61,7 @@ jobs:
       - name: run e2e test
         working-directory: ./api/test/e2e
         run: |
-          go mod tidy
+          go get -t ./...
           ../chaos/utils.sh port_forward
           ps -ef | grep '[p]ort-forward'
           export CHAOS_TEST=true
