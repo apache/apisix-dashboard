@@ -406,7 +406,7 @@ var _ = ginkgo.Describe("route create with service that contains upstream", func
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			Sleep:        base.SleepTime,
+			Sleep:        time.Second,
 		}),
 		table.Entry("remove service", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),
