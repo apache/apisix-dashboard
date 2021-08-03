@@ -321,7 +321,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 					`"labels":{"API_VERSION":"v2","dev":"test"}`,
 					`"upstream":{"nodes":[{"host":"httpbin.org","port":443,"weight":1}],"timeout":{"connect":6000,"read":6000,"send":6000},"type":"roundrobin","pass_host":"node"}`,
 				},
-				Sleep: sleepTime,
+				Sleep: time.Second,
 			}
 			tests = append(tests, tcDataVerify)
 		} else {
