@@ -47,7 +47,7 @@ const RequestId: React.FC<Props> = ({ form }) => {
                     message: `${formatMessage({ id: 'component.global.pleaseEnter' })} header_name`
                 }]}
                 tooltip={formatMessage({ id: 'component.pluginForm.request-id.heade_name.tooltip' })}
-                validateTrigger={['onChange', 'onBlur', 'onClick']}
+                validateTrigger={[ 'onChange', 'onBlur', 'onClick' ]}
             >
                 <Input />
             </Form.Item>
