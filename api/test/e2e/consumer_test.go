@@ -468,6 +468,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	// get the consumer, save createtime and updatetime
 	request, _ := http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
+	request.Close = true
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
 		fmt.Printf("server not responding %s", err.Error())
@@ -477,10 +478,8 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	createtime := gjson.Get(string(respBody), "data.create_time")
 	updatetime := gjson.Get(string(respBody), "data.update_time")
 
-	// wait 2 second so the update_time should be different
-	// and etcd sync need some more time in k8s
-	time.Sleep(time.Duration(2) * time.Second)
-
+	// wait 1 second so the update_time should be different
+	time.Sleep(time.Duration(1) * time.Second)
 	tests = []HttpTestCase{
 		{
 			Desc:   "update the consumer",

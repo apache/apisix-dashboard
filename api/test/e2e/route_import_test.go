@@ -278,6 +278,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 
 	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/routes", nil)
 	request.Header.Add("Authorization", token)
+	request.Close = true
 	resp, err := http.DefaultClient.Do(request)
 	assert.Nil(t, err)
 	defer resp.Body.Close()
@@ -297,7 +298,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Body:         `{"status":1}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			Sleep:        time.Second,
+			Sleep:        sleepTime,
 		}
 		tests = append(tests, tc)
 		uris := route["uris"].([]interface{})
@@ -321,7 +322,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 					`"labels":{"API_VERSION":"v2","dev":"test"}`,
 					`"upstream":{"nodes":[{"host":"httpbin.org","port":443,"weight":1}],"timeout":{"connect":6000,"read":6000,"send":6000},"type":"roundrobin","pass_host":"node"}`,
 				},
-				Sleep: time.Second,
+				Sleep: sleepTime,
 			}
 			tests = append(tests, tcDataVerify)
 		} else {
