@@ -16,7 +16,6 @@
  */
 
 export const removeBtnStyle = {
-  marginLeft: 20,
   display: 'flex',
   alignItems: 'center',
 };
