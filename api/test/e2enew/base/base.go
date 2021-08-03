@@ -177,6 +177,8 @@ func RunTestCase(tc HttpTestCase) {
 
 	if tc.Sleep != 0 {
 		time.Sleep(tc.Sleep)
+	} else if ChaosTest {
+		time.Sleep(SleepTime)
 	} else {
 		time.Sleep(time.Duration(50) * time.Millisecond)
 	}

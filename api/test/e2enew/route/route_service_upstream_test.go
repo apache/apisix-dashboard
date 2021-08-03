@@ -303,6 +303,7 @@ var _ = ginkgo.Describe("route create upstream", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        time.Second,
 		}),
 		table.Entry("remove upstream", base.HttpTestCase{
 			Object:       base.ManagerApiExpect(),

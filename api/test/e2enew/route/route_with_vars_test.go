@@ -161,6 +161,7 @@ var _ = ginkgo.Describe("test route with vars (args)", func() {
 			Body:         string(_createRouteBody),
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        time.Second,
 		})
 	})
 	ginkgo.It("hit the route with right Cookie", func() {
