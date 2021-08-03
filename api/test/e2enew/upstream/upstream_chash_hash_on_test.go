@@ -244,7 +244,7 @@ var _ = ginkgo.Describe("Upstream chash hash on cookie", func() {
 var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", func() {
 	// chash would based on upstream ip, while in k8s only FQDN but not ip of upstream is static
 	// make apisix pod use hostnetwork is one alternative, to use 127.0.0.1 as upstream ip
-	// but exposing too much priviledge could results in unpredictable explosion radius for chaos testing
+	// but exposing too much privilege could results in unpredictable explosion radius for chaos testing
 	// so skip some chash test which got effects
 	if base.ChaosTest {
 		return
