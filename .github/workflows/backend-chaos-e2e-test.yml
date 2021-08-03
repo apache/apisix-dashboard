@@ -54,6 +54,8 @@ jobs:
       - name: setup environment
         working-directory: ./api/test/docker
         run: |
+          ../chaos/utils.sh apply_sed
+          ../chaos/utils.sh create_configmap
           docker build -t managerapi -f Dockerfile ../..
           minikube cache add managerapi -v 7 --alsologtostderr
           kubectl apply -f ../kompose

@@ -16,6 +16,27 @@
 # limitations under the License.
 #
 
+apply_sed() {
+    sed -i -z 's$"http://172.16.238.10:2379"\n    - "http://172.16.238.11:2379"\n    - "http://172.16.238.12:2379"$"http://etcd.default.svc.cluster.local:2379"$g' docker/*.yaml
+    sed -i -e 's$http://172.16.238.50$http://skywalking.default.svc.cluster.local$g' docker/*.yaml
+    sed -i -e 's$127.0.0.1:2379$etcd.default.svc.cluster.local:2379$g' ../conf/conf.yaml
+}
+
+create_configmap() {
+    kubectl create configmap apisix-cm0 --from-file ./docker/apisix_config.yaml
+    kubectl create configmap apisix-cm1 --from-file ./certs/apisix.crt
+    kubectl create configmap apisix-cm2 --from-file ./certs/apisix.key
+    # mount log would fail with
+    #   nginx: [alert] could not open error log file: open() "/usr/local/apisix/logs/error.log" failed (30: Read-only file system)
+    # kubectl create configmap apisix-cm3 --from-file ./docker/apisix_logs
+    kubectl create configmap apisix2-cm0 --from-file ./docker/apisix_config2.yaml
+    kubectl create configmap apisix2-cm1 --from-file ./certs/apisix.crt
+    kubectl create configmap apisix2-cm2 --from-file ./certs/apisix.key
+    kubectl create configmap managerapi-cm0 --from-file ../conf/conf.yaml
+    kubectl create configmap managerapi-cm1 --from-file ./testdata
+    kubectl create configmap upstream-cm0 --from-file ./docker/upstream.conf
+}
+
 port_forward() {
     nohup kubectl port-forward svc/apisix 9080:9080 >/tmp/pf1 2>&1 &
     nohup kubectl port-forward svc/apisix 9091:9091 >/tmp/pf2 2>&1 &

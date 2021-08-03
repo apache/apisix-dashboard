@@ -353,7 +353,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Path:         "/get",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"url": "https://127.0.0.1/get"`,
-			Sleep:        sleepTime,
+			Sleep:        time.Second,
 		},
 		{
 			Desc:         "verify the route just imported",
@@ -362,7 +362,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Path:         "/post",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"url": "https://127.0.0.1/post"`,
-			Sleep:        sleepTime,
+			Sleep:        time.Second,
 		},
 	}
 	tests = append(tests, verifyTests...)

@@ -19,9 +19,7 @@
 #
 etcd:
   host:
-    - "http://172.16.238.10:2379"
-    - "http://172.16.238.11:2379"
-    - "http://172.16.238.12:2379"
+    - "http://etcd.default.svc.cluster.local:2379"
   resync_delay: 0  # sync data from etcd quickly for e2e test
 
 apisix:
@@ -91,7 +89,7 @@ plugin_attr:
   skywalking:
     service_name: APISIX
     service_instance_name: "APISIX Instance Name"
-    endpoint_addr: http://172.16.238.50:12800
+    endpoint_addr: http://skywalking.default.svc.cluster.local:12800
 
   server-info:
     report_interval: 60
