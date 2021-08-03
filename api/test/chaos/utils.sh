@@ -19,7 +19,7 @@
 apply_sed() {
     sed -i -z 's$"http://172.16.238.10:2379"\n    - "http://172.16.238.11:2379"\n    - "http://172.16.238.12:2379"$"http://etcd.default.svc.cluster.local:2379"$g' ./*.yaml
     sed -i -e 's$http://172.16.238.50$http://skywalking.default.svc.cluster.local$g' ./*.yaml
-    sed -i -e 's$127.0.0.1:2379$etcd.default.svc.cluster.local:2379$g' ../conf/conf.yaml
+    sed -i -e 's$127.0.0.1:2379$etcd.default.svc.cluster.local:2379$g' ../../conf/conf.yaml
 }
 
 create_configmap() {
