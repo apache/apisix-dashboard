@@ -89,15 +89,15 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   };
 
   const OperatorRenderText = {
-    '==': 'page.route.equal',
-    '~=': 'page.route.unequal',
-    '>': 'page.route.greaterThan',
-    '<': 'page.route.lessThan',
-    '~~': 'page.route.regexMatch',
-    '~*': 'page.route.caseInsensitiveRegexMatch',
-    IN: 'page.route.in',
-    HAS: 'page.route.has',
-    '!': 'page.route.reverse',
+    '==': formatMessage({ id: 'page.route.equal' }),
+    '~=': formatMessage({ id: 'page.route.unequal' }),
+    '>': formatMessage({ id: 'page.route.greaterThan' }),
+    '<': formatMessage({ id: 'page.route.lessThan' }),
+    '~~': formatMessage({ id: 'page.route.regexMatch' }),
+    '~*': formatMessage({ id: 'page.route.caseInsensitiveRegexMatch' }),
+    IN: formatMessage({ id: 'page.route.in' }),
+    HAS: formatMessage({ id: 'page.route.has' }),
+    '!': formatMessage({ id: 'page.route.reverse' }),
   };
 
   const columns = [
@@ -130,8 +130,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
     {
       title: formatMessage({ id: 'page.route.operationalCharacter' }),
       key: 'operator',
-      render: (text: RouteModule.MatchingRule) =>
-        formatMessage({ id: OperatorRenderText[text.operator] }),
+      render: (text: RouteModule.MatchingRule) => OperatorRenderText[text.operator],
     },
     {
       title: formatMessage({ id: 'page.route.value' }),
@@ -266,7 +265,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
             >
               {Object.keys(OperatorRenderText).map((item) => (
                 <Option value={item} key={item}>
-                  {formatMessage({ id: OperatorRenderText[item] })}
+                  {OperatorRenderText[item]}
                 </Option>
               ))}
             </Select>
