@@ -242,6 +242,13 @@ var _ = ginkgo.Describe("Upstream chash hash on cookie", func() {
 })
 
 var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", func() {
+	// chash would based on upstream ip, while in k8s only FQDN but not ip of upstream is static
+	// make apisix pod use hostnetwork is one alternative, to use 127.0.0.1 as upstream ip
+	// but exposing too much priviledge could results in unpredictable explosion radius for chaos testing
+	// so skip some chash test which got effects
+	if base.ChaosTest {
+		return
+	}
 	ginkgo.It("create chash upstream with key contains uppercase letters and hyphen", func() {
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = nodes
@@ -278,11 +285,7 @@ var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", fu
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		res := map[string]int{}
-		times := 15
-		if base.ChaosTest {
-			times = 31
-		}
-		for i := 0; i <= times; i++ {
+		for i := 0; i <= 15; i++ {
 			url := basepath + "/server_port"
 			req, err := http.NewRequest("GET", url, nil)
 			req.Header.Add("X-Sessionid", `chash_val_`+strconv.Itoa(i))
@@ -298,8 +301,7 @@ var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", fu
 			}
 		}
 		// the X-Sessionid of each request is different, the weight of upstreams are the same, so these requests will be sent to each upstream equally
-		gomega.Expect(res["1980"]).Should(gomega.Equal(times/2 + 1))
-		gomega.Expect(res["1981"]).Should(gomega.Equal(times/2 + 1))
+		gomega.Expect(res["1980"] == 8 && res["1981"] == 8).Should(gomega.BeTrue())
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{
@@ -478,6 +480,9 @@ var _ = ginkgo.Describe("Upstream chash hash on wrong key", func() {
 })
 
 var _ = ginkgo.Describe("Upstream chash hash on vars", func() {
+	if base.ChaosTest {
+		return
+	}
 	ginkgo.It("create chash upstream hash_on (vars)", func() {
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = nodes
@@ -534,14 +539,10 @@ var _ = ginkgo.Describe("Upstream chash hash on vars", func() {
 		})
 	})
 	ginkgo.It("hit routes(upstream hash_on (var))", func() {
-		time.Sleep(time.Second)
+		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		res := map[string]int{}
-		times := 17
-		if base.ChaosTest {
-			times = 109
-		}
-		for i := 0; i <= times; i++ {
+		for i := 0; i <= 17; i++ {
 			url := basepath + "/server_port?device_id=" + strconv.Itoa(i)
 			req, err := http.NewRequest("GET", url, nil)
 			resp, err := http.DefaultClient.Do(req)
@@ -555,8 +556,7 @@ var _ = ginkgo.Describe("Upstream chash hash on vars", func() {
 				res[body]++
 			}
 		}
-		gomega.Expect(res["1980"]).Should(gomega.Equal(times/2 + 1))
-		gomega.Expect(res["1981"]).Should(gomega.Equal(times/2 + 1))
+		gomega.Expect(res["1980"] == 9 && res["1981"] == 9).Should(gomega.BeTrue())
 	})
 	ginkgo.It("delete route", func() {
 		base.RunTestCase(base.HttpTestCase{

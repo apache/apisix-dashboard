@@ -329,6 +329,7 @@ func TestGlobalRule_with_createtime_updatetime(t *testing.T) {
 	// get the global_rule, save createtime and updatetime
 	request, _ := http.NewRequest("GET", basepath, nil)
 	request.Header.Add("Authorization", token)
+	request.Close = true
 	resp, err := http.DefaultClient.Do(request)
 	assert.Nil(t, err)
 	defer resp.Body.Close()
@@ -339,9 +340,8 @@ func TestGlobalRule_with_createtime_updatetime(t *testing.T) {
 	assert.True(t, createtime.Int() >= time.Now().Unix()-1 && createtime.Int() <= time.Now().Unix()+1)
 	assert.True(t, updatetime.Int() >= time.Now().Unix()-1 && updatetime.Int() <= time.Now().Unix()+1)
 
-	// wait 2 second so the update_time should be different
-	// and etcd sync need some more time in k8s
-	time.Sleep(time.Duration(2) * time.Second)
+	// wait 1 second so the update_time should be different
+	time.Sleep(time.Duration(1) * time.Second)
 
 	tests = []HttpTestCase{
 		{

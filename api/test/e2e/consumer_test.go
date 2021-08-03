@@ -480,6 +480,7 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 
 	// wait 1 second so the update_time should be different
 	time.Sleep(time.Duration(1) * time.Second)
+
 	tests = []HttpTestCase{
 		{
 			Desc:   "update the consumer",

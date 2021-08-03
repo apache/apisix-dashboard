@@ -139,6 +139,9 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 })
 
 var _ = ginkgo.Describe("Upstream chash query string", func() {
+	if base.ChaosTest {
+		return
+	}
 	ginkgo.It("create chash upstream with key (arg_xxx)", func() {
 		createUpstreamBody["key"] = "arg_device_id"
 		_createUpstreamBody, err := json.Marshal(createUpstreamBody)
@@ -172,11 +175,7 @@ var _ = ginkgo.Describe("Upstream chash query string", func() {
 		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		res := map[string]int{}
-		times := 17
-		if base.ChaosTest {
-			times = 26
-		}
-		for i := 0; i <= times; i++ {
+		for i := 0; i <= 17; i++ {
 			url := basepath + "/server_port?device_id=" + strconv.Itoa(i)
 			req, err := http.NewRequest("GET", url, nil)
 			gomega.Expect(err).To(gomega.BeNil())
