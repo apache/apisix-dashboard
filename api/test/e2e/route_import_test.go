@@ -297,7 +297,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Body:         `{"status":1}`,
 			Headers:      map[string]string{"Authorization": token},
 			ExpectStatus: http.StatusOK,
-			Sleep:        sleepTime,
+			Sleep:        time.Second,
 		}
 		tests = append(tests, tc)
 		uris := route["uris"].([]interface{})
