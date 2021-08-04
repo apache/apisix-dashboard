@@ -26,8 +26,8 @@ context('Create and Delete Upstream With Custom CHash Key', () => {
     nodes_0_host: '#nodes_0_host',
     nodes_0_port: '#nodes_0_port',
     nodes_0_weight: '#nodes_0_weight',
-    upstreamType: ".ant-select-item-option-content",
-    hashPosition: ".ant-select-item-option-content",
+    upstreamType: '.ant-select-item-option-content',
+    hashPosition: '.ant-select-item-option-content',
     chash_key: '#key',
     notification: '.ant-notification-notice-message',
     nameSelector: '[title=Name]',
@@ -62,7 +62,14 @@ context('Create and Delete Upstream With Custom CHash Key', () => {
     cy.get(selector.upstreamType).within(() => {
       cy.contains('CHash').click();
     });
+    cy.get('[title="Key"]').should('have.class', 'ant-form-item-required');
+    // Key is not required when Hasn on select consumer
     cy.get(selector.varSelect).click();
+    cy.get(selector.hashPosition).within(() => {
+      cy.contains('consumer').click();
+    });
+    cy.get('[title="Key"]').should('not.have.class', 'ant-form-item-required');
+    cy.get('#hash_on').click({ force: true });
     cy.get(selector.hashPosition).within(() => {
       cy.contains('cookie').click();
     });
