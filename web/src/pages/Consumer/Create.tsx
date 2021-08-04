@@ -46,7 +46,10 @@ const Page: React.FC = (props) => {
 
     fetchPlugList().then((data) => {
       setPluginList(data);
-      const authList = data.filter((item) => item.type === 'auth').map((item) => item.name);
+      const authList = data
+        .filter((item) => item.type === 'auth')
+        .map((item) => item.name)
+        .sort();
       setAuthPluginList(authList);
     });
   }, []);
