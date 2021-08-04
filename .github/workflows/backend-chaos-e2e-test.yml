@@ -40,7 +40,8 @@ jobs:
 
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
           sudo dpkg -i --force-architecture minikube_latest_amd64.deb
-          minikube start
+          cd api
+          minikube start --mount-string=$PWD:$PWD --mount
           kubectl wait pods -n kube-system --for=condition=Ready --timeout=300s --all
 
       - name: Deploy etcd with Helm
@@ -51,19 +52,27 @@ jobs:
           kubectl get pods --all-namespaces
           kubectl wait pods -l app.kubernetes.io/instance=etcd --for=condition=Ready --timeout=300s --all
 
-      - name: setup environment
+      - name: build docker and push to minikube
         working-directory: ./api/test/docker
         run: |
-          ../chaos/utils.sh apply_sed
-          ../chaos/utils.sh create_configmap
           docker build -t managerapi -f Dockerfile ../..
           minikube cache add managerapi -v 7 --alsologtostderr
+
+      - name: kompose
+        working-directory: ./api/test/docker
+        run: |
+          curl -L https://github.com/kubernetes/kompose/releases/download/v1.22.0/kompose-linux-amd64 -o kompose
+          chmod +x kompose
+          sudo mv ./kompose /usr/local/bin/kompose
+
+          ../chaos/utils.sh apply_sed
+          mkdir ../kompose
+          kompose convert --volumes hostMap --out ../kompose
+          rm ../kompose/etcd*.yaml ../kompose/node*.yaml
+          sed -i '/          resources: {}/a\          imagePullPolicy: Never' ../kompose/managerapi-deployment.yaml
+
           kubectl apply -f ../kompose
-          kubectl wait pods -l io.kompose.service=apisix --for=condition=Ready --timeout=300s --all
-          kubectl wait pods -l io.kompose.service=apisix2 --for=condition=Ready --timeout=300s --all
-          kubectl wait pods -l io.kompose.service=managerapi --for=condition=Ready --timeout=300s --all
-          kubectl wait pods -l io.kompose.service=skywalking --for=condition=Ready --timeout=300s --all
-          kubectl wait pods -l io.kompose.service=upstream --for=condition=Ready --timeout=300s --all
+          kubectl wait pods --for=condition=Ready --timeout=300s --all
           ../chaos/utils.sh port_forward
 
       - name: run e2e test

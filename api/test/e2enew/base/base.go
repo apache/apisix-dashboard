@@ -17,11 +17,9 @@
 package base
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -32,22 +30,13 @@ import (
 
 	"github.com/gavv/httpexpect/v2"
 	"github.com/onsi/ginkgo"
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
-	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/client-go/kubernetes"
-	clientScheme "k8s.io/client-go/kubernetes/scheme"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/client/config"
 )
 
 var (
-	token             string
-	errorLogSinceTime time.Time
-	ChaosTest         bool
+	token     string
+	ChaosTest bool
 
 	UpstreamIp             = "172.16.238.20"
 	APISIXHost             = "http://127.0.0.1:9080"
@@ -258,11 +247,6 @@ func RunTestCase(tc HttpTestCase) {
 
 func ReadAPISIXErrorLog() string {
 	t := getTestingHandle()
-	if ChaosTest {
-		logContent, err := ReadAPISIXErrorLogFromK8S()
-		assert.Nil(t, err)
-		return logContent
-	}
 	cmd := exec.Command("pwd")
 	pwdByte, err := cmd.CombinedOutput()
 	pwd := string(pwdByte)
@@ -275,53 +259,7 @@ func ReadAPISIXErrorLog() string {
 	return logContent
 }
 
-func ReadAPISIXErrorLogFromK8S() (string, error) {
-	scheme := runtime.NewScheme()
-	clientScheme.AddToScheme(scheme)
-
-	restConfig := config.GetConfigOrDie()
-	ctrlCli, err := client.New(restConfig, client.Options{Scheme: scheme})
-	if err != nil {
-		return "", err
-	}
-	kubeCli, err := kubernetes.NewForConfig(restConfig)
-	if err != nil {
-		return "", err
-	}
-
-	listOption := client.MatchingLabels{"io.kompose.service": "apisix"}
-	podList := &corev1.PodList{}
-	err = ctrlCli.List(context.Background(), podList, listOption)
-	if err != nil {
-		return "", err
-	}
-	pod := podList.Items[0]
-
-	podLogOpts := corev1.PodLogOptions{}
-	if !errorLogSinceTime.IsZero() {
-		podLogOpts.SinceTime = &metav1.Time{Time: errorLogSinceTime}
-	}
-
-	req := kubeCli.CoreV1().Pods(pod.Namespace).GetLogs(pod.Name, &podLogOpts)
-	podLogs, err := req.Stream(context.Background())
-	if err != nil {
-		return "", errors.Wrapf(err, "failed to open log stream for pod %s/%s", pod.GetNamespace(), pod.GetName())
-	}
-	defer podLogs.Close()
-
-	buf := new(bytes.Buffer)
-	_, err = io.Copy(buf, podLogs)
-	if err != nil {
-		return "", errors.Wrapf(err, "failed to copy information from podLogs to buf")
-	}
-	return buf.String(), nil
-}
-
 func CleanAPISIXErrorLog() {
-	if ChaosTest {
-		errorLogSinceTime = time.Now()
-		return
-	}
 	t := getTestingHandle()
 	cmd := exec.Command("pwd")
 	pwdByte, err := cmd.CombinedOutput()

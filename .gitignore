@@ -66,3 +66,5 @@ web/public/monaco-editor/
 *.swp
 *.swo
 
+# chaos
+api/test/kompose
