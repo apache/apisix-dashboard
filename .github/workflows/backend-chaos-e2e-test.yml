@@ -67,7 +67,7 @@ jobs:
 
           ../chaos/utils.sh apply_sed
           mkdir ../kompose
-          kompose convert --volumes hostMap --out ../kompose
+          kompose convert --volumes hostPath --out ../kompose
           rm ../kompose/etcd*.yaml ../kompose/node*.yaml
           sed -i '/          resources: {}/a\          imagePullPolicy: Never' ../kompose/managerapi-deployment.yaml
 
