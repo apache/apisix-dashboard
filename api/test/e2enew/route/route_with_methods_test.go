@@ -18,6 +18,7 @@ package route
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
@@ -240,6 +241,7 @@ var _ = ginkgo.Describe("route with methods", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        time.Second,
 		}),
 		table.Entry("add route with lower case methods", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),

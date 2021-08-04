@@ -404,6 +404,7 @@ var _ = ginkgo.Describe("route with limit count and disable", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
+			Sleep:        time.Second,
 		}),
 		table.Entry("hit the route just deleted", base.HttpTestCase{
 			Object:       base.APISIXExpect(),
