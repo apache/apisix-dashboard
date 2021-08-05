@@ -36,7 +36,7 @@ declare namespace RouteModule {
     plugins: PluginPage.PluginData;
     //  TEMP
     script: any;
-    plugin_config_id?: string
+    plugin_config_id?: string;
   };
 
   type UpstreamHost = {
@@ -130,7 +130,7 @@ declare namespace RouteModule {
   type Kvobject = {
     key: string;
     value: string;
-  }
+  };
   type ProxyRewrite = {
     scheme?: 'keep' | 'http' | 'https';
     uri?: string;
@@ -138,7 +138,7 @@ declare namespace RouteModule {
     host?: string;
     kvHeaders?: Kvobject[];
     headers?: Record<string, string>;
-  }
+  };
 
   type AdvancedMatchingRules = {
     advancedMatchingRules: MatchingRule[];
@@ -217,12 +217,12 @@ declare namespace RouteModule {
     header_params?: any;
   };
 
-  type debugResponse ={
-    code: number,
-    message: string,
-    data: any,
-    header: Record<string, string[]>
-  }
+  type debugResponse = {
+    code: number;
+    message: string;
+    data: any;
+    header: Record<string, string[]>;
+  };
 
   type authData = {
     authType: string;

@@ -29,38 +29,53 @@ import RefererRestriction from './referer-restriction';
 import Cors from './cors';
 
 type Props = {
-  name: string,
-  schema: Record<string, any> | undefined,
-  form: FormInstance,
-  renderForm: boolean
-}
+  name: string;
+  schema: Record<string, any> | undefined;
+  form: FormInstance;
+  renderForm: boolean;
+};
 
-export const PLUGIN_UI_LIST = ['api-breaker', 'basic-auth', 'cors', 'limit-req', 'limit-conn', 'proxy-mirror', 'referer-restriction', 'limit-count'];
+export const PLUGIN_UI_LIST = [
+  'api-breaker',
+  'basic-auth',
+  'cors',
+  'limit-req',
+  'limit-conn',
+  'proxy-mirror',
+  'referer-restriction',
+  'limit-count',
+];
 
 export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) => {
-
   const { formatMessage } = useIntl();
 
-  if (!renderForm) { return <Empty style={{ marginTop: 100 }} description={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} /> };
+  if (!renderForm) {
+    return (
+      <Empty
+        style={{ marginTop: 100 }}
+        description={formatMessage({ id: 'component.plugin.noConfigurationRequired' })}
+      />
+    );
+  }
 
   switch (name) {
     case 'api-breaker':
-      return <ApiBreaker form={form} />
+      return <ApiBreaker form={form} />;
     case 'basic-auth':
-      return <BasicAuth form={form} />
+      return <BasicAuth form={form} />;
     case 'limit-count':
-      return <LimitCount form={form} />
+      return <LimitCount form={form} />;
     case 'cors':
-      return <Cors form={form} />
+      return <Cors form={form} />;
     case 'limit-req':
-      return <LimitReq form={form} schema={schema} />
+      return <LimitReq form={form} schema={schema} />;
     case 'proxy-mirror':
-      return <ProxyMirror form={form} />
+      return <ProxyMirror form={form} />;
     case 'limit-conn':
-      return <LimitConn form={form} />
+      return <LimitConn form={form} />;
     case 'referer-restriction':
-      return <RefererRestriction form={form} />
+      return <RefererRestriction form={form} />;
     default:
       return null;
   }
-}
+};

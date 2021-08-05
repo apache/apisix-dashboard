@@ -63,10 +63,11 @@ export default defineConfig({
   },
   outputPath: '../output/html',
   extraBabelPlugins: [
-    ['babel-plugin-istanbul',  {
-      "exclude": [
-        "**/.umi", "**/locales"
-      ]
-    }],
+    [
+      'babel-plugin-istanbul',
+      {
+        exclude: ['**/.umi', '**/locales'],
+      },
+    ],
   ],
 });

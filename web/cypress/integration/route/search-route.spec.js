@@ -39,7 +39,7 @@ context('Create and Search Route', () => {
     drawerBody: '.ant-drawer-wrapper-body',
     notification: '.ant-notification-notice-message',
     notificationClose: '.anticon-close',
-    expandSearch: '.ant-pro-form-collapse-button'
+    expandSearch: '.ant-pro-form-collapse-button',
   };
 
   const data = {
@@ -84,7 +84,7 @@ context('Create and Search Route', () => {
       // config label
       cy.contains('Manage').click();
 
-      // eslint-disable-next-line no-loop-func
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
       cy.get(selector.drawerBody).within(() => {
         cy.contains('Add')
           .click()
@@ -176,6 +176,7 @@ context('Create and Search Route', () => {
       cy.contains('Delete').should('be.visible').click({ timeout });
       cy.get(selector.deleteAlert)
         .should('be.visible')
+        // eslint-disable-next-line @typescript-eslint/no-loop-func
         .within(() => {
           cy.contains('OK').click();
         });

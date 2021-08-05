@@ -29,13 +29,14 @@ const FORM_ITEM_LAYOUT = {
     span: 5,
   },
   wrapperCol: {
-    span: 18
+    span: 18,
   },
 };
 
 const FORM_ITEM_WITHOUT_LABEL = {
   wrapperCol: {
-    span: 10, offset: 5
+    span: 10,
+    offset: 5,
   },
 };
 
@@ -46,21 +47,21 @@ const removeBtnStyle = {
 };
 
 const RefererRestriction: React.FC<Props> = ({ form }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
   return (
-    <Form
-      form={form}
-      {...FORM_ITEM_LAYOUT}
-      initialValues={{ whitelist: [''] }}
-    >
+    <Form form={form} {...FORM_ITEM_LAYOUT} initialValues={{ whitelist: [''] }}>
       <Form.List name="whitelist">
         {(fields, { add, remove }) => {
           return (
             <div>
               <Form.Item
-                extra={formatMessage({ id: 'component.pluginForm.referer-restriction.whitelist.tooltip' })}
-                label='whitelist'
-                tooltip={formatMessage({ id: 'component.pluginForm.referer-restriction.whitelist.tooltip' })}
+                extra={formatMessage({
+                  id: 'component.pluginForm.referer-restriction.whitelist.tooltip',
+                })}
+                label="whitelist"
+                tooltip={formatMessage({
+                  id: 'component.pluginForm.referer-restriction.whitelist.tooltip',
+                })}
                 required
                 style={{ marginBottom: 0 }}
               >
@@ -72,15 +73,20 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
                         validateTrigger={['onChange', 'onBlur', 'onClick']}
                         noStyle
                         required
-                        rules={[{
-                          message: formatMessage({
-                            id: 'page.route.form.itemRulesPatternMessage.domain',
-                          }),
-                          pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g')
-                        }, {
-                          required: true,
-                          message: `${formatMessage({ id: 'component.global.pleaseEnter' })} whitelist`
-                        }]}
+                        rules={[
+                          {
+                            message: formatMessage({
+                              id: 'page.route.form.itemRulesPatternMessage.domain',
+                            }),
+                            pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g'),
+                          },
+                          {
+                            required: true,
+                            message: `${formatMessage({
+                              id: 'component.global.pleaseEnter',
+                            })} whitelist`,
+                          },
+                        ]}
                       >
                         <Input />
                       </Form.Item>
@@ -113,16 +119,20 @@ const RefererRestriction: React.FC<Props> = ({ form }) => {
         }}
       </Form.List>
       <Form.Item
-        extra={formatMessage({ id: 'component.pluginForm.referer-restriction.bypass_missing.tooltip' })}
+        extra={formatMessage({
+          id: 'component.pluginForm.referer-restriction.bypass_missing.tooltip',
+        })}
         label="bypass_missing"
         name="bypass_missing"
-        tooltip={formatMessage({ id: 'component.pluginForm.referer-restriction.bypass_missing.tooltip' })}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.referer-restriction.bypass_missing.tooltip',
+        })}
         valuePropName="checked"
       >
         <Switch />
       </Form.Item>
-    </Form >
+    </Form>
   );
-}
+};
 
 export default RefererRestriction;

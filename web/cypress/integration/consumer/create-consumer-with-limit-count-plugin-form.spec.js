@@ -17,9 +17,8 @@
 /* eslint-disable no-undef */
 
 context('Create and delete consumer with limit-count plugin form', () => {
-
   const selector = {
-    empty:'.ant-empty-normal',
+    empty: '.ant-empty-normal',
     username: '#username',
     description: '#desc',
     pluginCard: '.ant-card',
@@ -39,15 +38,15 @@ context('Create and delete consumer with limit-count plugin form', () => {
     redis_cluster_name: '#redis_cluster_name',
     redis_cluster_nodes_0: '#redis_cluster_nodes_0',
     redis_cluster_nodes_1: '#redis_cluster_nodes_1',
-    monacoViewZones: '.view-zones'
-  }
+    monacoViewZones: '.view-zones',
+  };
 
   const data = {
     consumerName: 'test_consumer',
     description: 'desc_by_autotest',
     createConsumerSuccess: 'Create Consumer Successfully',
-    deleteConsumerSuccess: 'Delete Consumer Successfully'
-  }
+    deleteConsumerSuccess: 'Delete Consumer Successfully',
+  };
 
   beforeEach(() => {
     cy.login();
@@ -119,7 +118,6 @@ context('Create and delete consumer with limit-count plugin form', () => {
       });
     });
     cy.get(selector.drawer).should('not.exist');
-
 
     // config limit-count form with redis policy
     cy.contains(selector.pluginCard, 'limit-count').within(() => {

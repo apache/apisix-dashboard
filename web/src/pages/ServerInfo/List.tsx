@@ -41,7 +41,9 @@ const ServerInfo: React.FC = () => {
           ...item,
           boot_time: moment(item.boot_time * 1000).format('YYYY-MM-DD HH:mm:ss'),
           last_report_time: moment(item.last_report_time * 1000).format('YYYY-MM-DD HH:mm:ss'),
-          up_time: moment(item.boot_time * 1000).locale(locale).fromNow(true),
+          up_time: moment(item.boot_time * 1000)
+            .locale(locale)
+            .fromNow(true),
         };
       });
 

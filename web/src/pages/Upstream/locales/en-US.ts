@@ -33,7 +33,7 @@ export default {
   'page.upstream.step.name.should.unique': 'Name should be unique',
   'page.upstream.step.input.upstream.name': 'Please enter upstream name',
   'page.upstream.step.description': 'Description',
-  'page.upstream.step.input.description': 'Please enter upstream\'s description',
+  'page.upstream.step.input.description': "Please enter upstream's description",
   'page.upstream.step.type': 'Algorithm',
   'page.upstream.step.pass-host': 'Hostname',
   'page.upstream.step.pass-host.pass': 'Keep the same Host from client request',
@@ -41,7 +41,8 @@ export default {
   'page.upstream.step.pass-host.rewrite': 'Custom Host (Will be deprecated in the future)',
   'page.upstream.step.pass-host.upstream_host': 'Custom Host',
   'page.upstream.step.connect.timeout': 'Connect Timeout',
-  'page.upstream.step.connect.timeout.desc': 'Timeout for establishing a connection from the request to the upstream server',
+  'page.upstream.step.connect.timeout.desc':
+    'Timeout for establishing a connection from the request to the upstream server',
   'page.upstream.step.input.connect.timeout': 'Please enter connect timeout',
   'page.upstream.step.send.timeout': 'Send Timeout',
   'page.upstream.step.send.timeout.desc': 'Timeout for sending data to upstream servers',
@@ -94,15 +95,22 @@ export default {
   'page.upstream.type.ewma': 'EWMA',
   'page.upstream.type.least_conn': 'Least conn',
 
-  'page.upstream.list.content': 'The upstream list contains the created upstream services (i.e., backend services) and allows load balancing and health checking of multiple target nodes of the upstream services.',
+  'page.upstream.list.content':
+    'The upstream list contains the created upstream services (i.e., backend services) and allows load balancing and health checking of multiple target nodes of the upstream services.',
 
-  'page.upstream.checks.active.timeout.description': 'Socket timeout for active checks (in seconds)',
-  'page.upstream.checks.active.unhealthy.interval.description': 'Interval between checks for unhealthy targets (in seconds)',
-  'page.upstream.checks.passive.healthy.http_statuses.description': 'Which HTTP statuses to consider a failure',
-  'page.upstream.checks.passive.unhealthy.http_statuses.description': 'Which HTTP statuses to consider a success',
-  'page.upstream.checks.passive.unhealthy.http_failures.description': 'Number of HTTP failures to consider a target unhealthy',
-  'page.upstream.checks.passive.unhealthy.tcp_failures.description': 'Number of TCP failures to consider a target unhealthy',
+  'page.upstream.checks.active.timeout.description':
+    'Socket timeout for active checks (in seconds)',
+  'page.upstream.checks.active.unhealthy.interval.description':
+    'Interval between checks for unhealthy targets (in seconds)',
+  'page.upstream.checks.passive.healthy.http_statuses.description':
+    'Which HTTP statuses to consider a failure',
+  'page.upstream.checks.passive.unhealthy.http_statuses.description':
+    'Which HTTP statuses to consider a success',
+  'page.upstream.checks.passive.unhealthy.http_failures.description':
+    'Number of HTTP failures to consider a target unhealthy',
+  'page.upstream.checks.passive.unhealthy.tcp_failures.description':
+    'Number of TCP failures to consider a target unhealthy',
   'page.upstream.scheme': 'Scheme',
 
-  'page.upstream.other.configuration.invalid': 'Please check the Upstream configuration'
+  'page.upstream.other.configuration.invalid': 'Please check the Upstream configuration',
 };

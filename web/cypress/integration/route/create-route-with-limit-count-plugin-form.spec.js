@@ -51,7 +51,7 @@ context('Create and delete route with limit-count form', () => {
     submitSuccess: 'Submit Successfully',
     port: '80',
     weight: 1,
-  }
+  };
 
   beforeEach(() => {
     cy.login();

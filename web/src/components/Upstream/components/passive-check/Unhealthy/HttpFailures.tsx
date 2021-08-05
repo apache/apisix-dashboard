@@ -14,22 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, InputNumber } from 'antd'
-import { useIntl } from 'umi'
+import React from 'react';
+import { Form, InputNumber } from 'antd';
+import { useIntl } from 'umi';
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const Component: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
 
   return (
     <Form.Item
-      label={formatMessage({ id: 'component.upstream.fields.checks.active.unhealthy.http_failures' })}
+      label={formatMessage({
+        id: 'component.upstream.fields.checks.active.unhealthy.http_failures',
+      })}
       required
-      tooltip={formatMessage({ id: 'page.upstream.checks.passive.unhealthy.http_failures.description' })}
+      tooltip={formatMessage({
+        id: 'page.upstream.checks.passive.unhealthy.http_failures.description',
+      })}
     >
       <Form.Item
         name={['checks', 'passive', 'unhealthy', 'http_failures']}
@@ -47,7 +51,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
         <InputNumber disabled={readonly} min={1} max={254} />
       </Form.Item>
     </Form.Item>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;
