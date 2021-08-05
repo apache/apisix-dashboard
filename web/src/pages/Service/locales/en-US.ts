@@ -21,6 +21,7 @@ export default {
   'page.service.list': 'Service List',
   'page.service.description':
     'A service consists of a combination of public plugin configuration and upstream target information in a route. Services are associated with Routes and Upstreams, and a service can correspond to a set of upstream nodes and can be bound by multiple routes.',
+  'page.service.fields.name.required': 'Please enter service name',
   'page.service.create': 'Create Service',
   'page.service.configure': 'Configure Service',
 };
