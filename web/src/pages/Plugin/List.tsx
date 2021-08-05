@@ -22,7 +22,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, Popconfirm, Space, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { omit } from 'lodash';
-import querystring from 'query-string'
+import querystring from 'query-string';
 
 import PluginDetail from '@/components/Plugin/PluginDetail';
 
@@ -146,7 +146,10 @@ const Page: React.FC = () => {
   );
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'page.plugin.list' })} content={formatMessage({ id: 'page.plugin.list.enabled' })}>
+    <PageHeaderWrapper
+      title={formatMessage({ id: 'page.plugin.list' })}
+      content={formatMessage({ id: 'page.plugin.list.enabled' })}
+    >
       <ProTable<PluginModule.TransformedPlugin>
         actionRef={ref}
         rowKey="id"

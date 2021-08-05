@@ -51,6 +51,8 @@ context('Create and delete route with limit-count form', () => {
     submitSuccess: 'Submit Successfully',
     port: '80',
     weight: 1,
+    redisClusterName: 'Please Enter redis_cluster_name',
+    redisClusterNode: 'Please Enter redis_cluster_node',
   }
 
   beforeEach(() => {
@@ -112,7 +114,7 @@ context('Create and delete route with limit-count form', () => {
     });
     cy.get(selector.drawer).should('not.exist');
 
-    // config limit-count form with redis policy
+    // config limit-count form with redis-cluster policy
     cy.contains(selector.pluginCard, 'limit-count').within(() => {
       cy.get('button').click({
         force: true,
@@ -125,6 +127,11 @@ context('Create and delete route with limit-count form', () => {
         force: true,
       });
     });
+    cy.get(selector.redis_cluster_name).click();
+    cy.contains(data.redisClusterName);
+    cy.get(selector.redis_cluster_nodes_0).click();
+    cy.contains(data.redisClusterNode);
+
     cy.get(selector.redis_cluster_name).type('redis_cluster_name');
     cy.get(selector.redis_cluster_nodes_0).type('127.0.0.1:5000');
     cy.get(selector.redis_cluster_nodes_1).type('127.0.0.1:5001');

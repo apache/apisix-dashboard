@@ -44,8 +44,8 @@ var _ = ginkgo.Describe("Version", func() {
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
 			ExpectBody: []string{"\"code\":2000001",
-				`"message":"The Manager-api and Apache APISIX are mismatched. ` +
-					`The version of Dashboard is , and should be used with Apache APISIX ."`,
+				`"message":"The Manager API and Apache APISIX are mismatched. ` +
+					`The version of Manager API is , and should be used with Apache APISIX ."`,
 				`"matched":false`, "apisix_server1", "apisix_server2"},
 		}),
 	)

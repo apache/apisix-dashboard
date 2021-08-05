@@ -107,6 +107,7 @@ const RedisClusterForm: React.FC = () => {
       <Form.Item
         label="redis_cluster_name"
         name="redis_cluster_name"
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
         rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_cluster_name` }]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_cluster_name.tooltip' })}
       >
@@ -129,7 +130,7 @@ const RedisClusterForm: React.FC = () => {
                         {...field}
                         noStyle
                         validateTrigger={['onChange', 'onBlur', 'onClick']}
-                        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_cluster_name` }, { min: 2, message: formatMessage({ id: 'component.pluginForm.limit-count.atLeast2Characters.rule' }) }]}
+                        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_cluster_node` }, { min: 2, message: formatMessage({ id: 'component.pluginForm.limit-count.atLeast2Characters.rule' }) }]}
                       >
                         <Input />
                       </Form.Item>

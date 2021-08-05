@@ -22,9 +22,6 @@
       "@@/*": ["./src/.umi/*"]
     }
   },
-  "include": [
-    "src",
-    "node_modules/monaco-editor/monaco.d.ts"
-  ],
+  "include": ["cypress", "src", "node_modules/monaco-editor/monaco.d.ts"],
   "exclude": ["node_modules", "build", "dist", "scripts", "src/.umi/*", "webpack", "jest"]
 }

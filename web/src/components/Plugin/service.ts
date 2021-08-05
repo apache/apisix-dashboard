@@ -34,6 +34,7 @@ export const fetchList = () => {
     const typedData = data.data.map(item => ({
       ...item,
       type: PLUGIN_LIST[item.name]?.type || "other",
+      originType: item.type,
       hidden: PLUGIN_LIST[item.name]?.hidden || false
     }));
 
