@@ -21,13 +21,11 @@ import (
 	"github.com/shiningrush/droplet"
 	wgin "github.com/shiningrush/droplet/wrapper/gin"
 
-	"github.com/apisix/manager-api/internal/core/store"
 	"github.com/apisix/manager-api/internal/handler"
 	"github.com/apisix/manager-api/internal/utils"
 )
 
 type Handler struct {
-	serverInfoStore store.Interface
 }
 
 type InfoOutput struct {
@@ -36,9 +34,7 @@ type InfoOutput struct {
 }
 
 func NewHandler() (handler.RouteRegister, error) {
-	return &Handler{
-		serverInfoStore: store.GetStore(store.HubKeyServerInfo),
-	}, nil
+	return &Handler{}, nil
 }
 
 func (h *Handler) ApplyRoute(r *gin.Engine) {
