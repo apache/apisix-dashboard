@@ -77,14 +77,14 @@ jobs:
 
       - name: run e2e test
         working-directory: ./api/test/e2e
-        run: CHAOS_TEST=true && go test -v
+        run: export CHAOS_TEST=true && go test -v
 
       - name: install ginkgo cli
         run: go get github.com/onsi/ginkgo/ginkgo
 
       - name: run e2enew test
         working-directory: ./api/test/e2enew
-        run: CHAOS_TEST=true && ginkgo -r
+        run: export CHAOS_TEST=true && ginkgo -r
 
       # Debug via SSH if previous steps failed
       - name: Set up tmate session
