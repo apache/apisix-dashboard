@@ -3,8 +3,6 @@ package conf
 import (
 	"strconv"
 
-	"golang.org/x/crypto/bcrypt"
-
 	"github.com/apisix/manager-api/internal/utils"
 	"github.com/apisix/manager-api/internal/utils/consts"
 )
@@ -58,7 +56,7 @@ func (u DashboardUserLocal) Valid(params map[string]interface{}) (bool, error) {
 		return false, consts.ErrUsernamePassword
 	}
 
-	if bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(params["password"].(string))) != nil {
+	if u.Password != params["password"].(string) {
 		return false, consts.ErrUsernamePassword
 	}
 

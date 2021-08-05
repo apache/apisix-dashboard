@@ -38,7 +38,7 @@ authentication:
   users:                     # yamllint enable rule:comments-indentation
     - type: local
       username: admin   # username and password for login `manager api`
-      password: $2a$10$NjjlIhuj4O6foZhWw96H0uXZQl0na8qg.BSbf/ASwurchFhUW0fzC
+      password: admin
     - type: local
       username: user
-      password: $2a$10$arSuTLefL6mgw8RcE9.ls.pJmnnE9PAYcbI.3POWKyrPyaIZmbeRm
+      password: user
