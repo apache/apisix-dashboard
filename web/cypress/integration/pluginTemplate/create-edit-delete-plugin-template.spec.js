@@ -17,7 +17,6 @@
 /* eslint-disable no-undef */
 
 context('Create Configure and Delete PluginTemplate', () => {
-
   const selector = {
     pluginCard: '.ant-card',
     empty: '.ant-empty-normal',

@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Shape, Dom } from '@antv/x6'
-import type { Addon, Graph, Cell } from '@antv/x6'
-import { formatMessage } from 'umi'
+import { Shape, Dom } from '@antv/x6';
+import type { Addon, Graph, Cell } from '@antv/x6';
+import { formatMessage } from 'umi';
 
-export const DEFAULT_STENCIL_WIDTH = 280
-export const DEFAULT_TOOLBAR_HEIGHT = 38
-export const DEFAULT_SHAPE_TEXT_EDIT_CLASS_NAME = ".flow-graph-shape-text-editor"
+export const DEFAULT_STENCIL_WIDTH = 280;
+export const DEFAULT_TOOLBAR_HEIGHT = 38;
+export const DEFAULT_SHAPE_TEXT_EDIT_CLASS_NAME = '.flow-graph-shape-text-editor';
 
 export const DEFAULT_OPINIONS: Partial<Graph.Options> = {
   scroller: true,
@@ -58,24 +58,19 @@ export const DEFAULT_OPINIONS: Partial<Graph.Options> = {
           name: 'manhattan',
         },
         zIndex: 0,
-      })
+      });
     },
-    validateConnection({
-      sourceView,
-      targetView,
-      sourceMagnet,
-      targetMagnet,
-    }) {
+    validateConnection({ sourceView, targetView, sourceMagnet, targetMagnet }) {
       if (sourceView === targetView) {
-        return false
+        return false;
       }
       if (!sourceMagnet) {
-        return false
+        return false;
       }
       if (!targetMagnet) {
-        return false
+        return false;
       }
-      return true
+      return true;
     },
   },
   highlighting: {
@@ -101,32 +96,32 @@ export const DEFAULT_OPINIONS: Partial<Graph.Options> = {
   embedding: {
     enabled: true,
     findParent({ node }) {
-      const bbox = node.getBBox()
+      const bbox = node.getBBox();
       return this.getNodes().filter((item) => {
-        const data = item.getData<any>()
+        const data = item.getData<any>();
         if (data && data.parent) {
-          const targetBBox = item.getBBox()
-          return bbox.isIntersectWithRect(targetBBox)
+          const targetBBox = item.getBBox();
+          return bbox.isIntersectWithRect(targetBBox);
         }
-        return false
-      })
+        return false;
+      });
     },
   },
-}
+};
 
 export const DEFAULT_STENCIL_OPINIONS: Partial<Addon.Stencil.Options> = {
   title: formatMessage({ id: 'component.plugin-flow.text.nodes-area' }),
   stencilGraphWidth: DEFAULT_STENCIL_WIDTH,
   search: (cell, keyword) => {
     if (keyword) {
-      return (cell as any).label?.indexOf(keyword) !== -1
+      return (cell as any).label?.indexOf(keyword) !== -1;
     }
-    return true
+    return true;
   },
   notFoundText: formatMessage({ id: 'component.plugin-flow.text.nodes.not-found' }),
   placeholder: formatMessage({ id: 'component.plugin-flow.text.search-nodes.placeholder' }),
   collapsable: true,
-}
+};
 
 export const DEFAULT_SHAPE_RECT_OPINIONS = {
   inherit: 'rect',
@@ -169,7 +164,7 @@ export const DEFAULT_SHAPE_RECT_OPINIONS = {
     {
       tagName: 'text',
       selector: 'text',
-    }
+    },
   ],
   ports: {
     groups: {
@@ -249,14 +244,14 @@ export const DEFAULT_SHAPE_RECT_OPINIONS = {
       },
     ],
   },
-}
+};
 
 export enum FlowGraphShape {
   base = 'flow-chart-rect',
   condition = 'flow-chart-condition-rect',
   start = 'flow-chart-start-rect',
   end = 'flow-chart-end-rect',
-  plugin = 'flow-chart-plugin-rect'
+  plugin = 'flow-chart-plugin-rect',
 }
 
 export enum FlowGraphEvent {
@@ -268,14 +263,14 @@ export const DEFAULT_PLUGIN_PROPS = {
   id: '',
   name: '',
   visible: false,
-  data: {}
-}
+  data: {},
+};
 
 export const DEFAULT_CONDITION_PROPS = {
   visible: false,
   id: '',
-  data: ''
-}
+  data: '',
+};
 
 export const DEFAULT_PLUGIN_FLOW_DATA: {
   chart: {
@@ -285,10 +280,10 @@ export const DEFAULT_PLUGIN_FLOW_DATA: {
   rule: Record<string, any>;
 } = {
   chart: {
-    cells: []
+    cells: [],
   },
   conf: {},
   rule: {
-    root: ""
-  }
-}
+    root: '',
+  },
+};

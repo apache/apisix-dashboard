@@ -37,7 +37,8 @@ export default {
   'component.ssl.removeSSLSuccess': '删除证书成功',
   'component.ssl.removeSSLItemModalContent': '确定要删除该证书吗？',
 
-  'component.ssl.description': '证书被网关用于处理加密请求，它将与 SNI 关联，并与路由中主机名绑定。',
+  'component.ssl.description':
+    '证书被网关用于处理加密请求，它将与 SNI 关联，并与路由中主机名绑定。',
   'component.ssl.fields.cert.required': '请输入证书内容',
   'component.ssl.fields.key.required': '请输入私钥内容',
 };
