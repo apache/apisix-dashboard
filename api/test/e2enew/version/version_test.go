@@ -37,16 +37,5 @@ var _ = ginkgo.Describe("Version", func() {
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   []string{"commit_hash", "\"version\""},
 		}),
-		table.Entry("check version matched (not matched)", base.HttpTestCase{
-			Object:       base.ManagerApiExpect(),
-			Method:       http.MethodGet,
-			Path:         "/apisix/admin/tool/version_match",
-			Headers:      map[string]string{"Authorization": base.GetToken()},
-			ExpectStatus: http.StatusOK,
-			ExpectBody: []string{"\"code\":2000001",
-				`"message":"The Manager API and Apache APISIX are mismatched. ` +
-					`The version of Manager API is , and should be used with Apache APISIX ."`,
-				`"matched":false`, "apisix_server1", "apisix_server2"},
-		}),
 	)
 })
