@@ -56,6 +56,11 @@ func init() {
 	}
 }
 
+type ExpectAndHost struct {
+	E *httpexpect.Expect
+	C *httpexpect.Config
+}
+
 func init() {
 	//login to get auth token
 	requestBody := []byte(`{
@@ -112,16 +117,16 @@ func httpGet(url string, headers map[string]string) ([]byte, int, error) {
 	return body, resp.StatusCode, nil
 }
 
-func ManagerApiExpect(t *testing.T) *httpexpect.Expect {
-	return httpexpect.New(t, ManagerAPIHost)
+func ManagerApiExpect(t *testing.T) ExpectAndHost {
+	return ExpectAndHost{httpexpect.New(t, ManagerAPIHost), &httpexpect.Config{BaseURL: ManagerAPIHost}}
 }
 
-func APISIXExpect(t *testing.T) *httpexpect.Expect {
-	return httpexpect.New(t, APISIXHost)
+func APISIXExpect(t *testing.T) ExpectAndHost {
+	return ExpectAndHost{httpexpect.New(t, APISIXHost), &httpexpect.Config{BaseURL: APISIXHost}}
 }
 
-func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
-	e := httpexpect.WithConfig(httpexpect.Config{
+func APISIXHTTPSExpect(t *testing.T) ExpectAndHost {
+	config := httpexpect.Config{
 		BaseURL:  "https://www.test2.com:9443",
 		Reporter: httpexpect.NewAssertReporter(t),
 		Client: &http.Client{
@@ -139,9 +144,10 @@ func APISIXHTTPSExpect(t *testing.T) *httpexpect.Expect {
 				},
 			},
 		},
-	})
+	}
+	e := httpexpect.WithConfig(config)
 
-	return e
+	return ExpectAndHost{e, &config}
 }
 
 func BatchTestServerPort(t *testing.T, times int) map[string]int {
@@ -180,7 +186,7 @@ var sleepTime = time.Duration(300) * time.Millisecond
 
 type HttpTestCase struct {
 	Desc          string
-	Object        *httpexpect.Expect
+	Object        ExpectAndHost
 	Method        string
 	Path          string
 	Query         string
@@ -197,6 +203,10 @@ type HttpTestCase struct {
 }
 
 func testCaseCheck(tc HttpTestCase, t *testing.T) {
+	if chaosTest {
+		testCaseCheckForChaos(tc, t)
+		return
+	}
 	t.Run(tc.Desc, func(t *testing.T) {
 		//init
 		expectObj := tc.Object
@@ -303,6 +313,96 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 
 func RunTestCases(tc HttpTestCase, t *testing.T) {
 	testCaseCheck(tc, t)
+}
+
+// to deal with ramdomly EOF
+func testCaseCheckForChaos(tc HttpTestCase, t *testing.T) {
+	t.Logf("%s %s\n", tc.Method, tc.Object.C.BaseURL+tc.Path)
+
+	req, err := http.NewRequest(tc.Method, tc.Object.C.BaseURL+tc.Path, strings.NewReader(tc.Body))
+	assert.Nil(t, err)
+
+	if tc.Sleep != 0 {
+		time.Sleep(tc.Sleep)
+	} else {
+		time.Sleep(time.Duration(50) * time.Millisecond)
+	}
+
+	if tc.Query != "" {
+		req.URL.RawQuery = tc.Query
+	}
+
+	setContentType := false
+	for k, v := range tc.Headers {
+		if k == "Host" {
+			req.Host = v
+		} else {
+			req.Header.Set(k, v)
+		}
+		if strings.ToLower(k) == "content-type" {
+			setContentType = true
+		}
+	}
+
+	if !setContentType {
+		req.Header.Set("Content-Type", "application/json")
+	}
+
+	req.Close = true
+
+	client := &http.Client{}
+	if tc.Object.C.Client != nil {
+		client = tc.Object.C.Client.(*http.Client)
+	}
+	resp, err := client.Do(req)
+	assert.Nil(t, err)
+
+	// match http status
+	if tc.ExpectStatus != 0 {
+		assert.Equal(t, resp.StatusCode, tc.ExpectStatus)
+	}
+
+	// match headers
+	if tc.ExpectHeaders != nil {
+		for key, val := range tc.ExpectHeaders {
+			assert.Contains(t, resp.Header.Get(key), val)
+		}
+	}
+
+	respBodyBytes, err := ioutil.ReadAll(resp.Body)
+	respBody := string(respBodyBytes)
+	assert.Nil(t, err)
+	defer resp.Body.Close()
+
+	// match body
+	if tc.ExpectBody != nil {
+		if body, ok := tc.ExpectBody.(string); ok {
+			if body == "" {
+				assert.Empty(t, respBody)
+			} else {
+				assert.Contains(t, respBody, body)
+			}
+		} else if bodies, ok := tc.ExpectBody.([]string); ok && len(bodies) != 0 {
+			for _, b := range bodies {
+				assert.Contains(t, respBody, b)
+			}
+		}
+	}
+
+	// match UnexpectBody
+	if tc.UnexpectBody != nil {
+		if body, ok := tc.UnexpectBody.(string); ok {
+			if body == "" {
+				assert.NotEmpty(t, respBody)
+			} else {
+				assert.NotContains(t, respBody, body)
+			}
+		} else if bodies, ok := tc.UnexpectBody.([]string); ok && len(bodies) != 0 {
+			for _, b := range bodies {
+				assert.NotContains(t, respBody, b)
+			}
+		}
+	}
 }
 
 func ReadAPISIXErrorLog(t *testing.T) string {
