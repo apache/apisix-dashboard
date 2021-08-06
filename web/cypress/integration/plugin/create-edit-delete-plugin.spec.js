@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
+/* eslint-disable */
 
 context('Enable and Delete Plugin List', () => {
   const timeout = 5000;
@@ -55,12 +55,14 @@ context('Enable and Delete Plugin List', () => {
     cy.get(this.domSelector.fiftyPerPage).should('exist');
     cy.location('href').should('include', 'pageSize=50');
 
-    cy.get(this.domSelector.deleteButton, { timeout }).should('exist').each(function ($el) {
-      cy.wrap($el).click().click({ timeout });
-      cy.contains('button', 'Confirm').click({ force: true });
-      cy.get(this.domSelector.notification).should('contain', this.data.deletePluginSuccess);
-      cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
-    });
+    cy.get(this.domSelector.deleteButton, { timeout })
+      .should('exist')
+      .each(function ($el) {
+        cy.wrap($el).click().click({ timeout });
+        cy.contains('button', 'Confirm').click({ force: true });
+        cy.get(this.domSelector.notification).should('contain', this.data.deletePluginSuccess);
+        cy.get(this.domSelector.notificationCloseIcon).click().should('not.exist');
+      });
 
     // check if plugin list is empty
     cy.get(this.domSelector.empty).should('be.visible');

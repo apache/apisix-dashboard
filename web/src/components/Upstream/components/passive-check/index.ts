@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Healthy from './Healthy'
-import Unhealthy from './Unhealthy'
-import Type from './Type'
+import Healthy from './Healthy';
+import Unhealthy from './Unhealthy';
+import Type from './Type';
 
 export default {
   Healthy,
   Unhealthy,
-  Type
-}
+  Type,
+};

@@ -17,9 +17,8 @@
 /* eslint-disable no-undef */
 
 context('Create and delete consumer with proxy-mirror plugin form', () => {
-
   const selector = {
-    empty:'.ant-empty-normal',
+    empty: '.ant-empty-normal',
     username: '#username',
     description: '#desc',
     pluginCard: '.ant-card',
@@ -32,8 +31,8 @@ context('Create and delete consumer with proxy-mirror plugin form', () => {
     allow_origins_by_regex: '#allow_origins_by_regex_0',
     host: '#host',
     alert: '[role=alert]',
-    monacoViewZones: '.view-zones'
-  }
+    monacoViewZones: '.view-zones',
+  };
 
   const data = {
     consumerName: 'test_consumer',
@@ -41,7 +40,7 @@ context('Create and delete consumer with proxy-mirror plugin form', () => {
     createConsumerSuccess: 'Create Consumer Successfully',
     deleteConsumerSuccess: 'Delete Consumer Successfully',
     time: 2,
-  }
+  };
 
   beforeEach(() => {
     cy.login();

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
+/* eslint-disable */
 
 context('Create and Search Route', () => {
   const timeout = 500;
@@ -39,7 +39,7 @@ context('Create and Search Route', () => {
     drawerBody: '.ant-drawer-wrapper-body',
     notification: '.ant-notification-notice-message',
     notificationClose: '.anticon-close',
-    expandSearch: '.ant-pro-form-collapse-button'
+    expandSearch: '.ant-pro-form-collapse-button',
   };
 
   const data = {

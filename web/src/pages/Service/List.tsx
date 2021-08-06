@@ -21,7 +21,7 @@ import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, notification, Popconfirm, Space } from 'antd';
-import querystring from 'query-string'
+import querystring from 'query-string';
 import { omit } from 'lodash';
 
 import { DELETE_FIELDS } from '@/constants';
@@ -68,18 +68,18 @@ const Page: React.FC = () => {
       render: (_, record) => (
         <>
           <Space align="baseline">
-            <Button
-              type="primary"
-              onClick={() => history.push(`/service/${record.id}/edit`)}
-            >
+            <Button type="primary" onClick={() => history.push(`/service/${record.id}/edit`)}>
               {formatMessage({ id: 'component.global.edit' })}
             </Button>
-            <Button type="primary" onClick={() => {
-              setId(record.id);
-              setRawData(omit(record, DELETE_FIELDS));
-              setVisible(true);
-              setEditorMode('update');
-            }}>
+            <Button
+              type="primary"
+              onClick={() => {
+                setId(record.id);
+                setRawData(omit(record, DELETE_FIELDS));
+                setVisible(true);
+                setEditorMode('update');
+              }}
+            >
               {formatMessage({ id: 'component.global.view' })}
             </Button>
             <Popconfirm
@@ -109,7 +109,10 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'page.service.list' })} content={formatMessage({ id: 'page.service.description' })}>
+    <PageHeaderWrapper
+      title={formatMessage({ id: 'page.service.list' })}
+      content={formatMessage({ id: 'page.service.description' })}
+    >
       <ProTable<ServiceModule.ResponseBody>
         actionRef={ref}
         rowKey="id"
@@ -129,27 +132,31 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
-          <Button type="default" onClick={() => {
-            setVisible(true);
-            setEditorMode('create');
-            setRawData({});
-          }}>
+          <Button
+            type="default"
+            onClick={() => {
+              setVisible(true);
+              setEditorMode('create');
+              setRawData({});
+            }}
+          >
             {formatMessage({ id: 'component.global.data.editor' })}
           </Button>,
         ]}
       />
       <RawDataEditor
         visible={visible}
-        type='service'
+        type="service"
         readonly={false}
         data={rawData}
-        onClose={() => { setVisible(false) }}
+        onClose={() => {
+          setVisible(false);
+        }}
         onSubmit={(data: any) => {
-          (editorMode === 'create' ? create(data) : update(id, data))
-            .then(() => {
-              setVisible(false);
-              ref.current?.reload();
-            })
+          (editorMode === 'create' ? create(data) : update(id, data)).then(() => {
+            setVisible(false);
+            ref.current?.reload();
+          });
         }}
       />
     </PageHeaderWrapper>

@@ -29,7 +29,11 @@ const PanelSection: React.FC<{
       <Divider orientation="left">
         {title}
         &nbsp;
-        {tooltip && <Tooltip title={tooltip}><QuestionCircleOutlined /></Tooltip>}
+        {tooltip && (
+          <Tooltip title={tooltip}>
+            <QuestionCircleOutlined />
+          </Tooltip>
+        )}
       </Divider>
       <div style={style}>{children}</div>
     </div>

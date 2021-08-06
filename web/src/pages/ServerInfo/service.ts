@@ -23,5 +23,5 @@ export const fetchInfoList = () => {
 };
 
 export const fetchVersion = () => {
-  return request<Res<ServerInfoModule.DashboardInfo>>('/tool/version').then(({ data }) => data)
+  return request<Res<ServerInfoModule.DashboardInfo>>('/tool/version').then(({ data }) => data);
 };

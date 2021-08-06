@@ -140,23 +140,29 @@ export default {
   'page.route.panelSection.title.requestOverride': 'Request Override',
   'page.route.form.itemLabel.headerRewrite': 'Header Override',
   'page.route.tooltip.pluginOrchOnlySupportChrome': 'Plugin orchestration only supports Chrome.',
-  'page.route.tooltip.pluginOrchWithoutProxyRewrite': 'Plugin orchestration mode cannot be used when request override is configured in Step 1.',
-  'page.route.tooltip.pluginOrchWithoutRedirect': 'Plugin orchestration mode cannot be used when Redirect in Step 1 is selected to enable HTTPS.',
+  'page.route.tooltip.pluginOrchWithoutProxyRewrite':
+    'Plugin orchestration mode cannot be used when request override is configured in Step 1.',
+  'page.route.tooltip.pluginOrchWithoutRedirect':
+    'Plugin orchestration mode cannot be used when Redirect in Step 1 is selected to enable HTTPS.',
 
   'page.route.tabs.normalMode': 'Normal',
   'page.route.tabs.orchestration': 'Orchestration',
 
-  'page.route.list.description': 'Route is the entry point of a request, which defines the matching rules between a client request and a service. A route can be associated with a service (Service), an upstream (Upstream), a service can correspond to a set of routes, and a route can correspond to an upstream object (a set of backend service nodes), so each request matching to a route will be proxied by the gateway to the route-bound upstream service.',
+  'page.route.list.description':
+    'Route is the entry point of a request, which defines the matching rules between a client request and a service. A route can be associated with a service (Service), an upstream (Upstream), a service can correspond to a set of routes, and a route can correspond to an upstream object (a set of backend service nodes), so each request matching to a route will be proxied by the gateway to the route-bound upstream service.',
 
   'page.route.configuration.name.rules.required.description': 'Please enter the route name',
   'page.route.configuration.name.placeholder': 'Please enter the route name',
   'page.route.configuration.desc.tooltip': 'Please enter the description of the route',
-  'page.route.configuration.publish.tooltip': 'Used to control whether a route is published to the gateway immediately after it is created',
+  'page.route.configuration.publish.tooltip':
+    'Used to control whether a route is published to the gateway immediately after it is created',
   'page.route.configuration.version.placeholder': 'Please enter the routing version number',
   'page.route.configuration.version.tooltip': 'Version number of the route, e.g. V1',
-  'page.route.configuration.normal-labels.tooltip': 'Add custom labels to routes that can be used for route grouping.',
+  'page.route.configuration.normal-labels.tooltip':
+    'Add custom labels to routes that can be used for route grouping.',
 
-  'page.route.configuration.path.rules.required.description': 'Please enter a valid HTTP request path',
+  'page.route.configuration.path.rules.required.description':
+    'Please enter a valid HTTP request path',
   'page.route.configuration.path.placeholder': 'Please enter the HTTP request path',
   'page.route.configuration.remote_addrs.placeholder': 'Please enter the client address',
   'page.route.configuration.host.placeholder': 'Please enter the HTTP request hostname',
@@ -169,12 +175,15 @@ export default {
   'page.route.advanced-match.operator.sample.IN': 'Please enter an array, e.g ["1", "2"]',
   'page.route.advanced-match.operator.sample.~~': 'Please enter a regular expression, e.g [a-z]+',
   'page.route.fields.service_id.invalid': 'Please check the configuration of binding service',
-  'page.route.fields.service_id.without-upstream': 'If you do not bind the service, you must set the Upstream (Step 2)',
-  'page.route.advanced-match.tooltip': 'It supports route matching through request headers, request parameters and cookies, and can be applied to scenarios such as grayscale publishing and blue-green testing.',
+  'page.route.fields.service_id.without-upstream':
+    'If you do not bind the service, you must set the Upstream (Step 2)',
+  'page.route.advanced-match.tooltip':
+    'It supports route matching through request headers, request parameters and cookies, and can be applied to scenarios such as grayscale publishing and blue-green testing.',
 
   'page.route.fields.custom.redirectOption.tooltip': 'This is related to redirect plugin',
   'page.route.fields.service_id.tooltip': 'Bind Service object to reuse their configuration.',
 
   'page.route.fields.vars.invalid': 'Please check the advanced match condition configuration',
-  'page.route.fields.vars.in.invalid': 'When using the IN operator, enter the parameter values in array format.',
+  'page.route.fields.vars.in.invalid':
+    'When using the IN operator, enter the parameter values in array format.',
 };

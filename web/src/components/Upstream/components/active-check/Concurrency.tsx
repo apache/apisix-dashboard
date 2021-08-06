@@ -14,24 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, InputNumber } from 'antd'
-import { useIntl } from 'umi'
+import React from 'react';
+import { Form, InputNumber } from 'antd';
+import { useIntl } from 'umi';
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const ConcurrencyComponent: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
 
   return (
-    <Form.Item label={formatMessage({ id: 'component.upstream.fields.checks.active.concurrency' })} tooltip={formatMessage({ id: "component.upstream.fields.checks.active.concurrency.tooltip" })}>
+    <Form.Item
+      label={formatMessage({ id: 'component.upstream.fields.checks.active.concurrency' })}
+      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.concurrency.tooltip' })}
+    >
       <Form.Item name={['checks', 'active', 'concurrency']} noStyle initialValue={10}>
         <InputNumber disabled={readonly} min={0} />
       </Form.Item>
     </Form.Item>
-  )
-}
+  );
+};
 
-export default ConcurrencyComponent
+export default ConcurrencyComponent;

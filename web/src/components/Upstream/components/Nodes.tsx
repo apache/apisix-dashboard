@@ -14,30 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, Input, Row, Col, InputNumber, Button } from 'antd'
-import { useIntl } from 'umi'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import React from 'react';
+import { Form, Input, Row, Col, InputNumber, Button } from 'antd';
+import { useIntl } from 'umi';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-import { removeBtnStyle } from '..'
+import { removeBtnStyle } from '..';
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const Component: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
 
   return (
-    <Form.List name="nodes" initialValue={[{ host: undefined, port: undefined, weight: undefined }]}>
+    <Form.List
+      name="nodes"
+      initialValue={[{ host: undefined, port: undefined, weight: undefined }]}
+    >
       {(fields, { add, remove }) => (
         <>
-          <Form.Item label={formatMessage({ id: 'page.upstream.form.item-label.node.domain.or.ip' })} style={{ marginBottom: 0 }}>
+          <Form.Item
+            label={formatMessage({ id: 'page.upstream.form.item-label.node.domain.or.ip' })}
+            style={{ marginBottom: 0 }}
+          >
             {fields.map((field, index) => (
               <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
                 <Col span={5}>
                   <Form.Item
-                    label={formatMessage({id: 'page.upstream.step.host'})}
+                    label={formatMessage({ id: 'page.upstream.step.host' })}
                     style={{ marginBottom: 0 }}
                     name={[field.name, 'host']}
                     rules={[
@@ -48,13 +54,10 @@ const Component: React.FC<Props> = ({ readonly }) => {
                         }),
                       },
                       {
-                        pattern: new RegExp(
-                          /^\*?[0-9a-zA-Z-._]+$/,
-                          'g',
-                        ),
+                        pattern: new RegExp(/^\*?[0-9a-zA-Z-._]+$/, 'g'),
                         message: formatMessage({
                           id: 'page.route.form.itemRulesPatternMessage.domain',
-                        })
+                        }),
                       },
                     ]}
                   >
@@ -107,7 +110,10 @@ const Component: React.FC<Props> = ({ readonly }) => {
                 </Col>
                 <Col style={{ ...removeBtnStyle, marginLeft: -50 }}>
                   {!readonly && (
-                    <MinusCircleOutlined data-cy={`upstream-node-minus-${index}`} onClick={() => remove(field.name)} />
+                    <MinusCircleOutlined
+                      data-cy={`upstream-node-minus-${index}`}
+                      onClick={() => remove(field.name)}
+                    />
                   )}
                 </Col>
               </Row>
@@ -124,7 +130,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
         </>
       )}
     </Form.List>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;
