@@ -24,20 +24,21 @@ type Props = {
   form: FormInstance;
 };
 
-type PolicyProps = "local" | "redis" | "redis-cluster"
+type PolicyProps = 'local' | 'redis' | 'redis-cluster';
 
 const FORM_ITEM_LAYOUT = {
   labelCol: {
     span: 7,
   },
   wrapperCol: {
-    span: 10
+    span: 10,
   },
 };
 
 const FORM_ITEM_WITHOUT_LABEL = {
   wrapperCol: {
-    span: 10, offset: 7,
+    span: 10,
+    offset: 7,
   },
 };
 
@@ -50,54 +51,69 @@ const removeBtnStyle = {
 const RedisForm: React.FC = () => {
   const { formatMessage } = useIntl();
 
-  return (<>
-    <Form.Item
-      label="redis_host"
-      name="redis_host"
-      tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_host.tooltip' })}
-      rules={[
-        { required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_host` },
-        { min: 2, message: formatMessage({ id: 'component.pluginForm.limit-count.atLeast2Characters.rule' }) }
-      ]}
-      validateTrigger={['onChange', 'onBlur', 'onClick']}
-    >
-      <Input />
-    </Form.Item>
-    <Form.Item
-      initialValue={6379}
-      label="redis_port"
-      name="redis_port"
-      tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_port.tooltip' })}
-    >
-      <InputNumber min={1} max={65535} />
-    </Form.Item>
-    <Form.Item
-      label="redis_password"
-      name="redis_password"
-      tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_password.tooltip' })}
-      rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_password` }]}
-      validateTrigger={['onChange', 'onBlur', 'onClick']}
-    >
-      <Input />
-    </Form.Item>
-    <Form.Item
-      initialValue={0}
-      label="redis_database"
-      name="redis_database"
-      tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_database.tooltip' })}
-    >
-      <InputNumber min={0} />
-    </Form.Item>
-    <Form.Item
-      initialValue={1000}
-      label="redis_timeout"
-      name="redis_timeout"
-      tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_timeout.tooltip' })}
-    >
-      <InputNumber min={1} />
-    </Form.Item>
-  </>)
-}
+  return (
+    <>
+      <Form.Item
+        label="redis_host"
+        name="redis_host"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_host.tooltip' })}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_host`,
+          },
+          {
+            min: 2,
+            message: formatMessage({
+              id: 'component.pluginForm.limit-count.atLeast2Characters.rule',
+            }),
+          },
+        ]}
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        initialValue={6379}
+        label="redis_port"
+        name="redis_port"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_port.tooltip' })}
+      >
+        <InputNumber min={1} max={65535} />
+      </Form.Item>
+      <Form.Item
+        label="redis_password"
+        name="redis_password"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_password.tooltip' })}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_password`,
+          },
+        ]}
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        initialValue={0}
+        label="redis_database"
+        name="redis_database"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_database.tooltip' })}
+      >
+        <InputNumber min={0} />
+      </Form.Item>
+      <Form.Item
+        initialValue={1000}
+        label="redis_timeout"
+        name="redis_timeout"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_timeout.tooltip' })}
+      >
+        <InputNumber min={1} />
+      </Form.Item>
+    </>
+  );
+};
 
 const RedisClusterForm: React.FC = () => {
   const { formatMessage } = useIntl();
@@ -108,8 +124,15 @@ const RedisClusterForm: React.FC = () => {
         label="redis_cluster_name"
         name="redis_cluster_name"
         validateTrigger={['onChange', 'onBlur', 'onClick']}
-        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_cluster_name` }]}
-        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_cluster_name.tooltip' })}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_cluster_name`,
+          },
+        ]}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.limit-count.redis_cluster_name.tooltip',
+        })}
       >
         <Input />
       </Form.Item>
@@ -118,10 +141,12 @@ const RedisClusterForm: React.FC = () => {
           return (
             <div>
               <Form.Item
-                label='redis_cluster_nodes'
+                label="redis_cluster_nodes"
                 style={{ marginBottom: 0 }}
                 required
-                tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_cluster_nodes.tooltip' })}
+                tooltip={formatMessage({
+                  id: 'component.pluginForm.limit-count.redis_cluster_nodes.tooltip',
+                })}
               >
                 {fields.map((field, index) => (
                   <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
@@ -130,7 +155,20 @@ const RedisClusterForm: React.FC = () => {
                         {...field}
                         noStyle
                         validateTrigger={['onChange', 'onBlur', 'onClick']}
-                        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_cluster_node` }, { min: 2, message: formatMessage({ id: 'component.pluginForm.limit-count.atLeast2Characters.rule' }) }]}
+                        rules={[
+                          {
+                            required: true,
+                            message: `${formatMessage({
+                              id: 'component.global.pleaseEnter',
+                            })} redis_cluster_node`,
+                          },
+                          {
+                            min: 2,
+                            message: formatMessage({
+                              id: 'component.pluginForm.limit-count.atLeast2Characters.rule',
+                            }),
+                          },
+                        ]}
                       >
                         <Input />
                       </Form.Item>
@@ -178,22 +216,25 @@ const RedisClusterForm: React.FC = () => {
       >
         <InputNumber min={1} />
       </Form.Item>
-    </>)
-}
+    </>
+  );
+};
 
 const LimitCount: React.FC<Props> = ({ form }) => {
   const [policy, setPoicy] = useState<PolicyProps>('local');
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
 
   return (
-    <Form
-      form={form}
-      {...FORM_ITEM_LAYOUT}
-    >
+    <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
         label="count"
         name="count"
-        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} count` }]}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} count`,
+          },
+        ]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.count.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
@@ -202,20 +243,36 @@ const LimitCount: React.FC<Props> = ({ form }) => {
       <Form.Item
         label="time_window"
         name="time_window"
-        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} time_window` }]}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} time_window`,
+          },
+        ]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.time_window.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <InputNumber min={1} />
       </Form.Item>
       <Form.Item
-        initialValue='remote_addr'
+        initialValue="remote_addr"
         label="key"
         name="key"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.key.tooltip' })}
       >
         <Select>
-          {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name", "service_id"].map(item => (<Select.Option value={item} key={item}>{item}</Select.Option>))}
+          {[
+            'remote_addr',
+            'server_addr',
+            'http_x_real_ip',
+            'http_x_forwarded_for',
+            'consumer_name',
+            'service_id',
+          ].map((item) => (
+            <Select.Option value={item} key={item}>
+              {item}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
       <Form.Item
@@ -232,11 +289,22 @@ const LimitCount: React.FC<Props> = ({ form }) => {
         name="policy"
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.policy.tooltip' })}
       >
-        <Select onChange={(e: PolicyProps) => { setPoicy(e) }}>
-          {["local", "redis", "redis-cluster"].map(item => (<Select.Option value={item} key={item}>{item}</Select.Option>))}
+        <Select
+          onChange={(e: PolicyProps) => {
+            setPoicy(e);
+          }}
+        >
+          {['local', 'redis', 'redis-cluster'].map((item) => (
+            <Select.Option value={item} key={item}>
+              {item}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
-      <Form.Item shouldUpdate={(prev, next) => prev.policy !== next.policy} style={{ display: 'none' }}>
+      <Form.Item
+        shouldUpdate={(prev, next) => prev.policy !== next.policy}
+        style={{ display: 'none' }}
+      >
         {() => {
           setPoicy(form.getFieldValue('policy'));
         }}
@@ -245,6 +313,6 @@ const LimitCount: React.FC<Props> = ({ form }) => {
       {Boolean(policy === 'redis-cluster') && <RedisClusterForm />}
     </Form>
   );
-}
+};
 
 export default LimitCount;

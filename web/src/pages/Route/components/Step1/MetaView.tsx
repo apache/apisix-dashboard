@@ -24,7 +24,13 @@ import { FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 import LabelsDrawer from '@/components/LabelsfDrawer';
 import { fetchLabelList, fetchServiceList } from '../../service';
 
-const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit, upstreamForm, onChange = () => { } }) => {
+const MetaView: React.FC<RouteModule.Step1PassProps> = ({
+  disabled,
+  form,
+  isEdit,
+  upstreamForm,
+  onChange = () => {},
+}) => {
   const { formatMessage } = useIntl();
   const [visible, setVisible] = useState(false);
   const [labelList, setLabelList] = useState<LabelList>({});
@@ -40,7 +46,11 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
 
     return (
       <React.Fragment>
-        <Form.Item label={formatMessage({ id: 'component.global.labels' })} name={field} tooltip={formatMessage({ id: 'page.route.configuration.normal-labels.tooltip' })}>
+        <Form.Item
+          label={formatMessage({ id: 'component.global.labels' })}
+          name={field}
+          tooltip={formatMessage({ id: 'page.route.configuration.normal-labels.tooltip' })}
+        >
           <Select
             mode="tags"
             style={{ width: '100%' }}
@@ -69,13 +79,13 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
               const labels = form.getFieldValue(field) || [];
               return (
                 <LabelsDrawer
-                  title={formatMessage({ id: "component.label-manager" })}
+                  title={formatMessage({ id: 'component.label-manager' })}
                   actionName={field}
                   dataSource={labels}
                   disabled={disabled || false}
                   onChange={onChange}
                   onClose={() => setVisible(false)}
-                  filterList={["API_VERSION"]}
+                  filterList={['API_VERSION']}
                   fetchLabelList={fetchLabelList}
                 />
               );
@@ -89,17 +99,16 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
   const VersionLabelComponent = () => {
     return (
       <Form.Item
-        label={formatMessage({ id: 'component.global.version' })} tooltip={formatMessage({ id: "page.route.configuration.version.tooltip" })}>
+        label={formatMessage({ id: 'component.global.version' })}
+        tooltip={formatMessage({ id: 'page.route.configuration.version.tooltip' })}
+      >
         <Row>
           <Col span={10}>
-            <Form.Item
-              noStyle
-              name="custom_version_label"
-            >
+            <Form.Item noStyle name="custom_version_label">
               <AutoComplete
                 options={(labelList.API_VERSION || []).map((item) => ({ value: item }))}
                 disabled={disabled}
-                placeholder={formatMessage({ id: "page.route.configuration.version.placeholder" })}
+                placeholder={formatMessage({ id: 'page.route.configuration.version.placeholder' })}
               />
             </Form.Item>
           </Col>
@@ -109,7 +118,11 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
   };
 
   const Name: React.FC = () => (
-    <Form.Item label={formatMessage({ id: 'component.global.name' })} required tooltip={formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' })}>
+    <Form.Item
+      label={formatMessage({ id: 'component.global.name' })}
+      required
+      tooltip={formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' })}
+    >
       <Row>
         <Col span={10}>
           <Form.Item
@@ -118,11 +131,15 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
             rules={[
               {
                 required: true,
-                message: formatMessage({ id: 'page.route.configuration.name.rules.required.description' }),
+                message: formatMessage({
+                  id: 'page.route.configuration.name.rules.required.description',
+                }),
               },
               {
                 pattern: new RegExp(/^[a-zA-Z][a-zA-Z0-9_-]{0,100}$/, 'g'),
-                message: formatMessage({ id: 'page.route.form.itemRulesPatternMessage.apiNameRule' }),
+                message: formatMessage({
+                  id: 'page.route.form.itemRulesPatternMessage.apiNameRule',
+                }),
               },
             ]}
           >
@@ -134,7 +151,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
         </Col>
       </Row>
     </Form.Item>
-  )
+  );
 
   const Description: React.FC = () => (
     <Form.Item label={formatMessage({ id: 'component.global.description' })}>
@@ -151,23 +168,22 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
         </Col>
       </Row>
     </Form.Item>
-  )
+  );
 
   const Publish: React.FC = () => (
-    <Form.Item label={formatMessage({ id: 'page.route.publish' })} tooltip={formatMessage({ id: 'page.route.configuration.publish.tooltip' })}>
+    <Form.Item
+      label={formatMessage({ id: 'page.route.publish' })}
+      tooltip={formatMessage({ id: 'page.route.configuration.publish.tooltip' })}
+    >
       <Row>
         <Col>
-          <Form.Item
-            noStyle
-            name="status"
-            valuePropName="checked"
-          >
+          <Form.Item noStyle name="status" valuePropName="checked">
             <Switch disabled={isEdit} />
           </Form.Item>
         </Col>
       </Row>
     </Form.Item>
-  )
+  );
 
   const WebSocket: React.FC = () => (
     <Form.Item label="WebSocket">
@@ -179,38 +195,40 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
         </Col>
       </Row>
     </Form.Item>
-  )
+  );
 
   const Redirect: React.FC = () => {
     const list = [
       {
-        value: "forceHttps",
-        label: formatMessage({ id: 'page.route.select.option.enableHttps' })
-      }, {
-        value: "customRedirect",
-        label: formatMessage({ id: 'page.route.select.option.configCustom' })
-      }, {
-        value: "disabled",
-        label: formatMessage({ id: 'page.route.select.option.forbidden' })
-      }
-    ]
+        value: 'forceHttps',
+        label: formatMessage({ id: 'page.route.select.option.enableHttps' }),
+      },
+      {
+        value: 'customRedirect',
+        label: formatMessage({ id: 'page.route.select.option.configCustom' }),
+      },
+      {
+        value: 'disabled',
+        label: formatMessage({ id: 'page.route.select.option.forbidden' }),
+      },
+    ];
 
     return (
-      <Form.Item label={formatMessage({ id: 'page.route.form.itemLabel.redirect' })} tooltip={formatMessage({ id: 'page.route.fields.custom.redirectOption.tooltip' })}>
+      <Form.Item
+        label={formatMessage({ id: 'page.route.form.itemLabel.redirect' })}
+        tooltip={formatMessage({ id: 'page.route.fields.custom.redirectOption.tooltip' })}
+      >
         <Row>
           <Col span={5}>
-            <Form.Item
-              name="redirectOption"
-              noStyle
-            >
+            <Form.Item name="redirectOption" noStyle>
               <Select
                 disabled={disabled}
-                data-cy='route-redirect'
+                data-cy="route-redirect"
                 onChange={(params) => {
                   onChange({ action: 'redirectOptionChange', data: params });
                 }}
               >
-                {list.map(item => (
+                {list.map((item) => (
                   <Select.Option value={item.value} key={item.value}>
                     {item.label}
                   </Select.Option>
@@ -220,8 +238,8 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
           </Col>
         </Row>
       </Form.Item>
-    )
-  }
+    );
+  };
 
   const CustomRedirect: React.FC = () => (
     <Form.Item
@@ -266,7 +284,7 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
                 </Col>
                 <Col span={5}>
                   <Form.Item name="ret_code" rules={[{ required: true }]}>
-                    <Select disabled={disabled} data-cy='redirect_code'>
+                    <Select disabled={disabled} data-cy="redirect_code">
                       <Select.Option value={301}>
                         {formatMessage({ id: 'page.route.select.option.redirect301' })}
                       </Select.Option>
@@ -283,18 +301,21 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
         return null;
       }}
     </Form.Item>
-  )
+  );
 
   const ServiceSelector: React.FC = () => (
     <React.Fragment>
-      <Form.Item label={formatMessage({ id: 'page.route.service' })} tooltip={formatMessage({ id: 'page.route.fields.service_id.tooltip' })}>
+      <Form.Item
+        label={formatMessage({ id: 'page.route.service' })}
+        tooltip={formatMessage({ id: 'page.route.fields.service_id.tooltip' })}
+      >
         <Row>
           <Col span={5}>
             <Form.Item noStyle name="service_id">
               <Select disabled={disabled}>
                 {/* TODO: value === '' means  no service_id select, need to find a better way */}
                 <Select.Option value="" key={Math.random().toString(36).substring(7)}>
-                  {formatMessage({ id: "page.route.service.none" })}
+                  {formatMessage({ id: 'page.route.service.none' })}
                 </Select.Option>
                 {serviceList.map((item) => {
                   return (
@@ -308,26 +329,29 @@ const MetaView: React.FC<RouteModule.Step1PassProps> = ({ disabled, form, isEdit
           </Col>
         </Row>
       </Form.Item>
-      <Form.Item noStyle shouldUpdate={(prev, next) => {
-        // route with redirect plugin can be edit without service and upstream
-        if (next.redirectOption === 'customRedirect') {
-          return false;
-        }
-        if (next.service_id === '') {
-          const upstream_id = upstreamForm?.getFieldValue('upstream_id')
-          if (upstream_id === 'None') {
-            notification.warning({
-              message: formatMessage({ id: 'page.route.fields.service_id.invalid' }),
-              description: formatMessage({ id: 'page.route.fields.service_id.without-upstream' })
-            })
+      <Form.Item
+        noStyle
+        shouldUpdate={(prev, next) => {
+          // route with redirect plugin can be edit without service and upstream
+          if (next.redirectOption === 'customRedirect') {
+            return false;
           }
-        }
-        return prev.service_id !== next.service_id
-      }}>
+          if (next.service_id === '') {
+            const upstream_id = upstreamForm?.getFieldValue('upstream_id');
+            if (upstream_id === 'None') {
+              notification.warning({
+                message: formatMessage({ id: 'page.route.fields.service_id.invalid' }),
+                description: formatMessage({ id: 'page.route.fields.service_id.without-upstream' }),
+              });
+            }
+          }
+          return prev.service_id !== next.service_id;
+        }}
+      >
         {() => null}
       </Form.Item>
     </React.Fragment>
-  )
+  );
 
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.nameDescription' })}>

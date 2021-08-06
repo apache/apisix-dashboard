@@ -14,32 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, Select } from 'antd'
-import { useIntl } from 'umi'
+import React from 'react';
+import { Form, Select } from 'antd';
+import { useIntl } from 'umi';
 
 const options = [
   {
-    label: "HTTP",
-    value: "http"
-  }, {
-    label: "HTTPs",
-    value: "https"
-  }, {
-    label: "gRPC",
-    value: "grpc"
-  }, {
-    label: "gRPCs",
-    value: "grpcs"
-  }
-]
+    label: 'HTTP',
+    value: 'http',
+  },
+  {
+    label: 'HTTPs',
+    value: 'https',
+  },
+  {
+    label: 'gRPC',
+    value: 'grpc',
+  },
+  {
+    label: 'gRPCs',
+    value: 'grpcs',
+  },
+];
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const Scheme: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
   return (
     <Form.Item
       label={formatMessage({ id: 'page.upstream.scheme' })}
@@ -48,7 +51,7 @@ const Scheme: React.FC<Props> = ({ readonly }) => {
       initialValue="http"
     >
       <Select disabled={readonly}>
-        {options.map(item => {
+        {options.map((item) => {
           return (
             <Select.Option value={item.value} key={item.value}>
               {item.label}
@@ -57,7 +60,7 @@ const Scheme: React.FC<Props> = ({ readonly }) => {
         })}
       </Select>
     </Form.Item>
-  )
-}
+  );
+};
 
-export default Scheme
+export default Scheme;

@@ -14,27 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, Switch } from 'antd'
-import { useIntl } from 'umi'
+import React from 'react';
+import { Form, Switch } from 'antd';
+import { useIntl } from 'umi';
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const HttpsVerifyCertificateComponent: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
   return (
     <Form.Item
-      label={formatMessage({ id: 'component.upstream.fields.checks.active.https_verify_certificate' })}
+      label={formatMessage({
+        id: 'component.upstream.fields.checks.active.https_verify_certificate',
+      })}
       name={['checks', 'active', 'https_verify_certificate']}
-      tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.https_verify_certificate.tooltip' })}
+      tooltip={formatMessage({
+        id: 'component.upstream.fields.checks.active.https_verify_certificate.tooltip',
+      })}
       initialValue={true}
       valuePropName="checked"
     >
       <Switch disabled={readonly} />
     </Form.Item>
-  )
-}
+  );
+};
 
-export default HttpsVerifyCertificateComponent
+export default HttpsVerifyCertificateComponent;

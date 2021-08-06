@@ -45,16 +45,27 @@ const Step1: React.FC<ServiceModule.Step1PassProps> = ({
   return (
     <>
       <Form {...FORM_LAYOUT} form={form}>
-        <Form.Item name="name" label={formatMessage({ id: 'component.global.name' })} required rules={[
-          {
-            required: true,
-            message: formatMessage({ id: 'page.service.fields.name.required' })
-          }
-        ]}>
-          <Input disabled={disabled} placeholder={formatMessage({ id: 'page.service.fields.name.required' })} />
+        <Form.Item
+          name="name"
+          label={formatMessage({ id: 'component.global.name' })}
+          required
+          rules={[
+            {
+              required: true,
+              message: formatMessage({ id: 'page.service.fields.name.required' }),
+            },
+          ]}
+        >
+          <Input
+            disabled={disabled}
+            placeholder={formatMessage({ id: 'page.service.fields.name.required' })}
+          />
         </Form.Item>
         <Form.Item name="desc" label={formatMessage({ id: 'component.global.description' })}>
-          <Input.TextArea disabled={disabled} placeholder={formatMessage({ id: 'component.global.description.required' })} />
+          <Input.TextArea
+            disabled={disabled}
+            placeholder={formatMessage({ id: 'component.global.description.required' })}
+          />
         </Form.Item>
       </Form>
       <UpstreamForm

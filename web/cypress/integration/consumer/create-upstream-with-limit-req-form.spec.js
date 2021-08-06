@@ -17,9 +17,8 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Consumer', () => {
-
   const selector = {
-    empty:'.ant-empty-normal',
+    empty: '.ant-empty-normal',
     username: '#username',
     description: '#desc',
     pluginCard: '.ant-card',
@@ -31,8 +30,8 @@ context('Create and Delete Consumer', () => {
     burst: '#burst',
     key: '#key',
     remote_addr: '[title=remote_addr]',
-    monacoViewZones: '.view-zones'
-  }
+    monacoViewZones: '.view-zones',
+  };
 
   const data = {
     consumerName: 'test_consumer',
@@ -40,7 +39,7 @@ context('Create and Delete Consumer', () => {
     createConsumerSuccess: 'Create Consumer Successfully',
     deleteConsumerSuccess: 'Delete Consumer Successfully',
     time: 2,
-  }
+  };
 
   beforeEach(() => {
     cy.login();

@@ -23,8 +23,8 @@ context('Create and Edit Route With Custom CHash Key Upstream', () => {
     roundRobinSelect: '[title="Round Robin"]',
     varSelect: '[title="vars"]',
     defaultCHashKey: '[value="remote_addr"]',
-    upstreamType: ".ant-select-item-option-content",
-    hashPosition: ".ant-select-item-option-content",
+    upstreamType: '.ant-select-item-option-content',
+    hashPosition: '.ant-select-item-option-content',
     nodes_0_host: '#nodes_0_host',
     nodes_0_port: '#nodes_0_port',
     nodes_0_weight: '#nodes_0_weight',
@@ -119,6 +119,6 @@ context('Create and Edit Route With Custom CHash Key Upstream', () => {
         cy.contains('OK').click();
       });
     cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
-    cy.get(selector.notificationCloseIcon).click({multiple: true});
+    cy.get(selector.notificationCloseIcon).click({ multiple: true });
   });
 });
