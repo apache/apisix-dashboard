@@ -53,7 +53,7 @@ context('Create and delete route with limit-count form', () => {
     weight: 1,
     redisClusterName: 'Please Enter redis_cluster_name',
     redisClusterNode: 'Please Enter redis_cluster_node',
-  }
+  };
 
   beforeEach(() => {
     cy.login();

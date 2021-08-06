@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, InputNumber } from 'antd'
-import { useIntl } from 'umi'
+import React from 'react';
+import { Form, InputNumber } from 'antd';
+import { useIntl } from 'umi';
 
-import TimeUnit from './TimeUnit'
+import TimeUnit from './TimeUnit';
 
 const Timeout: React.FC<{
   label: string;
@@ -26,7 +26,7 @@ const Timeout: React.FC<{
   name: string[];
   readonly?: boolean;
 }> = ({ label, desc, name, readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
   return (
     <Form.Item label={label} required tooltip={desc}>
       <Form.Item
@@ -44,7 +44,7 @@ const Timeout: React.FC<{
       </Form.Item>
       <TimeUnit />
     </Form.Item>
-  )
-}
+  );
+};
 
-export default Timeout
+export default Timeout;

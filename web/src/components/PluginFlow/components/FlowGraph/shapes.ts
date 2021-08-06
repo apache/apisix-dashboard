@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Graph } from '@antv/x6'
+import { Graph } from '@antv/x6';
 
 import defaultPluginImg from '../../../../../public/static/default-plugin.png';
 import { DEFAULT_SHAPE_RECT_OPINIONS, FlowGraphShape } from '../../constants';
 
-export const FlowChartRect = Graph.registerNode(FlowGraphShape.base, DEFAULT_SHAPE_RECT_OPINIONS)
+export const FlowChartRect = Graph.registerNode(FlowGraphShape.base, DEFAULT_SHAPE_RECT_OPINIONS);
 
 export const FlowChartConditionRect = Graph.registerNode(FlowGraphShape.condition, {
   ...DEFAULT_SHAPE_RECT_OPINIONS,
@@ -36,8 +36,8 @@ export const FlowChartConditionRect = Graph.registerNode(FlowGraphShape.conditio
         group: 'bottom',
       },
     ],
-  }
-})
+  },
+});
 
 export const FlowChartStartRect = Graph.registerNode(FlowGraphShape.start, {
   ...DEFAULT_SHAPE_RECT_OPINIONS,
@@ -48,8 +48,8 @@ export const FlowChartStartRect = Graph.registerNode(FlowGraphShape.start, {
         group: 'bottom',
       },
     ],
-  }
-})
+  },
+});
 
 export const FlowChartEndRect = Graph.registerNode(FlowGraphShape.end, {
   ...DEFAULT_SHAPE_RECT_OPINIONS,
@@ -60,8 +60,8 @@ export const FlowChartEndRect = Graph.registerNode(FlowGraphShape.end, {
         group: 'top',
       },
     ],
-  }
-})
+  },
+});
 
 export const FlowChartPluginRect = Graph.registerNode(FlowGraphShape.plugin, {
   inherit: 'rect',
@@ -74,8 +74,7 @@ export const FlowChartPluginRect = Graph.registerNode(FlowGraphShape.plugin, {
       fill: 'rgba(95,149,255,0.05)',
     },
     image: {
-      'xlink:href':
-        defaultPluginImg,
+      'xlink:href': defaultPluginImg,
       width: 16,
       height: 16,
       x: 12,
@@ -155,7 +154,7 @@ export const FlowChartPluginRect = Graph.registerNode(FlowGraphShape.plugin, {
       },
       {
         group: 'bottom',
-      }
+      },
     ],
   },
-})
+});

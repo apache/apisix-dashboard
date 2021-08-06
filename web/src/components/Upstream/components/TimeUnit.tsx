@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
+import React from 'react';
 
 const TimeUnit = () => <span style={{ margin: '0 8px' }}>s</span>;
 
-export default TimeUnit
+export default TimeUnit;

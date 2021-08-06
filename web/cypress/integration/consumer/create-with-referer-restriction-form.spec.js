@@ -17,9 +17,8 @@
 /* eslint-disable no-undef */
 
 context('Create and delete Consumer with referer-restriction form ', () => {
-
   const selector = {
-    empty:'.ant-empty-normal',
+    empty: '.ant-empty-normal',
     username: '#username',
     description: '#desc',
     pluginCard: '.ant-card',
@@ -27,10 +26,10 @@ context('Create and delete Consumer with referer-restriction form ', () => {
     dropdown: '.rc-virtual-list',
     disabledSwitcher: '#disable',
     notification: '.ant-notification-notice-message',
-    whitelist: "#whitelist_0",
-    bypass_missing: "#bypass_missing",
-    monacoViewZones: '.view-zones'
-  }
+    whitelist: '#whitelist_0',
+    bypass_missing: '#bypass_missing',
+    monacoViewZones: '.view-zones',
+  };
 
   const data = {
     consumerName: 'test_consumer',
@@ -38,7 +37,7 @@ context('Create and delete Consumer with referer-restriction form ', () => {
     createConsumerSuccess: 'Create Consumer Successfully',
     deleteConsumerSuccess: 'Delete Consumer Successfully',
     whitelist: 'yy.com',
-  }
+  };
 
   beforeEach(() => {
     cy.login();

@@ -14,19 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, Row, Col, Button, InputNumber } from 'antd'
-import { useIntl } from 'umi'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import React from 'react';
+import { Form, Row, Col, Button, InputNumber } from 'antd';
+import { useIntl } from 'umi';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-import { removeBtnStyle } from '@/components/Upstream'
+import { removeBtnStyle } from '@/components/Upstream';
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const Component: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
 
   return (
     <Form.List name={['checks', 'active', 'healthy', 'http_statuses']} initialValue={[200, 302]}>
@@ -34,9 +34,13 @@ const Component: React.FC<Props> = ({ readonly }) => {
         <>
           <Form.Item
             required
-            label={formatMessage({ id: 'component.upstream.fields.checks.active.healthy.http_statuses' })}
+            label={formatMessage({
+              id: 'component.upstream.fields.checks.active.healthy.http_statuses',
+            })}
             style={{ marginBottom: 0 }}
-            tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.healthy.http_statuses.tooltip' })}
+            tooltip={formatMessage({
+              id: 'component.upstream.fields.checks.active.healthy.http_statuses.tooltip',
+            })}
           >
             {fields.map((field, index) => (
               <Row style={{ marginBottom: 10 }} key={index}>
@@ -70,6 +74,6 @@ const Component: React.FC<Props> = ({ readonly }) => {
         </>
       )}
     </Form.List>
-  )
-}
-export default Component
+  );
+};
+export default Component;

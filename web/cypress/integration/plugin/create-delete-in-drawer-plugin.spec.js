@@ -30,11 +30,11 @@ context('Delete Plugin List with the Drawer', () => {
     checkedSwitcher: '.ant-switch-checked',
     refresh: '.anticon-reload',
     empty: '.ant-empty-normal',
-  }
+  };
 
   const data = {
     basicAuthPlugin: 'basic-auth',
-  }
+  };
 
   beforeEach(() => {
     cy.login();
@@ -45,28 +45,34 @@ context('Delete Plugin List with the Drawer', () => {
     cy.contains('Plugin').click();
     cy.contains('Enable').click();
 
-    cy.contains(data.basicAuthPlugin).parents(selector.pluginCardBordered).within(() => {
-      cy.get('button').click({
-        force: true
+    cy.contains(data.basicAuthPlugin)
+      .parents(selector.pluginCardBordered)
+      .within(() => {
+        cy.get('button').click({
+          force: true,
+        });
       });
-    });
 
-    cy.get(selector.monacoMode).invoke('text').then(text => {
-      if (text === 'Form') {
-        cy.get(selector.monacoMode).click();
-        cy.get(selector.selectDropdown).should('be.visible');
-        cy.get(selector.selectJSON).click();
-      }
-    });
+    cy.get(selector.monacoMode)
+      .invoke('text')
+      .then((text) => {
+        if (text === 'Form') {
+          cy.get(selector.monacoMode).click();
+          cy.get(selector.selectDropdown).should('be.visible');
+          cy.get(selector.selectJSON).click();
+        }
+      });
 
-    cy.get(selector.drawer).should('be.visible').within(() => {
-      cy.get(selector.disabledSwitcher).click();
-      cy.get(selector.checkedSwitcher).should('exist');
-    });
+    cy.get(selector.drawer)
+      .should('be.visible')
+      .within(() => {
+        cy.get(selector.disabledSwitcher).click();
+        cy.get(selector.checkedSwitcher).should('exist');
+      });
 
     cy.contains('button', 'Submit').click();
     cy.get(selector.drawer, {
-      timeout
+      timeout,
     }).should('not.exist');
   });
 
@@ -75,27 +81,31 @@ context('Delete Plugin List with the Drawer', () => {
     cy.contains('Plugin').click();
     cy.contains('Enable').click();
     ['openid-connect', 'authz-keycloak'].forEach((plugin) => {
-      cy.contains(plugin).parents(selector.pluginCardBordered).within(() => {
-        cy.get('button').click({
-          force: true
+      cy.contains(plugin)
+        .parents(selector.pluginCardBordered)
+        .within(() => {
+          cy.get('button').click({
+            force: true,
+          });
         });
-      });
-      cy.get(selector.drawer).should('be.visible').within(() => {
-        cy.contains('.ant-alert-warning', 'Doesn\'t need configuration').should('not.exist');
-        cy.contains('button', 'Cancel').click();
-      });
-    })
-  })
+      cy.get(selector.drawer)
+        .should('be.visible')
+        .within(() => {
+          cy.contains('.ant-alert-warning', "Doesn't need configuration").should('not.exist');
+          cy.contains('button', 'Cancel').click();
+        });
+    });
+  });
 
   it('should delete the plugin with the drawer', function () {
     cy.visit('/plugin/list');
     cy.get(selector.refresh).click();
     cy.contains('button', 'Configure').click();
     cy.get(selector.drawerFooter).contains('button', 'Delete').click({
-      force: true
+      force: true,
     });
     cy.contains('button', 'Confirm').click({
-      force: true
+      force: true,
     });
     cy.get(selector.empty).should('be.visible');
   });

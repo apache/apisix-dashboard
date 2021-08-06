@@ -27,12 +27,14 @@ const { Option } = AutoComplete;
 const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
   const { formatMessage } = useIntl();
 
-  const allSelectOptions = props.inputType === "header" ? HEADER_LIST : []
+  const allSelectOptions = props.inputType === 'header' ? HEADER_LIST : [];
   const [result, setResult] = useState<string[]>(allSelectOptions);
 
   const onSearch = (value: string) => {
-    setResult(allSelectOptions.filter((option) => option.toLowerCase().startsWith(value.toLowerCase())))
-  }
+    setResult(
+      allSelectOptions.filter((option) => option.toLowerCase().startsWith(value.toLowerCase())),
+    );
+  };
 
   return (
     <Form name={props.name} className={styles.routeDebugDraw} form={props.form}>
@@ -57,7 +59,8 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                     <Form.Item
                       {...field}
                       name={[field.name, 'key']}
-                      fieldKey={[field.fieldKey, 'key']}>
+                      fieldKey={[field.fieldKey, 'key']}
+                    >
                       <AutoComplete
                         onSearch={onSearch}
                         placeholder={formatMessage({ id: 'page.route.input.placeholder.paramKey' })}
@@ -70,7 +73,8 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                             prevData.params[index].check = true;
                             props.form.setFieldsValue(prevData);
                           }
-                        }}>
+                        }}
+                      >
                         {result.map((value) => (
                           <Option key={value} value={value}>
                             {value}
@@ -83,7 +87,8 @@ const DebugParamsView: React.FC<RouteModule.DebugViewProps> = (props) => {
                     <Form.Item
                       {...field}
                       name={[field.name, 'value']}
-                      fieldKey={[field.fieldKey, 'value']}>
+                      fieldKey={[field.fieldKey, 'value']}
+                    >
                       <Input
                         placeholder={formatMessage({
                           id: 'page.route.input.placeholder.paramValue',

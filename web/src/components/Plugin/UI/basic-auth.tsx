@@ -28,32 +28,21 @@ export const FORM_ITEM_LAYOUT = {
     span: 4,
   },
   wrapperCol: {
-    span: 8
+    span: 8,
   },
 };
 
 const BasicAuth: React.FC<Props> = ({ form }) => {
   return (
-    <Form
-      form={form}
-      {...FORM_ITEM_LAYOUT}
-    >
-      <Form.Item
-        label="username"
-        name="username"
-        required
-      >
+    <Form form={form} {...FORM_ITEM_LAYOUT}>
+      <Form.Item label="username" name="username" required>
         <Input></Input>
       </Form.Item>
-      <Form.Item
-        label="password"
-        name="password"
-        required
-      >
+      <Form.Item label="password" name="password" required>
         <Input></Input>
       </Form.Item>
     </Form>
   );
-}
+};
 
 export default BasicAuth;
