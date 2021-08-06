@@ -17,7 +17,7 @@
 #
 -->
 
-# Apache APISIX Dashboard (Experimental)
+# Apache APISIX Dashboard
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/apache/apisix-dashboard/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/apache/apisix-dashboard)](https://goreportcard.com/report/github.com/apache/apisix-dashboard)
