@@ -17,29 +17,29 @@
 
 /**
  * Schema: https://github.com/apache/apisix/blob/master/apisix/schema_def.lua#L335
-*/
+ */
 declare namespace UpstreamComponent {
-  type ActiveCheck = {}
+  type ActiveCheck = {};
 
-  type PassiveCheck = {}
+  type PassiveCheck = {};
 
   type TLS = {
     client_cert: string;
-    client_key: string
-  }
+    client_key: string;
+  };
 
   type Node = {
     host: string;
     port: number;
     weight: number;
     priority?: number;
-  }
+  };
 
   type Timeout = {
     connect: number;
     send: number;
     read: number;
-  }
+  };
 
   type ResponseData = {
     nodes?: Node[];
@@ -50,7 +50,7 @@ declare namespace UpstreamComponent {
     checks?: {
       active?: ActiveCheck;
       passive?: PassiveCheck;
-    }
+    };
     hash_on?: string;
     key?: string;
     scheme?: string;
@@ -64,5 +64,5 @@ declare namespace UpstreamComponent {
     upstream_id?: string;
     // NOTE: custom field
     custom?: Record<string, any>;
-  }
+  };
 }

@@ -177,7 +177,7 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 		if err != nil {
 			log.Errorf("ParseRouteUpstream err: ", err)
 			return nil, err
-		} else if err == nil && _upstream != nil {
+		} else if _upstream != nil {
 			extensions["x-apisix-upstream"] = _upstream
 		}
 
@@ -292,12 +292,8 @@ func (h *Handler) RouteToOpenAPI3(c droplet.Context, routes []*entity.Route) (*o
 func ParseLabels(route *entity.Route, serviceLabels map[string]string) (map[string]string, error) {
 	if route.Labels != nil {
 		return route.Labels, nil
-	} else if route.Labels == nil && route.ServiceID != nil {
-		if serviceLabels != nil {
-			return serviceLabels, nil
-		} else if serviceLabels == nil {
-			return nil, nil
-		}
+	} else if route.ServiceID != nil {
+		return serviceLabels, nil
 	}
 	return nil, nil
 }

@@ -30,7 +30,7 @@ const FORM_ITEM_LAYOUT = {
     span: 7,
   },
   wrapperCol: {
-    span: 8
+    span: 8,
   },
 };
 
@@ -50,10 +50,7 @@ const Cors: React.FC<Props> = ({ form }) => {
     >
       <Row>
         <Col span={24}>
-          <Form.Item
-            name="allow_methods"
-            initialValue={["*"]}
-          >
+          <Form.Item name="allow_methods" initialValue={['*']}>
             <Select
               mode="multiple"
               optionLabelProp="label"
@@ -65,21 +62,33 @@ const Cors: React.FC<Props> = ({ form }) => {
                 }
               }}
             >
-              {['*', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'CONNECT', 'TRACE'].map((item) => {
-                return <Select.Option value={item} key={item}>{item}</Select.Option>
+              {[
+                '*',
+                'GET',
+                'HEAD',
+                'POST',
+                'PUT',
+                'DELETE',
+                'OPTIONS',
+                'PATCH',
+                'CONNECT',
+                'TRACE',
+              ].map((item) => {
+                return (
+                  <Select.Option value={item} key={item}>
+                    {item}
+                  </Select.Option>
+                );
               })}
             </Select>
           </Form.Item>
         </Col>
       </Row>
-    </Form.Item >
+    </Form.Item>
   );
 
   return (
-    <Form
-      form={form}
-      {...FORM_ITEM_LAYOUT}
-    >
+    <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
         extra={formatMessage({ id: 'component.pluginForm.cors.allow_origins.extra' })}
         name="allow_origins"
@@ -125,7 +134,7 @@ const Cors: React.FC<Props> = ({ form }) => {
         <Switch />
       </Form.Item>
 
-      <Form.List name='allow_origins_by_regex' initialValue={['']}>
+      <Form.List name="allow_origins_by_regex" initialValue={['']}>
         {(fields, { add, remove }) => {
           return (
             <div>
@@ -134,13 +143,11 @@ const Cors: React.FC<Props> = ({ form }) => {
                   {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   label={index === 0 && 'allow_origins_by_regex'}
                   key={field.key}
-                  tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_origins_by_regex.tooltip' })}
+                  tooltip={formatMessage({
+                    id: 'component.pluginForm.cors.allow_origins_by_regex.tooltip',
+                  })}
                 >
-                  <Form.Item
-                    {...field}
-                    validateTrigger={['onChange', 'onBlur']}
-                    noStyle
-                  >
+                  <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
                     <Input style={{ width: '80%' }} />
                   </Form.Item>
                   {fields.length > 1 ? (
@@ -171,8 +178,8 @@ const Cors: React.FC<Props> = ({ form }) => {
           );
         }}
       </Form.List>
-    </Form >
+    </Form>
   );
-}
+};
 
 export default Cors;

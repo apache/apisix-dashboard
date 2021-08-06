@@ -28,11 +28,11 @@ import defaultPluginImg from '../../../public/static/default-plugin.png';
 type Props = {
   readonly?: boolean;
   type?: 'global' | 'scoped';
-  initialData?: PluginComponent.Data,
-  plugin_config_id?: string,
+  initialData?: PluginComponent.Data;
+  plugin_config_id?: string;
   schemaType?: PluginComponent.Schema;
   referPage?: PluginComponent.ReferPage;
-  showSelector?: boolean,
+  showSelector?: boolean;
   onChange?: (plugins: PluginComponent.Data, plugin_config_id?: string) => void;
 };
 
@@ -52,17 +52,19 @@ const NEVER_EXIST_PLUGIN_FLAG = 'NEVER_EXIST_PLUGIN_FLAG';
 const PluginPage: React.FC<Props> = ({
   readonly = false,
   initialData = {},
-  plugin_config_id = "",
+  plugin_config_id = '',
   schemaType = 'route',
   referPage = '',
   type = 'scoped',
   showSelector = false,
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
   const [form] = Form.useForm();
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
-  const [pluginTemplateList, setPluginTemplateList] = useState<PluginTemplateModule.ResEntity[]>([]);
+  const [pluginTemplateList, setPluginTemplateList] = useState<PluginTemplateModule.ResEntity[]>(
+    [],
+  );
   const [name, setName] = useState<string>(NEVER_EXIST_PLUGIN_FLAG);
   const [typeList, setTypeList] = useState<string[]>([]);
   const [plugins, setPlugins] = useState({});
@@ -87,8 +89,8 @@ const PluginPage: React.FC<Props> = ({
     });
     fetchPluginTemplateList().then((data) => {
       setPluginTemplateList(data);
-      form.setFieldsValue({ plugin_config_id })
-    })
+      form.setFieldsValue({ plugin_config_id });
+    });
   }, []);
 
   const PluginList = () => (
@@ -112,7 +114,11 @@ const PluginPage: React.FC<Props> = ({
         <Anchor offsetTop={150}>
           {typeList.map((typeItem) => {
             return (
-              <Anchor.Link href={`#plugin-category-${typeItem}`} title={formatMessage({ id: `component.plugin.${typeItem}` })} key={typeItem} />
+              <Anchor.Link
+                href={`#plugin-category-${typeItem}`}
+                title={formatMessage({ id: `component.plugin.${typeItem}` })}
+                key={typeItem}
+              />
             );
           })}
         </Anchor>
@@ -149,7 +155,9 @@ const PluginPage: React.FC<Props> = ({
                   {[
                     {
                       id: '',
-                      desc: formatMessage({ id: 'component.step.select.pluginTemplate.select.option' }),
+                      desc: formatMessage({
+                        id: 'component.step.select.pluginTemplate.select.option',
+                      }),
                     },
                     ...pluginTemplateList,
                   ].map((item) => (
@@ -160,10 +168,15 @@ const PluginPage: React.FC<Props> = ({
                 </Select>
               </Form.Item>
             </Form>
-            <Alert message={<>
-              <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tip1' })}</p>
-              <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tip2' })}</p>
-            </>} type="info" />
+            <Alert
+              message={
+                <>
+                  <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tip1' })}</p>
+                  <p>{formatMessage({ id: 'component.plugin.pluginTemplate.tip2' })}</p>
+                </>
+              }
+              type="info"
+            />
           </>
         )}
         {typeList.map((typeItem) => {
@@ -183,17 +196,19 @@ const PluginPage: React.FC<Props> = ({
                   key={item.name}
                   actions={[
                     <Button
-                      type={initialData[item.name] && !initialData[item.name].disable ? 'primary' : 'default'}
+                      type={
+                        initialData[item.name] && !initialData[item.name].disable
+                          ? 'primary'
+                          : 'default'
+                      }
                       danger={initialData[item.name] && !initialData[item.name].disable}
                       onClick={() => {
                         setName(item.name);
                       }}
                     >
-                      {
-                        initialData[item.name] && !initialData[item.name].disable
-                          ? formatMessage({ id: 'component.plugin.disable' })
-                          : formatMessage({ id: 'component.plugin.enable' })
-                      }
+                      {initialData[item.name] && !initialData[item.name].disable
+                        ? formatMessage({ id: 'component.plugin.disable' })
+                        : formatMessage({ id: 'component.plugin.enable' })}
                     </Button>,
                   ]}
                   title={[

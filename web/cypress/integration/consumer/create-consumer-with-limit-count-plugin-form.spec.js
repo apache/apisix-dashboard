@@ -17,9 +17,8 @@
 /* eslint-disable no-undef */
 
 context('Create and delete consumer with limit-count plugin form', () => {
-
   const selector = {
-    empty:'.ant-empty-normal',
+    empty: '.ant-empty-normal',
     username: '#username',
     description: '#desc',
     pluginCard: '.ant-card',
@@ -39,15 +38,17 @@ context('Create and delete consumer with limit-count plugin form', () => {
     redis_cluster_name: '#redis_cluster_name',
     redis_cluster_nodes_0: '#redis_cluster_nodes_0',
     redis_cluster_nodes_1: '#redis_cluster_nodes_1',
-    monacoViewZones: '.view-zones'
-  }
+    monacoViewZones: '.view-zones',
+  };
 
   const data = {
     consumerName: 'test_consumer',
     description: 'desc_by_autotest',
     createConsumerSuccess: 'Create Consumer Successfully',
-    deleteConsumerSuccess: 'Delete Consumer Successfully'
-  }
+    deleteConsumerSuccess: 'Delete Consumer Successfully',
+    redisClusterName: 'Please Enter redis_cluster_name',
+    redisClusterNode: 'Please Enter redis_cluster_node',
+  };
 
   beforeEach(() => {
     cy.login();
@@ -120,8 +121,7 @@ context('Create and delete consumer with limit-count plugin form', () => {
     });
     cy.get(selector.drawer).should('not.exist');
 
-
-    // config limit-count form with redis policy
+    // config limit-count form with redis-cluster policy
     cy.contains(selector.pluginCard, 'limit-count').within(() => {
       cy.contains('Enable').click({
         force: true,
@@ -134,6 +134,11 @@ context('Create and delete consumer with limit-count plugin form', () => {
         force: true,
       });
     });
+    cy.get(selector.redis_cluster_name).click();
+    cy.contains(data.redisClusterName);
+    cy.get(selector.redis_cluster_nodes_0).click();
+    cy.contains(data.redisClusterNode);
+
     cy.get(selector.redis_cluster_name).type('redis_cluster_name');
     cy.get(selector.redis_cluster_nodes_0).type('127.0.0.1:5000');
     cy.get(selector.redis_cluster_nodes_1).type('127.0.0.1:5001');

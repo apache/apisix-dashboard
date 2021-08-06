@@ -47,14 +47,14 @@ context('Create and Delete Route', () => {
     selectJSON: '.ant-select-dropdown [label=JSON]',
     drawerFooter: '.ant-drawer-footer',
     nameSelector: '[title=Name]',
-    monacoScroll: ".monaco-scrollable-element",
+    monacoScroll: '.monaco-scrollable-element',
     deleteAlert: '.ant-modal-body',
     notificationCloseIcon: '.ant-notification-close-icon',
     notification: '.ant-notification-notice-message',
     addHost: '[data-cy=addHost]',
-    schemaErrorMessage: ".ant-form-item-explain.ant-form-item-explain-error",
-    advancedMatchingTable: ".ant-table-row.ant-table-row-level-0",
-    advancedMatchingTableOperation: ".ant-space"
+    schemaErrorMessage: '.ant-form-item-explain.ant-form-item-explain-error',
+    advancedMatchingTable: '.ant-table-row.ant-table-row-level-0',
+    advancedMatchingTableOperation: '.ant-space',
   };
 
   const data = {
@@ -183,7 +183,7 @@ context('Create and Delete Route', () => {
 
     cy.get(selector.monacoScroll).within(() => {
       cy.contains('upstream').should('exist');
-      cy.contains('vars').should('exist')
+      cy.contains('vars').should('exist');
       cy.contains(name).should('exist');
     });
   });

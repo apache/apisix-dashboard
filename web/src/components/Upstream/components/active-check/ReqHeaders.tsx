@@ -14,29 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, Row, Col, Input, Button } from 'antd'
-import { useIntl } from 'umi'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import React from 'react';
+import { Form, Row, Col, Input, Button } from 'antd';
+import { useIntl } from 'umi';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-import { removeBtnStyle } from '../../constant'
+import { removeBtnStyle } from '../../constant';
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const Component: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
 
   return (
     <Form.List name={['checks', 'active', 'req_headers']}>
       {(fields, { add, remove }) => (
         <>
           <Form.Item
-            label={
-              formatMessage({ id: 'component.upstream.fields.checks.active.req_headers' })
-            }
-            tooltip={formatMessage({ id: 'component.upstream.fields.checks.active.req_headers.tooltip' })}
+            label={formatMessage({ id: 'component.upstream.fields.checks.active.req_headers' })}
+            tooltip={formatMessage({
+              id: 'component.upstream.fields.checks.active.req_headers.tooltip',
+            })}
             style={{ marginBottom: 0 }}
           >
             {fields.map((field, index) => (
@@ -76,7 +76,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
         </>
       )}
     </Form.List>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

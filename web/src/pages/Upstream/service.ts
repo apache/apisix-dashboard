@@ -31,7 +31,8 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
   }));
 };
 
-export const fetchOne = (id: string) => request<Res<any>>(`/upstreams/${id}`).then(({data}) => convertToFormData(data));
+export const fetchOne = (id: string) =>
+  request<Res<any>>(`/upstreams/${id}`).then(({ data }) => convertToFormData(data));
 
 export const create = (data: UpstreamModule.RequestBody) =>
   request('/upstreams', {

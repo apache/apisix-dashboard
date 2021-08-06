@@ -1,18 +1,8 @@
 {
   "Route": {
-    "uris": [
-      "/*"
-    ],
+    "uris": ["/*"],
     "name": "root",
-    "methods": [
-      "GET",
-      "HEAD",
-      "POST",
-      "PUT",
-      "DELETE",
-      "OPTIONS",
-      "PATCH"
-    ],
+    "methods": ["GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     "upstream": {
       "nodes": [
         {

@@ -108,7 +108,7 @@ export default {
   'component.pluginForm.limit-count.time_window.tooltip':
     'The time window in seconds before the request count is reset.',
   'component.pluginForm.limit-count.key.tooltip':
-    'The user specified key to limit the count.Now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username) and "service_id".',
+    'The user specified key to limit the count, now accept those as key: "remote_addr"(client\'s IP), "server_addr"(server\'s IP), "X-Forwarded-For/X-Real-IP" in request header, "consumer_name"(consumer\'s username) and "service_id".',
   'component.pluginForm.limit-count.rejected_code.tooltip':
     'The HTTP status code returned when the request exceeds the threshold is rejected, default 503.',
   'component.pluginForm.limit-count.policy.tooltip':
@@ -124,7 +124,7 @@ export default {
   'component.pluginForm.limit-count.redis_timeout.tooltip':
     'When using the redis policy, this property specifies the timeout in milliseconds of any command submitted to the Redis server.',
   'component.pluginForm.limit-count.redis_cluster_nodes.tooltip':
-    'When using redis-cluster policy，This property is a list of addresses of Redis cluster service nodes (at least two nodes).',
+    'When using redis-cluster policy, this property is a list of addresses of Redis cluster service nodes (at least two nodes).',
   'component.pluginForm.limit-count.redis_cluster_name.tooltip':
     'When using redis-cluster policy, this property is the name of Redis cluster service nodes.',
   'component.pluginForm.limit-count.atLeast2Characters.rule': 'Please enter at least 2 characters',
