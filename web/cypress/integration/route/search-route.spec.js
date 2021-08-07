@@ -95,7 +95,7 @@ context('Create and Search Route', () => {
           });
       });
 
-      cy.contains('Next').click();
+      cy.contains('button', 'Next').should('not.be.disabled').click();
       cy.get(selector.nodes_0_host).type(data.host2, {
         timeout,
       });

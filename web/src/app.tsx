@@ -58,10 +58,10 @@ export const layout = ({ initialState }: { initialState: { settings?: LayoutSett
 
 /* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["obj"] }] */
 const nullValueFilter = (obj: Record<string, any>) => {
-  Object.keys(obj).forEach((key) => {
-    if (isPlainObject(obj[key])) {
-      nullValueFilter(obj[key]);
-    } else if (obj[key] === null) {
+  Object.entries(obj).forEach(([key, value]) => {
+    if (isPlainObject(value)) {
+      nullValueFilter(value);
+    } else if ([null, undefined].includes(value)) {
       delete obj[key];
     }
   });
