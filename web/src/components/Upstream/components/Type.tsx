@@ -50,26 +50,28 @@ const CHash: React.FC<Props> = ({ form, readonly }) => {
           ))}
         </Select>
       </Form.Item>
-      <Form.Item
-        name="key"
-        rules={[{ required: form.getFieldValue('hash_on') !== 'consumer' }]}
-        label={formatMessage({ id: 'component.upstream.fields.key' })}
-        tooltip={formatMessage({ id: 'component.upstream.fields.key.tooltip' })}
-        initialValue="remote_addr"
-      >
-        <AutoComplete disabled={readonly} onSearch={handleSearch}>
-          {Object.entries(CommonHashKeyEnum)
-            .filter(
-              ([label, value]) =>
-                label.startsWith(keySearchWord) || value.startsWith(keySearchWord),
-            )
-            .map(([label, value]) => (
-              <Select.Option value={value} key={value}>
-                {label}
-              </Select.Option>
-            ))}
-        </AutoComplete>
-      </Form.Item>
+      {form.getFieldValue('hash_on') !== 'consumer' && (
+        <Form.Item
+          name="key"
+          rules={[{ required: true }]}
+          label={formatMessage({ id: 'component.upstream.fields.key' })}
+          tooltip={formatMessage({ id: 'component.upstream.fields.key.tooltip' })}
+          initialValue="remote_addr"
+        >
+          <AutoComplete disabled={readonly} onSearch={handleSearch}>
+            {Object.entries(CommonHashKeyEnum)
+              .filter(
+                ([label, value]) =>
+                  label.startsWith(keySearchWord) || value.startsWith(keySearchWord),
+              )
+              .map(([label, value]) => (
+                <Select.Option value={value} key={value}>
+                  {label}
+                </Select.Option>
+              ))}
+          </AutoComplete>
+        </Form.Item>
+      )}
     </React.Fragment>
   );
 };
