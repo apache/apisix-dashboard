@@ -34,7 +34,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 				"host": "$%$foo.com",
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -53,7 +53,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 				"hosts": ["$%$foo.com", "*.bar.com"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -73,7 +73,7 @@ func TestRoute_Invalid_Host(t *testing.T) {
 				"hosts": ["foo.com", "*.bar.com"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -128,7 +128,7 @@ func TestRoute_Create_With_Hosts(t *testing.T) {
 				"hosts": ["foo.com", "*.bar.com"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -226,7 +226,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -256,7 +256,7 @@ func TestRoute_Update_Routes_With_Hosts(t *testing.T) {
 				"hosts": ["bar.com"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -329,7 +329,7 @@ func TestRoute_Patch(t *testing.T) {
 				"uri": "/hello",
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -423,7 +423,7 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 				"host": "test.com",
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -452,7 +452,7 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 				"hosts": [],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -480,7 +480,7 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 				"uris": [],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -501,7 +501,7 @@ func TestRoute_With_Empty_Array(t *testing.T) {
 				"remote_addr": "0.0.0.0",
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -548,7 +548,7 @@ func TestRoute_Create_via_POST(t *testing.T) {
 				"hosts": ["foo.com", "*.bar.com"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
