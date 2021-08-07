@@ -22,7 +22,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { queryCurrent } from '@/services/user';
-import { getMenuData, errorHandler } from '@/helpers';
+import { getMenuData, errorHandler, getUrlQuery } from '@/helpers';
 
 import './libs/iconfont';
 import defaultSettings from '../config/defaultSettings';
@@ -33,7 +33,8 @@ export async function getInitialState(): Promise<{
 }> {
   const token = localStorage.getItem('token');
   if (!token) {
-    history.replace(`/user/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+    const redirect = getUrlQuery('redirect');
+    history.replace(`/user/login?redirect=${redirect}`);
   }
 
   const currentUser = await queryCurrent();
