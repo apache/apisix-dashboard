@@ -209,7 +209,7 @@ func testCaseCheck(tc HttpTestCase, t *testing.T) {
 	}
 	t.Run(tc.Desc, func(t *testing.T) {
 		//init
-		expectObj := tc.Object
+		expectObj := tc.Object.E
 		var req *httpexpect.Request
 		switch tc.Method {
 		case http.MethodGet:

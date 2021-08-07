@@ -58,7 +58,7 @@ var _ = ginkgo.Describe("Migrate", func() {
 
 	ginkgo.It("prepare config data", prepareConfigData)
 	ginkgo.It("export config success", func() {
-		req := base.ManagerApiExpect().GET("/apisix/admin/migrate/export")
+		req := base.ManagerApiExpect().E.GET("/apisix/admin/migrate/export")
 		resp := req.Expect()
 		resp.Status(http.StatusOK)
 		exportData = []byte(resp.Body().Raw())
@@ -68,7 +68,7 @@ var _ = ginkgo.Describe("Migrate", func() {
 	})
 
 	ginkgo.It("import config conflict and return", func() {
-		req := base.ManagerApiExpect().POST("/apisix/admin/migrate/import")
+		req := base.ManagerApiExpect().E.POST("/apisix/admin/migrate/import")
 		buffer := bytes.NewBuffer(exportData)
 		req.WithMultipart().WithForm(map[string]string{"mode": "return"})
 		req.WithMultipart().WithFile("file", "apisix-config.bak", buffer)
@@ -84,7 +84,7 @@ var _ = ginkgo.Describe("Migrate", func() {
 	})
 
 	ginkgo.It("import config conflict and skip", func() {
-		req := base.ManagerApiExpect().POST("/apisix/admin/migrate/import")
+		req := base.ManagerApiExpect().E.POST("/apisix/admin/migrate/import")
 		buffer := bytes.NewBuffer(exportData)
 		req.WithMultipart().WithForm(map[string]string{"mode": "skip"})
 		req.WithMultipart().WithFile("file", "apisix-config.bak", buffer)
@@ -97,7 +97,7 @@ var _ = ginkgo.Describe("Migrate", func() {
 	})
 
 	ginkgo.It("import config conflict and overwrite", func() {
-		req := base.ManagerApiExpect().POST("/apisix/admin/migrate/import")
+		req := base.ManagerApiExpect().E.POST("/apisix/admin/migrate/import")
 		buffer := bytes.NewBuffer(exportData)
 		req.WithMultipart().WithForm(map[string]string{"mode": "overwrite"})
 		req.WithMultipart().WithFile("file", "apisix-config.bak", buffer)
@@ -143,7 +143,7 @@ var _ = ginkgo.Describe("Migrate", func() {
 	})
 
 	ginkgo.It("import config success", func() {
-		req := base.ManagerApiExpect().POST("/apisix/admin/migrate/import")
+		req := base.ManagerApiExpect().E.POST("/apisix/admin/migrate/import")
 		buffer := bytes.NewBuffer(exportData)
 		req.WithMultipart().WithForm(map[string]string{"mode": "return"})
 		req.WithMultipart().WithFile("file", "apisix-config.bak", buffer)
