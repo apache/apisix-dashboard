@@ -468,7 +468,6 @@ func TestConsumer_with_createtime_updatetime(t *testing.T) {
 	// get the consumer, save createtime and updatetime
 	request, _ := http.NewRequest("GET", basepath+"/jack", nil)
 	request.Header.Add("Authorization", token)
-	request.Close = true
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
 		fmt.Printf("server not responding %s", err.Error())

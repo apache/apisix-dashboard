@@ -217,7 +217,6 @@ var _ = ginkgo.Describe("Upstream chash hash on cookie", func() {
 			Path:         "/apisix/admin/routes/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			Sleep:        time.Second,
 		})
 	})
 	ginkgo.It("delete upstream", func() {
@@ -310,7 +309,6 @@ var _ = ginkgo.Describe("Upstream key contains uppercase letters and hyphen", fu
 			Path:         "/apisix/admin/routes/1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			Sleep:        time.Second,
 		})
 	})
 	ginkgo.It("delete upstream", func() {

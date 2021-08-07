@@ -18,7 +18,6 @@ package route
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
@@ -181,7 +180,6 @@ var _ = ginkgo.Describe("route with plugin cors", func() {
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			Sleep:        time.Second,
 		}),
 		table.Entry("verify route with cors setting force wildcard", base.HttpTestCase{
 			Object: base.APISIXExpect(),

@@ -278,7 +278,6 @@ func TestImport_with_multi_routes(t *testing.T) {
 
 	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/routes", nil)
 	request.Header.Add("Authorization", token)
-	request.Close = true
 	resp, err := http.DefaultClient.Do(request)
 	assert.Nil(t, err)
 	defer resp.Body.Close()
@@ -353,7 +352,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Path:         "/get",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"url": "https://127.0.0.1/get"`,
-			Sleep:        time.Second,
+			Sleep:        sleepTime,
 		},
 		{
 			Desc:         "verify the route just imported",
@@ -362,7 +361,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 			Path:         "/post",
 			ExpectStatus: http.StatusOK,
 			ExpectBody:   `"url": "https://127.0.0.1/post"`,
-			Sleep:        time.Second,
+			Sleep:        sleepTime,
 		},
 	}
 	tests = append(tests, verifyTests...)

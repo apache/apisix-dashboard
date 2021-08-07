@@ -18,7 +18,6 @@ package route
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/extensions/table"
@@ -133,7 +132,6 @@ var _ = ginkgo.Describe("Route", func() {
 			}`,
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			Sleep:        time.Second,
 		}),
 		table.Entry("create route with int uri", base.HttpTestCase{
 			Object: base.ManagerApiExpect(),
@@ -177,7 +175,6 @@ var _ = ginkgo.Describe("Route", func() {
 			Path:         "/apisix/admin/routes/r1",
 			Headers:      map[string]string{"Authorization": base.GetToken()},
 			ExpectStatus: http.StatusOK,
-			Sleep:        time.Second,
 		}),
 		table.Entry("hit the route just deleted", base.HttpTestCase{
 			Object:       base.APISIXExpect(),

@@ -421,7 +421,7 @@ var _ = ginkgo.Describe("Upstream chash remote addr", func() {
 	})
 
 	ginkgo.It("hit routes(upstream weight 1)", func() {
-		time.Sleep(time.Second)
+		time.Sleep(time.Duration(500) * time.Millisecond)
 		basepath := base.APISIXHost
 		request, err := http.NewRequest("GET", basepath+"/server_port", nil)
 		gomega.Expect(err).To(gomega.BeNil())
