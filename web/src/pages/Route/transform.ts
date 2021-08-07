@@ -17,22 +17,17 @@
 import { omit, pick, cloneDeep, isEmpty, unset } from 'lodash';
 
 import { transformLableValueToKeyValue } from '@/helpers';
-import {
-  SCHEME_REWRITE,
-  URI_REWRITE_TYPE,
-  HOST_REWRITE_TYPE
-} from '@/pages/Route/constants';
+import { SCHEME_REWRITE, URI_REWRITE_TYPE, HOST_REWRITE_TYPE } from '@/pages/Route/constants';
 import { convertToFormData } from '@/components/Upstream/service';
 
-export const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): RouteModule.ProxyRewrite => {
+export const transformProxyRewrite2Plugin = (
+  data: RouteModule.ProxyRewrite,
+): RouteModule.ProxyRewrite => {
   let omitFieldsList: string[] = ['kvHeaders'];
   let headers: Record<string, string> = {};
 
   if (data.scheme !== 'http' && data.scheme !== 'https') {
-    omitFieldsList = [
-      ...omitFieldsList,
-      'scheme',
-    ]
+    omitFieldsList = [...omitFieldsList, 'scheme'];
   }
 
   (data.kvHeaders || []).forEach((kvHeader) => {
@@ -46,39 +41,45 @@ export const transformProxyRewrite2Plugin = (data: RouteModule.ProxyRewrite): Ro
   });
 
   if (!isEmpty(headers)) {
-    return omit({
-      ...data,
-      headers,
-    }, omitFieldsList);
+    return omit(
+      {
+        ...data,
+        headers,
+      },
+      omitFieldsList,
+    );
   }
 
   return omit(data, omitFieldsList);
-}
+};
 
 const transformProxyRewrite2Formdata = (pluginsData: any) => {
   const proxyRewriteData: RouteModule.ProxyRewrite = {
-    scheme: SCHEME_REWRITE.KEEP
+    scheme: SCHEME_REWRITE.KEEP,
   };
   let URIRewriteType = URI_REWRITE_TYPE.KEEP;
   let hostRewriteType = HOST_REWRITE_TYPE.KEEP;
 
   if (pluginsData) {
     if (pluginsData.regex_uri) {
-      URIRewriteType = URI_REWRITE_TYPE.REGEXP
+      URIRewriteType = URI_REWRITE_TYPE.REGEXP;
     }
 
     if (pluginsData.uri && !pluginsData.regex_uri) {
-      URIRewriteType = URI_REWRITE_TYPE.STATIC
+      URIRewriteType = URI_REWRITE_TYPE.STATIC;
     }
 
     if (pluginsData.host) {
-      hostRewriteType = HOST_REWRITE_TYPE.REWRITE
+      hostRewriteType = HOST_REWRITE_TYPE.REWRITE;
     }
 
-    Object.keys(pluginsData).forEach(key => {
+    Object.keys(pluginsData).forEach((key) => {
       switch (key) {
         case 'scheme':
-          proxyRewriteData[key] = pluginsData[key] === SCHEME_REWRITE.HTTP || pluginsData[key] === SCHEME_REWRITE.HTTPS ? pluginsData[key] : SCHEME_REWRITE.KEEP;
+          proxyRewriteData[key] =
+            pluginsData[key] === SCHEME_REWRITE.HTTP || pluginsData[key] === SCHEME_REWRITE.HTTPS
+              ? pluginsData[key]
+              : SCHEME_REWRITE.KEEP;
           break;
         case 'uri':
         case 'regex_uri':
@@ -91,22 +92,23 @@ const transformProxyRewrite2Formdata = (pluginsData: any) => {
               ...(proxyRewriteData.kvHeaders || []),
               {
                 key: headerKey,
-                value: pluginsData[key][headerKey]
-              }
-            ]
-          })
+                value: pluginsData[key][headerKey],
+              },
+            ];
+          });
           break;
-        default: break;
+        default:
+          break;
       }
-    })
+    });
   }
 
   return {
     proxyRewriteData,
     URIRewriteType,
     hostRewriteType,
-  }
-}
+  };
+};
 
 // Transform Route data then sent to API
 export const transformStepData = ({
@@ -138,7 +140,6 @@ export const transformStepData = ({
     labels[labelKey] = labelValue;
   });
 
-
   if (custom_version_label) {
     labels.API_VERSION = custom_version_label;
   }
@@ -159,9 +160,9 @@ export const transformStepData = ({
         default:
           key = `arg_${name}`;
       }
-      let finalValue = value
-      if (operator === "IN") {
-        finalValue = JSON.parse(value as string)
+      let finalValue = value;
+      if (operator === 'IN') {
+        finalValue = JSON.parse(value as string);
       }
       return [key, operator, finalValue];
     }),
@@ -184,11 +185,11 @@ export const transformStepData = ({
      * Due to convertToRequestData under the Upstream component,
      * if upstream_id === Custom or None, it will be omitted.
      * So upstream_id here mush be a valid Upstream ID from API.
-    */
+     */
     if (form2Data.upstream_id) {
-      data.upstream_id = form2Data.upstream_id
+      data.upstream_id = form2Data.upstream_id;
     } else {
-      data.upstream = form2Data
+      data.upstream = form2Data;
     }
 
     if (redirect.http_to_https) {
@@ -325,11 +326,12 @@ export const transformRouteData = (data: RouteModule.Body) => {
   }
 
   const proxyRewrite = data.plugins ? data.plugins['proxy-rewrite'] : {};
-  const { proxyRewriteData, URIRewriteType, hostRewriteType } = transformProxyRewrite2Formdata(proxyRewrite);
+  const { proxyRewriteData, URIRewriteType, hostRewriteType } = transformProxyRewrite2Formdata(
+    proxyRewrite,
+  );
   form1Data.proxyRewrite = proxyRewriteData;
   form1Data.URIRewriteType = URIRewriteType;
   form1Data.hostRewriteType = hostRewriteType;
-
 
   const advancedMatchingRules: RouteModule.MatchingRule[] = transformVarsToRules(vars);
 
@@ -337,7 +339,9 @@ export const transformRouteData = (data: RouteModule.Body) => {
     upstream.upstream_id = 'Custom';
   }
 
-  const form2Data: UpstreamComponent.ResponseData = convertToFormData(upstream) || { upstream_id: upstream_id || 'None' };
+  const form2Data: UpstreamComponent.ResponseData = convertToFormData(upstream) || {
+    upstream_id: upstream_id || 'None',
+  };
 
   const { plugins, script, plugin_config_id = '' } = data;
 

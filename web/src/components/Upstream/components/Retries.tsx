@@ -14,27 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, InputNumber } from 'antd'
-import { useIntl } from 'umi'
+import React from 'react';
+import { Form, InputNumber } from 'antd';
+import { useIntl } from 'umi';
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const Component: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
   return (
     <Form.Item
       label={formatMessage({ id: 'component.upstream.fields.retries' })}
       tooltip={formatMessage({ id: 'component.upstream.fields.retries.tooltip' })}
       name="retries"
     >
-      <InputNumber
-        disabled={readonly}
-      />
+      <InputNumber disabled={readonly} />
     </Form.Item>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

@@ -28,7 +28,7 @@ const FORM_ITEM_LAYOUT = {
     span: 4,
   },
   wrapperCol: {
-    span: 10
+    span: 10,
   },
 };
 
@@ -36,10 +36,7 @@ const ProxyMirror: React.FC<Props> = ({ form }) => {
   const { formatMessage } = useIntl();
 
   return (
-    <Form
-      form={form}
-      {...FORM_ITEM_LAYOUT}
-    >
+    <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
         label="host"
         name="host"
@@ -47,15 +44,18 @@ const ProxyMirror: React.FC<Props> = ({ form }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.proxy-mirror.host.tooltip' })}
         rules={[
           {
-            pattern: new RegExp(/^http(s)?:\/\/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:[0-9]{1,5})?$/, 'g'),
+            pattern: new RegExp(
+              /^http(s)?:\/\/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:[0-9]{1,5})?$/,
+              'g',
+            ),
             message: formatMessage({ id: 'component.pluginForm.proxy-mirror.host.ruletip' }),
-          }
+          },
         ]}
       >
         <Input />
       </Form.Item>
     </Form>
   );
-}
+};
 
 export default ProxyMirror;
