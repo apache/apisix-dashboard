@@ -153,6 +153,7 @@ func APISIXHTTPSExpect(t *testing.T) ExpectAndHost {
 func BatchTestServerPort(t *testing.T, times int) map[string]int {
 	url := APISIXSingleWorkerHost + "/server_port"
 	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req.Close = true
 	assert.Nil(t, err)
 
 	res := map[string]int{}
