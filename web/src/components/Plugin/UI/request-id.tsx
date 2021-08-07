@@ -46,7 +46,7 @@ const RequestId: React.FC<Props> = ({ form }) => {
                 rules={[{
                     message: `${formatMessage({ id: 'component.global.pleaseEnter' })} header_name`
                 }]}
-                tooltip={formatMessage({ id: 'component.pluginForm.request-id.heade_name.tooltip' })}
+                tooltip={formatMessage({ id: 'component.pluginForm.request-id.header_name.tooltip' })}
                 validateTrigger={[ 'onChange', 'onBlur', 'onClick' ]}
             >
                 <Input />
