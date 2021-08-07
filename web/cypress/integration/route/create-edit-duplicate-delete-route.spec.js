@@ -72,6 +72,13 @@ context('Create and Delete Route', () => {
     deleteRouteSuccess: 'Delete Route Successfully',
   };
 
+  const opreatorList = [
+    'Equal(==)',
+    'Case insensitive regular match(~*)',
+    'HAS',
+    'Reverse the result(!)',
+  ];
+
   beforeEach(() => {
     cy.login();
   });
@@ -92,18 +99,31 @@ context('Create and Delete Route', () => {
     cy.get(selector.remoteHost).type(data.host2);
     cy.get(selector.remoteAddress).click();
     cy.get(selector.address1).type(data.host3);
-    cy.contains('Advanced Routing Matching Conditions').parent().siblings().contains('Add').click();
 
-    // create advanced routing matching conditions
-    cy.get(selector.parameterPosition).click();
-    cy.contains('Cookie').click();
-    cy.get(selector.ruleCard).within(() => {
-      cy.get(selector.name).type('modalName');
+    // All Of Operational Character Should Exist And Can be Created
+    cy.wrap(opreatorList).each((opreator) => {
+      cy.contains('Advanced Routing Matching Conditions')
+        .parent()
+        .siblings()
+        .contains('Add')
+        .click()
+        .then(() => {
+          cy.get(selector.parameterPosition)
+            .click()
+            .then(() => {
+              cy.get('.ant-select-dropdown').within(() => {
+                cy.contains('Cookie').should('be.visible').click();
+              });
+            });
+          cy.get(selector.ruleCard).within(() => {
+            cy.get(selector.name).type('modalName');
+          });
+          cy.get(selector.operator).click();
+          cy.get(`[title="${opreator}"]`).should('be.visible').click();
+          cy.get(selector.value).type('value');
+          cy.contains('Confirm').click();
+        });
     });
-    cy.get(selector.operator).click();
-    cy.get('[title="Equal(==)"]').should('be.visible').click();
-    cy.get(selector.value).type('value');
-    cy.contains('Confirm').click();
 
     cy.contains('Next').click();
     cy.get(selector.nodes_0_host).type(data.host4);
@@ -201,8 +221,10 @@ context('Create and Delete Route', () => {
     cy.get(selector.name).clear().type(newName);
     cy.get(selector.description).clear().type(data.description2);
     cy.get(selector.advancedMatchingTable).should('exist');
-    cy.get(selector.advancedMatchingTableOperation).within(() => {
-      cy.contains('Delete').click().should('not.exist');
+    cy.wrap(opreatorList).each(() => {
+      cy.get(selector.advancedMatchingTableOperation).within(() => {
+        cy.contains('Delete').click().should('not.exist');
+      });
     });
 
     cy.contains('Next').click();

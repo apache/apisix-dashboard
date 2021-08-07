@@ -16,7 +16,7 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Form, InputNumber, Select } from 'antd';
+import { Form, InputNumber, Select, Switch } from 'antd';
 import { useIntl } from 'umi';
 
 type Props = {
@@ -99,6 +99,14 @@ const LimitReq: React.FC<Props> = ({ form, schema }) => {
           min={propertires.rejected_code.minimum}
           max={propertires.rejected_code.maximum}
         />
+      </Form.Item>
+      <Form.Item
+        label="nodelay"
+        name="nodelay"
+        valuePropName="checked"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.nodelay.tooltip' })}
+      >
+        <Switch defaultChecked={false} />
       </Form.Item>
     </Form>
   );

@@ -29,6 +29,7 @@ context('Create and Delete Consumer', () => {
     rate: '#rate',
     burst: '#burst',
     key: '#key',
+    nodelay: '#nodelay',
     remote_addr: '[title=remote_addr]',
     monacoViewZones: '.view-zones',
   };
@@ -88,6 +89,7 @@ context('Create and Delete Consumer', () => {
     cy.get(selector.burst).type(data.time);
     cy.get(selector.key).click();
     cy.get(selector.remote_addr).click();
+    cy.get(selector.nodelay).click();
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,
