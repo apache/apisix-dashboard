@@ -180,6 +180,19 @@ export const transformStepData = ({
     unset(data.plugins, ['proxy-rewrite']);
   }
 
+  if (data.uris && data.uris.filter(Boolean).length === 1) {
+    [data.uri] = data.uris;
+    delete data.uris;
+  }
+  if (data.hosts && data.hosts.filter(Boolean).length === 1) {
+    [data.host] = data.hosts;
+    delete data.hosts;
+  }
+  if (data.remote_addrs && data.remote_addrs.filter(Boolean).length === 1) {
+    [data.remote_addr] = data.remote_addrs;
+    delete data.remote_addrs;
+  }
+
   if ((Object.keys(redirect).length === 0 || redirect.http_to_https) && form2Data) {
     /**
      * Due to convertToRequestData under the Upstream component,
@@ -216,7 +229,7 @@ export const transformStepData = ({
       service_id.length === 0 ? 'service_id' : '',
       !Object.keys(data.plugins || {}).length ? 'plugins' : '',
       !Object.keys(data.script || {}).length ? 'script' : '',
-      form1Data.hosts.filter(Boolean).length === 0 ? 'hosts' : '',
+      form1Data.hosts?.filter(Boolean).length === 0 ? 'hosts' : '',
       form1Data.redirectOption === 'disabled' ? 'redirect' : '',
       data.remote_addrs?.filter(Boolean).length === 0 ? 'remote_addrs' : '',
       step3DataCloned.plugin_config_id === '' ? 'plugin_config_id' : '',
@@ -241,7 +254,7 @@ export const transformStepData = ({
     'labels',
     data.vars?.length ? 'vars' : '',
     service_id.length !== 0 ? 'service_id' : '',
-    form1Data.hosts.filter(Boolean).length !== 0 ? 'hosts' : '',
+    form1Data.hosts?.filter(Boolean).length !== 0 ? 'hosts' : '',
     data.remote_addrs?.filter(Boolean).length !== 0 ? 'remote_addrs' : '',
   ]);
 };

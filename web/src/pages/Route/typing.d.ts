@@ -71,8 +71,9 @@ declare namespace RouteModule {
     uri?: string;
     uris: string[];
     host?: string;
-    hosts: string[];
-    remote_addrs: string[];
+    hosts?: string[];
+    remote_addr?: string;
+    remote_addrs?: string[];
     upstream: UpstreamComponent.ResponseData;
     vars: [string, Operator, string | any[]][];
     upstream_path?: {
