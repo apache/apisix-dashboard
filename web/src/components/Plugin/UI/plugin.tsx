@@ -62,11 +62,7 @@ export const PluginForm: React.FC<Props> = ({ name, schema, renderForm, form }) 
     case 'api-breaker':
       return <ApiBreaker form={form} />;
     case 'basic-auth':
-<<<<<<< HEAD
       return <BasicAuth form={form} schema={schema} />
-=======
-      return <BasicAuth form={form} />;
->>>>>>> upstream/master
     case 'limit-count':
       return <LimitCount form={form} />;
     case 'cors':
