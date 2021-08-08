@@ -67,7 +67,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
                     />
                   </Form.Item>
                 </Col>
-                <Col span={4}>
+                <Col md={5} lg={5} xl={5} xxl={4}>
                   <Form.Item
                     style={{ marginBottom: 0 }}
                     name={[field.name, 'port']}
@@ -87,7 +87,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
                     />
                   </Form.Item>
                 </Col>
-                <Col span={5}>
+                <Col md={5} lg={5} xl={5} xxl={4}>
                   <Form.Item
                     style={{ marginBottom: 0 }}
                     name={[field.name, 'weight']}
@@ -108,7 +108,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
                     />
                   </Form.Item>
                 </Col>
-                <Col style={{ ...removeBtnStyle, marginLeft: -50 }}>
+                <Col style={{ ...removeBtnStyle }}>
                   {!readonly && (
                     <MinusCircleOutlined
                       data-cy={`upstream-node-minus-${index}`}

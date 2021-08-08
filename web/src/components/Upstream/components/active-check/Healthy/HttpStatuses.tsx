@@ -44,7 +44,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
           >
             {fields.map((field, index) => (
               <Row style={{ marginBottom: 10 }} key={index}>
-                <Col span={2}>
+                <Col md={4} lg={4} xl={4} xxl={2}>
                   <Form.Item style={{ marginBottom: 0 }} name={[field.name]}>
                     <InputNumber disabled={readonly} min={200} max={599} />
                   </Form.Item>

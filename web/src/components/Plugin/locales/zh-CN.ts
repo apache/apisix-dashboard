@@ -89,6 +89,7 @@ export default {
     '用来做请求计数的依据，当前接受的 key 有："remote_addr"(客户端IP地址), "server_addr"(服务端 IP 地址), 请求头中的"X-Forwarded-For" 或 "X-Real-IP"，"consumer_name"(consumer 的 username).',
   'component.pluginForm.limit-req.rejected_code.tooltip':
     '当请求超过阈值被拒绝时，返回的 HTTP 状态码。',
+  'component.pluginForm.limit-req.nodelay.tooltip': '开启后突发的请求不会延迟',
 
   'component.plugin.form': '表单',
   'component.plugin.format-codes.disable': '用于格式化 JSON 或 YAML 内容',
