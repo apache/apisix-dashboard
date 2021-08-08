@@ -62,7 +62,14 @@ context('Create and Delete Upstream With Custom CHash Key', () => {
     cy.get(selector.upstreamType).within(() => {
       cy.contains('CHash').click();
     });
+    cy.get('[title="Key"]').should('exist');
+    // Key is hidden when Hasn on select consumer
     cy.get(selector.varSelect).click();
+    cy.get(selector.hashPosition).within(() => {
+      cy.contains('consumer').click();
+    });
+    cy.get('[title="Key"]').should('not.exist');
+    cy.get('#hash_on').click({ force: true });
     cy.get(selector.hashPosition).within(() => {
       cy.contains('cookie').click();
     });
