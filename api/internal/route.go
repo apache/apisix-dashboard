@@ -36,6 +36,7 @@ import (
 	"github.com/apisix/manager-api/internal/handler/migrate"
 	"github.com/apisix/manager-api/internal/handler/plugin_config"
 	"github.com/apisix/manager-api/internal/handler/route"
+	"github.com/apisix/manager-api/internal/handler/route_online_debug"
 	"github.com/apisix/manager-api/internal/handler/schema"
 	"github.com/apisix/manager-api/internal/handler/server_info"
 	"github.com/apisix/manager-api/internal/handler/service"
@@ -70,6 +71,7 @@ func SetUpRouter() *gin.Engine {
 		healthz.NewHandler,
 		authentication.NewHandler,
 		global_rule.NewHandler,
+		route_online_debug.NewHandler,
 		server_info.NewHandler,
 		label.NewHandler,
 		data_loader.NewHandler,

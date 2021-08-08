@@ -35,7 +35,13 @@ import {
   Dropdown,
 } from 'antd';
 import { history, useIntl } from 'umi';
-import { PlusOutlined, ExportOutlined, ImportOutlined, DownOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined,
+  BugOutlined,
+  ExportOutlined,
+  ImportOutlined,
+  DownOutlined,
+} from '@ant-design/icons';
 import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
 import moment from 'moment';
@@ -205,6 +211,13 @@ const Page: React.FC = () => {
         onClick: () => {
           setUploadFileList([]);
           setShowImportModal(true);
+        },
+      },
+      {
+        name: formatMessage({ id: 'page.route.onlineDebug' }),
+        icon: <BugOutlined />,
+        onClick: () => {
+          setDebugDrawVisible(true);
         },
       },
     ];
