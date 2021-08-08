@@ -18,6 +18,7 @@ import React from 'react';
 import { history } from 'umi';
 import type { RequestConfig } from 'umi';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { isPlainObject } from 'lodash';
 
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
@@ -55,6 +56,17 @@ export const layout = ({ initialState }: { initialState: { settings?: LayoutSett
   };
 };
 
+/* eslint no-param-reassign: ["error", { "props": true, "ignorePropertyModificationsFor": ["obj"] }] */
+const nullValueFilter = (obj: Record<string, any>) => {
+  Object.entries(obj).forEach(([key, value]) => {
+    if (isPlainObject(value)) {
+      nullValueFilter(value);
+    } else if ([null, undefined].includes(value)) {
+      delete obj[key];
+    }
+  });
+};
+
 export const request: RequestConfig = {
   prefix: '/apisix/admin',
   errorHandler,
@@ -62,6 +74,9 @@ export const request: RequestConfig = {
   requestInterceptors: [
     (url, options) => {
       const newOptions = { ...options };
+      if (newOptions.data) {
+        nullValueFilter(newOptions.data);
+      }
       newOptions.headers = {
         ...options.headers,
         Authorization: localStorage.getItem('token') || '',

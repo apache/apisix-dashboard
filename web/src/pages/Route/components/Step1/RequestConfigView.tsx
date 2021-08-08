@@ -22,10 +22,7 @@ import { useIntl } from 'umi';
 
 import PanelSection from '@/components/PanelSection';
 
-import {
-  HTTP_METHOD_OPTION_LIST,
-  FORM_ITEM_WITHOUT_LABEL,
-} from '@/pages/Route/constants';
+import { HTTP_METHOD_OPTION_LIST, FORM_ITEM_WITHOUT_LABEL } from '@/pages/Route/constants';
 
 const removeBtnStyle = {
   marginLeft: 20,
@@ -33,10 +30,7 @@ const removeBtnStyle = {
   alignItems: 'center',
 };
 
-const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
-  form,
-  disabled,
-}) => {
+const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) => {
   const { formatMessage } = useIntl();
 
   const HostList = () => (
@@ -67,7 +61,9 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                       noStyle
                     >
                       <Input
-                        placeholder={formatMessage({ id: 'page.route.configuration.host.placeholder' })}
+                        placeholder={formatMessage({
+                          id: 'page.route.configuration.host.placeholder',
+                        })}
                         disabled={disabled}
                       />
                     </Form.Item>
@@ -112,9 +108,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
             <Form.Item
               label={formatMessage({ id: 'page.route.path' })}
               required
-              tooltip={
-                formatMessage({ id: 'page.route.form.itemExtraMessage1.path' })
-              }
+              tooltip={formatMessage({ id: 'page.route.form.itemExtraMessage1.path' })}
               style={{ marginBottom: 0 }}
             >
               {fields.map((field, index) => (
@@ -127,13 +121,17 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                         {
                           required: true,
                           whitespace: true,
-                          message: formatMessage({ id: "page.route.configuration.path.rules.required.description" }),
+                          message: formatMessage({
+                            id: 'page.route.configuration.path.rules.required.description',
+                          }),
                         },
                       ]}
                       noStyle
                     >
                       <Input
-                        placeholder={formatMessage({ id: 'page.route.configuration.path.placeholder' })}
+                        placeholder={formatMessage({
+                          id: 'page.route.configuration.path.placeholder',
+                        })}
                         disabled={disabled}
                       />
                     </Form.Item>
@@ -146,7 +144,8 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                           remove(field.name);
                         }}
                       />
-                    )}</Col>
+                    )}
+                  </Col>
                 </Row>
               ))}
             </Form.Item>
@@ -199,7 +198,9 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
                       noStyle
                     >
                       <Input
-                        placeholder={formatMessage({ id: 'page.route.configuration.remote_addrs.placeholder' })}
+                        placeholder={formatMessage({
+                          id: 'page.route.configuration.remote_addrs.placeholder',
+                        })}
                         disabled={disabled}
                       />
                     </Form.Item>
@@ -237,15 +238,10 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
   );
 
   const HTTPMethods: React.FC = () => (
-    <Form.Item
-      label={formatMessage({ id: 'page.route.form.itemLabel.httpMethod' })}
-    >
+    <Form.Item label={formatMessage({ id: 'page.route.form.itemLabel.httpMethod' })}>
       <Row>
         <Col span={10}>
-          <Form.Item
-            name="methods"
-            noStyle
-          >
+          <Form.Item name="methods" noStyle>
             <Select
               mode="multiple"
               style={{ width: '100%' }}
@@ -271,16 +267,13 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
         </Col>
       </Row>
     </Form.Item>
-  )
+  );
 
   const RoutePriority: React.FC = () => (
     <Form.Item label={formatMessage({ id: 'page.route.form.itemLabel.priority' })}>
       <Row>
         <Col span={5}>
-          <Form.Item
-            noStyle
-            name="priority"
-          >
+          <Form.Item noStyle name="priority">
             <InputNumber
               placeholder={`Please input ${formatMessage({
                 id: 'page.route.form.itemLabel.priority',
@@ -291,9 +284,7 @@ const RequestConfigView: React.FC<RouteModule.Step1PassProps> = ({
         </Col>
       </Row>
     </Form.Item>
-  )
-
-
+  );
 
   return (
     <PanelSection

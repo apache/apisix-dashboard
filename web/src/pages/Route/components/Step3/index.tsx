@@ -35,7 +35,11 @@ type Props = {
     };
     plugin_config_id?: string;
   };
-  onChange: (data: { plugins: PluginComponent.Data; script: any, plugin_config_id?: string; }) => void;
+  onChange: (data: {
+    plugins: PluginComponent.Data;
+    script: any;
+    plugin_config_id?: string;
+  }) => void;
   readonly?: boolean;
   isForceHttps?: boolean;
   isProxyEnable?: boolean;
@@ -43,7 +47,13 @@ type Props = {
 
 type Mode = 'NORMAL' | 'DRAW';
 
-const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps = false, isProxyEnable = false }) => {
+const Page: React.FC<Props> = ({
+  data,
+  onChange,
+  readonly = false,
+  isForceHttps = false,
+  isProxyEnable = false,
+}) => {
   const { formatMessage } = useIntl();
   const { plugins = {}, script = DEFAULT_PLUGIN_FLOW_DATA, plugin_config_id = '' } = data;
 
@@ -51,7 +61,9 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
   const useSupportBrowser = isChrome || isEdgeChromium || isChromium;
   const disableDraw = !useSupportBrowser || isForceHttps || isProxyEnable;
 
-  const [mode, setMode] = useState<Mode>(Object.keys(script.chart?.cells || {}).length === 0 || disableDraw ? 'NORMAL' : 'DRAW');
+  const [mode, setMode] = useState<Mode>(
+    Object.keys(script.chart?.cells || {}).length === 0 || disableDraw ? 'NORMAL' : 'DRAW',
+  );
 
   return (
     <>
@@ -61,7 +73,7 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
           onChange={(e) => {
             if (e.target.value === 'NORMAL') {
               // NOTE: current is DRAW
-              onChange({ ...data, script: { chart: FlowGraph.graph.toJSON() } })
+              onChange({ ...data, script: { chart: FlowGraph.graph.toJSON() } });
             }
 
             setMode(e.target.value);
@@ -83,13 +95,19 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
                 // NOTE: forceHttps do not support DRAW mode
                 const titleArr: string[] = [];
                 if (!useSupportBrowser) {
-                  titleArr.push(formatMessage({ id: 'page.route.tooltip.pluginOrchOnlySupportChrome' }));
+                  titleArr.push(
+                    formatMessage({ id: 'page.route.tooltip.pluginOrchOnlySupportChrome' }),
+                  );
                 }
                 if (isForceHttps) {
-                  titleArr.push(formatMessage({ id: 'page.route.tooltip.pluginOrchWithoutRedirect' }));
+                  titleArr.push(
+                    formatMessage({ id: 'page.route.tooltip.pluginOrchWithoutRedirect' }),
+                  );
                 }
                 if (isProxyEnable) {
-                  titleArr.push(formatMessage({ id: 'page.route.tooltip.pluginOrchWithoutProxyRewrite' }));
+                  titleArr.push(
+                    formatMessage({ id: 'page.route.tooltip.pluginOrchWithoutProxyRewrite' }),
+                  );
                 }
                 return titleArr.map((item, index) => `${index + 1}.${item}`).join('');
               }}
@@ -108,11 +126,11 @@ const Page: React.FC<Props> = ({ data, onChange, readonly = false, isForceHttps 
           referPage="route"
           showSelector
           onChange={(pluginsData, id) => {
-            onChange({ ...data, plugins: pluginsData, plugin_config_id: id })
+            onChange({ ...data, plugins: pluginsData, plugin_config_id: id });
           }}
         />
       )}
-      {Boolean(mode === 'DRAW') && (<PluginFlow chart={script.chart as any} />)}
+      {Boolean(mode === 'DRAW') && <PluginFlow chart={script.chart as any} />}
     </>
   );
 };

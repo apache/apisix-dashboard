@@ -59,10 +59,10 @@ func httpRequest(method, url string, headers map[string]string, reqBody string) 
 	}
 	req, err := http.NewRequest(method, url, requestBody)
 
-	req.Close = true
 	if err != nil {
 		return nil, 0, err
 	}
+	req.Close = true
 
 	// set header
 	for key, val := range headers {

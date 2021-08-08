@@ -16,11 +16,12 @@
  */
 import React from 'react';
 import type { FormInstance } from 'antd/es/form';
-import { Form, InputNumber, Select } from 'antd';
+import { Form, InputNumber, Select, Switch } from 'antd';
 import { useIntl } from 'umi';
 
 type Props = {
   form: FormInstance;
+  schema: Record<string, any> | undefined;
   ref?: any;
 };
 
@@ -29,67 +30,86 @@ export const FORM_ITEM_LAYOUT = {
     span: 4,
   },
   wrapperCol: {
-    span: 8
+    span: 8,
   },
 };
 
-const LimitReq: React.FC<Props> = ({ form }) => {
+const LimitReq: React.FC<Props> = ({ form, schema }) => {
   const { formatMessage } = useIntl();
+  const propertires = schema?.properties;
   return (
-    <Form
-      form={form}
-      {...FORM_ITEM_LAYOUT}
-    >
+    <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
         label="rate"
         name="rate"
-        rules={[{
-          required: true,
-          message: `${formatMessage({ id: 'component.global.pleaseEnter' })} rate`
-        }]}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} rate`,
+          },
+        ]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.rate.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
-        <InputNumber min={1} required />
+        <InputNumber min={propertires.rate.exclusiveMinimum} required />
       </Form.Item>
       <Form.Item
         label="burst"
         name="burst"
-        rules={[{
-          required: true,
-          message: `${formatMessage({ id: 'component.global.pleaseEnter' })} burst`
-        }]}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} burst`,
+          },
+        ]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.burst.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
-        <InputNumber min={0} required />
+        <InputNumber min={propertires.burst.minimum} required />
       </Form.Item>
       <Form.Item
         label="key"
         name="key"
-        rules={[{
-          required: true,
-          message: `${formatMessage({ id: 'component.global.pleaseChoose' })} key`
-        }]}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseChoose' })} key`,
+          },
+        ]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.key.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <Select>
-          {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name"].map(item => {
-            return <Select.Option value={item} key={item}>{item}</Select.Option>
+          {propertires.key.enum.map((item: string) => {
+            return (
+              <Select.Option value={item} key={item}>
+                {item}
+              </Select.Option>
+            );
           })}
         </Select>
       </Form.Item>
       <Form.Item
         label="rejected_code"
         name="rejected_code"
-        initialValue={503}
+        initialValue={propertires.rejected_code.default}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-req.rejected_code.tooltip' })}
       >
-        <InputNumber min={200} max={599} />
+        <InputNumber
+          min={propertires.rejected_code.minimum}
+          max={propertires.rejected_code.maximum}
+        />
+      </Form.Item>
+      <Form.Item
+        label="nodelay"
+        name="nodelay"
+        valuePropName="checked"
+        tooltip={formatMessage({ id: 'component.pluginForm.limit-req.nodelay.tooltip' })}
+      >
+        <Switch defaultChecked={false} />
       </Form.Item>
     </Form>
   );
-}
+};
 
 export default LimitReq;

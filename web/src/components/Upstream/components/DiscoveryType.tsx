@@ -14,21 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, Input } from 'antd'
-import { useIntl } from 'umi'
+import React from 'react';
+import { Form, Input } from 'antd';
+import { useIntl } from 'umi';
 
 type Props = {
   readonly?: boolean;
-}
+};
 
 const DiscoveryType: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
   return (
-    <Form.Item name="discovery_type" label={formatMessage({ id: 'component.upstream.fields.discovery_type' })} tooltip={formatMessage({ id: 'component.upstream.fields.discovery_type.tooltip' })}>
-      <Input disabled={readonly} placeholder={formatMessage({ id: 'component.upstream.fields.discovery_type.placeholder' })} />
+    <Form.Item
+      name="discovery_type"
+      label={formatMessage({ id: 'component.upstream.fields.discovery_type' })}
+      tooltip={formatMessage({ id: 'component.upstream.fields.discovery_type.tooltip' })}
+    >
+      <Input
+        disabled={readonly}
+        placeholder={formatMessage({ id: 'component.upstream.fields.discovery_type.placeholder' })}
+      />
     </Form.Item>
-  )
-}
+  );
+};
 
-export default DiscoveryType
+export default DiscoveryType;

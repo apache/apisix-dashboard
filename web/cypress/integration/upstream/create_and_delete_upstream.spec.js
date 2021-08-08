@@ -17,32 +17,31 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Upstream', () => {
-
   const selector = {
-    "name": "#name",
-    "nodes_0_host": "#nodes_0_host",
-    "nodes_0_port": "#nodes_0_port",
-    "nodes_0_weight": "#nodes_0_weight",
-    "input": ":input",
-    "notification": ".ant-notification-notice-message",
-    "nameSelector": "[title=Name]",
-    "upstreamType": ".ant-select-item-option-content",
-    "drawer": ".ant-drawer-content",
-    "monacoScroll": ".monaco-scrollable-element",
-    "description": "#desc",
-  }
+    name: '#name',
+    nodes_0_host: '#nodes_0_host',
+    nodes_0_port: '#nodes_0_port',
+    nodes_0_weight: '#nodes_0_weight',
+    input: ':input',
+    notification: '.ant-notification-notice-message',
+    nameSelector: '[title=Name]',
+    upstreamType: '.ant-select-item-option-content',
+    drawer: '.ant-drawer-content',
+    monacoScroll: '.monaco-scrollable-element',
+    description: '#desc',
+  };
 
   const data = {
-    "upstreamName": "test_upstream",
-    "description": "desc_by_autotest",
-    "ip1": "127.0.0.1",
-    "createUpstreamSuccess": "Create Upstream Successfully",
-    "deleteUpstreamSuccess": "Delete Upstream Successfully",
-    "port0": "7000",
-    "weight0": "2",
-    "port1": "7001",
-    "weight1": "2"
-  }
+    upstreamName: 'test_upstream',
+    description: 'desc_by_autotest',
+    ip1: '127.0.0.1',
+    createUpstreamSuccess: 'Create Upstream Successfully',
+    deleteUpstreamSuccess: 'Delete Upstream Successfully',
+    port0: '7000',
+    weight0: '2',
+    port1: '7001',
+    weight1: '2',
+  };
 
   beforeEach(() => {
     cy.login();
@@ -59,6 +58,8 @@ context('Create and Delete Upstream', () => {
     cy.get(selector.nodes_0_host).type(data.ip1);
     cy.get(selector.nodes_0_port).clear().type('7000');
     cy.get(selector.nodes_0_weight).clear().type(1);
+    cy.get('#custom_checks_active').click();
+    cy.get('#checks_active_port').clear();
     cy.contains('Next').click();
     cy.get(selector.input).should('be.disabled');
     cy.contains('Submit').click();
@@ -77,7 +78,7 @@ context('Create and Delete Upstream', () => {
     cy.get('.ant-drawer-content').should('be.visible');
 
     cy.get(selector.monacoScroll).within(() => {
-      cy.contains('nodes').should("exist");
+      cy.contains('nodes').should('exist');
       cy.contains('roundrobin').should('exist');
       cy.contains(data.upstreamName).should('exist');
     });
@@ -141,7 +142,7 @@ context('Create and Delete Upstream', () => {
     cy.get(selector.drawer).should('be.visible');
 
     cy.get(selector.monacoScroll).within(() => {
-      cy.contains('nodes').should("exist");
+      cy.contains('nodes').should('exist');
       cy.contains('chash').should('exist');
       cy.contains(data.upstreamName).should('exist');
     });

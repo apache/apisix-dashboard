@@ -21,8 +21,8 @@ import type { FormInstance } from 'antd/es/form';
 
 import PanelSection from '@/components/PanelSection';
 import PassiveCheck from './components/passive-check';
-import ActiveCheck from './components/active-check'
-import Nodes from './components/Nodes'
+import ActiveCheck from './components/active-check';
+import Nodes from './components/Nodes';
 import Scheme from './components/Scheme';
 import Timeout from './components/Timeout';
 import Type from './components/Type';
@@ -45,16 +45,26 @@ type Props = {
   // FIXME: use proper typing
   ref?: any;
   required?: boolean;
-  neverReadonly?: boolean
+  neverReadonly?: boolean;
 };
 
 /**
  * UpstreamForm is used to reuse Upstream Form UI,
  * before using this component, we need to execute the following command:
  * form.setFieldsValue(convertToFormData(VALUE_FROM_API))
-*/
+ */
 const UpstreamForm: React.FC<Props> = forwardRef(
-  ({ form, disabled = false, list = [], showSelector = false, required = true, neverReadonly = false }, ref) => {
+  (
+    {
+      form,
+      disabled = false,
+      list = [],
+      showSelector = false,
+      required = true,
+      neverReadonly = false,
+    },
+    ref,
+  ) => {
     const { formatMessage } = useIntl();
     const [readonly, setReadonly] = useState(false);
     const [hiddenForm, setHiddenForm] = useState(false);
@@ -63,17 +73,17 @@ const UpstreamForm: React.FC<Props> = forwardRef(
       {
         label: formatMessage({ id: 'page.upstream.step.connect.timeout' }),
         name: ['timeout', 'connect'],
-        desc: formatMessage({ id: 'page.upstream.step.connect.timeout.desc' })
+        desc: formatMessage({ id: 'page.upstream.step.connect.timeout.desc' }),
       },
       {
         label: formatMessage({ id: 'page.upstream.step.send.timeout' }),
         name: ['timeout', 'send'],
-        desc: formatMessage({ id: 'page.upstream.step.send.timeout.desc' })
+        desc: formatMessage({ id: 'page.upstream.step.send.timeout.desc' }),
       },
       {
         label: formatMessage({ id: 'page.upstream.step.read.timeout' }),
         name: ['timeout', 'read'],
-        desc: formatMessage({ id: 'page.upstream.step.read.timeout.desc' })
+        desc: formatMessage({ id: 'page.upstream.step.read.timeout.desc' }),
       },
     ];
 
@@ -84,64 +94,69 @@ const UpstreamForm: React.FC<Props> = forwardRef(
     const resetForm = (upstream_id: string) => {
       if (upstream_id === undefined) {
         setReadonly(disabled);
-        return
+        return;
       }
 
       if (!neverReadonly) {
-        setReadonly(!["Custom", "None"].includes(upstream_id) || disabled);
+        setReadonly(!['Custom', 'None'].includes(upstream_id) || disabled);
       }
 
       /**
        * upstream_id === None <==> required === false
        * No need to bind Upstream object.
        * When creating Route and binds with a Service, no need to configure Upstream in Route.
-      */
+       */
       if (upstream_id === 'None') {
         setHiddenForm(true);
-        form.resetFields()
-        form.setFieldsValue({ upstream_id: 'None' })
-        return
+        form.resetFields();
+        form.setFieldsValue({ upstream_id: 'None' });
+        return;
       }
 
-      setHiddenForm(false)
+      setHiddenForm(false);
 
       // NOTE: Use Ant Design's form object to set data automatically
-      if (upstream_id === "Custom") {
-        return
+      if (upstream_id === 'Custom') {
+        return;
       }
 
       // NOTE: Set data from Upstream List (Upstream Selector)
       if (list.length === 0) {
-        return
+        return;
       }
-      form.resetFields()
-      const targetData = list.find((item) => item.id === upstream_id) as UpstreamComponent.ResponseData
+      form.resetFields();
+      const targetData = list.find(
+        (item) => item.id === upstream_id,
+      ) as UpstreamComponent.ResponseData;
       if (targetData) {
         form.setFieldsValue(targetData);
       }
-    }
+    };
 
     /**
      * upstream_id
      * - None: No need to bind Upstream to a resource (e.g Service).
      * - Custom: Users could input values on UpstreamForm
      * - Upstream ID from API
-    */
+     */
     useEffect(() => {
       const upstream_id = form.getFieldValue('upstream_id');
-      resetForm(upstream_id)
+      resetForm(upstream_id);
     }, [form.getFieldValue('upstream_id'), list]);
 
     const ActiveHealthCheck = () => (
       <React.Fragment>
         <ActiveCheck.Type readonly={readonly} />
-        <Form.Item noStyle shouldUpdate={(prev, next) => prev.checks.active.type !== next.checks.active.type}>
+        <Form.Item
+          noStyle
+          shouldUpdate={(prev, next) => prev.checks.active.type !== next.checks.active.type}
+        >
           {() => {
-            const type = form.getFieldValue(['checks', 'active', 'type'])
+            const type = form.getFieldValue(['checks', 'active', 'type']);
             if (['https'].includes(type)) {
-              return <ActiveCheck.HttpsVerifyCertificate readonly={readonly} />
+              return <ActiveCheck.HttpsVerifyCertificate readonly={readonly} />;
             }
-            return null
+            return null;
           }}
         </Form.Item>
         <ActiveCheck.Timeout readonly={readonly} />
@@ -198,58 +213,65 @@ const UpstreamForm: React.FC<Props> = forwardRef(
         <PanelSection
           title={formatMessage({ id: 'page.upstream.step.healthyCheck.healthy.check' })}
         >
-          <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active' })} name={['custom', 'checks', 'active']} valuePropName="checked">
+          <Form.Item
+            label={formatMessage({ id: 'page.upstream.step.healthyCheck.active' })}
+            name={['custom', 'checks', 'active']}
+            valuePropName="checked"
+          >
             <Switch disabled={readonly} />
           </Form.Item>
           <Form.Item shouldUpdate noStyle>
-            {
-              () => {
-                const active = form.getFieldValue(['custom', 'checks', 'active'])
-                if (active) {
-                  return (
-                    <ActiveHealthCheck />
-                  )
-                }
-                return null
+            {() => {
+              const active = form.getFieldValue(['custom', 'checks', 'active']);
+              if (active) {
+                return <ActiveHealthCheck />;
               }
-            }
+              return null;
+            }}
           </Form.Item>
           <Divider orientation="left" plain />
-          <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive' })} name={['custom', 'checks', 'passive']} valuePropName="checked" tooltip={formatMessage({ id: 'component.upstream.other.health-check.passive-only' })}>
+          <Form.Item
+            label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive' })}
+            name={['custom', 'checks', 'passive']}
+            valuePropName="checked"
+            tooltip={formatMessage({ id: 'component.upstream.other.health-check.passive-only' })}
+          >
             <Switch disabled={readonly} />
           </Form.Item>
-          <Form.Item shouldUpdate={(prev, next) => prev.custom?.checks?.passive !== next.custom?.checks?.passive} noStyle>
-            {
-              () => {
-                const passive = form.getFieldValue(['custom', 'checks', 'passive'])
-                const active = form.getFieldValue(['custom', 'checks', 'active'])
-                if (passive) {
-                  /*
-                  * When enable passive check, we should enable active check, too.
-                  * When we use form.setFieldsValue to enable active check, error throws.
-                  * We choose to alert users first, and need users to enable active check manually.
-                  */
-                  if (!active) {
-                    notification.warn({
-                      message: formatMessage({ id: 'component.upstream.other.health-check.invalid' }),
-                      description: formatMessage({ id: 'component.upstream.other.health-check.passive-only' })
-                    })
-                  }
-                  return <PassiveHealthCheck />
-                }
-                return null
-              }
+          <Form.Item
+            shouldUpdate={(prev, next) =>
+              prev.custom?.checks?.passive !== next.custom?.checks?.passive
             }
+            noStyle
+          >
+            {() => {
+              const passive = form.getFieldValue(['custom', 'checks', 'passive']);
+              const active = form.getFieldValue(['custom', 'checks', 'active']);
+              if (passive) {
+                /*
+                 * When enable passive check, we should enable active check, too.
+                 * When we use form.setFieldsValue to enable active check, error throws.
+                 * We choose to alert users first, and need users to enable active check manually.
+                 */
+                if (!active) {
+                  notification.warn({
+                    message: formatMessage({ id: 'component.upstream.other.health-check.invalid' }),
+                    description: formatMessage({
+                      id: 'component.upstream.other.health-check.passive-only',
+                    }),
+                  });
+                }
+                return <PassiveHealthCheck />;
+              }
+              return null;
+            }}
           </Form.Item>
         </PanelSection>
-      )
-    }
+      );
+    };
 
     return (
-      <Form
-        form={form}
-        labelCol={{ span: 3 }}
-      >
+      <Form form={form} labelCol={{ span: 3 }}>
         {showSelector && (
           <UpstreamSelector
             list={list}
@@ -271,15 +293,13 @@ const UpstreamForm: React.FC<Props> = forwardRef(
 
             <Scheme readonly={readonly} />
             <Form.Item noStyle shouldUpdate={(prev, next) => prev.scheme !== next.scheme}>
-              {
-                () => {
-                  const scheme = form.getFieldValue("scheme") as string
-                  if (["https", "grpcs"].includes(scheme)) {
-                    return <TLSComponent form={form} readonly={readonly} />
-                  }
-                  return null
+              {() => {
+                const scheme = form.getFieldValue('scheme') as string;
+                if (['https', 'grpcs'].includes(scheme)) {
+                  return <TLSComponent form={form} readonly={readonly} />;
                 }
-              }
+                return null;
+              }}
             </Form.Item>
 
             {timeoutFields.map((item, index) => (

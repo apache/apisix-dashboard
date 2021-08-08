@@ -73,5 +73,5 @@ export default {
   'menu.setting': 'Settings',
   'menu.serverinfo': 'System Info',
   'menu.advanced-feature': 'Advanced',
-  'menu.more': 'More'
+  'menu.more': 'More',
 };
