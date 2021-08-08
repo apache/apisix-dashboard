@@ -21,7 +21,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Popconfirm, Button, notification, Space } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
-import querystring from 'query-string'
+import querystring from 'query-string';
 import { omit } from 'lodash';
 
 import { DELETE_FIELDS } from '@/constants';
@@ -40,7 +40,6 @@ const Page: React.FC = () => {
   const [paginationConfig, setPaginationConfig] = useState({ pageSize: 10, current: 1 });
 
   const { formatMessage } = useIntl();
-
 
   const savePageList = (page = 1, pageSize = 10) => {
     history.replace(`/upstream/list?page=${page}&pageSize=${pageSize}`);
@@ -78,18 +77,18 @@ const Page: React.FC = () => {
       hideInSearch: true,
       render: (_, record) => (
         <Space align="baseline">
-          <Button
-            type="primary"
-            onClick={() => history.push(`/upstream/${record.id}/edit`)}
-          >
+          <Button type="primary" onClick={() => history.push(`/upstream/${record.id}/edit`)}>
             {formatMessage({ id: 'page.upstream.list.edit' })}
           </Button>
-          <Button type="primary" onClick={() => {
-            setId(record.id);
-            setRawData(omit(record, DELETE_FIELDS));
-            setVisible(true);
-            setEditorMode('update');
-          }}>
+          <Button
+            type="primary"
+            onClick={() => {
+              setId(record.id);
+              setRawData(omit(record, DELETE_FIELDS));
+              setVisible(true);
+              setEditorMode('update');
+            }}
+          >
             {formatMessage({ id: 'component.global.view' })}
           </Button>
           <Popconfirm
@@ -116,7 +115,10 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageContainer title={formatMessage({ id: 'page.upstream.list' })} content={formatMessage({ id: "page.upstream.list.content" })}>
+    <PageContainer
+      title={formatMessage({ id: 'page.upstream.list' })}
+      content={formatMessage({ id: 'page.upstream.list.content' })}
+    >
       <ProTable<UpstreamModule.ResponseBody>
         actionRef={ref}
         columns={columns}
@@ -136,27 +138,31 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
-          <Button type="default" onClick={() => {
-            setVisible(true);
-            setEditorMode('create');
-            setRawData({});
-          }}>
+          <Button
+            type="default"
+            onClick={() => {
+              setVisible(true);
+              setEditorMode('create');
+              setRawData({});
+            }}
+          >
             {formatMessage({ id: 'component.global.data.editor' })}
           </Button>,
         ]}
       />
       <RawDataEditor
         visible={visible}
-        type='upstream'
+        type="upstream"
         readonly={false}
         data={rawData}
-        onClose={() => { setVisible(false) }}
+        onClose={() => {
+          setVisible(false);
+        }}
         onSubmit={(data: any) => {
-          (editorMode === 'create' ? create(data) : update(id, data))
-            .then(() => {
-              setVisible(false);
-              ref.current?.reload();
-            })
+          (editorMode === 'create' ? create(data) : update(id, data)).then(() => {
+            setVisible(false);
+            ref.current?.reload();
+          });
         }}
       />
     </PageContainer>

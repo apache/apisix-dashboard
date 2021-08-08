@@ -318,7 +318,7 @@ This release mainly refactors the dashboard.
 - Added `Manager API` support to process logics between APISIX and Dashboard.
 - Added Metrics/Route/SSL/Upstream/Consumer module.
 
-## 1.0.0
+# 1.0.0
 
 This release is mainly to build some basic panels and resolve License issue.
 

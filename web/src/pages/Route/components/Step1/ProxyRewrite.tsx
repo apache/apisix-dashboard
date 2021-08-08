@@ -26,7 +26,7 @@ import {
   FORM_ITEM_WITHOUT_LABEL,
   SCHEME_REWRITE,
   URI_REWRITE_TYPE,
-  HOST_REWRITE_TYPE
+  HOST_REWRITE_TYPE,
 } from '@/pages/Route/constants';
 
 const removeBtnStyle = {
@@ -38,7 +38,7 @@ const removeBtnStyle = {
 /**
  * https://apisix.apache.org/docs/apisix/plugins/proxy-rewrite
  * UI for ProxyRewrite plugin
-*/
+ */
 const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) => {
   const { formatMessage } = useIntl();
 
@@ -68,10 +68,7 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
         );
       case URI_REWRITE_TYPE.REGEXP:
         return (
-          <Form.List
-            name={['proxyRewrite', 'regex_uri']}
-            initialValue={['', '']}
-          >
+          <Form.List name={['proxyRewrite', 'regex_uri']} initialValue={['', '']}>
             {(fields) =>
               fields.map((field, index) => {
                 switch (index) {
@@ -168,15 +165,17 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
     const options = [
       {
         value: SCHEME_REWRITE.KEEP,
-        label: formatMessage({ id: 'page.route.radio.staySame' })
-      }, {
+        label: formatMessage({ id: 'page.route.radio.staySame' }),
+      },
+      {
         value: SCHEME_REWRITE.HTTP,
-        label: (SCHEME_REWRITE.HTTP).toLocaleUpperCase()
-      }, {
+        label: SCHEME_REWRITE.HTTP.toLocaleUpperCase(),
+      },
+      {
         value: SCHEME_REWRITE.HTTPS,
-        label: (SCHEME_REWRITE.HTTPS).toLocaleUpperCase()
-      }
-    ]
+        label: SCHEME_REWRITE.HTTPS.toLocaleUpperCase(),
+      },
+    ];
 
     return (
       <Form.Item
@@ -184,108 +183,105 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
         name={['proxyRewrite', 'scheme']}
       >
         <Radio.Group disabled={disabled}>
-          {
-            options.map(item => (
-              <Radio value={item.value} key={item.value}>{item.label}</Radio>
-            ))
-          }
+          {options.map((item) => (
+            <Radio value={item.value} key={item.value}>
+              {item.label}
+            </Radio>
+          ))}
         </Radio.Group>
       </Form.Item>
-    )
-  }
+    );
+  };
 
   const URIRewriteType: React.FC = () => {
     const options = [
       {
         value: URI_REWRITE_TYPE.KEEP,
-        label: formatMessage({ id: 'page.route.radio.staySame' })
-      }, {
+        label: formatMessage({ id: 'page.route.radio.staySame' }),
+      },
+      {
         value: URI_REWRITE_TYPE.STATIC,
         label: formatMessage({ id: 'page.route.radio.static' }),
-        dataCypress: 'uri-static'
-      }, {
+        dataCypress: 'uri-static',
+      },
+      {
         value: URI_REWRITE_TYPE.REGEXP,
-        label: formatMessage({ id: 'page.route.radio.regex' })
-      }
-    ]
+        label: formatMessage({ id: 'page.route.radio.regex' }),
+      },
+    ];
 
     return (
       <React.Fragment>
         <Form.Item
           label={formatMessage({ id: 'page.route.form.itemLabel.URIRewriteType' })}
-          name='URIRewriteType'
+          name="URIRewriteType"
         >
-          <Radio.Group
-            disabled={disabled}
-          >
-            {
-              options.map(item => (
-                <Radio data-cy={item.dataCypress} value={item.value} key={item.value}>
-                  {item.label}
-                </Radio>
-              ))
-            }
+          <Radio.Group disabled={disabled}>
+            {options.map((item) => (
+              <Radio data-cy={item.dataCypress} value={item.value} key={item.value}>
+                {item.label}
+              </Radio>
+            ))}
           </Radio.Group>
         </Form.Item>
-        <Form.Item shouldUpdate={
-          (prevValues, curValues) => prevValues.URIRewriteType !== curValues.URIRewriteType} noStyle>
-          {
-            () => {
-              return getUriRewriteItems()
-            }
+        <Form.Item
+          shouldUpdate={(prevValues, curValues) =>
+            prevValues.URIRewriteType !== curValues.URIRewriteType
           }
+          noStyle
+        >
+          {() => {
+            return getUriRewriteItems();
+          }}
         </Form.Item>
       </React.Fragment>
-    )
-  }
+    );
+  };
 
   const HostRewriteType: React.FC = () => {
     const options = [
       {
         label: formatMessage({ id: 'page.route.radio.staySame' }),
         value: HOST_REWRITE_TYPE.KEEP,
-        dataCypress: "host-keep"
-      }, {
+        dataCypress: 'host-keep',
+      },
+      {
         label: formatMessage({ id: 'page.route.radio.static' }),
         value: HOST_REWRITE_TYPE.REWRITE,
-        dataCypress: "host-static"
-      }
-    ]
+        dataCypress: 'host-static',
+      },
+    ];
     return (
       <React.Fragment>
         <Form.Item
           label={formatMessage({ id: 'page.route.form.itemLabel.hostRewriteType' })}
-          name='hostRewriteType'
+          name="hostRewriteType"
         >
-          <Radio.Group
-            disabled={disabled}
-          >
-            {
-              options.map(item => (
-                <Radio data-cy={item.dataCypress} value={item.value} key={item.value}>
-                  {item.label}
-                </Radio>
-              ))
-            }
+          <Radio.Group disabled={disabled}>
+            {options.map((item) => (
+              <Radio data-cy={item.dataCypress} value={item.value} key={item.value}>
+                {item.label}
+              </Radio>
+            ))}
           </Radio.Group>
         </Form.Item>
-        <Form.Item shouldUpdate={(prevValues, curValues) => prevValues.hostRewriteType !== curValues.hostRewriteType} noStyle>
-          {
-            () => {
-              return getHostRewriteItems();
-            }
+        <Form.Item
+          shouldUpdate={(prevValues, curValues) =>
+            prevValues.hostRewriteType !== curValues.hostRewriteType
           }
+          noStyle
+        >
+          {() => {
+            return getHostRewriteItems();
+          }}
         </Form.Item>
       </React.Fragment>
-    )
-  }
+    );
+  };
 
   const Headers: React.FC = () => {
     return (
-      <Form.List
-        name={['proxyRewrite', 'kvHeaders']}
-        initialValue={[{}]}
-      >
+      <Form.List name={['proxyRewrite', 'kvHeaders']} initialValue={[{}]}>
         {(fields, { add, remove }) => (
           <>
             <Form.Item
@@ -334,15 +330,21 @@ const ProxyRewrite: React.FC<RouteModule.Step1PassProps> = ({ form, disabled }) 
               ))}
             </Form.Item>
             <Form.Item {...FORM_ITEM_WITHOUT_LABEL}>
-              <Button data-cy='create-new-rewrite-header' type="dashed" disabled={disabled} onClick={() => add()} icon={<PlusOutlined />}>
+              <Button
+                data-cy="create-new-rewrite-header"
+                type="dashed"
+                disabled={disabled}
+                onClick={() => add()}
+                icon={<PlusOutlined />}
+              >
                 {formatMessage({ id: 'component.global.add' })}
               </Button>
             </Form.Item>
           </>
         )}
       </Form.List>
-    )
-  }
+    );
+  };
 
   return (
     <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.requestOverride' })}>

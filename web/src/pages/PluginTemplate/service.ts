@@ -32,9 +32,9 @@ export const fetchList = ({ current = 1, pageSize = 10, ...res }) => {
     return {
       data: data.rows,
       total: data.total_size,
-    }
+    };
   });
-}
+};
 
 export const remove = (rid: string) => request(`/plugin_configs/${rid}`, { method: 'DELETE' });
 
@@ -54,6 +54,4 @@ export const update = (id: string, data: PluginTemplateModule.Entity) =>
   });
 
 export const fetchLabelList = () =>
-  request('/labels/plugin_config').then(
-    ({ data }) => transformLabelList(data.rows) as LabelList,
-  );
+  request('/labels/plugin_config').then(({ data }) => transformLabelList(data.rows) as LabelList);

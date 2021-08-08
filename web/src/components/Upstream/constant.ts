@@ -16,16 +16,15 @@
  */
 
 export const removeBtnStyle = {
-  marginLeft: 20,
   display: 'flex',
   alignItems: 'center',
 };
 
 export enum AlgorithmEnum {
-  chash = "chash",
-  roundrobin = "roundrobin",
-  ewma = "ewma",
-  least_conn = "least_conn"
+  chash = 'chash',
+  roundrobin = 'roundrobin',
+  ewma = 'ewma',
+  least_conn = 'least_conn',
 }
 
 export enum HashOnEnum {
@@ -33,7 +32,7 @@ export enum HashOnEnum {
   header = 'header',
   cookie = 'cookie',
   consumer = 'consumer',
-  vars_combinations = 'vars_combinations'
+  vars_combinations = 'vars_combinations',
 }
 
 export enum CommonHashKeyEnum {
@@ -50,14 +49,14 @@ export enum CommonHashKeyEnum {
 }
 
 export enum SchemeEnum {
-  grpc = "grpc",
-  grpcs = "grpcs",
-  http = "http",
-  https = "https"
+  grpc = 'grpc',
+  grpcs = 'grpcs',
+  http = 'http',
+  https = 'https',
 }
 
 export enum PassHostEnum {
-  pass = "pass",
-  node = "node",
-  rewrite = "rewrite"
+  pass = 'pass',
+  node = 'node',
+  rewrite = 'rewrite',
 }

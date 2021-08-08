@@ -30,13 +30,14 @@ const FORM_ITEM_LAYOUT = {
     span: 5,
   },
   wrapperCol: {
-    span: 18
+    span: 18,
   },
 };
 
 const FORM_ITEM_WITHOUT_LABEL = {
   wrapperCol: {
-    span: 10, offset: 5
+    span: 10,
+    offset: 5,
   },
 };
 
@@ -62,9 +63,13 @@ const RefererRestriction: React.FC<Props> = ({ form, schema }) => {
           return (
             <div>
               <Form.Item
-                extra={formatMessage({ id: 'component.pluginForm.referer-restriction.whitelist.tooltip' })}
-                label='whitelist'
-                tooltip={formatMessage({ id: 'component.pluginForm.referer-restriction.whitelist.tooltip' })}
+                extra={formatMessage({
+                  id: 'component.pluginForm.referer-restriction.whitelist.tooltip',
+                })}
+                label="whitelist"
+                tooltip={formatMessage({
+                  id: 'component.pluginForm.referer-restriction.whitelist.tooltip',
+                })}
                 required
                 style={{ marginBottom: 0 }}
               >
@@ -117,16 +122,20 @@ const RefererRestriction: React.FC<Props> = ({ form, schema }) => {
         }}
       </Form.List>
       <Form.Item
-        extra={formatMessage({ id: 'component.pluginForm.referer-restriction.bypass_missing.tooltip' })}
+        extra={formatMessage({
+          id: 'component.pluginForm.referer-restriction.bypass_missing.tooltip',
+        })}
         label="bypass_missing"
         name="bypass_missing"
-        tooltip={formatMessage({ id: 'component.pluginForm.referer-restriction.bypass_missing.tooltip' })}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.referer-restriction.bypass_missing.tooltip',
+        })}
         valuePropName="checked"
       >
         <Switch defaultChecked={properties.bypass_missing.default} />
       </Form.Item>
-    </Form >
+    </Form>
   );
-}
+};
 
 export default RefererRestriction;
