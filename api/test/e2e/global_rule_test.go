@@ -329,6 +329,7 @@ func TestGlobalRule_with_createtime_updatetime(t *testing.T) {
 	// get the global_rule, save createtime and updatetime
 	request, _ := http.NewRequest("GET", basepath, nil)
 	request.Header.Add("Authorization", token)
+	request.Close = true
 	resp, err := http.DefaultClient.Do(request)
 	request.Close = true
 	assert.Nil(t, err)
