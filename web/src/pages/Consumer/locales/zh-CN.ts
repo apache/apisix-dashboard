@@ -23,7 +23,8 @@ export default {
   'page.consumer.username.required': '请输入消费者名称',
   'page.consumer.updateTime': '更新时间',
   'page.consumer.list': '消费者列表',
-  'page.consumer.description': '消费者是路由的消费方，形式包括开发者、最终用户、API 调用等。创建消费者时，需绑定至少一个认证类插件。',
+  'page.consumer.description':
+    '消费者是路由的消费方，形式包括开发者、最终用户、API 调用等。创建消费者时，需绑定至少一个认证类插件。',
   'page.consumer.create': '创建消费者',
   'page.consumer.configure': '配置消费者',
 };

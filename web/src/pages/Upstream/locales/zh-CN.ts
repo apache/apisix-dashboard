@@ -94,15 +94,21 @@ export default {
   'page.upstream.type.ewma': '指数加权移动平均法（EWMA）',
   'page.upstream.type.least_conn': '最小连接数（least_conn）',
 
-  'page.upstream.list.content': '上游列表包含了已创建的上游服务（即后端服务），可以对上游服务的多个目标节点进行负载均衡和健康检查。',
+  'page.upstream.list.content':
+    '上游列表包含了已创建的上游服务（即后端服务），可以对上游服务的多个目标节点进行负载均衡和健康检查。',
 
   'page.upstream.checks.active.timeout.description': '主动健康检查的套接字的超时时间',
-  'page.upstream.checks.active.unhealthy.interval.description': '对不健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对不健康节点不进行主动健康检查。',
-  'page.upstream.checks.passive.healthy.http_statuses.description': '当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表健康状态是由代理流量产生的。',
-  'page.upstream.checks.passive.unhealthy.http_statuses.description': '当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表不健康状态是由代理流量产生的。',
-  'page.upstream.checks.passive.unhealthy.http_failures.description': '由被动健康检查所观察，代理流量中 HTTP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。',
-  'page.upstream.checks.passive.unhealthy.tcp_failures.description': '被动健康检查所观察到的代理流量中 TCP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。',
+  'page.upstream.checks.active.unhealthy.interval.description':
+    '对不健康的上游服务目标节点进行主动健康检查的间隔时间，默认值为0，表示对不健康节点不进行主动健康检查。',
+  'page.upstream.checks.passive.healthy.http_statuses.description':
+    '当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表健康状态是由代理流量产生的。',
+  'page.upstream.checks.passive.unhealthy.http_statuses.description':
+    '当被动健康检查的探针返回值是 HTTP 状态码列表的某一个值时，代表不健康状态是由代理流量产生的。',
+  'page.upstream.checks.passive.unhealthy.http_failures.description':
+    '由被动健康检查所观察，代理流量中 HTTP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。',
+  'page.upstream.checks.passive.unhealthy.tcp_failures.description':
+    '被动健康检查所观察到的代理流量中 TCP 失败的次数。如果达到此值，则认为上游服务目标节点是不健康的。',
   'page.upstream.scheme': '协议',
 
-  'page.upstream.other.configuration.invalid': '请检查上游配置'
+  'page.upstream.other.configuration.invalid': '请检查上游配置',
 };

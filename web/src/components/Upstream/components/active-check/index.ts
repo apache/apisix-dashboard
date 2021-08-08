@@ -14,17 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Unhealthy from './Unhealthy'
-import Healthy from './Healthy'
+import Unhealthy from './Unhealthy';
+import Healthy from './Healthy';
 
-import Timeout from './Timeout'
-import Type from './Type'
-import ReqHeaders from './ReqHeaders'
-import Host from './Host'
-import Port from './Port'
-import HttpPath from './HttpPath'
-import Concurrency from './Concurrency'
-import HttpsVerifyCertificate from './HttpsVerifyCertificate'
+import Timeout from './Timeout';
+import Type from './Type';
+import ReqHeaders from './ReqHeaders';
+import Host from './Host';
+import Port from './Port';
+import HttpPath from './HttpPath';
+import Concurrency from './Concurrency';
+import HttpsVerifyCertificate from './HttpsVerifyCertificate';
 
 export default {
   Unhealthy,
@@ -36,5 +36,5 @@ export default {
   Port,
   HttpPath,
   Concurrency,
-  HttpsVerifyCertificate
-}
+  HttpsVerifyCertificate,
+};

@@ -17,9 +17,8 @@
 /* eslint-disable no-undef */
 
 context('Create and delete consumer with limit-conn plugin form', () => {
-
   const selector = {
-    empty:'.ant-empty-normal',
+    empty: '.ant-empty-normal',
     username: '#username',
     description: '#desc',
     pluginCard: '.ant-card',
@@ -34,8 +33,8 @@ context('Create and delete consumer with limit-conn plugin form', () => {
     key: '#key',
     rejected_code: '#rejected_code',
     title: '[title="remote_addr"]',
-    monacoViewZones: '.view-zones'
-  }
+    monacoViewZones: '.view-zones',
+  };
 
   const data = {
     consumerName: 'test_consumer',
@@ -46,7 +45,7 @@ context('Create and delete consumer with limit-conn plugin form', () => {
     burst: 0,
     default_conn_delay: 1,
     key: 'remote_addr',
-  }
+  };
 
   beforeEach(() => {
     cy.login();

@@ -66,6 +66,7 @@ func (mw *AuthenticationMiddleware) Handle(ctx droplet.Context) error {
 
 	if err != nil || token == nil || !token.Valid {
 		log.Warnf("token validate failed: %s", err)
+		log.Warn("please check the secret in conf.yaml")
 		ctx.SetOutput(&data.SpecCodeResponse{StatusCode: http.StatusUnauthorized, Response: response})
 		return nil
 	}

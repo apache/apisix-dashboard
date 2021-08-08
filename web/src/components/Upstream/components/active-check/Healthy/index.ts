@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Interval from './Interval'
-import Successes from './Successes'
-import HttpStatuses from './HttpStatuses'
+import Interval from './Interval';
+import Successes from './Successes';
+import HttpStatuses from './HttpStatuses';
 
 export default {
   Interval,
   Successes,
-  HttpStatuses
-}
+  HttpStatuses,
+};

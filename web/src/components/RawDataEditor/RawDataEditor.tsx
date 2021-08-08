@@ -20,17 +20,17 @@ import { LinkOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useIntl } from 'umi';
 import { js_beautify } from 'js-beautify';
-import type {Monaco} from "@monaco-editor/react";
-import Editor from "@monaco-editor/react";
-import type {languages} from "monaco-editor";
+import type { Monaco } from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
+import type { languages } from 'monaco-editor';
 
 import { json2yaml, yaml2json } from '../../helpers';
 
 type Props = {
-  visible: boolean,
-  readonly: boolean,
-  type: 'route' | 'service' | 'consumer' | 'upstream'
-  data: Record<string, any>,
+  visible: boolean;
+  readonly: boolean;
+  type: 'route' | 'service' | 'consumer' | 'upstream';
+  data: Record<string, any>;
   onClose?: () => void;
   onSubmit?: (data: Record<string, any>) => void;
 };
@@ -40,12 +40,19 @@ enum monacoLanguageList {
   YAML = 'YAML',
 }
 
-const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data = {}, onClose = () => { }, onSubmit = () => { } }) => {
+const RawDataEditor: React.FC<Props> = ({
+  visible,
+  readonly = true,
+  type,
+  data = {},
+  onClose = () => {},
+  onSubmit = () => {},
+}) => {
   const { formatMessage } = useIntl();
   const [monacoLanguage, setMonacoLanguage] = useState<PluginComponent.MonacoLanguage>(
     monacoLanguageList.JSON,
   );
-  const [content, setContent] = useState('')
+  const [content, setContent] = useState('');
 
   useEffect(() => {
     switch (monacoLanguage) {
@@ -53,17 +60,17 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
         setContent(JSON.stringify(data, null, 2));
         break;
       case monacoLanguageList.YAML: {
-        const {data: yamlData} = json2yaml(JSON.stringify(data, null, 2));
-        setContent(yamlData)
+        const { data: yamlData } = json2yaml(JSON.stringify(data, null, 2));
+        setContent(yamlData);
         break;
       }
       default:
     }
-  }, [data])
+  }, [data]);
 
   useEffect(() => {
     setMonacoLanguage(monacoLanguageList.JSON);
-  }, [visible])
+  }, [visible]);
 
   const modeOptions = [
     { label: monacoLanguageList.JSON, value: monacoLanguageList.JSON },
@@ -73,20 +80,20 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
   const handleModeChange = (value: PluginComponent.MonacoLanguage) => {
     switch (value) {
       case monacoLanguageList.JSON:
-        setContent(c => {
-          const {data:jsonData,error} = yaml2json(c, true);
-          if (error){
-            notification.error({message: formatMessage({ id: 'component.global.invalidYaml' })});
+        setContent((c) => {
+          const { data: jsonData, error } = yaml2json(c, true);
+          if (error) {
+            notification.error({ message: formatMessage({ id: 'component.global.invalidYaml' }) });
             return c;
           }
-          return js_beautify(jsonData, {indent_size: 2});
+          return js_beautify(jsonData, { indent_size: 2 });
         });
         break;
       case monacoLanguageList.YAML:
-        setContent(c => {
-          const {data:yamlData,error} = json2yaml(c);
-          if (error){
-            notification.error({message: formatMessage({ id: 'component.global.invalidJson' })});
+        setContent((c) => {
+          const { data: yamlData, error } = json2yaml(c);
+          if (error) {
+            notification.error({ message: formatMessage({ id: 'component.global.invalidJson' }) });
             return c;
           }
           return yamlData;
@@ -95,32 +102,34 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
       default:
         break;
     }
-    setMonacoLanguage(value)
+    setMonacoLanguage(value);
   };
 
-  const formatYaml = (yaml: string): string=> {
-    const json=yaml2json(yaml,true)
-    if (json.error){
+  const formatYaml = (yaml: string): string => {
+    const json = yaml2json(yaml, true);
+    if (json.error) {
       return yaml;
     }
     return json2yaml(json.data).data;
-  }
+  };
 
   const editorWillMount = (monaco: Monaco) => {
     const yamlFormatProvider: languages.DocumentFormattingEditProvider = {
       provideDocumentFormattingEdits(model) {
-        return [{
-          text: formatYaml(model.getValue()),
-          range: model.getFullModelRange()
-        }];
-      }
+        return [
+          {
+            text: formatYaml(model.getValue()),
+            range: model.getFullModelRange(),
+          },
+        ];
+      },
     };
-    monaco.languages.registerDocumentFormattingEditProvider("yaml",yamlFormatProvider);
+    monaco.languages.registerDocumentFormattingEditProvider('yaml', yamlFormatProvider);
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
-      trailingCommas: "error",
+      trailingCommas: 'error',
     });
-  }
+  };
 
   return (
     <>
@@ -147,7 +156,9 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
                         : yaml2json(content, false).data;
                     onSubmit(editorData);
                   } catch (error) {
-                    notification.error({message: formatMessage({ id: 'component.global.invalidJson' })});
+                    notification.error({
+                      message: formatMessage({ id: 'component.global.invalidJson' }),
+                    });
                   }
                 }}
               >
@@ -167,19 +178,22 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
               onChange={(value: PluginComponent.MonacoLanguage) => {
                 handleModeChange(value);
               }}
-              data-cy='monaco-language'
+              data-cy="monaco-language"
             />,
-            <CopyToClipboard text={content} onCopy={(_: string, result: boolean) => {
-              if (!result) {
-                notification.error({
-                  message: formatMessage({ id: 'component.global.copyFail' }),
+            <CopyToClipboard
+              text={content}
+              onCopy={(_: string, result: boolean) => {
+                if (!result) {
+                  notification.error({
+                    message: formatMessage({ id: 'component.global.copyFail' }),
+                  });
+                  return;
+                }
+                notification.success({
+                  message: formatMessage({ id: 'component.global.copySuccess' }),
                 });
-                return;
-              }
-              notification.success({
-                message: formatMessage({ id: 'component.global.copySuccess' }),
-              });
-            }}>
+              }}
+            >
               <Button type="primary" key={2}>
                 {formatMessage({ id: 'component.global.copy' })}
               </Button>
@@ -188,9 +202,7 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
               type="default"
               icon={<LinkOutlined />}
               onClick={() => {
-                window.open(
-                  `https://apisix.apache.org/docs/apisix/admin-api#${type}`,
-                );
+                window.open(`https://apisix.apache.org/docs/apisix/admin-api#${type}`);
               }}
               key={1}
             >
@@ -200,14 +212,14 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
         />
         <Editor
           value={content}
-          onChange={text=>{
-            if (text){
+          onChange={(text) => {
+            if (text) {
               setContent(text);
             } else {
               setContent('');
             }
           }}
-          onMount={(editor)=>{
+          onMount={(editor) => {
             // NOTE: for debug & test
             // @ts-ignore
             window.monacoEditor = editor;
@@ -215,12 +227,12 @@ const RawDataEditor: React.FC<Props> = ({ visible, readonly = true, type, data =
           beforeMount={editorWillMount}
           language={monacoLanguage.toLocaleLowerCase()}
           options={{
-            scrollbar:{
+            scrollbar: {
               vertical: 'hidden',
               horizontal: 'hidden',
             },
-            wordWrap: "on",
-            minimap: {enabled: false},
+            wordWrap: 'on',
+            minimap: { enabled: false },
             readOnly: readonly,
           }}
         />

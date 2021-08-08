@@ -36,9 +36,9 @@ import Ajv from 'ajv';
 import type { DefinedError } from 'ajv';
 import addFormats from 'ajv-formats';
 import { compact, omit } from 'lodash';
-import type { Monaco } from "@monaco-editor/react";
-import Editor from "@monaco-editor/react";
-import type {languages} from "monaco-editor";
+import type { Monaco } from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
+import type { languages } from 'monaco-editor';
 
 import { fetchSchema } from './service';
 import { json2yaml, yaml2json } from '../../helpers';
@@ -94,14 +94,14 @@ const PluginDetail: React.FC<Props> = ({
   maskClosable = true,
   isEnabled = false,
   initialData = {},
-  onClose = () => { },
-  onChange = () => { },
+  onClose = () => {},
+  onChange = () => {},
 }) => {
   const { formatMessage } = useIntl();
   enum monacoModeList {
     JSON = 'JSON',
     YAML = 'YAML',
-    UIForm = 'Form'
+    UIForm = 'Form',
   }
   const [form] = Form.useForm();
   const [UIForm] = Form.useForm();
@@ -116,17 +116,20 @@ const PluginDetail: React.FC<Props> = ({
   ];
 
   if (PLUGIN_UI_LIST.includes(name)) {
-    modeOptions.push({ label: formatMessage({ id: 'component.plugin.form' }), value: monacoModeList.UIForm });
+    modeOptions.push({
+      label: formatMessage({ id: 'component.plugin.form' }),
+      value: monacoModeList.UIForm,
+    });
   }
 
   const getUIFormData = () => {
     if (name === 'cors') {
       const formData = UIForm.getFieldsValue();
-      const newMethods = formData.allow_methods.join(",");
+      const newMethods = formData.allow_methods.join(',');
       const compactAllowRegex = compact(formData.allow_origins_by_regex);
       // Note: default allow_origins_by_regex setted for UI is [''], but this is not allowed, omit it.
       if (compactAllowRegex.length === 0) {
-        return omit({ ...formData, allow_methods: newMethods }, ['allow_origins_by_regex'])
+        return omit({ ...formData, allow_methods: newMethods }, ['allow_origins_by_regex']);
       }
 
       return { ...formData, allow_methods: newMethods };
@@ -136,7 +139,9 @@ const PluginDetail: React.FC<Props> = ({
 
   const setUIFormData = (formData: any) => {
     if (name === 'cors' && formData) {
-      const methods = (formData.allow_methods || '').length ? formData.allow_methods.split(",") : ["*"];
+      const methods = (formData.allow_methods || '').length
+        ? formData.allow_methods.split(',')
+        : ['*'];
       UIForm.setFieldsValue({ ...formData, allow_methods: methods });
       return;
     }
@@ -145,7 +150,7 @@ const PluginDetail: React.FC<Props> = ({
 
   useEffect(() => {
     form.setFieldsValue({
-      disable: isEnabled ? true : (initialData[name] && !initialData[name].disable),
+      disable: isEnabled ? true : initialData[name] && !initialData[name].disable,
       scope: 'global',
     });
     if (PLUGIN_UI_LIST.includes(name)) {
@@ -155,15 +160,15 @@ const PluginDetail: React.FC<Props> = ({
   }, []);
 
   const formatYaml = (yaml: string): string => {
-    const json=yaml2json(yaml,true)
-    if (json.error){
-      return yaml
+    const json = yaml2json(yaml, true);
+    if (json.error) {
+      return yaml;
     }
     return json2yaml(json.data).data;
-  }
+  };
 
   const editorWillMount = (monaco: Monaco) => {
-    fetchSchema(name, schemaType).then((schema)=> {
+    fetchSchema(name, schemaType).then((schema) => {
       const schemaConfig: languages.json.DiagnosticsOptions = {
         validate: true,
         schemas: [
@@ -171,25 +176,27 @@ const PluginDetail: React.FC<Props> = ({
             // useless placeholder
             uri: `https://apisix.apache.org/`,
             fileMatch: ['*'],
-            schema
-          }
+            schema,
+          },
         ],
-        trailingCommas: "error",
-        enableSchemaRequest: false
+        trailingCommas: 'error',
+        enableSchemaRequest: false,
       };
       const yamlFormatProvider: languages.DocumentFormattingEditProvider = {
         provideDocumentFormattingEdits(model) {
-          return [{
-            text: formatYaml(model.getValue()),
-            range: model.getFullModelRange()
-          }];
-        }
+          return [
+            {
+              text: formatYaml(model.getValue()),
+              range: model.getFullModelRange(),
+            },
+          ];
+        },
       };
-      monaco.languages.registerDocumentFormattingEditProvider("yaml",yamlFormatProvider);
-      monaco.editor.getModels().forEach(model => model.updateOptions({tabSize: 2}));
+      monaco.languages.registerDocumentFormattingEditProvider('yaml', yamlFormatProvider);
+      monaco.editor.getModels().forEach((model) => model.updateOptions({ tabSize: 2 }));
       monaco.languages.json.jsonDefaults.setDiagnosticsOptions(schemaConfig);
-    })
-  }
+    });
+  };
 
   const validateData = (pluginName: string, value: PluginComponent.Data) => {
     return fetchSchema(pluginName, schemaType).then((schema) => {
@@ -242,20 +249,21 @@ const PluginDetail: React.FC<Props> = ({
         if (monacoMode === monacoModeList.YAML) {
           const { data: yamlData, error } = yaml2json(content, true);
           if (error) {
-            notification.error({message: formatMessage({id: 'component.global.invalidYaml'})});
+            notification.error({ message: formatMessage({ id: 'component.global.invalidYaml' }) });
             return;
           }
-          setContent(js_beautify(yamlData, { indent_size: 2 }))
+          setContent(js_beautify(yamlData, { indent_size: 2 }));
         } else {
-          setContent(js_beautify(JSON.stringify(getUIFormData()), { indent_size: 2 }))
+          setContent(js_beautify(JSON.stringify(getUIFormData()), { indent_size: 2 }));
         }
         break;
       }
       case monacoModeList.YAML: {
-        const jsonData = monacoMode === monacoModeList.JSON ? content : JSON.stringify(getUIFormData());
+        const jsonData =
+          monacoMode === monacoModeList.JSON ? content : JSON.stringify(getUIFormData());
         const { data: yamlData, error } = json2yaml(jsonData);
-        if (error){
-          notification.error({ message: formatMessage({ id:'component.global.invalidJson' }) });
+        if (error) {
+          notification.error({ message: formatMessage({ id: 'component.global.invalidJson' }) });
           return;
         }
         setContent(yamlData);
@@ -268,7 +276,7 @@ const PluginDetail: React.FC<Props> = ({
         } else {
           const { data: yamlData, error } = yaml2json(content, true);
           if (error) {
-            notification.error({ message: formatMessage({ id:'component.global.invalidYaml' }) });
+            notification.error({ message: formatMessage({ id: 'component.global.invalidYaml' }) });
             return;
           }
           setUIFormData(JSON.parse(yamlData));
@@ -281,7 +289,8 @@ const PluginDetail: React.FC<Props> = ({
     setMonacoMode(value);
   };
 
-  const isNoConfigurationRequired = pluginType === 'auth' && schemaType !== 'consumer' && (monacoMode !== monacoModeList.UIForm);
+  const isNoConfigurationRequired =
+    pluginType === 'auth' && schemaType !== 'consumer' && monacoMode !== monacoModeList.UIForm;
 
   return (
     <Drawer
@@ -338,7 +347,9 @@ const PluginDetail: React.FC<Props> = ({
                     onChange({ formData: form.getFieldsValue(), monacoData: value });
                   });
                 } catch (error) {
-                  notification.error({ message: formatMessage({ id:'component.global.invalidJson' }) });
+                  notification.error({
+                    message: formatMessage({ id: 'component.global.invalidJson' }),
+                  });
                 }
               }}
             >
@@ -364,7 +375,11 @@ const PluginDetail: React.FC<Props> = ({
         <Form.Item label={formatMessage({ id: 'component.global.name' })}>
           <Input value={name} bordered={false} disabled />
         </Form.Item>
-        <Form.Item label={formatMessage({ id: 'component.global.enable' })} valuePropName="checked" name="disable">
+        <Form.Item
+          label={formatMessage({ id: 'component.global.enable' })}
+          valuePropName="checked"
+          name="disable"
+        >
           <Switch
             defaultChecked={isEnabled ? true : initialData[name] && !initialData[name].disable}
             disabled={readonly || isEnabled}
@@ -373,7 +388,7 @@ const PluginDetail: React.FC<Props> = ({
         {type === 'global' && (
           <Form.Item label={formatMessage({ id: 'component.global.scope' })} name="scope">
             <Select disabled>
-              <Select.Option value="global">{formatMessage({ id: "other.global" })}</Select.Option>
+              <Select.Option value="global">{formatMessage({ id: 'other.global' })}</Select.Option>
             </Select>
           </Form.Item>
         )}
@@ -383,7 +398,10 @@ const PluginDetail: React.FC<Props> = ({
         title=""
         subTitle={
           isNoConfigurationRequired ? (
-            <Alert message={formatMessage({ id: 'component.plugin.noConfigurationRequired' })} type="warning" />
+            <Alert
+              message={formatMessage({ id: 'component.plugin.noConfigurationRequired' })}
+              type="warning"
+            />
           ) : null
         }
         ghost={false}
@@ -393,7 +411,7 @@ const PluginDetail: React.FC<Props> = ({
             value={monacoMode}
             options={modeOptions}
             onChange={handleModeChange}
-            data-cy='monaco-mode'
+            data-cy="monaco-mode"
             key={1}
           />,
           <Button
@@ -409,14 +427,21 @@ const PluginDetail: React.FC<Props> = ({
             key={3}
           >
             {formatMessage({ id: 'component.global.document' })}
-          </Button>
+          </Button>,
         ]}
       />
-      {Boolean(monacoMode === monacoModeList.UIForm) && <PluginForm name={name} schema={pluginSchema} form={UIForm} renderForm={!(pluginType === 'auth' && schemaType !== 'consumer')} />}
+      {Boolean(monacoMode === monacoModeList.UIForm) && (
+        <PluginForm
+          name={name}
+          schema={pluginSchema}
+          form={UIForm}
+          renderForm={!(pluginType === 'auth' && schemaType !== 'consumer')}
+        />
+      )}
       <div style={{ display: monacoMode === monacoModeList.UIForm ? 'none' : 'unset' }}>
         <Editor
           value={content}
-          onChange={text=>{
+          onChange={(text) => {
             if (text) {
               setContent(text);
             } else {
@@ -424,7 +449,7 @@ const PluginDetail: React.FC<Props> = ({
             }
           }}
           language={monacoMode.toLocaleLowerCase()}
-          onMount={(editor)=>{
+          onMount={(editor) => {
             // NOTE: for debug & test
             // @ts-ignore
             window.monacoEditor = editor;
@@ -435,8 +460,8 @@ const PluginDetail: React.FC<Props> = ({
               vertical: 'hidden',
               horizontal: 'hidden',
             },
-            wordWrap: "on",
-            minimap: {enabled: false},
+            wordWrap: 'on',
+            minimap: { enabled: false },
             readOnly: readonly,
           }}
         />

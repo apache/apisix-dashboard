@@ -25,8 +25,8 @@ import defaultSettings from '../config/defaultSettings';
 
 // see https://github.com/suren-atoyan/monaco-react/issues/168
 loader.config({ paths: { vs: '/monaco-editor/min/vs' } });
-if (getLocale() === 'zh-CN'){
-  loader.config({ "vs/nls": { availableLanguages: { "*": 'zh-cn' } } });
+if (getLocale() === 'zh-CN') {
+  loader.config({ 'vs/nls': { availableLanguages: { '*': 'zh-cn' } } });
 }
 
 const { pwa } = defaultSettings;

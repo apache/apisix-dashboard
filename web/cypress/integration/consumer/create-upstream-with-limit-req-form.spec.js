@@ -17,9 +17,8 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Consumer', () => {
-
   const selector = {
-    empty:'.ant-empty-normal',
+    empty: '.ant-empty-normal',
     username: '#username',
     description: '#desc',
     pluginCard: '.ant-card',
@@ -30,9 +29,10 @@ context('Create and Delete Consumer', () => {
     rate: '#rate',
     burst: '#burst',
     key: '#key',
+    nodelay: '#nodelay',
     remote_addr: '[title=remote_addr]',
-    monacoViewZones: '.view-zones'
-  }
+    monacoViewZones: '.view-zones',
+  };
 
   const data = {
     consumerName: 'test_consumer',
@@ -40,7 +40,7 @@ context('Create and Delete Consumer', () => {
     createConsumerSuccess: 'Create Consumer Successfully',
     deleteConsumerSuccess: 'Delete Consumer Successfully',
     time: 2,
-  }
+  };
 
   beforeEach(() => {
     cy.login();
@@ -89,6 +89,7 @@ context('Create and Delete Consumer', () => {
     cy.get(selector.burst).type(data.time);
     cy.get(selector.key).click();
     cy.get(selector.remote_addr).click();
+    cy.get(selector.nodelay).click();
     cy.get(selector.drawer).within(() => {
       cy.contains('Submit').click({
         force: true,
