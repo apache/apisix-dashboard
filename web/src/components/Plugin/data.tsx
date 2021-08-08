@@ -27,7 +27,7 @@ export const PLUGIN_ICON_LIST: Record<string, any> = {
   'kafka-logger': <IconFont name="iconApache_kafka" />,
   'basic-auth': <IconFont name="iconbasic-auth" />,
   'hmac-auth': <IconFont name="iconhmac-auth" />,
-  'cors': <IconFont name="iconcors" />,
+  cors: <IconFont name="iconcors" />,
   'wolf-rbac': <IconFont name="iconwolf-rbac" />,
   'key-auth': <IconFont name="iconkey-auth" />,
   'request-validation': <IconFont name="iconrequest-validation" />,
@@ -49,13 +49,13 @@ export const PLUGIN_ICON_LIST: Record<string, any> = {
   'proxy-cache': <IconFont name="iconproxy-cache" />,
   'grpc-transcode': <IconFont name="icongrpc-transcode" />,
   'batch-requests': <IconFont name="iconbatch-request" />,
-  'zipkin': <IconFont name="iconzipkin" />,
+  zipkin: <IconFont name="iconzipkin" />,
   'udp-logger': <IconFont name="iconudp-logger" />,
   'error-log-logger': <IconFont name="iconerror-logger" />,
   'http-logger': <IconFont name="iconhttp-logger" />,
   'request-id': <IconFont name="iconrequest-id" />,
   'sls-logger': <IconFont name="iconsls-logger" />,
-  'syslog': <IconFont name="iconsys-logger" />,
+  syslog: <IconFont name="iconsys-logger" />,
   'tcp-logger': <IconFont name="icontcp-logger" />,
 };
 
@@ -66,162 +66,162 @@ export const PLUGIN_FILTER_LIST: Record<string, { list: PluginComponent.ReferPag
 };
 
 export enum PluginType {
-  authentication = "authentication",
-  security = "security",
-  traffic = "traffic",
-  serverless = "serverless",
-  observability = "observability",
-  other = "other"
+  authentication = 'authentication',
+  security = 'security',
+  traffic = 'traffic',
+  serverless = 'serverless',
+  observability = 'observability',
+  other = 'other',
 }
 
 /**
  * Plugin List that contains type field
-*/
+ */
 export const PLUGIN_LIST = {
-  "hmac-auth": {
-    type: PluginType.authentication
+  'hmac-auth': {
+    type: PluginType.authentication,
   },
-  "serverless-post-function": {
-    type: PluginType.serverless
+  'serverless-post-function': {
+    type: PluginType.serverless,
   },
-  "mqtt-proxy": {
+  'mqtt-proxy': {
     type: PluginType.other,
-    hidden: true
+    hidden: true,
   },
-  "response-rewrite": {
-    type: PluginType.other
-  },
-  "basic-auth": {
-    type: PluginType.authentication
-  },
-  "error-log-logger": {
-    type: PluginType.observability
-  },
-  "fault-injection": {
-    type: PluginType.security
-  },
-  "limit-count": {
-    type: PluginType.traffic
-  },
-  "prometheus": {
-    type: PluginType.observability
-  },
-  "proxy-rewrite": {
-    type: PluginType.other
-  },
-  "syslog": {
-    type: PluginType.observability
-  },
-  "traffic-split": {
-    type: PluginType.traffic
-  },
-  "jwt-auth": {
-    type: PluginType.authentication
-  },
-  "kafka-logger": {
-    type: PluginType.observability
-  },
-  "limit-conn": {
-    type: PluginType.traffic
-  },
-  "udp-logger": {
-    type: PluginType.observability
-  },
-  "zipkin": {
-    type: PluginType.observability
-  },
-  "echo": {
+  'response-rewrite': {
     type: PluginType.other,
-    hidden: true
   },
-  "log-rotate": {
+  'basic-auth': {
+    type: PluginType.authentication,
+  },
+  'error-log-logger': {
     type: PluginType.observability,
-    hidden: true
   },
-  "serverless-pre-function": {
-    type: PluginType.serverless
-  },
-  "dubbo-proxy": {
-    type: PluginType.other,
-    hidden: true
-  },
-  "node-status": {
-    type: PluginType.other,
-    hidden: true
-  },
-  "referer-restriction": {
-    type: PluginType.security
-  },
-  "api-breaker": {
+  'fault-injection': {
     type: PluginType.security,
   },
-  "consumer-restriction": {
-    type: PluginType.security
+  'limit-count': {
+    type: PluginType.traffic,
   },
-  "cors": {
-    type: PluginType.security
+  prometheus: {
+    type: PluginType.observability,
   },
-  "limit-req": {
-    type: PluginType.traffic
-  },
-  "proxy-mirror": {
-    type: PluginType.other
-  },
-  "request-validation": {
-    type: PluginType.security
-  },
-  "example-plugin": {
+  'proxy-rewrite': {
     type: PluginType.other,
-    hidden: true
   },
-  "ip-restriction": {
-    type: PluginType.security
+  syslog: {
+    type: PluginType.observability,
   },
-  "key-auth": {
-    type: PluginType.authentication
+  'traffic-split': {
+    type: PluginType.traffic,
   },
-  "proxy-cache": {
-    type: PluginType.other
+  'jwt-auth': {
+    type: PluginType.authentication,
   },
-  "redirect": {
+  'kafka-logger': {
+    type: PluginType.observability,
+  },
+  'limit-conn': {
+    type: PluginType.traffic,
+  },
+  'udp-logger': {
+    type: PluginType.observability,
+  },
+  zipkin: {
+    type: PluginType.observability,
+  },
+  echo: {
     type: PluginType.other,
-    hidden: true
+    hidden: true,
   },
-  "request-id": {
-    type: PluginType.observability
+  'log-rotate': {
+    type: PluginType.observability,
+    hidden: true,
   },
-  "skywalking": {
-    type: PluginType.observability
+  'serverless-pre-function': {
+    type: PluginType.serverless,
   },
-  "batch-requests": {
-    type: PluginType.other
-  },
-  "http-logger": {
-    type: PluginType.observability
-  },
-  "openid-connect": {
-    type: PluginType.authentication
-  },
-  "sls-logger": {
-    type: PluginType.observability
-  },
-  "tcp-logger": {
-    type: PluginType.observability
-  },
-  "uri-blocker": {
-    type: PluginType.security
-  },
-  "wolf-rbac": {
-    type: PluginType.other
-  },
-  "authz-keycloak": {
-    type: PluginType.authentication
-  },
-  "grpc-transcode": {
-    type: PluginType.other
-  },
-  "server-info": {
+  'dubbo-proxy': {
     type: PluginType.other,
-    hidden: true
-  }
-}
+    hidden: true,
+  },
+  'node-status': {
+    type: PluginType.other,
+    hidden: true,
+  },
+  'referer-restriction': {
+    type: PluginType.security,
+  },
+  'api-breaker': {
+    type: PluginType.security,
+  },
+  'consumer-restriction': {
+    type: PluginType.security,
+  },
+  cors: {
+    type: PluginType.security,
+  },
+  'limit-req': {
+    type: PluginType.traffic,
+  },
+  'proxy-mirror': {
+    type: PluginType.other,
+  },
+  'request-validation': {
+    type: PluginType.security,
+  },
+  'example-plugin': {
+    type: PluginType.other,
+    hidden: true,
+  },
+  'ip-restriction': {
+    type: PluginType.security,
+  },
+  'key-auth': {
+    type: PluginType.authentication,
+  },
+  'proxy-cache': {
+    type: PluginType.other,
+  },
+  redirect: {
+    type: PluginType.other,
+    hidden: true,
+  },
+  'request-id': {
+    type: PluginType.observability,
+  },
+  skywalking: {
+    type: PluginType.observability,
+  },
+  'batch-requests': {
+    type: PluginType.other,
+  },
+  'http-logger': {
+    type: PluginType.observability,
+  },
+  'openid-connect': {
+    type: PluginType.authentication,
+  },
+  'sls-logger': {
+    type: PluginType.observability,
+  },
+  'tcp-logger': {
+    type: PluginType.observability,
+  },
+  'uri-blocker': {
+    type: PluginType.security,
+  },
+  'wolf-rbac': {
+    type: PluginType.other,
+  },
+  'authz-keycloak': {
+    type: PluginType.authentication,
+  },
+  'grpc-transcode': {
+    type: PluginType.other,
+  },
+  'server-info': {
+    type: PluginType.other,
+    hidden: true,
+  },
+};

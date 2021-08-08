@@ -26,7 +26,7 @@ declare namespace ServerInfoModule {
   };
 
   type DashboardInfo = {
-    commit_hash: string,
-    version: string
-  }
+    commit_hash: string;
+    version: string;
+  };
 }

@@ -17,9 +17,8 @@
 /* eslint-disable no-undef */
 
 context('Create and Delete Consumer', () => {
-
   const selector = {
-    empty:'.ant-empty-normal',
+    empty: '.ant-empty-normal',
     username: '#username',
     description: '#desc',
     pluginCard: '.ant-card',
@@ -28,17 +27,17 @@ context('Create and Delete Consumer', () => {
     notification: '.ant-notification-notice-message',
     nameSelector: '[title=Name]',
     serviceSelector: '[title=test_service]',
-    monacoScroll: ".monaco-scrollable-element",
-    monacoViewZones: '.view-zones'
-  }
+    monacoScroll: '.monaco-scrollable-element',
+    monacoViewZones: '.view-zones',
+  };
 
   const data = {
     consumerName: 'test_consumer',
     description: 'desc_by_autotest',
     createConsumerSuccess: 'Create Consumer Successfully',
     deleteConsumerSuccess: 'Delete Consumer Successfully',
-    pluginErrorAlert: 'Invalid plugin data'
-  }
+    pluginErrorAlert: 'Invalid plugin data',
+  };
 
   beforeEach(() => {
     cy.login();

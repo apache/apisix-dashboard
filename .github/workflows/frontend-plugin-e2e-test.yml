@@ -40,7 +40,7 @@ jobs:
           submodules: recursive
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v2.4.0
         with:
           node-version: 14.x
 
@@ -85,7 +85,7 @@ jobs:
         run: yarn test-plugin:e2e
 
       - name: Archive code coverage results
-        uses: actions/upload-artifact@v2.2.3
+        uses: actions/upload-artifact@v2.2.4
         if: always()
         with:
           name: cypress-report

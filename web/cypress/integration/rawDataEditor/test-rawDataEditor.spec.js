@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
+/* eslint-disable */
 
 context('Test RawDataEditor', () => {
   const timeout = 1000;
@@ -24,7 +24,7 @@ context('Test RawDataEditor', () => {
     tableBody: '.ant-table-tbody',
     drawer: '.ant-drawer-content',
     notification: '.ant-notification-notice-message',
-    monacoViewZones: '.view-zones'
+    monacoViewZones: '.view-zones',
   };
 
   const data = {

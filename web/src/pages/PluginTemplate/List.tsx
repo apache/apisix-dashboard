@@ -21,7 +21,7 @@ import ProTable from '@ant-design/pro-table';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, notification, Popconfirm, Select, Space, Tag } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import querystring from 'query-string'
+import querystring from 'query-string';
 
 import { fetchList, remove, fetchLabelList } from './service';
 
@@ -66,13 +66,13 @@ const Page: React.FC = () => {
       title: formatMessage({ id: 'component.global.labels' }),
       dataIndex: 'labels',
       render: (_, record) => {
-        return Object.keys(record.labels || {})
-          .map((item) => (
-            <Tag key={Math.random().toString(36).slice(2)}>
-              {item}:{record.labels[item]}
-            </Tag>
-          ));
-      }, renderFormItem: (_, { type }) => {
+        return Object.keys(record.labels || {}).map((item) => (
+          <Tag key={Math.random().toString(36).slice(2)}>
+            {item}:{record.labels[item]}
+          </Tag>
+        ));
+      },
+      renderFormItem: (_, { type }) => {
         if (type === 'form') {
           return null;
         }
@@ -90,18 +90,20 @@ const Page: React.FC = () => {
               );
             }}
           >
-            {Object.keys(labelList)
-              .map((key) => {
-                return (
-                  <Select.OptGroup label={key} key={Math.random().toString(36).slice(2)}>
-                    {(labelList[key] || []).map((value: string) => (
-                      <Select.Option key={Math.random().toString(36).slice(2)} value={`${key}:${value}`}>
-                        {value}
-                      </Select.Option>
-                    ))}
-                  </Select.OptGroup>
-                );
-              })}
+            {Object.keys(labelList).map((key) => {
+              return (
+                <Select.OptGroup label={key} key={Math.random().toString(36).slice(2)}>
+                  {(labelList[key] || []).map((value: string) => (
+                    <Select.Option
+                      key={Math.random().toString(36).slice(2)}
+                      value={`${key}:${value}`}
+                    >
+                      {value}
+                    </Select.Option>
+                  ))}
+                </Select.OptGroup>
+              );
+            })}
           </Select>
         );
       },
@@ -115,7 +117,7 @@ const Page: React.FC = () => {
             <Button
               type="primary"
               onClick={() => {
-                history.push(`/plugin-template/${record.id}/edit`)
+                history.push(`/plugin-template/${record.id}/edit`);
               }}
               style={{ marginRight: 10 }}
             >

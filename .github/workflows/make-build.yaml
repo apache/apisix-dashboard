@@ -39,7 +39,7 @@ jobs:
           submodules: recursive
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v2.4.0
         with:
           node-version: 14.x
 
