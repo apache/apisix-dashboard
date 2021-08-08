@@ -49,6 +49,7 @@ func post(reqUrl string, reqParams map[string]string, contentType string, files 
 			httpRequest.Header.Add(k, v)
 		}
 	}
+	httpRequest.Close = true
 	resp, err := httpClient.Do(httpRequest)
 	if err != nil {
 		panic(err)

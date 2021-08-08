@@ -1668,6 +1668,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 	basepath := "http://127.0.0.1:9080"
 	request, _ := http.NewRequest("GET", basepath+"/apisix/plugin/jwt/sign?key=user-key", nil)
 	request.Header.Add("Authorization", token)
+	request.Close = true
 	resp, err := http.DefaultClient.Do(request)
 	assert.Nil(t, err)
 	defer resp.Body.Close()

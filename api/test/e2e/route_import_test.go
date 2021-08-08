@@ -45,6 +45,7 @@ func TestImport_default(t *testing.T) {
 
 	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/routes", nil)
 	request.Header.Add("Authorization", token)
+	request.Close = true
 	resp, err := http.DefaultClient.Do(request)
 	assert.Nil(t, err)
 	defer resp.Body.Close()
@@ -114,6 +115,7 @@ func TestImport_json(t *testing.T) {
 
 	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/routes", nil)
 	request.Header.Add("Authorization", token)
+	request.Close = true
 	resp, err := http.DefaultClient.Do(request)
 	assert.Nil(t, err)
 	defer resp.Body.Close()
@@ -183,6 +185,7 @@ func TestImport_with_plugins(t *testing.T) {
 
 	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/routes", nil)
 	request.Header.Add("Authorization", token)
+	request.Close = true
 	resp, err := http.DefaultClient.Do(request)
 	assert.Nil(t, err)
 	defer resp.Body.Close()
@@ -278,6 +281,7 @@ func TestImport_with_multi_routes(t *testing.T) {
 
 	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/routes", nil)
 	request.Header.Add("Authorization", token)
+	request.Close = true
 	resp, err := http.DefaultClient.Do(request)
 	assert.Nil(t, err)
 	defer resp.Body.Close()
@@ -530,6 +534,7 @@ func TestRoute_export_import(t *testing.T) {
 
 	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/routes", nil)
 	request.Header.Add("Authorization", token)
+	request.Close = true
 	resp, err := http.DefaultClient.Do(request)
 	assert.Nil(t, err)
 	defer resp.Body.Close()

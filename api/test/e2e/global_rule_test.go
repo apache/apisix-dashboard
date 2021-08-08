@@ -330,6 +330,7 @@ func TestGlobalRule_with_createtime_updatetime(t *testing.T) {
 	request, _ := http.NewRequest("GET", basepath, nil)
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
+	request.Close = true
 	assert.Nil(t, err)
 	defer resp.Body.Close()
 
@@ -373,6 +374,7 @@ func TestGlobalRule_with_createtime_updatetime(t *testing.T) {
 	time.Sleep(time.Duration(1) * time.Second)
 	request, _ = http.NewRequest("GET", basepath, nil)
 	request.Header.Add("Authorization", token)
+	request.Close = true
 	resp, err = http.DefaultClient.Do(request)
 	assert.Nil(t, err)
 	defer resp.Body.Close()

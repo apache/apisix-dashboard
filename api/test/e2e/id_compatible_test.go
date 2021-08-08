@@ -459,6 +459,7 @@ func TestID_Not_In_Body(t *testing.T) {
 	request, _ := http.NewRequest("GET", ManagerAPIHost+"/apisix/admin/routes", nil)
 	request.Header.Add("Authorization", token)
 	resp, err := http.DefaultClient.Do(request)
+	request.Close = true
 	assert.Nil(t, err)
 	defer resp.Body.Close()
 	respBody, _ := ioutil.ReadAll(resp.Body)
