@@ -370,6 +370,9 @@ var _ = ginkgo.Describe("Upstream update with domain", func() {
 })
 
 var _ = ginkgo.Describe("Upstream chash remote addr", func() {
+	if base.ChaosTest {
+		return
+	}
 	ginkgo.It("create chash upstream with key (remote_addr)", func() {
 		createUpstreamBody := make(map[string]interface{})
 		createUpstreamBody["nodes"] = []map[string]interface{}{
