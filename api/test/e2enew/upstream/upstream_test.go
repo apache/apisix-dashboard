@@ -830,7 +830,7 @@ var _ = ginkgo.Describe("test upstream delete (route is in use)", func() {
 			Headers: map[string]string{"Authorization": base.GetToken()},
 			Body: `{
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + base.UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}`,
@@ -909,7 +909,7 @@ var _ = ginkgo.Describe("test upstream delete (service is in use)", func() {
 			Headers: map[string]string{"Authorization": base.GetToken()},
 			Body: `{
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + base.UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}`,

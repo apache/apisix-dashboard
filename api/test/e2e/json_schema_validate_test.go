@@ -35,7 +35,7 @@ func TestSchema_not_exist_field(t *testing.T) {
                                 "upstream": {
                                         "type": "roundrobin",
                                         "nodes": [{
-                                                "host": "172.16.238.20",
+                                                "host": "` + UpstreamIp + `",
                                                 "port": 1980,
                                                 "weight": 1
                                         }]

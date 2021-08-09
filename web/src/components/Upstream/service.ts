@@ -21,43 +21,43 @@ import { formatMessage, request } from 'umi';
 /**
  * Because we have some `custom` field in Upstream Form, like custom.tls/custom.checks.active etc,
  * we need to transform data that doesn't have `custom` field to data contains `custom` field
-*/
+ */
 export const convertToFormData = (originData: UpstreamComponent.ResponseData) => {
   if (originData === undefined) {
     // NOTE: When binding Service without Upstream configuration (None), originData === undefined
-    return undefined
+    return undefined;
   }
 
-  const data = cloneDeep(originData)
-  data.custom = {}
-  data.upstream_id = "Custom"
+  const data = cloneDeep(originData);
+  data.custom = {};
+  data.upstream_id = 'Custom';
 
   if (data.checks) {
-    data.custom.checks = {}
+    data.custom.checks = {};
 
     if (data.checks.active) {
-      data.custom.checks.active = true
+      data.custom.checks.active = true;
     }
 
     if (data.checks.passive) {
-      data.custom.checks.passive = true
+      data.custom.checks.passive = true;
     }
   }
 
   if (data.tls) {
-    data.custom.tls = "enable"
+    data.custom.tls = 'enable';
   }
 
   if (data.id) {
     data.upstream_id = data.id;
   }
 
-  return data
-}
+  return data;
+};
 
 /**
  * Transform Upstream Form data from custom data to API needed data
-*/
+ */
 export const convertToRequestData = (
   formData: UpstreamModule.RequestBody,
 ): UpstreamModule.RequestBody | undefined | { upstream_id: string } => {
@@ -71,15 +71,15 @@ export const convertToRequestData = (
     nodes,
     pass_host,
     upstream_host,
-    upstream_id = "Custom",
-    checks
+    upstream_id = 'Custom',
+    checks,
   } = data;
 
-  if (!["Custom", "None"].includes(upstream_id)) {
+  if (!['Custom', 'None'].includes(upstream_id)) {
     return { upstream_id };
   }
 
-  data = omit(data, "upstream_id") as any
+  data = omit(data, 'upstream_id') as any;
 
   if (type === 'chash') {
     if (!hash_on) {
@@ -97,10 +97,10 @@ export const convertToRequestData = (
 
   if (checks?.passive && !checks.active) {
     notification.error({
-      message: formatMessage({id: 'component.upstream.other.health-check.invalid'}),
-      description: formatMessage({id: 'component.upstream.other.health-check.passive-only'})
-    })
-    return undefined
+      message: formatMessage({ id: 'component.upstream.other.health-check.invalid' }),
+      description: formatMessage({ id: 'component.upstream.other.health-check.passive-only' }),
+    });
+    return undefined;
   }
 
   /**
@@ -119,8 +119,10 @@ export const convertToRequestData = (
 };
 
 export const fetchUpstreamList = () => {
-  return request<Res<ResListData<UpstreamComponent.ResponseData>>>('/upstreams').then(({ data }) => ({
-    data: data.rows.map(row => convertToFormData(row)),
-    total: data.total_size,
-  }));
+  return request<Res<ResListData<UpstreamComponent.ResponseData>>>('/upstreams').then(
+    ({ data }) => ({
+      data: data.rows.map((row) => convertToFormData(row)),
+      total: data.total_size,
+    }),
+  );
 };

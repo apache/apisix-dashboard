@@ -50,7 +50,7 @@ var _ = ginkgo.Describe("route with plugin cors", func() {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + base.UpstreamIp + `",
 						"port": 1981,
 						"weight": 1
 					}]
@@ -91,7 +91,7 @@ var _ = ginkgo.Describe("route with plugin cors", func() {
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "` + base.UpstreamIp + `",
 							"port": 1981,
 							"weight": 1
 						}]
@@ -172,7 +172,7 @@ var _ = ginkgo.Describe("route with plugin cors", func() {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + base.UpstreamIp + `",
 						"port": 1981,
 						"weight": 1
 					}]

@@ -77,6 +77,7 @@ context('Create PluginTemplate Binding To Route', () => {
     cy.get(selector.nodes_0_port).clear().type(data.port);
     cy.get(selector.nodes_0_weight).clear().type(data.weight);
     cy.contains('Next').click();
+    cy.scrollTo(0, 0);
     cy.contains('Custom').should('be.visible');
     cy.get(selector.customSelector).click();
     cy.contains(data.pluginTemplateName).click();

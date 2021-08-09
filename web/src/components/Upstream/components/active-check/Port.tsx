@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, InputNumber } from 'antd'
-import { useIntl } from 'umi'
+import React from 'react';
+import { Form, InputNumber } from 'antd';
+import { useIntl } from 'umi';
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const Component: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
   return (
     <Form.Item label={formatMessage({ id: 'component.upstream.fields.checks.active.port' })}>
       <Form.Item name={['checks', 'active', 'port']} noStyle initialValue={80}>
@@ -37,7 +37,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
         />
       </Form.Item>
     </Form.Item>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

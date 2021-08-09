@@ -31,7 +31,7 @@ const FORM_ITEM_LAYOUT = {
     span: 7,
   },
   wrapperCol: {
-    span: 8
+    span: 8,
   },
 };
 
@@ -70,21 +70,33 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
                 }
               }}
             >
-              {['*', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'CONNECT', 'TRACE'].map((item) => {
-                return <Select.Option value={item} key={item}>{item}</Select.Option>
+              {[
+                '*',
+                'GET',
+                'HEAD',
+                'POST',
+                'PUT',
+                'DELETE',
+                'OPTIONS',
+                'PATCH',
+                'CONNECT',
+                'TRACE',
+              ].map((item) => {
+                return (
+                  <Select.Option value={item} key={item}>
+                    {item}
+                  </Select.Option>
+                );
               })}
             </Select>
           </Form.Item>
         </Col>
       </Row>
-    </Form.Item >
+    </Form.Item>
   );
 
   return (
-    <Form
-      form={form}
-      {...FORM_ITEM_LAYOUT}
-    >
+    <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
         extra={formatMessage({ id: 'component.pluginForm.cors.allow_origins.extra' })}
         name="allow_origins"
@@ -139,13 +151,11 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
                   {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   label={index === 0 && 'allow_origins_by_regex'}
                   key={field.key}
-                  tooltip={formatMessage({ id: 'component.pluginForm.cors.allow_origins_by_regex.tooltip' })}
+                  tooltip={formatMessage({
+                    id: 'component.pluginForm.cors.allow_origins_by_regex.tooltip',
+                  })}
                 >
-                  <Form.Item
-                    {...field}
-                    validateTrigger={['onChange', 'onBlur']}
-                    noStyle
-                  >
+                  <Form.Item {...field} validateTrigger={['onChange', 'onBlur']} noStyle>
                     <Input style={{ width: '80%' }} />
                   </Form.Item>
                   {fields.length > minLength &&
@@ -176,8 +186,8 @@ const Cors: React.FC<Props> = ({ form, schema }) => {
           );
         }}
       </Form.List>
-    </Form >
+    </Form>
   );
-}
+};
 
 export default Cors;

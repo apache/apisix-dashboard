@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import HttpStatuses from './HttpStatuses'
-import Successes from './Successes'
+import HttpStatuses from './HttpStatuses';
+import Successes from './Successes';
 
 export default {
   HttpStatuses,
-  Successes
-}
+  Successes,
+};
