@@ -3383,6 +3383,10 @@
 						"maximum": 599,
 						"minimum": 200,
 						"type": "integer"
+					},
+					"allow_degradation": {
+						"type": "boolean",
+						"default": false
 					}
 				},
 				"required": ["burst", "conn", "default_conn_delay", "key"],
@@ -3490,6 +3494,10 @@
 					"time_window": {
 						"exclusiveMinimum": 0,
 						"type": "integer"
+					},
+					"allow_degradation": {
+						"type": "boolean",
+						"default": false
 					}
 				},
 				"required": ["count", "time_window"],
@@ -3526,6 +3534,10 @@
 						"maximum": 599,
 						"minimum": 200,
 						"type": "integer"
+					},
+					"allow_degradation": {
+						"type": "boolean",
+						"default": false
 					}
 				},
 				"required": ["burst", "key", "rate"],
