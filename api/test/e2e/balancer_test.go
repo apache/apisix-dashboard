@@ -33,17 +33,17 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1980,
 					"weight": 1
 				},
 				{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1981,
 					"weight": 1
 				},
 				{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1982,
 					"weight": 1
 				}],
@@ -89,17 +89,17 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1980,
 					"weight": 1
 				},
 				{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1981,
 					"weight": 2
 				},
 				{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1982,
 					"weight": 3
 				}],
@@ -130,12 +130,12 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1980,
 					"weight": 1
 				},
 				{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1981,
 					"weight": 0
 				}],
@@ -164,7 +164,7 @@ func TestBalancer_roundrobin_with_weight(t *testing.T) {
 			Path:   "/apisix/admin/upstreams/1",
 			Body: `{
 				"nodes": [{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1980,
 					"weight": 1
 				}],

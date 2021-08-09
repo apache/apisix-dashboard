@@ -21,10 +21,10 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-import React, { useEffect, useState } from 'react'
-import { Toolbar } from '@antv/x6-react-components'
-import FlowGraph from '../FlowGraph'
-import { DataUri } from '@antv/x6'
+import React, { useEffect, useState } from 'react';
+import { Toolbar } from '@antv/x6-react-components';
+import FlowGraph from '../FlowGraph';
+import { DataUri } from '@antv/x6';
 import {
   ClearOutlined,
   SaveOutlined,
@@ -34,127 +34,123 @@ import {
   CopyOutlined,
   ScissorOutlined,
   SnippetsOutlined,
-} from '@ant-design/icons'
-import '@antv/x6-react-components/es/toolbar/style/index.css'
+} from '@ant-design/icons';
+import '@antv/x6-react-components/es/toolbar/style/index.css';
 
-const { Item, Group } = Toolbar
+const { Item, Group } = Toolbar;
 
 const ToolbarComponent = () => {
-  const [canUndo, setCanUndo] = useState(false)
-  const [canRedo, setCanRedo] = useState(false)
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
 
   const copy = () => {
-    const { graph } = FlowGraph
-    const cells = graph.getSelectedCells()
+    const { graph } = FlowGraph;
+    const cells = graph.getSelectedCells();
     if (cells.length) {
-      graph.copy(cells)
+      graph.copy(cells);
     }
-    return false
-  }
+    return false;
+  };
 
   const cut = () => {
-    const { graph } = FlowGraph
-    const cells = graph.getSelectedCells()
+    const { graph } = FlowGraph;
+    const cells = graph.getSelectedCells();
     if (cells.length) {
-      graph.cut(cells)
+      graph.cut(cells);
     }
-    return false
-  }
+    return false;
+  };
 
   const paste = () => {
-    const { graph } = FlowGraph
+    const { graph } = FlowGraph;
     if (!graph.isClipboardEmpty()) {
-      const cells = graph.paste({ offset: 32 })
-      graph.cleanSelection()
-      graph.select(cells)
+      const cells = graph.paste({ offset: 32 });
+      graph.cleanSelection();
+      graph.select(cells);
     }
-    return false
-  }
+    return false;
+  };
 
   useEffect(() => {
-    const { graph } = FlowGraph
-    const { history } = graph
-    setCanUndo(history.canUndo())
-    setCanRedo(history.canRedo())
+    const { graph } = FlowGraph;
+    const { history } = graph;
+    setCanUndo(history.canUndo());
+    setCanRedo(history.canRedo());
     history.on('change', () => {
-      setCanUndo(history.canUndo())
-      setCanRedo(history.canRedo())
-    })
+      setCanUndo(history.canUndo());
+      setCanRedo(history.canRedo());
+    });
 
     graph.bindKey(['meta+z', 'ctrl+z'], () => {
       if (history.canUndo()) {
-        history.undo()
+        history.undo();
       }
-      return false
-    })
+      return false;
+    });
     graph.bindKey(['meta+shift+z', 'ctrl+y'], () => {
       if (history.canRedo()) {
-        history.redo()
+        history.redo();
       }
-      return false
-    })
+      return false;
+    });
     graph.bindKey(['meta+d', 'ctrl+d'], () => {
-      graph.clearCells()
-      return false
-    })
+      graph.clearCells();
+      return false;
+    });
     graph.bindKey(['meta+s', 'ctrl+s'], () => {
       graph.toPNG((datauri: string) => {
-        DataUri.downloadDataUri(datauri, 'chart.png')
-      })
-      return false
-    })
+        DataUri.downloadDataUri(datauri, 'chart.png');
+      });
+      return false;
+    });
     graph.bindKey(['meta+p', 'ctrl+p'], () => {
-      graph.printPreview()
-      return false
-    })
-    graph.bindKey(['meta+c', 'ctrl+c'], copy)
-    graph.bindKey(['meta+v', 'ctrl+v'], paste)
-    graph.bindKey(['meta+x', 'ctrl+x'], cut)
-  }, [])
+      graph.printPreview();
+      return false;
+    });
+    graph.bindKey(['meta+c', 'ctrl+c'], copy);
+    graph.bindKey(['meta+v', 'ctrl+v'], paste);
+    graph.bindKey(['meta+x', 'ctrl+x'], cut);
+  }, []);
 
   const handleClick = (name: string) => {
-    const { graph } = FlowGraph
+    const { graph } = FlowGraph;
     switch (name) {
       case 'undo':
-        graph.history.undo()
-        break
+        graph.history.undo();
+        break;
       case 'redo':
-        graph.history.redo()
-        break
+        graph.history.redo();
+        break;
       case 'delete':
-        graph.clearCells()
-        break
+        graph.clearCells();
+        break;
       case 'save':
         graph.toPNG((datauri: string) => {
-          DataUri.downloadDataUri(datauri, 'chart.png')
-        })
-        break
+          DataUri.downloadDataUri(datauri, 'chart.png');
+        });
+        break;
       case 'print':
-        graph.printPreview()
-        break
+        graph.printPreview();
+        break;
       case 'copy':
-        copy()
-        break
+        copy();
+        break;
       case 'cut':
-        cut()
-        break
+        cut();
+        break;
       case 'paste':
-        paste()
-        break
+        paste();
+        break;
       default:
-        break
+        break;
     }
-  }
+  };
 
   return (
     <div>
       <Toolbar hoverEffect={true} size="small" onClick={handleClick}>
         <Group>
-          <Item
-            name="delete"
-            icon={<ClearOutlined />}
-            tooltip="Clear (Cmd + D, Ctrl + D)"
-          />
+          <Item name="delete" icon={<ClearOutlined />} tooltip="Clear (Cmd + D, Ctrl + D)" />
         </Group>
         <Group>
           <Item
@@ -173,23 +169,15 @@ const ToolbarComponent = () => {
         <Group>
           <Item name="copy" tooltip="Copy (Cmd + C, Ctrl + C)" icon={<CopyOutlined />} />
           <Item name="cut" tooltip="Cut (Cmd + X, Ctrl + X)" icon={<ScissorOutlined />} />
-          <Item
-            name="paste"
-            tooltip="Paste (Cmd + V, Ctrl + V)"
-            icon={<SnippetsOutlined />}
-          />
+          <Item name="paste" tooltip="Paste (Cmd + V, Ctrl + V)" icon={<SnippetsOutlined />} />
         </Group>
         <Group>
           <Item name="save" icon={<SaveOutlined />} tooltip="Save (Cmd + S, Ctrl + S)" />
-          <Item
-            name="print"
-            icon={<PrinterOutlined />}
-            tooltip="Print (Cmd + P, Ctrl + P)"
-          />
+          <Item name="print" icon={<PrinterOutlined />} tooltip="Print (Cmd + P, Ctrl + P)" />
         </Group>
       </Toolbar>
     </div>
-  )
-}
+  );
+};
 
-export default ToolbarComponent
+export default ToolbarComponent;

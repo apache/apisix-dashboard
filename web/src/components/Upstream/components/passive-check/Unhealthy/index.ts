@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Timeouts from './Timeouts'
-import HttpFailures from './HttpFailures'
-import TcpFailures from './TcpFailures'
-import HttpStatuses from './HttpStatuses'
+import Timeouts from './Timeouts';
+import HttpFailures from './HttpFailures';
+import TcpFailures from './TcpFailures';
+import HttpStatuses from './HttpStatuses';
 
 export default {
   Timeouts,
   HttpFailures,
   TcpFailures,
-  HttpStatuses
-}
+  HttpStatuses,
+};

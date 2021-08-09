@@ -25,8 +25,8 @@ type Props = {
   title?: string;
   actionName: string;
   dataSource: string[];
-  filterList?: string[],
-  fetchLabelList: any,
+  filterList?: string[];
+  fetchLabelList: any;
   disabled: boolean;
   onClose: () => void;
 } & Pick<RouteModule.Step1PassProps, 'onChange'>;
@@ -113,14 +113,14 @@ const LabelList = (disabled: boolean, labelList: LabelList, filterList: string[]
 };
 
 const LabelsDrawer: React.FC<Props> = ({
-  title = "",
+  title = '',
   actionName = '',
   disabled = false,
   dataSource = [],
   filterList = [],
   fetchLabelList,
   onClose,
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const transformLabel = transformLableValueToKeyValue(dataSource);
 
@@ -135,7 +135,7 @@ const LabelsDrawer: React.FC<Props> = ({
 
   return (
     <Drawer
-      title={title || formatMessage({ id: "component.label-manager" })}
+      title={title || formatMessage({ id: 'component.label-manager' })}
       placement="right"
       width={512}
       visible

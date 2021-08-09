@@ -25,7 +25,7 @@ type Props = {
   schema: Record<string, any> | undefined;
 };
 
-type PolicyProps = "local" | "redis" | "redis-cluster"
+type PolicyProps = 'local' | 'redis' | 'redis-cluster';
 
 type FormsProps={
   schema: Record<string, any> | undefined;
@@ -36,13 +36,14 @@ const FORM_ITEM_LAYOUT = {
     span: 7,
   },
   wrapperCol: {
-    span: 10
+    span: 10,
   },
 };
 
 const FORM_ITEM_WITHOUT_LABEL = {
   wrapperCol: {
-    span: 10, offset: 7,
+    span: 10,
+    offset: 7,
   },
 };
 
@@ -117,8 +118,16 @@ const RedisClusterForm: React.FC <FormsProps> = ({ schema }) => {
       <Form.Item
         label="redis_cluster_name"
         name="redis_cluster_name"
-        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_cluster_name` }]}
-        tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_cluster_name.tooltip' })}
+        validateTrigger={['onChange', 'onBlur', 'onClick']}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_cluster_name`,
+          },
+        ]}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.limit-count.redis_cluster_name.tooltip',
+        })}
       >
         <Input />
       </Form.Item>
@@ -127,10 +136,12 @@ const RedisClusterForm: React.FC <FormsProps> = ({ schema }) => {
           return (
             <div>
               <Form.Item
-                label='redis_cluster_nodes'
+                label="redis_cluster_nodes"
                 style={{ marginBottom: 0 }}
                 required
-                tooltip={formatMessage({ id: 'component.pluginForm.limit-count.redis_cluster_nodes.tooltip' })}
+                tooltip={formatMessage({
+                  id: 'component.pluginForm.limit-count.redis_cluster_nodes.tooltip',
+                })}
               >
                 {fields.map((field, index) => (
                   <Row style={{ marginBottom: 10 }} gutter={16} key={index}>
@@ -139,7 +150,20 @@ const RedisClusterForm: React.FC <FormsProps> = ({ schema }) => {
                         {...field}
                         noStyle
                         validateTrigger={['onChange', 'onBlur', 'onClick']}
-                        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} redis_cluster_name` }, { min: 2, message: formatMessage({ id: 'component.pluginForm.limit-count.atLeast2Characters.rule' }) }]}
+                        rules={[
+                          {
+                            required: true,
+                            message: `${formatMessage({
+                              id: 'component.global.pleaseEnter',
+                            })} redis_cluster_node`,
+                          },
+                          {
+                            min: 2,
+                            message: formatMessage({
+                              id: 'component.pluginForm.limit-count.atLeast2Characters.rule',
+                            }),
+                          },
+                        ]}
                       >
                         <Input />
                       </Form.Item>
@@ -187,8 +211,9 @@ const RedisClusterForm: React.FC <FormsProps> = ({ schema }) => {
       >
         <InputNumber min={properties.redis_timeout.minimum} />
       </Form.Item>
-    </>)
-}
+    </>
+  );
+};
 
 const LimitCount: React.FC<Props> = ({ form, schema }) => {
   const propertires = schema?.properties;
@@ -197,14 +222,16 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
   const dependSchema = schema?.dependencies.policy.oneOf;
 
   return (
-    <Form
-      form={form}
-      {...FORM_ITEM_LAYOUT}
-    >
+    <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
         label="count"
         name="count"
-        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} count` }]}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} count`,
+          },
+        ]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.count.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
@@ -213,7 +240,12 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
       <Form.Item
         label="time_window"
         name="time_window"
-        rules={[{ required: true, message: `${formatMessage({ id: 'component.global.pleaseEnter' })} time_window` }]}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} time_window`,
+          },
+        ]}
         tooltip={formatMessage({ id: 'component.pluginForm.limit-count.time_window.tooltip' })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
@@ -247,7 +279,10 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
           {propertires.policy.enum.map((item: string) => (<Select.Option value={item} key={item}>{item}</Select.Option>))}
         </Select>
       </Form.Item>
-      <Form.Item shouldUpdate={(prev, next) => prev.policy !== next.policy} style={{ display: 'none' }}>
+      <Form.Item
+        shouldUpdate={(prev, next) => prev.policy !== next.policy}
+        style={{ display: 'none' }}
+      >
         {() => {
           setPoicy(form.getFieldValue('policy'));
         }}
@@ -256,6 +291,6 @@ const LimitCount: React.FC<Props> = ({ form, schema }) => {
       {Boolean(policy === 'redis-cluster') && <RedisClusterForm schema={dependSchema[2]} />}
     </Form>
   );
-}
+};
 
 export default LimitCount;

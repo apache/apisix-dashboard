@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, Select } from 'antd'
-import { useIntl } from 'umi'
+import React from 'react';
+import { Form, Select } from 'antd';
+import { useIntl } from 'umi';
 
 type Upstream = {
   name?: string;
@@ -27,11 +27,11 @@ type Props = {
   list?: Upstream[];
   disabled?: boolean;
   required?: boolean;
-  onChange: (id: string) => void
-}
+  onChange: (id: string) => void;
+};
 
 const UpstreamSelector: React.FC<Props> = ({ onChange, list = [], disabled, required }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
 
   return (
     <Form.Item
@@ -43,11 +43,11 @@ const UpstreamSelector: React.FC<Props> = ({ onChange, list = [], disabled, requ
         data-cy="upstream_selector"
         disabled={disabled}
         onChange={onChange}
-        filterOption={(input, item) =>
-          item?.children.toLowerCase().includes(input.toLowerCase())
-        }
+        filterOption={(input, item) => item?.children.toLowerCase().includes(input.toLowerCase())}
       >
-        <Select.Option value="None" disabled={required}>{formatMessage({id: 'component.upstream.other.none'})}</Select.Option>
+        <Select.Option value="None" disabled={required}>
+          {formatMessage({ id: 'component.upstream.other.none' })}
+        </Select.Option>
         {[
           {
             name: formatMessage({ id: 'page.upstream.step.select.upstream.select.option' }),
@@ -61,7 +61,7 @@ const UpstreamSelector: React.FC<Props> = ({ onChange, list = [], disabled, requ
         ))}
       </Select>
     </Form.Item>
-  )
-}
+  );
+};
 
-export default UpstreamSelector
+export default UpstreamSelector;
