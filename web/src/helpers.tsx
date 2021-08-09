@@ -66,7 +66,7 @@ export const getMenuData = (): MenuDataItem[] => {
     {
       name: 'serverinfo',
       path: '/serverinfo',
-      icon: <InfoCircleOutlined style={{marginRight:6}} />,
+      icon: <InfoCircleOutlined style={{ marginRight: 6 }} />,
     },
   ];
 };
