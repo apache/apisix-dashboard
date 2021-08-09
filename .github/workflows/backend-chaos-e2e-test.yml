@@ -88,6 +88,7 @@ jobs:
       - name: apply chaos
         working-directory: ./api/test/chaos
         run: |
+          curl -sSL https://mirrors.chaos-mesh.org/latest/install.sh | bash
           kubectl apply -f ${{ matrix.chaos }}.yaml
           sleep 1
 
