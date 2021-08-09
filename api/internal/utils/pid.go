@@ -18,19 +18,62 @@
 package utils
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"runtime"
 	"strconv"
+	"syscall"
+	"time"
+
+	"github.com/pkg/errors"
 )
 
 // WritePID write pid to the given file path.
 func WritePID(filepath string, forceStart bool) error {
-	if pid, err := ReadPID(filepath); err == nil {
-		if !forceStart {
-			return fmt.Errorf("Instance of Manager API maybe running with a pid %d. If not, please run Manager API with '-f' or '--force' flag\n", pid)
+	pidStatAction := func() error {
+		pid, err := ReadPID(filepath)
+		if err != nil {
+			return nil
 		}
-		fmt.Printf("Force starting new instance. Another instance of Manager API maybe running with pid %d\n", pid)
+		// In unix system this always succeeds, doesn't ensure if the process at all exist or not.
+		proc, err := os.FindProcess(pid)
+		if err != nil {
+			return errors.Errorf("instance of Manager API maybe running with a pid %d. If not, please run Manager API with '-f' or '--force' flag. Error :%v\n", pid, err)
+		}
+
+		// Traditional unix way to check the existence of the particular PID.
+		err = proc.Signal(syscall.Signal(0))
+		// No entry of the process in process control block.
+		if err != nil {
+			return nil
+		}
+
+		// Windows has a tendency to pick unused old PIDs and allocate that to new process, so we won't kill it.
+		if runtime.GOOS != "windows" && forceStart {
+			fmt.Println("Killing existing instance of Manager API")
+			if err := proc.Signal(syscall.SIGINT); err != nil {
+				return errors.Wrapf(err, "failed to kill the existing process of PID %d ", pid)
+			}
+			// Wait for graceful shutdown.
+			for {
+				if err := proc.Signal(syscall.Signal(0)); err != nil {
+					break
+				}
+				time.Sleep(time.Second)
+			}
+			fmt.Println("Existing instance of Manager API successfully killed")
+		}
+		if forceStart {
+			fmt.Printf("Force starting new instance. Another instance of Manager API was running with pid %d\n", pid)
+		}
+
+		return errors.Errorf("instance of Manager API is already running. Either kill the existing instance of PID %d or run Manager API with '-f' or '--force' flag", pid)
+	}
+
+	if err := pidStatAction(); err != nil && !forceStart {
+		return err
 	}
 	pid := os.Getpid()
 	f, err := os.OpenFile(filepath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC|os.O_CREATE, 0600)
@@ -51,7 +94,7 @@ func ReadPID(filepath string) (int, error) {
 	if err != nil {
 		return -1, err
 	}
-	pid, err := strconv.Atoi(string(data))
+	pid, err := strconv.Atoi(string(bytes.Trim(data, " \n")))
 	if err != nil {
 		return -1, fmt.Errorf("invalid pid: %s", err)
 	}
