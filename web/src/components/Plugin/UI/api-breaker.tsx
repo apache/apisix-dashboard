@@ -30,7 +30,7 @@ const FORM_ITEM_LAYOUT = {
     span: 7,
   },
   wrapperCol: {
-    span: 7
+    span: 7,
   },
 };
 
@@ -56,11 +56,15 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
       <Form.Item
         label="break_response_code"
         name="break_response_code"
-        rules={[{
-          required: true,
-          message: `${formatMessage({ id: 'component.global.pleaseEnter' })} break_response_code`
-        }]}
-        tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.break_response_code.tooltip' })}
+        rules={[
+          {
+            required: true,
+            message: `${formatMessage({ id: 'component.global.pleaseEnter' })} break_response_code`,
+          },
+        ]}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.api-breaker.break_response_code.tooltip',
+        })}
         validateTrigger={['onChange', 'onBlur', 'onClick']}
       >
         <InputNumber min={propertires.break_response_code.minimum} max={propertires.break_response_code.maximum} required />
@@ -83,7 +87,9 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
                 <Form.Item
                   {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   label={index === 0 && 'unhealthy.http_statuses'}
-                  tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.unhealthy.http_statuses.tooltip' })}
+                  tooltip={formatMessage({
+                    id: 'component.pluginForm.api-breaker.unhealthy.http_statuses.tooltip',
+                  })}
                   key={field.key}
                 >
                   <Form.Item
@@ -139,7 +145,9 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
                   {...(index === 0 ? FORM_ITEM_LAYOUT : FORM_ITEM_WITHOUT_LABEL)}
                   key={field.key}
                   label={index === 0 && 'healthy.http_statuses'}
-                  tooltip={formatMessage({ id: 'component.pluginForm.api-breaker.healthy.http_statuses.tooltip' })}
+                  tooltip={formatMessage({
+                    id: 'component.pluginForm.api-breaker.healthy.http_statuses.tooltip',
+                  })}
                 >
                   <Form.Item
                     {...field}
@@ -184,8 +192,8 @@ const ApiBreaker: React.FC<Props> = ({ form, schema }) => {
       >
         <InputNumber min={propertires.healthy.properties.successes.minimum} />
       </Form.Item>
-    </Form >
+    </Form>
   );
-}
+};
 
 export default ApiBreaker;

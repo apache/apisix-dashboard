@@ -30,6 +30,7 @@ const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
   const [plugins, setPlugins] = useState<PluginComponent.Data>({});
   const [pluginList, setPluginList] = useState<PluginComponent.Meta[]>([]);
+  const [authPluginList, setAuthPluginList] = useState<string[]>([]);
   const [form1] = Form.useForm();
   const { formatMessage } = useIntl();
 
@@ -43,7 +44,14 @@ const Page: React.FC = (props) => {
       });
     }
 
-    fetchPlugList().then(setPluginList);
+    fetchPlugList().then((data) => {
+      setPluginList(data);
+      const authList = data
+        .filter((item) => item.type === 'auth')
+        .map((item) => item.name)
+        .sort();
+      setAuthPluginList(authList);
+    });
   }, []);
 
   const onSubmit = () => {
@@ -52,12 +60,13 @@ const Page: React.FC = (props) => {
     (username ? update(username, data) : create(data))
       .then(() => {
         notification.success({
-          message: `${username
-            ? formatMessage({ id: 'component.global.edit' })
-            : formatMessage({ id: 'component.global.create' })
-            } ${formatMessage({ id: 'menu.consumer' })} ${formatMessage({
-              id: 'component.status.success',
-            })}`,
+          message: `${
+            username
+              ? formatMessage({ id: 'component.global.edit' })
+              : formatMessage({ id: 'component.global.create' })
+          } ${formatMessage({ id: 'menu.consumer' })} ${formatMessage({
+            id: 'component.status.success',
+          })}`,
         });
         history.push('/consumer/list');
       })
@@ -81,9 +90,9 @@ const Page: React.FC = (props) => {
         ).length
       ) {
         notification.warning({
-          message: formatMessage({
+          message: `${formatMessage({
             id: 'page.consumer.notification.warning.enableAuthenticationPlugin',
-          }),
+          })} ${authPluginList.join(', ')}`,
         });
         return;
       }
@@ -98,10 +107,11 @@ const Page: React.FC = (props) => {
   return (
     <>
       <PageContainer
-        title={`${(props as any).match.params.username
-          ? formatMessage({ id: 'page.consumer.configure' })
-          : formatMessage({ id: 'page.consumer.create' })
-          }`}
+        title={`${
+          (props as any).match.params.username
+            ? formatMessage({ id: 'page.consumer.configure' })
+            : formatMessage({ id: 'page.consumer.create' })
+        }`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>

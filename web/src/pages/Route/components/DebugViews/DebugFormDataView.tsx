@@ -28,10 +28,10 @@ const DebugFormDataView: React.FC<RouteModule.DebugViewProps> = (props) => {
     { label: DebugBodyFormDataValueType.Text, value: DebugBodyFormDataValueType.Text },
     { label: DebugBodyFormDataValueType.File, value: DebugBodyFormDataValueType.File },
   ];
-  const [typeList, setTypeList] = useState({0: DebugBodyFormDataValueType.Text});
+  const [typeList, setTypeList] = useState({ 0: DebugBodyFormDataValueType.Text });
   const handleTypeChanged = (value: string, index: number) => {
-    setTypeList({...typeList, [index]: value})
-  }
+    setTypeList({ ...typeList, [index]: value });
+  };
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
       return e;
@@ -75,42 +75,45 @@ const DebugFormDataView: React.FC<RouteModule.DebugViewProps> = (props) => {
                   </Col>
                   <Col span={4}>
                     <Form.Item name={[field.name, 'type']}>
-                      <Select defaultValue={DebugBodyFormDataValueType.Text} options={typeOptions} onChange={(value) => {
-                        handleTypeChanged(value, index)
-                      }} data-cy={`debug-formdata-type-${index}`}/>
+                      <Select
+                        defaultValue={DebugBodyFormDataValueType.Text}
+                        options={typeOptions}
+                        onChange={(value) => {
+                          handleTypeChanged(value, index);
+                        }}
+                        data-cy={`debug-formdata-type-${index}`}
+                      />
                     </Form.Item>
                   </Col>
                   <Col span={7}>
-                    {
-                      ( typeList[index] === DebugBodyFormDataValueType.Text || !typeList[index] )&&
-                      (
-                        <Form.Item name={[field.name, 'value']}>
-                          <Input
-                            placeholder={formatMessage({
-                              id: 'page.route.input.placeholder.paramValue',
-                            })}
-                          />
-                        </Form.Item>
-                      )
-                    }
-                    {
-                      typeList[index] === DebugBodyFormDataValueType.File &&
-                      (
-                        <Form.Item>
-                          <Form.Item
+                    {(typeList[index] === DebugBodyFormDataValueType.Text || !typeList[index]) && (
+                      <Form.Item name={[field.name, 'value']}>
+                        <Input
+                          placeholder={formatMessage({
+                            id: 'page.route.input.placeholder.paramValue',
+                          })}
+                        />
+                      </Form.Item>
+                    )}
+                    {typeList[index] === DebugBodyFormDataValueType.File && (
+                      <Form.Item>
+                        <Form.Item
                           name={[field.name, 'value']}
                           valuePropName="file"
                           getValueFromEvent={normFile}
-                          >
-                            <Upload maxCount={1}>
-                              <Button type="primary" icon={<ImportOutlined />} data-cy={`debug-upload-btn-${index}`}>
-                                {formatMessage({ id: 'page.route.button.selectFile' })}
-                              </Button>
-                            </Upload>
-                          </Form.Item>
+                        >
+                          <Upload maxCount={1}>
+                            <Button
+                              type="primary"
+                              icon={<ImportOutlined />}
+                              data-cy={`debug-upload-btn-${index}`}
+                            >
+                              {formatMessage({ id: 'page.route.button.selectFile' })}
+                            </Button>
+                          </Upload>
                         </Form.Item>
-                      )
-                    }
+                      </Form.Item>
+                    )}
                   </Col>
                   <Col>
                     {fields.length > 1 && index !== fields.length - 1 && (

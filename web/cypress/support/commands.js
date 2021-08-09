@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
+/* eslint-disable */
 import defaultSettings from '../../config/defaultSettings';
 import 'cypress-file-upload';
 import '@4tw/cypress-drag-drop';
@@ -45,7 +45,7 @@ Cypress.Commands.add('configurePlugins', (cases) => {
     selectDropdown: '.ant-select-dropdown',
     monacoMode: '[data-cy="monaco-mode"]',
     selectJSON: '.ant-select-dropdown [label=JSON]',
-    monacoViewZones: '.view-zones'
+    monacoViewZones: '.view-zones',
   };
 
   cy.get(domSelector.name, { timeout }).then(function (cards) {
@@ -69,15 +69,17 @@ Cypress.Commands.add('configurePlugins', (cases) => {
         // NOTE: wait for the Drawer to appear on the DOM
         cy.focused(domSelector.drawer).should('exist');
 
-        cy.get(domSelector.monacoMode).invoke('text').then(text => {
-          if (text === 'Form') {
-            cy.wait(5000);
-            cy.get(domSelector.monacoMode).should('be.visible');
-            cy.get(domSelector.monacoMode).click();
-            cy.get(domSelector.selectDropdown).should('be.visible');
-            cy.get(domSelector.selectJSON).click();
-          }
-        });
+        cy.get(domSelector.monacoMode)
+          .invoke('text')
+          .then((text) => {
+            if (text === 'Form') {
+              cy.wait(5000);
+              cy.get(domSelector.monacoMode).should('be.visible');
+              cy.get(domSelector.monacoMode).click();
+              cy.get(domSelector.selectDropdown).should('be.visible');
+              cy.get(domSelector.selectJSON).click();
+            }
+          });
 
         cy.get(domSelector.drawer, { timeout }).within(() => {
           cy.get(domSelector.switch).click({
@@ -85,16 +87,18 @@ Cypress.Commands.add('configurePlugins', (cases) => {
           });
         });
 
-        cy.get(domSelector.monacoMode).invoke('text').then(text => {
-          if (text === 'Form') {
-            // FIXME: https://github.com/cypress-io/cypress/issues/7306
-            cy.wait(5000);
-            cy.get(domSelector.monacoMode).should('be.visible');
-            cy.get(domSelector.monacoMode).click();
-            cy.get(domSelector.selectDropdown).should('be.visible');
-            cy.get(domSelector.selectJSON).click();
-          }
-        });
+        cy.get(domSelector.monacoMode)
+          .invoke('text')
+          .then((text) => {
+            if (text === 'Form') {
+              // FIXME: https://github.com/cypress-io/cypress/issues/7306
+              cy.wait(5000);
+              cy.get(domSelector.monacoMode).should('be.visible');
+              cy.get(domSelector.monacoMode).click();
+              cy.get(domSelector.selectDropdown).should('be.visible');
+              cy.get(domSelector.selectJSON).click();
+            }
+          });
         // edit monaco
         cy.get(domSelector.monacoViewZones).should('exist').click({ force: true });
         cy.window().then((window) => {

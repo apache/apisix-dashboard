@@ -24,6 +24,7 @@ declare namespace PluginComponent {
     priority: number;
     schema: Record<string, any>;
     type: string;
+    originType: string;
     version: number;
     consumer_schema?: Record<string, any>;
     hidden?: boolean;
@@ -35,7 +36,7 @@ declare namespace PluginComponent {
     formData: any;
     monacoData: any;
     shouldDelete?: boolean;
-  }
+  };
 
   type MonacoLanguage = 'JSON' | 'YAML' | 'Form';
 }

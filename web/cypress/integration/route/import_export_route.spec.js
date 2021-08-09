@@ -84,7 +84,7 @@ context('import and export routes', () => {
       // input nodes_0_host, click Next
       cy.get(selector.nodes_0_host).type(data[`upstream_node0_host_${i}`]);
       cy.get(selector.nodes_0_port).type(data.port);
-      cy.get(selector.nodes_0_weight).type(data.weight);
+      cy.get(selector.nodes_0_weight).clear().type(data.weight);
       cy.contains(actionBarUS['component.actionbar.button.nextStep']).click();
       // do not config plugins, click Next
       cy.contains(actionBarUS['component.actionbar.button.nextStep']).click();

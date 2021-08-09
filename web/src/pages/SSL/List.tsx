@@ -21,7 +21,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Button, Popconfirm, notification, Tag } from 'antd';
 import { useIntl, history } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
-import querystring from 'query-string'
+import querystring from 'query-string';
 
 import { fetchList, remove as removeSSL } from '@/pages/SSL/service';
 import { timestampToLocaleString } from '@/helpers';
@@ -108,7 +108,10 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'page.ssl.list' })} content={formatMessage({ id: 'component.ssl.description' })}>
+    <PageHeaderWrapper
+      title={formatMessage({ id: 'page.ssl.list' })}
+      content={formatMessage({ id: 'component.ssl.description' })}
+    >
       <ProTable<SSLModule.ResponseBody>
         rowKey="id"
         columns={columns}

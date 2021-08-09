@@ -77,7 +77,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -110,7 +110,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -154,7 +154,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -207,7 +207,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -240,7 +240,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -284,7 +284,7 @@ func TestRoute_Export(t *testing.T) {
 				"methods": ["GET", "POST"],
 				"upstream": {
 					"nodes": {
-						"172.16.238.20:1980": 1
+						"` + UpstreamIp + `:1980": 1
 					},
 					"type": "roundrobin"
 				}
@@ -373,7 +373,7 @@ func TestRoute_Export(t *testing.T) {
 	"desc": "testservice_desc",
 	"upstream": {
 		"nodes": [{
-			"host": "172.16.238.20",
+			"host": "` + UpstreamIp + `",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -431,7 +431,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "` + UpstreamIp + `",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -472,7 +472,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -554,7 +554,7 @@ func TestRoute_Export(t *testing.T) {
 	"desc": "testservice_desc",
 	"upstream": {
 		"nodes": [{
-			"host": "172.16.238.20",
+			"host": "` + UpstreamIp + `",
 			"port": 1980,
 			"weight": 1
 		}],
@@ -615,7 +615,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "` + UpstreamIp + `",
 							"port": 1980,
 							"weight": 1
 						}],
@@ -656,7 +656,7 @@ func TestRoute_Export(t *testing.T) {
 					"create_time":1602883670,
 					"update_time":1602893670,
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -692,7 +692,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -804,7 +804,7 @@ func TestRoute_Export(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "` + UpstreamIp + `",
 							"port": 1981,
 							"weight": 1
 						}],
@@ -825,7 +825,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}
@@ -890,7 +890,7 @@ func TestRoute_Export(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1981,
 						"weight": 1
 					}]
@@ -988,7 +988,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}
@@ -1112,7 +1112,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}
@@ -1131,7 +1131,7 @@ func TestRoute_Export(t *testing.T) {
 				"name": "upstream5",
 				"nodes": [
 					{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1981,
 						"weight": 1
 					}
@@ -1304,7 +1304,7 @@ func TestRoute_Export(t *testing.T) {
 			Body: `{
 				"nodes": [
 					{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}
@@ -1442,7 +1442,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 				 "upstream": {
 					 "type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1646,7 +1646,7 @@ func TestExportRoute_With_Jwt_Plugin(t *testing.T) {
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -1755,7 +1755,7 @@ func TestExportRoute_With_Auth_Plugin(t *testing.T) {
 				 "upstream": {
 					 "type": "roundrobin",
 					"nodes": [{
-						"host": "172.16.238.20",
+						"host": "` + UpstreamIp + `",
 						"port": 1980,
 						"weight": 1
 					}]
@@ -2329,7 +2329,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2351,7 +2351,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2373,7 +2373,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1981": 1
+							"` + UpstreamIp + `:1981": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2398,7 +2398,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"status": 1,
 					"upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2421,7 +2421,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"status": 1,
 					"upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2444,7 +2444,7 @@ func TestRoute_Export_Equal_URI(t *testing.T) {
 					"status": 1,
 					"upstream": {
 						"nodes": {
-							"172.16.238.20:1981": 1
+							"` + UpstreamIp + `:1981": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2528,7 +2528,7 @@ func TestRoute_Export_Methods_Feild_Empty(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2548,7 +2548,7 @@ func TestRoute_Export_Methods_Feild_Empty(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2568,7 +2568,7 @@ func TestRoute_Export_Methods_Feild_Empty(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2588,7 +2588,7 @@ func TestRoute_Export_Methods_Feild_Empty(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2608,7 +2608,7 @@ func TestRoute_Export_Methods_Feild_Empty(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2628,7 +2628,7 @@ func TestRoute_Export_Methods_Feild_Empty(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2648,7 +2648,7 @@ func TestRoute_Export_Methods_Feild_Empty(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2668,7 +2668,7 @@ func TestRoute_Export_Methods_Feild_Empty(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2688,7 +2688,7 @@ func TestRoute_Export_Methods_Feild_Empty(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2713,7 +2713,7 @@ func TestRoute_Export_Methods_Feild_Empty(t *testing.T) {
 					"status": 1,
 					"upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2779,7 +2779,7 @@ func TestRoute_Export_Methods_Feild_Nil(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2798,7 +2798,7 @@ func TestRoute_Export_Methods_Feild_Nil(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2817,7 +2817,7 @@ func TestRoute_Export_Methods_Feild_Nil(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2836,7 +2836,7 @@ func TestRoute_Export_Methods_Feild_Nil(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2855,7 +2855,7 @@ func TestRoute_Export_Methods_Feild_Nil(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2874,7 +2874,7 @@ func TestRoute_Export_Methods_Feild_Nil(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2893,7 +2893,7 @@ func TestRoute_Export_Methods_Feild_Nil(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2912,7 +2912,7 @@ func TestRoute_Export_Methods_Feild_Nil(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2931,7 +2931,7 @@ func TestRoute_Export_Methods_Feild_Nil(t *testing.T) {
 					"x-apisix-status": 1,
 					"x-apisix-upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
@@ -2954,7 +2954,7 @@ func TestRoute_Export_Methods_Feild_Nil(t *testing.T) {
 					"status": 1,
 					"upstream": {
 						"nodes": {
-							"172.16.238.20:1980": 1
+							"` + UpstreamIp + `:1980": 1
 						},
 						"type": "roundrobin"
 					}
