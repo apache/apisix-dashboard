@@ -1,0 +1,12 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: network-delay-example
+spec:
+  action: delay
+  mode: all
+  selector:
+    labelSelectors:
+      "io.kompose.service": "apisix"
+  delay:
+    latency: "100ms"

@@ -21,6 +21,16 @@ concurrency:
 jobs:
   backend-chaos-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        chaos:
+          [
+            "etcd-delay",
+            "apisix-delay",
+            "managerapi-delay",
+          ]
 
     steps:
       - uses: actions/checkout@v2
@@ -74,6 +84,10 @@ jobs:
           kubectl apply -f ../kompose
           kubectl wait pods --for=condition=Ready --timeout=300s --all
           ../chaos/utils.sh port_forward
+
+      - name: apply chaos
+        working-directory: ./api/test/chaos
+        run: kubectl -f ${{ matrix.chaos }}.yaml
 
       - name: run e2e test
         working-directory: ./api/test/e2e

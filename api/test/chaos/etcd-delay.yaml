@@ -1,0 +1,12 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: network-delay-example
+spec:
+  action: delay
+  mode: all
+  selector:
+    labelSelectors:
+      "app.kubernetes.io/instance": "etcd"
+  delay:
+    latency: "100ms"
