@@ -87,7 +87,9 @@ jobs:
 
       - name: apply chaos
         working-directory: ./api/test/chaos
-        run: kubectl -f ${{ matrix.chaos }}.yaml
+        run: |
+          kubectl apply -f ${{ matrix.chaos }}.yaml
+          sleep 1
 
       - name: run e2e test
         working-directory: ./api/test/e2e
