@@ -8,9 +8,13 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'web/**'
   pull_request:
     branches:
       - master
+    paths:
+      - 'web/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -37,6 +41,7 @@ jobs:
         uses: actions/setup-node@v2.4.0
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
 
       # Install dependencies
       - name: Install dependencies

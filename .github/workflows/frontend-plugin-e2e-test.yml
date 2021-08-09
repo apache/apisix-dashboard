@@ -64,7 +64,7 @@ jobs:
         id: yarn-cache
         with:
           path: '*/node_modules'
-          key: '${{ runner.os }}-yarn-cache0-${{ hashFiles(''**/yarn.lock'') }}'
+          key: "${{ runner.os }}-yarn-cache0-${{ hashFiles('**/yarn.lock') }}"
           restore-keys: |
             ${{ runner.os }}-yarn-cache0
 
@@ -90,6 +90,6 @@ jobs:
         with:
           name: cypress-report
           path: |
-           web/cypress/videos
-           web/cypress/screenshots
+            web/cypress/videos
+            web/cypress/screenshots
           retention-days: 5

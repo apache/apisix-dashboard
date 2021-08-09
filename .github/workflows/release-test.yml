@@ -5,12 +5,32 @@ on:
     branches:
       - master
     paths-ignore:
+      - '.github/**'
+      - '.git/**'
+      - '.gitattributes'
+      - '.idea/**'
+      - '.vscode/**'
+      - '.gitignore'
+      - '.DS_Store'
       - 'docs/**'
+      - 'release/**'
+      - 'api/internal/core/store/validate_mock.go'
+      - 'api/internal/core/storage/storage_mock.go'
   pull_request:
     branches:
       - master
     paths-ignore:
+      - '.github/**'
+      - '.git/**'
+      - '.gitattributes'
+      - '.idea/**'
+      - '.vscode/**'
+      - '.gitignore'
+      - '.DS_Store'
       - 'docs/**'
+      - 'release/**'
+      - 'api/internal/core/store/validate_mock.go'
+      - 'api/internal/core/storage/storage_mock.go'
 
 jobs:
   run-test:

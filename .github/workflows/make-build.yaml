@@ -42,6 +42,7 @@ jobs:
         uses: actions/setup-node@v2.4.0
         with:
           node-version: 14.x
+          cache: 'yarn'
 
       - name: Setup golang environment
         uses: actions/setup-go@v2.1.3

@@ -29,6 +29,17 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
+      - uses: docker/setup-buildx-action@v1
+        with:
+          install: true
+
+      - uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Extract branch name
         id: branch_env
         shell: bash
@@ -66,5 +77,5 @@ jobs:
       - name: Publish Artifact
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: "rpm"
-          path: "./apisix-build-tools/output/apisix-dashboard-${{ steps.branch_env.outputs.version }}-0.x86_64.rpm"
+          name: 'rpm'
+          path: './apisix-build-tools/output/apisix-dashboard-${{ steps.branch_env.outputs.version }}-0.x86_64.rpm'
