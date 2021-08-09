@@ -40,7 +40,7 @@ import { js_beautify } from 'js-beautify';
 import yaml from 'js-yaml';
 import moment from 'moment';
 import { saveAs } from 'file-saver';
-import querystring from 'query-string'
+import querystring from 'query-string';
 import { omit } from 'lodash';
 
 import { DELETE_FIELDS } from '@/constants';
@@ -187,43 +187,47 @@ const Page: React.FC = () => {
         name: formatMessage({ id: 'page.route.pluginTemplateConfig' }),
         icon: <PlusOutlined />,
         onClick: () => {
-          history.push('/plugin-template/list')
-        }
-      }, {
+          history.push('/plugin-template/list');
+        },
+      },
+      {
         name: formatMessage({ id: 'component.global.data.editor' }),
         icon: <PlusOutlined />,
         onClick: () => {
           setVisible(true);
           setEditorMode('create');
           setRawData({});
-        }
-      }, {
+        },
+      },
+      {
         name: formatMessage({ id: 'page.route.button.importOpenApi' }),
         icon: <ImportOutlined />,
         onClick: () => {
           setUploadFileList([]);
           setShowImportModal(true);
-        }
-      }
-    ]
+        },
+      },
+    ];
 
     return (
-      <Dropdown overlay={<Menu>
-        {
-          tools.map(item => (
-            <Menu.Item key={item.name} onClick={item.onClick}>
-              {item.icon}
-              {item.name}
-            </Menu.Item>
-          ))
+      <Dropdown
+        overlay={
+          <Menu>
+            {tools.map((item) => (
+              <Menu.Item key={item.name} onClick={item.onClick}>
+                {item.icon}
+                {item.name}
+              </Menu.Item>
+            ))}
+          </Menu>
         }
-      </Menu>}>
+      >
         <Button type="dashed">
-          <DownOutlined /> {formatMessage({ id: "menu.advanced-feature" })}
+          <DownOutlined /> {formatMessage({ id: 'menu.advanced-feature' })}
         </Button>
       </Dropdown>
-    )
-  }
+    );
+  };
 
   const RecordActionDropdown: React.FC<{ record: any }> = ({ record }) => {
     const tools: {
@@ -231,65 +235,68 @@ const Page: React.FC = () => {
       onClick: () => void;
       icon?: ReactNode;
     }[] = [
-        {
-          name: formatMessage({ id: 'component.global.view' }),
-          onClick: () => {
-            setId(record.id);
-            setRawData(omit(record, DELETE_FIELDS));
-            setVisible(true);
-            setEditorMode('update');
-          }
-        }, {
-          name: formatMessage({ id: 'component.global.duplicate' }),
-          onClick: () => {
-            history.push(`/routes/${record.id}/duplicate`)
-          }
-        }, {
-          name: formatMessage({ id: 'component.global.delete' }),
-          onClick: () => {
-            Modal.confirm({
-              type: "warning",
-              title: formatMessage({ id: 'component.global.popconfirm.title.delete' }),
-              content: (
-                <>
-                  {formatMessage({ id: 'component.global.name' })} - {record.name}<br />
-                  ID - {record.id}
-                </>
-              ),
-              onOk: () => {
-                remove(record.id!).then(() => {
-                  handleTableActionSuccessResponse(
-                    `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
-                      id: 'menu.routes',
-                    })} ${formatMessage({ id: 'component.status.success' })}`,
-                  );
-                });
-              }
-            })
-          }
-        }
-      ]
+      {
+        name: formatMessage({ id: 'component.global.view' }),
+        onClick: () => {
+          setId(record.id);
+          setRawData(omit(record, DELETE_FIELDS));
+          setVisible(true);
+          setEditorMode('update');
+        },
+      },
+      {
+        name: formatMessage({ id: 'component.global.duplicate' }),
+        onClick: () => {
+          history.push(`/routes/${record.id}/duplicate`);
+        },
+      },
+      {
+        name: formatMessage({ id: 'component.global.delete' }),
+        onClick: () => {
+          Modal.confirm({
+            type: 'warning',
+            title: formatMessage({ id: 'component.global.popconfirm.title.delete' }),
+            content: (
+              <>
+                {formatMessage({ id: 'component.global.name' })} - {record.name}
+                <br />
+                ID - {record.id}
+              </>
+            ),
+            onOk: () => {
+              remove(record.id!).then(() => {
+                handleTableActionSuccessResponse(
+                  `${formatMessage({ id: 'component.global.delete' })} ${formatMessage({
+                    id: 'menu.routes',
+                  })} ${formatMessage({ id: 'component.status.success' })}`,
+                );
+              });
+            },
+          });
+        },
+      },
+    ];
 
     return (
-      <Dropdown overlay={
-        <Menu>
-          {
-            tools.map(item => (
+      <Dropdown
+        overlay={
+          <Menu>
+            {tools.map((item) => (
               <Menu.Item key={item.name} onClick={item.onClick}>
                 {item.icon && item.icon}
                 {item.name}
               </Menu.Item>
-            ))
-          }
-        </Menu>
-      }>
+            ))}
+          </Menu>
+        }
+      >
         <Button type="dashed">
           <DownOutlined />
-          {formatMessage({ id: "menu.more" })}
+          {formatMessage({ id: 'menu.more' })}
         </Button>
       </Dropdown>
-    )
-  }
+    );
+  };
 
   const ListFooter: React.FC = () => {
     return (
@@ -465,9 +472,9 @@ const Page: React.FC = () => {
         return (
           <Select
             style={{ width: '100%' }}
-            placeholder={
-              `${formatMessage({ id: 'page.route.unpublished' })}/${formatMessage({ id: 'page.route.published' })}`
-            }
+            placeholder={`${formatMessage({ id: 'page.route.unpublished' })}/${formatMessage({
+              id: 'page.route.published',
+            })}`}
             allowClear
           >
             <Option key={RouteStatus.Offline} value={RouteStatus.Offline}>
@@ -532,7 +539,10 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageHeaderWrapper title={formatMessage({ id: 'page.route.list' })} content={formatMessage({ id: 'page.route.list.description' })}>
+    <PageHeaderWrapper
+      title={formatMessage({ id: 'page.route.list' })}
+      content={formatMessage({ id: 'page.route.list.description' })}
+    >
       <ProTable<RouteModule.ResponseBody>
         actionRef={ref}
         rowKey="id"
@@ -552,7 +562,7 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
-          <ListToolbar />
+          <ListToolbar />,
         ]}
         rowSelection={rowSelection}
         footer={() => <ListFooter />}
@@ -567,16 +577,19 @@ const Page: React.FC = () => {
       />
       <RawDataEditor
         visible={visible}
-        type='route'
+        type="route"
         readonly={false}
         data={rawData}
-        onClose={() => { setVisible(false) }}
+        onClose={() => {
+          setVisible(false);
+        }}
         onSubmit={(data: any) => {
-          (editorMode === 'create' ? create(data, 'RawData') : update(id, data, 'RawData'))
-            .then(() => {
+          (editorMode === 'create' ? create(data, 'RawData') : update(id, data, 'RawData')).then(
+            () => {
               setVisible(false);
               ref.current?.reload();
-            })
+            },
+          );
         }}
       />
       <Modal

@@ -17,7 +17,6 @@
 /* eslint-disable no-undef */
 
 context('Create Route without Upstream', () => {
-
   const selector = {
     name: '#name',
     nodes_0_host: '#nodes_0_host',

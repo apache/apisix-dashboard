@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* eslint-disable no-undef */
+/* eslint-disable */
 
 context('Create and Search Route', () => {
   const timeout = 500;
@@ -39,7 +39,7 @@ context('Create and Search Route', () => {
     drawerBody: '.ant-drawer-wrapper-body',
     notification: '.ant-notification-notice-message',
     notificationClose: '.anticon-close',
-    expandSearch: '.ant-pro-form-collapse-button'
+    expandSearch: '.ant-pro-form-collapse-button',
   };
 
   const data = {
@@ -95,7 +95,7 @@ context('Create and Search Route', () => {
           });
       });
 
-      cy.contains('Next').click();
+      cy.contains('button', 'Next').should('not.be.disabled').click();
       cy.get(selector.nodes_0_host).type(data.host2, {
         timeout,
       });

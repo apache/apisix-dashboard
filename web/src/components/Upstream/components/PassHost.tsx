@@ -14,32 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, Input, notification, Select } from 'antd'
-import { useIntl } from 'umi'
-import type { FormInstance } from 'antd/lib/form'
+import React from 'react';
+import { Form, Input, notification, Select } from 'antd';
+import { useIntl } from 'umi';
+import type { FormInstance } from 'antd/lib/form';
 
 type Props = {
-  form: FormInstance
-  readonly?: boolean
-}
+  form: FormInstance;
+  readonly?: boolean;
+};
 
 const Component: React.FC<Props> = ({ form, readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
 
   const options = [
     {
-      value: "pass",
-      label: formatMessage({ id: 'page.upstream.step.pass-host.pass' })
-    }, {
-      value: "node",
-      label: formatMessage({ id: 'page.upstream.step.pass-host.node' })
-    }, {
-      value: "rewrite",
+      value: 'pass',
+      label: formatMessage({ id: 'page.upstream.step.pass-host.pass' }),
+    },
+    {
+      value: 'node',
+      label: formatMessage({ id: 'page.upstream.step.pass-host.node' }),
+    },
+    {
+      value: 'rewrite',
       label: formatMessage({ id: 'page.upstream.step.pass-host.rewrite' }),
-      disabled: true
-    }
-  ]
+      disabled: true,
+    },
+  ];
 
   return (
     <React.Fragment>
@@ -49,7 +51,7 @@ const Component: React.FC<Props> = ({ form, readonly }) => {
         initialValue="pass"
       >
         <Select disabled={readonly}>
-          {options.map(item => (
+          {options.map((item) => (
             <Select.Option value={item.value} key={item.value} disabled={item.disabled}>
               {item.label}
             </Select.Option>
@@ -71,27 +73,37 @@ const Component: React.FC<Props> = ({ form, readonly }) => {
                 rules={[
                   {
                     required: true,
-                    message: "",
+                    message: '',
                   },
                 ]}
               >
-                <Input disabled={readonly} placeholder={formatMessage({ id: `page.upstream.upstream_host.required` })} />
+                <Input
+                  disabled={readonly}
+                  placeholder={formatMessage({ id: `page.upstream.upstream_host.required` })}
+                />
               </Form.Item>
             );
           }
 
-          if (form.getFieldValue('pass_host') === 'node' && (form.getFieldValue('nodes') || []).length !== 1) {
+          if (
+            form.getFieldValue('pass_host') === 'node' &&
+            (form.getFieldValue('nodes') || []).length !== 1
+          ) {
             notification.warning({
-              message: formatMessage({id: 'component.upstream.other.pass_host-with-multiple-nodes.title'}),
-              description: formatMessage({id: 'component.upstream.other.pass_host-with-multiple-nodes'})
-            })
-            form.setFieldsValue({pass_host: 'pass'})
+              message: formatMessage({
+                id: 'component.upstream.other.pass_host-with-multiple-nodes.title',
+              }),
+              description: formatMessage({
+                id: 'component.upstream.other.pass_host-with-multiple-nodes',
+              }),
+            });
+            form.setFieldsValue({ pass_host: 'pass' });
           }
           return null;
         }}
       </Form.Item>
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

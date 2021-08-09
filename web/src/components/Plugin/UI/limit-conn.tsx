@@ -29,17 +29,14 @@ const FORM_ITEM_LAYOUT = {
     span: 6,
   },
   wrapperCol: {
-    span: 8
+    span: 8,
   },
 };
 
 const LimitConn: React.FC<Props> = ({ form }) => {
   const { formatMessage } = useIntl();
   return (
-    <Form
-      form={form}
-      {...FORM_ITEM_LAYOUT}
-    >
+    <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
         label="conn"
         required
@@ -60,7 +57,9 @@ const LimitConn: React.FC<Props> = ({ form }) => {
         label="default_conn_delay"
         required
         name="default_conn_delay"
-        tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.default_conn_delay.tooltip' })}
+        tooltip={formatMessage({
+          id: 'component.pluginForm.limit-conn.default_conn_delay.tooltip',
+        })}
       >
         <InputNumber step={0.001} min={0.001} required />
       </Form.Item>
@@ -72,8 +71,18 @@ const LimitConn: React.FC<Props> = ({ form }) => {
         tooltip={formatMessage({ id: 'component.pluginForm.limit-conn.key.tooltip' })}
       >
         <Select>
-          {["remote_addr", "server_addr", "http_x_real_ip", "http_x_forwarded_for", "consumer_name"].map(item => {
-            return <Select.Option value={item} key={item}>{item}</Select.Option>
+          {[
+            'remote_addr',
+            'server_addr',
+            'http_x_real_ip',
+            'http_x_forwarded_for',
+            'consumer_name',
+          ].map((item) => {
+            return (
+              <Select.Option value={item} key={item}>
+                {item}
+              </Select.Option>
+            );
           })}
         </Select>
       </Form.Item>
@@ -88,6 +97,6 @@ const LimitConn: React.FC<Props> = ({ form }) => {
       </Form.Item>
     </Form>
   );
-}
+};
 
 export default LimitConn;

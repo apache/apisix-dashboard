@@ -25,7 +25,7 @@ import { transformLableValueToKeyValue } from '@/helpers';
 
 import Step1 from './components/Step1';
 import Preview from './components/Preview';
-import { fetchItem, create, update, } from './service';
+import { fetchItem, create, update } from './service';
 
 const Page: React.FC = (props) => {
   const [step, setStep] = useState(1);
@@ -39,8 +39,9 @@ const Page: React.FC = (props) => {
       fetchItem(id).then(({ data }) => {
         const { desc, labels = {}, ...rest } = data;
         form1.setFieldsValue({
-          id, desc, custom_normal_labels: Object.keys(labels)
-            .map((key) => `${key}:${labels[key]}`)
+          id,
+          desc,
+          custom_normal_labels: Object.keys(labels).map((key) => `${key}:${labels[key]}`),
         });
         setPlugins(rest.plugins);
       });
@@ -50,21 +51,24 @@ const Page: React.FC = (props) => {
   const onSubmit = () => {
     const { desc, custom_normal_labels } = form1.getFieldsValue();
     const labels: Record<string, string> = {};
-    transformLableValueToKeyValue(custom_normal_labels || []).forEach(({ labelKey, labelValue }) => {
-      labels[labelKey] = labelValue;
-    });
+    transformLableValueToKeyValue(custom_normal_labels || []).forEach(
+      ({ labelKey, labelValue }) => {
+        labels[labelKey] = labelValue;
+      },
+    );
     const data = { desc, labels, plugins } as PluginTemplateModule.Entity;
 
     const { id } = (props as any).match.params;
     (id ? update(id, data) : create(data))
       .then(() => {
         notification.success({
-          message: `${id
-            ? formatMessage({ id: 'component.global.edit' })
-            : formatMessage({ id: 'component.global.create' })
-            } ${formatMessage({ id: 'menu.pluginTemplate' })} ${formatMessage({
-              id: 'component.status.success',
-            })}`,
+          message: `${
+            id
+              ? formatMessage({ id: 'component.global.edit' })
+              : formatMessage({ id: 'component.global.create' })
+          } ${formatMessage({ id: 'menu.pluginTemplate' })} ${formatMessage({
+            id: 'component.status.success',
+          })}`,
         });
         history.push('/plugin-template/list');
       })
@@ -90,10 +94,11 @@ const Page: React.FC = (props) => {
   return (
     <>
       <PageContainer
-        title={`${(props as any).match.params.id
-          ? formatMessage({ id: 'component.global.edit' })
-          : formatMessage({ id: 'component.global.create' })
-          } ${formatMessage({ id: 'menu.pluginTemplate' })}`}
+        title={`${
+          (props as any).match.params.id
+            ? formatMessage({ id: 'component.global.edit' })
+            : formatMessage({ id: 'component.global.create' })
+        } ${formatMessage({ id: 'menu.pluginTemplate' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>
@@ -113,7 +118,7 @@ const Page: React.FC = (props) => {
               onChange={setPlugins}
               referPage="route"
               schemaType="route"
-             />
+            />
           )}
           {step === 3 && <Preview form1={form1} plugins={plugins} />}
         </Card>

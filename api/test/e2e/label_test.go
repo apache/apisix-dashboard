@@ -40,7 +40,7 @@ func TestLabel(t *testing.T) {
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "` + UpstreamIp + `",
 							"port": 1980,
 							"weight": 1
 						}]
@@ -78,7 +78,7 @@ func TestLabel(t *testing.T) {
 			Path:   "/apisix/admin/upstreams/u1",
 			Body: `{
 				"nodes": [{
-					"host": "172.16.238.20",
+					"host": "` + UpstreamIp + `",
 					"port": 1980,
 					"weight": 1
 				}],

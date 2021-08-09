@@ -35,7 +35,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "` + UpstreamIp + `",
 							"port": 1980,
 							"weight": 1
 						}]
@@ -66,7 +66,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "` + UpstreamIp + `",
 							"port": 1980,
 							"weight": 1
 						}]
@@ -97,7 +97,7 @@ func TestRoute_add_with_invalid_remote_addr(t *testing.T) {
 					"upstream": {
 						"type": "roundrobin",
 						"nodes": [{
-							"host": "172.16.238.20",
+							"host": "` + UpstreamIp + `",
 							"port": 1980,
 							"weight": 1
 						}]
