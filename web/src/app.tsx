@@ -33,7 +33,7 @@ export async function getInitialState(): Promise<{
 }> {
   const token = localStorage.getItem('token');
   if (!token) {
-    const redirect = getUrlQuery('redirect');
+    const redirect = getUrlQuery('redirect') || '/';
     history.replace(`/user/login?redirect=${redirect}`);
   }
 
