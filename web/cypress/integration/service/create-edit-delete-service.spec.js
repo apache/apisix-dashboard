@@ -29,7 +29,7 @@ context('Create and Delete Service ', () => {
     disabledSwitcher: '#disable',
     drawer: '.ant-drawer-content',
     checkedSwitcher: '.ant-switch-checked',
-    monacoScroll: ".monaco-scrollable-element",
+    monacoScroll: '.monaco-scrollable-element',
     monacoMode: "[data-cy='monaco-mode']",
     selectDropdown: '.ant-select-dropdown',
     selectJSON: '.ant-select-dropdown [label=JSON]',

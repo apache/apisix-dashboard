@@ -37,7 +37,12 @@ const Step1: React.FC<Props> = ({ form, disabled, upstreamRef, neverReadonly }) 
         <Form.Item
           label={formatMessage({ id: 'page.upstream.step.name' })}
           name="name"
-          rules={[{ required: true, message: formatMessage({ id: 'page.upstream.step.input.upstream.name' }) }]}
+          rules={[
+            {
+              required: true,
+              message: formatMessage({ id: 'page.upstream.step.input.upstream.name' }),
+            },
+          ]}
         >
           <Input
             placeholder={formatMessage({ id: 'page.upstream.step.input.upstream.name' })}
@@ -51,7 +56,12 @@ const Step1: React.FC<Props> = ({ form, disabled, upstreamRef, neverReadonly }) 
           />
         </Form.Item>
       </Form>
-      <UpstreamForm ref={upstreamRef} form={form} disabled={disabled} neverReadonly={neverReadonly} />
+      <UpstreamForm
+        ref={upstreamRef}
+        form={form}
+        disabled={disabled}
+        neverReadonly={neverReadonly}
+      />
     </>
   );
 };

@@ -71,9 +71,9 @@ const Page: React.FC<Props> = (props) => {
 
   const setupRoute = (rid: number) =>
     fetchItem(rid).then((data) => {
-      const routeData = {...data};
+      const routeData = { ...data };
       if (props.route.path.indexOf('duplicate') !== -1) {
-        routeData.form1Data.name = "";
+        routeData.form1Data.name = '';
       }
       form1.setFieldsValue(routeData.form1Data);
       setAdvancedMatchingRules(routeData.advancedMatchingRules);
@@ -98,7 +98,7 @@ const Page: React.FC<Props> = (props) => {
 
   const getProxyRewriteEnable = () => {
     return !isEmpty(transformProxyRewrite2Plugin(form1.getFieldValue('proxyRewrite')));
-  }
+  };
 
   const renderStepList = () => {
     if (step === 1) {
@@ -194,37 +194,37 @@ const Page: React.FC<Props> = (props) => {
   };
 
   const savePlugins = (): boolean => {
-    const isScriptConfigured = FlowGraph.graph?.toJSON().cells.length
-    const isPluginsConfigured = Object.keys(step3Data.plugins || {}).length
+    const isScriptConfigured = FlowGraph.graph?.toJSON().cells.length;
+    const isPluginsConfigured = Object.keys(step3Data.plugins || {}).length;
 
     if (step === 3 && isScriptConfigured && isPluginsConfigured) {
       Modal.confirm({
         title: formatMessage({ id: 'component.plugin-flow.text.both-modes-exist.title' }),
         content: formatMessage({ id: 'component.plugin-flow.text.both-modes-exist' }),
         onOk: () => {
-          const data = FlowGraph.convertToData()
+          const data = FlowGraph.convertToData();
           if (data) {
             setStep3Data({ script: data, plugins: {} });
-            setStep(4)
+            setStep(4);
           }
         },
         okText: formatMessage({ id: 'component.global.confirm' }),
         cancelText: formatMessage({ id: 'component.global.cancel' }),
-      })
-      return false
+      });
+      return false;
     }
 
     if (isScriptConfigured) {
-      const data = FlowGraph.convertToData()
+      const data = FlowGraph.convertToData();
       if (!data) {
-        return false
+        return false;
       }
       setStep3Data({ script: data, plugins: {} });
     } else {
       setStep3Data({ ...step3Data, script: {} });
     }
-    return true
-  }
+    return true;
+  };
 
   const onStepChange = (nextStep: number) => {
     const onUpdateOrCreate = () => {
@@ -258,13 +258,16 @@ const Page: React.FC<Props> = (props) => {
             redirectOption === 'forceHttps' && filterHosts.length !== 0
               ? checkHostWithSSL(hosts)
               : Promise.resolve(),
-            checkUniqueName(value.name, props.route.path.indexOf('edit') > 0 ? (props as any).match.params.rid : ''),
+            checkUniqueName(
+              value.name,
+              props.route.path.indexOf('edit') > 0 ? (props as any).match.params.rid : '',
+            ),
           ]).then(() => {
             setStep(nextStep);
           });
         });
       } else {
-        setStep(nextStep)
+        setStep(nextStep);
       }
       return;
     }
@@ -281,9 +284,9 @@ const Page: React.FC<Props> = (props) => {
     }
 
     if (nextStep === 4) {
-      const result = savePlugins()
+      const result = savePlugins();
       if (!result) {
-        return
+        return;
       }
       setStep(nextStep);
     }
@@ -296,8 +299,9 @@ const Page: React.FC<Props> = (props) => {
   return (
     <>
       <PageHeaderWrapper
-        title={`${formatMessage({ id: `component.global.${props.route.path.split('/').slice(-1)[0]}` })
-          } ${formatMessage({ id: 'menu.routes' })}`}
+        title={`${formatMessage({
+          id: `component.global.${props.route.path.split('/').slice(-1)[0]}`,
+        })} ${formatMessage({ id: 'menu.routes' })}`}
       >
         <Card bordered={false}>
           <Steps current={step - 1} className={styles.steps}>

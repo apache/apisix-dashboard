@@ -21,7 +21,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import { Popconfirm, Button, notification } from 'antd';
 import { history, useIntl } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
-import querystring from 'query-string'
+import querystring from 'query-string';
 import { omit } from 'lodash';
 
 import { DELETE_FIELDS } from '@/constants';
@@ -77,12 +77,16 @@ const Page: React.FC = () => {
           >
             {formatMessage({ id: 'component.global.edit' })}
           </Button>
-          <Button type="primary" style={{ marginRight: 10 }} onClick={() => {
-            setId(record.username);
-            setRawData(omit(record, DELETE_FIELDS));
-            setVisible(true);
-            setEditorMode('update');
-          }}>
+          <Button
+            type="primary"
+            style={{ marginRight: 10 }}
+            onClick={() => {
+              setId(record.username);
+              setRawData(omit(record, DELETE_FIELDS));
+              setVisible(true);
+              setEditorMode('update');
+            }}
+          >
             {formatMessage({ id: 'component.global.view' })}
           </Button>
           <Popconfirm
@@ -111,7 +115,10 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <PageContainer title={formatMessage({ id: 'page.consumer.list' })} content={formatMessage({ id: "page.consumer.description" })}>
+    <PageContainer
+      title={formatMessage({ id: 'page.consumer.list' })}
+      content={formatMessage({ id: 'page.consumer.description' })}
+    >
       <ProTable<ConsumerModule.ResEntity>
         actionRef={ref}
         columns={columns}
@@ -131,11 +138,14 @@ const Page: React.FC = () => {
             <PlusOutlined />
             {formatMessage({ id: 'component.global.create' })}
           </Button>,
-          <Button type="primary" onClick={() => {
-            setVisible(true);
-            setEditorMode('create');
-            setRawData({});
-          }}>
+          <Button
+            type="primary"
+            onClick={() => {
+              setVisible(true);
+              setEditorMode('create');
+              setRawData({});
+            }}
+          >
             <PlusOutlined />
             {formatMessage({ id: 'component.global.data.editor' })}
           </Button>,
@@ -143,16 +153,17 @@ const Page: React.FC = () => {
       />
       <RawDataEditor
         visible={visible}
-        type='consumer'
+        type="consumer"
         readonly={false}
         data={rawData}
-        onClose={() => { setVisible(false) }}
+        onClose={() => {
+          setVisible(false);
+        }}
         onSubmit={(data: any) => {
-          (editorMode === 'create' ? create(data) : update(id, data))
-            .then(() => {
-              setVisible(false);
-              ref.current?.reload();
-            })
+          (editorMode === 'create' ? create(data) : update(id, data)).then(() => {
+            setVisible(false);
+            ref.current?.reload();
+          });
         }}
       />
     </PageContainer>

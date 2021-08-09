@@ -67,7 +67,16 @@ type ResListData<T> = {
   total_size: number;
 };
 
-type HttpMethod = 'GET' | 'POST' | 'DELETE' | 'PUT' | 'OPTIONS' | 'HEAD' | 'PATCH' | 'CONNECT' | 'TRACE';
+type HttpMethod =
+  | 'GET'
+  | 'POST'
+  | 'DELETE'
+  | 'PUT'
+  | 'OPTIONS'
+  | 'HEAD'
+  | 'PATCH'
+  | 'CONNECT'
+  | 'TRACE';
 
 type ResponseLabelList = Record<string, string>[];
 

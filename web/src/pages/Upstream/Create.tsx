@@ -34,7 +34,7 @@ const Page: React.FC = (props) => {
     const { id } = (props as any).match.params;
 
     if (id) {
-      fetchOne(id).then(data => {
+      fetchOne(id).then((data) => {
         form1.setFieldsValue(data);
       });
     }
@@ -44,17 +44,20 @@ const Page: React.FC = (props) => {
     form1.validateFields().then(() => {
       const data = upstreamRef.current?.getData();
       if (!data) {
-        notification.error({ message: formatMessage({id: 'page.upstream.other.configuration.invalid'}) });
+        notification.error({
+          message: formatMessage({ id: 'page.upstream.other.configuration.invalid' }),
+        });
         return;
       }
 
       const { id } = (props as any).match.params;
       (id ? update(id, data) : create(data)).then(() => {
         notification.success({
-          message: `${id
-            ? formatMessage({ id: 'page.upstream.edit.upstream.successfully' })
-            : formatMessage({ id: 'page.upstream.create.upstream.successfully' })
-            }`,
+          message: `${
+            id
+              ? formatMessage({ id: 'page.upstream.edit.upstream.successfully' })
+              : formatMessage({ id: 'page.upstream.create.upstream.successfully' })
+          }`,
         });
         history.replace('/upstream/list');
       });
@@ -76,9 +79,11 @@ const Page: React.FC = (props) => {
   return (
     <>
       <PageContainer
-        title={(props as any).match.params.id
-          ? formatMessage({ id: 'page.upstream.configure' })
-          : formatMessage({ id: 'page.upstream.create' })}
+        title={
+          (props as any).match.params.id
+            ? formatMessage({ id: 'page.upstream.configure' })
+            : formatMessage({ id: 'page.upstream.create' })
+        }
       >
         <Card bordered={false}>
           <Steps current={step - 1} style={{ marginBottom: 30 }}>

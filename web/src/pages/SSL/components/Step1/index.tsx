@@ -67,10 +67,7 @@ const Step: React.FC<Props> = ({ form }) => {
   };
   return (
     <>
-      <Form.Item
-        label={formatMessage({ id: 'page.ssl.form.itemLabel.way' })}
-        required
-      >
+      <Form.Item label={formatMessage({ id: 'page.ssl.form.itemLabel.way' })} required>
         <Select
           placeholder={formatMessage({ id: 'page.ssl.select.placeholder.selectCreateWays' })}
           defaultValue="Input"
