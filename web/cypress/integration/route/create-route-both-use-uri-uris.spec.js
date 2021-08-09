@@ -47,6 +47,12 @@ context('Create Route Both use uri and uris', () => {
     host: '12.12.12.12',
     port: '80',
     weight: 1,
+    host_0: '0.0.0.0',
+    uri_0: '/test',
+    remote_addr_0: '192.168.1.0',
+    host_1: '1.1.1.1',
+    uri_1: '/test1',
+    remote_addr_1: '192.168.1.1',
     submitSuccess: 'Submit Successfully',
     deleteRouteSuccess: 'Delete Route Successfully',
   };
@@ -64,9 +70,9 @@ context('Create Route Both use uri and uris', () => {
     cy.get(selector.name).type(data.name);
     cy.get(selector.description).type(data.description);
 
-    cy.get(selector.hosts_0).type('0.0.0.0');
-    cy.get(selector.uris_0).type('/test');
-    cy.get(selector.remote_addrs_0).type('192.168.1.0');
+    cy.get(selector.hosts_0).type(data.host_0);
+    cy.get(selector.uris_0).type(data.uri_0);
+    cy.get(selector.remote_addrs_0).type(data.remote_addr_0);
 
     cy.contains('Next').click();
     cy.get(selector.nodes_0_host).type(data.host);
@@ -110,11 +116,11 @@ context('Create Route Both use uri and uris', () => {
 
     cy.get('#status').should('have.class', 'ant-switch-checked');
     cy.get(selector.addHost).click();
-    cy.get(selector.hosts_1).type('1.1.1.1');
+    cy.get(selector.hosts_1).type(data.host_1);
     cy.get(selector.addUri).click();
-    cy.get(selector.uris_1).type('/test1');
+    cy.get(selector.uris_1).type(data.uri_1);
     cy.get(selector.addRemoteAddr).click();
-    cy.get(selector.remote_addrs_1).type('192.168.1.1');
+    cy.get(selector.remote_addrs_1).type(data.remote_addr_1);
 
     cy.contains('Next').click();
     cy.get(selector.nodes_0_host).type(data.host);
