@@ -23,14 +23,14 @@ import PanelSection from '@/components/PanelSection';
 const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
   advancedMatchingRules,
   disabled,
-  onChange = () => { },
+  onChange = () => {},
 }) => {
   const [visible, setVisible] = useState(false);
   const [mode, setMode] = useState<RouteModule.ModalType>('CREATE');
   const [namePlaceholder, setNamePlaceholder] = useState('');
   const [modalForm] = Form.useForm();
 
-  const [operatorValueSample, setOperatorValueSample] = useState("")
+  const [operatorValueSample, setOperatorValueSample] = useState('');
 
   const { Option } = Select;
 
@@ -38,15 +38,15 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
 
   const onOk = () => {
     modalForm.validateFields().then((value: RouteModule.MatchingRule) => {
-      if (value.operator === "IN") {
+      if (value.operator === 'IN') {
         try {
-          JSON.parse(value.value as string)
+          JSON.parse(value.value as string);
         } catch (error) {
           notification.warning({
             message: formatMessage({ id: 'page.route.fields.vars.invalid' }),
-            description: formatMessage({ id: 'page.route.fields.vars.in.invalid' })
-          })
-          return
+            description: formatMessage({ id: 'page.route.fields.vars.in.invalid' }),
+          });
+          return;
         }
       }
       if (mode === 'EDIT') {
@@ -88,6 +88,18 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
     });
   };
 
+  const OperatorRenderText = {
+    '==': formatMessage({ id: 'page.route.equal' }),
+    '~=': formatMessage({ id: 'page.route.unequal' }),
+    '>': formatMessage({ id: 'page.route.greaterThan' }),
+    '<': formatMessage({ id: 'page.route.lessThan' }),
+    '~~': formatMessage({ id: 'page.route.regexMatch' }),
+    '~*': formatMessage({ id: 'page.route.caseInsensitiveRegexMatch' }),
+    IN: formatMessage({ id: 'page.route.in' }),
+    HAS: formatMessage({ id: 'page.route.has' }),
+    '!': formatMessage({ id: 'page.route.reverse' }),
+  };
+
   const columns = [
     {
       title: formatMessage({ id: 'page.route.parameterPosition' }),
@@ -118,32 +130,7 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
     {
       title: formatMessage({ id: 'page.route.operationalCharacter' }),
       key: 'operator',
-      render: (text: RouteModule.MatchingRule) => {
-        let renderText;
-        switch (text.operator) {
-          case '==':
-            renderText = formatMessage({ id: 'page.route.equal' });
-            break;
-          case '~=':
-            renderText = formatMessage({ id: 'page.route.unequal' });
-            break;
-          case '>':
-            renderText = formatMessage({ id: 'page.route.greaterThan' });
-            break;
-          case '<':
-            renderText = formatMessage({ id: 'page.route.lessThan' });
-            break;
-          case '~~':
-            renderText = formatMessage({ id: 'page.route.regexMatch' });
-            break;
-          case 'IN':
-            renderText = formatMessage({ id: 'page.route.in' });
-            break;
-          default:
-            renderText = '';
-        }
-        return renderText;
-      },
+      render: (text: RouteModule.MatchingRule) => OperatorRenderText[text.operator],
     },
     {
       title: formatMessage({ id: 'page.route.value' }),
@@ -153,27 +140,29 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
     disabled
       ? {}
       : {
-        title: formatMessage({ id: 'component.global.operation' }),
-        key: 'action',
-        render: (_: any, record: RouteModule.MatchingRule) => (
-          <Space size="middle">
-            <a onClick={() => handleEdit(record)}>
-              {formatMessage({ id: 'component.global.edit' })}
-            </a>
-            <a onClick={() => handleRemove(record.key)}>
-              {formatMessage({ id: 'component.global.delete' })}
-            </a>
-          </Space>
-        ),
-      },
+          title: formatMessage({ id: 'component.global.operation' }),
+          key: 'action',
+          render: (_: any, record: RouteModule.MatchingRule) => (
+            <Space size="middle">
+              <a onClick={() => handleEdit(record)}>
+                {formatMessage({ id: 'component.global.edit' })}
+              </a>
+              <a onClick={() => handleRemove(record.key)}>
+                {formatMessage({ id: 'component.global.delete' })}
+              </a>
+            </Space>
+          ),
+        },
   ].filter((item) => Object.keys(item).length);
 
   const renderModal = () => {
     return (
       <Modal
-        title={mode === 'EDIT'
-          ? formatMessage({ id: 'page.route.rule.edit' })
-          : formatMessage({ id: 'page.route.rule.create' })}
+        title={
+          mode === 'EDIT'
+            ? formatMessage({ id: 'page.route.rule.edit' })
+            : formatMessage({ id: 'page.route.rule.create' })
+        }
         centered
         visible
         onOk={onOk}
@@ -234,7 +223,9 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
                 message: formatMessage({ id: 'component.global.input.ruleMessage.name' }),
               },
             ]}
-            tooltip={formatMessage({ id: 'page.route.form.itemRulesRequiredMessage.parameterName' })}
+            tooltip={formatMessage({
+              id: 'page.route.form.itemRulesRequiredMessage.parameterName',
+            })}
             extra={namePlaceholder}
           >
             <Input />
@@ -245,30 +236,38 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
             rules={[
               {
                 required: true,
-                message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage({
-                  id: 'page.route.operationalCharacter',
-                })}`,
+                message: `${formatMessage({ id: 'component.global.pleaseChoose' })} ${formatMessage(
+                  {
+                    id: 'page.route.operationalCharacter',
+                  },
+                )}`,
               },
             ]}
           >
-            <Select onChange={(e: string) => {
-              switch (e) {
-                case "IN":
-                  setOperatorValueSample(formatMessage({ id: 'page.route.advanced-match.operator.sample.IN' }))
-                  break
-                case "~~":
-                  setOperatorValueSample(formatMessage({ id: 'page.route.advanced-match.operator.sample.~~' }))
-                  break
-                default:
-                  setOperatorValueSample("")
-              }
-            }}>
-              <Option value="==">{formatMessage({ id: 'page.route.equal' })}</Option>
-              <Option value="~=">{formatMessage({ id: 'page.route.unequal' })}</Option>
-              <Option value=">">{formatMessage({ id: 'page.route.greaterThan' })}</Option>
-              <Option value="<">{formatMessage({ id: 'page.route.lessThan' })}</Option>
-              <Option value="~~">{formatMessage({ id: 'page.route.regexMatch' })}</Option>
-              <Option value="IN">{formatMessage({ id: 'page.route.in' })}</Option>
+            <Select
+              onChange={(e: string) => {
+                switch (e) {
+                  case 'IN':
+                    setOperatorValueSample(
+                      formatMessage({ id: 'page.route.advanced-match.operator.sample.IN' }),
+                    );
+                    break;
+                  case '~~':
+                  case '~*':
+                    setOperatorValueSample(
+                      formatMessage({ id: 'page.route.advanced-match.operator.sample.~~' }),
+                    );
+                    break;
+                  default:
+                    setOperatorValueSample('');
+                }
+              }}
+            >
+              {Object.keys(OperatorRenderText).map((item) => (
+                <Option value={item} key={item}>
+                  {OperatorRenderText[item]}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item
@@ -288,11 +287,14 @@ const MatchingRulesView: React.FC<RouteModule.Step1PassProps> = ({
           </Form.Item>
         </Form>
       </Modal>
-    )
+    );
   };
 
   return (
-    <PanelSection title={formatMessage({ id: 'page.route.panelSection.title.advancedMatchRule' })} tooltip={formatMessage({id: 'page.route.advanced-match.tooltip'})}>
+    <PanelSection
+      title={formatMessage({ id: 'page.route.panelSection.title.advancedMatchRule' })}
+      tooltip={formatMessage({ id: 'page.route.advanced-match.tooltip' })}
+    >
       {!disabled && (
         <Button
           onClick={() => {

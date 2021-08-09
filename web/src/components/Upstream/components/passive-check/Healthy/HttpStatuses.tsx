@@ -14,30 +14,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, Row, Col, InputNumber, Button } from 'antd'
-import { useIntl } from 'umi'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import React from 'react';
+import { Form, Row, Col, InputNumber, Button } from 'antd';
+import { useIntl } from 'umi';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-import { removeBtnStyle } from '@/components/Upstream/constant'
+import { removeBtnStyle } from '@/components/Upstream/constant';
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const Component: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
 
   return (
-    <Form.List name={['checks', 'passive', 'healthy', 'http_statuses']} initialValue={[200, 201, 202, 203, 204, 205, 206, 207,
-      208, 226, 300, 301, 302, 303, 304, 305,
-      306, 307, 308]}>
+    <Form.List
+      name={['checks', 'passive', 'healthy', 'http_statuses']}
+      initialValue={[
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        226,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308,
+      ]}
+    >
       {(fields, { add, remove }) => (
         <>
           <Form.Item
             required
             label={formatMessage({ id: 'page.upstream.step.healthyCheck.passive.http_statuses' })}
-            tooltip={formatMessage({ id: 'page.upstream.checks.passive.healthy.http_statuses.description' })}
+            tooltip={formatMessage({
+              id: 'page.upstream.checks.passive.healthy.http_statuses.description',
+            })}
             style={{ marginBottom: 0 }}
           >
             {fields.map((field, index) => (
@@ -72,7 +95,7 @@ const Component: React.FC<Props> = ({ readonly }) => {
         </>
       )}
     </Form.List>
-  )
-}
+  );
+};
 
-export default Component
+export default Component;

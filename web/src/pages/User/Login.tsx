@@ -41,7 +41,6 @@ const Page: React.FC = () => {
   const { formatMessage } = useIntl();
   const [loginMethod, setLoginMethod] = useState(loginMethods[0]);
 
-
   const onTabChange = (activeKey: string) => {
     loginMethods.forEach((item, index) => {
       if (activeKey === item.id) setLoginMethod(loginMethods[index]);
@@ -72,7 +71,7 @@ const Page: React.FC = () => {
     if (event.key === 'Enter') {
       onSubmit();
     }
-  }
+  };
 
   if (localStorage.getItem('token')) {
     history.replace('/');
@@ -81,7 +80,7 @@ const Page: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.lang}>
-        <div className={styles.github} >
+        <div className={styles.github}>
           <a target="_blank" href="https://apisix.apache.org">
             <GithubOutlined />
           </a>

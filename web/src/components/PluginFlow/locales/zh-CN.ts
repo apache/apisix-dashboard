@@ -37,5 +37,5 @@ export default {
   'component.plugin-flow.text.condition-without-configuration': '请检查条件判断元件的配置',
   'component.plugin-flow.text.preview.readonly': '请注意：在当前页面，您在画布上地操作不会被保留。',
   'component.plugin-flow.text.both-modes-exist': '编排模式配置将覆盖普通模式配置，是否继续操作？',
-  'component.plugin-flow.text.both-modes-exist.title': '配置冲突'
-}
+  'component.plugin-flow.text.both-modes-exist.title': '配置冲突',
+};

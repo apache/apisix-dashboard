@@ -14,26 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react'
-import { Form, InputNumber } from 'antd'
-import { useIntl } from 'umi'
-import TimeUnit from '../TimeUnit'
+import React from 'react';
+import { Form, InputNumber } from 'antd';
+import { useIntl } from 'umi';
+import TimeUnit from '../TimeUnit';
 
 type Props = {
-  readonly?: boolean
-}
+  readonly?: boolean;
+};
 
 const ActiveCheckTimeoutComponent: React.FC<Props> = ({ readonly }) => {
-  const { formatMessage } = useIntl()
+  const { formatMessage } = useIntl();
 
   return (
-    <Form.Item label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.timeout' })} tooltip={formatMessage({ id: 'page.upstream.checks.active.timeout.description' })}>
+    <Form.Item
+      label={formatMessage({ id: 'page.upstream.step.healthyCheck.active.timeout' })}
+      tooltip={formatMessage({ id: 'page.upstream.checks.active.timeout.description' })}
+    >
       <Form.Item name={['checks', 'active', 'timeout']} noStyle initialValue={1}>
         <InputNumber disabled={readonly} min={0} />
       </Form.Item>
       <TimeUnit />
     </Form.Item>
-  )
-}
+  );
+};
 
-export default ActiveCheckTimeoutComponent
+export default ActiveCheckTimeoutComponent;

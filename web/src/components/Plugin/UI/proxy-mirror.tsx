@@ -29,7 +29,7 @@ const FORM_ITEM_LAYOUT = {
     span: 4,
   },
   wrapperCol: {
-    span: 10
+    span: 10,
   },
 };
 
@@ -38,10 +38,7 @@ const ProxyMirror: React.FC<Props> = ({ form, schema }) => {
   const properties = schema?.properties;
 
   return (
-    <Form
-      form={form}
-      {...FORM_ITEM_LAYOUT}
-    >
+    <Form form={form} {...FORM_ITEM_LAYOUT}>
       <Form.Item
         label="host"
         name="host"
@@ -51,13 +48,13 @@ const ProxyMirror: React.FC<Props> = ({ form, schema }) => {
           {
             pattern: new RegExp(`${properties.host.pattern}`, 'g'),
             message: formatMessage({ id: 'component.pluginForm.proxy-mirror.host.ruletip' }),
-          }
+          },
         ]}
       >
         <Input />
       </Form.Item>
     </Form>
   );
-}
+};
 
 export default ProxyMirror;

@@ -26,6 +26,7 @@ import (
 )
 
 var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
+	remote_addr := "172.16.238.1"
 	table.DescribeTable("test route with valid remote_addr remote_addrs",
 		func(tc base.HttpTestCase) {
 			base.RunTestCase(tc)
@@ -37,7 +38,7 @@ var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
 			Body: `{
 				"name": "route1",
 				"uri": "/hello",
-				"remote_addr": "172.16.238.1",
+				"remote_addr": "` + remote_addr + `",
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": {
@@ -64,7 +65,7 @@ var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
 			Body: `{
 				"name": "route1",
 				"uri": "/hello",
-				"remote_addr": "172.16.238.1/24",
+				"remote_addr": "` + remote_addr + `/24",
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": {
@@ -91,7 +92,7 @@ var _ = ginkgo.Describe("route with valid remote_addr remote_addrs", func() {
 			Body: `{
 				"name": "route1",
 				"uri": "/hello",
-				"remote_addrs": ["172.16.238.1","192.168.0.2/24"],
+				"remote_addrs": ["` + remote_addr + `","192.168.0.2/24"],
 				"upstream": {
 					"type": "roundrobin",
 					"nodes": {

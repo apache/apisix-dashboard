@@ -16,35 +16,43 @@
  */
 /* eslint-disable no-undef */
 
-context('Create Route without Upstream', () => {
+context('Create and Edit Route With Custom CHash Key Upstream', () => {
   const selector = {
     name: '#name',
+    menu: '[role=menu]',
+    roundRobinSelect: '[title="Round Robin"]',
+    varSelect: '[title="vars"]',
+    defaultCHashKey: '[value="remote_addr"]',
+    upstreamType: '.ant-select-item-option-content',
+    hashPosition: '.ant-select-item-option-content',
     nodes_0_host: '#nodes_0_host',
     nodes_0_port: '#nodes_0_port',
     nodes_0_weight: '#nodes_0_weight',
-    input: ':input',
     nameSelector: '[title=Name]',
+    chash_key: '#key',
     deleteAlert: '.ant-modal-body',
+    notificationCloseIcon: '.ant-notification-close-icon',
     notification: '.ant-notification-notice-message',
   };
 
   const data = {
-    routeName: 'test_route',
-    submitSuccess: 'Submit Successfully',
-    ip1: '127.0.0.1',
-    ip2: '127.0.0.2',
-    port: '80',
-    weight: 1,
+    routeName: 'roteName',
+    ip: '127.0.0.1',
+    port: '7000',
+    weight: '1',
     deleteRouteSuccess: 'Delete Route Successfully',
+    submitSuccess: 'Submit Successfully',
+    custom_key: 'custom_key',
+    new_key: 'new_key',
   };
 
   beforeEach(() => {
     cy.login();
   });
 
-  it('should create route wittout upstream ', function () {
+  it('should create route with custom chash key Upstream', function () {
     cy.visit('/');
-    cy.get('[role=menu]')
+    cy.get(selector.menu)
       .should('be.visible')
       .within(() => {
         cy.contains('Route').click();
@@ -55,14 +63,27 @@ context('Create Route without Upstream', () => {
     cy.get(selector.name).type(data.routeName);
     cy.contains('Next').click();
 
-    cy.get(selector.nodes_0_host).clear().type(data.ip1);
-    cy.get(selector.nodes_0_port).type(data.port);
-    cy.get(selector.nodes_0_weight).type(data.weight);
+    cy.get(selector.roundRobinSelect).click();
+    cy.get(selector.upstreamType).within(() => {
+      cy.contains('CHash').click();
+    });
+    cy.get(selector.varSelect).click();
+    cy.get(selector.hashPosition).within(() => {
+      cy.contains('cookie').click();
+    });
+    cy.get(selector.defaultCHashKey).click();
+    cy.get(selector.defaultCHashKey).clear().type(data.custom_key);
+    cy.get(selector.nodes_0_host).click();
+    cy.get(selector.nodes_0_host).type(data.ip);
+    cy.get(selector.nodes_0_port).clear().type(data.port);
+    cy.get(selector.nodes_0_weight).clear().type(data.weight);
+
     cy.contains('Next').click();
     cy.contains('Next').click();
-    cy.get(selector.input).should('be.disabled');
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess).should('be.visible');
+
+    // back to route list page
     cy.contains('Goto List').click();
     cy.url().should('contains', 'routes/list');
   });
@@ -74,41 +95,21 @@ context('Create Route without Upstream', () => {
 
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('Configure').click();
-
     cy.get(selector.name).should('value', data.routeName);
     cy.contains('Next').click({
       force: true,
     });
-
-    // check if the changes have been saved
-    cy.get(selector.nodes_0_host).should('value', data.ip1);
-    cy.get(selector.nodes_0_host).clear().type(data.ip2);
-    cy.get(selector.nodes_0_port).type(data.port);
-    cy.get(selector.nodes_0_weight).type(data.weight);
+    cy.get(selector.chash_key).should('value', data.custom_key);
+    cy.get(selector.chash_key).clear().type(data.new_key);
     cy.contains('Next').click();
     cy.contains('Next').click();
-    cy.get(selector.input).should('be.disabled');
     cy.contains('Submit').click();
     cy.contains(data.submitSuccess).should('be.visible');
-    cy.contains('Goto List').click();
-    cy.url().should('contains', 'routes/list');
-
-    // check if the changes have been saved
-    cy.get(selector.nameSelector).type(data.routeName);
-    cy.contains('Search').click();
-
-    cy.contains(data.routeName).siblings().contains('Configure').click();
-    // ensure it has already changed to edit page
-    cy.get(selector.name).should('value', data.routeName);
-    cy.contains('Next').click({
-      force: true,
-    });
-    cy.get(selector.nodes_0_host).should('value', data.ip2);
   });
 
-  it('should delete this test route', function () {
+  it('should delete the route', function () {
     cy.visit('/routes/list');
-    cy.get(selector.nameSelector).type(data.routeName);
+    cy.get(selector.name).clear().type(data.routeName);
     cy.contains('Search').click();
     cy.contains(data.routeName).siblings().contains('More').click();
     cy.contains('Delete').click();
@@ -118,5 +119,6 @@ context('Create Route without Upstream', () => {
         cy.contains('OK').click();
       });
     cy.get(selector.notification).should('contain', data.deleteRouteSuccess);
+    cy.get(selector.notificationCloseIcon).click({ multiple: true });
   });
 });

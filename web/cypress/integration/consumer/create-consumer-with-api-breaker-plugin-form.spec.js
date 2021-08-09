@@ -17,26 +17,25 @@
 /* eslint-disable no-undef */
 
 context('Create and delete consumer with api-breaker plugin form', () => {
-
   const selector = {
-    break_response_code: "#break_response_code",
-    empty:'.ant-empty-normal',
+    break_response_code: '#break_response_code',
+    empty: '.ant-empty-normal',
     username: '#username',
     description: '#desc',
     pluginCard: '.ant-card',
     drawer: '.ant-drawer-content',
     disabledSwitcher: '#disable',
     notification: '.ant-notification-notice-message',
-    monacoViewZones: '.view-zones'
-  }
+    monacoViewZones: '.view-zones',
+  };
 
   const data = {
     break_response_code: 200,
     consumerName: 'test_consumer',
     description: 'desc_by_autotest',
     createConsumerSuccess: 'Create Consumer Successfully',
-    deleteConsumerSuccess: 'Delete Consumer Successfully'
-  }
+    deleteConsumerSuccess: 'Delete Consumer Successfully',
+  };
 
   beforeEach(() => {
     cy.login();
